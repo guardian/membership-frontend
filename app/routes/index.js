@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 
 /* GET home page. */
 router.get('/stripe', function(req, res) {
-  res.render('stripe', { title: 'Stripe' });
+  res.render('stripe', { title: 'Stripe' , message: 'Please submit payment'});
 });
 
 router.post('/stripe', function(req, res) {
@@ -23,15 +23,16 @@ router.post('/stripe', function(req, res) {
     var stripeToken = req.body.stripeToken;
 
     var charge = stripe.charges.create({
-      amount: 1337, // amount in cents, again
-      currency: "gbp",
-      card: stripeToken,
-      description: "payinguser@example.com"
+        amount: 1337, // amount in cents, again
+        currency: "gbp",
+        card: stripeToken,
+        description: "chris.finch@theguardian.com"
     }, function(err, charge) {
-      if (err && err.type === 'StripeCardError') {
-        // The card has been declined
-      }
-      res.send(200, "Everything is ok: "+arguments.toString());
+        if (err && err.type === 'StripeCardError') {
+            // The card has been declined
+            res.render('stripe', { title: 'Stripe' , message: 'Error: ' + err.type});
+        }
+        res.render('stripe', { title: 'Stripe' , message: 'Payment successfull'});
     });
 });
 
