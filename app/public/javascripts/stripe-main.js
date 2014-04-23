@@ -17,10 +17,11 @@ require.config({
 require([
     'jquery',
     'payment',
-    'stripe'
-], function($, Payment, Stripe) {
+    'stripe',
+    'gu_u'
+], function($, Payment, Stripe, GU_U) {
 
-    "use strict";
+    'use strict';
 
     var config = {
         stripePublishableKey: 'pk_test_Qm3CGRdrV4WfGYCpm0sftR0f'
@@ -44,42 +45,56 @@ require([
     };
 
     var bindFormatting = function ($form) {
-        $form.find(".cc-num").payment('formatCardNumber');
-        $form.find(".cc-cvc").payment('formatCardCVC');
-        $form.find(".cc-exp-month").payment('restrictNumeric');
-        $form.find(".cc-exp-year").payment('restrictNumeric');
+        $form.find('.cc-num').payment('formatCardNumber');
+        $form.find('.cc-cvc').payment('formatCardCVC');
+        $form.find('.cc-exp-month').payment('restrictNumeric');
+        $form.find('.cc-exp-year').payment('restrictNumeric');
 
     };
 
     var validateForm = function ($form) {
 
-        var number = $form.find(".cc-num");
-        var cvc = $form.find(".cc-cvc");
-        var expiryMonth = $form.find(".cc-exp-month");
-        var expiryYear = $form.find(".cc-exp-year");
+        var number = $form.find('.cc-num');
+        var cvc = $form.find('.cc-cvc');
+        var expiryMonth = $form.find('.cc-exp-month');
+        var expiryYear = $form.find('.cc-exp-year');
 
-        $form.find(".invalid").removeClass("invalid");
+        $form.find('.invalid').removeClass('invalid');
 
         if (!$.payment.validateCardNumber(number.val())) {
-            number.addClass("invalid");
+            number.addClass('invalid');
             return false;
         }
 
         if (!$.payment.validateCardCVC(cvc.val(), $.payment.cardType(number.val()))) {
-            cvc.addClass("invalid");
+            cvc.addClass('invalid');
             return false;
         }
 
         if (!$.payment.validateCardExpiry(expiryMonth.val(), expiryYear.val())) {
-            expiryMonth.addClass("invalid");
-            expiryYear.addClass("invalid");
+            expiryMonth.addClass('invalid');
+            expiryYear.addClass('invalid');
             return false;
         }
 
         return true;
     };
 
+    var populateUserInformation = function () {
+        var user = GU_U.getUserFromCookie();
+
+        var str = [];
+        str.push('User from cookie - ');
+        str.push('\r\ndisplayname: ' + user.displayname);
+        str.push('\r\nid: ' + user.id);
+        str.push('\r\nemail: ' + user.primaryemailaddress);
+
+        $('p.user').append(str.join(''));
+    };
+
     var init = function () {
+
+        populateUserInformation();
 
         var $form = $('#payment-form');
 
