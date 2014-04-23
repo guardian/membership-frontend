@@ -4,6 +4,11 @@
         <title><%= title %></title>
         <link rel='stylesheet' href='/stylesheets/style.css' />
         <script type="text/javascript" src="javascripts/lib/require.js" data-main="javascripts/stripe-main"></script>
+        <style type="text/css" media="screen">
+            .invalid {
+                border: 3px solid red;
+            }
+        </style>
     </head>
     <body>
         <h1><%= title %> integration</h1>
@@ -17,24 +22,24 @@
             <div class="form-row">
                 <label>
                     <span>Card Number</span>
-                    <input type="text" size="20" data-stripe="number"/>
+                    <input type="text" size="20" data-stripe="number" class="cc-num"/>
                 </label>
             </div>
 
             <div class="form-row">
                 <label>
                     <span>CVC</span>
-                    <input type="text" size="4" data-stripe="cvc"/>
+                    <input type="text" size="4" data-stripe="cvc" class="cc-cvc"/>
                 </label>
             </div>
 
             <div class="form-row">
                 <label>
                     <span>Expiration (MM/YYYY)</span>
-                    <input type="text" size="2" data-stripe="exp-month"/>
+                    <input type="text" size="2" data-stripe="exp-month" class="cc-exp-month"/>
                 </label>
                 <span> / </span>
-                <input type="text" size="4" data-stripe="exp-year"/>
+                <input type="text" size="4" data-stripe="exp-year" class="cc-exp-year"/>
             </div>
 
             <button type="submit">Submit Payment</button>

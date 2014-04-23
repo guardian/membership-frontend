@@ -43,17 +43,61 @@ require([
         }
     };
 
+    var bindFormatting = function ($form) {
+        $form.find(".cc-num").payment('formatCardNumber');
+        $form.find(".cc-cvc").payment('formatCardCVC');
+        $form.find(".cc-exp-month").payment('restrictNumeric');
+        $form.find(".cc-exp-year").payment('restrictNumeric');
+
+    };
+
+    var validateForm = function ($form) {
+
+        var number = $form.find(".cc-num");
+        var cvc = $form.find(".cc-cvc");
+        var expiryMonth = $form.find(".cc-exp-month");
+        var expiryYear = $form.find(".cc-exp-year");
+
+        $form.find(".invalid").removeClass("invalid");
+
+        if (!$.payment.validateCardNumber(number.val())) {
+            number.addClass("invalid");
+            return false;
+        }
+
+        if (!$.payment.validateCardCVC(cvc.val(), $.payment.cardType(number.val()))) {
+            cvc.addClass("invalid");
+            return false;
+        }
+
+        if (!$.payment.validateCardExpiry(expiryMonth.val(), expiryYear.val())) {
+            expiryMonth.addClass("invalid");
+            expiryYear.addClass("invalid");
+            return false;
+        }
+
+        return true;
+    };
+
     var init = function () {
+
+        var $form = $('#payment-form');
+
+        bindFormatting($form);
+
         Stripe.setPublishableKey(config.stripePublishableKey);
 
-        $('#payment-form').submit(function(event) {
+        $form.submit(function(event) {
             event.preventDefault();
-            var $form = $(this);
 
             // Disable the submit button to prevent repeated clicks
             $form.find('button').prop('disabled', true);
+            if (validateForm($form)) {
+                Stripe.card.createToken($form, stripeResponseHandler);
+            } else {
+                $form.find('button').prop('disabled', false);
+            }
 
-            Stripe.card.createToken($form, stripeResponseHandler);
         });
     };
 
