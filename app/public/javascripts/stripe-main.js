@@ -83,6 +83,8 @@ require([
     var populateUserInformation = function () {
         var user = GU_U.getUserFromCookie();
 
+        console.log(user)
+
         var str = [];
         str.push('User from cookie - ');
         str.push('\r\ndisplayname: ' + user.displayname);
