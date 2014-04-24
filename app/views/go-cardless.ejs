@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p><%= title %> integration</p>
+
+    <!-- in views/index.html (you'll need to create this file) -->
+    <form action="/subscribe" method="POST">
+        <label for="email">Enter your email to subscribe
+            <input type="email" name="email" id="email" placeholder="email address">
+        </label>
+
+
+
+
+
+<!--        first_name: req.params.first_name,
+        last_name: req.params.last_name,
+        email: req.params.email,
+        billing_address1: req.params.billing_address1,
+        billing_address2: req.params.billing_address2,
+        billing_town: req.params.billing_town,
+        billing_postcode: req.params.billing_postcode,-->
+
+
+
+        <button>Submit</button>
+    </form>
+    </form>
+  </body>
+</html>
