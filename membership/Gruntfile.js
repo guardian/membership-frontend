@@ -85,5 +85,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
+    grunt.registerTask('compile', [
+        'compile:css'
+    ]);
+
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 };
