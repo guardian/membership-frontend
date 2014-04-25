@@ -1,6 +1,19 @@
-@(message: String)
+@(message: String, events: Seq[controllers.Application.EBEvent])
+@import play.api.libs.json.JsValue
 
 @main("Welcome to Play") {
+
+       // accept events json
+
+       // for events json display event template
+
+
+
+    <ul>
+    @for(event <- events) {
+        <li>@event.name.text</li>
+    }
+    </ul>
 
     <ul>
         <li>
