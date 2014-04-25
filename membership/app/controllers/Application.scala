@@ -16,25 +16,32 @@ object Application extends Controller {
 
   case class StripePayment(token: String)
 
-  case class RichText(text: String, html: String)
-//  "id": "6465803",
-//  "address": {
-//    "country_name": "United Kingdom",
-//    "city": "London",
-//    "region": "Greater London",
-//    "address_1": "90 York Way",
-//    "country": "GB"
-//  },
-//  "latitude": "51.534966",
-//  "longitude": "-0.1221447000000353",
-//  "name": "Kings Place"
-  case class venue()
+  case class EBRichText(text: String, html: String)
 
-  case class EBEvent(name: RichText, description: RichText, logo_url: String, id: String)
+  case class EBAddress(country_name: Option[String], city: Option[String], region: Option[String], address_1: Option[String], country: Option[String])
+
+  case class EBVenue(id: Option[String], address: EBAddress, latitude: Option[String], longitude: Option[String], name: Option[String])
+
+  case class EBTime(timezone: String, local: String, utc: String)
+
+  case class EBEvent(
+                      name: EBRichText,
+                      description: EBRichText,
+                      logo_url: String,
+                      id: String,
+                      start: EBTime,
+                      end: EBTime,
+                      venue: EBVenue)
 
   case class EBResponse(events: Seq[EBEvent])
 
-  implicit val ebRichText = Json.reads[RichText]
+  implicit val ebAddress = Json.reads[EBAddress]
+
+  implicit val ebVenue = Json.reads[EBVenue]
+
+  implicit val ebTime = Json.reads[EBTime]
+
+  implicit val ebRichText = Json.reads[EBRichText]
 
   implicit val ebEventReads = Json.reads[EBEvent]
 
