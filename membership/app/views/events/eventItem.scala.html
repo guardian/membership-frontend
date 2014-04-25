@@ -1,8 +1,8 @@
 @(event: controllers.Application.EBEvent)
 
-    <li>
+    <li class="eventItem">
         <img src="@event.logo_url" alt="Event Image" width="200px"/>
-        <h2>@event.name.text</h2>
+        <h2 class="name"><a href="/eventItem/@event.id">@event.name.text</a></h2>
         <span class="time"></span>
         <span class="location"></span>
     </li>

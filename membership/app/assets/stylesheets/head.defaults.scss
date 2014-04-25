@@ -1,3 +1,16 @@
 @charset "UTF-8";
 
 @import "_head.common";
+
+.events {
+  .event {
+    display: inline-block;
+    width: 200px;
+    margin: 12px;
+
+    .name {
+      font-size: 16px;
+    }
+
+  }
+}

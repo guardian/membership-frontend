@@ -1,17 +1,17 @@
-@(message: String, events: Seq[controllers.Application.EBEvent])
+@(message: String, eventsList: Seq[controllers.Application.EBEvent])
 
 @main("Welcome to Play") {
 
        // accept events json
 
-       // for events json display event template
+       // for events json display eventItem template
 
 
 
-    <ul>
-    @for(event <- events) {
-        @partials.event(event)
-    }
+    <ul class="u-unstyled events">
+        @for(event <- eventsList) {
+            @events.eventItem(event)
+        }
     </ul>
 
     <ul>

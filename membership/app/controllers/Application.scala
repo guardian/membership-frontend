@@ -30,7 +30,7 @@ object Application extends Controller {
 //  "name": "Kings Place"
   case class venue()
 
-  case class EBEvent(name: RichText, description: RichText, logo_url: String)
+  case class EBEvent(name: RichText, description: RichText, logo_url: String, id: String)
 
   case class EBResponse(events: Seq[EBEvent])
 

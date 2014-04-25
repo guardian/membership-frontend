@@ -1,0 +1,15 @@
+a,
+.u-fauxlink {
+  color: $c-newsDefault;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+  &:active {
+    color: $c-newsAccent;
+    text-decoration: none;
+  }
+}
