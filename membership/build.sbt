@@ -3,9 +3,8 @@ name := "membership"
 version := "1.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  jdbc,
-  anorm,
-  cache
-)     
+  cache,
+  "com.stripe" % "stripe-java" % "1.12.0"
+)
 
 play.Project.playScalaSettings
