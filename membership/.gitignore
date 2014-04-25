@@ -13,3 +13,7 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+node_modules
+app/assets/stylesheets/components
+app/assets/javascripts/components
+public/stylesheets
