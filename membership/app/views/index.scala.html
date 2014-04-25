@@ -1,6 +1,18 @@
-@(message: String)
+@(message: String, events: Seq[controllers.Application.EBEvent])
 
 @main("Welcome to Play") {
+
+       // accept events json
+
+       // for events json display event template
+
+
+
+    <ul>
+    @for(event <- events) {
+        @partials.event(event)
+    }
+    </ul>
 
     <ul>
         <li>

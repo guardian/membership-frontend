@@ -1,0 +1,10 @@
+@(event: controllers.Application.EBEvent)
+
+    <li>
+        <img src="@event.logo_url" alt="Event Image" width="200px"/>
+        <h2>@event.name.text</h2>
+        <span class="time"></span>
+        <span class="location"></span>
+    </li>
+
+

@@ -83,15 +83,18 @@ require([
     var populateUserInformation = function () {
         var user = GU_U.getUserFromCookie();
 
-        console.log(user)
+        if (user) {
+            var str = [];
+            str.push('User from cookie - ');
+            str.push('\r\ndisplayname: ' + user.displayname);
+            str.push('\r\nid: ' + user.id);
+            str.push('\r\nemail: ' + user.primaryemailaddress);
 
-        var str = [];
-        str.push('User from cookie - ');
-        str.push('\r\ndisplayname: ' + user.displayname);
-        str.push('\r\nid: ' + user.id);
-        str.push('\r\nemail: ' + user.primaryemailaddress);
+            $('p.user').append(str.join(''));
+        } else {
+            throw new Error("no GU_U cookie could be found on this domain :-(");
+        }
 
-        $('p.user').append(str.join(''));
     };
 
     var init = function () {
