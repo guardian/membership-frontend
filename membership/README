@@ -1,4 +1,20 @@
-This is your new Play application
-=====================================
+## Membership App
 
-This file will be packaged with your application, when using `play dist`.
+# Install frontend dependencies
+
++ Go to project root
++ $ make install
+
+
+# To run frontend tests
+
++ $ make run-tests
+
+
+# Grunt Tasks
+
+# Watch and compile front-end files
++ $ grunt watch
+
+# Compile front-end files
++ $ grunt compile
