@@ -1,5 +1,4 @@
 @(message: String, events: Seq[controllers.Application.EBEvent])
-@import play.api.libs.json.JsValue
 
 @main("Welcome to Play") {
 
@@ -11,7 +10,7 @@
 
     <ul>
     @for(event <- events) {
-        <li>@event.name.text</li>
+        @partials.event(event)
     }
     </ul>
 

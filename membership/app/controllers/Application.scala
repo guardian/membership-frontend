@@ -17,8 +17,20 @@ object Application extends Controller {
   case class StripePayment(token: String)
 
   case class RichText(text: String, html: String)
+//  "id": "6465803",
+//  "address": {
+//    "country_name": "United Kingdom",
+//    "city": "London",
+//    "region": "Greater London",
+//    "address_1": "90 York Way",
+//    "country": "GB"
+//  },
+//  "latitude": "51.534966",
+//  "longitude": "-0.1221447000000353",
+//  "name": "Kings Place"
+  case class venue()
 
-  case class EBEvent(name: RichText, description: RichText)
+  case class EBEvent(name: RichText, description: RichText, logo_url: String)
 
   case class EBResponse(events: Seq[EBEvent])
 
