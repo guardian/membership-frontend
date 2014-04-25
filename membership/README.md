@@ -1,20 +1,20 @@
-## Membership App
+# Membership App
 
-# Install frontend dependencies
+## Install frontend dependencies
 
 + Go to project root
 + $ make install
 
 
-# To run frontend tests
+## To run frontend tests
 
 + $ make run-tests
 
 
 # Grunt Tasks
 
-# Watch and compile front-end files
+## Watch and compile front-end files
 + $ grunt watch
 
-# Compile front-end files
+## Compile front-end files
 + $ grunt compile
