@@ -1,6 +1,11 @@
-name := "membership"
+name := "Membership"
 
 version := "1.0-SNAPSHOT"
+
+organization := "com.gu"
+
+scalaVersion := "2.11"
+
 
 libraryDependencies ++= Seq(
   cache,
