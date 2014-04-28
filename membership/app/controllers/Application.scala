@@ -1,6 +1,5 @@
 package controllers
 
-import _root_.model.MembershipEvent
 import model.EventbriteEvent.{EBResponse, EBEvent}
 import play.api._
 import play.api.mvc._
@@ -14,28 +13,7 @@ import scala.concurrent._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 
-trait EventService {
-  def getEventsList(): Future[Seq[MembershipEvent]]
-}
 
-class EventBriteService extends EventService {
-  override def getEventsList(): Future[Seq[MembershipEvent]] = future{Nil}
-}
-
-object FrontPage extends FrontPage{
-  override val eventService: EventService = new EventBriteService
-}
-
-trait FrontPage extends Controller{
-
-  val eventService: EventService
-
-  def index = Action.async { request =>
-    eventService.getEventsList().map{ events =>
-      Ok(views.html.index(events))
-    }
-  }
-}
 
 object Application extends Controller {
 

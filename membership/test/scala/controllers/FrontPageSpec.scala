@@ -4,6 +4,7 @@ import play.api.test.{FakeRequest, WithApplication, PlaySpecification}
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import model.{DefaultMembershipEvent, MembershipEvent}
+import services.EventService
 
 object FrontPageSpec extends PlaySpecification with FrontPage {
 
@@ -24,7 +25,7 @@ object FrontPageSpec extends PlaySpecification with FrontPage {
 
 
 object MockEventBriteService extends EventService {
-  override def getEventsList(): Future[Seq[MembershipEvent]] = {
+  override def getEvents(): Future[Seq[MembershipEvent]] = {
     future {
       List(DefaultMembershipEvent("1", "Event 1"), DefaultMembershipEvent("2", "Event 2"))
     }
