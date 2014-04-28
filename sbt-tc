@@ -1,0 +1,18 @@
+
+#!/bin/bash
+
+SBT_BOOT_DIR=$HOME/.sbt/boot/
+
+if [ ! -d "$SBT_BOOT_DIR" ]; then
+  mkdir -p $SBT_BOOT_DIR
+fi
+
+cat /dev/null | java -Dfile.encoding=UTF8 -Xmx1G -XX:MaxPermSize=250m -XX:+UseCompressedOops \
+    -Dsbt.log.noformat=true \
+    -Dbuild.number="$BUILD_NUMBER" \
+    -Dbuild.vcs.number="$BUILD_VCS_NUMBER" \
+    -Dbuild.vcs.branch="$BUILD_VCS_BRANCH" \
+    -Djava.awt.headless=true \
+    -Dint.service.domain="integration.build" \
+    -jar sbt-launch-*.jar "$@"
+
