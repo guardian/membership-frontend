@@ -7,6 +7,8 @@ trait MembershipEvent {
   def title: String
 }
 
+case class DefaultMembershipEvent(id:String, title:String) extends MembershipEvent
+
 object EventbriteEvent {
 
   case class EBRichText(text: String, html: String)

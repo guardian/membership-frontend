@@ -10,7 +10,7 @@ import scala.collection.convert.wrapAll._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.ws._
-import scala.concurrent.Future
+import scala.concurrent._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 
@@ -18,14 +18,21 @@ trait EventService {
   def getEventsList(): Future[Seq[MembershipEvent]]
 }
 
+class EventBriteService extends EventService {
+  override def getEventsList(): Future[Seq[MembershipEvent]] = future{Nil}
+}
 
-class FrontPage(val eventService: EventService) extends Controller{
+object FrontPage extends FrontPage{
+  override val eventService: EventService = new EventBriteService
+}
+
+trait FrontPage extends Controller{
+
+  val eventService: EventService
 
   def index = Action.async { request =>
-    for {
-      events <- eventService.getEventsList
-    } yield {
-      Ok(views.html.index("Your new application is ready.", events))
+    eventService.getEventsList().map{ events =>
+      Ok(views.html.index(events))
     }
   }
 }
@@ -39,14 +46,6 @@ object Application extends Controller {
       "stripeToken" -> nonEmptyText
     )(StripePayment.apply)(StripePayment.unapply)
   )
-
-  def index = Action.async {
-    for {
-      events <- getEventsList
-    } yield {
-      Ok(views.html.index("Your new application is ready.", Nil))
-    }
-  }
 
   def getEventsList:Future[Seq[EBEvent]] = {
 
