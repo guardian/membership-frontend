@@ -1,6 +1,6 @@
-@(message: String, eventsList: Seq[controllers.Application.EBEvent])
+@(message: String, eventsList: Seq[model.EventbriteEvent.EBEvent])
 
-@main("Welcome to Play") {
+@main("Membership") {
 
     <ul class="u-unstyled events">
         @for(event <- eventsList) {

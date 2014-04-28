@@ -1,3 +1,12 @@
-@(eventId: String)
+@(event: model.EventbriteEvent.EBEvent)
 
-<h1>Event @eventId</h1>
+@main("Membership") {
+
+    <h1>Event @event.name.text</h1>
+
+    <img src="@event.logo_url" alt="Event Image" />
+
+    <p class="location">@event.venue.name</p>
+    <p class="time">@event.start.local</p>
+
+}
