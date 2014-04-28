@@ -9,4 +9,10 @@
     <p class="location">@event.venue.name</p>
     <p class="time">@event.start.local</p>
 
+    <div class="description">@Html(event.description.html)</div>
+
+    <div class="actions">
+        <a class="sign-in" href="http://profile.theguardian.com/signin">Sign In to attend</a>
+    </div>
+
 }

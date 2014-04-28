@@ -2,6 +2,30 @@
 
 @import "_head.common";
 
+.wrapper {
+  padding: 48px 0;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+header {
+  height: 90px;
+  border-bottom: 1px solid $c-neutral6;
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  background-color: $c-neutral8;
+  .copy {
+    text-align: center;
+    margin: 48px 0 0 0;
+  }
+}
+
 .events {
   .event {
     display: inline-block;
