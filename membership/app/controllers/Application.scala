@@ -1,5 +1,6 @@
 package controllers
 
+import _root_.model.MembershipEvent
 import model.EventbriteEvent.{EBResponse, EBEvent}
 import play.api._
 import play.api.mvc._
@@ -11,6 +12,23 @@ import play.api.data.Forms._
 import play.api.libs.ws._
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+
+trait EventService {
+  def getEventsList(): Future[Seq[MembershipEvent]]
+}
+
+
+class FrontPage(val eventService: EventService) extends Controller{
+
+  def index = Action.async { request =>
+    for {
+      events <- eventService.getEventsList
+    } yield {
+      Ok(views.html.index("Your new application is ready.", events))
+    }
+  }
+}
 
 object Application extends Controller {
 
@@ -26,7 +44,7 @@ object Application extends Controller {
     for {
       events <- getEventsList
     } yield {
-      Ok(views.html.index("Your new application is ready.", events))
+      Ok(views.html.index("Your new application is ready.", Nil))
     }
   }
 

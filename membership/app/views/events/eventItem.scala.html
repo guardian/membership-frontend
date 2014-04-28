@@ -1,14 +1,14 @@
-@(event: model.EventbriteEvent.EBEvent)
+@(event: model.MembershipEvent)
 
     <li class="event">
-        <a href="/eventItem/@event.id">
+        @*<a href="/eventItem/@event.id">
             <img src="@event.logo_url" alt="Event Image" width="200px"/>
-        </a>
+        </a>*@
         <h2 class="name">
-            <a href="/eventItem/@event.id">@event.name.text</a>
+            <a href="/eventItem/@event.id">@event.title</a>
         </h2>
-        <span class="location">@event.venue.name</span>
-        <span class="time">@event.start.local</span>
+        @*<span class="location">@event.venue.name</span>*@
+        @*<span class="time">@event.start.local</span>*@
     </li>
 
 

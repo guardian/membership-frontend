@@ -2,6 +2,11 @@ package model
 
 import play.api.libs.json.{Json, JsValue}
 
+trait MembershipEvent {
+  def id: String
+  def title: String
+}
+
 object EventbriteEvent {
 
   case class EBRichText(text: String, html: String)
@@ -19,7 +24,7 @@ object EventbriteEvent {
                       id: String,
                       start: EBTime,
                       end: EBTime,
-                      venue: EBVenue) // Single event (event page)
+                      venue: EBVenue)
 
   case class EBResponse(events: Seq[EBEvent]) // Array of events (events index)
 
@@ -34,5 +39,6 @@ object EventbriteEvent {
   implicit val ebEventReads = Json.reads[EBEvent]
 
   implicit val ebResponseReads = Json.reads[EBResponse]
+
 
 }
