@@ -1,15 +1,9 @@
-var APP_ID      = 'G64TPE52R4W5QVHK6PZ3J1V6ZCE8024CZHKYHTGWWFD2WWSXSGJC0MH4F7XA0YGG';
-var APP_SECRET  = 'WHTVP5ZRN6D9SVMCPYGVF1T5VEN1YMANM5NZ2PSZRGPQ9Q5Z53VRTXGX5P19DHYA';
-var TOKEN       = 'QKRD1S73S8WW9GX9JEJGHQSH6J2PJR66APJKVHXTW5VC74SKKGBEE5G0SZZ1HWSG';
-var MERCHANT_ID = '0JEP19YDA6';
-
-// go cardless config
-var gcConfig = {
+ var gcConfig = {
     sandbox: true,
-    appId: APP_ID,
-    appSecret: APP_SECRET,
-    token: TOKEN,
-    merchantId: MERCHANT_ID
+    appId: 'G64TPE52R4W5QVHK6PZ3J1V6ZCE8024CZHKYHTGWWFD2WWSXSGJC0MH4F7XA0YGG',
+    appSecret: 'WHTVP5ZRN6D9SVMCPYGVF1T5VEN1YMANM5NZ2PSZRGPQ9Q5Z53VRTXGX5P19DHYA',
+    token: 'QKRD1S73S8WW9GX9JEJGHQSH6J2PJR66APJKVHXTW5VC74SKKGBEE5G0SZZ1HWSG',
+    merchantId: '0JEP19YDA6'
 };
 var gocardless = require('gocardless')(gcConfig);
 
@@ -17,6 +11,12 @@ var express = require('express');
 var router = express.Router();
 
 var stripe = require('stripe')("***REMOVED***");
+
+var displayMerchantDetail = function(){
+    gocardless.merchant.getSelf(function(err, response, body) {
+        console.log( JSON.parse(body), 'Go Cardless repsonse' );
+    });
+};
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -51,18 +51,18 @@ router.post('/stripe', function(req, res) {
     });
 });
 
+
 /* GET go cardless */
-router.get('/go-cardless', function(req, res) {
+router.get('/subscribe', function(req, res) {
 
-    gocardless.merchant.getSelf(function(err, response, body) {
-        console.log( JSON.parse(body), 'Go Cardless repsonse' );
-    });
+    displayMerchantDetail();
 
-  res.render('go-cardless', { title: 'Go Cardless' });
+    res.render('subscribe', { title: 'Go Cardless subscription', message: 'Please enter your email for subscription' });
 });
 
 /* POST subscribe go cardless */
 router.post('/subscribe', function(req, res) {
+
     var url = gocardless.subscription.newUrl({
         amount: '15.00',
         interval_unit: 'month',
@@ -70,11 +70,41 @@ router.post('/subscribe', function(req, res) {
         name: 'Premium subscription',
         description: 'test description',
         user: {
-            email: req.params.email
+            email: req.body.email
         }
     });
 
     res.redirect(url);
+});
+
+router.post('/bill', function(req, res){
+
+    var url = gocardless.bill.newUrl({
+        amount: '10.00',
+        name: 'Coffee',
+        description: 'One bag of single origin coffee'
+    });
+
+    res.redirect(url);
+});
+
+router.get('/bill', function(req, res, next){
+
+    displayMerchantDetail();
+    res.render('bill', { title: 'Go Cardless bill', message: 'Please enter your email for billing' });
+});
+
+router.get('/success', function(req, res){
+
+    // Check the signature and POST back to GoCardless
+    gocardless.confirmResource(req.query, function(err, request, body){
+
+        if (err){
+            return res.end(401, err);
+        }
+    
+        res.render('success', { title: 'Go Cardless success', message: 'You are subscribed' });
+    });
 });
 
 module.exports = router;
