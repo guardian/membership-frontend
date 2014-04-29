@@ -1,6 +1,10 @@
 package model
 
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Reads, Json, JsValue}
+import com.github.nscala_time.time.Imports._
+import org.joda.time.format.ISODateTimeFormat
 
 object EventbriteEvent {
 
@@ -10,15 +14,15 @@ object EventbriteEvent {
 
   case class EBVenue(id: Option[String], address: EBAddress, latitude: Option[String], longitude: Option[String], name: Option[String])
 
-  case class EBTime(timezone: String, local: String, utc: String)
+  // case class EBTime(timezone: String, local: String, utc: String)
 
   case class EBEvent(
                       name: EBRichText,
                       description: EBRichText,
                       logo_url: String,
                       id: String,
-                      start: EBTime,
-                      end: EBTime,
+                      start: DateTime,
+                      end: DateTime,
                       venue: EBVenue) // Single event (event page)
 
   case class EBResponse(events: Seq[EBEvent]) // Array of events (events index)
@@ -27,7 +31,17 @@ object EventbriteEvent {
 
   implicit val ebVenue = Json.reads[EBVenue]
 
-  implicit val ebTime = Json.reads[EBTime]
+  //implicit val ebTime = Json.reads[DateTime]
+
+  def convertDateText(utc: String, timezone: String): DateTime = {
+    val timeZone = DateTimeZone.forID(timezone)
+    ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).withZone(timeZone)
+  }
+
+  implicit val readsEbDate: Reads[DateTime] = (
+    (JsPath \ "utc").read[String] and
+      (JsPath \ "timezone").read[String]
+    )(convertDateText _)
 
   implicit val ebRichText = Json.reads[EBRichText]
 
