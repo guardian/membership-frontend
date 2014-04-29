@@ -4,8 +4,6 @@
 
 .wrapper {
   padding: 48px 0;
-  max-width: 1024px;
-  margin: 0 auto;
 }
 
 header {
@@ -27,14 +25,49 @@ footer {
 }
 
 .events {
+
+  // An event list item
   .event {
     display: inline-block;
     width: 200px;
-    margin: 12px;
+    margin: 6px;
+    background-color: $c-neutral6;
 
-    .name {
+     .event__image {
+       height: 200px;
+       width: 200px;
+       overflow: hidden;
+     }
+
+    .event__meta {
+      padding: 6px;
+      height: 100px;
+      width: auto;
+    }
+
+    .event__name {
       font-size: 16px;
     }
 
+  }
+  
+}
+
+.actions {
+  margin: $gs-row-height 0 0 0;
+
+  .action {
+    float: left;
+    margin: 0 $gutter 0 0;
+  }
+
+  .sign-in {
+    background-color: $c-brandBlue;
+    color: #FFFFFF;
+    padding: $gutter/2;
+    &:hover {
+      background-color: darken($c-brandBlue, 15%);
+      text-decoration: none;
+    }
   }
 }
