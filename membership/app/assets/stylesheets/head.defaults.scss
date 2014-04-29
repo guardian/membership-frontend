@@ -22,6 +22,15 @@ header {
   }
 }
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 100px;
+}
+
 footer {
   position: absolute;
   left: 0;

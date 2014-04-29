@@ -1,8 +1,7 @@
 // An event list item
 li.event {
-  display: inline-block;
-  width: gs-span(3);
-  margin: 0 $gs-gutter $gs-gutter 0;
+  display: block;
+  margin-bottom: $gs-gutter;
   background-color: $c-neutral6;
 
   &:hover {
@@ -11,8 +10,10 @@ li.event {
 
   .event__image {
     height: gs-span(3);
-    width: gs-span(3);
     overflow: hidden;
+    img {
+      width: 100%;
+    }
   }
 
   .event__meta {
@@ -35,8 +36,18 @@ li.event {
     display: block;
   }
 
+  @include mq(tablet) {
+    width: gs-span(3);
+    margin-right: $gs-gutter;
+    display: inline-block;
 
-
+    .event__image {
+      width: gs-span(3);
+      img {
+        width: auto;
+      }
+    }
+  }
 
 }
 
@@ -70,7 +81,6 @@ div.event {
       vertical-align: top;
       width: gs-span(12);
       padding-right: $gs-gutter;
-      padding-left: $gs-gutter;
     }
     .event__related {
       margin: 0;
