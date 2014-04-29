@@ -9,7 +9,6 @@
                                                                           \ \_\
                                                                            \/_/
 ```
----
 
 # Membership App
 
