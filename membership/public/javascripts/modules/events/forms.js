@@ -1,31 +1,12 @@
-/*global require */
-
-require.config({
-    paths: {
-        // 'config': '../app/config',
-        'jquery': '//pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min',
-        'payment': 'lib/jquery.payment',
-        'stripe': 'https://js.stripe.com/v2/?'
-    },
-    shim: {
-        'payment': {
-            deps: ['jquery']
-        }
-    }
-});
-
-require([
+define([
     'jquery',
-    'payment',
     'stripe',
-    'gu_u'
-], function($, Payment, Stripe, GU_U) {
+    'jQueryPayment',
+    'config',
+    'user'
+], function($, stripe, jQueryPayment, config, userUtil){
 
     'use strict';
-
-    var config = {
-        stripePublishableKey: 'pk_test_Qm3CGRdrV4WfGYCpm0sftR0f'
-    };
 
     var stripeResponseHandler = function (status, response) {
         var $form = $('#payment-form');
@@ -81,7 +62,7 @@ require([
     };
 
     var populateUserInformation = function () {
-        var user = GU_U.getUserFromCookie();
+        var user = userUtil.getUserFromCookie();
 
         if (user) {
             var str = [];
@@ -92,7 +73,7 @@ require([
 
             $('p.user').append(str.join(''));
         } else {
-            throw new Error("no GU_U cookie could be found on this domain :-(");
+            throw new Error("no guUser cookie could be found on this domain :-(");
         }
 
     };
@@ -105,7 +86,7 @@ require([
 
         bindFormatting($form);
 
-        Stripe.setPublishableKey(config.stripePublishableKey);
+        stripe.setPublishableKey(config.stripePublishableKey);
 
         $form.submit(function(event) {
             event.preventDefault();
@@ -113,7 +94,7 @@ require([
             // Disable the submit button to prevent repeated clicks
             $form.find('button').prop('disabled', true);
             if (validateForm($form)) {
-                Stripe.card.createToken($form, stripeResponseHandler);
+                stripe.card.createToken($form, stripeResponseHandler);
             } else {
                 $form.find('button').prop('disabled', false);
             }
@@ -121,5 +102,7 @@ require([
         });
     };
 
-    $(init);
+    return {
+        init: init
+    };
 });
