@@ -24,40 +24,76 @@ footer {
   }
 }
 
-.events {
 
-  // An event list item
-  .event {
-    display: inline-block;
-    width: 200px;
-    margin: 6px;
-    background-color: $c-neutral6;
+// An event list item
+li.event {
+  display: inline-block;
+  width: gs-span(3);
+  margin: 0 $gs-gutter $gs-gutter 0;
+  background-color: $c-neutral6;
 
-     .event__image {
-       height: 200px;
-       width: 200px;
-       overflow: hidden;
-     }
+  &:hover {
+    background-color: $c-neutral4;
+  }
 
-    .event__meta {
-      padding: 6px;
-      height: 100px;
-      width: auto;
-    }
+   .event__image {
+     height: gs-span(3);
+     width: gs-span(3);
+     overflow: hidden;
+   }
 
-    .event__name {
-      font-size: 16px;
-    }
+  .event__meta {
+    padding: $gutter/2;
+    height: 100px;
+    width: gs-span(3) - 2*($gutter/2);
+    overflow: hidden;
+  }
+
+  .event__name {
+    font-size: 16px;
+  }
+
+}
+
+// An event on an event page
+div.event {
+  .event__content {
 
   }
-  
+
+  .event__related {
+    margin-top: gs-height(1);
+
+    .event__related--content {
+      background-color: $c-neutral8;
+    }
+  }
+
+  @include mq(desktop) {
+    .event__content {
+      display: table-cell;
+      vertical-align: top;
+      width: gs-span(12);
+      padding-right: $gs-gutter;
+      padding-left: $gs-gutter;
+    }
+    .event__related {
+      margin: 0;
+      display: table-cell;
+      vertical-align: top;
+      width: gs-span(4);
+      min-height: 600px;
+    }
+  }
+
 }
+
 
 .actions {
   margin: $gs-row-height 0 0 0;
 
   .action {
-    float: left;
+    display: inline-block;
     margin: 0 $gutter 0 0;
   }
 

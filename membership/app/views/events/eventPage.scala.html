@@ -3,22 +3,31 @@
 @main("Membership") {
 
     <div class="event">
-        <h1 class="event__name">@event.name.text</h1>
+        <div class="event__content">
+            <h1 class="event__name">@event.name.text</h1>
 
-        <div class="event__image">
-            <img src="@event.logo_url" alt="Event Image" />
+            <div class="event__image">
+                <img src="@event.logo_url" alt="Event Image" />
+            </div>
+
+            <div class="event__meta">
+                <p class="event__location">@event.venue.name</p>
+                <p class="event__time">@event.start.local</p>
+
+                <div class="event__description">@Html(event.description.html)</div>
+            </div>
+
+            <div class="actions">
+                <a class="sign-in action" href="http://profile.theguardian.com/signin">Sign In to attend</a>
+            </div>
+
         </div>
 
-        <div class="event__meta">
-            <p class="event__location">@event.venue.name</p>
-            <p class="event__time">@event.start.local</p>
-
-            <div class="event__description">@Html(event.description.html)</div>
+        <div class="event__related">
+            <div class="event__related--content">
+                related content placeholder
+            </div>
         </div>
-    </div>
-
-    <div class="actions">
-        <a class="sign-in action" href="http://profile.theguardian.com/signin">Sign In to attend</a>
     </div>
 
 }
