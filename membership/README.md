@@ -3,13 +3,14 @@
 ## Install frontend dependencies
 
 + Go to project root
-+ $ make install
++ $ npm install
++ cd app/assets/stylesheets
++ bower install
 
 
 ## To run frontend tests
 
-+ $ make run-tests
-
++ $ karma start
 
 # Grunt Tasks
 
