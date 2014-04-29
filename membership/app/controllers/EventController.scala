@@ -1,9 +1,10 @@
 package controllers
 
-import _root_.model.EventbriteEvent.EBEvent
+import model.EventbriteDeserializer._
 import play.api.mvc._
 import play.api.libs.ws._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import model.EBEvent
 
 object EventController extends Controller {
 

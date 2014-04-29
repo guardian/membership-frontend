@@ -1,6 +1,7 @@
 package controllers
 
-import model.EventbriteEvent.{EBResponse, EBEvent}
+import model._
+import model.EventbriteDeserializer._
 import play.api._
 import play.api.mvc._
 import com.stripe._

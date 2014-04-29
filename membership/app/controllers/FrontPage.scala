@@ -9,12 +9,12 @@ trait FrontPage extends Controller{
   val eventService: EventService
 
   def index = Action.async {
-    eventService.getEvents().map{ events =>
+    eventService.getAllEvents().map{ events =>
       Ok(views.html.index(events))
     }
   }
 }
 
 object FrontPage extends FrontPage{
-  override val eventService: EventService = new EventBriteService
+  override val eventService: EventService = EventBriteService
 }

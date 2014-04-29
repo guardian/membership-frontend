@@ -3,8 +3,12 @@ package controllers
 import play.api.test.{FakeRequest, WithApplication, PlaySpecification}
 import scala.concurrent._
 import ExecutionContext.Implicits.global
-import model.{DefaultMembershipEvent, MembershipEvent}
 import services.EventService
+import model._
+import model.EBTime
+import model.EBRichText
+import model.EBEvent
+import model.EBVenue
 
 object FrontPageSpec extends PlaySpecification with FrontPage {
 
@@ -25,9 +29,15 @@ object FrontPageSpec extends PlaySpecification with FrontPage {
 
 
 object MockEventBriteService extends EventService {
-  override def getEvents(): Future[Seq[MembershipEvent]] = {
+  override def getAllEvents(): Future[Seq[EBEvent]] = {
     future {
-      List(DefaultMembershipEvent("1", "Event 1"), DefaultMembershipEvent("2", "Event 2"))
+      val name = EBRichText("Event 1", "")
+      val name2 = EBRichText("Event 2", "")
+      val dummyTime = new EBTime("", "", "")
+      val dummyText = new EBRichText("dummy", "dummy")
+      val dummyAddress = new EBAddress(None, None, None, None, None)
+      val dummyVenue = new EBVenue(None, dummyAddress, None, None, None)
+      List(EBEvent(name, dummyText, "", "", dummyTime, dummyTime, dummyVenue ), EBEvent(name2, dummyText, "", "", dummyTime, dummyTime, dummyVenue ))
     }
   }
 
