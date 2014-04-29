@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+// temp membership vars location
+
+$membersip-orange: rgba(255, 90, 0, 1);
+
 /* ==========================================================================
    Variables and mixins
    ========================================================================== */
@@ -20,3 +24,12 @@
 @import "base/_links";
 @import "base/_helpers";
 @import "base/_lists";
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+@include grid-system;
+@import "layout/_layout";
+@include guss-row-utility;
+@include guss-columns-utility;
