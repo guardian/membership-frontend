@@ -4,6 +4,8 @@ import scala.concurrent.Future
 import model.{EBResponse, EBEvent}
 import play.api.libs.ws._
 import model.EventbriteDeserializer._
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.typesafe.config.ConfigFactory
 
 
 trait EventService {
@@ -11,26 +13,26 @@ trait EventService {
 }
 
 trait EventBriteService extends EventService {
-  implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  val eventUrl:String
-  val token:(String, String)
+  val eventUrl: String
+  val token: (String, String)
 
-  override def getAllEvents(): Future[Seq[EBEvent]] ={
+  override def getAllEvents(): Future[Seq[EBEvent]] = {
     val requestHolder = WS
       .url(eventUrl)
       .withQueryString(token)
     requestHolder.get().map(s => jsonMembershipEvent(s))
   }
 
-  def jsonMembershipEvent(r:Response):Seq[EBEvent] = {
+  def jsonMembershipEvent(r: Response): Seq[EBEvent] = {
     r.json.as[EBResponse].events
   }
 }
 
-object EventBriteService extends EventBriteService{
-  override val eventUrl: String = ""
-  override val token: (String, String) = ("", "")
+object EventBriteService extends EventBriteService {
+  val config = ConfigFactory.load()
+  override val eventUrl: String = config.getString("eventbrite.user.events-url")
+  override val token: (String, String) = ("token", config.getString("eventbrite.token"))
 }
 
 
