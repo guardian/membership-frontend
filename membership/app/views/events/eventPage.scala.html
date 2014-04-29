@@ -1,4 +1,5 @@
 @(event: model.EventbriteEvent.EBEvent)
+@import views.Dates._
 
 @main("Membership") {
 
@@ -12,7 +13,7 @@
 
             <div class="event__meta">
                 <p class="event__location">@event.venue.name</p>
-                <p class="event__time">@event.start.local</p>
+                <p class="event__time">@event.start.pretty</p>
 
                 <div class="event__description">@Html(event.description.html)</div>
             </div>
