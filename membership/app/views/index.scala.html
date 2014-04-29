@@ -2,11 +2,17 @@
 
 @main("Membership") {
 
-    <ul class="u-unstyled events">
+    <div class="events">
+
+        <h1 class="page-header section-header">Current Events</h1>
+
+        <ul class="u-unstyled events__list">
         @for(event <- eventsList) {
             @events.eventItem(event)
         }
-    </ul>
+        </ul>
+    </div>
+
 
     <ul>
         <li>
