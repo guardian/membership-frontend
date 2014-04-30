@@ -1,16 +1,24 @@
 define([
+    '$',
     'user'
-], function(user){
+], function($, user){
+
+    var classes = {
+        loggedInClass: 'sign-in--logged-in'
+    };
+
+    var text = {
+        loggedInCtaButton: 'Book Event'
+    };
 
     var init = function(){
 
-        var ctaButton = document.querySelectorAll('.sign-in')[0];
+        var ctaButton = $('.sign-in');
         var isUserLoggedIn = user.isLoggedIn();
 
-        console.log( isUserLoggedIn );
+        if(ctaButton && isUserLoggedIn){
 
-        if(ctaButton){
-
+            ctaButton.toggleClass(classes.loggedInClass).text(text.loggedInCtaButton);
         }
     };
 
