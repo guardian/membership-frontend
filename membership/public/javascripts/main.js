@@ -1,5 +1,8 @@
 require.config({
     paths: {
+        '$': '$',
+        'bonzo': 'components/bonzo/bonzo',
+        'qwery': 'components/qwery/qwery',
         'jquery': '//pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min',
         'jQueryPayment': 'components/stripe/jquery.payment',
         'stripe': 'https://js.stripe.com/v2/?',
@@ -20,10 +23,8 @@ require([
     'eventsForm',
     'ctaButton'
 ], function(eventsForm, ctaButton){
-
     'use strict';
 
     eventsForm.init();
     ctaButton.init();
-
 });
