@@ -1,10 +1,11 @@
 @(event: model.EventbriteEvent.EBEvent)
+@import views.Dates._
 
 @main("Membership") {
 
     <div class="event">
         <div class="event__content">
-            <h1 class="event__name">@event.name.text</h1>
+            <h1 class="event__name section-header page-header">@event.name.text</h1>
 
             <div class="event__image">
                 <img src="@event.logo_url" alt="Event Image" />
@@ -12,7 +13,7 @@
 
             <div class="event__meta">
                 <p class="event__location">@event.venue.name</p>
-                <p class="event__time">@event.start.local</p>
+                <p class="event__time">@event.start.pretty</p>
 
                 <div class="event__description">@Html(event.description.html)</div>
             </div>

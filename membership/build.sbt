@@ -9,6 +9,7 @@ scalaVersion := "2.11"
 
 libraryDependencies ++= Seq(
   cache,
+  "com.github.nscala-time" %% "nscala-time" % "1.0.0",
   "com.stripe" % "stripe-java" % "1.12.0"
 )
 
