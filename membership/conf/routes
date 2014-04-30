@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.FrontPage.index
 
 GET     /stripe                     controllers.Application.stripe
 POST    /stripe                     controllers.Application.stripeSubmit
