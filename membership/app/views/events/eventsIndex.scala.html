@@ -1,0 +1,18 @@
+@( eventsList: Seq[model.EBEvent])
+
+@main("Membership") {
+
+    @partials.crumb(List(List("Home", "/"), List("Events", "/events")))
+
+    <div class="events container">
+
+        <h1 class="page-header section-header">Current Events</h1>
+
+        <ul class="u-unstyled events__list">
+        @for(event <- eventsList) {
+            @events.eventItem(event)
+        }
+        </ul>
+    </div>
+
+}

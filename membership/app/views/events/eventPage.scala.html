@@ -3,8 +3,10 @@
 
 @main("Membership") {
 
+    @partials.crumb(List(List("Home", "/"), List("Events", "/events"), List(event.name.text, s"/events/${event.id}")))
+
     <div class="event">
-        <div class="event__content">
+        <div class="event__content container">
             <h1 class="event__name section-header page-header">@event.name.text</h1>
 
             <div class="event__image">
