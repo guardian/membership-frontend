@@ -1,11 +1,12 @@
-@(crumbs: List[List[String]])
+@(crumbs: Seq[views.Crumb])
+@import views.Crumb
 
 <div class="breadcrumb">
 
     <ul class="crumbs u-unstyled">
     @for(crumb <- crumbs) {
         <li class="crumb">
-            <a href="@crumb(1)">@crumb(0)</a>
+            <a href="@crumb.link">@crumb.text</a>
         </li>
     }
     </ul>
