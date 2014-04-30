@@ -18,9 +18,9 @@ require.config({
 require([
     'eventsForm'
 ], function(eventsForm){
-
     'use strict';
 
-    eventsForm.init();
-
+    document.addEventListener('DOMContentLoaded', function(){
+        eventsForm.init();
+    });
 });
