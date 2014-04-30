@@ -10,7 +10,7 @@ trait FrontPage extends Controller{
 
   def index = Action.async {
     eventService.getAllEvents().map{ events =>
-      Ok(views.html.index(events))
+      Ok(views.html.events.eventsIndex(events))
     }
   }
 }

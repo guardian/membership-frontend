@@ -5,8 +5,9 @@ import play.api.mvc._
 import play.api.libs.ws._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import model.EBEvent
+import services.{EventbriteService, EventService}
 
-object EventController extends Controller {
+trait EventController extends Controller {
 
   def getEventDetails(id: String) = {
     val url = s"https://www.eventbriteapi.com/v3/events/$id/?token=***REMOVED***"
@@ -30,4 +31,16 @@ object EventController extends Controller {
 
   }
 
+  val eventService: EventService
+
+  def renderEventsIndex = Action.async {
+    eventService.getAllEvents().map{ events =>
+      Ok(views.html.events.eventsIndex(events))
+    }
+  }
+
+}
+
+object EventController extends EventController{
+  override val eventService: EventService = EventbriteService
 }
