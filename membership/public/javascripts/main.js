@@ -4,6 +4,7 @@ require.config({
         'jQueryPayment': 'components/stripe/jquery.payment',
         'stripe': 'https://js.stripe.com/v2/?',
         'eventsForm': 'modules/events/forms',
+        'ctaButton': 'modules/events/ctaButton',
         'user': 'utils/user',
         'config': 'config/config'
     },
@@ -16,11 +17,13 @@ require.config({
 
 
 require([
-    'eventsForm'
-], function(eventsForm){
+    'eventsForm',
+    'ctaButton'
+], function(eventsForm, ctaButton){
 
     'use strict';
 
     eventsForm.init();
+    ctaButton.init();
 
 });
