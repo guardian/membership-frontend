@@ -1,6 +1,7 @@
 package controllers
 
-import model.EventbriteEvent.{EBResponse, EBEvent}
+import model._
+import model.EventbriteDeserializer._
 import play.api._
 import play.api.mvc._
 import com.stripe._
@@ -9,8 +10,11 @@ import scala.collection.convert.wrapAll._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.ws._
-import scala.concurrent.Future
+import scala.concurrent._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+
+
 
 object Application extends Controller {
 
@@ -21,14 +25,6 @@ object Application extends Controller {
       "stripeToken" -> nonEmptyText
     )(StripePayment.apply)(StripePayment.unapply)
   )
-
-  def index = Action.async {
-    for {
-      events <- getEventsList
-    } yield {
-      Ok(views.html.index("Your new application is ready.", events))
-    }
-  }
 
   def getEventsList:Future[Seq[EBEvent]] = {
 

@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 organization := "com.gu"
 
-scalaVersion := "2.11"
+scalaVersion := "2.10.4"
 
 
 libraryDependencies ++= Seq(
