@@ -1,8 +1,15 @@
 @charset "UTF-8";
 
+// temp membership vars location
+
+$membersip-orange: rgba(255, 90, 0, 1);
+
+$mem-trans-white: rgba(255,255,255,0.8);
+
 @import "_head.common";
 
 @import "_events";
+@import "_crumbs";
 
 html {
   position: relative;
@@ -16,14 +23,14 @@ html {
 }
 
 .wrapper {
-  padding: 48px 0;
+  padding: gs-height(1) 0;
 }
 
 header {
   height: 90px;
   border-bottom: 1px solid $c-neutral6;
 
-  background-color: rgba(255,255,255,0.7);
+  background-color: $mem-trans-white;
 
   .identity {
     position: absolute;
@@ -54,16 +61,18 @@ footer {
 }
 
 .section-header {
+  display: inline-block;
   @include fs-headline(5);
   @include rem((
           margin-bottom: $gs-baseline*2,
-          padding-top: $gs-baseline/3
+          padding: $gs-baseline/3
   ));
+  background-color: #FFFFFF;
 }
 
 .container {
   padding: $gutter;
-  background-color: rgba(255,255,255,0.7);
+  background-color: $mem-trans-white;
 }
 
 .actions {

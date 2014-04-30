@@ -5,7 +5,7 @@ li.event {
   background-color: $c-neutral6;
 
   &:hover {
-    background-color: $c-neutral4;
+    background-color: #FFFFFF;
   }
 
   .event__image {
@@ -71,21 +71,19 @@ div.event {
     margin-top: gs-height(1);
 
     .event__related--content {
-      background-color: $c-neutral8;
+      background-color: $mem-trans-white;
     }
   }
 
   @include mq(desktop) {
     .event__content {
-      display: table-cell;
-      vertical-align: top;
-      width: gs-span(12);
-      padding-right: $gs-gutter;
+      float: left;
+      width: gs-span(10);
+      margin-right: $gs-gutter;
     }
     .event__related {
       margin: 0;
-      display: table-cell;
-      vertical-align: top;
+      float: left;
       width: gs-span(4);
       min-height: 600px;
     }
