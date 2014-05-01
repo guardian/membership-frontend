@@ -4,12 +4,12 @@ define([
     'jQueryPayment',
     'config',
     'user'
-], function($, stripe, jQueryPayment, config, userUtil){
+], function(jQuery, stripe, jQueryPayment, config, userUtil){
 
     'use strict';
 
     var stripeResponseHandler = function (status, response) {
-        var $form = $('#payment-form');
+        var $form = jQuery('#payment-form');
 
         if (response.error) {
             // Show the errors on the form
@@ -19,7 +19,7 @@ define([
             // token contains id, last4, and card type
             var token = response.id;
             // Insert the token into the form so it gets submitted to the server
-            $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+            $form.append(jQuery('<input type="hidden" name="stripeToken" />').val(token));
             // and submit
             $form.get(0).submit();
         }
@@ -42,12 +42,12 @@ define([
 
         $form.find('.invalid').removeClass('invalid');
 
-        if (!$.payment.validateCardNumber(number.val())) {
+        if (!jQuery.payment.validateCardNumber(number.val())) {
             number.addClass('invalid');
             return false;
         }
 
-        if (!$.payment.validateCardCVC(cvc.val(), $.payment.cardType(number.val()))) {
+        if (!jQuery.payment.validateCardCVC(cvc.val(), jQuery.payment.cardType(number.val()))) {
             cvc.addClass('invalid');
             return false;
         }
@@ -71,9 +71,9 @@ define([
             str.push('\r\nid: ' + user.id);
             str.push('\r\nemail: ' + user.primaryemailaddress);
 
-            $('p.user').append(str.join(''));
+            jQuery('p.user').append(str.join(''));
         } else {
-            throw new Error("no guUser cookie could be found on this domain :-(");
+            console.warn("no guUser cookie could be found on this domain :-(");
         }
 
     };
@@ -82,7 +82,7 @@ define([
 
         populateUserInformation();
 
-        var $form = $('#payment-form');
+        var $form = jQuery('#payment-form');
 
         bindFormatting($form);
 

@@ -9,6 +9,10 @@ define(function(){
         }
     };
 
+    var isLoggedIn = function(){
+        return !!getUserFromCookie();
+    };
+
     var getUserFromCookie = function(){
         var userFromCookieCache = null;
 
@@ -70,7 +74,6 @@ define(function(){
                     emailVerified: userData[7],
                     rawResponse: cookieData
                 };
-                self.userFromCookieCache = userFromCookieCache;
             }
         }
 
@@ -78,6 +81,7 @@ define(function(){
     };
 
     return {
+        isLoggedIn: isLoggedIn,
         getUserOrSignIn: getUserOrSignIn,
         getUserFromCookie: getUserFromCookie
     };
