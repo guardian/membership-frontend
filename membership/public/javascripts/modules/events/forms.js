@@ -73,7 +73,7 @@ define([
 
             $('p.user').append(str.join(''));
         } else {
-            throw new Error("no guUser cookie could be found on this domain :-(");
+            throw new Error('no guUser cookie could be found on this domain :-(');
         }
 
     };
