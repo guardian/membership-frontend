@@ -1,8 +1,6 @@
 /*global escape:true */
 define(['utils/atob'], function(AtoB){
 
-    var self = this;
-
     var getUserOrSignIn = function(returnUrl){
         var user = getUserFromCookie();
         returnUrl = returnUrl || document.location.href;
