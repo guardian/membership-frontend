@@ -29,6 +29,7 @@ define(['user'], function (userUtil) {
 
                 config.DOM.ID_TIER.innerHTML = "Guardian Member";
 
+                config.DOM.ID_AVATAR.className += " u-h";
                 //config.DOM.ID_AVATAR.innerHTML = "<img src='" + "avatar_url" + "' />";
             }
         }
