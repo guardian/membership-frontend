@@ -16,6 +16,7 @@
     "requirejs": "^2.1.11",
     "grunt-karma": "~0.8.3",
     "karma-phantomjs-launcher": "~0.1.4",
-    "karma-requirejs": "~0.2.1"
+    "karma-requirejs": "~0.2.1",
+    "grunt-shell": "~0.7.0"
   }
 }

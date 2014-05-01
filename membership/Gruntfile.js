@@ -66,7 +66,8 @@ module.exports = function (grunt) {
 
         // Clean stuff up
         clean: {
-            css : ['<%= dirs.publicDir.stylesheets %>']
+            css: ['<%= dirs.publicDir.stylesheets %>'],
+            hooks: ['../.git/hooks/pre-commit']
         },
 
         // Recompile on change
@@ -111,6 +112,22 @@ module.exports = function (grunt) {
                     src: ['**/*.js', '!**/components/**/*.js', '!**/atob.js']
                 }]
             }
+        },
+
+        // misc
+
+        shell: {
+            /**
+             * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
+             */
+            copyHooks: {
+                command: 'cp git-hooks/pre-commit ../.git/hooks/',
+                options: {
+                    stdout: true,
+                    stderr: true,
+                    failOnError: false
+                }
+            }
         }
 
     });
@@ -121,6 +138,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('compile', [
         'compile:css'
@@ -135,4 +153,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['jshint', 'test:unit']);
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
+
+    grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };
