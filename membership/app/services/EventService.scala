@@ -12,7 +12,7 @@ trait EventService {
   def getAllEvents(): Future[Seq[EBEvent]]
 }
 
-trait EventBriteService extends EventService {
+trait EventbriteService extends EventService {
 
   val eventUrl: String
   val token: (String, String)
@@ -29,7 +29,7 @@ trait EventBriteService extends EventService {
   }
 }
 
-object EventBriteService extends EventBriteService {
+object EventbriteService extends EventbriteService {
   val config = ConfigFactory.load()
   override val eventUrl: String = config.getString("eventbrite.user.events-url")
   override val token: (String, String) = ("token", config.getString("eventbrite.token"))

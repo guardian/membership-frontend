@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import services.{EventBriteService, EventService}
+import services.{EventbriteService, EventService}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait FrontPage extends Controller{
@@ -10,11 +10,11 @@ trait FrontPage extends Controller{
 
   def index = Action.async {
     eventService.getAllEvents().map{ events =>
-      Ok(views.html.index(events))
+      Ok(views.html.events.eventsIndex(events))
     }
   }
 }
 
 object FrontPage extends FrontPage{
-  override val eventService: EventService = EventBriteService
+  override val eventService: EventService = EventbriteService
 }

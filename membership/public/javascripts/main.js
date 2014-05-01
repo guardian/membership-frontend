@@ -18,13 +18,15 @@ require.config({
     }
 });
 
-
 require([
     'eventsForm',
     'ctaButton'
 ], function(eventsForm, ctaButton){
     'use strict';
 
-    eventsForm.init();
-    ctaButton.init();
+    document.addEventListener('DOMContentLoaded', function(){
+        eventsForm.init();
+        ctaButton.init();
+    });
+
 });
