@@ -113,66 +113,6 @@ module.exports = function (grunt) {
             }
         }
 
-        // Much of the CasperJS setup borrowed from smlgbl/grunt-casperjs-extra
-//        env: {
-//            casperjs: {
-//                ENVIRONMENT : (process.env.ENVIRONMENT) ? process.env.ENVIRONMENT : (isDev) ? 'dev' : 'code',
-//                PHANTOMJS_EXECUTABLE : 'node_modules/casperjs/node_modules/.bin/phantomjs',
-//                extend: {
-//                    PATH: {
-//                        value: 'node_modules/.bin',
-//                        delimiter: ':'
-//                    }
-//                }
-//            }
-//        },
-//
-//        casperjsLogFile: 'results.xml',
-//        casperjs: {
-//            options: {
-//                casperjsOptions: [
-//                    '--verbose',
-//                    '--log-level=warning',
-//                    '--ignore-ssl-errors=yes',
-//                    '--includes=integration-tests/casper/tests/shared.js',
-//                    '--xunit=integration-tests/target/casper/<%= casperjsLogFile %>'
-//                ]
-//            },
-//            screenshot: {
-//                src: ['tools/screenshots/screenshot.js']
-//            },
-//            all: {
-//                src: ['integration-tests/casper/tests/**/*.spec.js']
-//            },
-//            admin: {
-//                src: ['integration-tests/casper/tests/admin/*.spec.js']
-//            },
-//            article: {
-//                src: ['integration-tests/casper/tests/article/*.spec.js']
-//            },
-//            applications: {
-//                src: ['integration-tests/casper/tests/applications/*.spec.js']
-//            },
-//            common : {
-//                src: ['integration-tests/casper/tests/common/*.spec.js']
-//            },
-//            discussion: {
-//                src: ['integration-tests/casper/tests/discussion/*.spec.js']
-//            },
-//            facia: {
-//                src: ['integration-tests/casper/tests/facia/*.spec.js']
-//            },
-//            identity: {
-//                src: ['integration-tests/casper/tests/identity/*.spec.js']
-//            },
-//            open: {
-//                src: ['integration-tests/casper/tests/open/*.spec.js']
-//            },
-//            commercial: {
-//                src: ['integration-tests/casper/tests/commercial/*.spec.js']
-//            }
-//        }
-
     });
 
     // Load the plugins
@@ -187,20 +127,11 @@ module.exports = function (grunt) {
     ]);
 
     // Test tasks
-//    grunt.registerTask('test:integration', function(app) {
-//        if (!app) {
-//            grunt.fail.fatal('No app specified.');
-//        }
-//        // does a casperjs setup exist for this app
-//        grunt.config.requires(['casperjs', app]);
-//        grunt.config('casperjsLogFile', app + '.xml');
-//        grunt.task.run(['env:casperjs', 'casperjs:' + app]);
-//    });
     grunt.registerTask('test:unit', function() {
         grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
         grunt.task.run(['karma:unit']);
     });
-    // TODO - don't have common as default?
+
     grunt.registerTask('test', ['jshint', 'test:unit']);
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
