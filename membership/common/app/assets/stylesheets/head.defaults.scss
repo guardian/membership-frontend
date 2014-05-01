@@ -6,13 +6,13 @@ $membersip-orange: rgba(255, 90, 0, 1);
 
 $mem-trans-white: rgba(255,255,255,0.8);
 
-@import "_head.common";
+@import "head.common";
 
-@import "_events";
-@import "_crumbs";
+@import "events";
+@import "crumbs";
 
 
-@import "_button";
+@import "button";
 
 html {
   position: relative;

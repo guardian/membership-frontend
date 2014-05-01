@@ -12,3 +12,7 @@ dist
 *.iml
 out
 .idea_modules
+membership/public/javascripts
+membership/public/stylesheets
+membership/common/app/assets/javascripts/components
+membership/common/app/assets/stylesheets/components

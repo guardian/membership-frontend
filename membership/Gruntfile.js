@@ -22,8 +22,9 @@ module.exports = function (grunt) {
                 images: '<%= dirs.public.root %>/images'
             },
             assets: {
-                root: 'app/assets',
-                stylesheets: '<%= dirs.assets.root %>/stylesheets'
+                root: 'common/app/assets',
+                stylesheets: '<%= dirs.assets.root %>/stylesheets',
+                javascripts: '<%= dirs.assets.root %>/javascripts'
             }
         },
 
@@ -51,6 +52,37 @@ module.exports = function (grunt) {
             }
         },
 
+        requirejs: {
+            compile: {
+                options: {
+                    include: ['main'],
+                    baseUrl: 'common/app/assets/javascripts',
+                    paths: {
+                        '$': '$',
+                        'bonzo': 'components/bonzo/bonzo',
+                        'qwery': 'components/qwery/qwery',
+                        'eventsForm': 'modules/events/forms',
+                        'ctaButton': 'modules/events/ctaButton',
+                        'user': 'utils/user',
+                        'credentials': 'config/credentials',
+                        'externalDependencies': 'config/externalDependencies',
+                        'jQueryPayment': 'components/stripe/jquery.payment',
+                        'jquery': 'empty:',
+                        'stripe': 'empty:'
+                    },
+                    shim: {
+                        'jQueryPayment': {
+                            deps: ['jquery']
+                        }
+                    },
+                    optimize: 'none',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: true,
+                    out: 'public/javascripts/main.js'
+                }
+            }
+        },
+
         copy: {
             css: {
                 files: [{
@@ -59,13 +91,20 @@ module.exports = function (grunt) {
                     src: ['**/*.scss'],
                     dest: '<%= dirs.public.stylesheets %>'
                 }]
+            },
+            require: {
+                src: '<%= dirs.assets.javascripts %>/components/requirejs/require.js',
+                dest: '<%= dirs.public.javascripts %>/libs/requirejs/',
+                expand: true,
+                flatten: true
             }
         },
 
 
         // Clean stuff up
         clean: {
-            css : ['<%= dirs.public.stylesheets %>']
+            css : ['<%= dirs.public.stylesheets %>'],
+            js : ['<%= dirs.public.javascripts %>']
         },
 
         // Recompile on change
@@ -84,10 +123,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('compile', [
-        'compile:css'
+        'compile:css',
+        'compile:js'
     ]);
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
+    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
 };
