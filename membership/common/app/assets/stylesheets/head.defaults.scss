@@ -39,8 +39,11 @@ header {
     position: absolute;
     top: gs-height(1)/2;
     right: $gs-gutter;
+    text-align: right;
     span {
       @include fs-data(2);
+      display: block;
+      padding: 2px 0;
     }
   }
 }

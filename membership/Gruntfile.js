@@ -4,22 +4,23 @@ module.exports = function (grunt) {
 
     var isDev = (grunt.option('dev') !== undefined) ? Boolean(grunt.option('dev')) : process.env.GRUNT_ISDEV === '1';
     var pkg = grunt.file.readJSON('package.json');
+    var singleRun = grunt.option('single-run') !== false;
 
     if (isDev) {
         grunt.log.subhead('Running Grunt in DEV mode');
     }
 
-    // Project configuration.
+    // Project configuration..
     grunt.initConfig({
 
         pkg: pkg,
 
         dirs: {
-            public: {
+            publicDir: {
                 root: 'public',
-                stylesheets: '<%= dirs.public.root %>/stylesheets',
-                javascripts: '<%= dirs.public.root %>/javascripts',
-                images: '<%= dirs.public.root %>/images'
+                stylesheets: '<%= dirs.publicDir.root %>/stylesheets',
+                javascripts: '<%= dirs.publicDir.root %>/javascripts',
+                images: '<%= dirs.publicDir.root %>/images'
             },
             assets: {
                 root: 'common/app/assets',
@@ -37,7 +38,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
                     src: ['*.scss', '!_*'],
-                    dest: '<%= dirs.public.stylesheets %>',
+                    dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
                 }],
                 options: {
@@ -89,7 +90,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
                     src: ['**/*.scss'],
-                    dest: '<%= dirs.public.stylesheets %>'
+                    dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
             },
             require: {
@@ -103,8 +104,9 @@ module.exports = function (grunt) {
 
         // Clean stuff up
         clean: {
-            css : ['<%= dirs.public.stylesheets %>'],
-            js : ['<%= dirs.public.javascripts %>']
+            js : ['<%= dirs.publicDir.javascripts %>'],
+            css: ['<%= dirs.publicDir.stylesheets %>'],
+            hooks: ['../.git/hooks/pre-commit']
         },
 
         // Recompile on change
@@ -116,7 +118,57 @@ module.exports = function (grunt) {
                     spawn: false
                 }
             }
+        },
+
+        /***********************************************************************
+         * Test
+         **********************************************************************/
+
+        karma: {
+            options: {
+                reporters: isDev ? ['dots'] : ['progress'],
+                singleRun: singleRun
+            },
+
+            unit: {
+                configFile: 'karma.conf.js',
+                browsers: ['PhantomJS']
+            }
+        },
+
+        // Lint Javascript sources
+        jshint: {
+            options: {
+                jshintrc: 'jshint_conf.json'
+            },
+            self: [
+                'Gruntfile.js'
+            ],
+            common: {
+                files: [{
+                    expand: true,
+                    cwd: 'public/javascripts/',
+                    src: ['**/*.js', '!**/components/**/*.js', '!**/atob.js']
+                }]
+            }
+        },
+
+        // misc
+
+        shell: {
+            /**
+             * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
+             */
+            copyHooks: {
+                command: 'cp git-hooks/pre-commit ../.git/hooks/',
+                options: {
+                    stdout: true,
+                    stderr: true,
+                    failOnError: false
+                }
+            }
         }
+
     });
 
     // Load the plugins
@@ -125,12 +177,27 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('compile', [
         'compile:css',
         'compile:js'
     ]);
 
+    // Test tasks
+    grunt.registerTask('test:unit', function() {
+        grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
+        grunt.task.run(['karma:unit']);
+    });
+
+    grunt.registerTask('test', ['jshint', 'test:unit']);
+
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
+
     grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
+
+    grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
+
 };
