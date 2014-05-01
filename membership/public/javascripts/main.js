@@ -16,11 +16,14 @@ require.config({
 
 
 require([
-    'eventsForm'
-], function(eventsForm){
+    'eventsForm',
+    'modules/account'
+], function(eventsForm, account){
 
     'use strict';
 
-    eventsForm.init();
+    //eventsForm.init();
+
+    account.init();
 
 });
