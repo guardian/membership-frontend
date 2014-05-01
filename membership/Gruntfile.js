@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         grunt.log.subhead('Running Grunt in DEV mode');
     }
 
-    // Project configuration.
+    // Project configuration
     grunt.initConfig({
 
         pkg: pkg,
