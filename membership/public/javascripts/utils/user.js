@@ -13,6 +13,10 @@ define(['utils/atob'], function(AtoB){
         }
     };
 
+    var isLoggedIn = function(){
+        return !!getUserFromCookie();
+    };
+
     var getUserFromCookie = function(){
         var userFromCookieCache = null;
 
@@ -43,7 +47,6 @@ define(['utils/atob'], function(AtoB){
                     emailVerified: userData[7],
                     rawResponse: cookieData
                 };
-                self.userFromCookieCache = userFromCookieCache;
             }
         }
 
@@ -51,6 +54,7 @@ define(['utils/atob'], function(AtoB){
     };
 
     return {
+        isLoggedIn: isLoggedIn,
         getUserOrSignIn: getUserOrSignIn,
         getUserFromCookie: getUserFromCookie
     };

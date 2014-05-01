@@ -1,15 +1,15 @@
 package integration
 
 import play.api.test.PlaySpecification
-import services.EventBriteService
+import services.EventbriteService
 
 
-class EventBriteIntegrationTest extends PlaySpecification {
+class EventbriteIntegrationTest extends PlaySpecification {
 
 
-  "EventBriteService" should {
+  "EventbriteService" should {
     "return all events in the guardian account" in {
-      val service = new EventBriteService with TestEventBriteAccount
+      val service = new EventbriteService with TestEventbriteAccount
       val events = await(service.getAllEvents())
       events.size mustEqual 4
     }
@@ -18,7 +18,7 @@ class EventBriteIntegrationTest extends PlaySpecification {
 
 }
 
-trait TestEventBriteAccount {
+trait TestEventbriteAccount {
 
   val eventUrl: String = "https://www.eventbriteapi.com/v3/users/99154249965/owned_events"
   val token: (String, String) = ("token" -> "***REMOVED***")
