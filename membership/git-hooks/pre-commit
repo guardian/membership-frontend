@@ -22,7 +22,7 @@ jsValidateResult=$?
 # Test JS CHANGE TO RIGHT PATTERN
 git diff --cached --name-only | if grep "[^/]\+/\(app/assets/javascripts\|test/js/spec\).*$JS_SRC_PATTERN"
 then
-    grunt test
+    cd membership; grunt test:unit; cd ..;
 fi
 jsTestResult=$?
 
