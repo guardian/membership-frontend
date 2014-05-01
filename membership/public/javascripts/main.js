@@ -20,13 +20,16 @@ require.config({
 
 require([
     'eventsForm',
-    'ctaButton'
-], function(eventsForm, ctaButton){
+    'ctaButton',
+    'modules/account'
+], function(eventsForm, ctaButton, account){
+
     'use strict';
 
     document.addEventListener('DOMContentLoaded', function(){
         eventsForm.init();
         ctaButton.init();
+        account.init();
     });
 
 });
