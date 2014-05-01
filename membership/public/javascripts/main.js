@@ -22,7 +22,7 @@ require([
 
     'use strict';
 
-    //eventsForm.init();
+    eventsForm.init();
 
     account.init();
 
