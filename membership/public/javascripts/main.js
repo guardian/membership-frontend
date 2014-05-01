@@ -8,7 +8,7 @@ require.config({
         'config': 'config/config'
     },
     shim: {
-        'payment': {
+        'jQueryPayment': {
             deps: ['jquery']
         }
     }
