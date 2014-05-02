@@ -1,11 +1,5 @@
 @charset "UTF-8";
 
-// temp membership vars location
-
-$membersip-orange: rgba(255, 90, 0, 1);
-
-$mem-trans-white: rgba(255,255,255,0.8);
-
 @import "head.common";
 
 @import "events";
@@ -79,23 +73,4 @@ footer {
 .container {
   padding: $gutter;
   background-color: $mem-trans-white;
-}
-
-.actions {
-  margin: $gs-row-height 0 0 0;
-
-  .action {
-    display: inline-block;
-    margin: 0 $gutter 0 0;
-  }
-
-  .sign-in {
-    background-color: $c-brandBlue;
-    color: #FFFFFF;
-    padding: $gutter/2;
-    &:hover {
-      background-color: darken($c-brandBlue, 15%);
-      text-decoration: none;
-    }
-  }
 }
