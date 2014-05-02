@@ -6,23 +6,42 @@
 #
 #####################################################
 
+echo " ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ";
+echo "||m |||e |||m |||b |||e |||r |||s |||h |||i |||p ||";
+echo "||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||";
+echo "|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|";
+
+printf "\n\r"
+
 #####################################################
 # Install NPM modules
 #####################################################
 
-printf "Installing NPM modules ...\n\r\n\r"
+printf "> Installing NPM modules ...\n\r\n\r"
 
-npm install
+npm install &> /dev/null
 
 #####################################################
-# Install Bower modules
+# Install Bower JS modules
 #####################################################
 
-printf "Installing bower modules in common/app/assets/javascripts ...\n\r\n\r"
+printf "> Installing bower JS modules in common/app/assets/javascripts ...\n\r\n\r"
 
 cd common/app/assets/javascripts
 
-bower install
+bower install &> /dev/null
+
+cd ../../../../
+
+#####################################################
+# Install Bower SASS modules
+#####################################################
+
+printf "> Installing bower SASS modules in common/app/assets/stylesheets ...\n\r\n\r"
+
+cd common/app/assets/stylesheets
+
+bower install &> /dev/null
 
 cd ../../../../
 
@@ -30,8 +49,20 @@ cd ../../../../
 # Compile clientside assets
 #####################################################
 
-printf "Compiling assets ...\n\r\n\r"
+printf "> Compiling assets ...\n\r\n\r"
 
-grunt compile
+grunt compile &> /dev/null
 
-printf "\n\r\n\rGood to go -> 'play run' to start app\n\r\n\r"
+#####################################################
+# Add commit hook
+#####################################################
+
+printf "> Adding git commit hook ...\n\r\n\r"
+
+grunt hookup &> /dev/null
+
+#####################################################
+# Done
+#####################################################
+
+printf "> Good to go -> 'play run' to start app\n\r\n\r"
