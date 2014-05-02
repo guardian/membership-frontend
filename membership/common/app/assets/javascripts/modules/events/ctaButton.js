@@ -3,12 +3,13 @@ define([
     'user'
 ], function($, user){
 
-    var classes = {
-        loggedInClass: 'sign-in--logged-in'
-    };
-
-    var text = {
-        loggedInCtaButton: 'Book Event'
+    var config = {
+        classes: {
+            LOGGED_IN_CLASS: 'sign-in--logged-in'
+        },
+        text: {
+            LOGGED_IN_CTA_BUTTON: 'Book Event'
+        }
     };
 
     var init = function(){
@@ -18,7 +19,7 @@ define([
 
         if(ctaButton && isUserLoggedIn){
 
-            ctaButton.toggleClass(classes.loggedInClass).text(text.loggedInCtaButton);
+            ctaButton.toggleClass(config.classes.LOGGED_IN_CLASS).text(config.text.LOGGED_IN_CTA_BUTTON);
         }
     };
 

@@ -4,9 +4,9 @@
    Variables and mixins
    ========================================================================== */
 
-@import "_vars";
-@import "_membership-vars";
-@import "_mixins";
+@import "vars";
+@import "membership-vars";
+@import "mixins";
 
 /* ==========================================================================
    Base
@@ -14,19 +14,19 @@
 
 //@import "_webfonts";
 
-@import "base/_normalize";
-@import "base/_base";
-@import "base/_type";
-@import "_extends-only";
-@import "base/_links";
-@import "base/_helpers";
-@import "base/_lists";
+@import "base/normalize";
+@import "base/base";
+@import "base/type";
+@import "extends-only";
+@import "base/links";
+@import "base/helpers";
+@import "base/lists";
 
 /* ==========================================================================
    Layout
    ========================================================================== */
 
 @include grid-system;
-@import "layout/_layout";
+@import "layout/layout";
 @include guss-row-utility;
 @include guss-columns-utility;

@@ -1,11 +1,10 @@
 define([
-    'jquery',
-    'stripe',
-    'jQueryPayment',
-    'config',
-    'user'
-], function(jQuery, stripe, jQueryPayment, config, userUtil){
-
+    'stripePayment',
+    'credentials',
+    'externalDependencies',
+    'user',
+    'require'
+], function(stripePayment, credentials, externalDependencies, userUtil){
     'use strict';
 
     var stripeResponseHandler = function (status, response) {
@@ -86,7 +85,7 @@ define([
 
         bindFormatting($form);
 
-        stripe.setPublishableKey(config.stripePublishableKey);
+        stripe.setPublishableKey(credentials.stripe.stripePublishableKey);
 
         $form.submit(function(event) {
             event.preventDefault();
@@ -105,4 +104,5 @@ define([
     return {
         init: init
     };
+
 });

@@ -15,5 +15,5 @@ dist
 /.settings
 node_modules
 app/assets/stylesheets/components
-app/assets/javascripts/components
+common/app/assets/javascripts/libs/bower-components
 public/stylesheets
