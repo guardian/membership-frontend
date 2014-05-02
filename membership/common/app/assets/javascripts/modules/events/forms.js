@@ -1,13 +1,11 @@
 define([
-    'jQueryPayment',
+    'stripePayment',
     'credentials',
     'externalDependencies',
-    'user'
-], function(jQueryPayment, credentials, externalDependencies, userUtil){
+    'user',
+    'require'
+], function(stripePayment, credentials, externalDependencies, userUtil){
     'use strict';
-
-    var jQuery = require('//pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min');
-    var stripe = require('https://js.stripe.com/v2/?');
 
     var stripeResponseHandler = function (status, response) {
         var $form = jQuery('#payment-form');
@@ -106,4 +104,5 @@ define([
     return {
         init: init
     };
+
 });
