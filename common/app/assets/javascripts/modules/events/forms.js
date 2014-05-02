@@ -1,3 +1,4 @@
+/* global stripe */
 define([
     'stripePayment',
     'credentials',

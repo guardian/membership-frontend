@@ -8,8 +8,6 @@ require([
 
     domready( function(){
 
-        console.log( 'dom loaded' );
-
        // eventsForm.init();
         ctaButton.init();
         account.init();
