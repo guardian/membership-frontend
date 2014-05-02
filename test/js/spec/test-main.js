@@ -10,7 +10,7 @@ for (var file in window.__karma__.files) {
 
 requirejs.config({
     // Karma serves files from '/base'
-    baseUrl: '/base/common/app/assets/javascripts',
+    baseUrl: '/base/common/app/assets/javascripts/src',
 
     paths: {
         'jquery': '//pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min',

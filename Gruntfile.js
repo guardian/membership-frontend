@@ -57,26 +57,26 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     include: ['main'],
-                    baseUrl: 'common/app/assets/javascripts',
+                    baseUrl: '<%= dirs.assets.javascripts %>/src',
                     paths: {
-                        '$': '$',
-                        'bonzo': 'libs/bower-components/bonzo/bonzo',
-                        'qwery': 'libs/bower-components/qwery/qwery',
-                        'domready': 'libs/bower-components/domready/ready',
+                        '$': 'utils/$',
+                        'bonzo': '../lib/bower-components/bonzo/bonzo',
+                        'qwery': '../lib/bower-components/qwery/qwery',
+                        'domready': '../lib/bower-components/domready/ready',
                         //'eventsForm': 'modules/events/forms',
                         'ctaButton': 'modules/events/ctaButton',
                         'user': 'utils/user',
                         'credentials': 'config/credentials',
                         'externalDependencies': 'config/externalDependencies'/*,
-                        'stripePayment': 'libs/stripe/stripe.payment',
-                        'stripe': 'libs/stripe/stripe.min'*/
+                        'stripePayment': 'lib/stripe/stripe.payment',
+                        'stripe': 'lib/stripe/stripe.min'*/
                     },
                     findNestedDependencies: true,
                     wrapShim: true,
                     optimize: 'none',
                     generateSourceMaps: true,
                     preserveLicenseComments: true,
-                    out: 'public/javascripts/main.js'
+                    out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
             }
         },
@@ -91,8 +91,8 @@ module.exports = function (grunt) {
                 }]
             },
             require: {
-                src: '<%= dirs.assets.javascripts %>/libs/bower-components/requirejs/require.js',
-                dest: '<%= dirs.publicDir.javascripts %>/libs/requirejs/',
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/requirejs/require.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/requirejs/',
                 expand: true,
                 flatten: true
             }
@@ -144,8 +144,8 @@ module.exports = function (grunt) {
             common: {
                 files: [{
                     expand: true,
-                    cwd: 'common/app/assets/javascripts/',
-                    src: ['**/*.js', '!**/libs/**/*.js', '!**/atob.js']
+                    cwd: '<%= dirs.assets.javascripts %>/',
+                    src: ['**/*.js', '!**/lib/**/*.js', '!**/atob.js']
                 }]
             }
         },
