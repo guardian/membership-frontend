@@ -103,7 +103,7 @@ module.exports = function (grunt) {
         clean: {
             js : ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
-            hooks: ['../.git/hooks/pre-commit']
+            hooks: ['.git/hooks/pre-commit']
         },
 
         // Recompile on change
@@ -157,7 +157,7 @@ module.exports = function (grunt) {
              * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
              */
             copyHooks: {
-                command: 'cp git-hooks/pre-commit ../.git/hooks/',
+                command: 'cp git-hooks/pre-commit .git/hooks/',
                 options: {
                     stdout: true,
                     stderr: true,
