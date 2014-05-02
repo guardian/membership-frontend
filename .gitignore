@@ -14,6 +14,5 @@ out
 .idea_modules
 public/javascripts
 public/stylesheets
-common/app/assets/javascripts/components
 common/app/assets/stylesheets/components
-common/app/assets/javascripts/libs/bower-components/
+common/app/assets/javascripts/lib/bower-components/
