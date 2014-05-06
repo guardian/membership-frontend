@@ -26,19 +26,6 @@ object Application extends Controller {
     )(StripePayment.apply)(StripePayment.unapply)
   )
 
-  def getEventsList:Future[Seq[EBEvent]] = {
-
-    val url = "https://www.eventbriteapi.com/v3/users/99154249965/owned_events"
-
-    val request = WS.url(url).withQueryString(("token", "***REMOVED***"))
-
-    for {
-      response <- request.get()
-    } yield {
-      response.json.as[EBResponse].events
-    }
-  }
-
   def stripe = Action {
     Ok(views.html.stripe())
   }
