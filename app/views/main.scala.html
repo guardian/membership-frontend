@@ -1,0 +1,36 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <!--
+
+             /'\_/`\                   /\ \                          /\ \      __
+            /\      \     __    ___ ___\ \ \____     __   _ __   ____\ \ \___ /\_\  _____
+            \ \ \__\ \  /'__`\/' __` __`\ \ '__`\  /'__`\/\`'__\/',__\\ \  _ `\/\ \/\ '__`\
+             \ \ \_/\ \/\  __//\ \/\ \/\ \ \ \L\ \/\  __/\ \ \//\__, `\\ \ \ \ \ \ \ \ \L\ \
+              \ \_\\ \_\ \____\ \_\ \_\ \_\ \_,__/\ \____\\ \_\\/\____/ \ \_\ \_\ \_\ \ ,__/
+               \/_/ \/_/\/____/\/_/\/_/\/_/\/___/  \/____/ \/_/ \/___/   \/_/\/_/\/_/\ \ \/
+                                                                                      \ \_\
+                                                                                       \/_/
+        -->
+
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/head.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/lib/requirejs/require.js")" data-main="@routes.Assets.at("javascripts/main")"></script>
+
+    </head>
+    <body>
+
+        @partials.header()
+
+        @content
+
+        @partials.footer()
+
+    </body>
+</html>

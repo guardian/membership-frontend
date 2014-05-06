@@ -1,0 +1,26 @@
+.actions {
+    margin: $gs-row-height 0 0 0;
+
+    .action {
+        display: inline-block;
+        margin: 0 $gutter 0 0;
+    }
+
+    .sign-in {
+        background-color: $mem-brandBlue;
+        color: #FFFFFF;
+        padding: $gutter/2;
+        &:hover {
+            background-color: darken($mem-brandBlue, 15%);
+            text-decoration: none;
+        }
+    }
+
+    .sign-in--logged-in {
+        background-color: $mem-brandOrange;
+        &:hover {
+            background-color: darken($mem-brandOrange, 15%);
+            text-decoration: none;
+        }
+    }
+} 
