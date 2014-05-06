@@ -16,8 +16,6 @@ object Subscription extends Subscription {
 
 trait Subscription extends Controller {
 
-  private val chargeAmount: Integer = 400
-
   def stripe = Action {
     Ok(views.html.stripe())
   }
@@ -27,24 +25,25 @@ trait Subscription extends Controller {
       stripePaymentForm.bindFromRequest.fold(ifBindingFailsReturnBadRequest, ifBindingSucceedsMakePayment)
   }
 
-  private case class StripePayment(token: String)
-
-  private val stripePaymentForm = Form(mapping("stripeToken" -> nonEmptyText)(StripePayment.apply)(StripePayment.unapply))
+  private val stripePaymentForm: Form[StripePayment] =
+    Form(mapping("stripeToken" -> nonEmptyText)(StripePayment.apply)(StripePayment.unapply))
 
   private def ifBindingFailsReturnBadRequest: (Form[StripePayment]) => Status = formWithErrors => BadRequest
 
-  private def ifBindingSucceedsMakePayment: (StripePayment) => Status = {
+  private def ifBindingSucceedsMakePayment: (StripePayment) => Status =
     stripePayment => {
-      val chargeParams = Map[String, Object](
-        "amount" -> chargeAmount,
-        "currency" -> "usd",
-        "card" -> stripePayment.token,
-        "description" -> "Charge for test@example.com")
-
-      Logger.debug(chargeParams.toString)
-      Charge.create(chargeParams)
+      Logger.debug(stripePayment.asMap.toString)
+      Charge.create(stripePayment.asMap)
       Ok
     }
+
+  case class StripePayment(token: String) {
+    val asMap: Map[String, Object] = Map(
+      "amount" -> "400",
+      "currency" -> "usd",
+      "card" -> token,
+      "description" -> "Charge for test@example.com"
+    )
   }
 
 }
