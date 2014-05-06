@@ -6,7 +6,6 @@ organization := "com.gu"
 
 scalaVersion := "2.10.4"
 
-
 libraryDependencies ++= Seq(
   cache,
   "com.github.nscala-time" %% "nscala-time" % "1.0.0",
@@ -14,3 +13,18 @@ libraryDependencies ++= Seq(
 )
 
 play.Project.playScalaSettings
+
+
+
+//Scala style settings
+org.scalastyle.sbt.ScalastylePlugin.Settings
+
+org.scalastyle.sbt.PluginKeys.failOnError := true
+
+lazy val testScalaStyle = taskKey[Unit]("testScalaStyle")
+
+testScalaStyle := {
+  org.scalastyle.sbt.PluginKeys.scalastyle.toTask("").value
+}
+
+(test in Test) <<= (test in Test) dependsOn testScalaStyle

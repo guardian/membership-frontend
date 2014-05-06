@@ -6,7 +6,6 @@ import services.EventbriteService
 
 class EventbriteIntegrationTest extends PlaySpecification {
 
-
   "EventbriteService" should {
     "return all events in the guardian account" in {
       val service = new EventbriteService with TestEventbriteAccount
@@ -14,8 +13,6 @@ class EventbriteIntegrationTest extends PlaySpecification {
       events.size mustEqual 4
     }
   }
-
-
 }
 
 trait TestEventbriteAccount {

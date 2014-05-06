@@ -9,14 +9,14 @@ import model.EventbriteTestObjects._
 
 
 
-object FrontPageSpec extends PlaySpecification with FrontPage {
+object FrontPageSpec extends PlaySpecification with EventController {
 
-  override val eventService: EventService = MockEventbriteService
+  val eventService: EventService = MockEventbriteService
 
   "Event Index page" should {
 
     "display list of all events" in new WithApplication {
-      val result = index()(FakeRequest())
+      val result = renderEventsIndex(FakeRequest())
       status(result) must equalTo(OK)
       contentAsString(result) must contain("Event 1")
       contentAsString(result) must contain("Event 2")
@@ -27,7 +27,7 @@ object FrontPageSpec extends PlaySpecification with FrontPage {
 
 
 object MockEventbriteService extends EventService {
-  override def getAllEvents(): Future[Seq[EBEvent]] = {
+   def getAllEvents(): Future[Seq[EBEvent]] = {
     future {
       List(eventWithName("Event 1"), eventWithName("Event 2"))
     }
