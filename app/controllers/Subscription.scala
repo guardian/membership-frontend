@@ -16,7 +16,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 
 
-object Application extends Controller {
+object Subscription extends Controller {
 
   case class StripePayment(token: String)
 
