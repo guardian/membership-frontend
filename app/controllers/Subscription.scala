@@ -1,7 +1,5 @@
 package controllers
 
-import model._
-import model.EventbriteDeserializer._
 import play.api._
 import play.api.mvc._
 import com.stripe._
@@ -9,14 +7,12 @@ import com.stripe.model._
 import scala.collection.convert.wrapAll._
 import play.api.data._
 import play.api.data.Forms._
-import play.api.libs.ws._
-import scala.concurrent._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 
 
+object Subscription extends Subscription
 
-object Subscription extends Controller {
+trait Subscription extends Controller {
 
   case class StripePayment(token: String)
 
