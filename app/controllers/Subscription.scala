@@ -7,52 +7,44 @@ import com.stripe.model._
 import scala.collection.convert.wrapAll._
 import play.api.data._
 import play.api.data.Forms._
+import com.typesafe.config.ConfigFactory
 
 
-
-object Subscription extends Subscription
+object Subscription extends Subscription {
+  Stripe.apiKey = ConfigFactory.load().getString("stripe.apiKey")
+}
 
 trait Subscription extends Controller {
 
-  case class StripePayment(token: String)
-
-  val stripePaymentForm = Form(
-    mapping(
-      "stripeToken" -> nonEmptyText
-    )(StripePayment.apply)(StripePayment.unapply)
-  )
+  private val chargeAmount: Integer = 400
 
   def stripe = Action {
     Ok(views.html.stripe())
   }
 
-  def stripeSubmit = Action { implicit request =>
-    Logger.info(s"Request body = ${request.body}")
+  def stripeSubmit = Action {
+    implicit request =>
+      stripePaymentForm.bindFromRequest.fold(ifBindingFailsReturnBadRequest, ifBindingSucceedsMakePayment)
+  }
 
-    Stripe.apiKey = "***REMOVED***"
+  private case class StripePayment(token: String)
 
-    //val cardToken = request.queryString.get("stripeToken").flatMap(_.headOption)
+  private val stripePaymentForm = Form(mapping("stripeToken" -> nonEmptyText)(StripePayment.apply)(StripePayment.unapply))
 
-    stripePaymentForm.bindFromRequest.fold(
-      formWithErrors => {
-        // binding failure, you retrieve the form containing errors:
-        BadRequest
-      },
-      stripePayment => {
-        val chargeParams = Map[String, Object](
-          ("amount", 400: java.lang.Integer),
-          ("currency", "usd"),
-          ("card", stripePayment.token),
-          ("description", "Charge for test@example.com")
-        )
+  private def ifBindingFailsReturnBadRequest: (Form[StripePayment]) => Status = formWithErrors => BadRequest
 
-        Logger.info(chargeParams.toString)
+  private def ifBindingSucceedsMakePayment: (StripePayment) => Status = {
+    stripePayment => {
+      val chargeParams = Map[String, Object](
+        "amount" -> chargeAmount,
+        "currency" -> "usd",
+        "card" -> stripePayment.token,
+        "description" -> "Charge for test@example.com")
 
-        Charge.create(chargeParams)
-        Ok
-      }
-    )
-
+      Logger.debug(chargeParams.toString)
+      Charge.create(chargeParams)
+      Ok
+    }
   }
 
 }
