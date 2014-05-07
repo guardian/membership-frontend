@@ -66,7 +66,7 @@ object Application extends Controller {
         Logger.info(chargeParams.toString)
 
         Charge.create(chargeParams)
-        Ok
+        Ok("Subscription successful")
       }
     )
 
