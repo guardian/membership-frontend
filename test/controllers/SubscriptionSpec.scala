@@ -10,7 +10,7 @@ class SubscriptionSpec extends PlaySpecification {
     "display stripe form" in {
       val controller = new TestController()
       val result = controller.stripe.apply(FakeRequest())
-      contentAsString(result) must be contain "Card Number"
+      contentAsString(result).contains("Card Number") must beEqualTo(true)
     }
 
   }

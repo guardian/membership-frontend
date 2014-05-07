@@ -10,3 +10,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.2")
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.4.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.2.0")
+
+resolvers += Classpaths.sbtPluginReleases
+
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "0.98.2")

@@ -16,7 +16,7 @@ play.Project.playScalaSettings
 
 scalariformSettings
 
-
+ScoverageSbtPlugin.instrumentSettings
 
 //Scala style settings
 org.scalastyle.sbt.ScalastylePlugin.Settings
