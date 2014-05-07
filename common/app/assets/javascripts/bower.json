@@ -1,10 +1,28 @@
 {
-  "name": "membership stylesheets",
-  "version": "0.0.0",
-  "dependencies": {
-    "qwery": "~4.0.0",
-    "bonzo": "~2.0.0",
-    "domready": "~1.0.5",
-    "requirejs": "~2.1.11"
-  }
+    "name": "membership stylesheets",
+    "version": "0.0.0",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests",
+        "source",
+        "spec",
+        ".bowerrc",
+        ".gitignore",
+        ".jshintignore",
+        ".jshintrc",
+        "bower.json",
+        "gruntfile.js",
+        "package.json",
+        "README.md"
+    ],
+    "dependencies": {
+        "qwery": "~4.0.0",
+        "bonzo": "~2.0.0",
+        "domready": "~1.0.5",
+        "requirejs": "~2.1.11",
+        "bean": "~1.0.6"
+    }
 }
