@@ -6,9 +6,9 @@ set -o errexit
 
 #export PATH=dev/gems/bin:$PATH
 
-#bundle install --binstubs dev/gems/bin --path dev/gems
+# Need node, npm, bower, karma-cli, sass installed globally
 
-# Need node, npm, bower, karma-cli installed globally
+bundle install --binstubs dev/gems/bin --path dev/gems
 
 npm install
 
