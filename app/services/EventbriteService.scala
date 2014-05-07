@@ -1,12 +1,11 @@
 package services
 
 import scala.concurrent.Future
-import model.{EBResponse, EBEvent}
+import model.{ EBResponse, EBEvent }
 import play.api.libs.ws._
 import model.EventbriteDeserializer._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.typesafe.config.ConfigFactory
-
 
 trait EventbriteService {
 
@@ -33,5 +32,4 @@ object EventbriteService extends EventbriteService {
   override val eventUrl: String = config.getString("eventbrite.event-url")
   override val token: (String, String) = ("token", config.getString("eventbrite.token"))
 }
-
 

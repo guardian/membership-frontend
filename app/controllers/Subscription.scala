@@ -9,7 +9,6 @@ import play.api.data._
 import play.api.data.Forms._
 import com.typesafe.config.ConfigFactory
 
-
 object Subscription extends Subscription {
   Stripe.apiKey = ConfigFactory.load().getString("stripe.apiKey")
 }

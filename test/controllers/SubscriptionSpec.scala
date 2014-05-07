@@ -1,6 +1,6 @@
 package controllers
 
-import play.api.test.{FakeRequest, PlaySpecification}
+import play.api.test.{ FakeRequest, PlaySpecification }
 
 class SubscriptionSpec extends PlaySpecification {
 

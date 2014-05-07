@@ -14,6 +14,8 @@ libraryDependencies ++= Seq(
 
 play.Project.playScalaSettings
 
+scalariformSettings
+
 
 
 //Scala style settings
