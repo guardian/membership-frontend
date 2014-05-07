@@ -12,4 +12,16 @@ set -o errexit
 
 npm install
 
+cd common/app/assets/javascripts
+
+bower install
+
+cd ../../../../
+
+cd common/app/assets/stylesheets
+
+bower install
+
+cd ../../../../
+
 #grunt "$@"
