@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -o xtrace
+set -o nounset
+set -o errexit
+
+################################################################################
+#
+# Build the static asset files for the project - files will now be found in Public folder
+#
+################################################################################
+
+JS_DIR=common/app/assets/javascripts
+SCSS_DIR=common/app/assets/stylesheets
+
+export PATH=dev/gems/bin:$PATH
+bundle install --binstubs dev/gems/bin --path dev/gems
+
+npm install
+
+pushd $JS_DIR
+bower install
+popd
+
+pushd $SCSS_DIR
+bower install
+popd
+
+grunt "$@"
