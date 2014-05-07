@@ -1,14 +1,14 @@
 require([
     'domready',
-    //'eventsForm',
-    'ctaButton',
-    'modules/account'
-], function(domready, /*eventsForm,*/ ctaButton, account){
+    'src/modules/events/form',
+    'src/modules/events/ctaButton',
+    'src/modules/account'
+], function(domready, stripeForm, ctaButton, account){
     'use strict';
 
     domready( function(){
 
-       // eventsForm.init();
+        stripeForm.init();
         ctaButton.init();
         account.init();
     });
