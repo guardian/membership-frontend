@@ -4,10 +4,12 @@ set -o xtrace
 set -o nounset
 set -o errexit
 
-#export PATH=dev/gems/bin:$PATH
+
 
 # Need node, npm, bower, karma-cli, sass installed globally
 
+# make sure gems available in PATH
+export PATH=dev/gems/bin:$PATH
 bundle install --binstubs dev/gems/bin --path dev/gems
 
 npm install
