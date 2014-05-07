@@ -12,5 +12,4 @@ define([
     };
 
     return $;
-
 });

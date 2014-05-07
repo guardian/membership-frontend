@@ -1,5 +1,5 @@
 /*global escape:true */
-define(['utils/atob'], function(AtoB){
+define(['src/utils/atob'], function(AtoB){
 
     var getUserOrSignIn = function(returnUrl){
         var user = getUserFromCookie();

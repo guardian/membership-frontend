@@ -1,6 +1,6 @@
 define([
     '$',
-    'user'
+    'src/utils/user'
 ], function($, user){
 
     var config = {

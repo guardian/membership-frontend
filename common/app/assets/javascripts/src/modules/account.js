@@ -1,7 +1,7 @@
 /**
  * Populate user details in the header account information container
  */
-define(['user'], function (userUtil) {
+define(['src/utils/user'], function (userUtil) {
 
     var config = {
         classes: {
