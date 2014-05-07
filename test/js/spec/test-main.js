@@ -10,20 +10,15 @@ for (var file in window.__karma__.files) {
 
 requirejs.config({
     // Karma serves files from '/base'
-    baseUrl: '/base/common/app/assets/javascripts/src',
+    baseUrl: '/base/common/app/assets/javascripts/',
 
     paths: {
-        'jquery': '//pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min',
-        'jQueryPayment': 'components/stripe/jquery.payment',
-        'stripe': 'https://js.stripe.com/v2/?',
-        'eventsForm': 'modules/events/forms',
-        'user': 'utils/user',
-        'config': 'config/config'
-    },
-    shim: {
-        'payment': {
-            deps: ['jquery']
-        }
+        '$': 'src/utils/$',
+        'bean': 'lib/bower-components/bean/bean',
+        'bonzo': 'lib/bower-components/bonzo/bonzo',
+        'qwery': 'lib/bower-components/qwery/qwery',
+        'domready': 'lib/bower-components/domready/ready',
+        'stripe': 'lib/stripe/stripe.min'
     },
 
     // ask Require.js to load these files (all our tests)

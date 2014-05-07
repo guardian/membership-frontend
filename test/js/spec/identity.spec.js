@@ -1,4 +1,6 @@
-define(['user'], function (userUtil) {
+define([
+    'src/utils/user'
+], function (userUtil) {
     describe('Identity module', function(){
         it('should read an Identity GU_U cookie correctly', function(){
 

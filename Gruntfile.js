@@ -56,20 +56,15 @@ module.exports = function (grunt) {
         requirejs: {
             compile: {
                 options: {
-                    include: ['main'],
-                    baseUrl: '<%= dirs.assets.javascripts %>/src',
+                    include: ['src/main'],
+                    baseUrl: '<%= dirs.assets.javascripts %>',
                     paths: {
-                        '$': 'utils/$',
-                        'bonzo': '../lib/bower-components/bonzo/bonzo',
-                        'qwery': '../lib/bower-components/qwery/qwery',
-                        'domready': '../lib/bower-components/domready/ready',
-                        //'eventsForm': 'modules/events/forms',
-                        'ctaButton': 'modules/events/ctaButton',
-                        'user': 'utils/user',
-                        'credentials': 'config/credentials',
-                        'externalDependencies': 'config/externalDependencies'/*,
-                        'stripePayment': 'lib/stripe/stripe.payment',
-                        'stripe': 'lib/stripe/stripe.min'*/
+                        '$': 'src/utils/$',
+                        'bean': 'lib/bower-components/bean/bean',
+                        'bonzo': 'lib/bower-components/bonzo/bonzo',
+                        'qwery': 'lib/bower-components/qwery/qwery',
+                        'domready': 'lib/bower-components/domready/ready',
+                        'stripe': 'lib/stripe/stripe.min'
                     },
                     findNestedDependencies: true,
                     wrapShim: true,
@@ -114,6 +109,13 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            js: {
+                files: ['<%= dirs.assets.javascripts %>/**/*.js'],
+                tasks: ['compile:js'],
+                options: {
+                    spawn: false
+                }
             }
         },
 
@@ -145,7 +147,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',
-                    src: ['**/*.js', '!**/lib/**/*.js', '!**/atob.js']
+                    src: ['**/*.js', '!**/lib/**/*.js', '!**/atob.js', '!**/user.js']
                 }]
             }
         },
@@ -196,5 +198,4 @@ module.exports = function (grunt) {
     grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
-
 };
