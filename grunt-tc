@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -o xtrace
+set -o nounset
+set -o errexit
+
+#export PATH=dev/gems/bin:$PATH
+
+#bundle install --binstubs dev/gems/bin --path dev/gems
+
+# Need node, npm, bower, karma-cli installed globally
+
+npm install
+
+#grunt "$@"
