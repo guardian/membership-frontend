@@ -1,8 +1,8 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{ Action, Controller }
 
-trait FrontPage extends Controller{
+trait FrontPage extends Controller {
 
   def index = Action {
     Ok(views.html.index())

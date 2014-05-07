@@ -3,7 +3,7 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Reads, Json}
+import play.api.libs.json.{ Reads, Json }
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.ISODateTimeFormat
 
@@ -12,14 +12,13 @@ case class EBAddress(country_name: Option[String], city: Option[String], region:
 case class EBVenue(id: Option[String], address: EBAddress, latitude: Option[String], longitude: Option[String], name: Option[String])
 case class EBResponse(events: Seq[EBEvent])
 case class EBEvent(
-                    name: EBRichText,
-                    description: EBRichText,
-                    logo_url: String,
-                    id: String,
-                    start: DateTime,
-                    end: DateTime,
-                    venue: EBVenue)
-
+  name: EBRichText,
+  description: EBRichText,
+  logo_url: String,
+  id: String,
+  start: DateTime,
+  end: DateTime,
+  venue: EBVenue)
 
 object EventbriteDeserializer {
 
@@ -30,9 +29,8 @@ object EventbriteDeserializer {
 
   implicit val readsEbDate: Reads[DateTime] = (
     (JsPath \ "utc").read[String] and
-      (JsPath \ "timezone").read[String]
-    )(convertDateText _)
-
+    (JsPath \ "timezone").read[String]
+  )(convertDateText _)
 
   implicit val ebAddress = Json.reads[EBAddress]
   implicit val ebVenue = Json.reads[EBVenue]

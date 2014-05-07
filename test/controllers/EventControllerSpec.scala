@@ -1,8 +1,7 @@
 package controllers
 
-import play.api.test.{FakeRequest, WithApplication, PlaySpecification}
+import play.api.test.{ FakeRequest, WithApplication, PlaySpecification }
 import services.EventbriteService
-
 
 object EventControllerSpec extends PlaySpecification with EventController {
 
@@ -26,7 +25,6 @@ object EventControllerSpec extends PlaySpecification with EventController {
 
   }
 }
-
 
 object SandboxEventbriteService extends EventbriteService {
   override val eventListUrl: String = "https://www.eventbriteapi.com/v3/users/99154249965/owned_events"
