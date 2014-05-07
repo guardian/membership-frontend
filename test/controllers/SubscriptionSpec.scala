@@ -15,4 +15,3 @@ class SubscriptionSpec extends PlaySpecification {
 
   }
 }
-
