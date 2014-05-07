@@ -24,4 +24,8 @@ bower install
 
 cd ../../../../
 
+grunt compile
+
+grunt test
+
 #grunt "$@"
