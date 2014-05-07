@@ -4,7 +4,8 @@ set -o xtrace
 set -o nounset
 set -o errexit
 
-
+JS_DIR=common/app/assets/javascripts
+SCSS_DIR=common/app/assets/stylesheets
 
 # Need node, npm, bower, karma-cli, sass installed globally
 
@@ -14,20 +15,16 @@ bundle install --binstubs dev/gems/bin --path dev/gems
 
 npm install
 
-cd common/app/assets/javascripts
+pushd $JS_DIR
 
 bower install
 
-cd ../../../../
+popd
 
-cd common/app/assets/stylesheets
+pushd $SCSS_DIR
 
 bower install
 
-cd ../../../../
+popd
 
-grunt compile
-
-grunt test
-
-#grunt "$@"
+grunt "$@"
