@@ -29,7 +29,7 @@ object EventControllerSpec extends PlaySpecification with EventController {
 
 
 object SandboxEventbriteService extends EventbriteService {
-  override val forEventList: String = "https://www.eventbriteapi.com/v3/users/99154249965/owned_events"
+  override val eventListUrl: String = "https://www.eventbriteapi.com/v3/users/99154249965/owned_events"
   override val eventUrl: String = "https://www.eventbriteapi.com/v3/events/"
   override val token: (String, String) = ("token", "***REMOVED***")
 }
