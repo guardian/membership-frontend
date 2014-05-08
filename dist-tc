@@ -11,7 +11,7 @@ set -o errexit
 #
 ################################################################################
 
-./sbt-tc clean test
+./sbt-tc clean scoverage:test
 ./grunt-tc test compile
 
 

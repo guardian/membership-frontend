@@ -1,0 +1,15 @@
+{
+    "packages":{
+        "app":{
+            "type":"autoscaling",
+            "data":{
+                "bucket": "membership-dist"
+            }
+        }
+    },
+    "recipes":{
+        "default":{
+            "actionsBeforeApp": ["app.uploadArtifacts", "app.deploy"]
+        }
+    }
+}
