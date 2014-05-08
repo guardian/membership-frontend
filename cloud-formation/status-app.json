@@ -1,0 +1,195 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description" : "membership-app",
+    "Parameters" : {
+        "Stack": {
+            "Description": "Applied directly as a tag",
+            "Type": "String"
+        },
+        "KeyName" : {
+            "Description" : "The EC2 Key Pair to allow SSH access to the instance",
+            "Type" : "String"
+        },
+        "Stage": {
+            "Description" : "Applied directly as a tag",
+            "Type" : "String",
+            "Default" : "PROD"
+        },
+        "HostedZone" : {
+            "Description" : "DNS hosted zone for which A CNAME will be created. e.g. 'example.com' (note, no trailing full-stop) for status.example.com. Leave empty if you don't want to add a CNAME to the status app",
+            "Type" : "String"
+        },
+        "ManagementPort": {
+            "Description": "Default port used to retrieve version information from web-apps",
+            "Type": "Number",
+            "Default": "9000"
+        },
+        "InstanceType" : {
+            "Description" : "EC2 instance type",
+            "Type" : "String",
+            "Default" : "t1.micro",
+            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        }
+    },
+    "Conditions": {
+        "HasDNS": { "Fn::Not" : [{"Fn::Equals" : [{"Ref" : "HostedZone"}, "" ] } ] }
+    },
+    "Resources" : {
+
+        "StatusAppRole" : {
+            "Type" : "AWS::IAM::Role",
+            "Properties":{
+                "Path":"/",
+                "AssumeRolePolicyDocument": {
+                    "Statement": [ {
+                        "Effect": "Allow",
+                        "Principal": { "Service": [ "ec2.amazonaws.com" ] },
+                        "Action": [ "sts:AssumeRole" ]
+                    } ]
+                }
+            }
+        },
+        "StatusAppReadMetadataPolicy" : {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "StatusAppReadMetadataPolicy",
+                "PolicyDocument": {
+                    "Statement": [ {
+                        "Action": [
+                            "ec2:describe*",
+                            "autoscaling:Describe*",
+                            "elasticloadbalancing:Describe*",
+                            "cloudwatch:Get*",
+                            "sqs:ListQueues"
+                        ],
+                        "Effect": "Allow",
+                        "Resource":"*"
+                    }]
+                },
+                "Roles": [ { "Ref": "StatusAppRole" } ]
+            }
+        },
+        "StatusAppInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [ {
+                    "Ref": "StatusAppRole"
+                } ]
+            }
+        },
+
+        "LoadBalancer" : {
+            "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+            "Properties" : {
+                "AvailabilityZones" : { "Fn::GetAZs" : "" },
+                "Listeners" : [ {
+                    "LoadBalancerPort" : "80",
+                    "InstancePort" : "9000",
+                    "Protocol" : "HTTP"
+                } ],
+
+                "HealthCheck" : {
+                    "Target" : "HTTP:9000/management/healthcheck",
+                    "HealthyThreshold" : "2",
+                    "UnhealthyThreshold" : "2",
+                    "Interval" : "10",
+                    "Timeout" : "5"
+                }
+            }
+        },
+
+        "AutoscalingGroup" : {
+            "Type" : "AWS::AutoScaling::AutoScalingGroup",
+            "Properties" : {
+                "AvailabilityZones" : { "Fn::GetAZs" : "" },
+                "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
+                "MinSize" : "1",
+                "MaxSize" : "2",
+                "DesiredCapacity" : "1",
+                "HealthCheckType" : "ELB",
+                "HealthCheckGracePeriod" : 300,
+                "LoadBalancerNames" : [ { "Ref": "LoadBalancer" }],
+                "Tags" : [
+                    { "Key" : "Stack", "Value" : { "Ref" : "Stack" }, "PropagateAtLaunch" : "true" },
+                    { "Key" : "App", "Value" : "status-app", "PropagateAtLaunch" : "true" },
+                    { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  },
+                    { "Key" : "Management", "Value" : "port=9000", "PropagateAtLaunch" : "true" },
+                    { "Key" : "Role", "Value" : { "Fn::Join": ["-", [{ "Ref" : "Stack" }, "status-app"]]}, "PropagateAtLaunch" : "true"  }
+                ]
+            }
+        },
+
+        "LaunchConfig" : {
+            "Type" : "AWS::AutoScaling::LaunchConfiguration",
+            "Properties" : {
+                "KeyName" : { "Ref" : "KeyName" },
+                "ImageId" : "ami-e894719f",
+                "SecurityGroups": [
+                    { "Ref" : "EC2SecurityGroup" }, { "Ref" : "StatusAppSecurityGroup" }
+                ],
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "IamInstanceProfile": { "Ref" : "StatusAppInstanceProfile" },
+
+                "UserData" : { "Fn::Base64": {
+                    "Fn::Join":["\n", [
+                        "#!/bin/bash -ev",
+                        "apt-get -y update",
+                        "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
+
+                        "adduser --system --home /status --disabled-password status",
+
+                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "membership-app/app.zip --directory-prefix=/membership"]]},
+
+                        "unzip -d /membership /membership/membership-app-1.0.zip",
+
+                        "mv /etc/init/membership",
+
+                        "chown -R status /status/",
+
+                        {"Fn::Join": ["", ["start membership-app MANAGEMENT_PORT=", { "Ref" : "ManagementPort" }]]}
+                    ]]
+
+                }}
+            }
+        },
+
+        "StatusAppSecurityGroup": {
+          "Type": "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Allow Status App access to mangement"
+            }
+        },
+
+        "EC2SecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Open up SSH access and http to load balancer",
+                "SecurityGroupIngress" : [
+                    { "IpProtocol": "tcp", "FromPort": "22",   "ToPort": "22",   "CidrIp": "0.0.0.0/0" },
+                    { "IpProtocol": "tcp", "FromPort": "9000",   "ToPort": "9000",   "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "9000",   "ToPort": "9000",
+                        "SourceSecurityGroupName": "amazon-elb-sg", "SourceSecurityGroupOwnerId": "amazon-elb" },
+                    { "IpProtocol": "tcp", "FromPort": "9000",   "ToPort": "9000",
+                        "SourceSecurityGroupName": { "Ref" : "StatusAppSecurityGroup" } }
+                ]
+            }
+        },
+
+        "MainDnsEntry" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Condition": "HasDNS",
+            "Properties" : {
+                "HostedZoneName" : { "Fn::Join": ["", [{ "Ref" : "HostedZone" }, "."]] },
+                "Comment" : "CNAME for status app",
+                "Name" : { "Fn::Join": [".", ["status", { "Ref" : "HostedZone" }]] },
+                "Type" : "CNAME",
+                "TTL" : "900",
+                "ResourceRecords" : [
+                    {"Fn::GetAtt":["LoadBalancer","DNSName"]}
+                ]
+            }
+        }
+    }
+}
