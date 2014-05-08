@@ -14,6 +14,10 @@ libraryDependencies ++= Seq(
 
 play.Project.playScalaSettings
 
+playArtifactDistSettings
+
+magentaPackageName := "membership-app"
+
 scalariformSettings
 
 ScoverageSbtPlugin.instrumentSettings
