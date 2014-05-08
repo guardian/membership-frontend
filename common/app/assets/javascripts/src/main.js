@@ -3,12 +3,12 @@ require([
     'src/modules/events/form',
     'src/modules/events/ctaButton',
     'src/modules/account'
-], function(domready, paymentForm, ctaButton, account){
+], function(domready, PaymentForm, ctaButton, account){
     'use strict';
 
     domready( function(){
 
-        var stripeForm = new paymentForm();
+        var stripeForm = new PaymentForm();
 
         stripeForm.init();
         ctaButton.init();

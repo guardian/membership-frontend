@@ -11,7 +11,7 @@ define([
 
     StripePaymentForm.prototype.config = {
 
-        class: {
+        classes: {
             FORM_FIELD_ERROR: 'form-field--error',
             ERROR_CARD_NUMBER: 'error--card-number',
             ERROR_CARD_CVC: 'error--card-cvc',
@@ -33,21 +33,21 @@ define([
     StripePaymentForm.prototype.domElementSetup = function(){
 
         var config = this.config;
-        var classNames = config.class;
+        var classNames = config.classes;
         var ids = config.id;
 
         for(var className in classNames){
 
-            var camelCasedName = this.camelCase(className);
+            var camelCasedClassName = this.camelCase(className);
 
-            config.domElements[camelCasedName] = this.getElementByClass(classNames[className]);
+            config.domElements[camelCasedClassName] = this.getElementByClass(classNames[className]);
         }
 
         for(var id in ids){
 
-            var camelCasedName = this.camelCase(id);
+            var camelCasedId = this.camelCase(id);
 
-            config.domElements[camelCasedName] = this.getElementById(ids[id]);
+            config.domElements[camelCasedId] = this.getElementById(ids[id]);
         }
 
     };
@@ -177,7 +177,7 @@ define([
 
         return {
             isValid: isValid,
-            errorElementClassName: this.config.class.ERROR_CARD_NUMBER
+            errorElementClassName: this.config.classes.ERROR_CARD_NUMBER
         };
     };
 
@@ -188,7 +188,7 @@ define([
 
         return {
             isValid: isValid,
-            errorElementClassName: this.config.class.ERROR_CARD_CVC
+            errorElementClassName: this.config.classes.ERROR_CARD_CVC
         };
     };
 
@@ -200,7 +200,7 @@ define([
 
         return {
             isValid: isValid,
-            errorElementClassName: this.config.class.ERROR_CARD_EXPIRY
+            errorElementClassName: this.config.classes.ERROR_CARD_EXPIRY
         };
     };
 
@@ -237,22 +237,22 @@ define([
 
         var $errorMessageElement = $('.' + validationResult.errorElementClassName);
         var $parentRow = $errorMessageElement.parent();
-        var configClass = this.config.class;
+        var configClasses = this.config.classes;
 
-        $parentRow.removeClass(configClass.FORM_FIELD_ERROR);
+        $parentRow.removeClass(configClasses.FORM_FIELD_ERROR);
 
         if (!validationResult.isValid) {
 
-            $parentRow.addClass(configClass.FORM_FIELD_ERROR);
+            $parentRow.addClass(configClasses.FORM_FIELD_ERROR);
 
-            if ($errorMessageElement.hasClass(configClass.HIDE)) {
-                $errorMessageElement.toggleClass(configClass.HIDE);
+            if ($errorMessageElement.hasClass(configClasses.HIDE)) {
+                $errorMessageElement.toggleClass(configClasses.HIDE);
             }
 
         } else {
 
-            if (!$errorMessageElement.hasClass(configClass.HIDE)) {
-                $errorMessageElement.addClass(configClass.HIDE);
+            if (!$errorMessageElement.hasClass(configClasses.HIDE)) {
+                $errorMessageElement.addClass(configClasses.HIDE);
             }
         }
     };
