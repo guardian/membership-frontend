@@ -8,28 +8,28 @@
         <fieldset class="fieldset">
             <span class="payment-errors"></span>
             <div class="form-field">
-                <label class="label" for="cc-num">
+                <label class="label" for="credit-card-number">
                     <span>Card Number</span>
-                    <input type="tel" size="20" data-stripe="number" class="cc-num text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx"/>
+                    <input type="tel" size="20" data-stripe="number" class="text-input" id="credit-card-number" placeholder="xxxx xxxx xxxx xxxx"/>
                 </label>
                 <p class="error--card-number error hide">Please enter a valid card number</p>
             </div>
 
             <div class="form-field">
-                <label class="label" for="cc-cvc">
+                <label class="label" for="credit-card-cvc">
                     <span>CVC</span>
-                    <input type="tel" size="4" data-stripe="cvc" class="cc-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC"/>
+                    <input type="tel" size="4" data-stripe="cvc" class="text-input text-input--small" id="credit-card-cvc" placeholder="CVC"/>
                 </label>
                 <p class="error--card-cvc error hide">Please enter a valid CVC number</p>
             </div>
 
             <div class="form-field">
-                <label class="label" for="cc-exp-month">
+                <label class="label" for="credit-card-expiry-month">
                     <span>Expiration (MM/YYYY)</span>
                     <p>
-                        <input type="tel" size="2" data-stripe="exp-month" class="cc-exp-month text-input text-input--small" id="cc-exp-month" placeholder="MM"/>
+                        <input type="tel" size="2" data-stripe="exp-month" class="text-input text-input--small" id="credit-card-expiry-month" placeholder="MM"/>
                         <span> / </span>
-                        <input type="tel" size="4" data-stripe="exp-year" class="cc-exp-year text-input text-input--small" placeholder="YYYY"/>
+                        <input type="tel" size="4" data-stripe="exp-year" class="credit-card-expiry-year text-input text-input--small" placeholder="YYYY"/>
                     </p>
                 </label>
                 <p class="error--card-expiry error hide">Please enter a valid Expiry</p>
