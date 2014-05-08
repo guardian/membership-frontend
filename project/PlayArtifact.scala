@@ -15,16 +15,14 @@ object PlayArtifact extends Plugin {
   lazy val playArtifactDistSettings = Seq(
 
     playArtifactResources := Seq(
-      baseDirectory.value / (magentaPackageName.value + ".conf") ->
-        ("packages/" + magentaPackageName.value + "/" + magentaPackageName.value + ".conf"),
-      dist.value -> "packages/%s/%s".format(magentaPackageName.value, dist.value.getName),
+      dist.value -> s"packages/${magentaPackageName.value}/app.zip",
       baseDirectory.value / "conf" / "deploy.json" -> "deploy.json"
     ),
 
     playArtifactFile := "artifacts.zip",
     playArtifact := {
       val distFile = target.value / playArtifactFile.value
-      streams.value.log.info("Disting " + distFile)
+      streams.value.log.info(s"Disting $distFile")
 
       if (distFile.exists()) {
         distFile.delete()
@@ -32,7 +30,7 @@ object PlayArtifact extends Plugin {
       IO.zip(playArtifactResources.value, distFile)
 
       // Tells TeamCity to publish the artifact => leave this println in here
-      println("##teamcity[publishArtifacts '%s']".format(distFile))
+      println(s"##teamcity[publishArtifacts '$distFile']")
 
       streams.value.log.info("Done disting.")
       distFile
