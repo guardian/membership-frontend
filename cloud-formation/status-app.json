@@ -140,15 +140,15 @@
 
                         "adduser --system --home /status --disabled-password status",
 
-                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/ophan-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "status-app/status-app.conf --directory-prefix=/etc/init"]]},
+                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "membership-app/app.zip --directory-prefix=/membership"]]},
 
-                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/ophan-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "status-app/status-app-1.0.zip --directory-prefix=/status"]]},
+                        "unzip -d /membership /membership/membership-app-1.0.zip",
 
-                        "unzip -d /status /status/status-app-1.0.zip",
+                        "mv /etc/init/membership",
 
                         "chown -R status /status/",
 
-                        {"Fn::Join": ["", ["start status-app MANAGEMENT_PORT=", { "Ref" : "ManagementPort" }]]}
+                        {"Fn::Join": ["", ["start membership-app MANAGEMENT_PORT=", { "Ref" : "ManagementPort" }]]}
                     ]]
 
                 }}
