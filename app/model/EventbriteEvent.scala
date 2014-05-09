@@ -16,8 +16,8 @@ case class EBPricing(currency: String, display: String, value: Int)
 case class EBTickets(id: Option[String], name: Option[String], free: Option[Boolean], quantity_total: Option[Int], quantity_sold: Option[Int], cost: Option[EBPricing], sales_end: Option[Instant])
 case class EBEvent(
   name: EBRichText,
-  description: EBRichText,
-  logo_url: String,
+  description: Option[EBRichText],
+  logo_url: Option[String],
   id: String,
   start: DateTime,
   end: DateTime,

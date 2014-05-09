@@ -21,7 +21,6 @@ li.event {
     }
 
     .event__image {
-        height: gs-span(2.8);
         overflow: hidden;
         img {
             width: 100%;
@@ -33,9 +32,8 @@ li.event {
         @include rem((
             height: 130px
         ));
-        width: gs-span(3) - 2*($gutter/2);
+        width: auto;
         overflow: hidden;
-        background-color: $c-neutral6;
     }
 
     .event__name {
@@ -53,12 +51,12 @@ li.event {
     }
 
     @include mq(tablet) {
-        width: gs-span(3);
+        width: gs-span(5);
         margin-right: $gs-gutter;
         display: inline-block;
 
         .event__image {
-            width: gs-span(3);
+            width: auto;
             img {
                 width: auto;
             }
