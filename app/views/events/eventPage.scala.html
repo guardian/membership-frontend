@@ -1,14 +1,25 @@
 @(event: model.EBEvent)
 @import views.Crumb
 @import views.Dates._
+@import org.joda.time.Instant
 
 @main("Membership") {
 
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/events/${event.id}")))
 
-    <div class="event">
+    <div class="event u-cf">
         <div class="event__content container">
             <h1 class="event__name section-header page-header">@event.name.text</h1>
+
+            <div class="event__tickets">
+                <div class="js-datetime-enhance">
+                    <span class="event__sale_ends_note js-datetime-enhance-note">Sales end at </span>
+                    <span class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None))).head.sales_end.getOrElse("")">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None))).head.sales_end.getOrElse(RichInstant(new Instant()).pretty)</span>
+                </div>
+
+                <span class="event__price">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None))).head.cost.getOrElse(model.EBPricing("GBP", "Free", 0)).display</span>
+                <span class="event__price-note"> per ticket.</span>
+            </div>
 
             <div class="event__image">
                 <img src="@event.logo_url" alt="Event Image" />
