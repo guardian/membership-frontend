@@ -70,6 +70,11 @@ li.event {
 /* ==========================================================================
    An event on an event page
    ========================================================================== */
+.container {
+    padding: $gutter;
+    background-color: $mem-trans-white;
+}
+
 div.event {
     .event__content {
 
