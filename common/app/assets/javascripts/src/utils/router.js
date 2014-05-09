@@ -15,10 +15,12 @@ define(function () {
     };
 
     Router.prototype.go = function () {
-        var path = document.location.pathname;
+        var path = window.location.pathname;
 
-        this.routes['*']();
-        delete this.routes['*'];
+        if (this.routes['*']) {
+            this.routes['*']();
+            delete this.routes['*'];
+        }
 
         for (var key in this.routes) {
             var regxp = new RegExp('^'+ key);
