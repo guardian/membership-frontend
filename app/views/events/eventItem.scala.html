@@ -9,7 +9,7 @@
         </div>
         <div class="event__meta">
             <h2 class="event__name">
-                <a href="/event/@event.id">@event.name.text</a>
+                <a href="/event/@event.id">@event.name.text.take(32).concat("...")</a>
             </h2>
             <span class="event__location">@event.venue.name</span>
             <span class="event__time">@event.start.pretty</span>
