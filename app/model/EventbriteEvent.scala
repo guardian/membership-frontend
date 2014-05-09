@@ -13,7 +13,7 @@ case class EBAddress(country_name: Option[String], city: Option[String], region:
 case class EBVenue(id: Option[String], address: EBAddress, latitude: Option[String], longitude: Option[String], name: Option[String])
 case class EBResponse(events: Seq[EBEvent])
 case class EBPricing(currency: String, display: String, value: Int)
-case class EBTickets(id: String, name: String, free: Boolean, quantity_total: Option[Int], quantity_sold: Option[Int], cost: Option[EBPricing], sales_end: Instant)
+case class EBTickets(id: Option[String], name: Option[String], free: Option[Boolean], quantity_total: Option[Int], quantity_sold: Option[Int], cost: Option[EBPricing], sales_end: Option[Instant])
 case class EBEvent(
   name: EBRichText,
   description: EBRichText,
@@ -23,7 +23,7 @@ case class EBEvent(
   end: DateTime,
   venue: EBVenue,
   capacity: Option[Int],
-  ticket_classes: Seq[EBTickets])
+  ticket_classes: Option[Seq[EBTickets]])
 
 object EventbriteDeserializer {
 
