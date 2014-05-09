@@ -201,11 +201,14 @@ define([
 
     var init = function () {
 
-        populateUserInformation();
+        if($formElement.length) {
 
-        addListeners();
+            populateUserInformation();
 
-        stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+            addListeners();
+
+            stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+        }
     };
 
     return {
