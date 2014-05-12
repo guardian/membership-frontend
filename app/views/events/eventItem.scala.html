@@ -10,15 +10,14 @@
                         <img src="@event.logo_url" class="responsive-img" alt="Event Image"></div>
                 </div>
                 <h2 class="item__title">
-                    @event.name.text.take(32).concat("...")
+                    @event.name.text
                 </h2>
             </a>
             <div class="item__meta">
                 <time class="item__timestamp js-item__timestamp">
                     <i class="i i-clock-light-grey"></i>
-                    <span class="timestamp__text" title="Published: 9 May 2014">2h</span>
-                    <span class="event__location">@event.venue.name</span>
-                    <span class="event__time">@event.start.pretty</span>
+                    <div class="event__location"><span class="icon location--icon"></span>@event.venue.name</div>
+                    <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
                 </time>
             </div>
         </div>

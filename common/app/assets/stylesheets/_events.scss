@@ -112,3 +112,63 @@ div.event {
     }
 
 }
+
+/* ==========================================================================
+   Temp events hackry stuff
+   ========================================================================== */
+
+.inner-container {
+    width: 1040px;
+    float: right;
+}
+
+.icon {
+    background-image: url('../images/icons.png');
+    width: 34px;
+    height: 33px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: .4em;
+}
+
+.location--icon {
+    background-position: 0 0;
+}
+
+.time--icon {
+    background-position: -33px 0;
+}
+
+.item__meta {
+    position: relative;
+}
+
+.event__location {
+    margin-bottom: .4em;
+}
+
+.container--people .facia-slice-wrapper--position-1 .item__title {
+    min-height: 0;
+}
+
+.item__meta .item__timestamp {
+    padding-left: 0;
+}
+
+.event {
+    background-color: #ffffff;
+    width: 100%;
+    overflow: hidden;
+}
+
+.event__image img {
+    width: 780px;
+}
+
+.event__meta {
+    padding-top: 1.2em;
+}
+
+.container {
+    padding-left: 240px;
+}

@@ -13,20 +13,23 @@
                     <span class="container__title__label u-text-hyphenate">Current Events</span>
                 </h2>
             </div>
+            <div class="inner-container">
 
-        @partials.imgContainerHeader()
-
-        @for((event, index) <- eventsList.zipWithIndex) {
-
-            @if(index % 3 == 0){
-                @partials.imgContainerFooter()
                 @partials.imgContainerHeader()
-            }
 
-            @events.eventItem(event)
-        }
+                @for((event, index) <- eventsList.zipWithIndex) {
 
-        @partials.imgContainerFooter()
+                    @if(index % 3 == 0 && index != 0){
+                        @partials.imgContainerFooter()
+                        @partials.imgContainerHeader()
+                    }
+
+                    @events.eventItem(event)
+                }
+
+                @partials.imgContainerFooter()
+
+            </div>
 
         </section>
     </div>
