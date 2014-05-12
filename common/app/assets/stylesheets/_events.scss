@@ -140,7 +140,7 @@ div.event {
 }
 
 .item__meta {
-    position: relative;
+    bottom: 20px;
 }
 
 .event__location {
@@ -171,4 +171,8 @@ div.event {
 
 .event__content.container {
     padding-left: 240px;
+}
+
+.l-row__item {
+    height: 21em;
 }

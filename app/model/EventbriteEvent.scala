@@ -9,22 +9,31 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 case class EBRichText(text: String, html: String)
-case class EBAddress(country_name: Option[String], city: Option[String], region: Option[String], address_1: Option[String], country: Option[String])
+case class EBAddress(country_name: Option[String], city: Option[String], address_1: Option[String], address_2: Option[String], region: Option[String], country: Option[String])
 case class EBVenue(id: Option[String], address: EBAddress, latitude: Option[String], longitude: Option[String], name: Option[String])
 case class EBResponse(events: Seq[EBEvent])
 case class EBPricing(currency: String, display: String, value: Int)
 case class EBTickets(id: Option[String], name: Option[String], free: Option[Boolean], quantity_total: Option[Int], quantity_sold: Option[Int], cost: Option[EBPricing], sales_end: Option[Instant])
 case class EBEvent(
-  name: EBRichText,
-  description: Option[EBRichText],
-  logo_url: Option[String],
-  url: String,
-  id: String,
-  start: DateTime,
-  end: DateTime,
-  venue: EBVenue,
-  capacity: Option[Int],
-  ticket_classes: Option[Seq[EBTickets]])
+    name: EBRichText,
+    description: Option[EBRichText],
+    logo_url: Option[String],
+    url: String,
+    id: String,
+    start: DateTime,
+    end: DateTime,
+    venue: EBVenue,
+    capacity: Option[Int],
+    ticket_classes: Option[Seq[EBTickets]]) {
+  val blankAddress = EBAddress(None, None, None, None, None, None)
+
+  def countryName = venue.address.country_name.getOrElse("")
+  def city = venue.address.city.getOrElse("")
+  def addressOne = venue.address.address_1.getOrElse("")
+  def addressTwo = venue.address.address_2.getOrElse("")
+  def region = venue.address.region.getOrElse("")
+  def country = venue.address.country.getOrElse("")
+}
 
 object EventbriteDeserializer {
 

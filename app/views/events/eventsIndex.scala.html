@@ -15,19 +15,19 @@
             </div>
             <div class="inner-container">
 
-                @partials.imgContainerHeader()
+                @partials.eventImgRowHeader()
 
                 @for((event, index) <- eventsList.zipWithIndex) {
 
                     @if(index % 3 == 0 && index != 0){
-                        @partials.imgContainerFooter()
-                        @partials.imgContainerHeader()
+                        @partials.eventImgRowFooter()
+                        @partials.eventImgRowHeader()
                     }
 
                     @events.eventItem(event)
                 }
 
-                @partials.imgContainerFooter()
+                @partials.eventImgRowFooter()
 
             </div>
 

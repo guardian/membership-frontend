@@ -33,6 +33,13 @@
                 <p class="event__location"><span class="icon location--icon"></span>@event.venue.name</p>
                 <p class="event__time"><span class="icon time--icon"></span>@event.start.pretty</p>
 
+                @if(!event.addressOne.isEmpty){ <p>@event.addressOne</p> }
+                @if(!event.addressTwo.isEmpty){ <p>@event.addressTwo</p> }
+                @if(!event.city.isEmpty){ <p>@event.city</p> }
+                @if(!event.region.isEmpty){ <p>@event.region</p> }
+                @if(!event.countryName.isEmpty){ <p>@event.countryName</p> }
+                @if(!event.country.isEmpty){ <p>@event.country</p> }
+
                 <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
             </div>
 

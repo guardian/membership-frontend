@@ -29,7 +29,8 @@ object Dates {
   }
 
   implicit class RichDateTime(dateTime: DateTime) {
-    val formatter = DateTimeFormat.mediumDateTime()
-    lazy val pretty = formatter.print(dateTime)
+    val DateFormat = "MMMM d, y k:m a"
+    val formatter = DateTimeFormat.forPattern(DateFormat)
+    lazy val pretty = formatter.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
 }
