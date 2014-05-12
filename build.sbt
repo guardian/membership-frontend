@@ -1,3 +1,5 @@
+
+
 name := "Membership"
 
 version := "1.0-SNAPSHOT"
@@ -18,6 +20,8 @@ playArtifactDistSettings
 
 magentaPackageName := "membership-app"
 
+parallelExecution in Global := false
+
 scalariformSettings
 
 ScoverageSbtPlugin.instrumentSettings
@@ -26,6 +30,8 @@ ScoverageSbtPlugin.instrumentSettings
 org.scalastyle.sbt.ScalastylePlugin.Settings
 
 org.scalastyle.sbt.PluginKeys.failOnError := true
+
+ScoverageSbtPlugin.ScoverageKeys.excludedPackages in ScoverageSbtPlugin.scoverage := "<empty>;Reverse.*;Routes"
 
 lazy val testScalaStyle = taskKey[Unit]("testScalaStyle")
 
