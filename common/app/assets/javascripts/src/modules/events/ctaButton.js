@@ -17,7 +17,7 @@ define([
         var ctaButton = $('.sign-in');
         var isUserLoggedIn = user.isLoggedIn();
 
-        if(ctaButton && isUserLoggedIn){
+        if(ctaButton.length && isUserLoggedIn){
 
             ctaButton.toggleClass(config.classes.LOGGED_IN_CLASS).text(config.text.LOGGED_IN_CTA_BUTTON);
         }
