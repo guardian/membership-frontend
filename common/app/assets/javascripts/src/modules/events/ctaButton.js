@@ -14,12 +14,13 @@ define([
 
     var init = function(){
 
-        var ctaButton = $('.sign-in');
+        var $ctaButton = $('.sign-in');
         var isUserLoggedIn = user.isLoggedIn();
 
-        if(ctaButton && isUserLoggedIn){
+        if($ctaButton && isUserLoggedIn){
 
-            ctaButton.toggleClass(config.classes.LOGGED_IN_CLASS).text(config.text.LOGGED_IN_CTA_BUTTON);
+            $ctaButton.toggleClass(config.classes.LOGGED_IN_CLASS).text(config.text.LOGGED_IN_CTA_BUTTON);
+            $ctaButton[0].href = $ctaButton.data('url');
         }
     };
 

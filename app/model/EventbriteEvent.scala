@@ -18,6 +18,7 @@ case class EBEvent(
   name: EBRichText,
   description: Option[EBRichText],
   logo_url: Option[String],
+  url: String,
   id: String,
   start: DateTime,
   end: DateTime,
