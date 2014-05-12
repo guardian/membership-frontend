@@ -29,10 +29,11 @@
    ========================================================================== */
 
 @include grid-system;
-@import "layout/layout";
 @include guss-row-utility;
 @include guss-columns-utility;
-
+@import "layout/layout";
+@import "layout/footer";
+@import "layout/header";
 
 /* ==========================================================================
    Base

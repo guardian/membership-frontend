@@ -15,41 +15,8 @@ html {
     padding: gs-height(1) 0;
 }
 
-header {
-    height: 90px;
-    border-bottom: 1px solid $c-neutral6;
-
-    background-color: $mem-trans-white;
-
-    .identity {
-        position: absolute;
-        top: gs-height(1)/2;
-        right: $gs-gutter;
-        text-align: right;
-        span {
-            @include fs-data(2);
-            display: block;
-            padding: 2px 0;
-        }
-    }
-}
-
 body {
     margin-bottom: 100px;
-}
-
-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 100px;
-    width: 100%;
-    background-color: $c-neutral8;
-    .copy {
-        @include fs-data(6);
-        text-align: center;
-        margin: 48px 0 0 0;
-    }
 }
 
 .section-header {

@@ -1,0 +1,20 @@
+header {
+  @include rem((
+    height: 134px
+  ));
+  border-bottom: 1px solid $c-neutral6;
+
+  background: $c-neutral8;
+
+  .identity {
+    position: absolute;
+    top: gs-height(1)/2;
+    right: $gs-gutter;
+    text-align: right;
+    span {
+      @include fs-data(2);
+      display: block;
+      padding: 2px 0;
+    }
+  }
+}
