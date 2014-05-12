@@ -5,25 +5,30 @@
 
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
 
-
-    <section class="container container--people container--row-pattern">
-        <div class="container__border tone-feature tone-accent-border"></div>
-        <div class="container__header">
-            <h2 class="container__title tone-feature tone-background">
-                <span class="container__title__label u-text-hyphenate">Current Events</span>
-            </h2>
-        </div>
-        <div class="container__body container--rolled-up-hide">
-            <div class="facia-slice-wrapper facia-slice-wrapper--position-1">
-                <ul class="u-unstyled l-row l-row--items-3 collection">
-
-                @for(event <- eventsList) {
-                    @events.eventItem(event)
-                }
-
-                </ul>
+    <div class="container--features">
+        <section class="container container--people container--row-pattern">
+            <div class="container__border tone-feature tone-accent-border"></div>
+            <div class="container__header">
+                <h2 class="container__title tone-feature tone-background">
+                    <span class="container__title__label u-text-hyphenate">Current Events</span>
+                </h2>
             </div>
-        </div>
-    </section>
+
+        @partials.imgContainerHeader()
+
+        @for((event, index) <- eventsList.zipWithIndex) {
+
+            @if(index % 3 == 0){
+                @partials.imgContainerFooter()
+                @partials.imgContainerHeader()
+            }
+
+            @events.eventItem(event)
+        }
+
+        @partials.imgContainerFooter()
+
+        </section>
+    </div>
 
 }

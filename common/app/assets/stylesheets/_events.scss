@@ -8,6 +8,7 @@
 /* ==========================================================================
    An Event List item
    ========================================================================== */
+
 li.event {
     text-align: left;
     display: block;
@@ -70,7 +71,7 @@ li.event {
    ========================================================================== */
 .container {
     padding: $gutter;
-    background-color: $mem-trans-white;
+    background-color: #FFFFFF;
 }
 
 div.event {
