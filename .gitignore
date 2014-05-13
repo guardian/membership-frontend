@@ -1,5 +1,6 @@
 node_modules
 app/npm-debug.log
+.DS_Store
 
 logs
 project/project

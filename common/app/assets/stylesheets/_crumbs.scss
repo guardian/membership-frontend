@@ -11,9 +11,12 @@
     padding-right: $gutter/4;
     margin: 0 21px 0 0;
 
-    a {
+    a, span {
       position: relative;
       z-index: 1;
+    }
+
+    a {
       color: $mem-brandOrange;
     }
 
@@ -54,18 +57,5 @@
         content: none;
       }
     }
-
-//    -webkit-transition: padding 0.2s ease-in-out;
-//    -moz-transition: padding  0.2s ease-in-out;
-//    -ms-transition: padding 0.2s ease-in-out;
-//    -o-transition: padding  0.2s ease-in-out;
-//    transition: padding 0.2s ease-in-out;
-
-//    &:hover {
-//      padding: 0 $gutter/2 0 0;
-//      a {
-//        text-decoration: none;
-//      }
-//    }
   }
 }

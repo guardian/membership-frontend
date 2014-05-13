@@ -1,19 +1,25 @@
 @(event: model.EBEvent)
 @import views.Dates._
 
-    <li class="event">
-        <div class="event__image">
-            <a href="/event/@event.id">
-                <img src="@event.logo_url" alt="Event Image" height="220"/>
+<li class="facia-slice__item facia-slice__item--volume-0 l-row__item">
+    <div class="item item--has-discussion item--has-image item--imageadjust-default tone-news">
+        <div class="item__container">
+            <a href="/event/@event.id" class="item__link tone-accent-border" data-link-name="article">
+                <div class="item__media-wrapper">
+                    <div class="item__image-container">
+                        <img src="@event.logo_url" class="responsive-img" alt="Event Image"></div>
+                </div>
+                <h2 class="item__title">
+                    @event.name.text
+                </h2>
             </a>
+            <div class="item__meta">
+                <time class="item__timestamp js-item__timestamp">
+                    <i class="i i-clock-light-grey"></i>
+                    <div class="event__location"><span class="icon location--icon"></span>@event.venue.name</div>
+                    <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
+                </time>
+            </div>
         </div>
-        <div class="event__meta">
-            <h2 class="event__name">
-                <a href="/event/@event.id">@event.name.text.take(32).concat("...")</a>
-            </h2>
-            <span class="event__location">@event.venue.name</span>
-            <span class="event__time">@event.start.pretty</span>
-        </div>
-    </li>
-
-
+    </div>
+</li>
