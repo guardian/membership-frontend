@@ -15,6 +15,20 @@
                 <img src="@event.logo_url" alt="Event Image" />
             </div>
 
+            <div class="event__meta">
+                <p class="event__location"><span class="icon location--icon"></span>
+                    <span class="event__venue-name">@event.venue.name</span>,
+                    <span class="event__address">
+                        @if(!event.addressOne.isEmpty){ <span>@event.addressOne</span>, }
+                        @if(!event.addressTwo.isEmpty){ <span>@event.addressTwo</span>, }
+                        @if(!event.city.isEmpty){ <span>@event.city</span>, }
+                        @if(!event.region.isEmpty){ <span>@event.region</span>, }
+                        @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
+                    </span>
+                </p>
+                <p class="event__time"><span class="icon time--icon"></span>@event.start.pretty</p>
+            </div>
+
             <div class="event__tickets">
                 <div class="js-datetime-enhance">
                     <span class="event__sale_ends_note js-datetime-enhance-note">Sales end at </span>
@@ -25,26 +39,14 @@
                 <span class="event__price-note"> per ticket.</span>
             </div>
 
-            <div class="actions">
+            <div class="actions top">
                 <a class="sign-in action" href="https://profile.theguardian.com/signin" data-url="@event.url">Sign In to attend</a>
             </div>
 
-            <div class="event__meta">
-                <p class="event__location"><span class="icon location--icon"></span>@event.venue.name</p>
-                <p class="event__time"><span class="icon time--icon"></span>@event.start.pretty</p>
-
-                @if(!event.addressOne.isEmpty){ <p>@event.addressOne</p> }
-                @if(!event.addressTwo.isEmpty){ <p>@event.addressTwo</p> }
-                @if(!event.city.isEmpty){ <p>@event.city</p> }
-                @if(!event.region.isEmpty){ <p>@event.region</p> }
-                @if(!event.countryName.isEmpty){ <p>@event.countryName</p> }
-                @if(!event.country.isEmpty){ <p>@event.country</p> }
-
-                <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
-            </div>
+            <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
             <div class="actions">
-                <a class="sign-in action" href="https://profile.theguardian.com/signin" data-url="@event.url">Sign In to attend</a>
+                <a class="sign-in action" href="https://profile.thegulocal.com/signin" data-url="@event.url">Sign In to attend</a>
             </div>
 
         </div>

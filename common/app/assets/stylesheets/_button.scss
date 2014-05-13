@@ -1,6 +1,10 @@
 .actions {
     margin: $gs-row-height 0 0 0;
 
+    &.top {
+      margin: 0 0 $gs-row-height 0;
+    }
+
     .action {
         display: inline-block;
         margin: 0 $gutter 0 0;

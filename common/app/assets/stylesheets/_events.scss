@@ -84,7 +84,11 @@ div.event {
         }
 
         .event__description {
-            @include fs-bodyCopy(3);
+            //@include fs-bodyCopy(3);
+            ol,
+            ul {
+              list-style-position: inside;
+            }
         }
 
     }
