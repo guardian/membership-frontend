@@ -9,11 +9,22 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 case class EBRichText(text: String, html: String)
-case class EBAddress(country_name: Option[String], city: Option[String], address_1: Option[String], address_2: Option[String], region: Option[String], country: Option[String])
+case class EBAddress(country_name: Option[String],
+  city: Option[String],
+  address_1: Option[String],
+  address_2: Option[String],
+  region: Option[String],
+  country: Option[String])
 case class EBVenue(id: Option[String], address: Option[EBAddress], latitude: Option[String], longitude: Option[String], name: Option[String])
 case class EBResponse(events: Seq[EBEvent])
 case class EBPricing(currency: String, display: String, value: Int)
-case class EBTickets(id: Option[String], name: Option[String], free: Option[Boolean], quantity_total: Option[Int], quantity_sold: Option[Int], cost: Option[EBPricing], sales_end: Option[Instant])
+case class EBTickets(id: Option[String],
+  name: Option[String],
+  free: Option[Boolean],
+  quantity_total: Option[Int],
+  quantity_sold: Option[Int],
+  cost: Option[EBPricing],
+  sales_end: Option[Instant])
 case class EBEvent(
     name: EBRichText,
     description: Option[EBRichText],
