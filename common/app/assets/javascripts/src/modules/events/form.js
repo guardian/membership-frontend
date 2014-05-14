@@ -10,79 +10,38 @@ define([
     function StripePaymentForm(){}
 
     StripePaymentForm.prototype.config = {
-
         classes: {
-            FORM_FIELD_ERROR: 'form-field--error',
-            ERROR_CARD_NUMBER: 'error--card-number',
-            ERROR_CARD_CVC: 'error--card-cvc',
-            ERROR_CARD_EXPIRY: 'error--card-expiry',
-            HIDE: 'hide',
-            CREDIT_CARD_EXPIRY_YEAR: 'credit-card-expiry-year',
-            PAYMENT_ERRORS: 'payment-errors',
-            FORM_SUBMIT: 'submit-input'
+            STRIPE_FORM: 'js-stripe-form',
+            FORM_FIELD_ERROR: 'js-form-field--error',
+            ERROR_CARD_NUMBER: 'js-error--card-number',
+            ERROR_CARD_CVC: 'js-error--card-cvc',
+            ERROR_CARD_EXPIRY: 'js-error--card-expiry',
+            HIDE: 'js-hide',
+            PAYMENT_ERRORS: 'js-payment-errors',
+            FORM_SUBMIT: 'js-submit-input',
+            CREDIT_CARD_NUMBER: 'js-credit-card-number',
+            CREDIT_CARD_CVC: 'js-credit-card-cvc',
+            CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-expiry-month',
+            CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-expiry-year'
         },
-        id: {
-            CREDIT_CARD_NUMBER: 'credit-card-number',
-            CREDIT_CARD_CVC: 'credit-card-cvc',
-            CREDIT_CARD_EXPIRY_MONTH: 'credit-card-expiry-month',
-            PAYMENT_FORM: 'payment-form'
-        },
-        domElements: {}
+        DOM: {}
     };
 
     StripePaymentForm.prototype.domElementSetup = function(){
-
-        var config = this.config;
-        var classNames = config.classes;
-        var ids = config.id;
-
-        for(var className in classNames){
-
-            var camelCasedClassName = this.camelCase(className);
-
-            config.domElements[camelCasedClassName] = this.getElementByClass(classNames[className]);
+        for(var className in this.config.classes){
+            this.config.DOM[className] = this.context.querySelector('.'+this.config.classes[className]);
         }
-
-        for(var id in ids){
-
-            var camelCasedId = this.camelCase(id);
-
-            config.domElements[camelCasedId] = this.getElementById(ids[id]);
-        }
-
-    };
-
-    StripePaymentForm.prototype.camelCase = function(string){
-
-        var camelCased = string.toLowerCase().split('_').map(function(str, i){
-
-            if(0 === i ){
-                return str;
-            }
-
-            return str[0].toUpperCase() + str.slice(1);
-        }).join('');
-
-        return camelCased;
-    };
-
-    StripePaymentForm.prototype.getElementByClass = function(className){
-        return $('.' + className);
-    };
-
-    StripePaymentForm.prototype.getElementById = function(id){
-        return $('#' + id);
     };
 
     StripePaymentForm.prototype.getElement = function(element){
-        return this.config.domElements[element];
+        return $(this.config.DOM[element]);
     };
 
     StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
-        var $paymentErrors = this.getElement('paymentErrors');
-        var $submitButton = this.getElement('formSubmit');
-        var $formElement = this.getElement('paymentForm');
+        var $paymentErrors = this.getElement('PAYMENT_ERRORS'),
+            $submitButton = this.getElement('FORM_SUBMIT'),
+            $formElement = $(this.context);
 
         if (response.error) {
             $paymentErrors.text(response.error.message);
@@ -119,11 +78,11 @@ define([
 
     StripePaymentForm.prototype.addListeners = function(){
 
-        var $creditCardNumberElement = this.getElement('creditCardNumber');
-        var $creditCardCVCElement = this.getElement('creditCardCvc');
-        var $creditCardExpiryMonthElement = this.getElement('creditCardExpiryMonth');
-        var $creditCardExpiryYearElement = this.getElement('creditCardExpiryYear');
-        var $formElement = this.getElement('paymentForm');
+        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
+            $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
+            $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
+            $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
+            $formElement = $(this.context);
 
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
@@ -257,17 +216,21 @@ define([
         }
     };
 
-    StripePaymentForm.prototype.init = function(){
+    StripePaymentForm.prototype.init = function (context) {
 
         //TODO init guard/element on page detection needs a thought here
 
-        this.domElementSetup();
+        this.context = context || document.querySelector('.'+this.config.classes.STRIPE_FORM);
 
-        this.populateUserInformation();
+        if (this.context) {
+            this.domElementSetup();
 
-        this.addListeners();
+            this.populateUserInformation();
 
-        stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+            this.addListeners();
+
+            stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+        }
     };
 
     return StripePaymentForm;
