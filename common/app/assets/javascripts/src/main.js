@@ -17,7 +17,10 @@ require([
         datetimeEnhance.init();
     });
 
-    router.match('/stripe').to(stripeForm.init);
+    router.match([
+        '/stripe',
+        '/partner-registration'
+    ]).to(stripeForm.init);
 
     router.match('*').to(function () {
         account.init();

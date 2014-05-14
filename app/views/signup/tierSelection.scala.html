@@ -1,0 +1,21 @@
+@import views.Crumb
+
+@main("Membership") {
+
+    @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member")))
+
+    <div class="container">
+
+        <h1 class="section-header">Become a member</h1>
+
+        <p>You should become a guardian partner because Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent et auctor nunc. Pellentesque posuere magna eu risus lobortis vel convallis elit scelerisque. Donec est justo, elementum vitae condimentum a, viverra eget augue.</p>
+
+        <ul class="tiers">
+            <li class="tier">Become a Guardian Member</li>
+            <li class="tier"><a href="/partner-registration">Register and become a Guardian Partner</a></li>
+            <li class="tier">Become a Guardian Patron</li>
+        </ul>
+
+    </div>
+
+}

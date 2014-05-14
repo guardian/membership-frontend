@@ -11,7 +11,14 @@ define(function () {
     };
 
     Router.prototype.to = function (fn) {
-        this.routes[this.route] = fn;
+        var self = this;
+        if (typeof self.route === 'string') {
+            self.routes[self.route] = fn;
+        } else {
+            self.route.forEach(function (e) {
+                self.routes[e] = fn;
+            });
+        }
     };
 
     Router.prototype.go = function () {

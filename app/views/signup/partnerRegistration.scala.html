@@ -1,0 +1,47 @@
+@import views.Crumb
+
+@main("Membership") {
+
+    @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member"), Crumb("Partner registration", "/partner-registration")))
+
+    <div class="container">
+        <h1 class="section-header">Partner registration</h1>
+
+        <form action="" method="POST" id="payment-form" class="form">
+            <fieldset class="fieldset">
+                <span class="payment-errors"></span>
+                <div class="form-field">
+                    <label class="label" for="cc-num">
+                        <span>Card Number</span>
+                        <input type="tel" size="20" data-stripe="number" class="cc-num text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx"/>
+                    </label>
+                    <p class="error--card-number error hide">Please enter a valid card number</p>
+                </div>
+
+                <div class="form-field">
+                    <label class="label" for="cc-cvc">
+                        <span>CVC</span>
+                        <input type="tel" size="4" data-stripe="cvc" class="cc-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC"/>
+                    </label>
+                    <p class="error--card-cvc error hide">Please enter a valid CVC number</p>
+                </div>
+
+                <div class="form-field">
+                    <label class="label" for="cc-exp-month">
+                        <span>Expiration (MM/YYYY)</span>
+                        <p>
+                            <input type="tel" size="2" data-stripe="exp-month" class="cc-exp-month text-input text-input--small" id="cc-exp-month" placeholder="MM"/>
+                            <span> / </span>
+                            <input type="tel" size="4" data-stripe="exp-year" class="cc-exp-year text-input text-input--small" placeholder="YYYY"/>
+                        </p>
+                    </label>
+                    <p class="error--card-expiry error hide">Please enter a valid Expiry</p>
+                </div>
+
+                <button type="submit" class="submit-input">Submit Payment</button>
+
+            </fieldset>
+        </form>
+    </div>
+
+}
