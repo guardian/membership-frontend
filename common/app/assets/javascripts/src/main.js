@@ -6,7 +6,7 @@ require([
     'src/modules/account',
     'src/modules/account',
     'src/modules/events/datetimeEnhance'
-], function(router, domready, stripeForm, ctaButton, account, datetimeEnhance){
+], function(router, domready, StripeForm, ctaButton, account, datetimeEnhance){
     'use strict';
 
 //    router.match('/events').to(function () {
@@ -20,7 +20,7 @@ require([
     });
 
     router.match('/stripe').to(function(){
-        var stripe = new stripeForm();
+        var stripe = new StripeForm();
         stripe.init();
     });
 

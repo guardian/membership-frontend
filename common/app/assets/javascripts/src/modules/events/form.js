@@ -257,7 +257,9 @@ define([
         }
     };
 
-    StripePaymentForm.prototype.init = function () {
+    StripePaymentForm.prototype.init = function(){
+
+        //TODO init guard/element on page detection needs a thought here
 
         this.domElementSetup();
 
