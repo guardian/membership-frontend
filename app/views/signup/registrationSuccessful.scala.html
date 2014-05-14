@@ -1,0 +1,11 @@
+@import views.Crumb
+
+@main("Membership") {
+
+    @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member"), Crumb("Partner registration", "/partner-registration"), Crumb("Complete", "/registration-successful")))
+
+    <div class="container">
+        <h1 class="section-header">THANK YOU</h1>
+    </div>
+
+}

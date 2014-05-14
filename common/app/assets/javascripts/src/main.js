@@ -19,7 +19,10 @@ require([
         datetimeEnhance.init();
     });
 
-    router.match('/stripe').to(function(){
+    router.match([
+        '/stripe',
+        '/partner-registration'
+    ]).to(function () {
         var stripe = new StripeForm();
         stripe.init();
     });

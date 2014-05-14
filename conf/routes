@@ -3,14 +3,19 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.FrontPage.index
+GET         /                            controllers.FrontPage.index
+
+# Membership
+GET         /become-a-member             controllers.Signup.renderTierSelection
+GET         /partner-registration        controllers.Signup.renderPartnerRegistration
+GET         /registration-successful     controllers.Signup.renderRegistrationSuccessful
 
 # Events
-GET     /events                     controllers.EventController.renderEventsIndex
-GET     /event/:id                  controllers.EventController.renderEventPage(id)
+GET         /events                      controllers.EventController.renderEventsIndex
+GET         /event/:id                   controllers.EventController.renderEventPage(id)
 
-GET     /stripe                     controllers.Subscription.stripe
-POST    /stripe                     controllers.Subscription.stripeSubmit
+GET         /stripe                      controllers.Subscription.stripe
+POST        /stripe                      controllers.Subscription.stripeSubmit
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET         /assets/*file                controllers.Assets.at(path="/public", file)
