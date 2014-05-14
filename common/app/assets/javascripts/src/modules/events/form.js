@@ -259,17 +259,13 @@ define([
 
     StripePaymentForm.prototype.init = function () {
 
-        var $paymentForm = this.getElement('paymentForm');
+        this.domElementSetup();
 
-        if($paymentForm.length) {
-            this.domElementSetup();
+        this.populateUserInformation();
 
-            this.populateUserInformation();
+        this.addListeners();
 
-            this.addListeners();
-
-            stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
-        }
+        stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
     };
 
     return StripePaymentForm;

@@ -19,13 +19,16 @@ require([
         datetimeEnhance.init();
     });
 
-    router.match('/stripe').to(stripeForm.init);
+    router.match('/stripe').to(function(){
+        var stripe = new stripeForm();
+        stripe.init();
+    });
 
     router.match('*').to(function () {
         account.init();
     });
 
-    domready(function () {
+    domready(function(){
         router.go();
     });
 
