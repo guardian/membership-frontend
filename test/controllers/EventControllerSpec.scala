@@ -13,13 +13,13 @@ object EventControllerSpec extends PlaySpecification with EventController {
       val result = renderEventsIndex(FakeRequest())
       status(result) must equalTo(OK)
       contentAsString(result) must contain("An evening with Chris Finch")
-      contentAsString(result) must contain("Chris High Res Party time extravaganza")
+      contentAsString(result) must contain("Chris High Res Party time")
     }
 
     "display a single event" in new WithApplication {
       val result = renderEventPage("11464752383")(FakeRequest())
       status(result) must equalTo(OK)
-      contentAsString(result) must contain("Chris High Res Party time extravaganza")
+      contentAsString(result) must contain("Chris High Res Party time")
       contentAsString(result) must contain("11464752383")
     }
 

@@ -1,92 +1,182 @@
-// An event list item
-li.event {
-  display: block;
-  margin-bottom: $gs-gutter;
-  background-color: $c-neutral6;
-
-  &:hover {
-    background-color: #FFFFFF;
-  }
-
-  .event__image {
-    height: gs-span(3);
-    overflow: hidden;
-    img {
-      width: 100%;
-    }
-  }
-
-  .event__meta {
-    padding: $gutter/2;
-    height: 100px;
-    width: gs-span(3) - 2*($gutter/2);
-    overflow: hidden;
-  }
-
-  .event__name {
-    @include fs-headline(2);
-    @include rem((
-            margin-bottom: $gs-baseline/4
-    ));
-  }
-
-  .event__location,
-  .event__time {
-    @include fs-textsans(2);
-    display: block;
-  }
-
-  @include mq(tablet) {
-    width: gs-span(3);
-    margin-right: $gs-gutter;
-    display: inline-block;
-
-    .event__image {
-      width: gs-span(3);
-      img {
-        width: auto;
-      }
-    }
-  }
-
+/* ==========================================================================
+   Event List
+   ========================================================================== */
+.events__list {
+    text-align: center;
 }
 
-// An event on an event page
-div.event {
-  .event__content {
+/* ==========================================================================
+   An Event List item
+   ========================================================================== */
+
+li.event {
+    text-align: left;
+    display: block;
+    margin-bottom: $gs-gutter;
+    background-color: #FFFFFF;
+    padding: .125em;
+    @include border-radius(.2em);
+
+    &:hover {
+        background-color: #FFFFFF;
+    }
+
+    .event__image {
+        overflow: hidden;
+        img {
+            width: 100%;
+        }
+    }
+
+    .event__meta {
+        padding: $gutter/2;
+        @include rem((
+            height: 130px
+        ));
+        width: auto;
+        overflow: hidden;
+    }
+
+    .event__name {
+        @include fs-headline(2);
+        @include rem((
+            margin-top: $gs-baseline/2,
+            margin-bottom: $gs-baseline
+        ));
+    }
 
     .event__location,
     .event__time {
-      @include fs-textsans(4);
-      display: block;
+        @include fs-textsans(2);
+        display: block;
     }
 
-    .event__description {
-      @include fs-bodyCopy(3);
+    @include mq(tablet) {
+        width: gs-span(5);
+        margin-right: $gs-gutter;
+        display: inline-block;
+
+        .event__image {
+            width: auto;
+            img {
+                width: auto;
+            }
+        }
     }
 
-  }
+}
 
-  .event__related {
-    margin-top: gs-height(1);
+/* ==========================================================================
+   An event on an event page
+   ========================================================================== */
+.container {
+    padding: $gutter;
+    background-color: #FFFFFF;
+}
 
-    .event__related--content {
-      background-color: $mem-trans-white;
-    }
-  }
-
-  @include mq(desktop) {
+div.event {
     .event__content {
-      float: left;
-      width: gs-span(10);
-      margin-right: $gs-gutter;
-    }
-    .event__related {
-      margin: 0;
-      float: left;
-      width: gs-span(4);
-      min-height: 600px;
-    }
-  }
 
+        .event__location,
+        .event__time {
+            @include fs-textsans(4);
+            display: block;
+        }
+
+        .event__description {
+            //@include fs-bodyCopy(3);
+            ol,
+            ul {
+              list-style-position: inside;
+            }
+        }
+
+    }
+
+    .event__related {
+        margin-top: gs-height(1);
+
+        .event__related--content {
+            background-color: $mem-trans-white;
+        }
+    }
+
+    @include mq(desktop) {
+        .event__content {
+            float: left;
+            width: gs-span(10);
+            margin-right: $gs-gutter;
+        }
+        .event__related {
+            margin: 0;
+            float: left;
+            width: gs-span(4);
+            min-height: 600px;
+        }
+    }
+
+}
+
+/* ==========================================================================
+   Temp events hackry stuff
+   ========================================================================== */
+
+.inner-container {
+    width: 1040px;
+    float: right;
+}
+
+.icon {
+    background-image: url('../images/icons.png');
+    width: 34px;
+    height: 33px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: .4em;
+}
+
+.location--icon {
+    background-position: 0 0;
+}
+
+.time--icon {
+    background-position: -33px 0;
+}
+
+.item__meta {
+    bottom: 20px;
+}
+
+.event__location {
+    margin-bottom: .4em;
+}
+
+.container--people .facia-slice-wrapper--position-1 .item__title {
+    min-height: 0;
+}
+
+.item__meta .item__timestamp {
+    padding-left: 0;
+}
+
+.event {
+    background-color: #ffffff;
+    width: 100%;
+    overflow: hidden;
+}
+
+.event__image img {
+    width: 780px;
+}
+
+.event__meta {
+    padding-top: 1.2em;
+}
+
+.event__content.container {
+    padding-left: 240px;
+}
+
+.l-row__item {
+    height: 21em;
 }

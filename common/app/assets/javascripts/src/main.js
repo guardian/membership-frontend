@@ -1,17 +1,32 @@
 require([
+    'src/utils/router',
     'domready',
     'src/modules/events/form',
     'src/modules/events/ctaButton',
-    'src/modules/account'
-], function(domready, PaymentForm, ctaButton, account){
+    'src/modules/account',
+    'src/modules/account',
+    'src/modules/events/datetimeEnhance'
+], function(router, domready, stripeForm, ctaButton, account, datetimeEnhance){
     'use strict';
 
-    domready( function(){
+//    router.match('/events').to(function () {
+//        console.log('events page');
+//    });
 
-        var stripeForm = new PaymentForm();
 
-        stripeForm.init();
+    router.match('/event').to(function () {
         ctaButton.init();
+        datetimeEnhance.init();
+    });
+
+    router.match('/stripe').to(stripeForm.init);
+
+    router.match('*').to(function () {
         account.init();
     });
+
+    domready(function () {
+        router.go();
+    });
+
 });
