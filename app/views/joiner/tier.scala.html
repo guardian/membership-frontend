@@ -1,0 +1,21 @@
+@(memberTier: String)
+
+@import views.Crumb
+
+@main("Membership") {
+
+@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member")))
+
+
+
+<div class="container">
+
+    <h1 class="section-header">@memberTier</h1>
+
+    <p>Lost of goodies to go here</p>
+
+    <a href="/join/parter/payment">Pay to become a partner</a>
+
+</div>
+
+}

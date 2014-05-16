@@ -10,6 +10,12 @@ GET         /become-a-member             controllers.Signup.renderTierSelection
 GET         /partner-registration        controllers.Signup.renderPartnerRegistration
 GET         /registration-successful     controllers.Signup.renderRegistrationSuccessful
 
+# Join
+GET         /join                        controllers.Joiner.tierList
+GET         /join/:memberTier            controllers.Joiner.tier(memberTier)
+GET         /join/:memberTier/payment    controllers.Joiner.payment(memberTier)
+GET         /join/:memberTier/thankyou   controllers.Joiner.thankyou(memberTier)
+
 # Events
 GET         /events                      controllers.EventController.renderEventsIndex
 GET         /event/:id                   controllers.EventController.renderEventPage(id)
