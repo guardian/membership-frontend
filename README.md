@@ -16,7 +16,7 @@
 
 + Go to project root
 + $ npm install
-+ cd app/assets/stylesheets
++ cd common/app/assets/stylesheets
 + bower install
 
 
