@@ -15,10 +15,7 @@
 ## Install frontend dependencies
 
 + Go to project root
-+ $ npm install
-+ cd app/assets/stylesheets
-+ bower install
-
++ ./setup.sh
 
 ## To run frontend tests
 
