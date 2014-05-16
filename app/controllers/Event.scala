@@ -4,7 +4,7 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.EventbriteService
 
-trait EventController extends Controller {
+trait Event extends Controller {
 
   val eventService: EventbriteService
 
@@ -18,6 +18,6 @@ trait EventController extends Controller {
 
 }
 
-object EventController extends EventController {
+object Event extends Event {
   override val eventService: EventbriteService = EventbriteService
 }

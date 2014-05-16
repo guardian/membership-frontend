@@ -12,8 +12,8 @@ GET         /join/:memberTier/payment    controllers.Joiner.payment(memberTier)
 GET         /join/:memberTier/thankyou   controllers.Joiner.thankyou(memberTier)
 
 # Events
-GET         /events                      controllers.EventController.renderEventsIndex
-GET         /event/:id                   controllers.EventController.renderEventPage(id)
+GET         /events                      controllers.Event.renderEventsIndex
+GET         /event/:id                   controllers.Event.renderEventPage(id)
 
 GET         /stripe                      controllers.Subscription.stripe
 POST        /stripe                      controllers.Subscription.stripeSubmit
