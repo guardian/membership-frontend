@@ -18,7 +18,7 @@ play.Project.playScalaSettings
 
 playArtifactDistSettings
 
-magentaPackageName := "membership-app"
+magentaPackageName := "app"
 
 parallelExecution in Global := false
 
