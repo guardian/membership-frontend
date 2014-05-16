@@ -7,14 +7,13 @@
 @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a " + memberTier, "/join/" + memberTier)))
 
 
-
 <div class="container">
 
     <h1 class="section-header">@memberTier</h1>
 
-    <p>Lost of goodies to go here</p>
-
-    <a href="/join/partner/payment">Pay to become a partner</a>
+    @if("partner" == memberTier){
+        @partials.tier.partner()
+    }
 
 </div>
 
