@@ -3,8 +3,9 @@ define([
     'bean',
     'config/appCredentials',
     'src/utils/user',
-    'stripe'
-], function($, bean, appCredentials, userUtil, stripe){
+    'stripe',
+    'ajax'
+], function($, bean, appCredentials, userUtil, stripe, ajax){
     'use strict';
 
     function StripePaymentForm(){}
@@ -12,17 +13,17 @@ define([
     StripePaymentForm.prototype.config = {
         classes: {
             STRIPE_FORM: 'js-stripe-form',
-            FORM_FIELD_ERROR: 'js-form-field--error',
+            FORM_FIELD_ERROR: 'form-field--error',
             ERROR_CARD_NUMBER: 'js-error--card-number',
             ERROR_CARD_CVC: 'js-error--card-cvc',
             ERROR_CARD_EXPIRY: 'js-error--card-expiry',
-            HIDE: 'js-hide',
+            HIDE: 'hide',
             PAYMENT_ERRORS: 'js-payment-errors',
             FORM_SUBMIT: 'js-submit-input',
             CREDIT_CARD_NUMBER: 'js-credit-card-number',
             CREDIT_CARD_CVC: 'js-credit-card-cvc',
-            CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-expiry-month',
-            CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-expiry-year'
+            CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
+            CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year'
         },
         DOM: {}
     };
@@ -40,8 +41,8 @@ define([
     StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
         var $paymentErrors = this.getElement('PAYMENT_ERRORS'),
-            $submitButton = this.getElement('FORM_SUBMIT'),
-            $formElement = $(this.context);
+            $submitButton = this.getElement('FORM_SUBMIT');
+//            $formElement = $(this.context);
 
         if (response.error) {
             $paymentErrors.text(response.error.message);
@@ -50,13 +51,25 @@ define([
 
             // token contains id, last4, and card type
             var token = response.id;
-            // Insert the token into the form so it gets submitted to the server
 
-            var hiddenInput = $.create('<input type="hidden" name="stripeToken" />').val(token);
+            ajax.init({page: {ajaxUrl: ''}});
 
-            $formElement.append(hiddenInput);
-            // and submit
-            $formElement[0].submit();
+            ajax({
+                url: '/partner-registration',
+                method: 'post',
+                data: {
+                    stripeToken: token
+                },
+                success: function (resp) {
+
+                    if (resp.status === 200) {
+                        window.location = '/registration-successful';
+                    }
+                },
+                error: function (err) {
+                    return err;
+                }
+            });
         }
     };
 
@@ -117,7 +130,7 @@ define([
                     cvc: $creditCardCVCElement.val(),
                     exp_month: $creditCardExpiryMonthElement.val(),
                     exp_year: $creditCardExpiryYearElement.val()
-                }, this.stripeResponseHandler);
+                }, this.stripeResponseHandler.bind(this));
 
             } else{
 
@@ -131,7 +144,7 @@ define([
 
     StripePaymentForm.prototype.validateCardNumber = function(){
 
-        var $creditCardNumberElement = this.getElement('creditCardNumber');
+        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER');
         var isValid = stripe.card.validateCardNumber($creditCardNumberElement.val());
 
         return {
@@ -142,7 +155,7 @@ define([
 
     StripePaymentForm.prototype.validateCVC = function(){
 
-        var $creditCardCVCElement = this.getElement('creditCardCvc');
+        var $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC');
         var isValid = stripe.card.validateCVC($creditCardCVCElement.val());
 
         return {
@@ -153,8 +166,8 @@ define([
 
     StripePaymentForm.prototype.validateExpiry = function(){
 
-        var $creditCardExpiryMonthElement = this.getElement('creditCardExpiryMonth');
-        var $creditCardExpiryYearElement = this.getElement('creditCardExpiryYear');
+        var $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH');
+        var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
         var isValid = stripe.card.validateExpiry($creditCardExpiryMonthElement.val(), $creditCardExpiryYearElement.val());
 
         return {

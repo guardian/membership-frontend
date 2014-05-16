@@ -8,6 +8,8 @@ import scala.collection.convert.wrapAll._
 import play.api.data._
 import play.api.data.Forms._
 import com.typesafe.config.ConfigFactory
+import play.api.libs.json.Json
+import scala.util.{ Failure, Success, Try }
 
 object Subscription extends Subscription {
   Stripe.apiKey = ConfigFactory.load().getString("stripe.apiKey")
@@ -27,14 +29,17 @@ trait Subscription extends Controller {
   private val stripePaymentForm: Form[StripePayment] =
     Form(mapping("stripeToken" -> nonEmptyText)(StripePayment.apply)(StripePayment.unapply))
 
-  private def ifBindingFailsReturnBadRequest: (Form[StripePayment]) => Status = formWithErrors => BadRequest
+  private def ifBindingFailsReturnBadRequest(formWithErrors: Form[StripePayment]) = BadRequest
 
-  private def ifBindingSucceedsMakePayment: (StripePayment) => Status =
-    stripePayment => {
-      Logger.debug(stripePayment.asMap.toString)
+  private def ifBindingSucceedsMakePayment(stripePayment: StripePayment) = {
+    Logger.debug(stripePayment.asMap.toString)
+    Try {
       Charge.create(stripePayment.asMap)
-      Ok
+    } match {
+      case Success(v) => Ok(Json.obj("status" -> 200))
+      case Failure(e) => BadRequest(Json.obj("error" -> e.getMessage()))
     }
+  }
 
   case class StripePayment(token: String) {
     val asMap: Map[String, Object] = Map(
