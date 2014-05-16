@@ -4,7 +4,7 @@
 
 @main("Membership") {
 
-@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member")))
+@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a " + memberTier, "/join/" + memberTier)))
 
 
 

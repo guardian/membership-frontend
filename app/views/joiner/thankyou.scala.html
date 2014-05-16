@@ -4,7 +4,7 @@
 
 @main("Membership") {
 
-@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member"), Crumb("Partner registration", "/partner-registration"), Crumb("Complete", "/registration-successful")))
+@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a " + memberTier, "/join/" + memberTier), Crumb(memberTier + " registration", "/join/" + memberTier + "/payment"), Crumb("Thank you " + memberTier, "/join/" + memberTier + "/thankyou")))
 
 <div class="container">
     <h1 class="section-header">THANK YOU you are now a @memberTier</h1>
