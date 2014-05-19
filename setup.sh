@@ -75,4 +75,5 @@ grunt hookup
 # Done
 #####################################################
 
+printf "\n\r\n\r====================================\n\r\n\r"
 printf "> Good to go -> 'play run' to start app\n\r\n\r"
