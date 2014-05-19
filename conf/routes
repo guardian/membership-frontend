@@ -5,14 +5,21 @@
 # Home page
 GET         /                            controllers.FrontPage.index
 
-# Membership
-GET         /become-a-member             controllers.Signup.renderTierSelection
-GET         /partner-registration        controllers.Signup.renderPartnerRegistration
-GET         /registration-successful     controllers.Signup.renderRegistrationSuccessful
+# Join
+GET         /join                        controllers.Joiner.tierList
+GET         /join/friend                 controllers.Joiner.friend
+GET         /join/partner                controllers.Joiner.partner
+GET         /join/patron                 controllers.Joiner.patron
+GET         /join/friend/payment         controllers.Joiner.paymentFriend
+GET         /join/partner/payment        controllers.Joiner.paymentPartner
+GET         /join/patron/payment         controllers.Joiner.paymentPatron
+GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
+GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
+GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
 # Events
-GET         /events                      controllers.EventController.renderEventsIndex
-GET         /event/:id                   controllers.EventController.renderEventPage(id)
+GET         /events                      controllers.Event.renderEventsIndex
+GET         /event/:id                   controllers.Event.renderEventPage(id)
 
 GET         /stripe                      controllers.Subscription.stripe
 POST        /stripe                      controllers.Subscription.stripeSubmit
