@@ -3,9 +3,10 @@ define([
     'bean',
     'config/appCredentials',
     'src/utils/user',
+    'src/utils/masker',
     'stripe',
     'ajax'
-], function($, bean, appCredentials, userUtil, stripe, ajax){
+], function($, bean, appCredentials, userUtil, masker, stripe, ajax){
     'use strict';
 
     function StripePaymentForm(){}
@@ -101,6 +102,7 @@ define([
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
             $formElement = $(this.context);
 
+        bean.on($creditCardNumberElement[0], 'keyup', masker(' ', 4));
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
             this.manageValidationResult(this.validateCardNumber());
