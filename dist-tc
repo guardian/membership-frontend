@@ -11,36 +11,5 @@ set -o errexit
 #
 ################################################################################
 
-./sbt-tc clean scoverage:test
 ./grunt-tc test compile
-
-
-################################################################################
-#
-# Build the Magenta deployable.
-#
-################################################################################
-#
-#echo "Disting $1/target/artifacts.zip"
-#
-#
-## Clean old dist files
-#rm -f "$1/target/artifacts.zip"
-#rm -fr "$1/target/dist"
-#mkdir -p "$1/target/dist/packages/frontend-$1"
-#
-#
-## Copy packages to dist directory
-#cp "$1/conf/deploy.json" "$1/target/dist"
-#cp "$1/target/scala-2.10/frontend-$1.jar" "$1/target/dist/packages/frontend-$1"
-#cp -r "static/target" "$1/target/dist/packages/frontend-static"
-#cp -r "$PWD/static/abtests.json" "$1/target/dist/packages/frontend-abtests"
-#
-#
-## And zip up the packet
-#cd "$1/target/dist"
-#zip -r "../artifacts.zip" .
-#
-#
-#echo "##teamcity[publishArtifacts '$1/target/artifacts.zip => .']"
-#echo "Done disting."
+./sbt-tc clean scoverage:test play-artifact

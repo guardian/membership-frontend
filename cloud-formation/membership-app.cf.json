@@ -1,0 +1,176 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description" : "membership-app",
+    "Parameters" : {
+        "VpcId" : {
+            "Type" : "String",
+            "Description" : "VpcId of your existing Virtual Private Cloud (VPC)",
+            "Default" : "vpc-e6e00183"
+        },
+        "Subnets" : {
+            "Type" : "CommaDelimitedList",
+            "Description" : "The list of SubnetIds in your Virtual Private Cloud (VPC)",
+            "Default" : "subnet-cb91ae8d, subnet-a7b74ac2, subnet-179e8063"
+        },
+        "Stack": {
+            "Description": "Applied directly as a tag",
+            "Type": "String",
+            "Default" : "memb-masterclasses"
+        },
+        "KeyName" : {
+            "Description" : "The EC2 Key Pair to allow SSH access to the instance",
+            "Type" : "String",
+            "Default" : "aws-membership"
+        },
+        "Stage": {
+            "Description" : "Applied directly as a tag",
+            "Type" : "String",
+            "Default" : "PROD"
+        },
+        "HostedZone" : {
+            "Description" : "DNS hosted zone for which A CNAME will be created. e.g. 'example.com' (note, no trailing full-stop) for status.example.com. Leave empty if you don't want to add a CNAME to the status app",
+            "Type" : "String"
+        },
+        "InstanceType" : {
+            "Description" : "EC2 instance type",
+            "Type" : "String",
+            "Default" : "t1.micro",
+            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        }
+    },
+    "Conditions": {
+        "HasDNS": { "Fn::Not" : [{"Fn::Equals" : [{"Ref" : "HostedZone"}, "" ] } ] }
+    },
+    "Resources" : {
+
+        "AppServerGroup" : {
+            "Type" : "AWS::AutoScaling::AutoScalingGroup",
+            "Properties" : {
+                "AvailabilityZones" : { "Fn::GetAZs" : "" },
+                "VPCZoneIdentifier" : { "Ref" : "Subnets" },
+                "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
+                "MinSize" : "1",
+                "MaxSize" : "2",
+                "DesiredCapacity" : "1",
+                "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ],
+                "HealthCheckType" : "ELB",
+                "HealthCheckGracePeriod" : 300,
+                "Tags" : [
+                    { "Key" : "Stack", "Value" : { "Ref" : "Stack" }, "PropagateAtLaunch" : "true" },
+                    { "Key" : "App", "Value" : "membership-app", "PropagateAtLaunch" : "true" },
+                    { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  },
+                    { "Key" : "Management", "Value" : "port=9000", "PropagateAtLaunch" : "true" },
+                    { "Key" : "Role", "Value" : { "Fn::Join": ["-", [{ "Ref" : "Stack" }, "membership-app"]]}, "PropagateAtLaunch" : "true"  }
+                ]
+            }
+        },
+
+        "LaunchConfig" : {
+            "Type" : "AWS::AutoScaling::LaunchConfiguration",
+            "Properties" : {
+                "ImageId" : "ami-896c96fe",
+                "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "KeyName" : { "Ref" : "KeyName" },
+                "IamInstanceProfile": { "Ref" : "MembershipAppInstanceProfile" },
+                "AssociatePublicIpAddress": true,
+                "UserData" : { "Fn::Base64": {
+                    "Fn::Join":["\n", [
+                        "#!/bin/bash -ev",
+                        "apt-get -y update",
+                        "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
+
+                        "adduser --system --home /membership --disabled-password membership",
+
+                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "membership-app/app.zip --directory-prefix=/tmp"]]},
+
+                        "unzip -d /membership /tmp/app.zip",
+
+                        "mv /membership/membership-1.0-SNAPSHOT/conf/upstart.conf /etc/init/membership-app.conf",
+
+                        "chown -R membership /membership/",
+
+                        "start membership-app"
+                    ]]
+                }}
+            }
+        },
+
+        "MembershipAppRole" : {
+            "Type" : "AWS::IAM::Role",
+            "Properties":{
+                "Path":"/",
+                "AssumeRolePolicyDocument": {
+                    "Statement": [ {
+                        "Effect": "Allow",
+                        "Principal": { "Service": [ "ec2.amazonaws.com" ] },
+                        "Action": [ "sts:AssumeRole" ]
+                    } ]
+                }
+            }
+        },
+        "MembershipAppInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [ {
+                    "Ref": "MembershipAppRole"
+                } ]
+            }
+        },
+
+        "ElasticLoadBalancer" : {
+            "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+            "Properties" : {
+                "Listeners" : [ {
+                    "LoadBalancerPort" : "80",
+                    "InstancePort" : "9000",
+                    "Protocol" : "HTTP"
+                } ],
+                "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
+                "Subnets" : { "Ref" : "Subnets" },
+                "HealthCheck" : {
+                    "Target" : "HTTP:9000/",
+                    "HealthyThreshold" : "2",
+                    "UnhealthyThreshold" : "2",
+                    "Interval" : "10",
+                    "Timeout" : "5"
+                }
+            }
+        },
+        "LoadBalancerSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Permit HTTP access on port 80, egress to port 9000",
+                "VpcId" : { "Ref" : "VpcId" },
+                "SecurityGroupIngress" : [
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.158.92/32" },
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.146.68/32" }
+                ],
+                "SecurityGroupEgress" : [
+                    { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "CidrIp": "0.0.0.0/0" }
+                ]
+            }
+        },
+        "InstanceSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Open up SSH access and enable HTTP access on the configured port",
+                "VpcId" : { "Ref" : "VpcId" },
+                "SecurityGroupIngress" : [
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "URL" : {
+            "Description" : "URL of the website",
+            "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]]}
+        }
+    }
+}
