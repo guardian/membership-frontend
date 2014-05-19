@@ -40,19 +40,14 @@ define([
 
     StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
-        var $paymentErrors = this.getElement('PAYMENT_ERRORS'),
-            $submitButton = this.getElement('FORM_SUBMIT');
-//            $formElement = $(this.context);
+        var self = this;
 
         if (response.error) {
-            $paymentErrors.text(response.error.message);
-            $submitButton.attr('disabled', false);
+            self.handleResponseError(response.error.message);
         } else {
 
             // token contains id, last4, and card type
             var token = response.id;
-
-            ajax.init({page: {ajaxUrl: ''}});
 
             ajax({
                 url: '/partner-registration',
@@ -61,16 +56,25 @@ define([
                     stripeToken: token
                 },
                 success: function (resp) {
-
                     if (resp.status === 200) {
                         window.location = '/registration-successful';
+                    } else { // 400
+                        self.handleResponseError(resp.error);
                     }
                 },
                 error: function (err) {
-                    return err;
+                    self.handleResponseError(err.response);
                 }
             });
         }
+    };
+
+    StripePaymentForm.prototype.handleResponseError = function (errorMessage) {
+        var $responseErrorElement = this.getElement('PAYMENT_ERRORS'),
+            $submitButton = this.getElement('FORM_SUBMIT');
+
+        $responseErrorElement.text(errorMessage).toggleClass(this.config.classes.HIDE);
+        $submitButton.attr('disabled', false);
     };
 
     StripePaymentForm.prototype.populateUserInformation = function () {

@@ -37,7 +37,7 @@ trait Subscription extends Controller {
       Charge.create(stripePayment.asMap)
     } match {
       case Success(v) => Ok(Json.obj("status" -> 200))
-      case Failure(e) => BadRequest(Json.obj("error" -> e.getMessage()))
+      case Failure(e) => Ok(Json.obj("status" -> 400, "error" -> e.getMessage()))
     }
   }
 
