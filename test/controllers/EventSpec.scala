@@ -3,7 +3,7 @@ package controllers
 import play.api.test.{ FakeRequest, WithApplication, PlaySpecification }
 import services.EventbriteService
 
-object EventControllerSpec extends PlaySpecification with EventController {
+object EventControllerSpec extends PlaySpecification with Event {
 
   val eventService: EventbriteService = SandboxEventbriteService
 

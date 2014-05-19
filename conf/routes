@@ -7,9 +7,15 @@ GET         /                            controllers.FrontPage.index
 
 # Join
 GET         /join                        controllers.Joiner.tierList
-GET         /join/:memberTier            controllers.Joiner.tier(memberTier)
-GET         /join/:memberTier/payment    controllers.Joiner.payment(memberTier)
-GET         /join/:memberTier/thankyou   controllers.Joiner.thankyou(memberTier)
+GET         /join/friend                 controllers.Joiner.friend
+GET         /join/partner                controllers.Joiner.partner
+GET         /join/patron                 controllers.Joiner.patron
+GET         /join/friend/payment         controllers.Joiner.paymentFriend
+GET         /join/partner/payment        controllers.Joiner.paymentPartner
+GET         /join/patron/payment         controllers.Joiner.paymentPatron
+GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
+GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
+GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
 # Events
 GET         /events                      controllers.Event.renderEventsIndex
