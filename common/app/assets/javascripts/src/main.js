@@ -23,7 +23,7 @@ require([
 
     router.match([
         '/stripe',
-        '/partner-registration'
+        '/join/partner/payment'
     ]).to(function () {
         var stripe = new StripeForm();
         stripe.init();

@@ -17,6 +17,9 @@ GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
 GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
 GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
+# Subscription
+POST        /subscribe                   controllers.Subscription.stripeSubmit
+
 # Events
 GET         /events                      controllers.Event.renderEventsIndex
 GET         /event/:id                   controllers.Event.renderEventPage(id)

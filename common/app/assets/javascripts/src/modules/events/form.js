@@ -50,7 +50,7 @@ define([
             var token = response.id;
 
             ajax({
-                url: '/partner-registration',
+                url: '/subscribe',
                 method: 'post',
                 data: {
                     stripeToken: token
