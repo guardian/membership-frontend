@@ -32,7 +32,7 @@ $headerHeight: 46px;
 
 $guss-column-rule: none;
 
-@import "components/guss-grid-system/grid-system";
+@import "components/bower_components/guss-grid-system/grid-system";
 
 
 // Breakpoints
@@ -224,3 +224,12 @@ $mpu-resulting-height: ceil($mpu-original-height*$mpu-scale-ratio);
 
 $action-icon-width: 23px;
 $action-icon-rightspace: 7px;
+
+
+// Membership
+// =============================================================================
+
+$mem-brandOrange: #ce6f14;
+$mem-brandBlue: #82c2d6;
+$mem-brandGrey: #dcddda;
+$mem-trans-white: rgba(255,255,255,0.8);
