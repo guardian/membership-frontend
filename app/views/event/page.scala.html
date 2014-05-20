@@ -8,7 +8,7 @@
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
 
     <div class="event">
-        <div class="event__content container">
+        <div class="event__content page-inner-container">
             <h1 class="event__name section-header page-header">@event.name.text</h1>
 
             <div class="event__image">
@@ -39,15 +39,11 @@
                 <span class="event__price-note"> per ticket.</span>
             </div>
 
-            <div class="actions top">
-                <a class="sign-in action" href="https://profile.theguardian.com/signin" data-url="@event.url">Sign In to attend</a>
-            </div>
+            <a class="button sign-in no-underline" href="https://profile.theguardian.com/signin" data-url="@event.url">Sign In to attend</a>
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
-            <div class="actions">
-                <a class="sign-in action" href="https://profile.thegulocal.com/signin" data-url="@event.url">Sign In to attend</a>
-            </div>
+            <a class="button sign-in no-underline" href="https://profile.thegulocal.com/signin" data-url="@event.url">Sign In to attend</a>
 
         </div>
     </div>

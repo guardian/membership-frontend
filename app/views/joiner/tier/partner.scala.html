@@ -5,60 +5,97 @@
 @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Partner", "/join/partner")))
 
 
-<div class="container">
+<div class="page-inner-container">
 
     <h1 class="section-header">Partner Tier</h1>
 
-    <div>
-        <ul>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-        </ul>
-    </div>
+    <img src="@routes.Assets.at("images/placeholder-large.png")" alt="" class="full-width"/>
 
-    <div>
-        <ul>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-            <li>
-                <img src="" alt=""/>
-                <span></span>
-            </li>
-        </ul>
-        <div>
-            <p></p>
-            <a href="/join/partner/payment">Join</a>
+    <section class="tier-intro">
+        <p>Aliquam pellentesque eros eget metus sagittis, ut molestie nisi molestie. Sed nisl nunc, vehicula sed adipiscing in, tincidunt eu felis. Nam venenatis, tortor ac consequat venenatis, dolor odio ullamcorper diam, sed tempus purus lacus at justo.</p>
+        <div class="center-aligned">
+            <a class="button button--large join no-underline" href="/join/partner/payment">Join</a>
         </div>
-    </div>
+    </section>
 
+    <section class="tier-options-navigation">
+        <ul class="u-unstyled center-aligned">
+            <li class="inline-list__item"><a href="#link-one">Link 1</a></li>
+            <li class="inline-list__item"><a href="#link-two">Link 2</a></li>
+            <li class="inline-list__item"><a href="#link-three">Link 3</a></li>
+        </ul>
+    </section>
+
+    <section class="separator">
+        <ul class="u-unstyled">
+            <li id="link-one" class="list-item">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-medium-square.png")" alt="" class="full-width"/>
+                </div>
+                <p class="list-item__secondary">Vestibulum facilisis rhoncus libero nec congue.</p>
+            </li>
+            <li id="link-two" class="list-item">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-medium-square.png")" alt="" class="full-width"/>
+                </div>
+                <p class="list-item__secondary">Morbi velit arcu, tempor at metus non, ultrices.</p>
+            </li>
+            <li id="link-three" class="list-item">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-medium-square.png")" alt="" class="full-width"/>
+                </div>
+                <p class="list-item__secondary">Cras tortor odio, laoreet nec pharetra non.</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="tier-advantages separator">
+        <ul class="u-unstyled">
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Vestibulum facilisis rhoncus libero nec congue.</p>
+            </li>
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Donec nisl enim, fermentum quis sem id</p>
+            </li>
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Aliquam pharetra tellus nec massa lacinia volutpat.</p>
+            </li>
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Morbi non iaculis metus. Donec nisl enim.</p>
+            </li>
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Laoreet at urna ac, tincidunt accumsan mi.</p>
+            </li>
+            <li class="list-item list-item--small">
+                <div class="list-item__primary">
+                    <img src="@routes.Assets.at("images/placeholder-tiny-square.png")" alt=""/>
+                </div>
+                <p>Quisque scelerisque magna lectus, a euismod.</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="separator">
+        <p>Nunc dapibus tristique lacus, vitae ullamcorper turpis fermentum et. Curabitur nec dui vel magna ornare tincidunt id ac nibh. Cras non eleifend nisi, vitae interdum erat. Etiam suscipit rhoncus enim, ac scelerisque metus lobortis at.</p>
+        <div class="center-aligned">
+            <a class="button button--large join no-underline" href="/join/partner/payment">Join</a>
+        </div>
+    </section>
 
 </div>
 
