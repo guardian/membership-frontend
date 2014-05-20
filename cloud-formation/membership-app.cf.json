@@ -13,9 +13,8 @@
             "Default" : "subnet-cb91ae8d, subnet-a7b74ac2, subnet-179e8063"
         },
         "Stack": {
-            "Description": "Applied directly as a tag",
-            "Type": "String",
-            "Default" : "memb-masterclasses"
+            "Description": "Applied directly as a tag ('membership', or 'memb-masterclasses')",
+            "Type": "String"
         },
         "KeyName" : {
             "Description" : "The EC2 Key Pair to allow SSH access to the instance",
@@ -58,10 +57,9 @@
                 "HealthCheckGracePeriod" : 300,
                 "Tags" : [
                     { "Key" : "Stack", "Value" : { "Ref" : "Stack" }, "PropagateAtLaunch" : "true" },
-                    { "Key" : "App", "Value" : "membership-app", "PropagateAtLaunch" : "true" },
+                    { "Key" : "App", "Value" : "app", "PropagateAtLaunch" : "true" },
                     { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  },
-                    { "Key" : "Management", "Value" : "port=9000", "PropagateAtLaunch" : "true" },
-                    { "Key" : "Role", "Value" : { "Fn::Join": ["-", [{ "Ref" : "Stack" }, "membership-app"]]}, "PropagateAtLaunch" : "true"  }
+                    { "Key" : "Management", "Value" : "port=9000", "PropagateAtLaunch" : "true" }
                 ]
             }
         },
