@@ -76,14 +76,13 @@
                 "UserData" : { "Fn::Base64": {
                     "Fn::Join":["\n", [
                         "#!/bin/bash -ev",
+                        "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
 
                         "adduser --system --home /membership --disabled-password membership",
 
-                        "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
-
-                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "membership-app/app.zip --directory-prefix=/tmp"]]},
+                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "app/app.zip --directory-prefix=/tmp"]]},
 
                         "unzip -d /membership /tmp/app.zip",
 
