@@ -17,19 +17,23 @@ printf "\n\r"
 # Install NPM modules
 #####################################################
 
-printf "> Installing NPM modules ...\n\r\n\r"
+printf "\n\r\n\r====================================\n\r\n\r"
+printf "> Installing NPM modules ..."
+printf "\n\r\n\r====================================\n\r\n\r"
 
-npm install &> /dev/null
+npm install
 
 #####################################################
 # Install Bower JS modules
 #####################################################
 
-printf "> Installing bower JS modules in common/app/assets/javascripts ...\n\r\n\r"
+printf "\n\r\n\r====================================\n\r\n\r"
+printf "> Installing bower JS modules in common/app/assets/javascripts ..."
+printf "\n\r\n\r====================================\n\r\n\r"
 
 cd common/app/assets/javascripts
 
-bower install &> /dev/null
+bower install
 
 cd ../../../../
 
@@ -37,11 +41,13 @@ cd ../../../../
 # Install Bower SASS modules
 #####################################################
 
-printf "> Installing bower SASS modules in common/app/assets/stylesheets ...\n\r\n\r"
+printf "\n\r\n\r====================================\n\r\n\r"
+printf "> Installing bower SASS modules in common/app/assets/stylesheets ..."
+printf "\n\r\n\r====================================\n\r\n\r"
 
 cd common/app/assets/stylesheets
 
-bower install &> /dev/null
+bower install
 
 cd ../../../../
 
@@ -49,17 +55,21 @@ cd ../../../../
 # Compile clientside assets
 #####################################################
 
-printf "> Compiling assets ...\n\r\n\r"
+printf "\n\r\n\r====================================\n\r\n\r"
+printf "> Compiling assets ..."
+printf "\n\r\n\r====================================\n\r\n\r"
 
-grunt compile &> /dev/null
+grunt compile
 
 #####################################################
 # Add commit hook
 #####################################################
 
-printf "> Adding git commit hook ...\n\r\n\r"
+printf "\n\r\n\r====================================\n\r\n\r"
+printf "> Adding git commit hook ..."
+printf "\n\r\n\r====================================\n\r\n\r"
 
-grunt hookup &> /dev/null
+grunt hookup
 
 #####################################################
 # Done
