@@ -83,6 +83,8 @@
 
                         "adduser --system --home /membership --disabled-password membership",
 
+                        "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
+
                         {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "membership-app/app.zip --directory-prefix=/tmp"]]},
 
                         "unzip -d /membership /tmp/app.zip",
