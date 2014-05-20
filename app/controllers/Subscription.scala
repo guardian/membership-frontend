@@ -23,9 +23,11 @@ trait Subscription extends Controller {
     Form { single("stripeToken" -> nonEmptyText) }
 
   private def makePayment(stripeToken: String) = {
-    Stripe.charge.create(1000, "gbp", stripeToken, "This is a description").map {
+    Stripe.customer.create(stripeToken).right.flatMap { customer =>
+      Stripe.subscription.create(customer.id, "test")
+    }.map {
       case Left(error) => BadRequest(error.message)
-      case Right(_) => Ok
+      case Right(subscription) => Ok(subscription.id)
     }
   }
 }
