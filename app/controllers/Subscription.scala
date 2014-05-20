@@ -1,19 +1,12 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
-import com.stripe._
-import com.stripe.model._
-import scala.collection.convert.wrapAll._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
-import com.typesafe.config.ConfigFactory
-import play.api.libs.json.Json
-import scala.util.{ Failure, Success, Try }
 
-object Subscription extends Subscription {
-  Stripe.apiKey = ConfigFactory.load().getString("stripe.apiKey")
-}
+import services.StripeService._
+import scala.concurrent.Future
 
 trait Subscription extends Controller {
 
@@ -21,33 +14,20 @@ trait Subscription extends Controller {
     Ok(views.html.stripe())
   }
 
-  def stripeSubmit = Action {
-    implicit request =>
-      stripePaymentForm.bindFromRequest.fold(ifBindingFailsReturnBadRequest, ifBindingSucceedsMakePayment)
+  def stripeSubmit = Action.async { implicit request =>
+    stripePaymentForm.bindFromRequest
+      .fold(_ => Future(BadRequest), makePayment)
   }
 
-  private val stripePaymentForm: Form[StripePayment] =
-    Form(mapping("stripeToken" -> nonEmptyText)(StripePayment.apply)(StripePayment.unapply))
+  private val stripePaymentForm =
+    Form { single("stripeToken" -> nonEmptyText) }
 
-  private def ifBindingFailsReturnBadRequest(formWithErrors: Form[StripePayment]) = BadRequest
-
-  private def ifBindingSucceedsMakePayment(stripePayment: StripePayment) = {
-    Logger.debug(stripePayment.asMap.toString)
-    Try {
-      Charge.create(stripePayment.asMap)
-    } match {
-      case Success(v) => Ok(Json.obj("status" -> 200))
-      case Failure(e) => Ok(Json.obj("status" -> 400, "error" -> e.getMessage()))
+  private def makePayment(stripeToken: String) = {
+    Charge.create(1000, "gbp", stripeToken, "This is a description").map {
+      case Left(error) => BadRequest(error.message)
+      case Right(_) => Ok
     }
   }
-
-  case class StripePayment(token: String) {
-    val asMap: Map[String, Object] = Map(
-      "amount" -> "400",
-      "currency" -> "usd",
-      "card" -> token,
-      "description" -> "Charge for test@example.com"
-    )
-  }
-
 }
+
+object Subscription extends Subscription
