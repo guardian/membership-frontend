@@ -1,0 +1,41 @@
+.list-item {
+
+    @include clearfix;
+    padding: $gs-baseline 0;
+
+    .list-item__secondary {
+        padding: $gs-baseline;
+    }
+
+    @include mq(mobile) {
+        .list-item__primary {
+            float: left;
+            padding-right: $gs-baseline;
+        }
+    }
+}
+
+.list-item--small {
+
+    @include mq(tablet){
+        width: 33%;
+        float: left;
+    }
+}
+
+.tier-intro {
+    padding-top: $gs-baseline;
+}
+
+.tier-options-navigation {
+
+    display: none;
+
+    @include mq(tablet){
+        display: block;
+    }
+}
+
+.tier-advantages {
+    @include clearfix;
+}
