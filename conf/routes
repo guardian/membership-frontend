@@ -18,7 +18,7 @@ GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
 GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
 # Subscription
-POST        /subscribe                   controllers.Subscription.stripeSubmit
+POST        /subscribe                   controllers.Subscription.subscribe
 
 # Events
 GET         /events                      controllers.Event.renderEventsIndex

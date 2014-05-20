@@ -14,7 +14,7 @@ trait Subscription extends Controller {
     Ok(views.html.stripe())
   }
 
-  def stripeSubmit = Action.async { implicit request =>
+  def subscribe = Action.async { implicit request =>
     stripePaymentForm.bindFromRequest
       .fold(_ => Future(BadRequest), makePayment)
   }
