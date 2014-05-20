@@ -1,4 +1,5 @@
 {
+    "defaultStacks": ["membership", "memb-masterclasses"],
     "packages":{
         "app":{
             "type":"autoscaling",
