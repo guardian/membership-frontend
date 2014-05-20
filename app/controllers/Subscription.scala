@@ -5,7 +5,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
 
-import services.StripeService._
+import services.stripe.Imports._
 import scala.concurrent.Future
 
 trait Subscription extends Controller {
@@ -23,7 +23,7 @@ trait Subscription extends Controller {
     Form { single("stripeToken" -> nonEmptyText) }
 
   private def makePayment(stripeToken: String) = {
-    Charge.create(1000, "gbp", stripeToken, "This is a description").map {
+    Stripe.charge.create(1000, "gbp", stripeToken, "This is a description").map {
       case Left(error) => BadRequest(error.message)
       case Right(_) => Ok
     }

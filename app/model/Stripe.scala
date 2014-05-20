@@ -9,4 +9,8 @@ object Stripe {
 
   case class Charge(amount: Int, currency: String, card: Card, description: String)
     extends StripeObject
+
+  case class Customer(id: String) extends StripeObject
+
+  case class Subscription(id: String) extends StripeObject
 }
