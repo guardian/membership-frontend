@@ -10,16 +10,12 @@ import scala.concurrent.Future
 
 trait Subscription extends Controller {
 
-  def stripe = Action {
-    Ok(views.html.stripe())
-  }
-
-  def stripeSubmit = Action.async { implicit request =>
-    stripePaymentForm.bindFromRequest
+  def subscribe = Action.async { implicit request =>
+    paymentForm.bindFromRequest
       .fold(_ => Future(BadRequest), makePayment)
   }
 
-  private val stripePaymentForm =
+  private val paymentForm =
     Form { single("stripeToken" -> nonEmptyText) }
 
   private def makePayment(stripeToken: String) = {
