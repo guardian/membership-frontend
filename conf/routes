@@ -24,8 +24,5 @@ POST        /subscribe                   controllers.Subscription.subscribe
 GET         /events                      controllers.Event.renderEventsIndex
 GET         /event/:id                   controllers.Event.renderEventPage(id)
 
-GET         /stripe                      controllers.Subscription.stripe
-POST        /stripe                      controllers.Subscription.stripeSubmit
-
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
