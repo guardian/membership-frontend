@@ -89,7 +89,7 @@ define([
             $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
             $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
-            $formElement = $(this.context);
+            $formElement = this.getElement('STRIPE_FORM');
 
         bean.on($creditCardNumberElement[0], 'keyup', masker(' ', 4));
 
@@ -108,7 +108,6 @@ define([
         bean.on($creditCardExpiryYearElement[0] , 'blur', function(){
             this.manageFieldValidationResult(this.validateExpiry());
         }.bind(this));
-
 
         bean.on($formElement[0], 'submit', function(e){
 
