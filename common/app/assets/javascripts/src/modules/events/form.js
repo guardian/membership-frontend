@@ -83,22 +83,6 @@ define([
         }
     };
 
-    StripePaymentForm.prototype.populateUserInformation = function () {
-
-        var user = userUtil.getUserFromCookie();
-        var userElement = $('.user');
-
-        if (user) {
-
-            userElement.html([
-                'User from cookie - ',
-                'displayname: ' + user.displayname,
-                'id: ' + user.id,
-                'email: ' + user.primaryemailaddress
-            ].join('<br/>'));
-        }
-    };
-
     StripePaymentForm.prototype.addListeners = function(){
 
         var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
@@ -273,8 +257,6 @@ define([
 
         if (this.context) {
             this.domElementSetup();
-
-            this.populateUserInformation();
 
             this.addListeners();
 

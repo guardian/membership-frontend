@@ -12,7 +12,6 @@ define([
          ********************************************************/
 
         it('should correctly execute a matched route', function() {
-
             var bar = null;
             var foo = {
                 setBar: function() {
@@ -23,6 +22,42 @@ define([
             spyOn(foo, 'setBar');
 
             router.match('/context.html').to(foo.setBar); // Karma default route
+
+            domready(function () {
+                router.go();
+                expect(foo.setBar).toHaveBeenCalled();
+            });
+        });
+
+        it('should correctly execute a wildcard route', function() {
+            var bar = null;
+            var foo = {
+                setBar: function() {
+                    bar = 'foo';
+                }
+            };
+
+            spyOn(foo, 'setBar');
+
+            router.match('*').to(foo.setBar); // Karma default route
+
+            domready(function () {
+                router.go();
+                expect(foo.setBar).toHaveBeenCalled();
+            });
+        });
+
+        it('should correctly execute a suffix route', function() {
+            var bar = null;
+            var foo = {
+                setBar: function() {
+                    bar = 'foo';
+                }
+            };
+
+            spyOn(foo, 'setBar');
+
+            router.match('*/context.html').to(foo.setBar); // Karma default route
 
             domready(function () {
                 router.go();
