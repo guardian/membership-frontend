@@ -9,13 +9,15 @@ import play.api.data._
 import play.api.data.Forms._
 import com.typesafe.config.ConfigFactory
 
+import actions.AuthenticatedAction
+
 object Subscription extends Subscription {
   Stripe.apiKey = ConfigFactory.load().getString("stripe.apiKey")
 }
 
 trait Subscription extends Controller {
 
-  def stripe = Action {
+  def stripe = AuthenticatedAction {
     Ok(views.html.stripe())
   }
 
