@@ -10,13 +10,15 @@ import actions.AuthRequest
 import com.typesafe.config.ConfigFactory
 
 trait AuthenticationService {
-  val identityWebAppUrl: String
+  val idWebAppUrl: String
+  val membershipUrl: String
+
   val cookieDecoder: IdentityCookieDecoder
 
   def handleAuthenticatedRequest[A](request: Request[A]): Either[SimpleResult, AuthRequest[A]] = {
     authenticatedRequestFor(request).toRight {
-      val returnUrl = URLEncoder.encode(request.uri, "UTF-8")
-      SeeOther(s"$identityWebAppUrl/signin?returnUrl=$returnUrl")
+      val returnUrl = URLEncoder.encode(s"$membershipUrl${request.uri}", "UTF-8")
+      SeeOther(s"$idWebAppUrl/signin?returnUrl=$returnUrl")
     }
   }
 
@@ -33,7 +35,8 @@ trait AuthenticationService {
 
 object AuthenticationService extends AuthenticationService {
   val config = ConfigFactory.load()
-  val identityWebAppUrl = config.getString("identity.webapp.url")
+  val membershipUrl = config.getString("membership.url")
+  val idWebAppUrl = config.getString("identity.webapp.url")
 
   val cookieDecoder = new IdentityCookieDecoder(new PreProductionKeys)
 }
