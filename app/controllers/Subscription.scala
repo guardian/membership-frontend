@@ -8,23 +8,26 @@ import play.api.data._
 import play.api.data.Forms._
 
 import services.stripe.Imports._
+import model.stripe
 
 trait Subscription extends Controller {
 
   def subscribe = Action.async { implicit request =>
     paymentForm.bindFromRequest
-      .fold(_ => Future(BadRequest), makePayment)
+      .fold(_ => Future.successful(BadRequest), makePayment)
   }
 
   private val paymentForm =
     Form { single("stripeToken" -> nonEmptyText) }
 
   private def makePayment(stripeToken: String) = {
-    Stripe.customer.create(stripeToken).right.flatMap { customer =>
-      Stripe.subscription.create(customer.id, "test")
-    }.map {
-      case Left(error) => BadRequest(error.message)
-      case Right(subscription) => Ok(subscription.id)
+    val payment = for {
+      customer <- Stripe.customer.create(stripeToken)
+      subscription <- Stripe.subscription.create(customer.id, "test")
+    } yield Ok(subscription.id)
+
+    payment.recover {
+      case error: stripe.Error => BadRequest(error.message)
     }
   }
 }

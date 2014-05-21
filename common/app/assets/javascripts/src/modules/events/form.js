@@ -102,11 +102,11 @@ define([
         }.bind(this));
 
         bean.on($creditCardExpiryMonthElement[0] , 'blur', function(){
-            this.manageFieldValidationResult(this.validateExpiry());
+            this.manageFieldValidationResult(this.validateExpiry(true));
         }.bind(this));
 
         bean.on($creditCardExpiryYearElement[0] , 'blur', function(){
-            this.manageFieldValidationResult(this.validateExpiry());
+            this.manageFieldValidationResult(this.validateExpiry(true));
         }.bind(this));
 
         bean.on($formElement[0], 'submit', function(e){
@@ -154,11 +154,17 @@ define([
         };
     };
 
-    StripePaymentForm.prototype.validateExpiry = function(){
+    StripePaymentForm.prototype.validateExpiry = function(allowEmpty){
 
         var $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH');
         var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
-        var isValid = stripe.card.validateExpiry($creditCardExpiryMonthElement.val(), $creditCardExpiryYearElement.val());
+
+        var isValid = true;
+        if (!allowEmpty || $creditCardExpiryMonthElement[0].selectedIndex > 0 &&
+            $creditCardExpiryYearElement[0].selectedIndex > 0) {
+
+            isValid = stripe.card.validateExpiry($creditCardExpiryMonthElement.val(), $creditCardExpiryYearElement.val());
+        }
 
         return {
             isValid: isValid,
