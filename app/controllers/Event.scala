@@ -3,17 +3,22 @@ package controllers
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.EventbriteService
+import actions.AuthenticatedAction
 
 trait Event extends Controller {
 
   val eventService: EventbriteService
 
-  def renderEventPage(id: String) = Action.async {
+  def details(id: String) = Action.async {
     eventService.getEvent(id).map(event => Ok(views.html.event.page(event)))
   }
 
-  def renderEventsIndex = Action.async {
+  def list = Action.async {
     eventService.getAllEvents.map(events => Ok(views.html.event.list(events)))
+  }
+
+  def buy(id: String) = AuthenticatedAction.async {
+    eventService.getEvent(id).map(event => Found(event.url))
   }
 
 }

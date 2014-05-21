@@ -40,13 +40,13 @@
             </div>
 
             <div class="actions top">
-                <a class="sign-in action" href="https://profile.theguardian.com/signin" data-url="@event.url">Sign In to attend</a>
+                <a class="sign-in action" href="/event/@event.id/buy">Sign In to attend</a>
             </div>
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
             <div class="actions">
-                <a class="sign-in action" href="https://profile.thegulocal.com/signin" data-url="@event.url">Sign In to attend</a>
+                <a class="sign-in action" href="/event/@event.id/buy">Sign In to attend</a>
             </div>
 
         </div>
