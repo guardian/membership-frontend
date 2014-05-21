@@ -1,12 +1,13 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
 
 import services.stripe.Imports._
-import scala.concurrent.Future
 
 trait Subscription extends Controller {
 
