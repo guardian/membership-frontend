@@ -1,6 +1,9 @@
-//    document.querySelector('[name=card_number]').addEventListener('keyup', maskInput(' ', 4));
-//    document.querySelector('[name=card_expiry]').addEventListener('keyup', maskInput(' / ', 2));
-//    document.querySelector('[name=card_cvc]').addEventListener('keyup', maskInput('', 4));
+/*
+*   Usage:
+*   el.addEventListener('keyup', maskInput(' ', 4)) // cc
+*   el.addEventListener('keyup', maskInput(' / ', 2)) // date
+*   el.addEventListener('keyup', maskInput('', 4)) // cvc
+*/
 define(function () {
     function maskInput(delim, len) {
         var tokRegex = new RegExp('\\d{1,' + len + '}', 'g');
