@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{ Json, Reads }
 import play.api.libs.ws.{ Response, WS }
 
-import model.Stripe._
+import model.stripe._
 
 trait StripeService {
   protected val apiURL: String
@@ -21,17 +21,15 @@ trait StripeService {
   private def request(endpoint: String) =
     WS.url(s"$apiURL/$endpoint").withHeaders(("Authorization", s"Bearer $apiSecret"))
 
-  private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]) = {
-    response.json.asOpt[A].toRight {
-      (response.json \ "error").asOpt[Error].getOrElse {
-        Error("internal", "Unable to extract object")
-      }
+  private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
+    response.json.asOpt[A].getOrElse {
+      throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object"))
     }
   }
 
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[Either[Error, A]] =
+  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     request(endpoint).post(data).map(extract[A])
 
-  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[Either[Error, A]] =
+  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
     request(endpoint).get().map(extract[A])
 }
