@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc.{ Action, Controller }
+import actions.AuthenticatedAction
 
 trait Joiner extends Controller {
 
@@ -20,27 +21,27 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.patron())
   }
 
-  def paymentFriend() = Action {
+  def paymentFriend() = AuthenticatedAction {
     Ok(views.html.joiner.payment.friend())
   }
 
-  def paymentPartner() = Action {
+  def paymentPartner() = AuthenticatedAction {
     Ok(views.html.joiner.payment.partner())
   }
 
-  def paymentPatron() = Action {
+  def paymentPatron() = AuthenticatedAction {
     Ok(views.html.joiner.payment.patron())
   }
 
-  def thankyouFriend() = Action {
+  def thankyouFriend() = AuthenticatedAction {
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPartner() = Action {
+  def thankyouPartner() = AuthenticatedAction {
     Ok(views.html.joiner.thankyou.partner())
   }
 
-  def thankyouPatron() = Action {
+  def thankyouPatron() = AuthenticatedAction {
     Ok(views.html.joiner.thankyou.patron())
   }
 
