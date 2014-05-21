@@ -12,25 +12,14 @@ import org.joda.time.format.{ PeriodFormatterBuilder, ISOPeriodFormat, PeriodFor
 object Dates {
 
   implicit class RichInstant(dateTime: Instant) {
-
-    //    val formatter = new PeriodFormatterBuilder()
-    //      .printZeroAlways()
-    //      .appendDays()
-    //      .appendSeparator("d ")
-    //      .appendHours()
-    //      .appendSeparator("h ")
-    //      .appendMinutes()
-    //      .appendLiteral("m")
-    //      .toFormatter()
-
     val formatter = DateTimeFormat.mediumDateTime()
 
     lazy val pretty = formatter.print(dateTime)
   }
 
   implicit class RichDateTime(dateTime: DateTime) {
-    val DateFormat = "MMMM d, y k:m a"
-    val formatter = DateTimeFormat.forPattern(DateFormat)
+    val formatter = DateTimeFormat.forPattern("MMMM d, y k:m a")
+
     lazy val pretty = formatter.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
 }

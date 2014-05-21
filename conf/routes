@@ -17,12 +17,12 @@ GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
 GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
 GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
+# Subscription
+POST        /subscribe                   controllers.Subscription.subscribe
+
 # Events
 GET         /events                      controllers.Event.renderEventsIndex
 GET         /event/:id                   controllers.Event.renderEventPage(id)
-
-GET         /stripe                      controllers.Subscription.stripe
-POST        /stripe                      controllers.Subscription.stripeSubmit
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)

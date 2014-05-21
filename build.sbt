@@ -14,8 +14,7 @@ libraryDependencies ++= Seq(
   cache,
   "com.github.nscala-time" %% "nscala-time" % "1.0.0",
   "com.gu.identity" %% "identity-cookie" % "3.40",
-  "com.gu.identity" %% "identity-model" % "3.40",
-  "com.stripe" % "stripe-java" % "1.12.0"
+  "com.gu.identity" %% "identity-model" % "3.40"
 )
 
 play.Project.playScalaSettings
