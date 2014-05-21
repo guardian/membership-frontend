@@ -112,11 +112,11 @@ define([
         bean.on($formElement[0], 'submit', function(e){
             e.preventDefault();
 
-            this.startLoader();
-
             var formValidationResult = this.isFormValid();
 
             if(formValidationResult.isValid){
+
+                this.startLoader();
 
                 stripe.card.createToken({
                     number: $creditCardNumberElement.val(),
@@ -126,7 +126,6 @@ define([
                 }, this.stripeResponseHandler.bind(this));
 
             } else{
-                this.stopLoader();
                 this.manageFormValidationResult(formValidationResult);
             }
         }.bind(this));
