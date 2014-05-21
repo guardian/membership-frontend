@@ -1,8 +1,9 @@
 define([
     'src/modules/events/form',
     'ajax',
-    '$'
-], function (PaymentForm, ajax, $) {
+    '$',
+    'stripe'
+], function (PaymentForm, ajax, $, stripe) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -100,32 +101,29 @@ define([
         });
 
         /********************************************************
-         * Requires internet access to talk to stripe....
+         * Submission
          ********************************************************/
 
         it('should create and try to submit a stripe customer object', function () {
 
-            runs(function () {
-                spyOn(paymentForm, 'stripeResponseHandler'); // http://tobyho.com/2011/12/15/jasmine-spy-cheatsheet/
+            spyOn(stripe.card, 'createToken'); // http://tobyho.com/2011/12/15/jasmine-spy-cheatsheet/
 
-                paymentFormFixture[0].querySelector('.js-credit-card-number').value     = '4242424242424242';
-                paymentFormFixture[0].querySelector('.js-credit-card-cvc').value        = '123';
-                paymentFormFixture[0].querySelector('.js-credit-card-exp-month').value  = '5';
-                paymentFormFixture[0].querySelector('.js-credit-card-exp-year').value   = '2020';
+            var paymentDetails = {
+                number : '4242424242424242',
+                cvc : '123',
+                exp_month : '5',
+                exp_year : '2020'
+            };
 
-                var formElement = paymentFormFixture[0].querySelector('.js-stripe-form');
-                triggerEvent(formElement, 'submit');
-            });
+            paymentFormFixture[0].querySelector('.js-credit-card-number').value     = paymentDetails.number;
+            paymentFormFixture[0].querySelector('.js-credit-card-cvc').value        = paymentDetails.cvc;
+            paymentFormFixture[0].querySelector('.js-credit-card-exp-month').value  = paymentDetails.exp_month;
+            paymentFormFixture[0].querySelector('.js-credit-card-exp-year').value   = paymentDetails.exp_year;
 
-            waitsFor(function () {
-                return paymentForm.stripeResponseHandler.callCount > 0;
-            }, 'Stripe to return', 5000);
+            var formElement = paymentFormFixture[0].querySelector('.js-stripe-form');
+            triggerEvent(formElement, 'submit');
 
-            runs(function () {
-                expect(paymentForm.stripeResponseHandler).toHaveBeenCalled();
-                expect(paymentForm.stripeResponseHandler.mostRecentCall.args[0]).toEqual(200);
-            });
-
+            expect(stripe.card.createToken.mostRecentCall.args[0]).toEqual(paymentDetails);
         });
 
     });
