@@ -7,6 +7,7 @@
 
     .action {
         display: inline-block;
+        vertical-align: top;
         margin: 0 $gutter 0 0;
     }
 
@@ -27,5 +28,17 @@
             background-color: darken($mem-brandOrange, 15%);
             text-decoration: none;
         }
+    }
+
+    .i-wait {
+        display: none;
+        img {
+            margin-top: 9px;
+        }
+    }
+
+    &.js-waiting .i-wait {
+        display: inline-block;
+        vertical-align: top;
     }
 } 

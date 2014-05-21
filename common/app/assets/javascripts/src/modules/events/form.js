@@ -24,7 +24,8 @@ define([
             CREDIT_CARD_NUMBER: 'js-credit-card-number',
             CREDIT_CARD_CVC: 'js-credit-card-cvc',
             CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
-            CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year'
+            CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
+            ACTIONS: 'js-waiting-container'
         },
         DOM: {}
     };
@@ -57,9 +58,11 @@ define([
                     stripeToken: token
                 },
                 success: function () {
+                    self.stopLoader();
                     window.location = window.location.href.replace('payment', 'thankyou');
                 },
                 error: function (err) {
+                    self.stopLoader();
                     self.handleError(err.response);
                 }
             });
@@ -107,11 +110,11 @@ define([
         }.bind(this));
 
         bean.on($formElement[0], 'submit', function(e){
-            var formValidationResult;
-
             e.preventDefault();
 
-            formValidationResult = this.isFormValid();
+            this.startLoader();
+
+            var formValidationResult = this.isFormValid();
 
             if(formValidationResult.isValid){
 
@@ -123,6 +126,7 @@ define([
                 }, this.stripeResponseHandler.bind(this));
 
             } else{
+                this.stopLoader();
                 this.manageFormValidationResult(formValidationResult);
             }
         }.bind(this));
@@ -244,6 +248,14 @@ define([
             $('.' + this.config.classes.FORM_FIELD_ERROR, this.context).removeClass(this.config.classes.FORM_FIELD_ERROR);
             this.handleError(); // empty param = remove error
         }
+    };
+
+    StripePaymentForm.prototype.startLoader = function () {
+        this.getElement('ACTIONS').addClass('js-waiting');
+    };
+
+    StripePaymentForm.prototype.stopLoader = function () {
+        this.getElement('ACTIONS').removeClass('js-waiting');
     };
 
     StripePaymentForm.prototype.init = function (context) {
