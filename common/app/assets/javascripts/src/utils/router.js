@@ -1,3 +1,14 @@
+
+// usage:
+//
+// Individual route = '*' or '*/some-ending-route' or '/some-route'
+//
+// var routes = String or Array
+//
+// router.match(routes).to(function () {
+//   // stuff
+// });
+
 define(function () {
 
     function Router () {
@@ -30,11 +41,19 @@ define(function () {
         }
 
         for (var key in this.routes) {
-            var regxp = new RegExp('^'+ key);
+
+            var regxp;
+
+            if (key.match(/^\*/)) {
+                regxp = new RegExp(key.replace('*', '') + '$');
+            } else {
+                regxp = new RegExp('^'+ key);
+            }
 
             if (path.match(regxp)) {
                 this.routes[key]();
             }
+
         }
     };
 
