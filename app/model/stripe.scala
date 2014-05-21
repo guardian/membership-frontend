@@ -1,9 +1,10 @@
 package model
 
-object Stripe {
+package object stripe {
+
   trait StripeObject
 
-  case class Error(`type`: String, message: String) extends StripeObject
+  case class Error(`type`: String, message: String) extends Throwable with StripeObject
 
   case class Card(`type`: String, last4: String) extends StripeObject
 
@@ -13,4 +14,5 @@ object Stripe {
   case class Customer(id: String) extends StripeObject
 
   case class Subscription(id: String) extends StripeObject
+
 }
