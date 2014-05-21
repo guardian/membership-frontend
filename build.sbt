@@ -8,17 +8,20 @@ organization := "com.gu"
 
 scalaVersion := "2.10.4"
 
+resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases"
+
 libraryDependencies ++= Seq(
   cache,
   "com.github.nscala-time" %% "nscala-time" % "1.0.0",
-  "com.stripe" % "stripe-java" % "1.12.0"
+  "com.gu.identity" %% "identity-cookie" % "3.40",
+  "com.gu.identity" %% "identity-model" % "3.40"
 )
 
 play.Project.playScalaSettings
 
 playArtifactDistSettings
 
-magentaPackageName := "membership-app"
+magentaPackageName := "app"
 
 parallelExecution in Global := false
 

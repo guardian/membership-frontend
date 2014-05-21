@@ -12,9 +12,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        {pattern: 'common/app/assets/javascripts/config/**/*.js', included: false},
         {pattern: 'common/app/assets/javascripts/src/**/*.js', included: false},
         {pattern: 'common/app/assets/javascripts/lib/**/*.js', included: false},
         {pattern: 'test/js/spec/*.spec.js', included: false},
+        {pattern: 'test/fixtures/*.fixture.html', included: false},
         'test/js/spec/test-main.js'
     ],
 

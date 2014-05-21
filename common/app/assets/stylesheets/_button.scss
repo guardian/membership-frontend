@@ -20,7 +20,8 @@
         }
     }
 
-    .sign-in--logged-in {
+    .sign-in--logged-in,
+    .default-action {
         background-color: $mem-brandOrange;
         &:hover {
             background-color: darken($mem-brandOrange, 15%);

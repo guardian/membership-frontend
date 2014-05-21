@@ -18,7 +18,9 @@ requirejs.config({
         'bonzo': 'lib/bower-components/bonzo/bonzo',
         'qwery': 'lib/bower-components/qwery/qwery',
         'domready': 'lib/bower-components/domready/ready',
-        'stripe': 'lib/stripe/stripe.min'
+        'stripe': 'lib/stripe/stripe.min',
+        'reqwest': 'lib/bower-components/reqwest/reqwest',
+        'ajax': 'src/utils/ajax'
     },
 
     // ask Require.js to load these files (all our tests)

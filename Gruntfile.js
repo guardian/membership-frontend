@@ -64,6 +64,8 @@ module.exports = function (grunt) {
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
                         'qwery': 'lib/bower-components/qwery/qwery',
                         'domready': 'lib/bower-components/domready/ready',
+                        'reqwest': 'lib/bower-components/reqwest/reqwest',
+                        'ajax': 'src/utils/ajax',
                         'stripe': 'lib/stripe/stripe.min'
                     },
                     findNestedDependencies: true,
