@@ -9,8 +9,11 @@ html {
 }
 
 .page-inner-container {
-    padding: $gutter;
+    padding: $gutter $gutter/3;
     background-color: #FFFFFF;
+    @include mq(tablet){
+        padding: $gutter;
+    }
 }
 
 body {
@@ -19,22 +22,16 @@ body {
 
 .section-header {
     display: inline-block;
-    @include fs-headline(5);
+    @include fs-headline(7);
     @include rem((
         margin-bottom: $gs-baseline*2,
         padding: $gs-baseline/3
     ));
+
     background-color: #FFFFFF;
 }
 
-.center-aligned {
-    text-align: center;
-}
-
 .separator {
-    @include rem((
-        padding-top: $gs-baseline/2
-    ));
-    border-top: 1px solid #dfdfdf
+    border-top: 2px solid #4bc6df;
+    margin: $gs-baseline 0 $gs-baseline/2;
 }
-

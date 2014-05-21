@@ -1,6 +1,19 @@
 .button {
-    margin: $gs-row-height 0 $gs-row-height 0;
+    margin-top: $gs-baseline;
     display: inline-block;
+    text-align: center;
+}
+
+.button--margin {
+    margin: $gs-baseline;
+}
+
+.button--inline {
+    display: inline;
+}
+
+.button--wide {
+    min-width: 10em;
 }
 
 .sign-in {
