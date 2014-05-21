@@ -56,12 +56,8 @@ define([
                 data: {
                     stripeToken: token
                 },
-                success: function (resp) {
-                    if (resp.status === 200) {
-                        window.location = window.location.href.replace('payment', 'thankyou');
-                    } else { // 400
-                        self.handleError(resp.error);
-                    }
+                success: function () {
+                    window.location = window.location.href.replace('payment', 'thankyou');
                 },
                 error: function (err) {
                     self.handleError(err.response);
@@ -72,13 +68,14 @@ define([
 
     StripePaymentForm.prototype.handleError = function (errorMessage) {
         var $responseErrorElement = this.getElement('PAYMENT_ERRORS'),
-            $submitButton = this.getElement('FORM_SUBMIT');
+            $submitButton = this.getElement('FORM_SUBMIT'),
+            eMessage = errorMessage || '';
 
-        if (errorMessage && (/[a-zA-Z]/).test(errorMessage)) { // msg exists and has content
-            $responseErrorElement.text(errorMessage).removeClass(this.config.classes.HIDE);
+        if (eMessage && (/[a-zA-Z]/).test(eMessage)) { // msg exists and has content
+            $responseErrorElement.text(eMessage).removeClass(this.config.classes.HIDE);
             $submitButton.attr('disabled', false);
         } else {
-            $responseErrorElement.text(errorMessage).addClass(this.config.classes.HIDE);
+            $responseErrorElement.text(eMessage).addClass(this.config.classes.HIDE);
             $submitButton.attr('disabled', false);
         }
     };
@@ -89,7 +86,7 @@ define([
             $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
             $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
-            $formElement = this.getElement('STRIPE_FORM');
+            $formElement = $(this.context);
 
         bean.on($creditCardNumberElement[0], 'keyup', masker(' ', 4));
 
@@ -110,7 +107,6 @@ define([
         }.bind(this));
 
         bean.on($formElement[0], 'submit', function(e){
-
             var formValidationResult;
 
             e.preventDefault();
@@ -253,6 +249,10 @@ define([
     StripePaymentForm.prototype.init = function (context) {
 
         this.context = context || document.querySelector('.'+this.config.classes.STRIPE_FORM);
+
+        if (!this.context.className.match(this.config.classes.STRIPE_FORM)) {
+            this.context = this.context.document.querySelector('.'+this.config.classes.STRIPE_FORM);
+        }
 
         if (this.context) {
             this.domElementSetup();

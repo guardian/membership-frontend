@@ -95,7 +95,7 @@ define([
         });
 
         it('should prevent submission of an empty form', function () {
-            var formElement = paymentFormFixture[0].querySelector('.js-stripe-form');
+            var formElement = paymentFormFixture[0];
             triggerEvent(formElement, 'submit');
             expect(errorMessageContainer.innerHTML).toEqual('Please enter a valid card number, Please enter a valid CVC number, Please enter a valid Expiry')
         });
@@ -120,7 +120,7 @@ define([
             paymentFormFixture[0].querySelector('.js-credit-card-exp-month').value  = paymentDetails.exp_month;
             paymentFormFixture[0].querySelector('.js-credit-card-exp-year').value   = paymentDetails.exp_year;
 
-            var formElement = paymentFormFixture[0].querySelector('.js-stripe-form');
+            var formElement = paymentFormFixture[0];
             triggerEvent(formElement, 'submit');
 
             expect(stripe.card.createToken.mostRecentCall.args[0]).toEqual(paymentDetails);
