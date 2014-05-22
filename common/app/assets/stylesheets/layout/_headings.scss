@@ -14,6 +14,11 @@
     @include fs-headline(7);
 }
 
+.section-sub-headline {
+    @extend %section-header;
+    @include fs-headline(4);
+}
+
 .section-body-heading {
     @extend %section-header;
     @include fs-bodyHeading(4);
