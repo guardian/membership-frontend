@@ -39,11 +39,11 @@
                 <span class="event__price-note"> per ticket.</span>
             </div>
 
-            <a class="action action--block action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
+            <a class="action action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
-            <a class="action action--block action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
+            <a class="action action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
 
         </div>
     </div>
