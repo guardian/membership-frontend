@@ -5,15 +5,12 @@
    ========================================================================== */
 
 @import "vars";
-@import "membership-vars";
 @import "mixins";
 @import "module/facia/_mixins";
 
 /* ==========================================================================
    Base
    ========================================================================== */
-
-//@import "_webfonts";
 
 @import "base/normalize";
 @import "base/base";
@@ -23,6 +20,8 @@
 @import "base/helpers";
 @import "base/lists";
 @import "base/forms";
+@import "base/tables";
+@import "base/images";
 
 /* ==========================================================================
    Layout
@@ -34,32 +33,4 @@
 @import "layout/layout";
 @import "layout/footer";
 @import "layout/header";
-
-/* ==========================================================================
-   Base
-   ========================================================================== */
-@import "base/_tables";
-
-
-/* ==========================================================================
-   Facia
-   ========================================================================== */
-@import "module/facia/_extends";
-@import "module/facia/_items";
-@import "module/facia/_row-pattern";
-@import "module/facia/_facia-container";
-@import "module/facia/_linkslist";
-@import "module/containers/_sport";
-@import "module/containers/_features";
-@import "module/containers/_comment";
-@import "module/containers/_special";
-@import "module/containers/_section";
-@import "module/containers/_commentanddebate";
-@import "module/containers/_people";
-@import "module/containers/_misc";
-@import "module/containers/_popular";
-@import "module/containers/_related";
-@import "module/containers/_multimedia";
-@import "module/containers/_series";
-@import "module/facia/_pagination";
-@import "module/facia/snaps/_football";
+@import "layout/headings";

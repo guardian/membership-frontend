@@ -15,7 +15,7 @@ out
 .idea_modules
 */public/javascripts
 */public/stylesheets
-*/common/app/assets/stylesheets/components
+*/common/app/assets/stylesheets/components/bower-components/
 */common/app/assets/javascripts/lib/bower-components/
 
 .bundle
