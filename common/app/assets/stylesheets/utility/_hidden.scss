@@ -1,0 +1,5 @@
+.hidden-mobile {
+    @include mq($to: tablet){
+        display: none !important;
+    }
+}

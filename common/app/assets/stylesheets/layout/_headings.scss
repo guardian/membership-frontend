@@ -1,5 +1,4 @@
 %section-header {
-    display: inline-block;
     @include rem((
         margin-bottom: $gs-baseline*2,
         padding: $gs-baseline/3
@@ -12,6 +11,11 @@
 .section-headline {
     @extend %section-header;
     @include fs-headline(7);
+}
+
+.section-sub-headline {
+    @extend %section-header;
+    @include fs-headline(4);
 }
 
 .section-body-heading {

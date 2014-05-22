@@ -19,10 +19,6 @@
 
 .tier-navigation {
     @include clearfix;
-    display: none;
-    @include mq(tablet){
-        display: block;
-    }
 }
 
 .tier-navigation__tab {
@@ -50,14 +46,13 @@
 
 .benefits {
     @include clearfix;
-    @include fs-bodyCopy(4);
 }
 
 .benefits-list {
     display: table;
     width: 100%;
     text-align: center;
-    margin-bottom: $gs-gutter;
+    padding: $gs-gutter;
     border-bottom: 1px solid #dfdfdf;
     @include mq(tablet){
         border: 1px solid #dfdfdf;
@@ -76,7 +71,6 @@
 }
 
 .benefits-list__item {
-    padding: $gs-baseline;
     @include mq(tablet){
         vertical-align: middle;
         display: table-cell;
