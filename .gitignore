@@ -13,10 +13,10 @@ dist
 *.iml
 out
 .idea_modules
-public/javascripts
-public/stylesheets
-common/app/assets/stylesheets/components
-common/app/assets/javascripts/lib/bower-components/
+*/public/javascripts
+*/public/stylesheets
+*/common/app/assets/stylesheets/components
+*/common/app/assets/javascripts/lib/bower-components/
 
 .bundle
 Gemfile.lock
