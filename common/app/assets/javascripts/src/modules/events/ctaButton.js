@@ -5,7 +5,8 @@ define([
 
     var config = {
         classes: {
-            LOGGED_IN_CLASS: 'sign-in--logged-in'
+            LOGGED_IN_CLASS: 'action--logged-in',
+            LOGGED_OUT_CLASS: 'action--logged-out'
         },
         text: {
             LOGGED_IN_CTA_BUTTON: 'Book Event'
@@ -14,11 +15,11 @@ define([
 
     var init = function(){
 
-        var ctaButtons = document.querySelectorAll('.sign-in');
+        var ctaButtons = document.querySelectorAll('.' + config.classes.LOGGED_OUT_CLASS);
         var isUserLoggedIn = user.isLoggedIn();
 
         if(ctaButtons.length && isUserLoggedIn){
-            for (var i=0; i<=ctaButtons.length-1; i++) {
+            for (var i = 0, ctaButtonsLength = ctaButtons.length - 1; i <= ctaButtonsLength; i++) {
                 $(ctaButtons[i]).toggleClass(config.classes.LOGGED_IN_CLASS).text(config.text.LOGGED_IN_CTA_BUTTON);
             }
         }
