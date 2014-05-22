@@ -19,10 +19,6 @@
 
 .tier-navigation {
     @include clearfix;
-    display: none;
-    @include mq(tablet){
-        display: block;
-    }
 }
 
 .tier-navigation__tab {
@@ -78,12 +74,5 @@
     @include mq(tablet){
         vertical-align: middle;
         display: table-cell;
-    }
-}
-
-.whats-included {
-    display: none;
-    @include mq(tablet){
-        display: inline-block;
     }
 }
