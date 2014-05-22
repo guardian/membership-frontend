@@ -13,3 +13,13 @@ a,
     text-decoration: none;
   }
 }
+
+.no-underline {
+    cursor: pointer;
+    text-decoration: none;
+    &:hover,
+    &:focus,
+    &:active {
+        text-decoration: none;
+    }
+}

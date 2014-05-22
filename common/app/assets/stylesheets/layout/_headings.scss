@@ -1,0 +1,20 @@
+%section-header {
+    display: inline-block;
+    @include rem((
+        margin-bottom: $gs-baseline*2,
+        padding: $gs-baseline/3
+    ));
+
+    background-color: #FFFFFF;
+}
+
+
+.section-headline {
+    @extend %section-header;
+    @include fs-headline(7);
+}
+
+.section-body-heading {
+    @extend %section-header;
+    @include fs-bodyHeading(4);
+}

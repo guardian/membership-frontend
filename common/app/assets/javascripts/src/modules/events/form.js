@@ -18,7 +18,7 @@ define([
             ERROR_CARD_NUMBER: 'js-error--card-number',
             ERROR_CARD_CVC: 'js-error--card-cvc',
             ERROR_CARD_EXPIRY: 'js-error--card-expiry',
-            HIDE: 'hide',
+            HIDE: 'is-hidden',
             PAYMENT_ERRORS: 'js-payment-errors',
             FORM_SUBMIT: 'js-submit-input',
             CREDIT_CARD_NUMBER: 'js-credit-card-number',
