@@ -61,10 +61,10 @@
     border-bottom: 1px solid #dfdfdf;
     @include mq(tablet){
         border: 1px solid #dfdfdf;
-        height: gs-height(4);
+        height: gs-height(3);
         float: left;
-        margin: 1% 1% 1% 0;
-        width: 23%;
+        margin: $gs-gutter $gs-gutter $gs-gutter 0;
+        width: 22%;
     }
 }
 

@@ -5,33 +5,31 @@
 
 @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
 
-<div class="container--features">
-    <section class="page-inner-container container--people container--row-pattern">
-        <div class="container__border tone-feature tone-accent-border"></div>
-        <div class="container__header">
-            <h2 class="container__title tone-feature tone-background">
-                <span class="container__title__label u-text-hyphenate">Current Events</span>
-            </h2>
-        </div>
-        <div class="inner-container">
+<section class="page-inner-container container--people container--row-pattern">
+    <div class="container__border tone-feature tone-accent-border"></div>
+    <div class="container__header">
+        <h2 class="container__title tone-feature tone-background">
+            <span class="container__title__label u-text-hyphenate">Current Events</span>
+        </h2>
+    </div>
+    <div class="inner-container">
 
-            @partials.event.imgRowHeader()
+        @partials.event.imgRowHeader()
 
-            @for((event, index) <- eventsList.zipWithIndex) {
+        @for((event, index) <- eventsList.zipWithIndex) {
 
-                @if(index % 3 == 0 && index != 0){
-                    @partials.event.imgRowFooter()
-                    @partials.event.imgRowHeader()
-                }
-
-                @partials.event.item(event)
+            @if(index % 3 == 0 && index != 0){
+                @partials.event.imgRowFooter()
+                @partials.event.imgRowHeader()
             }
 
-            @partials.event.imgRowFooter()
+            @partials.event.item(event)
+        }
 
-        </div>
+        @partials.event.imgRowFooter()
 
-    </section>
-</div>
+    </div>
+
+</section>
 
 }
