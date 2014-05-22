@@ -21,6 +21,21 @@ play.Project.playScalaSettings
 
 playArtifactDistSettings
 
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq[BuildInfoKey](
+  name,
+  BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
+  // so this next one is constant to avoid it always recompiling on dev machines.
+  // we only really care about build time on teamcity, when a constant based on when
+  // it was loaded is just fine
+  BuildInfoKey.constant("buildTime", System.currentTimeMillis)
+)
+
+buildInfoPackage := "app"
+
 magentaPackageName := "app"
 
 parallelExecution in Global := false
