@@ -34,7 +34,7 @@ object Membership extends Build {
     )
   }
 
-  val webapp = play.Project("webapp", version, path = file("webapp"))
+  val frontend = play.Project("frontend", version, path = file("frontend"))
     .settings(organization := "com.gu")
     .settings(scalaVersion := "2.10.4")
     .settings(resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases")

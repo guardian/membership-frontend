@@ -2,7 +2,7 @@
 #
 # Pre-commit hooks
 
-cd webapp
+cd frontend
 
 # Validate CSS
 CSS_SRC_PATTERN="\.scss"
