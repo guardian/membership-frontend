@@ -91,7 +91,7 @@ define([
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
             $formElement = $(this.context);
 
-        bean.on($creditCardNumberElement[0], 'keyup', masker(' ', 4));
+        bean.on($creditCardNumberElement[0], 'keyup blur', masker(' ', 4));
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
             this.manageFieldValidationResult(this.validateCardNumber());
