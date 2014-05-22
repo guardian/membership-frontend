@@ -58,8 +58,7 @@
                 "Tags" : [
                     { "Key" : "Stack", "Value" : { "Ref" : "Stack" }, "PropagateAtLaunch" : "true" },
                     { "Key" : "App", "Value" : "app", "PropagateAtLaunch" : "true" },
-                    { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  },
-                    { "Key" : "Management", "Value" : "port=9000", "PropagateAtLaunch" : "true" }
+                    { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  }
                 ]
             }
         },
@@ -79,8 +78,8 @@
                         "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
-                        {"Fn::Join":["", ["echo APP_STACK=", { "Ref" : "Stack" }, " >> /etc/environment"]]},
-                        
+                        {"Fn::Join":["", ["echo APP_STACK=", { "Ref" : "Stack" }, " >> /etc/gu-environment"]]},
+
                         "adduser --system --home /membership --disabled-password membership",
 
                         {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "app/app.zip --directory-prefix=/tmp"]]},

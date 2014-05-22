@@ -17,41 +17,6 @@
   display: none !important;
 }
 
-.mobile-only {
-  @include mq(tablet) {
-    display: none !important;
-  }
-}
-
-.mobile-and-tablet-only {
-  @include mq(leftCol) {
-    display: none !important;
-  }
-}
-
-.hide-on-mobile {
-  display: none !important;
-
-  @include mq(tablet) {
-    display: block !important;
-  }
-}
-.hide-on-mobile-inline {
-  display: none !important;
-
-  @include mq(tablet) {
-    display: inline !important;
-  }
-}
-
-.hide-on-mobile-inline {
-  display: none !important;
-
-  @include mq(tablet) {
-    display: inline !important;
-  }
-}
-
 .is-invisible {
   visibility: hidden !important;
 }
