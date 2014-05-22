@@ -50,9 +50,7 @@
     }
 }
 
-.actions {
-    &.js-waiting .i-wait {
-        display: inline-block;
-        vertical-align: top;
-    }
+.actions.js-waiting .i-wait {
+    display: inline-block;
+    vertical-align: top;
 }
