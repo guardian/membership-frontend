@@ -19,8 +19,6 @@ $gs-max-columns: 16;
 }
 @function gs-height($n-rows) {
     @return $n-rows * $gs-row-height + $gs-baseline * ($n-rows - 1);
-
-
 }
 
 @mixin gs-container {
