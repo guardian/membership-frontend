@@ -54,6 +54,6 @@ trait Membership {
 object Membership extends Build with Membership {
   val frontend = app("frontend")
 
-  val root = Project("root", base=file(".")).aggregate(frontend, api)
+  val root = Project("root", base=file(".")).aggregate(frontend)
 }
 
