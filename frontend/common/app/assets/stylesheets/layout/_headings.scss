@@ -20,5 +20,15 @@
 
 .section-body-heading {
     @extend %section-header;
+<<<<<<< Updated upstream
     @include fs-bodyHeading(4);
+=======
+    @include fs-headline(2);
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+>>>>>>> Stashed changes
 }
