@@ -2,8 +2,6 @@
 #
 # Pre-commit hooks
 
-cd frontend
-
 # Validate CSS
 CSS_SRC_PATTERN="\.scss"
 git diff --cached --name-only | if grep "CSS_SRC_PATTERN"
