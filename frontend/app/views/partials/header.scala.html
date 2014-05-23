@@ -1,6 +1,13 @@
+@import views.Config
+
 <header>
     <div class="header-content gs-container">
-        <a class="header__logo" href="/"><img src="@routes.Assets.at("images/membership_mobile.png")" alt="" /></a>
+
+        @if(Config.hideMem){
+            <a class="header__logo masterclasses" href="/"><img src="@routes.Assets.at("images/masterclasses_mobile.jpg")" alt="" /></a>
+        }else{
+            <a class="header__logo" href="/"><img src="@routes.Assets.at("images/membership_mobile.png")" alt="" /></a>
+        }
 
         <div class="header__identity">
             <span class="i-action"><span class="i-profile"></span></span>
