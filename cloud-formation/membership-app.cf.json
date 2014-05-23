@@ -43,16 +43,16 @@
     },
     "Resources" : {
 
-        "AppServerGroup" : {
+        "FrontendAutoScalingGroup" : {
             "Type" : "AWS::AutoScaling::AutoScalingGroup",
             "Properties" : {
                 "AvailabilityZones" : { "Fn::GetAZs" : "" },
                 "VPCZoneIdentifier" : { "Ref" : "Subnets" },
-                "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
+                "LaunchConfigurationName" : { "Ref" : "FrontendLaunchConfig" },
                 "MinSize" : "1",
                 "MaxSize" : "2",
                 "DesiredCapacity" : "1",
-                "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ],
+                "LoadBalancerNames" : [ { "Ref" : "FrontendElasticLoadBalancer" } ],
                 "HealthCheckType" : "ELB",
                 "HealthCheckGracePeriod" : 300,
                 "Tags" : [
@@ -63,7 +63,7 @@
             }
         },
 
-        "LaunchConfig" : {
+        "FrontendLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
                 "ImageId" : "ami-896c96fe",
@@ -79,7 +79,7 @@
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
                         {"Fn::Join":["", ["echo APP_STACK=", { "Ref" : "Stack" }, " >> /etc/gu-environment"]]},
-                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/", { "Ref" : "App" }, "/app.zip > /etc/gu-artifact-url" ]]},
+                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
 
@@ -120,7 +120,7 @@
             }
         },
 
-        "ElasticLoadBalancer" : {
+        "FrontendElasticLoadBalancer" : {
             "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties" : {
                 "Listeners" : [ {
@@ -169,8 +169,8 @@
     },
     "Outputs": {
         "URL" : {
-            "Description" : "URL of the website",
-            "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]]}
+            "Description" : "URL of the Frontend website",
+            "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "FrontendElasticLoadBalancer", "DNSName" ]}]]}
         }
     }
 }
