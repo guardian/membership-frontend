@@ -63,6 +63,13 @@ header {
             background: url('/assets/images/membership_tab.png');
             height: 66px;
             width: 221px;
+
+            &.masterclasses {
+                background: url('/assets/images/masterclasses_tab.jpg');
+                height: 56px;
+                width: 351px;
+            }
+
             position: absolute;
             top: 42px;
             right: 0;
@@ -81,6 +88,12 @@ header {
             background: url('/assets/images/membership.png');
             height: 90px;
             width: 301px;
+
+            &.masterclasses {
+                background: url('/assets/images/masterclasses.jpg');
+                height: 73px;
+                width: 458px;
+            }
         }
 
         .header__identity {
