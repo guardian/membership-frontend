@@ -90,7 +90,9 @@ footer {
   }
 
   a {
-    margin-bottom: .6em;
+      @include rem((
+           margin-bottom: 6px
+      ));
     display: block;
   }
 }
