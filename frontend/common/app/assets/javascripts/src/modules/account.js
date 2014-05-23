@@ -1,7 +1,7 @@
 /**
  * Populate user details in the header account information container
  */
-define(['src/utils/user'], function (userUtil) {
+define(['src/utils/user', '$'], function (userUtil, $) {
 
     var config = {
         classes: {
@@ -20,16 +20,18 @@ define(['src/utils/user'], function (userUtil) {
 
                 for (var c in config.classes) {
                     config.DOM = config.DOM || {};
-                    config.DOM[c] = document.querySelector(config.classes[c]);
+                    config.DOM[c] = $(document.querySelector(config.classes[c])); // bonzo object
                 }
 
-                config.DOM.ID_NOTICE.innerHTML = 'You are signed in as';
+                config.DOM.ID_NOTICE.text('You are signed in as'); // Screen readers
+                config.DOM.ID_NOTICE.addClass('u-h');
 
-                config.DOM.ID_ACCOUNT.innerHTML = user.displayname;
+                config.DOM.ID_ACCOUNT.text(user.displayname);
+                config.DOM.ID_ACCOUNT.removeClass('u-h');
 
-                config.DOM.ID_TIER.innerHTML = 'Guardian Member';
+                //config.DOM.ID_TIER.innerHTML = 'Guardian Member';
 
-                config.DOM.ID_AVATAR.className += ' u-h';
+                config.DOM.ID_AVATAR.addClass('u-h');
                 //config.DOM.ID_AVATAR.innerHTML = '<img src="' + 'avatar_url' + '" />';
             }
         }
