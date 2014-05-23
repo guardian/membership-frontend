@@ -2,9 +2,14 @@
 #
 # Pre-commit hooks
 
+# Allows us to change directory in this script
+unset GIT_DIR
+
+cd frontend
+
 # Validate CSS
 CSS_SRC_PATTERN="\.scss"
-git diff --cached --name-only | if grep "CSS_SRC_PATTERN"
+git diff --cached --name-only | if grep "$CSS_SRC_PATTERN"
 then
     grunt compile:css
 fi
