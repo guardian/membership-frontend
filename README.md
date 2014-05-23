@@ -17,10 +17,12 @@
 1. Go to project root
 1. ./setup.sh
 1. Add the following to your `/etc/hosts`
+
    ```
    127.0.0.1   mem.thegulocal.com
    127.0.0.1   memapi.thegulocal.com
    ```
+
 1. ./nginx/setup.sh
 
 ## Run
