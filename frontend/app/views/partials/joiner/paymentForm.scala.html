@@ -4,63 +4,75 @@
 
     <div class="js-payment-errors form__error is-hidden"></div>
 
-    <fieldset class="fieldset">
-        <div class="fieldset__heading">
-            <h2 class="form__heading">Card details</h2>
-            <div class="form__note">We accept all major cards</div>
-        </div>
+    <section class="form-primary-container">
+        <fieldset class="fieldset">
+            <div class="fieldset__heading">
+                <h2 class="form__heading">Card details</h2>
+                <div class="form__note">We accept all major cards</div>
+            </div>
 
-        <div class="fieldset__fields">
+            <div class="fieldset__fields">
+                <div class="form-field">
+                    <label class="label" for="cc-num">Card Number</label>
+                    <div class="input">
+                        <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" data-error-message="Please enter a valid card number"/>
+                    </div>
+                </div>
 
-            @* Credit Card number *@
+                <div class="form-field">
+                    <label class="label" for="cc-cvc">
+                        <span>Security code</span>
+                        <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC" maxlength="4" data-error-message="Please enter a valid CVC number"/>
+                    </label>
+                </div>
 
-            <div class="form-field">
-                <label class="label" for="cc-num">Card Number</label>
-                <div class="input">
-                    <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" data-error-message="Please enter a valid card number"/>
+                <div class="form-field">
+                    <label class="label" for="cc-exp-month">
+                        <span>Expiration (MM/YY)</span>
+                        <p>
+                            <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month" data-error-message="Please enter a valid Expiry">
+                                <option selected="selected">Month</option>
+                                @for(month <- selectDates.validCardMonths){
+                                    <option value="@month">@month</option>
+                                }
+                            </select>
+                            <span> / </span>
+                            <select data-stripe="exp-year" id="cc-exp-year" class="js-credit-card-exp-year" data-error-message="Please enter a valid Expiry">
+                                <option selected="selected">Year</option>
+                                @for((year, formattedYear) <- selectDates.validCardYears){
+                                    <option value="@year">@formattedYear</option>
+                                }
+                            </select>
+                        </p>
+                    </label>
                 </div>
             </div>
+        </fieldset>
 
-            <div class="form-field">
-                <label class="label" for="cc-cvc">
-                    <span>Security code</span>
-                    <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC" maxlength="4" data-error-message="Please enter a valid CVC number"/>
-                </label>
+        <fieldset class="fieldset">
+            <div class="fieldset__heading"></div>
+            <div class="fieldset__fields">
+                <div class="actions js-waiting-container">
+                    <button type="submit" class="submit-input action--logged-in js-submit-input">Pay £15 now</button>
+                    <div class="i-wait"><img src="@routes.Assets.at("images/wait.gif")" alt=""/></div>
+                </div>
             </div>
-
-            <div class="form-field">
-                <label class="label" for="cc-exp-month">
-                    <span>Expiration (MM/YY)</span>
-                    <p>
-                        <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month" data-error-message="Please enter a valid Expiry">
-                            <option selected="selected">Month</option>
-                            @for(month <- selectDates.validCardMonths){
-                                <option value="@month">@month</option>
-                            }
-                        </select>
-                        <span> / </span>
-                        <select data-stripe="exp-year" id="cc-exp-year" class="js-credit-card-exp-year" data-error-message="Please enter a valid Expiry">
-                            <option selected="selected">Year</option>
-                            @for((year, formattedYear) <- selectDates.validCardYears){
-                                <option value="@year">@formattedYear</option>
-                            }
-                        </select>
-                    </p>
-                </label>
-            </div>
-        </div>
-    </fieldset>
-
-    <fieldset class="fieldset">
-        <div class="fieldset__heading">
-            <h2 class="form__heading">Payment</h2>
-            <div class="form__note">You will be charged £15/month</div>
-        </div>
-        <div class="fieldset__fields">
-            <div class="actions top js-waiting-container">
-                <button type="submit" class="submit-input action--logged-in js-submit-input">Subscribe</button>
-                <div class="i-wait"><img src="@routes.Assets.at("images/wait.gif")" alt=""/></div>
-            </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    </section>
+    <section class="form-secondary-container">
+        <ul class="u-unstyled">
+            <li>
+                <h2 class="form__heading">What's included</h2>
+                <p>Nunc eget semper nisl. Cras auctor mattis enim, eu pellentesque ante dictum eu. Aliquam vitae laoreet mauris.</p>
+            </li>
+            <li>
+                <h2 class="form__heading">Payments</h2>
+                <p>Aenean et elit eu odio malesuada malesuada ut id odio. Duis at arcu ornare, vehicula ante ut, convallis lacus. Nullam et egestas sem.</p>
+            </li>
+            <li>
+                <h2 class="form__heading">Cancellation</h2>
+                <p>Donec elit nunc, egestas eu suscipit vitae, condimentum quis nibh. Vivamus est ante, commodo sit amet luctus vel, vulputate a eros</p>
+            </li>
+        </ul>
+    </section>
 </form>

@@ -1,7 +1,6 @@
 %section-header {
     @include rem((
         margin-bottom: $gs-baseline*2,
-        padding: $gs-baseline/3
     ));
 
     background-color: #FFFFFF;
@@ -21,4 +20,9 @@
 .section-body-heading {
     @extend %section-header;
     @include fs-bodyHeading(4);
+}
+
+.section-body-heading-small {
+    @extend %section-header;
+    @include fs-bodyHeading(2);
 }

@@ -5,7 +5,7 @@
 .joiner-section {
     width: 100%;
     border-bottom: 1px solid #dfdfdf;
-    margin: $gs-gutter 0;
+    margin: $gs-gutter;
     padding: $gs-gutter/2;
     text-align: center;
     @include mq(tablet) {
@@ -48,6 +48,14 @@
 }
 
 /* ==========================================================================
+   Tier List
+   ========================================================================== */
+
+.tier-list {
+    padding: $gs-gutter;
+}
+
+/* ==========================================================================
    Tier
    ========================================================================== */
 
@@ -84,6 +92,30 @@
     }
 }
 
+/* ==========================================================================
+   Payment Form
+   ========================================================================== */
+
+
+.form-primary-container {
+    width: 100%;
+    @include mq(tablet){
+        float: left;
+        width: 68%;
+        margin-right: 2%;
+    }
+}
+
+.form-secondary-container {
+    width: 100%;
+    @include mq(tablet){
+        border-left: 1px solid #f1f1f1;
+        padding: $gutter 0 0 $gutter;
+        float: left;
+        width: 30%;
+    }
+}
+
 
 /* ==========================================================================
    Thank You
@@ -99,7 +131,7 @@
 
 .questions__list {
     width: 100%;
-    padding: $gs-gutter;
+    padding: $gs-gutter $gs-gutter $gs-gutter 0;
     @include mq(tablet){
         width: 50%;
         float: left;
