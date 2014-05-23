@@ -101,19 +101,46 @@
     width: 100%;
     @include mq(tablet){
         float: left;
-        width: 68%;
+        width: 48%;
         margin-right: 2%;
     }
 }
 
 .form-secondary-container {
+    border-top: 1px solid #f1f1f1;
     width: 100%;
+    padding-top: $gutter;
     @include mq(tablet){
+        border-top: none;
         border-left: 1px solid #f1f1f1;
-        padding: $gutter 0 0 $gutter;
+        padding: $gutter 0 0 $gutter*3;
         float: left;
-        width: 30%;
+        width: 50%;
     }
+}
+
+
+.form__error {
+    margin-bottom: $gutter/2;
+}
+
+.form-detail__item {
+    margin-top: $gutter/2;
+}
+
+.fieldset {
+    border: none;
+}
+
+.form-terms {
+    @include fs-bodyCopy(1);
+}
+
+.form-padlock {
+    @include rem((
+        width: 18px,
+        height: 18px
+    ));
 }
 
 

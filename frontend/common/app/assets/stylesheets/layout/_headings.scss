@@ -17,12 +17,12 @@
     @include fs-headline(4);
 }
 
-.section-body-heading {
+.section-body-headline {
     @extend %section-header;
-    @include fs-bodyHeading(4);
+    @include fs-headline(4);
 }
 
-.section-body-heading-small {
+.section-sub-body-headline {
     @extend %section-header;
-    @include fs-bodyHeading(2);
+    @include fs-headline(2);
 }
