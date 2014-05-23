@@ -1,7 +1,5 @@
 import sbt._
 import sbt.Keys._
-import play.Project._
-import com.typesafe.sbt.SbtNativePackager._
 import com.typesafe.sbt.packager.Keys._
 
 object PlayArtifact extends Plugin {
@@ -12,7 +10,8 @@ object PlayArtifact extends Plugin {
 
   val magentaPackageName = SettingKey[String]("magenta-package-name", "Name of the magenta package")
 
-  lazy val playArtifactDistSettings = Seq(
+  val playArtifactDistSettings = Seq(
+    magentaPackageName := "app",
 
     playArtifactResources := Seq(
       dist.value -> s"packages/${magentaPackageName.value}/app.zip",
@@ -20,6 +19,7 @@ object PlayArtifact extends Plugin {
     ),
 
     playArtifactFile := "artifacts.zip",
+
     playArtifact := {
       val distFile = target.value / playArtifactFile.value
       streams.value.log.info(s"Disting $distFile")
