@@ -1,11 +1,11 @@
 import sbt._
 import sbt.Keys._
 
-import play.Project._
+import PlayArtifact._
 import sbtbuildinfo.Plugin._
 import com.typesafe.sbt.SbtScalariform._
 
-object Membership extends Build {
+trait Membership {
   val version = "1.0-SNAPSHOT"
 
   def buildInfoPlugin = buildInfoSettings ++ Seq(
@@ -34,22 +34,27 @@ object Membership extends Build {
     )
   }
 
-  val frontend = play.Project("frontend", version, path = file("frontend"))
-    .settings(organization := "com.gu")
-    .settings(scalaVersion := "2.10.4")
-    .settings(resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases")
-    .settings(libraryDependencies ++= Seq(
-      cache,
-      "com.github.nscala-time" %% "nscala-time" % "1.0.0",
-      "com.gu.identity" %% "identity-cookie" % "3.40",
-      "com.gu.identity" %% "identity-model" % "3.40"
-    ))
-    .settings(parallelExecution in Global := false)
-    .settings(buildInfoPlugin: _*)
-    .settings(PlayArtifact.magentaPackageName := "app")
-    .settings(PlayArtifact.playArtifactDistSettings: _*)
-    .settings(coveragePlugin: _*)
-    .settings(scalaStylePlugin: _*)
-    .settings(scalariformSettings: _*)
+  val commonDependencies = Seq(
+    "com.github.nscala-time" %% "nscala-time" % "1.0.0",
+    "com.gu.identity" %% "identity-cookie" % "3.40",
+    "com.gu.identity" %% "identity-model" % "3.40"
+  )
+
+  def commonSettings = Seq(
+    organization := "com.gu",
+    scalaVersion := "2.10.4",
+    resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
+    libraryDependencies ++= commonDependencies,
+    parallelExecution in Global := false
+  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin ++ scalariformSettings
+
+  def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)
+}
+
+object Membership extends Build with Membership {
+  val frontend = app("frontend")
+  val api = app("api")
+
+  val root = Project("root", base=file(".")).aggregate(frontend, api)
 }
 
