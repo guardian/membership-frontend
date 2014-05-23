@@ -57,7 +57,7 @@
                 "HealthCheckGracePeriod" : 300,
                 "Tags" : [
                     { "Key" : "Stack", "Value" : { "Ref" : "Stack" }, "PropagateAtLaunch" : "true" },
-                    { "Key" : "App", "Value" : "app", "PropagateAtLaunch" : "true" },
+                    { "Key" : "App", "Value" : "frontend", "PropagateAtLaunch" : "true" },
                     { "Key" : "Stage", "Value" : { "Ref" : "Stage" }, "PropagateAtLaunch" : "true"  }
                 ]
             }
@@ -79,10 +79,11 @@
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
                         {"Fn::Join":["", ["echo APP_STACK=", { "Ref" : "Stack" }, " >> /etc/gu-environment"]]},
+                        {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/", { "Ref" : "App" }, "/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
 
-                        {"Fn::Join":["/", ["wget https://s3-eu-west-1.amazonaws.com/membership-dist", { "Ref" : "Stack" }, { "Ref" : "Stage" },  "app/app.zip --directory-prefix=/tmp"]]},
+                        "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
 
                         "unzip -d /membership /tmp/app.zip",
 

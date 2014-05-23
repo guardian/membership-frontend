@@ -11,7 +11,6 @@ object PlayArtifact extends Plugin {
   val magentaPackageName = SettingKey[String]("magenta-package-name", "Name of the magenta package")
 
   val playArtifactDistSettings = Seq(
-    magentaPackageName := "app",
 
     playArtifactResources := Seq(
       dist.value -> s"packages/${magentaPackageName.value}/app.zip",
