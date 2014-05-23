@@ -4,7 +4,7 @@
 
 .joiner-section {
     width: 100%;
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: 1px solid #DFDFDF;
     margin: $gs-gutter;
     padding: $gs-gutter/2;
     text-align: center;
@@ -28,22 +28,21 @@
 .joiner-navigation__tab {
     width: 100%;
     text-align: center;
-    border: 1px solid #dfdfdf;
+    border: 1px solid #DFDFDF;
     display: table;
     float: left;
     width: 33.3%;
-
 }
 
 .joiner-navigation__btn {
     @include fs-bodyCopy(4);
-    background-color: #eaeaea;
+    background-color: #EAEAEA;
     height: gs-height(2);
     width: 100%;
     vertical-align: middle;
     display: table-cell;
     &:hover {
-        background-color: darken(#eaeaea, 15%);
+        background-color: darken(#EAEAEA, 15%);
     }
 }
 
@@ -68,9 +67,9 @@
     width: 100%;
     text-align: center;
     padding: $gs-gutter;
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: 1px solid #DFDFDF;
     @include mq(tablet){
-        border: 1px solid #dfdfdf;
+        border: 1px solid #DFDFDF;
         height: gs-height(3);
         float: left;
         margin: $gs-gutter $gs-gutter $gs-gutter 0;
@@ -107,12 +106,12 @@
 }
 
 .form-secondary-container {
-    border-top: 1px solid #f1f1f1;
+    border-top: 1px solid #F1F1F1;
     width: 100%;
     padding-top: $gutter;
     @include mq(tablet){
         border-top: none;
-        border-left: 1px solid #f1f1f1;
+        border-left: 1px solid #F1F1F1;
         padding: $gutter 0 0 $gutter*3;
         float: left;
         width: 50%;
@@ -158,7 +157,7 @@
 
 .questions__list {
     width: 100%;
-    padding: $gs-gutter $gs-gutter $gs-gutter 0;
+    padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
     @include mq(tablet){
         width: 50%;
         float: left;

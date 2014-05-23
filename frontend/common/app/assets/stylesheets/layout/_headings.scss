@@ -1,8 +1,7 @@
 %section-header {
     @include rem((
-        margin-bottom: $gs-baseline*2,
+        margin-bottom: $gs-baseline,
     ));
-
     background-color: #FFFFFF;
 }
 
