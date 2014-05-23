@@ -86,7 +86,7 @@
 
                         "unzip -d /membership /tmp/app.zip",
 
-                        "mv /membership/membership-1.0-SNAPSHOT/conf/upstart.conf /etc/init/membership-app.conf",
+                        "mv /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf /etc/init/membership-app.conf",
 
                         "chown -R membership /membership/",
 
