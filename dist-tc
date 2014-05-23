@@ -11,5 +11,4 @@ set -o errexit
 #
 ################################################################################
 
-./grunt-tc test compile
-./sbt-tc clean scoverage:test play-artifact
+./sbt-tc "project $1" clean scoverage:test play-artifact
