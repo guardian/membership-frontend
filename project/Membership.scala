@@ -1,7 +1,7 @@
 import sbt._
 import sbt.Keys._
 
-import PlayArtifact.playArtifactDistSettings
+import PlayArtifact._
 import sbtbuildinfo.Plugin._
 import com.typesafe.sbt.SbtScalariform._
 
@@ -48,7 +48,7 @@ trait Membership {
     parallelExecution in Global := false
   ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin ++ scalariformSettings
 
-  def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*)
+  def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)
 }
 
 object Membership extends Build with Membership {

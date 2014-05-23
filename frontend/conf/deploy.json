@@ -1,7 +1,7 @@
 {
     "defaultStacks": ["membership", "memb-masterclasses"],
     "packages":{
-        "app":{
+        "frontend":{
             "type":"autoscaling",
             "data":{
                 "bucket": "membership-dist"
@@ -10,7 +10,7 @@
     },
     "recipes":{
         "default":{
-            "actionsBeforeApp": ["app.uploadArtifacts", "app.deploy"]
+            "actionsBeforeApp": ["frontend.uploadArtifacts", "frontend.deploy"]
         }
     }
 }
