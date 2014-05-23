@@ -70,7 +70,6 @@ header {
                 display: none;
             }
         }
-
     }
 
     @include mq(tablet) {
@@ -87,7 +86,7 @@ header {
         .header__identity {
             position: absolute;
             top: gs-height(1)/2;
-            left: $gs-gutter;
+            left: 0;
             background: none;
             span {
                 @include fs-data(4);
