@@ -8,6 +8,7 @@ import com.gu.identity.cookie.{ IdentityCookieDecoder, PreProductionKeys }
 import actions.AuthRequest
 
 import com.typesafe.config.ConfigFactory
+import configuration.Config
 
 trait AuthenticationService {
   val idWebAppUrl: String
@@ -34,9 +35,8 @@ trait AuthenticationService {
 }
 
 object AuthenticationService extends AuthenticationService {
-  val config = ConfigFactory.load()
-  val membershipUrl = config.getString("membership.url")
-  val idWebAppUrl = config.getString("identity.webapp.url")
+  val membershipUrl = Config.membershipUrl
+  val idWebAppUrl = Config.idWebAppUrl
 
   val cookieDecoder = new IdentityCookieDecoder(new PreProductionKeys)
 }

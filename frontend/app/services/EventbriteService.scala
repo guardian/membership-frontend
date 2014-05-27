@@ -6,6 +6,7 @@ import play.api.libs.ws._
 import model.EventbriteDeserializer._
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.typesafe.config.ConfigFactory
+import configuration.Config
 
 trait EventbriteService {
 
@@ -27,9 +28,8 @@ trait EventbriteService {
 }
 
 object EventbriteService extends EventbriteService {
-  val config = ConfigFactory.load()
-  override val eventListUrl: String = config.getString("eventbrite.event-list-url")
-  override val eventUrl: String = config.getString("eventbrite.event-url")
-  override val token: (String, String) = ("token", config.getString("eventbrite.token"))
+  val eventListUrl: String = Config.eventListUrl
+  val eventUrl: String = Config.eventUrl
+  val token: (String, String) = Config.eventToken
 }
 

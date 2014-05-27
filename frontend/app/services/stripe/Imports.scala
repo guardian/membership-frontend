@@ -5,16 +5,16 @@ import scala.concurrent.Future
 import com.typesafe.config.ConfigFactory
 
 import model.stripe._
+import configuration.Config
 
 object Imports {
 
   object Stripe extends StripeService {
-    private val config = ConfigFactory.load()
 
-    protected val apiURL = config.getString("stripe.api.url")
-    protected val apiSecret = config.getString("stripe.api.secret")
+    protected val apiURL = Config.stripeApiURL
+    protected val apiSecret = Config.stripeApiSecret
 
-    object charge {
+    object Charge {
       def create(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
         post[Charge]("charges", Map(
           "amount" -> Seq(amount.toString),
@@ -25,12 +25,12 @@ object Imports {
       }
     }
 
-    object customer {
+    object Customer {
       def create(card: String): Future[Customer] =
         post[Customer]("customers", Map("card" -> Seq(card)))
     }
 
-    object subscription {
+    object Subscription {
       def create(customerId: String, planId: String): Future[Subscription] =
         post[Subscription](s"customers/$customerId", Map("plan" -> Seq(planId)))
     }
