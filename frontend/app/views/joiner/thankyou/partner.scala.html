@@ -1,4 +1,5 @@
 @import views.Crumb
+@import views.Dates._
 
 @main("Membership") {
 
@@ -25,7 +26,7 @@
                     Start Date
                 </td>
                 <td class="summary-table__cell">
-                    16th May
+                    @todayDate("MMMM d, y")
                 </td>
             </tr>
             <tr class="summary-table__row">
@@ -49,7 +50,7 @@
                     Next Payment
                 </td>
                 <td class="summary-table__cell">
-                    16th June 2014
+                    @todayDate("MMMM d, y")
                 </td>
             </tr>
             <tr class="summary-table__row">

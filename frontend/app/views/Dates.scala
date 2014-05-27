@@ -17,5 +17,5 @@ object Dates {
     lazy val pretty = formatter.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
 
-  def todayDate = DateTime.now.toString("dd/MM/yyyy")
+  def todayDate(format: String = "dd/MM/yyyy") = DateTime.now.toString(format)
 }
