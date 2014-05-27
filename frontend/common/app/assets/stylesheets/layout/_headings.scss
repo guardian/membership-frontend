@@ -23,5 +23,12 @@
 
 .section-sub-body-headline {
     @extend %section-header;
+    @include fs-bodyHeading(4);
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @include fs-headline(2);
 }
