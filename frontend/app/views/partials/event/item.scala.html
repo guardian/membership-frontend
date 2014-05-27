@@ -1,13 +1,13 @@
 @(event: model.EBEvent)
 @import views.Dates._
 
-<li class="facia-slice__item facia-slice__item--volume-0 l-row__item">
-    <div class="item item--has-discussion item--has-image item--imageadjust-default tone-news">
+<li class="events-list__item facia-slice__item">
+    <div class="item item--has-image">
         <div class="item__container">
-            <a href="/event/@event.id" class="item__link tone-accent-border" data-link-name="article">
+            <a href="/event/@event.id">
                 <div class="item__media-wrapper">
                     <div class="item__image-container">
-                        <img src="@event.logo_url" class="responsive-img" alt="Event Image"></div>
+                        <img src="@event.logo_url" alt="Event Image"></div>
                 </div>
                 <h2 class="item__title truncate">
                     @event.name.text
