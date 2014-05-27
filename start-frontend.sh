@@ -1,2 +1,2 @@
 #!/bin/bash
-sbt "project frontend" "run 9101"
+sbt "project frontend" "run 9100"

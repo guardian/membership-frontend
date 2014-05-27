@@ -20,18 +20,16 @@
 
    ```
    127.0.0.1   mem.thegulocal.com
-   127.0.0.1   memapi.thegulocal.com
    ```
 
 1. ./nginx/setup.sh
 
 ## Run
-The API and frontend normally run on ports 9100 and 9101 respectively.
+The app normally runs on ports 9100 respectively.
 You can run the following commands to start them (separate console windows)
 
 ```
 ./start-frontend.sh
-./start-api.sh
 ```
 
 ## To run frontend tests
