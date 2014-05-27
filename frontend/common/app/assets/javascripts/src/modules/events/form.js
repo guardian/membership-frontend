@@ -25,6 +25,7 @@ define([
             CREDIT_CARD_CVC: 'js-credit-card-cvc',
             CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
             CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
+            CREDIT_CARD_TYPE: 'form__card-type',
             ACTIONS: 'js-waiting-container'
         },
         DOM: {}
@@ -134,7 +135,14 @@ define([
     StripePaymentForm.prototype.validateCardNumber = function(){
 
         var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER');
-        var isValid = stripe.card.validateCardNumber($creditCardNumberElement.val());
+        var value = $creditCardNumberElement.val();
+        var isValid = stripe.card.validateCardNumber(value);
+
+        // Update card type indicator
+        this.getElement('CREDIT_CARD_TYPE')[0].className = this.config.classes.CREDIT_CARD_TYPE; // reset
+        if (isValid) {
+            this.getElement('CREDIT_CARD_TYPE').addClass('active').addClass(stripe.cardType(value).toLowerCase().replace(' ', '-'));
+        }
 
         return {
             isValid: isValid,
