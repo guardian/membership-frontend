@@ -10,7 +10,7 @@ object Config {
   val membershipHide = config.getBoolean("membership.hide")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
-  val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys() else new PreProductionKeys
+  val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val eventListUrl: String = config.getString("eventbrite.event-list-url")
   val eventUrl: String = config.getString("eventbrite.event-url")
