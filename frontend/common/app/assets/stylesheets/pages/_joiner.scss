@@ -142,6 +142,85 @@
     ));
 }
 
+// card types
+.input-cc-num {
+    position: relative;
+    .form__card-type {
+        position: absolute;
+        right: 0px;
+        display: inline-block;
+        height: 39px;
+        text-indent: -999px;
+        width: 63px;
+        overflow: hidden;
+        background: url("/assets/images/card_types_sprite_mobile.png") transparent no-repeat;
+        display: none;
+
+        &.active {
+            display: block;
+        }
+
+        &.visa {
+            background-position: 1px 0;
+        }
+
+        &.american-express {
+            background-position: -62px 0;
+        }
+
+        &.mastercard {
+            background-position: -125px 0;
+        }
+
+        &.discover {
+            background-position: -237px 0;
+        }
+
+        &.diners-club {
+            background-position: -299px -1px;
+            width: 144px;
+            height: 39px;
+            border: 1px solid #dcdcdc;
+            border-left: none;
+        }
+
+        &.jcb {
+            background-position: -187px -1px;
+            width: 51px;
+            border: 1px solid #dcdcdc;
+            border-left: none;
+        }
+
+        @include mq(tablet){
+            height: 36px;
+            width: 58px;
+            background: url("/assets/images/card_types_sprite.png") transparent no-repeat;
+
+            &.american-express {
+                background-position: -57px 0;
+            }
+
+            &.mastercard {
+                background-position: -115px 0;
+            }
+
+            &.discover {
+                background-position: -219px 0;
+            }
+
+            &.diners-club {
+                background-position: -275px -1px;
+                width: 127px;
+                height: 36px;
+            }
+
+            &.jcb {
+                background-position: -172px -1px;
+                width: 47px;
+            }
+        }
+    }
+}
 
 /* ==========================================================================
    Thank You

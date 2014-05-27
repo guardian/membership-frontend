@@ -25,6 +25,7 @@ define([
             CREDIT_CARD_CVC: 'js-credit-card-cvc',
             CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
             CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
+            CREDIT_CARD_TYPE: 'form__card-type',
             ACTIONS: 'js-waiting-container'
         },
         DOM: {}
@@ -85,13 +86,25 @@ define([
 
     StripePaymentForm.prototype.addListeners = function(){
 
-        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
+        var self = this,
+            $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
             $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
             $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
             $formElement = $(this.context);
 
-        bean.on($creditCardNumberElement[0], 'keyup blur', masker(' ', 4));
+        bean.on($creditCardNumberElement[0], 'keyup blur', function () {
+            masker(' ', 4).bind(this)();
+
+            // Update card type indicator
+            self.getElement('CREDIT_CARD_TYPE')[0].className = self.config.classes.CREDIT_CARD_TYPE; // reset
+            self.getElement('CREDIT_CARD_TYPE')
+                .addClass('active')
+                .addClass(stripe.cardType(self.getElement('CREDIT_CARD_NUMBER').val())
+                    .toLowerCase()
+                    .replace(' ', '-')
+                );
+        });
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
             this.manageFieldValidationResult(this.validateCardNumber());
@@ -134,7 +147,8 @@ define([
     StripePaymentForm.prototype.validateCardNumber = function(){
 
         var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER');
-        var isValid = stripe.card.validateCardNumber($creditCardNumberElement.val());
+        var value = $creditCardNumberElement.val();
+        var isValid = stripe.card.validateCardNumber(value);
 
         return {
             isValid: isValid,

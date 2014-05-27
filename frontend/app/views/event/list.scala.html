@@ -14,19 +14,16 @@
     </div>
     <div class="inner-container">
 
-        @partials.event.imgRowHeader()
+        <div class="events-sidebar"></div>
 
-        @for((event, index) <- eventsList.zipWithIndex) {
+        <ul class="events-list u-unstyled">
 
-            @if(index % 3 == 0 && index != 0){
-                @partials.event.imgRowFooter()
-                @partials.event.imgRowHeader()
+            @for((event, index) <- eventsList.zipWithIndex) {
+
+                @partials.event.item(event)
             }
 
-            @partials.event.item(event)
-        }
-
-        @partials.event.imgRowFooter()
+        </ul>
 
     </div>
 

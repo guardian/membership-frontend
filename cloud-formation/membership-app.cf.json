@@ -78,7 +78,6 @@
                         "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
-                        {"Fn::Join":["", ["echo APP_STACK=", { "Ref" : "Stack" }, " >> /etc/gu-environment"]]},
                         {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
@@ -87,7 +86,7 @@
 
                         "unzip -d /membership /tmp/app.zip",
 
-                        "mv /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf /etc/init/membership-app.conf",
+                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
@@ -142,10 +141,11 @@
         "LoadBalancerSecurityGroup" : {
             "Type" : "AWS::EC2::SecurityGroup",
             "Properties" : {
-                "GroupDescription" : "Permit HTTP access on port 80, egress to port 9000",
+                "GroupDescription" : "Permit incoming HTTP access on port 80, egress to port 9000",
                 "VpcId" : { "Ref" : "VpcId" },
                 "SecurityGroupIngress" : [
                     { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
+                    { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": "77.91.248.0/21" },
                     { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.158.92/32" },
                     { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.146.68/32" }
                 ],

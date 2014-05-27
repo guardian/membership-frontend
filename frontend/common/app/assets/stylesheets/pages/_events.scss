@@ -5,6 +5,35 @@
     text-align: center;
 }
 
+.events-sidebar {
+    @include mq(tablet) {
+        width: 5%;
+        float: left;
+        overflow: hidden;
+    }
+}
+
+.events-list {
+    width: 100%;
+    @include mq(tablet) {
+        width: 95%;
+        float: right;
+    }
+}
+
+.events-list__item {
+    display: inline-block;
+    width: 100%;
+    margin-right: 2%;
+    @include mq(tablet){
+        width: 30%;
+    }
+}
+
+.item__image-container img {
+    width: 100%;
+}
+
 /* ==========================================================================
    An Event List item
    ========================================================================== */
@@ -114,12 +143,18 @@ div.event {
 }
 
 /* ==========================================================================
-   Temp events hackry stuff
+   Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
 
+.item__meta {
+    position: relative;
+    overflow: hidden;
+    bottom: -10px;
+}
+
 .inner-container {
-    width: 1040px;
     float: right;
+    width: 100%;
 }
 
 .icon {
@@ -137,10 +172,6 @@ div.event {
 
 .time--icon {
     background-position: -33px 0;
-}
-
-.item__meta {
-    bottom: 20px;
 }
 
 .event__location {
@@ -173,6 +204,14 @@ div.event {
     padding-left: 240px;
 }
 
-.l-row__item {
-    height: 21em;
+.facia-slice__item:before,
+.events-list__item {
+    @include mq($to:tablet) {
+        border-left: 1px solid #ffffff !important;
+    }
+}
+
+.facia-slice__item:nth-of-type(3n+1):before,
+.events-list__item:nth-of-type(3n+1) {
+    border-left: 1px solid #ffffff;
 }
