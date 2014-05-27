@@ -23,6 +23,10 @@ body {
 }
 
 .separator {
-    border-top: 2px solid #4bc6df;
+    border-top: 2px solid $c-newsAccent;
     margin: $gs-baseline 0 $gs-baseline/2;
+}
+
+.align-center {
+    text-align: center;
 }

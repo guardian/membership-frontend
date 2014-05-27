@@ -1,9 +1,7 @@
 %section-header {
     @include rem((
-        margin-bottom: $gs-baseline*2,
-        padding: $gs-baseline/3
+        margin-bottom: $gs-baseline,
     ));
-
     background-color: #FFFFFF;
 }
 
@@ -18,7 +16,12 @@
     @include fs-headline(4);
 }
 
-.section-body-heading {
+.section-body-headline {
     @extend %section-header;
-    @include fs-bodyHeading(4);
+    @include fs-headline(4);
+}
+
+.section-sub-body-headline {
+    @extend %section-header;
+    @include fs-headline(2);
 }

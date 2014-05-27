@@ -14,6 +14,10 @@
     }
 }
 
+.action--wide {
+    min-width: 12em;
+}
+
 .action--inline-text {
     margin: $gs-baseline;
 }
