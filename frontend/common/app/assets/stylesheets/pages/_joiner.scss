@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Joiner
+   ========================================================================== */
+
+.joiner-section {
+    width: 100%;
+    border-bottom: 1px solid #DFDFDF;
+    margin: $gs-gutter;
+    padding: $gs-gutter/2;
+    text-align: center;
+    @include mq(tablet) {
+        padding: $gs-gutter*2;
+    }
+}
+
+.joiner-section--left-aligned {
+    text-align: left;
+}
+
+.joiner-section--no-border {
+    border: none;
+}
+
+.joiner-navigation {
+    @include clearfix;
+}
+
+.joiner-navigation__tab {
+    width: 100%;
+    text-align: center;
+    border: 1px solid #DFDFDF;
+    display: table;
+    float: left;
+    width: 33.3%;
+}
+
+.joiner-navigation__btn {
+    @include fs-bodyCopy(4);
+    background-color: #EAEAEA;
+    height: gs-height(2);
+    width: 100%;
+    vertical-align: middle;
+    display: table-cell;
+    &:hover {
+        background-color: darken(#EAEAEA, 15%);
+    }
+}
+
+/* ==========================================================================
+   Tier List
+   ========================================================================== */
+
+.tier-list {
+    padding: $gs-gutter;
+}
+
+/* ==========================================================================
+   Tier
+   ========================================================================== */
+
+.benefits {
+    @include clearfix;
+}
+
+.benefits-list {
+    display: table;
+    width: 100%;
+    text-align: center;
+    padding: $gs-gutter;
+    border-bottom: 1px solid #DFDFDF;
+    @include mq(tablet){
+        border: 1px solid #DFDFDF;
+        height: gs-height(3);
+        float: left;
+        margin: $gs-gutter $gs-gutter $gs-gutter 0;
+        width: 22%;
+    }
+}
+
+.benefits-list--left-aligned {
+    border: none;
+    @include mq(tablet){
+        text-align: left;
+    }
+}
+
+.benefits-list__item {
+    @include mq(tablet){
+        vertical-align: middle;
+        display: table-cell;
+    }
+}
+
+/* ==========================================================================
+   Payment Form
+   ========================================================================== */
+
+
+.form-primary-container {
+    width: 100%;
+    @include mq(tablet){
+        float: left;
+        width: 48%;
+        margin-right: 2%;
+    }
+}
+
+.form-secondary-container {
+    border-top: 1px solid #F1F1F1;
+    width: 100%;
+    padding-top: $gutter;
+    @include mq(tablet){
+        border-top: none;
+        border-left: 1px solid #F1F1F1;
+        padding: $gutter 0 0 $gutter*3;
+        float: left;
+        width: 50%;
+    }
+}
+
+
+.form__error {
+    margin-bottom: $gutter/2;
+}
+
+.form-detail__item {
+    margin-top: $gutter/2;
+}
+
+.fieldset {
+    border: none;
+}
+
+.form-terms {
+    @include fs-bodyCopy(1);
+}
+
+.form-padlock {
+    @include rem((
+        width: 18px,
+        height: 18px
+    ));
+}
+
+
+/* ==========================================================================
+   Thank You
+   ========================================================================== */
+
+.credit-card-provider {
+    vertical-align: middle;
+}
+
+.questions {
+  @include clearfix;
+}
+
+.questions__list {
+    width: 100%;
+    padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
+    @include mq(tablet){
+        width: 50%;
+        float: left;
+    }
+}
