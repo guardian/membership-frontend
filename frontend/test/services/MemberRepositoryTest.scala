@@ -1,6 +1,7 @@
 package services
 
 import play.api.test.PlaySpecification
+import model.Tier
 
 class MemberRepositoryTest extends PlaySpecification {
 
@@ -9,8 +10,8 @@ class MemberRepositoryTest extends PlaySpecification {
     "put a member tier in the repository" in {
       val members: MemberRepository = AwsMemberTable
 
-      members.putTier("user123", "member")
-      members.getTier("user123").get must equalTo("member")
+      members.putTier("user123", Tier.Partner)
+      members.getTier("user123") must equalTo(Tier.Partner)
     }
 
   }
