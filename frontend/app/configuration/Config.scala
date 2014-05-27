@@ -5,6 +5,9 @@ import com.typesafe.config.ConfigFactory
 object Config {
   val config = ConfigFactory.load()
 
+  val awsAccessKey = config.getString("aws.access.key")
+  val awsSecretKey = config.getString("aws.secret.key")
+
   val membershipUrl = config.getString("membership.url")
   val membershipHide = config.getBoolean("membership.hide")
 

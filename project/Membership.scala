@@ -46,7 +46,8 @@ trait Membership {
     scalaVersion := "2.10.4",
     resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
     libraryDependencies ++= commonDependencies,
-    parallelExecution in Global := false
+    parallelExecution in Global := false,
+    javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin ++ scalariformSettings
 
   def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)

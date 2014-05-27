@@ -11,7 +11,7 @@ class MemberRepositoryTest extends PlaySpecification {
 
       members.putTier("user123", "member")
       members.getTier("user123").get must equalTo("member")
-    }.pendingUntilFixed("Ignoring until we set up configs - IKenna")
+    }
 
   }
 
