@@ -2,7 +2,6 @@ package views
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.{ PeriodType, Hours, Instant }
-import org.joda.time.format.{ PeriodFormatterBuilder, ISOPeriodFormat, PeriodFormatter }
 
 object Dates {
 
