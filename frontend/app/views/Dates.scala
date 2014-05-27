@@ -22,4 +22,6 @@ object Dates {
 
     lazy val pretty = formatter.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
+
+  def todayDate() = DateTimeFormat.forPattern("dd/MM/yyyy").print(new DateTime())
 }
