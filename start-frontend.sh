@@ -1,2 +1,2 @@
 #!/bin/bash
-sbt "project frontend" "run 9100"
+sbt -Dconfig.resource=dev.conf "project frontend" "run 9100"
