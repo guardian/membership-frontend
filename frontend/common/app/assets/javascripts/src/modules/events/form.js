@@ -86,13 +86,25 @@ define([
 
     StripePaymentForm.prototype.addListeners = function(){
 
-        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
+        var self = this,
+            $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
             $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
             $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
             $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
             $formElement = $(this.context);
 
-        bean.on($creditCardNumberElement[0], 'keyup blur', masker(' ', 4));
+        bean.on($creditCardNumberElement[0], 'keyup blur', function () {
+            masker(' ', 4).bind(this)();
+
+            // Update card type indicator
+            self.getElement('CREDIT_CARD_TYPE')[0].className = self.config.classes.CREDIT_CARD_TYPE; // reset
+            self.getElement('CREDIT_CARD_TYPE')
+                .addClass('active')
+                .addClass(stripe.cardType(self.getElement('CREDIT_CARD_NUMBER').val())
+                    .toLowerCase()
+                    .replace(' ', '-')
+                );
+        });
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
             this.manageFieldValidationResult(this.validateCardNumber());
@@ -137,12 +149,6 @@ define([
         var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER');
         var value = $creditCardNumberElement.val();
         var isValid = stripe.card.validateCardNumber(value);
-
-        // Update card type indicator
-        this.getElement('CREDIT_CARD_TYPE')[0].className = this.config.classes.CREDIT_CARD_TYPE; // reset
-        if (isValid) {
-            this.getElement('CREDIT_CARD_TYPE').addClass('active').addClass(stripe.cardType(value).toLowerCase().replace(' ', '-'));
-        }
 
         return {
             isValid: isValid,
