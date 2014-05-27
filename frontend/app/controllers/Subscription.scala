@@ -22,8 +22,8 @@ trait Subscription extends Controller {
 
   private def makePayment(stripeToken: String) = {
     val payment = for {
-      customer <- Stripe.customer.create(stripeToken)
-      subscription <- Stripe.subscription.create(customer.id, "test")
+      customer <- Stripe.Customer.create(stripeToken)
+      subscription <- Stripe.Subscription.create(customer.id, "test")
     } yield Ok(subscription.id)
 
     payment.recover {

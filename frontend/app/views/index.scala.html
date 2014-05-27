@@ -1,14 +1,14 @@
 @import views.Crumb
-@import views.Config
+@import configuration.Config
 
 @main("Membership") {
 
     @partials.crumb(Seq(Crumb("Home", "/")))
 
     <div class="index page-inner-container">
-        <h1 class="section-header">@if(Config.hideMem){Masterclasses}else{Membership}</h1>
+        <h1 class="section-header">@if(Config.membershipHide){Masterclasses}else{Membership}</h1>
         <ul class="u-unstyled">
-            @if(!Config.hideMem){<li><a href="/join">Become a member</a></li>}
+            @if(!Config.membershipHide){<li><a href="/join">Become a member</a></li>}
             <li><a href="/events">Events</a></li>
         </ul>
     </div>
