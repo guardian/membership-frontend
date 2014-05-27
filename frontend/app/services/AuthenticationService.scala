@@ -38,5 +38,5 @@ object AuthenticationService extends AuthenticationService {
   val membershipUrl = Config.membershipUrl
   val idWebAppUrl = Config.idWebAppUrl
 
-  val cookieDecoder = new IdentityCookieDecoder(new PreProductionKeys)
+  val cookieDecoder = new IdentityCookieDecoder(Config.idKeys)
 }
