@@ -18,12 +18,14 @@ trait Subscription extends Controller {
   }
 
   private val paymentForm =
-    Form { single("stripeToken" -> nonEmptyText) }
+    Form { tuple("stripeToken" -> nonEmptyText, "tier" -> nonEmptyText) }
 
-  private def makePayment(stripeToken: String) = {
+  private def makePayment(formDate: (String, String)) = {
+    val stripeToken = formDate._1
+    val tier = formDate._2
     val payment = for {
       customer <- Stripe.Customer.create(stripeToken)
-      subscription <- Stripe.Subscription.create(customer.id, "test")
+      subscription <- Stripe.Subscription.create(customer.id, tier)
     } yield Ok(subscription.id)
 
     payment.recover {
