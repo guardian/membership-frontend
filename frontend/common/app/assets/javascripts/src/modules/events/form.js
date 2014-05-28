@@ -26,6 +26,7 @@ define([
             CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
             CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
             CREDIT_CARD_TYPE: 'form__card-type',
+            TIER_FIELD: 'js-tier-field',
             ACTIONS: 'js-waiting-container'
         },
         DOM: {}
@@ -56,7 +57,8 @@ define([
                 url: '/subscribe',
                 method: 'post',
                 data: {
-                    stripeToken: token
+                    stripeToken: token,
+                    tier: self.getElement('TIER_FIELD').val()
                 },
                 success: function () {
                     self.stopLoader();
