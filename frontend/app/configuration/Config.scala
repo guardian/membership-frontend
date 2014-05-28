@@ -6,6 +6,9 @@ import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
 object Config {
   val config = ConfigFactory.load()
 
+  lazy val awsAccessKey = config.getString("aws.access.key")
+  lazy val awsSecretKey = config.getString("aws.secret.key")
+
   val membershipUrl = config.getString("membership.url")
   val membershipHide = config.getBoolean("membership.hide")
 

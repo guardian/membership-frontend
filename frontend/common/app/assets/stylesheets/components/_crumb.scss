@@ -1,7 +1,12 @@
 .breadcrumb {
-    margin-bottom: gs-height(1);
+    margin: $gutter auto;
     height: 24px;
     display: none;
+    @include clearfix;
+    position: relative;
+    @include rem((
+        max-width: 1140px
+    ));
 
     @include mq(tablet) {
         display: block;

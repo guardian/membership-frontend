@@ -7,8 +7,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
 
-import services.stripe.Imports._
-import model.stripe
+import services.StripeService
+import model.Stripe
 
 trait Subscription extends Controller {
 
@@ -23,12 +23,12 @@ trait Subscription extends Controller {
   private def makePayment(formData: (String, String)) = {
     val (stripeToken, tier) = formData
     val payment = for {
-      customer <- Stripe.Customer.create(stripeToken)
-      subscription <- Stripe.Subscription.create(customer.id, tier)
+      customer <- StripeService.Customer.create(stripeToken)
+      subscription <- StripeService.Subscription.create(customer.id, tier)
     } yield Ok(subscription.id)
 
     payment.recover {
-      case error: stripe.Error => BadRequest(error.message)
+      case error: Stripe.Error => BadRequest(error.message)
     }
   }
 }

@@ -8,9 +8,6 @@
     margin: $gs-gutter;
     padding: $gs-gutter/2;
     text-align: center;
-    @include mq(tablet) {
-        padding: $gs-gutter*2;
-    }
 }
 
 .joiner-section--left-aligned {
@@ -68,27 +65,10 @@
     text-align: center;
     padding: $gs-gutter;
     border-bottom: 1px solid #DFDFDF;
-    @include mq(tablet){
-        border: 1px solid #DFDFDF;
-        height: gs-height(3);
-        float: left;
-        margin: $gs-gutter $gs-gutter $gs-gutter 0;
-        width: 22%;
-    }
 }
 
 .benefits-list--left-aligned {
     border: none;
-    @include mq(tablet){
-        text-align: left;
-    }
-}
-
-.benefits-list__item {
-    @include mq(tablet){
-        vertical-align: middle;
-        display: table-cell;
-    }
 }
 
 /* ==========================================================================
@@ -98,24 +78,12 @@
 
 .form-primary-container {
     width: 100%;
-    @include mq(tablet){
-        float: left;
-        width: 48%;
-        margin-right: 2%;
-    }
 }
 
 .form-secondary-container {
     border-top: 1px solid #F1F1F1;
     width: 100%;
     padding-top: $gutter;
-    @include mq(tablet){
-        border-top: none;
-        border-left: 1px solid #F1F1F1;
-        padding: $gutter 0 0 $gutter*3;
-        float: left;
-        width: 50%;
-    }
 }
 
 
@@ -237,7 +205,47 @@
 .questions__list {
     width: 100%;
     padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
-    @include mq(tablet){
+}
+
+
+@include mq(tablet) {
+    
+    .joiner-section {
+        padding: $gs-gutter*2;
+    }
+
+    .benefits-list {
+        border: 1px solid #DFDFDF;
+        height: gs-height(3);
+        float: left;
+        margin: $gs-gutter $gs-gutter $gs-gutter 0;
+        width: 22%;
+    }
+
+    .form-primary-container {
+        float: left;
+        width: 48%;
+        margin-right: 2%;
+    }
+
+    .benefits-list--left-aligned {
+        text-align: left;
+    }
+
+    .benefits-list__item {
+        vertical-align: middle;
+        display: table-cell;
+    }
+
+    .form-secondary-container {
+        border-top: none;
+        border-left: 1px solid #F1F1F1;
+        padding: $gutter 0 0 $gutter*3;
+        float: left;
+        width: 50%;
+    }
+
+    .questions__list {
         width: 50%;
         float: left;
     }

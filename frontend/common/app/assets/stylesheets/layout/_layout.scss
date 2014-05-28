@@ -4,22 +4,19 @@ html {
     background-color: #EEEEEE;
 }
 
-.page-container {
-    padding: gs-height(1) 0;
-    @include clearfix;
-}
-
-.page-inner-container {
-    @include clearfix;
-    padding: $gutter $gutter/3;
-    background-color: #FFFFFF;
-    @include mq(tablet){
-        padding: $gutter;
-    }
-}
-
 body {
     margin-bottom: 100px;
+}
+
+.page-container {
+    padding: $gutter $gutter/3;
+    background-color: #FFFFFF;
+    @include clearfix;
+    position: relative;
+    margin: 0 auto;
+    @include rem((
+        max-width: 1140px
+    ));
 }
 
 .separator {
@@ -29,4 +26,16 @@ body {
 
 .align-center {
     text-align: center;
+}
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@include mq(tablet) {
+    .page-container {
+        padding: $gutter;
+
+    }
 }

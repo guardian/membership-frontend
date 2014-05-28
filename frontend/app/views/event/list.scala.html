@@ -5,28 +5,29 @@
 
 @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
 
-<section class="page-inner-container container--people container--row-pattern">
-    <div class="container__border tone-feature tone-accent-border"></div>
-    <div class="container__header">
-        <h2 class="container__title tone-feature tone-background">
-            <span class="container__title__label u-text-hyphenate">Current Events</span>
-        </h2>
-    </div>
-    <div class="inner-container">
+<div class="page-container">
+    <section class="container--row-pattern">
+        <div class="container__border tone-feature tone-accent-border"></div>
+        <div class="container__header">
+            <h2 class="container__title tone-feature tone-background">
+                <span class="container__title__label u-text-hyphenate">Current Events</span>
+            </h2>
+        </div>
+        <div class="inner-container">
 
-        <div class="events-sidebar"></div>
+            <div class="events-sidebar"></div>
 
-        <ul class="events-list u-unstyled">
+            <ul class="events-list u-unstyled">
 
-            @for((event, index) <- eventsList.zipWithIndex) {
+                @for((event, index) <- eventsList.zipWithIndex) {
 
-                @partials.event.item(event)
-            }
+                    @partials.event.item(event)
+                }
 
-        </ul>
+            </ul>
 
-    </div>
+        </div>
 
-</section>
-
+    </section>
+</div>
 }
