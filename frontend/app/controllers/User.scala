@@ -9,9 +9,7 @@ import model.Tier
 trait User extends Controller {
   def me = Action { implicit request =>
     val tier = AuthenticationService.authenticatedRequestFor(request)
-      .fold(Tier.AnonymousUser) { authRequest =>
-        AwsMemberTable.getTier(authRequest.user.id)
-      }
+      .fold(Tier.AnonymousUser) { AwsMemberTable getTier _.user.id }
 
     Ok(Json.obj("tier" -> tier.toString))
   }
