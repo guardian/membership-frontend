@@ -1,6 +1,6 @@
 package model
 
-package object stripe {
+object Stripe {
 
   trait StripeObject
 
