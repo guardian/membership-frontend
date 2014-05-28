@@ -1,22 +1,17 @@
 @import configuration.Config
 
 <header>
-    <div class="header-content gs-container">
+    @if(Config.membershipHide){
+        <a class="header__logo masterclasses" href="/"><img src="@routes.Assets.at("images/masterclasses_mobile.jpg")" alt="" /></a>
+    }else{
+        <a class="header__logo" href="/"><img src="@routes.Assets.at("images/membership_mobile.png")" alt="" /></a>
+    }
 
-        @if(Config.membershipHide){
-            <a class="header__logo masterclasses" href="/"><img src="@routes.Assets.at("images/masterclasses_mobile.jpg")" alt="" /></a>
-        }else{
-            <a class="header__logo" href="/"><img src="@routes.Assets.at("images/membership_mobile.png")" alt="" /></a>
-        }
-
-        <div class="header__identity">
-            <span class="i-action"><span class="i-profile"></span></span>
-            <span class="identity__notice"><a href="https://profile.theguardian.com/signin?returnUrl=mem.theguardian.com">Sign in</a></span>
-            <span class="identity__avatar u-h"></span>
-            <span class="identity__account u-h"></span>
-            <span class="identity__tier u-h"></span>
-        </div>
+    <div class="header__identity">
+        <span class="i-action"><span class="i-profile"></span></span>
+        <span class="identity__notice"><a href="https://profile.theguardian.com/signin?returnUrl=mem.theguardian.com">Sign in</a></span>
+        <span class="identity__avatar u-h"></span>
+        <span class="identity__account u-h"></span>
+        <span class="identity__tier u-h"></span>
     </div>
 </header>
-
-<div class="page-container gs-container">

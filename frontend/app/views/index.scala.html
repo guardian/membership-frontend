@@ -5,7 +5,7 @@
 
     @partials.crumb(Seq(Crumb("Home", "/")))
 
-    <div class="index page-inner-container">
+    <div class="page-container">
         <h1 class="section-header">@if(Config.membershipHide){Masterclasses}else{Membership}</h1>
         <ul class="u-unstyled">
             @if(!Config.membershipHide){<li><a href="/join">Become a member</a></li>}

@@ -7,8 +7,9 @@
 
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
 
+ <div class="page-container">
     <div class="event">
-        <div class="event__content page-inner-container">
+        <div class="event__content">
             <h1 class="event__name section-header page-header">@event.name.text</h1>
 
             <div class="event__image">
@@ -47,5 +48,5 @@
 
         </div>
     </div>
-
+ </div>
 }
