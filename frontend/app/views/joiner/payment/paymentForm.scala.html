@@ -1,0 +1,81 @@
+@(tier: String)
+
+@import views.html.joiner.payment.selectDates
+@import views.Dates._
+
+@main("Membership") {
+
+<div class="page-container">
+    <h1 class="section-headline">Payment</h1>
+
+    <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
+
+        @* Membership Tier *@
+        <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
+
+        <div class="js-payment-errors form__error is-hidden"></div>
+        <fieldset class="fieldset">
+            <div class="fieldset__heading">
+                <h2 class="form__heading">Card details</h2>
+                <div class="form__note">We accept all major cards</div>
+            </div>
+
+            <div class="fieldset__fields">
+                <div class="form-field">
+                    <label class="label" for="cc-num">Card Number </label>
+                    <div class="input input-cc-num">
+                        <span class="form__card-type"></span>
+                        <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" data-error-message="Please enter a valid card number" autocomplete="off"/>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="label" for="cc-cvc">
+                        <span>Security code</span>
+                        <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC" maxlength="4" data-error-message="Please enter a valid CVC number" autocomplete="off"/>
+                    </label>
+                </div>
+
+                <div class="form-field">
+                    <label class="label" for="cc-exp-month">
+                        <span>Expiration (MM/YY)</span>
+                        <p>
+                            <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month" data-error-message="Please enter a valid Expiry">
+                                <option selected="selected">Month</option>
+                                @for(month <- selectDates.validCardMonths){
+                                    <option value="@month">@month</option>
+                                }
+                            </select>
+                            <span> / </span>
+                            <select data-stripe="exp-year" id="cc-exp-year" class="js-credit-card-exp-year" data-error-message="Please enter a valid Expiry">
+                                <option selected="selected">Year</option>
+                                @for((year, formattedYear) <- selectDates.validCardYears){
+                                    <option value="@year">@formattedYear</option>
+                                }
+                            </select>
+                        </p>
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+            <div class="fieldset__heading"></div>
+            <div class="fieldset__fields">
+                <div class="actions js-waiting-container">
+                    <button type="submit" class="submit-input action--logged-in js-submit-input">Pay £15 now</button>
+                    <div class="i-wait"><img src="@routes.Assets.at("images/wait.gif")" alt=""/></div>
+                </div>
+            </div>
+        </fieldset>
+
+        <p class="form-terms">All prices include VAT</p>
+        <p class="form-terms"><img src="@routes.Assets.at("images/padlock.png")" alt="" class="form-padlock"/> This form is secure</p>
+
+    </form>
+
+    @partials.joiner.paymentAside(tier)
+
+</div>
+
+}
