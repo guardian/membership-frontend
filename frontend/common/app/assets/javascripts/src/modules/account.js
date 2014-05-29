@@ -23,16 +23,19 @@ define(['src/utils/user', '$'], function (userUtil, $) {
                     config.DOM[c] = $(document.querySelector(config.classes[c])); // bonzo object
                 }
 
-                config.DOM.ID_NOTICE.text('You are signed in as'); // Screen readers
-                config.DOM.ID_NOTICE.addClass('u-h');
+                config.DOM.ID_NOTICE.text('You are signed in as') // Screen readers
+                    .addClass('u-h');
 
-                config.DOM.ID_ACCOUNT.text(user.displayname);
-                config.DOM.ID_ACCOUNT.removeClass('u-h');
-
-                //config.DOM.ID_TIER.innerHTML = 'Guardian Member';
+                config.DOM.ID_ACCOUNT.text(user.displayname)
+                    .removeClass('u-h');
 
                 config.DOM.ID_AVATAR.addClass('u-h');
                 //config.DOM.ID_AVATAR.innerHTML = '<img src="' + 'avatar_url' + '" />';
+
+                userUtil.getMemberTier(function (tier) {
+                    config.DOM.ID_TIER.text(tier);
+                    config.DOM.ID_TIER.removeClass('u-h');
+                });
             }
         }
     };
