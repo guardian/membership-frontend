@@ -2,6 +2,7 @@ package controllers
 
 import play.api.mvc.{ Action, Controller }
 import actions.AuthenticatedAction
+import model.Tier
 
 trait Joiner extends Controller {
 
@@ -22,15 +23,15 @@ trait Joiner extends Controller {
   }
 
   def paymentFriend() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm("friend"))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Friend))
   }
 
   def paymentPartner() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm("partner"))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Partner))
   }
 
   def paymentPatron() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm("patron"))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Patron))
   }
 
   def thankyouFriend() = AuthenticatedAction {
