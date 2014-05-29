@@ -1,6 +1,9 @@
 define([
-    'src/utils/atob'
-], function(AtoB){
+    'src/utils/atob',
+    'ajax'
+], function(AtoB, ajax){
+
+    var cachedMemberTier;
 
     var getUserOrSignIn = function(returnUrl){
         var user = getUserFromCookie();
@@ -52,9 +55,27 @@ define([
         return userFromCookieCache;
     };
 
+    var getMemberTier = function (callback) {
+           var tier = sessionStorage.getItem('cachedMemberTier');
+        if (tier) {
+            callback(tier);
+        } else {
+            ajax.init({page: {ajaxUrl: ''}});
+            ajax({
+                url: '/user/me',
+                method: 'get',
+                success: function (resp) { // currently no error handling
+                    sessionStorage.setItem('cachedMemberTier', resp.tier.toLowerCase());
+                    callback(cachedMemberTier);
+                }
+            });
+        }
+    };
+
     return {
         isLoggedIn: isLoggedIn,
         getUserOrSignIn: getUserOrSignIn,
-        getUserFromCookie: getUserFromCookie
+        getUserFromCookie: getUserFromCookie,
+        getMemberTier: getMemberTier
     };
 });
