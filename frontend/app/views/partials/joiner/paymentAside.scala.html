@@ -1,4 +1,5 @@
-@(tier: String)
+@(tier: model.Tier.Tier)
+
 @import views.Dates._
 
 <aside class="form-secondary-container">
@@ -9,7 +10,7 @@
                 @* Benefits List per tier *@
 
                 @tier match {
-                    case "friend" => {
+                    case model.Tier.Friend => {
                         <li>Book Live event tickets</li>
                         <li>Watch highlights of Live events</li>
                         <li>Watch stream of Flagship events</li>
@@ -17,7 +18,7 @@
                         <li>20% discount on tickets and plus ones</li>
                         <li>20% discount on Masterclasses</li>
                     }
-                    case "partner" => {
+                    case model.Tier.Partner => {
                         <li>Book Live event tickets</li>
                         <li>Watch highlights of Live events</li>
                         <li>Watch stream of Flagship events</li>
@@ -25,7 +26,7 @@
                         <li>20% discount on tickets and plus ones</li>
                         <li>20% discount on Masterclasses</li>
                     }
-                    case "patron" => {
+                    case model.Tier.Patron => {
                         <li>Book Live event tickets</li>
                         <li>Watch highlights of Live events</li>
                         <li>Watch stream of Flagship events</li>

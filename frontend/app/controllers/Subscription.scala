@@ -7,12 +7,13 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
 
-import services.StripeService
-import model.Stripe
+import services.{ AwsMemberTable, StripeService }
+import model.{ Tier, Stripe }
+import actions.{ AuthenticatedAction, AuthRequest }
 
 trait Subscription extends Controller {
 
-  def subscribe = Action.async { implicit request =>
+  def subscribe = AuthenticatedAction.async { implicit request =>
     paymentForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), makePayment)
   }
@@ -20,12 +21,15 @@ trait Subscription extends Controller {
   private val paymentForm =
     Form { tuple("stripeToken" -> nonEmptyText, "tier" -> nonEmptyText) }
 
-  private def makePayment(formData: (String, String)) = {
+  private def makePayment(formData: (String, String))(implicit request: AuthRequest[_]) = {
     val (stripeToken, tier) = formData
     val payment = for {
       customer <- StripeService.Customer.create(stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
-    } yield Ok(subscription.id)
+    } yield {
+      AwsMemberTable.putTier(request.user.id, Tier.withName(tier))
+      Ok(subscription.id)
+    }
 
     payment.recover {
       case error: Stripe.Error => BadRequest(error.message)
