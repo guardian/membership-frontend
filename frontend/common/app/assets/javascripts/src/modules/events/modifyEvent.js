@@ -9,7 +9,6 @@ define(['$', 'src/utils/user'], function ($, userUtil) {
     };
 
     var init = function () {
-
         for (var c in config.classes) {
             config.DOM = config.DOM || {};
             config.DOM[c] = $(document.querySelector('.' + config.classes[c])); // bonzo object
@@ -18,8 +17,8 @@ define(['$', 'src/utils/user'], function ($, userUtil) {
         userUtil.getMemberTier(enhanceWithTier);
     };
 
-    var     enhanceWithTier = function (tier) {
-        if (tier && (tier === 'Partner' || tier === 'Patron')) {
+    var enhanceWithTier = function (tier) {
+        if (tier && (tier === 'partner' || tier === 'patron')) {
             var price = config.DOM.EVENT_PRICE,
                 val = parseInt(price.text().replace('£', ''), 10),
                 discountedVal = (val * config.MEMBERSHIP_EVENT_DISCOUNT).toFixed(2);
