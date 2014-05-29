@@ -53,6 +53,9 @@ object StripeService extends StripeService {
   object Customer {
     def create(card: String): Future[Customer] =
       post[Customer]("customers", Map("card" -> Seq(card)))
+
+    def read(customerId: String): Future[Customer] =
+      get[Customer](s"customers/$customerId")
   }
 
   object Subscription {
