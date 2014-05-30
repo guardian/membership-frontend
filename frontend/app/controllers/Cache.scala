@@ -2,7 +2,6 @@ package controllers
 
 import org.joda.time.DateTime
 import play.api.mvc.SimpleResult
-import views.Dates._
 import com.github.nscala_time.time.Imports._
 
 object Cached {
@@ -19,10 +18,14 @@ object Cached {
     val now = DateTime.now
     result.withHeaders(
       "Cache-Control" -> s"max-age=$maxAge",
-      "Expires" -> (now + maxAge.seconds).toHttpDateTimeString,
-      "Date" -> now.toHttpDateTimeString
+      "Expires" -> toHttpDateTimeString(now + maxAge.seconds),
+      "Date" -> toHttpDateTimeString(now)
     )
   }
+
+  //http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
+  private val HTTPDateFormat = DateTimeFormat.forPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'").withZone(DateTimeZone.UTC)
+  def toHttpDateTimeString(dateTime: DateTime): String = dateTime.toString(HTTPDateFormat)
 }
 
 object NoCache {
