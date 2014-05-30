@@ -9,11 +9,11 @@ trait Event extends Controller {
 
   val eventService: EventbriteService
 
-  def details(id: String) = Action.async {
+  def details(id: String) = CachedAction.async {
     eventService.getEvent(id).map(event => Ok(views.html.event.page(event)))
   }
 
-  def list = Action.async {
+  def list = CachedAction.async {
     eventService.getAllEvents.map(events => Ok(views.html.event.list(events)))
   }
 
