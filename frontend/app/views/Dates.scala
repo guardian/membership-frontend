@@ -17,6 +17,8 @@ object Dates {
     lazy val pretty = formatter.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
 
+  def fromTimestamp(timestamp: Long): DateTime = new DateTime(timestamp * 1000)
+
   def todayDay = addSuffix(DateTime.now.toString("dd").toInt)
 
   def addSuffix(day: Int): String = {

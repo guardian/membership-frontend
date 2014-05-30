@@ -1,3 +1,5 @@
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
+
 @import views.Crumb
 
 @main("Membership") {
@@ -10,7 +12,7 @@
         </p>
     </section>
 
-    @partials.joiner.thankyou.paymentSummary()
+    @partials.joiner.thankyou.paymentSummary(subscription, card)
 
     <section class="align-center">
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>

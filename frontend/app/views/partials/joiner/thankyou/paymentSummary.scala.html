@@ -1,3 +1,11 @@
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card )
+
+@import views.Dates._
+
+@formatPrice(pence: Int) = {
+    &#163;@(pence / 100).@("%02d".format(pence % 100))
+}
+
 <section class="joiner-section joiner-section--no-border">
     <table class="table table--responsive-font table--striped">
         <tr class="table__headline">
@@ -5,7 +13,7 @@
                 Package
             </td>
             <td class="summary-table__cell">
-                Partner
+                @subscription.plan.name
             </td>
         </tr>
         <tr class="summary-table__row">
@@ -13,7 +21,7 @@
                 Start Date
             </td>
             <td class="summary-table__cell">
-                May 27th, 2014
+                @fromTimestamp(subscription.start).toString("MMMM d, y")
             </td>
         </tr>
         <tr class="summary-table__row">
@@ -21,7 +29,7 @@
                 Amount Paid Today
             </td>
             <td class="summary-table__cell">
-                &#163;15
+                @formatPrice(subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row">
@@ -29,7 +37,7 @@
                 Monthly Payment
             </td>
             <td class="summary-table__cell">
-                &#163;15
+                @formatPrice(subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row">
@@ -37,7 +45,7 @@
                 Next Payment
             </td>
             <td class="summary-table__cell">
-                June 27th, 2014
+                @fromTimestamp(subscription.current_period_end).toString("MMMM d, y")
             </td>
         </tr>
         <tr class="summary-table__row">
@@ -45,8 +53,8 @@
                 Card
             </td>
             <td class="summary-table__cell">
-                <img src="@routes.Assets.at("images/visa.png")" alt="" width="40" height="25" class="credit-card-provider"/>
-                <span>&#42;&#42;&#42;&#42;&nbsp;&#42;&#42;&#42;&#42;&nbsp;&#42;&#42;&#42;&#42;&nbsp;4242</span>
+                <span class="card-type active @(card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
             </td>
         </tr>
     </table>
