@@ -12,7 +12,7 @@ object Dates {
   }
 
   implicit class RichDateTime(dateTime: DateTime) {
-    val eventDateTimeFormat = DateTimeFormat.forPattern("MMMM d, y k:m a")
+    val eventDateTimeFormat = DateTimeFormat.forPattern("MMMM d, y k:mm a")
     lazy val pretty = eventDateTimeFormat.print(dateTime).replace("AM", "am").replace("PM", "pm")
   }
 
