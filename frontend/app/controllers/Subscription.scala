@@ -8,7 +8,7 @@ import play.api.data._
 import play.api.data.Forms._
 
 import services.{ AwsMemberTable, StripeService }
-import model.{ Tier, Stripe }
+import model.{ Stripe, Tier, Member }
 import actions.{ AuthenticatedAction, AuthRequest }
 
 trait Subscription extends Controller {
@@ -26,8 +26,9 @@ trait Subscription extends Controller {
     val payment = for {
       customer <- StripeService.Customer.create(stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
+      member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
-      AwsMemberTable.putTier(request.user.id, Tier.withName(tier))
+      AwsMemberTable.put(member)
       Ok(subscription.id)
     }
 
