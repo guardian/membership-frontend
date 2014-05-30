@@ -12,10 +12,28 @@
 
 # Membership App
 
-## Setup
+## Ubuntu
+
+In an ideal world, your Ubuntu package install would be:
+
+```
+$ sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
+```
+
+### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
+
+See Joyent's instructions on [installing Node & NPM on Ubuntu](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#ubuntu-mint-elementary-os).
+If the available [nodejs](http://packages.ubuntu.com/trusty/nodejs) or [NPM](http://packages.ubuntu.com/trusty/npm)
+package for your version of Ubuntu is old, you'll [probably](http://askubuntu.com/questions/49390/how-do-i-install-the-latest-version-of-node-js)
+want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
+which includes both Node.js and NPM.
+
+## General Setup
+
 
 1. Go to project root
-1. ./setup.sh
+1. If you don't have `bower`, `grunt`, or `sass`, run `./setup-tools.sh` to install them globally on your system.
+1. Run `./setup.sh` to install project-specific client-side dependencies.
 1. Add the following to your `/etc/hosts`
 
    ```
