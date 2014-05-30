@@ -1,12 +1,13 @@
 package controllers
 
-import play.api.mvc.{ Action, Controller }
+import play.api.mvc.Controller
 
 trait FrontPage extends Controller {
 
-  def index = Action {
+  def index = CachedAction {
     Ok(views.html.index())
   }
 
 }
+
 object FrontPage extends FrontPage

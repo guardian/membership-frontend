@@ -7,11 +7,11 @@ import services.{ AwsMemberTable, AuthenticationService }
 import model.Tier
 
 trait User extends Controller {
-  def me = Action { implicit request =>
-    val tier = AuthenticationService.authenticatedRequestFor(request)
-      .fold(Tier.AnonymousUser) { AwsMemberTable getTier _.user.id }
+  def me = NoCacheAction { implicit request =>
+    val authRequest = AuthenticationService.authenticatedRequestFor(request)
+    val tier = authRequest.fold(Tier.AnonymousUser) { AwsMemberTable getTier _.user.id }
 
-    Ok(Json.obj("tier" -> tier.toString))
+    Ok(Json.obj("userId" -> authRequest.map(_.user.id), "tier" -> tier.toString))
   }
 }
 
