@@ -16,8 +16,9 @@ trait StripeService {
   implicit val readsError = Json.reads[Error]
   implicit val readsCard = Json.reads[Card]
   implicit val readsCharge = Json.reads[Charge]
-  implicit val readsCustomer = Json.reads[Customer]
   implicit val readsSubscription = Json.reads[Subscription]
+  implicit val readsSubscriptionList = Json.reads[SubscriptionList]
+  implicit val readsCustomer = Json.reads[Customer]
 
   private def request(endpoint: String) =
     WS.url(s"$apiURL/$endpoint").withHeaders(("Authorization", s"Bearer $apiSecret"))
