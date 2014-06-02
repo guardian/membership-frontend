@@ -100,7 +100,7 @@ define([
         var cardTypes = this.config.creditCardTypes.join(' ');
 
         $creditCardNumberElement.removeClass(cardTypes).addClass(currentCardType);
-    }
+    };
 
     StripePaymentForm.prototype.addListeners = function(){
 
@@ -111,7 +111,7 @@ define([
         var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
         var $formElement = $(this.context);
 
-        bean.on($creditCardNumberElement[0], 'keyup blur', function (e) {
+        bean.on($creditCardNumberElement[0], 'keyup blur', function () {
 
             masker(' ', 4).bind(this)();
 
