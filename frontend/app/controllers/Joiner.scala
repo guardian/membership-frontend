@@ -9,19 +9,19 @@ import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
-  def tierList = Action {
+  def tierList = CachedAction {
     Ok(views.html.joiner.tierList())
   }
 
-  def friend() = Action {
+  def friend() = CachedAction {
     Ok(views.html.joiner.tier.friend())
   }
 
-  def partner() = Action {
+  def partner() = CachedAction {
     Ok(views.html.joiner.tier.partner())
   }
 
-  def patron() = Action {
+  def patron() = CachedAction {
     Ok(views.html.joiner.tier.patron())
   }
 

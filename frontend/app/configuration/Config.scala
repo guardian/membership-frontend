@@ -21,4 +21,8 @@ object Config {
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
+
+  val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
+
+  val corsAllowOrigin = config.getString("cors.allow.origin")
 }

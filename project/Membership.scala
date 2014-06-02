@@ -3,7 +3,6 @@ import sbt.Keys._
 
 import PlayArtifact._
 import sbtbuildinfo.Plugin._
-import com.typesafe.sbt.SbtScalariform._
 
 trait Membership {
   val version = "1.0-SNAPSHOT"
@@ -48,7 +47,7 @@ trait Membership {
     libraryDependencies ++= commonDependencies,
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
-  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin ++ scalariformSettings
+  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin
 
   def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)
 }
