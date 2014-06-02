@@ -53,7 +53,7 @@
                 Card
             </td>
             <td class="summary-table__cell">
-                <span class="card-type active @(card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                <span class="credit-card credit-card--inline-block @("credit-card--" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
                 <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
             </td>
         </tr>
