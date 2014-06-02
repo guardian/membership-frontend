@@ -29,7 +29,16 @@ define([
             TIER_FIELD: 'js-tier-field',
             ACTIONS: 'js-waiting-container'
         },
-        DOM: {}
+        DOM: {},
+        creditCardTypes: [
+            'credit-card--visa',
+            'credit-card--mastercard',
+            'credit-card--american-express',
+            'credit-card--discover',
+            'credit-card--diners-club',
+            'credit-card--jcb',
+            'credit-card--unknown'
+        ]
     };
 
     StripePaymentForm.prototype.domElementSetup = function(){
@@ -86,26 +95,27 @@ define([
         }
     };
 
+    StripePaymentForm.prototype.displayCardTypeImage = function($creditCardNumberElement){
+        var currentCardType = 'credit-card--' + stripe.cardType($creditCardNumberElement.val()).toLowerCase().replace(' ', '-');
+        var cardTypes = this.config.creditCardTypes.join(' ');
+
+        $creditCardNumberElement.removeClass(cardTypes).addClass(currentCardType);
+    }
+
     StripePaymentForm.prototype.addListeners = function(){
 
-        var self = this,
-            $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
-            $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
-            $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
-            $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
-            $formElement = $(this.context);
+        var stripePaymentFormClass = this;
+        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER');
+        var $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC');
+        var $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH');
+        var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
+        var $formElement = $(this.context);
 
-        bean.on($creditCardNumberElement[0], 'keyup blur', function () {
+        bean.on($creditCardNumberElement[0], 'keyup blur', function (e) {
+
             masker(' ', 4).bind(this)();
 
-            // Update card type indicator
-            self.getElement('CREDIT_CARD_TYPE')[0].className = self.config.classes.CREDIT_CARD_TYPE; // reset
-            self.getElement('CREDIT_CARD_TYPE')
-                .addClass('active')
-                .addClass(stripe.cardType(self.getElement('CREDIT_CARD_NUMBER').val())
-                    .toLowerCase()
-                    .replace(' ', '-')
-                );
+            stripePaymentFormClass.displayCardTypeImage($creditCardNumberElement);
         });
 
         bean.on($creditCardNumberElement[0], 'blur', function(){
