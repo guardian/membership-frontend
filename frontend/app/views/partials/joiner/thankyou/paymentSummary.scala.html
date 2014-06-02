@@ -1,0 +1,61 @@
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card )
+
+@import views.Dates._
+
+@formatPrice(pence: Int) = {
+    &#163;@(pence / 100).@("%02d".format(pence % 100))
+}
+
+<section class="joiner-section joiner-section--no-border">
+    <table class="table table--responsive-font table--striped">
+        <tr class="table__headline">
+            <td class="summary-table__cell">
+                Package
+            </td>
+            <td class="summary-table__cell">
+                @subscription.plan.name
+            </td>
+        </tr>
+        <tr class="summary-table__row">
+            <td class="summary-table__cell">
+                Start Date
+            </td>
+            <td class="summary-table__cell">
+                @fromTimestamp(subscription.start).toString("MMMM d, y")
+            </td>
+        </tr>
+        <tr class="summary-table__row">
+            <td class="summary-table__cell">
+                Amount Paid Today
+            </td>
+            <td class="summary-table__cell">
+                @formatPrice(subscription.plan.amount)
+            </td>
+        </tr>
+        <tr class="summary-table__row">
+            <td class="summary-table__cell">
+                Monthly Payment
+            </td>
+            <td class="summary-table__cell">
+                @formatPrice(subscription.plan.amount)
+            </td>
+        </tr>
+        <tr class="summary-table__row">
+            <td class="summary-table__cell">
+                Next Payment
+            </td>
+            <td class="summary-table__cell">
+                @fromTimestamp(subscription.current_period_end).toString("MMMM d, y")
+            </td>
+        </tr>
+        <tr class="summary-table__row">
+            <td class="summary-table__cell">
+                Card
+            </td>
+            <td class="summary-table__cell">
+                <span class="credit-card credit-card--inline-block @("credit-card--" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
+            </td>
+        </tr>
+    </table>
+</section>

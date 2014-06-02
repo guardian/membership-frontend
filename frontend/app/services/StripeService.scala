@@ -15,9 +15,12 @@ trait StripeService {
 
   implicit val readsError = Json.reads[Error]
   implicit val readsCard = Json.reads[Card]
+  implicit val readsCardList = Json.reads[CardList]
   implicit val readsCharge = Json.reads[Charge]
-  implicit val readsCustomer = Json.reads[Customer]
+  implicit val readsPlan = Json.reads[Plan]
   implicit val readsSubscription = Json.reads[Subscription]
+  implicit val readsSubscriptionList = Json.reads[SubscriptionList]
+  implicit val readsCustomer = Json.reads[Customer]
 
   private def request(endpoint: String) =
     WS.url(s"$apiURL/$endpoint").withHeaders(("Authorization", s"Bearer $apiSecret"))
@@ -53,6 +56,9 @@ object StripeService extends StripeService {
   object Customer {
     def create(card: String): Future[Customer] =
       post[Customer]("customers", Map("card" -> Seq(card)))
+
+    def read(customerId: String): Future[Customer] =
+      get[Customer](s"customers/$customerId")
   }
 
   object Subscription {

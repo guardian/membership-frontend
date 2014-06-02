@@ -1,24 +1,26 @@
 package services
 
-import awscala.dynamodbv2.DynamoDB
+import awscala.dynamodbv2.{ Item, DynamoDB }
 import configuration.Config
-import model.Tier
-import model.Tier.Tier
+import model.{ Tier, Member }
 
 sealed trait MemberRepository {
-  def putTier(userId: String, tier: Tier): Unit
-  def getTier(userId: String): Tier
+  def put(member: Member): Unit
+  def get(userId: String): Option[Member]
 }
 
 object AwsMemberTable extends MemberRepository {
   implicit val dynamoDB = DynamoDB(Config.awsAccessKey, Config.awsSecretKey).at(awscala.Region.EU_WEST_1)
   val table = dynamoDB.table("members").get
 
-  def putTier(key: String, tier: Tier): Unit = table.put(key, "tier" -> tier.toString)
+  private def getAttribute(item: Item, key: String) = item.attributes.find(_.name == key).map(_.value.getS)
 
-  def getTier(key: String): Tier = table.get(key)
-    .flatMap(_.attributes.find(_.name == "tier"))
-    .map(_.value.getS)
-    .fold(Tier.RegisteredUser)(Tier.withName)
+  def put(member: Member): Unit =
+    table.put(member.userId, "tier" -> member.tier.toString, "customerId" -> member.customerId)
+
+  def get(userId: String): Option[Member] = for {
+    member <- table.get(userId)
+    tier <- getAttribute(member, "tier")
+    customerId <- getAttribute(member, "customerId")
+  } yield Member(userId, Tier.withName(tier), customerId)
 }
-
