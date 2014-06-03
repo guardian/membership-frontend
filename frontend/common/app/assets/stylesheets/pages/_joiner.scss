@@ -139,6 +139,10 @@
     visibility: visible;
 }
 
+[data-card-type="unknown"] {
+    visibility: hidden;
+}
+
 [data-card-type="visa"] {
     background-position: 0 0;
 }
