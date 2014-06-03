@@ -10,7 +10,7 @@
         case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
         case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
         case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
-        case _ => { <a class='action action--logged-out' href='/event/{event.id}/buy'>Sign In to attend</a> }
+        case _ => { <a class='action action--logged-out' href='/event/@event.id/buy'>Sign In to attend</a> }
     }
 }
 
