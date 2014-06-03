@@ -8,15 +8,15 @@
 
 <section class="joiner-section joiner-section--no-border">
     <table class="table table--responsive-font table--striped">
-        <tr class="table__headline">
-            <td class="summary-table__cell">
+        <tr class="table__headline" role="row">
+            <td class="summary-table__cell" role="scope">
                 Package
             </td>
-            <td class="summary-table__cell">
+            <td class="summary-table__cell" role="scope">
                 @subscription.plan.name
             </td>
         </tr>
-        <tr class="summary-table__row">
+        <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
                 Start Date
             </td>
@@ -24,7 +24,7 @@
                 @fromTimestamp(subscription.start).toString("MMMM d, y")
             </td>
         </tr>
-        <tr class="summary-table__row">
+        <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
                 Amount Paid Today
             </td>
@@ -32,7 +32,7 @@
                 @formatPrice(subscription.plan.amount)
             </td>
         </tr>
-        <tr class="summary-table__row">
+        <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
                 Monthly Payment
             </td>
@@ -40,7 +40,7 @@
                 @formatPrice(subscription.plan.amount)
             </td>
         </tr>
-        <tr class="summary-table__row">
+        <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
                 Next Payment
             </td>
@@ -48,7 +48,7 @@
                 @fromTimestamp(subscription.current_period_end).toString("MMMM d, y")
             </td>
         </tr>
-        <tr class="summary-table__row">
+        <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
                 Card
             </td>
