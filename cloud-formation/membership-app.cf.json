@@ -26,8 +26,8 @@
             "Type" : "String",
             "Default" : "PROD"
         },
-        "HostedZone" : {
-            "Description" : "DNS hosted zone for which A CNAME will be created. e.g. 'example.com' (note, no trailing full-stop) for status.example.com. Leave empty if you don't want to add a CNAME to the status app",
+        "SiteDomain" : {
+            "Description" : "Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or 'membership.theguardian.com')",
             "Type" : "String"
         },
         "InstanceType" : {
@@ -37,9 +37,6 @@
             "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         }
-    },
-    "Conditions": {
-        "HasDNS": { "Fn::Not" : [{"Fn::Equals" : [{"Ref" : "HostedZone"}, "" ] } ] }
     },
     "Resources" : {
 
@@ -123,10 +120,11 @@
             "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
             "Properties" : {
                 "Listeners" : [ {
-                    "LoadBalancerPort" : "80",
-                    "InstancePort" : "9000",
-                    "Protocol" : "HTTP"
-                } ],
+                    "LoadBalancerPort": "443",
+                    "InstancePort": 9000,
+                    "Protocol": "HTTPS",
+                    "SSLCertificateId" : { "Fn::Join" : [ "", [ "arn:aws:iam::", {"Ref":"AWS::AccountId"}, ":server-certificate/", { "Ref" : "SiteDomain" } ] ] }
+                }],
                 "SecurityGroups" : [ { "Ref" : "LoadBalancerSecurityGroup" } ],
                 "Subnets" : { "Ref" : "Subnets" },
                 "HealthCheck" : {
