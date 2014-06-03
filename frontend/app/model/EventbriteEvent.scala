@@ -13,6 +13,13 @@ object EBEventStatus extends Enumeration {
   val Completed, Cancelled, SoldOut, PreLive, Live = Value
 }
 
+case class EBPagination(object_count: Int,
+    page_number: Int,
+    page_size: Int,
+    page_count: Int) {
+  lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
+}
+
 case class EBRichText(text: String, html: String)
 
 case class EBAddress(country_name: Option[String],
@@ -24,7 +31,7 @@ case class EBAddress(country_name: Option[String],
 
 case class EBVenue(id: Option[String], address: Option[EBAddress], latitude: Option[String], longitude: Option[String], name: Option[String])
 
-case class EBResponse(events: Seq[EBEvent])
+case class EBResponse(pagination: EBPagination, events: Seq[EBEvent])
 
 case class EBPricing(currency: String, display: String, value: Int)
 
@@ -108,5 +115,6 @@ object EventbriteDeserializer {
   implicit val ebPricingReads = Json.reads[EBPricing]
   implicit val ebTicketsReads = Json.reads[EBTickets]
   implicit val ebEventReads = Json.reads[EBEvent]
+  implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebResponseReads = Json.reads[EBResponse]
 }

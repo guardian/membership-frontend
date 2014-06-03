@@ -1,3 +1,6 @@
+$small-card: 32px;
+$large-card: 35px;
+
 /* ==========================================================================
    Joiner
    ========================================================================== */
@@ -113,66 +116,46 @@
 /* ==========================================================================
    Stripe credit card types
    ========================================================================== */
+.credit-card-container {
+    position: relative;
+}
 
 .credit-card {
-    background: transparent url("/assets/images/card_types_sprite.png") 200% 0 no-repeat;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 54px;
+    height: $large-card;
+    visibility: hidden;
+    background: url("/assets/images/card_types_large.png") right top no-repeat;
+
+    &[data-card-type] {
+        visibility: visible;
+    }
+
+    &[data-card-type="unknown"] {
+        visibility: hidden;
+    }
+
+    @include credit-card-images($large-card);
 }
 
 .credit-card--inline-block {
-    width: 49px;
-    height: 36px;
-    display: inline-block;
+    visibility: visible;
     vertical-align: middle;
-}
-
-.credit-card--visa {
-    background-position: 99.4% 0;
-}
-
-.credit-card--mastercard {
-    background-position: 99.4% -36px;
-}
-
-.credit-card--american-express {
-    background-position: 99.4% -71px;
-}
-
-.credit-card--discover {
-    background-position: 99.4% -107px;
-}
-
-.credit-card--diners-club {
-    background-position: 99.4% -144px;
-}
-
-.credit-card--jcb {
-    background-position: 99.4% -180px;
+    position: static;
+    display: inline-block;
+    margin-right: $gutter / 2;
 }
 
 @include mq(tablet){
 
-    .credit-card--visa {
-        background-position: 99.8% -1px;
-    }
+    .credit-card {
+        width: 49px;
+        height: $small-card;
+        background: url("/assets/images/card_types_small.png") right top no-repeat;
 
-    .credit-card--mastercard {
-        background-position: 99.8% -37px;
-    }
-
-    .credit-card--american-express {
-        background-position: 99.8% -73px;
-    }
-
-    .credit-card--discover {
-        background-position: 99.8% -109px;
-    }
-
-    .credit-card--diners-club {
-        background-position: 99.8% -145px;
-    }
-
-    .credit-card---jcb {
-        background-position: 99.8% -181px;
+        @include credit-card-images($small-card);
     }
 }
 
@@ -233,3 +216,5 @@
         float: left;
     }
 }
+
+

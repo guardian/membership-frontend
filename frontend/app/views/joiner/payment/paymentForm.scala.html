@@ -22,15 +22,16 @@
             <div class="fieldset__fields">
                 <div class="form-field">
                     <label class="label" for="cc-num">Card Number </label>
-                    <div class="input">
-                        <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input credit-card" id="cc-num" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" data-error-message="Please enter a valid card number" autocomplete="off"/>
+                    <div class="input credit-card-container">
+                        <i class="js-credit-card-image credit-card"></i>
+                        <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" data-error-message="Please enter a valid card number" autocomplete="off"/>
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label class="label" for="cc-cvc">
                         <span>Security code</span>
-                        <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small" id="cc-cvc" placeholder="CVC" maxlength="4" data-error-message="Please enter a valid CVC number" autocomplete="off"/>
+                        <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small text-input--block" id="cc-cvc" placeholder="CVC" maxlength="4" data-error-message="Please enter a valid CVC number" autocomplete="off"/>
                     </label>
                 </div>
 
