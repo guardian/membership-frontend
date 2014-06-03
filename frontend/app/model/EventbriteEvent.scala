@@ -66,7 +66,7 @@ case class EBEvent(
     status match {
       case Some("completed") => Completed
 
-      case Some("cancelled") => Cancelled
+      case Some("canceled") => Cancelled // American spelling
 
       case Some("live") if numberSoldTickets >= capacity.getOrElse(0) => SoldOut
 

@@ -4,6 +4,16 @@
 @import org.joda.time.Instant
 @import model.EBEventStatus._
 
+@renderButton(event: model.EBEvent) = {
+    @event.getStatus match {
+        case Completed => { <button class='action action--disabled' disabled='disabled'>Past Event</button> }
+        case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
+        case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
+        case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
+        case _ => { <a class='action action--logged-out' href='/event/{event.id}/buy'>Sign In to attend</a> }
+    }
+}
+
 @main("Membership") {
 
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
@@ -38,30 +48,14 @@
                 </div>
 
                 <span class="event__price js-event-price">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(model.EBPricing("GBP", "Free", 0)).display</span>
-                <span class="event__price-note"> per ticket.</span>
+                <span class="event__price-note js-event-price-note"> per ticket.</span>
             </div>
 
-            <a class="action action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
+            @renderButton(event)
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
-            @event.getStatus match {
-                case Completed => {
-                    <button class="action action--disabled" disabled="disabled">Past Event</button>
-                }
-                case SoldOut => {
-                    <button class="action action--disabled" disabled="disabled">Sold Out</button>
-                }
-                case Cancelled => {
-                    <button class="action action--disabled" disabled="disabled">Cancelled</button>
-                }
-                case PreLive => {
-                    <button class="action action--disabled" disabled="disabled">Coming Soon</button>
-                }
-                case _ => {
-                    <a class="action action--logged-out" href="/event/@event.id/buy">Sign In to attend</a>
-                }
-            }
+            @renderButton(event)
 
         </div>
     </div>
