@@ -121,3 +121,31 @@
     zoom: 1;
   }
 }
+
+// credit card background images
+@mixin credit-card-images($width) {
+    &[data-card-type="visa"] {
+        background-position: 0 0;
+    }
+
+    &[data-card-type="mastercard"] {
+        background-position: 0 (-$width);
+    }
+
+    &[data-card-type="american-express"] {
+        background-position: 0 (-$width * 2);
+    }
+
+    &[data-card-type="discover"] {
+        background-position: 0 (-$width * 3);
+    }
+
+    &[data-card-type="diners-club"] {
+        background-position: 0 (-$width * 4);
+    }
+
+    &[data-card-type="jcb"] {
+        background-position: 0 (-$width * 5);
+
+    }
+}

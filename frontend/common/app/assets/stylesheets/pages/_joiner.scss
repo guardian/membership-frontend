@@ -1,3 +1,6 @@
+$small-card: 32px;
+$large-card: 35px;
+
 /* ==========================================================================
    Joiner
    ========================================================================== */
@@ -122,9 +125,10 @@
     right: 2px;
     top: 2px;
     width: 54px;
-    height: 35px;
+    height: $large-card;
     visibility: hidden;
     background: url("/assets/images/card_types_large.png") right top no-repeat;
+
     &[data-card-type] {
         visibility: visible;
     }
@@ -133,29 +137,7 @@
         visibility: hidden;
     }
 
-    &[data-card-type="visa"] {
-        background-position: 0 0;
-    }
-
-    &[data-card-type="mastercard"] {
-        background-position: 0 -35px;
-    }
-
-    &[data-card-type="american-express"] {
-        background-position: 0 -70px;
-    }
-
-    &[data-card-type="discover"] {
-        background-position: 0 -105px;
-    }
-
-    &[data-card-type="diners-club"] {
-        background-position: 0 -140px;
-    }
-
-    &[data-card-type="jcb"] {
-        background-position: 0 -175px;
-    }
+    @include credit-card-images($large-card);
 }
 
 .credit-card--inline-block {
@@ -170,32 +152,10 @@
 
     .credit-card {
         width: 49px;
-        height: 32px;
+        height: $small-card;
         background: url("/assets/images/card_types_small.png") right top no-repeat;
 
-        &[data-card-type="visa"] {
-            background-position: 0 0;
-        }
-
-        &[data-card-type="mastercard"] {
-            background-position: 0 -32px;
-        }
-
-        &[data-card-type="american-express"] {
-            background-position: 0 -64px;
-        }
-
-        &[data-card-type="discover"] {
-            background-position: 0 -96px;
-        }
-
-        &[data-card-type="diners-club"] {
-            background-position: 0 -128px;
-        }
-
-        &[data-card-type="jcb"] {
-            background-position: 0 -160px;
-        }
+        @include credit-card-images($small-card);
     }
 }
 
@@ -256,3 +216,5 @@
         float: left;
     }
 }
+
+
