@@ -8,50 +8,50 @@
 
 <section class="joiner-section joiner-section--no-border">
     <table class="table table--responsive-font table--striped">
-        <tr class="table__headline">
-            <td class="summary-table__cell">
+        <tr class="table__headline" role="row">
+            <th class="summary-table__cell" scope="col">
                 Package
-            </td>
+            </th>
             <td class="summary-table__cell">
                 @subscription.plan.name
             </td>
         </tr>
-        <tr class="summary-table__row">
-            <td class="summary-table__cell">
+        <tr class="summary-table__row" role="row">
+            <th class="summary-table__cell" scope="col">
                 Start Date
-            </td>
+            </th>
             <td class="summary-table__cell">
                 @fromTimestamp(subscription.start).toString("MMMM d, y")
             </td>
         </tr>
-        <tr class="summary-table__row">
-            <td class="summary-table__cell">
+        <tr class="summary-table__row" role="row">
+            <th class="summary-table__cell" scope="col">
                 Amount Paid Today
-            </td>
+            </th>
             <td class="summary-table__cell">
                 @formatPrice(subscription.plan.amount)
             </td>
         </tr>
-        <tr class="summary-table__row">
-            <td class="summary-table__cell">
+        <tr class="summary-table__row" role="row">
+            <th class="summary-table__cell" scope="col">
                 Monthly Payment
-            </td>
+            </th>
             <td class="summary-table__cell">
                 @formatPrice(subscription.plan.amount)
             </td>
         </tr>
-        <tr class="summary-table__row">
-            <td class="summary-table__cell">
+        <tr class="summary-table__row" role="row">
+            <th class="summary-table__cell" scope="col">
                 Next Payment
-            </td>
+            </th>
             <td class="summary-table__cell">
                 @fromTimestamp(subscription.current_period_end).toString("MMMM d, y")
             </td>
         </tr>
-        <tr class="summary-table__row">
-            <td class="summary-table__cell">
+        <tr class="summary-table__row" role="row">
+            <th class="summary-table__cell" scope="col">
                 Card
-            </td>
+            </th>
             <td class="summary-table__cell">
                 <span class="credit-card credit-card--inline-block @("credit-card--" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
                 <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>

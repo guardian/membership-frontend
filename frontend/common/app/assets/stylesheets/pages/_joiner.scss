@@ -113,66 +113,86 @@
 /* ==========================================================================
    Stripe credit card types
    ========================================================================== */
+.credit-card-container {
+    position: relative;
+}
 
 .credit-card {
-    background: transparent url("/assets/images/card_types_sprite.png") 200% 0 no-repeat;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 54px;
+    height: 35px;
+    visibility: hidden;
+    background: url("/assets/images/card_types_large.png") right top no-repeat;
 }
 
 .credit-card--inline-block {
-    width: 49px;
-    height: 36px;
-    display: inline-block;
+    visibility: visible;
     vertical-align: middle;
+    position: static;
+    display: inline-block;
+    margin-right: $gutter / 2;
 }
 
-.credit-card--visa {
-    background-position: 99.4% 0;
+[data-card-type] {
+    visibility: visible;
 }
 
-.credit-card--mastercard {
-    background-position: 99.4% -36px;
+[data-card-type="visa"] {
+    background-position: 0 0;
 }
 
-.credit-card--american-express {
-    background-position: 99.4% -71px;
+[data-card-type="mastercard"] {
+    background-position: 0 -35px;
 }
 
-.credit-card--discover {
-    background-position: 99.4% -107px;
+[data-card-type="american-express"] {
+    background-position: 0 -70px;
 }
 
-.credit-card--diners-club {
-    background-position: 99.4% -144px;
+[data-card-type="discover"] {
+    background-position: 0 -105px;
 }
 
-.credit-card--jcb {
-    background-position: 99.4% -180px;
+[data-card-type="diners-club"] {
+    background-position: 0 -140px;
+}
+
+[data-card-type="jcb"] {
+    background-position: 0 -175px;
 }
 
 @include mq(tablet){
 
-    .credit-card--visa {
-        background-position: 99.8% -1px;
+    .credit-card {
+        width: 49px;
+        height: 32px;
+        background: url("/assets/images/card_types_small.png") right top no-repeat;
     }
 
-    .credit-card--mastercard {
-        background-position: 99.8% -37px;
+    [data-card-type="visa"] {
+        background-position: 0 0;
     }
 
-    .credit-card--american-express {
-        background-position: 99.8% -73px;
+    [data-card-type="mastercard"] {
+        background-position: 0 -32px;
     }
 
-    .credit-card--discover {
-        background-position: 99.8% -109px;
+    [data-card-type="american-express"] {
+        background-position: 0 -64px;
     }
 
-    .credit-card--diners-club {
-        background-position: 99.8% -145px;
+    [data-card-type="discover"] {
+        background-position: 0 -96px;
     }
 
-    .credit-card---jcb {
-        background-position: 99.8% -181px;
+    [data-card-type="diners-club"] {
+        background-position: 0 -128px;
+    }
+
+    [data-card-type="jcb"] {
+        background-position: 0 -160px;
     }
 }
 
