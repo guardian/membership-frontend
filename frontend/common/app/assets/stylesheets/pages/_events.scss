@@ -73,48 +73,74 @@ li.event {
 div.event {
     .event__content {
 
+        .event__meta > div {
+            display: inline-block;
+            margin: 0 12px 0 0;
+        }
+
         .event__location,
         .event__time {
             @include fs-textsans(4);
             display: block;
         }
 
+        .event__price,
+        .event__price-note,
+        .event__sale_ends_note,
+        .event__sale_ends_time{
+            @include fs-textsans(4);
+            display: inline-block;
+        }
+
+        .event__tickets > * {
+            display: inline-block;
+            margin-right: 12px;
+        }
+
         .event__description {
+            h2 {
+                @include fs-headline(2);
+                margin: 8px 0 16px 0;
+            }
+            p, li {
+                @include fs-bodyCopy(2);
+            }
             ol,
             ul {
               list-style-position: inside;
+                padding: 0;
+                margin: 0 0 8px 0;
+            }
+
+            blockquote {
+                p {
+                    margin: 0;
+                }
+                @include rem((
+                    padding-left: 14px
+                ));
+                border-left: 2px solid #cfcfcd;
+                font-style: italic;
+                margin: 0 0 16px 0;
             }
         }
-
     }
-
-    .event__related {
-        margin-top: gs-height(1);
-
-        .event__related--content {
-            background-color: $mem-trans-white;
-        }
-    }
-
-    @include mq(desktop) {
-        .event__content {
-            float: left;
-            width: gs-span(10);
-            margin-right: $gs-gutter;
-        }
-        .event__related {
-            margin: 0;
-            float: left;
-            width: gs-span(4);
-            min-height: 600px;
-        }
-    }
-
 }
 
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
+
+.event__masthead {
+    position: relative;
+    .event__name {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 6px 6px 6px 0;
+        background-color: #ffffff;
+    }
+}
 
 .item__meta {
     position: relative;
@@ -162,8 +188,11 @@ div.event {
     overflow: hidden;
 }
 
-.event__image img {
-    width: 780px;
+.event__image {
+    background-color: #CCCCCC;
+    img {
+        width: 100%;
+    }
 }
 
 .event__meta {

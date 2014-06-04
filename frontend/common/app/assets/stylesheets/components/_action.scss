@@ -63,3 +63,28 @@
     display: inline-block;
     vertical-align: top;
 }
+
+.action--ticket-button {
+    position: relative;
+    z-index: 1;
+    &:before, &:after {
+        content: " ";
+        position: absolute;
+        z-index: 2;
+        height: 10px;
+        width: 10px;
+        display: block;
+        border-radius: 50px;
+        background-color: #ffffff;
+        top: 50%;
+        margin-top: -5px;
+    }
+
+    &:before {
+        left: -5px;
+    }
+
+    &:after {
+        right: -5px;
+    }
+}

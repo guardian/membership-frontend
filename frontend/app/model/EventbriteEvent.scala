@@ -20,7 +20,14 @@ case class EBPagination(object_count: Int,
   lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
 }
 
-case class EBRichText(text: String, html: String)
+case class EBRichText(text: String, html: String) {
+  def cleanHtml: String = {
+    val stylePattern = "(?i)style=(\".*?\"|'.*?'|[^\"'][^\\s]*)".r
+    val cleanStyle = stylePattern replaceAllIn(html, "")
+    val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
+    clean
+  }
+}
 
 case class EBAddress(country_name: Option[String],
   city: Option[String],
