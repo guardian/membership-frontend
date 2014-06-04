@@ -246,10 +246,21 @@ div.event {
     }
 }
 
-.event-status {
+.event-image-container {
+    position: relative;
+}
 
+.event-status {
+    position: absolute;
+    right: .1em;
+    top: .1em;
+    width: 50%;
+    padding: $gutter/2;
+    text-align: center;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
 }
 
 .event-status--sold-out {
-
+    background-color: $mem-brandBlue;
 }
