@@ -4,7 +4,7 @@
 @import org.joda.time.Instant
 @import model.EBEventStatus._
 
-@renderButton(event: model.EBEvent) = {
+@renderButton = {
     @event.getStatus match {
         case Completed => { <button class='action action--disabled' disabled='disabled'>Past Event</button> }
         case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
@@ -51,11 +51,11 @@
                 <span class="event__price-note js-event-price-note"> per ticket.</span>
             </div>
 
-            @renderButton(event)
+            @renderButton
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).html)</div>
 
-            @renderButton(event)
+            @renderButton
 
         </div>
     </div>
