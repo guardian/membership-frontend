@@ -10,7 +10,7 @@
         case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
         case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
         case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
-        case _ => { <a class='action action--logged-out' href='/event/@event.id/buy'>Sign In to attend</a> }
+        case _ => { <a class='action action--logged-out ticket-button' href='/event/@event.id/buy'>Sign In to attend</a> }
     }
 }
 
@@ -56,8 +56,6 @@
                     <span class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.sales_end.getOrElse("")">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.sales_end.getOrElse(RichInstant(new Instant()).pretty)</span>
                 </div>
             </div>
-
-
 
             <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
 
