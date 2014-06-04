@@ -29,3 +29,4 @@ GET         /event/:id/buy               controllers.Event.buy(id)
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
 
 GET         /user/me                     controllers.User.me
+GET         /user/me/details             controllers.User.meDetails
