@@ -1,4 +1,4 @@
-define(function () {
+define(['src/utils/date'], function () {
 
    return (function () {
 
@@ -39,19 +39,23 @@ define(function () {
 
            var utc_timestamp_date = new Date(time_el.getAttribute('datetime'));
 
-           var diff = self.eventbriteDateDiff(utc_timestamp_date);
+           if (utc_timestamp_date > new Date()) {
+               var diff = self.eventbriteDateDiff(utc_timestamp_date);
 
-           var diff_string = [];
+               var diff_string = [];
 
-           diff_string.push(diff.days);
-           diff_string.push('d ');
-           diff_string.push(diff.hours);
-           diff_string.push('h ');
-           diff_string.push(diff.mins);
-           diff_string.push('m');
+               diff_string.push(diff.days);
+               diff_string.push('d ');
+               diff_string.push(diff.hours);
+               diff_string.push('h ');
+               diff_string.push(diff.mins);
+               diff_string.push('m');
 
-           time_el.innerHTML = diff_string.join('');
-           note_el.innerHTML = note_el.innerHTML.replace('at', 'in');
+               time_el.innerHTML = diff_string.join('');
+               note_el.innerHTML = note_el.innerHTML.replace('at', 'in');
+           } else { // Event is completed
+               time_el.innerHTML = utc_timestamp_date.format('h:mm, dd-MM-yyyy'); // src/utils/date.js
+           }
        };
 
        return {
