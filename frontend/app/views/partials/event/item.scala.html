@@ -1,5 +1,6 @@
 @(event: model.EBEvent)
 @import views.Dates._
+@import model.EBEventStatus._
 
 <li class="events-list__item facia-slice__item">
     <div class="item item--has-image">
@@ -7,7 +8,7 @@
             <a href="/event/@event.id">
                 <div class="item__media-wrapper">
                     <div class="item__image-container event-image-container">
-                    @if(event.hasSoldOut){
+                    @if(event.getStatus == SoldOut){
                         <span class="event-status event-status--sold-out">Sold Out</span>
                     }
                         <img src="@event.logo_url" alt="Event Image">
