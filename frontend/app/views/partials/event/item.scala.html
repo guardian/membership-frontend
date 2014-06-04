@@ -7,7 +7,11 @@
             <a href="/event/@event.id">
                 <div class="item__media-wrapper">
                     <div class="item__image-container">
-                        <img src="@event.logo_url" alt="Event Image"></div>
+                    @if(event.hasSoldOut){
+                        <span class="event-status event-status--sold-out">Sold Out</span>
+                    }
+                        <img src="@event.logo_url" alt="Event Image">
+                    </div>
                 </div>
                 <h2 class="item__title truncate">
                     @event.name.text
