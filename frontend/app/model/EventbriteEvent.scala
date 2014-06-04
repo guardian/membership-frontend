@@ -21,8 +21,6 @@ case class EBPagination(object_count: Int,
 }
 
 case class EBRichText(text: String, html: String) {
-  import scala.util.matching.Regex
-
   def cleanHtml: String = {
     val stylePattern = "(?i)style=(\".*?\"|'.*?'|[^\"'][^\\s]*)".r
     val cleanStyle = stylePattern replaceAllIn(html, "")
