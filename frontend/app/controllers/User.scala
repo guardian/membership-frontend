@@ -12,12 +12,12 @@ import model.{ Stripe, Tier }
 
 trait User extends Controller {
   def me = MemberAction { implicit request =>
-    Ok(basicDetails(request))
+    Cors(Ok(basicDetails(request)))
   }
 
   def meDetails = MemberAction.async { implicit request =>
     request.member.tier match {
-      case Tier.Friend => Future.successful(Ok(basicDetails(request)))
+      case Tier.Friend => Future.successful(Cors(Ok(basicDetails(request))))
 
       case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
         val subscriptionOpt = for {
@@ -25,7 +25,7 @@ trait User extends Controller {
           card <- customer.cards.data.headOption
         } yield subscriptionDetails(subscription, card)
 
-        Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj()))
+        Cors(Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj())))
       }
     }
   }
