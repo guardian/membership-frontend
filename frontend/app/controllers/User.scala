@@ -1,24 +1,47 @@
 package controllers
 
-import play.api.mvc.{ Controller, Action }
+import scala.concurrent.Future
+
+import play.api.mvc.Controller
 import play.api.libs.json.Json
-import configuration.Config
-import services.{ AwsMemberTable, AuthenticationService }
-import model.Tier
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+import actions.{ MemberRequest, MemberAction }
+import services.StripeService
+import model.{ Stripe, Tier }
 
 trait User extends Controller {
-  def me = NoCacheAction { implicit request =>
-    val authRequest = AuthenticationService.authenticatedRequestFor(request)
-    val tier = AuthenticationService.authenticatedRequestFor(request).map { authRequest =>
-      AwsMemberTable.get(authRequest.user.id).fold(Tier.RegisteredUser)(_.tier)
-    }.getOrElse(Tier.AnonymousUser)
-
-    Ok(Json.obj("userId" -> authRequest.map(_.user.id), "tier" -> tier.toString)).withHeaders(
-      ("Access-Control-Allow-Origin", Config.corsAllowOrigin),
-      ("Access-Control-Allow-Methods", "GET"),
-      ("Access-Control-Allow-Credentials", "true")
-    )
+  def me = MemberAction { implicit request =>
+    Cors(Ok(basicDetails(request)))
   }
+
+  def meDetails = MemberAction.async { implicit request =>
+    request.member.tier match {
+      case Tier.Friend => Future.successful(Cors(Ok(basicDetails(request))))
+
+      case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
+        val subscriptionOpt = for {
+          subscription <- customer.subscriptions.data.headOption
+          card <- customer.cards.data.headOption
+        } yield subscriptionDetails(subscription, card)
+
+        Cors(Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj())))
+      }
+    }
+  }
+
+  def basicDetails(request: MemberRequest[_]) =
+    Json.obj("userId" -> request.member.userId, "tier" -> request.member.tier.toString)
+
+  def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
+     Json.obj(
+       "subscription" -> Json.obj(
+        "start" -> subscription.start,
+        "end" -> subscription.current_period_end,
+        "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount),
+        "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
+       )
+     )
 }
 
 object User extends User
