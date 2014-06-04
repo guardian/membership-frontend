@@ -1,11 +1,11 @@
 package controllers
 
-import play.api.mvc.{ Action, Controller }
+import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import actions.AuthenticatedAction
+
+import actions.{ MemberAction, AuthenticatedAction }
 import model.Tier
-import services.{ AwsMemberTable, StripeService }
-import scala.concurrent.Future
+import services.StripeService
 
 trait Joiner extends Controller {
 
@@ -41,30 +41,26 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPartner() = AuthenticatedAction.async { implicit request =>
-    AwsMemberTable.get(request.user.id).map { member =>
-      StripeService.Customer.read(member.customerId).map { customer =>
-        val response = for {
-          subscription <- customer.subscriptions.data.headOption
-          card <- customer.cards.data.headOption
-        } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
+  def thankyouPartner() = MemberAction.async { implicit request =>
+    StripeService.Customer.read(request.member.customerId).map { customer =>
+      val response = for {
+        subscription <- customer.subscriptions.data.headOption
+        card <- customer.cards.data.headOption
+      } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
-        response.getOrElse(NotFound)
-      }
-    }.getOrElse(Future.successful(BadRequest))
+      response.getOrElse(NotFound)
+    }
   }
 
-  def thankyouPatron() = AuthenticatedAction.async { implicit request =>
-    AwsMemberTable.get(request.user.id).map { member =>
-      StripeService.Customer.read(member.customerId).map { customer =>
-        val response = for {
-          subscription <- customer.subscriptions.data.headOption
-          card <- customer.cards.data.headOption
-        } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
+  def thankyouPatron() = MemberAction.async { implicit request =>
+    StripeService.Customer.read(request.member.customerId).map { customer =>
+      val response = for {
+        subscription <- customer.subscriptions.data.headOption
+        card <- customer.cards.data.headOption
+      } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
-        response.getOrElse(NotFound)
-      }
-    }.getOrElse(Future.successful(BadRequest))
+      response.getOrElse(NotFound)
+    }
   }
 
 }
