@@ -1,7 +1,7 @@
 package services
 
 import scala.concurrent.Future
-import model.{ EBResponse, EBEvent }
+import model.{EBEventStatus, EBResponse, EBEvent}
 import play.api.libs.ws._
 import model.EventbriteDeserializer._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,10 +17,14 @@ trait EventbriteService {
   def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
 
   def pagingEnumerator(): Enumerator[Seq[EBEvent]] = Enumerator.unfoldM(Option(1)) {
-      _.fold(Future.successful[Option[(Option[Int], Seq[model.EBEvent])]](None)) { nextPage =>
-        for (response <- requestEventbriteEvents(nextPage)) yield Option((response.pagination.nextPageOpt, response.events))
-      }
-    }
+    _.map { nextPage =>
+      for (response <- requestEventbriteEvents(nextPage)) yield Option((response.pagination.nextPageOpt, response.events))
+    }.getOrElse(Future.successful(None))
+  }
+
+  def getLiveEvents: Future[Seq[EBEvent]] = getAllEvents.map { events =>
+    events.filter(event => event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live)
+  }
 
   def getEvent(id: String): Future[EBEvent] = eventbriteRequest(eventUrlWith(id)).map(asEBEvent(_))
 

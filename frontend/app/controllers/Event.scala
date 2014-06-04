@@ -14,7 +14,7 @@ trait Event extends Controller {
   }
 
   def list = CachedAction.async {
-    eventService.getAllEvents.map(events => Ok(views.html.event.list(events)))
+    eventService.getLiveEvents.map(events => Ok(views.html.event.list(events)))
   }
 
   def buy(id: String) = AuthenticatedAction.async {
