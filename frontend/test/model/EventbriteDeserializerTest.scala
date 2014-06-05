@@ -11,11 +11,9 @@ class EventbriteDeserializerTest extends PlaySpecification {
     "should deserialize event json" in {
       import EventbriteDeserializer._ // class under test
 
-      val resource = this.getClass.getClassLoader.getResourceAsStream("event-1.json")
-      val event = Source.fromInputStream(resource).mkString
-      val eventJson: JsValue = Json.parse(event)
-      val ebResponse = eventJson.as[EBResponse]
-      ebResponse.pagination.page_count === 1
+      val event = Source.fromURL(this.getClass.getClassLoader.getResource("event-1.json")).mkString
+      val ebResponse = Json.parse(event).as[EBResponse]
+
       ebResponse.events.head.name.text === "Chris' big time jamboree"
     }
   }
