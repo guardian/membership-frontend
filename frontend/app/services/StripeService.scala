@@ -63,6 +63,6 @@ object StripeService extends StripeService {
 
   object Subscription {
     def create(customerId: String, planId: String): Future[Subscription] =
-      post[Subscription](s"customers/$customerId", Map("plan" -> Seq(planId)))
+      post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
   }
 }
