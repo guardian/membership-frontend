@@ -26,14 +26,19 @@ trait EventbriteService {
 
   val apiEventListUrl: String
 
-  private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
+  private def get(url: String, page: Int = 1): Future[Response] =
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken, "page" -> page.toString).get()
 
   def pagingEnumerator(): Enumerator[Seq[EBEvent]] = Enumerator.unfoldM(Option(1)) {
     _.map { nextPage =>
-      for (response <- requestEventbriteEvents(nextPage)) yield Option((response.pagination.nextPageOpt, response.events))
+      for {
+        response <- get(apiEventListUrl, nextPage).map(_.json.as[EBResponse])
+      } yield Option((response.pagination.nextPageOpt, response.events))
     }.getOrElse(Future.successful(None))
   }
 
+  private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
+  
   def getLiveEvents: Future[Seq[EBEvent]] = Future.successful(allEvents()).map { events =>
     events.filter(event => event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live)
   }
@@ -43,13 +48,7 @@ trait EventbriteService {
    */
   def getEventsTagged(tag: String) = getLiveEvents.map(_.filter(_.name.text.toLowerCase().contains(tag)))
 
-  def getEvent(id: String): Future[EBEvent] = eventbriteRequest(s"events/$id").map(_.json.as[EBEvent])
-
-  def requestEventbriteEvents(page: Int = 1): Future[EBResponse] =
-    eventbriteRequest(apiEventListUrl, page).map(_.json.as[EBResponse])
-
-  def eventbriteRequest(url: String, page: Int = 1): Future[Response] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken, "page" -> page.toString).get()
+  def getEvent(id: String): Future[EBEvent] = get(s"events/$id").map(_.json.as[EBEvent])
 }
 
 object EventbriteService extends EventbriteService {
