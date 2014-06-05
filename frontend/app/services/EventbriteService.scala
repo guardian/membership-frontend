@@ -21,9 +21,10 @@ trait EventbriteService {
     allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
   }
 
-  val eventListUrl: String
-  val eventUrl: String
-  val token: (String, String)
+  val apiUrl: String
+  val apiToken: String
+
+  val apiEventListUrl: String
 
   private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
 
@@ -42,21 +43,19 @@ trait EventbriteService {
    */
   def getEventsTagged(tag: String) = getLiveEvents.map(_.filter(_.name.text.toLowerCase().contains(tag)))
 
-  def getEvent(id: String): Future[EBEvent] = eventbriteRequest(eventUrlWith(id)).map(asEBEvent(_))
+  def getEvent(id: String): Future[EBEvent] = eventbriteRequest(s"events/$id").map(_.json.as[EBEvent])
 
-  def requestEventbriteEvents(page: Int = 1): Future[EBResponse] = eventbriteRequest(eventListUrl, page).map(_.json.as[EBResponse])
+  def requestEventbriteEvents(page: Int = 1): Future[EBResponse] =
+    eventbriteRequest(apiEventListUrl, page).map(_.json.as[EBResponse])
 
-  def eventbriteRequest(url: String, page: Int = 1): Future[Response] = WS.url(url).withQueryString(token, ("page", page.toString)).get()
-
-  private def eventUrlWith(id: String) = eventUrl + s"/$id"
-
-  private def asEBEvent(r: Response) = r.json.as[EBEvent]
+  def eventbriteRequest(url: String, page: Int = 1): Future[Response] =
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken, "page" -> page.toString).get()
 }
 
 object EventbriteService extends EventbriteService {
-  val eventListUrl: String = Config.eventListUrl
-  val eventUrl: String = Config.eventUrl
-  val token: (String, String) = Config.eventToken
+  val apiUrl = Config.eventbriteApiUrl
+  val apiToken = Config.eventbriteApiToken
+  val apiEventListUrl = Config.eventbriteApiEventListUrl
 
 
   import play.api.Play.current
