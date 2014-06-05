@@ -1,4 +1,4 @@
-@( eventsList: Seq[model.EBEvent])
+@(eventsList: Seq[model.EBEvent])
 @import views.Crumb
 
 @main("Membership") {
@@ -19,7 +19,7 @@
 
             <ul class="events-list u-unstyled">
 
-                @for((event, index) <- eventsList.zipWithIndex) {
+                @for(event <- eventsList) {
 
                     @partials.event.item(event)
                 }

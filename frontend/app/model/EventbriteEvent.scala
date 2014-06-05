@@ -97,6 +97,7 @@ case class EBEvent(
     }
   }
 
+  def hasSoldOut: Boolean = getStatus == SoldOut
 }
 
 object EventbriteDeserializer {
