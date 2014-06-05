@@ -16,7 +16,9 @@ object Eventbrite {
     val Completed, Cancelled, SoldOut, PreLive, Live = Value
   }
 
-  case class EBError(error_message: String, error_type: String) extends Throwable with EBObject
+  case class EBError(error: String, error_description: String, status_code: Int) extends Throwable with EBObject {
+    override def getMessage: String = s"$status_code $error - $error_description"
+  }
 
   case class EBPagination(object_count: Int,
                           page_number: Int,

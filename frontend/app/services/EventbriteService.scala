@@ -32,7 +32,7 @@ trait EventbriteService {
 
   private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
-      throw (response.json \ "error").asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object"))
+      throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
     }
   }
 
