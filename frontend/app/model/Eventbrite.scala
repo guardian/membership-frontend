@@ -116,6 +116,7 @@ object Eventbrite {
     def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption
   }
 
+  case class EBDiscount(code: String) extends EBObject
 }
 
 object EventbriteDeserializer {
@@ -145,4 +146,5 @@ object EventbriteDeserializer {
   implicit val ebEventReads = Json.reads[EBEvent]
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebResponseReads = Json.reads[EBResponse]
+  implicit val ebDisounts = Json.reads[EBDiscount]
 }

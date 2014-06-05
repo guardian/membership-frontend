@@ -12,7 +12,7 @@ import play.api.Logger
 
 import model.Eventbrite._
 import model.EventbriteDeserializer._
-import model.Member
+import model.{Tier, Member}
 import configuration.Config
 import play.api.libs.json.Reads
 
@@ -66,6 +66,20 @@ trait EventbriteService {
   def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
+
+  def createDiscount(member: Member, eventId: String): Future[Option[EBDiscount]] = {
+    member.tier match {
+      case Tier.Patron | Tier.Partner =>
+        val code = s"${member.userId}_$eventId"
+        post[EBDiscount](s"events/$eventId/discounts", Map(
+          "discount.code" -> Seq(code),
+          "discount.percent_off" -> Seq("20"),
+          "discount.quantity_available" -> Seq("2")
+        )).map(Some(_))
+
+      case _ => Future.successful(None)
+    }
+  }
 }
 
 object EventbriteService extends EventbriteService {
