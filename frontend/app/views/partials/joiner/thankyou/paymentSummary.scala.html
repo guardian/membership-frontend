@@ -1,10 +1,7 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card )
 
 @import views.Dates._
-
-@formatPrice(pence: Int) = {
-    &#163;@(pence / 100).@("%02d".format(pence % 100))
-}
+@import views.Format._
 
 <section class="joiner-section joiner-section--no-border">
     <table class="table table--responsive-font table--striped">
@@ -29,7 +26,7 @@
                 Amount Paid Today
             </td>
             <td class="summary-table__cell">
-                @formatPrice(subscription.plan.amount)
+                @Html(formatPence(subscription.plan.amount))
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -37,7 +34,7 @@
                 Monthly Payment
             </td>
             <td class="summary-table__cell">
-                @formatPrice(subscription.plan.amount)
+                @Html(formatPence(subscription.plan.amount))
             </td>
         </tr>
         <tr class="summary-table__row" role="row">

@@ -1,6 +1,7 @@
-@(tier: model.Tier.Tier)
+@(tier: model.Tier.Tier, amount: Int)
 
 @import views.Dates._
+@import views.Format._
 
 <aside class="form-secondary-container">
     <ul class="form-detail u-unstyled">
@@ -40,7 +41,7 @@
         <li class="form-detail__item">
             <h2 class="form__heading">Payments</h2>
             <p><strong>First payment</strong> will be taken today under the name Guardian Membership.</p>
-            <p><strong>Ongoing payments</strong> Your card will be charged &#163;15 every month.  Payments will taken on or shortly after the @todayDay of every month.  You can change the payment date at any time.</p>
+            <p><strong>Ongoing payments</strong> Your card will be charged @Html(formatPounds(amount)) every month.  Payments will taken on or shortly after the @todayDay of every month.  You can change the payment date at any time.</p>
         </li>
         <li class="form-detail__item">
             <h2 class="form__heading">Changed you mind?</h2>
