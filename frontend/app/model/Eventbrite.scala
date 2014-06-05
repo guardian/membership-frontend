@@ -116,31 +116,33 @@ object Eventbrite {
     def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption
   }
 
-  object EventbriteDeserializer {
+}
 
-    private def convertInstantText(utc: String): Instant =
-      ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).toInstant
+object EventbriteDeserializer {
+  import Eventbrite._
 
-    private def convertDateText(utc: String, timezone: String): DateTime = {
-      val timeZone = DateTimeZone.forID(timezone)
-      ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).withZone(timeZone)
-    }
+  private def convertInstantText(utc: String): Instant =
+    ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).toInstant
 
-    implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)
-
-    implicit val readsEbDate: Reads[DateTime] = (
-      (JsPath \ "utc").read[String] and
-        (JsPath \ "timezone").read[String]
-      )(convertDateText _)
-
-    implicit val ebError = Json.reads[EBError]
-    implicit val ebAddress = Json.reads[EBAddress]
-    implicit val ebVenue = Json.reads[EBVenue]
-    implicit val ebRichText = Json.reads[EBRichText]
-    implicit val ebPricingReads = Json.reads[EBPricing]
-    implicit val ebTicketsReads = Json.reads[EBTickets]
-    implicit val ebEventReads = Json.reads[EBEvent]
-    implicit val ebPaginationReads = Json.reads[EBPagination]
-    implicit val ebResponseReads = Json.reads[EBResponse]
+  private def convertDateText(utc: String, timezone: String): DateTime = {
+    val timeZone = DateTimeZone.forID(timezone)
+    ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).withZone(timeZone)
   }
+
+  implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)
+
+  implicit val readsEbDate: Reads[DateTime] = (
+    (JsPath \ "utc").read[String] and
+      (JsPath \ "timezone").read[String]
+    )(convertDateText _)
+
+  implicit val ebError = Json.reads[EBError]
+  implicit val ebAddress = Json.reads[EBAddress]
+  implicit val ebVenue = Json.reads[EBVenue]
+  implicit val ebRichText = Json.reads[EBRichText]
+  implicit val ebPricingReads = Json.reads[EBPricing]
+  implicit val ebTicketsReads = Json.reads[EBTickets]
+  implicit val ebEventReads = Json.reads[EBEvent]
+  implicit val ebPaginationReads = Json.reads[EBPagination]
+  implicit val ebResponseReads = Json.reads[EBResponse]
 }

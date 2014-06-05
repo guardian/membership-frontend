@@ -11,7 +11,7 @@ import play.api.libs.concurrent.Akka
 import play.api.Logger
 
 import model.Eventbrite._
-import model.Eventbrite.EventbriteDeserializer._
+import model.EventbriteDeserializer._
 import model.Member
 import configuration.Config
 import play.api.libs.json.Reads
