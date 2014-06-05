@@ -13,13 +13,13 @@ trait Event extends Controller {
     eventService.getEvent(id).map(event => Ok(views.html.event.page(event)))
   }
 
-  def list = CachedAction.async {
-    eventService.getLiveEvents.map(events => Ok(views.html.event.list(events)))
+  def list = CachedAction {
+    Ok(views.html.event.list(eventService.getLiveEvents))
   }
 
-  def listFilteredBy(urlTagText: String) = CachedAction.async {
+  def listFilteredBy(urlTagText: String) = CachedAction {
     val tag = urlTagText.replace('-', ' ')
-    eventService.getEventsTagged(tag).map(events => Ok(views.html.event.list(events)))
+    Ok(views.html.event.list(eventService.getEventsTagged(tag)))
   }
 
   def buy(id: String) = AuthenticatedAction.async {

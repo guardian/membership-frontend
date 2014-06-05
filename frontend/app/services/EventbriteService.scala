@@ -39,14 +39,14 @@ trait EventbriteService {
 
   private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
   
-  def getLiveEvents: Future[Seq[EBEvent]] = Future.successful(allEvents()).map { events =>
-    events.filter(event => event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live)
+  def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
+    event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
   }
 
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getLiveEvents.map(_.filter(_.name.text.toLowerCase().contains(tag)))
+  def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Future[EBEvent] = get(s"events/$id").map(_.json.as[EBEvent])
 }
