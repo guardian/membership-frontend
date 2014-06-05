@@ -1,6 +1,7 @@
-@(tier: model.Tier.Tier)
+@(tier: model.Tier.Tier, amount: Int)
 
 @import views.html.joiner.payment.selectDates
+@import views.Format._
 
 @main("Membership") {
 
@@ -62,7 +63,7 @@
             <div class="fieldset__heading"></div>
             <div class="fieldset__fields">
                 <div class="actions js-waiting-container">
-                    <button type="submit" class="submit-input action--logged-in js-submit-input">Pay £15 now</button>
+                    <button type="submit" class="submit-input action--logged-in js-submit-input">Pay @Html(formatPounds(amount)) now</button>
                     <div class="i-wait"><img src="@routes.Assets.at("images/wait.gif")" alt=""/></div>
                 </div>
             </div>
@@ -73,7 +74,7 @@
 
     </form>
 
-    @partials.joiner.paymentAside(tier)
+    @partials.joiner.paymentAside(tier, amount)
 
 </div>
 

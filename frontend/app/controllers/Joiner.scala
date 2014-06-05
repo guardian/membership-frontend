@@ -25,16 +25,12 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.patron())
   }
 
-  def paymentFriend() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm(Tier.Friend))
-  }
-
   def paymentPartner() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm(Tier.Partner))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
   }
 
   def paymentPatron() = AuthenticatedAction {
-    Ok(views.html.joiner.payment.paymentForm(Tier.Patron))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
   }
 
   def thankyouFriend() = AuthenticatedAction {
