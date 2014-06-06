@@ -17,6 +17,11 @@ trait Event extends Controller {
     eventService.getLiveEvents.map(events => Ok(views.html.event.list(events)))
   }
 
+  def listFilteredBy(urlTagText: String) = CachedAction.async {
+    val tag = urlTagText.replace('-', ' ')
+    eventService.getEventsTagged(tag).map(events => Ok(views.html.event.list(events)))
+  }
+
   def buy(id: String) = AuthenticatedAction.async {
     eventService.getEvent(id).map(event => Found(event.url))
   }

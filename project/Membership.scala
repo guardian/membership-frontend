@@ -35,6 +35,7 @@ trait Membership {
 
   val commonDependencies = Seq(
     "com.github.nscala-time" %% "nscala-time" % "1.0.0",
+    "com.typesafe.akka" %% "akka-agent" % "2.2.0",
     "com.gu.identity" %% "identity-cookie" % "3.40",
     "com.gu.identity" %% "identity-model" % "3.40",
     "com.github.seratch" %% "awscala" % "0.2.1"

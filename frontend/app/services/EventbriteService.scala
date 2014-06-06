@@ -1,20 +1,31 @@
 package services
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import concurrent.duration._
 import model.{EBEventStatus, EBResponse, EBEvent}
 import play.api.libs.ws._
 import model.EventbriteDeserializer._
 import scala.concurrent.ExecutionContext.Implicits.global
 import configuration.Config
 import play.api.libs.iteratee.{Iteratee, Enumerator}
+import akka.agent.Agent
+import play.api.libs.concurrent.Akka
+import play.api.Logger
 
 trait EventbriteService {
+
+  val allEvents = Agent[Seq[EBEvent]](Nil)
+
+  def refresh() {
+    Logger.debug("Refreshing EventbriteService events")
+    allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
+  }
 
   val eventListUrl: String
   val eventUrl: String
   val token: (String, String)
 
-  def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
+  private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
 
   def pagingEnumerator(): Enumerator[Seq[EBEvent]] = Enumerator.unfoldM(Option(1)) {
     _.map { nextPage =>
@@ -22,9 +33,14 @@ trait EventbriteService {
     }.getOrElse(Future.successful(None))
   }
 
-  def getLiveEvents: Future[Seq[EBEvent]] = getAllEvents.map { events =>
+  def getLiveEvents: Future[Seq[EBEvent]] = Future.successful(allEvents()).map { events =>
     events.filter(event => event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live)
   }
+
+  /**
+   * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
+   */
+  def getEventsTagged(tag: String) = getLiveEvents.map(_.filter(_.name.text.toLowerCase().contains(tag)))
 
   def getEvent(id: String): Future[EBEvent] = eventbriteRequest(eventUrlWith(id)).map(asEBEvent(_))
 
@@ -41,5 +57,14 @@ object EventbriteService extends EventbriteService {
   val eventListUrl: String = Config.eventListUrl
   val eventUrl: String = Config.eventUrl
   val token: (String, String) = Config.eventToken
+
+
+  import play.api.Play.current
+  private implicit val system = Akka.system
+
+  def start() {
+    Logger.info("Starting EventbriteService background tasks")
+    system.scheduler.schedule(5.seconds, 60.seconds) { refresh() }
+  }
 }
 

@@ -9,13 +9,6 @@ object EventSpec extends PlaySpecification with Event {
 
   "Event Index page" should {
 
-    "display list of all events" in new WithApplication {
-      val result = list(FakeRequest())
-      status(result) must equalTo(OK)
-      contentAsString(result) must contain("Creative writing weekend with MJ Hyland")
-      contentAsString(result) must contain("Advanced writing: Manuscript surgery")
-    }
-
     "display a single event" in new WithApplication {
       val result = details("11582434373")(FakeRequest())
       status(result) must equalTo(OK)
