@@ -40,7 +40,7 @@
                         @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
                     </span>
                 </div>
-                <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
+                <div class="event__time"><span class="icon time--icon"></span>@Html(event.start.pretty)</div>
             </div>
 
             <div class="event__tickets">
@@ -52,8 +52,9 @@
                 </div>
 
                 <div class="js-datetime-enhance">
-                    <span class="event__sale_ends_note js-datetime-enhance-note">Sales end at </span>
-                    <span class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.sales_end.getOrElse("")">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.sales_end.getOrElse(RichInstant(new Instant()).pretty)</span>
+                    <span class="event__sale_ends_note js-datetime-enhance-note">Sales @if(event.getStatus == Completed){ended on}else{end at} </span>
+                    <span class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                    @Html(event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty))</span>
                 </div>
             </div>
 
