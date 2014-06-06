@@ -11,8 +11,10 @@ object Cached {
   def apply(result: SimpleResult): SimpleResult = apply(60)(result)
 
   def apply(seconds: Int)(result: SimpleResult): SimpleResult = {
-    if (cacheableStatusCodes.exists(_ == result.header.status)) cacheHeaders(seconds, result) else result
+    if (suitableForCaching(result)) cacheHeaders(seconds, result) else result
   }
+
+  def suitableForCaching(result: SimpleResult): Boolean = cacheableStatusCodes.exists(_ == result.header.status)
 
   private def cacheHeaders(maxAge: Int, result: SimpleResult) = {
     val now = DateTime.now
