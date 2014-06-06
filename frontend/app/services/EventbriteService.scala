@@ -67,18 +67,13 @@ trait EventbriteService {
 
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
 
-  def createDiscount(member: Member, eventId: String): Future[Option[EBDiscount]] = {
-    member.tier match {
-      case Tier.Patron | Tier.Partner =>
-        val code = s"${member.userId}_$eventId"
-        post[EBDiscount](s"events/$eventId/discounts", Map(
-          "discount.code" -> Seq(code),
-          "discount.percent_off" -> Seq("20"),
-          "discount.quantity_available" -> Seq("2")
-        )).map(Some(_))
-
-      case _ => Future.successful(None)
-    }
+  def createDiscount(member: Member, eventId: String): Future[EBDiscount] = {
+    val code = s"${member.userId}_$eventId"
+    post[EBDiscount](s"events/$eventId/discounts", Map(
+      "discount.code" -> Seq(code),
+      "discount.percent_off" -> Seq("20"),
+      "discount.quantity_available" -> Seq("2")
+    ))
   }
 }
 

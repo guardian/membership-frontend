@@ -1,15 +1,21 @@
 package services
 
-import model.{Tier, Member}
+import scala.concurrent.Future
+import scala.collection.JavaConverters._
+
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.regions.{Regions, Region}
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import scala.collection.JavaConverters._
+
+import model.{Tier, Member}
+import model.Eventbrite.{EBEvent, EBDiscount}
 
 trait MemberService {
   def put(member: Member): Unit
 
   def get(userId: String): Option[Member]
+
+  def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]]
 }
 
 object MemberService extends MemberService {
@@ -33,4 +39,11 @@ object MemberService extends MemberService {
   def itemKey(userId: String) = Map("id" -> att(userId))
 
   def att(value: String) = new AttributeValue(value)
+
+  def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]] = {
+    for {
+      member <- get(userId)
+      if member.tier == Tier.Patron || member.tier == Tier.Partner
+    } yield EventbriteService.createDiscount(member, event.id)
+  }
 }

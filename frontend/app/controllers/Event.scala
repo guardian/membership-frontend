@@ -30,13 +30,12 @@ trait Event extends Controller {
   def buy(id: String) = AuthenticatedAction.async { implicit request =>
     for {
       event <- eventService.getEvent(id)
-      discountOpt <- AwsMemberTable.get(request.user.id).map { member =>
-        eventService.createDiscount(member, event.id)
-      }.getOrElse(Future.successful(None))
-    } yield Found(event.url + discountOpt.fold("")(discount => s"?discount=${discount.code}"))
+      discountSeq <- Future.sequence(memberService.createEventDiscount(request.user.id, event).toSeq)
+    } yield Found(event.url + discountSeq.headOption.fold("")(d => s"?discount=${d.code}}"))
   }
 }
 
 object Event extends Event {
-  override val eventService: EventbriteService = EventbriteService
+  val eventService = EventbriteService
+  val memberService = MemberService
 }
