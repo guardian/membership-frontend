@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
 
-import services.{ AwsMemberTable, StripeService }
+import services.{ JavaAwsMemberTable, StripeService }
 import model.{ Stripe, Tier, Member }
 import actions.{ AuthenticatedAction, AuthRequest }
 
@@ -28,7 +28,7 @@ trait Subscription extends Controller {
       subscription <- StripeService.Subscription.create(customer.id, tier)
       member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
-      AwsMemberTable.put(member)
+      JavaAwsMemberTable.put(member)
       Ok(subscription.id)
     }
 
