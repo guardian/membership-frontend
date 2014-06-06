@@ -5,6 +5,9 @@
 # Home page
 GET         /                            controllers.FrontPage.index
 
+# Healthcheck
+GET         /healthcheck                  controllers.Healthcheck.healthcheck
+
 # Join
 GET         /join                        controllers.Joiner.tierList
 GET         /join/friend                 controllers.Joiner.friend
