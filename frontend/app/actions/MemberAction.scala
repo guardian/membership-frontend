@@ -6,7 +6,7 @@ import play.api.mvc.{Request, ActionBuilder}
 import play.api.mvc.Results.Forbidden
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import services.{JavaAwsMemberTable, AuthenticationService}
+import services.{AwsMemberTable, AuthenticationService}
 import controllers.NoCache
 import play.api.mvc.SimpleResult
 
@@ -16,7 +16,7 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
   protected def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[SimpleResult]) = {
     val result = for {
       authRequest <- authService.authenticatedRequestFor(request)
-      member <- JavaAwsMemberTable.get(authRequest.user.id)
+      member <- AwsMemberTable.get(authRequest.user.id)
     } yield {
       block(MemberRequest[A](request, member))
     }
