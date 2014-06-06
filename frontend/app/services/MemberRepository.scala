@@ -1,26 +1,36 @@
 package services
 
-import awscala.dynamodbv2.{ Item, DynamoDB }
-import configuration.Config
-import model.{ Tier, Member }
+import model.{Tier, Member}
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
+import com.amazonaws.regions.{Regions, Region}
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import scala.collection.JavaConverters._
 
 sealed trait MemberRepository {
   def put(member: Member): Unit
+
   def get(userId: String): Option[Member]
 }
 
 object AwsMemberTable extends MemberRepository {
-  implicit val dynamoDB = DynamoDB(Config.awsAccessKey, Config.awsSecretKey).at(awscala.Region.EU_WEST_1)
-  val table = dynamoDB.table("members").get
 
-  private def getAttribute(item: Item, key: String) = item.attributes.find(_.name == key).map(_.value.getS)
+  val client = new AmazonDynamoDBClient
+  client.setRegion(Region.getRegion(Regions.EU_WEST_1))
 
-  def put(member: Member): Unit =
-    table.put(member.userId, "tier" -> member.tier.toString, "customerId" -> member.customerId)
+  def put(member: Member): Unit = {
+    val attributes = itemKey(member.userId) ++  Map("tier" -> att(member.tier.toString), "customerId" -> att(member.customerId))
+    client.putItem("members", attributes.asJava)
+  }
 
-  def get(userId: String): Option[Member] = for {
-    member <- table.get(userId)
-    tier <- getAttribute(member, "tier")
-    customerId <- getAttribute(member, "customerId")
-  } yield Member(userId, Tier.withName(tier), customerId)
+  def get(userId: String): Option[Member] = {
+    val attributesOpt = Option(client.getItem("members", itemKey(userId).asJava).getItem)
+    attributesOpt.map { attributes =>
+      val (id, tier, customer) = (attributes.get("id").getS, attributes.get("tier").getS, attributes.get("customerId").getS)
+      Member(id, Tier.withName(tier), customer)
+    }
+  }
+
+  def itemKey(userId: String) = Map("id" -> att(userId))
+
+  def att(value: String) = new AttributeValue(value)
 }
