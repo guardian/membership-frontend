@@ -21,6 +21,7 @@ POST        /subscribe                   controllers.Subscription.subscribe
 
 # Events
 GET         /events                      controllers.Event.list
+GET         /events/:tag                 controllers.Event.listFilteredBy(tag)
 GET         /event/:id                   controllers.Event.details(id)
 GET         /event/:id/buy               controllers.Event.buy(id)
 
