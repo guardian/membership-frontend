@@ -6,13 +6,13 @@ import com.amazonaws.regions.{Regions, Region}
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import scala.collection.JavaConverters._
 
-sealed trait MemberRepository {
+trait MemberService {
   def put(member: Member): Unit
 
   def get(userId: String): Option[Member]
 }
 
-object AwsMemberTable extends MemberRepository {
+object MemberService extends MemberService {
 
   val client = new AmazonDynamoDBClient
   client.setRegion(Region.getRegion(Regions.EU_WEST_1))

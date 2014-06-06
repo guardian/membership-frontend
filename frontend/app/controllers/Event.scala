@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.{AwsMemberTable, EventbriteService}
+import services.{MemberService, EventbriteService}
 import actions.AuthenticatedAction
 import model.Eventbrite.EBError
 import scala.concurrent.Future
@@ -10,6 +10,7 @@ import scala.concurrent.Future
 trait Event extends Controller {
 
   val eventService: EventbriteService
+  val memberService: MemberService
 
   def details(id: String) = CachedAction.async {
     eventService.getEvent(id)
