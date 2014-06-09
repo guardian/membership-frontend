@@ -44,17 +44,19 @@ trait EventbriteService {
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
-  private def getAllEvents: Future[Seq[EBEvent]] = {
+  private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
-          response <- get[EBResponse](apiEventListUrl, "page" -> nextPage.toString)
-        } yield Option((response.pagination.nextPageOpt, response.events))
+          response <- get[EBResponse[T]](url, "page" -> nextPage.toString)
+        } yield Some((response.pagination.nextPageOpt, response.data))
       }.getOrElse(Future.successful(None))
     }
 
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
+
+  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
   
   def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
