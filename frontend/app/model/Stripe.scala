@@ -4,7 +4,9 @@ object Stripe {
 
   trait StripeObject
 
-  case class Error(`type`: String, message: String) extends Throwable with StripeObject
+  case class Error(`type`: String, message: String) extends Throwable with StripeObject {
+    override def getMessage:String = `type` + s" $message "
+  }
 
   case class Card(`type`: String, last4: String) extends StripeObject
 
@@ -19,5 +21,7 @@ object Stripe {
 
   case class SubscriptionList(data: List[Subscription]) extends StripeObject
 
-  case class Plan(id: String, name: String, amount: Int) extends StripeObject
+  case class Plan(id: String, name: String, amount: Int) extends StripeObject {
+    val tier = Tier.withName(id)
+  }
 }
