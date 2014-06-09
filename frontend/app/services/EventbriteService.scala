@@ -69,9 +69,8 @@ trait EventbriteService {
 
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
 
-  def createDiscount(member: Member, eventId: String): Future[EBDiscount] = {
+  def createDiscount(eventId: String, code: String): Future[EBDiscount] = {
     val uri = s"events/$eventId/discounts"
-    val code = s"${member.userId}_$eventId"
 
     for {
       discounts <- getPaginated[EBDiscount](uri)

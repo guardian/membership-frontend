@@ -1,5 +1,6 @@
 package services
 
+import java.math.BigInteger
 import scala.concurrent.Future
 import scala.collection.JavaConverters._
 
@@ -41,9 +42,17 @@ object MemberService extends MemberService {
   def att(value: String) = new AttributeValue(value)
 
   def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]] = {
+    def encode(code: String) = {
+      val md = java.security.MessageDigest.getInstance("SHA-1")
+      val digest = md.digest(code.getBytes)
+      new BigInteger(digest).toString(36).toUpperCase.substring(0, 8)
+    }
+
     for {
       member <- get(userId)
       if member.tier == Tier.Patron || member.tier == Tier.Partner
-    } yield EventbriteService.createDiscount(member, event.id)
+      // code should be unique for each user/event combination
+      code = encode(s"${member.userId}${event.id}")
+    } yield EventbriteService.createDiscount(event.id, code)
   }
 }
