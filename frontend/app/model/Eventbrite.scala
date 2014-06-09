@@ -116,7 +116,7 @@ object Eventbrite {
     def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption
   }
 
-  case class EBDiscount(code: String) extends EBObject
+  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
 }
 
 object EventbriteDeserializer {

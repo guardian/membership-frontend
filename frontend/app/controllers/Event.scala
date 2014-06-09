@@ -1,11 +1,15 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import services.{MemberService, EventbriteService}
 import actions.AuthenticatedAction
 import model.Eventbrite.EBError
-import scala.concurrent.Future
+
+import com.netaporter.uri.dsl._
 
 trait Event extends Controller {
 
@@ -31,7 +35,8 @@ trait Event extends Controller {
     for {
       event <- eventService.getEvent(id)
       discountSeq <- Future.sequence(memberService.createEventDiscount(request.user.id, event).toSeq)
-    } yield Found(event.url + discountSeq.headOption.fold("")(d => s"?discount=${d.code}}"))
+      discountOpt = discountSeq.headOption.filter(discount => discount.quantity_available > discount.quantity_sold)
+    } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
   }
 }
 
