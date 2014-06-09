@@ -25,7 +25,7 @@ trait StripeService {
   implicit val readsCustomer = Json.reads[Customer]
 
   private def request(endpoint: String) =
-    WS.url(apiURL / endpoint).withHeaders(("Authorization", s"Bearer $apiSecret"))
+    WS.url(apiURL + endpoint).withHeaders(("Authorization", s"Bearer $apiSecret"))
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
