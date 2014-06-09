@@ -6,19 +6,23 @@ import org.joda.time.Instant
 object Dates {
 
   implicit class RichInstant(dateTime: Instant) {
-    val formatter = DateTimeFormat.mediumDateTime()
-
-    lazy val pretty = formatter.print(dateTime)
+    val date = new DateTime(dateTime)
+    lazy val pretty = dayWithSuffix(date) + date.toString(" MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
   }
 
   implicit class RichDateTime(dateTime: DateTime) {
-    val eventDateTimeFormat = DateTimeFormat.forPattern("MMMM d, y k:mm a")
-    lazy val pretty = eventDateTimeFormat.print(dateTime).replace("AM", "am").replace("PM", "pm")
+    val date = new DateTime(dateTime)
+    lazy val pretty = dayWithSuffix(date) + date.toString(" MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
   }
 
-  def fromTimestamp(timestamp: Long): DateTime = new DateTime(timestamp * 1000)
+  implicit class RichLong(dateTime: Long) {
+    val date = new DateTime(dateTime * 1000)
+    lazy val pretty = dayWithSuffix(date) + date.toString(" MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
+  }
 
-  def todayDay = addSuffix(DateTime.now.toString("dd").toInt)
+  def dayWithSuffix(date: DateTime): String = addSuffix(date.toString("dd").toInt)
+
+  def dayInMonthWithSuffix(date: DateTime = DateTime.now): String = dayWithSuffix(date)
 
   def addSuffix(day: Int): String = {
     val suffix = (day % 10) match {
@@ -27,6 +31,6 @@ object Dates {
       case 3 => "rd"
       case _ => "th"
     }
-    day + suffix
+    day + "<sup>" + suffix + "</sup>"
   }
 }

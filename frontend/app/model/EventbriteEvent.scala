@@ -97,7 +97,7 @@ case class EBEvent(
     }
   }
 
-  def hasSoldOut: Boolean = getStatus == SoldOut
+  def ticketClassesHead: Option[EBTickets] = ticket_classes.getOrElse(Seq.empty).headOption
 }
 
 object EventbriteDeserializer {

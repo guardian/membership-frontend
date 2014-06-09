@@ -1,4 +1,4 @@
-define(['src/utils/date'], function () {
+define(function () {
 
    return (function () {
 
@@ -53,8 +53,6 @@ define(['src/utils/date'], function () {
 
                time_el.innerHTML = diff_string.join('');
                note_el.innerHTML = note_el.innerHTML.replace('at', 'in');
-           } else { // Event is completed
-               time_el.innerHTML = utc_timestamp_date.format('h:mm, dd-MM-yyyy'); // src/utils/date.js
            }
        };
 
