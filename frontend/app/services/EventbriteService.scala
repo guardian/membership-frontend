@@ -70,12 +70,19 @@ trait EventbriteService {
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
 
   def createDiscount(member: Member, eventId: String): Future[EBDiscount] = {
+    val uri = s"events/$eventId/discounts"
     val code = s"${member.userId}_$eventId"
-    post[EBDiscount](s"events/$eventId/discounts", Map(
-      "discount.code" -> Seq(code),
-      "discount.percent_off" -> Seq("20"),
-      "discount.quantity_available" -> Seq("2")
-    ))
+
+    for {
+      discounts <- getPaginated[EBDiscount](uri)
+      discount <- discounts.find(_.code == code).map(Future.successful).getOrElse {
+        post[EBDiscount](uri, Map(
+          "discount.code" -> Seq(code),
+          "discount.percent_off" -> Seq("20"),
+          "discount.quantity_available" -> Seq("2")
+        ))
+      }
+    } yield discount
   }
 }
 
