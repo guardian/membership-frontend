@@ -6,6 +6,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{ Json, Reads }
 import play.api.libs.ws.{ Response, WS }
 
+import com.netaporter.uri.dsl._
+
 import model.Stripe._
 import configuration.Config
 
@@ -23,7 +25,7 @@ trait StripeService {
   implicit val readsCustomer = Json.reads[Customer]
 
   private def request(endpoint: String) =
-    WS.url(s"$apiURL/$endpoint").withHeaders(("Authorization", s"Bearer $apiSecret"))
+    WS.url(apiURL / endpoint).withHeaders(("Authorization", s"Bearer $apiSecret"))
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -58,11 +60,11 @@ object StripeService extends StripeService {
       post[Customer]("customers", Map("card" -> Seq(card)))
 
     def read(customerId: String): Future[Customer] =
-      get[Customer](s"customers/$customerId")
+      get[Customer]("customers" / customerId)
   }
 
   object Subscription {
     def create(customerId: String, planId: String): Future[Subscription] =
-      post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
+      post[Subscription]("customers" / customerId / "subscriptions", Map("plan" -> Seq(planId)))
   }
 }
