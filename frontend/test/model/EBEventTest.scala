@@ -14,24 +14,24 @@ class EBEventTest extends PlaySpecification {
 
   val ebCompletedEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, None, Some("completed"))
   val ebCanceledEvent = new EBEvent(eventName("Canceled Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, None, Some("canceled"))
-  val ebSoldOutEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(1), Some(Seq(ebTicketsQuantitySoldTen)), Some("live"))
-  val ebLiveEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Some(Seq(ebTicketsStartInFuture)), Some("live"))
-  val ebPreLiveEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Some(Seq(ebTicketsStartInPast)), Some("live"))
+  val ebSoldOutEvent = new EBEvent(eventName("Sold Out Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(1), Some(Seq(ebTicketsQuantitySoldTen)), Some("live"))
+  val ebLiveEvent = new EBEvent(eventName("Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Some(Seq(ebTicketsStartInFuture)), Some("live"))
+  val ebPreLiveEvent = new EBEvent(eventName("Pre Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Some(Seq(ebTicketsStartInPast)), Some("live"))
 
   "getStatus" should {
-    "event should be Completed" in {
+    "be Completed" in {
       ebCompletedEvent.getStatus mustEqual(Completed)
     }
-    "event should be Cancelled" in {
+    "be Cancelled" in {
       ebCanceledEvent.getStatus mustEqual(Cancelled)
     }
-    "event should be SoldOut" in {
+    "be SoldOut" in {
       ebSoldOutEvent.getStatus mustEqual(SoldOut)
     }
-    "event should be Live" in {
+    "be Live" in {
       ebLiveEvent.getStatus mustEqual(Live)
     }
-    "event should be PreLive" in {
+    "be PreLive" in {
       ebPreLiveEvent.getStatus mustEqual(PreLive)
     }
 
