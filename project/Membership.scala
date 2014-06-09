@@ -38,7 +38,8 @@ trait Membership {
     "com.typesafe.akka" %% "akka-agent" % "2.2.0",
     "com.gu.identity" %% "identity-cookie" % "3.40",
     "com.gu.identity" %% "identity-model" % "3.40",
-    "com.github.seratch" %% "awscala" % "0.2.1"
+    "com.github.seratch" %% "awscala" % "0.2.1",
+    "com.netaporter" %% "scala-uri" % "0.4.1"
   )
 
   def commonSettings = Seq(

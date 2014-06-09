@@ -1,13 +1,12 @@
 package services
 
-import java.net.URLEncoder
 import play.api.mvc.Request
 import play.api.mvc.SimpleResult
 import play.api.mvc.Results.SeeOther
-import com.gu.identity.cookie.{ IdentityCookieDecoder, PreProductionKeys }
+import com.gu.identity.cookie.IdentityCookieDecoder
+import com.netaporter.uri.dsl._
 import actions.AuthRequest
 
-import com.typesafe.config.ConfigFactory
 import configuration.Config
 
 trait AuthenticationService {
@@ -18,8 +17,7 @@ trait AuthenticationService {
 
   def handleAuthenticatedRequest[A](request: Request[A]): Either[SimpleResult, AuthRequest[A]] = {
     authenticatedRequestFor(request).toRight {
-      val returnUrl = URLEncoder.encode(s"$membershipUrl${request.uri}", "UTF-8")
-      SeeOther(s"$idWebAppUrl/signin?returnUrl=$returnUrl")
+      SeeOther((idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl${request.uri}"))
     }
   }
 
