@@ -33,20 +33,18 @@ trait EventbriteService {
 
   private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
+      Logger.error(s"Eventbrite request - Response body : ${response.body}")
       throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
     }
   }
 
   private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    val response = WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-    val trial = Try(response.map(extract[A]))
-    trial match {
-      case Success(result) => result
-      case Failure(e) => {
-        response.onSuccess { case r => Logger.error(s"Eventbrite request $url - Response body : ${r.body}", e)}
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
+      .map(extract[A])
+      .recover { case e =>
+        Logger.error(s"Eventbrite request $url", e)
         throw e
       }
-    }
   }
 
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
