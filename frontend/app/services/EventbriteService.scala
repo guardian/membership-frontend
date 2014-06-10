@@ -36,10 +36,11 @@ trait EventbriteService {
     }
   }
 
-  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url")
-      .withQueryString("token" -> apiToken).withQueryString(params: _*)
-      .get().map(extract[A])
+  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
+    val response = WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
+    response.onSuccess{case r => Logger.debug(s"Eventbrite request $url - Response body : ${r.body}")}
+    response.map(extract[A])
+  }
 
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
@@ -55,7 +56,7 @@ trait EventbriteService {
 
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
-  
+
   def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
   }
