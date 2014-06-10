@@ -15,6 +15,7 @@ import model.EventbriteDeserializer._
 import model.{Tier, Member}
 import configuration.Config
 import play.api.libs.json.Reads
+import scala.util.{Failure, Success, Try}
 
 trait EventbriteService {
 
@@ -32,14 +33,19 @@ trait EventbriteService {
 
   private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
+      Logger.error(s"Eventbrite request - Response body : ${response.body}")
       throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
     }
   }
 
-  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url")
-      .withQueryString("token" -> apiToken).withQueryString(params: _*)
-      .get().map(extract[A])
+  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
+      .map(extract[A])
+      .recover { case e =>
+        Logger.error(s"Eventbrite request $url", e)
+        throw e
+      }
+  }
 
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
@@ -57,7 +63,7 @@ trait EventbriteService {
   }
 
   private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
-  
+
   def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
   }
