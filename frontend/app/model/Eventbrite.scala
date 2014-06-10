@@ -20,6 +20,8 @@ object Eventbrite {
     override def getMessage: String = s"$status_code $error - $error_description"
   }
 
+  case class EBResponse[T](pagination: EBPagination, data: Seq[T]) extends EBObject
+
   case class EBPagination(object_count: Int,
                           page_number: Int,
                           page_size: Int,
@@ -48,8 +50,6 @@ object Eventbrite {
                      latitude: Option[String],
                      longitude: Option[String],
                      name: Option[String]) extends EBObject
-
-  case class EBResponse(pagination: EBPagination, events: Seq[EBEvent]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject
 
@@ -116,10 +116,15 @@ object Eventbrite {
     def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption
   }
 
+  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
 }
 
 object EventbriteDeserializer {
   import Eventbrite._
+
+  private def ebResponseReads[T](namespace: String)(implicit reads: Reads[Seq[T]]): Reads[EBResponse[T]] =
+    ((JsPath \ "pagination").read[EBPagination] and
+      (JsPath \ namespace).read[Seq[T]])(EBResponse[T] _)
 
   private def convertInstantText(utc: String): Instant =
     ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).toInstant
@@ -143,6 +148,9 @@ object EventbriteDeserializer {
   implicit val ebPricingReads = Json.reads[EBPricing]
   implicit val ebTicketsReads = Json.reads[EBTickets]
   implicit val ebEventReads = Json.reads[EBEvent]
+  implicit val ebDisountReads = Json.reads[EBDiscount]
+
   implicit val ebPaginationReads = Json.reads[EBPagination]
-  implicit val ebResponseReads = Json.reads[EBResponse]
+  implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
+  implicit val ebDiscountsReads = ebResponseReads[EBDiscount]("discounts")
 }

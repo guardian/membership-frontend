@@ -12,7 +12,7 @@ import play.api.Logger
 
 import model.Eventbrite._
 import model.EventbriteDeserializer._
-import model.Member
+import model.{Tier, Member}
 import configuration.Config
 import play.api.libs.json.Reads
 import scala.util.{Failure, Success, Try}
@@ -52,17 +52,19 @@ trait EventbriteService {
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
-  private def getAllEvents: Future[Seq[EBEvent]] = {
+  private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
-          response <- get[EBResponse](apiEventListUrl, "page" -> nextPage.toString)
-        } yield Option((response.pagination.nextPageOpt, response.events))
+          response <- get[EBResponse[T]](url, "page" -> nextPage.toString)
+        } yield Some((response.pagination.nextPageOpt, response.data))
       }.getOrElse(Future.successful(None))
     }
 
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
+
+  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
 
   def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
@@ -74,6 +76,21 @@ trait EventbriteService {
   def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
+
+  def createOrGetDiscount(eventId: String, code: String): Future[EBDiscount] = {
+    val uri = s"events/$eventId/discounts"
+
+    for {
+      discounts <- getPaginated[EBDiscount](uri)
+      discount <- discounts.find(_.code == code).map(Future.successful).getOrElse {
+        post[EBDiscount](uri, Map(
+          "discount.code" -> Seq(code),
+          "discount.percent_off" -> Seq("20"),
+          "discount.quantity_available" -> Seq("2")
+        ))
+      }
+    } yield discount
+  }
 }
 
 object EventbriteService extends EventbriteService {
