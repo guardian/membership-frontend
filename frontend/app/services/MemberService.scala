@@ -3,6 +3,7 @@ package services
 import java.math.BigInteger
 import scala.concurrent.Future
 import scala.collection.JavaConverters._
+import play.api.Logger
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.regions.{Regions, Region}
@@ -53,6 +54,9 @@ object MemberService extends MemberService {
       if member.tier == Tier.Patron || member.tier == Tier.Partner
       // code should be unique for each user/event combination
       code = encode(s"${member.userId}_${event.id}")
-    } yield EventbriteService.createOrGetDiscount(event.id, code)
+    } yield {
+      Logger.debug("CODE IS " + code)
+      EventbriteService.createOrGetDiscount(event.id, code)
+    }
   }
 }
