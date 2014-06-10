@@ -69,7 +69,7 @@ trait EventbriteService {
 
   def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
 
-  def createDiscount(eventId: String, code: String): Future[EBDiscount] = {
+  def createOrGetDiscount(eventId: String, code: String): Future[EBDiscount] = {
     val uri = s"events/$eventId/discounts"
 
     for {
