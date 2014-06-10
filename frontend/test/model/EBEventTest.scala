@@ -1,7 +1,8 @@
 package model
 
 import model.EventbriteTestObjects._
-import model.EBEventStatus._
+import model.Eventbrite._
+import model.Eventbrite.EBEventStatus._
 import play.api.test.PlaySpecification
 import org.joda.time.Instant
 

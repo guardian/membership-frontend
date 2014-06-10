@@ -15,9 +15,9 @@ object Config {
   val idWebAppUrl = config.getString("identity.webapp.url")
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
-  val eventListUrl: String = config.getString("eventbrite.event-list-url")
-  val eventUrl: String = config.getString("eventbrite.event-url")
-  val eventToken: (String, String) = ("token", config.getString("eventbrite.token"))
+  val eventbriteApiUrl = config.getString("eventbrite.api.url")
+  val eventbriteApiToken = config.getString("eventbrite.api.token")
+  val eventbriteApiEventListUrl = config.getString("eventbrite.api.event-list-url")
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")

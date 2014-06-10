@@ -1,11 +1,13 @@
 package controllers
 
 import play.api.test.{ FakeRequest, WithApplication, PlaySpecification }
-import services.EventbriteService
+import services.{MemberService, EventbriteService}
+import configuration.Config
 
 object EventSpec extends PlaySpecification with Event {
 
   val eventService: EventbriteService = SandboxEventbriteService
+  val memberService = MemberService
 
   "Event Index page" should {
 
@@ -20,7 +22,7 @@ object EventSpec extends PlaySpecification with Event {
 }
 
 object SandboxEventbriteService extends EventbriteService {
-  override val eventListUrl: String = "https://www.eventbriteapi.com/v3/users/101063397097/owned_events"
-  override val eventUrl: String = "https://www.eventbriteapi.com/v3/events/"
-  override val token: (String, String) = ("token", "***REMOVED***")
+  val apiUrl = Config.eventbriteApiUrl
+  val apiToken = Config.eventbriteApiToken
+  val apiEventListUrl = Config.eventbriteApiEventListUrl
 }
