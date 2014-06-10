@@ -9,7 +9,7 @@ body {
 }
 
 .page-container {
-    padding: $gutter $gutter/3;
+    padding: 0;
     background-color: #FFFFFF;
     @include clearfix;
     position: relative;
@@ -26,16 +26,4 @@ body {
 
 .align-center {
     text-align: center;
-}
-
-
-/* ==========================================================================
-   Media Queries
-   ========================================================================== */
-
-@include mq(tablet) {
-    .page-container {
-        padding: $gutter;
-
-    }
 }
