@@ -54,7 +54,9 @@ object MemberService extends MemberService {
       if member.tier == Tier.Patron || member.tier == Tier.Partner
       // code should be unique for each user/event combination
       code = encode(s"${member.userId}_${event.id}")
+    } yield {
       Logger.debug("CODE IS " + code)
-    } yield EventbriteService.createOrGetDiscount(event.id, code)
+      EventbriteService.createOrGetDiscount(event.id, code)
+    }
   }
 }
