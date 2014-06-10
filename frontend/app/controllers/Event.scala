@@ -1,14 +1,20 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.EventbriteService
+
+import services.{MemberService, EventbriteService}
 import actions.AuthenticatedAction
 import model.Eventbrite.EBError
+
+import com.netaporter.uri.dsl._
 
 trait Event extends Controller {
 
   val eventService: EventbriteService
+  val memberService: MemberService
 
   def details(id: String) = CachedAction.async {
     eventService.getEvent(id)
@@ -25,12 +31,16 @@ trait Event extends Controller {
     Ok(views.html.event.list(eventService.getEventsTagged(tag)))
   }
 
-  def buy(id: String) = AuthenticatedAction.async {
-    eventService.getEvent(id).map(event => Found(event.url))
+  def buy(id: String) = AuthenticatedAction.async { implicit request =>
+    for {
+      event <- eventService.getEvent(id)
+      discountSeq <- Future.sequence(memberService.createEventDiscount(request.user.id, event).toSeq)
+      discountOpt = discountSeq.headOption.filter(discount => discount.quantity_available > discount.quantity_sold)
+    } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
   }
-
 }
 
 object Event extends Event {
-  override val eventService: EventbriteService = EventbriteService
+  val eventService = EventbriteService
+  val memberService = MemberService
 }

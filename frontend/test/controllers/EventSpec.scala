@@ -1,12 +1,13 @@
 package controllers
 
 import play.api.test.{ FakeRequest, WithApplication, PlaySpecification }
-import services.EventbriteService
+import services.{MemberService, EventbriteService}
 import configuration.Config
 
 object EventSpec extends PlaySpecification with Event {
 
   val eventService: EventbriteService = SandboxEventbriteService
+  val memberService = MemberService
 
   "Event Index page" should {
 
