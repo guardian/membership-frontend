@@ -137,6 +137,18 @@
   }
 }
 
+.u-strike {
+    text-decoration: line-through;
+}
+
+.u-parens {
+    &:before {
+        content: "(";
+    }
+    &:after {
+        content: ")";
+    }
+}
 
 /**
  * Prevent line breaks

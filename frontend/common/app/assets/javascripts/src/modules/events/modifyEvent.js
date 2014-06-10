@@ -1,4 +1,4 @@
-define(['$', 'src/utils/user'], function ($, userUtil) {
+define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
 
     var config = {
         classes: {
@@ -27,8 +27,12 @@ define(['$', 'src/utils/user'], function ($, userUtil) {
             } else {
                 var val = parseInt(priceValue.replace('£', ''), 10),
                     discountedVal = (val * config.MEMBERSHIP_EVENT_DISCOUNT).toFixed(2);
-
                 price.text('£' + discountedVal);
+
+                var pre = bonzo(bonzo.create('<span>')).text('£'+val+'').addClass('u-strike');
+                var preCont = bonzo(bonzo.create('<span>')).addClass('u-parens').append(pre);
+
+                price.before(preCont);
             }
         }
     };
