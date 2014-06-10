@@ -25,11 +25,14 @@ object Dates {
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): String = dayWithSuffix(date)
 
   def addSuffix(day: Int): String = {
-    val suffix = (day % 10) match {
+    var suffix = (day % 10) match {
       case 1 => "st"
       case 2 => "nd"
       case 3 => "rd"
       case _ => "th"
+    }
+    if (day == 12){
+      suffix = "th"
     }
     day + "<sup>" + suffix + "</sup>"
   }
