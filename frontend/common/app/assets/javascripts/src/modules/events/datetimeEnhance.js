@@ -170,10 +170,13 @@ define(function () {
             this.saleEndTextElement = document.querySelectorAll('.js-datetime-enhance-note')[0];
             this.saleEndTimeElement = document.querySelectorAll('.js-datetime-enhance-time')[0];
 
-            var timestamp = this.saleEndTimeElement.getAttribute('datetime'),
-                timeLeft = this.calculateTimeLeft(timestamp);
+            if (this.saleEndTextElement) {
 
-            this.createEnhancedTimeString(timeLeft);
+                var timestamp = this.saleEndTimeElement.getAttribute('datetime'),
+                    timeLeft = this.calculateTimeLeft(timestamp);
+
+                this.createEnhancedTimeString(timeLeft);
+            }
         };
 
         return DateTimeEnhance;
