@@ -9,7 +9,7 @@ body {
 }
 
 .page-container {
-    padding: 0;
+    padding-bottom: 16px;
     background-color: #FFFFFF;
     @include clearfix;
     position: relative;
