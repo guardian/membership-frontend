@@ -46,7 +46,7 @@ object MemberService extends MemberService {
     def encode(code: String) = {
       val md = java.security.MessageDigest.getInstance("SHA-1")
       val digest = md.digest(code.getBytes)
-      new BigInteger(digest).toString(36).toUpperCase.substring(0, 8)
+      new BigInteger(digest).abs.toString(36).toUpperCase.substring(0, 8)
     }
 
     for {
