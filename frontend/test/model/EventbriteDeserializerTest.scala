@@ -3,6 +3,7 @@ package model
 import play.api.libs.json._
 import play.api.test.PlaySpecification
 import scala.io.Source
+import model.Eventbrite.EBResponse
 
 class EventbriteDeserializerTest extends PlaySpecification {
 

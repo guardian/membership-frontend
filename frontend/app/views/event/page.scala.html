@@ -1,8 +1,9 @@
-@(event: model.EBEvent)
+@(event: model.Eventbrite.EBEvent)
 @import views.Crumb
 @import views.Dates._
 @import org.joda.time.Instant
-@import model.EBEventStatus._
+@import model.Eventbrite._
+@import model.Eventbrite.EBEventStatus._
 
 @renderButton = {
     @event.getStatus match {
@@ -47,7 +48,7 @@
                 @renderButton
 
                 <div class="event__price">
-                    <span class="event__price-amount js-event-price">@event.ticket_classes.getOrElse(Seq(model.EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(model.EBPricing("GBP", "Free", 0)).display</span>
+                    <span class="event__price-amount js-event-price">@event.ticket_classes.getOrElse(Seq(EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(EBPricing("GBP", "Free", 0)).display</span>
                     <span class="event__price-note js-event-price-note"> per ticket</span>
                 </div>
 
@@ -58,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="event__description">@Html(event.description.getOrElse(model.EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+            <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
 
             @renderButton
 

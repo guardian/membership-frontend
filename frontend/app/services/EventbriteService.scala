@@ -1,18 +1,27 @@
 package services
 
 import scala.concurrent.{Await, Future}
-import concurrent.duration._
-import model.{EBEventStatus, EBResponse, EBEvent}
-import play.api.libs.ws._
-import model.EventbriteDeserializer._
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import configuration.Config
-import play.api.libs.iteratee.{Iteratee, Enumerator}
 import akka.agent.Agent
+
+import play.api.libs.ws._
+import play.api.libs.iteratee.{Iteratee, Enumerator}
 import play.api.libs.concurrent.Akka
 import play.api.Logger
 
+import model.Eventbrite._
+import model.EventbriteDeserializer._
+import model.Member
+import configuration.Config
+import play.api.libs.json.Reads
+
 trait EventbriteService {
+
+  val apiUrl: String
+  val apiToken: String
+
+  val apiEventListUrl: String
 
   val allEvents = Agent[Seq[EBEvent]](Nil)
 
@@ -21,42 +30,48 @@ trait EventbriteService {
     allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
   }
 
-  val eventListUrl: String
-  val eventUrl: String
-  val token: (String, String)
-
-  private def getAllEvents: Future[Seq[EBEvent]] = pagingEnumerator()(Iteratee.consume()).flatMap(_.run)
-
-  def pagingEnumerator(): Enumerator[Seq[EBEvent]] = Enumerator.unfoldM(Option(1)) {
-    _.map { nextPage =>
-      for (response <- requestEventbriteEvents(nextPage)) yield Option((response.pagination.nextPageOpt, response.events))
-    }.getOrElse(Future.successful(None))
+  private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
+    response.json.asOpt[A].getOrElse {
+      throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
+    }
   }
 
-  def getLiveEvents: Future[Seq[EBEvent]] = Future.successful(allEvents()).map { events =>
-    events.filter(event => event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live)
+  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] =
+    WS.url(s"$apiUrl/$url")
+      .withQueryString("token" -> apiToken).withQueryString(params: _*)
+      .get().map(extract[A])
+
+  private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
+
+  private def getAllEvents: Future[Seq[EBEvent]] = {
+    val enumerator = Enumerator.unfoldM(Option(1)) {
+      _.map { nextPage =>
+        for {
+          response <- get[EBResponse](apiEventListUrl, "page" -> nextPage.toString)
+        } yield Option((response.pagination.nextPageOpt, response.events))
+      }.getOrElse(Future.successful(None))
+    }
+
+    enumerator(Iteratee.consume()).flatMap(_.run)
+  }
+  
+  def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
+    event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
   }
 
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getLiveEvents.map(_.filter(_.name.text.toLowerCase().contains(tag)))
+  def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
 
-  def getEvent(id: String): Future[EBEvent] = eventbriteRequest(eventUrlWith(id)).map(asEBEvent(_))
-
-  def requestEventbriteEvents(page: Int = 1): Future[EBResponse] = eventbriteRequest(eventListUrl, page).map(_.json.as[EBResponse])
-
-  def eventbriteRequest(url: String, page: Int = 1): Future[Response] = WS.url(url).withQueryString(token, ("page", page.toString)).get()
-
-  private def eventUrlWith(id: String) = eventUrl + s"/$id"
-
-  private def asEBEvent(r: Response) = r.json.as[EBEvent]
+  def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
 }
 
 object EventbriteService extends EventbriteService {
-  val eventListUrl: String = Config.eventListUrl
-  val eventUrl: String = Config.eventUrl
-  val token: (String, String) = Config.eventToken
+  val apiUrl = Config.eventbriteApiUrl
+  val apiToken = Config.eventbriteApiToken
+  val apiEventListUrl = Config.eventbriteApiEventListUrl
 
 
   import play.api.Play.current

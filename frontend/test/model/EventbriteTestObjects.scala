@@ -1,6 +1,7 @@
 package model
 
 import org.joda.time.{ Instant, DateTime }
+import model.Eventbrite._
 
 object EventbriteTestObjects {
   def eventName(eventName: String = "Event Name") = EBRichText(eventName, "")
