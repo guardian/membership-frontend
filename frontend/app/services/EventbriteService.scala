@@ -15,6 +15,7 @@ import model.EventbriteDeserializer._
 import model.Member
 import configuration.Config
 import play.api.libs.json.Reads
+import scala.util.{Failure, Success, Try}
 
 trait EventbriteService {
 
@@ -38,8 +39,14 @@ trait EventbriteService {
 
   private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
     val response = WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-    response.onSuccess{case r => Logger.debug(s"Eventbrite request $url - Response body : ${r.body}")}
-    response.map(extract[A])
+    val trial = Try(response.map(extract[A]))
+    trial match {
+      case Success(result) => result
+      case Failure(e) => {
+        response.onSuccess { case r => Logger.error(s"Eventbrite request $url - Response body : ${r.body}", e)}
+        throw e
+      }
+    }
   }
 
   private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
