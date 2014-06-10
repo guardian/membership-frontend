@@ -56,7 +56,8 @@ define([
     };
 
     var getMemberTier = function (callback) {
-           var tier = sessionStorage.getItem('cachedMemberTier');
+        // var tier = sessionStorage.getItem('cachedMemberTier');
+        var tier = null;
         if (tier) {
             callback(tier);
         } else {
@@ -65,8 +66,8 @@ define([
                 url: '/user/me',
                 method: 'get',
                 success: function (resp) { // currently no error handling
-                    sessionStorage.setItem('cachedMemberTier', resp.tier.toLowerCase());
-                    callback(cachedMemberTier);
+                    // sessionStorage.setItem('cachedMemberTier', resp.tier.toLowerCase());
+                    callback(resp.tier.toLowerCase());
                 }
             });
         }
