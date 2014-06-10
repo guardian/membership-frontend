@@ -2,40 +2,53 @@ define(function () {
 
     return (function () {
 
-        // TODO
-        // put various strings into constants
-        // create config object
-        // split into a class
-        // write tests
-        // write comment about what is going on with eventbrite api and times
+        function DateTimeEnhance () {}
 
-
-        var saleEndTextElement,
-            saleEndTimeElement;
+        DateTimeEnhance.prototype.config = {
+            attribute: {
+                SALES_END: 'datetime'
+            },
+            string: {
+                SALE_ENDS_TODAY: 'Sale ends Today',
+                SALE_ENDS_TOMORROW: 'Sale ends Tomorrow',
+                SALE_ENDS_IN: 'Sale ends in',
+                DAY: 'day',
+                PLURAL: 's',
+                SPACE: ' ',
+                OPEN_BRACKET: '(',
+                CLOSED_BRACKET: ')'
+            }
+        };
 
         /**
          *
          * @param timeLeftOj
          * @returns {*}
          */
-        var createTimeString = function (timeLeftOj) {
+        DateTimeEnhance.prototype.createEnhancedTimeString = function (timeLeft) {
 
             var timeLeftString,
-                saleEndString = saleEndTimeElement.innerHTML;
+                saleEndString = this.saleEndTimeElement.innerHTML,
+                config = this.config;
 
-            if (timeLeftOj.isToday) {
-                timeLeftString = 'Sale ends Today';
+            if (timeLeft.isToday) {
+                timeLeftString = config.string.SALE_ENDS_TODAY;
                 saleEndString = saleEndString.split(',')[1].replace(/\s/g, '');
-            } else if (timeLeftOj.isTomorrow) {
-                timeLeftString = 'Sale ends Tomorrow';
+            } else if (timeLeft.isTomorrow) {
+                timeLeftString = config.string.SALE_ENDS_TOMORROW;
                 saleEndString = saleEndString.split(',')[1].replace(/\s/g, '');
-            } else if (timeLeftOj.days > 0) {
-                timeLeftString = 'Sale ends in ' + timeLeftOj.days + ' day' + (timeLeftOj.days > 1 ? 's' : '');
+            } else if (timeLeft.days > 0) {
+                timeLeftString = [
+                        config.string.SALE_ENDS_IN,
+                        config.string.SPACE, timeLeft.days,
+                        config.string.SPACE, config.string.DAY,
+                        (timeLeft.days > 1 ? config.string.PLURAL : '')
+                ].join('');
             }
 
             if (timeLeftString) {
-                saleEndTextElement.innerHTML = timeLeftString;
-                saleEndTimeElement.innerHTML = '(' + saleEndString + ')';
+                this.saleEndTextElement.innerHTML = timeLeftString;
+                this.saleEndTimeElement.innerHTML = config.string.OPEN_BRACKET + saleEndString + config.string.CLOSED_BRACKET;
             }
         };
 
@@ -44,13 +57,10 @@ define(function () {
          * @param timestamp
          * @returns {Date}
          */
-        var createDateFromTimestamp = function (timestamp) {
-
-            /*
-            The Eventbrite api appears to be sending a zulu time "2014-06-10T17:30:00.000Z" which is displayed on
+        DateTimeEnhance.prototype.createDateFromTimestamp = function (timestamp) {
+            /* The Eventbrite api appears to be sending a zulu time "2014-06-10T17:30:00.000Z" which is displayed on
             their site as a BST time for sale end. We are not treating this time as a Zulu time we are treating it as BST
-            this will need refactoring if eventbrite correct their api
-             */
+            this will need refactoring if eventbrite correct their api */
             var dateTimeArray = timestamp.slice(0, -1).split('T'),
                 dateArray = dateTimeArray[0].split('-'),
                 timeArray = dateTimeArray[1].split(':'),
@@ -71,10 +81,10 @@ define(function () {
          * @param dateToCompare
          * @returns {boolean}
          */
-        var isToday = function (dateToCompare) {
+        DateTimeEnhance.prototype.isToday = function (dateToCompare) {
             var now = new Date();
 
-            return datesAreEqual(dateToCompare, now);
+            return this.datesAreEqual(dateToCompare, now);
         };
 
         /**
@@ -82,13 +92,13 @@ define(function () {
          * @param dateToCompare
          * @returns {boolean}
          */
-        var isTomorrow = function (dateToCompare) {
+        DateTimeEnhance.prototype.isTomorrow = function (dateToCompare) {
             var now = new Date(),
                 nowDayOfMonth = now.getDate();
 
              now.setDate(nowDayOfMonth + 1);
 
-            return datesAreEqual(dateToCompare, now);
+            return this.datesAreEqual(dateToCompare, now);
         };
 
         /**
@@ -97,7 +107,7 @@ define(function () {
          * @param dateTwo
          * @returns {boolean}
          */
-        var datesAreEqual = function (dateOne, dateTwo) {
+        DateTimeEnhance.prototype.datesAreEqual = function (dateOne, dateTwo) {
             if (dateOne.getFullYear() === dateTwo.getFullYear() &&
                 dateOne.getDate() === dateTwo.getDate() &&
                 dateOne.getMonth() === dateTwo.getMonth()) {
@@ -111,8 +121,8 @@ define(function () {
          * @param timestamp
          * @returns {{days: number, hours: number, minutes: number, seconds: number, isToday: boolean, isTomorrow: boolean}}
          */
-        var calculateTimeLeft = function (timestamp) {
-            var dateFromTimestamp = createDateFromTimestamp(timestamp),
+        DateTimeEnhance.prototype.calculateTimeLeft = function (timestamp) {
+            var dateFromTimestamp = this.createDateFromTimestamp(timestamp),
                 now = new Date(),
                 milliSecondDifference = dateFromTimestamp - now.getTime(),
                 secondDifference,
@@ -143,8 +153,8 @@ define(function () {
                 hours: hours,
                 minutes: minutes,
                 seconds: seconds,
-                isToday: isToday(dateFromTimestamp),
-                isTomorrow: isTomorrow(dateFromTimestamp)
+                isToday: this.isToday(dateFromTimestamp),
+                isTomorrow: this.isTomorrow(dateFromTimestamp)
             };
         };
 
@@ -155,21 +165,18 @@ define(function () {
          * Sale ends Tomorrow (5:30pm)
          * Sale ends in n day(s) (9th June 2014, 5:30pm)
          */
-        var init = function () {
+        DateTimeEnhance.prototype.init = function () {
 
-            saleEndTextElement = document.querySelectorAll('.js-datetime-enhance-note')[0];
-            saleEndTimeElement = document.querySelectorAll('.js-datetime-enhance-time')[0];
+            this.saleEndTextElement = document.querySelectorAll('.js-datetime-enhance-note')[0];
+            this.saleEndTimeElement = document.querySelectorAll('.js-datetime-enhance-time')[0];
 
-            //var timestamp = saleEndTimeElement.getAttribute('datetime');
-            var timestamp = '2014-06-10T17:30:00.000Z',
-                timeLeftObj = calculateTimeLeft(timestamp);
+            var timestamp = this.saleEndTimeElement.getAttribute('datetime'),
+                timeLeft = this.calculateTimeLeft(timestamp);
 
-            createTimeString(timeLeftObj);
+            this.createEnhancedTimeString(timeLeft);
         };
 
-        return {
-            init: init
-        };
+        return DateTimeEnhance;
 
     })();
 });

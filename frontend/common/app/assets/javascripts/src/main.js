@@ -7,14 +7,15 @@ require([
     'src/modules/account',
     'src/modules/events/datetimeEnhance',
     'src/modules/events/modifyEvent'
-], function(router, domready, ajax, StripeForm, ctaButton, account, datetimeEnhance, modifyEvent) {
+], function(router, domready, ajax, StripeForm, ctaButton, account, DatetimeEnhance, modifyEvent) {
     'use strict';
 
     ajax.init({page: {ajaxUrl: ''}});
 
     router.match('/event').to(function () {
+        var dateEnhance = new DatetimeEnhance();
+        dateEnhance.init();
         ctaButton.init();
-        datetimeEnhance.init();
         modifyEvent.init();
     });
 
