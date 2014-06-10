@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent)(implicit request: play.api.mvc.Request[_])
 @import views.Crumb
 @import views.Dates._
 @import org.joda.time.Instant

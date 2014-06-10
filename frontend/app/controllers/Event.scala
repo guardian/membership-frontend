@@ -16,17 +16,17 @@ trait Event extends Controller {
   val eventService: EventbriteService
   val memberService: MemberService
 
-  def details(id: String) = CachedAction.async {
+  def details(id: String) = CachedAction.async { implicit request =>
     eventService.getEvent(id)
       .map(event => Ok(views.html.event.page(event)))
       .recover { case error: EBError if error.status_code == NOT_FOUND => NotFound }
   }
 
-  def list = CachedAction {
+  def list = CachedAction { implicit request =>
     Ok(views.html.event.list(eventService.getLiveEvents))
   }
 
-  def listFilteredBy(urlTagText: String) = CachedAction {
+  def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
     val tag = urlTagText.replace('-', ' ')
     Ok(views.html.event.list(eventService.getEventsTagged(tag)))
   }

@@ -10,14 +10,13 @@ import actions.AuthRequest
 import configuration.Config
 
 trait AuthenticationService {
-  val idWebAppUrl: String
-  val membershipUrl: String
+  def idWebAppSigninUrl: (String => String)
 
   val cookieDecoder: IdentityCookieDecoder
 
   def handleAuthenticatedRequest[A](request: Request[A]): Either[SimpleResult, AuthRequest[A]] = {
     authenticatedRequestFor(request).toRight {
-      SeeOther((idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl${request.uri}"))
+      SeeOther(idWebAppSigninUrl(request.uri))
     }
   }
 
@@ -33,8 +32,7 @@ trait AuthenticationService {
 }
 
 object AuthenticationService extends AuthenticationService {
-  val membershipUrl = Config.membershipUrl
-  val idWebAppUrl = Config.idWebAppUrl
+  def idWebAppSigninUrl = Config.idWebAppSigninUrl
 
   val cookieDecoder = new IdentityCookieDecoder(Config.idKeys)
 }
