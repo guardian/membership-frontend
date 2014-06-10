@@ -1,3 +1,5 @@
+@()(implicit request: play.api.mvc.Request[_])
+
 @import configuration.Config
 
 <header>
@@ -9,7 +11,7 @@
 
     <div class="header__identity">
         <span class="i-action"><span class="i-profile"></span></span>
-        <span class="identity__notice"><a href="@Config.idWebAppSigninUrl">Sign in</a></span>
+        <span class="identity__notice"><a href="@Config.idWebAppSigninUrl(request.uri)">Sign in</a></span>
         <span class="identity__avatar u-h"></span>
         <span class="identity__account u-h"></span>
         <span class="identity__tier u-h"></span>

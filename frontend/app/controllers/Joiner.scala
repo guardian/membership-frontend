@@ -9,31 +9,31 @@ import services.StripeService
 
 trait Joiner extends Controller {
 
-  def tierList = CachedAction {
+  def tierList = CachedAction { implicit request =>
     Ok(views.html.joiner.tierList())
   }
 
-  def friend() = CachedAction {
+  def friend() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.friend())
   }
 
-  def partner() = CachedAction {
+  def partner() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.partner())
   }
 
-  def patron() = CachedAction {
+  def patron() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.patron())
   }
 
-  def paymentPartner() = AuthenticatedAction {
+  def paymentPartner() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
   }
 
-  def paymentPatron() = AuthenticatedAction {
+  def paymentPatron() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
   }
 
-  def thankyouFriend() = AuthenticatedAction {
+  def thankyouFriend() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.thankyou.friend())
   }
 

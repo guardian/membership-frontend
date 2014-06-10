@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
 @import views.Crumb
 

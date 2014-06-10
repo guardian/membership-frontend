@@ -4,6 +4,7 @@ import com.netaporter.uri.dsl._
 
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
+import play.api.mvc.Request
 
 object Config {
   val config = ConfigFactory.load()
@@ -15,7 +16,8 @@ object Config {
   val membershipHide = config.getBoolean("membership.hide")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
-  val idWebAppSigninUrl = (idWebAppUrl ? ("returnUrl" -> membershipUrl)).toString
+  def idWebAppSigninUrl(uri: String): String =
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri")
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
