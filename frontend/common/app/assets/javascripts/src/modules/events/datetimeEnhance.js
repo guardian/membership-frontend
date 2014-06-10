@@ -1,74 +1,175 @@
 define(function () {
 
-   return (function () {
+    return (function () {
 
-       var enhancers = {};
-       var self = this;
+        // TODO
+        // put various strings into constants
+        // create config object
+        // split into a class
+        // write tests
+        // write comment about what is going on with eventbrite api and times
 
 
-       self.eventbriteDateDiff = function (d) {
+        var saleEndTextElement,
+            saleEndTimeElement;
 
-           var _MS_PER_DAY = 1000 * 60 * 60 * 24;
-           var _MS_PER_HOUR = 1000 * 60 * 60;
-           var _MS_PER_MIN = 1000 * 60;
+        /**
+         *
+         * @param timeLeftOj
+         * @returns {*}
+         */
+        var createTimeString = function (timeLeftOj) {
 
-           var now = new Date();
+            var timeLeftString,
+                saleEndString = saleEndTimeElement.innerHTML;
 
-           // Discard the time and time-zone information.
-           var now_utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-           var utc = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+            if (timeLeftOj.isToday) {
+                timeLeftString = 'Sale ends Today';
+                saleEndString = saleEndString.split(',')[1].replace(/\s/g, '');
+            } else if (timeLeftOj.isTomorrow) {
+                timeLeftString = 'Sale ends Tomorrow';
+                saleEndString = saleEndString.split(',')[1].replace(/\s/g, '');
+            } else if (timeLeftOj.days > 0) {
+                timeLeftString = 'Sale ends in ' + timeLeftOj.days + ' day' + (timeLeftOj.days > 1 ? 's' : '');
+            }
 
-           var diff = utc - now_utc;
+            if (timeLeftString) {
+                saleEndTextElement.innerHTML = timeLeftString;
+                saleEndTimeElement.innerHTML = '(' + saleEndString + ')';
+            }
+        };
 
-           var days = Math.floor(diff / _MS_PER_DAY);
-           var hours = Math.floor((diff - (days*_MS_PER_DAY)) / _MS_PER_HOUR);
-           var mins = Math.floor((diff - (days*_MS_PER_DAY) - (hours*_MS_PER_HOUR)) / _MS_PER_MIN);
+        /**
+         *
+         * @param timestamp
+         * @returns {Date}
+         */
+        var createDateFromTimestamp = function (timestamp) {
 
-           return {
-               millis_total: diff,
-               days: days,
-               hours: hours,
-               mins: mins
-           };
-       };
+            /*
+            The Eventbrite api appears to be sending a zulu time "2014-06-10T17:30:00.000Z" which is displayed on
+            their site as a BST time for sale end. We are not treating this time as a Zulu time we are treating it as BST
+            this will need refactoring if eventbrite correct their api
+             */
+            var dateTimeArray = timestamp.slice(0, -1).split('T'),
+                dateArray = dateTimeArray[0].split('-'),
+                timeArray = dateTimeArray[1].split(':'),
+                dateFromTimestamp = new Date(
+                    dateArray[0],
+                    parseInt(dateArray[1] - 1, 10),
+                    dateArray[2],
+                    timeArray[0],
+                    timeArray[1],
+                    timeArray[2]
+                );
 
-       self.dateTimeEnhancer = function (element) {
+            return dateFromTimestamp;
+        };
 
-           var time_el = element.querySelector('.js-datetime-enhance-time');
-           var note_el = element.querySelector('.js-datetime-enhance-note');
+        /**
+         *
+         * @param dateToCompare
+         * @returns {boolean}
+         */
+        var isToday = function (dateToCompare) {
+            var now = new Date();
 
-           var utc_timestamp_date = new Date(time_el.getAttribute('datetime'));
+            return datesAreEqual(dateToCompare, now);
+        };
 
-           if (utc_timestamp_date > new Date()) {
-               var diff = self.eventbriteDateDiff(utc_timestamp_date);
+        /**
+         *
+         * @param dateToCompare
+         * @returns {boolean}
+         */
+        var isTomorrow = function (dateToCompare) {
+            var now = new Date(),
+                nowDayOfMonth = now.getDate();
 
-               var diff_string = [];
+             now.setDate(nowDayOfMonth + 1);
 
-               diff_string.push(diff.days);
-               diff_string.push('d ');
-               diff_string.push(diff.hours);
-               diff_string.push('h ');
-               diff_string.push(diff.mins);
-               diff_string.push('m');
+            return datesAreEqual(dateToCompare, now);
+        };
 
-               time_el.innerHTML = diff_string.join('');
-               note_el.innerHTML = note_el.innerHTML.replace('at', 'in');
-           }
-       };
+        /**
+         * compare two dates
+         * @param dateOne
+         * @param dateTwo
+         * @returns {boolean}
+         */
+        var datesAreEqual = function (dateOne, dateTwo) {
+            if (dateOne.getFullYear() === dateTwo.getFullYear() &&
+                dateOne.getDate() === dateTwo.getDate() &&
+                dateOne.getMonth() === dateTwo.getMonth()) {
 
-       return {
-           init: function (context) {
-               context = context || document;
-               var dateTimes = context.querySelectorAll('.js-datetime-enhance');
+                return true;
+            }
+        };
 
-               if (dateTimes) {
-                   for (var i = 0; i < dateTimes.length; i++) {
-                       dateTimes[i].setAttribute('data-datetimeEnhancer', i);
-                       enhancers[i] = new self.dateTimeEnhancer(dateTimes[i]);
-                   }
-               }
-           }
-       };
+        /**
+         *
+         * @param timestamp
+         * @returns {{days: number, hours: number, minutes: number, seconds: number, isToday: boolean, isTomorrow: boolean}}
+         */
+        var calculateTimeLeft = function (timestamp) {
+            var dateFromTimestamp = createDateFromTimestamp(timestamp),
+                now = new Date(),
+                milliSecondDifference = dateFromTimestamp - now.getTime(),
+                secondDifference,
+                minuteDifference,
+                hourDifference,
+                seconds,
+                minutes,
+                hours,
+                days;
 
-   })();
+            //convert milliseconds to seconds
+            secondDifference = milliSecondDifference/1000;
+            seconds = Math.floor(secondDifference % 60);
+
+            //convert seconds to minutes
+            minuteDifference = secondDifference / 60;
+            minutes = Math.floor(minuteDifference % 60);
+
+            //convert minutes to hours
+            hourDifference = minuteDifference / 60;
+            hours = Math.floor(hourDifference % 24);
+
+            //divide hours into days
+            days = Math.floor(hourDifference / 24);
+
+            return {
+                days: days,
+                hours: hours,
+                minutes: minutes,
+                seconds: seconds,
+                isToday: isToday(dateFromTimestamp),
+                isTomorrow: isTomorrow(dateFromTimestamp)
+            };
+        };
+
+        /**
+         * Take timestamp and the pretty scala date from template and calculate how long it is until this date and
+         * return the following strings:
+         * Sale ends Today (5:30pm)
+         * Sale ends Tomorrow (5:30pm)
+         * Sale ends in n day(s) (9th June 2014, 5:30pm)
+         */
+        var init = function () {
+
+            saleEndTextElement = document.querySelectorAll('.js-datetime-enhance-note')[0];
+            saleEndTimeElement = document.querySelectorAll('.js-datetime-enhance-time')[0];
+
+            //var timestamp = saleEndTimeElement.getAttribute('datetime');
+            var timestamp = '2014-06-10T17:30:00.000Z',
+                timeLeftObj = calculateTimeLeft(timestamp);
+
+            createTimeString(timeLeftObj);
+        };
+
+        return {
+            init: init
+        };
+
+    })();
 });
