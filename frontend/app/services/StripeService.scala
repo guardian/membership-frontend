@@ -47,14 +47,8 @@ trait StripeService {
     r.onSuccess{case a => println(s"** get $endpoint")}
     r
   }
-}
 
-object StripeService extends StripeService {
-  protected val apiURL = Config.stripeApiURL
-  protected val apiSecret = Config.stripeApiSecret
-
-  object Charge {
-    def create(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
+    def createCharge(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
       post[Charge]("charges", Map(
         "amount" -> Seq(amount.toString),
         "currency" -> Seq(currency),
@@ -62,19 +56,19 @@ object StripeService extends StripeService {
         "description" -> Seq(description)
       ))
     }
-  }
 
-  object Customer {
-    def create(card: String): Future[Customer] ={
+    def createCustomer(card: String): Future[Customer] ={
       post[Customer]("customers", Map("card" -> Seq(card)))
     }
 
-    def read(customerId: String): Future[Customer] =
+    def readCustomer(customerId: String): Future[Customer] =
       get[Customer](s"customers/$customerId")
-  }
 
-  object Subscription {
-    def create(customerId: String, planId: String): Future[Subscription] =
+    def createSubscription(customerId: String, planId: String): Future[Subscription] =
       post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
-  }
+}
+
+object StripeService extends StripeService {
+  protected val apiURL = Config.stripeApiURL
+  protected val apiSecret = Config.stripeApiSecret
 }

@@ -47,8 +47,8 @@ class StripeServiceTest extends PlaySpecification {
 
       val subscriptionFuture: Future[Stripe.Subscription] = for {
         token <- createToken
-        customer <- StripeService.Customer.create(token.id)
-        subscription <- StripeService.Subscription.create(customer.id, "Patron")
+        customer <- StripeService.createCustomer(token.id)
+        subscription <- StripeService.createSubscription(customer.id, "Patron")
       } yield subscription
 
       wireMockServer.stop()
