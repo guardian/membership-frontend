@@ -66,7 +66,7 @@ define(function () {
                 this.saleEndTimeElement.innerHTML = config.string.OPEN_BRACKET + timeString.saleEnd + config.string.CLOSED_BRACKET;
             }
         };
-        
+
         /**
          *
          * @param timestamp
