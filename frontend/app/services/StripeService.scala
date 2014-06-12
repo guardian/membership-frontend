@@ -8,6 +8,7 @@ import play.api.libs.ws.{ Response, WS }
 
 import model.Stripe._
 import configuration.Config
+import scala.util.{Failure, Success}
 
 trait StripeService {
   protected val apiURL: String
@@ -30,15 +31,19 @@ trait StripeService {
   }
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
-    println(response.json)
+//    println("Body beofre extraction ******** " + response.body)
     response.json.asOpt[A].getOrElse {
       throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object"))
     }
   }
 
   def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] ={
-    val r = request(endpoint).post(data).map(extract[A])
-    r.onSuccess{case a => println(s"** post $endpoint \n Data:  $data" )}
+//    println("Posting data *** " + data)
+    val r:Future[A] = request(endpoint).post(data).map(extract[A])
+//    r.onComplete{
+//      case Success(a) => println(s"** post $endpoint \n Data:  $data" )
+//      case Failure(e) => println(s"** post failure $e" )
+//    }
     r
   }
 
