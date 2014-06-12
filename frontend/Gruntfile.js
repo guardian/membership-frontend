@@ -70,9 +70,9 @@ module.exports = function (grunt) {
                     },
                     findNestedDependencies: true,
                     wrapShim: true,
-                    optimize: 'none',
+                    optimize: isDev ? 'none' : 'uglify2',
                     generateSourceMaps: true,
-                    preserveLicenseComments: true,
+                    preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
             }
