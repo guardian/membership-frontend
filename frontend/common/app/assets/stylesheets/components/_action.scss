@@ -88,3 +88,10 @@
         right: -5px;
     }
 }
+
+.action--ticket-button--grey {
+    margin: 40px 0 5px 0;
+    &:before, &:after {
+        background-color: #E1E1E1;
+    }
+}

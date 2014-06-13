@@ -1,9 +1,19 @@
-@(event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent)(implicit request: play.api.mvc.Request[_])
 @import views.Crumb
 @import views.Dates._
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import model.Eventbrite.EBEventStatus._
+
+@renderButtonGrey = {
+    @event.getStatus match {
+        case Completed => { <button class='action action--disabled' disabled='disabled'>Past Event</button> }
+        case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
+        case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
+        case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
+        case _ => { <a class='action action--logged-out action--ticket-button action--ticket-button--grey' href='/event/@event.id/buy'>Sign In to attend</a> }
+    }
+}
 
 @renderButton = {
     @event.getStatus match {
@@ -22,46 +32,52 @@
  <div class="page-container">
     <div class="event">
         <div class="event__content">
-            <div class="event__masthead">
-                <h1 class="event__name section-header page-header">@event.name.text</h1>
-
-                <div class="event__image">
-                    <img src="@event.logo_url" alt="Event Image" />
+            <div class="event__image">
+                <img src="@event.logo_url" alt="Event Image" />
+            </div>
+            <div class="event__content__inner">
+                <div class="event__content-body">
+                    <div class="event__masthead">
+                        <h1 class="event__name section-header page-header">@event.name.text</h1>
+                    </div>
                 </div>
             </div>
+            <div class="event__content__inner event__content__inner--sub">
+                <div class="event__content-body">
+                    <div class="event__meta">
+                        <div class="event__location">
+                            <span class="icon location--icon"></span>
+                            <span class="event__venue-name">@event.venue.name</span>,
+                            <span class="event__address">
+                                @if(!event.addressOne.isEmpty){ <span>@event.addressOne</span>, }
+                                @if(!event.addressTwo.isEmpty){ <span>@event.addressTwo</span>, }
+                                @if(!event.city.isEmpty){ <span>@event.city</span>, }
+                                @if(!event.region.isEmpty){ <span>@event.region</span>, }
+                                @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
+                            </span>
+                        </div>
+                        <div class="event__time"><span class="icon time--icon"></span>@Html(event.start.pretty)</div>
+                    </div>
+                    <div class="event__tickets">
 
-            <div class="event__meta">
-                <div class="event__location"><span class="icon location--icon"></span>
-                    <span class="event__venue-name">@event.venue.name</span>,
-                    <span class="event__address">
-                        @if(!event.addressOne.isEmpty){ <span>@event.addressOne</span>, }
-                        @if(!event.addressTwo.isEmpty){ <span>@event.addressTwo</span>, }
-                        @if(!event.city.isEmpty){ <span>@event.city</span>, }
-                        @if(!event.region.isEmpty){ <span>@event.region</span>, }
-                        @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
-                    </span>
+                        <div class="event__price">
+                            <span class="event__price-amount js-event-price">@event.ticket_classes.getOrElse(Seq(EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(EBPricing("GBP", "Free", 0)).display</span>
+                            <span class="event__price-note js-event-price-note"> per ticket</span>
+                        </div>
+                        @renderButtonGrey
+
+                        <div class="event__sale-ends">
+                            <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
+                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@Html(event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty))</time>
+                        </div>
+                    </div>
                 </div>
-                <div class="event__time"><span class="icon time--icon"></span>@Html(event.start.pretty)</div>
             </div>
+            <div class="event__content-body">
+                <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
 
-            <div class="event__tickets">
                 @renderButton
-
-                <div class="event__price">
-                    <span class="event__price-amount js-event-price">@event.ticket_classes.getOrElse(Seq(EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(EBPricing("GBP", "Free", 0)).display</span>
-                    <span class="event__price-note js-event-price-note"> per ticket</span>
-                </div>
-
-                <div class="js-datetime-enhance">
-                    <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
-                    <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@Html(event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty))</time>
-                </div>
             </div>
-
-            <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
-
-            @renderButton
-
         </div>
     </div>
  </div>
