@@ -5,12 +5,12 @@ define([
     'src/utils/user',
     'src/utils/masker',
     'stripe',
-    'ajax'
-], function ($, bean, appCredentials, userUtil, masker, stripe, ajax) {
+    'ajax',
+    'config/stripeErrorMessages'
+], function ($, bean, appCredentials, userUtil, masker, stripe, ajax, stripeErrorMessages) {
     'use strict';
 
-    function StripePaymentForm () {
-    }
+    function StripePaymentForm () {}
 
     StripePaymentForm.prototype.config = {
         classes: {
@@ -37,6 +37,22 @@ define([
         }
     };
 
+    /**
+     * get parent by className
+     * @param $element
+     * @param parentClass
+     * @returns {*}
+     */
+    StripePaymentForm.prototype.getSpecifiedParent = function ($element, parentClass) {
+
+        do {
+            $element = $element.parent();
+
+        } while ($element && !$element.hasClass(parentClass));
+
+        return $element;
+    };
+
     StripePaymentForm.prototype.domElementSetup = function () {
         for (var className in this.config.classes) {
             this.config.DOM[className] = this.context.querySelector('.' + this.config.classes[className]);
@@ -52,7 +68,7 @@ define([
         var self = this;
 
         if (response.error) {
-            self.handleError(response.error.message);
+            self.getErrorMessage(response.error);
         } else {
 
             // token contains id, last4, and card type
@@ -69,25 +85,58 @@ define([
                     self.stopLoader();
                     window.location = window.location.href.replace('payment', 'thankyou');
                 },
-                error: function (err) {
+                error: function (error) {
+
+                    var errorObj,
+                        errorMessage;
+
+                    try {
+                        errorObj = error.response && JSON.parse(error.response);
+                    } catch(e) {}
+
                     self.stopLoader();
-                    self.handleError(err.response);
+                    errorMessage = self.getErrorMessage(errorObj);
+                    self.handleErrors([errorMessage]);
                 }
             });
         }
     };
 
-    StripePaymentForm.prototype.handleError = function (errorMessage) {
-        var $responseErrorElement = this.getElement('PAYMENT_ERRORS'),
-            $submitButton = this.getElement('FORM_SUBMIT'),
-            eMessage = errorMessage || '';
 
-        if (eMessage && (/[a-zA-Z]/).test(eMessage)) { // msg exists and has content
-            $responseErrorElement.text(eMessage).removeClass(this.config.classes.HIDE);
-            $submitButton.attr('disabled', false);
+    StripePaymentForm.prototype.getErrorMessage = function (errorObj) {
+
+        var errorType = errorObj && errorObj.type,
+            errorCode = errorObj && errorObj.code,
+            errorSection = stripeErrorMessages[errorType] && stripeErrorMessages[errorType],
+            errorMessage = errorSection && (errorSection[errorCode] && errorSection[errorCode]);
+
+        return errorMessage;
+    };
+
+    /**
+     *
+     * @param errorMessages
+     */
+    StripePaymentForm.prototype.handleErrors = function (errorMessages) {
+        var $paymentErrorsElement = this.getElement('PAYMENT_ERRORS'),
+            $formSubmitButton = this.getElement('FORM_SUBMIT'),
+            errorString = '';
+
+        if (errorMessages.length) {
+            //display errors and disable submit
+            errorMessages.forEach(function (element) {
+                errorString += element + '\n';
+            });
+
+            $paymentErrorsElement.removeClass(this.config.classes.HIDE);
+            $paymentErrorsElement.html(errorString);
+
+            $formSubmitButton.attr('disabled', true);
         } else {
-            $responseErrorElement.text(eMessage).addClass(this.config.classes.HIDE);
-            $submitButton.attr('disabled', false);
+            //hide errors and enable submit
+            $paymentErrorsElement.html('');
+            $paymentErrorsElement.addClass(this.config.classes.HIDE);
+            $formSubmitButton.removeAttr('disabled');
         }
     };
 
@@ -103,7 +152,6 @@ define([
     };
 
     StripePaymentForm.prototype.addListeners = function () {
-
         var stripePaymentFormClass = this,
             $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
             $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC'),
@@ -116,20 +164,40 @@ define([
             stripePaymentFormClass.displayCardTypeImage($creditCardNumberElement);
         });
 
-        bean.on($creditCardNumberElement[0], 'blur', function () {
-            this.manageFieldValidationResult(this.validateCardNumber());
+        bean.on($creditCardNumberElement[0], 'blur', function (e) {
+
+            var $creditCardNumberElement = $(e.target),
+                validationResult = this.validateCardNumber($creditCardNumberElement);
+
+            this.manageErrors(validationResult);
+
         }.bind(this));
 
-        bean.on($creditCardCVCElement[0], 'blur', function () {
-            this.manageFieldValidationResult(this.validateCVC());
+        bean.on($creditCardCVCElement[0], 'blur', function (e) {
+
+            var $cvcElement = $(e.target),
+                validationResult = this.validateCVC($cvcElement);
+
+            this.manageErrors(validationResult);
+
         }.bind(this));
 
-        bean.on($creditCardExpiryMonthElement[0], 'blur', function () {
-            this.manageFieldValidationResult(this.validateExpiry(true));
+        bean.on($creditCardExpiryMonthElement[0], 'blur', function (e) {
+
+            var $expiryMonthElement = $(e.target),
+                validationResult = this.validateExpiry($expiryMonthElement);
+
+            this.manageErrors(validationResult);
+
         }.bind(this));
 
-        bean.on($creditCardExpiryYearElement[0], 'blur', function () {
-            this.manageFieldValidationResult(this.validateExpiry(true));
+        bean.on($creditCardExpiryYearElement[0], 'blur', function (e) {
+
+            var $expiryYearElement = $(e.target),
+                validationResult = this.validateExpiry($expiryYearElement);
+
+            this.manageErrors(validationResult);
+
         }.bind(this));
 
         bean.on($formElement[0], 'submit', function (e) {
@@ -149,51 +217,65 @@ define([
                 }, this.stripeResponseHandler.bind(this));
 
             } else {
-                this.manageFormValidationResult(formValidationResult);
+               formValidationResult.errors.forEach(function (validationProfileResult) {
+                    this.manageErrors(validationProfileResult);
+                }, this);
             }
         }.bind(this));
     };
 
-    StripePaymentForm.prototype.validateCardNumber = function () {
+    StripePaymentForm.prototype.validateCardNumber = function ($creditCardNumberElement) {
 
-        var $creditCardNumberElement = this.getElement('CREDIT_CARD_NUMBER'),
-            value = $creditCardNumberElement.val(),
-            isValid = stripe.card.validateCardNumber(value);
+        var $element = $creditCardNumberElement || this.getElement('CREDIT_CARD_NUMBER');
 
         return {
-            isValid: isValid,
-            element: $creditCardNumberElement
+            isValid: stripe.card.validateCardNumber($element.val()),
+            errorMessage: stripeErrorMessages.card_error.incorrect_number,
+            $element: $element
         };
     };
 
-    StripePaymentForm.prototype.validateCVC = function () {
+    StripePaymentForm.prototype.validateCVC = function ($cvcElement) {
 
-        var $creditCardCVCElement = this.getElement('CREDIT_CARD_CVC');
-        var isValid = stripe.card.validateCVC($creditCardCVCElement.val());
+        var $element = $cvcElement || this.getElement('CREDIT_CARD_CVC');
 
         return {
-            isValid: isValid,
-            element: $creditCardCVCElement
+            isValid: stripe.card.validateCVC($element.val()),
+            errorMessage: stripeErrorMessages.card_error.incorrect_cvc,
+            $element: $element
         };
     };
 
-    StripePaymentForm.prototype.validateExpiry = function (allowEmpty) {
+    StripePaymentForm.prototype.validateExpiry = function () {
 
         var $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
-            $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
+            $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
+            today = new Date(),
+            isValid,
+            validDateEntry = function () {
+                var presentOrFutureMonth = true,
+                    monthAndYearHaveValue = $creditCardExpiryMonthElement[0].selectedIndex > 0 &&
+                                            $creditCardExpiryYearElement[0].selectedIndex > 0;
 
-        var isValid = true;
-        if (!allowEmpty || $creditCardExpiryMonthElement[0].selectedIndex > 0 &&
-            $creditCardExpiryYearElement[0].selectedIndex > 0) {
+                // if we are on the current year check the month is the current or a future month
+                if ($creditCardExpiryYearElement.val() === today.getFullYear().toString().slice(2)) {
+                    presentOrFutureMonth = $creditCardExpiryMonthElement.val() >= (today.getMonth() + 1);
+                }
 
+                return monthAndYearHaveValue && presentOrFutureMonth;
+            };
+
+        if (validDateEntry()) {
             isValid = stripe.card.validateExpiry($creditCardExpiryMonthElement.val(), $creditCardExpiryYearElement.val());
         }
 
         return {
             isValid: isValid,
-            element: $creditCardExpiryMonthElement
+            errorMessage: stripeErrorMessages.card_error.invalid_expiry,
+            $element: $creditCardExpiryMonthElement
         };
     };
+
 
     StripePaymentForm.prototype.isFormValid = function () {
 
@@ -210,10 +292,10 @@ define([
 
             if (validationProfiles.hasOwnProperty(profile) && 'function' === typeof validationProfile) {
 
-                var result = validationProfile.call(this);
+                var validationProfileResult = validationProfile.call(this);
 
-                if (!result.isValid) {
-                    errors.push(result);
+                if (!validationProfileResult.isValid) {
+                    errors.push(validationProfileResult);
                 }
             }
         }
@@ -224,59 +306,50 @@ define([
         };
     };
 
-    StripePaymentForm.prototype.manageFieldValidationResult = function (validationResult) {
-        var self = this,
-            $el = validationResult.element,
-            $par = $el.parent();
+    StripePaymentForm.prototype.addErrorStyles = function (validationResult) {
+        var $elementParentFormField = this.getSpecifiedParent(validationResult.$element, 'form-field');
 
-        // generate complete error message with current invalid field, maintain correct punctuation and prevent repetition
-        function genErrorMessage (remove) {
-            var errorEl = self.getElement('PAYMENT_ERRORS')[0],
-                eMsg = $el.data('error-message'),
-                currentError = errorEl.innerHTML.replace(eMsg, '').replace(/, $/, '').replace(/^, /, '');
-            if (remove) {
-                return currentError.replace(', ,', ', ');
-            } else {
-                return (currentError.length > 0 ? currentError.replace(eMsg, '') + ', ' + eMsg : eMsg).replace(', ,', ', ');
-            }
-        }
-
-        // if invalid add error class and post error message else remove class and remove element error message from current error message
         if (!validationResult.isValid) {
-            $par.addClass(this.config.classes.FORM_FIELD_ERROR);
-            this.handleError(genErrorMessage());
+            $elementParentFormField.addClass('form-field--error');
         } else {
-            $par.removeClass(this.config.classes.FORM_FIELD_ERROR);
-            this.handleError(genErrorMessage(true));
+            $elementParentFormField.removeClass('form-field--error');
         }
     };
 
-    StripePaymentForm.prototype.manageFormValidationResult = function (validationResult) {
-        var self = this;
+    StripePaymentForm.prototype.manageErrors = function (validationResult) {
 
-        function genErrorMessage () { // Generate error message for form
-            var msg = [];
-            validationResult.errors.forEach(function (error) {
-                msg.push(error.element.data('error-message'));
-            }, self);
-            return msg.join(', ');
+        var paymentErrorsElement = this.getElement('PAYMENT_ERRORS')[0],
+            paymentErrorsElementText = paymentErrorsElement.textContent,
+            errors = [],
+            messageIndex,
+            formErrors = [
+                stripeErrorMessages.card_error.invalid_expiry,
+                stripeErrorMessages.card_error.incorrect_cvc,
+                stripeErrorMessages.card_error.incorrect_number
+            ];
+
+        this.addErrorStyles(validationResult);
+
+        if (paymentErrorsElementText !== '') {
+            //split error element text on '\n' and remove any empty elements from resulting array
+            errors = paymentErrorsElementText.split('\n').filter(function (element) { return element.length !== 0; });
         }
 
-        // remove error class from all fields
-        $('.' + this.config.classes.FORM_FIELD_ERROR, this.context).removeClass(this.config.classes.FORM_FIELD_ERROR);
-
-        // add error class to invalid fields
-        validationResult.errors.forEach(function (error) {
-            error.element.parent().addClass(this.config.classes.FORM_FIELD_ERROR);
-        }, this);
-
-        // display error message if invalid else remove error classes and remove message
-        if (!validationResult.isValid) {
-            this.handleError(genErrorMessage());
-        } else {
-            $('.' + this.config.classes.FORM_FIELD_ERROR, this.context).removeClass(this.config.classes.FORM_FIELD_ERROR);
-            this.handleError(); // empty param = remove error
+        if (validationResult.isValid) {
+            errors = errors.filter(function (errorMessage) { return formErrors.indexOf(errorMessage) !== -1; });
         }
+
+        messageIndex = errors.indexOf(validationResult.errorMessage);
+
+        if (messageIndex === -1 && !validationResult.isValid) {
+            //add error
+            errors.push(validationResult.errorMessage);
+        } else if (messageIndex >= 0 && validationResult.isValid) {
+            //remove error
+            errors.splice(messageIndex, 1);
+        }
+
+        this.handleErrors(errors);
     };
 
     StripePaymentForm.prototype.startLoader = function () {
