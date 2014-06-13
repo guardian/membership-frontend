@@ -3,12 +3,11 @@ package services
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import play.api.libs.json.{ Json, Reads }
-import play.api.libs.ws.{ Response, WS }
+import play.api.libs.json.{Json, Reads}
+import play.api.libs.ws.{Response, WS}
 
 import model.Stripe._
 import configuration.Config
-import scala.util.{Failure, Success}
 
 trait StripeService {
   protected val apiURL: String
@@ -49,23 +48,23 @@ trait StripeService {
     ))
   }
 
-    def createCustomer(card: String): Future[Customer] ={
-      post[Customer]("customers", Map("card" -> Seq(card)))
-    }
-
-    def readCustomer(customerId: String): Future[Customer] =
-      get[Customer](s"customers/$customerId")
-
-    def createSubscription(customerId: String, planId: String): Future[Subscription] = {
-      post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
-    }
-
-  def httpPost(url:String, data: Map[String, Seq[String]], header: (String, String)*):Future[Response] ={
-    WS.url(url).withHeaders(header:_*).post(data)
+  def createCustomer(card: String): Future[Customer] = {
+    post[Customer]("customers", Map("card" -> Seq(card)))
   }
 
-  def httpGet(url:String,  header: (String, String)*):Future[Response]={
-    WS.url(url).withHeaders(header:_*).get
+  def readCustomer(customerId: String): Future[Customer] =
+    get[Customer](s"customers/$customerId")
+
+  def createSubscription(customerId: String, planId: String): Future[Subscription] = {
+    post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
+  }
+
+  def httpPost(url: String, data: Map[String, Seq[String]], header: (String, String)*): Future[Response] = {
+    WS.url(url).withHeaders(header: _*).post(data)
+  }
+
+  def httpGet(url: String, header: (String, String)*): Future[Response] = {
+    WS.url(url).withHeaders(header: _*).get
   }
 }
 

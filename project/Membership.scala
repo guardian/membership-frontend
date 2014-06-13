@@ -39,8 +39,7 @@ trait Membership {
     "com.gu.identity" %% "identity-cookie" % "3.40",
     "com.gu.identity" %% "identity-model" % "3.40",
     "com.github.seratch" %% "awscala" % "0.2.1",
-    "com.netaporter" %% "scala-uri" % "0.4.1",
-    "com.github.tomakehurst" % "wiremock" % "1.46"
+    "com.netaporter" %% "scala-uri" % "0.4.1"
   )
 
   def commonSettings = Seq(
