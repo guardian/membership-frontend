@@ -4,7 +4,7 @@ object Stripe {
 
   trait StripeObject
 
-  case class Error(`type`: String, message: String) extends Throwable with StripeObject {
+  case class Error(`type`: String, message: String, code: Option[String]) extends Throwable with StripeObject {
     override def getMessage:String = `type` + s" $message "
   }
 

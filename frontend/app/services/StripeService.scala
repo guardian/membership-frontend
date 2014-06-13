@@ -27,7 +27,7 @@ trait StripeService {
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
-      throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object"))
+      throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object", None))
     }
   }
 
