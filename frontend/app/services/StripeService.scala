@@ -23,7 +23,8 @@ trait StripeService {
   implicit val readsSubscriptionList = Json.reads[SubscriptionList]
   implicit val readsCustomer = Json.reads[Customer]
 
-  private def request(endpoint: String) =  WS.url(s"$apiURL/$endpoint").withHeaders(("Authorization", s"Bearer $apiSecret"))
+  private def headers = ("Authorization", s"Bearer $apiSecret")
+
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -31,20 +32,22 @@ trait StripeService {
     }
   }
 
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    request(endpoint).post(data).map(extract[A])
+  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] = {
+    httpPost(s"$apiURL/$endpoint", data, headers).map(extract[A])
+  }
 
-  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    request(endpoint).get().map(extract[A])
+  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
+    httpGet(s"$apiURL/$endpoint", headers).map(extract[A])
+  }
 
-    def createCharge(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
-      post[Charge]("charges", Map(
-        "amount" -> Seq(amount.toString),
-        "currency" -> Seq(currency),
-        "card" -> Seq(card),
-        "description" -> Seq(description)
-      ))
-    }
+  def createCharge(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
+    post[Charge]("charges", Map(
+      "amount" -> Seq(amount.toString),
+      "currency" -> Seq(currency),
+      "card" -> Seq(card),
+      "description" -> Seq(description)
+    ))
+  }
 
     def createCustomer(card: String): Future[Customer] ={
       post[Customer]("customers", Map("card" -> Seq(card)))
@@ -56,6 +59,14 @@ trait StripeService {
     def createSubscription(customerId: String, planId: String): Future[Subscription] = {
       post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
     }
+
+  def httpPost(url:String, data: Map[String, Seq[String]], header: (String, String)*):Future[Response] ={
+    WS.url(url).withHeaders(header:_*).post(data)
+  }
+
+  def httpGet(url:String,  header: (String, String)*):Future[Response]={
+    WS.url(url).withHeaders(header:_*).get
+  }
 }
 
 object StripeService extends StripeService {
