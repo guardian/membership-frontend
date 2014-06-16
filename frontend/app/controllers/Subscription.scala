@@ -9,7 +9,7 @@ import play.api.data.Forms._
 
 import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
-import actions.{ AuthenticatedAction, AuthRequest }
+import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 
 trait Subscription extends Controller {
 
@@ -35,6 +35,14 @@ trait Subscription extends Controller {
     payment.recover {
       case error: Stripe.Error => BadRequest(error.message)
     }
+  }
+
+  def cancel = MemberAction.async { implicit request =>
+    for {
+      customer <- StripeService.Customer.read(request.member.customerId)
+      subscriptionId = customer.subscriptions.data.headOption.map(_.id).getOrElse("")
+      subscription <- StripeService.Subscription.delete(customer.id, subscriptionId)
+    } yield Ok
   }
 }
 

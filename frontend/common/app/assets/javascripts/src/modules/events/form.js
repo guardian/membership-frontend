@@ -59,7 +59,7 @@ define([
             var token = response.id;
 
             ajax({
-                url: '/subscribe',
+                url: '/subscription/subscribe',
                 method: 'post',
                 data: {
                     stripeToken: token,
