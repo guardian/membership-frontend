@@ -42,12 +42,17 @@ class StripeServiceTest extends PlaySpecification {
     val apiURL = "http://localhost:9999/v1"
     val apiAuthHeader = ("Authorization", "Bearer test_api_secret")
 
+    def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
+      RequestInfo(s"$apiURL/$endpoint", Map.empty) mustEqual expected
+      Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
+    }
+
     def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] = {
       RequestInfo(s"$apiURL/$endpoint", data, apiAuthHeader) mustEqual expected
       Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
     }
 
-    def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
+    def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
       RequestInfo(s"$apiURL/$endpoint", Map[String, Seq[String]](), apiAuthHeader) mustEqual expected
       Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
     }

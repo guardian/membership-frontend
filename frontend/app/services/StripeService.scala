@@ -11,8 +11,9 @@ import model.StripeDeserializer._
 import configuration.Config
 
 trait StripeService {
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
   def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
+  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
+  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
 
   private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -55,4 +56,7 @@ object StripeService extends StripeService {
 
   def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiURL/$endpoint").withHeaders(apiAuthHeader).post(data).map(extract[A])
+
+  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
+    WS.url(s"$apiURL/$endpoint").withHeaders(apiAuthHeader).delete().map(extract[A])
 }
