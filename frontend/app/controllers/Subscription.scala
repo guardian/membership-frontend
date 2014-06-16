@@ -39,7 +39,7 @@ trait Subscription extends Controller {
 
     payment.recover {
       case error: Stripe.Error => Forbidden(
-        Json.obj( "type" -> error.`type`, "code" -> error.code)
+        Json.obj( "type" -> error.`type`, "code" -> error.code, "decline_code" -> error.decline_code)
       )
     }
   }
