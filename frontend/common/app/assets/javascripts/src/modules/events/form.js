@@ -12,9 +12,6 @@ define([
 
    return (function() {
 
-        // on first pass through of the select do not show errors when just the month is entered
-        var doNotDisplayMonthError = true;
-
         function StripePaymentForm () {}
 
         StripePaymentForm.prototype.config = {
@@ -41,6 +38,8 @@ define([
                 CARD_TYPE: 'data-card-type'
             }
         };
+
+       StripePaymentForm.prototype.displayMonthError = false;
 
         /**
         * get parent by className
@@ -71,9 +70,11 @@ define([
         StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
             var self = this;
-
             if (response.error) {
-                self.getErrorMessage(response.error);
+                var errorMessage = self.getErrorMessage(response.error);
+                if (errorMessage) {
+                    self.handleErrors([errorMessage]);
+                }
             } else {
 
                 // token contains id, last4, and card type
@@ -101,7 +102,9 @@ define([
 
                         self.stopLoader();
                         errorMessage = self.getErrorMessage(errorObj);
-                        self.handleErrors([errorMessage]);
+                        if (errorMessage) {
+                            self.handleErrors([errorMessage]);
+                        }
                     }
                 });
             }
@@ -109,15 +112,26 @@ define([
 
        /**
         * get friendly error messages via codes sent from stripe
-        * @param errorObj
+        * @param errorObj {type: 'card_error', code: 'incorrect_number', decline_code: 'do_not_honour'}
         * @returns {*}
         */
         StripePaymentForm.prototype.getErrorMessage = function (errorObj) {
 
             var errorType = errorObj && errorObj.type,
                 errorCode = errorObj && errorObj.code,
+                declineCode = errorObj && errorObj.decline_code,
                 errorSection = stripeErrorMessages[errorType] && stripeErrorMessages[errorType],
-                errorMessage = errorSection && (errorSection[errorCode] && errorSection[errorCode]);
+                errorMessage;
+
+            if (errorCode === 'card_declined') {
+                if (errorSection && declineCode && errorSection[errorCode] && errorSection[errorCode][declineCode]) {
+                    errorMessage = errorSection[errorCode][declineCode];
+                }
+            } else {
+                if (errorSection && errorCode && errorSection[errorCode]) {
+                    errorMessage = errorSection[errorCode];
+                }
+            }
 
             return errorMessage;
         };
@@ -153,8 +167,8 @@ define([
             return stripe.cardType(cardNumber).toLowerCase().replace(' ', '-');
         };
 
-        StripePaymentForm.prototype.displayCardTypeImage = function ($creditCardNumberElement) {
-            var cardType = this.getCardType($creditCardNumberElement.val()),
+        StripePaymentForm.prototype.displayCardTypeImage = function (creditCardNumber) {
+            var cardType = this.getCardType(creditCardNumber),
                 $creditCardImageElement = this.getElement('CREDIT_CARD_IMAGE');
 
             $creditCardImageElement.attr(this.config.data.CARD_TYPE, cardType);
@@ -170,7 +184,7 @@ define([
 
             bean.on($creditCardNumberElement[0], 'keyup blur', function () {
                 masker(' ', 4).bind(this)();
-                stripePaymentFormClass.displayCardTypeImage($creditCardNumberElement);
+                stripePaymentFormClass.displayCardTypeImage($creditCardNumberElement.val());
             });
 
             bean.on($creditCardNumberElement[0], 'blur', function (e) {
@@ -193,6 +207,8 @@ define([
 
             bean.on($creditCardExpiryMonthElement[0], 'blur', function (e) {
 
+                this.setDisplayMonthErrorStatus();
+
                 var $expiryMonthElement = $(e.target),
                     validationResult = this.validateExpiry($expiryMonthElement);
 
@@ -201,6 +217,8 @@ define([
             }.bind(this));
 
             bean.on($creditCardExpiryYearElement[0], 'blur', function (e) {
+
+                this.displayMonthError = true;
 
                 var $expiryYearElement = $(e.target),
                     validationResult = this.validateExpiry($expiryYearElement);
@@ -213,7 +231,7 @@ define([
                 e.preventDefault();
 
                 // turn month select errors on when submitting
-                this.setMonthErrorDisplayStatusToFalse();
+                this.displayMonthError = true;
 
                 var formValidationResult = this.isFormValid();
 
@@ -269,11 +287,16 @@ define([
         };
 
         /**
-        * enable errors to be shown when using the month select
+        * Display the month error only if the year has a value
+        * @returns {boolean}
         */
-        StripePaymentForm.prototype.setMonthErrorDisplayStatusToFalse = function () {
-            doNotDisplayMonthError = doNotDisplayMonthError && false;
+        StripePaymentForm.prototype.setDisplayMonthErrorStatus = function () {
+            var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
+
+            this.displayMonthError = $creditCardExpiryYearElement[0].selectedIndex === 0 ? false : true;
         };
+
+
 
         /**
         *
@@ -284,14 +307,14 @@ define([
             var $creditCardExpiryMonthElement = this.getElement('CREDIT_CARD_EXPIRY_MONTH'),
                 $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR'),
                 today = new Date(),
-                isValid = doNotDisplayMonthError,
+                isValid = !this.displayMonthError,
                 validDateEntry = function () {
                     var presentOrFutureMonth = true,
                         monthAndYearHaveValue = $creditCardExpiryMonthElement[0].selectedIndex > 0 &&
                                                 $creditCardExpiryYearElement[0].selectedIndex > 0;
 
                     // if we are on the current year check the month is the current or a future month
-                    if ($creditCardExpiryYearElement.val() === today.getFullYear().toString().slice(2)) {
+                    if ($creditCardExpiryYearElement.val() === today.getFullYear().toString()) {
                         presentOrFutureMonth = $creditCardExpiryMonthElement.val() >= (today.getMonth() + 1);
                     }
 
@@ -301,9 +324,6 @@ define([
             if (validDateEntry()) {
                 isValid = stripe.card.validateExpiry($creditCardExpiryMonthElement.val(), $creditCardExpiryYearElement.val());
             }
-
-            // turn month select errors on
-            this.setMonthErrorDisplayStatusToFalse();
 
             return {
                 isValid: isValid,
