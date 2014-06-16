@@ -38,6 +38,9 @@ trait StripeService {
 
     def read(customerId: String): Future[Customer] =
       get[Customer](s"customers/$customerId")
+
+    def updateCard(customerId: String, card: String): Future[Customer] =
+      post[Customer](s"customers/$customerId", Map("card" -> Seq(card)))
   }
 
   object Subscription {
