@@ -2,20 +2,52 @@ define([
     'src/modules/events/form',
     'ajax',
     '$',
-    'stripe'
-], function (PaymentForm, ajax, $, stripe) {
+    'stripe',
+    'config/stripeErrorMessages'
+], function (PaymentForm, ajax, $, stripe, stripeErrorMessages) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
     describe('Payment form module', function() {
 
-        var paymentForm, paymentFormFixture = null, errorMessageContainer;
+        var NEW_LINE_CHARACTER = '\n',
+            TEST_ERROR_MESSAGE = 'a test error message',
+            VALID_CREDIT_CARD_NUMBER = '4242424242424242',
+            INVALID_CREDIT_CARD_NUMBER = '1234123412341234',
+            VALID_CVC_NUMBER = '123',
+            EMPTY_ARRAY = [],
+            EMPTY_STRING = '',
+            creditCardNumbers = {
+                visa: '4242424242424242',
+                mastercard: '5555555555554444',
+                american_express: '371449635398431',
+                discover: '6011000990139424',
+                diners_club: '38520000023237',
+                jcb: '3566002020360505'
+            },
+            stripeErrorObjects = {
+                valid: {type: 'card_error', code: 'incorrect_number'},
+                declinedCard: {type: 'card_error', code: 'card_declined', decline_code: 'do_not_honor'},
+                invalid: {type: 'captain_haddock', code: 'tintin'}
+            },
+            paymentForm,
+            paymentFormFixtureElement = null,
+            errorMessageContainer,
+            creditCardNumberInputElement,
+            creditCardVerificationCodeInputElement,
+            submitButtonElement,
+            errorMessageDisplayElement,
+            creditCardImageElement,
+            expiryMonthElement,
+            expiryYearElement,
+            now;
+
 
         // PhantomJS doesn't support bind yet
-        Function.prototype.bind = Function.prototype.bind || function (thisp) {
+        Function.prototype.bind = Function.prototype.bind || function (context) {
             var fn = this;
             return function () {
-                return fn.apply(thisp, arguments);
+                return fn.apply(context, arguments);
             };
         };
 
@@ -36,77 +68,175 @@ define([
                     url: '/base/test/fixtures/paymentForm.fixture.html',
                     method: 'get',
                     success: function (resp) {
-                        paymentFormFixture = $.create(resp);
+                        paymentFormFixtureElement = $.create(resp)[0];
                     }
                 });
             });
 
             waitsFor(function () {
-               return paymentFormFixture !== null;
+               return paymentFormFixtureElement !== null;
             }, 'Fixture should be loaded', 1000);
 
             runs(function () {
                 paymentForm = new PaymentForm();
-                paymentForm.init(paymentFormFixture[0]);
-                errorMessageContainer = paymentFormFixture[0].querySelector('.js-payment-errors');
+                paymentForm.init(paymentFormFixtureElement);
+                errorMessageContainer = paymentFormFixtureElement.querySelectorAll('.js-payment-errors')[0];
+                creditCardNumberInputElement = paymentFormFixtureElement.querySelectorAll('.js-credit-card-number')[0];
+                creditCardVerificationCodeInputElement = paymentFormFixtureElement.querySelectorAll('.js-credit-card-cvc')[0];
+                submitButtonElement = paymentFormFixtureElement.querySelectorAll('.js-submit-input')[0];
+                errorMessageDisplayElement = paymentFormFixtureElement.querySelectorAll('.js-payment-errors')[0];
+                creditCardImageElement = paymentFormFixtureElement.querySelectorAll('.js-credit-card-image')[0];
+                expiryMonthElement = paymentFormFixtureElement.querySelectorAll('.js-credit-card-exp-month')[0];
+                expiryYearElement = paymentFormFixtureElement.querySelectorAll('.js-credit-card-exp-year')[0];
+                now = new Date();
             });
 
         });
 
         afterEach(function () {
-           paymentForm = null;
-           paymentFormFixture = null;
-           errorMessageContainer = null;
+            paymentForm = null;
+            paymentFormFixtureElement = null;
+            errorMessageContainer = null;
+            submitButtonElement.removeAttribute('disabled');
+            expiryMonthElement.selectedIndex = 0;
+            expiryYearElement.selectedIndex = 0;
         });
 
-        /********************************************************
-         * Payment - form.js
-         ********************************************************/
-
-        xit('should correctly initialise itself', function () {
-            expect(paymentForm.context).toEqual(paymentFormFixture[0]);
-            expect(paymentForm.config.DOM.CREDIT_CARD_NUMBER).toEqual(paymentFormFixture[0].querySelector('.js-credit-card-number'));
+        it('should correctly initialise itself', function () {
+            expect(paymentForm.context).toEqual(paymentFormFixtureElement);
+            expect(paymentForm.config.DOM.CREDIT_CARD_NUMBER).toEqual(paymentFormFixtureElement.querySelector('.js-credit-card-number'));
         });
 
-        xit('should display an error message', function () {
-            var testMessage = 'a test error message'
-            paymentForm.handleError(testMessage);
-            expect(paymentFormFixture[0].querySelector('.js-payment-errors').innerHTML).toEqual(testMessage);
+        it('should display an error message', function () {
+            paymentForm.handleErrors([TEST_ERROR_MESSAGE]);
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(TEST_ERROR_MESSAGE + NEW_LINE_CHARACTER);
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
         });
 
-        /********************************************************
-         *  Testing the validation for the CC number here,
-         *  all depends on Stripe so no reason to test the CVC and expiry...
-         ********************************************************/
+        it('should not display an error message', function () {
+            paymentForm.handleErrors(EMPTY_ARRAY);
 
-        xit('should detect an invalid credit card number', function () {
-            var ccNumInput = paymentFormFixture[0].querySelector('.js-credit-card-number');
-            ccNumInput.value = "123";
-            triggerEvent(ccNumInput, 'blur');
-            expect(errorMessageContainer.innerHTML).toEqual('Please enter a valid card number');
+            expect(errorMessageDisplayElement.innerHTML).toEqual('');
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
         });
 
-        xit('should allow a valid credit card number', function () {
-            var ccNumInput = paymentFormFixture[0].querySelector('.js-credit-card-number');
-            ccNumInput.value = "4242424242424242";
-            triggerEvent(ccNumInput, 'blur');
-            expect(errorMessageContainer.innerHTML).toEqual(''); // no error message
-            expect(errorMessageContainer.className.match('hide').length).toEqual(1); // hidden class applied
+        it('should detect an invalid credit card number', function () {
+            creditCardNumberInputElement.value = INVALID_CREDIT_CARD_NUMBER;
+            triggerEvent(creditCardNumberInputElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.incorrect_number + NEW_LINE_CHARACTER);
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
         });
 
-        xit('should prevent submission of an empty form', function () {
-            var formElement = paymentFormFixture[0];
-            triggerEvent(formElement, 'submit');
-            expect(errorMessageContainer.innerHTML).toEqual('Please enter a valid card number, Please enter a valid CVC number, Please enter a valid Expiry')
+        it('should allow a valid credit card number', function () {
+            creditCardNumberInputElement.value = VALID_CREDIT_CARD_NUMBER;
+            triggerEvent(creditCardNumberInputElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
         });
 
-        /********************************************************
-         * Submission
-         ********************************************************/
+        it('should detect an invalid Card Verification Code number', function () {
+            creditCardVerificationCodeInputElement.value = EMPTY_STRING;
+            triggerEvent(creditCardVerificationCodeInputElement, 'blur');
 
-        xit('should create and try to submit a stripe customer object', function () {
+            expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.incorrect_cvc + NEW_LINE_CHARACTER);
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+        });
 
-            spyOn(stripe.card, 'createToken'); // http://tobyho.com/2011/12/15/jasmine-spy-cheatsheet/
+        it('should allow a valid Card Verification Code number', function () {
+            creditCardVerificationCodeInputElement.value = VALID_CVC_NUMBER;
+            triggerEvent(creditCardVerificationCodeInputElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+        });
+
+        it('should prevent submission of an empty form', function () {
+            triggerEvent(paymentFormFixtureElement, 'submit');
+
+            expect(errorMessageContainer.innerHTML).toEqual(
+                [
+                    stripeErrorMessages.card_error.incorrect_number + NEW_LINE_CHARACTER,
+                    stripeErrorMessages.card_error.incorrect_cvc + NEW_LINE_CHARACTER,
+                    stripeErrorMessages.card_error.invalid_expiry + NEW_LINE_CHARACTER
+                ].join('')
+            );
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+        });
+
+        it('should add correct card type class to credit card image element', function() {
+            var cardType;
+
+            for (cardType in creditCardNumbers) {
+
+                paymentForm.displayCardTypeImage(creditCardNumbers[cardType]);
+
+                expect(creditCardImageElement.getAttribute('data-card-type')).toEqual(cardType.replace('_', '-'));
+                expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
+                expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
+                expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+            }
+        });
+
+        it('correct error returned from stripeErrorMessages via getErrorMessage', function() {
+            var stripeErrorMessage = paymentForm.getErrorMessage(stripeErrorObjects.valid);
+
+            expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.incorrect_number);
+        });
+
+        it('undefined returned from stripeErrorMessages via getErrorMessage for invalid stripe error object', function() {
+            var stripeErrorMessage = paymentForm.getErrorMessage(stripeErrorObjects.invalid);
+
+            expect(stripeErrorMessage).toBeUndefined();
+        });
+
+        it('correct error returned from stripeErrorMessages via getErrorMessage for declined_card', function() {
+            var stripeErrorMessage = paymentForm.getErrorMessage(stripeErrorObjects.declinedCard);
+
+            expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.card_declined.do_not_honor);
+        });
+
+        it('no error when year does not have an entry and month does', function () {
+            expiryMonthElement.value = 2;
+            expiryYearElement.selectedIndex = 0;
+            triggerEvent(expiryMonthElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+        });
+
+        it('error when month does have an entry and year does not', function () {
+            expiryMonthElement.value = 2;
+            expiryYearElement.selectedIndex = 0;
+            triggerEvent(expiryYearElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.invalid_expiry + NEW_LINE_CHARACTER);
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+        });
+
+        it('error when month is in the past', function () {
+
+            var currentMonth = now.getMonth() + 1,
+                currentYear = now.getFullYear();
+
+            expiryMonthElement.value = currentMonth - 1;
+            expiryYearElement.value = currentYear;
+
+            triggerEvent(expiryYearElement, 'blur');
+
+            expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.invalid_expiry + NEW_LINE_CHARACTER);
+            expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
+            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+        });
+
+        it('should create and try to submit a stripe customer object', function () {
 
             var paymentDetails = {
                 number : '4242424242424242',
@@ -115,14 +245,17 @@ define([
                 exp_year : '2020'
             };
 
-            paymentFormFixture[0].querySelector('.js-credit-card-number').value     = paymentDetails.number;
-            paymentFormFixture[0].querySelector('.js-credit-card-cvc').value        = paymentDetails.cvc;
-            paymentFormFixture[0].querySelector('.js-credit-card-exp-month').value  = paymentDetails.exp_month;
-            paymentFormFixture[0].querySelector('.js-credit-card-exp-year').value   = paymentDetails.exp_year;
+            spyOn(stripe.card, 'createToken');
 
-            var formElement = paymentFormFixture[0];
-            triggerEvent(formElement, 'submit');
+            expiryMonthElement.value = paymentDetails.exp_month;
+            expiryYearElement.value = paymentDetails.exp_year;
+            creditCardNumberInputElement.value = paymentDetails.number;
+            creditCardVerificationCodeInputElement.value = paymentDetails.cvc;
 
+            triggerEvent(paymentFormFixtureElement, 'submit');
+
+            expect(stripe.card.createToken).toHaveBeenCalled();
+            expect(stripe.card.createToken.callCount).toEqual(1);
             expect(stripe.card.createToken.mostRecentCall.args[0]).toEqual(paymentDetails);
         });
 
