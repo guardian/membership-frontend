@@ -5,7 +5,7 @@ require([
     'src/modules/events/form',
     'src/modules/events/ctaButton',
     'src/modules/account',
-    'src/modules/events/datetimeEnhance',
+    'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent'
 ], function(router, domready, ajax, StripeForm, ctaButton, account, DatetimeEnhance, modifyEvent) {
     'use strict';

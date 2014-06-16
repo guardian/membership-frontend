@@ -1,47 +1,55 @@
 package services
 
+import scala.concurrent._
 import play.api.test.PlaySpecification
+import play.api.libs.ws.Response
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent._
-import model.{Tier, Stripe}
-import model.Stripe.StripeObject
-import play.api.libs.json.Json
-import scala.concurrent.duration._
-import org.joda.time.DateTime
 
 class StripeServiceTest extends PlaySpecification {
 
-  "StripeService" should {
 
-    "support subscription" in {
-      val subscriptionFuture: Future[Stripe.Subscription] = for {
-        token <- createToken
-        customer <- StripeService.Customer.create(token.id)
-        subscription <- StripeService.Subscription.create(customer.id, "Patron")
-      } yield subscription
+  "SubscriptionService" should {
 
-      val subscription = Await.result(subscriptionFuture, 5 seconds)
-      subscription.plan.tier mustEqual Tier.Patron
+    "create customers" in {
+      val expected = RequestInfo(
+        url = "http://localhost:9999/v1/customers",
+        body = Map("card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou")),
+        header = ("Authorization", "Bearer test_api_secret")
+      )
+      new TestStripeService(expected).createCustomer("tok_104Bpz2eZvKYlo2CRWVWL4Ou")
+      1 mustEqual (1) //just to keep specs2 happy. The real assertion is in the TestStripeService
+    }
+
+
+    "should create a subscription" in {
+      val expected = RequestInfo(
+        url = s"http://localhost:9999/v1/customers/cust_123/subscriptions",
+        body = Map("plan" -> Seq("Patron")),
+        header = ("Authorization", "Bearer test_api_secret")
+      )
+      new TestStripeService(expected).createSubscription("cust_123", "Patron")
+      1 mustEqual (1) //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
   }
 
-  /*
-  * This method is only used by this test, so putting it here.
-  * Retrieving tokens is done client side
-  */
-  def createToken: Future[Token] = {
-    implicit val readsToken = Json.reads[Token]
-    StripeService.post[Token](
-      s"tokens",
-      Map(
-        "card[number]" -> Seq("4242424242424242"),
-        "card[exp_month]" -> Seq("12"),
-        "card[exp_year]" -> Seq((DateTime.now.getYear + 1).toString),
-        "card[cvc]" -> Seq("123")
-      )
-    )
+  case class RequestInfo(url: String, body: Map[String, Seq[String]], header: (String, String)*)
+
+  class TestStripeService(expected: RequestInfo) extends StripeService {
+    override protected val apiURL: String = s"http://localhost:9999/v1"
+    override protected val apiSecret: String = "test_api_secret"
+
+    override def httpPost(url: String, data: Map[String, Seq[String]], header: (String, String)*): Future[Response] = {
+      RequestInfo(url, data, header: _*) mustEqual expected
+      future(Response(null)) //don't care
+    }
+
+    override def httpGet(url: String, header: (String, String)*): Future[Response] = {
+      RequestInfo(url, Map[String, Seq[String]](), header: _*) mustEqual expected
+      future(Response(null)) //don't care
+    }
   }
 
-  case class Token(id: String) extends StripeObject
 }
+
+

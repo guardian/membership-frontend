@@ -25,8 +25,8 @@ trait Subscription extends Controller {
   private def makePayment(formData: (String, String))(implicit request: AuthRequest[_]) = {
     val (stripeToken, tier) = formData
     val payment = for {
-      customer <- StripeService.Customer.create(stripeToken)
-      subscription <- StripeService.Subscription.create(customer.id, tier)
+      customer <- StripeService.createCustomer(stripeToken)
+      subscription <- StripeService.createSubscription(customer.id, tier)
       member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
       MemberService.put(member)
