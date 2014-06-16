@@ -1,5 +1,7 @@
 package model
 
+import play.api.libs.json.Json
+
 object Stripe {
 
   trait StripeObject
@@ -24,4 +26,17 @@ object Stripe {
   case class Plan(id: String, name: String, amount: Int) extends StripeObject {
     val tier = Tier.withName(id)
   }
+}
+
+object StripeDeserializer {
+  import Stripe._
+
+  implicit val readsError = Json.reads[Error]
+  implicit val readsCard = Json.reads[Card]
+  implicit val readsCardList = Json.reads[CardList]
+  implicit val readsCharge = Json.reads[Charge]
+  implicit val readsPlan = Json.reads[Plan]
+  implicit val readsSubscription = Json.reads[Subscription]
+  implicit val readsSubscriptionList = Json.reads[SubscriptionList]
+  implicit val readsCustomer = Json.reads[Customer]
 }
