@@ -19,7 +19,7 @@ trait User extends Controller {
     request.member.tier match {
       case Tier.Friend => Future.successful(Cors(Ok(basicDetails(request))))
 
-      case _ => StripeService.readCustomer(request.member.customerId).map { customer =>
+      case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
         val subscriptionOpt = for {
           subscription <- customer.subscriptions.data.headOption
           card <- customer.cards.data.headOption

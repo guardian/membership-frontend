@@ -20,7 +20,9 @@ GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
 GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 
 # Subscription
-POST        /subscribe                   controllers.Subscription.subscribe
+POST        /subscription/subscribe      controllers.Subscription.subscribe
+POST        /subscription/cancel         controllers.Subscription.cancel
+POST        /subscription/update         controllers.Subscription.update
 
 # Events
 GET         /events                      controllers.Event.list

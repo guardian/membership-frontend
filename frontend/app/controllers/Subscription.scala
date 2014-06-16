@@ -10,7 +10,7 @@ import play.api.libs.json._
 
 import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
-import actions.{ AuthenticatedAction, AuthRequest }
+import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 
 trait Subscription extends Controller {
 
@@ -25,8 +25,8 @@ trait Subscription extends Controller {
   private def makePayment(formData: (String, String))(implicit request: AuthRequest[_]) = {
     val (stripeToken, tier) = formData
     val payment = for {
-      customer <- StripeService.createCustomer(stripeToken)
-      subscription <- StripeService.createSubscription(customer.id, tier)
+      customer <- StripeService.Customer.create(stripeToken)
+      subscription <- StripeService.Subscription.create(customer.id, tier)
       member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
       MemberService.put(member)
@@ -43,6 +43,28 @@ trait Subscription extends Controller {
       )
     }
   }
+
+  def cancel = MemberAction.async { implicit request =>
+    for {
+      customer <- StripeService.Customer.read(request.member.customerId)
+      subscriptionIdOpt = customer.subscriptions.data.headOption.map(_.id)
+      status <- subscriptionIdOpt
+        .fold(Future.successful(NotFound)) {
+          StripeService.Subscription.delete(customer.id, _).map(_ => Ok)
+        }
+    } yield status
+  }
+
+  def update = MemberAction.async { implicit request =>
+    updateForm.bindFromRequest
+      .fold(_ => Future.successful(BadRequest), stripeToken =>
+        for {
+          customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
+        } yield Ok
+      )
+  }
+
+  private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
 }
 
 object Subscription extends Subscription
