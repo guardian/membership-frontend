@@ -32,6 +32,16 @@ class StripeServiceTest extends PlaySpecification {
       TestStripeService(expected).Subscription.create("cust_123", "Patron")
       1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
+
+    "should cancel a subscription" in {
+      val expected = RequestInfo(
+        url = s"http://localhost:9999/v1/customers/cust_123/subscriptions/sub_123?at_period_end=true",
+        body = Map.empty
+      )
+
+      TestStripeService(expected).Subscription.delete("cust_123", "sub_123")
+      1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
+    }
   }
 
   case class RequestInfo(url: String, body: Map[String, Seq[String]])

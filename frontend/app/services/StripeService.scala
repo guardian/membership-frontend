@@ -41,9 +41,11 @@ trait StripeService {
   }
 
   object Subscription {
-    def create(customerId: String, planId: String): Future[Subscription] = {
+    def create(customerId: String, planId: String): Future[Subscription] =
       post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
-    }
+
+    def delete(customerId: String, subscriptionId: String): Future[Subscription] =
+      StripeService.this.delete[Subscription](s"customers/$customerId/subscriptions/$subscriptionId?at_period_end=true")
   }
 }
 
