@@ -1,5 +1,5 @@
 define([
-    'src/modules/events/form',
+    'src/modules/joiner/form',
     'ajax',
     '$',
     'stripe',
