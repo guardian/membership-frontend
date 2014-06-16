@@ -47,6 +47,17 @@ trait Subscription extends Controller {
         }
     } yield status
   }
+
+  def update = MemberAction.async { implicit request =>
+    updateForm.bindFromRequest
+      .fold(_ => Future.successful(BadRequest), stripeToken =>
+        for {
+          customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
+        } yield Ok
+      )
+  }
+
+  private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
 }
 
 object Subscription extends Subscription
