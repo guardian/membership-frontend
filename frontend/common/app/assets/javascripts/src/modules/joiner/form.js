@@ -297,7 +297,7 @@ define([
     StripePaymentForm.prototype.setDisplayMonthErrorStatus = function () {
         var $creditCardExpiryYearElement = this.getElement('CREDIT_CARD_EXPIRY_YEAR');
 
-        this.displayMonthError = $creditCardExpiryYearElement[0].selectedIndex === 0 ? false : true;
+        this.displayMonthError = $creditCardExpiryYearElement[0].selectedIndex !== 0;
     };
 
 
