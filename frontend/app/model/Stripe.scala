@@ -1,6 +1,7 @@
 package model
 
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 object Stripe {
 
@@ -10,18 +11,16 @@ object Stripe {
     override def getMessage:String = `type` + s" $message "
   }
 
+  case class StripeList[T](total_count: Int, data: Seq[T]) extends StripeObject
+
   case class Card(`type`: String, last4: String) extends StripeObject
 
-  case class CardList(data: List[Card]) extends StripeObject
-
-  case class Charge(amount: Int, currency: String, card: Card, description: String)
+  case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
     extends StripeObject
 
-  case class Customer(id: String, subscriptions: SubscriptionList, cards: CardList) extends StripeObject
+  case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject
 
   case class Subscription(id: String, start: Long, current_period_end: Long, plan: Plan) extends StripeObject
-
-  case class SubscriptionList(data: List[Subscription]) extends StripeObject
 
   case class Plan(id: String, name: String, amount: Int) extends StripeObject {
     val tier = Tier.withName(id)
@@ -33,11 +32,13 @@ object StripeDeserializer {
 
   implicit val readsError = Json.reads[Error]
   implicit val readsCard = Json.reads[Card]
-  implicit val readsCardList = Json.reads[CardList]
   implicit val readsCharge = Json.reads[Charge]
   implicit val readsPlan = Json.reads[Plan]
   implicit val readsSubscription = Json.reads[Subscription]
-  implicit val readsSubscriptionList = Json.reads[SubscriptionList]
+
+  implicit def readsList[T](implicit reads: Reads[Seq[T]]): Reads[StripeList[T]] =
+    ((JsPath \ "total_count").read[Int] and (JsPath \ "data").read[Seq[T]])(StripeList[T] _)
+
   implicit val readsCustomer = Json.reads[Customer]
 }
 

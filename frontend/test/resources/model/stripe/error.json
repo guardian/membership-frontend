@@ -1,0 +1,8 @@
+{
+    "message": "Your card is not supported. Please use a Visa, MasterCard, or American Express card",
+    "type": "card_error",
+    "param": "number",
+    "code": "card_declined",
+    "decline_code": "card_not_supported",
+    "charge": "ch_4ErRzxXPWHczGZ"
+}

@@ -1,0 +1,23 @@
+{
+    "id": "card_4EqOubEAg8akPi",
+    "object": "card",
+    "last4": "4242",
+    "brand": "Visa",
+    "funding": "credit",
+    "exp_month": 12,
+    "exp_year": 2018,
+    "fingerprint": "WcEoAaSA58JhZuZI",
+    "country": "US",
+    "name": null,
+    "address_line1": null,
+    "address_line2": null,
+    "address_city": null,
+    "address_state": null,
+    "address_zip": null,
+    "address_country": null,
+    "cvc_check": "pass",
+    "address_line1_check": null,
+    "address_zip_check": null,
+    "customer": "cus_4EqORIiU7hBgmo",
+    "type": "Visa"
+}
