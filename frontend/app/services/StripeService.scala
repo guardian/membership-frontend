@@ -33,8 +33,8 @@ trait StripeService {
   }
 
   object Customer {
-    def create(card: String): Future[Customer] =
-      post[Customer]("customers", Map("card" -> Seq(card)))
+    def create(email: String, card: String): Future[Customer] =
+      post[Customer]("customers", Map("email" -> Seq(email), "card" -> Seq(card)))
 
     def read(customerId: String): Future[Customer] =
       get[Customer](s"customers/$customerId")
