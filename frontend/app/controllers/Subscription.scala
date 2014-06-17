@@ -6,10 +6,11 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
-import play.api.libs.json._
+import play.api.libs.json.Json
 
 import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
+import model.StripeSerializer._
 import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 
 trait Subscription extends Controller {
@@ -38,9 +39,7 @@ trait Subscription extends Controller {
     }
 
     payment.recover {
-      case error: Stripe.Error => Forbidden(
-        Json.obj( "type" -> error.`type`, "code" -> error.code, "decline_code" -> error.decline_code)
-      )
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
     }
   }
 

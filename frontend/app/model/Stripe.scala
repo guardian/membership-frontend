@@ -40,3 +40,9 @@ object StripeDeserializer {
   implicit val readsSubscriptionList = Json.reads[SubscriptionList]
   implicit val readsCustomer = Json.reads[Customer]
 }
+
+object StripeSerializer {
+  import Stripe._
+
+  implicit val writesError = Json.writes[Error]
+}
