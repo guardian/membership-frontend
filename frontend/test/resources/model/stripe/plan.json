@@ -1,0 +1,14 @@
+{
+    "interval": "month",
+    "name": "Partner plan",
+    "created": 1401377340,
+    "amount": 1500,
+    "currency": "gbp",
+    "id": "Partner",
+    "object": "plan",
+    "livemode": false,
+    "interval_count": 1,
+    "trial_period_days": null,
+    "metadata": {},
+    "statement_description": null
+}
