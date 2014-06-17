@@ -34,6 +34,9 @@ define([
         DOM: {},
         data: {
             CARD_TYPE: 'data-card-type'
+        },
+        url: {
+            SUBSCRIBE: '/subscription/subscribe'
         }
     };
 
@@ -67,7 +70,9 @@ define([
 
     StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
-        var self = this;
+        var self = this,
+            config = this.config;
+
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
             if (errorMessage) {
@@ -79,7 +84,7 @@ define([
             var token = response.id;
 
             ajax({
-                url: '/subscribe',
+                url: config.url.SUBSCRIBE,
                 method: 'post',
                 data: {
                     stripeToken: token,
@@ -96,7 +101,7 @@ define([
 
                     try {
                         errorObj = error.response && JSON.parse(error.response);
-                    } catch(e) {}
+                    } catch (e) {}
 
                     self.stopLoader();
                     errorMessage = self.getErrorMessage(errorObj);
@@ -115,21 +120,19 @@ define([
     */
     StripePaymentForm.prototype.getErrorMessage = function (errorObj) {
 
-        var errorType = errorObj && errorObj.type,
-            errorCode = errorObj && errorObj.code,
-            declineCode = errorObj && errorObj.decline_code,
-            errorSection = stripeErrorMessages[errorType] && stripeErrorMessages[errorType],
-            errorMessage;
+        var errorMessage;
 
-        if (errorCode === 'card_declined') {
-            if (errorSection && declineCode && errorSection[errorCode] && errorSection[errorCode][declineCode]) {
-                errorMessage = errorSection[errorCode][declineCode];
+        try {
+
+            if (errorObj.code === 'card_declined') {
+                errorMessage = stripeErrorMessages[errorObj.type][errorObj.code][errorObj.decline_code];
+                if (!errorMessage) {
+                    errorMessage = stripeErrorMessages[errorObj.type].processing_error;
+                }
+            } else {
+                errorMessage = stripeErrorMessages[errorObj.type][errorObj.code];
             }
-        } else {
-            if (errorSection && errorCode && errorSection[errorCode]) {
-                errorMessage = errorSection[errorCode];
-            }
-        }
+        } catch(e) {}
 
         return errorMessage;
     };
