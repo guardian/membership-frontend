@@ -101,13 +101,13 @@ define([
 
                     try {
                         errorObj = error.response && JSON.parse(error.response);
+                        errorMessage = self.getErrorMessage(errorObj);
+                        if (errorMessage) {
+                            self.handleErrors([errorMessage]);
+                        }
                     } catch (e) {}
 
                     self.stopLoader();
-                    errorMessage = self.getErrorMessage(errorObj);
-                    if (errorMessage) {
-                        self.handleErrors([errorMessage]);
-                    }
                 }
             });
         }
@@ -120,19 +120,22 @@ define([
     */
     StripePaymentForm.prototype.getErrorMessage = function (errorObj) {
 
-        var errorMessage;
+        var errorCode = errorObj && errorObj.code,
+            errorType = errorObj && errorObj.type,
+            errorSection = stripeErrorMessages[errorType],
+            errorMessage;
 
-        try {
+        if (errorSection) {
+            errorMessage = errorSection[errorCode];
 
-            if (errorObj.code === 'card_declined') {
-                errorMessage = stripeErrorMessages[errorObj.type][errorObj.code][errorObj.decline_code];
-                if (!errorMessage) {
-                    errorMessage = stripeErrorMessages[errorObj.type].processing_error;
-                }
-            } else {
-                errorMessage = stripeErrorMessages[errorObj.type][errorObj.code];
+            if (errorCode === 'card_declined') {
+                errorMessage = errorSection.card_declined[errorObj.decline_code];
             }
-        } catch(e) {}
+        }
+
+        if (!errorMessage) {
+            errorMessage = stripeErrorMessages.generic_error;
+        }
 
         return errorMessage;
     };

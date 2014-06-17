@@ -27,7 +27,7 @@ define([
             },
             stripeErrorObjects = {
                 valid: {type: 'card_error', code: 'incorrect_number'},
-                declinedCard: {type: 'card_error', code: 'card_declined', decline_code: 'do_not_honor'},
+                declinedCard: {type: 'card_error', code: 'card_declined', decline_code: 'card_not_supported'},
                 invalid: {type: 'captain_haddock', code: 'tintin'}
             },
             paymentForm,
@@ -192,13 +192,13 @@ define([
         it('undefined returned from stripeErrorMessages via getErrorMessage for invalid stripe error object', function() {
             var stripeErrorMessage = paymentForm.getErrorMessage(stripeErrorObjects.invalid);
 
-            expect(stripeErrorMessage).toBeUndefined();
+            expect(stripeErrorMessage).toEqual(stripeErrorMessages.generic_error);
         });
 
         it('correct error returned from stripeErrorMessages via getErrorMessage for declined_card', function() {
             var stripeErrorMessage = paymentForm.getErrorMessage(stripeErrorObjects.declinedCard);
 
-            expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.card_declined.do_not_honor);
+            expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.card_declined.card_not_supported);
         });
 
         it('no error when year does not have an entry and month does', function () {
