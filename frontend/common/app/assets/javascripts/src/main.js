@@ -2,7 +2,7 @@ require([
     'src/utils/router',
     'domready',
     'ajax',
-    'src/modules/events/form',
+    'src/modules/joiner/form',
     'src/modules/events/ctaButton',
     'src/modules/account',
     'src/modules/events/DatetimeEnhance',

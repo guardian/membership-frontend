@@ -60,17 +60,17 @@ class StripeServiceTest extends PlaySpecification {
 
     def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
       RequestInfo(s"$apiURL/$endpoint", Map.empty) mustEqual expected
-      Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
+      Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
 
     def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] = {
       RequestInfo(s"$apiURL/$endpoint", data) mustEqual expected
-      Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
+      Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
 
     def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
       RequestInfo(s"$apiURL/$endpoint", Map.empty) mustEqual expected
-      Future.failed[A](Stripe.Error("internal", "Not implemented")) // don't care
+      Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
   }
 

@@ -193,7 +193,12 @@ module.exports = function (grunt) {
         grunt.task.run(['karma:unit']);
     });
 
-    grunt.registerTask('test', ['jshint', 'test:unit']);
+    grunt.registerTask('test', function(){
+        if (!isDev) {
+            grunt.task.run(['jshint']);
+        }
+        grunt.task.run(['test:unit']);
+    });
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 

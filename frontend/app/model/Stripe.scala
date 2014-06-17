@@ -6,7 +6,7 @@ object Stripe {
 
   trait StripeObject
 
-  case class Error(`type`: String, message: String) extends Throwable with StripeObject {
+  case class Error(`type`: String, message: String, code: Option[String], decline_code: Option[String]) extends Throwable with StripeObject {
     override def getMessage:String = `type` + s" $message "
   }
 
@@ -39,4 +39,10 @@ object StripeDeserializer {
   implicit val readsSubscription = Json.reads[Subscription]
   implicit val readsSubscriptionList = Json.reads[SubscriptionList]
   implicit val readsCustomer = Json.reads[Customer]
+}
+
+object StripeSerializer {
+  import Stripe._
+
+  implicit val writesError = Json.writes[Error]
 }

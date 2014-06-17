@@ -11,4 +11,3 @@ object Cors {
     HeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true"
   )
 }
-

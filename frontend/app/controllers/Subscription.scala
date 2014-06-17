@@ -6,9 +6,11 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.data._
 import play.api.data.Forms._
+import play.api.libs.json.Json
 
 import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
+import model.StripeSerializer._
 import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 
 trait Subscription extends Controller {
@@ -29,11 +31,15 @@ trait Subscription extends Controller {
       member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
       MemberService.put(member)
-      Ok(subscription.id)
+      /*
+      We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.
+      A pull reqwest will be added to their library to solve this issue
+      */
+      Ok("")
     }
 
     payment.recover {
-      case error: Stripe.Error => BadRequest(error.message)
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
     }
   }
 
