@@ -18,7 +18,7 @@
                 Start Date
             </td>
             <td class="summary-table__cell">
-                @Html(subscription.start.pretty)
+                @dateWithoutTime(subscription.start)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -26,7 +26,7 @@
                 Amount Paid Today
             </td>
             <td class="summary-table__cell">
-                @Html(formatPence(subscription.plan.amount))
+                @formatPence(subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -34,7 +34,7 @@
                 Monthly Payment
             </td>
             <td class="summary-table__cell">
-                @Html(formatPence(subscription.plan.amount))
+                @formatPence(subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -42,7 +42,7 @@
                 Next Payment
             </td>
             <td class="summary-table__cell">
-                @Html(subscription.current_period_end.pretty)
+                @dateWithoutTime(subscription.current_period_end)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
