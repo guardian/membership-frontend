@@ -11,7 +11,7 @@ define({
         invalid_cvc: 'Sorry, the security code that you have entered is invalid. Please check and retype.',
         expired_card: 'Sorry, this card has expired. Please try again with another card.',
         card_declined: {
-            generic_decline: 'Your card was declined.xcxc',
+            generic_decline: 'Your card was declined.',
             do_not_honor: 'Your card was declined.',
             card_not_supported: 'Your card was declined.',
             currency_not_supported: 'Your card was declined.',
