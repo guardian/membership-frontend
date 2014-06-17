@@ -2,7 +2,6 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{ Reads, Json }
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
