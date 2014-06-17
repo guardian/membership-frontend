@@ -56,7 +56,7 @@
                                 @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
                             </span>
                         </div>
-                        <div class="event__time"><span class="icon time--icon"></span>event.start.pretty</div>
+                        <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
                     </div>
                     <div class="event__tickets">
 
@@ -68,13 +68,13 @@
 
                         <div class="event__sale-ends">
                             <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
-                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)</time>
+                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold(Html(""))(_.pretty)</time>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="event__content-body">
-                <div class="event__description">event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml</div>
+                <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
 
                 @renderButton
             </div>
