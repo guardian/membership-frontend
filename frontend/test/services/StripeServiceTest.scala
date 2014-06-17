@@ -17,9 +17,9 @@ class StripeServiceTest extends PlaySpecification {
     "create customers" in {
       val expected = RequestInfo(
         url = "http://localhost:9999/v1/customers",
-        body = Map("card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou"))
+        body = Map("email" -> Seq("test@example.com"), "card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou"))
       )
-      TestStripeService(expected).Customer.create("tok_104Bpz2eZvKYlo2CRWVWL4Ou")
+      TestStripeService(expected).Customer.create("test@example.com", "tok_104Bpz2eZvKYlo2CRWVWL4Ou")
       1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
 
