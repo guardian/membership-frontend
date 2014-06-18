@@ -59,7 +59,8 @@ trait Subscription extends Controller {
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
           customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
-        } yield Ok
+          cardOpt = customer.cards.data.headOption
+        } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
       )
   }
 
