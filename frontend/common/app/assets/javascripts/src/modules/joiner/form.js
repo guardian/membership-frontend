@@ -130,6 +130,9 @@ define([
 
             if (errorCode === 'card_declined') {
                 errorMessage = errorSection.card_declined[errorObj.decline_code];
+                if (!errorMessage) {
+                    errorMessage = errorMessage.card_declined.generic_decline;
+                }
             }
         }
 
@@ -209,7 +212,7 @@ define([
 
         }.bind(this));
 
-        bean.on($creditCardExpiryMonthElement[0], 'blur', function (e) {
+        bean.on($creditCardExpiryMonthElement[0], 'change', function (e) {
 
             this.setDisplayMonthErrorStatus();
 
@@ -220,7 +223,7 @@ define([
 
         }.bind(this));
 
-        bean.on($creditCardExpiryYearElement[0], 'blur', function (e) {
+        bean.on($creditCardExpiryYearElement[0], 'change', function (e) {
 
             this.displayMonthError = true;
 
