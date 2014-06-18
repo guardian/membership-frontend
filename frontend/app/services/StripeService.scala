@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.api.libs.json.Reads
 import play.api.libs.ws.{Response, WS}
+import play.api.Logger
 
 import model.Stripe._
 import model.StripeDeserializer._
@@ -49,6 +50,16 @@ trait StripeService {
 
     def delete(customerId: String, subscriptionId: String): Future[Subscription] =
       StripeService.this.delete[Subscription](s"customers/$customerId/subscriptions/$subscriptionId?at_period_end=true")
+  }
+
+  object Events {
+    val defaultHandler = (_: Event) => true
+    val eventHandlers = Map[String, Event => Boolean]()
+
+    def handle(event: Event): Boolean = {
+      Logger.debug(s"Got event ${event.`type`}")
+      eventHandlers.getOrElse(event.`type`, defaultHandler)(event)
+    }
   }
 }
 

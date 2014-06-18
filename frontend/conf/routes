@@ -23,6 +23,7 @@ GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
 POST        /subscription/subscribe      controllers.Subscription.subscribe
 POST        /subscription/cancel         controllers.Subscription.cancel
 POST        /subscription/update         controllers.Subscription.update
+POST        /subscription/event          controllers.Subscription.event(secret: String)
 
 # Events
 GET         /events                      controllers.Event.list
