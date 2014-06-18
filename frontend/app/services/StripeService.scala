@@ -54,7 +54,14 @@ trait StripeService {
 
   object Events {
     val defaultHandler = (_: Event) => true
-    val eventHandlers = Map[String, Event => Boolean]()
+    val eventHandlers = Map[String, Event => Boolean](
+      "customer.subscription.deleted" -> customerSubscriptionDeleted
+    )
+
+    def customerSubscriptionDeleted(event: Event) = {
+      val subscription = event.extract[Subscription]
+      true
+    }
 
     def handle(event: Event): Boolean = {
       Logger.debug(s"Got event ${event.`type`}")

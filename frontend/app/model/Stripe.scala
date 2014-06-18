@@ -20,7 +20,7 @@ object Stripe {
 
   case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject
 
-  case class Subscription(id: String, start: Long, current_period_end: Long, plan: Plan) extends StripeObject
+  case class Subscription(id: String, start: Long, current_period_end: Long, customer: String, plan: Plan) extends StripeObject
 
   case class Plan(id: String, name: String, amount: Int) extends StripeObject {
     val tier = Tier.withName(id)

@@ -24,6 +24,7 @@ class StripeDeserializerTest extends PlaySpecification {
     deserialize[Charge]("charge")
     deserialize[Customer]("customer")
     deserialize[Plan]("plan")
+    deserialize[Subscription]("subscription")
 
     deserialize[StripeList[Card]]("cardlist")
     deserialize[StripeList[Subscription]]("subscriptionlist")
