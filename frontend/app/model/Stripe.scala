@@ -25,6 +25,11 @@ object Stripe {
   case class Plan(id: String, name: String, amount: Int) extends StripeObject {
     val tier = Tier.withName(id)
   }
+
+  case class EventData(`object`: JsObject) extends StripeObject
+  case class Event(id: String, `type`: String, data: EventData) extends StripeObject {
+    def extract[T](implicit reads: Reads[T]) = data.`object`.as[T]
+  }
 }
 
 object StripeDeserializer {
@@ -40,6 +45,9 @@ object StripeDeserializer {
     ((JsPath \ "total_count").read[Int] and (JsPath \ "data").read[Seq[T]])(StripeList[T] _)
 
   implicit val readsCustomer = Json.reads[Customer]
+
+  implicit val readsEventData = Json.reads[EventData]
+  implicit val readsEvent = Json.reads[Event]
 }
 
 object StripeSerializer {
