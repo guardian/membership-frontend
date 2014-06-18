@@ -13,7 +13,6 @@ define({
         card_declined: {
             generic_decline: 'We\'re sorry. Your card has been declined.',
             card_not_supported:	'We\'re sorry. We can\'t take payment with this type of card. Please try again using Visa, Mastercard or American Express.',
-            currency_not_supported:	'We\'re sorry. You\'ve tried to pay using a currency we don\'t accept.',
             try_again_later: 'We can\'t process your payment right now. Please try again later.'
         },
         processing_error: 'Sorry, we weren\'t able to process your payment this time around. Please try again.',
