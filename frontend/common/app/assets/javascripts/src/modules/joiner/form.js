@@ -209,7 +209,7 @@ define([
 
         }.bind(this));
 
-        bean.on($creditCardExpiryMonthElement[0], 'blur', function (e) {
+        bean.on($creditCardExpiryMonthElement[0], 'change', function (e) {
 
             this.setDisplayMonthErrorStatus();
 
@@ -220,7 +220,7 @@ define([
 
         }.bind(this));
 
-        bean.on($creditCardExpiryYearElement[0], 'blur', function (e) {
+        bean.on($creditCardExpiryYearElement[0], 'change', function (e) {
 
             this.displayMonthError = true;
 
