@@ -131,7 +131,7 @@ define([
             if (errorCode === 'card_declined') {
                 errorMessage = errorSection.card_declined[errorObj.decline_code];
                 if (!errorMessage) {
-                    errorMessage = errorMessage.card_declined.generic_decline;
+                    errorMessage = errorSection.card_declined.generic_decline;
                 }
             }
         }
