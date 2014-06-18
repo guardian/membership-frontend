@@ -214,7 +214,7 @@ define([
         it('error when month does have an entry and year does not', function () {
             expiryMonthElement.value = 2;
             expiryYearElement.selectedIndex = 0;
-            triggerEvent(expiryYearElement, 'blur');
+            triggerEvent(expiryYearElement, 'change');
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.invalid_expiry + NEW_LINE_CHARACTER);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
@@ -229,7 +229,7 @@ define([
             expiryMonthElement.value = currentMonth - 1;
             expiryYearElement.value = currentYear;
 
-            triggerEvent(expiryYearElement, 'blur');
+            triggerEvent(expiryYearElement, 'change');
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(stripeErrorMessages.card_error.invalid_expiry + NEW_LINE_CHARACTER);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
