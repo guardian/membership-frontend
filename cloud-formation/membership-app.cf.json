@@ -107,8 +107,25 @@
                         "Effect": "Allow",
                         "Principal": { "Service": [ "ec2.amazonaws.com" ] },
                         "Action": [ "sts:AssumeRole" ]
-                    } ]
-                }
+                    }]
+                },
+                "Policies": [ {
+                    "PolicyName": "name",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "dynamodb:GetItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:Query"
+                                ],
+                                "Resource": "arn:aws:dynamodb:eu-west-1:865473395570:table/members"
+                            }
+                        ]
+                    }
+                }]
             }
         },
         "MembershipAppInstanceProfile": {
