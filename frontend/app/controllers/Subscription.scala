@@ -62,8 +62,8 @@ trait Subscription extends Controller {
           cardOpt = customer.cards.data.headOption
         } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
       ).recover {
-      case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
-    }
+        case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
+      }
   }
 
   private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
