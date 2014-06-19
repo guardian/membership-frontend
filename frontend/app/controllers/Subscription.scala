@@ -76,8 +76,10 @@ trait Subscription extends Controller {
       val result = for {
         json <- request.body.asJson
         event <- json.asOpt[Stripe.Event]
-        if StripeService.Events.handle(event)
-      } yield Ok
+      } yield {
+        StripeService.Events.handle(event)
+        Ok
+      }
 
       result.getOrElse(BadRequest)
     } else {

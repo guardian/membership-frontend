@@ -10,6 +10,7 @@ import play.api.Logger
 import model.Stripe._
 import model.StripeDeserializer._
 import configuration.Config
+import model.Tier
 
 trait StripeService {
   def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
@@ -53,19 +54,20 @@ trait StripeService {
   }
 
   object Events {
-    val defaultHandler = (_: Event) => true
-    val eventHandlers = Map[String, Event => Boolean](
-      "customer.subscription.deleted" -> customerSubscriptionDeleted
+    val eventHandlers = Map(
+      "customer.subscription.deleted" -> customerSubscriptionDeleted _
     )
 
-    def customerSubscriptionDeleted(event: Event) = {
+    def customerSubscriptionDeleted(event: Event) {
       val subscription = event.extract[Subscription]
-      true
+      MemberService.getByCustomerId(subscription.customer).map { member =>
+        MemberService.put(member.copy(tier=Tier.Friend))
+      }
     }
 
-    def handle(event: Event): Boolean = {
+    def handle(event: Event) {
       Logger.debug(s"Got event ${event.`type`}")
-      eventHandlers.getOrElse(event.`type`, defaultHandler)(event)
+      eventHandlers.get(event.`type`).map(_(event))
     }
   }
 }
