@@ -56,12 +56,14 @@ trait Subscription extends Controller {
 
   def update = MemberAction.async { implicit request =>
     updateForm.bindFromRequest
-      .fold(_ => Future.successful(BadRequest), stripeToken =>
+      .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
         for {
           customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
           cardOpt = customer.cards.data.headOption
         } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
-      )
+      ).recover {
+        case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
+      }
   }
 
   private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
