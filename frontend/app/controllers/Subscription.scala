@@ -56,7 +56,7 @@ trait Subscription extends Controller {
 
   def update = MemberAction.async { implicit request =>
     updateForm.bindFromRequest
-      .fold(_ => Future.successful(BadRequest), stripeToken =>
+      .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
         for {
           customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
           cardOpt = customer.cards.data.headOption
