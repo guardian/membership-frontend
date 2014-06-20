@@ -26,6 +26,7 @@ object Config {
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
+  val stripeApiWebhookSecret = config.getString("stripe.api.webhook.secret")
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
