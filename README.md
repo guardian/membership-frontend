@@ -41,6 +41,12 @@ which includes both Node.js and NPM.
    ```
 
 1. ./nginx/setup.sh
+1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev.
+
+    If you have the AWS CLI set up you can run
+    ```
+    aws s3 cp s3://membership-private/keys.conf frontend/conf
+    ```
 
 ## Run
 The app normally runs on ports 9100 respectively.
