@@ -1,0 +1,10 @@
+.l-row__item {
+    min-height: 264px;
+}
+
+.secondary-content {
+    order: 2;
+    @if $old-ie {
+        float: left;
+    }
+}

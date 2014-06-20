@@ -1,0 +1,89 @@
+/* Core elements
+   ========================================================================== */
+
+.page-container {
+    > p,
+    ul,
+    ol,
+    address {
+        @include rem((
+            margin: 0 0 $gs-baseline 0
+        ));
+        padding: 0;
+
+        @include mq(tablet) {
+            @include rem((
+                margin-bottom: ($gs-baseline/3)*4
+            ));
+        }
+    }
+    > ol,
+    > blockquote > ul,
+    > ul {
+        margin-top: .8em;
+        list-style: none;
+    }
+    > ol {
+        counter-reset: li;
+    }
+    > ol > li:before {
+        content: counter(li)'.';
+        counter-increment: li;
+        @include fs-header(1);
+        margin-right: 4px;
+
+        @include mq(tablet) {
+            @include fs-header(2, true);
+        }
+    }
+    > ol > li,
+    > ul > li {
+        position: relative;
+        margin-bottom: .8em;
+    }
+    h2 {
+        @include fs-header(2);
+
+        @include mq(tablet) {
+            margin-bottom: 1px;
+            @include fs-header(3, true);
+        }
+    }
+    h3 {
+        margin: 0;
+        @include fs-bodyHeading(2);
+
+        @include mq(tablet) {
+            @include fs-bodyHeading(3, true);
+        }
+    }
+    > p,
+    > figure,
+    > video {
+        + h2 {
+            @include rem((
+                margin-top: 24px
+            ));
+
+            @include mq(tablet) {
+                @include rem((
+                    margin-top: 27px
+                ));
+            }
+        }
+        + h3 {
+            @include rem((
+                margin-top: $gs-baseline
+            ));
+        }
+    }
+}
+
+.content__heading {
+    @include fs-header(3);
+}
+
+.tone-news-one {
+    color: guss-colour('tone-news-1');
+}
+
