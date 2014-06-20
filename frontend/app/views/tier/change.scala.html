@@ -1,0 +1,21 @@
+@()(implicit request: play.api.mvc.Request[_])
+
+@import configuration.Config
+
+@main("Membership - Change Tier") {
+
+<div class="page-container">
+    <main>
+        <a href="@Config.idWebAppUrl/account/edit">My Profile</a>
+        <h1>Change Membership Package</h1>
+        <form action="/tier/downgrade/confirm" method="POST">
+            <input type="submit" value="Downgrade"/>
+        </form>
+        <form action="/tier/upgrade/confirm" method="POST">
+            <input type="submit" value="Upgrade"/>
+        </form>
+        <a href="@Config.idWebAppUrl/account/edit" class="action action-cancel">Cancel</a>
+    </main>
+</div>
+
+}

@@ -1,0 +1,69 @@
+@()(implicit request: play.api.mvc.Request[_])
+
+@main("Membership - Downgrade Tier") {
+
+<div class="page-container">
+    <main role="main">
+        <div class="content__container">
+            <section class="l-row l-row--items-2 content__section">
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h1 class="content__headline">Are you sure you would like to downgrade your account?</h1>
+                    <p>You will no longer receive all the great benefits</p>
+                </article>
+                <aside class="l-row__item">
+                    <h2 class="content__heading tone-news-one">Downgrade info</h2>
+                </aside>
+            </section>
+        </div>
+        <section class="l-row l-row--items-4">
+            <div class="l-row__item">
+                <h2>Your current benefits</h2>
+            </div>
+            <div class="l-row__item">
+                <h3>Digital</h3>
+                <div class="u-responsive-ratio">
+                    <img src="@routes.Assets.at("images/placeholder.jpg")" alt="Digital Benefits"/>
+                </div>
+                <ul>
+                    <li>Vestibulum ante ipsum primis in faucibus</li>
+                    <li>Fusce non sagittis ligula</li>
+                    <li>Phasellus et urna non orci mollis vestibulum</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                </ul>
+            </div>
+            <div class="l-row__item">
+                <h3>Community</h3>
+                <div class="u-responsive-ratio">
+                    <img src="@routes.Assets.at("images/placeholder-1.jpg")" alt="Digital Benefits"/>
+                </div>
+                <ul>
+                    <li>Sit amet libero congue pulvinar</li>
+                    <li>Vehicula tellus et, commodo nisl</li>
+                    <li>Adipiscing in risus et consequat</li>
+                    <li>Maecenas tincidunt auctor</li>
+                </ul>
+            </div>
+            <div class="l-row__item">
+                <h3>Live</h3>
+                <div class="u-responsive-ratio">
+                    <img src="@routes.Assets.at("images/placeholder-2.jpg")" alt="Digital Benefits"/>
+                </div>
+                <ul>
+                    <li>Donec rhoncus tristique faucibus</li>
+                    <li>Leo congue imperdiet ultricies</li>
+                    <li>Non facilisis tellus mauris</li>
+                    <li>Orci volutpat varius</li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <form action="/tier/downgrade/summary" method="POST">
+                <h2>Proceed with downgrade?</h2>
+                <input type="submit" value="Yes"/>
+                <a href="/tier/downgrade/confirm" class="action action-cancel">Cancel</a>
+            </form>
+        </section>
+    </main>
+</div>
+
+}
