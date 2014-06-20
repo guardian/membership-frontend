@@ -88,7 +88,7 @@
 
                         "unzip -d /membership /tmp/app.zip",
 
-                        "aws s3 cp s3://membership-private/keys.conf /membership/frontend-1.0-SNAPSHOT/conf",
+                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/keys.conf /membership/frontend-1.0-SNAPSHOT/conf"]]},
 
                         {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
