@@ -8,60 +8,73 @@
             <section class="l-row l-row--items-2 content__section">
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Are you sure you would like to downgrade your account?</h1>
-                    <p>You will no longer receive all the great benefits</p>
+                    <p class="item__title">You will no longer receive all the great benefits</p>
                 </article>
                 <aside class="l-row__item">
                     <h2 class="content__heading tone-news-one">Downgrade info</h2>
                 </aside>
             </section>
         </div>
-        <section class="l-row l-row--items-4">
-            <div class="l-row__item">
-                <h2>Your current benefits</h2>
-            </div>
-            <div class="l-row__item">
-                <h3>Digital</h3>
-                <div class="u-responsive-ratio">
-                    <img src="@routes.Assets.at("images/placeholder.jpg")" alt="Digital Benefits"/>
+        <div class="content__container">
+            <section class="l-row l-row--items-4">
+                <div class="l-row__item">
+                    <h2>Your current benefits</h2>
                 </div>
-                <ul>
-                    <li>Vestibulum ante ipsum primis in faucibus</li>
-                    <li>Fusce non sagittis ligula</li>
-                    <li>Phasellus et urna non orci mollis vestibulum</li>
-                    <li>Lorem ipsum dolor sit amet</li>
-                </ul>
-            </div>
-            <div class="l-row__item">
-                <h3>Community</h3>
-                <div class="u-responsive-ratio">
-                    <img src="@routes.Assets.at("images/placeholder-1.jpg")" alt="Digital Benefits"/>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Digital</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="@routes.Assets.at("images/placeholder.jpg")" alt="Digital Benefits"/>
+                        </div>
+                        <ul>
+                            <li class="item__list-element">Vestibulum ante ipsum primis</li>
+                            <li class="item__list-element">Fusce non sagittis ligula</li>
+                            <li class="item__list-element">Phasellus et urna non orci</li>
+                            <li class="item__list-element">Lorem ipsum dolor sit amet</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>Sit amet libero congue pulvinar</li>
-                    <li>Vehicula tellus et, commodo nisl</li>
-                    <li>Adipiscing in risus et consequat</li>
-                    <li>Maecenas tincidunt auctor</li>
-                </ul>
-            </div>
-            <div class="l-row__item">
-                <h3>Live</h3>
-                <div class="u-responsive-ratio">
-                    <img src="@routes.Assets.at("images/placeholder-2.jpg")" alt="Digital Benefits"/>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Community</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="@routes.Assets.at("images/placeholder-1.jpg")" alt="Digital Benefits"/>
+                        </div>
+                        <ul>
+                            <li class="item__list-element">Sit amet libero congue pulvinar</li>
+                            <li class="item__list-element">Vehicula tellus et, commodo</li>
+                            <li class="item__list-element">Adipiscing in risus et consequat</li>
+                            <li class="item__list-element">Maecenas tincidunt auctor</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul>
-                    <li>Donec rhoncus tristique faucibus</li>
-                    <li>Leo congue imperdiet ultricies</li>
-                    <li>Non facilisis tellus mauris</li>
-                    <li>Orci volutpat varius</li>
-                </ul>
-            </div>
-        </section>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Live</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="@routes.Assets.at("images/placeholder-2.jpg")" alt="Digital Benefits"/>
+                        </div>
+                        <ul>
+                            <li class="item__list-element">Donec rhoncus tristique</li>
+                            <li class="item__list-element">Leo congue imperdiet ultricies</li>
+                            <li class="item__list-element">Non facilisis tellus mauris</li>
+                            <li class="item__list-element">Orci volutpat varius</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
         <section>
-            <form action="/tier/downgrade/summary" method="POST">
-                <h2>Proceed with downgrade?</h2>
-                <input type="submit" value="Yes"/>
-                <a href="/tier/downgrade/confirm" class="action action-cancel">Cancel</a>
-            </form>
+            <div class="l-row l-row--items-2">
+                <div class="l-row__item"></div>
+                <div class="l-row__item l-row__item--boost-2 secondary-content">
+                    <form action="/tier/downgrade/confirm" method="POST">
+                        <h3 class="item__title">Proceed with downgrade?</h2>
+                        <a href="/tier/change" class="form-action form-action--cancel">No</a>
+                        <input type="submit" value="Yes" class="form-action form-action--confirm"/>
+                    </form>
+                </div>
+            </div>
         </section>
     </main>
 </div>
