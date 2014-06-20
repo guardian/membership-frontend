@@ -30,6 +30,11 @@
             "Description" : "Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or 'membership.theguardian.com')",
             "Type" : "String"
         },
+        "AllowedIngressIps" : {
+            "Description" : "IP address range (CIDR) that access the site (e.g. '77.91.248.0/21'- Internal Guardian, or '0.0.0.0/0' - the whole internet!)",
+            "Type" : "String",
+            "Default" : "77.91.248.0/21"
+        },
         "InstanceType" : {
             "Description" : "EC2 instance type",
             "Type" : "String",
@@ -102,8 +107,25 @@
                         "Effect": "Allow",
                         "Principal": { "Service": [ "ec2.amazonaws.com" ] },
                         "Action": [ "sts:AssumeRole" ]
-                    } ]
-                }
+                    }]
+                },
+                "Policies": [ {
+                    "PolicyName": "name",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "dynamodb:GetItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:Query"
+                                ],
+                                "Resource": "arn:aws:dynamodb:eu-west-1:865473395570:table/members"
+                            }
+                        ]
+                    }
+                }]
             }
         },
         "MembershipAppInstanceProfile": {
@@ -142,10 +164,10 @@
                 "GroupDescription" : "Permit incoming HTTP access on port 80, egress to port 9000",
                 "VpcId" : { "Ref" : "VpcId" },
                 "SecurityGroupIngress" : [
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "77.91.248.0/21" },
-                    { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": "77.91.248.0/21" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.158.92/32" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "80.254.146.68/32" }
+                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": { "Ref" : "AllowedIngressIps" } },
+                    { "IpProtocol": "tcp", "FromPort": "443", "ToPort": "443", "CidrIp": { "Ref" : "AllowedIngressIps" } },
+                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.158.92/32" },
+                    { "IpProtocol": "tcp", "FromPort": "80",  "ToPort": "80",  "CidrIp": "80.254.146.68/32" }
                 ],
                 "SecurityGroupEgress" : [
                     { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "CidrIp": "0.0.0.0/0" }
