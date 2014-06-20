@@ -6,10 +6,13 @@
 
 <div class="page-container">
     <main>
-        <a href="@Config.idWebAppUrl/account/edit">My Profile</a>
-        <h1>Change Membership Package</h1>
-        <a href="/tier/downgrade/confirm" class="form-action form-action--confirm">Downgrade</a>
-        <a href="@Config.idWebAppUrl/membership/edit" class="form-action form-action--cancel">Cancel</a>
+        <div class="content__container">
+            <a href="@Config.idWebAppUrl/account/edit">My Profile</a>
+            <h1>Change Membership Package</h1>
+            <a href="/tier/downgrade/confirm" class="form-action form-action--confirm">Downgrade (flow)</a>
+            <a href="/tier/cancel/confirm" class="form-action form-action--confirm">Cancel (flow)</a>
+            <a href="@Config.idWebAppUrl/membership/edit" class="form-action form-action--cancel">Cancel (change)</a>
+        </div>
     </main>
 </div>
 

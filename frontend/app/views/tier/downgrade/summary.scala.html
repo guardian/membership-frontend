@@ -6,22 +6,37 @@
 
 <div class="page-container">
     <main role="main">
-        <div class="content__container">
-            <section class="l-row content__section">
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-2 content__section">
+                <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
                     <p>You will continue to receive all the great Membership Benefits until</p>
                 </article>
             </section>
         </div>
-        @partials.tier.summary()
-        <section>
-            <div class="l-row l-row--items-2">
-                <div class="l-row__item"></div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <a href="@Config.idWebAppUrl/account/edit" class="form-action form-action--confirm">My Profile</a>
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-2">
+                <div class="l-row__item">
+                    <h2>Current Package Summary</h2>
                 </div>
-            </div>
+                <div class="l-row__item l-row__item--boost-2 secondary-content">
+                    @partials.tier.summary()
+                </div>
+            </section>
+        </div>
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-2">
+                <div class="l-row__item">
+                    <h2>New Package Summary</h2>
+                </div>
+                <div class="l-row__item l-row__item--boost-2 secondary-content">
+                    @partials.tier.summary()
+                </div>
+            </section>
+        </div>
+        <section class="content__container right-align">
+            <a href="@Config.idWebAppUrl/account/edit" class="form-action form-action--confirm">My Profile</a>
         </section>
     </main>
 </div>
