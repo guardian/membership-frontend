@@ -98,19 +98,20 @@
 
 .form-action {
     color: #FFFFFF;
+    border: none;
     padding: $gs-gutter / 2;
     margin-top: $gs-gutter;
     text-align: center;
     display: inline-block;
     cursor: pointer;
     @include rem((
-        min-width: $gs-baseline * 6
+        min-width: $gs-baseline * 6,
+        line-height: $gs-gutter
     ));
 }
 
 .form-action--confirm {
     background-color: $mem-button-confirm;
-    border: 3px solid $mem-button-confirm;
 }
 
 .form-action--cancel {

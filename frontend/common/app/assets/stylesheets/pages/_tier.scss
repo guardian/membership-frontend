@@ -1,11 +1,3 @@
-.l-row__item {
-    @include mq(tablet) {
-        @include rem((
-            min-height: 170px
-        ));
-    }
-}
-
 .secondary-content {
     flex-basis: 16em;
     order: 2;
@@ -14,3 +6,6 @@
     }
 }
 
+.right-align {
+    float: right;
+}

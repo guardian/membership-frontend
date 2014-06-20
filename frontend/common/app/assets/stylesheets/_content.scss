@@ -34,11 +34,14 @@
 }
 
 .content__container {
-    border-top: 1px dotted guss-colour('neutral-5');
     @include rem((
         padding-top: $gs-baseline,
-        margin: $gs-gutter
+        margin: $gs-gutter * 2 $gs-gutter $gs-gutter $gs-gutter
     ));
+}
+
+.content__container--border {
+    border-top: 1px dotted guss-colour('neutral-5');
 }
 
 .content__section {
