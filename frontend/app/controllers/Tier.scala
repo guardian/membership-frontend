@@ -21,6 +21,17 @@ trait Tier extends Controller {
     Redirect("/tier/downgrade/summary")
   }
 
+  def confirmCancel() = AuthenticatedAction { implicit request =>
+    Ok(views.html.tier.cancel.confirm())
+  }
+
+  def cancelSummary() = AuthenticatedAction { implicit request =>
+    Ok(views.html.tier.cancel.summary())
+  }
+
+  def cancelTier() = AuthenticatedAction { implicit request =>
+    Redirect("/tier/cancel/summary")
+  }
 }
 
 object Tier extends Tier
