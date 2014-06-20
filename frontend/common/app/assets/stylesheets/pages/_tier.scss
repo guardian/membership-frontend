@@ -1,10 +1,16 @@
 .l-row__item {
-    min-height: 264px;
+    @include mq(tablet) {
+        @include rem((
+            min-height: 170px
+        ));
+    }
 }
 
 .secondary-content {
+    flex-basis: 16em;
     order: 2;
     @if $old-ie {
         float: left;
     }
 }
+

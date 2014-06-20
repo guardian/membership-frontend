@@ -165,19 +165,15 @@
 }
 .item {
     position: relative;
-    @include box-sizing(border-box);
-    @include rem((
-        margin-top: $gs-baseline,
-        padding-left: $gs-gutter/2,
-        padding-right: $gs-gutter/2,
-        padding-bottom: 18px
-    ));
-
-    @include vertical-item-separator;
-
     @include mq(tablet) {
+        @include rem((
+            padding-left: $gs-gutter/2,
+            padding-right: $gs-gutter/2,
+            padding-bottom: 18px
+        ));
         display: inline-block;
         vertical-align: top;
+        @include vertical-item-separator;
     }
 }
 .item__link {
@@ -234,28 +230,21 @@
 .item__standfirst {
     @include f-headline;
 }
+
 .item__title {
     position: relative;
     @include rem((
-        padding-top: $gs-baseline/6
+        padding-bottom: $gs-baseline
     ));
-    @include fs-headline(2, $size-only: true);
+    @include fs-headline(1, true);
     word-wrap: break-word;
-
-    .i-quote-orange {
-        float: left;
-        margin-right: 7px;
-        position: relative;
-        top: 3px;
-        width: 1.45em;
-        height: 1em;
-        background-size: contain;
-
-        // This is a scalable icon,
-        // it will only work if SVG is active
-        @include show-only-if-svg-is-supported;
-    }
+    @include f-headline;
 }
+
+.item__list-element {
+    margin: $gs-baseline 0;
+}
+
 .item--video,
 .item--gallery {
     .item__title .i {

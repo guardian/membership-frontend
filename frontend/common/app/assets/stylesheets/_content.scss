@@ -36,6 +36,7 @@
 .content__container {
     border-top: 1px dotted guss-colour('neutral-5');
     @include rem((
+        padding-top: $gs-baseline,
         margin: $gs-gutter
     ));
 }

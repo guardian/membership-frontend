@@ -49,14 +49,6 @@
             @include fs-header(3, true);
         }
     }
-    h3 {
-        margin: 0;
-        @include fs-bodyHeading(2);
-
-        @include mq(tablet) {
-            @include fs-bodyHeading(3, true);
-        }
-    }
     > p,
     > figure,
     > video {
