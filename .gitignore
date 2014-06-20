@@ -21,3 +21,5 @@ out
 .bundle
 Gemfile.lock
 dev
+
+frontend/conf/keys.conf
