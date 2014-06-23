@@ -18,8 +18,8 @@ trait TierController extends Controller {
   def downgradeSummary() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.tier.downgrade.summary(subscription, card))
 
       response.getOrElse(NotFound)
@@ -37,8 +37,8 @@ trait TierController extends Controller {
   def cancelSummary() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.tier.cancel.summary(subscription, card))
 
       response.getOrElse(NotFound)
