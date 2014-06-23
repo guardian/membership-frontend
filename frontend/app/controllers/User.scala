@@ -21,8 +21,8 @@ trait User extends Controller {
 
       case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
         val subscriptionOpt = for {
-          subscription <- customer.subscriptions.data.headOption
-          card <- customer.cards.data.headOption
+          subscription <- customer.subscription
+          card <- customer.card
         } yield subscriptionDetails(subscription, card)
 
         Cors(Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj())))
