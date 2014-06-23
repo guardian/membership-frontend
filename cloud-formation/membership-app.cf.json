@@ -88,7 +88,11 @@
 
                         "unzip -d /membership /tmp/app.zip",
 
-                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/keys.conf /membership/frontend-1.0-SNAPSHOT/conf"]]},
+                        "mkdir /etc/gu",
+
+                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/keys.conf /etc/gu/membership-keys.conf"]]},
+                        "chown membership /etc/gu/membership-keys.conf",
+                        "chmod 0600 /etc/gu/membership-keys.conf",
 
                         {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
