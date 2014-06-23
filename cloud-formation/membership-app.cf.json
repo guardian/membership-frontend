@@ -79,7 +79,7 @@
                         "#!/bin/bash -ev",
                         "wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/authorized_keys &",
                         "apt-get -y update",
-                        "apt-get -y install language-pack-en openjdk-7-jre-headless unzip",
+                        "apt-get -y install language-pack-en openjdk-7-jre-headless unzip awscli",
                         {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",
@@ -87,6 +87,8 @@
                         "wget -i /etc/gu-artifact-url --directory-prefix=/tmp",
 
                         "unzip -d /membership /tmp/app.zip",
+
+                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/keys.conf /membership/frontend-1.0-SNAPSHOT/conf"]]},
 
                         {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
@@ -110,7 +112,7 @@
                     }]
                 },
                 "Policies": [ {
-                    "PolicyName": "name",
+                    "PolicyName": "MembersTable",
                     "PolicyDocument": {
                         "Version": "2012-10-17",
                         "Statement": [
@@ -122,6 +124,19 @@
                                     "dynamodb:Query"
                                 ],
                                 "Resource": "arn:aws:dynamodb:eu-west-1:865473395570:table/members"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "PolicyName": "PrivateBucket",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": "s3:GetObject",
+                                "Resource": "arn:aws:s3:::membership-private/*"
                             }
                         ]
                     }
