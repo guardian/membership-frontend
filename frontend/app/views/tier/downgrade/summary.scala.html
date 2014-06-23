@@ -32,7 +32,32 @@
                     <h2>New Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @partials.tier.summary(subscription, card)
+                    <table class="table table--responsive-font table--striped">
+                        <tr class="table__headline" role="row">
+                            <td class="summary-table__cell" role="scope">
+                                Package
+                            </td>
+                            <td class="summary-table__cell" role="scope">
+                                Friend plan
+                            </td>
+                        </tr>
+                        <tr class="summary-table__row" role="row">
+                            <td class="summary-table__cell">
+                                Start Date
+                            </td>
+                            <td class="summary-table__cell">
+                                @dateWithoutTime(subscription.current_period_end)
+                            </td>
+                        </tr>
+                        <tr class="summary-table__row" role="row">
+                            <td class="summary-table__cell">
+                                Monthly Payment
+                            </td>
+                            <td class="summary-table__cell">
+                                £ FREE
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </section>
         </div>
