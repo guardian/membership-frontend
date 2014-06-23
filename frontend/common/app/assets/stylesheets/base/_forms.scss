@@ -15,6 +15,10 @@
   ));
 }
 
+.form--inline {
+  display: inline-block;
+}
+
 .form__heading {
   @include fs-bodyHeading(3);
   margin-left: 0;
