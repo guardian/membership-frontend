@@ -1,6 +1,7 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
 @import configuration.Config
+@import views.Dates._
 
 @main("Membership - Down Grade Tier Summary") {
 
@@ -11,7 +12,7 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership Benefits until <span style="color:red; font-weight:bold; font-size: 2em;">DATE HERE</span></p>
+                    <p>You will continue to receive all the great Membership Benefits until @subscription.current_period_end.pretty</p>
                 </article>
             </section>
         </div>
@@ -29,7 +30,7 @@
             <section class="l-row l-row--items-2">
                 <div class="l-row__item"> </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <p>Your Guardian profile will remain active so you can continue to participate in the guardian community</p>
+                    <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community</p>
                 </div>
             </section>
         </div>

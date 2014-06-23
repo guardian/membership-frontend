@@ -14,18 +14,10 @@
     </tr>
     <tr class="summary-table__row" role="row">
         <td class="summary-table__cell">
-            Start Date
+            End Date
         </td>
         <td class="summary-table__cell">
-            @dateWithoutTime(subscription.start)
-        </td>
-    </tr>
-    <tr class="summary-table__row" role="row">
-        <td class="summary-table__cell">
-            Amount Paid Today
-        </td>
-        <td class="summary-table__cell">
-            @formatPence(subscription.plan.amount)
+            @dateWithoutTime(subscription.current_period_end)
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -38,10 +30,10 @@
     </tr>
     <tr class="summary-table__row" role="row">
         <td class="summary-table__cell">
-            Next Payment
+            Last Payment
         </td>
         <td class="summary-table__cell">
-            @dateWithoutTime(subscription.current_period_end)
+            @dateWithoutTime(subscription.current_period_start)
         </td>
     </tr>
 </table>
