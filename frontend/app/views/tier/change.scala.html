@@ -5,13 +5,72 @@
 @main("Membership - Change Tier") {
 
 <div class="page-container">
+    <main role="main">
+        <div class="content__container">
+            <a href="@Config.idWebAppUrl/account/edit" class="action-cta action-cta--confirm">My Profile</a>
+            <section class="content__section">
+                <h1 class="content__headline">Change Membership Package</h1>
+            </section>
+        </div>
+        <div class="content__container">
+            <section class="l-row l-row--items-3">
+                <div class="l-row__item">
+                    <div class="item">
+                        <h2 class="item__title">Friend</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio.</p>
+                        <ul>
+                            <li class="item__list-element">Book Live event tickets</li>
+                        </ul>
+                        <div>
+                            <h3 class="tier-price">Free</h3>
+                            <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h2 class="item__title">Partner</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
+                        <ul>
+                            <li class="item__list-element">Welcome pack</li>
+                            <li class="item__list-element">Early booking for live events (1 week before general release)</li>
+                            <li class="item__list-element">20% discount on tickets and plus ones</li>
+                            <li class="item__list-element">20% discount on Masterclasses</li>
+                        </ul>
+                        <div>
+                            <h3 class="tier-price">£15</h3>
+                            <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h2 class="item__title">Patron</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
+                        <ul>
+                            <li class="item__list-element">Patron pack</li>
+                            <li class="item__list-element">Invited to patron only events</li>
+                            <li class="item__list-element">Invited to annual patron forum</li>
+                            <li class="item__list-element">Drinks from The Guardian wine rack</li>
+                            <li class="item__list-element">Early booking for live events (2 weeks before general release)</li>
+                            <li class="item__list-element">20% discount on tickets and plus ones</li>
+                            <li class="item__list-element">20% discount on Masterclasses</li>
+                        </ul>
+                        <div>
+                            <h3 class="tier-price">£60</h3>
+                            <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+  </main>
+
+
+
     <main>
         <div class="content__container">
-            <a href="@Config.idWebAppUrl/account/edit">My Profile</a>
-            <h1>Change Membership Package</h1>
-            <a href="/tier/downgrade/confirm" class="form-action form-action--confirm">Downgrade (flow)</a>
-            <a href="/tier/cancel/confirm" class="form-action form-action--confirm">Cancel (flow)</a>
-            <a href="@Config.idWebAppUrl/membership/edit" class="form-action form-action--cancel">Cancel (change)</a>
+            <a href="/tier/cancel/confirm" class="action-cta action-cta--cancel">Cancel Membership</a>
         </div>
     </main>
 </div>
