@@ -10,8 +10,14 @@ import services.StripeService
 
 trait TierController extends Controller {
 
-  def change()  = AuthenticatedAction { implicit request =>
-    Ok(views.html.tier.change())
+  def change() = MemberAction.async { implicit request =>
+    StripeService.Customer.read(request.member.customerId).map { customer =>
+      val response = for {
+        subscription <- customer.subscriptions.data.headOption
+      } yield Ok(views.html.tier.change(subscription))
+
+      response.getOrElse(NotFound)
+    }
   }
 
   def confirmDowngrade() = AuthenticatedAction { implicit request =>
