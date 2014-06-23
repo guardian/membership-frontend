@@ -5,7 +5,6 @@
     ul,
     ol,
     address {
-        @include fs-bodyCopy(1);
         @include rem((
             margin: 0 0 $gs-baseline 0
         ));
@@ -44,7 +43,6 @@
         @include fs-header(2);
 
         @include mq(tablet) {
-            margin-bottom: 1px;
             @include fs-header(3, true);
         }
     }

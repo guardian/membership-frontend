@@ -36,7 +36,7 @@
 .content__container {
     @include rem((
         padding-top: $gs-baseline,
-        margin: $gs-gutter * 2 $gs-gutter $gs-gutter $gs-gutter
+        margin: $gs-gutter * 2 0 $gs-gutter 0
     ));
 }
 
@@ -44,8 +44,18 @@
     border-top: 1px dotted guss-colour('neutral-5');
 }
 
+.content__container--border-dark {
+    border-top: 1px dotted #333333;
+}
+
 .content__section {
     @include rem((
         padding-top: $gs-baseline
     ));
+}
+
+.content__footer {
+    color: #1a4683;
+    text-align: center;
+    @include fs-bodyCopy(4);
 }
