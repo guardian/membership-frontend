@@ -31,13 +31,13 @@ GET         /event/:id                   controllers.Event.details(id)
 GET         /event/:id/buy               controllers.Event.buy(id)
 
 # Tier
-GET         /tier/change                 controllers.Tier.change
-GET         /tier/downgrade/confirm      controllers.Tier.confirmDowngrade
-POST        /tier/downgrade/confirm      controllers.Tier.downgradeTier
-GET         /tier/downgrade/summary      controllers.Tier.downgradeSummary
-GET         /tier/cancel/confirm         controllers.Tier.confirmCancel
-POST        /tier/cancel/confirm         controllers.Tier.cancelTier
-GET         /tier/cancel/summary         controllers.Tier.cancelSummary
+GET         /tier/change                 controllers.TierController.change
+GET         /tier/downgrade/confirm      controllers.TierController.confirmDowngrade
+POST        /tier/downgrade/confirm      controllers.TierController.downgradeTier
+GET         /tier/downgrade/summary      controllers.TierController.downgradeSummary
+GET         /tier/cancel/confirm         controllers.TierController.confirmCancel
+POST        /tier/cancel/confirm         controllers.TierController.cancelTier
+GET         /tier/cancel/summary         controllers.TierController.cancelSummary
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
