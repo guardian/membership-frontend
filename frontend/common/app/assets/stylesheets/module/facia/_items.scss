@@ -164,6 +164,9 @@
     ));
 }
 .item {
+    @include rem((
+        padding-bottom: $gs-gutter
+    ));
     position: relative;
     @include mq(tablet) {
         @include rem((

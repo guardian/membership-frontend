@@ -2,10 +2,10 @@
    ========================================================================== */
 
 .page-container {
-    > p,
     ul,
     ol,
     address {
+        @include fs-bodyCopy(1);
         @include rem((
             margin: 0 0 $gs-baseline 0
         ));
@@ -13,12 +13,11 @@
 
         @include mq(tablet) {
             @include rem((
-                margin-bottom: ($gs-baseline/3)*4
+                margin-bottom: $gs-baseline*4
             ));
         }
     }
     > ol,
-    > blockquote > ul,
     > ul {
         margin-top: .8em;
         list-style: none;
@@ -47,26 +46,6 @@
         @include mq(tablet) {
             margin-bottom: 1px;
             @include fs-header(3, true);
-        }
-    }
-    > p,
-    > figure,
-    > video {
-        + h2 {
-            @include rem((
-                margin-top: 24px
-            ));
-
-            @include mq(tablet) {
-                @include rem((
-                    margin-top: 27px
-                ));
-            }
-        }
-        + h3 {
-            @include rem((
-                margin-top: $gs-baseline
-            ));
         }
     }
 }

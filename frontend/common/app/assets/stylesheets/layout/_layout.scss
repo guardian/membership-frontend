@@ -27,3 +27,12 @@ body {
 .align-center {
     text-align: center;
 }
+
+.l-row__item {
+    @include rem((
+        padding-bottom: $gs-gutter * 2
+    ));
+    @include mq(tablet) {
+
+    }
+}

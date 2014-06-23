@@ -5,7 +5,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.{AuthenticatedAction, MemberAction}
 import services.StripeService
 
-trait Tier extends Controller {
+trait TierController extends Controller {
 
   def change()  = AuthenticatedAction { implicit request =>
     Ok(views.html.tier.change())
@@ -50,4 +50,4 @@ trait Tier extends Controller {
   }
 }
 
-object Tier extends Tier
+object TierController extends TierController

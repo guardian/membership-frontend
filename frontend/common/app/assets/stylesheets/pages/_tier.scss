@@ -9,3 +9,7 @@
 .right-align {
     float: right;
 }
+
+.tier-price {
+    @include fs-bodyHeading(2);
+}

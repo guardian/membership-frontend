@@ -96,11 +96,10 @@
     }
 }
 
-.form-action {
+.action-cta {
     color: #FFFFFF;
     border: none;
     padding: $gs-gutter / 2;
-    margin-top: $gs-gutter;
     text-align: center;
     display: inline-block;
     cursor: pointer;
@@ -110,10 +109,17 @@
     ));
 }
 
-.form-action--confirm {
+.action-cta--confirm {
     background-color: $mem-button-confirm;
 }
 
-.form-action--cancel {
+.action-cta--cancel {
     background-color: $mem-button-cancel;
+}
+
+.action-cta--full-width-mobile {
+    width: 100%;
+    @include mq(tablet) {
+        width: auto;
+    }
 }
