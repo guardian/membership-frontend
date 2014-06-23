@@ -45,8 +45,8 @@ trait Joiner extends Controller {
   def thankyouPartner() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
       response.getOrElse(NotFound)
@@ -56,8 +56,8 @@ trait Joiner extends Controller {
   def thankyouPatron() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
       response.getOrElse(NotFound)
