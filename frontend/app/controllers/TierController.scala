@@ -1,7 +1,10 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import actions.{AuthenticatedAction, MemberAction}
 import services.StripeService
 
@@ -26,8 +29,16 @@ trait TierController extends Controller {
     }
   }
 
-  def downgradeTier() = AuthenticatedAction { implicit request =>
-      Redirect("/tier/downgrade/summary")
+  def downgradeTier() = MemberAction.async { implicit request =>
+      for {
+        customer <- StripeService.Customer.read(request.member.customerId)
+        cancelledOpt = customer.subscription.map { subscription =>
+          StripeService.Subscription.delete(customer.id, subscription.id)
+        }
+        cancelled <- Future.sequence(cancelledOpt.toSeq)
+      } yield {
+        cancelled.headOption.map(_ => Redirect("/tier/downgrade/summary")).getOrElse(NotFound)
+      }
   }
 
   def confirmCancel() = AuthenticatedAction { implicit request =>
