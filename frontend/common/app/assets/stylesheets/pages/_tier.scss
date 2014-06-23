@@ -10,6 +10,28 @@
     float: right;
 }
 
-.tier-price {
+.package-container {
+    padding: $gs-gutter * 2;
+    background-color: #cdcdcd;
+}
+
+.package {
+    @include border-radius(4px);
+    background-color: #ffffff;
+    margin: $gs-gutter / 2;
+    padding: $gs-gutter;
+}
+
+.package--current {
+    background-color: #f2f2f2;
+}
+
+.package__list-element > li {
+    list-style: none;
+    margin: $gs-baseline 0;
+    @include faux-bullet-point(#333333, $right-space: 4px);
+}
+
+.package__price {
     @include fs-bodyHeading(2);
 }

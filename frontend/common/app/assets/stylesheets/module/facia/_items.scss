@@ -244,8 +244,9 @@
     @include f-headline;
 }
 
-.item__list-element {
+.item__list-element > li {
     margin: $gs-baseline 0;
+    @include faux-bullet-point(#333333, $right-space: 4px);
 }
 
 .item--video,
