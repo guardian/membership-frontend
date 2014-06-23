@@ -1,68 +1,72 @@
-@()(implicit request: play.api.mvc.Request[_])
+@(subscription: model.Stripe.Subscription)(implicit request: play.api.mvc.Request[_])
 
 @import configuration.Config
+@import model.Tier
 
 @main("Membership - Change Tier") {
 
 <div class="page-container">
     <main role="main">
         <div class="content__container">
-            <a href="@Config.idWebAppUrl/account/edit" class="action-cta action-cta--confirm">My Profile</a>
-            <section class="content__section">
-                <h1 class="content__headline">Change Membership Package</h1>
+            <section class="l-row l-row--items-2 content__section">
+                <aside class="l-row__item">
+                    <h2 class="content__heading tone-news-one">Membership packages</h2>
+                </aside>
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h1 class="content__headline">Amend your package</h1>
+                    <p class="item__title">Nulla a massa turpis. Integer porta ligula vitae faucibus facilisis. Vivamus eu sollicitudin massa. Nullam vestibulum, massa quis tempor iaculis, sem turpis tempus mauris, ut ornare est neque in neque. Mauris ultrices dapibus neque id malesuada. Donec sagittis, dui rhoncus hendrerit ultrices, dui augue vulputate lorem, vitae tincidunt nibh erat at metus. Nunc mattis magna nec urna blandit, vitae vestibulum turpis porttitor.</p>
+                    <a href="@Config.idWebAppUrl/account/edit"><< Back to 'My Profile'</a>
+                </article>
             </section>
         </div>
-        <div class="content__container">
-            <section class="l-row l-row--items-3">
-                <div class="l-row__item">
-                    <div class="item">
-                        <h2 class="item__title">Friend</h2>
+        <div class="package-container">
+            <h2>Select the package you would like to switch to:</h2>
+            <div class="content__container">
+                <section class="l-row l-row--items-3">
+                    <div class="package l-row__item@if(subscription.plan.tier == Tier.Friend){ package--current}">
+                        <h2 class="package__title">Friend</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio.</p>
-                        <ul>
-                            <li class="item__list-element">Book Live event tickets</li>
+                        <ul class="package__list-element">
+                            <li>Book Live event tickets</li>
                         </ul>
                         <div>
-                            <h3 class="tier-price">Free</h3>
+                            <h3 class="package__price">Free</h3>
                             <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
                         </div>
                     </div>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h2 class="item__title">Partner</h2>
+                    <div class="package l-row__item@if(subscription.plan.tier == Tier.Partner){ package--current}">
+                        <h2 class="package__title">Partner</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
-                        <ul>
-                            <li class="item__list-element">Welcome pack</li>
-                            <li class="item__list-element">Early booking for live events (1 week before general release)</li>
-                            <li class="item__list-element">20% discount on tickets and plus ones</li>
-                            <li class="item__list-element">20% discount on Masterclasses</li>
+                        <ul class="package__list-element">
+                            <li>Welcome pack</li>
+                            <li>Early booking for live events (1 week before general release)</li>
+                            <li>20% discount on tickets and plus ones</li>
+                            <li>20% discount on Masterclasses</li>
                         </ul>
                         <div>
-                            <h3 class="tier-price">£15</h3>
+                            <h3 class="package__price">£15</h3>
                             <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
                         </div>
                     </div>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h2 class="item__title">Patron</h2>
+                    <div class="package l-row__item@if(subscription.plan.tier == Tier.Patron){ package--current}">
+                        <h2 class="package__title">Patron</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
-                        <ul>
-                            <li class="item__list-element">Patron pack</li>
-                            <li class="item__list-element">Invited to patron only events</li>
-                            <li class="item__list-element">Invited to annual patron forum</li>
-                            <li class="item__list-element">Drinks from The Guardian wine rack</li>
-                            <li class="item__list-element">Early booking for live events (2 weeks before general release)</li>
-                            <li class="item__list-element">20% discount on tickets and plus ones</li>
-                            <li class="item__list-element">20% discount on Masterclasses</li>
+                        <ul class="package__list-element">
+                            <li>Patron pack</li>
+                            <li>Invited to patron only events</li>
+                            <li>Invited to annual patron forum</li>
+                            <li>Drinks from The Guardian wine rack</li>
+                            <li>Early booking for live events (2 weeks before general release)</li>
+                            <li>20% discount on tickets and plus ones</li>
+                            <li>20% discount on Masterclasses</li>
                         </ul>
                         <div>
-                            <h3 class="tier-price">£60</h3>
+                            <h3 class="package_price">£60</h3>
                             <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Downgrade</a>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
   </main>
 
