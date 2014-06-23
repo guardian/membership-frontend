@@ -1,4 +1,4 @@
-@()
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
 
 @import views.Dates._
 @import views.Format._
@@ -6,10 +6,10 @@
 <table class="table table--responsive-font table--striped">
     <tr class="table__headline" role="row">
         <td class="summary-table__cell" role="scope">
-
+            Package
         </td>
         <td class="summary-table__cell" role="scope">
-
+            @subscription.plan.name
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -17,7 +17,7 @@
             Start Date
         </td>
         <td class="summary-table__cell">
-
+            @dateWithoutTime(subscription.start)
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -25,7 +25,7 @@
             Amount Paid Today
         </td>
         <td class="summary-table__cell">
-
+            @formatPence(subscription.plan.amount)
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -33,7 +33,7 @@
             Monthly Payment
         </td>
         <td class="summary-table__cell">
-
+            @formatPence(subscription.plan.amount)
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -41,7 +41,7 @@
             Next Payment
         </td>
         <td class="summary-table__cell">
-
+            @dateWithoutTime(subscription.current_period_end)
         </td>
     </tr>
 </table>

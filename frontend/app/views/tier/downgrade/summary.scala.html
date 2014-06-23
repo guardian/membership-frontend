@@ -1,4 +1,4 @@
-@()(implicit request: play.api.mvc.Request[_])
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
 @import configuration.Config
 
@@ -11,7 +11,7 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership Benefits until</p>
+                    <p>You will continue to receive all the great Membership Benefits until <span style="color:red; font-weight:bold; font-size: 2em;">DATE HERE</span></p>
                 </article>
             </section>
         </div>
@@ -21,7 +21,7 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @partials.tier.summary()
+                    @partials.tier.summary(subscription, card)
                 </div>
             </section>
         </div>
@@ -31,7 +31,7 @@
                     <h2>New Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @partials.tier.summary()
+                    @partials.tier.summary(subscription, card)
                 </div>
             </section>
         </div>
