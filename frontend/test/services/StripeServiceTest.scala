@@ -2,8 +2,6 @@ package services
 
 import scala.concurrent._
 import play.api.test.PlaySpecification
-import play.api.libs.ws.Response
-import scala.concurrent.ExecutionContext.Implicits.global
 import model.Stripe.StripeObject
 import play.api.libs.json.Reads
 import model.Stripe
