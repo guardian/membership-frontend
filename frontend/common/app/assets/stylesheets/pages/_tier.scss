@@ -12,7 +12,7 @@
 
 .package-container {
     padding: 0;
-    background-color: #cdcdcd;
+    background-color: #f2f2f2;
     @include mq(tablet) {
         padding: $gs-gutter * 2;
     }
@@ -21,28 +21,50 @@
 .package-container__header {
     @include rem((
         padding-bottom: $gs-gutter,
-        margin-bottom: $gs-gutter * 4
     ));
+    @include mq(tablet){
+        @include rem((
+            margin-bottom: 40px
+        ));
+    }
     border-bottom: 1px dotted #333333;
 }
 
 .package {
-    position: relative;
-    @include border-radius(4px);
-    background-color: #ffffff;
     @include rem((
-        margin: $gs-gutter,
-        padding: $gs-gutter
+        margin: 30px $gs-gutter $gs-gutter
     ));
     @include mq(tablet) {
         @include rem((
-            margin: 0 $gs-gutter / 2 0 0
+            margin: 47px $gs-gutter / 2 0 0
         ));
     }
 }
 
-.package--current {
-    background-color: #f2f2f2;
+.package.package--current {
+    margin-top: 0;
+}
+
+.package__current-indicator {
+    color: #ffffff;
+    @include rem((
+        padding: $gs-baseline,
+        margin: 0 $gs-baseline/2
+    ));
+    text-align: center;
+    background-color: #9c9c9c;
+}
+
+.package__inner {
+    @include rem((
+        padding: $gs-gutter
+    ));
+    @include border-radius(4px);
+    background-color: #ffffff;
+}
+
+.package--current .package__inner {
+    border: 1px solid #9c9c9c;
 }
 
 .package__title {
@@ -63,11 +85,13 @@
         padding: $gs-gutter/2 0 $gs-gutter
     ));
     > li {
+        list-style-position: inside;
         list-style: none;
         @include rem((
             margin: $gs-baseline 0
         ));
-        @include faux-bullet-point(#333333, $right-space: 4px);
+         @include faux-bullet-point(#333333, $right-space: 4px);
+
     }
 }
 
