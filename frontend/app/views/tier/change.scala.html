@@ -31,7 +31,7 @@
                                 <li>Book Live event tickets</li>
                             </ul>
                             <div>
-                                <span class="package__price">Free</span>
+                                <span class="package__price">£(Free)</span>
                                 @if(subscription.plan.tier != Tier.Friend) {
                                     <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Select</a>
                                 }
@@ -49,7 +49,7 @@
                                 <li>20% discount on Masterclasses</li>
                             </ul>
                             <div>
-                                <span class="package__price">£15</span>
+                                <span class="package__price">£15 <span class="package__pcm">pcm</span></span>
                                 @if(subscription.plan.tier != Tier.Partner) {
                                     <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Select</a>
                                 }
@@ -70,7 +70,7 @@
                                 <li>20% discount on Masterclasses</li>
                             </ul>
                             <div>
-                                <span class="package__price">£60</span>
+                                <span class="package__price">£60 <span class="package__pcm">pcm</span></span>
                                 @if(subscription.plan.tier != Tier.Patron) {
                                     <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Select</a>
                                 }
