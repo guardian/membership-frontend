@@ -19,10 +19,10 @@ import scala.util.{Failure, Success, Try}
 
 trait EventbriteService {
 
-  val apiUrl: String
-  val apiToken: String
-
   val apiEventListUrl: String
+
+  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
+  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
 
   val allEvents = Agent[Seq[EBEvent]](Nil)
 
@@ -37,18 +37,6 @@ trait EventbriteService {
       throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
     }
   }
-
-  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map(extract[A])
-      .recover { case e =>
-        Logger.error(s"Eventbrite request $url", e)
-        throw e
-      }
-  }
-
-  private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -96,6 +84,17 @@ object EventbriteService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
 
+  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
+      .map(extract[A])
+      .recover { case e =>
+      Logger.error(s"Eventbrite request $url", e)
+      throw e
+    }
+  }
+
+  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
   import play.api.Play.current
   private implicit val system = Akka.system
