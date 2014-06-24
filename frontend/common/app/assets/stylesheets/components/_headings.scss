@@ -1,0 +1,21 @@
+/* Core elements
+   ========================================================================== */
+
+.page-container {
+    h2 {
+        @include fs-header(2);
+
+        @include mq(tablet) {
+            @include fs-header(3, true);
+        }
+    }
+}
+
+.content__heading {
+    @include fs-header(3);
+}
+
+.tone-news-one {
+    color: guss-colour('tone-news-1');
+}
+
