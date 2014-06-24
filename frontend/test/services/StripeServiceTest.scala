@@ -1,77 +1,72 @@
 package services
 
 import scala.concurrent._
-import play.api.test.PlaySpecification
 import model.Stripe.StripeObject
 import play.api.libs.json.Reads
 import model.Stripe
+import org.specs2.mutable.Specification
 
 
-class StripeServiceTest extends PlaySpecification {
-
+class StripeServiceTest extends Specification {
 
   "SubscriptionService" should {
 
-    "create customers" in {
-      val expected = RequestInfo(
+    "create customers" in TestStripeService { service =>
+      service.Customer.create("test@example.com", "tok_104Bpz2eZvKYlo2CRWVWL4Ou")
+      service.lastRequest mustEqual RequestInfo(
         url = "http://localhost:9999/v1/customers",
         body = Map("email" -> Seq("test@example.com"), "card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou"))
       )
-      TestStripeService(expected).Customer.create("test@example.com", "tok_104Bpz2eZvKYlo2CRWVWL4Ou")
-      1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
 
-
-    "should create a subscription" in {
-      val expected = RequestInfo(
+    "should create a subscription" in TestStripeService { service =>
+      service.Subscription.create("cust_123", "Patron")
+      service.lastRequest mustEqual RequestInfo(
         url = s"http://localhost:9999/v1/customers/cust_123/subscriptions",
         body = Map("plan" -> Seq("Patron"))
       )
-      TestStripeService(expected).Subscription.create("cust_123", "Patron")
-      1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
 
-    "should cancel a subscription" in {
-      val expected = RequestInfo(
+    "should cancel a subscription" in TestStripeService { service =>
+      service.Subscription.delete("cust_123", "sub_123")
+      service.lastRequest mustEqual RequestInfo(
         url = s"http://localhost:9999/v1/customers/cust_123/subscriptions/sub_123?at_period_end=true",
         body = Map.empty
       )
-
-      TestStripeService(expected).Subscription.delete("cust_123", "sub_123")
-      1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
 
-    "should update card details" in {
-      val expected = RequestInfo(
+    "should update card details" in TestStripeService { service =>
+      service.Customer.updateCard("cust_123", "tok_123")
+      service.lastRequest mustEqual RequestInfo(
         url = s"http://localhost:9999/v1/customers/cust_123",
         body = Map("card" -> Seq("tok_123"))
       )
-      TestStripeService(expected).Customer.updateCard("cust_123", "tok_123")
-      1 mustEqual 1 //just to keep specs2 happy. The real assertion is in the TestStripeService
     }
   }
 
-  class TestStripeService(expected: RequestInfo) extends StripeService {
+  class TestStripeService() extends StripeService {
     val apiURL = "http://localhost:9999/v1"
 
+    var lastRequest = RequestInfo.empty
+
     def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
-      RequestInfo(s"$apiURL/$endpoint", Map.empty) mustEqual expected
+      lastRequest = RequestInfo(s"$apiURL/$endpoint", Map.empty)
       Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
 
     def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] = {
-      RequestInfo(s"$apiURL/$endpoint", data) mustEqual expected
+      lastRequest = RequestInfo(s"$apiURL/$endpoint", data)
       Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
 
     def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] = {
-      RequestInfo(s"$apiURL/$endpoint", Map.empty) mustEqual expected
+      lastRequest = RequestInfo(s"$apiURL/$endpoint", Map.empty)
       Future.failed[A](Stripe.Error("internal", "Not implemented", None, None)) // don't care
     }
   }
 
   object TestStripeService {
-    def apply(expected: RequestInfo) = new TestStripeService(expected)
+    def apply[T](block: TestStripeService => T) = block(new TestStripeService)
   }
 }
 
