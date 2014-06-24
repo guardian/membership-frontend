@@ -36,7 +36,7 @@
 .content__container {
     @include rem((
         padding-top: $gs-baseline,
-        margin: $gs-gutter * 2 0 $gs-gutter 0
+        margin-bottom: $gs-gutter
     ));
 }
 

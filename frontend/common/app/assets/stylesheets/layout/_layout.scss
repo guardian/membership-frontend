@@ -9,7 +9,9 @@ body {
 }
 
 .page-container {
-    padding-bottom: 16px;
+    @include rem((
+        padding: 0 $gs-gutter/4 $gs-gutter/4
+    ));
     background-color: #FFFFFF;
     @include clearfix;
     position: relative;
@@ -17,6 +19,11 @@ body {
     @include rem((
         max-width: 1140px
     ));
+    @include mq(tablet){
+        @include rem((
+            padding: 0 $gs-gutter $gs-gutter
+        ));
+    }
 }
 
 .separator {

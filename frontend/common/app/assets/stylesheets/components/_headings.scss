@@ -2,43 +2,6 @@
    ========================================================================== */
 
 .page-container {
-    ul,
-    ol,
-    address {
-        @include rem((
-            margin: 0 0 $gs-baseline 0
-        ));
-        padding: 0;
-
-        @include mq(tablet) {
-            @include rem((
-                margin-bottom: $gs-baseline*4
-            ));
-        }
-    }
-    > ol,
-    > ul {
-        margin-top: .8em;
-        list-style: none;
-    }
-    > ol {
-        counter-reset: li;
-    }
-    > ol > li:before {
-        content: counter(li)'.';
-        counter-increment: li;
-        @include fs-header(1);
-        margin-right: 4px;
-
-        @include mq(tablet) {
-            @include fs-header(2, true);
-        }
-    }
-    > ol > li,
-    > ul > li {
-        position: relative;
-        margin-bottom: .8em;
-    }
     h2 {
         @include fs-header(2);
 
