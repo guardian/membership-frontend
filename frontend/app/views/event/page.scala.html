@@ -25,7 +25,7 @@
     }
 }
 
-@main("Membership") {
+@main() {
 
     @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
 
