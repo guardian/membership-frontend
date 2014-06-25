@@ -45,6 +45,7 @@ class StripeServiceTest extends Specification {
   }
 
   class TestStripeService() extends StripeService {
+
     val apiURL = "http://localhost:9999/v1"
 
     var lastRequest = RequestInfo.empty

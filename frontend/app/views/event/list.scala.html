@@ -1,7 +1,7 @@
 @(eventsList: Seq[model.Eventbrite.EBEvent])(implicit request: play.api.mvc.Request[_])
 @import views.Crumb
 
-@main("Membership") {
+@main() {
 
 @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
 

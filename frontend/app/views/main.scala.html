@@ -1,4 +1,4 @@
-@(title: String)(content: Html)(implicit request: play.api.mvc.Request[_])
+@(title: Option[String] = None)(content: Html)(implicit request: play.api.mvc.Request[_])
 
 <!DOCTYPE html>
 
@@ -32,7 +32,7 @@
         <meta name="Rating"                         content="general"/>
         <meta name="Distribution"                   content="Global"/>
 
-        <title>@title</title>
+        <title>@Config.siteTitle@title.map(" - " + _)</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.ico")">
 
