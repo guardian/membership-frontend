@@ -9,6 +9,8 @@ import play.api.mvc.Request
 object Config {
   val config = ConfigFactory.load()
 
+  lazy val siteTitle = config.getString("site.title")
+
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
