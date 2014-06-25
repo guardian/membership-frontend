@@ -51,8 +51,6 @@ class StripeServiceTest extends PlaySpecification {
     }
   }
 
-  case class RequestInfo(url: String, body: Map[String, Seq[String]])
-
   class TestStripeService(expected: RequestInfo) extends StripeService {
     val apiURL = "http://localhost:9999/v1"
 
