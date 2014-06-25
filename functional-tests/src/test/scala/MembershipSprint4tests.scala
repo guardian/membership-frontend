@@ -1,0 +1,60 @@
+
+
+/**
+* Created by jao on 19/06/2014.
+*/
+class MembershipSprint4tests extends BaseMembershipTest {
+
+  info("Tests for Membership Sprint 4")
+
+  feature("Manage card payment details") {
+    scenarioWeb("User can update card details") {
+      given {
+        MembershipSteps().IAmLoggedIn
+      }
+      .when {
+       _.IGoToIdentity
+      }
+      .then {
+        _.ICanUpdateMyCardDetails
+      }
+    }
+
+    scenarioWeb("User can't add an incorrect card") {
+      given {
+        MembershipSteps().IAmLoggedIn
+      }
+      .when {
+        _.IGoToMembershipTabToChangeDetails
+      }
+      .then {
+        _.ErrorMessageIsDisplayedWhenIEnterAnInvalidCard
+      }
+    }
+
+    scenarioWeb("User can't add a card with incorrect CVC") {
+      given {
+        MembershipSteps().IAmLoggedIn
+      }
+      .when {
+        _.IGoToMembershipTabToChangeDetails
+
+      }
+      .then {
+        _.ISeeAnErrorWhenMyCVCIsInvalid
+      }
+    }
+
+    scenarioWeb("User can't add a card with invalid expiry date") {
+      given {
+        MembershipSteps().IAmLoggedIn
+      }
+      .when {
+        _.IGoToMembershipTabToChangeDetails
+      }
+      .then {
+        _.ISeeAnErrorMessageWhenMyExpiryDateIsInThePast
+      }
+    }
+  }
+}
