@@ -3,7 +3,7 @@
 
 @main() {
 
-@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
+@fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
 
 <div class="page-container">
     <section class="container--row-pattern">
@@ -14,20 +14,14 @@
             </h2>
         </div>
         <div class="inner-container">
-
             <div class="events-sidebar"></div>
-
             <ul class="events-list u-unstyled">
-
                 @for(event <- eventsList) {
 
-                    @partials.event.item(event)
+                    @fragments.event.item(event)
                 }
-
             </ul>
-
         </div>
-
     </section>
 </div>
 }
