@@ -21,18 +21,6 @@ trait Membership {
     ScoverageSbtPlugin.ScoverageKeys.excludedPackages in ScoverageSbtPlugin.scoverage := "<empty>;Reverse.*;Routes"
   )
 
-  def scalaStylePlugin = {
-    lazy val testScalaStyle = taskKey[Unit]("testScalaStyle")
-
-    org.scalastyle.sbt.ScalastylePlugin.Settings ++ Seq(
-      org.scalastyle.sbt.PluginKeys.failOnError := true,
-      testScalaStyle := {
-        org.scalastyle.sbt.PluginKeys.scalastyle.toTask("").value
-      },
-      (test in Test) <<= (test in Test) dependsOn testScalaStyle
-    )
-  }
-
   val commonDependencies = Seq(
     "com.github.nscala-time" %% "nscala-time" % "1.0.0",
     "com.typesafe.akka" %% "akka-agent" % "2.2.0",
@@ -49,7 +37,7 @@ trait Membership {
     libraryDependencies ++= commonDependencies,
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
-  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ scalaStylePlugin ++ coveragePlugin
+  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ coveragePlugin
 
   def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)
 }
