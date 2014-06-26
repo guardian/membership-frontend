@@ -68,7 +68,7 @@
 
                         <div class="event__sale-ends">
                             <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
-                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold(Html(""))(_.pretty)</time>
+                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)</time>
                         </div>
                     </div>
                 </div>

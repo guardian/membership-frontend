@@ -6,22 +6,19 @@ class DatesTest extends Specification {
   "addSuffix" should {
 
     "append the correct suffix for 'th'" in {
-      Dates.suffix(5) mustEqual "th"
-      Dates.suffix(11) mustEqual "th"
-      Dates.suffix(12) mustEqual "th"
-      Dates.suffix(13) mustEqual "th"
+      forall((4 to 20) ++ (24 to 30)) ((num:Int) => Dates.suffix(num) mustEqual("th"))
     }
 
     "append the correct suffix for 'st" in {
-      Dates.suffix(1) mustEqual "st"
+      forall(Seq(1, 21, 31)) ((num:Int) => Dates.suffix(num) mustEqual("st"))
     }
 
     "append the correct suffix for 'nd" in {
-      Dates.suffix(2) mustEqual "nd"
+      forall(Seq(2, 22)) ((num:Int) => Dates.suffix(num) mustEqual("nd"))
     }
 
     "append the correct suffix for 'rd" in {
-      Dates.suffix(3) mustEqual "rd"
+      forall(Seq(3, 23)) ((num:Int) => Dates.suffix(num) mustEqual("rd"))
     }
   }
 }
