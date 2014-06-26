@@ -74,6 +74,8 @@ object Eventbrite {
                       ticket_classes: Option[Seq[EBTickets]],
                       status: Option[String]) extends EBObject {
 
+    lazy val logoUrl = logo_url.map(_.replace("http:", ""))
+
     lazy val countryName = venue.address.flatMap(_.country_name).getOrElse("")
 
     lazy val city = venue.address.flatMap(_.city).getOrElse("")
