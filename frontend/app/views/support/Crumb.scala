@@ -1,4 +1,4 @@
-package views
+package views.support
 
 /**
  * Created by cfinch on 30/04/2014.

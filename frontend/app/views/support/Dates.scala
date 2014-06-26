@@ -1,4 +1,4 @@
-package views
+package views.support
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Instant

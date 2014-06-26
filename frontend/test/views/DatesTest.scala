@@ -1,6 +1,7 @@
 package views
 
 import org.specs2.mutable.Specification
+import views.support.Dates
 
 class DatesTest extends Specification {
   "addSuffix" should {
