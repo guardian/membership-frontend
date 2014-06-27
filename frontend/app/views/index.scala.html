@@ -3,7 +3,7 @@
 @import views.support.Crumb
 @import configuration.Config
 
-@main() {
+@main(Config.indexPageTitle) {
 
     @fragments.crumb(Seq(Crumb("Home", "/")))
 

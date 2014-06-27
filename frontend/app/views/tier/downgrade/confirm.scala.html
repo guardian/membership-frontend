@@ -1,6 +1,8 @@
 @()(implicit request: play.api.mvc.Request[_])
 
-@main(Some("Downgrade Tier")) {
+@import configuration.Config
+
+@main(Config.tierDowngradeConfirmPageTitle) {
 
 <div class="page-container">
     <main role="main">

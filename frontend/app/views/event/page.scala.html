@@ -4,6 +4,7 @@
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import model.Eventbrite.EBEventStatus._
+@import configuration.Config
 
 @renderButtonGrey = {
     @event.getStatus match {
@@ -25,7 +26,7 @@
     }
 }
 
-@main() {
+@main(Config.eventDetailPageTitle) {
 
     @fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
 
