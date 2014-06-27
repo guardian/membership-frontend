@@ -90,12 +90,6 @@ module.exports = function (grunt) {
                     src: ['**/*.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
-            },
-            require: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/requirejs/require.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/requirejs/',
-                expand: true,
-                flatten: true
             }
         },
 
