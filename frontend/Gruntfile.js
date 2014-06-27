@@ -150,7 +150,13 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',
-                    src: ['**/*.js', '!**/lib/**/*.js', '!**/atob.js', '!**/user.js']
+                    src: [
+                        '**/*.js',
+                        '!**/lib/**/*.js',
+                        '!**/atob.js',
+                        '!**/user.js',
+                        '!**/utils/analytics/omniture.js'
+                    ]
                 }]
             }
         },
