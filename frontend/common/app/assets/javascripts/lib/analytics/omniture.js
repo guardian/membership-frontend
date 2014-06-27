@@ -1011,7 +1011,6 @@ function AppMeasurement () {
         a && (s[b + "_onLoad"] = a, s.C(b + "_onLoad", [s, c], 1) || a(s, c))
     };
     s.q = function (b) {
-        debugger;
         var a, c;
         for (a in s.I)if (!Object.prototype[a] && (c = s.I[a])) {
             if (c._olc && c.onLoad)c._olc =
@@ -1190,7 +1189,6 @@ function AppMeasurement () {
             for (b = 0; b < s.c.length; b++)if (a = s.c[b], a.substring(0, 4) == "prop" || a.substring(0, 4) == "eVar" || a.substring(0, 4) == "hier" || a.substring(0, 4) == "list" || a == "channel" || a == "events" || a == "eventList" || a == "products" || a == "productList" || a == "purchaseID" || a == "transactionID" || a == "state" || a == "zip" || a == "campaign")s[a] = void 0
         };
     s.Ua = function (b, a) {
-        debugger;
         var c, e = s.trackingServer;
         c = "";
         var d = s.dc, f = "sc.", g = s.visitorNamespace;
