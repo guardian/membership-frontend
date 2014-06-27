@@ -1,4 +1,4 @@
-@(title: Option[String] = None)(content: Html)(implicit request: play.api.mvc.Request[_])
+@(title: String)(content: Html)(implicit request: play.api.mvc.Request[_])
 
 <!DOCTYPE html>
 
@@ -32,11 +32,11 @@
         <meta name="Rating"                         content="general"/>
         <meta name="Distribution"                   content="Global"/>
 
-        <title>@Config.siteTitle@title.map(" - " + _)</title>
+        <title>@(Config.siteTitle + " - " + title)</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.ico")">
 
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/lib/requirejs/require.js")" data-main="@routes.Assets.at("javascripts/main")"></script>
+        <script async="async" type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
 
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
