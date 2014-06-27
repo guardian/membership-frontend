@@ -66,7 +66,8 @@ module.exports = function (grunt) {
                         'domready': 'lib/bower-components/domready/ready',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
-                        'stripe': 'lib/stripe/stripe.min'
+                        'stripe': 'lib/stripe/stripe.min',
+                        'omniture': 'lib/analytics/omniture'
                     },
                     findNestedDependencies: true,
                     wrapShim: true,
