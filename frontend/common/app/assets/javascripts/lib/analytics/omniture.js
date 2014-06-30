@@ -34,7 +34,7 @@ if (typeof(s) == "undefined") s = new AppMeasurement();
 s.account = "guardiangudev-code"
 s.debugTracking = false
 s.charSet = "UTF-8";
-s.cookieDomainPeriods = "3";
+s.cookieDomainPeriods = "2";
 
 /* Link Tracking Config */
 s.trackDownloadLinks = true;
