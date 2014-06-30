@@ -12,7 +12,6 @@ object Config {
   lazy val siteTitle = config.getString("site.title")
 
   lazy val indexPageTitle = config.getString("index.page.title")
-  lazy val tierPageTitle = config.getString("tier.page.title")
   lazy val joinerPageTitle = config.getString("joiner.page.title")
   lazy val joinerPaymentPageTitle = config.getString("joiner.payment.page.title")
   lazy val joinerThankyouPageTitle = config.getString("joiner.thankyou.page.title")
