@@ -3,7 +3,7 @@
 @import views.support.Crumb
 @import configuration.Config
 
-@main(Config.joinerThankyouPageTitle) {
+@main(Config.joinerPageTitle + " | Partner") {
 
 @fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Partner", "/join/partner")))
 
