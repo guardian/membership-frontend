@@ -1,10 +1,13 @@
 package model
 
+import java.text.DecimalFormat
+
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
+import configuration.Config
 
 object Eventbrite {
 
@@ -111,6 +114,31 @@ object Eventbrite {
 
         case _ => Live
       }
+    }
+
+    def priceFormat(price: Double) = {
+      val df = new DecimalFormat("0.00")
+      "£" + df.format(price)
+    }
+
+    def getPrice = {
+      val emptyEBTicketsSequence = Seq(EBTickets(None, None, None, None, None, None, None, None))
+      ticket_classes.getOrElse(emptyEBTicketsSequence)
+        .head.cost.getOrElse(EBPricing("GBP", "Free", 0))
+    }
+
+    def getFormattedPrice = getPrice.display
+
+    def getDiscountPrice = {
+      val discountPriceValue = (getPrice.value * Config.discountMultiplier)/100
+
+      priceFormat(discountPriceValue.toDouble)
+    }
+
+    def getSavingPrice = {
+      val savingPriceValue = (getPrice.value * (1 - Config.discountMultiplier))/100
+
+      priceFormat(savingPriceValue.toDouble)
     }
 
     def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption

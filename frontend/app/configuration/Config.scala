@@ -33,4 +33,6 @@ object Config {
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
+
+  val discountMultiplier = config.getDouble("event.discountMultiplier")
 }
