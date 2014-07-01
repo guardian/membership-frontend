@@ -7,7 +7,7 @@ import play.api.Logger
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.regions.{Regions, Region}
-import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model._
 
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
@@ -16,31 +16,68 @@ trait MemberService {
   def put(member: Member): Unit
 
   def get(userId: String): Option[Member]
+  def getByCustomerId(customerId: String): Option[Member]
 
   def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]]
 }
 
 object MemberService extends MemberService {
 
+  val TABLE_NAME = "members"
+
+  object Keys {
+    val USER_ID = "userId"
+    val TIER = "tier"
+    val CUSTOMER_ID = "customerId"
+  }
+
   val client = new AmazonDynamoDBClient
   client.setRegion(Region.getRegion(Regions.EU_WEST_1))
 
+  private def att(value: String) = new AttributeValue(value)
+
   def put(member: Member): Unit = {
-    val attributes = itemKey(member.userId) ++  Map("tier" -> att(member.tier.toString), "customerId" -> att(member.customerId))
-    client.putItem("members", attributes.asJava)
+    Logger.debug(s"Putting member $member")
+
+    client.putItem(TABLE_NAME, Map(
+      Keys.USER_ID -> att(member.userId),
+      Keys.TIER -> att(member.tier.toString),
+      Keys.CUSTOMER_ID -> att(member.customerId)
+    ).asJava)
+  }
+
+  private def getMember(attrs: Map[String, AttributeValue]): Option[Member] = {
+    for {
+      id <- attrs.get(Keys.USER_ID)
+      tier <- attrs.get(Keys.TIER)
+      customerId <- attrs.get(Keys.CUSTOMER_ID)
+    } yield Member(id.getS, Tier.withName(tier.getS), customerId.getS)
   }
 
   def get(userId: String): Option[Member] = {
-    val attributesOpt = Option(client.getItem("members", itemKey(userId).asJava).getItem)
-    attributesOpt.map { attributes =>
-      val (id, tier, customer) = (attributes.get("id").getS, attributes.get("tier").getS, attributes.get("customerId").getS)
-      Member(id, Tier.withName(tier), customer)
-    }
+    for {
+      attrsJ <- Option(client.getItem(TABLE_NAME, Map(Keys.USER_ID -> att(userId)).asJava).getItem)
+      attrs = attrsJ.asScala.toMap
+      member <- getMember(attrs)
+    } yield member
   }
 
-  def itemKey(userId: String) = Map("id" -> att(userId))
+  def getByCustomerId(customerId: String): Option[Member] = {
+    val cond = new Condition()
+      .withComparisonOperator(ComparisonOperator.EQ)
+      .withAttributeValueList(att(customerId))
 
-  def att(value: String) = new AttributeValue(value)
+    val query = new QueryRequest()
+      .withTableName(TABLE_NAME)
+      .withIndexName(s"${Keys.CUSTOMER_ID}-index")
+      .withKeyConditions(Map(Keys.CUSTOMER_ID -> cond).asJava)
+
+    for {
+      attrsJ <- client.query(query).getItems.asScala.headOption
+      attrs = attrsJ.asScala.toMap
+      member <- getMember(attrs)
+    } yield member
+  }
 
   def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]] = {
     def encode(code: String) = {
@@ -55,7 +92,6 @@ object MemberService extends MemberService {
       // code should be unique for each user/event combination
       code = encode(s"${member.userId}_${event.id}")
     } yield {
-      Logger.debug("CODE IS " + code)
       EventbriteService.createOrGetDiscount(event.id, code)
     }
   }
