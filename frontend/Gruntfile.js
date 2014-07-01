@@ -200,7 +200,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 
-    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
+    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile']);
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };
