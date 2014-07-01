@@ -23,7 +23,7 @@ trait MemberService {
 
 object MemberService extends MemberService {
 
-  val TABLE_NAME = "members2"
+  val TABLE_NAME = "members"
 
   object Keys {
     val USER_ID = "userId"
