@@ -1,9 +1,8 @@
 @()(implicit request: play.api.mvc.Request[_])
 
 @import views.support.Crumb
-@import configuration.Config
 
-@main(Config.joinerPageTitle + " | Patron") {
+@main("Join | Patron") {
 
 @fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Patron", "/join/patron")))
 

@@ -1,9 +1,8 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
 @import views.support.Crumb
-@import configuration.Config
 
-@main(Config.joinerThankyouPageTitle + " | " + subscription.plan.name) {
+@main("Thankyou | " + subscription.plan.name) {
 
 <div class="page-container">
 
