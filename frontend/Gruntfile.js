@@ -87,12 +87,6 @@ module.exports = function (grunt) {
                     src: ['**/*.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
-            },
-            require: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/requirejs/require.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/requirejs/',
-                expand: true,
-                flatten: true
             }
         },
 
@@ -209,7 +203,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 
-    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
+    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile']);
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };
