@@ -11,8 +11,6 @@ require([
 ], function(omnitureAnalytics, router, domready, ajax, StripeForm, ctaButton, account, DatetimeEnhance, modifyEvent) {
     'use strict';
 
-    omnitureAnalytics.init();
-
     ajax.init({page: {ajaxUrl: ''}});
 
     router.match('/event').to(function () {
@@ -29,6 +27,7 @@ require([
 
     router.match('*').to(function () {
         account.init();
+        omnitureAnalytics.init();
     });
 
     domready(function() {
