@@ -1,0 +1,128 @@
+@()(implicit request: play.api.mvc.Request[_])
+
+@main(Some("Downgrade Tier")) {
+
+<div class="page-container">
+    <main role="main">
+        <div class="content__container">
+            <section class="l-row l-row--items-2 content__section">
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h1 class="content__headline">Become a Friend for free</h1>
+                    <a href="/join/friend" class="action-cta action-cta--confirm">Become a Friend</a>
+                </article>
+                <aside class="l-row__item">
+                    <h2 class="content__heading tone-news-one">
+                        Sure you want to cancel?
+                    </h2>
+                </aside>
+            </section>
+        </div>
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-4">
+                <div class="l-row__item">
+                    <h2>Whats included?</h2>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Digital</h3>
+                        <ul class="item__list-element">
+                            <li>Vestibulum ante ipsum primis</li>
+                            <li>Fusce non sagittis ligula</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Community</h3>
+                        <ul class="item__list-element">
+                            <li>Sit amet libero congue pulvinar</li>
+                            <li>Vehicula tellus et, commodo</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Live</h3>
+                        <ul class="item__list-element">
+                            <li>Donec rhoncus tristique</li>
+                            <li>Leo congue imperdiet ultricies</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-2 content__section">
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h1 class="content__headline">Are you sure you would like to cancel your account?</h1>
+                    <p class="item__title">You will no longer receive all the great benefits</p>
+                </article>
+                <aside class="l-row__item">
+                    <h2 class="content__heading tone-news-one">Cancel info</h2>
+                </aside>
+            </section>
+        </div>
+        <div class="content__container content__container--border">
+            <section class="l-row l-row--items-4">
+                <div class="l-row__item">
+                    <h2>If you cancel you can no longer</h2>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Digital</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="" alt=""/>
+                        </div>
+                        <ul class="item__list-element">
+                            <li>Vestibulum ante ipsum primis</li>
+                            <li>Fusce non sagittis ligula</li>
+                            <li>Phasellus et urna non orci</li>
+                            <li>Lorem ipsum dolor sit amet</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Community</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="" alt=""/>
+                        </div>
+                        <ul class="item__list-element">
+                            <li>Sit amet libero congue pulvinar</li>
+                            <li>Vehicula tellus et, commodo</li>
+                            <li>Adipiscing in risus et consequat</li>
+                            <li>Maecenas tincidunt auctor</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="l-row__item">
+                    <div class="item">
+                        <h3 class="item__title">Live</h3>
+                        <div class="u-responsive-ratio">
+                            <img src="" alt=""/>
+                        </div>
+                        <ul class="item__list-element">
+                            <li>Donec rhoncus tristique</li>
+                            <li>Leo congue imperdiet ultricies</li>
+                            <li>Non facilisis tellus mauris</li>
+                            <li>Orci volutpat varius</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <section>
+            <div class="l-row l-row--items-2">
+                <div class="l-row__item"></div>
+                <div class="l-row__item l-row__item--boost-2 secondary-content">
+                    <form action="/tier/cancel/confirm" method="POST">
+                        <p class="item__title">You will still be a registered Guardian user</p>
+                        <input type="submit" value="Cancel Membership" class="action-cta action-cta--confirm"/>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+}

@@ -1,9 +1,9 @@
 @(tier: model.Tier.Tier, amount: Int)(implicit request: play.api.mvc.Request[_])
 
-@import views.html.joiner.payment.selectDates
-@import views.Format._
+@import views.support.selectDates
+@import views.support.Format._
 
-@main("Membership") {
+@main() {
 
 <div class="page-container">
     <h1 class="section-headline">Payment</h1>
@@ -74,7 +74,7 @@
 
     </form>
 
-    @partials.joiner.payment.aside(tier, amount)
+    @fragments.joiner.payment.aside(tier, amount)
 
 </div>
 

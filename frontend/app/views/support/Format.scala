@@ -1,4 +1,4 @@
-package views
+package views.support
 
 object Format {
   def formatPounds(pounds: Int): String = {

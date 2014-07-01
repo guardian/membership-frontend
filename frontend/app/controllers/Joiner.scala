@@ -4,8 +4,8 @@ import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import actions.{ MemberAction, AuthenticatedAction }
-import model.Tier
-import services.StripeService
+import model.{Member, Tier}
+import services.{MemberService, StripeService}
 
 trait Joiner extends Controller {
 
@@ -15,6 +15,11 @@ trait Joiner extends Controller {
 
   def friend() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.friend())
+  }
+
+  def joinFriend() = AuthenticatedAction { implicit request =>
+    MemberService.put(Member.friend(request.user.id, Tier.Friend))
+    Redirect(routes.Joiner.thankyouFriend())
   }
 
   def partner() = CachedAction { implicit request =>
@@ -40,8 +45,8 @@ trait Joiner extends Controller {
   def thankyouPartner() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
       response.getOrElse(NotFound)
@@ -51,8 +56,8 @@ trait Joiner extends Controller {
   def thankyouPatron() = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
-        subscription <- customer.subscriptions.data.headOption
-        card <- customer.cards.data.headOption
+        subscription <- customer.subscription
+        card <- customer.card
       } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
 
       response.getOrElse(NotFound)

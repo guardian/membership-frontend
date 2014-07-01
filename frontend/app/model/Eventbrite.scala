@@ -73,19 +73,20 @@ object Eventbrite {
                       capacity: Option[Int],
                       ticket_classes: Option[Seq[EBTickets]],
                       status: Option[String]) extends EBObject {
-    val blankAddress = EBAddress(None, None, None, None, None, None)
 
-    def countryName = venue.address.getOrElse(blankAddress).country_name.getOrElse("")
+    lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
-    def city = venue.address.getOrElse(blankAddress).city.getOrElse("")
+    lazy val countryName = venue.address.flatMap(_.country_name).getOrElse("")
 
-    def addressOne = venue.address.getOrElse(blankAddress).address_1.getOrElse("")
+    lazy val city = venue.address.flatMap(_.city).getOrElse("")
 
-    def addressTwo = venue.address.getOrElse(blankAddress).address_2.getOrElse("")
+    lazy val addressOne = venue.address.flatMap(_.address_1).getOrElse("")
 
-    def region = venue.address.getOrElse(blankAddress).region.getOrElse("")
+    lazy val addressTwo = venue.address.flatMap(_.address_2).getOrElse("")
 
-    def country = venue.address.getOrElse(blankAddress).country.getOrElse("")
+    lazy val region = venue.address.flatMap(_.region).getOrElse("")
+
+    lazy val country = venue.address.flatMap(_.country).getOrElse("")
 
     import EBEventStatus._
 

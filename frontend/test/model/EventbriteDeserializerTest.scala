@@ -1,9 +1,8 @@
 package model
 
-import play.api.libs.json._
 import play.api.test.PlaySpecification
-import scala.io.Source
 import model.Eventbrite._
+import utils.Resource
 
 class EventbriteDeserializerTest extends PlaySpecification {
 
@@ -12,8 +11,8 @@ class EventbriteDeserializerTest extends PlaySpecification {
     "should deserialize event json" in {
       import EventbriteDeserializer._ // class under test
 
-      val event = Source.fromURL(this.getClass.getClassLoader.getResource("event-1.json")).mkString
-      val ebResponse = Json.parse(event).as[EBResponse[EBEvent]]
+      val event = Resource.getJson("model/eventbrite/events.json")
+      val ebResponse = event.as[EBResponse[EBEvent]]
 
       ebResponse.data.head.name.text === "Chris' big time jamboree"
     }

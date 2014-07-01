@@ -1,6 +1,6 @@
 @(event: model.Eventbrite.EBEvent)(implicit request: play.api.mvc.Request[_])
-@import views.Crumb
-@import views.Dates._
+@import views.support.Crumb
+@import views.support.Dates._
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import model.Eventbrite.EBEventStatus._
@@ -25,15 +25,15 @@
     }
 }
 
-@main("Membership") {
+@main() {
 
-    @partials.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
+    @fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
 
  <div class="page-container">
     <div class="event">
         <div class="event__content">
             <div class="event__image">
-                <img src="@event.logo_url" alt="Event Image" />
+                <img src="@event.logoUrl" alt="Event Image" />
             </div>
             <div class="event__content__inner">
                 <div class="event__content-body">
@@ -68,7 +68,7 @@
 
                         <div class="event__sale-ends">
                             <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
-                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold(Html(""))(_.pretty)</time>
+                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)</time>
                         </div>
                     </div>
                 </div>

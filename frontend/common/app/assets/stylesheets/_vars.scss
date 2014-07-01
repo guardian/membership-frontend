@@ -205,6 +205,9 @@ $c-statusNeutral: $c-neutral2;
 $c-statusNegative: #da1d1d;
 
 
+@import "components/bower-components/guss-colours/_colours.scss";
+@import "components/bower-components/guss-colours/_helpers.scss";
+
 // MPU
 // =============================================================================
 
@@ -233,3 +236,9 @@ $mem-brandOrange: #ce6f14;
 $mem-brandBlue: #82c2d6;
 $mem-brandGrey: #dcddda;
 $mem-trans-white: rgba(255,255,255,0.8);
+$mem-black: #333333;
+
+$mem-button-confirm: #1a4683;
+$mem-button-cancel: #b8b8b8;
+
+

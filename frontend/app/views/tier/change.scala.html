@@ -1,0 +1,72 @@
+@(subscription: model.Stripe.Subscription)(implicit request: play.api.mvc.Request[_])
+
+@import configuration.Config
+@import model.Tier
+
+@yourCurrentPackage = {
+    <div class="package__current-indicator">Your Current Package</div>
+}
+
+@main(Some("Change Tier")) {
+
+<div class="page-container">
+    <main role="main">
+        <div class="content__container">
+            <section class="l-row l-row--items-2 content__section">
+                <aside class="l-row__item">
+                    <h2 class="content__heading tone-news-one">Membership packages</h2>
+                </aside>
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h1 class="content__headline">Amend your package</h1>
+                    <p class="item__title">Nulla a massa turpis. Integer porta ligula vitae faucibus facilisis. Vivamus eu sollicitudin massa. Nullam vestibulum, massa quis tempor iaculis, sem turpis tempus mauris, ut ornare est neque in neque. Mauris ultrices dapibus neque id malesuada. Donec sagittis, dui rhoncus hendrerit ultrices, dui augue vulputate lorem, vitae tincidunt nibh erat at metus. Nunc mattis magna nec urna blandit, vitae vestibulum turpis porttitor.</p>
+                    <a href="@Config.idWebAppUrl/account/edit"><< Back to 'My Profile'</a>
+                </article>
+            </section>
+        </div>
+        <div class="package-container">
+            <h2 class="package-container__header">Select the package you would like to switch to:</h2>
+            <div class="content__container">
+                <section class="l-row l-row--items-3">
+                    @fragments.tier.benefits(subscription, Tier.Friend) {£(Free)} {
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio.</p>
+                        <ul class="package__list-element">
+                            <li>Book Live event tickets</li>
+                        </ul>
+                    }
+                    fragmentss.tier.benefits(subscription, Tier.Partner) {£15 <span class="package__pcm">pcm</span>} {
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
+                        <ul class="package__list-element">
+                            <li>Welcome pack</li>
+                            <li>Early booking for live events (1 week before general release)</li>
+                            <li>20% discount on tickets and plus ones</li>
+                            <li>20% discount on Masterclasses</li>
+                        </ul>
+                    }
+                   fragmentsls.tier.benefits(subscription, Tier.Patron) {£60 <span class="package__pcm">pcm</span>} {
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
+                        <ul class="package__list-element">
+                            <li>Patron pack</li>
+                            <li>Invited to patron only events</li>
+                            <li>Invited to annual patron forum</li>
+                            <li>Drinks from The Guardian wine rack</li>
+                            <li>Early booking for live events (2 weeks before general release)</li>
+                            <li>20% discount on tickets and plus ones</li>
+                            <li>20% discount on Masterclasses</li>
+                        </ul>
+                    }
+                </section>
+            </div>
+            <div class="content__container content__container--border-dark content__footer">
+                <ul class="inline-list">
+                    <li class="inline-list__item"><a href="#faq">FAQ</a></li>
+                    <li class="inline-list__item">&#149;</li>
+                    <li class="inline-list__item"><a href="#help">Email User help</a></li>
+                    <li class="inline-list__item">&#149;</li>
+                    <li class="inline-list__item"><a href="/tier/cancel/confirm">Cancel Membership</a></li>
+                </ul>
+            </div>
+        </div>
+  </main>
+</div>
+
+}

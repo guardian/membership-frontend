@@ -5,6 +5,7 @@
     padding: $gutter/2 $gutter;
     color: #FFFFFF;
     cursor: pointer;
+    border: 0;
     text-decoration: none;
     &:visited,
     &:hover,
@@ -93,5 +94,35 @@
     margin: 40px 0 5px 0;
     &:before, &:after {
         background-color: #E1E1E1;
+    }
+}
+
+.action-cta {
+    color: #FFFFFF;
+    border: none;
+    padding: $gs-gutter / 2;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    @include rem((
+        min-width: $gs-baseline * 6,
+        line-height: $gs-gutter
+    ));
+}
+
+.action-cta--confirm {
+    background-color: $mem-button-confirm;
+}
+
+.action-cta--cancel {
+    background-color: $mem-button-cancel;
+}
+
+.action-cta--full-width-mobile {
+    width: 100%;
+    vertical-align: middle;
+    @include mq(tablet) {
+        width: auto;
+        float: right;
     }
 }

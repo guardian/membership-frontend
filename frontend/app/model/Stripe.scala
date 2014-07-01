@@ -18,9 +18,19 @@ object Stripe {
   case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
     extends StripeObject
 
-  case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject
+  case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
+    // We currently only support one subscription/card
+    val subscription = subscriptions.data.headOption
+    val card = cards.data.headOption
+  }
 
-  case class Subscription(id: String, start: Long, current_period_end: Long, customer: String, plan: Plan) extends StripeObject
+  case class Subscription(
+    id: String,
+    start: Long,
+    current_period_start: Long,
+    current_period_end: Long,
+    customer: String,
+    plan: Plan) extends StripeObject
 
   case class Plan(id: String, name: String, amount: Int) extends StripeObject {
     val tier = Tier.withName(id)

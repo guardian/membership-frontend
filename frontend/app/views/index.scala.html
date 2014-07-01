@@ -1,11 +1,11 @@
 @()(implicit request: play.api.mvc.Request[_])
 
-@import views.Crumb
+@import views.support.Crumb
 @import configuration.Config
 
-@main("Membership") {
+@main() {
 
-    @partials.crumb(Seq(Crumb("Home", "/")))
+    @fragments.crumb(Seq(Crumb("Home", "/")))
 
     <div class="page-container">
         <h1 class="section-header">@if(Config.membershipHide){Masterclasses}else{Membership}</h1>
