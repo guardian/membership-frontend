@@ -7,7 +7,7 @@
     <div class="package__current-indicator">Your Current Package</div>
 }
 
-@main(Some("Change Tier")) {
+@main("Change Tier") {
 
 <div class="page-container">
     <main role="main">
@@ -33,7 +33,7 @@
                             <li>Book Live event tickets</li>
                         </ul>
                     }
-                    fragmentss.tier.benefits(subscription, Tier.Partner) {£15 <span class="package__pcm">pcm</span>} {
+                    @fragments.tier.benefits(subscription, Tier.Partner) {£15 <span class="package__pcm">pcm</span>} {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
                         <ul class="package__list-element">
                             <li>Welcome pack</li>
@@ -42,7 +42,7 @@
                             <li>20% discount on Masterclasses</li>
                         </ul>
                     }
-                   fragmentsls.tier.benefits(subscription, Tier.Patron) {£60 <span class="package__pcm">pcm</span>} {
+                   @fragments.tier.benefits(subscription, Tier.Patron) {£60 <span class="package__pcm">pcm</span>} {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
                         <ul class="package__list-element">
                             <li>Patron pack</li>
