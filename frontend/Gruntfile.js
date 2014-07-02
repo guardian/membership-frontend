@@ -66,7 +66,8 @@ module.exports = function (grunt) {
                         'domready': 'lib/bower-components/domready/ready',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
-                        'stripe': 'lib/stripe/stripe.min'
+                        'stripe': 'lib/stripe/stripe.min',
+                        'omniture': 'lib/analytics/omniture'
                     },
                     findNestedDependencies: true,
                     wrapShim: true,
@@ -86,12 +87,6 @@ module.exports = function (grunt) {
                     src: ['**/*.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
-            },
-            require: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/requirejs/require.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/requirejs/',
-                expand: true,
-                flatten: true
             }
         },
 
@@ -149,7 +144,13 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',
-                    src: ['**/*.js', '!**/lib/**/*.js', '!**/atob.js', '!**/user.js']
+                    src: [
+                        '**/*.js',
+                        '!**/lib/**/*.js',
+                        '!**/atob.js',
+                        '!**/user.js',
+                        '!**/utils/analytics/omniture.js'
+                    ]
                 }]
             }
         },
@@ -202,7 +203,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 
-    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile', 'copy:require']);
+    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile']);
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };
