@@ -1,13 +1,13 @@
 package controllers
 
-import play.api.mvc.{ SimpleResult, Request, ActionBuilder }
+import play.api.mvc.{ Result, Request, ActionBuilder }
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 object CachedAction extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[SimpleResult]) = block(request).map { Cached(_) }
+  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map { Cached(_) }
 }
 
 object NoCacheAction extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[SimpleResult]) = block(request).map { NoCache(_) }
+  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map { NoCache(_) }
 }

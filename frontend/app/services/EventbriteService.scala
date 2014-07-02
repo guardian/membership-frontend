@@ -5,6 +5,7 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.agent.Agent
 
+import play.api.Play.current
 import play.api.libs.ws._
 import play.api.libs.iteratee.{Iteratee, Enumerator}
 import play.api.libs.concurrent.Akka

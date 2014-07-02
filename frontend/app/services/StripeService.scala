@@ -3,6 +3,7 @@ package services
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import play.api.Play.current
 import play.api.libs.json.Reads
 import play.api.libs.ws.{Response, WS}
 import play.api.Logger
