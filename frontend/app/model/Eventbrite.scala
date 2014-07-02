@@ -121,21 +121,22 @@ object Eventbrite {
       "£" + df.format(price)
     }
 
-    def getPrice = {
+    lazy val getPrice = {
       val emptyEBTicketsSequence = Seq(EBTickets(None, None, None, None, None, None, None, None))
+
       ticket_classes.getOrElse(emptyEBTicketsSequence)
         .head.cost.getOrElse(EBPricing("GBP", "Free", 0))
     }
 
-    def getFormattedPrice = getPrice.display
+    lazy val getFormattedPrice = getPrice.display
 
-    def getDiscountPrice = {
+    lazy val getDiscountPrice = {
       val discountPriceValue = (getPrice.value * Config.discountMultiplier)/100
 
       priceFormat(discountPriceValue.toDouble)
     }
 
-    def getSavingPrice = {
+    lazy val getSavingPrice = {
       val savingPriceValue = (getPrice.value * (1 - Config.discountMultiplier))/100
 
       priceFormat(savingPriceValue.toDouble)
