@@ -204,6 +204,17 @@
                     { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
                 ]
             }
+        },
+        "FrontendELBDNSrecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
+                "Comment" : "CNAME for AWS ELB",
+                "Name" :  { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] },
+                "Type" : "CNAME",
+                "TTL" : "120",
+                "ResourceRecords" : [ {"Fn::GetAtt":["FrontendElasticLoadBalancer","DNSName"]} ]
+            }
         }
     },
     "Outputs": {
