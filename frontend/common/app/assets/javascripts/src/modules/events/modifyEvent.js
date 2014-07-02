@@ -27,9 +27,7 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
             var priceText = config.DOM.EVENT_PRICE.text(),
                 priceDiscount = config.DOM.EVENT_PRICE_DISCOUNT.text();
 
-            if (priceText === 'Free') {
-                config.DOM.EVENT_PRICE_NOTE.hide();
-            } else {
+            if (priceText !== 'Free') {
                 config.DOM.EVENT_PRICE.text(priceDiscount);
                 config.DOM.EVENT_PRICE_DISCOUNT.text(priceText);
                 config.DOM.EVENT_TRAIL_TAG.text('Full price ');
