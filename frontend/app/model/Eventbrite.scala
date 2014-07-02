@@ -1,10 +1,13 @@
 package model
 
+import java.text.DecimalFormat
+
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
+import configuration.Config
 
 object Eventbrite {
 
@@ -50,11 +53,19 @@ object Eventbrite {
                      longitude: Option[String],
                      name: Option[String]) extends EBObject
 
-  case class EBPricing(currency: String, display: String, value: Int) extends EBObject
+  case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
+    def priceFormat(priceInPence: Double) = f"£${priceInPence/100}%2.2f"
+
+    lazy val formattedPrice = priceFormat(value)
+
+    lazy val discountPrice = priceFormat(value * Config.discountMultiplier)
+
+    lazy val savingPrice = priceFormat(value * (1-Config.discountMultiplier))
+  }
 
   case class EBTickets(id: Option[String],
                        name: Option[String],
-                       free: Option[Boolean],
+                       free: Boolean,
                        quantity_total: Option[Int],
                        quantity_sold: Option[Int],
                        cost: Option[EBPricing],
@@ -71,7 +82,7 @@ object Eventbrite {
                       end: DateTime,
                       venue: EBVenue,
                       capacity: Option[Int],
-                      ticket_classes: Option[Seq[EBTickets]],
+                      ticket_classes: Seq[EBTickets],
                       status: Option[String]) extends EBObject {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
@@ -91,7 +102,7 @@ object Eventbrite {
     import EBEventStatus._
 
     def getStatus: EBEventStatus = {
-      val numberSoldTickets = ticket_classes.getOrElse(Seq.empty).flatMap(_.quantity_sold).sum
+      val numberSoldTickets = ticket_classes.flatMap(_.quantity_sold).sum
 
       status match {
         case Some("completed") => Completed
@@ -101,19 +112,15 @@ object Eventbrite {
         case Some("live") if numberSoldTickets >= capacity.getOrElse(0) => SoldOut
 
         case Some("live") => {
-          val startDates = ticket_classes.getOrElse(Seq.empty).map(_.sales_start.getOrElse(Instant.now))
-          if (startDates.exists(_ <= Instant.now)) {
-            Live
-          } else {
-            PreLive
-          }
+          val startDates = ticket_classes.map(_.sales_start.getOrElse(Instant.now))
+          if (startDates.exists(_ <= Instant.now)) Live else PreLive
         }
 
         case _ => Live
       }
     }
 
-    def ticketClassesHead = ticket_classes.getOrElse(Seq.empty).headOption
+    def ticketClassesHead = ticket_classes.headOption
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject

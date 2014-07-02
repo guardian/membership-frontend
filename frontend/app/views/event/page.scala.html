@@ -58,19 +58,36 @@
                         </div>
                         <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
                     </div>
-                    <div class="event__tickets">
 
-                        <div class="event__price">
-                            <span class="event__price-amount js-event-price">@event.ticket_classes.getOrElse(Seq(EBTickets(None, None, None, None, None, None, None, None))).head.cost.getOrElse(EBPricing("GBP", "Free", 0)).display</span>
-                            <span class="event__price-note js-event-price-note"> per ticket</span>
-                        </div>
-                        @renderButtonGrey
+                    @for(ticket <- event.ticketClassesHead) {
+                        <div class="event__tickets">
 
-                        <div class="event__sale-ends">
-                            <span class="event__sale_ends_note js-datetime-enhance-note">Sale @if(event.getStatus == Completed){ended on}else{ends on} </span>
-                            <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)</time>
+                            @if(ticket.free) {
+                                <div class="event__price">
+                                    <span class="event__price-amount js-event-price">Free</span>
+                                </div>
+                            } else {
+                                @for(pricing <- ticket.cost) {
+                                    <div class="event__price">
+                                        <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                        <span class="event__price-note js-event-price-note"> per ticket</span>
+                                    </div>
+                                    <div class="event__trail">
+                                        <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                        <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                        <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                    </div>
+                                }
+                            }
+
+                            @renderButtonGrey
+
+                            <div class="event__sale-ends">
+                                <span class="event__sale_ends_note js-datetime-enhance-note">Sales @if(event.getStatus == Completed){ended on}else{end on} </span>
+                                <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)</time>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
             <div class="event__content-body">
