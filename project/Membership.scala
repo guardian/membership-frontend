@@ -49,7 +49,7 @@ trait Membership {
 }
 
 object Membership extends Build with Membership {
-  val frontend = app("frontend")
+  val frontend = app("frontend").settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
 
   val root = Project("root", base=file(".")).aggregate(frontend)
 }
