@@ -14,6 +14,10 @@ import com.amazonaws.services.dynamodbv2.model._
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
 
+case class MemberNotFound(userId: String) extends Throwable {
+  override def getMessage: String = s"Member with ID $userId not found"
+}
+
 trait MemberService {
   def put(member: Member): Future[Unit]
 
@@ -63,7 +67,7 @@ object MemberService extends MemberService {
       member <- getMember(attrs)
     } yield member
 
-    memberOpt.getOrElse(Future.failed(new Exception))
+    memberOpt.getOrElse(Future.failed(MemberNotFound(userId)))
   }
 
   def getByCustomerId(customerId: String): Future[Member] = {
@@ -82,7 +86,7 @@ object MemberService extends MemberService {
       member <- getMember(attrs)
     } yield member
 
-    memberOpt.getOrElse(Future.failed(new Exception))
+    memberOpt.getOrElse(Future.failed(MemberNotFound(customerId)))
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[EBDiscount] = {
