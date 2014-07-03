@@ -13,8 +13,15 @@
                 <span class="package__price">
                     @benefitPricing
                 </span>
+
                 @if(!isCurrentPackage) {
-                    <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Select</a>
+                    <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
+                        @if(subscription.plan.tier > tier){
+                            Downgrade
+                        } else {
+                            Upgrade
+                        }
+                    </a>
                 }
             </div>
         </div>

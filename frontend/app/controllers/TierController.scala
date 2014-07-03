@@ -47,6 +47,10 @@ trait TierController extends Controller {
       }
   }
 
+  def upgradePayment = AuthenticatedAction { implicit request =>
+    Ok(views.html.tier.upgrade.payment())
+  }
+
   def confirmCancel() = AuthenticatedAction { implicit request =>
     Ok(views.html.tier.cancel.confirm())
   }

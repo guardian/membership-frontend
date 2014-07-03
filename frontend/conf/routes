@@ -37,9 +37,16 @@ GET         /tier/change                 controllers.TierController.change
 GET         /tier/downgrade/confirm      controllers.TierController.confirmDowngrade
 POST        /tier/downgrade/confirm      controllers.TierController.downgradeTier
 GET         /tier/downgrade/summary      controllers.TierController.downgradeSummary
+GET         /tier/upgrade/payment        controllers.TierController.upgradePayment
 GET         /tier/cancel/confirm         controllers.TierController.confirmCancel
 POST        /tier/cancel/confirm         controllers.TierController.cancelTier
 GET         /tier/cancel/summary         controllers.TierController.cancelSummary
+
+GET         /tier/change/friend          controllers.TierController.confirmDowngrade
+
+GET         /tier/change/partner         controllers.TierController.confirmDowngrade
+
+GET         /tier/change/patron          controllers.TierController.confirmDowngrade
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
