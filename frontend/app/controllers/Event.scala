@@ -34,9 +34,8 @@ trait Event extends Controller {
   def buy(id: String) = AuthenticatedAction.async { implicit request =>
     for {
       event <- eventService.getEvent(id)
-      discountSeq <- Future.sequence(memberService.createEventDiscount(request.user.id, event).toSeq)
-      discountOpt = discountSeq.headOption.filter(discount => discount.quantity_available > discount.quantity_sold)
-    } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+      discount <- memberService.createEventDiscount(request.user.id, event)
+    } yield Found(event.url ? ("discount" -> discount.code))
   }
 }
 
