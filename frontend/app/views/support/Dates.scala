@@ -2,7 +2,7 @@ package views.support
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Instant
-import play.api.templates.Html
+import play.twirl.api.Html
 
 object Dates {
 

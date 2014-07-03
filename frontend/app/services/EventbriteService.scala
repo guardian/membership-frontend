@@ -5,6 +5,7 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.agent.Agent
 
+import play.api.Play.current
 import play.api.libs.ws._
 import play.api.libs.iteratee.{Iteratee, Enumerator}
 import play.api.libs.concurrent.Akka
@@ -31,7 +32,7 @@ trait EventbriteService {
     allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
   }
 
-  private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
+  private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
       Logger.error(s"Eventbrite request - Response body : ${response.body}")
       throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))

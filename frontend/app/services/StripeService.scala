@@ -3,8 +3,9 @@ package services
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import play.api.Play.current
 import play.api.libs.json.Reads
-import play.api.libs.ws.{Response, WS}
+import play.api.libs.ws.{WSResponse, WS}
 import play.api.Logger
 
 import model.Stripe._
@@ -17,7 +18,7 @@ trait StripeService {
   def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
   def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
 
-  private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
+  private def extract[A <: StripeObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
       throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object", None, None))
     }

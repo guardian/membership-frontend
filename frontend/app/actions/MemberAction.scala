@@ -8,12 +8,12 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import services.{MemberService, AuthenticationService}
 import controllers.NoCache
-import play.api.mvc.SimpleResult
+import play.api.mvc.Result
 
 trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
 
-  protected def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[SimpleResult]) = {
+  def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
     val result = for {
       authRequest <- authService.authenticatedRequestFor(request)
       member <- MemberService.get(authRequest.user.id)
