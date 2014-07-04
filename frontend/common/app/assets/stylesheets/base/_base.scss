@@ -16,10 +16,6 @@ html {
     }
 }
 
-body {
-
-}
-
 body:after {
     content: "mobile";
     @include u-h;

@@ -35,6 +35,8 @@ define([
         this.addListeners();
     };
 
+    Header.prototype.user = userUtil.getUserFromCookie();
+
     Header.prototype.cacheDomElements = function () {
         var selector;
 
@@ -47,7 +49,7 @@ define([
      * Event listeners for the identity menu and the hamburger menu
      */
     Header.prototype.addListeners = function () {
-        var user = userUtil.getUserFromCookie();
+        var user = this.user;
 
         bean.on(config.DOM.MENU_ICON[0], 'click', function (e) {
             e.preventDefault();
@@ -69,7 +71,7 @@ define([
      * Populate user details in the header account information container
      */
     Header.prototype.populateUserDetails = function() {
-        var user = userUtil.getUserFromCookie();
+        var user = this.user;
 
         if (user) {
             config.DOM.IDENTITY_NOTICE.text(config.text.SIGNED_IN_PREFIX).addClass('u-h');

@@ -37,7 +37,6 @@
     }
 }
 
-
 .i-logo {
     display: block;
     @include rem((
@@ -57,4 +56,8 @@
 .svg .i-logo {
     background: url("/assets/images/header/logo.svg");
     @include background-size(cover);
+}
+
+.icon-wrapper {
+    display: block;
 }

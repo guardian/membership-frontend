@@ -11,8 +11,10 @@
         padding: ($gs-baseline/3)*2 0
     ));
     list-style: none;
-    margin-bottom: -4px;
-    border-bottom: 2px solid $c-brandBlue;
+    @include rem((
+        margin-bottom: -4px,
+        border-bottom: 2px solid $c-brandBlue
+    ));
     background: #ffffff;
     width: 100%;
     .nav-popup__cta_container {
@@ -20,8 +22,10 @@
     }
     .nav-popup__cta {
         background-color: #005689;
-        padding: $gs-baseline $gs-baseline * 2;
-        margin: $gs-gutter 0;
+        @include rem((
+            padding: $gs-baseline $gs-baseline * 2,
+            margin: $gs-gutter 0
+        ));
         color: #ffffff;
         display: inline-block;
         width: 90%;
