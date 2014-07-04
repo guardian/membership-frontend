@@ -82,18 +82,21 @@
 /* Media Queries
    ========================================================================== */
 @include mq(tablet){
-    .header__inner {
-        padding: 0 $gs-gutter;
-    }
-    .i-logo {
-        margin-top: $gs-gutter/2;
-        margin-bottom: $gs-gutter/2;
+    .header {
+        .header__inner {
+            padding: 0 $gs-gutter;
+        }
+        .i-logo {
+            margin-top: $gs-gutter/2;
+            margin-bottom: $gs-gutter/2;
+        }
     }
 }
 
 @include mq(wide){
-
-    .header__inner {
-        padding: 0 ($gs-gutter + $gs-column-width);
+    .header {
+        .header__inner {
+            padding: 0 ($gs-gutter + $gs-column-width);
+        }
     }
 }
