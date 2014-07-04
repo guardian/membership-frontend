@@ -1,98 +1,99 @@
-header {
-    @include clearfix;
-    padding: 0 0 gs-height(1)/2 0;
-    border-bottom: 1px solid $c-neutral6;
-    background: $c-neutral8;
-
-    .header__logo {
-        display: block;
+.header {
+    background: $mem-header;
+    @include rem((
+        border-bottom: 2px solid $white-trans
+    ));
+    .header__inner {
         @include rem((
-            height: 42px,
-            margin-top: $gutter * 3
+            padding: $gs-gutter/2
         ));
-        float: right;
     }
-
-    .header__identity {
-        background-color: #FFFFFF;
-        width: 100%;
-        height: 42px;
-        display: block;
-        padding: 0 0 0 6px;
-
-        .i-action {
-            border: 1px solid #333;
-            padding: 0;
-            -webkit-border-radius: 100rem;
-            border-radius: 100rem;
-            width: 30px;
-            height: 30px;
-            padding-top: 5px;
-        }
-
-        .i-profile {
-            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCI+PHBhdGggZD0iTTguOTg0IDcuNmguMDFjLjgyNC4wMDMgMS41OTgtLjI4OCAyLjE0Ni0uODY0LjU0OS0uNTczLjg2LTEuNDA4Ljg1OS0yLjQ0Ny4wMDEtMS4wMDQtLjI5Mi0xLjgyOC0uODI5LTIuNDA1LS41MzUtLjU3OS0xLjMxMi0uODg3LTIuMTY2LS44ODMtLjgyLS4wMDUtMS41OTYuMjgzLTIuMTQ2Ljg1Ny0uNTQ3LjU3MS0uODYgMS40MDEtLjg1OCAyLjQzOCAwIDEuMDA2LjI5MiAxLjgzMy44MjcgMi40MTUuNTMzLjU3OSAxLjMwNi44ODkgMi4xNTcuODg5em01LjUxNiAyLjA1M2gtLjAwMmMtMi45NTctMS44MDEtOC4wMzctMS44MDEtMTAuOTkyIDBoLS4wMDZ2LjAxOGwtLjUgNS41MDMuNzQxLjgyN2gxMC41MTlsLjc0LS44MjctLjUtNS41MjF6IiBmaWxsPSIjMzMzIi8+PC9zdmc+);
-            background-position: 0 0;
-            background-repeat: no-repeat;
-            height: 18px;
-            width: 18px;
-            margin: 0 auto;
-        }
-
-        span {
-            @include fs-data(2);
-            display: block;
-        }
-
-        > span {
-            vertical-align: top;
-            display: inline-block;
-            padding: 6px 0;
-            margin: 6px 6px 6px 0;
-        }
+    .header__primary {
+        float: left;
     }
-
-    @include mq(mobile) {
-        padding: gs-height/2 0;
-        .header__logo {
-            background: url('/assets/images/membership_tab.png');
-            height: 66px;
-            width: 221px;
-
-            &.masterclasses {
-                background: url('/assets/images/masterclasses_tab.jpg');
-                height: 56px;
-                width: 351px;
-            }
-
-            img {
-                display: none;
-            }
-        }
+    .header__secondary {
+        float: right
     }
+    .header__menu {
+        display: none;
+    }
+}
 
-    @include mq(tablet) {
+.menu-item {
+    float: left;
+    @include rem((
+        padding-top: 0,
+        margin-right: 15px
+    ));
+    @include mq(tablet){
+        @include rem((
+            padding-top: 8px
+        ));
+    }
+}
 
-        .header__logo {
-            background: url('/assets/images/membership.png');
-            height: 90px;
-            width: 301px;
-            @include rem((
-                margin-top: 0
-            ));
+.menu-item--large {
+    @include rem((
+        padding-top: 3px
+    ));
+}
 
-            &.masterclasses {
-                background: url('/assets/images/masterclasses.jpg');
-                height: 73px;
-                width: 458px;
-            }
-        }
+.menu-item--last {
+    border: none;
+    margin: 0;
+    @include mq(tablet){
+        @include rem((
+            padding-left: 13px,
+            border-left: 1px solid $white
+        ));
+    }
+}
 
-        .header__identity {
-            background: none;
-            span {
-                @include fs-data(4);
-            }
-        }
+.menu-item--active {
+    .i-user {
+        color: $offWhite !important;
+    }
+    .control {
+        border: 1px solid $offWhite !important;
+    }
+    .control__info {
+        color: $offWhite !important;
+    }
+}
+
+.menu-cta {
+    @include rem((
+        padding: 8px 35px,
+        border: 1px solid $white
+    ));
+    color: $white;
+    display: block;
+    &:hover {
+        color: $black;
+        color: $black-trans;
+        background-color: $white;
+    }
+}
+
+.identity__notice {
+    @include fs-data(4);
+}
+
+/* Media Queries
+   ========================================================================== */
+@include mq(tablet){
+    .header__inner {
+        padding: 0 $gs-gutter;
+    }
+    .i-logo {
+        margin-top: $gs-gutter/2;
+        margin-bottom: $gs-gutter/2;
+    }
+}
+
+@include mq(wide){
+
+    .header__inner {
+        padding: 0 ($gs-gutter + $gs-column-width);
     }
 }

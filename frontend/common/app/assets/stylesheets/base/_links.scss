@@ -1,17 +1,18 @@
 a,
 .u-fauxlink {
-  color: $c-newsDefault;
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-  }
-  &:active {
-    color: $c-newsAccent;
+    overflow: hidden;
+    color: $c-newsDefault;
+    cursor: pointer;
     text-decoration: none;
-  }
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+    &:active {
+        color: $c-newsAccent;
+        text-decoration: none;
+    }
 }
 
 .no-underline {
@@ -22,4 +23,8 @@ a,
     &:active {
         text-decoration: none;
     }
+}
+
+.icon-wrapper {
+    display: block;
 }

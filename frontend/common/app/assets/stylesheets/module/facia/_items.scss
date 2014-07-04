@@ -58,9 +58,6 @@
     }
 
     .today__sub {
-        @include mq(faciaLeftCol) {
-            @include fs-headline(1);
-        }
         @include mq(wide) {
             @include fs-headline(2, $size-only: true);
         }
@@ -79,11 +76,7 @@
     @include box-sizing(border-box);
     width: 100%;
 
-    @include mq(faciaLeftCol) {
-        .i--clock {
-            display: none;
-        }
-    }
+
     @include mq(wide) {
         @include rem((
             padding-left: $gs-gutter*2
