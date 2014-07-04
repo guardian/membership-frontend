@@ -1,0 +1,73 @@
+@()(implicit request: RequestHeader)
+
+@* Critical scripts that should execute as soon as possible, preventing layout thrashing *@
+
+<!--[if lt IE 9]>
+<script src="@routes.Assets.at("javascripts/lib/html5shiv/html5shiv.min.js")"></script>
+<![endif]-->
+
+<script id="gu">
+
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function (oThis) {
+            if (typeof this !== "function") {
+                // closest thing possible to the ECMAScript 5
+                // internal IsCallable function
+                throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+            }
+
+            var aArgs = Array.prototype.slice.call(arguments, 1),
+                fToBind = this,
+                fNOP = function () {},
+                fBound = function () {
+                    return fToBind.apply(this instanceof fNOP && oThis
+                            ? this
+                            : oThis,
+                        aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
+
+            return fBound;
+        };
+    }
+
+    var guardian = {
+        isModernBrowser: (
+            'querySelector' in document
+            && 'addEventListener' in window
+            && 'localStorage' in window
+            && 'sessionStorage' in window
+            && 'bind' in Function
+            && (('XMLHttpRequest' in window && 'withCredentials' in new XMLHttpRequest())
+              || 'XDomainRequest' in window)),
+        css: {
+            loaded: false
+        }
+    };
+
+    (function(isModern) {
+
+        if (!isModern) { return false; }
+
+        @* we want to add/remove classes to HTML ASAP to avoid FOUC *@
+        var htmlClassNames = [];
+
+        @* http://modernizr.com/download/#-svg *@
+        function hasSvgSupport() {
+            var ns = {'svg': 'http://www.w3.org/2000/svg'};
+            return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
+        }
+
+        if (hasSvgSupport()) {
+            htmlClassNames.push('svg');
+        }
+
+        htmlClassNames.push('js-on');
+
+        document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + htmlClassNames.join(' ');
+
+    })(guardian.isModernBrowser);
+
+</script>
