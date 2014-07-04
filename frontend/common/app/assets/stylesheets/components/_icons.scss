@@ -1,0 +1,63 @@
+.i {
+    background-repeat: no-repeat;
+    display: inline-block;
+    @include rem((
+        text-indent: -9999px,
+        width: 18px,
+        height: 18px
+    ));
+}
+
+.i-menu {
+    background: url("/assets/images/header/menu.png");
+}
+
+.svg .i-menu {
+    background: url("/assets/images/header/menu.svg");
+}
+
+.i-user {
+    background: url("/assets/images/header/user.png");
+}
+
+.menu-item--active {
+    .i-user {
+        background: url("/assets/images/header/user_active.png");
+    }
+}
+
+.svg {
+    .i-user {
+        background: url("/assets/images/header/user.svg");
+    }
+    .menu-item--active {
+        .i-user {
+            background: url("/assets/images/header/user_active.svg");
+        }
+    }
+}
+
+.i-logo {
+    display: block;
+    @include rem((
+        width: 140px,
+        height: 34px
+    ));
+    background: url("/assets/images/header/logo.png");
+
+    @include mq(tablet){
+        @include rem((
+            width: 263px,
+            height: 65px,
+        ));
+    }
+}
+
+.svg .i-logo {
+    background: url("/assets/images/header/logo.svg");
+    @include background-size(cover);
+}
+
+.icon-wrapper {
+    display: block;
+}

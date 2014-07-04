@@ -6,12 +6,6 @@
   @include u-h;
 }
 
-.u-h--up-to-right-col {
-  @include mq($to: rightCol) {
-    @include u-h;
-  }
-}
-
 .is-hidden,
 [hidden] {
   display: none !important;

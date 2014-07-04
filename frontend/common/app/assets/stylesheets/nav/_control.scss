@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Navigation controls
+   ========================================================================== */
+
+/* Control
+   ========================================================================== */
+
+.control {
+    @extend %icon-holder-circle;
+    font-family: $serif;
+    @include rem((
+        font-size: 13px
+    ));
+
+    .is-signed-in & {
+        color: $c-brandBlue;
+        border-color: $c-brandBlue;
+    }
+    &.is-active {
+        border-color: $c-brandLightBlue;
+    }
+}
+
+/* Profile control info (text label next to it)
+   ========================================================================== */
+
+.control__info {
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    font-family: $serif;
+    @include rem((
+        line-height: 35px,
+        max-width: 200px,
+        padding-left: $gs-gutter/4,
+        height: 35px,
+        font-size: 13px
+    ));
+    color: #ffffff;
+}
+
+
+/* Active control icon
+   ========================================================================== */
+
+.control__icon {
+    display: block;
+    text-align: center;
+    @include rem((
+        height: 24px,
+        padding-top: 5px
+    ));
+
+    .i {
+        display: none;
+        margin: 0 auto;
+
+        &:first-child {
+            display: block;
+        }
+
+        .is-active & {
+            display: block;
+
+            &:first-child {
+                display: none;
+            }
+        }
+    }
+}
