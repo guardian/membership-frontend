@@ -1,9 +1,9 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
 @import configuration.Config
-@import views.Dates._
+@import views.support.Dates._
 
-@main("Membership - Down Grade Tier Summary") {
+@main("Cancel Tier summary") {
 
 <div class="page-container">
     <main role="main">
@@ -22,7 +22,7 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @partials.tier.summary(subscription, card)
+                    @fragments.tier.summary(subscription, card)
                 </div>
             </section>
         </div>

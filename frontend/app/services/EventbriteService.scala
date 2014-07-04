@@ -5,6 +5,7 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.agent.Agent
 
+import play.api.Play.current
 import play.api.libs.ws._
 import play.api.libs.iteratee.{Iteratee, Enumerator}
 import play.api.libs.concurrent.Akka
@@ -19,10 +20,10 @@ import scala.util.{Failure, Success, Try}
 
 trait EventbriteService {
 
-  val apiUrl: String
-  val apiToken: String
-
   val apiEventListUrl: String
+
+  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
+  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
 
   val allEvents = Agent[Seq[EBEvent]](Nil)
 
@@ -31,24 +32,12 @@ trait EventbriteService {
     allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
   }
 
-  private def extract[A <: EBObject](response: Response)(implicit reads: Reads[A]): A = {
+  private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
       Logger.error(s"Eventbrite request - Response body : ${response.body}")
       throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
     }
   }
-
-  private def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map(extract[A])
-      .recover { case e =>
-        Logger.error(s"Eventbrite request $url", e)
-        throw e
-      }
-  }
-
-  private def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -96,6 +85,17 @@ object EventbriteService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
 
+  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
+      .map(extract[A])
+      .recover { case e =>
+      Logger.error(s"Eventbrite request $url", e)
+      throw e
+    }
+  }
+
+  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
 
   import play.api.Play.current
   private implicit val system = Akka.system

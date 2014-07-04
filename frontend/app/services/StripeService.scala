@@ -3,19 +3,22 @@ package services
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import play.api.Play.current
 import play.api.libs.json.Reads
-import play.api.libs.ws.{Response, WS}
+import play.api.libs.ws.{WSResponse, WS}
+import play.api.Logger
 
 import model.Stripe._
 import model.StripeDeserializer._
 import configuration.Config
+import model.Tier
 
 trait StripeService {
   def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
   def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
   def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
 
-  private def extract[A <: StripeObject](response: Response)(implicit reads: Reads[A]): A = {
+  private def extract[A <: StripeObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
       throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object", None, None))
     }
@@ -49,6 +52,24 @@ trait StripeService {
 
     def delete(customerId: String, subscriptionId: String): Future[Subscription] =
       StripeService.this.delete[Subscription](s"customers/$customerId/subscriptions/$subscriptionId?at_period_end=true")
+  }
+
+  object Events {
+    val eventHandlers = Map(
+      "customer.subscription.deleted" -> customerSubscriptionDeleted _
+    )
+
+    def customerSubscriptionDeleted(event: Event) {
+      val subscription = event.extract[Subscription]
+      MemberService.getByCustomerId(subscription.customer).foreach { member =>
+        MemberService.put(member.copy(tier=Tier.Friend))
+      }
+    }
+
+    def handle(event: Event) {
+      Logger.debug(s"Got event ${event.`type`}")
+      eventHandlers.get(event.`type`).map(_(event))
+    }
   }
 }
 

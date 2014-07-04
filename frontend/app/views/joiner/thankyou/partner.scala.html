@@ -1,9 +1,9 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
-@import views.Crumb
-@import views.Dates._
+@import views.support.Crumb
+@import views.support.Dates._
 
-@main("Membership") {
+@main("Thankyou | " + subscription.plan.name) {
 
 <div class="page-container">
 
@@ -13,7 +13,7 @@
         </p>
     </section>
 
-    @partials.joiner.thankyou.paymentSummary(subscription, card)
+    @fragments.joiner.thankyou.paymentSummary(subscription, card)
 
     <section class="align-center">
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>

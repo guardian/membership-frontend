@@ -7,7 +7,7 @@ import controllers.Cached.suitableForCaching
 
 object CheckCacheHeadersFilter extends Filter {
 
-  def apply(nextFilter: RequestHeader => Future[SimpleResult])(requestHeader: RequestHeader): Future[SimpleResult] = {
+  def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     nextFilter(requestHeader).map { result =>
       if (suitableForCaching(result)) {
         val hasCacheControl = result.header.headers.contains("Cache-Control")

@@ -9,6 +9,8 @@ import play.api.mvc.Request
 object Config {
   val config = ConfigFactory.load()
 
+  lazy val siteTitle = config.getString("site.title")
+
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
@@ -26,8 +28,11 @@ object Config {
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
+  val stripeApiWebhookSecret = config.getString("stripe.api.webhook.secret")
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
+
+  val discountMultiplier = config.getDouble("event.discountMultiplier")
 }

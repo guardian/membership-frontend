@@ -1,0 +1,23 @@
+@(subscription: model.Stripe.Subscription, tier: model.Tier.Tier)(benefitPricing: Html)(benefitsList: Html)
+
+@defining(subscription.plan.tier == tier) { isCurrentPackage =>
+<div class="l-row__item">
+    <div class="package@if(isCurrentPackage){ package--current}">
+        @if(isCurrentPackage) {
+            <div class="package__current-indicator">Your Current Package</div>
+        }
+        <div class="package__inner">
+            <h2 class="package__title">@tier</h2>
+                @benefitsList
+            <div>
+                <span class="package__price">
+                    @benefitPricing
+                </span>
+                @if(!isCurrentPackage) {
+                    <a href="/tier/downgrade/confirm" class="action-cta action-cta--full-width-mobile action-cta--confirm">Select</a>
+                }
+            </div>
+        </div>
+    </div>
+ </div>
+}

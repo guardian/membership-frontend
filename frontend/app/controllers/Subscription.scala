@@ -11,9 +11,12 @@ import play.api.libs.json.Json
 import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
 import model.StripeSerializer._
+import model.StripeDeserializer.readsEvent
 import actions.{MemberAction, AuthenticatedAction, AuthRequest}
+import configuration.Config
 
 trait Subscription extends Controller {
+  val stripeApiWebhookSecret: String
 
   def subscribe = AuthenticatedAction.async { implicit request =>
     paymentForm.bindFromRequest
@@ -67,6 +70,24 @@ trait Subscription extends Controller {
   }
 
   private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
+
+  def event(secret: String) = NoCacheAction { implicit request =>
+    if (secret == stripeApiWebhookSecret) {
+      val result = for {
+        json <- request.body.asJson
+        event <- json.asOpt[Stripe.Event]
+      } yield {
+        StripeService.Events.handle(event)
+        Ok
+      }
+
+      result.getOrElse(BadRequest)
+    } else {
+      NotFound
+    }
+  }
 }
 
-object Subscription extends Subscription
+object Subscription extends Subscription {
+  val stripeApiWebhookSecret = Config.stripeApiWebhookSecret
+}

@@ -3,16 +3,20 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
     var config = {
         classes: {
             EVENT_PRICE: 'js-event-price',
-            EVENT_PRICE_NOTE: 'js-event-price-note'
+            EVENT_PRICE_NOTE: 'js-event-price-note',
+            EVENT_PRICE_DISCOUNT: 'js-event-price-discount',
+            EVENT_SAVING: 'js-event-price-saving',
+            EVENT_TRAIL_TAG: 'js-event-price-tag'
         },
-        DOM: {},
-        MEMBERSHIP_EVENT_DISCOUNT: 0.8 // 20%
+        DOM: {}
     };
 
     var init = function () {
         for (var c in config.classes) {
-            config.DOM = config.DOM || {};
-            config.DOM[c] = $(document.querySelector('.' + config.classes[c])); // bonzo object
+            if (config.classes.hasOwnProperty(c)) {
+                config.DOM = config.DOM || {};
+                config.DOM[c] = $(document.querySelector('.' + config.classes[c])); // bonzo object
+            }
         }
 
         userUtil.getMemberTier(enhanceWithTier);
@@ -20,22 +24,13 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
 
     var enhanceWithTier = function (tier) {
         if (tier && (tier === 'partner' || tier === 'patron')) {
-            var price = config.DOM.EVENT_PRICE,
-                priceValue = price.text(),
-                priceNote = config.DOM.EVENT_PRICE_NOTE;
+            var priceText = config.DOM.EVENT_PRICE.text(),
+                priceDiscount = config.DOM.EVENT_PRICE_DISCOUNT.text();
 
-            if (priceValue === 'Free') {
-                config.DOM.EVENT_PRICE_NOTE.hide();
-            } else {
-                var val = parseInt(priceValue.replace('£', ''), 10),
-                    discountedVal = (val * config.MEMBERSHIP_EVENT_DISCOUNT).toFixed(2);
-
-                price.text(' £' + discountedVal);
-
-                var pre = bonzo(bonzo.create('<span>')).text('£'+val+'').addClass('u-strike');
-                var preCont = bonzo(bonzo.create('<span>')).addClass('u-parens old-price').append(pre);
-
-                priceNote.after(preCont);
+            if (priceText !== 'Free') {
+                config.DOM.EVENT_PRICE.text(priceDiscount);
+                config.DOM.EVENT_PRICE_DISCOUNT.text(priceText);
+                config.DOM.EVENT_TRAIL_TAG.text('Full price ');
             }
         }
     };

@@ -98,7 +98,8 @@ div.event {
         }
 
         .event__location,
-        .event__time {
+        .event__time,
+        .event__trail {
             @include fs-textsans(4);
             display: block;
         }

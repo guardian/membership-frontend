@@ -1,4 +1,4 @@
-package views.html.joiner.payment
+package views.support
 
 import com.github.nscala_time.time.Imports._
 

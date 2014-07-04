@@ -1,10 +1,10 @@
 @()(implicit request: play.api.mvc.Request[_])
 
-@import views.Crumb
+@import views.support.Crumb
 
-@main("Membership") {
+@main("Join | Friend") {
 
-@partials.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Friend", "/join/friend")))
+@fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Friend", "/join/friend")))
 
 <div class="page-container">
 
