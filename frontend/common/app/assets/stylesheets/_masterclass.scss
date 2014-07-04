@@ -1,0 +1,19 @@
+/* Any css needed for masterclass work */
+
+/* no svg needed for masterclass so just use png*/
+.svg .i-logo--masterclass,
+.i-logo--masterclass {
+    @include rem((
+        width: 251px,
+        height: 40px
+    ));
+    background: url("/assets/images/header/masterclasses_mobile.png");
+
+    @include mq(tablet){
+        @include rem((
+            width: 458px,
+            height: 73px
+        ));
+        background: url("/assets/images/header/masterclasses.png");
+    }
+}
