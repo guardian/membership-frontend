@@ -94,7 +94,7 @@ module.exports = function (grunt) {
             },
             html5shiv: {
                 src: '<%= dirs.assets.javascripts %>/lib/bower-components/html5shiv/dist/html5shiv.min.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/html5shiv.min.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/',
                 expand: true,
                 flatten: true
             }
