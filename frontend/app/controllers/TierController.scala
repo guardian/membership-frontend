@@ -32,10 +32,10 @@ trait TierController extends Controller {
         "country" -> nonEmptyText
       )(AddressForm.apply)(AddressForm.unapply),
       "billingAddress" -> mapping(
-        "street" -> nonEmptyText,
-        "city" -> nonEmptyText,
-        "postCode" -> nonEmptyText,
-        "country" -> nonEmptyText
+        "street" -> text,
+        "city" -> text,
+        "postCode" -> text,
+        "country" -> text
       )(AddressForm.apply)(AddressForm.unapply)
     )(UpgradeTierForm.apply)(UpgradeTierForm.unapply)
   )
@@ -78,8 +78,8 @@ trait TierController extends Controller {
   def upgradeTo(tierName: String) = MemberAction { implicit request =>
     val changingToTier = Tier.withName(tierName.capitalize)
     request.member.tier match {
-      case Tier.Friend => Ok(views.html.tier.upgrade.payment(changingToTier))
-      case Tier.Partner => Ok(views.html.tier.upgrade.payment(changingToTier))
+      case Tier.Friend => Ok(views.html.tier.upgrade.upgradeForm(changingToTier))
+      case Tier.Partner => Ok(views.html.tier.upgrade.upgradeForm(changingToTier))
       case _ => NotFound
     }
 

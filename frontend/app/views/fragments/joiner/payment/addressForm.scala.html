@@ -1,8 +1,8 @@
-@(heading: String, note: String, formType: String)
+@(heading: String, note: String, formType: String, isVisible: Boolean)
 
 @import model.Countries
 
-<fieldset class="fieldset address-fieldset">
+<fieldset class="fieldset address-fieldset js-@(formType)-fieldset @if(!isVisible){u-h}">
 
     <div class="fieldset__heading">
         <h2 class="form__heading">@heading</h2>
