@@ -36,7 +36,7 @@ trait User extends Controller {
     Json.obj(
       "userId" -> request.member.userId,
       "tier" -> request.member.tier.toString,
-      "joinDate" -> request.member.joinDate
+      "joinDate" -> request.member.joinDate.map(_.getMillis / 1000)
     )
 
   def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
