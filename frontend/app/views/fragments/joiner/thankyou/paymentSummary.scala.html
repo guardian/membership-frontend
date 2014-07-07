@@ -3,14 +3,6 @@
 @import views.support.Dates._
 @import views.support.Format._
 
-@paymentType = {
-    @if(subscription.plan.interval == "year") {
-        Yearly payment
-    } else {
-        Monthly Payment
-    }
-}
-
 <section class="joiner-section joiner-section--no-border">
     <table class="table table--responsive-font table--striped">
         <tr class="table__headline" role="row">
@@ -39,7 +31,11 @@
         </tr>
         <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
-                @paymentType
+                @if(subscription.plan.interval == "year") {
+                    Yearly payment
+                } else {
+                    Monthly Payment
+                }
             </td>
             <td class="summary-table__cell">
                 @formatPence(subscription.plan.amount)
