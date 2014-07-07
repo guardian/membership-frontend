@@ -6,6 +6,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.{ MemberAction, AuthenticatedAction }
 import model.{Member, Tier}
 import services.{MemberService, StripeService}
+import awscala.DateTime
 
 trait Joiner extends Controller {
 
@@ -18,7 +19,7 @@ trait Joiner extends Controller {
   }
 
   def joinFriend() = AuthenticatedAction { implicit request =>
-    MemberService.put(Member.friend(request.user.id, Tier.Friend))
+    MemberService.put(Member.friend(request.user.id, Tier.Friend, DateTime.now))
     Redirect(routes.Joiner.thankyouFriend())
   }
 

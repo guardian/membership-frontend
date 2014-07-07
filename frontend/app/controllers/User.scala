@@ -33,7 +33,11 @@ trait User extends Controller {
   }
 
   def basicDetails(request: MemberRequest[_]) =
-    Json.obj("userId" -> request.member.userId, "tier" -> request.member.tier.toString)
+    Json.obj(
+      "userId" -> request.member.userId,
+      "tier" -> request.member.tier.toString,
+      "joinDate" -> request.member.joinDate
+    )
 
   def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
      Json.obj(
