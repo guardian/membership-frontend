@@ -15,7 +15,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IAmNotLoggedIn = {
     logger.log("I am not logged in")
-//    driver.get("https://mem.thegulocal.com/") // TODO move the data to a config file
+    // TODO move the data to a config file
     driver.get("https://membership.theguardian.com/")
     this
   }
@@ -122,7 +122,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IHaveToLogIn = {
     IAmLoggedIn
-//    driver.get("https://mem.thegulocal.com/join/partner/payment")
     driver.get("https://membership.theguardian.com/join/partner/payment")
     this
   }
@@ -209,7 +208,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICanRegisterAndPurchaseASubscription = {
     val user = "test_" + System.currentTimeMillis()
     val correct = new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-      .enterPassword("Rea11yL0nGP4s5w()rD").enterUserName(user).clickSubmit.clickCompleteRegistration.isPageLoaded
+      .enterPassword(user).enterUserName(user).clickSubmit.clickCompleteRegistration.isPageLoaded
     Assert.assert(correct, true, "Newly-registered user is redirected to the ticket purchase page")
     this
   }
@@ -232,7 +231,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IGoToIdentity = {
     // TODO James Oram move this to a config file
-//    driver.get("https://profile.thegulocal.com/account/edit")
     driver.get("https://profile.theguardian.com/account/edit")
     this
   }
@@ -243,7 +241,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IGoToMembershipTabToChangeDetails = {
-//    driver.get("https://profile.thegulocal.com/membership/edit")
     driver.get("https://profile.theguardian.com/membership/edit")
     new IdentityEditPage(driver).clickChangebutton
     this
@@ -253,7 +250,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val page = new IdentityEditPage(driver)
     page.clickMembershipTab.clickChangebutton.enterCardNumber(validCardNumber)
       .enterCardSecurityCode("343").enterCardExpirationMonth("11").enterCardExpirationYear("2018").clickUpdateCardDetails
-    //assert(logger, ) TODO verify flash message
     val success = new IdentityEditPage(driver).isSuccessFlashMessagePresent
     Assert.assert(success, true, "The card update should be successful")
     this
@@ -279,14 +275,14 @@ object CookieHandler {
     this.synchronized {
       if (None == CookieHandler.loginCookie) {
         // TODO move the data to a config file
-//        driver.get("https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fmem.thegulocal.com")
-//        new LoginPage(driver).login("james.oram+test@guardian.co.uk", "Guardian12")
         driver.get("https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fmembership.theguardian.com")
-        new LoginPage(driver).login("james.oram@guardian.co.uk", "kissthiss77")
+        val user = System.currentTimeMillis().toString
+        new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
+          .enterPassword(user).enterUserName(user).clickSubmit.clickCompleteRegistration
+        driver.get("https://membership.theguardian.com")
         CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
         CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
       } else {
-//        driver.get("https://mem.thegulocal.com")
         driver.get("https://membership.theguardian.com")
         driver.manage().addCookie(CookieHandler.loginCookie.get)
         driver.manage().addCookie(CookieHandler.secureCookie.get)

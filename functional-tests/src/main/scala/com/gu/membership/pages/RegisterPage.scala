@@ -1,5 +1,6 @@
 package com.gu.membership.pages
 
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{By, WebDriver}
 
 /**
@@ -31,6 +32,7 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickSubmit: CheckEmailPage = {
+    new Actions(driver).moveToElement(submitButton).perform
     submitButton.click()
     new CheckEmailPage(driver)
   }

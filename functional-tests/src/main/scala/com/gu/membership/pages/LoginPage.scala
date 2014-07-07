@@ -1,5 +1,6 @@
 package com.gu.membership.pages
 
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{By, Keys, StaleElementReferenceException, WebDriver}
 
 class LoginPage(driver: WebDriver) extends BasePage(driver) {
@@ -32,6 +33,7 @@ class LoginPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickRegister: RegisterPage = {
+    new Actions(driver).moveToElement(registerNowLink).perform
     registerNowLink.click()
     new RegisterPage(driver)
   }

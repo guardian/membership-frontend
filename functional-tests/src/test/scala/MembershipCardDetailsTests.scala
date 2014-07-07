@@ -3,11 +3,12 @@
 /**
 * Created by jao on 19/06/2014.
 */
-class MembershipSprint4tests extends BaseMembershipTest {
+class MembershipCardDetailsTests extends BaseMembershipTest {
 
-  info("Tests for Membership Sprint 4")
+  info("Tests for card management")
 
   feature("Manage card payment details") {
+
     scenarioWeb("User can update card details") {
       given {
         MembershipSteps().IAmLoggedIn

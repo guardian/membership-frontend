@@ -21,7 +21,7 @@ class EventPage(driver: WebDriver) extends BasePage(driver) {
 
   private def eventName = driver.findElement(By.cssSelector(".event__name"))
 
-  private def originalPriceSpan = driver.findElement(By.cssSelector(".u-strike"))
+  private def originalPriceSpan = driver.findElement(By.cssSelector(".event__price-amount"))
 
   def getEventLocation: String = eventLocationP.getText
 

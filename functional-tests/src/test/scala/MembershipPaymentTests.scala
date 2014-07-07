@@ -3,17 +3,17 @@
 /**
  * Created by jao on 29/05/2014.
  */
-class MembershipSprint2Tests extends BaseMembershipTest {
+class MembershipPaymentTests extends BaseMembershipTest {
 
   info("Tests for the sprint 2 of Membership")
 
   feature("Payment option") {
+
     /*
      In order to become a partner
      As a user
      I want to be able to pay a subscription
      */
-
     scenarioWeb("9. Non-logged in registered user purchase a subscription") {
       given {
         MembershipSteps().IAmNotLoggedIn

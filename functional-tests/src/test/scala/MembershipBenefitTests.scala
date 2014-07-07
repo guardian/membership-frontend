@@ -3,9 +3,9 @@
 /**
  * Created by jao on 06/06/2014.
  */
-class MembershipSprint3Tests extends BaseMembershipTest {
+class MembershipBenefitTests extends BaseMembershipTest {
 
-  info("Tests for Membership sprint 3")
+  info("Tests for Membership benefits")
 
   scenarioWeb("25. Member gets a discount") {
     given {

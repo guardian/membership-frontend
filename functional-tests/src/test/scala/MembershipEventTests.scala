@@ -1,6 +1,6 @@
 
 
-class MembershipSprint1Tests extends BaseMembershipTest {
+class MembershipEventTests extends BaseMembershipTest {
 
   info("Tests for sprint 1 of the Membership project")
 
