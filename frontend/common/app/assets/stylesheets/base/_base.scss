@@ -7,62 +7,58 @@
 }
 
 html {
-  &.iframed {
-    overflow-y: auto;
-  }
+    &.iframed {
+        overflow-y: auto;
+    }
 
-  &.iframed--overflow-hidden {
-    overflow: hidden;
-  }
-}
-
-body {
-  //background-color: #ffffff;
+    &.iframed--overflow-hidden {
+        overflow: hidden;
+    }
 }
 
 body:after {
-  content: "mobile";
-  @include u-h;
+    content: "mobile";
+    @include u-h;
 
-  @include mq(tablet) {
-    content: "tablet";
-  }
-  @include mq(desktop) {
-    content: "desktop";
-  }
-  @include mq(wide) {
-    content: "wide";
-  }
+    @include mq(tablet) {
+        content: "tablet";
+    }
+    @include mq(desktop) {
+        content: "desktop";
+    }
+    @include mq(wide) {
+        content: "wide";
+    }
 }
 
 .dateline {
-  color: $c-neutral2;
-  @include fs-data(2);
+    color: $c-neutral2;
+    @include fs-data(2);
 
-  @include mq(tablet) {
-    @include fs-data(3, true);
-  }
+    @include mq(tablet) {
+        @include fs-data(3, true);
+    }
 
-  i {
-    vertical-align: baseline;
-  }
+    i {
+        vertical-align: baseline;
+    }
 }
 
 .relative-timestamp {
-  display: block;
-  color: $c-neutral2;
-  margin: 0;
+    display: block;
+    color: $c-neutral2;
+    margin: 0;
 }
 
 .relative-timestamp span {
-  display: inline-block;
+    display: inline-block;
 }
 
 .relative-timestamp__icon {
-  vertical-align: -2px;
+    vertical-align: -2px;
 }
 
 ol,
 ul {
-  list-style-position: inside;
+    list-style-position: inside;
 }

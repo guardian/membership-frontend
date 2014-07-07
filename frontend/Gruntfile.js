@@ -91,6 +91,12 @@ module.exports = function (grunt) {
                     src: ['**/*.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
+            },
+            html5shiv: {
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/html5shiv/dist/html5shiv.min.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/',
+                expand: true,
+                flatten: true
             }
         },
 
@@ -207,7 +213,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
 
-    grunt.registerTask('compile:js', ['clean:js', 'requirejs:compile']);
+    grunt.registerTask('compile:js', [
+        'clean:js',
+        'requirejs:compile',
+        'copy:html5shiv'
+    ]);
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };

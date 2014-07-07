@@ -1,11 +1,13 @@
 import sbt._
 import sbt.Keys._
 
+import play._
 import PlayArtifact._
 import sbtbuildinfo.Plugin._
 
 trait Membership {
-  val version = "1.0-SNAPSHOT"
+
+  val appVersion = "1.0-SNAPSHOT"
 
   def buildInfoPlugin = buildInfoSettings ++ Seq(
     sourceGenerators in Compile <+= buildInfo,
@@ -27,11 +29,13 @@ trait Membership {
     "com.gu.identity" %% "identity-cookie" % "3.40",
     "com.gu.identity" %% "identity-model" % "3.40",
     "com.github.seratch" %% "awscala" % "0.2.1",
-    "com.netaporter" %% "scala-uri" % "0.4.1"
+    "com.netaporter" %% "scala-uri" % "0.4.1",
+    PlayImport.ws
   )
 
   def commonSettings = Seq(
     organization := "com.gu",
+    version := appVersion,
     scalaVersion := "2.10.4",
     resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
     libraryDependencies ++= commonDependencies,
@@ -39,11 +43,13 @@ trait Membership {
     javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ coveragePlugin
 
-  def app(name: String) = play.Project(name, version, path=file(name)).settings(commonSettings: _*).settings(magentaPackageName := name)
+  def app(name: String) = Project(name, file(name)).enablePlugins(PlayScala)
+    .settings(commonSettings: _*)
+    .settings(magentaPackageName := name)
 }
 
 object Membership extends Build with Membership {
-  val frontend = app("frontend")
+  val frontend = app("frontend").settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
 
   val root = Project("root", base=file(".")).aggregate(frontend)
 }

@@ -51,9 +51,9 @@
                 "AvailabilityZones" : { "Fn::GetAZs" : "" },
                 "VPCZoneIdentifier" : { "Ref" : "Subnets" },
                 "LaunchConfigurationName" : { "Ref" : "FrontendLaunchConfig" },
-                "MinSize" : "1",
-                "MaxSize" : "2",
-                "DesiredCapacity" : "1",
+                "MinSize" : "2",
+                "MaxSize" : "4",
+                "DesiredCapacity" : "2",
                 "LoadBalancerNames" : [ { "Ref" : "FrontendElasticLoadBalancer" } ],
                 "HealthCheckType" : "ELB",
                 "HealthCheckGracePeriod" : 300,
@@ -203,6 +203,17 @@
                     { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "CidrIp": "77.91.248.0/21" },
                     { "IpProtocol": "tcp", "FromPort": "9000", "ToPort": "9000", "SourceSecurityGroupId" : { "Ref" : "LoadBalancerSecurityGroup" } }
                 ]
+            }
+        },
+        "FrontendELBDNSrecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
+                "Comment" : "CNAME for AWS ELB",
+                "Name" :  { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] },
+                "Type" : "CNAME",
+                "TTL" : "120",
+                "ResourceRecords" : [ {"Fn::GetAtt":["FrontendElasticLoadBalancer","DNSName"]} ]
             }
         }
     },
