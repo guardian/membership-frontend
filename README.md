@@ -50,6 +50,7 @@ which includes both Node.js and NPM.
 1. In ~/.bash_profile add
     ```
     export AWS_ACCESS_KEY=<access-key-id>
+
     export AWS_SECRET_KEY=<secret-key>
     ```
 
