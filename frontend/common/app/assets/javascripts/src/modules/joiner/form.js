@@ -34,9 +34,6 @@ define([
         DOM: {},
         data: {
             CARD_TYPE: 'data-card-type'
-        },
-        url: {
-            SUBSCRIBE: ''
         }
     };
 

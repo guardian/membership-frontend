@@ -1,7 +1,6 @@
 package controllers
 
 import model.Stripe.Plan
-import model.Tier
 import model.Tier.Tier
 import model.{Member, Tier}
 import play.api.data.Form
