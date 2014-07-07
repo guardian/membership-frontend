@@ -2,6 +2,8 @@ package services
 
 import java.math.BigInteger
 import scala.concurrent.Future
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 import scala.collection.JavaConverters._
 import play.api.Logger
 
@@ -11,7 +13,6 @@ import com.amazonaws.services.dynamodbv2.model._
 
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
-import awscala.DateTime
 
 trait MemberService {
   def put(member: Member): Unit
@@ -45,7 +46,7 @@ object MemberService extends MemberService {
       Keys.USER_ID -> att(member.userId),
       Keys.TIER -> att(member.tier.toString),
       Keys.CUSTOMER_ID -> att(member.customerId),
-      Keys.JOIN_DATE -> att("todo")
+      Keys.JOIN_DATE -> att(member.joinDate.getOrElse(new DateTime().toDateTime(UTC)).toString)
     ).asJava)
   }
 
@@ -54,7 +55,8 @@ object MemberService extends MemberService {
       id <- attrs.get(Keys.USER_ID)
       tier <- attrs.get(Keys.TIER)
       customerId <- attrs.get(Keys.CUSTOMER_ID)
-    } yield Member(id.getS, Tier.withName(tier.getS), customerId.getS, DateTime.now) //todo this needs to be joinDate
+      joinDate <- attrs.get(Keys.JOIN_DATE)
+    } yield Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS)))
   }
 
   def get(userId: String): Option[Member] = {

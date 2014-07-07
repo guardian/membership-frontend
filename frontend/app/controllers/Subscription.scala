@@ -14,7 +14,7 @@ import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
 import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
-import org.joda.time.DateTime
+import actions.AuthRequest
 
 trait Subscription extends Controller {
   val stripeApiWebhookSecret: String
@@ -32,7 +32,7 @@ trait Subscription extends Controller {
     val payment = for {
       customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
-      member = Member(request.user.id, Tier.withName(tier), customer.id, DateTime.now)
+      member = Member(request.user.id, Tier.withName(tier), customer.id)
     } yield {
       MemberService.put(member)
       /*
