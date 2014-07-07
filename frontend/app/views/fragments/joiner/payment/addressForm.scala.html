@@ -1,4 +1,4 @@
-@(heading: String, note: String)
+@(heading: String, note: String, formType: String)
 
 @import model.Countries
 
@@ -13,24 +13,24 @@
 
         <div class="form-field address-fieldset__street">
             <label class="label" for="street">Street
-                <input type="text" name="street" id="street" class="text-input text-input--block" />
+                <input type="text" name="@(formType)Street" id="street" class="text-input text-input--block" />
             </label>
         </div>
 
         <div class="form-field address-fieldset__city-post-code">
             <label class="label label--inline label--half" for="city">City
-                <input type="text" name="city" id="city" class="text-input text-input--block" />
+                <input type="text" name="@(formType)City" id="city" class="text-input text-input--block" />
             </label>@*
                 == Inline block whitespace ==
             *@<label class="label label--inline label--half" for="postCode">Post code
-                <input type="text" name="postCode" id="postCode" class="text-input text-input--block" />
+                <input type="text" name="@(formType)PostCode" id="postCode" class="text-input text-input--block" />
             </label>
         </div>
 
         <div class="form-field address-fieldset__country">
             <label class="label" for="country">Country</label>
             <div class="input">
-                <select name="country" id="country">
+                <select name="@(formType)Country" id="country">
                     @for(country <- Countries.all) {
                     <option value="@country.toLowerCase.replace(' ', '-')">@country</option>
                     }

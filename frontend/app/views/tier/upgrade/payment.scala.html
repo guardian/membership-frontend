@@ -1,4 +1,4 @@
-@()(implicit request: play.api.mvc.Request[_])
+@(targetTier: model.Tier.Tier)(implicit request: play.api.mvc.Request[_])
 
 @import views.support.selectDates
 @import views.support.Format._
@@ -11,14 +11,11 @@
 
     <form action="" method="POST" id="payment-form" class="form form-primary-container--full-width js-stripe-form">
 
-        @* Membership Tier *@
-        <input type="hidden" name="tier" class="js-tier-field" value="FILL ME OUT"/>
-
         <div class="js-payment-errors form__error is-hidden"></div>
 
         @* =============== DELIVERY ADDRESS =============== *@
 
-        @fragments.joiner.payment.addressForm("Delivery address", "Where we'll send your welcome pack")
+        @fragments.joiner.payment.addressForm("Delivery address", "Where we'll send your welcome pack", "delivery")
 
         @* =============== CARD DETAILS =============== *@
 
@@ -76,7 +73,7 @@
 
         @* =============== DELIVERY ADDRESS =============== *@
 
-        @fragments.joiner.payment.addressForm("Billing address", "The billing address for your card")
+        @fragments.joiner.payment.addressForm("Billing address", "The billing address for your card", "billing")
 
         @* =============== PAYMENT OPTION =============== *@
 
@@ -88,13 +85,13 @@
             <div class="fieldset__fields">
                 <div class="form-field">
                     <label class="label upgrade__payment-label" for=annual>
-                        <input type="radio" name="payment-type" id="annual" value="annual" checked="checked"/>
+                        <input type="radio" name="paymentType" id="annual" value="annual" checked="checked"/>
                         <span class="payment-label__title">Pay annually</span>
                         <span class="payment-label__amount">£135 one off payment (save £45 a year)</span>
                         <span class="payment-label__note">1 year membership, 3 months free</span>
                     </label>
                     <label class="label upgrade__payment-label" for="monthly">
-                        <input type="radio" name="payment-type" id="monthly" value="month"/>
+                        <input type="radio" name="paymentType" id="monthly" value="month"/>
                         <span class="payment-label__title">Pay monthly</span>
                         <span class="payment-label__amount">£15 per month (£180 per year)</span>
                         <span class="payment-label__note">No comittment, cancel at any time (if you can find the button)</span>

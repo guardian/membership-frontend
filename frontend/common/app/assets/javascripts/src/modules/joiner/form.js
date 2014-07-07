@@ -36,7 +36,7 @@ define([
             CARD_TYPE: 'data-card-type'
         },
         url: {
-            SUBSCRIBE: '/subscription/subscribe'
+            SUBSCRIBE: ''
         }
     };
 
@@ -70,8 +70,7 @@ define([
 
     StripePaymentForm.prototype.stripeResponseHandler = function (status, response) {
 
-        var self = this,
-            config = this.config;
+        var self = this;
 
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
@@ -80,36 +79,8 @@ define([
             }
         } else {
 
-            // token contains id, last4, and card type
-            var token = response.id;
+            self.tokenHandler.bind(self)(response, self.context);
 
-            ajax({
-                url: config.url.SUBSCRIBE,
-                method: 'post',
-                data: {
-                    stripeToken: token,
-                    tier: self.getElement('TIER_FIELD').val()
-                },
-                success: function () {
-                    self.stopLoader();
-                    window.location = window.location.href.replace('payment', 'thankyou');
-                },
-                error: function (error) {
-
-                    var errorObj,
-                        errorMessage;
-
-                    try {
-                        errorObj = error.response && JSON.parse(error.response);
-                        errorMessage = self.getErrorMessage(errorObj);
-                        if (errorMessage) {
-                            self.handleErrors([errorMessage]);
-                        }
-                    } catch (e) {}
-
-                    self.stopLoader();
-                }
-            });
         }
     };
 
@@ -438,7 +409,9 @@ define([
         this.getElement('ACTIONS').removeClass('js-waiting');
     };
 
-    StripePaymentForm.prototype.init = function (context) {
+    StripePaymentForm.prototype.init = function (context, tokenHandler) {
+
+        this.tokenHandler = tokenHandler;
 
         this.context = context || document.querySelector('.' + this.config.classes.STRIPE_FORM);
 

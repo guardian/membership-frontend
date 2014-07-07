@@ -1,14 +1,16 @@
-@(subscription: model.Stripe.Subscription, tier: model.Tier.Tier)(benefitPricing: Html)(benefitsList: Html)
+@(currentTier: model.Tier.Tier, tier: model.Tier.Tier)(benefitPricing: Html)(benefitsList: Html)
 
-@defining(subscription.plan.tier == tier) { isCurrentPackage =>
+@defining(currentTier == tier) { isCurrentPackage =>
 <div class="l-row__item">
     <div class="package@if(isCurrentPackage){ package--current}">
         @if(isCurrentPackage) {
             <div class="package__current-indicator">Your Current Package</div>
         }
         <div class="package__inner">
+
             <h2 class="package__title">@tier</h2>
-                @benefitsList
+            @benefitsList
+
             <div>
                 <span class="package__price">
                     @benefitPricing
@@ -16,7 +18,7 @@
 
                 @if(!isCurrentPackage) {
                     <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
-                        @if(subscription.plan.tier > tier){
+                        @if(currentTier > tier){
                             Downgrade
                         } else {
                             Upgrade
