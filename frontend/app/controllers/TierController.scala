@@ -14,13 +14,13 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.{MemberRequest, AuthRequest, MemberAction, AuthenticatedAction}
 import services.{MemberService, StripeService}
 
-case class UserAddressData(street: String, postCode: String, city: String, country: String)
+case class AddressForm(street: String, postCode: String, city: String, country: String)
 
-case class PaymentDetailsForm(paymentType: String, stripeToken: String, deliveryAddress: UserAddressData, billingAddress: UserAddressData)
+case class UpgradeTierForm(paymentType: String, stripeToken: String, deliveryAddress: AddressForm, billingAddress: AddressForm)
 
 trait TierController extends Controller {
 
-  val upgradeTierForm: Form[PaymentDetailsForm] = Form(
+  val upgradeTierForm: Form[UpgradeTierForm] = Form(
     mapping(
       "paymentType" -> nonEmptyText,
       "stripeToken" -> nonEmptyText,
@@ -29,14 +29,14 @@ trait TierController extends Controller {
         "city" -> nonEmptyText,
         "postCode" -> nonEmptyText,
         "country" -> nonEmptyText
-      )(UserAddressData.apply)(UserAddressData.unapply),
+      )(AddressForm.apply)(AddressForm.unapply),
       "billingAddress" -> mapping(
         "street" -> nonEmptyText,
         "city" -> nonEmptyText,
         "postCode" -> nonEmptyText,
         "country" -> nonEmptyText
-      )(UserAddressData.apply)(UserAddressData.unapply)
-    )(PaymentDetailsForm.apply)(PaymentDetailsForm.unapply)
+      )(AddressForm.apply)(AddressForm.unapply)
+    )(UpgradeTierForm.apply)(UpgradeTierForm.unapply)
   )
 
   def change() = MemberAction { implicit request =>
@@ -113,7 +113,7 @@ trait TierController extends Controller {
     Redirect("/tier/cancel/summary")
   }
 
-  def makePayment(tier: Tier)(formData: PaymentDetailsForm)(implicit request: MemberRequest[_]) = {
+  def makePayment(tier: Tier)(formData: UpgradeTierForm)(implicit request: MemberRequest[_]) = {
 
     val futureCustomer =
       if (request.member.customerId == Member.NO_CUSTOMER_ID)
