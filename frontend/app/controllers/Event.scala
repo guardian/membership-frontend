@@ -35,7 +35,7 @@ trait Event extends Controller {
     for {
       event <- eventService.getEvent(id)
       discount <- memberService.createEventDiscount(request.user.id, event)
-    } yield Found(event.url ? ("discount" -> discount.code))
+    } yield Found(event.url ? ("discount" -> discount.map(_.code)))
   }
 }
 
