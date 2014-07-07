@@ -32,7 +32,7 @@
             <div class="input">
                 <select name="@(formType).country" id="country">
                     @for(country <- Countries.all) {
-                    <option value="@country.toLowerCase.replace(' ', '-')">@country</option>
+                    <option value="@country">@country</option>
                     }
                 </select>
             </div>
