@@ -47,13 +47,40 @@ which includes both Node.js and NPM.
     ```
     aws s3 cp s3://membership-private/keys.conf /etc/gu/membership-keys.conf
     ```
+1. In ~/.bash_profile add
+    ```
+    export AWS_ACCESS_KEY=<access-key-id>
+    export AWS_SECRET_KEY=<secret-key>
+    ```
 
 ## Run
 The app normally runs on ports 9100 respectively.
 You can run the following commands to start them (separate console windows)
 
 ```
+ nginx/setup.sh
 ./start-frontend.sh
+```
+
+## Run membership locally with Identity on NGW
+To be able to go through the registration flow locally you will need to have the Identity API and Identity project in NGW running.
+
+Identity repo: https://github.com/guardian/identity
+
+Run through the set up instructions. Once complete you will just need to run
+```
+ nginx/setup.sh
+ ./start-api.sh
+```
+
+NGW Frontend repo: https://github.com/guardian/frontend
+
+Run through the set up instructions. Once complete you will just need to run
+```
+nginx/setup.sh
+./sbt
+project identity
+idrun
 ```
 
 ## To run frontend tests
