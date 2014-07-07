@@ -102,3 +102,39 @@
 .package__pcm {
     @include fs-headline(1);
 }
+
+/* Upgrade
+======================================================================= */
+
+.upgrade__payment-label {
+    display: block;
+    position: relative;
+    border: 1px solid #ccc;
+    padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
+    @include border-radius(5px);
+
+    span {
+        display: block;
+        @include fs-textsans(4);
+        margin: 0 0 $gs-baseline 0;
+        &.payment-label__title {
+            @include fs-headline(2);
+        }
+    }
+
+    input[type=radio] {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 10px;
+        left: 6px;
+    }
+
+    input[type=radio]:checked + .payment-label__title {
+        font-weight: bold;
+    }
+
+    &:hover {
+        background-color: #eeeeee;
+    }
+}
