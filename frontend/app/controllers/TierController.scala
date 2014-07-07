@@ -72,9 +72,9 @@ trait TierController extends Controller {
     }
   }
 
-  // Partner upgrade flow =====================================
+  // Upgrade flow =====================================
 
-  def changeTo(tierName: String) = MemberAction { implicit request =>
+  def upgradeTo(tierName: String) = MemberAction { implicit request =>
     val changingToTier = Tier.withName(tierName.capitalize)
     request.member.tier match {
       case Tier.Friend => Ok(views.html.tier.upgrade.payment(changingToTier))
@@ -84,7 +84,7 @@ trait TierController extends Controller {
 
   }
 
-  def confirmTier(tierName: String) = MemberAction.async { implicit request => // POST
+  def confirmUpgradeTo(tierName: String) = MemberAction.async { implicit request => // POST
     val changingToTier = Tier.withName(tierName.capitalize)
     if (changingToTier > request.member.tier) {
       val formValues = upgradeTierForm.bindFromRequest
@@ -92,16 +92,6 @@ trait TierController extends Controller {
     } else {
       Future.successful(NotFound)
     }
-  }
-
-//  // Patron upgrade flow ======================================
-//
-//  def changePatron = AuthenticatedAction { implicit request =>
-//    Ok(views.html.tier.upgrade.payment(Tier.Patron))
-//  }
-
-  def confirmPatron = MemberAction { implicit request => // POST
-    Ok
   }
 
   def confirmCancel() = AuthenticatedAction { implicit request =>
@@ -125,19 +115,23 @@ trait TierController extends Controller {
 
   def makePayment(tier: Tier)(formData: PaymentDetailsForm)(implicit request: MemberRequest[_]) = {
 
-    val futureCustomerId =
+    val futureCustomer =
       if (request.member.customerId == Member.NO_CUSTOMER_ID)
-        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken).map(_.id)
+        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken)
       else
-        Future.successful(request.member.customerId)
+        StripeService.Customer.read(request.member.customerId)
 
     val planName = tier.toString + (if (formData.paymentType == "annual") "Annual" else "")
 
     for {
-      customerId <- futureCustomerId
-      subscription <- StripeService.Subscription.create(customerId, planName)
+      customer <- futureCustomer
+      subscription <- customer.subscription.map { subscription =>
+        StripeService.Subscription.update(customer.id, subscription.id, planName, formData.stripeToken)
+      }.getOrElse {
+        StripeService.Subscription.create(customer.id, planName)
+      }
     } yield {
-      MemberService.put(request.member.copy(tier = tier, customerId = customerId))
+      MemberService.put(request.member.copy(tier = tier, customerId = customer.id))
       Ok("")
     }
 
