@@ -1,5 +1,6 @@
 package controllers
 
+import model.Stripe.Plan
 import model.Tier
 import model.Tier.Tier
 import model.{Member, Tier}
@@ -121,7 +122,7 @@ trait TierController extends Controller {
       else
         StripeService.Customer.read(request.member.customerId)
 
-    val planName = tier.toString + (if (formData.paymentType == "annual") "Annual" else "")
+    val planName = tier.toString + (if (formData.paymentType == "annual") Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer
