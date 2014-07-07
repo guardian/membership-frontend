@@ -39,8 +39,8 @@ GET         /tier/cancel/confirm         controllers.TierController.confirmCance
 POST        /tier/cancel/confirm         controllers.TierController.cancelTier
 GET         /tier/cancel/summary         controllers.TierController.cancelSummary
 
-GET         /tier/change/friend          controllers.TierController.changeFriend
-POST        /tier/change/friend          controllers.TierController.confirmFriend
+GET         /tier/change/friend          controllers.TierController.downgradeToFriend
+POST        /tier/change/friend          controllers.TierController.confirmDowngradeToFriend
 GET         /tier/change/friend/summary  controllers.TierController.summaryFriend
 
 GET         /tier/change/:tier           controllers.TierController.upgradeTo(tier)

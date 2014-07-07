@@ -43,13 +43,11 @@ trait TierController extends Controller {
     Ok(views.html.tier.change(request.member.tier))
   }
 
-  // Friend downgrade flow ====================================
-
-  def changeFriend() = MemberAction { implicit request =>
+  def downgradeToFriend() = MemberAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm())
   }
 
-  def confirmFriend() = MemberAction.async { implicit request => // POST
+  def confirmDowngradeToFriend() = MemberAction.async { implicit request => // POST
     for {
       customer <- StripeService.Customer.read(request.member.customerId)
       cancelledOpt = customer.subscription.map { subscription =>
