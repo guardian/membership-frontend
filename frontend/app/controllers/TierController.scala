@@ -1,6 +1,6 @@
 package controllers
 
-import model.Tier
+import model.{Member, Tier}
 import play.api.data.Form
 import play.api.data.Forms._
 
@@ -12,39 +12,30 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.{MemberRequest, AuthRequest, MemberAction, AuthenticatedAction}
 import services.{MemberService, StripeService}
 
-case class Address(street: String, postCode: String, city: String, country: String)
+case class UserAddressData(street: String, postCode: String, city: String, country: String)
 
-case class PaymentDetailsForm(paymentType: String, stripeToken: String, billingAddress: Address, deliveryAddress: Address)
+case class PaymentDetailsForm(paymentType: String, stripeToken: String, deliveryAddress: UserAddressData, billingAddress: UserAddressData)
 
 trait TierController extends Controller {
 
-  case class AddressData(street: String, city: String)
-
-  case class UserAddressData(name: String, address: AddressData)
-
-  val userFormNested: Form[UserAddressData] = Form(
+  val upgradeTierForm: Form[PaymentDetailsForm] = Form(
     mapping(
-      "name" -> text,
-      "address" -> mapping(
-        "street" -> text,
-        "city" -> text
-      )(AddressData.apply)(AddressData.unapply)
-    )(UserAddressData.apply)(UserAddressData.unapply)
+      "paymentType" -> nonEmptyText,
+      "stripeToken" -> nonEmptyText,
+      "deliveryAddress" -> mapping(
+        "street" -> nonEmptyText,
+        "city" -> nonEmptyText,
+        "postCode" -> nonEmptyText,
+        "country" -> nonEmptyText
+      )(UserAddressData.apply)(UserAddressData.unapply),
+      "billingAddress" -> mapping(
+        "street" -> nonEmptyText,
+        "city" -> nonEmptyText,
+        "postCode" -> nonEmptyText,
+        "country" -> nonEmptyText
+      )(UserAddressData.apply)(UserAddressData.unapply)
+    )(PaymentDetailsForm.apply)(PaymentDetailsForm.unapply)
   )
-
-  val changeForm: Form[PaymentDetailsForm] = Form{ tuple(
-    "paymentType" -> nonEmptyText,
-    "stripeToken" -> nonEmptyText,
-    "billingCity" -> nonEmptyText,
-    "billingPostCode" -> nonEmptyText,
-    "billingStreet" -> nonEmptyText,
-    "billingCountry" -> nonEmptyText,
-    "deliveryCity" -> nonEmptyText,
-    "deliveryPostCode" -> nonEmptyText,
-    "deliveryStreet" -> nonEmptyText,
-    "deliveryCountry" -> nonEmptyText,
-    "paymentType" -> nonEmptyText
-  ) }
 
   def change() = MemberAction { implicit request =>
     Ok(views.html.tier.change(request.member.tier))
@@ -94,7 +85,7 @@ trait TierController extends Controller {
     request.member.tier match {
       case Tier.Friend => {
 
-        val formValues = changeForm.bindFromRequest
+        val formValues = upgradeTierForm.bindFromRequest
 
         formValues.fold(_ => Future.successful(BadRequest), makePayment)
 
@@ -140,13 +131,11 @@ trait TierController extends Controller {
     Redirect("/tier/cancel/summary")
   }
 
-  def makePayment(formData: (String, String, String, String, String, String, String, String, String, String, String))(implicit request: MemberRequest[_]) = {
-    val paymentType = formData._1
-    val stripeToken = formData._2
+  def makePayment(formData: PaymentDetailsForm)(implicit request: MemberRequest[_]) = {
 
     val futureCustomerId =
-      if (request.member.customerId.isEmpty)
-        StripeService.Customer.create("will.franklin@theguardian.com", stripeToken).map(_.id)
+      if (request.member.customerId == Member.NO_CUSTOMER_ID)
+        StripeService.Customer.create("will.franklin@theguardian.com", formData.stripeToken).map(_.id)
       else
         Future.successful(request.member.customerId)
 

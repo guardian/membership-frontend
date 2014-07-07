@@ -45,10 +45,9 @@ GET         /tier/change/friend          controllers.TierController.changeFriend
 POST        /tier/change/friend          controllers.TierController.confirmFriend
 GET         /tier/change/friend/summary  controllers.TierController.summaryFriend
 
-GET         /tier/change/:tier         controllers.TierController.changeTo(tier)
+GET         /tier/change/:tier           controllers.TierController.changeTo(tier)
 POST        /tier/change/partner         controllers.TierController.confirmPartner
-
-GET         /tier/change/:tier          controllers.TierController.changeTo(tier)
+GET         /tier/change/partner/summary controllers.Joiner.thankyouPartner
 
 ######################################
 

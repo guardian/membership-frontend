@@ -56,7 +56,7 @@ require([
         });
     });
 
-    router.match('/tier/change/partner').to(function () {
+    router.match('*/tier/change/partner').to(function () {
         var stripe = new StripeForm();
         stripe.init(undefined, function (response, form) {
             var self = this;
@@ -81,7 +81,8 @@ require([
                 data: serializedForm,
                 success: function () {
                     self.stopLoader();
-                    window.location = window.location.href.replace('payment', 'thankyou');
+
+                    window.location = window.location.href = '/tier/change/partner/summary';
                 },
                 error: function (error) {
 
