@@ -14,7 +14,6 @@ import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
 import actions.{MemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
-import actions.AuthRequest
 
 trait Subscription extends Controller {
   val stripeApiWebhookSecret: String

@@ -1,6 +1,6 @@
 package model
 
-import org.joda.time.DateTime
+import com.github.nscala_time.time.Imports._
 
 case class Member(userId: String, tier: Tier.Tier, customerId: String, joinDate: Option[DateTime] = None)
 

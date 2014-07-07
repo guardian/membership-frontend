@@ -2,8 +2,8 @@ package services
 
 import java.math.BigInteger
 import scala.concurrent.Future
-import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import com.github.nscala_time.time.Imports._
 import scala.collection.JavaConverters._
 import play.api.Logger
 
@@ -46,7 +46,7 @@ object MemberService extends MemberService {
       Keys.USER_ID -> att(member.userId),
       Keys.TIER -> att(member.tier.toString),
       Keys.CUSTOMER_ID -> att(member.customerId),
-      Keys.JOIN_DATE -> att(member.joinDate.getOrElse(new DateTime().toDateTime(UTC)).toString)
+      Keys.JOIN_DATE -> att(member.joinDate.getOrElse(DateTime.now.toDateTime(UTC)).toString)
     ).asJava)
   }
 
