@@ -18,11 +18,7 @@
 
                 @if(!isCurrentPackage) {
                     <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
-                        @if(currentTier > tier){
-                            Downgrade
-                        } else {
-                            Upgrade
-                        }
+                        Become a @tier
                     </a>
                 }
             </div>
