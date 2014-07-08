@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription)(implicit request: play.api.mvc.Request[_])
+@(currentTier: model.Tier.Tier)(implicit request: play.api.mvc.Request[_])
 
 @import configuration.Config
 @import model.Tier
@@ -27,13 +27,13 @@
             <h2 class="package-container__header">Select the package you would like to switch to:</h2>
             <div class="content__container">
                 <section class="l-row l-row--items-3">
-                    @fragments.tier.benefits(subscription, Tier.Friend) {£(Free)} {
+                    @fragments.tier.benefits(currentTier, Tier.Friend) {£(Free)} {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio.</p>
                         <ul class="package__list-element">
                             <li>Book Live event tickets</li>
                         </ul>
                     }
-                    @fragments.tier.benefits(subscription, Tier.Partner) {£15 <span class="package__pcm">pcm</span>} {
+                    @fragments.tier.benefits(currentTier, Tier.Partner) {£15 <span class="package__pcm">pcm</span>} {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
                         <ul class="package__list-element">
                             <li>Welcome pack</li>
@@ -42,7 +42,7 @@
                             <li>20% discount on Masterclasses</li>
                         </ul>
                     }
-                   @fragments.tier.benefits(subscription, Tier.Patron) {£60 <span class="package__pcm">pcm</span>} {
+                   @fragments.tier.benefits(currentTier, Tier.Patron) {£60 <span class="package__pcm">pcm</span>} {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
                         <ul class="package__list-element">
                             <li>Patron pack</li>

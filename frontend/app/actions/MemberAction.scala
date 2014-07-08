@@ -18,7 +18,7 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
       authRequest <- authService.authenticatedRequestFor(request)
       member <- MemberService.get(authRequest.user.id)
     } yield {
-      block(MemberRequest[A](request, member))
+      block(MemberRequest[A](request, member, authRequest.user))
     }
 
     result.getOrElse(Future.successful(Forbidden)).map(NoCache(_))

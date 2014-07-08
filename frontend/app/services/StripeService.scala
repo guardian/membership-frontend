@@ -52,6 +52,9 @@ trait StripeService {
 
     def delete(customerId: String, subscriptionId: String): Future[Subscription] =
       StripeService.this.delete[Subscription](s"customers/$customerId/subscriptions/$subscriptionId?at_period_end=true")
+
+    def update(customerId: String, subscriptionId: String, planId: String, card: String): Future[Subscription] =
+      post[Subscription](s"customers/$customerId/subscriptions/$subscriptionId", Map("plan" -> Seq(planId), "card" -> Seq(card)))
   }
 
   object Events {

@@ -32,8 +32,12 @@ object Stripe {
     customer: String,
     plan: Plan) extends StripeObject
 
-  case class Plan(id: String, name: String, amount: Int) extends StripeObject {
-    val tier = Tier.withName(id)
+  case class Plan(id: String, name: String, amount: Int, interval: String) extends StripeObject {
+    val tier = Tier.withName(id.replace(Plan.ANNUAL_SUFFIX, ""))
+  }
+
+  object Plan {
+    val ANNUAL_SUFFIX = "Annual"
   }
 
   case class EventData(`object`: JsObject) extends StripeObject
