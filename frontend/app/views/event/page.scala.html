@@ -1,5 +1,5 @@
 @(event: model.Eventbrite.EBEvent)(implicit request: play.api.mvc.Request[_])
-@import views.support.Crumb
+
 @import views.support.Dates._
 @import org.joda.time.Instant
 @import model.Eventbrite._
@@ -27,9 +27,6 @@
 
 @main("Event Detail | " + event.name.text) {
 
-    @fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events"), Crumb(event.name.text, s"/event/${event.id}")))
-
- <div class="page-container">
     <div class="event">
         <div class="event__content">
             <div class="event__image">
@@ -97,5 +94,4 @@
             </div>
         </div>
     </div>
- </div>
 }

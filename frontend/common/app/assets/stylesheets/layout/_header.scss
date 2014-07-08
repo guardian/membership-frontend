@@ -1,8 +1,8 @@
 .header {
+    @include mq(tablet) {
+        height: $headerHeight;
+    }
     background: $mem-header;
-    @include rem((
-        border-bottom: 2px solid $white-trans
-    ));
     .header__inner {
         @include rem((
             padding: $gs-gutter/2

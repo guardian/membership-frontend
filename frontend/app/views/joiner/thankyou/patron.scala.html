@@ -1,10 +1,6 @@
 @(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
 
-@import views.support.Crumb
-
 @main("Thankyou | " + subscription.plan.name) {
-
-<div class="page-container">
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
         <h1 class="section-headline u-text-hyphenate">Thank You</h1>
@@ -32,7 +28,5 @@
             </li>
         </ul>
     </section>
-
-</div>
 
 }
