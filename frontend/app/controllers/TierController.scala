@@ -3,7 +3,7 @@ package controllers
 import model.Stripe.Plan
 import model.Tier.Tier
 import model.{Member, Tier}
-import play.api.data.Form
+import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
 import scala.concurrent.Future
@@ -56,20 +56,17 @@ trait UpgradeTier {
     mapping(
       "paymentType" -> nonEmptyText,
       "stripeToken" -> nonEmptyText,
-      "deliveryAddress" -> mapping(
-        "street" -> nonEmptyText,
-        "city" -> nonEmptyText,
-        "postCode" -> nonEmptyText,
-        "country" -> nonEmptyText
-      )(AddressForm.apply)(AddressForm.unapply),
-      "billingAddress" -> mapping(
-        "street" -> text,
-        "city" -> text,
-        "postCode" -> text,
-        "country" -> text
-      )(AddressForm.apply)(AddressForm.unapply)
+      "deliveryAddress" -> addressMapping(nonEmptyText),
+      "billingAddress" -> addressMapping(text)
     )(UpgradeTierForm.apply)(UpgradeTierForm.unapply)
   )
+
+  def addressMapping(textMapping: Mapping[String]): Mapping[AddressForm] = mapping(
+    "street" -> textMapping,
+    "city" -> textMapping,
+    "postCode" -> textMapping,
+    "country" -> textMapping
+  )(AddressForm.apply)(AddressForm.unapply)
 
   def upgrade(tierStr: String) = MemberAction { implicit request =>
     val tier = Tier.routeMap(tierStr)
