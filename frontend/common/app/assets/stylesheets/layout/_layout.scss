@@ -1,16 +1,36 @@
 html {
     position: relative;
     min-height: 100%;
-    background-color: #EEEEEE;
+    background-color: #ffffff;
 }
 
 body {
-    margin-bottom: 198px;
+    @include rem((
+        margin-bottom: 198px
+    ));
+}
+
+.header {
+    position: relative;
+    z-index: 999;
+    margin: 0 0 $headerMargin 0;
+}
+
+.page-container__background-image {
+    position: absolute;
+    background: #ffffff url("/assets/images/crowd.jpg") no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    @include rem((
+        height: $headerHeight+$headerMargin+$pageImageIndent,
+        top: 0
+    ));
 }
 
 .page-container {
+    min-height: $pageImageIndent;
     @include rem((
-        padding: 0 $gs-gutter/4 $gs-gutter/4
+        padding: $gs-gutter/4 $gs-gutter/4 0 $gs-gutter/4
     ));
     background-color: #FFFFFF;
     @include clearfix;
@@ -21,7 +41,7 @@ body {
     ));
     @include mq(tablet){
         @include rem((
-            padding: 0 $gs-gutter $gs-gutter
+            padding: $gs-gutter $gs-gutter 0 $gs-gutter
         ));
     }
 }
