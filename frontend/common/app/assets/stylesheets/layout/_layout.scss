@@ -13,7 +13,9 @@ body {
 .header {
     position: relative;
     z-index: 999;
-    margin: 0 0 $headerMargin 0;
+    @include rem((
+        margin: 0 0 $headerMargin 0
+    ));
 }
 
 .page-container__background-image {
