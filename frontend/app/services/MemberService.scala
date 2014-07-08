@@ -2,6 +2,7 @@ package services
 
 import java.math.BigInteger
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTimeZone.UTC
 import com.github.nscala_time.time.Imports._
 import scala.collection.JavaConverters._
@@ -13,6 +14,7 @@ import com.amazonaws.services.dynamodbv2.model._
 
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
+import model.Stripe.Subscription
 
 trait MemberService {
   def put(member: Member): Unit
@@ -32,6 +34,7 @@ object MemberService extends MemberService {
     val TIER = "tier"
     val CUSTOMER_ID = "customerId"
     val JOIN_DATE = "joinDate"
+    val CANCELLATION_REQUESTED = "cancellationRequested"
   }
 
   val client = new AmazonDynamoDBClient
@@ -42,12 +45,14 @@ object MemberService extends MemberService {
   def put(member: Member): Unit = {
     Logger.debug(s"Putting member $member")
 
-    client.putItem(TABLE_NAME, Map(
+    val attrs = Map(
       Keys.USER_ID -> att(member.userId),
       Keys.TIER -> att(member.tier.toString),
       Keys.CUSTOMER_ID -> att(member.customerId),
       Keys.JOIN_DATE -> att(member.joinDate.getOrElse(DateTime.now.toDateTime(UTC)).toString)
-    ).asJava)
+    ) ++ (if (member.cancellationRequested) Some(Keys.CANCELLATION_REQUESTED -> att("true")) else None)
+
+    client.putItem(TABLE_NAME, attrs.asJava)
   }
 
   private def getMember(attrs: Map[String, AttributeValue]): Option[Member] = {
@@ -56,7 +61,10 @@ object MemberService extends MemberService {
       tier <- attrs.get(Keys.TIER)
       customerId <- attrs.get(Keys.CUSTOMER_ID)
       joinDate <- attrs.get(Keys.JOIN_DATE)
-    } yield Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS)))
+    } yield {
+      val cancellationRequested = attrs.get(Keys.CANCELLATION_REQUESTED).exists(_ => true)
+      Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS)), cancellationRequested)
+    }
   }
 
   def get(userId: String): Option[Member] = {
@@ -99,5 +107,15 @@ object MemberService extends MemberService {
     } yield {
       EventbriteService.createOrGetDiscount(event.id, code)
     }
+  }
+
+  def cancelPayment(member:Member): Future[Option[Subscription]] = {
+    for {
+      customer <- StripeService.Customer.read(member.customerId)
+      cancelledOpt = customer.subscription.map { subscription =>
+        StripeService.Subscription.delete(customer.id, subscription.id)
+      }
+      cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
+    } yield cancelledSubscription.headOption
   }
 }
