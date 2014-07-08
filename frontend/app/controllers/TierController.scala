@@ -119,7 +119,7 @@ trait CancelTier {
     for {
       cancelledSubscription <- MemberService.cancelPayment(request.member)
     } yield {
-      MemberService.put(request.member.copy(cancellationRequested = false))
+      MemberService.put(request.member.copy(cancellationRequested=true))
       Redirect("/tier/cancel/summary")
     }
   }
