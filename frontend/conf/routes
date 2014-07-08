@@ -17,8 +17,7 @@ GET         /join/patron                 controllers.Joiner.patron
 GET         /join/partner/payment        controllers.Joiner.paymentPartner
 GET         /join/patron/payment         controllers.Joiner.paymentPatron
 GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
-GET         /join/partner/thankyou       controllers.Joiner.thankyouPartner
-GET         /join/patron/thankyou        controllers.Joiner.thankyouPatron
+GET         /join/:tier/thankyou         controllers.Joiner.thankyouPaid(tier)
 
 # Subscription
 POST        /subscription/subscribe      controllers.Subscription.subscribe
@@ -45,7 +44,7 @@ GET         /tier/change/friend/summary  controllers.TierController.friendDowngr
 
 GET         /tier/change/:tier           controllers.TierController.upgrade(tier)
 POST        /tier/change/:tier           controllers.TierController.upgradeConfirm(tier)
-GET         /tier/change/partner/summary   controllers.Joiner.thankyouPartner
+GET         /tier/change/:tier/summary   controllers.Joiner.thankyouPaid(tier)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
