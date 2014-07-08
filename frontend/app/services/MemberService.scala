@@ -15,7 +15,6 @@ import com.amazonaws.services.dynamodbv2.model._
 
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
-import java.util.NoSuchElementException
 
 case class MemberNotFound(userId: String) extends Throwable {
   override def getMessage: String = s"Member with ID $userId not found"
@@ -96,20 +95,19 @@ object MemberService extends MemberService {
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
-    def encode(code: String) = {
-      val md = java.security.MessageDigest.getInstance("SHA-1")
-      val digest = md.digest(code.getBytes)
-      new BigInteger(digest).abs.toString(36).toUpperCase.substring(0, 8)
+
+    def createDiscountFor(member: Member): Future[Option[EBDiscount]] = {
+      // code should be unique for each user/event combination
+      member.tier match {
+        case Tier.Partner | Tier.Patron =>
+          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")).map(Some(_))
+        case _ => Future.successful(None)
+      }
     }
 
-    val futureDiscount = for {
+    for {
       member <- get(userId)
-      if member.tier == Tier.Patron || member.tier == Tier.Partner
-      // code should be unique for each user/event combination
-      code = encode(s"${member.userId}_${event.id}")
-      discount <- EventbriteService.createOrGetDiscount(event.id, code)
-    } yield Some(discount)
-
-    futureDiscount.recover { case e: NoSuchElementException => None }
+      discount <- createDiscountFor(member)
+    } yield discount
   }
 }
