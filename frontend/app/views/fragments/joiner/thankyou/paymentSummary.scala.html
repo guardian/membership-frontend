@@ -18,7 +18,7 @@
                 Start Date
             </td>
             <td class="summary-table__cell">
-                @subscription.start.pretty
+                @prettyDate(subscription.start)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -46,7 +46,7 @@
                 Next Payment
             </td>
             <td class="summary-table__cell">
-                @subscription.current_period_end.pretty
+                @prettyDate(subscription.current_period_end)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
