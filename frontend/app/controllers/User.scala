@@ -1,9 +1,12 @@
 package controllers
 
+import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.{DateTime, Instant}
+
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import actions.{ MemberRequest, MemberAction }
@@ -32,12 +35,21 @@ trait User extends Controller {
     }
   }
 
-  def basicDetails(request: MemberRequest[_]) =
+  def basicDetails(request: MemberRequest[_]) = {
+    val member = request.member
+
+    implicit object JodaDateTimeWriter extends Writes[DateTime] {
+      val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+
+      def writes(dateTime: DateTime) = JsString(dateTime.toString(standardFormat))
+    }
+    
     Json.obj(
-      "userId" -> request.member.userId,
-      "tier" -> request.member.tier.toString,
-      "joinDate" -> request.member.joinDate.map(_.getMillis / 1000)
+      "userId" -> member.userId,
+      "tier" -> member.tier.toString,
+      "joinDate" -> member.joinDate
     )
+  }
 
   def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
      Json.obj(

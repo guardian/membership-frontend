@@ -54,12 +54,14 @@
                     <li class="inline-list__item nav__item">
                         <a href="/events" class="nav__link">events</a>
                     </li>
-                    <li class="inline-list__item nav__item">
-                        <a href="/join" class="nav__link">become a member</a>
-                    </li>
-                    <li class="inline-list__item nav__item">
-                        <a href="/join/patron" class="nav__link">become a patron</a>
-                    </li>
+                    @if(!Config.membershipHide) {
+                        <li class="inline-list__item nav__item">
+                            <a href="/join" class="nav__link">become a member</a>
+                        </li>
+                        <li class="inline-list__item nav__item">
+                            <a href="/join/patron" class="nav__link">become a patron</a>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="header__secondary">

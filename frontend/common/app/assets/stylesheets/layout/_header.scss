@@ -1,7 +1,4 @@
 .header {
-    @include mq(tablet) {
-        height: $headerHeight;
-    }
     background: $mem-header;
     .header__inner {
         @include rem((
