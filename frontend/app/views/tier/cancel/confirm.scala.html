@@ -23,7 +23,7 @@
         </div>
         <div class="package-container">
             <div class="package-list">
-                <div class="package package__current">
+                <div class="package package--current">
                     <div class="package__current-indicator">This is what you'll be missing</div>
                     <div class="package__inner">
 
@@ -68,7 +68,7 @@
                 </div>
 
                 @if(currentTier != Tier.Friend) {
-                    <div class="package package__current">
+                    <div class="package package--current">
                         <div class="package__current-indicator">Can we still be Friends?</div>
                         <div class="package__inner">
 
@@ -95,7 +95,7 @@
                 <aside class="l-row__item"></aside>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h2 class="item__title">How can we make Guardian Membership better? Tell us what you think.</h2>
-                    <form method="POST">
+                    <form method="POST" action="/tier/cancel/confirm">
                         <fieldset class="fieldset">
                             <div class="form-field">
                                 <p>What is the main reason you are leaving Guardian Membership?</p>
@@ -131,5 +131,4 @@
             </section>
         </div>
     </main>
-
 }
