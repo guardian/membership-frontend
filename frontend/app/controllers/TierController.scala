@@ -112,7 +112,7 @@ trait CancelTier {
   self: TierController =>
 
   def cancelTier() = MemberAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm())
+    Ok(views.html.tier.cancel.confirm(request.member.tier))
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
