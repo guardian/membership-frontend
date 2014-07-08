@@ -1,6 +1,8 @@
 package model
 
-case class Member(userId: String, tier: Tier.Tier, customerId: String)
+import com.github.nscala_time.time.Imports._
+
+case class Member(userId: String, tier: Tier.Tier, customerId: String, joinDate: Option[DateTime] = None)
 
 object Member {
   val NO_CUSTOMER_ID = " "

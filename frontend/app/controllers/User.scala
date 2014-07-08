@@ -18,7 +18,7 @@ trait User extends Controller {
   def meDetails = MemberAction.async { implicit request =>
     request.member.tier match {
       case Tier.Friend =>
-        val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("name" -> "Friend", "amount" -> 0))
+        val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
         Future.successful(Cors(Ok(details)))
 
       case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
@@ -33,7 +33,11 @@ trait User extends Controller {
   }
 
   def basicDetails(request: MemberRequest[_]) =
-    Json.obj("userId" -> request.member.userId, "tier" -> request.member.tier.toString)
+    Json.obj(
+      "userId" -> request.member.userId,
+      "tier" -> request.member.tier.toString,
+      "joinDate" -> request.member.joinDate.map(_.getMillis / 1000)
+    )
 
   def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
      Json.obj(
