@@ -92,6 +92,11 @@ object MemberService extends MemberService {
     } yield member
   }
 
+  def delete(member: Member) = {
+    client.deleteItem(TABLE_NAME, Map(Keys.USER_ID -> att(member.userId)).asJava)
+  }
+
+
   def createEventDiscount(userId: String, event: EBEvent): Option[Future[EBDiscount]] = {
     def encode(code: String) = {
       val md = java.security.MessageDigest.getInstance("SHA-1")

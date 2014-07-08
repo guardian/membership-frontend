@@ -115,8 +115,13 @@ trait CancelTier {
     Ok(views.html.tier.cancel.confirm())
   }
 
-  def cancelTierConfirm() = MemberAction { implicit request =>
-    Redirect("/tier/cancel/summary")
+  def cancelTierConfirm() = MemberAction.async { implicit request =>
+    for {
+      cancelledSubscription <- MemberService.cancelPayment(request.member)
+    } yield {
+      MemberService.put(request.member.copy(cancellationRequested = false))
+      Redirect("/tier/cancel/summary")
+    }
   }
 
   def cancelTierSummary() = MemberAction.async { implicit request =>
