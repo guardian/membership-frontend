@@ -40,21 +40,30 @@
 .i-logo {
     display: block;
     @include rem((
-        width: 140px,
-        height: 34px
+        width: 217px,
+        height: 20px
     ));
-    background: url("/assets/images/header/logo.png");
+    background: url("/assets/images/header/logo_mobile.png") no-repeat center top;
+
+    @include mq(mobileLandscape){
+        background: url("/assets/images/header/logo_tablet.png") no-repeat center top;
+        @include rem((
+            width: 375px,
+            height: 34px
+        ));
+    }
 
     @include mq(tablet){
+        background: url("/assets/images/header/logo.png") no-repeat center top;
         @include rem((
-            width: 263px,
-            height: 65px,
+            width: 520px,
+            height: 48px,
         ));
     }
 }
 
 .svg .i-logo {
-    background: url("/assets/images/header/logo.svg");
+    background: url("/assets/images/header/logo.svg") no-repeat center top;
     @include background-size(cover);
 }
 
