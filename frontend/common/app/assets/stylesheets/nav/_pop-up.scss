@@ -58,7 +58,7 @@
     @include rem((
         padding-top: $gs-baseline/3,
         padding-bottom: $gs-baseline,
-        top: $headerHeight,
+        top: $mobilePopupOffset,
         min-height: 47px
     ));
 

@@ -8,17 +8,17 @@ object Dates {
 
   implicit class RichInstant(dateTime: Instant) {
     val date = new DateTime(dateTime)
-    lazy val pretty = date.toString("dd MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
+    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
   }
 
   implicit class RichDateTime(dateTime: DateTime) {
     val date = new DateTime(dateTime)
-    lazy val pretty = date.toString("dd MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
+    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
   }
 
   implicit class RichLong(dateTime: Long) {
     val date = new DateTime(dateTime * 1000)
-    lazy val pretty = date.toString("dd MMMMM YYYY, h:mma").replace("AM", "am").replace("PM", "pm")
+    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
   }
 
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)

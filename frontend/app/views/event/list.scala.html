@@ -1,13 +1,8 @@
 @(eventsList: Seq[model.Eventbrite.EBEvent])(implicit request: play.api.mvc.Request[_])
-@import views.support.Crumb
 
 @main("Events") {
 
-@fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Events", "/events")))
-
-<div class="page-container">
     <section class="container--row-pattern">
-        <div class="container__border tone-feature tone-accent-border"></div>
         <div class="container__header">
             <h2 class="container__title tone-feature tone-background">
                 <span class="container__title__label u-text-hyphenate">Current Events</span>
@@ -23,5 +18,5 @@
             </ul>
         </div>
     </section>
-</div>
+
 }
