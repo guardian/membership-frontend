@@ -1,12 +1,6 @@
 @()(implicit request: play.api.mvc.Request[_])
 
-@import views.support.Crumb
-
 @main("Join") {
-
-@fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/become-a-member")))
-
-<div class="page-container">
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border ">
         <h1 class="section-headline">Become a member</h1>
@@ -20,7 +14,5 @@
         </ul>
 
     </section>
-
-</div>
 
 }

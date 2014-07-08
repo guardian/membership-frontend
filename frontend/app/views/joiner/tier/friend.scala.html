@@ -1,12 +1,6 @@
 @()(implicit request: play.api.mvc.Request[_])
 
-@import views.support.Crumb
-
 @main("Join | Friend") {
-
-@fragments.crumb(Seq(Crumb("Home", "/"), Crumb("Become a member", "/join"), Crumb("Become a Friend", "/join/friend")))
-
-<div class="page-container">
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border ">
         <h1 class="section-headline u-text-hyphenate">Purpose/Value</h1>
@@ -61,13 +55,12 @@
             </li>
             <li class="benefits-list benefits-list--left-aligned">
                 <span class="benefits-list__item">Friend Free
-                    <a class="action action--join" href="/join/friend/thankyou">Join</a>
+                    <form class="form--inline" method="POST">
+                        <button class="action action--inline-text action--join">Join</button>
+                    </form>
                 </span>
             </li>
         </ul>
     </section>
-
-</div>
-
 
 }

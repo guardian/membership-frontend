@@ -1,7 +1,10 @@
 package model
 
-case class Member(userId: String, tier: Tier.Tier, customerId: String)
+import com.github.nscala_time.time.Imports._
+
+case class Member(userId: String, tier: Tier.Tier, customerId: String, joinDate: Option[DateTime] = None)
 
 object Member {
-  def friend(userId: String, tier: Tier.Tier) = Member(userId, tier, " ") // DynamoDB doesn't accept empty strings
+  val NO_CUSTOMER_ID = " "
+  def friend(userId: String, tier: Tier.Tier) = Member(userId, tier, NO_CUSTOMER_ID) // DynamoDB doesn't accept empty strings
 }

@@ -3,6 +3,8 @@ package services
 import java.math.BigInteger
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.joda.time.DateTimeZone.UTC
+import com.github.nscala_time.time.Imports._
 import scala.collection.JavaConverters._
 
 import play.api.Logger
@@ -36,6 +38,7 @@ object MemberService extends MemberService {
     val USER_ID = "userId"
     val TIER = "tier"
     val CUSTOMER_ID = "customerId"
+    val JOIN_DATE = "joinDate"
   }
 
   val client = new AmazonDynamoDBClient
@@ -49,7 +52,8 @@ object MemberService extends MemberService {
     client.putItem(TABLE_NAME, Map(
       Keys.USER_ID -> att(member.userId),
       Keys.TIER -> att(member.tier.toString),
-      Keys.CUSTOMER_ID -> att(member.customerId)
+      Keys.CUSTOMER_ID -> att(member.customerId),
+      Keys.JOIN_DATE -> att(member.joinDate.getOrElse(DateTime.now.toDateTime(UTC)).toString)
     ).asJava)
   }
 
@@ -58,7 +62,8 @@ object MemberService extends MemberService {
       id <- attrs.get(Keys.USER_ID)
       tier <- attrs.get(Keys.TIER)
       customerId <- attrs.get(Keys.CUSTOMER_ID)
-    } yield Future.successful(Member(id.getS, Tier.withName(tier.getS), customerId.getS))
+      joinDate <- attrs.get(Keys.JOIN_DATE)
+    } yield Future.successful(Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS))))
   }
 
   def get(userId: String): Future[Member] = {

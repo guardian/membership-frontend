@@ -33,6 +33,8 @@
         <meta name="Distribution"                   content="Global"/>
 
         <title>@(Config.siteTitle + " - " + title)</title>
+        @fragments.javaScriptFirstSteps()
+
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/style.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.ico")">
 
@@ -56,7 +58,13 @@
 
         @fragments.header()
 
-        @content
+        <div class="page-container__background-image"></div>
+
+        <div class="page-container">
+
+            @content
+
+        </div>
 
         @fragments.footer()
 

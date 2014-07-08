@@ -189,6 +189,20 @@
   ));
 }
 
+.label--inline {
+    display: inline-block;
+}
+
+// Allows for two up form field and label layout as in address form
+.label--half {
+    width: 50%;
+    padding-right: 12px;
+    &:last-of-type {
+        padding-right: 0;
+        padding-left: 12px;
+    }
+}
+
 .text-input,
 .textarea {
   border: 1px solid $c-neutral4;
