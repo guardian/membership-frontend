@@ -1,31 +1,25 @@
-@charset "UTF-8";
+@charset 'UTF-8';
 
 /* Variables and mixins
    ========================================================================== */
-
-@import "vars";
-@import "mixins";
-@import "module/facia/_mixins";
-
+@import 'vars';
+@import 'mixins';
+@import 'module/facia/_mixins';
 /* Base
    ========================================================================== */
-
-@import "base/normalize";
-@import "base/base";
-@import "base/type";
-@import "extends-only";
-@import "base/links";
-@import "base/helpers";
-@import "base/lists";
-@import "base/forms";
-@import "base/tables";
-@import "base/images";
-
-
+@import 'base/normalize';
+@import 'base/base';
+@import 'base/type';
+@import 'extends-only';
+@import 'base/links';
+@import 'base/helpers';
+@import 'base/lists';
+@import 'base/forms';
+@import 'base/tables';
+@import 'base/images';
 /* Utility
    ========================================================================== */
-@import "utility/hidden";
-
+@import 'utility/hidden';
 
 /* Layout
    ========================================================================== */
@@ -33,34 +27,29 @@
 @include grid-system;
 @include guss-row-utility;
 @include guss-columns-utility;
-@import "layout/layout";
-@import "layout/footer";
-@import "layout/header";
-@import "layout/headings";
-
+@import 'layout/layout';
+@import 'layout/footer';
+@import 'layout/header';
+@import 'layout/headings';
 
 /* Content
    ========================================================================== */
-@import "content";
-
+@import 'content';
 
 /* Headings
    ========================================================================== */
-@import "components/headings";
-
+@import 'components/headings';
 
 /* Icons
    ========================================================================== */
-@import "components/icons";
-
+@import 'components/icons';
 
 /* Nav
    ========================================================================== */
-@import "nav/nav";
-@import "nav/pop-up";
-@import "nav/control";
-
+@import 'nav/nav';
+@import 'nav/pop-up';
+@import 'nav/control';
 
 /* Masterclass
    ========================================================================== */
-@import "masterclass";
+@import 'masterclass';

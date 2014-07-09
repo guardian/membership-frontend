@@ -45,7 +45,7 @@
     ));
     background: url("/assets/images/header/logo_mobile.png") no-repeat center top;
 
-    @include mq(mobileLandscape){
+    @include mq(mobileLandscape) {
         background: url("/assets/images/header/logo_tablet.png") no-repeat center top;
         @include rem((
             width: 375px,
@@ -53,7 +53,7 @@
         ));
     }
 
-    @include mq(tablet){
+    @include mq(tablet) {
         background: url("/assets/images/header/logo.png") no-repeat center top;
         @include rem((
             width: 520px,

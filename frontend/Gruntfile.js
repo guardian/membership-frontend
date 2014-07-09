@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 
         /***********************************************************************
          * Compile
-         **********************************************************************/
+         ***********************************************************************/
         sass: {
             compile: {
                 files: [{
@@ -128,7 +128,7 @@ module.exports = function (grunt) {
 
         /***********************************************************************
          * Test
-         **********************************************************************/
+         ***********************************************************************/
 
         karma: {
             options: {
@@ -141,6 +141,10 @@ module.exports = function (grunt) {
                 browsers: ['PhantomJS']
             }
         },
+
+        /***********************************************************************
+         * Validate
+         ***********************************************************************/
 
         // Lint Javascript sources
         jshint: {
@@ -162,6 +166,18 @@ module.exports = function (grunt) {
                         '!**/utils/analytics/omniture.js'
                     ]
                 }]
+            }
+        },
+
+        // Lint Sass sources
+        scsslint: {
+            allFiles: [
+                'common/app/assets/stylesheets'
+            ],
+            options: {
+                bundleExec: true,
+                config: '.scss-lint.yml',
+                reporterOutput: null
             }
         },
 
@@ -190,6 +206,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-shell');
 
@@ -197,6 +214,8 @@ module.exports = function (grunt) {
         'compile:css',
         'compile:js'
     ]);
+
+    grunt.registerTask('validate', ['jshint', 'scsslint']);
 
     // Test tasks
     grunt.registerTask('test:unit', function() {
@@ -206,15 +225,16 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', function(){
         if (!isDev) {
-            grunt.task.run(['jshint']);
+            grunt.task.run(['validate']);
         }
         grunt.task.run(['test:unit']);
     });
 
-    grunt.registerTask('compile:css', ['clean:css', 'sass:compile']);
+    grunt.registerTask('compile:css', ['clean:css', 'scsslint', 'sass:compile']);
 
     grunt.registerTask('compile:js', [
         'clean:js',
+        'jshint',
         'requirejs:compile',
         'copy:html5shiv'
     ]);

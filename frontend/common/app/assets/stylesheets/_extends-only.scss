@@ -2,36 +2,36 @@
 // =============================================================================
 
 %d-badge-icon {
-  display: inline-block;
-  position: relative;
-  top: -.1em;
-  width: 1em;
-  height: 1em;
-  margin-left: .2em;
-  vertical-align: middle;
-  background: $c-newsDefault;
-  font: bold 13px/1 $serifheadline;
-  color: #ffffff;
-  text-align: center;
-  cursor: help;
+    display: inline-block;
+    position: relative;
+    top: -.1em;
+    width: 1em;
+    height: 1em;
+    margin-left: .2em;
+    vertical-align: middle;
+    background: $c-newsDefault;
+    font: bold 13px/1 $serifheadline;
+    color: #ffffff;
+    text-align: center;
+    cursor: help;
 }
 
 %icon-holder-circle {
-  display: inline-block;
-  overflow: hidden;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #ffffff;
-  padding: 0;
-  margin: 0;
-  @include border-radius(50%);
-  background-color: transparent;
+    display: inline-block;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ffffff;
+    padding: 0;
+    margin: 0;
+    @include border-radius(50%);
+    background-color: transparent;
 
-  &,
-  &:active,
-  &:focus,
-  &:hover {
-    text-decoration: none;
-    color: $c-body;
-  }
+    &,
+    &:active,
+    &:focus,
+    &:hover {
+        text-decoration: none;
+        color: $c-body;
+    }
 }
