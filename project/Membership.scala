@@ -38,7 +38,12 @@ trait Membership {
 }
 
 object Membership extends Build with Membership {
-  val scalaforce = lib("scalaforce").settings(libraryDependencies += PlayImport.ws)
+  val scalaforce = lib("scalaforce")
+    .settings(libraryDependencies ++= Seq(
+        "com.typesafe.akka" %% "akka-agent" % "2.2.0",
+        PlayImport.ws
+      )
+    )
 
   val frontend = app("frontend").dependsOn(scalaforce)
     .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
