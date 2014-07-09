@@ -6,7 +6,7 @@ import org.openqa.selenium.{By, WebDriver}
 /**
  * Created by jao on 20/06/2014.
  */
-class CreditCardWidget(driver: WebDriver) extends BasePage(driver) {
+class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def cardNumberTextbox = driver.findElement(By.id("cc-num"))
 

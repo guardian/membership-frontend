@@ -13,7 +13,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def tierSpan = driver.findElement(By.cssSelector(".js-membership-tier"))
 
-  private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-start-date"))
+  private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-join-date"))
 
   private def paymentCostSpan = driver.findElement(By.cssSelector(".js-membership-payment-cost"))
 
@@ -21,33 +21,40 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def cardDetailsSpan = driver.findElement(By.cssSelector(".membership-tab__card-details"))
 
-  private def changeButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-open"))
+  private def changeCardButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-open"))
 
   private def successFlashMessage = driver.findElement(By.cssSelector(".form__success"))
 
+  private def changeTierButton = driver.findElement(By.xpath("id('tabs-account-profile-3')/div/ul[1]/li[1]/div[2]/div/a"))
+
   val cardWidget = new CreditCardWidget(driver)
 
-  def clickChangebutton: CreditCardWidget = {
-    new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeButton))
+  def clickChangebutton = {
+    new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeCardButton))
     // FIXME: for some reason the JS doesn't work if you click immediately
-    new Actions(driver).moveToElement(changeButton).perform
+    new Actions(driver).moveToElement(changeCardButton).perform
     Thread.sleep(1000)
-    changeButton.click()
+    changeCardButton.click()
     cardWidget
   }
 
-  def clickMembershipTab: IdentityEditPage = {
+  def clickMembershipTab = {
     new WebDriverWait(driver, 35).until(ExpectedConditions.visibilityOf(membershipTab))
     membershipTab.click()
     this
   }
 
-  def isMembershipTabVisible: Boolean = {
+  def isMembershipTabVisible = {
     try {
       membershipTab.isDisplayed
     } catch {
       case e: Exception => false
     }
+  }
+
+  def clickChangeTier = {
+    changeTierButton.click
+    new ChangeTierPage(driver)
   }
 
   def getMembershipTier: String = tierSpan.getText

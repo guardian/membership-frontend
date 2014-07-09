@@ -3,7 +3,7 @@ package com.gu.membership.pages
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{By, WebDriver}
 
-class EventPage(driver: WebDriver) extends BasePage(driver) {
+class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventLocationP = driver.findElement(By.cssSelector(".event__location"))
 

@@ -208,7 +208,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICanRegisterAndPurchaseASubscription = {
     val user = "test_" + System.currentTimeMillis()
     val correct = new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-      .enterPassword(user).enterUserName(user).clickSubmit.clickCompleteRegistration.isPageLoaded
+      .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user)
+      .clickSubmit.clickCompleteRegistration.isPageLoaded
     Assert.assert(correct, true, "Newly-registered user is redirected to the ticket purchase page")
     this
   }
@@ -255,6 +256,25 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmLoggedInAsAPartner = {
+    IAmLoggedIn
+    IBecomeAPartner
+    this
+  }
+
+  def IChooseToBecomeAFriend = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAFriend.clickContinue
+    this
+  }
+
+  def IAmAFriend = {
+    val page = new DowngradeConfirmationPage(driver)
+    Assert.assert(page.getCurrentPackage.equals("Friend plan"), false, "Current package should not be friend")
+    Assert.assert(page.getEndDate, page.getStartDate, "The new date should be the same as the old date")
+    Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
+  }
+
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2018")
 
   private def isInFuture(dateTime: String): Boolean = {
@@ -278,7 +298,7 @@ object CookieHandler {
         driver.get("https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fmembership.theguardian.com")
         val user = System.currentTimeMillis().toString
         new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-          .enterPassword(user).enterUserName(user).clickSubmit.clickCompleteRegistration
+          .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
         driver.get("https://membership.theguardian.com")
         CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
         CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))

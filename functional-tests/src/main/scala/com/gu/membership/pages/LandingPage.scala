@@ -2,7 +2,7 @@ package com.gu.membership.pages
 
 import org.openqa.selenium.{By, WebDriver}
 
- class LandingPage(driver: WebDriver) extends BasePage(driver) {
+ class LandingPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
    private def title = driver.findElement(By.cssSelector("h1"))
 

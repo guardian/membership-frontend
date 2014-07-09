@@ -4,7 +4,7 @@ import java.util
 
 import org.openqa.selenium.{By, WebDriver, WebElement}
 
-class EventsListPage(driver: WebDriver) extends BasePage(driver) {
+class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventsImageList: util.List[WebElement] = driver.findElements(By.cssSelector(".item__image-container>img"))
 

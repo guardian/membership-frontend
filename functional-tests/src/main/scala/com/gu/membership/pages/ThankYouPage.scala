@@ -5,17 +5,17 @@ import org.openqa.selenium.{By, WebDriver}
 /**
  * Created by jao on 30/05/2014.
  */
-class ThankYouPage(driver: WebDriver) extends BasePage(driver) {
+class ThankYouPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def packageCell = driver.findElement(By.xpath("//body/div[1]/section[2]/table/tbody/tr[1]/td[2]"))
+  private def packageCell = driver.findElement(By.xpath("//tbody/tr[1]/td[2]"))
 
-  private def startDateCell = driver.findElement(By.xpath("//body/div[1]/section[2]/table/tbody/tr[2]/td[2]"))
+  private def startDateCell = driver.findElement(By.xpath("//tbody/tr[2]/td[2]"))
 
-  private def amountPaidTodayCell = driver.findElement(By.xpath("//body/div[1]/section[2]/table/tbody/tr[3]/td[2]"))
+  private def amountPaidTodayCell = driver.findElement(By.xpath("//tbody/tr[3]/td[2]"))
 
-  private def monthlyPaymentCell = driver.findElement(By.xpath("//body/div[1]/section[2]/table/tbody/tr[4]/td[2]"))
+  private def monthlyPaymentCell = driver.findElement(By.xpath("//tbody/tr[4]/td[2]"))
 
-  private def nextPaymentCell = driver.findElement(By.xpath("//body/div[1]/section[2]/table/tbody/tr[5]/td[2]"))
+  private def nextPaymentCell = driver.findElement(By.xpath("//tbody/tr[5]/td[2]"))
 
   private def getStartedButton = driver.findElement(By.cssSelector(".action"))
 

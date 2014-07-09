@@ -5,7 +5,7 @@ import org.openqa.selenium.{By, WebDriver}
 /**
  * Created by jao on 16/06/2014.
  */
-class CheckEmailPage(driver: WebDriver) extends BasePage(driver)  {
+class CheckEmailPage(driver: WebDriver) extends BaseMembershipPage(driver)  {
 
   private def completeRegistrationButton = driver.findElement(By.cssSelector(".submit-input"))
 
