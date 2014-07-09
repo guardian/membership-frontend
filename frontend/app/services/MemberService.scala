@@ -55,8 +55,7 @@ object MemberService extends MemberService with Scalaforce {
 
   def put(member: Member): Future[Member] = {
     for {
-      token <- getAccessToken
-      result <- request(contactURL(Keys.USER_ID, member.userId), token).patch(
+      result <- request(contactURL(Keys.USER_ID, member.userId)).patch(
         Json.obj(
           Keys.CUSTOMER_ID -> member.customerId,
           Keys.LAST_NAME-> "LAST NAME",
@@ -68,8 +67,7 @@ object MemberService extends MemberService with Scalaforce {
 
   private def getMember(key: String, id: String): Future[Member] = {
     for {
-      token <- getAccessToken
-      result <- request(contactURL(key, id), token).get()
+      result <- request(contactURL(key, id)).get()
     } yield {
       result.status match {
         case OK => result.json.as[Member]

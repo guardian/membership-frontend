@@ -21,8 +21,8 @@ trait Scalaforce {
 
   val accessToken = Agent[String]("")
 
-  def request(endpoint: String, token: String) =
-    WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer $token")
+  def request(endpoint: String) =
+    WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}")
 
   def getAccessToken: Future[String] = {
     WS.url(apiURL + "/services/oauth2/token")
@@ -50,6 +50,6 @@ trait Scalaforce {
 
   def start() {
     Logger.info("Starting Scalaforce background tasks")
-    system.scheduler.schedule(5.seconds, 2.hours) { refresh() }
+    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
   }
 }
