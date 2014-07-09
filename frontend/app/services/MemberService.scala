@@ -1,20 +1,12 @@
 package services
 
-import java.math.BigInteger
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.joda.time.DateTimeZone.UTC
-import com.github.nscala_time.time.Imports._
-import scala.collection.JavaConverters._
 
 import play.api.Logger
 import play.api.http.Status.{OK, NOT_FOUND}
 import play.api.libs.json.{Json, JsPath, Reads}
 import play.api.libs.functional.syntax._
-
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.amazonaws.regions.{Regions, Region}
-import com.amazonaws.services.dynamodbv2.model._
 
 import com.gu.scalaforce.Scalaforce
 
