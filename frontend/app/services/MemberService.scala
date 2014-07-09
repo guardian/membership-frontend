@@ -82,5 +82,20 @@ object MemberService extends MemberService with Scalaforce {
   def get(userId: String): Future[Member] = getMember(Keys.USER_ID, userId)
   def getByCustomerId(customerId: String): Future[Member] = getMember(Keys.CUSTOMER_ID, customerId)
 
-  def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = Future.failed(new Exception)
+  def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
+
+    def createDiscountFor(member: Member): Future[Option[EBDiscount]] = {
+      // code should be unique for each user/event combination
+      member.tier match {
+        case Tier.Partner | Tier.Patron =>
+          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")).map(Some(_))
+        case _ => Future.successful(None)
+      }
+    }
+
+    for {
+      member <- get(userId)
+      discount <- createDiscountFor(member)
+    } yield discount
+  }
 }
