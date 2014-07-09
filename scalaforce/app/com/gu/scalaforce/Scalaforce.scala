@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import play.api.Play.current
 import play.api.libs.ws.WS
+import play.api.libs.json.Json
 
 trait Scalaforce {
   val consumerKey: String
@@ -14,6 +15,9 @@ trait Scalaforce {
   val apiUsername: String
   val apiPassword: String
   val apiToken: String
+
+  def request(endpoint: String, token: String) =
+    WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer $token")
 
   def getAccessToken: Future[String] = {
     WS.url(apiURL + "/services/oauth2/token")
@@ -27,8 +31,4 @@ trait Scalaforce {
         (result.json \ "access_token").as[String]
       }
   }
-
-  object Contact {
-  }
 }
-
