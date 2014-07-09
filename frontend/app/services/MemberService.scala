@@ -19,7 +19,7 @@ case class MemberNotFound(userId: String) extends Throwable {
 }
 
 trait MemberService {
-  def put(member: Member): Future[Unit]
+  def put(member: Member): Future[Member]
 
   def get(userId: String): Future[Member]
   def getByCustomerId(customerId: String): Future[Member]
@@ -53,7 +53,7 @@ object MemberService extends MemberService with Scalaforce {
     )((userId, tier, customerId) => Member(userId, tier, customerId, None)
     )
 
-  def put(member: Member): Future[Unit] = {
+  def put(member: Member): Future[Member] = {
     for {
       token <- getAccessToken
       result <- request(contactURL(Keys.USER_ID, member.userId), token).patch(
@@ -63,7 +63,7 @@ object MemberService extends MemberService with Scalaforce {
           Keys.TIER -> member.tier.toString
         )
       )
-    } yield Unit
+    } yield member
   }
 
   private def getMember(key: String, id: String): Future[Member] = {
