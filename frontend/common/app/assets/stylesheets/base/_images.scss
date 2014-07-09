@@ -3,7 +3,7 @@
     height: 100%;
     display: block;
 
-    @include mq(desktop){
+    @include mq(desktop) {
         width: auto;
         height: auto;
     }

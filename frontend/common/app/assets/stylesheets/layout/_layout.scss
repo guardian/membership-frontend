@@ -20,7 +20,7 @@ body {
 
 .page-container__background-image {
     position: absolute;
-    background: #ffffff url("/assets/images/crowd.jpg") no-repeat center top;
+    background: #ffffff url('/assets/images/crowd.jpg') no-repeat center top;
     background-size: cover;
     width: 100%;
     @include rem((
@@ -34,14 +34,14 @@ body {
     @include rem((
         padding: $gs-gutter/4 $gs-gutter/4 0 $gs-gutter/4
     ));
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     @include clearfix;
     position: relative;
     margin: 0 auto;
     @include rem((
         max-width: 1140px
     ));
-    @include mq(tablet){
+    @include mq(tablet) {
         @include rem((
             padding: $gs-gutter $gs-gutter 0 $gs-gutter
         ));

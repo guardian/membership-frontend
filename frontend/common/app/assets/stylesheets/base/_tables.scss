@@ -5,7 +5,9 @@ $table-breakpoint-importance-2: mobile;
 $table-breakpoint-importance-3: 220px;
 
 @mixin table--hide-none {
-    th, td { display: table-cell !important; }
+    th, td {
+        display: table-cell !important;
+    }
 }
 
 @mixin table--hide-from-importance-1 {
@@ -28,10 +30,22 @@ $table-breakpoint-importance-3: 220px;
         display: none;
     }
 }
-.table--hide-none { @include table--hide-none; }
-.table--hide-from-importance-1 { @include table--hide-from-importance-1; }
-.table--hide-from-importance-2 { @include table--hide-from-importance-2; }
-.table--hide-from-importance-3 { @include table--hide-from-importance-3; }
+
+.table--hide-none {
+    @include table--hide-none;
+}
+
+.table--hide-from-importance-1 {
+    @include table--hide-from-importance-1;
+}
+
+.table--hide-from-importance-2 {
+    @include table--hide-from-importance-2;
+}
+
+.table--hide-from-importance-3 {
+    @include table--hide-from-importance-3;
+}
 
 table {
     width: 100%;
@@ -72,9 +86,15 @@ td {
     }
 
     // Show / hide functionality
-    @include mq($to: $table-breakpoint-importance-1) { @include table--hide-from-importance-1; }
-    @include mq($to: $table-breakpoint-importance-2) { @include table--hide-from-importance-2; }
-    @include mq($to: $table-breakpoint-importance-3) { @include table--hide-from-importance-3; }
+    @include mq($to: $table-breakpoint-importance-1) {
+        @include table--hide-from-importance-1;
+    }
+    @include mq($to: $table-breakpoint-importance-2) {
+        @include table--hide-from-importance-2;
+    }
+    @include mq($to: $table-breakpoint-importance-3) {
+        @include table--hide-from-importance-3;
+    }
 }
 
 .table--responsive-font {
@@ -140,6 +160,7 @@ td {
     text-align: left;
     z-index: 2;
 }
+
 .table__caption--bottom {
     font-weight: normal;
     border-bottom: 0 none;

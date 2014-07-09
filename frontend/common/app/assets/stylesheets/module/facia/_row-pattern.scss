@@ -10,10 +10,12 @@
         ));
     }
 }
+
 .facia-slice-wrapper--no-outer-margins {
     margin-left: 0;
     margin-right: 0;
 }
+
 .facia-slice__item {
     position: relative; // Replace .item as a relative context
 
@@ -221,6 +223,7 @@
         }
     }
 }
+
 .row-of-two--boost-first .facia-slice__item:nth-child(1) .item__media-wrapper,
 .row-of-two--boost-second .facia-slice__item:nth-child(2) .item__media-wrapper {
     @include mq(tablet) {
@@ -234,6 +237,7 @@
         ));
     }
 }
+
 @include mq(desktop) {
     .row-of-two {
         .item__standfirst {

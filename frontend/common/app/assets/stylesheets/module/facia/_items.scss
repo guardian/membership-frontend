@@ -11,6 +11,7 @@
         ));
     }
 }
+
 .container--first {
     margin-top: 0;
 }
@@ -18,6 +19,7 @@
 .container__header {
     position: relative;
 }
+
 .container__title {
     position: relative;
     @include fs-header(5);
@@ -59,6 +61,7 @@
         color: inherit;
     }
 }
+
 .container__updated {
     display: block;
     @include fs-headline(1);
@@ -68,7 +71,6 @@
     position: relative;
     @include box-sizing(border-box);
     width: 100%;
-
 
     @include mq(wide) {
         @include rem((
@@ -83,12 +85,14 @@
         display: block;
     }
 }
+
 .container__toggle,
 .item__live-indicator,
 .item__meta,
 .collection__show-more {
     @include f-data;
 }
+
 .container__toggle {
     position: absolute;
     @include rem((
@@ -141,6 +145,7 @@
         left: gs-span(15) + $gs-gutter;
     }
 }
+
 .facia-slice {
     font-size: 0;
     overflow: hidden;
@@ -149,6 +154,7 @@
         margin-right: -$gs-gutter/2
     ));
 }
+
 .item {
     @include rem((
         padding-bottom: $gs-gutter
@@ -165,6 +171,7 @@
         @include vertical-item-separator;
     }
 }
+
 .item__link {
     display: block;
     border-top: $item-top-border-height solid $c-newsAccent;
@@ -192,9 +199,11 @@
         }
     }
 }
+
 .item__link--no-border {
     border-width: 0;
 }
+
 .item__image-container {
     margin-top: 4px;
 
@@ -214,6 +223,7 @@
     font-weight: bold;
     text-transform: uppercase;
 }
+
 .item--sport-stats .competition-table h3,
 .item__title,
 .item__standfirst {
@@ -239,13 +249,13 @@
     }
 }
 
-
 .item--video,
 .item--gallery {
     .item__title .i {
         display: none;
     }
 }
+
 .l-row--items-4 {
     @include mq($to: tablet) {
         .item__title--has-icon-mobile {
@@ -269,16 +279,19 @@
         }
     }
 }
+
 .item__byline {
     @include fs-headline(2);
     @include rem((
         margin-bottom: $gs-baseline/3
     ));
 }
+
 .item__standfirst,
 .item__meta {
     color: $c-neutral2;
 }
+
 .item__standfirst {
     display: none;
     @include rem((
@@ -291,6 +304,7 @@
         margin-bottom: 0; // Some trail texts are wrapped in a paragraph
     }
 }
+
 .item__meta {
     position: absolute;
     bottom: 0;
@@ -347,6 +361,7 @@
         }
     }
 }
+
 .item__support {
     display: none;
     @include rem((
@@ -356,6 +371,7 @@
         display: block;
     }
 }
+
 .item__support__title {
     color: $c-neutral2;
     @include fs-data(3);
@@ -364,12 +380,16 @@
         @include fs-data(4, true);
     }
 }
-.item__support__item {}
-.item__support__action {}
+
+.item__support__item {
+}
+
+.item__support__action {
+}
 
 .item__cta {
     position: absolute;
-    width: ($gs-baseline/3)*11;  //44px
+    width: ($gs-baseline/3)*11; //44px
     height: ($gs-baseline/3)*11;
     @include rem((
         top: ($gs-baseline/3)*2,
@@ -390,6 +410,7 @@
         text-indent: -999em;
     }
 }
+
 $gallery-cta-icon: (
     width: 18px,
     height: 13px,
@@ -419,12 +440,14 @@ $cta-icon-gap: 2px;
         }
     }
 }
+
 .item__cta--gallery,
 .item__cta--video {
     width: 36px;
     height: 36px;
     background-color: $c-media-icon;
 }
+
 .item__cta__icon {
     position: absolute;
     top: 50%;
@@ -446,6 +469,7 @@ $cta-icon-gap: 2px;
         margin-top: -1 * (map-get($video-cta-icon, height) / 2);
     }
 }
+
 .item--dark {
     .item__container,
     .item__meta {
@@ -488,11 +512,21 @@ $show-more-icon: (
 );
 
 @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    25% { -webkit-transform: rotate(90deg); }
-    50% { -webkit-transform: rotate(180deg); }
-    75% { -webkit-transform: rotate(270deg); }
-    100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    25% {
+        -webkit-transform: rotate(90deg);
+    }
+    50% {
+        -webkit-transform: rotate(180deg);
+    }
+    75% {
+        -webkit-transform: rotate(270deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 .collection__show-more {
@@ -524,11 +558,13 @@ $show-more-icon: (
         -webkit-animation: spin 3s cubic-bezier(.680, -.550, .265, 1.550) forwards infinite;
     }
 }
+
 .collection__show-more__icon {
     display: block;
     height: (map-get($show-more-icon, height) + map-get($show-more-icon, space-between)) * 2;
     width: map-get($show-more-icon, width);
 }
+
 .container--rolled-up .container--rolled-up-hide {
     display: none;
 }
