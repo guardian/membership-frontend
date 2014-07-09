@@ -17,9 +17,10 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.friend())
   }
 
-  def joinFriend() = AuthenticatedAction { implicit request =>
-    MemberService.put(Member.friend(request.user.id, Tier.Friend))
-    Redirect(routes.Joiner.thankyouFriend())
+  def joinFriend() = AuthenticatedAction.async { implicit request =>
+    for {
+      done <- MemberService.put(Member.friend(request.user.id, Tier.Friend))
+    } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
   def partner() = CachedAction { implicit request =>
