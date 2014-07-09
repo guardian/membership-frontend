@@ -72,9 +72,7 @@ object MemberService extends MemberService with Scalaforce {
       result <- request(contactURL(key, id), token).get()
     } yield {
       result.status match {
-        case OK =>
-          println(result.json)
-          result.json.as[Member]
+        case OK => result.json.as[Member]
         case NOT_FOUND => throw MemberNotFound(id)
         case code =>
           Logger.error(s"getMember failed, Salesforce returned $code")
