@@ -232,12 +232,12 @@ module.exports = function (grunt) {
 
     grunt.registerTask('compile:css', ['clean:css', 'scsslint', 'sass:compile']);
 
-    grunt.registerTask('compile:js', [
-        'clean:js',
-        'jshint',
-        'requirejs:compile',
-        'copy:html5shiv'
-    ]);
+    grunt.registerTask('compile:js', function() {
+        if (!isDev) {
+            grunt.task.run(['jshint']);
+        }
+        grunt.task.run(['clean:js', 'requirejs:compile', 'copy:html5shiv']);
+    });
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
 };
