@@ -36,7 +36,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
   }
 
   feature("Membership tab") {
-    scenarioWeb("28. Membership tab appears if you are a member") {
+    scenarioWeb("28. Membership tab appears if you are a Partner") {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -45,8 +45,34 @@ class MembershipBenefitTests extends BaseMembershipTest {
         _.IBecomeAPartner
       }
       .then {
-        _.ICanSeeTheMembershipTab
+        _.ICanSeeTheMembershipTabForAPartner
       }
+    }
+
+    scenarioWeb("32. Membership tab appears if you are a Patron") {
+      implicit driver =>
+        given {
+          MembershipSteps().IAmLoggedIn
+        }
+        .when {
+          _.IBecomeAPatron
+        }
+        .then {
+          _.ICanSeeTheMembershipTabForAPatron
+        }
+    }
+
+    scenarioWeb("33. Membership tab appears if you are a Friend") {
+      implicit driver =>
+        given {
+          MembershipSteps().IAmLoggedIn
+        }
+        .when {
+          _.IBecomeAFriend
+        }
+        .then {
+          _.ICanSeeTheMembershipTabForFriend
+        }
     }
 
     scenarioWeb("29. Membership tab does not appear if you are not a member") {

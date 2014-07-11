@@ -215,11 +215,31 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
-  def ICanSeeTheMembershipTab = {
+  def IBecomeAFriend = {
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinButton
+    this
+  }
+
+  def ICanSeeTheMembershipTabForAPartner = {
+   ICanSeeTheMembershipTab("partner", "15.00")
+  }
+
+  def ICanSeeTheMembershipTabForAPatron = {
+    ICanSeeTheMembershipTab("patron", "60.00")
+  }
+
+  def ICanSeeTheMembershipTabForFriend = {
     IGoToIdentity
     val page = new IdentityEditPage(driver).clickMembershipTab
-    Assert.assert(page.getMembershipTier.toLowerCase.contains("partner"), true, "Membership plan should be partner")
-    Assert.assert(page.getPaymentCost, "15.00", "Cost should be £15")
+    Assert.assert(page.getMembershipTier.toLowerCase.contains("friend"), true, "Membership plan should be friend")
+    Assert.assert(page.getPaymentCost, "FREE", "Cost should be £FREE")
+  }
+
+  def ICanSeeTheMembershipTab(tier: String, price: String) = {
+    IGoToIdentity
+    val page = new IdentityEditPage(driver).clickMembershipTab
+    Assert.assert(page.getMembershipTier.toLowerCase.contains(tier), true, "Membership plan should be " + tier)
+    Assert.assert(page.getPaymentCost, price, "Cost should be £" + price)
     Assert.assert(page.getCardDetails.endsWith("4242"), true, "Card should be correct")
     Assert.assertNotEmpty(page.getStartDate, "Start date should not be empty")
     this

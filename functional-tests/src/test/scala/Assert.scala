@@ -6,7 +6,7 @@ import org.scalatest.Matchers._
 object Assert {
 
   def assert[A](found: A, expected: A, message: String = "") {
-    println("Expecting " + found + "to be " + expected + ". " + message)
+    println("Expecting " + found + " to be " + expected + ". " + message)
     found should be(expected)
   }
 
