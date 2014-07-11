@@ -11,7 +11,7 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership benefits until @prettyDate(subscription.current_period_end)</p>
+                    <p>You will continue to receive all the great Membership benefits until @subscription.current_period_end.pretty</p>
                 </article>
             </section>
         </div>
@@ -45,7 +45,7 @@
                                 Start Date
                             </td>
                             <td class="summary-table__cell">
-                                @prettyDate(subscription.current_period_end)
+                                @subscription.current_period_end.pretty
                             </td>
                         </tr>
                         <tr class="summary-table__row" role="row">

@@ -53,7 +53,7 @@
                                 @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
                             </span>
                         </div>
-                        <div class="event__time"><span class="icon time--icon"></span>@prettyDateWithTime(event.start)</div>
+                        <div class="event__time"><span class="icon time--icon"></span>@(event.start)</div>
                     </div>
 
                     @for(ticket <- event.ticketClassesHead) {
@@ -81,7 +81,8 @@
 
                             <div class="event__sale-ends">
                                 <span class="event__sale_ends_note js-datetime-enhance-note">Sales @if(event.getStatus == Completed){ended on}else{end on} </span>
-                                <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_end).fold("")(prettyDateWithTime)</time>
+                                <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                                @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)</time>
                             </div>
                         </div>
                     }
