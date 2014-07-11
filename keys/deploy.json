@@ -4,7 +4,7 @@
         "keys": {
             "type": "aws-s3",
             "data": {
-            "bucket": "jenny-test-cred",
+            "bucket": "membership-dist",
             "cacheControl": "private",
             "prefixPackage": false,
             "prefixStage": false
