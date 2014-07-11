@@ -2,6 +2,7 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import org.joda.time.Instant
 
 object Stripe {
 
@@ -26,9 +27,9 @@ object Stripe {
 
   case class Subscription(
     id: String,
-    start: Long,
-    current_period_start: Long,
-    current_period_end: Long,
+    start: Instant,
+    current_period_start: Instant,
+    current_period_end: Instant,
     customer: String,
     plan: Plan) extends StripeObject
 
@@ -48,6 +49,8 @@ object Stripe {
 
 object StripeDeserializer {
   import Stripe._
+
+  implicit val readsInstant = JsPath.read[Long].map(l => new Instant(l * 1000))
 
   implicit val readsError = Json.reads[Error]
   implicit val readsCard = Json.reads[Card]

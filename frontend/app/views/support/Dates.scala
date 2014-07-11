@@ -16,11 +16,6 @@ object Dates {
     lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
   }
 
-  implicit class RichLong(dateTime: Long) {
-    val date = new DateTime(dateTime * 1000)
-    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
-  }
-
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
 
   def addSuffix(day: Int): Html = Html(day + "<sup>" + suffix(day) + "</sup>")
