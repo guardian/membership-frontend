@@ -23,11 +23,7 @@ class ThankYouPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   def getPackage: String = packageCell.getText
 
-  def getStartDate: String =  {
-    // FIXME implicit wait is not working here, need to identify why
-    Thread.sleep(5000)
-    startDateCell.getText
-  }
+  def getStartDate: String = startDateCell.getText
 
   def getAmountPaidToday: String = amountPaidTodayCell.getText
 

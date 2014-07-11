@@ -35,9 +35,8 @@ class MembershipDowngradeTests extends BaseMembershipTest {
       }
     }
   }
-  // cancel membership
 
-  // patron to friend
+  // cancel membership
 
   // patron to partner
 

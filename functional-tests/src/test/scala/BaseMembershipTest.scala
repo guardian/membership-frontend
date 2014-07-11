@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit
+
 import com.gu.automation.core.{GivenWhenThen, WebDriverFeatureSpec}
 import com.gu.automation.support.TestRetries
 
@@ -6,4 +8,9 @@ import com.gu.automation.support.TestRetries
  */
 class BaseMembershipTest extends WebDriverFeatureSpec with TestRetries with GivenWhenThen {
 
+    override def startDriver(testName: String) = {
+      val driver = super.startDriver(testName)
+      driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS)
+      driver
+    }
 }
