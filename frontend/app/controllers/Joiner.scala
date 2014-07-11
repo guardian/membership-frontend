@@ -17,9 +17,10 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.friend())
   }
 
-  def joinFriend() = AuthenticatedAction { implicit request =>
-    MemberService.put(Member.friend(request.user.id, Tier.Friend))
-    Redirect(routes.Joiner.thankyouFriend())
+  def joinFriend() = AuthenticatedAction.async { implicit request =>
+    for {
+      done <- MemberService.put(Member.friend(request.user.id, Tier.Friend))
+    } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
   def partner() = CachedAction { implicit request =>
@@ -42,7 +43,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPartner() = MemberAction.async { implicit request =>
+  def thankyouPaid(tier: String) = MemberAction.async { implicit request =>
     StripeService.Customer.read(request.member.customerId).map { customer =>
       val response = for {
         subscription <- customer.subscription
@@ -52,18 +53,6 @@ trait Joiner extends Controller {
       response.getOrElse(NotFound)
     }
   }
-
-  def thankyouPatron() = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
-      val response = for {
-        subscription <- customer.subscription
-        card <- customer.card
-      } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
-
-      response.getOrElse(NotFound)
-    }
-  }
-
 }
 
 object Joiner extends Joiner

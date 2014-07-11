@@ -2,9 +2,8 @@
     @include rem((
         margin-bottom: $gs-baseline,
     ));
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 }
-
 
 .section-headline {
     @extend %section-header;

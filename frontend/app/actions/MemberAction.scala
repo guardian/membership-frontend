@@ -14,14 +14,12 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
 
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
-    val result = for {
-      authRequest <- authService.authenticatedRequestFor(request)
-      member <- MemberService.get(authRequest.user.id)
-    } yield {
-      block(MemberRequest[A](request, member, authRequest.user))
-    }
-
-    result.getOrElse(Future.successful(Forbidden)).map(NoCache(_))
+    authService.authenticatedRequestFor(request).map { authRequest =>
+      for {
+        member <- MemberService.get(authRequest.user.id)
+        result <- block(MemberRequest[A](request, member, authRequest.user))
+      } yield NoCache(result)
+    }.getOrElse(Future.successful(Forbidden))
   }
 }
 

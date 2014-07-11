@@ -13,6 +13,7 @@ $item-top-border-height: 2px;
         display: block !important;
     }
 }
+
 @mixin first-row($first-row-size) {
     .item:nth-child(-n+#{$first-row-size}) {
         margin-top: 0;
@@ -28,6 +29,7 @@ $item-top-border-height: 2px;
         }
     }
 }
+
 @mixin card-mobile($with-image: false) {
     .item__title {
         @include fs-headline(2, $size-only: true);
@@ -44,6 +46,7 @@ $item-top-border-height: 2px;
         @include card-mobile-image;
     }
 }
+
 @mixin card-mobile-image {
     @include image-meta;
     .item__title {
@@ -53,6 +56,7 @@ $item-top-border-height: 2px;
         ));
     }
 }
+
 @mixin card-half-width($with-image: false) {
     float: left;
     width: 50%;
@@ -82,11 +86,13 @@ $item-top-border-height: 2px;
         @include card-half-width-image;
     }
 }
+
 @mixin card-half-width-image {
     @include rem((
         min-height: gs-height(5)
     ));
 }
+
 @mixin card($with-image: false) {
     @include rem((
         width: gs-span(3) + $gs-gutter,
@@ -97,12 +103,14 @@ $item-top-border-height: 2px;
         @include card-mobile;
     }
 }
+
 @mixin card-image {
     @include rem((
         min-height: gs-height(6)
     ));
     @include image-meta;
 }
+
 @mixin card-double-width {
     float: left;
     @include rem((
@@ -126,6 +134,7 @@ $item-top-border-height: 2px;
         ));
     }
 }
+
 @mixin card-full-width {
     &.item--has-image {
         @include rem((
@@ -154,9 +163,10 @@ $item-top-border-height: 2px;
         padding-bottom: 0;
     }
 }
+
 @mixin vertical-item-separator {
     &:before {
-        content: "";
+        content: '';
         display: block;
         position: absolute;
         top: 0;
@@ -167,6 +177,7 @@ $item-top-border-height: 2px;
         border-left: 1px solid $c-neutral5;
     }
 }
+
 @mixin item--hide-tone-border {
     .item__link {
         border-top-width: 0 !important;
@@ -175,9 +186,12 @@ $item-top-border-height: 2px;
         margin-top: 0 !important;
     }
 }
+
 @mixin show-only-if-svg-is-supported {
     display: none;
-    .svg & { display: block; }
+    .svg & {
+        display: block;
+    }
 }
 
 @mixin hide-icon-in-title {
@@ -185,6 +199,8 @@ $item-top-border-height: 2px;
     .item--gallery .item__title--has-icon-mobile {
         padding-left: 0;
 
-        .i { display: none; }
+        .i {
+            display: none;
+        }
     }
 }
