@@ -10,9 +10,22 @@ class MembershipDowngradeTests extends BaseMembershipTest {
   feature("A user can downgrade") {
 
     scenarioWeb("30. A Partner can downgrade to a Friend") {
-
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
+      }
+      .when {
+        _.IChooseToBecomeAFriend
+      }
+      .then {
+        _.IAmAFriend
+      }
+    }
+
+  scenarioWeb("31. A Patron can downgrade to a Friend") {
+    implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAPatron
       }
       .when {
         _.IChooseToBecomeAFriend

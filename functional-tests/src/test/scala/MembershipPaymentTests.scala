@@ -15,6 +15,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
      I want to be able to pay a subscription
      */
     scenarioWeb("9. Non-logged in registered user purchase a subscription") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -28,6 +29,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("10. Logged in user can purchase a subscription") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -40,6 +42,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("11. A user who pays should be able to see the payment details") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -52,6 +55,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("20. User with incorrect card number cannot make a purchase") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -64,6 +68,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("21. User with no funds in account cannot make a purchase") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -76,6 +81,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("22. User with incorrect CVC in card cannot make a purchase") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -88,6 +94,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
     }
 
     scenarioWeb("24. User with invalid expiry date in card cannot make a purchase") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }

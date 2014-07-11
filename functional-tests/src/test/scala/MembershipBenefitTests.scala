@@ -9,7 +9,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
 
   feature("User gets benefits from being a member") {
 
-    scenarioWeb("25. Member gets a discount") {
+    scenarioWeb("25. Member gets a discount") { implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -22,6 +22,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
     }
 
     scenarioWeb("26. Discount gets compared to non-discounted price") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -36,6 +37,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
 
   feature("Membership tab") {
     scenarioWeb("28. Membership tab appears if you are a member") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -48,6 +50,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
     }
 
     scenarioWeb("29. Membership tab does not appear if you are not a member") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }

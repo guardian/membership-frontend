@@ -12,6 +12,7 @@ class MembershipEventTests extends BaseMembershipTest {
      I want to see a list of events
      */
     scenarioWeb("1. Logged in user sees event list") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -24,6 +25,7 @@ class MembershipEventTests extends BaseMembershipTest {
     }
 
     scenarioWeb("2. Non logged in user sees event list") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -43,6 +45,7 @@ class MembershipEventTests extends BaseMembershipTest {
      I want to see the details of an event
      */
     scenarioWeb("3. Logged in user sees details for an event") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -55,6 +58,7 @@ class MembershipEventTests extends BaseMembershipTest {
     }
 
     scenarioWeb("4. Non logged in user sees details for an event") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -67,6 +71,7 @@ class MembershipEventTests extends BaseMembershipTest {
     }
 
     scenarioWeb("5. Event details are the same as on the event provider") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -86,6 +91,7 @@ class MembershipEventTests extends BaseMembershipTest {
      I need to be logged in
      */
     scenarioWeb("6. Logged in user can purchase a ticket") {
+      implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
       }
@@ -98,6 +104,7 @@ class MembershipEventTests extends BaseMembershipTest {
     }
 
     scenarioWeb("7. Non logged in user has to login in order to purchase a ticket") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -110,6 +117,7 @@ class MembershipEventTests extends BaseMembershipTest {
     }
 
     scenarioWeb("27. Non-registered user can register and purchase a ticket") {
+      implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }

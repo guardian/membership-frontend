@@ -1,5 +1,5 @@
+import com.gu.automation.support.TestLogger
 import com.gu.membership.pages._
-import com.gu.support.{Assert, TestLogger}
 import org.openqa.selenium.{Cookie, WebDriver}
 
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
@@ -8,38 +8,32 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   val cardWithNoFunds = "4000000000000341"
 
   def IAmLoggedIn = {
-    logger.log("I am logged in")
     CookieHandler.login(driver)
     this
   }
 
   def IAmNotLoggedIn = {
-    logger.log("I am not logged in")
     // TODO move the data to a config file
     driver.get("https://membership.theguardian.com/")
     this
   }
 
   def ILand(implicit logger: TestLogger) = {
-    logger.log("I land on the page")
     this
   }
 
   def IGoToTheEventsPage = {
-    logger.log("I go to the events list page")
     new LandingPage(driver).clickEventsButton
     this
   }
 
   def TitleIsDisplayed = {
-    logger.log("Title is displayed")
     val title = new LandingPage(driver).getTitle()
     Assert.assert(title, "Membership")
     this
   }
 
   def ISeeAListOfEvents = {
-    logger.log("I see a list of events")
     val page = new EventsListPage(driver)
     val eventCount = page.getEventsListSize - 1
     Assert.assert(eventCount > 6, true, "There are 6 or more events")
@@ -59,13 +53,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnAnEvent = {
-    logger.log("I click on an event")
     new LandingPage(driver).clickEventsButton.clickLastEvent
     this
   }
 
   def ISeeTheEventDetails = {
-    logger.log("I see the event details")
     val page = new EventPage(driver)
     Assert.assertNotEmpty(page.getEventDescription)
     Assert.assertNotEmpty(page.getEventLocation)
@@ -76,7 +68,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def TheDetailsAreTheSameAsOnTheEventProvider = {
-    logger.log("The details are the same as on the event provider")
     val page = new EventPage(driver)
     val eventName = page.getEventName
     // assumes we are logged in
@@ -87,13 +78,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickThePurchaseButton = {
-    logger.log("I click the purchase button")
     new LandingPage(driver).clickEventsButton.clickLastEvent.clickBuyButton
     this
   }
 
   def ICanPurchaseATicket = {
-    logger.log("I can purchase a ticket")
     val loaded = new EventBritePage(driver).isPageLoaded
     Assert.assert(loaded, true, "Eventbrite page is loaded")
     this
@@ -220,6 +209,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IBecomeAPatron = {
+    new LandingPage(driver).clickJoinButton.clickBecomeAPatron.clickJoinButton
+    ICanPurchaseASubscription
+    this
+  }
+
   def ICanSeeTheMembershipTab = {
     IGoToIdentity
     val page = new IdentityEditPage(driver).clickMembershipTab
@@ -262,6 +257,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmLoggedInAsAPatron = {
+    IAmLoggedIn
+    IBecomeAPatron
+  }
+
   def IChooseToBecomeAFriend = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
       .clickBecomeAFriend.clickContinue
@@ -275,7 +275,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
   }
 
-  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2018")
+  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
 
   private def isInFuture(dateTime: String): Boolean = {
 //    val sdf = new SimpleDateFormat("d MMMM y, h:mmaa")
