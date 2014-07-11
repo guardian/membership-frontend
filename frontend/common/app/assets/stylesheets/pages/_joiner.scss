@@ -5,14 +5,6 @@ $large-card: 35px;
    Joiner
    ========================================================================== */
 
-.joiner-section {
-    width: 100%;
-    border-bottom: 1px solid #dfdfdf;
-    margin: $gs-gutter;
-    padding: $gs-gutter/2;
-    text-align: center;
-}
-
 .joiner-section--left-aligned {
     text-align: left;
 }
@@ -57,13 +49,7 @@ $large-card: 35px;
    Tier
    ========================================================================== */
 
-.benefits {
-    @include clearfix;
-}
-
 .benefits-list {
-    display: table;
-    width: 100%;
     text-align: center;
     padding: $gs-gutter;
     border-bottom: 1px solid #dfdfdf;
@@ -169,23 +155,32 @@ $large-card: 35px;
     padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
 }
 
-@include mq(tablet) {
+.benefits {
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
 
-    .joiner-section {
-        padding: $gs-gutter*2;
-    }
+@include mq(tablet) {
 
     .benefits-list {
         border: 1px solid #dfdfdf;
         height: gs-height(3);
-        float: left;
-        margin: $gs-gutter $gs-gutter $gs-gutter 0;
-        width: 22%;
+
+        flex-grow: 0;
+        flex-basis: 22%;
+        flex-direction: column;
+
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center;
     }
 
     .form-primary-container {
         float: left;
-        width: 48%;
+        width: 63%;
         margin-right: 2%;
     }
 
@@ -194,8 +189,8 @@ $large-card: 35px;
     }
 
     .benefits-list__item {
-        vertical-align: middle;
         display: table-cell;
+        vertical-align: middle;
     }
 
     .form-secondary-container {
@@ -203,7 +198,7 @@ $large-card: 35px;
         border-left: 1px solid #f1f1f1;
         padding: $gutter 0 0 $gutter*3;
         float: left;
-        width: 50%;
+        width: 35%;
     }
 
     .questions__list {
@@ -211,5 +206,3 @@ $large-card: 35px;
         float: left;
     }
 }
-
-
