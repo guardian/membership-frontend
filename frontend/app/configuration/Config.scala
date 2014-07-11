@@ -5,8 +5,6 @@ import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
 import model.Tier
-import model.Tier.Tier
-import model.Tier.Tier
 import play.api.mvc.Request
 import collection.convert.wrapAsScala._
 
