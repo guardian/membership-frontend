@@ -22,6 +22,7 @@ define(function () {
 
         /**
          * extract the time from the time string and return it in the following format 12:30am
+         * note this is converting 24 hour time to 12 hour time
          * @param utcTimeString
          * @returns {string}
          */
@@ -32,10 +33,11 @@ define(function () {
             var minutes = dateFromTimestamp.getMinutes();
             var suffix = hours >= 12 ? 'pm' : 'am';
 
-            var formattedHours = hours ? hours : 12;
-            var formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            // This covers the case of 0 (midnight)
+            var twelveHourTime = hours ? hours : 12;
+            var minutesWithLeadingZero = minutes < 10 ? '0' + minutes : minutes;
 
-            return formattedHours + ':' + formattedMinutes + suffix;
+            return twelveHourTime + ':' + minutesWithLeadingZero + suffix;
         };
 
         /**
