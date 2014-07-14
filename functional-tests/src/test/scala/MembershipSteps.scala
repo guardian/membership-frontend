@@ -123,7 +123,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     // TODO James Oram we don't really care what the numbers are here, but there will be a test for each tier
     val paidAmount = thankYouPage.getAmountPaidToday
     Assert.assertNotEmpty(paidAmount, "There paid amount should not be empty")
-    val nextPaymentAmount = thankYouPage.getMonthlyPayment
+    val nextPaymentAmount = thankYouPage.getPaymentAmount
     Assert.assertNotEmpty(nextPaymentAmount, "The next payment amount should not be empty")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assertNotEmpty(cardNumber, "The card number should not be empty")
@@ -139,7 +139,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val thankYouPage = pay
     val paidAmount = thankYouPage.getAmountPaidToday
     Assert.assert(paidAmount, "£15.00", "Should have paid £15")
-    val nextPaymentAmount = thankYouPage.getMonthlyPayment
+    val nextPaymentAmount = thankYouPage.getPaymentAmount
     Assert.assert(nextPaymentAmount, "£15.00", "Next payment should be £15")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assert(cardNumber.endsWith("4242"), true, "Should see correct card details")
@@ -282,9 +282,23 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     IBecomeAPatron
   }
 
+  def IAmLoggedInAsAFriend = {
+    IAmLoggedIn
+    IBecomeAFriend
+  }
+
   def IChooseToBecomeAFriend = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
       .clickBecomeAFriend.clickContinue
+    this
+  }
+
+  def IChooseToBecomeAPartner = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAPartner.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
+      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
+      .enterCardSecurityCode("566")
+    new UpgradePage(driver).clickSubmit
     this
   }
 
@@ -293,6 +307,15 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getCurrentPackage.equals("Friend plan"), false, "Current package should not be friend")
     Assert.assert(page.getEndDate, page.getStartDate, "The new date should be the same as the old date")
     Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
+  }
+
+  def IAmAPartner = {
+    val yearlyPayment = "£135.00"
+    val page = new ThankYouPage(driver)
+    Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
+    Assert.assert(page.getAmountPaidToday, yearlyPayment, "Amount paid today should be " + yearlyPayment)
+    Assert.assert(page.getPaymentAmount, yearlyPayment, "The yearly payment should be the same as the current payment")
+    Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
 
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
