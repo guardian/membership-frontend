@@ -302,6 +302,15 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IChooseToBecomeAPatron = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAPatron.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
+      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
+      .enterCardSecurityCode("566")
+    new UpgradePage(driver).clickSubmit
+    this
+  }
+
   def IAmAFriend = {
     val page = new DowngradeConfirmationPage(driver)
     Assert.assert(page.getCurrentPackage.equals("Friend plan"), false, "Current package should not be friend")
@@ -310,13 +319,21 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IAmAPartner = {
-    val yearlyPayment = "£135.00"
+    verifyTier("£135.00")
+  }
+
+  def IAmAPatron = {
+    verifyTier("£540.00")
+  }
+
+  private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
     Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
     Assert.assert(page.getAmountPaidToday, yearlyPayment, "Amount paid today should be " + yearlyPayment)
     Assert.assert(page.getPaymentAmount, yearlyPayment, "The yearly payment should be the same as the current payment")
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
+
 
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
 

@@ -50,6 +50,19 @@ class MembershipChangeTierTests extends BaseMembershipTest {
           _.IAmAPartner
         }
     }
+
+    scenarioWeb("35. A Partner can upgrade to a Patron") {
+      implicit driver =>
+        given {
+          MembershipSteps().IAmLoggedInAsAPartner
+        }
+        .when {
+          _.IChooseToBecomeAPatron
+        }
+        .then {
+          _.IAmAPatron
+        }
+    }
   }
 
   // cancel membership
