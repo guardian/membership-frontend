@@ -2,10 +2,13 @@
 
 @main("Join | Patron") {
 
-    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border ">
+    <section class="content-section">
         <h1 class="section-headline u-text-hyphenate">Purpose/Value</h1>
-        <h2 class="section-sub-headline u-text-hyphenate">Patron &#163;60</h2>
-        <p><a class="action action--inline-text action--join" href="/join/patron/payment">Join</a><a href="#whats-included" class="hidden-mobile">Whats Included</a></p>
+
+        <div class="action-inline-combo">
+            <h2 class="section-sub-headline u-text-hyphenate">Patron &#163;60</h2>
+            <a class="action action--inline-text action--join" href="/join/patron/payment">Join</a>
+        </div>
     </section>
 
     <section class="joiner-navigation hidden-mobile">
@@ -38,18 +41,18 @@
     <div class="separator"></div>
     <section id="whats-included">
         <h2>Whats Included</h2>
-        <ul class="benefits u-unstyled">
-            <li class="benefits-list">
+        <ul class="benefits u-unstyled l-row l-row--items-4">
+            <li class="benefits-list l-row__item">
                 <span class="benefits-list__item">Digital</span>
             </li>
-            <li class="benefits-list">
+            <li class="benefits-list l-row__item">
                 <span class="benefits-list__item">Community</span>
             </li>
-            <li class="benefits-list">
+            <li class="benefits-list l-row__item">
                 <span class="benefits-list__item">Live</span>
             </li>
-            <li class="benefits-list benefits-list--left-aligned">
-                <span class="benefits-list__item">Patron £60
+            <li class="benefits-list l-row__item">
+                <span class="benefits-list__item action-inline-combo action-inline-combo--nomargin">Patron £60
                     <a class="action action--join" href="/join/patron/payment">Join</a>
                 </span>
             </li>
