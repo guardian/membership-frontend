@@ -6,44 +6,45 @@
    ========================================================================== */
 
 html {
-  font-family: $serif;
+    font-family: $serif;
 
-  // Set baseline font size to 10px
-  // This is used as a baseline for rem (root ems) values
-  font-size: 62.5%;
+    // Set baseline font size to 10px
+    // This is used as a baseline for rem (root ems) values
+    font-size: 62.5%;
 
-  // For IE11 to do the math properly
-  // See http://bit.ly/1g4X0bX — thanks @7studio and @dawitti
-  font-size: calc(1em * .625);
+    // For IE11 to do the math properly
+    // See http://bit.ly/1g4X0bX — thanks @7studio and @dawitti
+    font-size: calc(1em * .625);
 }
+
 body {
-  color: $c-body;
-  font-size: 1.6em; // Bump font-size back up to 16px
-  line-height: 1.4;
+    color: $c-body;
+    font-size: 1.6em; // Bump font-size back up to 16px
+    line-height: 1.4;
 }
-
 
 /* Base headings
    ========================================================================== */
 
 h1, h2, h3, h4, h5, h6 {
-  color: $c-neutral1;
-  margin: 0;
+    color: $c-neutral1;
+    margin: 0;
 }
-
 
 /* Default type elements
    ========================================================================== */
 
 blockquote {
-  margin: 0;
+    margin: 0;
 }
+
 p {
-  margin-top: 0;
-  margin-bottom: ($gs-baseline/3)*2;
+    margin-top: 0;
+    margin-bottom: ($gs-baseline/3)*2;
 }
+
 h3 {
-  font-weight: normal;
-  margin-bottom: 7px;
-  @include fs-bodyCopy(3);
+    font-weight: normal;
+    margin-bottom: 7px;
+    @include fs-bodyCopy(3);
 }

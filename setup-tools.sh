@@ -6,3 +6,5 @@ sudo npm install -g grunt-cli
 
 sudo gem install sass
 
+sudo gem install scss-lint
+
