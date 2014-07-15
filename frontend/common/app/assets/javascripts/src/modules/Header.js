@@ -8,6 +8,7 @@ define([
 
     var config = {
         classes: {
+            HTML_ELEMENT: 'html',
             HEADER_JOIN_US_CTA: '.js-header-join-us-cta',
             SECTIONS_POP_UP_JOIN_US_CTA: '.js-sections-nav-join-us',
             SECTIONS_POP_UP_NAV: '.js-sections-nav-popup',
@@ -49,22 +50,63 @@ define([
      * Event listeners for the identity menu and the hamburger menu
      */
     Header.prototype.addListeners = function () {
+        var self = this;
         var user = this.user;
 
         bean.on(config.DOM.MENU_ICON[0], 'click', function (e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
+
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
             config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-hidden');
+
+            if(config.DOM.SECTIONS_POP_UP_NAV.hasClass('is-hidden')) {
+                self.removeCloseMenuListener();
+            } else {
+                self.addCloseMenuListener();
+            }
         });
 
         bean.on(config.DOM.IDENTITY_ICON[0], 'click', function (e) {
             if (user) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
+
                 config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
                 config.DOM.IDENTITY_POP_UP_NAV.toggleClass('is-hidden');
                 config.DOM.IDENTITY_ICON.toggleClass('menu-item--active');
+
+                if(config.DOM.IDENTITY_POP_UP_NAV.hasClass('is-hidden')) {
+                    self.removeCloseMenuListener();
+                } else {
+                    self.addCloseMenuListener();
+                }
             }
         });
+    };
+
+    /**
+     * add a listener on the html element when a menu has been opened,
+     * this will close the menu automatically
+     */
+    Header.prototype.addCloseMenuListener = function () {
+
+        var htmlElement = config.DOM.HTML_ELEMENT;
+
+        bean.on(htmlElement[0], 'click', function () {
+            config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
+            config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
+        });
+    };
+
+    /**
+     * remove the html listener when the menus are closed
+     */
+    Header.prototype.removeCloseMenuListener = function () {
+
+        var htmlElement = config.DOM.HTML_ELEMENT;
+
+        bean.off(htmlElement[0], 'click');
     };
 
     /**
