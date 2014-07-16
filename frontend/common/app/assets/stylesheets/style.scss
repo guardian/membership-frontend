@@ -1,33 +1,22 @@
-@charset "UTF-8";
+@charset 'UTF-8';
 
-@import "head.common";
-
+@import 'head.common';
 /* ==========================================================================
    Facia
    ========================================================================== */
-@import "module/facia/_items";
-@import "module/facia/_row-pattern";
-
-
+@import 'module/facia/_items';
+@import 'module/facia/_row-pattern';
 /* ==========================================================================
    Memebership components
    ========================================================================== */
-
-@import "components/crumb";
-@import "components/action";
-
-
+@import 'components/action';
 /* ==========================================================================
    Memebership pages
    ========================================================================== */
-
-@import "pages/events";
-@import "pages/joiner";
-@import "pages/tier";
-
-
+@import 'pages/events';
+@import 'pages/joiner';
+@import 'pages/tier';
 /* ==========================================================================
    Webfonts pages
    ========================================================================== */
-
-@import "webfonts";
+@import 'webfonts';

@@ -27,12 +27,12 @@ li.event {
     text-align: left;
     display: block;
     margin-bottom: $gs-gutter;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     padding: .125em;
     @include border-radius(.2em);
 
     &:hover {
-        background-color: #FFFFFF;
+        background-color: #ffffff;
     }
 
     .event__image {
@@ -106,38 +106,40 @@ div.event {
 
         .event__price-note,
         .event__sale_ends_note,
-        .event__sale_ends_time{
+        .event__sale_ends_time {
             @include fs-textsans(4);
             display: inline-block;
         }
+    }
+}
 
-        .event__description {
-            h2 {
-                @include fs-headline(2);
-                margin: 8px 0 16px 0;
-            }
-            p, li {
-                @include fs-bodyCopy(3);
-            }
-            ol,
-            ul {
-              list-style-position: inside;
-                padding: 0;
-                margin: 0 0 8px 0;
-            }
+.event__description {
+    h2 {
+        @include fs-headline(2);
+        margin: 8px 0 16px;
+    }
+    p, li {
+        @include fs-bodyCopy(3);
+    }
+    ol,
+    ul {
+        list-style-position: inside;
+        padding: 0;
+        margin: 0 0 8px;
+    }
 
-            blockquote {
-                p {
-                    margin: 0;
-                }
-                @include rem((
-                    padding-left: 14px
-                ));
-                border-left: 2px solid #cfcfcd;
-                font-style: italic;
-                margin: 0 0 16px 0;
-            }
-        }
+    blockquote {
+        @include rem((
+            padding-left: 14px
+        ));
+
+        border-left: 2px solid #cfcfcd;
+        font-style: italic;
+        margin: 0 0 16px;
+    }
+
+    blockquote p {
+        margin: 0;
     }
 }
 
@@ -150,11 +152,11 @@ div.event {
 }
 
 .event__content__inner {
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
 }
 
 .event__content__inner--sub {
-    background-color: #E1E1E1;
+    background-color: #e1e1e1;
     margin-bottom: 20px;
 }
 
@@ -168,7 +170,6 @@ div.event {
 .item__meta {
     position: relative;
     overflow: hidden;
-    bottom: -10px;
 }
 
 .inner-container {
@@ -228,7 +229,7 @@ div.event {
 
 .facia-slice__item:before,
 .events-list__item {
-    @include mq($to:tablet) {
+    @include mq($to: tablet) {
         border-left: 1px solid #ffffff !important;
     }
 }
@@ -279,7 +280,7 @@ div.event {
     top: 0;
     padding: 8px 14px;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .event-status--sold-out {

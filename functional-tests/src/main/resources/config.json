@@ -1,0 +1,10 @@
+{
+  "local": {
+    "selenium"   : "http://localhost:4444/wd/hub",
+    "browser"    : "chrome",
+    "login"      : "https://profile.thegulocal.com/signin",
+    "user"       : "dummytest@guardian.co.uk",
+    "password"   : "dummypassword",
+    "membership" : "https://mem.thegulocal.com/"
+  }
+}

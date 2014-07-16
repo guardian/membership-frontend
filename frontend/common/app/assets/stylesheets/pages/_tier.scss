@@ -19,7 +19,14 @@ $current-indicator: rem(47px);
 }
 
 .package-container__header {
-    padding: rem($gs-gutter);
+    @include rem((
+        padding-bottom: $gs-gutter,
+    ));
+    @include mq(tablet) {
+        @include rem((
+            margin-bottom: 40px
+        ));
+    }
     border-bottom: 1px dotted #333333;
 }
 
@@ -54,7 +61,7 @@ $current-indicator: rem(47px);
         margin: 0 $gs-baseline/2 0
     ));
     @include mq(desktop) {
-      margin-top: -$current-indicator;
+        margin-top: -$current-indicator;
     }
 }
 
@@ -93,7 +100,7 @@ $current-indicator: rem(47px);
         @include rem((
             margin: $gs-baseline 0
         ));
-         @include faux-bullet-point(#333333, $right-space: 4px);
+        @include faux-bullet-point(#333333, $right-space: 4px);
 
     }
 }
@@ -112,14 +119,14 @@ $current-indicator: rem(47px);
 .upgrade__payment-label {
     display: block;
     position: relative;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
     @include border-radius(5px);
 
     span {
         display: block;
         @include fs-textsans(4);
-        margin: 0 0 $gs-baseline 0;
+        margin: 0 0 $gs-baseline;
         &.payment-label__title {
             @include fs-headline(2);
         }

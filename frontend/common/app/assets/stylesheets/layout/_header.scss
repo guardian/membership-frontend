@@ -9,7 +9,7 @@
         float: left;
     }
     .header__secondary {
-        float: right
+        float: right;
     }
     .header__menu {
         display: none;
@@ -22,7 +22,7 @@
         padding-top: 0,
         margin-right: 15px
     ));
-    @include mq(tablet){
+    @include mq(tablet) {
         @include rem((
             padding-top: 8px
         ));
@@ -36,9 +36,9 @@
 }
 
 .menu-item--last {
-    border: none;
+    border: 0;
     margin: 0;
-    @include mq(tablet){
+    @include mq(tablet) {
         @include rem((
             padding-left: 13px,
             border-left: 1px solid $white
@@ -78,7 +78,7 @@
 
 /* Media Queries
    ========================================================================== */
-@include mq(tablet){
+@include mq(tablet) {
     .header {
         .header__inner {
             padding: 0 $gs-gutter;
@@ -90,7 +90,7 @@
     }
 }
 
-@include mq(wide){
+@include mq(wide) {
     .header {
         .header__inner {
             padding: 0 ($gs-gutter + $gs-column-width);

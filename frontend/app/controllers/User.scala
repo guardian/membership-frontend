@@ -38,12 +38,9 @@ trait User extends Controller {
   def basicDetails(request: MemberRequest[_]) = {
     val member = request.member
 
-    implicit object JodaDateTimeWriter extends Writes[DateTime] {
-      val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+    val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+    implicit val writesDateTime = Writes[DateTime] { dt => JsString(dt.toString(standardFormat)) }
 
-      def writes(dateTime: DateTime) = JsString(dateTime.toString(standardFormat))
-    }
-    
     Json.obj(
       "userId" -> member.userId,
       "tier" -> member.tier.toString,
@@ -51,15 +48,19 @@ trait User extends Controller {
     )
   }
 
-  def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) =
-     Json.obj(
-       "subscription" -> Json.obj(
+  def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) = {
+    val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+    implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
+
+    Json.obj(
+      "subscription" -> Json.obj(
         "start" -> subscription.start,
         "end" -> subscription.current_period_end,
         "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount),
         "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
-       )
-     )
+      )
+    )
+  }
 }
 
 object User extends User

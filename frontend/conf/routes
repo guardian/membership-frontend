@@ -46,6 +46,10 @@ GET         /tier/change/:tier           controllers.TierController.upgrade(tier
 POST        /tier/change/:tier           controllers.TierController.upgradeConfirm(tier)
 GET         /tier/change/:tier/summary   controllers.Joiner.thankyouPaid(tier)
 
+# Information
+GET         /help                        controllers.Info.help
+GET         /feedback                    controllers.Info.feedback
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                controllers.Assets.at(path="/public", file)
 

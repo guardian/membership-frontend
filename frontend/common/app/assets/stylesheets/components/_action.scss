@@ -126,3 +126,18 @@
         float: right;
     }
 }
+
+// Heading/Text with an action button inline next to it
+.action-inline-combo {
+    margin-bottom: $gs-baseline;
+    &.action-inline-combo--nomargin {
+        margin: 0;
+    }
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+        margin-top: 0;
+        margin-bottom: 0;
+
+    }
+}
