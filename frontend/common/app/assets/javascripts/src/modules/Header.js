@@ -8,7 +8,7 @@ define([
 
     var config = {
         classes: {
-            HTML_ELEMENT: 'html',
+            DOCUMENT_ELEMENT: 'html',
             HEADER_JOIN_US_CTA: '.js-header-join-us-cta',
             SECTIONS_POP_UP_JOIN_US_CTA: '.js-sections-nav-join-us',
             SECTIONS_POP_UP_NAV: '.js-sections-nav-popup',
@@ -60,11 +60,7 @@ define([
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
             config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-hidden');
 
-            if(config.DOM.SECTIONS_POP_UP_NAV.hasClass('is-hidden')) {
-                self.removeCloseMenuListener();
-            } else {
-                self.addCloseMenuListener();
-            }
+            self.setMenuListener.call(self, config.DOM.SECTIONS_POP_UP_NAV);
         });
 
         bean.on(config.DOM.IDENTITY_ICON[0], 'click', function (e) {
@@ -76,13 +72,17 @@ define([
                 config.DOM.IDENTITY_POP_UP_NAV.toggleClass('is-hidden');
                 config.DOM.IDENTITY_ICON.toggleClass('menu-item--active');
 
-                if(config.DOM.IDENTITY_POP_UP_NAV.hasClass('is-hidden')) {
-                    self.removeCloseMenuListener();
-                } else {
-                    self.addCloseMenuListener();
-                }
+                self.setMenuListener.call(self, config.DOM.IDENTITY_POP_UP_NAV);
             }
         });
+    };
+
+    Header.prototype.setMenuListener = function (navElement) {
+        if(navElement.hasClass('is-hidden')) {
+            this.removeCloseMenuListener();
+        } else {
+            this.addCloseMenuListener();
+        }
     };
 
     /**
@@ -90,10 +90,7 @@ define([
      * this will close the menu automatically
      */
     Header.prototype.addCloseMenuListener = function () {
-
-        var htmlElement = config.DOM.HTML_ELEMENT;
-
-        bean.on(htmlElement[0], 'click', function () {
+        bean.on(config.DOM.DOCUMENT_ELEMENT[0], 'click', function () {
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
             config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
         });
@@ -103,10 +100,7 @@ define([
      * remove the html listener when the menus are closed
      */
     Header.prototype.removeCloseMenuListener = function () {
-
-        var htmlElement = config.DOM.HTML_ELEMENT;
-
-        bean.off(htmlElement[0], 'click');
+        bean.off(config.DOM.DOCUMENT_ELEMENT[0], 'click');
     };
 
     /**
