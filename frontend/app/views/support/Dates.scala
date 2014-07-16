@@ -19,7 +19,7 @@ object Dates {
   def prettyDate(dt: DateTime): String = dt.toString("dd MMMMM YYYY")
 
   def prettyDateWithTime(dt: DateTime): String =
-    prettyDate(dt) + dt.toString(", HH:mm ") + dt.toString("a").toLowerCase
+    prettyDate(dt) + dt.toString(", h:mm ") + dt.toString("a").toLowerCase
 
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
 
