@@ -5,9 +5,9 @@ object Dependencies {
 
   //versions
   val nScalaTimeVersion = "1.0.0"
-  val akkaVersion = "2.0.0"
-  val identityCookieVersion = "3.4.0"
-  val identityModelVersion = "3.4.0"
+  val akkaVersion = "2.2.0"
+  val identityCookieVersion = "3.40"
+  val identityModelVersion = "3.40"
   val awsScalaVersion = "0.2.1"
   val scalaUriVersion ="0.4.1"
 
