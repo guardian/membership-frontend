@@ -34,7 +34,7 @@ define(function () {
             var suffix = hours >= 12 ? 'pm' : 'am';
 
             // This covers the case of 0 (midnight)
-            var twelveHourTime = hours ? hours : 12;
+            var twelveHourTime = (hours % 12) || 12;
             var minutesWithLeadingZero = minutes < 10 ? '0' + minutes : minutes;
 
             return twelveHourTime + ':' + minutesWithLeadingZero + suffix;
