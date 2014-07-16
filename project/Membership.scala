@@ -24,12 +24,11 @@ trait Membership {
     ScoverageSbtPlugin.ScoverageKeys.excludedPackages in ScoverageSbtPlugin.scoverage := "<empty>;Reverse.*;Routes"
   )
 
-  def commonSettings = Seq(
+  val commonSettings = Seq(
     organization := "com.gu",
     version := appVersion,
     scalaVersion := "2.10.4",
     resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
-    libraryDependencies ++= frontendDependencies,
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ coveragePlugin
@@ -40,8 +39,9 @@ trait Membership {
 }
 
 object Membership extends Build with Membership {
-  val frontend = app("frontend").settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
+  val frontend = app("frontend")
+                .settings(libraryDependencies ++= frontendDependencies: _*)
+                .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
 
   val root = Project("root", base=file(".")).aggregate(frontend)
 }
-
