@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+set -e
+
 [ -d target ] && rm -rf target
 mkdir target
-cd $(dirname $0)/target
-
+cd target
 mkdir -p packages/keys
 
 for USER in $(cat ../users.txt)
