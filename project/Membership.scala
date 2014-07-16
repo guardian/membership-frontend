@@ -20,10 +20,6 @@ trait Membership {
     buildInfoPackage := "app"
   )
 
-  def coveragePlugin = ScoverageSbtPlugin.instrumentSettings ++ Seq(
-    ScoverageSbtPlugin.ScoverageKeys.excludedPackages in ScoverageSbtPlugin.scoverage := "<empty>;Reverse.*;Routes"
-  )
-
   val commonSettings = Seq(
     organization := "com.gu",
     version := appVersion,
@@ -31,7 +27,7 @@ trait Membership {
     resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
-  ) ++ buildInfoPlugin ++ playArtifactDistSettings ++ coveragePlugin
+  ) ++ buildInfoPlugin ++ playArtifactDistSettings
 
   def app(name: String) = Project(name, file(name)).enablePlugins(PlayScala)
     .settings(commonSettings: _*)
