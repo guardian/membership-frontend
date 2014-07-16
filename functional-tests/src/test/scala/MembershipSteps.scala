@@ -1,5 +1,5 @@
+import com.gu.automation.support.TestLogger
 import com.gu.membership.pages._
-import com.gu.support.{Assert, TestLogger}
 import org.openqa.selenium.{Cookie, WebDriver}
 
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
@@ -8,38 +8,32 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   val cardWithNoFunds = "4000000000000341"
 
   def IAmLoggedIn = {
-    logger.log("I am logged in")
     CookieHandler.login(driver)
     this
   }
 
   def IAmNotLoggedIn = {
-    logger.log("I am not logged in")
     // TODO move the data to a config file
     driver.get("https://membership.theguardian.com/")
     this
   }
 
   def ILand(implicit logger: TestLogger) = {
-    logger.log("I land on the page")
     this
   }
 
   def IGoToTheEventsPage = {
-    logger.log("I go to the events list page")
     new LandingPage(driver).clickEventsButton
     this
   }
 
   def TitleIsDisplayed = {
-    logger.log("Title is displayed")
     val title = new LandingPage(driver).getTitle()
     Assert.assert(title, "Membership")
     this
   }
 
   def ISeeAListOfEvents = {
-    logger.log("I see a list of events")
     val page = new EventsListPage(driver)
     val eventCount = page.getEventsListSize - 1
     Assert.assert(eventCount > 6, true, "There are 6 or more events")
@@ -59,13 +53,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnAnEvent = {
-    logger.log("I click on an event")
     new LandingPage(driver).clickEventsButton.clickLastEvent
     this
   }
 
   def ISeeTheEventDetails = {
-    logger.log("I see the event details")
     val page = new EventPage(driver)
     Assert.assertNotEmpty(page.getEventDescription)
     Assert.assertNotEmpty(page.getEventLocation)
@@ -76,7 +68,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def TheDetailsAreTheSameAsOnTheEventProvider = {
-    logger.log("The details are the same as on the event provider")
     val page = new EventPage(driver)
     val eventName = page.getEventName
     // assumes we are logged in
@@ -87,13 +78,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickThePurchaseButton = {
-    logger.log("I click the purchase button")
     new LandingPage(driver).clickEventsButton.clickLastEvent.clickBuyButton
     this
   }
 
   def ICanPurchaseATicket = {
-    logger.log("I can purchase a ticket")
     val loaded = new EventBritePage(driver).isPageLoaded
     Assert.assert(loaded, true, "Eventbrite page is loaded")
     this
@@ -134,7 +123,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     // TODO James Oram we don't really care what the numbers are here, but there will be a test for each tier
     val paidAmount = thankYouPage.getAmountPaidToday
     Assert.assertNotEmpty(paidAmount, "There paid amount should not be empty")
-    val nextPaymentAmount = thankYouPage.getMonthlyPayment
+    val nextPaymentAmount = thankYouPage.getPaymentAmount
     Assert.assertNotEmpty(nextPaymentAmount, "The next payment amount should not be empty")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assertNotEmpty(cardNumber, "The card number should not be empty")
@@ -150,7 +139,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val thankYouPage = pay
     val paidAmount = thankYouPage.getAmountPaidToday
     Assert.assert(paidAmount, "£15.00", "Should have paid £15")
-    val nextPaymentAmount = thankYouPage.getMonthlyPayment
+    val nextPaymentAmount = thankYouPage.getPaymentAmount
     Assert.assert(nextPaymentAmount, "£15.00", "Next payment should be £15")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assert(cardNumber.endsWith("4242"), true, "Should see correct card details")
@@ -220,11 +209,37 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
-  def ICanSeeTheMembershipTab = {
+  def IBecomeAPatron = {
+    new LandingPage(driver).clickJoinButton.clickBecomeAPatron.clickJoinButton
+    ICanPurchaseASubscription
+    this
+  }
+
+  def IBecomeAFriend = {
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinButton
+    this
+  }
+
+  def ICanSeeTheMembershipTabForAPartner = {
+   ICanSeeTheMembershipTab("partner", "15.00")
+  }
+
+  def ICanSeeTheMembershipTabForAPatron = {
+    ICanSeeTheMembershipTab("patron", "60.00")
+  }
+
+  def ICanSeeTheMembershipTabForFriend = {
     IGoToIdentity
     val page = new IdentityEditPage(driver).clickMembershipTab
-    Assert.assert(page.getMembershipTier.toLowerCase.contains("partner"), true, "Membership plan should be partner")
-    Assert.assert(page.getPaymentCost, "15.00", "Cost should be £15")
+    Assert.assert(page.getMembershipTier.toLowerCase.contains("friend"), true, "Membership plan should be friend")
+    Assert.assert(page.getPaymentCost, "FREE", "Cost should be £FREE")
+  }
+
+  def ICanSeeTheMembershipTab(tier: String, price: String) = {
+    IGoToIdentity
+    val page = new IdentityEditPage(driver).clickMembershipTab
+    Assert.assert(page.getMembershipTier.toLowerCase.contains(tier), true, "Membership plan should be " + tier)
+    Assert.assert(page.getPaymentCost, price, "Cost should be £" + price)
     Assert.assert(page.getCardDetails.endsWith("4242"), true, "Card should be correct")
     Assert.assertNotEmpty(page.getStartDate, "Start date should not be empty")
     this
@@ -262,9 +277,37 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmLoggedInAsAPatron = {
+    IAmLoggedIn
+    IBecomeAPatron
+  }
+
+  def IAmLoggedInAsAFriend = {
+    IAmLoggedIn
+    IBecomeAFriend
+  }
+
   def IChooseToBecomeAFriend = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
       .clickBecomeAFriend.clickContinue
+    this
+  }
+
+  def IChooseToBecomeAPartner = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAPartner.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
+      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
+      .enterCardSecurityCode("566")
+    new UpgradePage(driver).clickSubmit
+    this
+  }
+
+  def IChooseToBecomeAPatron = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAPatron.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
+      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
+      .enterCardSecurityCode("566")
+    new UpgradePage(driver).clickSubmit
     this
   }
 
@@ -275,7 +318,24 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
   }
 
-  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2018")
+  def IAmAPartner = {
+    verifyTier("£135.00")
+  }
+
+  def IAmAPatron = {
+    verifyTier("£540.00")
+  }
+
+  private def verifyTier(yearlyPayment: String) = {
+    val page = new ThankYouPage(driver)
+    Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
+    Assert.assert(page.getAmountPaidToday, yearlyPayment, "Amount paid today should be " + yearlyPayment)
+    Assert.assert(page.getPaymentAmount, yearlyPayment, "The yearly payment should be the same as the current payment")
+    Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
+  }
+
+
+  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
 
   private def isInFuture(dateTime: String): Boolean = {
 //    val sdf = new SimpleDateFormat("d MMMM y, h:mmaa")

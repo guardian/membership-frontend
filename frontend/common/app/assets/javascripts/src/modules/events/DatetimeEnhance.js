@@ -21,15 +21,35 @@ define(function () {
         };
 
         /**
+         * extract the time from the time string and return it in the following format 12:30am
+         * note this is converting 24 hour time to 12 hour time
+         * @param utcTimeString
+         * @returns {string}
+         */
+        DatetimeEnhance.prototype.extractEventTime = function (utcTimeString) {
+
+            var dateFromTimestamp = this.createDateFromUTC(utcTimeString);
+            var hours = dateFromTimestamp.getHours();
+            var minutes = dateFromTimestamp.getMinutes();
+            var suffix = hours >= 12 ? 'pm' : 'am';
+
+            // This covers the case of 0 (midnight)
+            var twelveHourTime = hours ? hours : 12;
+            var minutesWithLeadingZero = minutes < 10 ? '0' + minutes : minutes;
+
+            return twelveHourTime + ':' + minutesWithLeadingZero + suffix;
+        };
+
+        /**
          *
          * @param timeDifference
          * @returns {*}
          */
-        DatetimeEnhance.prototype.createEnhancedTimeString = function (timeDifference) {
+        DatetimeEnhance.prototype.createEnhancedTimeString = function (timeDifference, utcTimeString) {
 
             var timeLeft,
                 saleEnd = this.saleEndTimeElement.innerHTML,
-                saleEndTime = saleEnd.split(',')[1].replace(/\s/g, ''),
+                saleEndTime = this.extractEventTime(utcTimeString),
                 config = this.config;
 
             if (timeDifference.isToday) {
@@ -57,13 +77,13 @@ define(function () {
          *
          * @param timeString
          */
-        DatetimeEnhance.prototype.insertEnhancedTimeString = function (timeString) {
+        DatetimeEnhance.prototype.insertEnhancedTimeString = function (timeStringDetail) {
 
             var config = this.config;
 
-            if (timeString.timeLeft) {
-                this.saleEndTextElement.innerHTML = timeString.timeLeft;
-                this.saleEndTimeElement.innerHTML = config.string.OPEN_BRACKET + timeString.saleEnd + config.string.CLOSED_BRACKET;
+            if (timeStringDetail.timeLeft) {
+                this.saleEndTextElement.innerHTML = timeStringDetail.timeLeft;
+                this.saleEndTimeElement.innerHTML = config.string.OPEN_BRACKET + timeStringDetail.saleEnd + config.string.CLOSED_BRACKET;
             }
         };
 
@@ -71,11 +91,12 @@ define(function () {
          *
          * @param timestamp
          * @returns {Date}
+         * The Eventbrite api appears to be sending a zulu time "2014-06-10T17:30:00.000Z" which is displayed on
+         * their site as a BST time for sale end. We are not treating this time as a Zulu time we are treating it as BST
+         * this will need refactoring if eventbrite correct their api.
          */
         DatetimeEnhance.prototype.createDateFromUTC = function (utcTimeString) {
-            /* The Eventbrite api appears to be sending a zulu time "2014-06-10T17:30:00.000Z" which is displayed on
-            their site as a BST time for sale end. We are not treating this time as a Zulu time we are treating it as BST
-            this will need refactoring if eventbrite correct their api */
+
             var dateTimeArray = utcTimeString.slice(0, -1).split('T'),
                 dateArray = dateTimeArray[0].split('-'),
                 timeArray = dateTimeArray[1].split(':'),
@@ -189,9 +210,9 @@ define(function () {
 
                 var utcTimeString = this.saleEndTimeElement.getAttribute('datetime'),
                     timeDifference = this.calculateTimeDifference(utcTimeString),
-                    timeString = this.createEnhancedTimeString(timeDifference);
+                    timeStringDetail = this.createEnhancedTimeString(timeDifference, utcTimeString);
 
-                this.insertEnhancedTimeString(timeString);
+                this.insertEnhancedTimeString(timeStringDetail);
             }
         };
 

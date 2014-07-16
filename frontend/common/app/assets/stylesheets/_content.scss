@@ -1,7 +1,7 @@
 .content__headline {
     @include fs-headline(4);
     @include rem((
-        padding-bottom: $gs-baseline*2,
+        padding-bottom: $gs-baseline,
         padding-top: $gs-baseline/2
     ));
 
@@ -11,10 +11,6 @@
     @include mq(tablet) {
         -webkit-font-smoothing: antialiased;
         @include fs-headline(7, true);
-        @include rem((
-            padding-bottom: $gs-row-height,
-            padding-top: $gs-baseline/6
-        ));
         border-top: 0;
     }
     a {
@@ -35,7 +31,6 @@
 
 .content__container {
     @include rem((
-        padding-top: $gs-baseline,
         margin-bottom: $gs-gutter
     ));
 }
@@ -46,12 +41,6 @@
 
 .content__container--border-dark {
     border-top: 1px dotted #333333;
-}
-
-.content__section {
-    @include rem((
-        padding-top: $gs-baseline
-    ));
 }
 
 .content__footer {
