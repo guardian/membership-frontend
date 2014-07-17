@@ -9,7 +9,7 @@ import com.gu.scalaforce.Scalaforce
 import play.api.mvc.{Action, Controller}
 import play.api.data._
 import play.api.data.Forms._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WS
 import play.api.Play.current
 
@@ -50,4 +50,14 @@ object Testforce extends Scalaforce {
   val apiUsername = config.getString("salesforce.api.username")
   val apiPassword = config.getString("salesforce.api.password")
   val apiToken = config.getString("salesforce.api.token")
+
+  def login(endpoint: String, params: Seq[(String, String)]) =
+    WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
+
+  def get(endpoint: String) =
+    WS.url(apiURL + endpoint).withHeaders("Authoriation" -> s"Bearer token").get()
+
+  def patch(endpoint: String, body: JsValue) =
+    WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer token").patch(body)
+
 }
