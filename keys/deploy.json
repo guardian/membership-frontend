@@ -1,0 +1,19 @@
+{
+    "defaultStacks": ["membership", "memb-masterclasses"],
+    "packages": {
+        "keys": {
+            "type": "aws-s3",
+            "data": {
+            "bucket": "membership-dist",
+            "cacheControl": "private",
+            "prefixPackage": false,
+            "prefixStage": false
+            }
+        }
+    },
+    "recipes": {
+        "default": {
+        "actions": [ "keys.uploadStaticFiles" ]
+        }
+    }
+}
