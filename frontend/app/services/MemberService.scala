@@ -145,7 +145,7 @@ object MemberService extends MemberService {
       WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
 
     def get(endpoint: String) =
-      WS.url(apiURL + endpoint).withHeaders("Authoriation" -> s"Bearer ${accessToken.get()}").get()
+      WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").get()
 
     def patch(endpoint: String, body: JsValue) =
       WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").patch(body)
