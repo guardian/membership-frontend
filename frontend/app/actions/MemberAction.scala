@@ -16,8 +16,10 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
-        member <- MemberService.get(authRequest.user.id)
-        result <- block(MemberRequest[A](request, member, authRequest.user))
+        memberOpt <- MemberService.get(authRequest.user.id)
+        result <- memberOpt.map { member =>
+          block(MemberRequest[A](request, member, authRequest.user))
+        }.getOrElse(Future.successful(Forbidden))
       } yield NoCache(result)
     }.getOrElse(Future.successful(Forbidden))
   }
