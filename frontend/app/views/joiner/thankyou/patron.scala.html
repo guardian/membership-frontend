@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)(implicit request: play.api.mvc.Request[_])
+@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
 
 @main("Thankyou | " + subscription.plan.name) {
 

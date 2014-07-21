@@ -32,6 +32,7 @@ define([
     Header.prototype.init = function() {
 
         this.cacheDomElements();
+        this.appendLocationDetailToIdentityReturnUrl();
         this.populateUserDetails();
         this.addListeners();
     };
@@ -124,6 +125,13 @@ define([
             config.DOM.SECTIONS_POP_UP_JOIN_US_CTA.removeClass('u-h');
             config.DOM.SECTIONS_POP_UP_PAGE_LIST.removeClass('nav--top-border-off');
         }
+    };
+
+    Header.prototype.appendLocationDetailToIdentityReturnUrl = function () {
+        var windowLocation = window.location;
+        config.DOM.IDENTITY_ICON.attr('href',
+                config.DOM.IDENTITY_ICON.attr('href') + windowLocation.pathname + windowLocation.search
+        );
     };
 
     return Header;
