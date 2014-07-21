@@ -19,7 +19,7 @@ trait Joiner extends Controller {
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      done <- MemberService.put(Member.friend(request.user.id, Tier.Friend))
+      member <- MemberService.insert(request.user.id, Member.NO_CUSTOMER_ID, Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 

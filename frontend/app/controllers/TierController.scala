@@ -103,7 +103,7 @@ trait UpgradeTier {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberService.put(request.member.copy(tier = tier, customerId = customer.id))
+      MemberService.update(request.member.copy(tier = tier, customerId = customer.id))
       Ok("")
     }
   }

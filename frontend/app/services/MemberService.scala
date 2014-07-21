@@ -18,6 +18,8 @@ import com.gu.scalaforce.Scalaforce
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
 import configuration.Config
+import model.Tier.Tier
+import model.Tier
 
 case class MemberNotFound(userId: String) extends Throwable {
   override def getMessage: String = s"Member with ID $userId not found"
@@ -41,7 +43,7 @@ abstract class MemberService {
       (JsPath \ Keys.CUSTOMER_ID).read[String]
     )((userId, tier, customerId) => Member(userId, tier, customerId, None))
 
-  def put(member: Member): Future[Member] = {
+  def update(member: Member): Future[Member] = {
     for {
       result <- salesforce.patch(
         contactURL(Keys.USER_ID, member.userId),
@@ -52,6 +54,19 @@ abstract class MemberService {
         )
       )
     } yield member
+  }
+
+  def insert(userId: String, customerId: String, tier: Tier): Future[Member] = {
+    for {
+      result <- salesforce.patch(
+        contactURL(Keys.USER_ID, userId),
+        Json.obj(
+          Keys.CUSTOMER_ID -> customerId,
+          Keys.LAST_NAME -> "LAST NAME",
+          Keys.TIER -> tier.toString
+        )
+      )
+    } yield Member(userId, tier, customerId, None)
   }
 
   private def getMember(key: String, id: String): Future[Member] = {

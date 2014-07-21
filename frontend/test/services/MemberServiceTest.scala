@@ -15,8 +15,8 @@ class MemberServiceTest extends Specification {
 
   "MemberServiceTest" should {
 
-    "put a member" in TestMemberService { service =>
-      service.put(Member("userId", Tier.Partner, "customerId"))
+    "update a member" in TestMemberService { service =>
+      service.update(Member("userId", Tier.Partner, "customerId"))
 
       service.lastRequest mustEqual RequestInfo(
         "PATCH",
