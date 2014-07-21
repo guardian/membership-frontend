@@ -1,6 +1,7 @@
 @(currentTier: model.Tier.Tier)
 
 @import model.Tier
+@import configuration.Config
 
 @main("Cancel Tier") {
 
@@ -26,44 +27,21 @@
                 <div class="package package--current">
                     <div class="package__current-indicator">This is what you'll be missing</div>
                     <div class="package__inner">
-
-                        <h2 class="package__title">As a @currentTier you get</h2>
-                        @currentTier match {
-                            case Tier.Friend => {
-                                <p>
-                                    As a friend you can book tickets to any of our events. We will keep you in the
-                                    know about events coming up in your area
-                                </p>
-                            }
-                            case Tier.Partner => {
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
-                                <ul class="package__list-element">
-                                    <li>Welcome pack</li>
-                                    <li>Early booking for live events (1 week before general release)</li>
-                                    <li>20% discount on tickets and plus ones</li>
-                                    <li>20% discount on Masterclasses</li>
-                                </ul>
-                            }
-                            case Tier.Patron => {
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sit amet felis nec nulla dignissim laoreet ut ac odio. </p>
-                                <ul class="package__list-element">
-                                    <li>Patron pack</li>
-                                    <li>Invited to patron only events</li>
-                                    <li>Invited to annual patron forum</li>
-                                    <li>Drinks from The Guardian wine rack</li>
-                                    <li>Early booking for live events (2 weeks before general release)</li>
-                                    <li>20% discount on tickets and plus ones</li>
-                                    <li>20% discount on Masterclasses</li>
-                                </ul>
-                            }
+                        <h2 class="package__title">@currentTier</h2>
+                        <p>@Config.benefits(currentTier).leadin</p>
+                        <ul class="package__list-element">
+                        @for(item <- Config.benefits(currentTier).list) {
+                            <li>@item</li>
                         }
-                        <span class="package__price">
-                            @currentTier match {
-                                case Tier.Friend => { £FREE }
-                                case Tier.Partner => { £15 <span class="package__pcm">pcm</span> }
-                                case Tier.Patron => { £60 <span class="package__pcm">pcm</span> }
-                            }
-                        </span>
+                        </ul>
+                        <div>
+                            <span class="package__price">
+                                @Config.benefits(currentTier).priceText
+                                @if(currentTier > Tier.Friend){
+                                    <span class="package__pcm">pcm</span>
+                                }
+                            </span>
+                        </div>
                     </div>
                 </div>
 
