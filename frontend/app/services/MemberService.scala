@@ -57,7 +57,8 @@ abstract class MemberService {
         Json.obj(
           Keys.CUSTOMER_ID -> member.customerId,
           Keys.LAST_NAME-> "LAST NAME",
-          Keys.TIER -> member.tier.toString
+          Keys.TIER -> member.tier.toString,
+          Keys.OPT_IN -> member.optedIn
         )
       )
     } yield member

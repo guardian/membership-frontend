@@ -25,7 +25,8 @@ class MemberServiceTest extends Specification {
         Json.obj(
           "Stripe_Customer_ID__c" -> "customerId",
           "LastName" -> "LAST NAME",
-          "Membership_Tier__c" -> "Partner"
+          "Membership_Tier__c" -> "Partner",
+          "Membership_Opt_In__c" -> true
         )
       )
     }

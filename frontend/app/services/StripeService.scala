@@ -66,8 +66,8 @@ trait StripeService {
       val subscription = event.extract[Subscription]
       MemberService.getByCustomerId(subscription.customer).foreach {
         _.map { member =>
-          if (member.cancellationRequested) MemberService.delete(member)
-          else MemberService.update(member.copy(tier = Tier.Friend))
+          if (member.optedIn) MemberService.update(member.copy(tier = Tier.Friend))
+          else MemberService.delete(member)
         }
       }
     }

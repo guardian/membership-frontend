@@ -6,5 +6,5 @@ case class Member(userId: String,
                   tier: Tier.Tier,
                   customerId: String,
                   joinDate: DateTime,
-                  cancellationRequested: Boolean = false)
+                  optedIn: Boolean)
 
