@@ -20,7 +20,10 @@ define([
         CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
         CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
         BILLING_CTA: 'js-toggle-billing-address',
-        BILLING_FIELDSET: 'js-billingAddress-fieldset'
+        BILLING_FIELDSET: 'js-billingAddress-fieldset',
+        ADDRESS_LINE_ONE: 'js-address-line-one',
+        TOWN: 'js-town',
+        POST_CODE: 'js-post-code'
     };
 
     Upgrade.prototype.data = {
@@ -46,6 +49,18 @@ define([
 
         this.form.addValidation(
             [
+                {
+                    elem: this.getElem('ADDRESS_LINE_ONE'),
+                    name: 'required'
+                },
+                {
+                    elem: this.getElem('TOWN'),
+                    name: 'required'
+                },
+                {
+                    elem: this.getElem('POST_CODE'),
+                    name: 'required'
+                },
                 {
                     elem: this.getElem('CREDIT_CARD_NUMBER'),
                     name: 'creditCardNumber'
