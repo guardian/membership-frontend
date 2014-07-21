@@ -1,4 +1,7 @@
-import com.gu.automation.support.TestLogger
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import com.gu.automation.support.{Config, TestLogger}
 import com.gu.membership.pages._
 import org.openqa.selenium.{Cookie, WebDriver}
 
@@ -13,8 +16,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IAmNotLoggedIn = {
-    // TODO move the data to a config file
-    driver.get("https://membership.theguardian.com/")
+    driver.get(Config().getTestBaseUrl())
     this
   }
 
@@ -111,7 +113,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IHaveToLogIn = {
     IAmLoggedIn
-    driver.get("https://membership.theguardian.com/join/partner/payment")
+    driver.get(Config().getUserValue("partnerPayment"))
     this
   }
 
@@ -119,8 +121,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val thankYouPage = pay
     val startDate = thankYouPage.getStartDate
     val nextPaymentDate = thankYouPage.getNextPaymentDate
-    // TODO James Oram verify dates  correct format is implemented
-    // TODO James Oram we don't really care what the numbers are here, but there will be a test for each tier
+    Assert.assert(isInFuture(nextPaymentDate), true, "Next payment date should be in the future")
+    Assert.assert(isInFuture(startDate), false, "The Start Date should not be in the future")
     val paidAmount = thankYouPage.getAmountPaidToday
     Assert.assertNotEmpty(paidAmount, "There paid amount should not be empty")
     val nextPaymentAmount = thankYouPage.getPaymentAmount
@@ -246,8 +248,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IGoToIdentity = {
-    // TODO James Oram move this to a config file
-    driver.get("https://profile.theguardian.com/account/edit")
+    driver.get(Config().getUserValue("accountEdit"))
     this
   }
 
@@ -257,7 +258,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IGoToMembershipTabToChangeDetails = {
-    driver.get("https://profile.theguardian.com/membership/edit")
+    driver.get(Config().getUserValue("membershipEdit"))
     new IdentityEditPage(driver).clickChangebutton
     this
   }
@@ -318,13 +319,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
   }
 
-  def IAmAPartner = {
-    verifyTier("£135.00")
-  }
+  def IAmAPartner = verifyTier("£135.00")
 
-  def IAmAPatron = {
-    verifyTier("£540.00")
-  }
+  def IAmAPatron = verifyTier("£540.00")
 
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
@@ -334,15 +331,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
 
-
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
 
-  private def isInFuture(dateTime: String): Boolean = {
-//    val sdf = new SimpleDateFormat("d MMMM y, h:mmaa")
-//    sdf.parse(dateTime.replaceFirst("[rd|th|nd|st]", "")
-//      .replaceFirst("[rd|th|nd|st]", "")).after(new Date())
-    // TODO James Oram this is disabled due to MEM-141
-    true
+  private def isInFuture(dateTime: String) = {
+    // TODO James Oram MEM-141 should make this not fail occasionally
+    new SimpleDateFormat("dd MMMM yyyy").parse(dateTime).after(new Date())
   }
 }
 
@@ -354,16 +347,15 @@ object CookieHandler {
   def login(driver: WebDriver) = {
     this.synchronized {
       if (None == CookieHandler.loginCookie) {
-        // TODO move the data to a config file
-        driver.get("https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fmembership.theguardian.com")
+        driver.get(Config().getUserValue("identityReturn"))
         val user = System.currentTimeMillis().toString
         new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
           .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
-        driver.get("https://membership.theguardian.com")
+        driver.get(Config().getTestBaseUrl())
         CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
         CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
       } else {
-        driver.get("https://membership.theguardian.com")
+        driver.get(Config().getTestBaseUrl())
         driver.manage().addCookie(CookieHandler.loginCookie.get)
         driver.manage().addCookie(CookieHandler.secureCookie.get)
       }
