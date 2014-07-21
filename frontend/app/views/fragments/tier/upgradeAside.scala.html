@@ -2,39 +2,15 @@
 
 @import views.support.Dates._
 @import views.support.Format._
+@import configuration.Config
 
 <aside class="form-secondary-container">
     <ul class="form-detail u-unstyled">
         <li class="form-detail__item">
             <h2 class="form__heading">What's included</h2>
             <ul>
-                @* Benefits List per tier *@
-
-                @tier match {
-                    case model.Tier.Friend => {
-                        <li>Book Live event tickets</li>
-                        <li>Watch highlights of Live events</li>
-                        <li>Watch stream of Flagship events</li>
-                        <li>Early booking for Live events</li>
-                        <li>20% discount on tickets and plus ones</li>
-                        <li>20% discount on Masterclasses</li>
-                    }
-                    case model.Tier.Partner => {
-                        <li>Book Live event tickets</li>
-                        <li>Watch highlights of Live events</li>
-                        <li>Watch stream of Flagship events</li>
-                        <li>Early booking for Live events</li>
-                        <li>20% discount on tickets and plus ones</li>
-                        <li>20% discount on Masterclasses</li>
-                    }
-                    case model.Tier.Patron => {
-                        <li>Book Live event tickets</li>
-                        <li>Watch highlights of Live events</li>
-                        <li>Watch stream of Flagship events</li>
-                        <li>Early booking for Live events</li>
-                        <li>20% discount on tickets and plus ones</li>
-                        <li>20% discount on Masterclasses</li>
-                    }
+                @for(item <- Config.benefits(tier).list) {
+                    <li>@item</li>
                 }
             </ul>
         </li>
