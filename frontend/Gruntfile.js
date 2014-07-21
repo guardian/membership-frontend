@@ -184,6 +184,18 @@ module.exports = function (grunt) {
         // misc
 
         shell: {
+            //  shamelessly stolen from NGW's gruntfile
+            spriteGeneration: {
+                command: [
+                    'cd ../tools/sprites/',
+                    'find . -name \'*.json\' -exec node spricon.js {} \\;'
+                ].join('&&'),
+                options: {
+                    stdout: true,
+                    stderr: true,
+                    failOnError: true
+                }
+            },
             /**
              * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
              */
@@ -211,6 +223,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('compile', [
+        'shell:spriteGeneration',
         'compile:css',
         'compile:js'
     ]);
