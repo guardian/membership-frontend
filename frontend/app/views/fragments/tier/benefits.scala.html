@@ -4,7 +4,6 @@
 @import model.Tier
 
 @defining(currentTier == tier) { isCurrentPackage =>
-<div class="l-row__item">
     <div class="package@if(isCurrentPackage){ package--current}">
         @if(isCurrentPackage) {
             <div class="package__current-indicator">Your Current Package</div>
@@ -32,5 +31,4 @@
             </div>
         </div>
     </div>
- </div>
 }

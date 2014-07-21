@@ -1,11 +1,7 @@
-@(currentTier: model.Tier.Tier)(implicit request: play.api.mvc.Request[_])
+@(currentTier: model.Tier.Tier)
 
 @import configuration.Config
 @import model.Tier
-
-@yourCurrentPackage = {
-    <div class="package__current-indicator">Your Current Package</div>
-}
 
 @main("Change Tier") {
 
@@ -20,7 +16,7 @@
         <div class="package-container">
             <h2 class="package-container__header">Select the package you would like to switch to:</h2>
             <div class="content__container">
-                <section class="l-row l-row--items-3">
+                <section class="package-list">
 
                     @for(tier <- Tier.values.toSeq.sorted){
                         @if(tier >= Tier.Friend){ @fragments.tier.benefits(currentTier, tier) }
@@ -34,7 +30,7 @@
                     <li class="inline-list__item">&#149;</li>
                     <li class="inline-list__item"><a href="#help">Email User help</a></li>
                     <li class="inline-list__item">&#149;</li>
-                    <li class="inline-list__item"><a href="/tier/cancel/confirm">Cancel Membership</a></li>
+                    <li class="inline-list__item"><a href="/tier/cancel">Cancel Membership</a></li>
                 </ul>
             </div>
         </div>

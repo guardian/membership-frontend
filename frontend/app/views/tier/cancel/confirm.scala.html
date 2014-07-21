@@ -1,4 +1,7 @@
-@()(implicit request: play.api.mvc.Request[_])
+@(currentTier: model.Tier.Tier)
+
+@import model.Tier
+@import configuration.Config
 
 @main("Cancel Tier") {
 
@@ -6,8 +9,11 @@
         <div class="content__container">
             <section class="l-row l-row--items-2 content__section">
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
-                    <h1 class="content__headline">Become a Friend for free</h1>
-                    <a href="/join/friend" class="action-cta action-cta--confirm">Become a Friend</a>
+                    <h1 class="content__headline">We don't like goodbyes&hellip;</h1>
+                    <p>
+                        &hellip;so instead we're going to try and tempt you to stay by reminding you of all the good things
+                        you get from Guardian Membership
+                    </p>
                 </article>
                 <aside class="l-row__item">
                     <h2 class="content__heading tone-news-one">
@@ -16,111 +22,91 @@
                 </aside>
             </section>
         </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-4">
-                <div class="l-row__item">
-                    <h2>Whats included?</h2>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Digital</h3>
-                        <ul class="item__list-element">
-                            <li>Vestibulum ante ipsum primis</li>
-                            <li>Fusce non sagittis ligula</li>
+        <div class="package-container">
+            <div class="package-list">
+                <div class="package package--current">
+                    <div class="package__current-indicator">This is what you'll be missing</div>
+                    <div class="package__inner">
+                        <h2 class="package__title">@currentTier</h2>
+                        <p>@Config.benefits(currentTier).leadin</p>
+                        <ul class="package__list-element">
+                        @for(item <- Config.benefits(currentTier).list) {
+                            <li>@item</li>
+                        }
                         </ul>
-                    </div>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Community</h3>
-                        <ul class="item__list-element">
-                            <li>Sit amet libero congue pulvinar</li>
-                            <li>Vehicula tellus et, commodo</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Live</h3>
-                        <ul class="item__list-element">
-                            <li>Donec rhoncus tristique</li>
-                            <li>Leo congue imperdiet ultricies</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-2 content__section">
-                <article class="l-row__item l-row__item--boost-2 secondary-content">
-                    <h1 class="content__headline">Are you sure you would like to cancel your account?</h1>
-                    <p class="item__title">You will no longer receive all the great benefits</p>
-                </article>
-                <aside class="l-row__item">
-                    <h2 class="content__heading tone-news-one">Cancel info</h2>
-                </aside>
-            </section>
-        </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-4">
-                <div class="l-row__item">
-                    <h2>If you cancel you can no longer</h2>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Digital</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
+                        <div>
+                            <span class="package__price">
+                                @Config.benefits(currentTier).priceText
+                                @if(currentTier > Tier.Friend){
+                                    <span class="package__pcm">pcm</span>
+                                }
+                            </span>
                         </div>
-                        <ul class="item__list-element">
-                            <li>Vestibulum ante ipsum primis</li>
-                            <li>Fusce non sagittis ligula</li>
-                            <li>Phasellus et urna non orci</li>
-                            <li>Lorem ipsum dolor sit amet</li>
-                        </ul>
                     </div>
                 </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Community</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
-                        </div>
-                        <ul class="item__list-element">
-                            <li>Sit amet libero congue pulvinar</li>
-                            <li>Vehicula tellus et, commodo</li>
-                            <li>Adipiscing in risus et consequat</li>
-                            <li>Maecenas tincidunt auctor</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Live</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
-                        </div>
-                        <ul class="item__list-element">
-                            <li>Donec rhoncus tristique</li>
-                            <li>Leo congue imperdiet ultricies</li>
-                            <li>Non facilisis tellus mauris</li>
-                            <li>Orci volutpat varius</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <section>
-            <div class="l-row l-row--items-2">
-                <div class="l-row__item"></div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <form action="/tier/cancel/confirm" method="POST">
-                        <p class="item__title">You will still be a registered Guardian user</p>
-                        <input type="submit" value="Cancel Membership" class="action-cta action-cta--confirm"/>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
 
+                @if(currentTier != Tier.Friend) {
+                    <div class="package package--current">
+                        <div class="package__current-indicator">Can we still be Friends?</div>
+                        <div class="package__inner">
+
+                            <h2 class="package__title">Still not convinced?</h2>
+                            <p>
+                                As a friend you can book tickets to any of our events. We will keep you in the
+                                know about events coming up in your area
+                            </p>
+
+                            <span class="package__price">
+                                &pound;FREE
+                            </span>
+
+                            <form style="float: right" action="/tier/change/friend" method="POST">
+                                <button class="action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="content__container">
+            <section class="l-row l-row--items-2 content__section">
+                <aside class="l-row__item"></aside>
+                <article class="l-row__item l-row__item--boost-2 secondary-content">
+                    <h2 class="item__title">How can we make Guardian Membership better? Tell us what you think.</h2>
+                    <form method="POST" action="/tier/cancel/confirm">
+                        <fieldset class="fieldset">
+                            <div class="form-field">
+                                <p>What is the main reason you are leaving Guardian Membership?</p>
+                                <select name="leavingReason">
+                                    <option>Please select</option>option>
+                                    <option>Too many emails</option>option>
+                                    <option>Too expensive</option>option>
+                                    <option>Going on holiday</option>option>
+                                    <option>No events in my area</option>option>
+                                    <option>Other</option>option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <p>How likely is it that you would recommend Guardian Membership to a friend?</p>
+                                <select name="recommend">
+                                    <option>Please select</option>option>
+                                    <option>1</option>option>
+                                    <option>2</option>option>
+                                    <option>3</option>option>
+                                    <option>4</option>option>
+                                    <option>5</option>option>
+                                    <option>6</option>option>
+                                    <option>7</option>option>
+                                    <option>8</option>option>
+                                    <option>9</option>option>
+                                    <option>10</option>option>
+                                </select>
+                            </div>
+                            <button class="action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership account</button>
+                        </fieldset>
+                    </form>
+                </article>
+            </section>
+        </div>
+    </main>
 }
