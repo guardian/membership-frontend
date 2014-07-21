@@ -42,7 +42,7 @@ trait User extends Controller {
     implicit val writesDateTime = Writes[DateTime] { dt => JsString(dt.toString(standardFormat)) }
 
     Json.obj(
-      "userId" -> member.userId,
+      "userId" -> member.identityId,
       "tier" -> member.tier.toString,
       "joinDate" -> member.joinDate
     )

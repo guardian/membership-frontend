@@ -31,6 +31,7 @@ abstract class MemberService {
   val salesforce: Scalaforce
 
   object Keys {
+    val ID = "Id"
     val LAST_NAME = "LastName"
     val USER_ID = "IdentityID__c"
     val CUSTOMER_ID = "Stripe_Customer_ID__c"
@@ -43,7 +44,8 @@ abstract class MemberService {
 
   implicit val readsDateTime = JsPath.read[String].map(s => new DateTime(s))
   implicit val readsMember: Reads[Member] = (
-    (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
+    (JsPath \ Keys.ID).read[String] and
+      (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
       (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
       (JsPath \ Keys.CUSTOMER_ID).read[Option[String]] and
       (JsPath \ Keys.CREATED).read[DateTime] and
@@ -53,7 +55,7 @@ abstract class MemberService {
   def update(member: Member): Future[Member] = {
     for {
       result <- salesforce.patch(
-        contactURL(Keys.USER_ID, member.userId),
+        contactURL(Keys.USER_ID, member.identityId),
         Json.obj(
           Keys.CUSTOMER_ID -> member.customerId,
           Keys.LAST_NAME-> "LAST NAME",
@@ -105,7 +107,7 @@ abstract class MemberService {
       memberOpt
         .filter(_.tier >= Tier.Partner)
         .map { member =>
-          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.userId}_${event.id}"))
+          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}"))
         }
     }
 

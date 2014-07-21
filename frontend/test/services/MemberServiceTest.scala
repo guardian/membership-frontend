@@ -17,7 +17,7 @@ class MemberServiceTest extends Specification {
   "MemberServiceTest" should {
 
     "update a member" in TestMemberService { service =>
-      service.update(Member("userId", Tier.Partner, "customerId", DateTime.now, true))
+      service.update(Member("salesforceId", "userId", Tier.Partner, "customerId", DateTime.now, true))
 
       service.lastRequest mustEqual RequestInfo(
         "PATCH",
