@@ -1,3 +1,5 @@
+$current-indicator: rem(47px);
+
 .secondary-content {
     flex-basis: 16em;
     order: 2;
@@ -11,11 +13,10 @@
 }
 
 .package-container {
-    padding: 0;
     background-color: #f2f2f2;
-    @include mq(tablet) {
-        padding: $gs-gutter * 2;
-    }
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    padding: rem($gs-gutter);
 }
 
 .package-container__header {
@@ -30,29 +31,39 @@
     border-bottom: 1px dotted #333333;
 }
 
-.package {
-    @include rem((
-        margin: 30px $gs-gutter $gs-gutter
-    ));
-    @include mq(tablet) {
-        @include rem((
-            margin: 47px $gs-gutter / 2 0 0
-        ));
+.package-list {
+    @include mq(desktop) {
+        display: table;
+        margin: 0 auto;
+        border-spacing: rem($gs-gutter);
+        padding-top: $current-indicator;
     }
 }
 
-.package.package--current {
-    margin-top: 0;
+.package {
+    vertical-align: top;
+
+    @include rem((
+        margin: 30px $gs-gutter $gs-gutter
+    ));
+
+    @include mq(desktop) {
+        display: table-cell;
+        max-width: 330px;
+    }
 }
 
 .package__current-indicator {
     color: #ffffff;
+    background-color: #9c9c9c;
+    text-align: center;
     @include rem((
         padding: $gs-baseline,
-        margin: 0 $gs-baseline/2
+        margin: 0 $gs-baseline/2 0
     ));
-    text-align: center;
-    background-color: #9c9c9c;
+    @include mq(desktop) {
+        margin-top: -$current-indicator;
+    }
 }
 
 .package__inner {

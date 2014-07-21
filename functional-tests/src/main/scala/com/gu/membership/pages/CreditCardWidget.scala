@@ -22,49 +22,49 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def errorMessage = driver.findElement(By.cssSelector(".form__error"))
 
-  def enterCardNumber(number: String): CreditCardWidget = {
+  def enterCardNumber(number: String) = {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(cardNumberTextbox))
     cardNumberTextbox.sendKeys(number)
     this
   }
 
-  def enterCardSecurityCode(code: String): CreditCardWidget = {
+  def enterCardSecurityCode(code: String) = {
     cardSecurityCodeTextbox.sendKeys(code)
     this
   }
 
-  def enterCardExpirationMonth(month: String): CreditCardWidget = {
+  def enterCardExpirationMonth(month: String) = {
     new Select(cardExpirationMonthDropdown).selectByValue(month)
     this
   }
 
-  def enterCardExpirationYear(year: String): CreditCardWidget = {
+  def enterCardExpirationYear(year: String) = {
     new Select(cardExpirationYearDropdown).selectByValue(year)
     this
   }
 
-  def focusOnCvc: CreditCardWidget = {
+  def focusOnCvc = {
     cardSecurityCodeTextbox.click
     this
   }
 
-  def getErrorMessage: String = {
+  def getErrorMessage = {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(errorMessage))
     errorMessage.getText
   }
 
-  def clickUpdateCardDetails: CreditCardWidget = {
+  def clickUpdateCardDetails = {
     updateCCButton.click()
     this
   }
 
-  def clickSubmitPayment: ThankYouPage = {
+  def clickSubmitPayment = {
     submitPaymentButton.click
     new ThankYouPage(driver)
   }
 
   def submitPayment(cardNumber: String, cardSecurityCode: String, cardExpirationMonth: String,
-                    cardExpirationYear: String): ThankYouPage =
+                    cardExpirationYear: String) =
     enterCardNumber(cardNumber).enterCardSecurityCode(cardSecurityCode)
       .enterCardExpirationMonth(cardExpirationMonth).enterCardExpirationYear(cardExpirationYear).clickSubmitPayment
 }

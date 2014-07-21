@@ -4,7 +4,9 @@ import com.netaporter.uri.dsl._
 
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
+import model.Tier
 import play.api.mvc.Request
+import collection.convert.wrapAsScala._
 
 object Config {
   val config = ConfigFactory.load()
@@ -42,4 +44,25 @@ object Config {
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
+
+
+  case class Benefits(leadin: String, list: Seq[String], priceText: String, cta: String)
+
+  val benefits: Map[Tier.Value, Benefits] = Tier.values.toSeq.map {
+    t =>
+      val benefits =
+        if (t >= Tier.Friend) {
+          val configKey = s"benefits.${t.toString.toLowerCase}."
+          Benefits(
+            config.getString(configKey + "leadin"),
+            config.getStringList(configKey + "list").toSeq,
+            config.getString(configKey + "priceText"),
+            config.getString(configKey + "cta")
+          )
+        } else {
+          Benefits("", Seq.empty, "", "")
+        }
+      t -> benefits
+  }.toMap
+
 }

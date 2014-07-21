@@ -27,7 +27,7 @@ class ThankYouPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   def getAmountPaidToday: String = amountPaidTodayCell.getText
 
-  def getMonthlyPayment: String = monthlyPaymentCell.getText
+  def getPaymentAmount: String = monthlyPaymentCell.getText
 
   def getNextPaymentDate: String = nextPaymentCell.getText
 

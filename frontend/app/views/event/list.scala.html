@@ -1,22 +1,18 @@
-@(eventsList: Seq[model.Eventbrite.EBEvent])(implicit request: play.api.mvc.Request[_])
+@(eventsList: Seq[model.Eventbrite.EBEvent])
 
 @main("Events") {
 
     <section class="container--row-pattern">
         <div class="container__header">
-            <h2 class="container__title tone-feature tone-background">
-                <span class="container__title__label u-text-hyphenate">Current Events</span>
-            </h2>
+            <h1 class="content__headline">Current Events</h1>
         </div>
-        <div class="inner-container">
-            <div class="events-sidebar"></div>
-            <ul class="events-list u-unstyled">
-                @for(event <- eventsList) {
+        <div class="events-sidebar"></div>
+        <ul class="events-list u-unstyled">
+            @for(event <- eventsList) {
 
-                    @fragments.event.item(event)
-                }
-            </ul>
-        </div>
+                @fragments.event.item(event)
+            }
+        </ul>
     </section>
 
 }

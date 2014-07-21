@@ -6,20 +6,20 @@ import play.twirl.api.Html
 
 object Dates {
 
-  implicit class RichInstant(dateTime: Instant) {
-    val date = new DateTime(dateTime)
-    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
+  implicit class RichDateTime(dt: DateTime) {
+    lazy val pretty = prettyDate(dt)
+    lazy val prettyWithTime = prettyDateWithTime(dt)
   }
 
-  implicit class RichDateTime(dateTime: DateTime) {
-    val date = new DateTime(dateTime)
-    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
+  implicit class RichInstant(dt: Instant) {
+    lazy val pretty = prettyDate(new DateTime(dt))
+    lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
   }
 
-  implicit class RichLong(dateTime: Long) {
-    val date = new DateTime(dateTime * 1000)
-    lazy val pretty = date.toString("dd MMMMM YYYY").replace("AM", "am").replace("PM", "pm")
-  }
+  def prettyDate(dt: DateTime): String = dt.toString("dd MMMMM YYYY")
+
+  def prettyDateWithTime(dt: DateTime): String =
+    prettyDate(dt) + dt.toString(", h:mm ") + dt.toString("a").toLowerCase
 
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
 

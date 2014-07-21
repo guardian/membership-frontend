@@ -27,13 +27,9 @@ trait DowngradeTier {
 
   def friendDowngradeConfirm() = MemberAction.async { implicit request => // POST
     for {
-      customer <- StripeService.Customer.read(request.member.customerId)
-      cancelledOpt = customer.subscription.map { subscription =>
-        StripeService.Subscription.delete(customer.id, subscription.id)
-      }
-      cancelled <- Future.sequence(cancelledOpt.toSeq)
+      cancelledSubscription <- MemberService.cancelPayment(request.member)
     } yield {
-      cancelled.headOption.map(_ => Redirect("/tier/change/friend/summary")).getOrElse(NotFound)
+      cancelledSubscription.map(_ => Redirect("/tier/change/friend/summary")).getOrElse(NotFound)
     }
   }
 
@@ -113,11 +109,16 @@ trait CancelTier {
   self: TierController =>
 
   def cancelTier() = MemberAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm())
+    Ok(views.html.tier.cancel.confirm(request.member.tier))
   }
 
-  def cancelTierConfirm() = MemberAction { implicit request =>
-    Redirect("/tier/cancel/summary")
+  def cancelTierConfirm() = MemberAction.async { implicit request =>
+    for {
+      cancelledSubscription <- MemberService.cancelPayment(request.member)
+    } yield {
+      MemberService.update(request.member.copy(cancellationRequested=true))
+      Redirect("/tier/cancel/summary")
+    }
   }
 
   def cancelTierSummary() = MemberAction.async { implicit request =>

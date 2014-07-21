@@ -20,6 +20,7 @@ import model.Eventbrite.{EBEvent, EBDiscount}
 import configuration.Config
 import model.Tier.Tier
 import model.Tier
+import model.Stripe.Subscription
 
 case class MemberNotFound(userId: String) extends Throwable {
   override def getMessage: String = s"Member with ID $userId not found"
@@ -56,7 +57,7 @@ abstract class MemberService {
     } yield member
   }
 
-  def insert(userId: String, customerId: String, tier: Tier): Future[Member] = {
+  def insert(userId: String, customerId: String, tier: Tier): Future[Option[Member]] = {
     for {
       result <- salesforce.patch(
         contactURL(Keys.USER_ID, userId),
@@ -66,16 +67,16 @@ abstract class MemberService {
           Keys.TIER -> tier.toString
         )
       )
-    } yield Member(userId, tier, customerId, None)
+    } yield Some(Member(userId, tier, customerId, None))
   }
 
-  private def getMember(key: String, id: String): Future[Member] = {
+  private def getMember(key: String, id: String): Future[Option[Member]] = {
     for {
       result <- salesforce.get(contactURL(key, id))
     } yield {
       result.status match {
-        case OK => result.json.as[Member]
-        case NOT_FOUND => throw MemberNotFound(id)
+        case OK => Some(result.json.as[Member])
+        case NOT_FOUND => None
         case code =>
           Logger.error(s"getMember failed, Salesforce returned $code")
           throw new Exception("blah")
@@ -83,25 +84,40 @@ abstract class MemberService {
     }
   }
 
-  def get(userId: String): Future[Member] = getMember(Keys.USER_ID, userId)
-  def getByCustomerId(customerId: String): Future[Member] = getMember(Keys.CUSTOMER_ID, customerId)
+  def get(userId: String): Future[Option[Member]] = getMember(Keys.USER_ID, userId)
+  def getByCustomerId(customerId: String): Future[Option[Member]] = getMember(Keys.CUSTOMER_ID, customerId)
+
+  def delete(member: Member) = {
+    // TODO: do we actually delete in SF?
+  }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
-    def createDiscountFor(member: Member): Future[Option[EBDiscount]] = {
+    def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
       // code should be unique for each user/event combination
-      member.tier match {
-        case Tier.Partner | Tier.Patron =>
-          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")).map(Some(_))
-        case _ => Future.successful(None)
-      }
+      memberOpt
+        .filter(_.tier >= Tier.Partner)
+        .map { member =>
+          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.userId}_${event.id}"))
+        }
     }
 
     for {
       member <- get(userId)
-      discount <- createDiscountFor(member)
-    } yield discount
+      discount <- Future.sequence(createDiscountFor(member).toSeq)
+    } yield discount.headOption
   }
+
+  def cancelPayment(member:Member): Future[Option[Subscription]] = {
+    for {
+      customer <- StripeService.Customer.read(member.customerId)
+      cancelledOpt = customer.subscription.map { subscription =>
+        StripeService.Subscription.delete(customer.id, subscription.id)
+      }
+      cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
+    } yield cancelledSubscription.headOption
+  }
+
 }
 
 object MemberService extends MemberService {

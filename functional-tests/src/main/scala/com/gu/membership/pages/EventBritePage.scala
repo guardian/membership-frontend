@@ -8,9 +8,9 @@ class EventBritePage(driver: WebDriver) extends BasePage(driver) {
 
   private def descriptionSpan = driver.findElement(By.cssSelector(".description"))
 
-  def getEventName: String = eventNameSpan.getText
+  def getEventName = eventNameSpan.getText
 
-  def getEventDescription: String = descriptionSpan.getText
+  def getEventDescription = descriptionSpan.getText
 
-  def isPageLoaded: Boolean = descriptionSpan.isDisplayed && driver.getCurrentUrl.contains("eventbrite")
+  def isPageLoaded = descriptionSpan.isDisplayed && driver.getCurrentUrl.contains("eventbrite")
 }
