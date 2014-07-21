@@ -5,6 +5,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import akka.agent.Agent
 
+import org.joda.time.DateTime
+
 import play.api.libs.concurrent.Akka
 import play.api.Logger
 import play.api.http.Status.{OK, NOT_FOUND}
@@ -15,15 +17,14 @@ import play.api.libs.functional.syntax._
 
 import com.gu.scalaforce.Scalaforce
 
-import model.{Tier, Member}
-import model.Eventbrite.{EBEvent, EBDiscount}
 import configuration.Config
+import model.{Tier, Member}
 import model.Tier.Tier
-import model.Tier
+import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.Subscription
 
-case class MemberNotFound(userId: String) extends Throwable {
-  override def getMessage: String = s"Member with ID $userId not found"
+case class MemberServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
 }
 
 abstract class MemberService {
@@ -34,15 +35,20 @@ abstract class MemberService {
     val USER_ID = "IdentityID__c"
     val CUSTOMER_ID = "Stripe_Customer_ID__c"
     val TIER = "Membership_Tier__c"
+    val OPT_IN = "Membership_Opt_In__c"
+    val CREATED = "CreatedDate"
   }
 
   def contactURL(key: String, id: String): String = s"/services/data/v29.0/sobjects/Contact/$key/$id"
 
+  implicit val readsDateTime = JsPath.read[String].map(s => new DateTime(s))
   implicit val readsMember: Reads[Member] = (
     (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
       (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
-      (JsPath \ Keys.CUSTOMER_ID).read[String]
-    )((userId, tier, customerId) => Member(userId, tier, customerId, None))
+      (JsPath \ Keys.CUSTOMER_ID).read[String] and
+      (JsPath \ Keys.CREATED).read[DateTime] and
+      (JsPath \ Keys.OPT_IN).read[Boolean]
+    )(Member.apply _)
 
   def update(member: Member): Future[Member] = {
     for {
@@ -67,7 +73,7 @@ abstract class MemberService {
           Keys.TIER -> tier.toString
         )
       )
-    } yield Some(Member(userId, tier, customerId, None))
+    } yield Some(result.json.as[Member])
   }
 
   private def getMember(key: String, id: String): Future[Option[Member]] = {
@@ -79,7 +85,7 @@ abstract class MemberService {
         case NOT_FOUND => None
         case code =>
           Logger.error(s"getMember failed, Salesforce returned $code")
-          throw new Exception("blah")
+          throw MemberServiceError(s"Salesforce returned $code")
       }
     }
   }

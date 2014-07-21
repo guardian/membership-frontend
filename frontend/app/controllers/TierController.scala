@@ -84,7 +84,7 @@ trait UpgradeTier {
 
   def makePayment(tier: Tier)(formData: UpgradeTierForm)(implicit request: MemberRequest[_]) = {
     val futureCustomer =
-      if (request.member.customerId == Member.NO_CUSTOMER_ID)
+      if (request.member.customerId == "") // TODO: fix
         StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken)
       else
         StripeService.Customer.read(request.member.customerId)

@@ -8,6 +8,7 @@ import play.api.libs.json.{Json, JsValue}
 import model.{Tier, Member}
 import com.gu.scalaforce.Scalaforce
 import org.specs2.mutable.Specification
+import org.joda.time.DateTime
 
 class MemberServiceTest extends Specification {
 
@@ -16,7 +17,7 @@ class MemberServiceTest extends Specification {
   "MemberServiceTest" should {
 
     "update a member" in TestMemberService { service =>
-      service.update(Member("userId", Tier.Partner, "customerId"))
+      service.update(Member("userId", Tier.Partner, "customerId", DateTime.now, true))
 
       service.lastRequest mustEqual RequestInfo(
         "PATCH",
