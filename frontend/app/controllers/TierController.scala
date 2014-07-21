@@ -34,7 +34,7 @@ trait DowngradeTier {
   }
 
   def friendDowngradeSummary() = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
+    StripeService.Customer.read(request.member.customerId.get).map { customer =>
       val response = for {
         subscription <- customer.subscription
         card <- customer.card
@@ -84,10 +84,10 @@ trait UpgradeTier {
 
   def makePayment(tier: Tier)(formData: UpgradeTierForm)(implicit request: MemberRequest[_]) = {
     val futureCustomer =
-      if (request.member.customerId == "") // TODO: fix
+      if (request.member.customerId.isEmpty)
         StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken)
       else
-        StripeService.Customer.read(request.member.customerId)
+        StripeService.Customer.read(request.member.customerId.get)
 
     val planName = tier.toString + (if (formData.paymentType == "annual") Plan.ANNUAL_SUFFIX else "")
 
@@ -99,7 +99,7 @@ trait UpgradeTier {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberService.update(request.member.copy(tier = tier, customerId = customer.id))
+      MemberService.update(request.member.copy(tier = tier, customerId = Some(customer.id)))
       Ok("")
     }
   }
@@ -122,7 +122,7 @@ trait CancelTier {
   }
 
   def cancelTierSummary() = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
+    StripeService.Customer.read(request.member.customerId.get).map { customer =>
       val response = for {
         subscription <- customer.subscription
         card <- customer.card

@@ -47,7 +47,7 @@ trait Subscription extends Controller {
 
   def cancel = MemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.customerId)
+      customer <- StripeService.Customer.read(request.member.customerId.get)
       subscriptionIdOpt = customer.subscription.map(_.id)
       status <- subscriptionIdOpt
         .fold(Future.successful(NotFound)) {
@@ -60,7 +60,7 @@ trait Subscription extends Controller {
     updateForm.bindFromRequest
       .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
         for {
-          customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
+          customer <- StripeService.Customer.updateCard(request.member.customerId.get, stripeToken)
           cardOpt = customer.card
         } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
       ).recover {

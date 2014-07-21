@@ -44,7 +44,7 @@ trait Joiner extends Controller {
   }
 
   def thankyouPaid(tier: String) = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
+    StripeService.Customer.read(request.member.customerId.get).map { customer =>
       val response = for {
         subscription <- customer.subscription
         card <- customer.card

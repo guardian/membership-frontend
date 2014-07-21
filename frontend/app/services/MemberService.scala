@@ -45,7 +45,7 @@ abstract class MemberService {
   implicit val readsMember: Reads[Member] = (
     (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
       (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
-      (JsPath \ Keys.CUSTOMER_ID).read[String] and
+      (JsPath \ Keys.CUSTOMER_ID).read[Option[String]] and
       (JsPath \ Keys.CREATED).read[DateTime] and
       (JsPath \ Keys.OPT_IN).read[Boolean]
     )(Member.apply _)
@@ -115,9 +115,9 @@ abstract class MemberService {
     } yield discount.headOption
   }
 
-  def cancelPayment(member:Member): Future[Option[Subscription]] = {
+  def cancelPayment(member: Member): Future[Option[Subscription]] = {
     for {
-      customer <- StripeService.Customer.read(member.customerId)
+      customer <- StripeService.Customer.read(member.customerId.get)
       cancelledOpt = customer.subscription.map { subscription =>
         StripeService.Subscription.delete(customer.id, subscription.id)
       }

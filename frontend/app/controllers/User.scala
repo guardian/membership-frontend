@@ -24,7 +24,7 @@ trait User extends Controller {
         val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
         Future.successful(Cors(Ok(details)))
 
-      case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
+      case _ => StripeService.Customer.read(request.member.customerId.get).map { customer =>
         val subscriptionOpt = for {
           subscription <- customer.subscription
           card <- customer.card
