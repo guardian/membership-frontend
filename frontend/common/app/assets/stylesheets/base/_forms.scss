@@ -288,7 +288,11 @@
 }
 
 .submit-input[disabled] {
-    background: $c-neutral5;
+    &,
+    &:hover,
+    &:focus {
+        background: $c-neutral5;
+    }
 }
 
 .check-label,
@@ -317,4 +321,17 @@
         width: 13px
     ));
 
+}
+
+.required-marker {
+    &:before {
+        vertical-align: middle;
+        content: '*';
+        color: guss-colour('tone-live-2');
+        font-family: $sans-serif;
+        @include rem((
+            font-size: 18px,
+            margin-right: $gs-baseline / 2
+        ));
+    }
 }
