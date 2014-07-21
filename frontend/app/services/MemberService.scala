@@ -15,16 +15,13 @@ import com.amazonaws.services.dynamodbv2.model._
 
 import model.{Tier, Member}
 import model.Eventbrite.{EBEvent, EBDiscount}
-
-case class MemberNotFound(userId: String) extends Throwable {
-  override def getMessage: String = s"Member with ID $userId not found"
-}
+import model.Stripe.Subscription
 
 trait MemberService {
   def put(member: Member): Future[Unit]
 
-  def get(userId: String): Future[Member]
-  def getByCustomerId(customerId: String): Future[Member]
+  def get(userId: String): Future[Option[Member]]
+  def getByCustomerId(customerId: String): Future[Option[Member]]
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]]
 }
@@ -38,6 +35,7 @@ object MemberService extends MemberService {
     val TIER = "tier"
     val CUSTOMER_ID = "customerId"
     val JOIN_DATE = "joinDate"
+    val CANCELLATION_REQUESTED = "cancellationRequested"
   }
 
   val client = new AmazonDynamoDBClient
@@ -48,34 +46,39 @@ object MemberService extends MemberService {
   def put(member: Member): Future[Unit] = Future.successful {
     Logger.debug(s"Putting member $member")
 
-    client.putItem(TABLE_NAME, Map(
+    val attrs = Map(
       Keys.USER_ID -> att(member.userId),
       Keys.TIER -> att(member.tier.toString),
       Keys.CUSTOMER_ID -> att(member.customerId),
       Keys.JOIN_DATE -> att(member.joinDate.getOrElse(DateTime.now.toDateTime(UTC)).toString)
-    ).asJava)
+    ) ++ (if (member.cancellationRequested) Some(Keys.CANCELLATION_REQUESTED -> att("true")) else None)
+
+    client.putItem(TABLE_NAME, attrs.asJava)
   }
 
-  private def getMember(attrs: Map[String, AttributeValue]): Option[Future[Member]] = {
+  private def getMember(attrs: Map[String, AttributeValue]): Option[Member] = {
     for {
       id <- attrs.get(Keys.USER_ID)
       tier <- attrs.get(Keys.TIER)
       customerId <- attrs.get(Keys.CUSTOMER_ID)
       joinDate <- attrs.get(Keys.JOIN_DATE)
-    } yield Future.successful(Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS))))
+    } yield {
+      val cancellationRequested = attrs.get(Keys.CANCELLATION_REQUESTED).exists(_ => true)
+      Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS)), cancellationRequested)
+    }
   }
 
-  def get(userId: String): Future[Member] = {
+  def get(userId: String): Future[Option[Member]] = {
     val memberOpt = for {
       attrsJ <- Option(client.getItem(TABLE_NAME, Map(Keys.USER_ID -> att(userId)).asJava).getItem)
       attrs = attrsJ.asScala.toMap
       member <- getMember(attrs)
     } yield member
 
-    memberOpt.getOrElse(Future.failed(MemberNotFound(userId)))
+    Future.successful(memberOpt)
   }
 
-  def getByCustomerId(customerId: String): Future[Member] = {
+  def getByCustomerId(customerId: String): Future[Option[Member]] = {
     val cond = new Condition()
       .withComparisonOperator(ComparisonOperator.EQ)
       .withAttributeValueList(att(customerId))
@@ -91,23 +94,35 @@ object MemberService extends MemberService {
       member <- getMember(attrs)
     } yield member
 
-    memberOpt.getOrElse(Future.failed(MemberNotFound(customerId)))
+    Future.successful(memberOpt)
+  }
+
+  def delete(member: Member) = {
+    client.deleteItem(TABLE_NAME, Map(Keys.USER_ID -> att(member.userId)).asJava)
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
-    def createDiscountFor(member: Member): Future[Option[EBDiscount]] = {
+    def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
       // code should be unique for each user/event combination
-      member.tier match {
-        case Tier.Partner | Tier.Patron =>
-          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")).map(Some(_))
-        case _ => Future.successful(None)
-      }
+      memberOpt
+        .filter { _.tier >= Tier.Partner }
+        .map(_ => EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")))
     }
 
     for {
       member <- get(userId)
-      discount <- createDiscountFor(member)
-    } yield discount
+      discount <- Future.sequence(createDiscountFor(member).toSeq)
+    } yield discount.headOption
+  }
+
+  def cancelPayment(member:Member): Future[Option[Subscription]] = {
+    for {
+      customer <- StripeService.Customer.read(member.customerId)
+      cancelledOpt = customer.subscription.map { subscription =>
+        StripeService.Subscription.delete(customer.id, subscription.id)
+      }
+      cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
+    } yield cancelledSubscription.headOption
   }
 }

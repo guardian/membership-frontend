@@ -1,4 +1,4 @@
-@()(implicit request: play.api.mvc.Request[_])
+@()
 
 @import configuration.Config
 
@@ -20,7 +20,7 @@
                                 <a href="/join" role="menuitem" class="menu-cta no-underline">Join us</a>
                             </li>
                             <li class="menu-item menu-item--last">
-                                <a href="@Config.idWebAppSigninUrl(request.uri)" role="menuitem" class="no-underline icon-wrapper js-identity-icon">
+                                <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon">
                                     <span class="control">
                                         <span class="control__icon">
                                             <i class="i i-user"></i>
