@@ -45,7 +45,7 @@ trait User extends Controller {
       "userId" -> member.userId,
       "tier" -> member.tier.toString,
       "joinDate" -> member.joinDate,
-      "optIn" -> false
+      "optIn" -> !member.cancellationRequested
     )
   }
 
