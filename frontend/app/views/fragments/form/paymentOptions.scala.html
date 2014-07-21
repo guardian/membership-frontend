@@ -1,0 +1,26 @@
+@(targetTier: model.Tier.Tier)
+
+@import views.support.Options._
+
+<fieldset class="fieldset">
+    <div class="fieldset__heading">
+        <h2 class="form__heading">Select payment option</h2>
+        <div class="form__note">Price includes VAT</div>
+    </div>
+    <div class="fieldset__fields">
+        <div class="form-field">
+            <label class="label upgrade__payment-label" for=annual>
+                <input type="radio" name="paymentType" id="annual" value="annual" checked="checked"/>
+                <span class="payment-label__title">Pay annually</span>
+                <span class="payment-label__amount">@annualAmount(targetTier)</span>
+                <span class="payment-label__note">1 year membership, 3 months free</span>
+            </label>
+            <label class="label upgrade__payment-label" for="monthly">
+                <input type="radio" name="paymentType" id="monthly" value="month"/>
+                <span class="payment-label__title">Pay monthly</span>
+                <span class="payment-label__amount">@monthAmount(targetTier)</span>
+                <span class="payment-label__note">No comittment, cancel at any time (if you can find the button)</span>
+            </label>
+        </div>
+    </div>
+</fieldset>
