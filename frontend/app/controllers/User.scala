@@ -40,7 +40,8 @@ trait User extends Controller {
     Json.obj(
       "userId" -> member.identityId,
       "tier" -> member.tier.toString,
-      "joinDate" -> member.joinDate
+      "joinDate" -> member.joinDate,
+      "optIn" -> member.optedIn
     )
   }
 
@@ -48,12 +49,19 @@ trait User extends Controller {
     val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
     implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
+    val Stripe.PaymentDetails(card, subscription) = paymentDetails
+
     Json.obj(
       "subscription" -> Json.obj(
-        "start" -> paymentDetails.subscription.start,
-        "end" -> paymentDetails.subscription.current_period_end,
-        "plan" -> Json.obj("name" -> paymentDetails.subscription.plan.name, "amount" -> paymentDetails.subscription.plan.amount),
-        "card" -> Json.obj("last4" -> paymentDetails.card.last4, "type" -> paymentDetails.card.`type`)
+        "start" -> subscription.start,
+        "end" -> subscription.current_period_end,
+        "cancelledAt" -> subscription.canceled_at,
+        "plan" -> Json.obj(
+          "name" -> subscription.plan.name,
+          "amount" -> subscription.plan.amount,
+          "interval" -> subscription.plan.interval
+        ),
+        "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
       )
     )
   }

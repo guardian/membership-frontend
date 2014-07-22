@@ -17,6 +17,10 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.friend())
   }
 
+  def detailFriend() = AuthenticatedAction { implicit request =>
+    Ok(views.html.joiner.detail.addressForm())
+  }
+
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
       member <- MemberService.insert(request.user, "", Tier.Friend)
@@ -27,12 +31,12 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.partner())
   }
 
-  def patron() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.patron())
-  }
-
   def paymentPartner() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
+  }
+
+  def patron() = CachedAction { implicit request =>
+    Ok(views.html.joiner.tier.patron())
   }
 
   def paymentPatron() = AuthenticatedAction { implicit request =>
