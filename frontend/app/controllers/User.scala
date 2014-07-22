@@ -44,7 +44,8 @@ trait User extends Controller {
     Json.obj(
       "userId" -> member.userId,
       "tier" -> member.tier.toString,
-      "joinDate" -> member.joinDate
+      "joinDate" -> member.joinDate,
+      "optIn" -> !member.cancellationRequested
     )
   }
 
@@ -56,7 +57,8 @@ trait User extends Controller {
       "subscription" -> Json.obj(
         "start" -> subscription.start,
         "end" -> subscription.current_period_end,
-        "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount),
+        "cancelledAt" -> subscription.canceled_at,
+        "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount, "interval" -> subscription.plan.interval),
         "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
       )
     )

@@ -30,6 +30,7 @@ object Stripe {
     start: Instant,
     current_period_start: Instant,
     current_period_end: Instant,
+    canceled_at: Option[Instant],
     customer: String,
     plan: Plan) extends StripeObject
 
