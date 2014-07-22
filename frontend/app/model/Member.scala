@@ -2,10 +2,9 @@ package model
 
 import com.github.nscala_time.time.Imports._
 
-case class Member(crmId: String,
+case class Member(salesforceContactId: String,
                   identityId: String,
                   tier: Tier.Tier,
-                  customerId: Option[String],
+                  stripeCustomerId: Option[String],
                   joinDate: DateTime,
                   optedIn: Boolean)
-

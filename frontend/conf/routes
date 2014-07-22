@@ -21,8 +21,7 @@ GET         /join/:tier/thankyou         controllers.Joiner.thankyouPaid(tier)
 
 # Subscription
 POST        /subscription/subscribe      controllers.Subscription.subscribe
-POST        /subscription/cancel         controllers.Subscription.cancel
-POST        /subscription/update         controllers.Subscription.update
+POST        /subscription/update         controllers.Subscription.updateCard
 POST        /subscription/event          controllers.Subscription.event(secret: String)
 
 # Events
@@ -38,9 +37,9 @@ GET         /tier/cancel                 controllers.TierController.cancelTier
 POST        /tier/cancel/confirm         controllers.TierController.cancelTierConfirm
 GET         /tier/cancel/summary         controllers.TierController.cancelTierSummary
 
-GET         /tier/change/friend          controllers.TierController.friendDowngrade
-POST        /tier/change/friend          controllers.TierController.friendDowngradeConfirm
-GET         /tier/change/friend/summary  controllers.TierController.friendDowngradeSummary
+GET         /tier/change/friend          controllers.TierController.downgradeToFriend
+POST        /tier/change/friend          controllers.TierController.downgradeToFriendConfirm
+GET         /tier/change/friend/summary  controllers.TierController.downgradeToFriendSummary
 
 GET         /tier/change/:tier           controllers.TierController.upgrade(tier)
 POST        /tier/change/:tier           controllers.TierController.upgradeConfirm(tier)

@@ -3,8 +3,8 @@ package controllers
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import actions.{ MemberAction, AuthenticatedAction }
-import model.{Member, Tier}
+import actions.{PaidMemberAction, AuthenticatedAction}
+import model.Tier
 import services.{MemberService, StripeService}
 
 trait Joiner extends Controller {
@@ -43,12 +43,11 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPaid(tier: String) = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId.get).map { customer =>
+  def thankyouPaid(tier: String) = PaidMemberAction.async { implicit request =>
+    StripeService.Customer.read(request.stripeCustomerId).map { customer =>
       val response = for {
-        subscription <- customer.subscription
-        card <- customer.card
-      } yield Ok(views.html.joiner.thankyou.partner(subscription, card))
+        paymentDetails <- customer.paymentDetails
+      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails))
 
       response.getOrElse(NotFound)
     }

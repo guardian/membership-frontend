@@ -21,7 +21,8 @@ import configuration.Config
 import model.{Tier, Member}
 import model.Tier.Tier
 import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.Subscription
+import model.Stripe.{Customer, Subscription}
+import com.gu.identity.model.User
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -57,7 +58,7 @@ abstract class MemberService {
       result <- salesforce.patch(
         contactURL(Keys.USER_ID, member.identityId),
         Json.obj(
-          Keys.CUSTOMER_ID -> member.customerId,
+          Keys.CUSTOMER_ID -> member.stripeCustomerId,
           Keys.LAST_NAME-> "LAST NAME",
           Keys.TIER -> member.tier.toString,
           Keys.OPT_IN -> member.optedIn
@@ -76,7 +77,7 @@ abstract class MemberService {
           Keys.TIER -> tier.toString
         )
       )
-    } yield Some(result.json.as[Member])
+    } yield (result.json \ "id").as[String]
   }
 
   private def getMember(key: String, id: String): Future[Option[Member]] = {
@@ -113,12 +114,18 @@ abstract class MemberService {
     } yield discount.headOption
   }
 
-  def cancelPayment(member: Member): Future[Option[Subscription]] = {
-    for {
-      customer <- StripeService.Customer.read(member.customerId.get)
-      cancelledOpt = customer.subscription.map { subscription =>
-        StripeService.Subscription.delete(customer.id, subscription.id)
+  def cancelAnySubscriptionPayment(member: Member): Future[Option[Subscription]] = {
+    def cancelSubscription(customer: Customer): Option[Future[Subscription]] = {
+      for {
+        paymentDetails <- customer.paymentDetails
+      } yield {
+        StripeService.Subscription.delete(customer.id, paymentDetails.subscription.id)
       }
+    }
+
+    for {
+      customer <- StripeService.Customer.read(member.stripeCustomerId.get)
+      cancelledOpt = cancelSubscription(customer)
       cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
     } yield cancelledSubscription.headOption
   }

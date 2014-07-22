@@ -24,13 +24,9 @@ trait User extends Controller {
         val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
         Future.successful(Cors(Ok(details)))
 
-      case _ => StripeService.Customer.read(request.member.customerId.get).map { customer =>
-        val subscriptionOpt = for {
-          subscription <- customer.subscription
-          card <- customer.card
-        } yield subscriptionDetails(subscription, card)
-
-        Cors(Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj())))
+      case _ => StripeService.Customer.read(request.member.stripeCustomerId.get).map { customer =>
+        val paymentDetails = customer.paymentDetails.fold(Json.obj())(extractPaymentDetails)
+        Cors(Ok(basicDetails(request) ++ paymentDetails))
       }
     }
   }
@@ -48,16 +44,16 @@ trait User extends Controller {
     )
   }
 
-  def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) = {
+  def extractPaymentDetails(paymentDetails: Stripe.PaymentDetails) = {
     val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
     implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
     Json.obj(
       "subscription" -> Json.obj(
-        "start" -> subscription.start,
-        "end" -> subscription.current_period_end,
-        "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount),
-        "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
+        "start" -> paymentDetails.subscription.start,
+        "end" -> paymentDetails.subscription.current_period_end,
+        "plan" -> Json.obj("name" -> paymentDetails.subscription.plan.name, "amount" -> paymentDetails.subscription.plan.amount),
+        "card" -> Json.obj("last4" -> paymentDetails.card.last4, "type" -> paymentDetails.card.`type`)
       )
     )
   }
