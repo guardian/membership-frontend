@@ -39,6 +39,7 @@ abstract class MemberService {
     val TIER = "Membership_Tier__c"
     val OPT_IN = "Membership_Opt_In__c"
     val CREATED = "CreatedDate"
+    val EMAIL = "Email"
   }
 
   def contactURL(key: String, id: String): String = s"/services/data/v29.0/sobjects/Contact/$key/$id"
@@ -67,14 +68,15 @@ abstract class MemberService {
     } yield member
   }
 
-  def insert(userId: String, customerId: String, tier: Tier): Future[Option[Member]] = {
+  def insert(user: User, customerId: String, tier: Tier): Future[String] = {
     for {
       result <- salesforce.patch(
-        contactURL(Keys.USER_ID, userId),
+        contactURL(Keys.USER_ID, user.id),
         Json.obj(
           Keys.CUSTOMER_ID -> customerId,
           Keys.LAST_NAME -> "LAST NAME",
-          Keys.TIER -> tier.toString
+          Keys.TIER -> tier.toString,
+          Keys.EMAIL -> user.getPrimaryEmailAddress
         )
       )
     } yield (result.json \ "id").as[String]

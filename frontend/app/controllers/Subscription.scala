@@ -31,7 +31,7 @@ trait Subscription extends Controller {
     val payment = for {
       customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
-      member <- MemberService.insert(request.user.id, customer.id, Tier.withName(tier))
+      member <- MemberService.insert(request.user, customer.id, Tier.withName(tier))
     } yield {
       /*
       We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.
