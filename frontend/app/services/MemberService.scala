@@ -96,10 +96,6 @@ abstract class MemberService {
   def get(userId: String): Future[Option[Member]] = getMember(Keys.USER_ID, userId)
   def getByCustomerId(customerId: String): Future[Option[Member]] = getMember(Keys.CUSTOMER_ID, customerId)
 
-  def delete(member: Member) = {
-    // TODO: do we actually delete in SF?
-  }
-
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
     def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
