@@ -126,10 +126,10 @@ trait CancelTier {
   }
 
   def cancelTierSummary() = MemberAction.async { implicit request =>
-    val futurePaymentDetails: Future[Option[PaymentDetails]] = request.member.stripeCustomerId
-      .map { stripeCustomerId =>
-      StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
-    }.getOrElse(Future.successful(None))
+    val futurePaymentDetails =
+      request.member.stripeCustomerId.map { stripeCustomerId =>
+        StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
+      }.getOrElse(Future.successful(None))
 
     futurePaymentDetails.map(paymentDetails => Ok(views.html.tier.cancel.summary(paymentDetails)))
   }
