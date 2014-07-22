@@ -135,7 +135,7 @@ define([
 
             var token = response.id;
             var data = self.buildDataObject(self.formElement, {
-                stripeToken: token
+                'payment.token': token
             });
 
             ajax({
