@@ -74,7 +74,7 @@ abstract class MemberService {
         contactURL(Keys.USER_ID, user.id),
         Json.obj(
           Keys.CUSTOMER_ID -> customerId,
-          Keys.LAST_NAME -> "LAST NAME",
+          Keys.LAST_NAME -> "LAST NAME", // TODO: fill surname
           Keys.TIER -> tier.toString,
           Keys.EMAIL -> user.getPrimaryEmailAddress
         )
