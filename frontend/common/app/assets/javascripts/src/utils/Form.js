@@ -120,7 +120,7 @@ define([
     };
 
     /**
-     *
+     * handle response from stripe, success or error failure
      * @param status
      * @param response
      */
