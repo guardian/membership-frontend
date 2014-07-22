@@ -3,13 +3,26 @@ require([
     'src/utils/router',
     'domready',
     'ajax',
-    'src/modules/joiner/form',
-    'src/modules/joiner/upgradeForm',
+    'src/modules/tier/joinFree',
+    'src/modules/tier/joinPaid',
+    'src/modules/tier/upgrade',
     'src/modules/events/ctaButton',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent'
-], function(omnitureAnalytics, router, domready, ajax, StripeForm, UpgradeForm, ctaButton, Header, DatetimeEnhance, modifyEvent) {
+], function(
+    omnitureAnalytics,
+    router,
+    domready,
+    ajax,
+    JoinFree,
+    JoinPaid,
+    Upgrade,
+    ctaButton,
+    Header,
+    DatetimeEnhance,
+    modifyEvent
+    ) {
     'use strict';
 
     ajax.init({page: {ajaxUrl: ''}});
@@ -20,45 +33,16 @@ require([
         modifyEvent.init();
     });
 
+    router.match('*/detail').to(function () {
+        (new JoinFree()).init();
+    });
+
     router.match('*/payment').to(function () {
-        var stripe = new StripeForm();
-        stripe.init(undefined, function (response) {
-            var self = this;
-            // token contains id, last4, and card type
-            var token = response.id;
-
-            ajax({
-                url: '/subscription/subscribe',
-                method: 'post',
-                data: {
-                    stripeToken: token,
-                    tier: self.getElement('TIER_FIELD').val()
-                },
-                success: function () {
-                    self.stopLoader();
-                    window.location = window.location.href.replace('payment', 'thankyou');
-                },
-                error: function (error) {
-
-                    var errorObj,
-                        errorMessage;
-
-                    try {
-                        errorObj = error.response && JSON.parse(error.response);
-                        errorMessage = self.getErrorMessage(errorObj);
-                        if (errorMessage) {
-                            self.handleErrors([errorMessage]);
-                        }
-                    } catch (e) {}
-
-                    self.stopLoader();
-                }
-            });
-        });
+        (new JoinPaid()).init();
     });
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
-        (new UpgradeForm()).init();
+        (new Upgrade()).init();
     });
 
     router.match('*').to(function () {

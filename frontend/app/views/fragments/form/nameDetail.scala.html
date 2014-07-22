@@ -1,0 +1,24 @@
+<fieldset class="fieldset address-fieldset">
+
+    <div class="fieldset__heading">
+        <h2 class="form__heading">Name</h2>
+        <div class="form__note">All fields with <span class="required-marker"></span>required.</div>
+    </div>
+
+    <div class="fieldset__fields">
+
+        <div class="form-field">
+            <label class="label label--inline label--half" for="name-first">First
+                <input type="text" name="name.first" id="name-first" class="text-input text-input--block js-name-first"
+                       data-error-message="Please enter your first name"/>
+            </label>@*
+            == Inline block whitespace ==
+            *@<label class="label label--inline label--half" for="name-last">Last
+                <input type="text" name="name.last" id="name-last" class="text-input text-input--block js-name-last"
+                       data-error-message="Please enter your last name"/>
+            </label>
+        </div>
+
+    </div>
+
+</fieldset>

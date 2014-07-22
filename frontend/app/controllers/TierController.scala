@@ -14,7 +14,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.{MemberRequest, AuthRequest, MemberAction, AuthenticatedAction}
 import services.{MemberService, StripeService}
 
-case class AddressForm(street: String, postCode: String, city: String, country: String)
+case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String, postCode: String, country: String)
 
 case class UpgradeTierForm(paymentType: String, stripeToken: String, deliveryAddress: AddressForm, billingAddress: AddressForm)
 
@@ -58,8 +58,10 @@ trait UpgradeTier {
   )
 
   def addressMapping(textMapping: Mapping[String]): Mapping[AddressForm] = mapping(
-    "street" -> textMapping,
-    "city" -> textMapping,
+    "lineOne" -> textMapping,
+    "lineTwo" -> textMapping,
+    "town" -> textMapping,
+    "countyOrState" -> textMapping,
     "postCode" -> textMapping,
     "country" -> textMapping
   )(AddressForm.apply)(AddressForm.unapply)
