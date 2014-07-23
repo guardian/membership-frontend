@@ -80,12 +80,10 @@ abstract class MemberService {
         )
       )
     } yield {
-      Logger.debug(result.body)
       result.status match {
         case CREATED => (result.json \ "id").as[String]
         case code =>
           Logger.error(s"insert failed, Salesforce returned $code")
-          Logger.error(result.body)
           throw MemberServiceError(s"Salesforce return $code")
       }
     }
@@ -158,11 +156,28 @@ object MemberService extends MemberService {
     def login(endpoint: String, params: Seq[(String, String)]) =
       WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
 
-    def get(endpoint: String) =
-      WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").get()
+    def get(endpoint: String) = {
+      Logger.debug(s"MemberService: get $endpoint")
 
-    def patch(endpoint: String, body: JsValue) =
-      WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").patch(body)
+      val futureResult = WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").get()
+      futureResult.foreach { result =>
+        Logger.debug(s"MemberService: get response ${result.status}")
+        Logger.debug(result.body)
+      }
+      futureResult
+    }
+
+    def patch(endpoint: String, body: JsValue) = {
+      Logger.debug(s"MemberService: patch $endpoint")
+      Logger.debug(Json.prettyPrint(body))
+
+      val futureResult = WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").patch(body)
+      futureResult.foreach { result =>
+        Logger.debug(s"MemberService: patch response ${result.status}")
+        Logger.debug(result.body)
+      }
+      futureResult
+    }
   }
 
   private implicit val system = Akka.system
