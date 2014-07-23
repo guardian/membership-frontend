@@ -39,7 +39,7 @@ define([
 
     JoinPaid.prototype.toggleBillingAddressListener = function() {
         bean.on($(this.getElem('BILLING_CTA'))[0], 'click', function () {
-            $(self.getElem('BILLING_FIELDSET')).toggleClass('u-h');
+            $(self.getElem('BILLING_FIELDSET')).toggleClass('address-fieldset--show');
         });
     };
 
