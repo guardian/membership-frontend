@@ -65,8 +65,7 @@
         document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + ' ' + htmlClassNames.join(' ');
 
         if (isModern) {
-            @* we can use classList here, hooray *@
-            document.documentElement.classList.remove('js-not-modern');
+            document.documentElement.className = document.documentElement.className.replace(/\bjs-not-modern\b/g, '')
 
             // only load JS if the browser cuts the mustard
             (function(scriptUrl) {
