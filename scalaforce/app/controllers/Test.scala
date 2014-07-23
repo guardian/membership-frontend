@@ -12,6 +12,7 @@ import play.api.data.Forms._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WS
 import play.api.Play.current
+import play.api.Logger
 
 object Test extends Controller {
   def start = Action {
@@ -24,9 +25,9 @@ object Test extends Controller {
     val (url, method, body) = form.bindFromRequest.get
 
     for {
-      token <- Testforce.getAccessToken
-      result <- WS.url(Testforce.apiURL + url)
-        .withHeaders("Authorization" -> s"Bearer $token")
+      authentication <- Testforce.getAuthentication
+      result <- WS.url(authentication.instance_url + url)
+        .withHeaders("Authorization" -> s"Bearer ${authentication.access_token}")
         .withBody(body)
         .execute(method)
     } yield {
@@ -51,13 +52,34 @@ object Testforce extends Scalaforce {
   val apiPassword = config.getString("salesforce.api.password")
   val apiToken = config.getString("salesforce.api.token")
 
-  def login(endpoint: String, params: Seq[(String, String)]) =
-    WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
+  def login(endpoint: String, params: Seq[(String, String)]) = {
+    val futureResult = WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
 
-  def get(endpoint: String) =
-    WS.url(apiURL + endpoint).withHeaders("Authoriation" -> s"Bearer token").get()
+    futureResult.foreach { result =>
+      Logger.debug(s"LOGIN result ${result.status}")
+      Logger.debug(result.body)
+    }
+    futureResult
+  }
 
-  def patch(endpoint: String, body: JsValue) =
-    WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer token").patch(body)
+  def get(endpoint: String) = {
+    val futureResult = WS.url(apiURL + endpoint).withHeaders("Authoriation" -> s"Bearer token").get()
+
+    futureResult.foreach { result =>
+      Logger.debug(s"GET result ${result.status}")
+      Logger.debug(result.body)
+    }
+    futureResult
+  }
+
+  def patch(endpoint: String, body: JsValue) = {
+    val futureResult = WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer token").patch(body)
+
+    futureResult.foreach { result =>
+      Logger.debug(s"PATCH result ${result.status}")
+      Logger.debug(result.body)
+    }
+    futureResult
+  }
 
 }
