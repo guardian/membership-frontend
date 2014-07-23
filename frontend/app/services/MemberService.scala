@@ -47,7 +47,7 @@ abstract class MemberService {
   implicit val readsDateTime = JsPath.read[String].map(s => new DateTime(s))
   implicit val readsMember: Reads[Member] = (
     (JsPath \ Keys.ID).read[String] and
-      (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
+      (JsPath \ Keys.USER_ID).read[String] and
       (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
       (JsPath \ Keys.CUSTOMER_ID).read[Option[String]] and
       (JsPath \ Keys.CREATED).read[DateTime] and
