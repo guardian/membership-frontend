@@ -9,7 +9,7 @@ import org.joda.time.DateTime
 
 import play.api.libs.concurrent.Akka
 import play.api.Logger
-import play.api.http.Status.{OK, NO_CONTENT, NOT_FOUND}
+import play.api.http.Status.{OK, CREATED, NOT_FOUND}
 import play.api.Play.current
 import play.api.libs.ws.WS
 import play.api.libs.json.{JsValue, Json, JsPath, Reads}
@@ -80,8 +80,9 @@ abstract class MemberService {
         )
       )
     } yield {
+      Logger.debug(result.body)
       result.status match {
-        case OK => (result.json \ Keys.ID).as[String]
+        case CREATED => (result.json \ "id").as[String]
         case code =>
           Logger.error(s"insert failed, Salesforce returned $code")
           Logger.error(result.body)
