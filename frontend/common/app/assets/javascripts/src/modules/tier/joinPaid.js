@@ -6,10 +6,7 @@ define([
 ], function ($, bean, component, Form) {
     'use strict';
 
-    var self;
-    var JoinPaid = function () {
-        self = this;
-    };
+    var JoinPaid = function () {};
 
     component.define(JoinPaid);
 
