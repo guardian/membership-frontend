@@ -45,7 +45,7 @@ which includes both Node.js and NPM.
 
     If you have the AWS CLI set up you can run
     ```
-    aws s3 cp s3://membership-private/keys.conf /etc/gu/membership-keys.conf
+    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
     ```
 1. In ~/.bash_profile add
     ```
