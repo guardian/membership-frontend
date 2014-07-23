@@ -15,7 +15,7 @@ import play.api.libs.ws.WS
 import play.api.libs.json.{JsValue, Json, JsPath, Reads}
 import play.api.libs.functional.syntax._
 
-import com.gu.scalaforce.Scalaforce
+import com.gu.scalaforce.{Authentication, Scalaforce}
 
 import configuration.Config
 import model.{Tier, Member}
@@ -142,7 +142,7 @@ abstract class MemberService {
 }
 
 object MemberService extends MemberService {
-  val accessToken = Agent[String]("")
+  val authenticationAgent = Agent[Authentication](Authentication("", ""))
 
   val salesforce = new Scalaforce {
     val consumerKey: String = Config.salesforceConsumerKey
@@ -153,13 +153,20 @@ object MemberService extends MemberService {
     val apiPassword: String = Config.salesforceApiPassword
     val apiToken: String = Config.salesforceApiToken
 
+    private def requestWithAuth(endpoint: String) = {
+      val authentication = authenticationAgent.get()
+
+      WS.url(authentication.instance_url + endpoint)
+        .withHeaders("Authorization" -> s"Bearer ${authentication.access_token}")
+    }
+
     def login(endpoint: String, params: Seq[(String, String)]) =
       WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
 
     def get(endpoint: String) = {
       Logger.debug(s"MemberService: get $endpoint")
 
-      val futureResult = WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").get()
+      val futureResult = requestWithAuth(endpoint).get()
       futureResult.foreach { result =>
         Logger.debug(s"MemberService: get response ${result.status}")
         Logger.debug(result.body)
@@ -171,7 +178,7 @@ object MemberService extends MemberService {
       Logger.debug(s"MemberService: patch $endpoint")
       Logger.debug(Json.prettyPrint(body))
 
-      val futureResult = WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").patch(body)
+      val futureResult = requestWithAuth(endpoint).patch(body)
       futureResult.foreach { result =>
         Logger.debug(s"MemberService: patch response ${result.status}")
         Logger.debug(result.body)
@@ -184,8 +191,8 @@ object MemberService extends MemberService {
 
   def refresh() {
     Logger.debug("Refreshing Scalaforce token")
-    accessToken.sendOff(_ => {
-      val token = Await.result(salesforce.getAccessToken, 15.seconds)
+    authenticationAgent.sendOff(_ => {
+      val token = Await.result(salesforce.getAuthentication, 15.seconds)
       Logger.debug(s"Got token $token")
       token
     })
