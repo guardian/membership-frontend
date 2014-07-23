@@ -1,0 +1,34 @@
+.js-warning {
+    background-color: #e9e939;
+    padding: 5px;
+    font-size: 1.4rem;
+    text-align: center;
+    opacity: .8;
+}
+
+.js-warning p {
+    margin: 0;
+}
+
+// hide all JS warning messages by default
+.js-warning,
+.js-warning__js-off,
+.js-warning__unsupported {
+    display: none;
+}
+
+// show the container if any JS requirement fails
+.js-off .js-warning,
+.js-not-modern .js-warning {
+    display: block;
+}
+
+// show the JS off warning to non-JS users
+.js-off .js-warning__js-off {
+    display: block;
+}
+
+// show the ancient browser warning to browsers that don't cut the mustard
+.js-not-modern .js-warning__unsupported {
+    display: block;
+}
