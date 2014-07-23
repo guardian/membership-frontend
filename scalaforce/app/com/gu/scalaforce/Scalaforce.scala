@@ -19,6 +19,13 @@ trait Scalaforce {
   def get(endpoint: String): Future[WSResponse]
   def patch(endpoint: String, body: JsValue): Future[WSResponse]
 
+  /**
+   * This uses the Salesforce Username-Password Flow to get an access token.
+   *
+   *
+   * https://help.salesforce.com/apex/HTViewHelpDoc?id=remoteaccess_oauth_username_password_flow.htm
+   * https://www.salesforce.com/us/developer/docs/api_rest/Content/intro_understanding_username_password_oauth_flow.htm
+   */
   def getAccessToken: Future[String] = {
     val params = Seq(
       "client_id" -> consumerKey,
