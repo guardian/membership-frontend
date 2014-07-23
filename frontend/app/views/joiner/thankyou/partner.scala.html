@@ -1,8 +1,8 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
+@(paymentDetails: model.Stripe.PaymentDetails)
 
 @import views.support.Dates._
 
-@main("Thankyou | " + subscription.plan.name) {
+@main("Thankyou | " + paymentDetails.subscription.plan.name) {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
         <h1 class="section-headline u-text-hyphenate">Thank You</h1>
@@ -10,7 +10,7 @@
         </p>
     </section>
 
-    @fragments.joiner.thankyou.paymentSummary(subscription, card)
+    @fragments.joiner.thankyou.paymentSummary(paymentDetails)
 
     <section class="align-center">
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>

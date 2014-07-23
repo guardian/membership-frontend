@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
+@(paymentDetails: model.Stripe.PaymentDetails)
 
 @import configuration.Config
 @import views.support.Dates._
@@ -11,7 +11,7 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership benefits until @subscription.current_period_end.pretty</p>
+                    <p>You will continue to receive all the great Membership benefits until @paymentDetails.subscription.current_period_end.pretty</p>
                 </article>
             </section>
         </div>
@@ -21,7 +21,7 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @fragments.tier.summary(subscription, card)
+                    @fragments.tier.summary(paymentDetails.subscription)
                 </div>
             </section>
         </div>
@@ -45,7 +45,7 @@
                                 Start Date
                             </td>
                             <td class="summary-table__cell">
-                                @subscription.current_period_end.pretty
+                                @paymentDetails.subscription.current_period_end.pretty
                             </td>
                         </tr>
                         <tr class="summary-table__row" role="row">

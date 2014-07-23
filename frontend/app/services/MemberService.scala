@@ -1,113 +1,113 @@
 package services
 
-import java.math.BigInteger
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.joda.time.DateTimeZone.UTC
-import com.github.nscala_time.time.Imports._
-import scala.collection.JavaConverters._
+import scala.concurrent.duration._
+import akka.agent.Agent
 
+import org.joda.time.DateTime
+
+import play.api.libs.concurrent.Akka
 import play.api.Logger
+import play.api.http.Status.{OK, NOT_FOUND}
+import play.api.Play.current
+import play.api.libs.ws.WS
+import play.api.libs.json.{JsValue, Json, JsPath, Reads}
+import play.api.libs.functional.syntax._
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.amazonaws.regions.{Regions, Region}
-import com.amazonaws.services.dynamodbv2.model._
+import com.gu.scalaforce.Scalaforce
 
+import configuration.Config
 import model.{Tier, Member}
+import model.Tier.Tier
 import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.Subscription
+import model.Stripe.{Customer, Subscription}
+import com.gu.identity.model.User
 
-trait MemberService {
-  def put(member: Member): Future[Unit]
-
-  def get(userId: String): Future[Option[Member]]
-  def getByCustomerId(customerId: String): Future[Option[Member]]
-
-  def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]]
+case class MemberServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
 }
 
-object MemberService extends MemberService {
-
-  val TABLE_NAME = "members"
+abstract class MemberService {
+  val salesforce: Scalaforce
 
   object Keys {
-    val USER_ID = "userId"
-    val TIER = "tier"
-    val CUSTOMER_ID = "customerId"
-    val JOIN_DATE = "joinDate"
-    val CANCELLATION_REQUESTED = "cancellationRequested"
+    val ID = "Id"
+    val LAST_NAME = "LastName"
+    val USER_ID = "IdentityID__c"
+    val CUSTOMER_ID = "Stripe_Customer_ID__c"
+    val TIER = "Membership_Tier__c"
+    val OPT_IN = "Membership_Opt_In__c"
+    val CREATED = "CreatedDate"
+    val EMAIL = "Email"
   }
 
-  val client = new AmazonDynamoDBClient
-  client.setRegion(Region.getRegion(Regions.EU_WEST_1))
+  def contactURL(key: String, id: String): String = s"/services/data/v29.0/sobjects/Contact/$key/$id"
 
-  private def att(value: String) = new AttributeValue(value)
+  implicit val readsDateTime = JsPath.read[String].map(s => new DateTime(s))
+  implicit val readsMember: Reads[Member] = (
+    (JsPath \ Keys.ID).read[String] and
+      (JsPath \ Keys.USER_ID).read[Int].map(_.toString) and
+      (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
+      (JsPath \ Keys.CUSTOMER_ID).read[Option[String]] and
+      (JsPath \ Keys.CREATED).read[DateTime] and
+      (JsPath \ Keys.OPT_IN).read[Boolean]
+    )(Member.apply _)
 
-  def put(member: Member): Future[Unit] = Future.successful {
-    Logger.debug(s"Putting member $member")
-
-    val attrs = Map(
-      Keys.USER_ID -> att(member.userId),
-      Keys.TIER -> att(member.tier.toString),
-      Keys.CUSTOMER_ID -> att(member.customerId),
-      Keys.JOIN_DATE -> att(member.joinDate.getOrElse(DateTime.now.toDateTime(UTC)).toString)
-    ) ++ (if (member.cancellationRequested) Some(Keys.CANCELLATION_REQUESTED -> att("true")) else None)
-
-    client.putItem(TABLE_NAME, attrs.asJava)
-  }
-
-  private def getMember(attrs: Map[String, AttributeValue]): Option[Member] = {
+  def update(member: Member): Future[Member] = {
     for {
-      id <- attrs.get(Keys.USER_ID)
-      tier <- attrs.get(Keys.TIER)
-      customerId <- attrs.get(Keys.CUSTOMER_ID)
-      joinDate <- attrs.get(Keys.JOIN_DATE)
+      result <- salesforce.patch(
+        contactURL(Keys.USER_ID, member.identityId),
+        Json.obj(
+          Keys.CUSTOMER_ID -> member.stripeCustomerId,
+          Keys.LAST_NAME-> "LAST NAME",
+          Keys.TIER -> member.tier.toString,
+          Keys.OPT_IN -> member.optedIn
+        )
+      )
+    } yield member
+  }
+
+  def insert(user: User, customerId: String, tier: Tier): Future[String] = {
+    for {
+      result <- salesforce.patch(
+        contactURL(Keys.USER_ID, user.id),
+        Json.obj(
+          Keys.CUSTOMER_ID -> customerId,
+          Keys.LAST_NAME -> "LAST NAME", // TODO: fill surname
+          Keys.TIER -> tier.toString,
+          Keys.EMAIL -> user.getPrimaryEmailAddress
+        )
+      )
+    } yield (result.json \ "id").as[String]
+  }
+
+  private def getMember(key: String, id: String): Future[Option[Member]] = {
+    for {
+      result <- salesforce.get(contactURL(key, id))
     } yield {
-      val cancellationRequested = attrs.get(Keys.CANCELLATION_REQUESTED).exists(_ => true)
-      Member(id.getS, Tier.withName(tier.getS), customerId.getS, Some(new DateTime(joinDate.getS)), cancellationRequested)
+      result.status match {
+        case OK => Some(result.json.as[Member])
+        case NOT_FOUND => None
+        case code =>
+          Logger.error(s"getMember failed, Salesforce returned $code")
+          throw MemberServiceError(s"Salesforce returned $code")
+      }
     }
   }
 
-  def get(userId: String): Future[Option[Member]] = {
-    val memberOpt = for {
-      attrsJ <- Option(client.getItem(TABLE_NAME, Map(Keys.USER_ID -> att(userId)).asJava).getItem)
-      attrs = attrsJ.asScala.toMap
-      member <- getMember(attrs)
-    } yield member
-
-    Future.successful(memberOpt)
-  }
-
-  def getByCustomerId(customerId: String): Future[Option[Member]] = {
-    val cond = new Condition()
-      .withComparisonOperator(ComparisonOperator.EQ)
-      .withAttributeValueList(att(customerId))
-
-    val query = new QueryRequest()
-      .withTableName(TABLE_NAME)
-      .withIndexName(s"${Keys.CUSTOMER_ID}-index")
-      .withKeyConditions(Map(Keys.CUSTOMER_ID -> cond).asJava)
-
-    val memberOpt = for {
-      attrsJ <- client.query(query).getItems.asScala.headOption
-      attrs = attrsJ.asScala.toMap
-      member <- getMember(attrs)
-    } yield member
-
-    Future.successful(memberOpt)
-  }
-
-  def delete(member: Member) = {
-    client.deleteItem(TABLE_NAME, Map(Keys.USER_ID -> att(member.userId)).asJava)
-  }
+  def get(userId: String): Future[Option[Member]] = getMember(Keys.USER_ID, userId)
+  def getByCustomerId(customerId: String): Future[Option[Member]] = getMember(Keys.CUSTOMER_ID, customerId)
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
     def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
       // code should be unique for each user/event combination
       memberOpt
-        .filter { _.tier >= Tier.Partner }
-        .map(_ => EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${userId}_${event.id}")))
+        .filter(_.tier >= Tier.Partner)
+        .map { member =>
+          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}"))
+        }
     }
 
     for {
@@ -116,13 +116,59 @@ object MemberService extends MemberService {
     } yield discount.headOption
   }
 
-  def cancelPayment(member:Member): Future[Option[Subscription]] = {
-    for {
-      customer <- StripeService.Customer.read(member.customerId)
-      cancelledOpt = customer.subscription.map { subscription =>
-        StripeService.Subscription.delete(customer.id, subscription.id)
+  def cancelAnySubscriptionPayment(member: Member): Future[Option[Subscription]] = {
+    def cancelSubscription(customer: Customer): Option[Future[Subscription]] = {
+      for {
+        paymentDetails <- customer.paymentDetails
+      } yield {
+        StripeService.Subscription.delete(customer.id, paymentDetails.subscription.id)
       }
+    }
+
+    for {
+      customer <- StripeService.Customer.read(member.stripeCustomerId.get)
+      cancelledOpt = cancelSubscription(customer)
       cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
     } yield cancelledSubscription.headOption
+  }
+
+}
+
+object MemberService extends MemberService {
+  val accessToken = Agent[String]("")
+
+  val salesforce = new Scalaforce {
+    val consumerKey: String = Config.salesforceConsumerKey
+    val consumerSecret: String = Config.salesforceConsumerSecret
+
+    val apiURL: String = Config.salesforceApiUrl
+    val apiUsername: String = Config.salesforceApiUsername
+    val apiPassword: String = Config.salesforceApiPassword
+    val apiToken: String = Config.salesforceApiToken
+
+    def login(endpoint: String, params: Seq[(String, String)]) =
+      WS.url(apiURL + endpoint).withQueryString(params: _*).post("")
+
+    def get(endpoint: String) =
+      WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").get()
+
+    def patch(endpoint: String, body: JsValue) =
+      WS.url(apiURL + endpoint).withHeaders("Authorization" -> s"Bearer ${accessToken.get()}").patch(body)
+  }
+
+  private implicit val system = Akka.system
+
+  def refresh() {
+    Logger.debug("Refreshing Scalaforce token")
+    accessToken.sendOff(_ => {
+      val token = Await.result(salesforce.getAccessToken, 15.seconds)
+      Logger.debug(s"Got token $token")
+      token
+    })
+  }
+
+  def start() {
+    Logger.info("Starting Scalaforce background tasks")
+    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
   }
 }

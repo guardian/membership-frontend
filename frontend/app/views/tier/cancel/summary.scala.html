@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card)
+@(paymentDetailsOpt: Option[model.Stripe.PaymentDetails])
 
 @import configuration.Config
 @import views.support.Dates._
@@ -11,7 +11,9 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership Benefits until @subscription.current_period_end.pretty</p>
+                    @for(paymentDetails <- paymentDetailsOpt) {
+                        <p>You will continue to receive all the great Membership Benefits until @paymentDetails.subscription.current_period_end.pretty</p>
+                    }
                 </article>
             </section>
         </div>
@@ -21,7 +23,9 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @fragments.tier.summary(subscription, card)
+                    @for(paymentDetails <- paymentDetailsOpt) {
+                        @fragments.tier.summary(paymentDetails.subscription)
+                    }
                 </div>
             </section>
         </div>

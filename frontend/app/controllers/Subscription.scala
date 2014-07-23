@@ -12,7 +12,7 @@ import services.{ MemberService, StripeService }
 import model.{ Stripe, Tier, Member }
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
-import actions.{MemberAction, AuthenticatedAction, AuthRequest}
+import actions.{PaidMemberAction, MemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
 
 trait Subscription extends Controller {
@@ -31,7 +31,7 @@ trait Subscription extends Controller {
     val payment = for {
       customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
-      done <- MemberService.put(Member(request.user.id, Tier.withName(tier), customer.id))
+      member <- MemberService.insert(request.user, customer.id, Tier.withName(tier))
     } yield {
       /*
       We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.
@@ -45,23 +45,12 @@ trait Subscription extends Controller {
     }
   }
 
-  def cancel = MemberAction.async { implicit request =>
-    for {
-      customer <- StripeService.Customer.read(request.member.customerId)
-      subscriptionIdOpt = customer.subscription.map(_.id)
-      status <- subscriptionIdOpt
-        .fold(Future.successful(NotFound)) {
-          StripeService.Subscription.delete(customer.id, _).map(_ => Ok)
-        }
-    } yield status
-  }
-
-  def update = MemberAction.async { implicit request =>
+  def updateCard() = PaidMemberAction.async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
         for {
-          customer <- StripeService.Customer.updateCard(request.member.customerId, stripeToken)
-          cardOpt = customer.card
+          customer <- StripeService.Customer.updateCard(request.stripeCustomerId, stripeToken)
+          cardOpt = customer.paymentDetails.map(_.card)
         } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
       ).recover {
         case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
