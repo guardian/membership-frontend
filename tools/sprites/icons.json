@@ -1,0 +1,11 @@
+{
+    "src":          "../../frontend/public/images/svgs/",
+    "imgDest":      "../../frontend/public/images/sprite/",
+    "cssDest":      "../../frontend/common/app/assets/stylesheets/icons/",
+    "datasvgcss":   "icons-svg.scss",
+    "urlpngcss" :   "icons-sprite.scss",
+    "spritepath":   "/assets/images/sprite/",
+    "svg":          true,
+    "cssprefix":    "i-new-",
+    "cssparent":    "i-2"
+}
