@@ -24,7 +24,8 @@ define([
         ADDRESS_LINE_ONE: 'js-address-line-one',
         TOWN: 'js-town',
         POST_CODE: 'js-post-code',
-        BILLING_CTA: 'js-toggle-billing-address',
+        BILLING: 'js-toggle-billing-address',
+        BILLING_CTA: 'js-toggle-billing-address-cta',
         BILLING_FIELDSET: 'js-billingAddress-fieldset'
     };
 
