@@ -39,8 +39,15 @@ define([
     };
 
     JoinPaid.prototype.toggleBillingAddressListener = function() {
+        var $billing = $(this.getElem('BILLING')).removeClass('u-h');
+        var $billingDetails = $(this.getElem('BILLING_FIELDSET')).detach();
+
         bean.on($(this.getElem('BILLING_CTA'))[0], 'click', function () {
-            $(self.getElem('BILLING_FIELDSET')).toggleClass('u-h');
+            if ($billingDetails.parent().length === 0) {
+                $billingDetails.insertAfter($billing);
+            } else {
+                $billingDetails.detach();
+            }
         });
     };
 
