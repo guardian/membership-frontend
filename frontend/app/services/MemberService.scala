@@ -5,23 +5,22 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import akka.agent.Agent
 
-import org.joda.time.DateTime
-
 import play.api.libs.concurrent.Akka
 import play.api.Logger
 import play.api.http.Status.{OK, CREATED, NOT_FOUND}
 import play.api.Play.current
 import play.api.libs.ws.WS
-import play.api.libs.json.{JsValue, Json, JsPath, Reads}
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsValue, Json}
 
 import com.gu.scalaforce.{Authentication, Scalaforce}
 
 import configuration.Config
 import model.{Tier, Member}
+import model.MemberDeserializer._
 import model.Tier.Tier
 import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.{Customer, Subscription}
+
 import com.gu.identity.model.User
 
 case class MemberServiceError(s: String) extends Throwable {
@@ -29,30 +28,11 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 abstract class MemberService {
+  import model.Member.Keys
+
   val salesforce: Scalaforce
 
-  object Keys {
-    val ID = "Id"
-    val LAST_NAME = "LastName"
-    val USER_ID = "IdentityID__c"
-    val CUSTOMER_ID = "Stripe_Customer_ID__c"
-    val TIER = "Membership_Tier__c"
-    val OPT_IN = "Membership_Opt_In__c"
-    val CREATED = "CreatedDate"
-    val EMAIL = "Email"
-  }
-
   def contactURL(key: String, id: String): String = s"/services/data/v29.0/sobjects/Contact/$key/$id"
-
-  implicit val readsDateTime = JsPath.read[String].map(s => new DateTime(s))
-  implicit val readsMember: Reads[Member] = (
-    (JsPath \ Keys.ID).read[String] and
-      (JsPath \ Keys.USER_ID).read[String] and
-      (JsPath \ Keys.TIER).read[String].map(Tier.withName) and
-      (JsPath \ Keys.CUSTOMER_ID).read[Option[String]] and
-      (JsPath \ Keys.CREATED).read[DateTime] and
-      (JsPath \ Keys.OPT_IN).read[Boolean]
-    )(Member.apply _)
 
   def update(member: Member): Future[Member] = {
     for {
