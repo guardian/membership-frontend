@@ -5,6 +5,15 @@
             padding: $gs-gutter/2
         ));
     }
+    .header__inner--popup {
+        padding: 0;
+
+        @include mq(tablet) {
+            @include rem((
+                padding: $gs-gutter/2
+            ));
+        }
+    }
     .header__primary {
         float: left;
     }
