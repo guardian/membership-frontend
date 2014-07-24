@@ -15,7 +15,7 @@
             <label class="label" for="address-line-one">Address line 1
                 <input type="text" name="@(formType).lineOne" id="address-line-one"
                        class="text-input text-input--block js-address-line-one"
-                       data-error-message="Please enter your address first line"/>
+                       data-error-message="Please enter your @heading.toLowerCase() first line"/>
             </label>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="form-field">
             <label class="label" for="town">Town
                 <input type="text" name="@(formType).town" id="town" class="text-input text-input--block js-town"
-                       data-error-message="Please enter your town"/>
+                       data-error-message="Please enter your @heading.toLowerCase() town"/>
             </label>
         </div>
 
@@ -44,7 +44,7 @@
             <label class="label" for="postCode">Post code
                 <input type="text" name="@(formType).postCode" id="postCode"
                        class="text-input text-input--block js-post-code"
-                       data-error-message="Please enter your post code"/>
+                       data-error-message="Please enter your @heading.toLowerCase() post code"/>
             </label>
         </div>
 
