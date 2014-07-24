@@ -6,7 +6,10 @@ define([
 ], function ($, bean, component, Form) {
     'use strict';
 
-    var JoinPaid = function () {};
+    var self;
+    var JoinPaid = function () {
+        self = this;
+    };
 
     component.define(JoinPaid);
 
@@ -36,16 +39,66 @@ define([
     };
 
     JoinPaid.prototype.toggleBillingAddressListener = function() {
+        this.removeValidatorFromValidationProfile();
+
         var $billing = $(this.getElem('BILLING')).removeClass('u-h');
         var $billingDetails = $(this.getElem('BILLING_FIELDSET')).detach();
+        var $billingCTA = $(this.getElem('BILLING_CTA'));
 
-        bean.on($(this.getElem('BILLING_CTA'))[0], 'click', function () {
+        bean.on($billingCTA[0], 'click', function () {
+
             if ($billingDetails.parent().length === 0) {
+                // open
                 $billingDetails.insertAfter($billing);
+                $billingCTA.text('Same billing address as above');
+                self.addValidatorFromValidationProfile();
             } else {
+                // closed
+                $('.form-field', $billingDetails).removeClass('form-field--error');
+
+                $billingCTA.text('Different billing address?');
+                self.removeValidatorFromValidationProfile();
                 $billingDetails.detach();
             }
         });
+    };
+
+    JoinPaid.prototype.addValidatorFromValidationProfile = function () {
+
+        this.form.addValidatorFromValidationProfile(
+            [
+                {
+                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                },
+                {
+                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                },
+                {
+                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                }
+            ]);
+    };
+
+    JoinPaid.prototype.removeValidatorFromValidationProfile = function () {
+
+        this.form.removeValidatorFromValidationProfile(
+            [
+                {
+                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                },
+                {
+                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                },
+                {
+                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    validator: 'requiredValidator'
+                }
+            ]);
     };
 
     JoinPaid.prototype.addFormValidation = function () {
@@ -73,6 +126,18 @@ define([
                 },
                 {
                     elem: this.getElem('POST_CODE'),
+                    name: 'required'
+                },
+                {
+                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    name: 'required'
+                },
+                {
+                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    name: 'required'
+                },
+                {
+                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
                     name: 'required'
                 },
                 {
