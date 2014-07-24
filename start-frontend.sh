@@ -1,2 +1,2 @@
 #!/bin/bash
-sbt "project frontend" "devrun"
+sbt -Djava.awt.headless=true "project frontend" "devrun"
