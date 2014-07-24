@@ -48,7 +48,7 @@ class MemberServiceTest extends Specification {
     }
 
     "generate a session" in TestMemberService { service =>
-      service.salesforce.getAccessToken
+      service.salesforce.getAuthentication
       service.lastRequest mustEqual RequestInfo(
         "POST",
         "/services/oauth2/token",
