@@ -1,8 +1,6 @@
 package controllers
 
-import model.Stripe.{PaymentDetails, Plan}
-import model.Tier.Tier
-import model.{Member, Tier}
+import model.Stripe.Plan
 import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
@@ -11,8 +9,11 @@ import scala.concurrent.Future
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.Tier.Tier
+
 import actions._
-import services.{MemberService, StripeService}
+import services.{MemberRepository, MemberService, StripeService}
 import actions.MemberRequest
 import scala.Some
 
@@ -103,7 +104,7 @@ trait UpgradeTier {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberService.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
+      MemberRepository.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
       Ok("")
     }
   }
@@ -120,7 +121,7 @@ trait CancelTier {
     for {
       cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
-      MemberService.update(request.member.copy(optedIn=false))
+      MemberRepository.update(request.member.copy(optedIn=false))
       Redirect("/tier/cancel/summary")
     }
   }

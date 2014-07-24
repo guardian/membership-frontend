@@ -4,8 +4,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import com.typesafe.config.ConfigFactory
 
-import com.gu.scalaforce.Scalaforce
-
 import play.api.mvc.{Action, Controller}
 import play.api.data._
 import play.api.data.Forms._
@@ -13,6 +11,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WS
 import play.api.Play.current
 import play.api.Logger
+import com.gu.membership.salesforce.Scalaforce
 
 object Test extends Controller {
   def start = Action {

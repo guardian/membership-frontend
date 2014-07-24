@@ -8,8 +8,10 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-import services.{ MemberService, StripeService }
-import model.{ Stripe, Tier, Member }
+import com.gu.membership.salesforce.Tier
+
+import services.{MemberRepository, StripeService}
+import model.Stripe
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
 import actions.{PaidMemberAction, MemberAction, AuthenticatedAction, AuthRequest}
@@ -31,7 +33,7 @@ trait Subscription extends Controller {
     val payment = for {
       customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, stripeToken)
       subscription <- StripeService.Subscription.create(customer.id, tier)
-      member <- MemberService.insert(request.user, customer.id, Tier.withName(tier))
+      member <- MemberRepository.insert(request.user, customer.id, Tier.withName(tier))
     } yield {
       /*
       We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.

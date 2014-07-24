@@ -2,14 +2,15 @@ package actions
 
 import scala.concurrent.Future
 
+import play.api.mvc.Result
 import play.api.mvc.{Request, ActionBuilder}
 import play.api.mvc.Results.Forbidden
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import services.{MemberService, AuthenticationService}
+import com.gu.membership.salesforce._
+
+import services.{MemberRepository, AuthenticationService}
 import controllers.NoCache
-import play.api.mvc.Result
-import model.Member
 
 trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
@@ -17,7 +18,7 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
-        memberOpt <- MemberService.get(authRequest.user.id)
+        memberOpt <- MemberRepository.get(authRequest.user.id)
         result <- memberOpt.map { member =>
           block(MemberRequest[A](request, member, authRequest.user))
         }.getOrElse(Future.successful(Forbidden))
@@ -43,7 +44,7 @@ trait PaidMemberAction extends ActionBuilder[PaidMemberRequest] {
   def invokeBlock[A](request: Request[A], block: PaidMemberRequest[A] => Future[Result]) = {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
-        memberOpt <- MemberService.get(authRequest.user.id)
+        memberOpt <- MemberRepository.get(authRequest.user.id)
         result <- paidMemberRequestFor(memberOpt, authRequest).map(block).getOrElse(Future.successful(Forbidden))
       } yield NoCache(result)
     }.getOrElse(Future.successful(Forbidden))

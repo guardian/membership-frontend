@@ -1,14 +1,14 @@
-package model
+package com.gu.membership.salesforce
 
 import org.specs2.mutable.Specification
-
-import model.MemberDeserializer._
 import utils.Resource
+
+import MemberDeserializer._
 
 class MemberDeserializerTest extends Specification {
   "MemberDeserializer" should {
     "deserialize Member" in {
-      val resource = Resource.getJson("model/salesforce/member.json")
+      val resource = Resource.getJson("member.json")
       val member = resource.asOpt[Member]
 
       member must beSome

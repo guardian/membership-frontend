@@ -1,22 +1,21 @@
-package services
+package com.gu.membership.salesforce
 
 import scala.concurrent.Future
 
-import play.api.libs.ws.WSResponse
-import play.api.libs.json.{Json, JsValue}
-
-import model.{Tier, Member}
-import com.gu.scalaforce.Scalaforce
 import org.specs2.mutable.Specification
-import org.joda.time.DateTime
 
-class MemberServiceTest extends Specification {
+import com.github.nscala_time.time.Imports._
+
+import play.api.libs.ws.WSResponse
+import play.api.libs.json.{JsValue, Json}
+
+class MemberRepositoryTest extends Specification {
 
   case class RequestInfo(method: String, url: String, body: Any = null)
 
-  "MemberServiceTest" should {
+  "MemberRepositoryTest" should {
 
-    "update a member" in TestMemberService { service =>
+    "update a member" in TestMemberRepository { service =>
       service.update(Member("salesforceId", "userId", Tier.Partner, Some("customerId"), DateTime.now, true))
 
       service.lastRequest mustEqual RequestInfo(
@@ -31,7 +30,7 @@ class MemberServiceTest extends Specification {
       )
     }
 
-    "get a member by id" in TestMemberService { service =>
+    "get a member by id" in TestMemberRepository { service =>
       service.get("userId")
       service.lastRequest mustEqual RequestInfo(
         "GET",
@@ -39,7 +38,7 @@ class MemberServiceTest extends Specification {
       )
     }
 
-    "get a member by customer id" in TestMemberService { service =>
+    "get a member by customer id" in TestMemberRepository { service =>
       service.getByCustomerId("customerId")
       service.lastRequest mustEqual RequestInfo(
         "GET",
@@ -47,7 +46,7 @@ class MemberServiceTest extends Specification {
       )
     }
 
-    "generate a session" in TestMemberService { service =>
+    "generate a session" in TestMemberRepository { service =>
       service.salesforce.getAuthentication
       service.lastRequest mustEqual RequestInfo(
         "POST",
@@ -63,7 +62,7 @@ class MemberServiceTest extends Specification {
     }
   }
 
-  class TestMemberService extends MemberService {
+  class TestMemberRepository extends MemberRepository {
     var lastRequest: RequestInfo = _
 
     val salesforce = new Scalaforce {
@@ -92,7 +91,8 @@ class MemberServiceTest extends Specification {
     }
   }
 
-  object TestMemberService {
-    def apply[T](block: TestMemberService => T) = block(new TestMemberService)
+  object TestMemberRepository {
+    def apply[T](block: TestMemberRepository => T) = block(new TestMemberRepository)
   }
 }
+

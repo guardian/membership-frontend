@@ -1,9 +1,9 @@
-package model
-
-import com.github.nscala_time.time.Imports._
+package com.gu.membership.salesforce
 
 import play.api.libs.json.{Reads, JsPath}
 import play.api.libs.functional.syntax._
+
+import com.github.nscala_time.time.Imports._
 
 case class Member(salesforceContactId: String,
                   identityId: String,
@@ -11,6 +11,14 @@ case class Member(salesforceContactId: String,
                   stripeCustomerId: Option[String],
                   joinDate: DateTime,
                   optedIn: Boolean)
+
+object Tier extends Enumeration {
+  type Tier = Value
+  // ordering is important
+  val None, Friend, Partner, Patron = Value
+
+  val routeMap = Tier.values.map(t => t.toString.toLowerCase -> t).toMap
+}
 
 object Member {
   object Keys {
@@ -38,3 +46,4 @@ object MemberDeserializer {
       (JsPath \ Keys.OPT_IN).read[Boolean]
     )(Member.apply _)
 }
+

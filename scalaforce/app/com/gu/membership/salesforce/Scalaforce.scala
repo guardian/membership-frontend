@@ -1,4 +1,4 @@
-package com.gu.scalaforce
+package com.gu.membership.salesforce
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global

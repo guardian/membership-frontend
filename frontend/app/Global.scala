@@ -7,13 +7,13 @@ import play.api.Application
 
 import controllers.Cached
 import filters.CheckCacheHeadersFilter
-import services.{MemberService, EventbriteService}
+import services.{MemberRepository, EventbriteService}
 
 
 object Global extends WithFilters(CheckCacheHeadersFilter) {
   override def onStart(app: Application) {
     EventbriteService.start()
-    MemberService.start()
+    MemberRepository.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

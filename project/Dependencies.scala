@@ -15,6 +15,6 @@ object Dependencies {
   val playWS = PlayImport.ws
 
   //projects
-  val scalaforceDependencies = Seq(playWS)
+  val scalaforceDependencies = Seq(nScalaTime, akkaAgent, playWS, identityModel)
   val frontendDependencies = Seq(nScalaTime, akkaAgent, identityCookie, identityModel, awsScala, scalaUri, playWS)
 }

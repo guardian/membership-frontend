@@ -13,10 +13,8 @@ import play.api.Logger
 
 import model.Eventbrite._
 import model.EventbriteDeserializer._
-import model.{Tier, Member}
 import configuration.Config
 import play.api.libs.json.Reads
-import scala.util.{Failure, Success, Try}
 
 trait EventbriteService {
 
