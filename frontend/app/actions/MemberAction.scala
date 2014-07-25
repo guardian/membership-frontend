@@ -9,7 +9,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import services.{MemberService, AuthenticationService}
 import controllers.NoCache
 import play.api.mvc.Result
-import model.Member
+import model.{Tier, Member}
 
 trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
@@ -18,7 +18,7 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
         memberOpt <- MemberService.get(authRequest.user.id)
-        result <- memberOpt.map { member =>
+        result <- memberOpt.filter(_.tier > Tier.None).map { member =>
           block(MemberRequest[A](request, member, authRequest.user))
         }.getOrElse(Future.successful(Forbidden))
       } yield NoCache(result)
