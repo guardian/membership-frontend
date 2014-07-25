@@ -120,7 +120,8 @@ trait CancelTier {
     for {
       cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
-      MemberService.update(request.member.copy(optedIn=false))
+      val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
+      MemberService.update(request.member.copy(optedIn=false, tier=newTier))
       Redirect("/tier/cancel/summary")
     }
   }
