@@ -126,13 +126,17 @@ trait CancelTier {
     }
   }
 
-  def cancelTierSummary() = MemberAction.async { implicit request =>
-    val futurePaymentDetails =
-      request.member.stripeCustomerId.map { stripeCustomerId =>
+  def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
+    def paymentDetailsFor(memberOpt: Option[Member]) = {
+      memberOpt.flatMap(_.stripeCustomerId).map { stripeCustomerId =>
         StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
       }.getOrElse(Future.successful(None))
+    }
 
-    futurePaymentDetails.map(paymentDetails => Ok(views.html.tier.cancel.summary(paymentDetails)))
+    for {
+      member <- MemberService.get(request.user.id)
+      paymentDetails <- paymentDetailsFor(member)
+    } yield Ok(views.html.tier.cancel.summary(paymentDetails))
   }
 }
 

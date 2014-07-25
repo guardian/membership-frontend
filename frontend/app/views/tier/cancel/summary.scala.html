@@ -17,18 +17,18 @@
                 </article>
             </section>
         </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-2">
-                <div class="l-row__item">
-                    <h2>Current Package Summary</h2>
-                </div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @for(paymentDetails <- paymentDetailsOpt) {
+        @for(paymentDetails <- paymentDetailsOpt) {
+            <div class="content__container content__container--border">
+                <section class="l-row l-row--items-2">
+                    <div class="l-row__item">
+                        <h2>Current Package Summary</h2>
+                    </div>
+                    <div class="l-row__item l-row__item--boost-2 secondary-content">
                         @fragments.tier.summary(paymentDetails.subscription)
-                    }
-                </div>
-            </section>
-        </div>
+                    </div>
+                </section>
+            </div>
+        }
         <div class="content__container content__container--border">
             <section class="l-row l-row--items-2">
                 <div class="l-row__item"> </div>
