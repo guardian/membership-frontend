@@ -35,22 +35,7 @@ define([
 
         this.form = new Form(formElement);
 
-        this.form.addValidation(
-            [
-                {
-                    elem: this.getElem('NAME_FIRST'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('NAME_LAST'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('POST_CODE'),
-                    name: 'required'
-                }
-            ]
-        ).init();
+        this.form.init();
     };
 
     return JoinFree;

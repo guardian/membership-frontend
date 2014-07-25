@@ -632,10 +632,43 @@ define([
     };
 
     /**
+     * set up form validation automatically
+     */
+    Form.prototype.setupFormValidation = function () {
+        var $validation = $('[data-validation]', this.form);
+        var $creditCardMonthExpiry = $('.js-credit-card-exp-month', this.form);
+        var $creditCardYearExpiry = $('.js-credit-card-exp-year', this.form);
+        var elem;
+        var validationProfiles = [];
+
+        for (var i = 0, validationLength = $validation.length; i < validationLength; i++) {
+            elem = $validation[i];
+
+            validationProfiles.push({
+                elem: elem,
+                name: elem.getAttribute('data-validation')
+            });
+        }
+
+        if ($creditCardMonthExpiry.length && $creditCardYearExpiry.length) {
+            validationProfiles.push({
+                elem: [$creditCardMonthExpiry[0], $creditCardYearExpiry[0]],
+                name: 'creditCardExpiry'
+            });
+        }
+
+        if (validationProfiles.length) {
+            this.addValidation(validationProfiles);
+        }
+    };
+
+    /**
      * initialise the form, setup the sub listener and set the stripePublishableKey if credit card validation is
      * required
      */
     Form.prototype.init = function () {
+
+        this.setupFormValidation();
 
         this.submitButton();
 

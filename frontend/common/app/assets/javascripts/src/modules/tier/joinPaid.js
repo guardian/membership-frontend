@@ -106,57 +106,7 @@ define([
 
         this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('payment', 'thankyou'));
 
-        this.form.addValidation(
-            [
-                {
-                    elem: this.getElem('NAME_FIRST'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('NAME_LAST'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('ADDRESS_LINE_ONE'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('TOWN'),
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('POST_CODE'),
-                    name: 'required'
-                },
-                {
-                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
-                    name: 'required'
-                },
-                {
-                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
-                    name: 'required'
-                },
-                {
-                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
-                    name: 'required'
-                },
-                {
-                    elem: this.getElem('CREDIT_CARD_NUMBER'),
-                    name: 'creditCardNumber'
-                },
-                {
-                    elem: this.getElem('CREDIT_CARD_CVC'),
-                    name: 'creditCardCVC'
-                },
-                {
-                    elem: [
-                        this.getElem('CREDIT_CARD_EXPIRY_MONTH'),
-                        this.getElem('CREDIT_CARD_EXPIRY_YEAR')
-                    ],
-                    name: 'creditCardExpiry'
-                }
-            ]
-        ).init();
+        this.form.init();
     };
 
     return JoinPaid;
