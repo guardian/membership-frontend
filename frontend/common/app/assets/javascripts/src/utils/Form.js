@@ -15,7 +15,6 @@ define([
     /**
      * This class has grown somewhat, I am happy with the majority of it but parts of it need a bit of a
      * rethink as a few things have been attached for the moment I am leaving it because although verbose it works.
-     * TODO-ben: make initialisation of validation automatic from js-classes or html attributes on elements
      * TODO-ben: simplify class
      * TODO-ben: move errors to above inputs (confirm with UX and Design)
      */
@@ -635,6 +634,7 @@ define([
      * set up form validation automatically
      */
     Form.prototype.setupFormValidation = function () {
+
         var $validation = $('[data-validation]', this.form);
         var $creditCardMonthExpiry = $('.js-credit-card-exp-month', this.form);
         var $creditCardYearExpiry = $('.js-credit-card-exp-year', this.form);

@@ -26,15 +26,13 @@ define([
     };
 
     JoinFree.prototype.init = function () {
-        this.addFormValidation();
+        this.setupForm();
     };
 
 
-    JoinFree.prototype.addFormValidation = function () {
+    JoinFree.prototype.setupForm = function () {
         var formElement = this.elem = this.getElem('ADDRESS_FORM');
-
         this.form = new Form(formElement);
-
         this.form.init();
     };
 

@@ -34,7 +34,7 @@ define([
     };
 
     JoinPaid.prototype.init = function () {
-        this.addFormValidation();
+        this.setupForm();
         this.toggleBillingAddressListener();
     };
 
@@ -101,11 +101,9 @@ define([
             ]);
     };
 
-    JoinPaid.prototype.addFormValidation = function () {
+    JoinPaid.prototype.setupForm = function () {
         var formElement = this.elem = this.getElem('STRIPE_FORM');
-
         this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('payment', 'thankyou'));
-
         this.form.init();
     };
 
