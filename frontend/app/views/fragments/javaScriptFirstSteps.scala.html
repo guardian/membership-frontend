@@ -66,14 +66,11 @@
 
         if (isModern) {
             document.documentElement.className = document.documentElement.className.replace(/\bjs-not-modern\b/g, '')
-
             // only load JS if the browser cuts the mustard
-            (function(scriptUrl) {
-                var newElm = document.createElement('script');
-                newElm.async = 1;
-                newElm.src = scriptUrl;
-                document.getElementsByTagName("head")[0].appendChild(newElm);
-            })('@routes.Assets.at("javascripts/main.js")');
+            var newElm = document.createElement('script');
+            newElm.async = 1;
+            newElm.src = '@routes.Assets.at("javascripts/main.js")';
+            document.getElementsByTagName("head")[0].appendChild(newElm);
         }
 
     })(guardian.isModernBrowser);

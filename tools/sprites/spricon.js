@@ -72,6 +72,11 @@
     cleanSVG = function(src, callback) {
         var files = fs.readdirSync(src);
 
+        if (files.length === 0) {
+            console.error("Warning: there are no files in the designated folder!");
+            return;
+        }
+
         for(var i=0, l= files.length; i < l; i++){
             files[i] = src + files[i];
         }
@@ -129,7 +134,7 @@
             mkdirp.sync( config.imgDest );
         }
 
-        console.info( "Output CSS file created." );
+        console.info( "Output CSS file generated." );
 
         console.info( "Cleaning SVG" );
         cleanSVG(config.src, function(){
