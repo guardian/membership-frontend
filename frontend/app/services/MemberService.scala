@@ -75,11 +75,11 @@ object MemberRepository extends MemberRepository {
   private val authenticationAgent = Agent[Authentication](Authentication("", ""))
 
   def refresh() {
-    Logger.debug("Refreshing Scalaforce token")
+    Logger.debug("Refreshing Scalaforce login")
     authenticationAgent.sendOff(_ => {
-      val token = Await.result(salesforce.getAuthentication, 15.seconds)
-      Logger.debug(s"Got token $token")
-      token
+      val auth = Await.result(salesforce.getAuthentication, 15.seconds)
+      Logger.debug(s"Got Scalaforce login $auth")
+      auth
     })
   }
 
