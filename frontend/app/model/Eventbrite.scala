@@ -1,12 +1,13 @@
 package model
 
-import java.text.DecimalFormat
-
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+
 import com.github.nscala_time.time.Imports._
+
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
+
 import configuration.Config
 
 object Eventbrite {
@@ -151,7 +152,12 @@ object EventbriteDeserializer {
   implicit val ebError = Json.reads[EBError]
   implicit val ebAddress = Json.reads[EBAddress]
   implicit val ebVenue = Json.reads[EBVenue]
-  implicit val ebRichText = Json.reads[EBRichText]
+
+  implicit val ebRichText: Reads[EBRichText] = (
+      (JsPath \ "text").readNullable[String].map(_.getOrElse("")) and
+        (JsPath \ "html").readNullable[String].map(_.getOrElse(""))
+    )(EBRichText.apply _)
+
   implicit val ebPricingReads = Json.reads[EBPricing]
   implicit val ebTicketsReads = Json.reads[EBTickets]
   implicit val ebEventReads = Json.reads[EBEvent]
