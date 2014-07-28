@@ -58,7 +58,7 @@ trait MemberService {
 object MemberService extends MemberService
 
 object MemberRepository extends MemberRepository {
-  val salesforce = new ScalaforceWS {
+  val salesforce = new Scalaforce {
     val consumerKey = Config.salesforceConsumerKey
     val consumerSecret = Config.salesforceConsumerSecret
 
