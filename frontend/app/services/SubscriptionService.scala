@@ -42,8 +42,17 @@ trait ZuoraSOAP {
         <ns1:session>{authentication.token}</ns1:session>
       </ns1:SessionHeader>
 
+
     val xml = soapBuilder(body, Some(head))
-    WS.url(authentication.url).post(xml).map(_.xml)
+
+    Logger.debug("ZuoraSOAP authenticated request")
+    Logger.debug(xml)
+
+    WS.url(authentication.url).post(xml).map { result =>
+      Logger.debug(s"Got result ${result.status}")
+      Logger.debug(result.body)
+      result.xml
+    }
   }
 
   def getAuthentication: Future[Authentication] = {
