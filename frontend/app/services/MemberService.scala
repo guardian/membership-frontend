@@ -10,6 +10,9 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 
 import com.gu.membership.salesforce._
+import com.gu.membership.salesforce.Tier.Tier
+
+import com.gu.identity.model.User
 
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
@@ -20,6 +23,14 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 trait MemberService {
+  def createMember(user: User, tier: Tier, paymentToken: Option[String]): Future[String] = {
+    for {
+      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, paymentToken.get)
+      salesforceContactId <- MemberRepository.insert(user, customer.id, tier)
+      subscription <- SubscriptionService.createSubscription(salesforceContactId, customer, tier)
+    } yield salesforceContactId
+  }
+
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
     def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {

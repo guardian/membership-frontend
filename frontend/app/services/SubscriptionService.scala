@@ -7,6 +7,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Null, Elem}
 import akka.agent.Agent
 
+import com.gu.membership.salesforce.Tier.Tier
+
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.ws.WS
@@ -14,6 +16,7 @@ import play.api.libs.concurrent.Akka
 
 import configuration.Config
 import model.Zuora._
+import model.Stripe
 
 trait ZuoraSOAP {
   val apiUrl: String
@@ -50,7 +53,7 @@ trait ZuoraSOAP {
 }
 
 trait SubscriptionService {
-  def createSubscription(salesforceContactId: String): Subscription
+  def createSubscription(salesforceContactId: String, customer: Stripe.Customer, tier: Tier): Future[Subscription]
 }
 
 object SubscriptionService extends SubscriptionService {
@@ -61,6 +64,10 @@ object SubscriptionService extends SubscriptionService {
     val apiPassword = Config.zuoraApiPassword
 
     def authentication: Authentication = authenticationAgent.get()
+  }
+
+  def createSubscription(salesforceContactId: String, customer: Stripe.Customer, tier: Tier): Future[Subscription] = {
+    zuoraSOAP.authRequest(Subscription.subscribe(salesforceContactId, customer, tier)).map(Subscription(_))
   }
 
   private implicit val system = Akka.system

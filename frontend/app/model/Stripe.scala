@@ -15,7 +15,7 @@ object Stripe {
 
   case class StripeList[T](total_count: Int, data: Seq[T]) extends StripeObject
 
-  case class Card(`type`: String, last4: String) extends StripeObject
+  case class Card(id: String, `type`: String, last4: String) extends StripeObject
 
   case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
     extends StripeObject
