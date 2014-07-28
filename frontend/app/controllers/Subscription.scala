@@ -16,24 +16,20 @@ import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
 import actions.{PaidMemberAction, MemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
+import forms.MemberForm._
 
 trait Subscription extends Controller {
   val stripeApiWebhookSecret: String
 
   def subscribe = AuthenticatedAction.async { implicit request =>
-    paymentForm.bindFromRequest
-      .fold(_ => Future.successful(BadRequest), makePayment)
+    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment)
   }
 
-  private val paymentForm =
-    Form { tuple("stripeToken" -> nonEmptyText, "tier" -> nonEmptyText) }
-
-  private def makePayment(formData: (String, String))(implicit request: AuthRequest[_]) = {
-    val (stripeToken, tier) = formData
+  private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
     val payment = for {
-      customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, stripeToken)
-      subscription <- StripeService.Subscription.create(customer.id, tier)
-      member <- MemberRepository.insert(request.user, customer.id, Tier.withName(tier))
+      customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
+      subscription <- StripeService.Subscription.create(customer.id, formData.tier.toString)
+      member <- MemberRepository.insert(request.user, customer.id, formData.tier)
     } yield {
       /*
       We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.

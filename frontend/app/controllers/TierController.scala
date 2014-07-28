@@ -1,9 +1,5 @@
 package controllers
 
-import model.Stripe.Plan
-import play.api.data.{Mapping, Form}
-import play.api.data.Forms._
-
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
@@ -13,13 +9,9 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
+import forms.MemberForm._
+import model.Stripe.Plan
 import services.{MemberRepository, MemberService, StripeService}
-import actions.MemberRequest
-import scala.Some
-
-case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String, postCode: String, country: String)
-
-case class UpgradeTierForm(paymentType: String, stripeToken: String, deliveryAddress: AddressForm, billingAddress: AddressForm)
 
 trait DowngradeTier {
   self: TierController =>
@@ -50,24 +42,6 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
-  val upgradeTierForm: Form[UpgradeTierForm] = Form(
-    mapping(
-      "paymentType" -> nonEmptyText,
-      "stripeToken" -> nonEmptyText,
-      "deliveryAddress" -> addressMapping(nonEmptyText),
-      "billingAddress" -> addressMapping(text)
-    )(UpgradeTierForm.apply)(UpgradeTierForm.unapply)
-  )
-
-  def addressMapping(textMapping: Mapping[String]): Mapping[AddressForm] = mapping(
-    "lineOne" -> textMapping,
-    "lineTwo" -> textMapping,
-    "town" -> textMapping,
-    "countyOrState" -> textMapping,
-    "postCode" -> textMapping,
-    "country" -> textMapping
-  )(AddressForm.apply)(AddressForm.unapply)
-
   def upgrade(tierStr: String) = MemberAction { implicit request =>
     val tier = Tier.routeMap(tierStr)
 
@@ -81,25 +55,25 @@ trait UpgradeTier {
     val tier = Tier.routeMap(tierStr)
 
     if (request.member.tier < tier)
-      upgradeTierForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
+      paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
     else
       Future.successful(NotFound)
   }
 
-  def makePayment(tier: Tier)(formData: UpgradeTierForm)(implicit request: MemberRequest[_]) = {
+  def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
     val futureCustomer =
       request.member.stripeCustomerId.fold {
-        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken)
+        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
       } {
         StripeService.Customer.read // TODO: use stripeToken to update card
       }
 
-    val planName = tier.toString + (if (formData.paymentType == "annual") Plan.ANNUAL_SUFFIX else "")
+    val planName = tier.toString + (if (formData.payment.`type` == "annual") Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer
       subscription <- customer.paymentDetails.map { paymentDetails =>
-        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.stripeToken)
+        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.payment.token)
       }.getOrElse {
         StripeService.Subscription.create(customer.id, planName)
       }

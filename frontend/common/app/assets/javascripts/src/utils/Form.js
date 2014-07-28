@@ -12,6 +12,12 @@ define([
 ], function ($, bean, component, appCredentials, userUtil, masker, stripe, ajax, stripeErrorMessages, utilsHelper) {
     'use strict';
 
+    /**
+     * This class has grown somewhat, I am happy with the majority of it but parts of it need a bit of a
+     * rethink as a few things have been attached for the moment I am leaving it because although verbose it works.
+     * TODO-ben: simplify class
+     * TODO-ben: move errors to above inputs (confirm with UX and Design)
+     */
     var self;
 
     function Form (formElement, successPostUrl, successRedirectUrl) {
@@ -51,7 +57,7 @@ define([
      * build the data object to be sent to the server
      * @param form
      * @param mixin
-     * @returns {{}}
+     * @returns {{} || undefined }
      */
     Form.prototype.buildDataObject = function (form, mixin) {
 
@@ -76,43 +82,8 @@ define([
 
             var element = formElements[i];
 
-            if (element.name === '') {
-                continue;
-            }
-
-            switch (element.nodeName) {
-                case 'INPUT':
-                    switch (element.type) {
-                        case 'tel':
-                        case 'text':
-                        case 'hidden':
-                        case 'password':
-                        case 'button':
-                        case 'submit':
-                            dataObj[element.name] = element.value;
-                            break;
-                        case 'checkbox':
-                        case 'radio':
-                            if (element.checked) {
-                                dataObj[element.name] = element.value;
-                            }
-                            break;
-                    }
-                    break;
-                case 'TEXTAREA':
-                    dataObj[element.name] = element.value;
-                    break;
-                case 'SELECT':
-                    dataObj[element.name] = element.value;
-                    break;
-                case 'BUTTON':
-                    switch (element.type) {
-                        case 'submit':
-                        case 'button':
-                            dataObj[element.name] = element.value;
-                            break;
-                    }
-                    break;
+            if (element.name !== '' && (element.type !== 'checkbox' && element.type !== 'radio' || element.checked)) {
+                dataObj[element.name] = element.value;
             }
         }
 
@@ -129,13 +100,13 @@ define([
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
             if (errorMessage) {
-                self.handleErrors([errorMessage]);
+                self.displayErrors([errorMessage]);
             }
         } else {
 
             var token = response.id;
             var data = self.buildDataObject(self.formElement, {
-                stripeToken: token
+                'payment.token': token
             });
 
             ajax({
@@ -155,7 +126,7 @@ define([
                         errorObj = error.response && JSON.parse(error.response);
                         errorMessage = self.getErrorMessage(errorObj);
                         if (errorMessage) {
-                            self.handleErrors([errorMessage]);
+                            self.displayErrors([errorMessage]);
                         }
                     } catch (e) {}
 
@@ -197,10 +168,11 @@ define([
     };
 
     /**
-     *
+     * hide or show error messages in the error element at the top of the page,
+     * disable or enable the submit button dependant on if we have errors
      * @param errorMessages
      */
-    Form.prototype.handleErrors = function (errorMessages) {
+    Form.prototype.displayErrors = function (errorMessages) {
         var $paymentErrorsElement = $(this.getElem('PAYMENT_ERRORS')),
             $formSubmitButton = $(this.getElem('FORM_SUBMIT')),
             errorString = '';
@@ -224,7 +196,7 @@ define([
     };
 
     /**
-     *
+     * get the card type from strip method
      * @param cardNumber
      * @returns {string}
      */
@@ -233,7 +205,7 @@ define([
     };
 
     /**
-     *
+     * display the relevant card type
      * @param creditCardNumber
      */
     Form.prototype.displayCardTypeImage = function (creditCardNumber) {
@@ -244,30 +216,104 @@ define([
     };
 
     /**
-     * add validation to the form
+     * add validation to the form,
+     * this will add specific validator events to specified elements,
+     * it will throw an error if an incorrect validation event method has been supplied
      * @param validationDetail
      * @returns {Form}
      */
     Form.prototype.addValidation = function (validationDetail) {
+
         var args;
+        var validator;
 
-        validationDetail.forEach(function (validator) {
+        for (var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
+            validator = validationDetail[i];
 
-            if (!self[validator.name] && typeof self[validator.name] === 'function') {
-                throw 'please specify an existing validation profile';
-            }
+            this.checkValidatorExistsException(validator.name);
 
             utilsHelper.getSpecifiedParent($(validator.elem), 'label').addClass('required-marker');
 
-            args = validator.elem instanceof Array ? validator.elem : [validator.elem];
+            args = self.createArgsArray(validator.elem);
             self[validator.name].apply(self, args);
-        });
+        }
 
         return this;
     };
 
+    Form.prototype.checkValidatorExistsException = function (validatorName) {
+        if (!self[validatorName] && typeof self[validatorName] === 'function') {
+            throw 'please specify an existing validation profile';
+        }
+    };
+
     /**
-     * validation event for required inputs
+     * remove validator from the validation profile, this takes the validator out of the internal
+     * validation profile array and stops messages being displayed and stops this validation being fired on submit
+     * @param validationDetail
+     *
+     * Note to dev: Currently this removes the validationProfile because it is being used for the billing address,
+     * when the billing address is closed it is detached from the dom so there is no need to add validation events and
+     * remove them, potentially there may be a need for this if this is used for other elements.
+     * This also works on name attributes if inputs without name attributes (credit card inputs) need to be
+     * removed then this will need a rework.
+     */
+    Form.prototype.removeValidatorFromValidationProfile = function (validationDetail) {
+        var validator;
+        var errorMessages = [];
+        var validationMessage;
+        var args;
+
+        var removeValidators = function (validationProfile, i, validationProfiles) {
+
+            if (validator.elem.name === validationProfile.elem.name &&
+                validator.validator === validationProfile.validator) {
+
+                validationProfiles.splice(i, 1);
+
+                // remove any error messages from validation Profiles that are being removed
+                if (self.errorMessages.length) {
+                    args = self.createArgsArray(validator.elem);
+                    validationMessage = self[validator.validator].apply(self, args);
+                    errorMessages.push(validationMessage.errorMessage);
+                }
+            }
+        };
+
+        for(var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
+            validator = validationDetail[i];
+
+            this.validationProfiles.map(removeValidators);
+        }
+
+        if (errorMessages.length) {
+            this.flushErrors(errorMessages);
+        }
+    };
+
+    /**
+     * create arguments array to be used with apply function
+     * @param elem
+     * @returns {*}
+     */
+    Form.prototype.createArgsArray = function (elem) {
+        return elem instanceof Array ? elem : [elem];
+    };
+
+    /**
+     * add a validator back in to the validation profile array so messages will be displayed and validation will fire
+     * on submit
+     * @param validationDetail
+     */
+    Form.prototype.addValidatorFromValidationProfile = function (validationDetail) {
+
+        for(var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
+            this.validationProfiles.push(validationDetail[i]);
+        }
+    };
+
+    /**
+     * validation event listener for required inputs
      * @param element
      */
     Form.prototype.required = function (element) {
@@ -283,7 +329,7 @@ define([
     };
 
     /**
-     * validation event for credit card element
+     * validation event listener for credit card element
      * @param creditCardNumberElement
      */
     Form.prototype.creditCardNumber = function (creditCardNumberElement) {
@@ -308,7 +354,7 @@ define([
     };
 
     /**
-     * validation event for credit card CVC
+     * validation event listener for credit card CVC
      * @param creditCardCVCElement
      */
     Form.prototype.creditCardCVC = function (creditCardCVCElement) {
@@ -324,7 +370,7 @@ define([
     };
 
     /**
-     * validation event for credit card expiry
+     * validation event listner for credit card expiry
      * @param creditCardExpiryMonthElement
      * @param creditCardExpiryYearElement
      */
@@ -354,7 +400,7 @@ define([
     };
 
     /**
-     * validation event for submit button
+     * validation event listner for submit button
      */
     Form.prototype.submitButton = function () {
 
@@ -365,6 +411,7 @@ define([
             self.displayMonthError = true;
 
             var formValidationResult = self.isFormValid();
+            var validationResult;
 
             if (formValidationResult.isValid) {
 
@@ -382,11 +429,37 @@ define([
                 }
 
             } else {
-                formValidationResult.errors.forEach(function (validationProfileResult) {
-                    self.manageErrors(validationProfileResult);
-                });
+                for (var i = 0, formErrorsLength = formValidationResult.errors.length; i < formErrorsLength; i++) {
+                    validationResult = formValidationResult.errors[i];
+                    self.manageErrors(validationResult);
+                }
             }
         });
+    };
+
+    /**
+     * flush errors from the errorMessages array. This is used when we wish to remove specific errors from
+     * the error display
+     * @param formErrors
+     */
+    Form.prototype.flushErrors = function (formErrors) {
+
+        var formError;
+        var removeErrorMessage = function (errorMessage, i, errorMessages) {
+            if (errorMessage === formError) {
+                errorMessages.splice(i, 1);
+            }
+        };
+
+        if (this.errorMessages.length) {
+
+            for(var i = 0, formErrorsLength = formErrors.length; i < formErrorsLength; i++) {
+                formError = formErrors[i];
+                this.errorMessages.map(removeErrorMessage);
+            }
+
+            this.displayErrors(this.errorMessages);
+        }
     };
 
     /**
@@ -477,7 +550,8 @@ define([
     };
 
     /**
-     *
+     * checks the validationProfiles and runs each, stores the error messages and returns if the form is valid and
+     * an array of error messages
      * @returns {{isValid: boolean, errors: Array}}
      */
     Form.prototype.isFormValid = function () {
@@ -489,14 +563,14 @@ define([
 
         validationProfiles.forEach(function (validationProfile) {
 
-            if (self[validationProfile.validator] && typeof self[validationProfile.validator] === 'function') {
-                validationProfileElem = validationProfile.elem;
-                args = validationProfileElem instanceof Array ? validationProfileElem : [validationProfileElem];
-                validationProfileResult = self[validationProfile.validator].apply(self, args);
+            self.checkValidatorExistsException(validationProfile.validator);
 
-                if (!validationProfileResult.isValid) {
-                    errors.push(validationProfileResult);
-                }
+            validationProfileElem = validationProfile.elem;
+            args = self.createArgsArray(validationProfileElem);
+            validationProfileResult = self[validationProfile.validator].apply(self, args);
+
+            if (!validationProfileResult.isValid) {
+                errors.push(validationProfileResult);
             }
         });
 
@@ -507,7 +581,7 @@ define([
     };
 
     /**
-     *
+     * add 'form-field--error' class to 'form-field' element to give error styles to element
      * @param validationResult
      */
     Form.prototype.addErrorStylesForInput = function (validationResult) {
@@ -521,7 +595,7 @@ define([
     };
 
     /**
-     *
+     * this will add or remove the error from the errorMessages array and add error styles to the inputs
      * @param validationResult
      */
     Form.prototype.manageErrors = function (validationResult) {
@@ -538,19 +612,63 @@ define([
             this.errorMessages.splice(messageIndex, 1);
         }
 
-        this.handleErrors(this.errorMessages);
+        this.displayErrors(this.errorMessages);
     };
 
 
+    /**
+     * start loading throbber
+     */
     Form.prototype.startLoader = function () {
         $(this.getElem('THROBBER')).addClass('js-waiting');
     };
 
+    /**
+     * stop loading throbber
+     */
     Form.prototype.stopLoader = function () {
         $(this.getElem('THROBBER')).removeClass('js-waiting');
     };
 
+    /**
+     * set up form validation automatically
+     */
+    Form.prototype.setupFormValidation = function () {
+
+        var $validation = $('[data-validation]', this.form);
+        var $creditCardMonthExpiry = $('.js-credit-card-exp-month', this.form);
+        var $creditCardYearExpiry = $('.js-credit-card-exp-year', this.form);
+        var elem;
+        var validationProfiles = [];
+
+        for (var i = 0, validationLength = $validation.length; i < validationLength; i++) {
+            elem = $validation[i];
+
+            validationProfiles.push({
+                elem: elem,
+                name: elem.getAttribute('data-validation')
+            });
+        }
+
+        if ($creditCardMonthExpiry.length && $creditCardYearExpiry.length) {
+            validationProfiles.push({
+                elem: [$creditCardMonthExpiry[0], $creditCardYearExpiry[0]],
+                name: 'creditCardExpiry'
+            });
+        }
+
+        if (validationProfiles.length) {
+            this.addValidation(validationProfiles);
+        }
+    };
+
+    /**
+     * initialise the form, setup the sub listener and set the stripePublishableKey if credit card validation is
+     * required
+     */
     Form.prototype.init = function () {
+
+        this.setupFormValidation();
 
         this.submitButton();
 

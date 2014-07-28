@@ -13,7 +13,12 @@
             <label class="label" for="cc-num">Card Number
                 <div class="input credit-card-container">
                     <i class="js-credit-card-image credit-card"></i>
-                    <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off"/>
+                    <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input"
+                           id="cc-num"
+                           placeholder="0000 0000 0000 0000"
+                           maxlength="19"
+                           autocomplete="off"
+                           data-validation="creditCardNumber"/>
                 </div>
             </label>
         </div>
@@ -21,7 +26,13 @@
         <div class="form-field">
             <label class="label" for="cc-cvc">
                 <span>Security code</span>
-                <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small text-input--block" id="cc-cvc" placeholder="CVC" maxlength="4" autocomplete="off"/>
+                <input type="tel" size="4" data-stripe="cvc"
+                       class="js-credit-card-cvc text-input text-input--small text-input--block"
+                       id="cc-cvc"
+                       placeholder="CVC"
+                       maxlength="4"
+                       autocomplete="off"
+                       data-validation="creditCardCVC"/>
             </label>
         </div>
 
