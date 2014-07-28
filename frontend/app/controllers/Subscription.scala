@@ -8,13 +8,11 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-import com.gu.membership.salesforce.Tier
-
-import services.{MemberRepository, StripeService}
+import services.{MemberService, StripeService}
 import model.Stripe
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
-import actions.{PaidMemberAction, MemberAction, AuthenticatedAction, AuthRequest}
+import actions.{PaidMemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
 import forms.MemberForm._
 
@@ -27,16 +25,8 @@ trait Subscription extends Controller {
 
   private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
     val payment = for {
-      customer <- StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
-      subscription <- StripeService.Subscription.create(customer.id, formData.tier.toString)
-      member <- MemberRepository.insert(request.user, customer.id, formData.tier)
-    } yield {
-      /*
-      We need to return an empty string due in the OK("") rather than a NoContent to issue in reqwest ajax library.
-      A pull reqwest will be added to their library to solve this issue
-      */
-      Ok("")
-    }
+      salesforceContactId <- MemberService.createMember(request.user, formData.tier, Some(formData.payment.token))
+    } yield Ok("")
 
     payment.recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
