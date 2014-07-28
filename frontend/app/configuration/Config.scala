@@ -39,6 +39,11 @@ object Config {
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
 
+  val zuoraApiUrlREST = config.getString("zuora.api.url.rest")
+  val zuoraApiUrlSOAP = config.getString("zuora.api.url.soap")
+  val zuoraApiUsername = config.getString("zuora.api.username")
+  val zuoraApiPassword = config.getString("zuora.api.password")
+
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
