@@ -1,11 +1,13 @@
 @import views.support.selectDates
+@import views.support.Asset
+
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">
         <h2 class="form__heading">Card details</h2>
         <div class="form__note">
             <p>We accept all major cards</p>
-            <p><img src="@routes.Assets.at("images/padlock.png")" alt="" class="form-padlock"/> This form is secure</p></div>
+            <p><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This form is secure</p></div>
     </div>
 
     <div class="fieldset__fields">
