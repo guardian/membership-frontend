@@ -2,9 +2,10 @@ package forms
 
 import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
-import model.Tier.Tier
-import model.Tier
-import model.Tier.Tier
+
+import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.Tier.Tier
+
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,

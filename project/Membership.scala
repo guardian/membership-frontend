@@ -35,9 +35,7 @@ trait Membership {
 }
 
 object Membership extends Build with Membership {
-  val scalaforce = lib("scalaforce").settings(libraryDependencies ++= scalaforceDependencies)
-
-  val frontend = app("frontend").dependsOn(scalaforce)
+  val frontend = app("frontend")
                 .settings(libraryDependencies ++= frontendDependencies)
                 .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
 

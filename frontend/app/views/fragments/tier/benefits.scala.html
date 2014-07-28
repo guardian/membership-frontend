@@ -1,7 +1,7 @@
-@(currentTier: model.Tier.Tier, tier: model.Tier.Tier)
+@(currentTier: com.gu.membership.salesforce.Tier.Tier, tier: com.gu.membership.salesforce.Tier.Tier)
 
 @import configuration.Config
-@import model.Tier
+@import com.gu.membership.salesforce.Tier
 
 @defining(currentTier == tier) { isCurrentPackage =>
     <div class="package@if(isCurrentPackage){ package--current}">

@@ -3,9 +3,10 @@ package controllers
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import com.gu.membership.salesforce.Tier
+
 import actions.{PaidMemberAction, AuthenticatedAction}
-import model.Tier
-import services.{MemberService, StripeService}
+import services.{MemberRepository, StripeService}
 
 trait Joiner extends Controller {
 
@@ -23,7 +24,7 @@ trait Joiner extends Controller {
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      member <- MemberService.insert(request.user, "", Tier.Friend)
+      member <- MemberRepository.insert(request.user, "", Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
