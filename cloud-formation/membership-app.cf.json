@@ -90,7 +90,7 @@
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/keys.conf /etc/gu/membership-keys.conf"]]},
+                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/membership-keys.conf /etc/gu"]]},
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 

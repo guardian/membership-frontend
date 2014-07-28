@@ -20,6 +20,9 @@
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "~0.1.4",
     "karma-requirejs": "~0.2.1",
-    "requirejs": "^2.1.11"
+    "requirejs": "^2.1.11",
+    "svgo": "^0.4.4",
+    "mkdirp": "^0.5.0",
+    "phantomjs": "~1.9.1"
   }
 }

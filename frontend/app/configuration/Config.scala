@@ -32,6 +32,13 @@ object Config {
   val stripeApiSecret = config.getString("stripe.api.secret")
   val stripeApiWebhookSecret = config.getString("stripe.api.webhook.secret")
 
+  val salesforceConsumerKey = config.getString("salesforce.consumer.key")
+  val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")
+  val salesforceApiUrl = config.getString("salesforce.api.url")
+  val salesforceApiUsername = config.getString("salesforce.api.username")
+  val salesforceApiPassword = config.getString("salesforce.api.password")
+  val salesforceApiToken = config.getString("salesforce.api.token")
+
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val corsAllowOrigin = config.getString("cors.allow.origin")

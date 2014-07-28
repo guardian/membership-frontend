@@ -3,80 +3,85 @@
 @import configuration.Config
 
 <header class="header" role="banner">
-    <div>
-        <div class="header__inner">
-            <div class="u-cf">
-                <div class="header__primary">
-                    <nav>
-                        <ul class="inline-list u-cf" role="menubar">
-                            <li class="menu-item mobile-only">
-                                <a href="#" role="menuitem" class="control js-menu-icon">
+    <!-- placeholder until real design and copy arrives -->
+    <div class="js-warning">
+        <p class="js-warning__js-off">Please enable JavaScript.</p>
+        <p class="js-warning__unsupported">Please use a modern browser.</p>
+    </div>
+    <div class="header__inner">
+        <div class="u-cf">
+            <div class="header__primary">
+                <nav>
+                    <ul class="inline-list u-cf" role="menubar">
+                        <li class="menu-item mobile-only">
+                            <a href="#" role="menuitem" class="control js-menu-icon">
+                                <span class="control__icon">
+                                    <i class="i i-menu"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="menu-item menu-item--large hidden-mobile is-hidden js-header-join-us-cta">
+                            <a href="/join" role="menuitem" class="menu-cta no-underline">Join us</a>
+                        </li>
+                        <li class="menu-item menu-item--last">
+                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon">
+                                <span class="control">
                                     <span class="control__icon">
-                                        <i class="i i-menu"></i>
+                                        <i class="i i-user"></i>
                                     </span>
-                                </a>
-                            </li>
-                            <li class="menu-item menu-item--large hidden-mobile is-hidden js-header-join-us-cta">
-                                <a href="/join" role="menuitem" class="menu-cta no-underline">Join us</a>
-                            </li>
-                            <li class="menu-item menu-item--last">
-                                <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon">
-                                    <span class="control">
-                                        <span class="control__icon">
-                                            <i class="i i-user"></i>
-                                        </span>
-                                    </span>
-                                    <span class="hidden-mobile ">
-                                        <span class="identity__notice control__info">Sign in</span>
-                                        <span class="identity__account control__info u-h"></span>
-                                        <span class="identity__tier control__info u-h"></span>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="header__secondary">
-                    <span itemscope itemtype="http://schema.org/Organization">
-                        <a href="/" itemprop="url" class="icon-wrapper">
-                            <span class="u-h" itemprop="name">@Config.siteTitle</span>
-                            @if(Config.membershipHide){
-                                <i class="i i-logo i-logo--masterclass"></i>
-                            }else{
-                                <i class="i i-logo"></i>
-                            }
-                        </a>
-                    </span>
-                </div>
+                                </span>
+                                <span class="hidden-mobile ">
+                                    <span class="identity__notice control__info">Sign in</span>
+                                    <span class="identity__account control__info u-h"></span>
+                                    <span class="identity__tier control__info u-h"></span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <nav role="navigation" class="nav nav--global">
-                <div class="header__primary">
-                    <ul class="inline-list">
-                        <li class="inline-list__item nav__item">
-                            <a href="/events" class="nav__link">events</a>
-                        </li>
-                        @if(!Config.membershipHide) {
-                            <li class="inline-list__item nav__item">
-                                <a href="/join" class="nav__link">become a member</a>
-                            </li>
-                            <li class="inline-list__item nav__item">
-                                <a href="/join/patron" class="nav__link">become a patron</a>
-                            </li>
+            <div class="header__secondary">
+                <span itemscope itemtype="http://schema.org/Organization">
+                    <a href="/" itemprop="url" class="icon-wrapper">
+                        <span class="u-h" itemprop="name">@Config.siteTitle</span>
+                        @if(Config.membershipHide){
+                            <i class="i i-logo i-logo--masterclass"></i>
+                        }else{
+                            <i class="i i-logo"></i>
                         }
-                    </ul>
-                </div>
-                <div class="header__secondary">
-                    <ul class="inline-list">
-                        <li class="inline-list__item nav__item">
-                            <a href="/help" class="nav__link">help</a>
-                        </li>
-                        <li class="inline-list__item nav__item">
-                            <a href="/feedback" class="nav__link nav__link--last">feedback</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+                    </a>
+                </span>
+            </div>
         </div>
+        <nav role="navigation" class="nav nav--global">
+            <div class="header__primary">
+                <ul class="inline-list">
+                    <li class="inline-list__item nav__item">
+                        <a href="/events" class="nav__link">events</a>
+                    </li>
+                    @if(!Config.membershipHide) {
+                        <li class="inline-list__item nav__item">
+                            <a href="/join" class="nav__link">become a member</a>
+                        </li>
+                        <li class="inline-list__item nav__item">
+                            <a href="/join/patron" class="nav__link">become a patron</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="header__secondary">
+                <ul class="inline-list">
+                    <li class="inline-list__item nav__item">
+                        <a href="/help" class="nav__link">help</a>
+                    </li>
+                    <li class="inline-list__item nav__item">
+                        <a href="/feedback" class="nav__link nav__link--last">feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="header__inner header__inner--popup">
         <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
             <nav role="navigation" aria-label="Profile menu">
                 <ul class="nav nav--columns">

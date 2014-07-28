@@ -49,10 +49,8 @@
 
     (function(isModern) {
 
-        if (!isModern) { return false; }
-
         @* we want to add/remove classes to HTML ASAP to avoid FOUC *@
-        var htmlClassNames = [];
+        var htmlClassNames = ['js-on']; // we know we have JS
 
         @* http://modernizr.com/download/#-svg *@
         function hasSvgSupport() {
@@ -64,9 +62,16 @@
             htmlClassNames.push('svg');
         }
 
-        htmlClassNames.push('js-on');
+        document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + ' ' + htmlClassNames.join(' ');
 
-        document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + htmlClassNames.join(' ');
+        if (isModern) {
+            document.documentElement.className = document.documentElement.className.replace(/\bjs-not-modern\b/g, '')
+            // only load JS if the browser cuts the mustard
+            var newElm = document.createElement('script');
+            newElm.async = 1;
+            newElm.src = '@routes.Assets.at("javascripts/main.js")';
+            document.getElementsByTagName("head")[0].appendChild(newElm);
+        }
 
     })(guardian.isModernBrowser);
 

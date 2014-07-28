@@ -1,4 +1,4 @@
-@(subscription: model.Stripe.Subscription, card: model.Stripe.Card )
+@(paymentDetails: model.Stripe.PaymentDetails)
 
 @import views.support.Dates._
 @import views.support.Format._
@@ -10,7 +10,7 @@
                 Package
             </td>
             <td class="summary-table__cell" role="scope">
-                @subscription.plan.name
+                @paymentDetails.subscription.plan.name
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -18,7 +18,7 @@
                 Start Date
             </td>
             <td class="summary-table__cell">
-                @subscription.start.pretty
+                @paymentDetails.subscription.start.pretty
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -26,19 +26,19 @@
                 Amount Paid Today
             </td>
             <td class="summary-table__cell">
-                @formatPence(subscription.plan.amount)
+                @formatPence(paymentDetails.subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
             <td class="summary-table__cell">
-                @if(subscription.plan.interval == "year") {
+                @if(paymentDetails.subscription.plan.interval == "year") {
                     Yearly payment
                 } else {
                     Monthly Payment
                 }
             </td>
             <td class="summary-table__cell">
-                @formatPence(subscription.plan.amount)
+                @formatPence(paymentDetails.subscription.plan.amount)
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -46,7 +46,7 @@
                 Next Payment
             </td>
             <td class="summary-table__cell">
-                @subscription.current_period_end.pretty
+                @paymentDetails.subscription.current_period_end.pretty
             </td>
         </tr>
         <tr class="summary-table__row" role="row">
@@ -54,8 +54,8 @@
                 Card
             </td>
             <td class="summary-table__cell">
-                <span class="credit-card credit-card--inline-block @("credit-card--" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
-                <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
+                <span class="credit-paymentDetails.card credit-paymentDetails.card--inline-block @("credit-paymentDetails.card--" + paymentDetails.card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @paymentDetails.card.last4</span>
             </td>
         </tr>
     </table>

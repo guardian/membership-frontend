@@ -24,13 +24,9 @@ trait User extends Controller {
         val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
         Future.successful(Cors(Ok(details)))
 
-      case _ => StripeService.Customer.read(request.member.customerId).map { customer =>
-        val subscriptionOpt = for {
-          subscription <- customer.subscription
-          card <- customer.card
-        } yield subscriptionDetails(subscription, card)
-
-        Cors(Ok(basicDetails(request) ++ subscriptionOpt.getOrElse(Json.obj())))
+      case _ => StripeService.Customer.read(request.member.stripeCustomerId.get).map { customer =>
+        val paymentDetails = customer.paymentDetails.fold(Json.obj())(extractPaymentDetails)
+        Cors(Ok(basicDetails(request) ++ paymentDetails))
       }
     }
   }
@@ -42,23 +38,29 @@ trait User extends Controller {
     implicit val writesDateTime = Writes[DateTime] { dt => JsString(dt.toString(standardFormat)) }
 
     Json.obj(
-      "userId" -> member.userId,
+      "userId" -> member.identityId,
       "tier" -> member.tier.toString,
       "joinDate" -> member.joinDate,
-      "optIn" -> !member.cancellationRequested
+      "optIn" -> member.optedIn
     )
   }
 
-  def subscriptionDetails(subscription: Stripe.Subscription, card: Stripe.Card) = {
+  def extractPaymentDetails(paymentDetails: Stripe.PaymentDetails) = {
     val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
     implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
+
+    val Stripe.PaymentDetails(card, subscription) = paymentDetails
 
     Json.obj(
       "subscription" -> Json.obj(
         "start" -> subscription.start,
         "end" -> subscription.current_period_end,
         "cancelledAt" -> subscription.canceled_at,
-        "plan" -> Json.obj("name" -> subscription.plan.name, "amount" -> subscription.plan.amount, "interval" -> subscription.plan.interval),
+        "plan" -> Json.obj(
+          "name" -> subscription.plan.name,
+          "amount" -> subscription.plan.amount,
+          "interval" -> subscription.plan.interval
+        ),
         "card" -> Json.obj("last4" -> card.last4, "type" -> card.`type`)
       )
     )

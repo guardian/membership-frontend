@@ -1,39 +1,38 @@
 package controllers
 
-import model.Stripe.Plan
-import model.Tier.Tier
-import model.{Member, Tier}
 
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import actions.{MemberRequest, AuthRequest, MemberAction, AuthenticatedAction}
-import services.{MemberService, StripeService}
+import actions._
 import forms.MemberForm._
+import model.Stripe.{PaymentDetails, Plan}
+import model.Tier.Tier
+import model.{Member, Tier}
+import services.{MemberService, StripeService}
 
 trait DowngradeTier {
   self: TierController =>
 
-  def friendDowngrade() = MemberAction { implicit request =>
+  def downgradeToFriend() = PaidMemberAction { implicit request =>
     Ok(views.html.tier.downgrade.confirm())
   }
 
-  def friendDowngradeConfirm() = MemberAction.async { implicit request => // POST
+  def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.cancelPayment(request.member)
+      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
       cancelledSubscription.map(_ => Redirect("/tier/change/friend/summary")).getOrElse(NotFound)
     }
   }
 
-  def friendDowngradeSummary() = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
+  def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
+    StripeService.Customer.read(request.stripeCustomerId).map { customer =>
       val response = for {
-        subscription <- customer.subscription
-        card <- customer.card
-      } yield Ok(views.html.tier.downgrade.summary(subscription, card))
+        paymentDetails <- customer.paymentDetails
+      } yield Ok(views.html.tier.downgrade.summary(paymentDetails))
 
       response.getOrElse(NotFound)
     }
@@ -63,22 +62,23 @@ trait UpgradeTier {
 
   def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
     val futureCustomer =
-      if (request.member.customerId == Member.NO_CUSTOMER_ID)
+      request.member.stripeCustomerId.fold {
         StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
-      else
-        StripeService.Customer.read(request.member.customerId)
+      } {
+        StripeService.Customer.read // TODO: use stripeToken to update card
+      }
 
     val planName = tier.toString + (if (formData.payment.`type` == "annual") Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer
-      subscription <- customer.subscription.map { subscription =>
-        StripeService.Subscription.update(customer.id, subscription.id, planName, formData.payment.token)
+      subscription <- customer.paymentDetails.map { paymentDetails =>
+        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.payment.token)
       }.getOrElse {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberService.put(request.member.copy(tier = tier, customerId = customer.id))
+      MemberService.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
       Ok("")
     }
   }
@@ -93,22 +93,20 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      cancelledSubscription <- MemberService.cancelPayment(request.member)
+      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
-      MemberService.put(request.member.copy(cancellationRequested=true))
+      MemberService.update(request.member.copy(optedIn=false))
       Redirect("/tier/cancel/summary")
     }
   }
 
   def cancelTierSummary() = MemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.customerId).map { customer =>
-      val response = for {
-        subscription <- customer.subscription
-        card <- customer.card
-      } yield Ok(views.html.tier.cancel.summary(subscription, card))
+    val futurePaymentDetails =
+      request.member.stripeCustomerId.map { stripeCustomerId =>
+        StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
+      }.getOrElse(Future.successful(None))
 
-      response.getOrElse(NotFound)
-    }
+    futurePaymentDetails.map(paymentDetails => Ok(views.html.tier.cancel.summary(paymentDetails)))
   }
 }
 
