@@ -133,11 +133,11 @@ module.exports = function (grunt) {
         asset_hash: {
             options: {
                 preserveSourceMaps: false,
-                assetMap: 'conf/assets.map',
+                assetMap: isDev ? false : 'conf/assets.map',
                 hashLength: 8,
                 algorithm: 'md5',
                 srcBasePath: 'public/',
-                destBasePath: 'public/dist/',
+                destBasePath: 'public/',
                 hashType: 'file'
             },
             staticfiles: {
