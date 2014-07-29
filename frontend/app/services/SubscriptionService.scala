@@ -27,7 +27,9 @@ trait ZuoraSOAP {
 
   private def soapBuilder(body: Elem, head: Option[Elem] = None): String = {
     val xml =
-      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/">
+      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
+                        xmlns:ns2="http://object.api.zuora.com/">
         <soapenv:Header>{head.getOrElse(Null)}</soapenv:Header>
         <soapenv:Body>{body}</soapenv:Body>
       </soapenv:Envelope>
