@@ -4,8 +4,8 @@ import com.netaporter.uri.dsl._
 
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
-import model.Tier
-import play.api.mvc.Request
+import com.gu.membership.salesforce.Tier
+
 import collection.convert.wrapAsScala._
 
 object Config {

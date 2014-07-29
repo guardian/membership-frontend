@@ -8,10 +8,11 @@ import play.api.libs.json.Reads
 import play.api.libs.ws.{WSResponse, WS}
 import play.api.Logger
 
+import com.gu.membership.salesforce.Tier
+
 import model.Stripe._
 import model.StripeDeserializer._
 import configuration.Config
-import model.Tier
 
 trait StripeService {
   def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
@@ -64,8 +65,8 @@ trait StripeService {
 
     def customerSubscriptionDeleted(event: Event) {
       val subscription = event.extract[Subscription]
-      MemberService.getByCustomerId(subscription.customer).foreach {
-        _.filter(_.optedIn).map { member => MemberService.update(member.copy(tier = Tier.Friend)) }
+      MemberRepository.getByCustomerId(subscription.customer).foreach {
+        _.filter(_.optedIn).map { member => MemberRepository.update(member.copy(tier = Tier.Friend)) }
       }
     }
 
