@@ -4,6 +4,7 @@ import scala.io.Source
 
 import play.api.libs.json.{Json, JsObject}
 import collection.mutable.{ Map => MutableMap }
+import configuration.Config
 
 object Asset {
   lazy val map = {
@@ -11,5 +12,6 @@ object Asset {
     json.as[JsObject].fields.toMap.mapValues(_.as[String])
   }
 
-  def at(path: String): String = "/assets/dist/" + map.getOrElse(path, path)
+  def at(path: String):
+    String = "/assets/" + (if (Config.membershipDebug) path else "dist/" + map.getOrElse(path, path))
 }
