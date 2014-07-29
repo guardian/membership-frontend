@@ -9,11 +9,13 @@ import com.gu.membership.salesforce.Tier.Tier
 object Zuora {
   trait ZuoraObject
 
+  // TODO: add annual plans
   val plans = Map(
-    Tier.Friend -> "sdasd",
-    Tier.Partner -> "dsadsa",
-    Tier.Patron -> "asda"
+    Tier.Friend -> "8a80812a4733a5bb01475f2b6b4c04a2",
+    Tier.Partner -> "8a80812a4733a5bb01475f2b6b9204a8",
+    Tier.Patron -> "8a80812a4733a5bb01475f2b6ae80498"
   )
+
   case class Authentication(token: String, url: String) extends ZuoraObject
 
   case class Subscription() extends ZuoraObject
