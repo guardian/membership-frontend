@@ -11,5 +11,5 @@ object Asset {
     json.as[JsObject].fields.toMap.mapValues(_.as[String])
   }
 
-  def at(path: String): String = "/assets/" + map.getOrElse(path, path)
+  def at(path: String): String = "/assets/dist/" + map.getOrElse(path, path)
 }
