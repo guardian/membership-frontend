@@ -1,0 +1,35 @@
+@import services.{MemberRepository, SubscriptionService}
+
+<style>
+    .debug-panel {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-top-right-radius: 20px;
+        padding: 20px;
+        color: white;
+    }
+    .debug-panel p:last-child {
+        margin-bottom: 0;
+    }
+    .debug-panel p:hover::before {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        background-color: black;
+    }
+
+    #salesforce:hover::before {
+        content: "@MemberRepository.authenticationAgent.get()";
+    }
+
+    #zuora:hover::before {
+        content: "@SubscriptionService.authenticationAgent.get()";
+    }
+</style>
+<div class="debug-panel">
+    <p id="salesforce">Salesforce</p>
+    <p id="zuora">Zuora</p>
+</div>

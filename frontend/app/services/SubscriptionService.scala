@@ -81,7 +81,7 @@ object SubscriptionService extends SubscriptionService {
 
   private implicit val system = Akka.system
 
-  private val authenticationAgent = Agent[Authentication](Authentication("", ""))
+  val authenticationAgent = Agent[Authentication](Authentication("", ""))
 
   def refresh() {
     Logger.debug("Refreshing Zuora login")

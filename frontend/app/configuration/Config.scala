@@ -18,6 +18,7 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipHide = config.getBoolean("membership.hide")
+  val membershipDebug = config.getBoolean("membership.debug")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
   def idWebAppSigninUrl(uri: String): String =

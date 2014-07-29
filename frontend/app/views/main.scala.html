@@ -1,10 +1,11 @@
 @(title: String)(content: Html)
 
+@import configuration.Config
+
 <!DOCTYPE html>
 
 <html class="js-off js-not-modern">
     <head>
-        @import configuration.Config
         @if(!Config.membershipHide){
         <!--
 
@@ -65,6 +66,10 @@
         </div>
 
         @fragments.footer()
+
+        @if(Config.membershipDebug) {
+            @fragments.debug()
+        }
 
     </body>
 </html>
