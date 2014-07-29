@@ -24,6 +24,8 @@ object Stripe {
 
   case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
     // We currently only support one subscription/card
+    val cardOpt = cards.data.headOption
+
     val paymentDetails = for {
       card <- cards.data.headOption
       subscription <- subscriptions.data.headOption
