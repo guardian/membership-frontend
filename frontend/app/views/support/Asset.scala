@@ -4,14 +4,13 @@ import scala.io.Source
 
 import play.api.libs.json.{Json, JsObject}
 import collection.mutable.{ Map => MutableMap }
-import configuration.Config
 
 object Asset {
   lazy val map = {
-    val json = Json.parse(Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("assets.map")).mkString)
-    json.as[JsObject].fields.toMap.mapValues(_.as[String])
+    val resourceOpt = Option(getClass.getClassLoader.getResourceAsStream("assets.map"))
+    val jsonOpt = resourceOpt.map(Source.fromInputStream(_).mkString).map(Json.parse(_))
+    jsonOpt.map(_.as[JsObject].fields.toMap.mapValues(_.as[String])).getOrElse(Map.empty)
   }
 
-  def at(path: String):
-    String = "/assets/" + (if (Config.membershipDebug) path else "dist/" + map.getOrElse(path, path))
+  def at(path: String): String = "/assets/" + map.getOrElse(path, path)
 }
