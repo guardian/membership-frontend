@@ -126,6 +126,28 @@ module.exports = function (grunt) {
             }
         },
 
+        // generate a mapping file of hashed assets
+        // and move/rename built files to /dist/
+        asset_hash: {
+            options: {
+                preserveSourceMaps: false,
+                assetMap: 'conf/assets.map',
+                hashLength: 8,
+                algorithm: 'md5',
+                srcBasePath: 'public/',
+                destBasePath: 'public/dist/',
+                hashType: 'file'
+            },
+            staticfiles: {
+                files: [
+                    {
+                        src:  ['<%= dirs.publicDir.stylesheets %>/**/*.css', '<%= dirs.publicDir.javascripts %>/**/*.js'],
+                        dest: '<%= dirs.publicDir.root %>/dist/'
+                    }
+                ]
+            }
+          },
+
         /***********************************************************************
          * Test
          ***********************************************************************/
@@ -212,6 +234,7 @@ module.exports = function (grunt) {
     });
 
     // Load the plugins
+    grunt.loadNpmTasks('grunt-asset-hash');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
