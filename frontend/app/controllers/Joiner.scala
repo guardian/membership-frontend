@@ -24,7 +24,7 @@ trait Joiner extends Controller {
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      member <- MemberRepository.insert(request.user, "", Tier.Friend)
+      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
