@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET         /robots.txt                  controllers.Assets.at(path="/public", file="robots.txt")
+
 # Home page
 GET         /                            controllers.FrontPage.index
 
@@ -51,7 +53,7 @@ GET         /help                        controllers.Info.help
 GET         /feedback                    controllers.Info.feedback
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                controllers.Assets.at(path="/public", file)
+GET         /assets/*assetFile           controllers.Assets.at(path="/public", assetFile)
 
 GET         /user/me                     controllers.User.me
 GET         /user/me/details             controllers.User.meDetails
