@@ -14,10 +14,6 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def friend() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.friend())
-  }
-
   def detailFriend() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.detail.addressForm())
   }
@@ -26,10 +22,6 @@ trait Joiner extends Controller {
     for {
       member <- MemberRepository.upsert(request.user, "", Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
-  }
-
-  def partner() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.partner())
   }
 
   def paymentPartner() = AuthenticatedAction { implicit request =>

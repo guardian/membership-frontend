@@ -12,10 +12,8 @@ GET         /healthcheck                  controllers.Healthcheck.healthcheck
 
 # Join
 GET         /join                        controllers.Joiner.tierList
-GET         /join/friend                 controllers.Joiner.friend
 GET         /join/friend/detail          controllers.Joiner.detailFriend
 POST        /join/friend/detail          controllers.Joiner.joinFriend
-GET         /join/partner                controllers.Joiner.partner
 GET         /join/patron                 controllers.Joiner.patron
 GET         /join/partner/payment        controllers.Joiner.paymentPartner
 GET         /join/patron/payment         controllers.Joiner.paymentPatron
