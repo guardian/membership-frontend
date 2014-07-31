@@ -1,0 +1,65 @@
+@(ticketId: String)
+
+@import com.gu.membership.salesforce.Tier
+@import configuration.Config
+
+@main("Join membership") {
+
+    @fragments.tickets.ticketsFunnel(1)
+
+    <section class="joiner-section joiner-section--no-border tickets-choose">
+        <h1 class="section-headline">Join Guardian membership</h1>
+
+        <p>Our live events programme has something for everyone.  Sign up to be first in line to hear about up and coming events.</p>
+
+        <form action="" method="POST" id="payment-form" class="form tickets-select-form">
+
+            <input type="hidden" value="@ticketId" name="ticketId"/>
+
+            <label for="friend">
+                <input type="radio" value="friend" id="friend" name="tier"/>
+                <h2 class="tickets-select-form__tier-name">Friend</h2>
+                <p>@Config.benefits(Tier.Friend).leadin</p>
+
+                <ul class="">
+                @for(item <- Config.benefits(Tier.Friend).list) {
+                    <li>@item</li>
+                }
+                </ul>
+                <span class="tickets-select-form__price">@Config.benefits(Tier.Friend).priceText</span>
+            </label>
+
+            <label for="partner">
+                <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
+                <h2 class="tickets-select-form__tier-name">Partner</h2>
+                <p>@Config.benefits(Tier.Partner).leadin</p>
+
+                <ul class="">
+                @for(item <- Config.benefits(Tier.Partner).list) {
+                    <li>@item</li>
+                }
+                </ul>
+                <span class="tickets-select-form__price">@Config.benefits(Tier.Partner).priceText</span>
+            </label>
+
+            <label for="patron">
+                <input type="radio" value="patron" id="patron" name="tier"/>
+                <h2 class="tickets-select-form__tier-name">Patron</h2>
+                <p>@Config.benefits(Tier.Patron).leadin</p>
+
+                <ul class="">
+                @for(item <- Config.benefits(Tier.Patron).list) {
+                    <li>@item</li>
+                }
+                </ul>
+                <span class="tickets-select-form__price">@Config.benefits(Tier.Patron).priceText</span>
+            </label>
+
+            <input type="submit" class="submit-input action--logged-in" value="Choose"/>
+
+        </form>
+
+
+    </section>
+
+}

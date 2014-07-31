@@ -20,6 +20,9 @@ GET         /join/patron/payment         controllers.Joiner.paymentPatron
 GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
 GET         /join/:tier/thankyou         controllers.Joiner.thankyouPaid(tier)
 
+# The flow
+GET         /tickets/:id/join                         controllers.Tickets.ticketsJoin(id)
+
 GET         /signin                      controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 # Subscription
