@@ -158,7 +158,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ISeeAnErrorWhenMyCardHasNoFunds = {
     val page = new PaymentPage(driver).cardWidget
-    page.submitPayment(cardWithNoFunds, "111", "12", "2018")
+    page.submitPayment("Test", "Automation", "90 York", " Way", "London", "UK", "N19GU", cardWithNoFunds, "111", "12",
+      "2018")
     val errorMessage = page.getErrorMessage
     Assert.assert(errorMessage, "We're sorry. Your card has been declined.",
       "We display stripe's error message correctly")
@@ -218,7 +219,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAFriend = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinFriendButton.enterFirstName("Test")
+      .enterLastName("Automation").enterPostCode("N19GU").clickSubmitPayment
     this
   }
 
@@ -259,13 +261,13 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IGoToMembershipTabToChangeDetails = {
     driver.get(Config().getUserValue("membershipEdit"))
-    new IdentityEditPage(driver).clickChangebutton
+    new IdentityEditPage(driver).clickChangeButton
     this
   }
 
   def ICanUpdateMyCardDetails = {
     val page = new IdentityEditPage(driver)
-    page.clickMembershipTab.clickChangebutton.enterCardNumber(validCardNumber)
+    page.clickMembershipTab.clickChangeButton.enterCardNumber(validCardNumber)
       .enterCardSecurityCode("343").enterCardExpirationMonth("11").enterCardExpirationYear("2018").clickUpdateCardDetails
     val success = new IdentityEditPage(driver).isSuccessFlashMessagePresent
     Assert.assert(success, true, "The card update should be successful")
@@ -296,18 +298,16 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IChooseToBecomeAPartner = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
-      .clickBecomeAPartner.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
-      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
-      .enterCardSecurityCode("566")
+      .clickBecomeAPartner.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
+        "12", "2031")
     new UpgradePage(driver).clickSubmit
     this
   }
 
   def IChooseToBecomeAPatron = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
-      .clickBecomeAPatron.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
-      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
-      .enterCardSecurityCode("566")
+      .clickBecomeAPatron.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
+        "12", "2031")
     new UpgradePage(driver).clickSubmit
     this
   }
@@ -331,7 +331,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
 
-  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
+  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
+    "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2031")
 
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally
@@ -343,22 +344,40 @@ object CookieHandler {
 
   var loginCookie: Option[Cookie] = None
   var secureCookie: Option[Cookie] = None
+  val surveyCookie = new Cookie("gu.test", "test")
 
   def login(driver: WebDriver) = {
-    this.synchronized {
-      if (None == CookieHandler.loginCookie) {
-        driver.get(Config().getUserValue("identityReturn"))
-        val user = System.currentTimeMillis().toString
-        new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-          .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
-        driver.get(Config().getTestBaseUrl())
-        CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
-        CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
-      } else {
-        driver.get(Config().getTestBaseUrl())
-        driver.manage().addCookie(CookieHandler.loginCookie.get)
-        driver.manage().addCookie(CookieHandler.secureCookie.get)
-      }
-    }
+
+    driver.get(Config().getUserValue("identityReturn"))
+    driver.manage().addCookie(surveyCookie)
+    val user = System.currentTimeMillis().toString
+    val password = scala.util.Random.alphanumeric.take(10).mkString
+    val email = user + "@testme.com"
+    new LoginPage(driver).clickRegister.enterEmail(email)
+    .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
+    ////////////////////////////////////////////////////////////
+//    driver.get(Config().getUserValue("identityReturn"))
+//    new LoginPage(driver).enterEmail(email).enterPassword(password)
+//    Thread.sleep(5000)
+//    driver.get(Config().getTestBaseUrl())
+    ////////////////////////////////////////////////////////////
+
+//    this.synchronized {
+//      if (None == CookieHandler.loginCookie) {
+//        driver.get(Config().getUserValue("identityReturn"))
+//        driver.manage().addCookie(surveyCookie)
+//        val user = System.currentTimeMillis().toString
+//        new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
+//          .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
+//        driver.get(Config().getTestBaseUrl())
+//        CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
+//        CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
+//      } else {
+//        driver.get(Config().getTestBaseUrl())
+//        driver.manage().addCookie(surveyCookie)
+//        driver.manage().addCookie(CookieHandler.loginCookie.get)
+//        driver.manage().addCookie(CookieHandler.secureCookie.get)
+//      }
+//    }
   }
 }

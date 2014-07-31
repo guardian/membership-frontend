@@ -8,8 +8,9 @@ import com.gu.automation.support.TestRetries
  */
 abstract class BaseMembershipTest extends WebDriverFeatureSpec with TestRetries with GivenWhenThen {
 
-    override def startDriver(testName: String) = {
-      val driver = super.startDriver(testName)
+    override def startDriver(testName: String, extraCapabilities: Map[String, String] = Map()) = {
+      val capabilities = extraCapabilities + ("browserstack.local" -> "true");
+      val driver = super.startDriver(testName, capabilities)
       driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS)
       driver
     }

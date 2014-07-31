@@ -13,4 +13,9 @@ class JoinPartnerPage(driver: WebDriver) extends BaseMembershipPage(driver) {
     joinButton.click
     new PaymentPage(driver)
   }
+
+  def clickJoinFriendButton = {
+    joinButton.click
+    new CreditCardWidget(driver) // it is the widget without the payment part
+  }
 }

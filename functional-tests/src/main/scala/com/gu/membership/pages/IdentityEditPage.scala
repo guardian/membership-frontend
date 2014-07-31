@@ -15,11 +15,11 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-join-date"))
 
-  private def paymentCostSpan = driver.findElement(By.cssSelector(".js-membership-payment-cost"))
+  private def paymentCostSpan = driver.findElement(By.xpath("(//span[contains(@class,'js-membership-payment-cost')])[2]"))
 
   private def nextPaymentSpan = driver.findElement(By.cssSelector(".js-membership-payment-next"))
 
-  private def cardDetailsSpan = driver.findElement(By.cssSelector(".membership-tab__card-details"))
+  private def cardDetailsSpan = driver.findElement(By.xpath("(//span[contains(@class, 'membership-tab__card-details')])[2]"))
 
   private def changeCardButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-open"))
 
@@ -29,7 +29,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   val cardWidget = new CreditCardWidget(driver)
 
-  def clickChangebutton = {
+  def clickChangeButton = {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeCardButton))
     // FIXME: for some reason the JS doesn't work if you click immediately
     new Actions(driver).moveToElement(changeCardButton).perform

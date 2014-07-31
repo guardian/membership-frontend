@@ -11,7 +11,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
 
     scenarioWeb("User can update card details") { implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAPartner
       }
       .when {
        _.IGoToIdentity
@@ -23,7 +23,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
 
     scenarioWeb("User can't add an incorrect card") { implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAPartner
       }
       .when {
         _.IGoToMembershipTabToChangeDetails
@@ -35,7 +35,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
 
     scenarioWeb("User can't add a card with incorrect CVC") { implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAPartner
       }
       .when {
         _.IGoToMembershipTabToChangeDetails
@@ -49,7 +49,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
     scenarioWeb("User can't add a card with invalid expiry date") {
       implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAPartner
       }
       .when {
         _.IGoToMembershipTabToChangeDetails
