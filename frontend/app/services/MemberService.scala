@@ -26,9 +26,9 @@ trait MemberService {
   def createMember(user: User, tier: Tier, paymentToken: Option[String]): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, paymentToken.get)
-      salesforceContactId <- MemberRepository.insert(user, customer.id, tier)
-      subscription <- SubscriptionService.createSubscription(salesforceContactId, customer, tier)
-    } yield salesforceContactId
+      salesforceContactId <- MemberRepository.upsert(user, customer.id, tier)
+      subscription <- SubscriptionService.createSubscription("", customer, tier)
+    } yield ""
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {

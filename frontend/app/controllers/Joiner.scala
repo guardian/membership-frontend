@@ -6,16 +6,12 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import com.gu.membership.salesforce.Tier
 
 import actions.{PaidMemberAction, AuthenticatedAction}
-import services.{MemberService, StripeService}
+import services.{MemberRepository, MemberService, StripeService}
 
 trait Joiner extends Controller {
 
   def tierList = CachedAction { implicit request =>
     Ok(views.html.joiner.tierList())
-  }
-
-  def friend() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.friend())
   }
 
   def detailFriend() = AuthenticatedAction { implicit request =>
@@ -24,12 +20,8 @@ trait Joiner extends Controller {
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      salesforceContactId <- MemberService.createMember(request.user, Tier.Friend, None)
+      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
-  }
-
-  def partner() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.partner())
   }
 
   def paymentPartner() = AuthenticatedAction { implicit request =>
