@@ -1,12 +1,15 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.Tier
 
-import actions.{PaidMemberAction, AuthenticatedAction}
-import services.{MemberRepository, MemberService, StripeService}
+import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
+import services.{MemberService, StripeService}
+import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 
 trait Joiner extends Controller {
 
@@ -19,8 +22,12 @@ trait Joiner extends Controller {
   }
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
+    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makeFriend)
+  }
+
+  private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
     for {
-      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
+      salesforceContactId <- MemberService.createFriend(request.user, formData)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 

@@ -1,6 +1,6 @@
 package model
 
-import scala.xml.Elem
+import scala.xml.{Null, Elem}
 import org.joda.time.DateTime
 
 import com.gu.membership.salesforce.Tier
@@ -35,26 +35,32 @@ object Zuora {
   }
 
   object Subscription {
-    def subscribe(salesforceContactId: String, customer: Stripe.Customer, tier: Tier): Elem = {
+    def subscribe(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Elem = {
       val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
+
+      val payment = customerOpt.map { customer =>
+        <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
+          <ns2:TokenId>{customer.cardOpt.fold("")(_.id)}</ns2:TokenId>
+          <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
+          <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
+        </ns1:PaymentMethod>
+      }.getOrElse(Null)
+
+      // TODO: customer.cardOpt should always be Some
 
       <ns1:subscribe>
         <ns1:subscribes>
           <ns1:Account xsi:type="ns2:Account">
-           <ns2:AutoPay>true</ns2:AutoPay>
+           <ns2:AutoPay>{customerOpt.isDefined}</ns2:AutoPay>
            <ns2:BcdSettingOption>AutoSet</ns2:BcdSettingOption>
            <ns2:BillCycleDay>0</ns2:BillCycleDay>
            <ns2:Currency>GBP</ns2:Currency>
-           <ns2:Name>Account Name</ns2:Name>
+           <ns2:Name>{sfAccountId}</ns2:Name>
            <ns2:PaymentTerm>Due Upon Receipt</ns2:PaymentTerm>
            <ns2:Batch>Batch1</ns2:Batch>
-           <ns2:CrmId>{salesforceContactId}</ns2:CrmId>
+           <ns2:CrmId>{sfAccountId}</ns2:CrmId>
           </ns1:Account>
-          <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
-            <ns2:TokenId>{customer.cardOpt.get.id}</ns2:TokenId>
-            <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
-            <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
-          </ns1:PaymentMethod>
+          {payment}
           <ns1:BillToContact xsi:type="ns2:Contact">
             <ns2:Address1>25 North Row</ns2:Address1>
             <ns2:City>London</ns2:City>

@@ -11,8 +11,9 @@ import com.gu.membership.salesforce.Tier.Tier
 
 import play.api.Logger
 import play.api.Play.current
-import play.api.libs.ws.WS
+import play.api.libs.ws.{WSResponse, WS}
 import play.api.libs.concurrent.Akka
+import play.api.http.Status.OK
 
 import configuration.Config
 import model.Zuora._
@@ -64,7 +65,7 @@ trait ZuoraSOAP {
 }
 
 trait SubscriptionService {
-  def createSubscription(salesforceContactId: String, customer: Stripe.Customer, tier: Tier): Future[Subscription]
+  def createSubscription(salesforceContactId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription]
 }
 
 object SubscriptionService extends SubscriptionService {
@@ -77,8 +78,14 @@ object SubscriptionService extends SubscriptionService {
     def authentication: Authentication = authenticationAgent.get()
   }
 
-  def createSubscription(salesforceContactId: String, customer: Stripe.Customer, tier: Tier): Future[Subscription] = {
-    zuoraSOAP.authRequest(Subscription.subscribe(salesforceContactId, customer, tier)).map(Subscription(_))
+  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
+    for {
+      response <- zuoraSOAP.authRequest(Subscription.subscribe(sfAccountId, customerOpt, tier))
+    } yield {
+      val subscription = Subscription(response)
+      println(subscription)
+      subscription
+    }
   }
 
   private implicit val system = Akka.system

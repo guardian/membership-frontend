@@ -10,25 +10,46 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 
 import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier.Tier
 
 import com.gu.identity.model.User
 
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.{Customer, Subscription}
+import forms.MemberForm.{JoinForm, PaidMemberJoinForm, FriendJoinForm}
+import com.gu.membership.salesforce.Member.Keys
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
 trait MemberService {
-  def createMember(user: User, tier: Tier, paymentToken: Option[String]): Future[String] = {
+  def commonData(user: User, formData: JoinForm, tier: Tier.Tier) = Map(
+    Keys.EMAIL -> user.getPrimaryEmailAddress,
+    Keys.FIRST_NAME -> formData.name.first,
+    Keys.LAST_NAME -> formData.name.last,
+    Keys.OPT_IN -> true,
+    Keys.TIER -> tier.toString,
+    "MailingAddress" -> formData.deliveryAddress.postCode
+  )
+
+  def createFriend(user: User, formData: FriendJoinForm): Future[String] = {
     for {
-      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, paymentToken.get)
-      salesforceContactId <- MemberRepository.upsert(user, customer.id, tier)
-      subscription <- SubscriptionService.createSubscription("", customer, tier)
-    } yield ""
+      sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
+      subscription <- SubscriptionService.createSubscription(sfAccountId, None, Tier.Friend)
+    } yield sfAccountId
+  }
+
+  def createPaidMember(user: User, formData: PaidMemberJoinForm): Future[String] = {
+    for {
+      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
+      updatedData = commonData(user, formData, formData.tier) ++ Map(
+        Keys.CUSTOMER_ID -> customer.id,
+        "DefaultCard" -> customer.cardOpt.fold("")(_.id)
+      )
+      sfAccountId <- MemberRepository.upsert(user.id, updatedData)
+      subscription <- SubscriptionService.createSubscription(sfAccountId, Some(customer), formData.tier)
+    } yield sfAccountId
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {

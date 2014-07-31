@@ -15,10 +15,15 @@ object MemberForm {
 
   case class PaymentForm(`type`: String, token: String)
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm)
+  trait JoinForm {
+    val name: NameForm
+    val deliveryAddress: AddressForm
+  }
+
+  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm) extends JoinForm
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
-                                billingAddress: Option[AddressForm])
+                                billingAddress: Option[AddressForm]) extends JoinForm
 
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
