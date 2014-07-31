@@ -39,7 +39,7 @@ trait ZuoraSOAP {
     xml.toString()
   }
 
-  def authRequest(body: Elem): Future[Elem] = {
+  def request(body: Elem): Future[Elem] = {
     val head =
       <ns1:SessionHeader>
         <ns1:session>{authentication.token}</ns1:session>
@@ -65,7 +65,7 @@ trait ZuoraSOAP {
 }
 
 trait SubscriptionService {
-  def createSubscription(salesforceContactId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription]
+  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription]
 }
 
 object SubscriptionService extends SubscriptionService {
@@ -80,12 +80,8 @@ object SubscriptionService extends SubscriptionService {
 
   def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
     for {
-      response <- zuoraSOAP.authRequest(Subscription.subscribe(sfAccountId, customerOpt, tier))
-    } yield {
-      val subscription = Subscription(response)
-      println(subscription)
-      subscription
-    }
+      response <- zuoraSOAP.request(Subscription.subscribe(sfAccountId, customerOpt, tier))
+    } yield Subscription(response)
   }
 
   private implicit val system = Akka.system
