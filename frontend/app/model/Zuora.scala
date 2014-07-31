@@ -18,6 +18,8 @@ object Zuora {
 
   case class Authentication(token: String, url: String) extends ZuoraObject
 
+  case class Query() extends ZuoraObject
+
   case class Subscription(id: String) extends ZuoraObject
 
   object Authentication {
@@ -31,6 +33,18 @@ object Zuora {
     def apply(elem: Elem): Authentication = {
       val result = elem \\ "loginResponse" \ "result"
       Authentication((result \ "Session").text, (result \ "ServerUrl").text)
+    }
+  }
+
+  object Query {
+    def query(q: String): Elem = {
+      <ns1:query>
+        <ns1:queryString>{q}</ns1:queryString>
+      </ns1:query>
+    }
+
+    def apply(elem: Elem): Query = {
+      Query()
     }
   }
 
