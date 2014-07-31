@@ -1,0 +1,17 @@
+@(ticketId: String)
+
+@import configuration.Config
+
+@main("Address Details") {
+
+<h1 class="section-headline">@Config.siteTitle events in your area</h1>
+
+<form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
+    <input type="hidden" name="ticketId" value="@ticketId"/>
+    @fragments.form.errorMessageDisplay()
+    @fragments.form.nameDetail()
+    @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true)
+    @fragments.form.submit("Join now")
+</form>
+
+}

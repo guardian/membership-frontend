@@ -25,7 +25,7 @@ trait Joiner extends Controller {
   }
 
   def paymentPartner() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Partner))
   }
 
   def patron() = CachedAction { implicit request =>
@@ -33,7 +33,7 @@ trait Joiner extends Controller {
   }
 
   def paymentPatron() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
+    Ok(views.html.joiner.payment.paymentForm(Tier.Patron))
   }
 
   def thankyouFriend() = AuthenticatedAction { implicit request =>
@@ -49,6 +49,7 @@ trait Joiner extends Controller {
       response.getOrElse(NotFound)
     }
   }
+
 }
 
 object Joiner extends Joiner
