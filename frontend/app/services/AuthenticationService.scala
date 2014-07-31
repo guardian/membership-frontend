@@ -15,7 +15,8 @@ trait AuthenticationService {
 
   def handleAuthenticatedRequest[A](request: Request[A]): Either[Result, AuthRequest[A]] = {
     authenticatedRequestFor(request).toRight {
-      SeeOther(controllers.routes.Login.chooseSigninOrRegister(request.uri, None).absoluteURL()(request))
+      val chooseSigninOrRegister: Call = controllers.routes.Login.chooseSigninOrRegister(request.uri, None)
+      SeeOther(chooseSigninOrRegister.absoluteURL(secure = true)(request))
     }
   }
 
