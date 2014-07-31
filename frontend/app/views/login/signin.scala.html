@@ -1,0 +1,35 @@
+@(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
+
+@import configuration.Config
+
+@main("Join membership") {
+
+    <section class="joiner-section joiner-section--no-border">
+
+        <p>
+            Don't have a guardian account?
+            <a class="action action--join" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now &gt;</a>
+        </p>
+
+        <br/>
+
+        @for(tier <- tierOpt) {
+            <p>@Config.benefits(tier).leadin</p>
+
+            <ul class="package__list-element">
+            @for(item <- Config.benefits(tier).list) {
+                <li>@item</li>
+            }
+            </ul>
+
+            <br/>
+        }
+
+        <p>
+            Already have a Guardian account?
+            <a class="action action--join" href="@Config.idWebAppSigninUrl(returnUrl)">Sign in</a>
+        </p>
+
+    </section>
+
+}
