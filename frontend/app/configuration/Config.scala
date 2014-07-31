@@ -21,8 +21,13 @@ object Config {
   val membershipDebug = config.getBoolean("membership.debug")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
+
   def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri")
+
+  def idWebAppRegisterUrl(uri: String): String =
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
+
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
