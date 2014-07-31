@@ -18,7 +18,7 @@ object Zuora {
 
   case class Authentication(token: String, url: String) extends ZuoraObject
 
-  case class Subscription() extends ZuoraObject
+  case class Subscription(id: String) extends ZuoraObject
 
   object Authentication {
     def login(user: String, pass: String): Elem = {
@@ -97,7 +97,8 @@ object Zuora {
     }
 
     def apply(elem: Elem): Subscription = {
-      Subscription()
+      val result = elem \\ "subscribeResponse" \ "result"
+      Subscription((result \ "SubscriptionId").text)
     }
   }
 }
