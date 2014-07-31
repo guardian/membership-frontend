@@ -1,7 +1,6 @@
 package services
 
-import play.api.mvc.Request
-import play.api.mvc.Result
+import play.api.mvc.{Call, Request, Result}
 import play.api.mvc.Results.SeeOther
 import com.gu.identity.cookie.IdentityCookieDecoder
 import com.netaporter.uri.dsl._
@@ -16,7 +15,7 @@ trait AuthenticationService {
 
   def handleAuthenticatedRequest[A](request: Request[A]): Either[Result, AuthRequest[A]] = {
     authenticatedRequestFor(request).toRight {
-      SeeOther(idWebAppSigninUrl(request.uri))
+      SeeOther(controllers.routes.Login.chooseSigninOrRegister(request.uri, None).absoluteURL()(request))
     }
   }
 

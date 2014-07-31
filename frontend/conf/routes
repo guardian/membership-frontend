@@ -20,6 +20,8 @@ GET         /join/patron/payment         controllers.Joiner.paymentPatron
 GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
 GET         /join/:tier/thankyou         controllers.Joiner.thankyouPaid(tier)
 
+GET         /signin                      controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
+
 # Subscription
 POST        /subscription/subscribe      controllers.Subscription.subscribe
 POST        /subscription/update         controllers.Subscription.updateCard
