@@ -65,7 +65,13 @@ trait ZuoraSOAP {
 }
 
 trait SubscriptionService {
-  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription]
+  val zuoraSOAP: ZuoraSOAP
+
+  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
+    for {
+      response <- zuoraSOAP.request(Subscription.subscribe(sfAccountId, customerOpt, tier))
+    } yield Subscription(response)
+  }
 }
 
 object SubscriptionService extends SubscriptionService {
@@ -76,12 +82,6 @@ object SubscriptionService extends SubscriptionService {
     val apiPassword = Config.zuoraApiPassword
 
     def authentication: Authentication = authenticationAgent.get()
-  }
-
-  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
-    for {
-      response <- zuoraSOAP.request(Subscription.subscribe(sfAccountId, customerOpt, tier))
-    } yield Subscription(response)
   }
 
   private implicit val system = Akka.system
