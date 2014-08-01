@@ -16,8 +16,9 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
 
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
     lazy val seeMiniMembershipTierChooser = {
-      val miniTierChooser: Call = controllers.routes.Tickets.ticketsJoin("123456")
-      SeeOther(miniTierChooser.absoluteURL(secure = true)(request))
+      val miniTierChooser: Call = controllers.routes.Joining.tierChooser()
+
+      SeeOther(miniTierChooser.absoluteURL(secure = true)(request)).addingToSession("preJoinReturnUrl" -> request.uri)(request)
     }
 
     authService.authenticatedRequestFor(request).map { authRequest =>
