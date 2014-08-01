@@ -3,12 +3,13 @@
 # ~~~~
 
 GET         /robots.txt                  controllers.Assets.at(path="/public", file="robots.txt")
+GET         /favicon.ico                 controllers.Assets.at(path="/public/images/favicons", file="32x32.ico")
 
 # Home page
 GET         /                            controllers.FrontPage.index
 
 # Healthcheck
-GET         /healthcheck                  controllers.Healthcheck.healthcheck
+GET         /healthcheck                 controllers.Healthcheck.healthcheck
 
 # Join
 GET         /join                        controllers.Joiner.tierList
@@ -19,6 +20,10 @@ GET         /join/partner/payment        controllers.Joiner.paymentPartner
 GET         /join/patron/payment         controllers.Joiner.paymentPatron
 GET         /join/friend/thankyou        controllers.Joiner.thankyouFriend
 GET         /join/:tier/thankyou         controllers.Joiner.thankyouPaid(tier)
+
+# The flow
+GET         /choose-tier                 controllers.Joining.tierChooser()
+POST        /choose-tier                 controllers.Joining.tierChooserRedirect()
 
 GET         /signin                      controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
