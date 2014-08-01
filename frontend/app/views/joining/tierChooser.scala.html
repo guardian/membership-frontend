@@ -1,3 +1,5 @@
+@(eventIdOpt: Option[String])
+
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
@@ -56,6 +58,9 @@
         </form>
 
 
+        @for(eventId <- eventIdOpt) {
+            You are going to buy this amazing ticket once this is all over @eventId
+        }
     </section>
 
 }
