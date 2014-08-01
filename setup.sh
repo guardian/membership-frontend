@@ -34,10 +34,10 @@ npm install
 #####################################################
 
 printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower JS modules in common/app/assets/javascripts ..."
+printf "> Installing bower JS modules in assets/javascripts ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
-cd common/app/assets/javascripts
+cd assets/javascripts
 
 bower install
 
@@ -48,10 +48,10 @@ cd ../../../../
 #####################################################
 
 printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower SASS modules in common/app/assets/stylesheets ..."
+printf "> Installing bower SASS modules in assets/stylesheets ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
-cd common/app/assets/stylesheets
+cd assets/stylesheets
 
 bower install
 
