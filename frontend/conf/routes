@@ -2,33 +2,26 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /robots.txt                  controllers.Assets.at(path="/public", file="robots.txt")
-GET         /favicon.ico                 controllers.Assets.at(path="/public/images/favicons", file="32x32.ico")
+GET         /robots.txt                               controllers.Assets.at(path="/public", file="robots.txt")
+GET         /favicon.ico                              controllers.Assets.at(path="/public/images/favicons", file="32x32.ico")
 
 # Home page
 GET         /                                         controllers.FrontPage.index
 
 # Healthcheck
-GET         /healthcheck                 controllers.Healthcheck.healthcheck
+GET         /healthcheck                              controllers.Healthcheck.healthcheck
 
 # Join
 GET         /join                                     controllers.Joiner.tierList
-GET         /join/friend/detail                       controllers.Joiner.detailFriend
-POST        /join/friend/detail                       controllers.Joiner.joinFriend
+GET         /join/:tier/enter-details                 controllers.Joiner.enterDetails(tier)
+POST        /join/friend/enter-details                controllers.Joiner.joinFriend
+
 GET         /join/patron                              controllers.Joiner.patron
-GET         /join/partner/payment                     controllers.Joiner.paymentPartner
-GET         /join/patron/payment                      controllers.Joiner.paymentPatron
+
 GET         /join/friend/thankyou                     controllers.Joiner.thankyouFriend
 GET         /join/:tier/thankyou                      controllers.Joiner.thankyouPaid(tier)
 
-GET         /signin       controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
-
-# The flow
-GET         /tickets/:id/join/friend/payment          controllers.Tickets.detailsForm(id)
-GET         /tickets/:id/join/:tier/payment           controllers.Tickets.paymentForm(id, tier)
-GET         /tickets/:id/join/friend/thankyou         controllers.Tickets.ticketsThankyouFriend(id)
-GET         /tickets/:id/join/partner/thankyou        controllers.Tickets.ticketsThankyouPartner(id)
-GET         /tickets/:id/join/patron/thankyou         controllers.Tickets.ticketsThankyouPatron(id)
+GET         /signin                                   controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 GET         /choose-tier                              controllers.Joining.tierChooser()
 POST        /choose-tier                              controllers.Joining.tierChooserRedirect()

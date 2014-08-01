@@ -8,45 +8,7 @@ import play.api.data.Forms._
 import services.{StripeService, AuthenticationService}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-trait Tickets extends Controller {
-
-  val authService: AuthenticationService
-
-  /*
-  *   Tier selection page ===============================================
-  */
-
-  def ticketsJoin(ticketId: String) = CachedAction { implicit request =>
-    Ok(views.html.tickets.ticketsJoin(ticketId))
-  }
-
-  private val tierForm =
-    Form { tuple("ticketId" -> nonEmptyText, "tier" -> nonEmptyText) }
-
-  def ticketsJoinRedirect(ticketId: String) = CachedAction { implicit request =>
-
-    def redirect(formData: (String, String)) = {
-      val (ticketId, tierString) = formData
-      Redirect(routes.Tickets.paymentForm(ticketId, tierString)) //TODO handle friend?
-    }
-
-    tierForm.bindFromRequest
-      .fold(_ => BadRequest, redirect)
-  }
-
-  /*
-  *   Payment/detail pages ==============================================
-  */
-
-  // Duplicated from joiner controller due to funnel
-
-  def detailsForm(ticketId: String) = AuthenticatedAction { implicit request =>
-    Ok(views.html.tickets.addressForm(ticketId))
-  }
-
-  def paymentForm(ticketId: String, tierString: String) = AuthenticatedAction { implicit request =>
-    Ok(views.html.tickets.paymentForm(ticketId, Tier.routeMap(tierString)))
-  }
+object Tickets extends Controller {
 
   /*
   *   Thankyou pages ====================================================
@@ -85,8 +47,4 @@ trait Tickets extends Controller {
     }
   }
 
-}
-
-object Tickets extends Tickets {
-  val authService = AuthenticationService
 }

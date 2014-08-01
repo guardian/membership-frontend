@@ -33,11 +33,11 @@ require([
         modifyEvent.init();
     });
 
-    router.match('*/detail').to(function () {
+    router.match('*/friend/enter-details').to(function () {
         (new JoinFree()).init();
     });
 
-    router.match('*/payment').to(function () {
+    router.match(['*/payment', '*/partner/enter-details', '*/patron/enter-details']).to(function () {
         (new JoinPaid()).init();
     });
 
