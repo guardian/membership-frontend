@@ -6,8 +6,12 @@
 }
 
 .section-headline {
-    @extend %section-header;
     @include fs-headline(7);
+
+    border-top: 20px solid $mem-blue;
+    float: left;
+    padding-top: $gs-baseline/3; // 4px
+    margin-bottom: $gs-baseline*4;
 }
 
 .section-sub-headline {
