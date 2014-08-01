@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                 images: '<%= dirs.publicDir.root %>/images'
             },
             assets: {
-                root: 'common/app/assets',
+                root: 'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
                 javascripts: '<%= dirs.assets.root %>/javascripts'
             }
@@ -196,7 +196,8 @@ module.exports = function (grunt) {
         // Lint Sass sources
         scsslint: {
             allFiles: [
-                'common/app/assets/stylesheets'
+                '<%= dirs.assets.stylesheets %>/**/*.scss',
+                '!<%= dirs.assets.stylesheets %>/components/bower-components/**/*.scss'
             ],
             options: {
                 bundleExec: true,
