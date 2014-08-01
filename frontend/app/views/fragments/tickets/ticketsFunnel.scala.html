@@ -1,0 +1,25 @@
+@(Step: Int)
+
+<div class="funnel">
+    <ul>
+        <li class="funnel__step @if(Step == 1){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">Choose</span>
+        </li>
+        <li class="funnel__sep"></li>
+        <li class="funnel__step @if(Step == 2){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">Sign in</span>
+        </li>
+        <li class="funnel__sep"></li>
+        <li class="funnel__step @if(Step == 3){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">Pay</span>
+        </li>
+        <li class="funnel__sep"></li>
+        <li class="funnel__step @if(Step == 4){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">Done</span>
+        </li>
+    </ul>
+</div>

@@ -14,34 +14,21 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def friend() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.friend())
-  }
-
-  def detailFriend() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.detail.addressForm())
+  def enterDetails(tierString: String) = AuthenticatedAction { implicit request =>
+    Tier.routeMap(tierString) match {
+      case Tier.Friend => Ok(views.html.joiner.detail.addressForm())
+      case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier))
+    }
   }
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      member <- MemberRepository.insert(request.user, "", Tier.Friend)
+      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
-  }
-
-  def partner() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.partner())
-  }
-
-  def paymentPartner() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
   }
 
   def patron() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.patron())
-  }
-
-  def paymentPatron() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
   }
 
   def thankyouFriend() = AuthenticatedAction { implicit request =>
@@ -57,6 +44,7 @@ trait Joiner extends Controller {
       response.getOrElse(NotFound)
     }
   }
+
 }
 
 object Joiner extends Joiner
