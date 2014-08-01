@@ -23,5 +23,6 @@ Gemfile.lock
 dev
 
 frontend/conf/keys.conf
+frontend/conf/assets.map
 membership.sublime-project
 membership.sublime-workspace
