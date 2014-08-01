@@ -8,7 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import com.gu.membership.salesforce.Tier
 
 import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
-import services.{MemberService, StripeService}
+import services.{SubscriptionService, MemberService, StripeService}
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 
 trait Joiner extends Controller {
@@ -48,12 +48,13 @@ trait Joiner extends Controller {
   }
 
   def thankyouPaid(tier: String) = PaidMemberAction.async { implicit request =>
-    StripeService.Customer.read(request.stripeCustomerId).map { customer =>
-      val response = for {
-        paymentDetails <- customer.paymentDetails
-      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails))
-
-      response.getOrElse(NotFound)
+    for {
+      customer <- StripeService.Customer.read(request.stripeCustomerId)
+      invoice <- SubscriptionService.getInvoiceSummary(request.member.salesforceAccountId)
+    } yield {
+      customer.cardOpt
+        .map { card => Ok(views.html.joiner.thankyou.paid(card, invoice)) }
+        .getOrElse(NotFound)
     }
   }
 }

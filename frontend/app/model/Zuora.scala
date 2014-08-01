@@ -22,6 +22,8 @@ object Zuora {
 
   case class Subscription(id: String) extends ZuoraObject
 
+  case class InvoiceItem(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime) extends ZuoraObject
+
   object Authentication {
     def login(user: String, pass: String): Elem = {
       <api:login>

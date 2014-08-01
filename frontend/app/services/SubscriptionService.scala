@@ -9,15 +9,20 @@ import akka.agent.Agent
 
 import com.gu.membership.salesforce.Tier.Tier
 
+import org.joda.time.DateTime
+
 import play.api.Logger
 import play.api.Play.current
-import play.api.libs.ws.{WSResponse, WS}
+import play.api.libs.ws.WS
 import play.api.libs.concurrent.Akka
-import play.api.http.Status.OK
 
 import configuration.Config
 import model.Zuora._
 import model.Stripe
+
+case class SubscriptionServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
+}
 
 trait ZuoraSOAP {
   val apiUrl: String
@@ -67,11 +72,45 @@ trait ZuoraSOAP {
 trait SubscriptionService {
   val zuoraSOAP: ZuoraSOAP
 
+  /**
+   * Zuora doesn't return fields which are empty! This method guarantees that the keys will
+   * be in the map and also that the query only returns one result
+   */
+  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
+    val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
+    zuoraSOAP.request(Query.query(q)).map(Query(_)).map { case Query(results) =>
+      if (results.length != 1) {
+        throw new SubscriptionServiceError(s"Query $q returned more than one result")
+      }
+
+      fields.map { field => (field, results(0).getOrElse(field, "")) }.toMap
+    }
+  }
+
+  def queryOne(field: String, table: String, where: String): Future[String] =
+    queryOne(Seq(field), table, where).map(_(field))
+
   def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
     for {
       response <- zuoraSOAP.request(Subscription.subscribe(sfAccountId, customerOpt, tier))
     } yield Subscription(response)
   }
+
+  def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {
+    val invoiceKeys = Seq("ServiceStartDate", "ServiceEndDate", "ProductName", "ChargeAmount", "TaxAmount")
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
+      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId'")
+    } yield {
+      val startDate = new DateTime(invoice("ServiceStartDate"))
+      val endDate = new DateTime(invoice("ServiceEndDate")).plusDays(1) // Yes we really have to +1 day
+      val planAmount = invoice("ChargeAmount").toFloat + invoice("TaxAmount").toFloat
+
+      InvoiceItem(invoice("ProductName"), planAmount, startDate, endDate)
+    }
+  }
+
 }
 
 object SubscriptionService extends SubscriptionService {
