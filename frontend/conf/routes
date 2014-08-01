@@ -2,13 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /robots.txt                               controllers.Assets.at(path="/public", file="robots.txt")
+GET         /robots.txt                  controllers.Assets.at(path="/public", file="robots.txt")
+GET         /favicon.ico                 controllers.Assets.at(path="/public/images/favicons", file="32x32.ico")
 
 # Home page
 GET         /                                         controllers.FrontPage.index
 
 # Healthcheck
-GET         /healthcheck                              controllers.Healthcheck.healthcheck
+GET         /healthcheck                 controllers.Healthcheck.healthcheck
 
 # Join
 GET         /join                                     controllers.Joiner.tierList
@@ -23,15 +24,17 @@ GET         /join/:tier/thankyou                      controllers.Joiner.thankyo
 GET         /signin       controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 # The flow
-GET         /tickets/:id/join                         controllers.Tickets.ticketsJoin(id)
-POST        /tickets/:id/join                         controllers.Tickets.ticketsJoinRedirect(id)
 GET         /tickets/:id/join/friend/payment          controllers.Tickets.detailsForm(id)
 GET         /tickets/:id/join/:tier/payment           controllers.Tickets.paymentForm(id, tier)
 GET         /tickets/:id/join/friend/thankyou         controllers.Tickets.ticketsThankyouFriend(id)
 GET         /tickets/:id/join/partner/thankyou        controllers.Tickets.ticketsThankyouPartner(id)
 GET         /tickets/:id/join/patron/thankyou         controllers.Tickets.ticketsThankyouPatron(id)
 
-GET         /signin                      controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
+GET         /choose-tier                              controllers.Joining.tierChooser()
+POST        /choose-tier                              controllers.Joining.tierChooserRedirect()
+
+
+GET         /signin                                   controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 # Subscription
 POST        /subscription/subscribe                   controllers.Subscription.subscribe
