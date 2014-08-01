@@ -105,6 +105,8 @@ module.exports = function (grunt) {
         clean: {
             js : ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
+            dist: ['<%= dirs.publicDir.root %>/dist/'],
+            assetMap: 'conf/assets.map',
             hooks: ['../.git/hooks/pre-commit']
         },
 
@@ -125,6 +127,28 @@ module.exports = function (grunt) {
                 }
             }
         },
+
+        // generate a mapping file of hashed assets
+        // and move/rename built files to /dist/
+        asset_hash: {
+            options: {
+                preserveSourceMaps: false,
+                assetMap: isDev ? false : 'conf/assets.map',
+                hashLength: 8,
+                algorithm: 'md5',
+                srcBasePath: 'public/',
+                destBasePath: 'public/',
+                hashType: 'file'
+            },
+            staticfiles: {
+                files: [
+                    {
+                        src:  ['<%= dirs.publicDir.stylesheets %>/**/*.css', '<%= dirs.publicDir.javascripts %>/**/*.js'],
+                        dest: '<%= dirs.publicDir.root %>/dist/'
+                    }
+                ]
+            }
+          },
 
         /***********************************************************************
          * Test
@@ -212,6 +236,7 @@ module.exports = function (grunt) {
     });
 
     // Load the plugins
+    grunt.loadNpmTasks('grunt-asset-hash');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -243,13 +268,15 @@ module.exports = function (grunt) {
         grunt.task.run(['test:unit']);
     });
 
-    grunt.registerTask('compile:css', ['clean:css', 'scsslint', 'sass:compile']);
+    grunt.registerTask('clean-assets', ['clean:dist', 'clean:assetMap']);
+
+    grunt.registerTask('compile:css', ['clean:css', 'clean-assets', 'scsslint', 'sass:compile', 'asset_hash']);
 
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
             grunt.task.run(['jshint']);
         }
-        grunt.task.run(['clean:js', 'requirejs:compile', 'copy:html5shiv']);
+        grunt.task.run(['clean:js', 'clean-assets', 'requirejs:compile', 'copy:html5shiv', 'asset_hash']);
     });
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
