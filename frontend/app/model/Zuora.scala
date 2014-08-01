@@ -18,7 +18,7 @@ object Zuora {
 
   case class Authentication(token: String, url: String) extends ZuoraObject
 
-  case class Query() extends ZuoraObject
+  case class Query(results: Seq[Map[String, String]]) extends ZuoraObject
 
   case class Subscription(id: String) extends ZuoraObject
 
@@ -44,7 +44,10 @@ object Zuora {
     }
 
     def apply(elem: Elem): Query = {
-      Query()
+      val results = (elem \\ "queryResponse" \ "result" \ "records").map { record =>
+        record.child.map { node => (node.label, node.text) }.toMap
+      }
+      Query(results)
     }
   }
 
