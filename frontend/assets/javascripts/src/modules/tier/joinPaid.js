@@ -7,7 +7,7 @@ define([
     'use strict';
 
     var self;
-    var JoinPaid = function () {
+    var JoinPaid = function() {
         self = this;
     };
 
