@@ -7,7 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Null, Elem}
 import akka.agent.Agent
 
-import com.gu.membership.salesforce.Tier.Tier
+import com.gu.membership.salesforce.Tier
 
 import org.joda.time.DateTime
 
@@ -18,6 +18,7 @@ import play.api.libs.concurrent.Akka
 
 import configuration.Config
 import model.Zuora._
+import model.ZuoraObject
 import model.Stripe
 
 case class SubscriptionServiceError(s: String) extends Throwable {
@@ -64,7 +65,7 @@ trait ZuoraSOAP {
   }
 
   def getAuthentication: Future[Authentication] = {
-    val xml = soapBuilder(Authentication.login(apiUsername, apiPassword))
+    val xml = soapBuilder(ZuoraObject.login(apiUsername, apiPassword))
     WS.url(apiUrl).post(xml).map(result => Authentication(result.xml))
   }
 }
@@ -72,13 +73,20 @@ trait ZuoraSOAP {
 trait SubscriptionService {
   val zuoraSOAP: ZuoraSOAP
 
+  // TODO: add annual plans
+  val plans = Map(
+    Tier.Friend -> "8a80812a4733a5bb01475f2b6b4c04a2",
+    Tier.Partner -> "8a80812a4733a5bb01475f2b6b9204a8",
+    Tier.Patron -> "8a80812a4733a5bb01475f2b6ae80498"
+  )
+
   /**
    * Zuora doesn't return fields which are empty! This method guarantees that the keys will
    * be in the map and also that the query only returns one result
    */
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    zuoraSOAP.request(Query.query(q)).map(Query(_)).map { case Query(results) =>
+    zuoraSOAP.request(ZuoraObject.query(q)).map(Query(_)).map { case Query(results) =>
       if (results.length != 1) {
         throw new SubscriptionServiceError(s"Query $q returned more than one result")
       }
@@ -90,9 +98,9 @@ trait SubscriptionService {
   def queryOne(field: String, table: String, where: String): Future[String] =
     queryOne(Seq(field), table, where).map(_(field))
 
-  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier): Future[Subscription] = {
+  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier.Tier): Future[Subscription] = {
     for {
-      response <- zuoraSOAP.request(Subscription.subscribe(sfAccountId, customerOpt, tier))
+      response <- zuoraSOAP.request(ZuoraObject.subscribe(sfAccountId, customerOpt, plans(tier)))
     } yield Subscription(response)
   }
 
