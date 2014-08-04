@@ -41,7 +41,7 @@ cd assets/javascripts
 
 bower install
 
-cd ../../../../
+cd ../../
 
 #####################################################
 # Install Bower SASS modules
@@ -55,7 +55,7 @@ cd assets/stylesheets
 
 bower install
 
-cd ../../../../
+cd ../../
 
 #####################################################
 # Compile clientside assets
