@@ -37,11 +37,11 @@ printf "\n\r\n\r====================================\n\r\n\r"
 printf "> Installing bower JS modules in assets/javascripts ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
-cd assets/javascripts
+pushd assets/javascripts
 
 bower install
 
-cd ../../
+popd
 
 #####################################################
 # Install Bower SASS modules
@@ -51,11 +51,11 @@ printf "\n\r\n\r====================================\n\r\n\r"
 printf "> Installing bower SASS modules in assets/stylesheets ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
-cd assets/stylesheets
+pushd assets/stylesheets
 
 bower install
 
-cd ../../
+popd
 
 #####################################################
 # Compile clientside assets
