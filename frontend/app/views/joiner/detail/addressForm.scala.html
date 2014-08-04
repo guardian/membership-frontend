@@ -2,7 +2,7 @@
 
 @main("Address Details") {
 
-    <h1 class="section-headline">@Config.siteTitle events in your area</h1>
+    @fragments.layout.sectionHeader(Config.siteTitle + " events in your area")
 
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
         @fragments.form.errorMessageDisplay()

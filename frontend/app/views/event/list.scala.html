@@ -3,13 +3,11 @@
 @main("Events") {
 
     <section class="container--row-pattern">
-        <div class="container__header">
-            <h1 class="content__headline">Current Events</h1>
-        </div>
-        <div class="events-sidebar"></div>
+
+        @fragments.layout.sectionHeader("Current Events")
+
         <ul class="events-list u-unstyled">
             @for(event <- eventsList) {
-
                 @fragments.event.item(event)
             }
         </ul>

@@ -49,7 +49,7 @@
         display: table-cell;
         @include rem((
             padding-right: $gs-gutter*5,
-            width: gs-span(3)
+            width: gs-span(4)
         ));
         vertical-align: top;
     }
