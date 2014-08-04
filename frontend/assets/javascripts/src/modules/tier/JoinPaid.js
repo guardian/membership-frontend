@@ -7,13 +7,15 @@ define([
     'use strict';
 
     var self;
-    var Upgrade = function () {
+    var JoinPaid = function() {
         self = this;
     };
 
-    component.define(Upgrade);
+    component.define(JoinPaid);
 
-    Upgrade.prototype.classes = {
+    JoinPaid.prototype.classes = {
+        NAME_FIRST: 'js-name-first',
+        NAME_LAST: 'js-name-last',
         STRIPE_FORM: 'js-stripe-form',
         CREDIT_CARD_NUMBER: 'js-credit-card-number',
         CREDIT_CARD_CVC: 'js-credit-card-cvc',
@@ -25,24 +27,23 @@ define([
         BILLING: 'js-toggle-billing-address',
         BILLING_CTA: 'js-toggle-billing-address-cta',
         BILLING_FIELDSET: 'js-billingAddress-fieldset'
-
     };
 
-    Upgrade.prototype.data = {
+    JoinPaid.prototype.data = {
         CARD_TYPE: 'data-card-type'
     };
 
-    Upgrade.prototype.init = function () {
+    JoinPaid.prototype.init = function () {
         this.setupForm();
         this.toggleBillingAddressListener();
     };
 
-    Upgrade.prototype.toggleBillingAddressListener = function() {
+    JoinPaid.prototype.toggleBillingAddressListener = function() {
         this.removeValidatorFromValidationProfile();
 
-        var $billing = $(this.getElem('BILLING')).removeClass('u-h');
-        var $billingDetails = $(this.getElem('BILLING_FIELDSET')).detach();
-        var $billingCTA = $(this.getElem('BILLING_CTA'));
+        var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
+        var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).detach();
+        var $billingCTA = $(this.getClass('BILLING_CTA'), this.form.formElement);
 
         bean.on($billingCTA[0], 'click', function () {
 
@@ -62,50 +63,49 @@ define([
         });
     };
 
-    Upgrade.prototype.addValidatorFromValidationProfile = function () {
+    JoinPaid.prototype.addValidatorFromValidationProfile = function () {
 
         this.form.addValidatorFromValidationProfile(
             [
                 {
-                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('ADDRESS_LINE_ONE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('TOWN'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('POST_CODE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 }
             ]);
     };
 
-    Upgrade.prototype.removeValidatorFromValidationProfile = function () {
+    JoinPaid.prototype.removeValidatorFromValidationProfile = function () {
 
         this.form.removeValidatorFromValidationProfile(
             [
                 {
-                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('ADDRESS_LINE_ONE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('TOWN'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('POST_CODE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 }
             ]);
     };
 
-    Upgrade.prototype.setupForm = function () {
-        var formElement = this.elem = this.getElem('STRIPE_FORM'),
-            changeToTier = formElement.getAttribute('data-change-to-tier').toLowerCase();
-        this.form = new Form(formElement,  '/tier/change/' + changeToTier, '/tier/change/' + changeToTier + '/summary');
+    JoinPaid.prototype.setupForm = function () {
+        var formElement = this.elem = this.getElem('STRIPE_FORM');
+        this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('enter-details', 'thankyou'));
         this.form.init();
     };
 
-    return Upgrade;
+    return JoinPaid;
 });
