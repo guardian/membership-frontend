@@ -22,8 +22,8 @@ object Joining extends Controller {
   def tierChooserRedirect() = CachedAction { implicit request =>
 
     def redirect(formData: (String)) = {
-      val tier = formData
-      Redirect(routes.Joiner.paymentPartner()) //TODO handle friend?
+      val tierString = formData
+      Redirect(routes.Joiner.enterDetails(Tier.routeMap(tierString)))
     }
 
     tierForm.bindFromRequest.fold(_ => BadRequest, redirect)

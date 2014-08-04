@@ -1,11 +1,9 @@
 package controllers
 
-import play.api.mvc.Controller
+import actions.{AuthenticatedAction, PaidMemberAction}
+import com.gu.membership.salesforce.Tier._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.gu.membership.salesforce.Tier
-
-import actions.{PaidMemberAction, AuthenticatedAction}
+import play.api.mvc.Controller
 import services.{MemberRepository, StripeService}
 
 trait Joiner extends Controller {
@@ -14,33 +12,28 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def detailFriend() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.detail.addressForm())
+  def enterDetails(tier: Tier) = AuthenticatedAction { implicit request =>
+    tier match {
+      case Friend => Ok(views.html.joiner.detail.addressForm())
+      case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier))
+    }
   }
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
     for {
-      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
+      member <- MemberRepository.upsert(request.user, "", Friend)
     } yield Redirect(routes.Joiner.thankyouFriend())
-  }
-
-  def paymentPartner() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
   }
 
   def patron() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.patron())
   }
 
-  def paymentPatron() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
-  }
-
   def thankyouFriend() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPaid(tier: String) = PaidMemberAction.async { implicit request =>
+  def thankyouPaid(tier: Tier) = PaidMemberAction.async { implicit request =>
     StripeService.Customer.read(request.stripeCustomerId).map { customer =>
       val response = for {
         paymentDetails <- customer.paymentDetails
@@ -49,6 +42,7 @@ trait Joiner extends Controller {
       response.getOrElse(NotFound)
     }
   }
+
 }
 
 object Joiner extends Joiner
