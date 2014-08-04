@@ -1,35 +1,129 @@
-<!-- FIXTURE STARTS HERE -->
+<form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
+    <input type="hidden" name="tier" class="js-tier-field" value="Patron">
+    <ul class="u-unstyled js-payment-errors form__error is-hidden"></ul>
 
-<form action="" method="POST" id="payment-form" class="form js-stripe-form">
+    <fieldset class="fieldset address-fieldset">
 
-    <div class="js-payment-errors form__error is-hidden"></div>
-
-    <fieldset class="fieldset">
         <div class="fieldset__heading">
-            <h2 class="form__heading">Card details</h2>
-            <div class="form__note">We accept all major cards</div>
+            <h2 class="form__heading">Name</h2>
+
+            <div class="form__note">All fields with <span class="required-marker"></span>required.</div>
         </div>
 
         <div class="fieldset__fields">
 
             <div class="form-field">
-                <label class="label" for="cc-num">Card Number </label>
-                <div class="input credit-card-container">
-                    <i class="js-credit-card-image credit-card"></i>
-                    <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input" id="cc-num" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off"/>
-                </div>
+                <label class="label label--inline label--half required-marker" for="name-first">First
+                    <input type="text" name="name.first" id="name-first" class="text-input text-input--block js-name-first"
+                           data-error-message="Please enter your first name" data-validation="required">
+                </label><label class="label label--inline label--half required-marker" for="name-last">Last
+                <input type="text" name="name.last" id="name-last" class="text-input text-input--block js-name-last"
+                       data-error-message="Please enter your last name" data-validation="required">
+            </label>
             </div>
 
+        </div>
+
+    </fieldset>
+
+
+    <fieldset class="fieldset address-fieldset js-deliveryAddress-fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="form__heading">Delivery address</h2>
+
+            <div class="form__note">Where shall we send your welcome pack</div>
+        </div>
+
+        <div class="fieldset__fields">
+
             <div class="form-field">
-                <label class="label" for="cc-cvc">
-                    <span>Security code</span>
-                    <input type="tel" size="4" data-stripe="cvc" class="js-credit-card-cvc text-input text-input--small text-input--block" id="cc-cvc" placeholder="CVC" maxlength="4" autocomplete="off"/>
+                <label class="label required-marker" for="address-line-one">Address line 1
+                    <input type="text" name="deliveryAddress.lineOne" id="address-line-one"
+                           class="text-input text-input--block js-address-line-one"
+                           data-error-message="Please enter your delivery address first line" data-validation="required">
                 </label>
             </div>
 
             <div class="form-field">
-                <label class="label" for="cc-exp-month">
-                    <span>Expiration (MM/YYYY)</span>
+                <label class="label" for="address-line-two">Address line 2
+                    <input type="text" name="deliveryAddress.lineTwo" id="address-line-two"
+                           class="text-input text-input--block js-address-line-two">
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label class="label required-marker" for="town">Town
+                    <input type="text" name="deliveryAddress.town" id="town" class="text-input text-input--block js-town"
+                           data-error-message="Please enter your delivery address town" data-validation="required">
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label class="label" for="county-or-state">County or State
+                    <input type="text" name="deliveryAddress.countyOrState" id="county-or-state"
+                           class="text-input text-input--block js-county-state">
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label class="label required-marker" for="postCode">Post code
+                    <input type="text" name="deliveryAddress.postCode" id="postCode"
+                           class="text-input text-input--block js-post-code"
+                           data-error-message="Please enter your delivery address post code" data-validation="required">
+                </label>
+            </div>
+
+            <div class="form-field address-fieldset__country">
+                <label class="label" for="country">Country</label>
+
+                <div class="input">
+                    <select name="deliveryAddress.country" id="country">
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United States">United States</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <div class="fieldset__heading">
+            <h2 class="form__heading">Card details</h2>
+
+            <div class="form__note">
+                <p>We accept all major cards</p>
+
+                <p><img src="/assets/images/padlock.png" alt="" class="form-padlock"> This form is secure</p></div>
+        </div>
+
+        <div class="fieldset__fields">
+            <div class="form-field">
+                <label class="label required-marker" for="cc-num">Card Number
+                    <div class="input credit-card-container">
+                        <i class="js-credit-card-image credit-card"></i>
+                        <input type="tel" size="20" data-stripe="number" class="js-credit-card-number text-input"
+                               id="cc-num" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off"
+                               data-validation="creditCardNumber">
+                    </div>
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label class="label required-marker" for="cc-cvc">
+                    <span>Security code</span>
+                    <input type="tel" size="4" data-stripe="cvc"
+                           class="js-credit-card-cvc text-input text-input--small text-input--block" id="cc-cvc"
+                           placeholder="CVC" maxlength="4" autocomplete="off" data-validation="creditCardCVC">
+                </label>
+            </div>
+
+            <div class="form-field">
+                <label class="label required-marker" for="cc-exp-month">
+                    <span>Expiry</span>
+
                     <p>
                         <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month">
                             <option selected="selected">Month</option>
@@ -76,17 +170,101 @@
         </div>
     </fieldset>
 
+    <fieldset class="fieldset js-toggle-billing-address">
+        <div class="fieldset__heading"></div>
+        <div class="fieldset__fields">
+            <div class="form-field">
+                <a class="submit-input action--logged-in js-toggle-billing-address-cta">Different billing address?</a>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset address-fieldset js-billingAddress-fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="form__heading">Billing address</h2>
+            <div class="form__note">The billing address for your card</div>
+        </div>
+
+        <div class="fieldset__fields">
+
+        <div class="form-field">
+            <label class="label required-marker" for="address-line-one">Address line 1
+                <input type="text" name="billingAddress.lineOne" id="address-line-one" class="text-input text-input--block js-address-line-one" data-error-message="Please enter your billing address first line" data-validation="required">
+            </label>
+        </div>
+
+        <div class="form-field">
+            <label class="label" for="address-line-two">Address line 2
+                <input type="text" name="billingAddress.lineTwo" id="address-line-two" class="text-input text-input--block js-address-line-two">
+            </label>
+        </div>
+
+        <div class="form-field">
+            <label class="label required-marker" for="town">Town
+                <input type="text" name="billingAddress.town" id="town" class="text-input text-input--block js-town" data-error-message="Please enter your billing address town" data-validation="required">
+            </label>
+        </div>
+
+        <div class="form-field">
+            <label class="label" for="county-or-state">County or State
+                <input type="text" name="billingAddress.countyOrState" id="county-or-state" class="text-input text-input--block js-county-state">
+            </label>
+        </div>
+
+        <div class="form-field">
+            <label class="label required-marker" for="postCode">Post code
+                <input type="text" name="billingAddress.postCode" id="postCode" class="text-input text-input--block js-post-code" data-error-message="Please enter your billing address post code" data-validation="required">
+            </label>
+        </div>
+
+        <div class="form-field address-fieldset__country">
+            <label class="label" for="country">Country</label>
+            <div class="input">
+                <select name="billingAddress.country" id="country">
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    </fieldset>
+
+
     <fieldset class="fieldset">
         <div class="fieldset__heading">
-            <h2 class="form__heading">Payment</h2>
-            <div class="form__note">You will be charged £15/month</div>
+            <h2 class="form__heading">Select payment option</h2>
+
+            <div class="form__note">Price includes VAT</div>
         </div>
         <div class="fieldset__fields">
-            <div class="actions top">
-                <button type="submit" class="submit-input default-action js-submit-input">Subscribe</button>
+            <div class="form-field">
+                <label class="label upgrade__payment-label" for="annual">
+                    <input type="radio" name="payment.type" id="annual" value="annual" checked="checked">
+                    <span class="payment-label__title">Pay annually</span>
+                    <span class="payment-label__amount">£540 one off payment (save £180 a year)</span>
+                    <span class="payment-label__note">1 year membership, 3 months free</span>
+                </label>
+                <label class="label upgrade__payment-label" for="monthly">
+                    <input type="radio" name="payment.type" id="monthly" value="month">
+                    <span class="payment-label__title">Pay monthly</span>
+                    <span class="payment-label__amount">£60 per month (£720 per year)</span>
+                    <span class="payment-label__note">No commitment, cancel at any time</span>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="fieldset">
+        <div class="fieldset__heading"></div>
+        <div class="fieldset__fields">
+            <div class="actions js-waiting-container">
+                <button type="submit" class="submit-input action--logged-in js-submit-input">Join now</button>
+                <div class="i-wait"><img src="/assets/images/wait.gif" alt=""></div>
             </div>
         </div>
     </fieldset>
 </form>
-
-<!-- FIXTURE ENDS HERE -->

@@ -25,11 +25,11 @@ define([
         this.formElement = formElement;
         this.successPostUrl = successPostUrl;
         this.successRedirectUrl = successRedirectUrl;
+        this.errorMessages = [];
+        this.validationProfiles = [];
     }
 
     component.define(Form);
-
-    Form.prototype.errorMessages = [];
 
     Form.prototype.classes = {
         HIDE: 'is-hidden',
@@ -50,7 +50,6 @@ define([
     Form.prototype.displayMonthError = false;
     Form.prototype.validator = {};
     Form.prototype.listener = {};
-    Form.prototype.validationProfiles = [];
     Form.prototype.isStripeForm = false;
 
     /**
@@ -82,7 +81,7 @@ define([
 
             var element = formElements[i];
 
-            if (element.name !== '' && (element.type !== 'checkbox' && element.type !== 'radio' || element.checked)) {
+            if (element.name !== '' && element.type && (element.type !== 'checkbox' && element.type !== 'radio' || element.checked)) {
                 dataObj[element.name] = element.value;
             }
         }
@@ -173,8 +172,8 @@ define([
      * @param errorMessages
      */
     Form.prototype.displayErrors = function (errorMessages) {
-        var $paymentErrorsElement = $(this.getElem('PAYMENT_ERRORS')),
-            $formSubmitButton = $(this.getElem('FORM_SUBMIT')),
+        var $paymentErrorsElement = $(this.getClass('PAYMENT_ERRORS'), this.formElement),
+            $formSubmitButton = $(this.getClass('FORM_SUBMIT'), this.formElement),
             errorString = '';
 
         if (errorMessages.length) {
@@ -210,7 +209,7 @@ define([
      */
     Form.prototype.displayCardTypeImage = function (creditCardNumber) {
         var cardType = this.getCardType(creditCardNumber),
-            $creditCardImageElement = $(this.getElem('CREDIT_CARD_IMAGE'));
+            $creditCardImageElement = $(this.getClass('CREDIT_CARD_IMAGE'), this.formElement);
 
         $creditCardImageElement.attr(this.data.CARD_TYPE, cardType);
     };
@@ -242,7 +241,7 @@ define([
     };
 
     Form.prototype.checkValidatorExistsException = function (validatorName) {
-        if (!self[validatorName] && typeof self[validatorName] === 'function') {
+        if (!self[validatorName] && typeof self[validatorName] !== 'function') {
             throw 'please specify an existing validation profile';
         }
     };
@@ -419,10 +418,10 @@ define([
 
                 if( self.isStripeForm ){
                     stripe.card.createToken({
-                        number: $(self.getElem('CREDIT_CARD_NUMBER')).val(),
-                        cvc: $(self.getElem('CREDIT_CARD_CVC')).val(),
-                        exp_month: $(self.getElem('CREDIT_CARD_EXPIRY_MONTH')).val(),
-                        exp_year: $(self.getElem('CREDIT_CARD_EXPIRY_YEAR')).val()
+                        number: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement).val(),
+                        cvc: $(self.getClass('CREDIT_CARD_CVC'), self.formElement).val(),
+                        exp_month: $(self.getClass('CREDIT_CARD_EXPIRY_MONTH'), self.formElement).val(),
+                        exp_year: $(self.getClass('CREDIT_CARD_EXPIRY_YEAR'), self.formElement).val()
                     }, self.stripeResponseHandler);
                 } else {
                     self.formElement.submit();
@@ -620,14 +619,14 @@ define([
      * start loading throbber
      */
     Form.prototype.startLoader = function () {
-        $(this.getElem('THROBBER')).addClass('js-waiting');
+        $(this.getClass('THROBBER'), this.formElement).addClass('js-waiting');
     };
 
     /**
      * stop loading throbber
      */
     Form.prototype.stopLoader = function () {
-        $(this.getElem('THROBBER')).removeClass('js-waiting');
+        $(this.getClass('THROBBER'), this.formElement).removeClass('js-waiting');
     };
 
     /**
@@ -635,9 +634,9 @@ define([
      */
     Form.prototype.setupFormValidation = function () {
 
-        var $validation = $('[data-validation]', this.form);
-        var $creditCardMonthExpiry = $('.js-credit-card-exp-month', this.form);
-        var $creditCardYearExpiry = $('.js-credit-card-exp-year', this.form);
+        var $validation = $('[data-validation]', this.formElement);
+        var $creditCardMonthExpiry = $('.js-credit-card-exp-month', this.formElement);
+        var $creditCardYearExpiry = $('.js-credit-card-exp-year', this.formElement);
         var elem;
         var validationProfiles = [];
 

@@ -6,7 +6,7 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import services.{MemberService, EventbriteService}
-import actions.AuthenticatedAction
+import actions.{MemberAction, AuthenticatedAction}
 import model.Eventbrite.EBError
 
 import com.netaporter.uri.dsl._
@@ -31,7 +31,7 @@ trait Event extends Controller {
     Ok(views.html.event.list(eventService.getEventsTagged(tag)))
   }
 
-  def buy(id: String) = AuthenticatedAction.async { implicit request =>
+  def buy(id: String) = MemberAction.async { implicit request =>
     for {
       event <- eventService.getEvent(id)
       discount <- memberService.createEventDiscount(request.user.id, event)
