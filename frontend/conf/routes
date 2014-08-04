@@ -27,8 +27,6 @@ GET         /choose-tier                              controllers.Joining.tierCh
 POST        /choose-tier                              controllers.Joining.tierChooserRedirect()
 
 
-GET         /signin                                   controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
-
 # Subscription
 POST        /subscription/subscribe                   controllers.Subscription.subscribe
 POST        /subscription/update                      controllers.Subscription.updateCard
