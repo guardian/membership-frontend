@@ -1,5 +1,7 @@
 @()
 
+@import com.gu.membership.salesforce.Tier._
+
 @main("Join") {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border ">
@@ -14,9 +16,9 @@
         around the world. Join us today as a friend, partner or patron.</p>
 
         <ul class="tier-list u-unstyled">
-            <li><a href="@routes.Joiner.enterDetails("friend")" class="action action--join">Become a Friend</a></li>
-            <li><a href="@routes.Joiner.enterDetails("partner")" class="action action--join">Become a Partner</a></li>
-            <li><a href="@routes.Joiner.enterDetails("patron")">Become a Patron</a></li>
+            <li><a href="@routes.Joiner.enterDetails(Friend)" class="action action--join">Become a Friend</a></li>
+            <li><a href="@routes.Joiner.enterDetails(Partner)" class="action action--join">Become a Partner</a></li>
+            <li><a href="@routes.Joiner.enterDetails(Patron)">Become a Patron</a></li>
         </ul>
 
         <h2>Guardian Live events</h2>
