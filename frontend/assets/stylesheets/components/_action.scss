@@ -3,7 +3,7 @@
     display: inline-block;
     text-align: center;
     padding: $gutter/2 $gutter;
-    color: #FFFFFF;
+    color: #ffffff;
     cursor: pointer;
     border: 0;
     text-decoration: none;
@@ -16,8 +16,8 @@
 }
 
 .action--disabled {
-    background-color: #CCCCCC;
-    border: none;
+    background-color: #cccccc;
+    border: 0;
 }
 
 .action--wide {
@@ -69,7 +69,7 @@
     position: relative;
     z-index: 1;
     &:before, &:after {
-        content: " ";
+        content: ' ';
         position: absolute;
         z-index: 2;
         height: 10px;
@@ -91,15 +91,15 @@
 }
 
 .action--ticket-button--grey {
-    margin: 40px 0 5px 0;
+    margin: 40px 0 5px;
     &:before, &:after {
-        background-color: #E1E1E1;
+        background-color: #e1e1e1;
     }
 }
 
 .action-cta {
-    color: #FFFFFF;
-    border: none;
+    color: #ffffff;
+    border: 0;
     padding: $gs-gutter / 2;
     text-align: center;
     display: inline-block;

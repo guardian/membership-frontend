@@ -13,21 +13,19 @@ GET         /healthcheck                              controllers.Healthcheck.he
 
 # Join
 GET         /join                                     controllers.Joiner.tierList
-GET         /join/:tier/enter-details                 controllers.Joiner.enterDetails(tier)
+GET         /join/:tier/enter-details                 controllers.Joiner.enterDetails(tier: Tier.Value)
 POST        /join/friend/enter-details                controllers.Joiner.joinFriend
 
 GET         /join/patron                              controllers.Joiner.patron
 
 GET         /join/friend/thankyou                     controllers.Joiner.thankyouFriend
-GET         /join/:tier/thankyou                      controllers.Joiner.thankyouPaid(tier)
+GET         /join/:tier/thankyou                      controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
 GET         /signin                                   controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 GET         /choose-tier                              controllers.Joining.tierChooser()
 POST        /choose-tier                              controllers.Joining.tierChooserRedirect()
 
-
-GET         /signin                                   controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 # Subscription
 POST        /subscription/subscribe                   controllers.Subscription.subscribe
@@ -51,9 +49,9 @@ GET         /tier/change/friend                       controllers.TierController
 POST        /tier/change/friend                       controllers.TierController.downgradeToFriendConfirm
 GET         /tier/change/friend/summary               controllers.TierController.downgradeToFriendSummary
 
-GET         /tier/change/:tier                        controllers.TierController.upgrade(tier)
-POST        /tier/change/:tier                        controllers.TierController.upgradeConfirm(tier)
-GET         /tier/change/:tier/summary                controllers.Joiner.thankyouPaid(tier)
+GET         /tier/change/:tier                        controllers.TierController.upgrade(tier: Tier.Value)
+POST        /tier/change/:tier                        controllers.TierController.upgradeConfirm(tier: Tier.Value)
+GET         /tier/change/:tier/summary                controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
 # Information
 GET         /help                                     controllers.Info.help

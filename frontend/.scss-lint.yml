@@ -1,5 +1,5 @@
 # Default application configuration that all configurations inherit from.
-exclude: 'common/app/assets/stylesheets/components/*'
+exclude: 'assets/stylesheets/components/*'
 
 linters:
   BorderZero:
@@ -7,7 +7,7 @@ linters:
 
   CapitalizationInSelector:
     enabled: true
-    exclude: common/app/assets/stylesheets/module/_search.scss
+    exclude: assets/stylesheets/module/_search.scss
 
   ColorKeyword:
     enabled: true
@@ -24,8 +24,8 @@ linters:
   DuplicateProperty:
     enabled: true
     exclude:
-        - common/app/assets/stylesheets/base/_type.scss # We need to declare font-size twice
-        - common/app/assets/stylesheets/_mixins.scss
+        - assets/stylesheets/base/_type.scss # We need to declare font-size twice
+        - assets/stylesheets/_mixins.scss
 
   MergeableSelector:
     enabled: false
@@ -85,8 +85,8 @@ linters:
     enabled: true
     max_depth: 4
     exclude: # Exclude if forced to break the inception rule to style third party components
-        - common/app/assets/stylesheets/module/_live-blog.scss
-        - common/app/assets/stylesheets/module/commercial/_travel.scss
+        - assets/stylesheets/module/_live-blog.scss
+        - assets/stylesheets/module/commercial/_travel.scss
 
   Shorthand:
     enabled: true

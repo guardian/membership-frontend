@@ -30,7 +30,7 @@ object Joining extends Controller {
 
     def redirect(formData: (String)) = {
       val tierString = formData
-      Redirect(routes.Joiner.enterDetails(tierString)) //TODO handle friend?
+      Redirect(routes.Joiner.enterDetails(Tier.routeMap(tierString)))
     }
 
     tierForm.bindFromRequest.fold(_ => BadRequest, redirect)

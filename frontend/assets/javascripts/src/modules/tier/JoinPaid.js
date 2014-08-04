@@ -7,7 +7,7 @@ define([
     'use strict';
 
     var self;
-    var JoinPaid = function () {
+    var JoinPaid = function() {
         self = this;
     };
 
@@ -41,9 +41,9 @@ define([
     JoinPaid.prototype.toggleBillingAddressListener = function() {
         this.removeValidatorFromValidationProfile();
 
-        var $billing = $(this.getElem('BILLING')).removeClass('u-h');
-        var $billingDetails = $(this.getElem('BILLING_FIELDSET')).detach();
-        var $billingCTA = $(this.getElem('BILLING_CTA'));
+        var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
+        var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).detach();
+        var $billingCTA = $(this.getClass('BILLING_CTA'), this.form.formElement);
 
         bean.on($billingCTA[0], 'click', function () {
 
@@ -68,15 +68,15 @@ define([
         this.form.addValidatorFromValidationProfile(
             [
                 {
-                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('ADDRESS_LINE_ONE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('TOWN'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('POST_CODE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 }
             ]);
@@ -87,15 +87,15 @@ define([
         this.form.removeValidatorFromValidationProfile(
             [
                 {
-                    elem: $(this.getClass('ADDRESS_LINE_ONE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('ADDRESS_LINE_ONE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('TOWN'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('TOWN'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 },
                 {
-                    elem: $(this.getClass('POST_CODE'), this.getClass('BILLING_FIELDSET'))[0],
+                    elem: $(this.getClass('BILLING_FIELDSET') + ' ' + this.getClass('POST_CODE'), this.form.formElement)[0],
                     validator: 'requiredValidator'
                 }
             ]);
