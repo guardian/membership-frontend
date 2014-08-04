@@ -15,7 +15,10 @@ object Zuora {
 
   case class Subscription(id: String) extends ZuoraObject
 
-  case class InvoiceItem(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime) extends ZuoraObject
+  case class InvoiceItem(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime) extends ZuoraObject {
+    // TODO: is there a better way?
+    val annual = endDate == startDate.plusYears(1)
+  }
 
   object Authentication {
     def apply(elem: Elem): Authentication = {

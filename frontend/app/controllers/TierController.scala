@@ -68,7 +68,7 @@ trait UpgradeTier {
         StripeService.Customer.read // TODO: use stripeToken to update card
       }
 
-    val planName = tier.toString + (if (formData.payment.`type` == "annual") Plan.ANNUAL_SUFFIX else "")
+    val planName = tier.toString + (if (formData.payment.annual) Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer

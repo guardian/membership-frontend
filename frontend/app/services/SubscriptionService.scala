@@ -73,12 +73,21 @@ trait ZuoraService {
 trait SubscriptionService {
   val zuora: ZuoraService
 
-  // TODO: add annual plans
-  val plans = Map(
-    Tier.Friend -> "8a80812a4733a5bb01475f2b6b4c04a2",
-    Tier.Partner -> "8a80812a4733a5bb01475f2b6b9204a8",
-    Tier.Patron -> "8a80812a4733a5bb01475f2b6ae80498"
-  )
+  val friendPlan = "8a80812a4733a5bb01475f2b6b4c04a2"
+
+  case class PaidPlan(monthly: String, annual: String)
+
+  object PaidPlan {
+    val plans = Map(
+      Tier.Partner -> PaidPlan("8a80812a4733a5bb01475f2b6b9204a8", "8a80812a4733a5bb01475f2b6ba404aa"),
+      Tier.Patron -> PaidPlan("8a80812a4733a5bb01475f2b6ae80498", "8a80812a4733a5bb01475f2b6af9049a")
+    )
+
+    def apply(tier: Tier.Tier, annual: Boolean): String = {
+      val plan = plans(tier)
+      if (annual) plan.annual else plan.monthly
+    }
+  }
 
   /**
    * Zuora doesn't return fields which are empty! This method guarantees that the keys will
@@ -98,10 +107,14 @@ trait SubscriptionService {
   def queryOne(field: String, table: String, where: String): Future[String] =
     queryOne(Seq(field), table, where).map(_(field))
 
-  def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier.Tier): Future[Subscription] = {
-    for {
-      response <- zuora.request(ZuoraObject.subscribe(sfAccountId, customerOpt, plans(tier)))
-    } yield Subscription(response)
+  def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
+                             annual: Boolean): Future[Subscription] = {
+    val plan = PaidPlan(tier, annual)
+    zuora.request(ZuoraObject.subscribe(sfAccountId, Some(customer), plan)).map(Subscription(_))
+  }
+
+  def createFriendSubscription(sfAccountId: String): Future[Subscription] = {
+    zuora.request(ZuoraObject.subscribe(sfAccountId, None, friendPlan)).map(Subscription(_))
   }
 
   def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {

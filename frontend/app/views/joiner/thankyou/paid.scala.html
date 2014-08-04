@@ -39,8 +39,7 @@
             </tr>
             <tr class="summary-table__row" role="row">
                 <td class="summary-table__cell">
-                    @* TODO: Yearly payment *@
-                    Monthly Payment
+                    @if(invoice.annual){ Annual } else { Monthly } Payment
                 </td>
                 <td class="summary-table__cell">
                     @invoice.planAmount.pretty

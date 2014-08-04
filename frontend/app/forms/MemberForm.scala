@@ -13,7 +13,7 @@ object MemberForm {
 
   case class NameForm(first: String, last: String)
 
-  case class PaymentForm(`type`: String, token: String)
+  case class PaymentForm(annual: Boolean, token: String)
 
   trait JoinForm {
     val name: NameForm
@@ -52,7 +52,7 @@ object MemberForm {
   )(NameForm.apply)(NameForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "type" -> nonEmptyText,
+    "annual" -> boolean,
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
