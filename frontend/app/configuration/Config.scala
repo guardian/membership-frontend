@@ -45,8 +45,7 @@ object Config {
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
 
-  val zuoraApiUrlREST = config.getString("zuora.api.url.rest")
-  val zuoraApiUrlSOAP = config.getString("zuora.api.url.soap")
+  val zuoraApiUrl = config.getString("zuora.api.url")
   val zuoraApiUsername = config.getString("zuora.api.username")
   val zuoraApiPassword = config.getString("zuora.api.password")
 

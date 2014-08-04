@@ -25,7 +25,7 @@ case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-trait ZuoraSOAP {
+trait Zuora {
   val apiUrl: String
   val apiUsername: String
   val apiPassword: String
@@ -71,7 +71,7 @@ trait ZuoraSOAP {
 }
 
 trait SubscriptionService {
-  val zuoraSOAP: ZuoraSOAP
+  val zuora: Zuora
 
   // TODO: add annual plans
   val plans = Map(
@@ -86,7 +86,7 @@ trait SubscriptionService {
    */
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    zuoraSOAP.request(ZuoraObject.query(q)).map(Query(_)).map { case Query(results) =>
+    zuora.request(ZuoraObject.query(q)).map(Query(_)).map { case Query(results) =>
       if (results.length != 1) {
         throw new SubscriptionServiceError(s"Query $q returned more than one result")
       }
@@ -100,7 +100,7 @@ trait SubscriptionService {
 
   def createSubscription(sfAccountId: String, customerOpt: Option[Stripe.Customer], tier: Tier.Tier): Future[Subscription] = {
     for {
-      response <- zuoraSOAP.request(ZuoraObject.subscribe(sfAccountId, customerOpt, plans(tier)))
+      response <- zuora.request(ZuoraObject.subscribe(sfAccountId, customerOpt, plans(tier)))
     } yield Subscription(response)
   }
 
@@ -122,9 +122,8 @@ trait SubscriptionService {
 }
 
 object SubscriptionService extends SubscriptionService {
-  val zuoraSOAP = new ZuoraSOAP {
-    val apiUrl = Config.zuoraApiUrlSOAP
-
+  val zuora = new Zuora {
+    val apiUrl = Config.zuoraApiUrl
     val apiUsername = Config.zuoraApiUsername
     val apiPassword = Config.zuoraApiPassword
 
@@ -138,7 +137,7 @@ object SubscriptionService extends SubscriptionService {
   def refresh() {
     Logger.debug("Refreshing Zuora login")
     authenticationAgent.sendOff(_ => {
-      val auth = Await.result(zuoraSOAP.getAuthentication, 15.seconds)
+      val auth = Await.result(zuora.getAuthentication, 15.seconds)
       Logger.debug(s"Got Zuora login $auth")
       auth
     })
