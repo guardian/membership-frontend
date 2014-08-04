@@ -1,9 +1,10 @@
 @()
+@import views.support.Asset
 
 @* Critical scripts that should execute as soon as possible, preventing layout thrashing *@
 
 <!--[if lt IE 9]>
-<script src="@routes.Assets.at("javascripts/lib/html5shiv/html5shiv.min.js")"></script>
+<script src="@Asset.at("javascripts/lib/html5shiv/html5shiv.min.js")"></script>
 <![endif]-->
 
 <script id="gu">
@@ -69,7 +70,7 @@
             // only load JS if the browser cuts the mustard
             var newElm = document.createElement('script');
             newElm.async = 1;
-            newElm.src = '@routes.Assets.at("javascripts/main.js")';
+            newElm.src = '@Asset.at("javascripts/main.js")';
             document.getElementsByTagName("head")[0].appendChild(newElm);
         }
 

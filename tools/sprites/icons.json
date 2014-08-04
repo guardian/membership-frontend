@@ -1,7 +1,7 @@
 {
     "src":          "../../frontend/public/images/svgs/",
     "imgDest":      "../../frontend/public/images/sprite/",
-    "cssDest":      "../../frontend/common/app/assets/stylesheets/icons/",
+    "cssDest":      "../../frontend/assets/stylesheets/icons/",
     "datasvgcss":   "icons-svg.scss",
     "urlpngcss" :   "icons-sprite.scss",
     "spritepath":   "/assets/images/sprite/",

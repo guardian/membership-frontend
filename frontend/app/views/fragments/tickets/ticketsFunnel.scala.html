@@ -1,0 +1,29 @@
+@(  Step: Int,
+    StepOne: String = "Choose membership",
+    StepTwo: String = "Sign into Guardian account",
+    StepThree: String = "Welcome pack / Billing",
+    StepFour: String = "Confirm membership")
+
+<div class="funnel">
+    <ul class="u-unstyled l-row l-row--items-4">
+        <li class="funnel__step l-row__item @if(Step == 1){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">@StepOne</span>
+        </li>
+        @*<li class="funnel__sep"></li>*@
+        <li class="funnel__step l-row__item @if(Step == 2){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">@StepTwo</span>
+        </li>
+        @*<li class="funnel__sep"></li>*@
+        <li class="funnel__step l-row__item @if(Step == 3){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">@StepThree</span>
+        </li>
+        @*<li class="funnel__sep"></li>*@
+        <li class="funnel__step l-row__item @if(Step == 4){active}">
+            <span class="funnel__point"></span>
+            <span class="funnel__text">@StepFour</span>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,93 @@
+html {
+    position: relative;
+    min-height: 100%;
+    background-color: #ffffff;
+
+    background: url(/assets/images/mem-bg-default.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+body {
+    min-height: 100%;
+    @include rem((
+        margin-bottom: 198px
+    ));
+}
+
+.header {
+    position: relative;
+    z-index: 999;
+    @include rem((
+        margin: 0 0 $headerMargin 0
+    ));
+}
+
+//.page-container__background-image {
+//    position: absolute;
+//    background: #ffffff url('/assets/images/crowd.jpg') no-repeat center top;
+//    background-size: cover;
+//    width: 100%;
+//    @include rem((
+//        height: $headerHeight+$headerMargin+$pageImageIndent,
+//        top: 0
+//    ));
+//}
+
+.page-container {
+    @include rem((
+        padding: 0 $gs-gutter/4
+    ));
+    background-color: #ffffff;
+    @include clearfix;
+    position: relative;
+    margin: 0 auto;
+    @include rem((
+        max-width: 1100px
+    ));
+    @include mq(tablet) {
+        @include rem((
+            padding: 0 $gs-gutter*4 $gs-gutter*8
+        ));
+    }
+}
+
+.separator {
+    border-top: 2px solid $c-newsAccent;
+    margin: $gs-baseline 0 $gs-baseline/2;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.l-row__item {
+    @include rem((
+        padding-bottom: $gs-gutter * 2
+    ));
+}
+
+// Two thirds section
+
+.section-two-thirds {
+
+    section.thirds {
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    section.two-thirds {
+        width: 66.7%;
+        padding-right: $gs-gutter*2;
+        border-right: 1px solid $c-neutral3;
+    }
+
+    section.one-third {
+        width: 33.3%;
+        padding-left: $gs-gutter*2;
+    }
+
+}

@@ -7,6 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
+import TierBinder.bindableTier
 
 import actions._
 import forms.MemberForm._
@@ -42,18 +43,14 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
-  def upgrade(tierStr: String) = MemberAction { implicit request =>
-    val tier = Tier.routeMap(tierStr)
-
+  def upgrade(tier: Tier) = MemberAction { implicit request =>
     if (request.member.tier < tier)
       Ok(views.html.tier.upgrade.upgradeForm(tier))
     else
       NotFound
   }
 
-  def upgradeConfirm(tierStr: String) = MemberAction.async { implicit request =>
-    val tier = Tier.routeMap(tierStr)
-
+  def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
     if (request.member.tier < tier)
       paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
     else

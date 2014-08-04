@@ -5,7 +5,7 @@ import scala.concurrent.Future
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.Tier._
 
 import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
 import services.{SubscriptionService, MemberService, StripeService}
@@ -17,8 +17,11 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def detailFriend() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.detail.addressForm())
+  def enterDetails(tier: Tier) = AuthenticatedAction { implicit request =>
+    tier match {
+      case Friend => Ok(views.html.joiner.detail.addressForm())
+      case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier))
+    }
   }
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
@@ -31,23 +34,15 @@ trait Joiner extends Controller {
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
-  def paymentPartner() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Partner, 15))
-  }
-
   def patron() = CachedAction { implicit request =>
     Ok(views.html.joiner.tier.patron())
-  }
-
-  def paymentPatron() = AuthenticatedAction { implicit request =>
-    Ok(views.html.joiner.payment.paymentForm(Tier.Patron, 60))
   }
 
   def thankyouFriend() = AuthenticatedAction { implicit request =>
     Ok(views.html.joiner.thankyou.friend())
   }
 
-  def thankyouPaid(tier: String) = PaidMemberAction.async { implicit request =>
+  def thankyouPaid(tier: Tier) = PaidMemberAction.async { implicit request =>
     for {
       customer <- StripeService.Customer.read(request.stripeCustomerId)
       invoice <- SubscriptionService.getInvoiceSummary(request.member.salesforceAccountId)
@@ -57,6 +52,7 @@ trait Joiner extends Controller {
         .getOrElse(NotFound)
     }
   }
+
 }
 
 object Joiner extends Joiner
