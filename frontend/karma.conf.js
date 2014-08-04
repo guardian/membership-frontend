@@ -12,9 +12,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        {pattern: 'common/app/assets/javascripts/config/**/*.js', included: false},
-        {pattern: 'common/app/assets/javascripts/src/**/*.js', included: false},
-        {pattern: 'common/app/assets/javascripts/lib/**/*.js', included: false},
+        {pattern: 'assets/javascripts/config/**/*.js', included: false},
+        {pattern: 'assets/javascripts/src/**/*.js', included: false},
+        {pattern: 'assets/javascripts/lib/**/*.js', included: false},
         {pattern: 'test/js/spec/*.spec.js', included: false},
         {pattern: 'test/fixtures/*.fixture.html', included: false},
         'test/js/spec/test-main.js'
@@ -23,14 +23,14 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-        'common/app/assets/javascripts/src/main.js'
+        'assets/javascripts/src/main.js'
     ],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-    
+
     },
 
 

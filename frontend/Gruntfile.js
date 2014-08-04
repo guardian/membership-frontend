@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                 images: '<%= dirs.publicDir.root %>/images'
             },
             assets: {
-                root: 'common/app/assets',
+                root: 'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
                 javascripts: '<%= dirs.assets.root %>/javascripts'
             }
@@ -196,7 +196,8 @@ module.exports = function (grunt) {
         // Lint Sass sources
         scsslint: {
             allFiles: [
-                'common/app/assets/stylesheets'
+                '<%= dirs.assets.stylesheets %>/**/*.scss',
+                '!<%= dirs.assets.stylesheets %>/components/bower-components/**/*.scss'
             ],
             options: {
                 bundleExec: true,
@@ -248,7 +249,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('compile', [
-        'shell:spriteGeneration',
         'compile:css',
         'compile:js'
     ]);
@@ -270,7 +270,14 @@ module.exports = function (grunt) {
 
     grunt.registerTask('clean-assets', ['clean:dist', 'clean:assetMap']);
 
-    grunt.registerTask('compile:css', ['clean:css', 'clean-assets', 'scsslint', 'sass:compile', 'asset_hash']);
+    grunt.registerTask('compile:css', [
+        'clean:css',
+        'clean-assets',
+        'shell:spriteGeneration',
+        'scsslint',
+        'sass:compile',
+        'asset_hash'
+    ]);
 
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
