@@ -30,7 +30,7 @@ trait MemberService {
     Keys.LAST_NAME -> formData.name.last,
     Keys.OPT_IN -> true,
     Keys.TIER -> tier.toString,
-    "MailingAddress" -> formData.deliveryAddress.postCode
+    Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
   )
 
   def createFriend(user: User, formData: FriendJoinForm): Future[String] = {
@@ -45,7 +45,7 @@ trait MemberService {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
-        "DefaultCard" -> customer.cardOpt.fold("")(_.id)
+        Keys.DEFAULT_CARD_ID -> customer.cardOpt.fold("")(_.id)
       )
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createSubscription(sfAccountId, Some(customer), formData.tier)
