@@ -25,7 +25,7 @@ case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-trait Zuora {
+trait ZuoraService {
   val apiUrl: String
   val apiUsername: String
   val apiPassword: String
@@ -71,7 +71,7 @@ trait Zuora {
 }
 
 trait SubscriptionService {
-  val zuora: Zuora
+  val zuora: ZuoraService
 
   // TODO: add annual plans
   val plans = Map(
@@ -122,7 +122,7 @@ trait SubscriptionService {
 }
 
 object SubscriptionService extends SubscriptionService {
-  val zuora = new Zuora {
+  val zuora = new ZuoraService {
     val apiUrl = Config.zuoraApiUrl
     val apiUsername = Config.zuoraApiUsername
     val apiPassword = Config.zuoraApiPassword
