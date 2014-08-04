@@ -1,27 +1,30 @@
 package controllers
 
-import actions.{PaidMemberAction, MemberAction, AuthenticatedAction}
 import com.gu.membership.salesforce.Tier
-import model.Eventbrite
-import play.api.Routes
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
-import play.core.Router
-import services.{StripeService, AuthenticationService}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import services.EventbriteService
+import scala.concurrent.ExecutionContext.Implicits.global
+
+import scala.concurrent.Future
 
 object Joining extends Controller {
 
   /*
   *   Tier selection page ===============================================
   */
-  def tierChooser() = CachedAction { implicit request =>
+  def tierChooser() = CachedAction.async { implicit request =>
 
+    val eventService = EventbriteService
     val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    val eventOpt = eventIdOpt.map(eventService.getEvent)
 
-
-    Ok(views.html.joining.tierChooser(eventIdOpt))
+    for (
+      event <- Future.sequence(eventOpt.toSeq)
+    ) yield {
+      Ok(views.html.joining.tierChooser(event.headOption))
+    }
   }
 
   private val tierForm = Form { single("tier" -> nonEmptyText) }

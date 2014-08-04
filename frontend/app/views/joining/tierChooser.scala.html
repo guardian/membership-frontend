@@ -1,4 +1,4 @@
-@(eventIdOpt: Option[String])
+@(eventOpt: Option[model.Eventbrite.EBEvent])
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
@@ -58,8 +58,8 @@
         </form>
 
 
-        @for(eventId <- eventIdOpt) {
-            You are going to buy this amazing ticket once this is all over @eventId
+        @for(event <- eventOpt) {
+            You are going to buy this amazing ticket once this is all over @event.id
         }
     </section>
 
