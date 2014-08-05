@@ -1,5 +1,6 @@
 $small-card: 32px;
 $large-card: 35px;
+$card-icon-offset: 2px;
 
 /* ==========================================================================
    Joiner
@@ -105,8 +106,8 @@ $large-card: 35px;
 
 .credit-card {
     position: absolute;
-    right: 2px;
-    top: 2px;
+    right: $card-icon-offset;
+    top: $card-icon-offset;
     width: 54px;
     height: $large-card;
 
@@ -114,7 +115,11 @@ $large-card: 35px;
         visibility: hidden;
     }
 
-    @include credit-card-images($large-card);
+}
+
+.credit-card-input {
+    // bit messy but needs to account for outline plus icon offset
+    height: $large-card+$card-icon-offset+2px;
 }
 
 .credit-card--inline-block {
@@ -124,17 +129,6 @@ $large-card: 35px;
     display: inline-block;
     margin-right: $gutter / 2;
 }
-
-// @include mq(tablet) {
-
-//     .credit-card {
-//         width: 49px;
-//         height: $small-card;
-//         background: url('/assets/images/card_types_small.png') right top no-repeat;
-
-//         @include credit-card-images($small-card);
-//     }
-// }
 
 /* ==========================================================================
    Thank You
