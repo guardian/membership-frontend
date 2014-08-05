@@ -1,4 +1,5 @@
 .action {
+    background-color: #0096C9;
     margin: $gs-baseline 0;
     display: inline-block;
     text-align: center;
@@ -13,11 +14,24 @@
     &:active {
         text-decoration: none;
     }
+    &:hover {
+        background-color: darken(#0096C9, 10%);
+    }
 }
 
+
+
 .action--disabled {
-    background-color: #cccccc;
+    &,
+    &:visited,
+    &:hover,
+    &:focus,
+    &:active {
+        background-color: #cccccc;
+        color: #ffffff;
+    }
     border: 0;
+    cursor: default;
 }
 
 .action--wide {

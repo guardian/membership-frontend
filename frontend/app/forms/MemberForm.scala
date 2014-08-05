@@ -13,12 +13,17 @@ object MemberForm {
 
   case class NameForm(first: String, last: String)
 
-  case class PaymentForm(`type`: String, token: String)
+  case class PaymentForm(annual: Boolean, token: String)
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm)
+  trait JoinForm {
+    val name: NameForm
+    val deliveryAddress: AddressForm
+  }
+
+  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm) extends JoinForm
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
-                                billingAddress: Option[AddressForm])
+                                billingAddress: Option[AddressForm]) extends JoinForm
 
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
@@ -47,7 +52,7 @@ object MemberForm {
   )(NameForm.apply)(NameForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "type" -> nonEmptyText,
+    "annual" -> boolean,
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 

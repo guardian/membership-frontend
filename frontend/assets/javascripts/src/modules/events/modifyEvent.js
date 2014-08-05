@@ -19,10 +19,13 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
             }
         }
 
-        userUtil.getMemberTier(enhanceWithTier);
+        userUtil.getMemberDetail(enhanceWithTier);
     };
 
-    var enhanceWithTier = function (tier) {
+    var enhanceWithTier = function (memberDetail) {
+
+        var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
+
         if (tier && (tier === 'partner' || tier === 'patron')) {
             var priceText = config.DOM.EVENT_PRICE.text(),
                 priceDiscount = config.DOM.EVENT_PRICE_DISCOUNT.text();

@@ -23,7 +23,14 @@ define(function () {
         return $element;
     };
 
+
+    var getLocationDetail = function () {
+        var windowLocation = window.location;
+        return windowLocation.pathname + windowLocation.search;
+    };
+
     return {
+        getLocationDetail: getLocationDetail,
         getSpecifiedParent: getSpecifiedParent
     };
 });

@@ -11,15 +11,51 @@ import play.api.libs.concurrent.Akka
 
 import com.gu.membership.salesforce._
 
+import com.gu.identity.model.User
+
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.{Customer, Subscription}
+import forms.MemberForm.{JoinForm, PaidMemberJoinForm, FriendJoinForm}
+import com.gu.membership.salesforce.Member.Keys
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
 trait MemberService {
+  def commonData(user: User, formData: JoinForm, tier: Tier.Tier) = Map(
+    Keys.EMAIL -> user.getPrimaryEmailAddress,
+    Keys.FIRST_NAME -> formData.name.first,
+    Keys.LAST_NAME -> formData.name.last,
+    Keys.OPT_IN -> true,
+    Keys.TIER -> tier.toString,
+    Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
+  )
+
+  def createFriend(user: User, formData: FriendJoinForm): Future[String] = {
+    for {
+      sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
+      subscription <- SubscriptionService.createFriendSubscription(sfAccountId)
+    } yield sfAccountId
+  }
+
+  def createPaidMember(user: User, formData: PaidMemberJoinForm): Future[String] = {
+    for {
+      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
+
+      // Leaving this in until Stripe has been completely removed
+      sub <- StripeService.Subscription.create(customer.id, formData.tier.toString)
+
+      updatedData = commonData(user, formData, formData.tier) ++ Map(
+        Keys.CUSTOMER_ID -> customer.id,
+        Keys.DEFAULT_CARD_ID -> customer.cardOpt.fold("")(_.id)
+      )
+      sfAccountId <- MemberRepository.upsert(user.id, updatedData)
+      subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier, formData.payment.annual)
+    } yield sfAccountId
+  }
+
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
     def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
@@ -74,14 +110,14 @@ object MemberRepository extends MemberRepository {
 
   private implicit val system = Akka.system
 
-  private val authenticationAgent = Agent[Authentication](Authentication("", ""))
+  val authenticationAgent = Agent[Authentication](Authentication("", ""))
 
   def refresh() {
-    Logger.debug("Refreshing Scalaforce token")
+    Logger.debug("Refreshing Scalaforce login")
     authenticationAgent.sendOff(_ => {
-      val token = Await.result(salesforce.getAuthentication, 15.seconds)
-      Logger.debug(s"Got token $token")
-      token
+      val auth = Await.result(salesforce.getAuthentication, 15.seconds)
+      Logger.debug(s"Got Scalaforce login $auth")
+      auth
     })
   }
 
