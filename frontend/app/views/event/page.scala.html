@@ -97,7 +97,7 @@
                                 <p>General release <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">
                                     @model.TicketSaleDates.datesFor(event.start, ticket)(Tier.Friend).pretty</time></strong>
                                 </p>
-                                Pre-sale tickets available<span class="js-ticket-sale-now"></span>. Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
+                                Pre-sale tickets available<span class="js-ticket-sale-now"></span>. <span class="booking-dates">Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span></span>
                             </div>
                             <div class="ticket-info">
                                 <p class="u-h">Existing members
