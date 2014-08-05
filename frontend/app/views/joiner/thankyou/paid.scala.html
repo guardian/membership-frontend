@@ -1,4 +1,4 @@
-@(card: model.Stripe.Card, invoice: model.Zuora.InvoiceItem)
+@(card: model.Stripe.Card, invoice: model.Zuora.InvoiceItem, eventIframeUrlOpt: Option[String])
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -70,6 +70,11 @@
     <section class="align-center">
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
     </section>
+
+    @for(eventIframeUrl <- eventIframeUrlOpt) {
+        <iframe src="@eventIframeUrl" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5"
+        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+    }
 
     <div class="separator"></div>
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border" id="whats-included">

@@ -24,7 +24,7 @@ trait MemberAction extends ActionBuilder[MemberRequest] {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
         memberOpt <- MemberRepository.get(authRequest.user.id)
-        result <- memberOpt.map { member =>
+        result <- memberOpt.filter(_.tier > Tier.None).map { member =>
           block(MemberRequest[A](request, member, authRequest.user))
         }.getOrElse(Future.successful(seeMiniMembershipTierChooser))
       } yield NoCache(result)
