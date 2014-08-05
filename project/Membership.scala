@@ -5,6 +5,7 @@ import play._
 import PlayArtifact._
 import sbtbuildinfo.Plugin._
 import Dependencies._
+import PlayImport.PlayKeys._
 
 trait Membership {
 
@@ -32,12 +33,11 @@ trait Membership {
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)
 
   def app(name: String) = lib(name).settings(playArtifactDistSettings: _*).settings(magentaPackageName := name)
+    .settings(routesImport ++= Seq("controllers.TierBinder._","com.gu.membership.salesforce.Tier"))
 }
 
 object Membership extends Build with Membership {
-  val scalaforce = lib("scalaforce").settings(libraryDependencies ++= scalaforceDependencies)
-
-  val frontend = app("frontend").dependsOn(scalaforce)
+  val frontend = app("frontend")
                 .settings(libraryDependencies ++= frontendDependencies)
                 .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
 

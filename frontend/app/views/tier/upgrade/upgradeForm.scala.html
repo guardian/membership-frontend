@@ -1,16 +1,16 @@
-@(targetTier: model.Tier.Tier)
+@(targetTier: com.gu.membership.salesforce.Tier.Tier)
 
 @main("Upgrade Payment") {
 
-    <h1 class="section-headline">Payment</h1>
+    @fragments.layout.sectionHeader("Payment")
 
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
 
         @fragments.form.errorMessageDisplay()
-        @fragments.form.addressDetail("Delivery address", "Where we'll send your welcome pack", "deliveryAddress", true)
+        @fragments.form.addressDetail("Delivery address", "Where we'll send your welcome pack", "deliveryAddress")
         @fragments.form.cardDetail()
         @fragments.form.billingAddressCTA()
-        @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", false)
+        @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress")
         @fragments.form.paymentOptions(targetTier)
         @fragments.form.submit("Join now")
 

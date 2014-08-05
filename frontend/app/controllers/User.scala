@@ -9,9 +9,11 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import com.gu.membership.salesforce.Tier
+
 import actions.{ MemberRequest, MemberAction }
 import services.StripeService
-import model.{ Stripe, Tier }
+import model.Stripe
 
 trait User extends Controller {
   def me = MemberAction { implicit request =>

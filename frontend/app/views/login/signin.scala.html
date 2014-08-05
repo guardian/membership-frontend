@@ -1,0 +1,44 @@
+@(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
+
+@import configuration.Config
+
+@main("Join membership") {
+
+    <section class="section-signin">
+
+        @fragments.tickets.ticketsFunnel(2)
+
+        <div class="signin__jumbotron">
+            <h1>Progress comes through the free expression of ideas</h1>
+            <h2>You're going to help us build the world's largest community of free-thinkers</h2>
+        </div>
+
+        <div class="signin__actions">
+            <div class="signin__login">
+                <h3>Sign in to your Guardian account</h3>
+                <a class="action action--join" href="@Config.idWebAppSigninUrl(returnUrl)">Sign in</a>
+            </div>
+            <div class="signin__register">
+                <h3>New to the guardian?</h3>
+                <h4>Please take a few short moments to register</h4>
+                <a class="action action--join" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now &gt;</a>
+            </div>
+        </div>
+
+        @*
+        @for(tier <- tierOpt) {
+            <p>@Config.benefits(tier).leadin</p>
+
+            <ul class="package__list-element">
+            @for(item <- Config.benefits(tier).list) {
+                <li>@item</li>
+            }
+            </ul>
+
+            <br/>
+        }
+        *@
+
+    </section>
+
+}

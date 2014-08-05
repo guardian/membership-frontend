@@ -2,27 +2,33 @@ package actions
 
 import scala.concurrent.Future
 
-import play.api.mvc.{Request, ActionBuilder}
-import play.api.mvc.Results.Forbidden
+import play.api.mvc.{Call, Result, Request, ActionBuilder}
+import play.api.mvc.Results._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import services.{MemberService, AuthenticationService}
+import com.gu.membership.salesforce._
+
+import services.{MemberRepository, AuthenticationService}
 import controllers.NoCache
-import play.api.mvc.Result
-import model.{Tier, Member}
 
 trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
 
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
+    lazy val seeMiniMembershipTierChooser = {
+      val miniTierChooser: Call = controllers.routes.Joining.tierChooser()
+
+      SeeOther(miniTierChooser.absoluteURL(secure = true)(request)).addingToSession("preJoinReturnUrl" -> request.uri)(request)
+    }
+
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
-        memberOpt <- MemberService.get(authRequest.user.id)
+        memberOpt <- MemberRepository.get(authRequest.user.id)
         result <- memberOpt.filter(_.tier > Tier.None).map { member =>
           block(MemberRequest[A](request, member, authRequest.user))
-        }.getOrElse(Future.successful(Forbidden))
+        }.getOrElse(Future.successful(seeMiniMembershipTierChooser))
       } yield NoCache(result)
-    }.getOrElse(Future.successful(Forbidden))
+    }.getOrElse(Future.successful(seeMiniMembershipTierChooser))
   }
 }
 
@@ -43,7 +49,7 @@ trait PaidMemberAction extends ActionBuilder[PaidMemberRequest] {
   def invokeBlock[A](request: Request[A], block: PaidMemberRequest[A] => Future[Result]) = {
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
-        memberOpt <- MemberService.get(authRequest.user.id)
+        memberOpt <- MemberRepository.get(authRequest.user.id)
         result <- paidMemberRequestFor(memberOpt, authRequest).map(block).getOrElse(Future.successful(Forbidden))
       } yield NoCache(result)
     }.getOrElse(Future.successful(Forbidden))

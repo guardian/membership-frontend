@@ -1,24 +1,17 @@
 package controllers
 
-import model.Stripe.{PaymentDetails, Plan}
-import model.Tier.Tier
-import model.{Member, Tier}
-import play.api.data.{Mapping, Form}
-import play.api.data.Forms._
-
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import com.gu.membership.salesforce.{Member, Tier}
+import com.gu.membership.salesforce.Tier.Tier
+
 import actions._
-import services.{MemberService, StripeService}
-import actions.MemberRequest
-import scala.Some
-
-case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String, postCode: String, country: String)
-
-case class UpgradeTierForm(paymentType: String, stripeToken: String, deliveryAddress: AddressForm, billingAddress: AddressForm)
+import forms.MemberForm._
+import model.Stripe.Plan
+import services.{MemberRepository, MemberService, StripeService}
 
 trait DowngradeTier {
   self: TierController =>
@@ -49,61 +42,39 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
-  val upgradeTierForm: Form[UpgradeTierForm] = Form(
-    mapping(
-      "paymentType" -> nonEmptyText,
-      "stripeToken" -> nonEmptyText,
-      "deliveryAddress" -> addressMapping(nonEmptyText),
-      "billingAddress" -> addressMapping(text)
-    )(UpgradeTierForm.apply)(UpgradeTierForm.unapply)
-  )
-
-  def addressMapping(textMapping: Mapping[String]): Mapping[AddressForm] = mapping(
-    "lineOne" -> textMapping,
-    "lineTwo" -> textMapping,
-    "town" -> textMapping,
-    "countyOrState" -> textMapping,
-    "postCode" -> textMapping,
-    "country" -> textMapping
-  )(AddressForm.apply)(AddressForm.unapply)
-
-  def upgrade(tierStr: String) = MemberAction { implicit request =>
-    val tier = Tier.routeMap(tierStr)
-
+  def upgrade(tier: Tier) = MemberAction { implicit request =>
     if (request.member.tier < tier)
       Ok(views.html.tier.upgrade.upgradeForm(tier))
     else
       NotFound
   }
 
-  def upgradeConfirm(tierStr: String) = MemberAction.async { implicit request =>
-    val tier = Tier.routeMap(tierStr)
-
+  def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
     if (request.member.tier < tier)
-      upgradeTierForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
+      paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
     else
       Future.successful(NotFound)
   }
 
-  def makePayment(tier: Tier)(formData: UpgradeTierForm)(implicit request: MemberRequest[_]) = {
+  def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
     val futureCustomer =
       request.member.stripeCustomerId.fold {
-        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.stripeToken)
+        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
       } {
         StripeService.Customer.read // TODO: use stripeToken to update card
       }
 
-    val planName = tier.toString + (if (formData.paymentType == "annual") Plan.ANNUAL_SUFFIX else "")
+    val planName = tier.toString + (if (formData.payment.`type` == "annual") Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer
       subscription <- customer.paymentDetails.map { paymentDetails =>
-        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.stripeToken)
+        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.payment.token)
       }.getOrElse {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberService.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
+      MemberRepository.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
       Ok("")
     }
   }
@@ -121,7 +92,7 @@ trait CancelTier {
       cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
       val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
-      MemberService.update(request.member.copy(optedIn=false, tier=newTier))
+      MemberRepository.update(request.member.copy(optedIn=false, tier=newTier))
       Redirect("/tier/cancel/summary")
     }
   }
@@ -134,7 +105,7 @@ trait CancelTier {
     }
 
     for {
-      member <- MemberService.get(request.user.id)
+      member <- MemberRepository.get(request.user.id)
       paymentDetails <- paymentDetailsFor(member)
     } yield Ok(views.html.tier.cancel.summary(paymentDetails))
   }
