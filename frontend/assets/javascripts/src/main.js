@@ -6,7 +6,7 @@ require([
     'src/modules/tier/JoinFree',
     'src/modules/tier/JoinPaid',
     'src/modules/tier/Upgrade',
-    'src/modules/events/ctaButton',
+    'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent'
@@ -18,7 +18,7 @@ require([
     JoinFree,
     JoinPaid,
     Upgrade,
-    ctaButton,
+    Cta,
     Header,
     DatetimeEnhance,
     modifyEvent
@@ -29,7 +29,7 @@ require([
 
     router.match('/event').to(function () {
         (new DatetimeEnhance()).init();
-        ctaButton.init();
+        (new Cta()).init();
         modifyEvent.init();
     });
 
