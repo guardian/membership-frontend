@@ -4,7 +4,7 @@
     "cssDest":      "../../frontend/assets/stylesheets/icons/",
     "datasvgcss":   "icons-svg.scss",
     "urlpngcss" :   "icons-sprite.scss",
-    "spritepath":   "/public/images/sprite/",
+    "spritepath":   "/assets/images/sprite/",
     "svg":          true,
     "cssprefix":    "icon-sprite-",
     "cssparent":    "icon-sprite"
