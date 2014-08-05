@@ -17,7 +17,13 @@ import model.Stripe
 
 trait User extends Controller {
   def me = MemberAction { implicit request =>
-    Cors(Ok(basicDetails(request)))
+    request.member.tier match {
+      case Tier.Friend | Tier.Partner | Tier.Patron =>
+        val details = basicDetails(request)
+        Cors(Ok(details))
+      case _ =>
+        Cors(BadRequest)
+    }
   }
 
   def meDetails = MemberAction.async { implicit request =>
