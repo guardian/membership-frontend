@@ -129,16 +129,14 @@ define([
         this.elem = this.getElem('EVENT_TICKETS_CONTAINER');
         this.userIsLoggedIn = user.isLoggedIn();
 
-        user.getMemberDetail(function (memberDetail, err) {
-            if (!err) {
-                self.memberTier = memberDetail && memberDetail.tier;
-                self.parseDates();
-                self.buyTicketCta();
-                self.memberCta();
-                self.existingMembersSignInMessage();
-                self.addTooltipListener();
-                self.appendOnSaleNowMessage();
-            }
+        user.getMemberDetail(function (memberDetail) {
+            self.memberTier = memberDetail && memberDetail.tier;
+            self.parseDates();
+            self.buyTicketCta();
+            self.memberCta();
+            self.existingMembersSignInMessage();
+            self.addTooltipListener();
+            self.appendOnSaleNowMessage();
         });
     };
 
