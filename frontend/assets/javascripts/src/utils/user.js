@@ -3,8 +3,6 @@ define([
     'ajax'
 ], function(AtoB, ajax){
 
-    var cachedMemberTier;
-
     var getUserOrSignIn = function(returnUrl){
         var user = getUserFromCookie();
         returnUrl = returnUrl || document.location.href;
@@ -55,8 +53,7 @@ define([
         return userFromCookieCache;
     };
 
-    var getMemberTier = function (callback) {
-        // var tier = sessionStorage.getItem('cachedMemberTier');
+    var getMemberDetail = function (callback) {
         var tier = null;
         if (tier) {
             callback(tier);
@@ -65,9 +62,11 @@ define([
             ajax({
                 url: '/user/me',
                 method: 'get',
-                success: function (resp) { // currently no error handling
-                    // sessionStorage.setItem('cachedMemberTier', resp.tier.toLowerCase());
-                    callback(resp.tier.toLowerCase());
+                success: function (resp) {
+                    callback(resp);
+                },
+                error: function (err) {
+                    callback(null, err);
                 }
             });
         }
@@ -77,6 +76,6 @@ define([
         isLoggedIn: isLoggedIn,
         getUserOrSignIn: getUserOrSignIn,
         getUserFromCookie: getUserFromCookie,
-        getMemberTier: getMemberTier
+        getMemberDetail: getMemberDetail
     };
 });

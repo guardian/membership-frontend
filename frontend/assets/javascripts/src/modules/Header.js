@@ -1,8 +1,9 @@
 define([
     '$',
     'bean',
-    'src/utils/user'
-], function ($, bean, userUtil) {
+    'src/utils/user',
+    'src/utils/helper'
+], function ($, bean, userUtil, utilsHelper) {
 
     //TODO-ben once we bring in components.js from the front end this needs refactoring to work with a scala html fragment
 
@@ -114,8 +115,11 @@ define([
             config.DOM.IDENTITY_NOTICE.text(config.text.SIGNED_IN_PREFIX).addClass('u-h');
             config.DOM.IDENTITY_ACCOUNT.text(user.displayname).removeClass('u-h');
 
-            userUtil.getMemberTier(function (tier) {
-                config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+            userUtil.getMemberDetail(function (memberDetail) {
+                var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
+                if (tier) {
+                    config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+                }
             });
 
             config.DOM.COMMENT_ACTIVITY_LINK.attr('href', config.DOM.COMMENT_ACTIVITY_LINK.attr('href') + user.id);
@@ -128,10 +132,7 @@ define([
     };
 
     Header.prototype.appendLocationDetailToIdentityReturnUrl = function () {
-        var windowLocation = window.location;
-        config.DOM.IDENTITY_ICON.attr('href',
-                config.DOM.IDENTITY_ICON.attr('href') + windowLocation.pathname + windowLocation.search
-        );
+        config.DOM.IDENTITY_ICON.attr('href', config.DOM.IDENTITY_ICON.attr('href') + utilsHelper.getLocationDetail());
     };
 
     return Header;

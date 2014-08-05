@@ -5,9 +5,8 @@ import scala.concurrent.Future
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
-import TierBinder.bindableTier
 
 import actions._
 import forms.MemberForm._
@@ -65,7 +64,7 @@ trait UpgradeTier {
         StripeService.Customer.read // TODO: use stripeToken to update card
       }
 
-    val planName = tier.toString + (if (formData.payment.`type` == "annual") Plan.ANNUAL_SUFFIX else "")
+    val planName = tier.toString + (if (formData.payment.annual) Plan.ANNUAL_SUFFIX else "")
 
     for {
       customer <- futureCustomer
@@ -92,18 +91,23 @@ trait CancelTier {
     for {
       cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
-      MemberRepository.update(request.member.copy(optedIn=false))
+      val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
+      MemberRepository.update(request.member.copy(optedIn=false, tier=newTier))
       Redirect("/tier/cancel/summary")
     }
   }
 
-  def cancelTierSummary() = MemberAction.async { implicit request =>
-    val futurePaymentDetails =
-      request.member.stripeCustomerId.map { stripeCustomerId =>
+  def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
+    def paymentDetailsFor(memberOpt: Option[Member]) = {
+      memberOpt.flatMap(_.stripeCustomerId).map { stripeCustomerId =>
         StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
       }.getOrElse(Future.successful(None))
+    }
 
-    futurePaymentDetails.map(paymentDetails => Ok(views.html.tier.cancel.summary(paymentDetails)))
+    for {
+      member <- MemberRepository.get(request.user.id)
+      paymentDetails <- paymentDetailsFor(member)
+    } yield Ok(views.html.tier.cancel.summary(paymentDetails))
   }
 }
 

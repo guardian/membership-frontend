@@ -5,23 +5,17 @@
 
 @main("Cancel Tier") {
 
-    <main role="main">
-        <div class="content__container">
-            <section class="l-row l-row--items-2 content__section">
-                <article class="l-row__item l-row__item--boost-2 secondary-content">
-                    <h1 class="content__headline">We don't like goodbyes&hellip;</h1>
-                    <p>
-                        &hellip;so instead we're going to try and tempt you to stay by reminding you of all the good things
-                        you get from Guardian Membership
-                    </p>
-                </article>
-                <aside class="l-row__item">
-                    <h2 class="content__heading tone-news-one">
-                        Sure you want to cancel?
-                    </h2>
-                </aside>
-            </section>
-        </div>
+    <section>
+
+        @fragments.layout.sectionHeader("We don't like goodbyes&hellip;")
+
+        <p>
+                &hellip;so instead we're going to try and tempt you to stay by reminding you of all the good things
+            you get from Guardian Membership
+        </p>
+
+        <h2 class="section-sub-headline">Sure you want to cancel?</h2>
+
         <div class="package-container">
             <div class="package-list">
                 <div class="package package--current">
@@ -68,45 +62,41 @@
                 }
             </div>
         </div>
-        <div class="content__container">
-            <section class="l-row l-row--items-2 content__section">
-                <aside class="l-row__item"></aside>
-                <article class="l-row__item l-row__item--boost-2 secondary-content">
-                    <h2 class="item__title">How can we make Guardian Membership better? Tell us what you think.</h2>
-                    <form method="POST" action="/tier/cancel/confirm">
-                        <fieldset class="fieldset">
-                            <div class="form-field">
-                                <p>What is the main reason you are leaving Guardian Membership?</p>
-                                <select name="leavingReason">
-                                    <option>Please select</option>option>
-                                    <option>Too many emails</option>option>
-                                    <option>Too expensive</option>option>
-                                    <option>Going on holiday</option>option>
-                                    <option>No events in my area</option>option>
-                                    <option>Other</option>option>
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <p>How likely is it that you would recommend Guardian Membership to a friend?</p>
-                                <select name="recommend">
-                                    <option>Please select</option>option>
-                                    <option>1</option>option>
-                                    <option>2</option>option>
-                                    <option>3</option>option>
-                                    <option>4</option>option>
-                                    <option>5</option>option>
-                                    <option>6</option>option>
-                                    <option>7</option>option>
-                                    <option>8</option>option>
-                                    <option>9</option>option>
-                                    <option>10</option>option>
-                                </select>
-                            </div>
-                            <button class="action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership account</button>
-                        </fieldset>
-                    </form>
-                </article>
-            </section>
-        </div>
-    </main>
+
+        <h2 class="section-sub-headline">How can we make Guardian Membership better? Tell us what you think.</h2>
+
+        <form method="POST" action="/tier/cancel/confirm">
+            <fieldset class="fieldset">
+                <div class="form-field">
+                    <p>What is the main reason you are leaving Guardian Membership?</p>
+                    <select name="leavingReason">
+                        <option>Please select</option>
+                        <option>Too many emails</option>
+                        <option>Too expensive</option>
+                        <option>Going on holiday</option>
+                        <option>No events in my area</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <p>How likely is it that you would recommend Guardian Membership to a friend?</p>
+                    <select name="recommend">
+                        <option>Please select</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                    </select>
+                </div>
+                <button class="action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership account</button>
+            </fieldset>
+        </form>
+
+    </section>
 }
