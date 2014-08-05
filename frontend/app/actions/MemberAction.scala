@@ -14,26 +14,33 @@ import controllers.NoCache
 trait MemberAction extends ActionBuilder[MemberRequest] {
   val authService: AuthenticationService
 
+  def notAllowedResult(request: Request[_]): Result
+
   def invokeBlock[A](request: Request[A], block: MemberRequest[A] => Future[Result]) = {
-    lazy val seeMiniMembershipTierChooser = {
-      val miniTierChooser: Call = controllers.routes.Joining.tierChooser()
-
-      SeeOther(miniTierChooser.absoluteURL(secure = true)(request)).addingToSession("preJoinReturnUrl" -> request.uri)(request)
-    }
-
     authService.authenticatedRequestFor(request).map { authRequest =>
       for {
         memberOpt <- MemberRepository.get(authRequest.user.id)
         result <- memberOpt.filter(_.tier > Tier.None).map { member =>
           block(MemberRequest[A](request, member, authRequest.user))
-        }.getOrElse(Future.successful(seeMiniMembershipTierChooser))
+        }.getOrElse(Future.successful(notAllowedResult(request)))
       } yield NoCache(result)
-    }.getOrElse(Future.successful(seeMiniMembershipTierChooser))
+    }.getOrElse(Future.successful(notAllowedResult(request)))
   }
 }
 
 object MemberAction extends MemberAction {
   val authService = AuthenticationService
+
+  def notAllowedResult(request: Request[_]): Result = {
+    val miniTierChooser: Call = controllers.routes.Joining.tierChooser()
+    SeeOther(miniTierChooser.absoluteURL(secure = true)(request)).addingToSession("preJoinReturnUrl" -> request.uri)(request)
+  }
+}
+
+object AjaxMemberAction extends MemberAction {
+  val authService = AuthenticationService
+
+  def notAllowedResult(request: Request[_]): Result = Forbidden
 }
 
 trait PaidMemberAction extends ActionBuilder[PaidMemberRequest] {
