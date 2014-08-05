@@ -1,7 +1,6 @@
 @(
     paymentDetails: model.Stripe.PaymentDetails,
-    eventOpt: Option[model.Eventbrite.EBEvent],
-    discountCodeOpt: Option[model.Eventbrite.EBDiscount]
+    ebIframeUrlOpt: Option[String]
     )
 
 @import views.support.Dates._
@@ -23,10 +22,11 @@
     </section>
 
     @for(
-        event <- eventOpt
+        ebIframeUrl <- ebIframeUrlOpt
     ) {
 
-        <iframe src="https://www.eventbrite.com/tickets-external?eid=@event.id&ref=etckt&v=2&discount=@discountCodeOpt.getOrElse(model.Eventbrite.EBDiscount("", 0, 0)).code" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+        <iframe src="@ebIframeUrl" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5"
+        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
 
     }
 

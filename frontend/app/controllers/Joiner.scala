@@ -2,14 +2,20 @@ package controllers
 
 import actions.{AuthenticatedAction, PaidMemberAction}
 import com.gu.membership.salesforce.Tier._
+import configuration.Config
 import controllers.Joining._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
 import services.{MemberService, StripeService, EventbriteService, MemberRepository}
+import model.Eventbrite._
 
 import scala.concurrent.Future
+import com.netaporter.uri.dsl._
 
 trait Joiner extends Controller {
+
+  val memberService: MemberService
+  val eventService: EventbriteService
 
   def tierList = CachedAction { implicit request =>
     Ok(views.html.joiner.tierList())
@@ -38,19 +44,28 @@ trait Joiner extends Controller {
 
   def thankyouPaid(tier: Tier) = PaidMemberAction.async { implicit request =>
 
-    val memberService = MemberService
-    val eventService = EventbriteService
     val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
     val eventOpt = eventIdOpt.map(eventService.getEvent)
+
+    def getDiscount(eventOpt: Option[EBEvent]): Future[Option[EBDiscount]] = {
+      val discountOpt = eventOpt.map(memberService.createEventDiscount(request.user.id, _))
+      Future.sequence(discountOpt.toSeq).map(_.headOption.flatten)
+    }
+
+    def getEbIframeUrl(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[String] = {
+      for (event <- eventOpt) yield {
+        Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))
+      }
+    }
 
     for {
       customer <- StripeService.Customer.read(request.stripeCustomerId)
       event <- Future.sequence(eventOpt.toSeq)
-      discount <- memberService.createEventDiscount(request.user.id, event.headOption.get)
+      discountOpt <- getDiscount(event.headOption)
     } yield {
       val response = for {
         paymentDetails <- customer.paymentDetails
-      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails, event.headOption, discount))
+      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails, getEbIframeUrl(event.headOption, discountOpt)))
 
       response.getOrElse(NotFound)
     }
@@ -58,4 +73,7 @@ trait Joiner extends Controller {
 
 }
 
-object Joiner extends Joiner
+object Joiner extends Joiner {
+  val memberService = MemberService
+  val eventService = EventbriteService
+}
