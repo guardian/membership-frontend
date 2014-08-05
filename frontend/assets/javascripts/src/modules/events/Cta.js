@@ -26,7 +26,8 @@ define([
         MEMBER_CTA: 'js-member-cta',
         BUY_TICKET_CTA: 'js-ticket-cta',
         TICKET_SIGN_IN_MESSAGE: 'js-ticket-sale-sign-in',
-        TOOLTIP: 'tooltip'
+        TOOLTIP: 'tooltip',
+        TICKETS_ON_SALE_NOW: 'js-ticket-sale-now'
     };
 
     Cta.prototype.buyTicketCta = function () {
@@ -43,24 +44,24 @@ define([
             // tickets on sale < 7 days
             if (patronSaleStart < now && partnerSaleStart > now) {
                 if (memberTier === PARTNER || memberTier === FRIEND) {
-                    $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                    $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
                 }
             }
 
             // tickets on sale > 8 days < 14 days
             if (partnerSaleStart < now && friendSaleStart > now) {
                 if (memberTier === FRIEND) {
-                    $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                    $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
                 }
             }
 
             if (!memberTier) {
-                $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
             }
         }
 
         if (!this.userIsLoggedIn && friendSaleStart > now) {
-            $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+            $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
         }
     };
 
@@ -94,14 +95,30 @@ define([
         };
     };
 
+    Cta.prototype.appendOnSaleNowMessage = function () {
+        var friendSaleStart = this.ticketDates.saleStartFriend.getTime();
+        var partnerSaleStart = this.ticketDates.saleStartPartner.getTime();
+        var patronSaleStart = this.ticketDates.saleStartPatron.getTime();
+        var now = Date.now();
+        var memberTier = this.memberTier;
+
+        if (this.userIsLoggedIn) {
+            if (memberTier === 'Friend' && friendSaleStart < now ||
+                memberTier === 'Partner' && partnerSaleStart < now ||
+                memberTier === 'Patron' && patronSaleStart < now) {
+                $(this.getElem('TICKETS_ON_SALE_NOW')).text(' to you now');
+            }
+        }
+    };
+
     Cta.prototype.addTooltipListener = function () {
         var self = this;
 
-        bean.on($(this.getElem('TOOLTIP'))[0], 'mouseenter', function () {
+        bean.on(this.getElem('TOOLTIP'), 'mouseenter', function () {
             $(self.getElem('BOOKING_DATES_CONTAINER')).removeClass('u-h');
         });
 
-        bean.on($(this.getElem('TOOLTIP'))[0], 'mouseleave', function () {
+        bean.on(this.getElem('TOOLTIP'), 'mouseleave', function () {
             $(self.getElem('BOOKING_DATES_CONTAINER')).addClass('u-h');
         });
     };
@@ -120,6 +137,7 @@ define([
                 self.memberCta();
                 self.existingMembersSignInMessage();
                 self.addTooltipListener();
+                self.appendOnSaleNowMessage();
             }
         });
     };
