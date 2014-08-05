@@ -4,24 +4,39 @@
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import model.Eventbrite.EBEventStatus._
+@import com.gu.membership.salesforce.Tier
+@import configuration.Config
 
-@renderButtonGrey = {
+@ticketCta = {
     @event.getStatus match {
-        case Completed => { <button class='action action--disabled' disabled='disabled'>Past Event</button> }
-        case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
-        case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
-        case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
-        case _ => { <a class='action action--logged-out action--ticket-button action--ticket-button--grey' href='/event/@event.id/buy'>Sign In to attend</a> }
+        case Completed => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Past Event</button> }
+        case SoldOut => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Sold Out</button> }
+        case Cancelled => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Cancelled</button> }
+        case PreLive => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Buy Tickets</button> }
+        case _ => { <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a> }
     }
 }
 
-@renderButton = {
-    @event.getStatus match {
-        case Completed => { <button class='action action--disabled' disabled='disabled'>Past Event</button> }
-        case SoldOut => { <button class='action action--disabled' disabled='disabled'>Sold Out</button> }
-        case Cancelled => { <button class='action action--disabled' disabled='disabled'>Cancelled</button> }
-        case PreLive => { <button class='action action--disabled' disabled='disabled'>Coming Soon</button> }
-        case _ => { <a class='action action--logged-out action--ticket-button' href='/event/@event.id/buy'>Sign In to attend</a> }
+@dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
+    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">
+        @if(Instant.now.isAfter(salesDate)) {
+            now
+        }else{
+            @salesDate.pretty
+        }
+    </time>
+}
+
+@ticketBookingDates(ticket: EBTickets) = {
+    @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
+        <div class="tooltip__detail u-h js-booking-dates">
+            <h2>Booking Dates</h2>
+            @for((tier, salesDate) <- ticketSaleDates) {
+                <p class="ticket-info">@(tier + "s") @dateOrNow(tier, salesDate)</p>
+            }
+            <p class="ticket-info">General Booking @dateOrNow(Tier.Friend, ticketSaleDates(Tier.Friend))</p>
+            <div class="tooltip__stem"></div>
+        </div>
     }
 }
 
@@ -57,6 +72,7 @@
                     </div>
 
                     @for(ticket <- event.ticketClassesHead) {
+
                         <div class="event__tickets">
 
                             @if(ticket.free) {
@@ -76,8 +92,25 @@
                                     </div>
                                 }
                             }
-
-                            @renderButtonGrey
+                            @ticketCta
+                            <div>
+                                Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
+                            </div>
+                            <div class="ticket-info">
+                                <p>On sale <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_start).fold("")(_.pretty)</time></strong>
+                                </p>
+                                <p>Pre-sale tickets available.</p>
+                            </div>
+                            <div class="ticket-info">
+                                <p class="u-h">Existing members
+                                    <strong>
+                                        <a class="js-ticket-sale-sign-in" href="@Config.idWebAppSigninUrl("")">sign in</a>
+                                    </strong>
+                                </p>
+                            </div>
+                            <div>
+                                <a class='action js-member-cta' href='/join'>Become a member</a>
+                            </div>
 
                             <div class="event__sale-ends">
                                 <span class="event__sale_ends_note js-datetime-enhance-note">Sales @if(event.getStatus == Completed){ended on}else{end on} </span>
@@ -90,8 +123,6 @@
             </div>
             <div class="event__content-body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
-
-                @renderButton
             </div>
         </div>
     </div>
