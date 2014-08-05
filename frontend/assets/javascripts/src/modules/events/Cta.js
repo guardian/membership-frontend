@@ -55,7 +55,8 @@ define([
                 }
             }
 
-            if (!memberTier) {
+            // if we don't have a member tier and the user is logged in and general sale is not released
+            if (!memberTier && friendSaleStart > now) {
                 $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
             }
         }
