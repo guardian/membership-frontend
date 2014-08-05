@@ -115,8 +115,11 @@ define([
             config.DOM.IDENTITY_NOTICE.text(config.text.SIGNED_IN_PREFIX).addClass('u-h');
             config.DOM.IDENTITY_ACCOUNT.text(user.displayname).removeClass('u-h');
 
-            userUtil.getMemberTier(function (tier) {
-                config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+            userUtil.getMemberDetail(function (memberDetail) {
+                var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
+                if (tier) {
+                    config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+                }
             });
 
             config.DOM.COMMENT_ACTIVITY_LINK.attr('href', config.DOM.COMMENT_ACTIVITY_LINK.attr('href') + user.id);
