@@ -64,14 +64,18 @@ object Eventbrite {
     lazy val savingPrice = priceFormat(value * (1-Config.discountMultiplier))
   }
 
-  case class EBTickets(id: Option[String],
-                       name: Option[String],
-                       free: Boolean,
-                       quantity_total: Option[Int],
-                       quantity_sold: Option[Int],
-                       cost: Option[EBPricing],
-                       sales_end: Option[Instant],
-                       sales_start: Option[Instant]) extends EBObject
+
+  /**
+   * https://developer.eventbrite.com/docs/ticket-class-object/
+   */
+  case class EBTickets(id: Option[String] = None,
+                       name: Option[String] = None,
+                       free: Boolean = false,
+                       quantity_total: Option[Int] = None,
+                       quantity_sold: Option[Int] = None,
+                       cost: Option[EBPricing] = None,
+                       sales_end: Option[Instant] = None,
+                       sales_start: Option[Instant] = None) extends EBObject
 
   case class EBEvent(
                       name: EBRichText,
