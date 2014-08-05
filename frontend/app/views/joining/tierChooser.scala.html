@@ -2,6 +2,8 @@
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
+@import model.Eventbrite.EBEventStatus._
+@import views.support.Dates._
 
 @main("Join membership") {
 
@@ -65,16 +67,51 @@
 
         *@<section class="thirds one-third">
 
-            <h2 class="section-sub-headline">You're buying tickets for:</h2>
+            @for(event <- eventOpt) {
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent et auctor
-        nunc. Pellentesque posuere magna eu risus lobortis vel convallis elit scelerisque. Donec est justo, elementum vitae condimentum a, viverra eget augue. Cras eget risus sit amet dui rhoncus adipiscing. Curabitur elit orci, volutpat eget fermentum mattis, tincidunt euismod sapien. In eget rhoncus magna. Phasellus vitae nisl quis leo pellentesque posuere. Donec nec consectetur nisl. Vivamus vitae purus nec libero varius tempus. Aenean arcu erat, rutrum vel blandit laoreet, porttitor vitae ante. In quis elementum arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus convallis, erat id pellentesque placerat, nibh lectus adipiscing odio, non adipiscing metus nisl auctor arcu. Mauris dictum consequat orci, sit amet cursus purus condimentum feugiat. Nam in eros quam, scelerisque fringilla tortor.</p>
+                <h2 class="section-sub-headline">You're buying tickets for:</h2>
+
+                <a href="/event/@event.id">
+                    <div class="item__media-wrapper">
+                        <div class="item__image-container event-image-container">
+                            @if(event.getStatus == SoldOut){
+                                <span class="event-status event-status--sold-out">Sold Out</span>
+                            }
+                            <img src="@event.logoUrl" alt="Event Image">
+                        </div>
+                    </div>
+                    <h2 class="item__title truncate">
+                    @event.name.text
+                    </h2>
+                </a>
+                <div class="item__meta">
+                    <time class="item__timestamp js-item__timestamp">
+                        <div class="event__location">@event.venue.name</div>
+                        <div class="event__time">@event.start.pretty</div>
+                    </time>
+                </div>
+                @for(ticket <- event.ticketClassesHead) {
+                    <div class="event__tickets">
+
+                    @if(ticket.free) {
+                        <div class="event__price">
+                            <span class="event__price-amount js-event-price">Free</span>
+                        </div>
+                    } else {
+                        @for(pricing <- ticket.cost) {
+                            <div class="event__price">
+                                <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                <span class="event__price-note js-event-price-note"> per ticket</span>
+                            </div>
+                        }
+                    }
+
+                    </div>
+                }
+            }
+
         </section>
 
-
-        @for(event <- eventOpt) {
-            You are going to buy this amazing ticket once this is all over @event.id
-        }
     </section>
 
 }

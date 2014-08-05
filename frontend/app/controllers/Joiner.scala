@@ -2,9 +2,12 @@ package controllers
 
 import actions.{AuthenticatedAction, PaidMemberAction}
 import com.gu.membership.salesforce.Tier._
+import controllers.Joining._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
-import services.{MemberRepository, StripeService}
+import services.{MemberService, StripeService, EventbriteService, MemberRepository}
+
+import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
@@ -34,10 +37,20 @@ trait Joiner extends Controller {
   }
 
   def thankyouPaid(tier: Tier) = PaidMemberAction.async { implicit request =>
-    StripeService.Customer.read(request.stripeCustomerId).map { customer =>
+
+    val memberService = MemberService
+    val eventService = EventbriteService
+    val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+    val eventOpt = eventIdOpt.map(eventService.getEvent)
+
+    for {
+      customer <- StripeService.Customer.read(request.stripeCustomerId)
+      event <- Future.sequence(eventOpt.toSeq)
+      discount <- memberService.createEventDiscount(request.user.id, event.headOption.get)
+    } yield {
       val response = for {
         paymentDetails <- customer.paymentDetails
-      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails))
+      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails, event.headOption, discount))
 
       response.getOrElse(NotFound)
     }
