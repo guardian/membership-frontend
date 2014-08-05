@@ -48,7 +48,7 @@ define(function () {
         DatetimeEnhance.prototype.createEnhancedTimeString = function (timeDifference, utcTimeString) {
 
             var timeLeft,
-                saleEnd = this.saleEndTimeElement.innerHTML,
+                saleEnd = this.saleEndTimeElement.innerHTML.trim(),
                 saleEndTime = this.extractEventTime(utcTimeString),
                 config = this.config;
 
