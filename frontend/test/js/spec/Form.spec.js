@@ -100,13 +100,13 @@ define([
         });
 
         it('should add correct card type class to credit card image element', function() {
-            var cardType;
+            var cardType, cardTypeClassname;
 
             for (cardType in creditCardNumbers) {
 
                 form.displayCardTypeImage(creditCardNumbers[cardType]);
-
-                expect(creditCardImageElement.getAttribute('data-card-type')).toEqual(cardType.replace('_', '-'));
+                cardTypeClassname = cardType.replace('_', '-');
+                expect(creditCardImageElement.className).toContain(cardTypeClassname);
                 expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
                 expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
                 expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
