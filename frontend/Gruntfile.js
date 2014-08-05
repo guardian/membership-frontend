@@ -116,14 +116,16 @@ module.exports = function (grunt) {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
                 tasks: ['compile:css'],
                 options: {
-                    spawn: false
+                    spawn: false,
+                    livereload: true
                 }
             },
             js: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
                 tasks: ['compile:js'],
                 options: {
-                    spawn: false
+                    spawn: false,
+                    livereload: true
                 }
             }
         },
