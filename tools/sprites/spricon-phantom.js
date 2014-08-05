@@ -53,7 +53,7 @@ sprite.viewportSize = {
 sprite.content = '<html><body><div id="container" style="overflow:visible;"></div></body></html>';
 
 // add a single reference to the sprite background
-pngcssrules.push("." + cssparent + " { background-image: url(" + spritepath + "sprite.png); background-repeat: no-repeat; display: inline-block; }\n");
+pngcssrules.push("%" + cssparent + ", ." + cssparent + " { background-image: url(" + spritepath + "sprite.png); background-repeat: no-repeat; display: inline-block; }\n");
 
 // increment the current file index and process it
 function nextFile() {
@@ -80,7 +80,6 @@ function finishUp() {
 
     // write CSS files
     fs.write(cssOutputdir + fallbackcss, pngcssrules.join("\n"));
-    // todo
     if (generatesvg) {
         fs.write(cssOutputdir + datacss, datacssrules.join("\n\n"));
     }
@@ -153,7 +152,7 @@ function processFile() {
 
                     }, svgdata);
 
-                    pngcssrules.push("." + customClassName + " { background-position: -" + coords.x + "px -" + coords.y + "px; width: " + coords.w + "px; height: " + coords.h + "px; }\n");
+                    pngcssrules.push("%" + customClassName + ", ." + customClassName + " { background-position: -" + coords.x + "px -" + coords.y + "px; width: " + coords.w + "px; height: " + coords.h + "px; }\n");
 
                     // process the next svg
                     nextFile();
