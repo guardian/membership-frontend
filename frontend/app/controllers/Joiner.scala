@@ -1,16 +1,19 @@
 package controllers
 
-import actions.{AuthenticatedAction, PaidMemberAction}
-import com.gu.membership.salesforce.Tier
-import configuration.Config
-import controllers.Joining._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.mvc.{Request, Controller}
-import services.{MemberService, StripeService, EventbriteService, MemberRepository}
-import model.Eventbrite._
-
 import scala.concurrent.Future
+
+import play.api.mvc.{Request, Controller}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+import com.gu.membership.salesforce.Tier
+
 import com.netaporter.uri.dsl._
+
+import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
+import services.{EventbriteService, SubscriptionService, MemberService, StripeService}
+import forms.MemberForm.{FriendJoinForm, friendJoinForm}
+import model.Eventbrite.{EBDiscount, EBEvent}
+import configuration.Config
 
 trait Joiner extends Controller {
 
@@ -40,8 +43,12 @@ trait Joiner extends Controller {
   }
 
   def joinFriend() = AuthenticatedAction.async { implicit request =>
+    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makeFriend)
+  }
+
+  private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
     for {
-      member <- MemberRepository.upsert(request.user, "", Tier.Friend)
+      salesforceContactId <- MemberService.createFriend(request.user, formData)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
@@ -65,14 +72,14 @@ trait Joiner extends Controller {
 
     for {
       customer <- StripeService.Customer.read(request.stripeCustomerId)
-      event <- getEbEventFromSession(request)
-      discountOpt <- getDiscount(event.headOption)
+      invoice <- SubscriptionService.getInvoiceSummary(request.member.salesforceAccountId)
+      eventOpt <- getEbEventFromSession(request)
+      discountOpt <- getDiscount(eventOpt)
     } yield {
-      val response = for {
-        paymentDetails <- customer.paymentDetails
-      } yield Ok(views.html.joiner.thankyou.partner(paymentDetails, getEbIframeUrl(event.headOption, discountOpt)))
-
-      response.getOrElse(NotFound)
+      val urlOpt = getEbIframeUrl(eventOpt, discountOpt)
+      customer.cardOpt
+        .map { card => Ok(views.html.joiner.thankyou.paid(card, invoice, urlOpt)) }
+        .getOrElse(NotFound)
     }
   }
 

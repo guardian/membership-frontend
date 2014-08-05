@@ -1,0 +1,94 @@
+@(card: model.Stripe.Card, invoice: model.Zuora.InvoiceItem, eventIframeUrlOpt: Option[String])
+
+@import views.support.Dates._
+@import views.support.Prices._
+
+@main("Thankyou | " + invoice.planName) {
+
+    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
+
+        @fragments.layout.sectionHeader("Thank You")
+
+        @fragments.tickets.ticketsFunnel(4)
+
+    </section>
+
+    <section class="joiner-section joiner-section--no-border">
+        <table class="table table--responsive-font table--striped">
+            <tr class="table__headline" role="row">
+                <td class="summary-table__cell" role="scope">
+                    Package
+                </td>
+                <td class="summary-table__cell" role="scope">
+                @invoice.planName
+                </td>
+            </tr>
+            <tr class="summary-table__row" role="row">
+                <td class="summary-table__cell">
+                    Start Date
+                </td>
+                <td class="summary-table__cell">
+                    @invoice.startDate.pretty
+                </td>
+            </tr>
+            <tr class="summary-table__row" role="row">
+                <td class="summary-table__cell">
+                    Amount Paid Today
+                </td>
+                <td class="summary-table__cell">
+                    @invoice.planAmount.pretty
+                </td>
+            </tr>
+            <tr class="summary-table__row" role="row">
+                <td class="summary-table__cell">
+                    @if(invoice.annual){ Annual } else { Monthly } Payment
+                </td>
+                <td class="summary-table__cell">
+                    @invoice.planAmount.pretty
+                </td>
+            </tr>
+            <tr class="summary-table__row" role="row">
+                <td class="summary-table__cell">
+                    Next Payment
+                </td>
+                <td class="summary-table__cell">
+                   @invoice.endDate.pretty
+                </td>
+            </tr>
+            <tr class="summary-table__row" role="row">
+                <td class="summary-table__cell">
+                    Card
+                </td>
+                <td class="summary-table__cell">
+                    <span class="credit-card credit-card--inline-block @("credit-card--" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                    <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
+                </td>
+            </tr>
+        </table>
+    </section>
+
+    <section class="align-center">
+        <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
+    </section>
+
+    @for(eventIframeUrl <- eventIframeUrlOpt) {
+        <iframe src="@eventIframeUrl" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5"
+        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+    }
+
+    <div class="separator"></div>
+    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border" id="whats-included">
+        <h2 class="section-body-headline">Questions</h2>
+        <ul class="questions u-unstyled">
+            <li class="questions__list">
+                <h3 class="section-sub-body-headline">What happens next?</h3>
+                <p>Donec convallis sem non facilisis dapibus. Suspendisse tincidunt tellus at mattis porttitor. Donec nibh odio, hendrerit sed est in, fringilla imperdiet tellus. Vestibulum sapien urna, auctor nec eleifend nec, ornare eget nisi.</p>
+            </li>
+            <li class="questions__list">
+                <h3 class="section-sub-body-headline">I haven't received an email?</h3>
+                <p>In quis nunc tristique, aliquam lectus nec, hendrerit nibh. Fusce eleifend nunc vel ante vestibulum, in ultrices augue fermentum. Etiam laoreet mauris quis sem semper, at feugiat nisi commodo.</p>
+            </li>
+        </ul>
+    </section>
+
+}
