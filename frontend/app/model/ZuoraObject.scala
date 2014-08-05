@@ -6,50 +6,6 @@ import org.joda.time.DateTime
 
 object ZuoraObject {
 
-  def amend(): Elem = {
-    <ns1:amend>
-      <ns1:requests>
-        <ns1:Amendments>
-          <ns2:ContractEffectiveDate>2014-07-20T00:00:00</ns2:ContractEffectiveDate>
-          <ns2:Name>Upgrade</ns2:Name>
-          <ns2:RatePlanData>
-            <ns1:RatePlan>
-              <ns2:AmendmentSubscriptionRatePlanId>2c92c0f8473dcfe60147443f178a48aa</ns2:AmendmentSubscriptionRatePlanId>
-            </ns1:RatePlan>
-          </ns2:RatePlanData>
-          <ns2:ServiceActivationDate/>
-          <ns2:Status>Completed</ns2:Status>
-          <ns2:SubscriptionId>2c92c0f8473dcfe60147443f176c48a6</ns2:SubscriptionId>
-          <ns2:Type>RemoveProduct</ns2:Type>
-        </ns1:Amendments>
-
-        <ns1:Amendments>
-          <ns2:ContractEffectiveDate>2014-07-20T00:00:00</ns2:ContractEffectiveDate>
-          <ns2:Name>Upgrade</ns2:Name>
-          <ns2:RatePlanData>
-            <ns1:RatePlan>
-              <ns2:ProductRatePlanId>2c92c0f845fed48301460578277167c3</ns2:ProductRatePlanId>
-            </ns1:RatePlan>
-          </ns2:RatePlanData>
-          <ns2:Status>Completed</ns2:Status>
-          <ns2:SubscriptionId>2c92c0f8473dcfe60147443f176c48a6</ns2:SubscriptionId>
-          <ns2:Type>NewProduct</ns2:Type>
-        </ns1:Amendments>
-        <ns1:AmendOptions>
-          <ns1:GenerateInvoice>true</ns1:GenerateInvoice>
-          <ns1:InvoiceProcessingOptions>
-            <ns1:InvoiceTargetDate>2014-07-20T00:00:00</ns1:InvoiceTargetDate>
-          </ns1:InvoiceProcessingOptions>
-          <ns1:ProcessPayments>true</ns1:ProcessPayments>
-        </ns1:AmendOptions>
-        <ns1:PreviewOptions>
-          <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>
-          <ns1:PreviewThroughTermEnd>true</ns1:PreviewThroughTermEnd>
-        </ns1:PreviewOptions>
-      </ns1:requests>
-    </ns1:amend>
-  }
-
   def login(username: String, password: String): Elem = {
     <api:login>
       <api:username>{username}</api:username>
