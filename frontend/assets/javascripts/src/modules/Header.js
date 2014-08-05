@@ -1,8 +1,9 @@
 define([
     '$',
     'bean',
-    'src/utils/user'
-], function ($, bean, userUtil) {
+    'src/utils/user',
+    'src/utils/helper'
+], function ($, bean, userUtil, utilsHelper) {
 
     //TODO-ben once we bring in components.js from the front end this needs refactoring to work with a scala html fragment
 
@@ -128,10 +129,7 @@ define([
     };
 
     Header.prototype.appendLocationDetailToIdentityReturnUrl = function () {
-        var windowLocation = window.location;
-        config.DOM.IDENTITY_ICON.attr('href',
-                config.DOM.IDENTITY_ICON.attr('href') + windowLocation.pathname + windowLocation.search
-        );
+        config.DOM.IDENTITY_ICON.attr('href', config.DOM.IDENTITY_ICON.attr('href') + utilsHelper.getLocationDetail());
     };
 
     return Header;
