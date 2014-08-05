@@ -23,9 +23,7 @@ $inArticleInlineImgWidth: 114px;
 $trailblockImgWidth: 100%;
 $trailblockImgWidthLarge: 140px;
 $mobilePopupOffset: 55px;
-$headerHeight: 112px;
-$headerMargin: 130px;
-$pageImageIndent: 290px;
+$headerMargin: 48px;
 
 // Guss defaults overrides
 // =============================================================================
@@ -85,7 +83,8 @@ $fs-bodyHeadings: (
         14 22, // 1
         16 24, // 2
         18 28, // 3
-        20 28  // 4
+        20 28, // 4
+        22 32  // 5
 );
 
 $fs-bodyCopy: (
@@ -211,6 +210,7 @@ $mem-brandBlue: #82c2d6;
 $mem-brandGrey: #dcddda;
 $mem-trans-white: rgba(255, 255, 255, .8);
 $mem-black: #333333;
+$mem-blue: rgba(2, 199, 225, 1);
 
 $mem-button-confirm: #1a4683;
 $mem-button-cancel: #b8b8b8;
@@ -222,3 +222,4 @@ $offWhite: #d6d6d6;
 $black: #000000;
 $black-trans: rgba(0, 0, 0, .5);
 $white-trans: rgba(255, 255, 255, .5);
+

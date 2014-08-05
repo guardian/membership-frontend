@@ -1,5 +1,5 @@
 .header {
-    background: $mem-header;
+    background: transparentize($mem-blue, .2);
     .header__inner {
         @include rem((
             padding: $gs-gutter/2

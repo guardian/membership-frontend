@@ -1,13 +1,18 @@
-@(paymentDetails: model.Stripe.PaymentDetails)
+@(
+    paymentDetails: model.Stripe.PaymentDetails,
+    ebIframeUrlOpt: Option[String]
+    )
 
 @import views.support.Dates._
 
 @main("Thankyou | " + paymentDetails.subscription.plan.name) {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
-        <h1 class="section-headline u-text-hyphenate">Thank You</h1>
-        <p>Nam eu purus eros. Sed tortor lectus, bibendum nec est et, interdum tristique magna. Aliquam erat volutpat. Curabitur faucibus a sem quis porttitor. Suspendisse semper dui libero, eu convallis sem pharetra nec.
-        </p>
+
+        @fragments.layout.sectionHeader("Thank You")
+
+        @fragments.tickets.ticketsFunnel(4)
+
     </section>
 
     @fragments.joiner.thankyou.paymentSummary(paymentDetails)
@@ -15,6 +20,15 @@
     <section class="align-center">
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
     </section>
+
+    @for(
+        ebIframeUrl <- ebIframeUrlOpt
+    ) {
+
+        <iframe src="@ebIframeUrl" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5"
+        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+
+    }
 
     <div class="separator"></div>
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border" id="whats-included">

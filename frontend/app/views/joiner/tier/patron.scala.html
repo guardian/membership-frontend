@@ -3,11 +3,12 @@
 @main("Join | Patron") {
 
     <section class="content-section">
-        <h1 class="section-headline u-text-hyphenate">Purpose/Value</h1>
+
+        @fragments.layout.sectionHeader("Purpose/Value")
 
         <div class="action-inline-combo">
             <h2 class="section-sub-headline u-text-hyphenate">Patron &#163;60</h2>
-            <a class="action action--inline-text action--join" href="/join/patron/payment">Join</a>
+            <a class="action action--inline-text action--join" href="/join/patron/enter-details">Join</a>
         </div>
     </section>
 
@@ -53,7 +54,7 @@
             </li>
             <li class="benefits-list l-row__item">
                 <span class="benefits-list__item action-inline-combo action-inline-combo--nomargin">Patron £60
-                    <a class="action action--join" href="/join/patron/payment">Join</a>
+                    <a class="action action--join" href="/join/patron/enter-details">Join</a>
                 </span>
             </li>
         </ul>

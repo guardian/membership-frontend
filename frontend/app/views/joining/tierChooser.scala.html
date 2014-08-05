@@ -1,60 +1,116 @@
+@(eventOpt: Option[model.Eventbrite.EBEvent])
+
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
+@import model.Eventbrite.EBEventStatus._
+@import views.support.Dates._
 
 @main("Join membership") {
 
-    @fragments.tickets.ticketsFunnel(1)
+    <section class="section-two-thirds">
 
-    <section class="joiner-section joiner-section--no-border tickets-choose">
-        <h1 class="section-headline">Join Guardian membership</h1>
+        @fragments.layout.sectionHeader("Choose a membership tier")
 
-        <p>Our live events programme has something for everyone.  Sign up to be first in line to hear about up and coming events.</p>
+        @fragments.tickets.ticketsFunnel(1)
 
-        <form action="" method="POST" id="payment-form" class="form tickets-select-form">
+        <section class="thirds two-thirds">
 
-            <label for="friend">
-                <input type="radio" value="friend" id="friend" name="tier"/>
-                <h2 class="tickets-select-form__tier-name">Friend</h2>
-                <p>@Config.benefits(Tier.Friend).leadin</p>
+            <h2 class="section-sub-headline">Tiers</h2>
 
-                <ul class="">
-                @for(item <- Config.benefits(Tier.Friend).list) {
-                    <li>@item</li>
+            <form action="" method="POST" id="payment-form" class="form tickets-select-form">
+
+                <label for="friend">
+                    <input type="radio" value="friend" id="friend" name="tier"/>
+                    <h2 class="tickets-select-form__tier-name">Friend</h2>
+                    <p>@Config.benefits(Tier.Friend).leadin</p>
+
+                    <ul>
+                    @for(item <- Config.benefits(Tier.Friend).list) {
+                        <li>@item</li>
+                    }
+                    </ul>
+                    <span class="tickets-select-form__price">@Config.benefits(Tier.Friend).priceText</span>
+                </label>
+
+                <label for="partner">
+                    <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
+                    <h2 class="tickets-select-form__tier-name">Partner</h2>
+                    <p>@Config.benefits(Tier.Partner).leadin</p>
+
+                    <ul>
+                    @for(item <- Config.benefits(Tier.Partner).list) {
+                        <li>@item</li>
+                    }
+                    </ul>
+                    <span class="tickets-select-form__price">@Config.benefits(Tier.Partner).priceText</span>
+                </label>
+
+                <label for="patron">
+                    <input type="radio" value="patron" id="patron" name="tier"/>
+                    <h2 class="tickets-select-form__tier-name">Patron</h2>
+                    <p>@Config.benefits(Tier.Patron).leadin</p>
+
+                    <ul>
+                    @for(item <- Config.benefits(Tier.Patron).list) {
+                        <li>@item</li>
+                    }
+                    </ul>
+                    <span class="tickets-select-form__price">@Config.benefits(Tier.Patron).priceText</span>
+                </label>
+
+                <input type="submit" class="submit-input action--logged-in" value="Choose"/>
+
+            </form>
+        </section>@*
+
+            //inline-block whitespace
+
+        *@<section class="thirds one-third">
+
+            @for(event <- eventOpt) {
+
+                <h2 class="section-sub-headline">You're buying tickets for:</h2>
+
+                <a href="/event/@event.id">
+                    <div class="item__media-wrapper">
+                        <div class="item__image-container event-image-container">
+                            @if(event.getStatus == SoldOut){
+                                <span class="event-status event-status--sold-out">Sold Out</span>
+                            }
+                            <img src="@event.logoUrl" alt="Event Image">
+                        </div>
+                    </div>
+                    <h2 class="item__title truncate">
+                    @event.name.text
+                    </h2>
+                </a>
+                <div class="item__meta">
+                    <time class="item__timestamp js-item__timestamp">
+                        <div class="event__location">@event.venue.name</div>
+                        <div class="event__time">@event.start.pretty</div>
+                    </time>
+                </div>
+                @for(ticket <- event.ticketClassesHead) {
+                    <div class="event__tickets">
+
+                    @if(ticket.free) {
+                        <div class="event__price">
+                            <span class="event__price-amount js-event-price">Free</span>
+                        </div>
+                    } else {
+                        @for(pricing <- ticket.cost) {
+                            <div class="event__price">
+                                <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                <span class="event__price-note js-event-price-note"> per ticket</span>
+                            </div>
+                        }
+                    }
+
+                    </div>
                 }
-                </ul>
-                <span class="tickets-select-form__price">@Config.benefits(Tier.Friend).priceText</span>
-            </label>
+            }
 
-            <label for="partner">
-                <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
-                <h2 class="tickets-select-form__tier-name">Partner</h2>
-                <p>@Config.benefits(Tier.Partner).leadin</p>
-
-                <ul class="">
-                @for(item <- Config.benefits(Tier.Partner).list) {
-                    <li>@item</li>
-                }
-                </ul>
-                <span class="tickets-select-form__price">@Config.benefits(Tier.Partner).priceText</span>
-            </label>
-
-            <label for="patron">
-                <input type="radio" value="patron" id="patron" name="tier"/>
-                <h2 class="tickets-select-form__tier-name">Patron</h2>
-                <p>@Config.benefits(Tier.Patron).leadin</p>
-
-                <ul class="">
-                @for(item <- Config.benefits(Tier.Patron).list) {
-                    <li>@item</li>
-                }
-                </ul>
-                <span class="tickets-select-form__price">@Config.benefits(Tier.Patron).priceText</span>
-            </label>
-
-            <input type="submit" class="submit-input action--logged-in" value="Choose"/>
-
-        </form>
-
+        </section>
 
     </section>
 
