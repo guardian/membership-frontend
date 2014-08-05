@@ -6,6 +6,6 @@
     "urlpngcss" :   "icons-sprite.scss",
     "spritepath":   "/assets/images/sprite/",
     "svg":          true,
-    "cssprefix":    "i-new-",
-    "cssparent":    "i-2"
+    "cssprefix":    "icon-sprite-",
+    "cssparent":    "icon-sprite"
 }
