@@ -287,6 +287,10 @@ div.event {
     background-color: $mem-brandOrange;
 }
 
+.js-off .booking-dates {
+    display: none;
+}
+
 .tooltip {
     position: relative;
 }
@@ -301,6 +305,8 @@ div.event {
     ));
     vertical-align: middle;
     cursor: pointer;
+    z-index: 10000;
+    position: relative;
 }
 
 .tooltip__detail {
