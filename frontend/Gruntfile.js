@@ -20,12 +20,13 @@ module.exports = function (grunt) {
                 root: 'public',
                 stylesheets: '<%= dirs.publicDir.root %>/stylesheets',
                 javascripts: '<%= dirs.publicDir.root %>/javascripts',
-                images: '<%= dirs.publicDir.root %>/images'
+                images:      '<%= dirs.publicDir.root %>/images'
             },
             assets: {
                 root: 'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
-                javascripts: '<%= dirs.assets.root %>/javascripts'
+                javascripts: '<%= dirs.assets.root %>/javascripts',
+                images:      '<%= dirs.assets.root %>/images'
             }
         },
 
@@ -97,6 +98,12 @@ module.exports = function (grunt) {
                 dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/',
                 expand: true,
                 flatten: true
+            },
+            images: {
+                cwd: '<%= dirs.assets.images %>',
+                src: ['**', '!**/svgs/**'],
+                dest: '<%= dirs.publicDir.images %>',
+                expand: true
             }
         },
 
@@ -107,7 +114,8 @@ module.exports = function (grunt) {
             css: ['<%= dirs.publicDir.stylesheets %>'],
             dist: ['<%= dirs.publicDir.root %>/dist/'],
             assetMap: 'conf/assets.map',
-            hooks: ['../.git/hooks/pre-commit']
+            hooks: ['../.git/hooks/pre-commit'],
+            images: ['<%= dirs.publicDir.images %>']
         },
 
         // Recompile on change
@@ -275,6 +283,8 @@ module.exports = function (grunt) {
     grunt.registerTask('compile:css', [
         'clean:css',
         'clean-assets',
+        'clean:images',
+        'copy:images',
         'shell:spriteGeneration',
         'scsslint',
         'sass:compile',

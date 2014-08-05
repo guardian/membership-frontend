@@ -46,11 +46,13 @@ trait MemberService {
       }
     }
 
-    for {
-      customer <- StripeService.Customer.read(member.stripeCustomerId.get)
-      cancelledOpt = cancelSubscription(customer)
-      cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
-    } yield cancelledSubscription.headOption
+    member.stripeCustomerId.map { customerId =>
+      for {
+        customer <- StripeService.Customer.read(customerId)
+        cancelledOpt = cancelSubscription(customer)
+        cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
+      } yield cancelledSubscription.headOption
+    }.getOrElse(Future.successful(None))
   }
 
 }

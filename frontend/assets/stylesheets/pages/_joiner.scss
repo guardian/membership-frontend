@@ -82,7 +82,7 @@ $large-card: 35px;
 }
 
 .fieldset {
-    border: 0;
+    border-width: 2px;
 }
 
 .form-terms {
@@ -170,12 +170,6 @@ $large-card: 35px;
         display: flex;
         justify-content: center; /* align horizontal */
         align-items: center;
-    }
-
-    .form-primary-container {
-        float: left;
-        width: 63%;
-        margin-right: 2%;
     }
 
     .benefits-list--left-aligned {
