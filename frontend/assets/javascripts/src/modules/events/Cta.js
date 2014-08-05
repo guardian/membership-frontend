@@ -69,12 +69,10 @@ define([
 
         var memberTier = this.memberTier;
 
-        if (this.userIsLoggedIn) {
-            if (memberTier === PATRON) {
-                $(this.getElem('MEMBER_CTA')).addClass('u-h');
-            } else {
-                $(this.getElem('MEMBER_CTA')).text('Upgrade').attr('href', '/tier/change');
-            }
+        if (memberTier === PATRON) {
+            $(this.getElem('MEMBER_CTA')).addClass('u-h');
+        } else if (memberTier) {
+            $(this.getElem('MEMBER_CTA')).text('Upgrade').attr('href', '/tier/change');
         }
     };
 
