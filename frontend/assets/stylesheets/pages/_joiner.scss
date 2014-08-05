@@ -109,14 +109,8 @@ $large-card: 35px;
     top: 2px;
     width: 54px;
     height: $large-card;
-    visibility: hidden;
-    background: url('/assets/images/card_types_large.png') right top no-repeat;
 
-    &[data-card-type] {
-        visibility: visible;
-    }
-
-    &[data-card-type='unknown'] {
+    &.icon-sprite-card-unknown {
         visibility: hidden;
     }
 
@@ -131,16 +125,16 @@ $large-card: 35px;
     margin-right: $gutter / 2;
 }
 
-@include mq(tablet) {
+// @include mq(tablet) {
 
-    .credit-card {
-        width: 49px;
-        height: $small-card;
-        background: url('/assets/images/card_types_small.png') right top no-repeat;
+//     .credit-card {
+//         width: 49px;
+//         height: $small-card;
+//         background: url('/assets/images/card_types_small.png') right top no-repeat;
 
-        @include credit-card-images($small-card);
-    }
-}
+//         @include credit-card-images($small-card);
+//     }
+// }
 
 /* ==========================================================================
    Thank You

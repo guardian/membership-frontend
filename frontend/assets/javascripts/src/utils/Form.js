@@ -40,7 +40,8 @@ define([
         CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
         CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
         CREDIT_CARD_IMAGE: 'js-credit-card-image',
-        THROBBER: 'js-waiting-container'
+        THROBBER: 'js-waiting-container',
+        ICON_PREFIX: 'icon-sprite-card-'
     };
 
     Form.prototype.data = {
@@ -211,7 +212,9 @@ define([
         var cardType = this.getCardType(creditCardNumber),
             $creditCardImageElement = $(this.getClass('CREDIT_CARD_IMAGE'), this.formElement);
 
-        $creditCardImageElement.attr(this.data.CARD_TYPE, cardType);
+        var re = new RegExp('\\b' + this.classes.ICON_PREFIX + '\\S*', 'gi');
+        $creditCardImageElement[0].className = $creditCardImageElement[0].className.replace(re, '');
+        $creditCardImageElement.addClass(this.classes.ICON_PREFIX + cardType);
     };
 
     /**
