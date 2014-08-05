@@ -93,13 +93,11 @@
                                 }
                             }
                             @ticketCta
-                            <div>
-                                Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
-                            </div>
                             <div class="ticket-info">
-                                <p>On sale <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">@event.ticketClassesHead.flatMap(_.sales_start).fold("")(_.pretty)</time></strong>
+                                <p>On sale <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">
+                                    @model.TicketSaleDates.datesFor(event.start, ticket)(Tier.Friend).pretty</time></strong>
                                 </p>
-                                <p>Pre-sale tickets available.</p>
+                                Pre-sale tickets available. Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
                             </div>
                             <div class="ticket-info">
                                 <p class="u-h">Existing members
