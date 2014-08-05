@@ -77,28 +77,6 @@ define([
         }
     };
 
-    Cta.prototype.bookingDatesMessage = function () {
-
-        var salesStart = this.ticketDates.saleStart.getTime();
-        var memberTier = this.memberTier;
-        var now = Date.now();
-
-        if (memberTier === PARTNER) {
-            $(this.getClass('SALE_START_FRIEND')).parent().addClass('u-h');
-        }
-
-        if (memberTier === PATRON) {
-            $(this.getClass('SALE_START_FRIEND')).parent().addClass('u-h');
-            $(this.getElem('SALE_START_PARTNER')).parent().addClass('u-h');
-        }
-
-        if (salesStart < now) {
-            if (memberTier === PATRON) {
-                $(this.getElem('BOOKING_DATES_CONTAINER')).addClass('u-h');
-            }
-        }
-    };
-
     Cta.prototype.existingMembersSignInMessage = function () {
         if (!this.userIsLoggedIn) {
             $(this.getElem('TICKET_SIGN_IN_MESSAGE'))
@@ -140,7 +118,6 @@ define([
                 self.parseDates();
                 self.buyTicketCta();
                 self.memberCta();
-                self.bookingDatesMessage();
                 self.existingMembersSignInMessage();
                 self.addTooltipListener();
             }
