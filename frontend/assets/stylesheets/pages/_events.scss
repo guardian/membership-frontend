@@ -286,3 +286,48 @@ div.event {
 .event-status--sold-out {
     background-color: $mem-brandOrange;
 }
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip__cta {
+    @include border-radius(20px);
+    color: #0096c9;
+    background-color: #ffffff;
+    padding: 2px 8px;
+    vertical-align: middle;
+    border: 1px solid #0096c9;
+    cursor: pointer;
+}
+
+.tooltip__detail {
+    position: absolute;
+    min-width: 200px;
+    display: block;
+    bottom: 41px;
+    left: -22px;
+    background-color: #ffffff;
+    z-index: 1000;
+    padding: 20px;
+    @include border-radius(10px);
+}
+
+.tooltip__stem {
+    border-color: #ffffff transparent transparent;
+    border-style: solid;
+    border-width: 15px;
+    position: absolute;
+    left: 22px;
+    bottom: -30px;
+    height: 0;
+    width: 0;
+    z-index: -1;
+    font-size: 0;
+    line-height: 0;
+}
+
+.ticket-info {
+    @include fs-textsans(1);
+    color: #878787;
+}
