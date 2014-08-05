@@ -11,16 +11,16 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.Tier
 
-import actions.{ MemberRequest, MemberAction }
+import actions.{AjaxMemberAction, MemberRequest}
 import services.StripeService
 import model.Stripe
 
 trait User extends Controller {
-  def me = MemberAction { implicit request =>
+  def me = AjaxMemberAction { implicit request =>
     Cors(Ok(basicDetails(request)))
   }
 
-  def meDetails = MemberAction.async { implicit request =>
+  def meDetails = AjaxMemberAction.async { implicit request =>
     request.member.tier match {
       case Tier.Friend =>
         val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
