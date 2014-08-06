@@ -144,11 +144,7 @@ $card-icon-offset: 2px;
 }
 
 .benefits {
-    -webkit-box-pack: justify;
-    -moz-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+    @extend %flexbox-container-justify;
 }
 
 @include mq(tablet) {

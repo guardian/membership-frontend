@@ -25,17 +25,6 @@ body {
     ));
 }
 
-//.page-container__background-image {
-//    position: absolute;
-//    background: #ffffff url('/assets/images/crowd.jpg') no-repeat center top;
-//    background-size: cover;
-//    width: 100%;
-//    @include rem((
-//        height: $headerHeight+$headerMargin+$pageImageIndent,
-//        top: 0
-//    ));
-//}
-
 .page-container {
     @include rem((
         padding: 0 $gs-gutter/4
@@ -90,4 +79,14 @@ body {
         padding-left: $gs-gutter*2;
     }
 
+}
+
+// Flexbox
+
+%flexbox-container-justify {
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
 }

@@ -3,14 +3,18 @@
         position: relative;
         display: block;
         width: 100%;
-        border-top: 1px solid $c-neutral4;
         background-color: $c-neutral7;
-        padding: $gs-baseline $gs-gutter $gs-baseline $gs-gutter*2;
-        margin: 0 0 $gs-baseline;
+        @include rem((
+            border-top: 1px solid $c-neutral4,
+            padding: $gs-baseline $gs-gutter $gs-baseline $gs-gutter*2,
+            margin: 0 0 $gs-baseline
+        ));
 
         input {
-            top: $gs-baseline*1.5;
-            left: $gs-gutter;
+            @include rem((
+                top: $gs-baseline*1.5,
+                left: $gs-gutter
+            ));
             position: absolute;
             margin: 0;
         }
@@ -20,9 +24,11 @@
         }
 
         .tickets-select-form__tier-name {
-            margin-bottom: $gs-baseline;
-            padding-bottom: $gs-baseline;
-            border-bottom: 1px solid $c-neutral4;
+            @include rem((
+                margin-bottom: $gs-baseline,
+                padding-bottom: $gs-baseline,
+                border-bottom: 1px solid $c-neutral4
+            ));
         }
 
         .tickets-select-form__price {
@@ -42,12 +48,16 @@
 .tickets__payment {
     .payment__flyer {
         float: left;
-        width: 63%;
-        padding: $gs-baseline 0;
-        border-bottom: 1px solid $c-neutral1;
-        margin-bottom: $gs-baseline;
+        @include rem((
+            width: 63%,
+            padding: $gs-baseline 0,
+            border-bottom: 1px solid $c-neutral1,
+            margin-bottom: $gs-baseline
+        ));
         .payment__flyer-image {
-            padding-right: $gs-gutter;
+            @include rem((
+                padding-right: $gs-gutter
+            ));
             float: left;
         }
     }
@@ -63,53 +73,54 @@
 
 .funnel {
     width: 100%;
-    height: 72px;
     text-align: center;
     cursor: default;
     position: relative;
-    margin-top: $gs-baseline*4;
-    margin-bottom: $gs-baseline*4;
+    @include rem((
+        margin-top: $gs-baseline*4,
+        margin-bottom: $gs-baseline*4,
+        height: 72px
+    ));
 
-    > ul {
+    .funnel__rail {
+        @extend %flexbox-container-justify;
+
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 16px;
         width: 100%;
+        @include rem((
+            height: 16px
+        ));
         background-color: $c-neutral6;
-        @include border-radius(50px);
-
-        -webkit-box-pack: justify;
-        -moz-box-pack: justify;
-        -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-
-        > li {
-            flex-grow: 0;
-            flex-basis: 16px;
-            flex-direction: column;
-
-            display: flex;
-            justify-content: center; /* align horizontal */
-            align-items: center;
-        }
+        @include border-radius(rem(50px));
     }
 
     .funnel__step {
         display: block;
-        height: 20px;
-        width: 16px;
         position: relative;
+
+        flex-grow: 0;
+        @include rem((
+            flex-basis: 16px
+        ));
+        flex-direction: column;
+
+        @include rem((
+            height: 20px,
+            width: 16px
+        ));
 
         .funnel__point {
             display: block;
-            width: 16px;
-            height: 16px;
-            @include border-radius(50px);
             background-color: #ffffff;
-            border: 2px solid $c-neutral4;
+            @include rem((
+                width: 16px,
+                height: 16px,
+                border: 2px solid $c-neutral4
+            ));
+            @include border-radius(rem(50px));
         }
 
         &.active .funnel__point {
@@ -120,12 +131,14 @@
         .funnel__text {
             display: block;
             text-align: center;
-            width: 106px;
             position: absolute;
-            left: 50%;
-            margin-left: -53px;
-            top: -($gs-baseline*4);
             @include fs-textsans(2);
+            @include rem((
+                width: 106px,
+                left: 50%,
+                margin-left: -53px,
+                top: -($gs-baseline*4)
+            ));
         }
 
         &:first-child .funnel__text {
