@@ -2,4 +2,12 @@
 
 @main("Feedback") {
     @fragments.layout.sectionHeader("Feedback")
+
+    <p>Please leave some feedback on membership for us&hellip;</p>
+
+    <form action="" method="POST" id="feedback-form" class="form form-primary-container">
+        @fragments.form.nameDetail()
+        @fragments.form.feedback()
+        @fragments.form.submit("Submit")
+    </form>
 }
