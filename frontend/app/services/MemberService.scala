@@ -82,15 +82,17 @@ trait MemberService {
       }
     }
 
-    member.stripeCustomerId.map { customerId =>
-      for {
-        customer <- StripeService.Customer.read(customerId)
-        cancelledOpt = cancelSubscription(customer)
-        cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
-      } yield cancelledSubscription.headOption
-    }.getOrElse(Future.successful(None))
-  }
+    member match {
+      case paidMember: PaidMember =>
+        for {
+          customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
+          cancelledOpt = cancelSubscription(customer)
+          cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
+        } yield cancelledSubscription.headOption
 
+      case _ => Future.successful(None)
+    }
+  }
 }
 
 object MemberService extends MemberService

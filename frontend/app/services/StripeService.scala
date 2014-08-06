@@ -8,7 +8,7 @@ import play.api.libs.json.Reads
 import play.api.libs.ws.{WSResponse, WS}
 import play.api.Logger
 
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{Member, Tier}
 
 import model.Stripe._
 import model.StripeDeserializer._
@@ -65,8 +65,11 @@ trait StripeService {
 
     def customerSubscriptionDeleted(event: Event) {
       val subscription = event.extract[Subscription]
-      MemberRepository.getByCustomerId(subscription.customer).foreach {
-        _.filter(_.optedIn).map { member => MemberRepository.update(member.copy(tier = Tier.Friend)) }
+      // TODO: This whole section will soon be deleted when we switch to Zuora
+      MemberRepository.get(subscription.customer, Member.Keys.CUSTOMER_ID).foreach {
+        _.filter(_.optedIn).map { member =>
+          MemberRepository.upsert(member.identityId, Map(Member.Keys.TIER -> Tier.Friend.toString))
+        }
       }
     }
 

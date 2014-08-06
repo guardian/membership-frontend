@@ -71,7 +71,7 @@ trait Joiner extends Controller {
     }
 
     for {
-      customer <- StripeService.Customer.read(request.stripeCustomerId)
+      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       invoice <- SubscriptionService.getInvoiceSummary(request.member.salesforceAccountId)
       eventOpt <- getEbEventFromSession(request)
       discountOpt <- getDiscount(eventOpt)
