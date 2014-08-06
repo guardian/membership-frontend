@@ -49,7 +49,7 @@ trait MemberService {
 
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
-        Keys.DEFAULT_CARD_ID -> customer.cardOpt.fold("")(_.id)
+        Keys.DEFAULT_CARD_ID -> customer.card.id
       )
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier, formData.payment.annual)
@@ -97,9 +97,8 @@ trait MemberService {
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
-      cardId = customer.cardOpt.fold("")(_.id)
-      sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> cardId))
-    } yield customer.cardOpt.get
+      sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
+    } yield customer.card
   }
 }
 

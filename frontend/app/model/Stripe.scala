@@ -23,11 +23,15 @@ object Stripe {
   case class PaymentDetails(card: Card, subscription: Subscription)
 
   case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
-    // We currently only support one subscription/card
-    val cardOpt = cards.data.headOption
+    // customers should always have a card
+    if (cards.total_count != 1) {
+      throw Error("internal", s"Customer $id has ${cards.total_count} cards, should have exactly one", None, None)
+    }
 
+    val card = cards.data(0)
+
+    // TODO: delete once Stripe subscriptions have been removed
     val paymentDetails = for {
-      card <- cards.data.headOption
       subscription <- subscriptions.data.headOption
     } yield PaymentDetails(card, subscription)
   }
