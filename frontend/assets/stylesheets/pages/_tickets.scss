@@ -101,10 +101,14 @@
         display: block;
         position: relative;
 
+        -webkit-flex-grow: 0;
         flex-grow: 0;
         @include rem((
+            -webkit-flex-basis: 16px,
             flex-basis: 16px
         ));
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
         flex-direction: column;
 
         @include rem((
