@@ -100,6 +100,23 @@ trait MemberService {
       sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
   }
+
+  // TODO: this currently only handles free -> paid
+  def upgradeSubscription(member: FreeMember, token: String, tier: Tier.Tier): Future[String] = {
+    for {
+      customer <- StripeService.Customer.create("test@test.com", token)
+      _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
+      subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, true)
+      sfAccountId <- MemberRepository.upsert(
+        member.identityId,
+        Map(
+          Keys.TIER -> tier.toString,
+          Keys.CUSTOMER_ID -> customer.id,
+          Keys.DEFAULT_CARD_ID -> customer.card.id
+        )
+      )
+    } yield sfAccountId
+  }
 }
 
 object MemberService extends MemberService

@@ -32,16 +32,20 @@ trait ZuoraService {
 
   def authentication: Authentication
 
-  private def soapBuilder(body: Elem, head: Option[Elem] = None): String = {
+  private def soapBuilder(body: Elem, head: Option[Elem] = None, st: Boolean = false): String = {
     val xml =
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
                         xmlns:ns2="http://object.api.zuora.com/">
         <soapenv:Header>
           {head.getOrElse(Null)}
-          <ns1:CallOptions>
-            <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
-          </ns1:CallOptions>
+          {
+            if (st) {
+              <ns1:CallOptions>
+                <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
+              </ns1:CallOptions>
+            }
+          }
         </soapenv:Header>
         <soapenv:Body>{body}</soapenv:Body>
       </soapenv:Envelope>
@@ -50,14 +54,14 @@ trait ZuoraService {
     xml.toString()
   }
 
-  def request(body: Elem): Future[Elem] = {
+  def request(body: Elem, singleTransaction: Boolean = false): Future[Elem] = {
     val head =
       <ns1:SessionHeader>
         <ns1:session>{authentication.token}</ns1:session>
       </ns1:SessionHeader>
 
 
-    val xml = soapBuilder(body, Some(head))
+    val xml = soapBuilder(body, Some(head), singleTransaction)
 
     Logger.debug("ZuoraSOAP authenticated request")
     Logger.debug(xml)
@@ -129,6 +133,24 @@ trait SubscriptionService {
       subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
       invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId'")
     } yield InvoiceItem.fromMap(invoice)
+  }
+
+  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      result <- zuora.request(ZuoraObject.createPaymentMethod(accountId, customer))
+    } yield accountId
+  }
+
+  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
+    val newRatePlanId = PaidPlan(tier, annual)
+
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
+      ratePlanId  <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      result <- zuora.request(ZuoraObject.upgradePlan(subscriptionId, ratePlanId, newRatePlanId), true)
+    } yield Subscription(result)
   }
 
 }

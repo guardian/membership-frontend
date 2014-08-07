@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 
 object ZuoraObject {
 
-  def amend(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String): Elem = {
+  def upgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String): Elem = {
     val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
 
     <ns1:amend>
@@ -58,6 +58,17 @@ object ZuoraObject {
     </api:login>
   }
 
+  def createPaymentMethod(accountId: String, customer: Stripe.Customer): Elem = {
+    <ns1:create>
+      <ns1:zObjects xsi:type="ns2:PaymentMethod">
+        <ns2:AccountId>{accountId}</ns2:AccountId>
+        <ns2:TokenId>{customer.card.id}</ns2:TokenId>
+        <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
+        <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
+      </ns1:zObjects>
+    </ns1:create>
+  }
+
   def query(q: String): Elem = {
     <ns1:query>
       <ns1:queryString>{q}</ns1:queryString>
@@ -74,8 +85,6 @@ object ZuoraObject {
         <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
       </ns1:PaymentMethod>
     }.getOrElse(Null)
-
-    // TODO: customer.cardOpt should always be Some
 
     <ns1:subscribe>
       <ns1:subscribes>
@@ -124,6 +133,5 @@ object ZuoraObject {
       </ns1:subscribes>
     </ns1:subscribe>
   }
-
 
 }
