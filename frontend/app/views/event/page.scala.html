@@ -18,13 +18,7 @@
 }
 
 @dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
-    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">
-        @if(Instant.now.isAfter(salesDate)) {
-            now
-        }else{
-            @salesDate.pretty
-        }
-    </time>
+    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">@salesDate.pretty</time>
 }
 
 @ticketBookingDates(ticket: EBTickets) = {
@@ -97,14 +91,18 @@
                                 <p>General release <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">
                                     @model.TicketSaleDates.datesFor(event.start, ticket)(Tier.Friend).pretty</time></strong>
                                 </p>
-                                Pre-sale tickets available<span class="js-ticket-sale-now"></span>. <span class="booking-dates">Booking Dates <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span></span>
-                            </div>
-                            <div class="ticket-info">
-                                <p class="u-h">Existing members
-                                    <strong>
-                                        <a class="js-ticket-sale-sign-in" href="@Config.idWebAppSigninUrl("")">sign in</a>
-                                    </strong>
-                                </p>
+                                <div>Pre-sale tickets available<span class="js-ticket-on-sale-now"></span>.
+                                    <span class="booking-dates">Booking Dates
+                                        <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
+                                    </span>
+                                </div>
+                                <div class="ticket-info">
+                                    <p class="u-h">Existing members
+                                        <strong>
+                                            <a class="js-ticket-sale-sign-in" href="@Config.idWebAppSigninUrl("")">sign in</a>
+                                        </strong>
+                                    </p>
+                                </div>
                             </div>
                             <div>
                                 <a class='action js-member-cta' href='/join'>Become a member</a>
