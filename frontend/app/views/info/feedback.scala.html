@@ -3,11 +3,15 @@
 @main("Feedback") {
     @fragments.layout.sectionHeader("Feedback")
 
-    <p>Please leave some feedback on membership for us&hellip;</p>
+    <p>Help us improve our membership experience.  Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
 
-    <form action="" method="POST" id="feedback-form" class="form form-primary-container">
-        @fragments.form.nameDetail()
+    <p>We read all feedback carefully, but please note we cannot respond all comments submitted.</p>
+
+    <p>If you’re having any problems please visit our help section.</p>
+
+    <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
+        @fragments.form.errorMessageDisplay()
         @fragments.form.feedback()
-        @fragments.form.submit("Submit")
+        @fragments.form.submit("Send feedback now")
     </form>
 }

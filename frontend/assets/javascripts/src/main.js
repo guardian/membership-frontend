@@ -5,6 +5,7 @@ require([
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/tier/JoinPaid',
+    'src/modules/info/Feedback',
     'src/modules/tier/Upgrade',
     'src/modules/events/Cta',
     'src/modules/Header',
@@ -19,6 +20,7 @@ require([
     ajax,
     JoinFree,
     JoinPaid,
+    FeedbackForm,
     Upgrade,
     Cta,
     Header,
@@ -68,6 +70,10 @@ require([
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
         (new Upgrade()).init();
+    });
+
+    router.match('/feedback').to(function () {
+        (new FeedbackForm()).init();
     });
 
     /**
