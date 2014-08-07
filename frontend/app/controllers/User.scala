@@ -9,7 +9,7 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{FreeMember, PaidMember}
 
 import actions.{AjaxMemberAction, MemberRequest}
 import services.StripeService
@@ -21,16 +21,23 @@ trait User extends Controller {
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
-    request.member.tier match {
-      case Tier.Friend =>
-        val details = basicDetails(request) ++ Json.obj("subscription" -> Json.obj("plan" -> Json.obj("name" -> "Friend", "amount" -> 0)))
-        Future.successful(Cors(Ok(details)))
+    val futurePaymentDetails = request.member match {
+      case paidMember: PaidMember =>
+        StripeService.Customer.read(paidMember.stripeCustomerId).map {
+          _.paymentDetails.fold(Json.obj())(extractPaymentDetails)
+        }
 
-      case _ => StripeService.Customer.read(request.member.stripeCustomerId.get).map { customer =>
-        val paymentDetails = customer.paymentDetails.fold(Json.obj())(extractPaymentDetails)
-        Cors(Ok(basicDetails(request) ++ paymentDetails))
-      }
+      case member: FreeMember =>
+        val paymentDetails = Json.obj(
+          "subscription" -> Json.obj(
+            "plan" -> Json.obj("name" -> member.tier.toString, "amount" -> 0)
+          )
+        )
+
+        Future.successful(paymentDetails)
     }
+
+    futurePaymentDetails.map { paymentDetails => Cors(Ok(basicDetails(request) ++ paymentDetails)) }
   }
 
   def basicDetails(request: MemberRequest[_]) = {

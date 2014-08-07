@@ -47,10 +47,9 @@ trait PaidMemberAction extends ActionBuilder[PaidMemberRequest] {
   val authService: AuthenticationService
 
   def paidMemberRequestFor[A](memberOpt: Option[Member], authRequest: AuthRequest[A]): Option[PaidMemberRequest[A]] = {
-    for {
-      member <- memberOpt
-      stripeCustomerId <- member.stripeCustomerId
-    } yield PaidMemberRequest[A](authRequest, member, stripeCustomerId, authRequest.user)
+    memberOpt.collect { case paidMember: PaidMember =>
+      PaidMemberRequest[A](authRequest, paidMember, authRequest.user)
+    }
   }
 
   def invokeBlock[A](request: Request[A], block: PaidMemberRequest[A] => Future[Result]) = {

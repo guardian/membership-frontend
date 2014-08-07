@@ -5,7 +5,7 @@ import scala.concurrent.Future
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.{Member, Tier}
+import com.gu.membership.salesforce.{PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
@@ -29,7 +29,7 @@ trait DowngradeTier {
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
-    StripeService.Customer.read(request.stripeCustomerId).map { customer =>
+    StripeService.Customer.read(request.member.stripeCustomerId).map { customer =>
       val response = for {
         paymentDetails <- customer.paymentDetails
       } yield Ok(views.html.tier.downgrade.summary(paymentDetails))
@@ -57,12 +57,11 @@ trait UpgradeTier {
   }
 
   def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
-    val futureCustomer =
-      request.member.stripeCustomerId.fold {
-        StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
-      } {
-        StripeService.Customer.read // TODO: use stripeToken to update card
-      }
+    val futureCustomer = request.member match {
+      // TODO: use stripeToken to update card
+      case paidMember: PaidMember => StripeService.Customer.read(paidMember.stripeCustomerId)
+      case _ => StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
+    }
 
     val planName = tier.toString + (if (formData.payment.annual) Plan.ANNUAL_SUFFIX else "")
 
@@ -74,7 +73,14 @@ trait UpgradeTier {
         StripeService.Subscription.create(customer.id, planName)
       }
     } yield {
-      MemberRepository.update(request.member.copy(tier = tier, stripeCustomerId = Some(customer.id)))
+      // TODO: move into MemberService
+      MemberRepository.upsert(
+        request.member.identityId,
+        Map(
+          Member.Keys.TIER -> tier.toString,
+          Member.Keys.CUSTOMER_ID -> customer.id
+        )
+      )
       Ok("")
     }
   }
@@ -92,15 +98,22 @@ trait CancelTier {
       cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
     } yield {
       val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
-      MemberRepository.update(request.member.copy(optedIn=false, tier=newTier))
+      // TODO: move into MemberService
+      MemberRepository.upsert(
+        request.member.identityId,
+        Map(
+          Member.Keys.TIER -> newTier.toString,
+          Member.Keys.OPT_IN -> false
+        )
+      )
       Redirect("/tier/cancel/summary")
     }
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
     def paymentDetailsFor(memberOpt: Option[Member]) = {
-      memberOpt.flatMap(_.stripeCustomerId).map { stripeCustomerId =>
-        StripeService.Customer.read(stripeCustomerId).map(_.paymentDetails)
+      memberOpt.collect { case paidMember: PaidMember =>
+        StripeService.Customer.read(paidMember.stripeCustomerId).map(_.paymentDetails)
       }.getOrElse(Future.successful(None))
     }
 
