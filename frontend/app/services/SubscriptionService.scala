@@ -37,7 +37,12 @@ trait ZuoraService {
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
                         xmlns:ns2="http://object.api.zuora.com/">
-        <soapenv:Header>{head.getOrElse(Null)}</soapenv:Header>
+        <soapenv:Header>
+          {head.getOrElse(Null)}
+          <ns1:CallOptions>
+            <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
+          </ns1:CallOptions>
+        </soapenv:Header>
         <soapenv:Body>{body}</soapenv:Body>
       </soapenv:Envelope>
 
