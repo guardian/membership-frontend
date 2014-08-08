@@ -49,17 +49,11 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    if (request.member.tier < tier)
-      paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
-    else
-      Future.successful(NotFound)
-  }
-
-  def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
     request.member match {
       case freeMember: FreeMember =>
-        MemberService.upgradeSubscription(freeMember, formData.payment.token, tier).map(_ => Ok(""))
-
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
+          MemberService.upgradeSubscription(freeMember, tier, formData.payment).map(_ => Ok(""))
+        })
       case _ => Future.successful(NotFound)
     }
   }
