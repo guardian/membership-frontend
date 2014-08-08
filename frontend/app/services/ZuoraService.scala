@@ -30,6 +30,8 @@ trait ZuoraService {
     val authRequired = true
     val singleTransaction = false
 
+    // The .toString is necessary because Zuora doesn't like Content-Type application/xml
+    // which Play automatically adds if you pass it Elems
     lazy val xml = {
       <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
@@ -41,15 +43,16 @@ trait ZuoraService {
               {authentication.token}
             </ns1:session>
           </ns1:SessionHeader>
-        }}{if (singleTransaction) {
-          <ns1:CallOptions>
-            <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
-          </ns1:CallOptions>
-        }}
+          }}
+          {
+            if (singleTransaction) {
+              <ns1:CallOptions>
+                <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
+              </ns1:CallOptions>
+            }
+          }
         </soapenv:Header>
-        <soapenv:Body>
-          {body}
-        </soapenv:Body>
+        <soapenv:Body>{body}</soapenv:Body>
       </soapenv:Envelope>.toString()
     }
 
@@ -125,6 +128,8 @@ trait ZuoraService {
         </ns1:PaymentMethod>
       }.getOrElse(Null)
 
+      // NOTE: This appears to be white-space senstive in some way. Zuora rejected
+      // the XML after Intellij auto-reformatted the code.
       <ns1:subscribe>
         <ns1:subscribes>
           <ns1:Account xsi:type="ns2:Account">
@@ -184,48 +189,34 @@ trait ZuoraService {
       <ns1:amend>
         <ns1:requests>
           <ns1:Amendments>
-            <ns2:ContractEffectiveDate>
-              {now}
-            </ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
             <ns2:Name>Upgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
-                <ns2:AmendmentSubscriptionRatePlanId>
-                  {subscriptionRatePlanId}
-                </ns2:AmendmentSubscriptionRatePlanId>
+                <ns2:AmendmentSubscriptionRatePlanId>{subscriptionRatePlanId}</ns2:AmendmentSubscriptionRatePlanId>
               </ns1:RatePlan>
             </ns2:RatePlanData>
             <ns2:ServiceActivationDate/>
             <ns2:Status>Completed</ns2:Status>
-            <ns2:SubscriptionId>
-              {subscriptionId}
-            </ns2:SubscriptionId>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
             <ns2:Type>RemoveProduct</ns2:Type>
           </ns1:Amendments>
           <ns1:Amendments>
-            <ns2:ContractEffectiveDate>
-              {now}
-            </ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
             <ns2:Name>Upgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
-                <ns2:ProductRatePlanId>
-                  {newRatePlanId}
-                </ns2:ProductRatePlanId>
+                <ns2:ProductRatePlanId>{newRatePlanId}</ns2:ProductRatePlanId>
               </ns1:RatePlan>
             </ns2:RatePlanData>
             <ns2:Status>Completed</ns2:Status>
-            <ns2:SubscriptionId>
-              {subscriptionId}
-            </ns2:SubscriptionId>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
             <ns2:Type>NewProduct</ns2:Type>
           </ns1:Amendments>
           <ns1:AmendOptions>
             <ns1:GenerateInvoice>true</ns1:GenerateInvoice>
             <ns1:InvoiceProcessingOptions>
-              <ns1:InvoiceTargetDate>
-                {now}
-              </ns1:InvoiceTargetDate>
+              <ns1:InvoiceTargetDate>{now}</ns1:InvoiceTargetDate>
             </ns1:InvoiceProcessingOptions>
             <ns1:ProcessPayments>true</ns1:ProcessPayments>
           </ns1:AmendOptions>
