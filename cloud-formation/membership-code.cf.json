@@ -92,11 +92,11 @@
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
-                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
+                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
@@ -125,7 +125,7 @@
                             {
                                 "Effect": "Allow",
                                 "Action": "s3:GetObject",
-                                "Resource": "arn:aws:s3:::membership-private/DEV/*"
+                                "Resource": "arn:aws:s3:::membership-private/*"
                             }
                         ]
                     }
