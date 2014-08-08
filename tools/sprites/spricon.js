@@ -9,9 +9,7 @@
 
     var fs = require('fs');
     var spawn = require('child_process').spawn;
-    var crypto = require('crypto');
     var mkdirp = require('../../frontend/node_modules/mkdirp/index');
-    var SVGO = require('../../frontend/node_modules/svgo/lib/svgo');
     var utils = {};
     var config;
 
@@ -40,35 +38,6 @@
       return child;
     };
 
-    var savings = 0;
-
-    processSVG = function(files, file, callback) {
-        if(files[file].match( /\.svg$/i )){
-            // optimize SVG from current file
-            fs.readFile(files[file], 'utf8', function(err, data) {
-                var inBytes = Buffer.byteLength(data, 'utf8');
-                new SVGO().optimize(data, function(result) {
-                    var outBytes = Buffer.byteLength(result.data, 'utf8');
-
-                    fs.writeFileSync(files[file], result.data);
-
-                    savings += (inBytes - outBytes);
-
-                    if(file < files.length-1){
-                        processSVG(files, file + 1, callback);
-                    } else {
-                        console.log("Total savings: " + Math.round(savings) + "kb");
-                        callback();
-                    }
-                });
-            });
-        } else {
-            if(file < files.length-1){
-                processSVG(files, file + 1, callback);
-            }
-        }
-    };
-
     cleanSVG = function(src, callback) {
         var files = fs.readdirSync(src);
 
@@ -81,7 +50,7 @@
             files[i] = src + files[i];
         }
 
-        processSVG(files, 0, callback);
+        callback();
     };
 
     //Load config from json file
@@ -163,29 +132,6 @@
                 }, function(err, result, code) {
                     // If no error is returned from phantomjs
                     if(!err && code === 0) {
-
-                        // // Generate md5 hash of newly created sprite file
-                        // var md5sum = crypto.createHash('md5');
-                        // var s = fs.ReadStream(config.imgDest + 'sprite.png');
-
-                        // s.on('data', function(d) {
-                        //   md5sum.update(d);
-                        // });
-
-                        // s.on('end', function() {
-                        //     var hash = md5sum.digest('hex');
-
-                        //     // Read the png sprite css file
-                        //     var spriteData = fs.readFileSync(config.cssDest + config.urlpngcss, 'utf-8');
-
-                        //     // Replace sprite file reference with hash
-                        //     var newData = spriteData.replace(/sprite\.png/g, 'sprite.' + hash + '.png');
-
-                        //     // Write back to file
-                        //     fs.writeFileSync(config.cssDest + config.urlpngcss, newData, 'utf-8');
-
-                        // });
-
                         console.info("Spricon complete...");
                     } else {
                         console.error("Something went wrong with PhantomJS...");
@@ -195,4 +141,3 @@
         });
 
     });
-
