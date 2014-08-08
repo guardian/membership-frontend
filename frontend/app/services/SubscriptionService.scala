@@ -73,14 +73,14 @@ trait ZuoraService {
 trait SubscriptionService {
   val zuora: ZuoraService
 
-  val friendPlan = "8a80812a4733a5bb01475f2b6b4c04a2"
+  val friendPlan = "2c92c0f945fee1c90146057402c7066b"
 
   case class PaidPlan(monthly: String, annual: String)
 
   object PaidPlan {
     val plans = Map(
-      Tier.Partner -> PaidPlan("8a80812a4733a5bb01475f2b6b9204a8", "8a80812a4733a5bb01475f2b6ba404aa"),
-      Tier.Patron -> PaidPlan("8a80812a4733a5bb01475f2b6ae80498", "8a80812a4733a5bb01475f2b6af9049a")
+      Tier.Partner -> PaidPlan("2c92c0f945fee1c9014605749e450969", "2c92c0f8471e22bb01471ffe9596366c"),
+      Tier.Patron -> PaidPlan("2c92c0f845fed48301460578277167c3", "2c92c0f9471e145d01471ffd7c304df9")
     )
 
     def apply(tier: Tier.Tier, annual: Boolean): String = {
