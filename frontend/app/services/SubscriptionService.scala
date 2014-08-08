@@ -73,8 +73,11 @@ trait SubscriptionService {
     val invoiceKeys = Seq("ServiceStartDate", "ServiceEndDate", "ProductName", "ChargeAmount", "TaxAmount")
     for {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
-      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId' AND Status='Active'")
+      // When an upgrade happens, the user is refunded some money. At then moment we ignore negative invoices
+      // because we can only upgrade from a friend
+      // TODO: we will probably want to show the negative invoice item at some point
+      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId' AND ChargeAmount>0")
     } yield InvoiceItem.fromMap(invoice)
   }
 
