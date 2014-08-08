@@ -27,7 +27,7 @@ require([
 
     ajax.init({page: {ajaxUrl: ''}});
 
-    router.match('/event').to(function () {
+    router.match('/event/').to(function () {
         (new DatetimeEnhance()).init();
         (new Cta()).init();
         modifyEvent.init();
