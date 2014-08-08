@@ -12,15 +12,15 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def lastNameTextbox = driver.findElement(By.id("name-last"))
 
-  private def address1Textbox = driver.findElement(By.id("address-line-one"))
+  private def address1Textbox = driver.findElement(By.id("address-line-one-deliveryAddress"))
 
-  private def address2Textbox = driver.findElement(By.id("address-line-two"))
+  private def address2Textbox = driver.findElement(By.id("address-line-two-deliveryAddress"))
 
-  private def countyTextbox = driver.findElement(By.id("county-or-state"))
+  private def countyTextbox = driver.findElement(By.id("county-or-state-deliveryAddress"))
 
-  private def postCodeTextbox = driver.findElement(By.id("postCode"))
+  private def postCodeTextbox = driver.findElement(By.id("postCode-deliveryAddress"))
 
-  private def townTextbox = driver.findElement(By.id("town"))
+  private def townTextbox = driver.findElement(By.id("town-deliveryAddress"))
 
   private def cardNumberTextbox = driver.findElement(By.id("cc-num"))
 

@@ -219,8 +219,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAFriend = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinFriendButton.enterFirstName("Test")
-      .enterLastName("Automation").enterPostCode("N19GU").clickSubmitPayment
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterFirstName("Test").enterLastName("Automation")
+      .enterPostCode("N19GU").clickJoinNow
     this
   }
 
