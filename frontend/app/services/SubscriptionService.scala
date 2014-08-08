@@ -81,7 +81,8 @@ trait SubscriptionService {
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
     for {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).go()
+      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).go().map(PaymentMethod(_))
+      _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).go()
     } yield accountId
   }
 
