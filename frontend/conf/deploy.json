@@ -13,7 +13,7 @@
             "actionsBeforeApp": ["frontend.uploadArtifacts", "frontend.deploy"]
         },
         "artifactUploadOnly": {
-           "actions": [ "workflow.uploadArtifacts" ]
+           "actions": [ "frontend.uploadArtifacts" ]
        }
     }
 }
