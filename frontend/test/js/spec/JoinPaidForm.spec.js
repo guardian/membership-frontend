@@ -51,31 +51,27 @@ define([
             element.dispatchEvent(event);
         }
 
-        beforeEach(function () {
+        beforeEach(function (done) {
+            //pull this in once and cache it
+            if (!canonicalPaymentFormFixtureElement) {
+                ajax({
+                    url: '/base/test/fixtures/paymentForm.fixture.html',
+                    method: 'get',
+                    success: function (resp) {
+                        canonicalPaymentFormFixtureElement = $.create(resp)[0];
+                        callback(canonicalPaymentFormFixtureElement);
+                    }
+                });
+            } else {
+                callback(canonicalPaymentFormFixtureElement);
+            }
 
-            runs(function () {
+            function callback(canonicalPaymentFormFixtureElement) {
 
-                //pull this in once and cache it
-                if (!canonicalPaymentFormFixtureElement) {
-                    ajax({
-                        url: '/base/test/fixtures/paymentForm.fixture.html',
-                        method: 'get',
-                        success: function (resp) {
-                            canonicalPaymentFormFixtureElement = $.create(resp)[0];
-                        }
-                    });
-                }
-            });
-
-            waitsFor(function () {
-               return !!canonicalPaymentFormFixtureElement;
-            }, 'Fixture should be loaded', 1000);
-
-            runs(function () {
                 paymentFormFixtureElement = canonicalPaymentFormFixtureElement.cloneNode(true);
                 joinPaidForm = new JoinPaid();
 
-                spyOn(joinPaidForm, 'setupForm').andCallFake(function() {
+                spyOn(joinPaidForm, 'setupForm').and.callFake(function() {
                     joinPaidForm.form = new Form(paymentFormFixtureElement, SUCCESS_POST_URL, SUCCESS_REDIRECT_URL);
                     joinPaidForm.form.init();
                 });
@@ -96,54 +92,66 @@ define([
                 postcodeElement = $('.js-post-code', paymentFormFixtureElement)[0];
                 differentBillingAddress = $('.js-toggle-billing-address-cta', paymentFormFixtureElement)[0];
                 now = new Date();
-            });
+
+                done();
+            }
         });
 
         afterEach(function () {
             paymentFormFixtureElement = null;
         });
 
-        it('should correctly initialise itself', function () {
+        it('should correctly initialise itself', function (done) {
             expect(joinPaidForm).toBeDefined();
             expect(joinPaidForm.form.validationProfiles.length).toBe(8);
             expect(joinPaidForm.form.successPostUrl).toEqual(SUCCESS_POST_URL);
             expect(joinPaidForm.form.successRedirectUrl).toEqual(SUCCESS_REDIRECT_URL);
+
+            done();
         });
 
-        it('should detect an invalid credit card number', function () {
+        it('should detect an invalid credit card number', function (done) {
             creditCardNumberInputElement.value = INVALID_CREDIT_CARD_NUMBER;
             triggerEvent(creditCardNumberInputElement, 'blur');
             expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_number);
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
 
-        it('should allow a valid credit card number', function () {
+        it('should allow a valid credit card number', function (done) {
             creditCardNumberInputElement.value = VALID_CREDIT_CARD_NUMBER;
             triggerEvent(creditCardNumberInputElement, 'blur');
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
             expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+
+            done();
         });
 
-        it('should detect an invalid Card Verification Code number', function () {
+        it('should detect an invalid Card Verification Code number', function (done) {
             creditCardVerificationCodeInputElement.value = EMPTY_STRING;
             triggerEvent(creditCardVerificationCodeInputElement, 'blur');
 
             expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_cvc);
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
 
-        it('should allow a valid Card Verification Code number', function () {
+        it('should allow a valid Card Verification Code number', function (done) {
             creditCardVerificationCodeInputElement.value = VALID_CVC_NUMBER;
             triggerEvent(creditCardVerificationCodeInputElement, 'blur');
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
             expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+
+            done();
         });
 
-        it('no error when year does not have an entry and month does', function () {
+        it('no error when year does not have an entry and month does', function (done) {
             expiryMonthElement.value = 2;
             expiryYearElement.selectedIndex = 0;
             triggerEvent(expiryMonthElement, 'blur');
@@ -151,9 +159,11 @@ define([
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
             expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
+
+            done();
         });
 
-        it('error when month does have an entry and year does not', function () {
+        it('error when month does have an entry and year does not', function (done) {
             expiryMonthElement.value = 2;
             expiryYearElement.selectedIndex = 0;
             triggerEvent(expiryYearElement, 'change');
@@ -161,9 +171,11 @@ define([
             expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
 
-        it('error when month is in the past', function () {
+        it('error when month is in the past', function (done) {
 
             var currentMonth = now.getMonth() + 1,
                 currentYear = now.getFullYear();
@@ -177,9 +189,10 @@ define([
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
 
+            done();
         });
 
-        it('should create and try to submit a stripe customer object', function () {
+        it('should create and try to submit a stripe customer object', function (done) {
 
             var paymentDetails = {
                     number: '4242424242424242',
@@ -216,27 +229,32 @@ define([
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(stripe.card.createToken).toHaveBeenCalled();
-            expect(stripe.card.createToken.callCount).toEqual(1);
-            expect(stripe.card.createToken.mostRecentCall.args[0]).toEqual(paymentDetails);
+            expect(stripe.card.createToken.calls.count()).toEqual(1);
+            expect(stripe.card.createToken.calls.argsFor(0)[0]).toEqual(paymentDetails);
 
+            done();
         });
 
-        it('should prevent submission of an empty form', function () {
+        it('should prevent submission of an empty form', function (done) {
             triggerEvent(paymentFormFixtureElement, 'submit');
 
             expect(errorMessageDisplayElement.children.length).toBe(8);
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
 
-        it('should prevent submission of an empty form with billing address', function () {
+        it('should prevent submission of an empty form with billing address', function (done) {
             triggerEvent(differentBillingAddress, 'click');
             triggerEvent(paymentFormFixtureElement, 'submit');
 
             expect(errorMessageDisplayElement.children.length).toBe(11);
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
 
-        it('should prevent submission of an empty form with billing address and then remove billing address validation when billing address is closed', function () {
+        it('should prevent submission of an empty form with billing address and then remove billing address validation when billing address is closed', function (done) {
 
             //open billing address
             triggerEvent(differentBillingAddress, 'click');
@@ -251,6 +269,8 @@ define([
 
             expect(errorMessageDisplayElement.children.length).toBe(8);
             expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            done();
         });
     });
 
