@@ -52,7 +52,7 @@ trait UpgradeTier {
     request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
-          MemberService.upgradeSubscription(freeMember, tier, formData.payment).map(_ => Ok(""))
+          MemberService.upgradeSubscription(freeMember, request.user, tier, formData.payment).map(_ => Ok(""))
         })
       case _ => Future.successful(NotFound)
     }

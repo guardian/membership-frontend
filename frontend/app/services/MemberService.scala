@@ -102,9 +102,9 @@ trait MemberService {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, tier: Tier.Tier, payment: PaymentForm): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, payment: PaymentForm): Future[String] = {
     for {
-      customer <- StripeService.Customer.create("test@test.com", payment.token)
+      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
       subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, payment.annual)
       sfAccountId <- MemberRepository.upsert(
