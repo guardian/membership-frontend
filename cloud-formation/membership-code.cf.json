@@ -35,7 +35,7 @@
         "AllowedIngressIps" : {
             "Description" : "IP address range (CIDR) that access the site (e.g. '77.91.248.0/21'- Internal Guardian, or '0.0.0.0/0' - the whole internet!)",
             "Type" : "String",
-            "Default" : "77.91.248.0/21"
+            "Default" : "0.0.0.0/0"
         },
         "InstanceType" : {
             "Description" : "EC2 instance type",
