@@ -123,13 +123,7 @@ trait SubscriptionService {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
       subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
       invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId'")
-    } yield {
-      val startDate = new DateTime(invoice("ServiceStartDate"))
-      val endDate = new DateTime(invoice("ServiceEndDate")).plusDays(1) // Yes we really have to +1 day
-      val planAmount = invoice("ChargeAmount").toFloat + invoice("TaxAmount").toFloat
-
-      InvoiceItem(invoice("ProductName"), planAmount, startDate, endDate)
-    }
+    } yield InvoiceItem.fromMap(invoice)
   }
 
 }
