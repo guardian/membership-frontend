@@ -1,9 +1,10 @@
-@(eventOpt: Option[model.Eventbrite.EBEvent])
+@(eventOpt: Option[model.Eventbrite.EBEvent])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 @import model.Eventbrite.EBEventStatus._
 @import views.support.Dates._
+@import helper._
 
 @main("Join membership") {
 
@@ -18,7 +19,7 @@
             <h2 class="section-sub-headline">Tiers</h2>
 
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
-
+                @CSRF.formField
                 <label for="friend">
                     <input type="radio" value="friend" id="friend" name="tier"/>
                     <h2 class="tickets-select-form__tier-name">Friend</h2>

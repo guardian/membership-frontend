@@ -1,4 +1,5 @@
-@()
+@()(implicit token: play.filters.csrf.CSRF.Token)
+@import helper._
 
 @main("Downgrade Tier") {
 
@@ -68,6 +69,7 @@
                 <div class="l-row__item"></div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
                     <form action="/tier/change/friend" method="POST">
+                        @CSRF.formField
                         <a href="/tier/change" class="action-cta action-cta--cancel">Back</a>
                         <input type="submit" value="Continue" class="action-cta action-cta--confirm"/>
                     </form>

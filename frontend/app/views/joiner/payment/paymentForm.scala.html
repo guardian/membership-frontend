@@ -1,6 +1,7 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier)
+@(tier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.support.Asset
+@import helper._
 
     @main("Payment | " + tier) {
 
@@ -12,6 +13,7 @@
 
             <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
 
+                @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
 
                 <fieldset class="fieldset">
