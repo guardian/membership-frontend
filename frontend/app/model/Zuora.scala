@@ -42,4 +42,15 @@ object Zuora {
       Subscription((result \ "SubscriptionId").text)
     }
   }
+
+  object InvoiceItem {
+    def fromMap(invoice: Map[String, String]): InvoiceItem = {
+      val startDate = new DateTime(invoice("ServiceStartDate"))
+      val endDate = new DateTime(invoice("ServiceEndDate")).plusDays(1) // Yes we really have to +1 day
+      val planAmount = invoice("ChargeAmount").toFloat + invoice("TaxAmount").toFloat
+
+      InvoiceItem(invoice("ProductName"), planAmount, startDate, endDate)
+    }
+  }
+
 }
