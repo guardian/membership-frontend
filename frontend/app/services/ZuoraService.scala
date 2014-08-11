@@ -2,7 +2,7 @@ package services
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.xml.{Null, Elem}
+import scala.xml.{Null, Elem, PrettyPrinter}
 
 import org.joda.time.DateTime
 
@@ -68,7 +68,7 @@ trait ZuoraService {
 
       WS.url(url).post(xml).map { result =>
         Logger.debug(s"Got result ${result.status}")
-        Logger.debug(result.body)
+        Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
         // TODO: check result for generic errors
         result.xml
       }
