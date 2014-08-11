@@ -10,7 +10,13 @@ define([
     var FRIEND = 'Friend';
     var PARTNER = 'Partner';
     var PATRON = 'Patron';
-    var Cta = function () {};
+    var TICKETS_AVAILABLE_NOW = ' to you now';
+    var TIER_CHANGE_URL = '/tier/change';
+    var JOIN_URL = '/join';
+
+    var Cta = function (containerElem) {
+        this.elem = containerElem;
+    };
 
     component.define(Cta);
 
@@ -27,7 +33,7 @@ define([
         BUY_TICKET_CTA: 'js-ticket-cta',
         TICKET_SIGN_IN_MESSAGE: 'js-ticket-sale-sign-in',
         TOOLTIP: 'tooltip',
-        TICKETS_ON_SALE_NOW: 'js-ticket-sale-now'
+        TICKETS_ON_SALE_NOW: 'js-ticket-on-sale-now'
     };
 
     Cta.prototype.buyTicketCta = function () {
@@ -44,25 +50,25 @@ define([
             // tickets on sale < 7 days
             if (patronSaleStart < now && partnerSaleStart > now) {
                 if (memberTier === PARTNER || memberTier === FRIEND) {
-                    $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                    $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
                 }
             }
 
             // tickets on sale > 8 days < 14 days
             if (partnerSaleStart < now && friendSaleStart > now) {
                 if (memberTier === FRIEND) {
-                    $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                    $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
                 }
             }
 
             // if we don't have a member tier and the user is logged in and general sale is not released
             if (!memberTier && friendSaleStart > now) {
-                $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+                $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
             }
         }
 
         if (!this.userIsLoggedIn && friendSaleStart > now) {
-            $(this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+            $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
         }
     };
 
@@ -73,7 +79,9 @@ define([
         if (memberTier === PATRON) {
             $(this.getElem('MEMBER_CTA')).addClass('u-h');
         } else if (memberTier) {
-            $(this.getElem('MEMBER_CTA')).text('Upgrade').attr('href', '/tier/change');
+            $(this.getElem('MEMBER_CTA')).text('Upgrade').attr('href', TIER_CHANGE_URL);
+        } else {
+            $(this.getElem('MEMBER_CTA')).attr('href', JOIN_URL);
         }
     };
 
@@ -81,7 +89,7 @@ define([
         if (!this.userIsLoggedIn) {
             $(this.getElem('TICKET_SIGN_IN_MESSAGE'))
                 .attr('href', $(this.getElem('TICKET_SIGN_IN_MESSAGE')).attr('href') + utilsHelper.getLocationDetail())
-                .parent().removeClass('u-h');
+                .parent().parent().removeClass('u-h');
         }
     };
 
@@ -102,10 +110,9 @@ define([
         var memberTier = this.memberTier;
 
         if (this.userIsLoggedIn) {
-            if (memberTier === 'Friend' && friendSaleStart < now ||
-                memberTier === 'Partner' && partnerSaleStart < now ||
-                memberTier === 'Patron' && patronSaleStart < now) {
-                $(this.getElem('TICKETS_ON_SALE_NOW')).text(' to you now');
+            if ((memberTier === 'Partner' && partnerSaleStart < now) && now < friendSaleStart ||
+                (memberTier === 'Patron' && patronSaleStart < now) && now < friendSaleStart) {
+                $(this.getElem('TICKETS_ON_SALE_NOW')).text(TICKETS_AVAILABLE_NOW);
             }
         }
     };
@@ -125,7 +132,7 @@ define([
     Cta.prototype.init = function () {
         var self = this;
 
-        this.elem = this.getElem('EVENT_TICKETS_CONTAINER');
+        this.elem = this.elem || this.getElem('EVENT_TICKETS_CONTAINER');
         this.userIsLoggedIn = user.isLoggedIn();
 
         user.getMemberDetail(function (memberDetail) {

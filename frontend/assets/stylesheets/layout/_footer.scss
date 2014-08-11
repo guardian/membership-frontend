@@ -1,3 +1,7 @@
+$tabletFooterCols:  4;
+$desktopFooterCols: 6;
+$wideFooterCols:    9;
+
 footer {
     position: absolute;
     left: 0;
@@ -78,18 +82,18 @@ footer {
     @include mq(tablet) {
         float: right;
         @include rem((
-            width: gs-span(4),
+            width: gs-span($tabletFooterCols),
             margin-left: gs-span(1)
         ));
     }
     @include mq(desktop) {
         @include rem((
-            width: gs-span(6)
+            width: gs-span($desktopFooterCols)
         ));
     }
     @include mq(wide) {
         @include rem((
-            width: gs-span(8)
+            width: gs-span($wideFooterCols)
         ));
     }
 
@@ -105,33 +109,36 @@ footer {
     float: left;
     width: 50%;
     @include box-sizing(border-box);
-    @include rem((
-        padding-right: $gs-gutter/2
-    ));
 
-    @include mq($to: desktop) {
-        &:nth-child(even) {
-            padding-right: 0;
-            @include rem((
-                padding-left: $gs-gutter/2
-            ));
-        }
-    }
-
-    @include mq(desktop) {
-        width: gs-span(2);
-        padding-left: 0;
+    @include mq($from: tablet) {
         @include rem((
             margin-right: $gs-gutter
         ));
     }
+
+    @include mq(tablet, desktop) {
+        @include rem((
+            width: gs-span($tabletFooterCols/2),
+        ));
+        &:nth-child(2n) {
+            margin-right: 0;
+        }
+    }
+
     @include mq(desktop, wide) {
+        @include rem((
+            width: gs-span($desktopFooterCols/3),
+        ));
         &:nth-child(3n) {
             margin-right: 0;
         }
     }
+
     @include mq(wide) {
-        &:nth-child(4n) {
+        @include rem((
+            width: gs-span($wideFooterCols/3),
+        ));
+        &:nth-child(3n) {
             margin-right: 0;
         }
     }
