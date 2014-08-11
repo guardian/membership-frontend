@@ -56,7 +56,7 @@ trait ZuoraService {
       </soapenv:Envelope>.toString()
     }
 
-    def go(): Future[Elem] = {
+    def mkRequest(): Future[Elem] = {
       val url = if (authRequired) authentication.url else apiUrl
 
       if (authRequired && authentication.url.length == 0) {

@@ -47,7 +47,7 @@ trait SubscriptionService {
    */
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    zuora.Query(q).go().map(Query(_)).map { case Query(results) =>
+    zuora.Query(q).mkRequest().map(Query(_)).map { case Query(results) =>
       if (results.length != 1) {
         throw new SubscriptionServiceError(s"Query $q returned more than one result")
       }
@@ -62,11 +62,11 @@ trait SubscriptionService {
   def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(sfAccountId, Some(customer), plan).go().map(Subscription(_))
+    zuora.Subscribe(sfAccountId, Some(customer), plan).mkRequest().map(Subscription(_))
   }
 
   def createFriendSubscription(sfAccountId: String): Future[Subscription] = {
-    zuora.Subscribe(sfAccountId, None, friendPlan).go().map(Subscription(_))
+    zuora.Subscribe(sfAccountId, None, friendPlan).mkRequest().map(Subscription(_))
   }
 
   def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {
@@ -84,8 +84,8 @@ trait SubscriptionService {
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
     for {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).go().map(PaymentMethod(_))
-      _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).go()
+      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest().map(PaymentMethod(_))
+      _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
     } yield accountId
   }
 
@@ -96,7 +96,7 @@ trait SubscriptionService {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
       subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
       ratePlanId  <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).go()
+      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
     } yield Subscription(result)
   }
 
@@ -118,7 +118,7 @@ object SubscriptionService extends SubscriptionService {
   def refresh() {
     Logger.debug("Refreshing Zuora login")
     authenticationAgent.sendOff(_ => {
-      val auth = Await.result(zuora.Login().go().map(Authentication(_)), 15.seconds)
+      val auth = Await.result(zuora.Login().mkRequest().map(Authentication(_)), 15.seconds)
       Logger.debug(s"Got Zuora login $auth")
       auth
     })
