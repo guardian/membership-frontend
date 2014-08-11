@@ -49,11 +49,9 @@ trait Joiner extends Controller {
   }
 
   private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
-    val cookie = request.cookies.get("SC_GU_U").get //todo bleugh
-
     for {
       salesforceContactId <- MemberService.createFriend(request.user, formData)
-      identityStuff <- IdentityService.saveUser(request.user, formData, cookie.value)
+      _ <- IdentityService.updateUser(request.user, formData, request.cookies.get("SC_GU_U"))
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
@@ -83,7 +81,7 @@ trait Joiner extends Controller {
     } yield {
       val urlOpt = getEbIframeUrl(eventOpt, discountOpt)
       customer.cardOpt
-        .map { card => Ok(views.html.joiner.thankyou.paid(card, invoice, urlOpt)) }
+        .map { card => Ok(views.html.joiner.thankyou.paid(card, invoice, urlOpt))}
         .getOrElse(NotFound)
     }
   }

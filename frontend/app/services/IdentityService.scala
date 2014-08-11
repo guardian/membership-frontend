@@ -7,14 +7,21 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.libs.ws.{WS, WSResponse}
 import play.api.libs.json.{JsObject, Json}
+import play.api.mvc.Cookie
 
 
 import scala.concurrent.Future
 
+case class IdentityServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
+}
+
 trait IdentityService {
 
-  def saveUser(user: User, formData: JoinForm, cookieValue: String): Future[WSResponse] = {
-    IdentityApi.post(s"user/${user.id}/privateFields", updateUser(user, formData), cookieValue)
+  def updateUser(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
+    cookieOpt.map { cookie =>
+      IdentityApi.post(s"user/${user.id}/privateFields", updateUser(user, formData), cookie.value)
+    }.getOrElse(throw IdentityServiceError("User cookie not set"))
   }
 
   private def updateUser(user: User, formData: JoinForm) = {
@@ -44,6 +51,6 @@ object IdentityApi extends Http {
 
     val headers = List(("X-GU-ID-Client-Access-Token" -> s"Bearer ${Config.idApiClientToken}"), ("X-GU-ID-FOWARDED-SC-GU-U" -> identityCookieValue))
 
-    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withRequestTimeout(1000).post(data)
+    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withRequestTimeout(2000).post(data)
   }
 }
