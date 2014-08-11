@@ -128,6 +128,8 @@ trait ZuoraService {
         </ns1:PaymentMethod>
       }.getOrElse(Null)
 
+      // TODO: address and name
+
       // NOTE: This appears to be white-space senstive in some way. Zuora rejected
       // the XML after Intellij auto-reformatted the code.
       <ns1:subscribe>
@@ -176,6 +178,54 @@ trait ZuoraService {
           </ns1:SubscriptionData>
         </ns1:subscribes>
       </ns1:subscribe>
+    }
+  }
+
+  case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
+                           date: DateTime) extends ZuoraAction {
+
+    override val singleTransaction = true
+
+    val body = {
+      <ns1:amend>
+        <ns1:requests>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:Name>Downgrade</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:AmendmentSubscriptionRatePlanId>{subscriptionRatePlanId}</ns2:AmendmentSubscriptionRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:ServiceActivationDate/>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>RemoveProduct</ns2:Type>
+          </ns1:Amendments>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:Name>Downgrade</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:ProductRatePlanId>{newRatePlanId}</ns2:ProductRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>NewProduct</ns2:Type>
+          </ns1:Amendments>
+          <ns1:AmendOptions>
+            <ns1:GenerateInvoice>false</ns1:GenerateInvoice>
+            <ns1:ProcessPayments>false</ns1:ProcessPayments>
+          </ns1:AmendOptions>
+          <ns1:PreviewOptions>
+            <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>
+            <ns1:PreviewThroughTermEnd>true</ns1:PreviewThroughTermEnd>
+          </ns1:PreviewOptions>
+        </ns1:requests>
+      </ns1:amend>
     }
   }
 

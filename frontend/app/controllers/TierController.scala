@@ -21,10 +21,8 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
-    } yield {
-      cancelledSubscription.map(_ => Redirect("/tier/change/friend/summary")).getOrElse(NotFound)
-    }
+      cancelledSubscription <- MemberService.downgradeSubscription(request.member, Tier.Friend)
+    } yield Redirect("/tier/change/friend/summary")
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>

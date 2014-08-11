@@ -59,6 +59,13 @@ trait SubscriptionService {
   def queryOne(field: String, table: String, where: String): Future[String] =
     queryOne(Seq(field), table, where).map(_(field))
 
+  def getBasicIds(sfAccountId: String): Future[(String, String)] = {
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId' AND Status='Active'")
+    } yield (accountId, subscriptionId)
+  }
+
   def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
@@ -72,8 +79,7 @@ trait SubscriptionService {
   def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {
     val invoiceKeys = Seq("ServiceStartDate", "ServiceEndDate", "ProductName", "ChargeAmount", "TaxAmount")
     for {
-      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId' AND Status='Active'")
+      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
       // When an upgrade happens, the user is refunded some money. At then moment we ignore negative invoices
       // because we can only upgrade from a friend
       // TODO: we will probably want to show the negative invoice item at some point
@@ -89,12 +95,25 @@ trait SubscriptionService {
     } yield accountId
   }
 
+  def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
+    val newRatePlanId = tier match {
+      case Tier.Friend => friendPlan
+      case t => PaidPlan(t, annual)
+    }
+
+    for {
+      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
+      ratePlanId <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      chargedThroughDate <- queryOne("ChargedThroughDate", "RatePlanCharge", s"RatePlanId='$ratePlanId'")
+      result <- zuora.DowngradePlan(subscriptionId, ratePlanId, newRatePlanId, new DateTime(chargedThroughDate)).mkRequest()
+    } yield ""
+  }
+
   def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
     val newRatePlanId = PaidPlan(tier, annual)
 
     for {
-      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
+      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
       ratePlanId  <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
       result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
     } yield Subscription(result)
