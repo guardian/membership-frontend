@@ -1,5 +1,7 @@
 package controllers
 
+import play.api.Logger
+
 import scala.concurrent.Future
 
 import play.api.mvc.{Request, Controller}
@@ -10,7 +12,7 @@ import com.gu.membership.salesforce.Tier
 import com.netaporter.uri.dsl._
 
 import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
-import services.{EventbriteService, SubscriptionService, MemberService, StripeService}
+import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
 import configuration.Config
@@ -47,8 +49,11 @@ trait Joiner extends Controller {
   }
 
   private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
+    val cookie = request.cookies.get("SC_GU_U").get //todo bleugh
+
     for {
       salesforceContactId <- MemberService.createFriend(request.user, formData)
+      identityStuff <- IdentityService.saveUser(request.user, formData, cookie.value)
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
