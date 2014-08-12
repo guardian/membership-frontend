@@ -1,0 +1,13 @@
+@import views.support.Asset
+
+@* Scripts that should be executed after CSS is loaded *@
+
+<script>
+    var curl = {
+        apiName: 'require',
+        paths: {
+            zxcvbn: '@Asset.at("javascripts/lib/zxcvbn/zxcvbn")'
+        }
+    };
+</script>
+<script src='@Asset.at("javascripts/lib/curl/curl.js")'><script>

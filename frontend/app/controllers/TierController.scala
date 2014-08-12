@@ -5,12 +5,11 @@ import scala.concurrent.Future
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.{PaidMember, Member, Tier}
+import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
 import forms.MemberForm._
-import model.Stripe.Plan
 import services.{MemberRepository, MemberService, StripeService}
 
 trait DowngradeTier {
@@ -50,38 +49,12 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    if (request.member.tier < tier)
-      paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment(tier))
-    else
-      Future.successful(NotFound)
-  }
-
-  def makePayment(tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_]) = {
-    val futureCustomer = request.member match {
-      // TODO: use stripeToken to update card
-      case paidMember: PaidMember => StripeService.Customer.read(paidMember.stripeCustomerId)
-      case _ => StripeService.Customer.create(request.user.getPrimaryEmailAddress, formData.payment.token)
-    }
-
-    val planName = tier.toString + (if (formData.payment.annual) Plan.ANNUAL_SUFFIX else "")
-
-    for {
-      customer <- futureCustomer
-      subscription <- customer.paymentDetails.map { paymentDetails =>
-        StripeService.Subscription.update(customer.id, paymentDetails.subscription.id, planName, formData.payment.token)
-      }.getOrElse {
-        StripeService.Subscription.create(customer.id, planName)
-      }
-    } yield {
-      // TODO: move into MemberService
-      MemberRepository.upsert(
-        request.member.identityId,
-        Map(
-          Member.Keys.TIER -> tier.toString,
-          Member.Keys.CUSTOMER_ID -> customer.id
-        )
-      )
-      Ok("")
+    request.member match {
+      case freeMember: FreeMember =>
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
+          MemberService.upgradeSubscription(freeMember, request.user, tier, formData.payment).map(_ => Ok(""))
+        })
+      case _ => Future.successful(NotFound)
     }
   }
 }

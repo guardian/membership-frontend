@@ -8,17 +8,25 @@
     <div class="fieldset__fields">
 
         <div class="form-field">
-            <label class="label label--inline label--half" for="name-first">First
-                <input type="text" name="name.first" id="name-first" class="text-input text-input--block js-name-first"
+            <div class="form-field__half">
+                <label class="label label--inline" for="name-first">First</label>
+                <input type="text"
+                       name="name.first"
+                       id="name-first"
+                       class="text-input text-input--block js-name-first"
                        data-error-message="Please enter your first name"
                        data-validation="required"/>
-            </label>@*
+            </div>@*
             == Inline block whitespace ==
-            *@<label class="label label--inline label--half" for="name-last">Last
-                <input type="text" name="name.last" id="name-last" class="text-input text-input--block js-name-last"
+            *@<div class="form-field__half">
+                <label class="label label--inline" for="name-last">Last</label>
+                <input type="text"
+                       name="name.last"
+                       id="name-last"
+                       class="text-input text-input--block js-name-last"
                        data-error-message="Please enter your last name"
                        data-validation="required"/>
-            </label>
+            </div>
         </div>
 
     </div>

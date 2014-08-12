@@ -103,6 +103,17 @@
     }
 }
 
+// Allows for two up form field and label layout as in address form
+.form-field__half {
+    display: inline-block;
+    width: 50%;
+    padding-right: 12px;
+    &:last-of-type {
+        padding-right: 0;
+        padding-left: 12px;
+    }
+}
+
 .form__error {
     @include fs-data(4);
     background-color: #fdf4f3;
@@ -190,16 +201,6 @@
 
 .label--inline {
     display: inline-block;
-}
-
-// Allows for two up form field and label layout as in address form
-.label--half {
-    width: 50%;
-    padding-right: 12px;
-    &:last-of-type {
-        padding-right: 0;
-        padding-left: 12px;
-    }
 }
 
 .text-input,
@@ -353,5 +354,34 @@
                 max-height: 536px
             ));
         }
+    }
+}
+
+.password-strength-indicator {
+    background-color: #ebebeb;
+    height: 8px;
+    margin-top: 4px;
+    position: relative;
+
+    /* Indicator bar */
+    &:after {
+        bottom: 0;
+        content: '';
+        display: block;
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    &.score-0:after { width: 20%; background-color: #cc0a00; }
+    &.score-1:after { width: 40%; background-color: #ff4b00; }
+    &.score-2:after { width: 60%; background-color: #ff8b00; }
+    &.score-3:after { width: 80%; background-color: #00e643; }
+    &.score-4:after { width: 100%; background-color: #00b334; }
+
+    .password-strength {
+        display: inline-block;
+        height: 40px;
+        margin-top: 14px;
     }
 }
