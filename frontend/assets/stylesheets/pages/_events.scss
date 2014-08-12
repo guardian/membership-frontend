@@ -342,4 +342,7 @@ div.event {
 .ticket-info {
     @include fs-textsans(1);
     color: #878787;
+    @include rem((
+        margin-top: 8px
+    ));
 }

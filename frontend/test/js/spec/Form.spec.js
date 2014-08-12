@@ -63,43 +63,43 @@ define([
             };
         };
 
-        beforeEach(function () {
+        beforeEach(function (done) {
 
-            runs(function () {
+            //pull this in once and cache it
+            if (!form) {
+                ajax({
+                    url: '/base/test/fixtures/paymentForm.fixture.html',
+                    method: 'get',
+                    success: function (resp) {
+                        canonicalFormElement = $.create(resp)[0];
+                        callback(canonicalFormElement);
+                    }
+                });
+            } else {
+                callback(canonicalFormElement);
+            }
 
-                //pull this in once and cache it
-                if (!form) {
-                    ajax({
-                        url: '/base/test/fixtures/paymentForm.fixture.html',
-                        method: 'get',
-                        success: function (resp) {
-                            canonicalFormElement = $.create(resp)[0];
-                        }
-                    });
-                }
-            });
+            function callback(canonicalFormElement) {
 
-            waitsFor(function () {
-                return !!canonicalFormElement;
-            }, 'Fixture should be loaded', 1000);
-
-            runs(function () {
                 formElement = canonicalFormElement.cloneNode(true);
                 form = new Form(formElement);
+                form.elems = []; //reset component.js internal element cache
                 submitButtonElement = $('.js-submit-input', formElement)[0];
                 errorMessageDisplayElement = $('.js-payment-errors', formElement)[0];
                 creditCardImageElement = $('.js-credit-card-image', formElement)[0];
                 firstNameElement = $('.js-name-first', formElement)[0];
                 lastNameElement = $('.js-name-last', formElement)[0];
                 postcodeElement = $('.js-post-code', formElement)[0];
-            });
+
+                done();
+            }
         });
 
         afterEach(function () {
             formElement = null;
         });
 
-        it('should add correct card type class to credit card image element', function() {
+        it('should add correct card type class to credit card image element', function(done) {
             var cardType, cardTypeClassname;
 
             for (cardType in creditCardNumbers) {
@@ -111,27 +111,31 @@ define([
                 expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
                 expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
             }
+            done();
         });
 
-        it('correct error returned from stripeErrorMessages via getErrorMessage', function() {
+        it('correct error returned from stripeErrorMessages via getErrorMessage', function(done) {
             var stripeErrorMessage = form.getErrorMessage(stripeErrorObjects.valid);
 
             expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.incorrect_number);
+            done();
         });
 
-        it('undefined returned from stripeErrorMessages via getErrorMessage for invalid stripe error object', function() {
+        it('undefined returned from stripeErrorMessages via getErrorMessage for invalid stripe error object', function(done) {
             var stripeErrorMessage = form.getErrorMessage(stripeErrorObjects.invalid);
 
             expect(stripeErrorMessage).toEqual(stripeErrorMessages.generic_error);
+            done();
         });
 
-        it('correct error returned from stripeErrorMessages via getErrorMessage for declined_card', function() {
+        it('correct error returned from stripeErrorMessages via getErrorMessage for declined_card', function(done) {
             var stripeErrorMessage = form.getErrorMessage(stripeErrorObjects.declinedCard);
 
             expect(stripeErrorMessage).toEqual(stripeErrorMessages.card_error.card_declined.card_not_supported);
+            done();
         });
 
-        it('correct data object is built for serialization', function () {
+        it('correct data object is built for serialization', function (done) {
 
             firstNameElement.value = mockDataObj['name.first'];
             lastNameElement.value = mockDataObj['name.last'];
@@ -142,22 +146,26 @@ define([
             for (var prop in dataObj) {
                 expect(dataObj[prop]).toEqual(mockDataObj[prop]);
             }
+            done();
         });
 
-        it('check non existing validator throws exception', function () {
+        it('check non existing validator throws exception', function (done) {
             expect(form.checkValidatorExistsException.bind(this, 'randomValidator')).toThrow();
+            done();
         });
 
-        it('array is returned if non array sent in as argument', function () {
+        it('array is returned if non array sent in as argument', function (done) {
             var argsArray = form.createArgsArray('string');
             expect(argsArray).toBeTruthy(argsArray instanceof Array);
             expect(argsArray).toEqual(['string']);
+            done();
         });
 
-        it('array is returned if array sent in as argument', function () {
+        it('array is returned if array sent in as argument', function (done) {
             var argsArray = form.createArgsArray(['string']);
             expect(argsArray).toBeTruthy(argsArray instanceof Array);
             expect(argsArray).toEqual(['string']);
+            done();
         });
 
     });

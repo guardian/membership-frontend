@@ -38,9 +38,8 @@ trait Subscription extends Controller {
     updateForm.bindFromRequest
       .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
         for {
-          customer <- StripeService.Customer.updateCard(request.member.stripeCustomerId, stripeToken)
-          cardOpt = customer.paymentDetails.map(_.card)
-        } yield Cors(Ok(Json.obj("last4" -> cardOpt.map(_.last4), "cardType" -> cardOpt.map(_.`type`))))
+          card <- MemberService.updateDefaultCard(request.member, stripeToken)
+        } yield Cors(Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`)))
       ).recover {
         case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
       }

@@ -1,7 +1,5 @@
 package controllers
 
-import play.api.Logger
-
 import scala.concurrent.Future
 
 import play.api.mvc.{Request, Controller}
@@ -80,9 +78,7 @@ trait Joiner extends Controller {
       discountOpt <- getDiscount(eventOpt)
     } yield {
       val urlOpt = getEbIframeUrl(eventOpt, discountOpt)
-      customer.cardOpt
-        .map { card => Ok(views.html.joiner.thankyou.paid(card, invoice, urlOpt))}
-        .getOrElse(NotFound)
+      Ok(views.html.joiner.thankyou.paid(customer.card, invoice, urlOpt))
     }
   }
 

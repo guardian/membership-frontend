@@ -15,7 +15,7 @@ import com.gu.identity.model.User
 
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.{Customer, Subscription}
+import model.Stripe.{Card, Customer, Subscription}
 import forms.MemberForm.{JoinForm, PaidMemberJoinForm, FriendJoinForm}
 import com.gu.membership.salesforce.Member.Keys
 
@@ -49,7 +49,7 @@ trait MemberService {
 
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
-        Keys.DEFAULT_CARD_ID -> customer.cardOpt.fold("")(_.id)
+        Keys.DEFAULT_CARD_ID -> customer.card.id
       )
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier, formData.payment.annual)
@@ -92,6 +92,13 @@ trait MemberService {
 
       case _ => Future.successful(None)
     }
+  }
+
+  def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
+    for {
+      customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
+      sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
+    } yield customer.card
   }
 }
 

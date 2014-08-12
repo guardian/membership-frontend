@@ -24,7 +24,7 @@ object ZuoraObject {
 
     val payment = customerOpt.map { customer =>
       <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
-        <ns2:TokenId>{customer.cardOpt.fold("")(_.id)}</ns2:TokenId>
+        <ns2:TokenId>{customer.card.id}</ns2:TokenId>
         <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
         <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
       </ns1:PaymentMethod>

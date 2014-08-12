@@ -19,8 +19,6 @@
     }
 }
 
-
-
 .action--disabled {
     &,
     &:visited,
@@ -45,6 +43,7 @@
 .action--join,
 .action--logged-out {
     background-color: $mem-brandBlue;
+    @include border-radius(50%);
     &:visited,
     &:active,
     &:focus {
@@ -155,3 +154,4 @@
 
     }
 }
+

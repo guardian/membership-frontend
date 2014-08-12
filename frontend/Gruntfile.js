@@ -280,16 +280,20 @@ module.exports = function (grunt) {
 
     grunt.registerTask('clean-assets', ['clean:dist', 'clean:assetMap']);
 
-    grunt.registerTask('compile:css', [
-        'clean:css',
-        'clean-assets',
-        'clean:images',
-        'copy:images',
-        'shell:spriteGeneration',
-        'scsslint',
-        'sass:compile',
-        'asset_hash'
-    ]);
+    grunt.registerTask('compile:css', function() {
+        if (!isDev) {
+            grunt.task.run(['scsslint']);
+        }
+        grunt.task.run([
+            'clean:css',
+            'clean-assets',
+            'clean:images',
+            'copy:images',
+            'shell:spriteGeneration',
+            'sass:compile',
+            'asset_hash'
+        ]);
+    });
 
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
