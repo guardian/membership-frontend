@@ -5,7 +5,7 @@ import org.openqa.selenium.{By, WebDriver}
 /**
  * Created by jao on 29/05/2014.
  */
-class JoinPartnerPage(driver: WebDriver) extends BaseMembershipPage(driver) {
+class JoinPartnerPage(driver: WebDriver) extends JoinFriendPage(driver) {
 
   private def joinButton = driver.findElement(By.cssSelector(".action"))
 

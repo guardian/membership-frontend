@@ -6,7 +6,7 @@ import org.openqa.selenium.{By, WebDriver}
 
    private def title = driver.findElement(By.cssSelector("h1"))
 
-   private def eventsButton = driver.findElement(By.linkText("Events"))
+   private def eventsButton = driver.findElement(By.xpath("//div[2]/nav/div[1]/ul/li[1]/a"))
 
    private def joinButton = driver.findElement(By.linkText("Become a member"))
 

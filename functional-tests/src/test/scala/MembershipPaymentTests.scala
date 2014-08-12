@@ -24,6 +24,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
       .then {
         _.IHaveToLogIn
+        .IClickOnThePurchaseSubscriptionCTA
         .andICanPurchaseASubscription
       }
     }

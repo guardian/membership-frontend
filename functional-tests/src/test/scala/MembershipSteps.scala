@@ -59,6 +59,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def ISelectFriend = {
+    new ChooseTierPage(driver).clickFriend.clickChoose.enterFirstName("Test")
+      .enterLastName("Automation").enterPostCode("N19GU").clickJoinNow
+    this
+  }
+
   def ISeeTheEventDetails = {
     val page = new EventPage(driver)
     Assert.assertNotEmpty(page.getEventDescription)
@@ -72,8 +78,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def TheDetailsAreTheSameAsOnTheEventProvider = {
     val page = new EventPage(driver)
     val eventName = page.getEventName
+    println("event name: " + eventName)
     // assumes we are logged in
     val eventBritePage = page.clickBuyButton
+    println("Other name: " + eventBritePage.getEventName)
     Assert.assert(eventBritePage.getEventName.contains(eventName),
       true, "The event name should be the same on Eventbrite")
     this
@@ -90,6 +98,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmRedirectedToTheChooseTierPage = {
+    val loaded = new ChooseTierPage(driver).isPageLoaded
+    Assert.assert(loaded, true, "The Choose tier page should be loaded")
+  }
+
   def IAmRedirectedToTheLoginPage = {
     val loaded = new LoginPage(driver).isPageLoaded
     Assert.assert(loaded, true, "Login page is loaded")
@@ -102,7 +115,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnThePurchaseSubscriptionCTA = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPartner.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
     this
   }
 
@@ -113,7 +126,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IHaveToLogIn = {
     IAmLoggedIn
-    driver.get(Config().getUserValue("partnerPayment"))
     this
   }
 
@@ -140,9 +152,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICanSeeMyPaymentDetails = {
     val thankYouPage = pay
     val paidAmount = thankYouPage.getAmountPaidToday
-    Assert.assert(paidAmount, "£15.00", "Should have paid £15")
+    Assert.assert(paidAmount, "£135.00", "Should have paid £15")
     val nextPaymentAmount = thankYouPage.getPaymentAmount
-    Assert.assert(nextPaymentAmount, "£15.00", "Next payment should be £15")
+    Assert.assert(nextPaymentAmount, "£135.00", "Next payment should be £15")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assert(cardNumber.endsWith("4242"), true, "Should see correct card details")
     this
@@ -213,7 +225,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAPatron = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPatron.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAPatron
     ICanPurchaseASubscription
     this
   }
@@ -222,6 +234,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterFirstName("Test").enterLastName("Automation")
       .enterPostCode("N19GU").clickJoinNow
     this
+  }
+
+  def ICancelMembership = {
+    new LandingPage(driver).clickAccountControl.clickEditProfile.clickChangeTier
   }
 
   def ICanSeeTheMembershipTabForAPartner = {

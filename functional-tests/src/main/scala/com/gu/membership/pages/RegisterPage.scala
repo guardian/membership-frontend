@@ -16,6 +16,8 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
 
   private def submitButton = driver.findElement(By.cssSelector(".submit-input"))
 
+  private def closeBetaButton = driver.findElement(By.cssSelector(".i-close-icon-white-small"))
+
   def enterEmail(email: String): RegisterPage = {
     emailTextbox.sendKeys(email)
     this
@@ -32,8 +34,13 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickSubmit: CheckEmailPage = {
-    new Actions(driver).moveToElement(submitButton).perform
-    submitButton.click()
-    new CheckEmailPage(driver)
+    try {
+      closeBetaButton.click()
+    } catch {
+      case _ => ; // do nothing - element appears randomly
+    }
+      new Actions(driver).moveToElement(submitButton).perform
+      submitButton.click()
+      new CheckEmailPage(driver)
   }
 }

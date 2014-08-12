@@ -73,7 +73,7 @@ class MembershipEventTests extends BaseMembershipTest {
     scenarioWeb("5. Event details are the same as on the event provider") {
       implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAFriend
       }
       .when {
         _.IClickOnAnEvent
@@ -93,7 +93,7 @@ class MembershipEventTests extends BaseMembershipTest {
     scenarioWeb("6. Logged in user can purchase a ticket") {
       implicit driver =>
       given {
-        MembershipSteps().IAmLoggedIn
+        MembershipSteps().IAmLoggedInAsAFriend
       }
       .when {
         _.IClickThePurchaseButton
@@ -112,7 +112,7 @@ class MembershipEventTests extends BaseMembershipTest {
         _.IClickThePurchaseButton
       }
       .then {
-        _.IAmRedirectedToTheLoginPage
+        _.IAmRedirectedToTheChooseTierPage
       }
     }
 
@@ -125,7 +125,7 @@ class MembershipEventTests extends BaseMembershipTest {
         _.IClickThePurchaseButton
       }
       .then {
-        _.ICanRegisterAndPurchaseASubscription
+        _.IAmRedirectedToTheChooseTierPage
       }
     }
   }
