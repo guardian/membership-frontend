@@ -2,7 +2,7 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'src/utils/Form'
+    'src/utils/form/Form'
 ], function ($, bean, component, Form) {
     'use strict';
 
