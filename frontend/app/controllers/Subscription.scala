@@ -8,7 +8,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-import services.{MemberService, StripeService}
+import services.{IdentityService, MemberService, StripeService}
 import model.Stripe
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
@@ -26,6 +26,7 @@ trait Subscription extends Controller {
   private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
     val payment = for {
       salesforceContactId <- MemberService.createPaidMember(request.user, formData)
+      _ <- IdentityService.updateUser(request.user, formData, request.cookies.get("SC_GU_U"))
     } yield Ok("")
 
     payment.recover {
