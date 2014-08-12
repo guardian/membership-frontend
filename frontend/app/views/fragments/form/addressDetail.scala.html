@@ -14,43 +14,49 @@
         <div class="fieldset__fields">
 
             <div class="form-field">
-                <label class="label" for="address-line-one-@(formType)">Address line 1
-                    <input type="text" name="@(formType).lineOne" id="address-line-one-@(formType)"
-                           class="text-input text-input--block js-address-line-one"
-                           data-error-message="Please enter your @heading.toLowerCase() first line"
-                           @if(addressRequired == true){data-validation="required"} />
-                </label>
+                <label class="label" for="address-line-one-@(formType)">Address line 1</label>
+                <input type="text"
+                       name="@(formType).lineOne"
+                       id="address-line-one-@(formType)"
+                       class="text-input text-input--block js-address-line-one"
+                       data-error-message="Please enter your @heading.toLowerCase() first line"
+                       @if(addressRequired == true){data-validation="required"} />
             </div>
 
             <div class="form-field">
-                <label class="label" for="address-line-two-@(formType)">Address line 2
-                    <input type="text" name="@(formType).lineTwo" id="address-line-two-@(formType)"
-                           class="text-input text-input--block js-address-line-two"/>
-                </label>
+                <label class="label" for="address-line-two-@(formType)">Address line 2</label>
+                <input type="text"
+                       name="@(formType).lineTwo"
+                       id="address-line-two-@(formType)"
+                       class="text-input text-input--block js-address-line-two"/>
             </div>
 
             <div class="form-field">
-                <label class="label" for="town-@(formType)">Town
-                    <input type="text" name="@(formType).town" id="town-@(formType)" class="text-input text-input--block js-town"
-                           data-error-message="Please enter your @heading.toLowerCase() town"
-                           @if(addressRequired == true){data-validation="required"} />
-                </label>
+                <label class="label" for="town-@(formType)">Town</label>
+                <input type="text"
+                       name="@(formType).town"
+                       id="town-@(formType)"
+                       class="text-input text-input--block js-town"
+                       data-error-message="Please enter your @heading.toLowerCase() town"
+                       @if(addressRequired == true){data-validation="required"} />
             </div>
 
             <div class="form-field">
-                <label class="label" for="postCode-@(formType)">Post code
-                    <input type="text" name="@(formType).postCode" id="postCode-@(formType)"
-                           class="text-input text-input--block js-post-code"
-                           data-error-message="Please enter your @heading.toLowerCase() post code"
-                           data-validation="required"/>
-                </label>
+                <label class="label" for="postCode-@(formType)">Post code</label>
+                <input type="text"
+                       name="@(formType).postCode"
+                       id="postCode-@(formType)"
+                       class="text-input text-input--block js-post-code"
+                       data-error-message="Please enter your @heading.toLowerCase() post code"
+                       data-validation="required"/>
             </div>
 
             <div class="form-field">
-                <label class="label" for="county-or-state-@(formType)">County or State
-                    <input type="text" name="@(formType).countyOrState" id="county-or-state-@(formType)"
-                           class="text-input text-input--block js-county-state"/>
-                </label>
+                <label class="label" for="county-or-state-@(formType)">County or State</label>
+                <input type="text"
+                       name="@(formType).countyOrState"
+                       id="county-or-state-@(formType)"
+                       class="text-input text-input--block js-county-state"/>
             </div>
 
             <div class="form-field address-fieldset__country">
