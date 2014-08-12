@@ -4,7 +4,6 @@ import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.xml.{Null, Elem}
 import akka.agent.Agent
 
 import com.gu.membership.salesforce.Tier
@@ -13,61 +12,14 @@ import org.joda.time.DateTime
 
 import play.api.Logger
 import play.api.Play.current
-import play.api.libs.ws.WS
 import play.api.libs.concurrent.Akka
 
 import configuration.Config
 import model.Zuora._
-import model.ZuoraObject
 import model.Stripe
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
-}
-
-trait ZuoraService {
-  val apiUrl: String
-  val apiUsername: String
-  val apiPassword: String
-
-  def authentication: Authentication
-
-  private def soapBuilder(body: Elem, head: Option[Elem] = None): String = {
-    val xml =
-      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
-                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
-                        xmlns:ns2="http://object.api.zuora.com/">
-        <soapenv:Header>{head.getOrElse(Null)}</soapenv:Header>
-        <soapenv:Body>{body}</soapenv:Body>
-      </soapenv:Envelope>
-
-    // Must toString() because Zuora does not like Content-Type
-    xml.toString()
-  }
-
-  def request(body: Elem): Future[Elem] = {
-    val head =
-      <ns1:SessionHeader>
-        <ns1:session>{authentication.token}</ns1:session>
-      </ns1:SessionHeader>
-
-
-    val xml = soapBuilder(body, Some(head))
-
-    Logger.debug("ZuoraSOAP authenticated request")
-    Logger.debug(xml)
-
-    WS.url(authentication.url).post(xml).map { result =>
-      Logger.debug(s"Got result ${result.status}")
-      Logger.debug(result.body)
-      result.xml
-    }
-  }
-
-  def getAuthentication: Future[Authentication] = {
-    val xml = soapBuilder(ZuoraObject.login(apiUsername, apiPassword))
-    WS.url(apiUrl).post(xml).map(result => Authentication(result.xml))
-  }
 }
 
 trait SubscriptionService {
@@ -95,7 +47,7 @@ trait SubscriptionService {
    */
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    zuora.request(ZuoraObject.query(q)).map(Query(_)).map { case Query(results) =>
+    zuora.Query(q).mkRequest().map(Query(_)).map { case Query(results) =>
       if (results.length != 1) {
         throw new SubscriptionServiceError(s"Query $q returned more than one result")
       }
@@ -110,20 +62,42 @@ trait SubscriptionService {
   def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.request(ZuoraObject.subscribe(sfAccountId, Some(customer), plan)).map(Subscription(_))
+    zuora.Subscribe(sfAccountId, Some(customer), plan).mkRequest().map(Subscription(_))
   }
 
   def createFriendSubscription(sfAccountId: String): Future[Subscription] = {
-    zuora.request(ZuoraObject.subscribe(sfAccountId, None, friendPlan)).map(Subscription(_))
+    zuora.Subscribe(sfAccountId, None, friendPlan).mkRequest().map(Subscription(_))
   }
 
   def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {
     val invoiceKeys = Seq("ServiceStartDate", "ServiceEndDate", "ProductName", "ChargeAmount", "TaxAmount")
     for {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
-      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId' AND Status='Active'")
+      // When an upgrade happens, the user is refunded some money. At then moment we ignore negative invoices
+      // because we can only upgrade from a friend
+      // TODO: we will probably want to show the negative invoice item at some point
+      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId' AND ChargeAmount>0")
     } yield InvoiceItem.fromMap(invoice)
+  }
+
+  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest().map(PaymentMethod(_))
+      _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
+    } yield accountId
+  }
+
+  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
+    val newRatePlanId = PaidPlan(tier, annual)
+
+    for {
+      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId'")
+      ratePlanId  <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
+    } yield Subscription(result)
   }
 
 }
@@ -144,7 +118,7 @@ object SubscriptionService extends SubscriptionService {
   def refresh() {
     Logger.debug("Refreshing Zuora login")
     authenticationAgent.sendOff(_ => {
-      val auth = Await.result(zuora.getAuthentication, 15.seconds)
+      val auth = Await.result(zuora.Login().mkRequest().map(Authentication(_)), 15.seconds)
       Logger.debug(s"Got Zuora login $auth")
       auth
     })

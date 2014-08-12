@@ -8,8 +8,9 @@ import com.gu.membership.salesforce.Tier
 object Zuora {
   trait ZuoraObject
 
-
   case class Authentication(token: String, url: String) extends ZuoraObject
+
+  case class PaymentMethod(id: String) extends ZuoraObject
 
   case class Query(results: Seq[Map[String, String]]) extends ZuoraObject
 
@@ -24,6 +25,13 @@ object Zuora {
     def apply(elem: Elem): Authentication = {
       val result = elem \\ "loginResponse" \ "result"
       Authentication((result \ "Session").text, (result \ "ServerUrl").text)
+    }
+  }
+
+  object PaymentMethod {
+    def apply(elem: Elem): PaymentMethod = {
+      val result = elem \\ "createResponse" \ "result"
+      PaymentMethod((result \ "Id").text)
     }
   }
 

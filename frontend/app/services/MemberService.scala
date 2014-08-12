@@ -16,7 +16,7 @@ import com.gu.identity.model.User
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.{Card, Customer, Subscription}
-import forms.MemberForm.{JoinForm, PaidMemberJoinForm, FriendJoinForm}
+import forms.MemberForm.{PaymentForm, JoinForm, PaidMemberJoinForm, FriendJoinForm}
 import com.gu.membership.salesforce.Member.Keys
 
 case class MemberServiceError(s: String) extends Throwable {
@@ -99,6 +99,23 @@ trait MemberService {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  // TODO: this currently only handles free -> paid
+  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, payment: PaymentForm): Future[String] = {
+    for {
+      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, payment.token)
+      _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
+      subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, payment.annual)
+      sfAccountId <- MemberRepository.upsert(
+        member.identityId,
+        Map(
+          Keys.TIER -> tier.toString,
+          Keys.CUSTOMER_ID -> customer.id,
+          Keys.DEFAULT_CARD_ID -> customer.card.id
+        )
+      )
+    } yield sfAccountId
   }
 }
 
