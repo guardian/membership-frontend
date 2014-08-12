@@ -32,6 +32,7 @@ trait IdentityService {
       )
     )
     cookieOpt.map { cookie =>
+      Logger.info(s"Posting updated information to Identity for user :${user.id}")
       IdentityApi.post(s"user/${user.id}", json, cookie.value)
     }.getOrElse(throw IdentityServiceError("User cookie not set"))
   }
