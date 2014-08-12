@@ -10,6 +10,9 @@
     text-decoration: none;
     min-width: 220px;
     text-align: left;
+    @include fs-textsans(4);
+    // overwrite fontsize
+    @include font-size(15, 22);
     &:visited,
     &:hover,
     &:focus,
