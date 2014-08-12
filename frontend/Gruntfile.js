@@ -99,6 +99,12 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
+            zxcvbn: {
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/zxcvbn.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
+                expand: true,
+                flatten: true
+            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: ['**', '!**/svgs/**'],
@@ -295,7 +301,14 @@ module.exports = function (grunt) {
         if (!isDev) {
             grunt.task.run(['jshint']);
         }
-        grunt.task.run(['clean:js', 'clean-assets', 'requirejs:compile', 'copy:html5shiv', 'asset_hash']);
+        grunt.task.run([
+            'clean:js',
+            'clean-assets',
+            'requirejs:compile',
+            'copy:html5shiv',
+            'copy:zxcvbn',
+            'asset_hash'
+        ]);
     });
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
