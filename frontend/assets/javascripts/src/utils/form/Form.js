@@ -230,11 +230,14 @@ define([
         var validator;
 
         for (var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
+            var elem;
+
             validator = validationDetail[i];
+            elem = validator.elem instanceof Array ? validator.elem[0] : validator.elem;
 
             this.checkValidatorExistsException(validator.name);
 
-            utilsHelper.getSpecifiedParent($(validator.elem), 'label').addClass('required-marker');
+            $('.label', utilsHelper.getSpecifiedParent($(elem), 'form-field')).addClass('required-marker');
 
             args = self.createArgsArray(validator.elem);
             self[validator.name].apply(self, args);
@@ -298,8 +301,17 @@ define([
      * @param elem
      * @returns {*}
      */
-    Form.prototype.createArgsArray = function (elem) {
-        return elem instanceof Array ? elem : [elem];
+    Form.prototype.createArgsArray = function (elem, args) {
+
+        var argsArray;
+        argsArray = elem instanceof Array ? elem : [elem];
+
+        if (args) {
+
+            argsArray = argsArray.concat(args);
+        }
+
+        return argsArray;
     };
 
     /**
@@ -327,6 +339,26 @@ define([
         self.validationProfiles.push({
             elem: element,
             validator: 'requiredValidator'
+        });
+    };
+
+    /**
+     * validation event listener for error messages on input lengths
+     * @param element
+     */
+    Form.prototype.length = function (element) {
+        var args = JSON.parse(element.getAttribute('data-arguments'));
+
+        bean.on(element, 'blur', function (e) {
+            args.unshift(e.target);
+            var validationResult = self.lengthValidator.apply(this, args);
+            self.manageErrors(validationResult);
+        });
+
+        self.validationProfiles.push({
+            elem: element,
+            args: element.getAttribute('data-arguments'),
+            validator: 'lengthValidator'
         });
     };
 
@@ -467,7 +499,7 @@ define([
     /**
      * validator for required event
      * @param element
-     * @returns {{isValid: boolean, errorMessage: *, $element: (*|jQuery|HTMLElement)}}
+     * @returns {{isValid: boolean, errorMessage: *, $element: (*|Bonzo|HTMLElement)}}
      */
     Form.prototype.requiredValidator = function (element) {
         var $element = $(element);
@@ -479,9 +511,23 @@ define([
     };
 
     /**
+     * validator for input lengths
+     * @param element
+     * @returns {{isValid: boolean, errorMessage: *, $element: (*|Bonzo|HTMLElement)}}
+     */
+    Form.prototype.lengthValidator = function (element, minLength, maxLength) {
+        var $element = $(element);
+        return {
+            isValid: $element.val().length >= minLength && $element.val().length <= maxLength,
+            errorMessage: $element.attr('data-error-message'),
+            $element: $element
+        };
+    };
+
+    /**
      * validator for credit card event
      * @param creditCardNumberElement
-     * @returns {{isValid: ({isValid: *, errorMessage: (config|stripeErrorMessages.card_error.incorrect_number|*), $element: *}|*), errorMessage: (config/stripeErrorMessages.card_error.incorrect_number|*), $element: (*|jQuery|HTMLElement)}}
+     * @returns {{isValid: ({isValid: *, errorMessage: (config|stripeErrorMessages.card_error.incorrect_number|*), $element: *}|*), errorMessage: (config/stripeErrorMessages.card_error.incorrect_number|*), $element: (*|Bonzo|HTMLElement)}}
      */
     Form.prototype.creditCardNumberValidator = function (creditCardNumberElement) {
         var $creditCardNumberElement = $(creditCardNumberElement);
@@ -495,7 +541,7 @@ define([
     /**
      * validator for cvc event
      * @param creditCardCVCElement
-     * @returns {{isValid: ({isValid: *, errorMessage: (config|stripeErrorMessages.card_error.incorrect_cvc|*), $element: *}|*), errorMessage: (config/stripeErrorMessages.card_error.incorrect_cvc|*), $element: (*|jQuery|HTMLElement)}}
+     * @returns {{isValid: ({isValid: *, errorMessage: (config|stripeErrorMessages.card_error.incorrect_cvc|*), $element: *}|*), errorMessage: (config/stripeErrorMessages.card_error.incorrect_cvc|*), $element: (*|Bonzo|HTMLElement)}}
      */
     Form.prototype.creditCardCVCValidator = function (creditCardCVCElement) {
         var $creditCardCVCElement = $(creditCardCVCElement);
@@ -510,7 +556,7 @@ define([
      * validator for required expiry event
      * @param creditCardExpiryMonthElement
      * @param creditCardExpiryYearElement
-     * @returns {{isValid: boolean, errorMessage: (config/stripeErrorMessages.card_error.invalid_expiry|*), $element: (*|jQuery|HTMLElement)}}
+     * @returns {{isValid: boolean, errorMessage: (config/stripeErrorMessages.card_error.invalid_expiry|*), $element: (*|Bonzo|HTMLElement)}}
      */
     Form.prototype.creditCardExpiryDateValidator = function (creditCardExpiryMonthElement, creditCardExpiryYearElement) {
 
@@ -561,14 +607,16 @@ define([
             validationProfiles = this.validationProfiles,
             validationProfileResult,
             args,
-            validationProfileElem;
+            validationProfileElem,
+            validationProfileArgs;
 
         validationProfiles.forEach(function (validationProfile) {
 
             self.checkValidatorExistsException(validationProfile.validator);
 
             validationProfileElem = validationProfile.elem;
-            args = self.createArgsArray(validationProfileElem);
+            validationProfileArgs = validationProfile.args && JSON.parse(validationProfile.args);
+            args = self.createArgsArray(validationProfileElem, validationProfileArgs);
             validationProfileResult = self[validationProfile.validator].apply(self, args);
 
             if (!validationProfileResult.isValid) {
@@ -648,6 +696,7 @@ define([
 
             validationProfiles.push({
                 elem: elem,
+                args: elem.getAttribute('data-arguments'),
                 name: elem.getAttribute('data-validation')
             });
         }
