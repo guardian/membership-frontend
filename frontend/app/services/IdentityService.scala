@@ -20,20 +20,22 @@ trait IdentityService {
 
   def updateUser(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
     cookieOpt.map { cookie =>
-      IdentityApi.post(s"user/${user.id}/privateFields", updateUser(user, formData), cookie.value)
+      IdentityApi.post(s"user/${user.id}", updateUser(user, formData), cookie.value)
     }.getOrElse(throw IdentityServiceError("User cookie not set"))
   }
 
   private def updateUser(user: User, formData: JoinForm) = {
-    Json.obj(
-      "secondName" -> formData.name.last,
-      "firstName" -> formData.name.first,
-      "address1" -> formData.deliveryAddress.lineOne,
-      "address2" -> formData.deliveryAddress.lineTwo,
-      "address3" -> formData.deliveryAddress.town,
-      "address4" -> formData.deliveryAddress.countyOrState,
-      "postcode" -> formData.deliveryAddress.postCode,
-      "country" -> formData.deliveryAddress.country
+    Json.obj("privateFields" ->
+      Json.obj(
+        "secondName" -> formData.name.last,
+        "firstName" -> formData.name.first,
+        "address1" -> formData.deliveryAddress.lineOne,
+        "address2" -> formData.deliveryAddress.lineTwo,
+        "address3" -> formData.deliveryAddress.town,
+        "address4" -> formData.deliveryAddress.countyOrState,
+        "postcode" -> formData.deliveryAddress.postCode,
+        "country" -> formData.deliveryAddress.country
+      )
     )
   }
 }
