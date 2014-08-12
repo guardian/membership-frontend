@@ -3,7 +3,7 @@ define([
     'ajax',
     'stripe',
     'src/modules/tier/JoinPaid',
-    'src/utils/Form',
+    'src/utils/form/Form',
     'config/stripeErrorMessages'
 ], function ($, ajax, stripe, JoinPaid, Form, stripeErrorMessages) {
 
