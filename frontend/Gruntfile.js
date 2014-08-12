@@ -99,6 +99,12 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
+            curl: {
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/curl/dist/curl-with-js-and-domReady/curl.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/curl/',
+                expand: true,
+                flatten: true
+            },
             zxcvbn: {
                 src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/zxcvbn.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
@@ -306,6 +312,7 @@ module.exports = function (grunt) {
             'clean-assets',
             'requirejs:compile',
             'copy:html5shiv',
+            'copy:curl',
             'copy:zxcvbn',
             'asset_hash'
         ]);
