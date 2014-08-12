@@ -19,19 +19,20 @@ case class IdentityServiceError(s: String) extends Throwable {
 trait IdentityService {
 
   def updateUserBasedOnJoining(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
-    val json = Json.obj("privateFields" ->
-      Json.obj(
-        "secondName" -> formData.name.last,
-        "firstName" -> formData.name.first,
-        "address1" -> formData.deliveryAddress.lineOne,
-        "address2" -> formData.deliveryAddress.lineTwo,
-        "address3" -> formData.deliveryAddress.town,
-        "address4" -> formData.deliveryAddress.countyOrState,
-        "postcode" -> formData.deliveryAddress.postCode,
-        "country" -> formData.deliveryAddress.country
-      )
-    )
     cookieOpt.map { cookie =>
+      val json = Json.obj("privateFields" ->
+        Json.obj(
+          "secondName" -> formData.name.last,
+          "firstName" -> formData.name.first,
+          "address1" -> formData.deliveryAddress.lineOne,
+          "address2" -> formData.deliveryAddress.lineTwo,
+          "address3" -> formData.deliveryAddress.town,
+          "address4" -> formData.deliveryAddress.countyOrState,
+          "postcode" -> formData.deliveryAddress.postCode,
+          "country" -> formData.deliveryAddress.country
+        )
+      )
+
       Logger.info(s"Posting updated information to Identity for user :${user.id}")
       IdentityApi.post(s"user/${user.id}", json, cookie.value)
     }.getOrElse(throw IdentityServiceError("User cookie not set"))
