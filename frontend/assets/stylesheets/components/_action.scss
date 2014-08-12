@@ -3,11 +3,13 @@
     margin: $gs-baseline 0;
     display: inline-block;
     text-align: center;
-    padding: $gutter/2 $gutter;
+    padding: 8px 8px 8px 18px;
     color: #ffffff;
     cursor: pointer;
     border: 0;
     text-decoration: none;
+    min-width: 220px;
+    text-align: left;
     &:visited,
     &:hover,
     &:focus,
@@ -51,6 +53,10 @@
     }
     &:hover {
         background-color: darken($mem-brandBlue, 15%);
+    }
+    i {
+        float: right;
+        margin-top: 2px;
     }
 }
 
