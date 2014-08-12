@@ -8,13 +8,12 @@ import akka.agent.Agent
 
 import com.gu.membership.salesforce.Tier
 
-import org.joda.time.DateTime
-
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 
 import configuration.Config
+import forms.MemberForm.{NameForm, AddressForm}
 import model.Zuora._
 import model.Stripe
 
@@ -60,13 +59,13 @@ trait SubscriptionService {
     queryOne(Seq(field), table, where).map(_(field))
 
   def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
-                             annual: Boolean): Future[Subscription] = {
+                             annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(sfAccountId, Some(customer), plan).mkRequest().map(Subscription(_))
+    zuora.Subscribe(sfAccountId, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
   }
 
-  def createFriendSubscription(sfAccountId: String): Future[Subscription] = {
-    zuora.Subscribe(sfAccountId, None, friendPlan).mkRequest().map(Subscription(_))
+  def createFriendSubscription(sfAccountId: String, name: NameForm, address: AddressForm): Future[Subscription] = {
+    zuora.Subscribe(sfAccountId, None, friendPlan, name, address).mkRequest().map(Subscription(_))
   }
 
   def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {

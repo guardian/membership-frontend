@@ -10,6 +10,7 @@ import play.api.Logger
 import play.api.libs.ws.WS
 import play.api.Play.current
 
+import forms.MemberForm.{NameForm, AddressForm}
 import model.Stripe
 import model.Zuora.Authentication
 
@@ -114,8 +115,8 @@ trait ZuoraService {
       </ns1:query>
   }
 
-  case class Subscribe(sfAccountId: String, customerOpt: Option[Stripe.Customer], ratePlanId: String)
-    extends ZuoraAction {
+  case class Subscribe(sfAccountId: String, customerOpt: Option[Stripe.Customer], ratePlanId: String,
+                       name: NameForm, address: AddressForm) extends ZuoraAction {
 
     val body = {
       val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
@@ -127,6 +128,10 @@ trait ZuoraService {
           <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
         </ns1:PaymentMethod>
       }.getOrElse(Null)
+
+      // We can't use Zuora's Address2 field because Salesforce doesn't have an Address2 field which
+      // means that when SF address changes are pushed to Zuora, Address2 would not be updated.
+      val addressLine = Seq(address.lineOne, address.lineTwo).filter(_.nonEmpty).mkString(", ")
 
       // NOTE: This appears to be white-space senstive in some way. Zuora rejected
       // the XML after Intellij auto-reformatted the code.
@@ -144,12 +149,13 @@ trait ZuoraService {
           </ns1:Account>
           {payment}
           <ns1:BillToContact xsi:type="ns2:Contact">
-            <ns2:Address1>25 North Row</ns2:Address1>
-            <ns2:City>London</ns2:City>
-            <ns2:Country>United Kingdom</ns2:Country>
-            <ns2:FirstName>Zuora</ns2:FirstName>
-            <ns2:LastName>Customer</ns2:LastName>
-            <ns2:PostalCode>W1K 6DJ</ns2:PostalCode>
+            <ns2:FirstName>{name.first}</ns2:FirstName>
+            <ns2:LastName>{name.last}</ns2:LastName>
+            <ns2:Address1>{addressLine}</ns2:Address1>
+            <ns2:City>{address.town}</ns2:City>
+            <ns2:PostalCode>{address.postCode}</ns2:PostalCode>
+            <ns2:State>{address.countyOrState}</ns2:State>
+            <ns2:Country>{address.country}</ns2:Country>
           </ns1:BillToContact>
           <ns1:PreviewOptions>
             <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>
