@@ -74,7 +74,7 @@ module.exports = function (grunt) {
                         'stripe': 'lib/stripe/stripe.min',
                         'omniture': 'lib/analytics/omniture'
                     },
-                    findNestedDependencies: true,
+                    findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
                     generateSourceMaps: true,
