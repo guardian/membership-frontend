@@ -18,14 +18,8 @@ case class IdentityServiceError(s: String) extends Throwable {
 
 trait IdentityService {
 
-  def updateUser(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
-    cookieOpt.map { cookie =>
-      IdentityApi.post(s"user/${user.id}", updateUser(user, formData), cookie.value)
-    }.getOrElse(throw IdentityServiceError("User cookie not set"))
-  }
-
-  private def updateUser(user: User, formData: JoinForm) = {
-    Json.obj("privateFields" ->
+  def updateUserBasedOnJoining(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
+    val json = Json.obj("privateFields" ->
       Json.obj(
         "secondName" -> formData.name.last,
         "firstName" -> formData.name.first,
@@ -37,6 +31,9 @@ trait IdentityService {
         "country" -> formData.deliveryAddress.country
       )
     )
+    cookieOpt.map { cookie =>
+      IdentityApi.post(s"user/${user.id}", json, cookie.value)
+    }.getOrElse(throw IdentityServiceError("User cookie not set"))
   }
 }
 

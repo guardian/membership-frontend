@@ -26,7 +26,7 @@ trait Subscription extends Controller {
   private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
     val payment = for {
       salesforceContactId <- MemberService.createPaidMember(request.user, formData)
-      _ <- IdentityService.updateUser(request.user, formData, request.cookies.get("SC_GU_U"))
+      _ <- IdentityService.updateUserBasedOnJoining(request.user, formData, request.cookies.get("SC_GU_U"))
     } yield Ok("")
 
     payment.recover {
