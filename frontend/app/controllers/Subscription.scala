@@ -8,7 +8,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-import services.{IdentityService, MemberService, StripeService}
+import services.{MemberService, StripeService}
 import model.Stripe
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
