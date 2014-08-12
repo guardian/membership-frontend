@@ -36,7 +36,7 @@ trait MemberService {
   def createFriend(user: User, formData: FriendJoinForm): Future[String] = {
     for {
       sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
-      subscription <- SubscriptionService.createFriendSubscription(sfAccountId)
+      subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
     } yield sfAccountId
   }
 
@@ -52,7 +52,8 @@ trait MemberService {
         Keys.DEFAULT_CARD_ID -> customer.card.id
       )
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
-      subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier, formData.payment.annual)
+      subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier,
+        formData.payment.annual, formData.name, formData.deliveryAddress)
     } yield sfAccountId
   }
 
