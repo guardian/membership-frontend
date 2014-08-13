@@ -38,8 +38,11 @@ trait MemberService {
     for {
       sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
-      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
-    } yield sfAccountId
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+    } yield {
+      Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
+      sfAccountId
+    }
   }
 
   def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
@@ -56,8 +59,11 @@ trait MemberService {
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
-    } yield sfAccountId
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+    } yield {
+      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
+      sfAccountId
+    }
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
