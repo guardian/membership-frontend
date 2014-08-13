@@ -58,17 +58,12 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     name: 'src/main',
-                    include: [
-                        'requireLib'
-                    ],
                     baseUrl: '<%= dirs.assets.javascripts %>',
                     paths: {
-                        'requireLib': 'lib/bower-components/requirejs/require',
                         '$': 'src/utils/$',
                         'bean': 'lib/bower-components/bean/bean',
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
                         'qwery': 'lib/bower-components/qwery/qwery',
-                        'domready': 'lib/bower-components/domready/ready',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
                         'stripe': 'lib/stripe/stripe.min',
