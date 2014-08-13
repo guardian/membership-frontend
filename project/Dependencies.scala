@@ -14,9 +14,9 @@ object Dependencies {
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
   val salesforce = "com.gu" %% "membership-salesforce" % "0.11"
   val playWS = PlayImport.ws
-  val filters = PlayImport.filters
+  val playFilters = PlayImport.filters
 
   //projects
   val frontendDependencies = Seq(nScalaTime, akkaAgent, identityCookie, identityModel, awsScala,
-    scalaUri, salesforce, playWS, filters)
+    scalaUri, salesforce, playWS, playFilters)
 }
