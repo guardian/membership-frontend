@@ -31,7 +31,7 @@ object Config {
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
-  val idApiClientToken = config.getString("id.api.client.token")
+  val idApiClientToken = config.getString("identity.api.client.token")
 
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
   val eventbriteApiToken = config.getString("eventbrite.api.token")
