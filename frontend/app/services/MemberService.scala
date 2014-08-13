@@ -38,8 +38,13 @@ trait MemberService {
     for {
       sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
-      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
-    } yield sfAccountId
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+    } yield {
+      Logger.info("**********")
+      Logger.info(s"Identity status response: ${identity.status.toString}")
+      Logger.info("**********")
+      sfAccountId
+    }
   }
 
   def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
