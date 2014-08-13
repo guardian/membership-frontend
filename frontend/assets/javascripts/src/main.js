@@ -48,5 +48,9 @@ require([
         omnitureAnalytics.init();
     });
 
+    /**
+     * We were using domready here but for an unknown reason it is not firing in our production environment.
+     * Please ask Ben Chidgey or Chris Finch if there are issues around this.
+     */
     router.go();
 });
