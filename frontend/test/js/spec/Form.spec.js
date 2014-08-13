@@ -2,7 +2,7 @@ define([
     '$',
     'ajax',
     'stripe',
-    'src/utils/Form',
+    'src/utils/form/Form',
     'config/stripeErrorMessages'
 ], function ($, ajax, stripe, Form, stripeErrorMessages) {
 

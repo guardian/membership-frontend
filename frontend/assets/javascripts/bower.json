@@ -8,6 +8,8 @@
     "requirejs": "~2.1.11",
     "bean": "~1.0.6",
     "reqwest": "~1.1.0",
-    "html5shiv": "~3.7.2"
+    "html5shiv": "~3.7.2",
+    "zxcvbn": "*",
+    "curl": "~0.8.10"
   }
 }

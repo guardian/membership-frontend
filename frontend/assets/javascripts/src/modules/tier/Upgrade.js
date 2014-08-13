@@ -2,8 +2,9 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'src/utils/Form'
-], function ($, bean, component, Form) {
+    'src/utils/form/Form',
+    'src/utils/form/Password'
+], function ($, bean, component, Form, Password) {
     'use strict';
 
     var self;
@@ -35,6 +36,7 @@ define([
     Upgrade.prototype.init = function () {
         this.setupForm();
         this.toggleBillingAddressListener();
+        this.setupPasswordStrength();
     };
 
     Upgrade.prototype.toggleBillingAddressListener = function() {
@@ -105,6 +107,10 @@ define([
             changeToTier = formElement.getAttribute('data-change-to-tier').toLowerCase();
         this.form = new Form(formElement,  '/tier/change/' + changeToTier, '/tier/change/' + changeToTier + '/summary');
         this.form.init();
+    };
+
+    Upgrade.prototype.setupPasswordStrength = function () {
+        (new Password()).init();
     };
 
     return Upgrade;
