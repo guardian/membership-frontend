@@ -10,7 +10,7 @@ import com.gu.membership.salesforce.Tier
 import com.netaporter.uri.dsl._
 
 import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
-import services.{EventbriteService, SubscriptionService, MemberService, StripeService}
+import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
 import configuration.Config
@@ -48,7 +48,7 @@ trait Joiner extends Controller {
 
   private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
     for {
-      salesforceContactId <- MemberService.createFriend(request.user, formData)
+      salesforceContactId <- MemberService.createFriend(request.user, formData, request.cookies.get("SC_GU_U"))
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 

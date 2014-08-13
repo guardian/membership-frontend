@@ -74,7 +74,7 @@ module.exports = function (grunt) {
                         'stripe': 'lib/stripe/stripe.min',
                         'omniture': 'lib/analytics/omniture'
                     },
-                    findNestedDependencies: true,
+                    findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
                     generateSourceMaps: true,
@@ -96,6 +96,18 @@ module.exports = function (grunt) {
             html5shiv: {
                 src: '<%= dirs.assets.javascripts %>/lib/bower-components/html5shiv/dist/html5shiv.min.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/',
+                expand: true,
+                flatten: true
+            },
+            curl: {
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/curl/dist/curl-with-js-and-domReady/curl.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/curl/',
+                expand: true,
+                flatten: true
+            },
+            zxcvbn: {
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/zxcvbn.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
                 expand: true,
                 flatten: true
             },
@@ -299,7 +311,15 @@ module.exports = function (grunt) {
         if (!isDev) {
             grunt.task.run(['jshint']);
         }
-        grunt.task.run(['clean:js', 'clean-assets', 'requirejs:compile', 'copy:html5shiv', 'asset_hash']);
+        grunt.task.run([
+            'clean:js',
+            'clean-assets',
+            'requirejs:compile',
+            'copy:html5shiv',
+            'copy:curl',
+            'copy:zxcvbn',
+            'asset_hash'
+        ]);
     });
 
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);

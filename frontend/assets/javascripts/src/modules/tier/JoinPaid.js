@@ -2,8 +2,9 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'src/utils/Form'
-], function ($, bean, component, Form) {
+    'src/utils/form/Form',
+    'src/utils/form/Password'
+], function ($, bean, component, Form, Password) {
     'use strict';
 
     var self;
@@ -36,6 +37,7 @@ define([
     JoinPaid.prototype.init = function () {
         this.setupForm();
         this.toggleBillingAddressListener();
+        this.setupPasswordStrength();
     };
 
     JoinPaid.prototype.toggleBillingAddressListener = function() {
@@ -105,6 +107,10 @@ define([
         var formElement = this.elem = this.getElem('STRIPE_FORM');
         this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('enter-details', 'thankyou'));
         this.form.init();
+    };
+
+    JoinPaid.prototype.setupPasswordStrength = function () {
+        (new Password()).init();
     };
 
     return JoinPaid;
