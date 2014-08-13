@@ -1,7 +1,6 @@
 require([
     'src/utils/analytics/omniture',
     'src/utils/router',
-    'domready',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/tier/JoinPaid',
@@ -13,7 +12,6 @@ require([
 ], function(
     omnitureAnalytics,
     router,
-    domready,
     ajax,
     JoinFree,
     JoinPaid,
@@ -50,8 +48,5 @@ require([
         omnitureAnalytics.init();
     });
 
-    domready(function() {
-        router.go();
-    });
-
+    router.go();
 });

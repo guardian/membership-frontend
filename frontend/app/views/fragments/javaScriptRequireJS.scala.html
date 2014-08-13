@@ -7,7 +7,6 @@
         if (isModern) {
             // only load JS if the browser cuts the mustard
             var newElm = document.createElement('script');
-            newElm.async = 1;
             newElm.src = '@Asset.at("javascripts/main.js")';
             document.getElementsByTagName("head")[0].appendChild(newElm);
         }
