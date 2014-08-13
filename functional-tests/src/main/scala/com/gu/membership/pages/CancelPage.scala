@@ -11,5 +11,6 @@ class CancelPage(driver: WebDriver) extends BasePage(driver) {
 
   def clickConfirmCancellation = {
     confirmCancelLink.click()
+    new CancelConfirmationPage(driver)
   }
 }

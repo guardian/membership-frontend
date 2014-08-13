@@ -238,6 +238,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ICancelMembership = {
     new LandingPage(driver).clickAccountControl.clickEditProfile.clickChangeTier
+    this
   }
 
   def ICanSeeTheMembershipTabForAPartner = {
@@ -338,6 +339,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def IAmAPartner = verifyTier("£135.00")
 
   def IAmAPatron = verifyTier("£540.00")
+
+  def IAmNotAMember = {
+    // TODO james oram verify user has cancelled (blocked by )
+  }
 
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
