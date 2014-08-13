@@ -40,9 +40,7 @@ trait MemberService {
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
       identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield {
-      Logger.info("**********")
-      Logger.info(s"Identity status response: ${identity.status.toString}")
-      Logger.info("**********")
+      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       sfAccountId
     }
   }
@@ -63,9 +61,7 @@ trait MemberService {
         formData.payment.annual, formData.name, formData.deliveryAddress)
       identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield {
-      Logger.info("**********")
-      Logger.info(s"Identity status response: ${identity.status.toString}")
-      Logger.info("**********")
+      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       sfAccountId
   }
 
