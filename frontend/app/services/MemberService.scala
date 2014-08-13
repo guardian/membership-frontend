@@ -63,6 +63,7 @@ trait MemberService {
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       sfAccountId
+    }
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
