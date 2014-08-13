@@ -40,7 +40,7 @@ trait MemberService {
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
       identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield {
-      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
+      Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.statusText} for user ${user.id}")
       sfAccountId
     }
   }
