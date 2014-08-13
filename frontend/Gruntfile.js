@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     style: 'compressed',
-                    sourcemap: true,
+                    sourcemap: isDev ? true : false,
                     noCache: true,
                     quiet: isDev ? false : true,
                     loadPath: [
@@ -77,7 +77,7 @@ module.exports = function (grunt) {
                     findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
-                    generateSourceMaps: true,
+                    generateSourceMaps: isDev ? true : false,
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
