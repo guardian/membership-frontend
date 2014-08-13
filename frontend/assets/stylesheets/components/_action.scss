@@ -3,16 +3,10 @@
     margin: $gs-baseline 0;
     display: inline-block;
     text-align: center;
-    padding: 8px 8px 8px 18px;
     color: #ffffff;
     cursor: pointer;
     border: 0;
     text-decoration: none;
-    width: 220px;
-    text-align: left;
-    @include fs-textsans(4);
-    // overwrite fontsize
-    @include font-size(15, 22);
     &:visited,
     &:hover,
     &:focus,
@@ -46,16 +40,23 @@
 }
 
 .action--join,
-.action--logged-out {
-    background-color: #197CAA;
+.action--logged-out,
+.action--logged-in {
+    text-align: left;
+    background-color: $mem-buttonBlue;
+    padding: 8px 8px 8px 18px;
+    width: 220px;
+    @include fs-textsans(4);
+    // overwrite fontsize
+    @include font-size(15, 22);
     @include border-radius(50%);
     &:visited,
     &:active,
     &:focus {
-        background-color: #197CAA;
+        background-color: $mem-buttonBlue;
     }
     &:hover {
-        background-color: darken(#197CAA, 15%);
+        background-color: darken($mem-buttonBlue, 15%);
     }
     i {
         float: right;
@@ -63,17 +64,22 @@
     }
 }
 
-.action--logged-in {
-    background-color: $mem-brandOrange;
-    &:visited,
-    &:active,
-    &:focus {
-        background-color: $mem-brandOrange;
-    }
-    &:hover {
-        background-color: darken($mem-brandOrange, 15%);
-    }
-}
+// .action--logged-in {
+//     background-color: $mem-brandOrange;
+//     @include border-radius(50%);
+//     &:visited,
+//     &:active,
+//     &:focus {
+//         background-color: $mem-brandOrange;
+//     }
+//     &:hover {
+//         background-color: darken($mem-brandOrange, 15%);
+//     }
+//     i {
+//         float: right;
+//         margin-top: 2px;
+//     }
+// }
 
 .i-wait {
     display: none;
