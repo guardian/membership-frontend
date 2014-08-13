@@ -47,15 +47,15 @@
 
 .action--join,
 .action--logged-out {
-    background-color: $mem-brandBlue;
+    background-color: #197CAA;
     @include border-radius(50%);
     &:visited,
     &:active,
     &:focus {
-        background-color: $mem-brandBlue;
+        background-color: #197CAA;
     }
     &:hover {
-        background-color: darken($mem-brandBlue, 15%);
+        background-color: darken(#197CAA, 15%);
     }
     i {
         float: right;
