@@ -8,6 +8,7 @@ import akka.agent.Agent
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import play.api.mvc.Cookie
 
 import com.gu.membership.salesforce._
 
@@ -33,14 +34,15 @@ trait MemberService {
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
   )
 
-  def createFriend(user: User, formData: FriendJoinForm): Future[String] = {
+  def createFriend(user: User, formData: FriendJoinForm, cookie: Option[Cookie]): Future[String] = {
     for {
       sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
+      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield sfAccountId
   }
 
-  def createPaidMember(user: User, formData: PaidMemberJoinForm): Future[String] = {
+  def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
@@ -54,6 +56,7 @@ trait MemberService {
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
+      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield sfAccountId
   }
 
