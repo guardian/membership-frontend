@@ -9,8 +9,10 @@ import controllers.Cached
 import filters.CheckCacheHeadersFilter
 import services.{SubscriptionService, MemberRepository, EventbriteService}
 import play.filters.csrf._
+import play.filters.gzip.GzipFilter
 
-object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter()) {
+
+object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter(), new GzipFilter()) {
   override def onStart(app: Application) {
     EventbriteService.start()
     MemberRepository.start()
