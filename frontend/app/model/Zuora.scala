@@ -27,7 +27,7 @@ object Zuora {
   object SubscriptionDetails {
     def apply(map: Map[String, String]): SubscriptionDetails = {
       val startDate = new DateTime(map("EffectiveStartDate"))
-      val endDate = new DateTime(map("ChargedThroughDate")).plusDays(1) // Yes we really have to +1 day
+      val endDate = map.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
 
       SubscriptionDetails(map("Name"), map("Price").toFloat, startDate, endDate)
     }

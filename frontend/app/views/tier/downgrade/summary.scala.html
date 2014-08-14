@@ -1,7 +1,8 @@
-@(paymentDetails: model.Stripe.PaymentDetails)
+@(paymentDetails: model.Stripe.Card, currentSubscription: model.Zuora.SubscriptionDetails, futureSubscription: model.Zuora.SubscriptionDetails)
 
 @import configuration.Config
 @import views.support.Dates._
+@import views.support.Prices._
 
 @main("Downgrade Tier Summary") {
 
@@ -11,7 +12,7 @@
                 <div class="l-row__item"></div>
                 <article class="l-row__item l-row__item--boost-2 secondary-content">
                     <h1 class="content__headline">Sorry to see you go...</h1>
-                    <p>You will continue to receive all the great Membership benefits until @paymentDetails.subscription.current_period_end.pretty</p>
+                    <p>You will continue to receive all the great Membership benefits until @currentSubscription.endDate.pretty</p>
                 </article>
             </section>
         </div>
@@ -21,7 +22,40 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @fragments.tier.summary(paymentDetails.subscription)
+                    <table class="table table--responsive-font table--striped">
+                        <tr class="table__headline" role="row">
+                            <td class="summary-table__cell" role="scope">
+                                Package
+                            </td>
+                            <td class="summary-table__cell" role="scope">
+                            @currentSubscription.planName
+                            </td>
+                        </tr>
+                        <tr class="summary-table__row" role="row">
+                            <td class="summary-table__cell">
+                                End Date
+                            </td>
+                            <td class="summary-table__cell">
+                                @currentSubscription.endDate.pretty
+                            </td>
+                        </tr>
+                        <tr class="summary-table__row" role="row">
+                            <td class="summary-table__cell">
+                                Monthly Payment
+                            </td>
+                            <td class="summary-table__cell">
+                                @currentSubscription.planAmount.pretty
+                            </td>
+                        </tr>
+                        <tr class="summary-table__row" role="row">
+                            <td class="summary-table__cell">
+                                Last Payment
+                            </td>
+                            <td class="summary-table__cell">
+                                @currentSubscription.startDate.pretty
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </section>
         </div>
@@ -45,7 +79,7 @@
                                 Start Date
                             </td>
                             <td class="summary-table__cell">
-                                @paymentDetails.subscription.current_period_end.pretty
+                                @futureSubscription.startDate.pretty
                             </td>
                         </tr>
                         <tr class="summary-table__row" role="row">
@@ -53,7 +87,7 @@
                                 Monthly Payment
                             </td>
                             <td class="summary-table__cell">
-                                £ FREE
+                                @futureSubscription.planAmount.pretty
                             </td>
                         </tr>
                     </table>
