@@ -13,7 +13,7 @@ class SubscriptionServiceTest extends Specification {
       val subscriptionDetails = SubscriptionDetails(
         Map(
           "EffectiveStartDate" -> "2014-10-06T10:00:00",
-          "ChargedThroughDate" -> "2014-11-06T10:00:00",
+          "ChargedThroughDate" -> "2014-11-07T10:00:00",
           "Price" -> "12",
           "Name" -> "Product name"
         )
