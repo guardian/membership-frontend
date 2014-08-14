@@ -54,6 +54,7 @@ $card-icon-offset: 2px;
     text-align: center;
     padding: $gs-gutter;
     border-bottom: 1px solid #dfdfdf;
+    
     @include mq(tablet) {
         border: 1px solid #dfdfdf;
         height: gs-height(3);
@@ -70,6 +71,7 @@ $card-icon-offset: 2px;
 
 .benefits-list--left-aligned {
     border: 0;
+
     @include mq(tablet) {
         text-align: left;
     }
