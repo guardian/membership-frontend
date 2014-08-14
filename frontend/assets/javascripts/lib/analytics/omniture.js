@@ -31,7 +31,7 @@
 /******************************************************************************/
 
 if (typeof(s)=="undefined") s = new AppMeasurement();
-s.account="guardiangudev-code"
+s.account="guardiangu-network"
 s.debugTracking=false
 s.charSet = "UTF-8";
 s.cookieDomainPeriods="2";
