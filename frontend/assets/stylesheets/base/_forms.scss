@@ -264,6 +264,7 @@
 }
 
 .submit-input {
+    @extend .action;
     background: $c-newsDefault;
     border: 0 none;
     color: #ffffff;
