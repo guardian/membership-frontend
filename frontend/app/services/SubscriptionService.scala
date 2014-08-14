@@ -24,14 +24,14 @@ case class SubscriptionServiceError(s: String) extends Throwable {
 trait SubscriptionService {
   val zuora: ZuoraService
 
-  val friendPlan = "2c92c0f945fee1c90146057402c7066b"
+  val friendPlan = Config.zuoraApiFriend
 
   case class PaidPlan(monthly: String, annual: String)
 
   object PaidPlan {
     val plans = Map(
-      Tier.Partner -> PaidPlan("2c92c0f945fee1c9014605749e450969", "2c92c0f8471e22bb01471ffe9596366c"),
-      Tier.Patron -> PaidPlan("2c92c0f845fed48301460578277167c3", "2c92c0f9471e145d01471ffd7c304df9")
+      Tier.Partner -> PaidPlan(Config.zuoraApiPartnerMonthly, Config.zuoraApiPartnerAnnual),
+      Tier.Patron -> PaidPlan(Config.zuoraApiPatronMonthly, Config.zuoraApiPatronAnnual)
     )
 
     def apply(tier: Tier.Tier, annual: Boolean): String = {
