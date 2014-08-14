@@ -16,9 +16,21 @@ object Zuora {
 
   case class Subscription(id: String) extends ZuoraObject
 
-  case class InvoiceItem(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime) extends ZuoraObject {
+  case class SubscriptionStatus(current: String, future: Option[String])
+
+  case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime)
+    extends ZuoraObject {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
+  }
+
+  object SubscriptionDetails {
+    def apply(map: Map[String, String]): SubscriptionDetails = {
+      val startDate = new DateTime(map("EffectiveStartDate"))
+      val endDate = map.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
+
+      SubscriptionDetails(map("Name"), map("Price").toFloat, startDate, endDate)
+    }
   }
 
   object Authentication {
@@ -37,10 +49,18 @@ object Zuora {
 
   object Query {
     def apply(elem: Elem): Query = {
-      val results = (elem \\ "queryResponse" \ "result" \ "records").map { record =>
-        record.child.map { node => (node.label, node.text) }.toMap
+      val resultNode = elem \\ "queryResponse" \ "result"
+      val size = (resultNode \ "size").text.toInt
+
+      // Zuora still returns an empty records node even if there were no results
+      if (size == 0) {
+        Query(Nil)
+      } else {
+        val results = (resultNode \ "records").map { record =>
+          record.child.map { node => (node.label, node.text)}.toMap
+        }
+        Query(results)
       }
-      Query(results)
     }
   }
 
@@ -50,15 +70,4 @@ object Zuora {
       Subscription((result \ "SubscriptionId").text)
     }
   }
-
-  object InvoiceItem {
-    def fromMap(invoice: Map[String, String]): InvoiceItem = {
-      val startDate = new DateTime(invoice("ServiceStartDate"))
-      val endDate = new DateTime(invoice("ServiceEndDate")).plusDays(1) // Yes we really have to +1 day
-      val planAmount = invoice("ChargeAmount").toFloat + invoice("TaxAmount").toFloat
-
-      InvoiceItem(invoice("ProductName"), planAmount, startDate, endDate)
-    }
-  }
-
 }

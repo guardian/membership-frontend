@@ -72,12 +72,12 @@ trait Joiner extends Controller {
 
     for {
       customer <- StripeService.Customer.read(request.member.stripeCustomerId)
-      invoice <- SubscriptionService.getInvoiceSummary(request.member.salesforceAccountId)
+      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventOpt <- getEbEventFromSession(request)
       discountOpt <- getDiscount(eventOpt)
     } yield {
       val urlOpt = getEbIframeUrl(eventOpt, discountOpt)
-      Ok(views.html.joiner.thankyou.paid(customer.card, invoice, urlOpt))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, urlOpt))
     }
   }
 

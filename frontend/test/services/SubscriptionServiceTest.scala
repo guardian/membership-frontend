@@ -1,7 +1,7 @@
 package services
 
 import org.specs2.mutable.Specification
-import model.Zuora.InvoiceItem
+import model.Zuora.SubscriptionDetails
 import org.joda.time.DateTime
 
 class SubscriptionServiceTest extends Specification {
@@ -10,18 +10,17 @@ class SubscriptionServiceTest extends Specification {
       val startDate = new DateTime(2014, 10, 6, 10, 0)
       val endDate = new DateTime(2014, 11, 7, 10, 0)
 
-      val invoice = InvoiceItem.fromMap(
+      val subscriptionDetails = SubscriptionDetails(
         Map(
-          "ServiceStartDate" -> "2014-10-06T10:00:00",
-          "ServiceEndDate" -> "2014-11-06T10:00:00",
-          "ChargeAmount" -> "10",
-          "TaxAmount" -> "2",
-          "ProductName" -> "Product name"
+          "EffectiveStartDate" -> "2014-10-06T10:00:00",
+          "ChargedThroughDate" -> "2014-11-07T10:00:00",
+          "Price" -> "12",
+          "Name" -> "Product name"
         )
       )
 
-      invoice mustEqual InvoiceItem("Product name", 12.0f, startDate, endDate)
-      invoice.annual mustEqual false
+      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, startDate, endDate)
+      subscriptionDetails.annual mustEqual false
     }
   }
 }

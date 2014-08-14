@@ -108,6 +108,12 @@ trait MemberService {
     } yield customer.card
   }
 
+  def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
+    for {
+      _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
+    } yield ""
+  }
+
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, payment: PaymentForm): Future[String] = {
     for {
