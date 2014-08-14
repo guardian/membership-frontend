@@ -44,8 +44,11 @@
 .action--logged-in {
     text-align: left;
     background-color: $mem-buttonBlue;
-    padding: 8px 8px 8px 18px;
-    width: 220px;
+    @include rem((
+        padding: 8px 8px 8px 18px,
+        width: 220px
+    ));
+    
     @include fs-textsans(4);
     // overwrite fontsize
     @include font-size(15, 22);
