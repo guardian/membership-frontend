@@ -11,7 +11,7 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 
 import forms.MemberForm.{NameForm, AddressForm}
-import model.Stripe
+import model.{Zuora, Stripe}
 import model.Zuora.Authentication
 
 case class ZuoraServiceError(s: String) extends Throwable {
@@ -282,4 +282,23 @@ trait ZuoraService {
       </ns1:amend>
     }
   }
+
+  /**
+   * Zuora doesn't return fields which are empty! This method guarantees that the keys will
+   * be in the map and also that the query only returns one result
+   */
+  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
+    val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
+    Query(q).mkRequest().map(Zuora.Query(_)).map { case Zuora.Query(results) =>
+      if (results.length != 1) {
+        throw new SubscriptionServiceError(s"Query $q returned more than one result")
+      }
+
+      fields.map { field => (field, results(0).getOrElse(field, "")) }.toMap
+    }
+  }
+
+  def queryOne(field: String, table: String, where: String): Future[String] =
+    queryOne(Seq(field), table, where).map(_(field))
+
 }

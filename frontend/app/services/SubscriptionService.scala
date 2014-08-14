@@ -39,25 +39,6 @@ trait SubscriptionService {
       if (annual) plan.annual else plan.monthly
     }
   }
-
-  /**
-   * Zuora doesn't return fields which are empty! This method guarantees that the keys will
-   * be in the map and also that the query only returns one result
-   */
-  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
-    val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    zuora.Query(q).mkRequest().map(Query(_)).map { case Query(results) =>
-      if (results.length != 1) {
-        throw new SubscriptionServiceError(s"Query $q returned more than one result")
-      }
-
-      fields.map { field => (field, results(0).getOrElse(field, "")) }.toMap
-    }
-  }
-
-  def queryOne(field: String, table: String, where: String): Future[String] =
-    queryOne(Seq(field), table, where).map(_(field))
-
   def getBasicIds(sfAccountId: String): Future[(String, String)] = {
     for {
       accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")

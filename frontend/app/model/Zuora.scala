@@ -37,10 +37,18 @@ object Zuora {
 
   object Query {
     def apply(elem: Elem): Query = {
-      val results = (elem \\ "queryResponse" \ "result" \ "records").map { record =>
-        record.child.map { node => (node.label, node.text) }.toMap
+      val resultNode = elem \\ "queryResponse" \ "result"
+      val size = (resultNode \ "size").text.toInt
+
+      // Zuora still returns an empty records node even if there were no results
+      if (size == 0) {
+        Query(Nil)
+      } else {
+        val results = (resultNode \ "records").map { record =>
+          record.child.map { node => (node.label, node.text)}.toMap
+        }
+        Query(results)
       }
-      Query(results)
     }
   }
 
