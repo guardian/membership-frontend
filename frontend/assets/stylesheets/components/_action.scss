@@ -50,8 +50,6 @@
     ));
     
     @include fs-textsans(4);
-    // overwrite fontsize
-    @include font-size(15, 22);
     @include border-radius(50%);
     &:visited,
     &:active,
@@ -63,26 +61,11 @@
     }
     i {
         float: right;
-        margin-top: 2px;
+        @include rem((
+            margin-top: 2px
+        ));   
     }
 }
-
-// .action--logged-in {
-//     background-color: $mem-brandOrange;
-//     @include border-radius(50%);
-//     &:visited,
-//     &:active,
-//     &:focus {
-//         background-color: $mem-brandOrange;
-//     }
-//     &:hover {
-//         background-color: darken($mem-brandOrange, 15%);
-//     }
-//     i {
-//         float: right;
-//         margin-top: 2px;
-//     }
-// }
 
 .i-wait {
     display: none;
