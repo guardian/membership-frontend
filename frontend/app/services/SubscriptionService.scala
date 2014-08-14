@@ -6,6 +6,8 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.agent.Agent
 
+import org.joda.time.DateTime
+
 import com.gu.membership.salesforce.Tier
 
 import play.api.Logger
@@ -21,7 +23,18 @@ case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
+object SubscriptionServiceHelpers {
+  def sortAmendments(subscriptions: Seq[Map[String, String]], amendments: Seq[Map[String, String]]) = {
+    val versions = subscriptions.map { amendment => (amendment("Id"), amendment("Version").toInt) }.toMap
+    amendments.sortBy { amendment => versions(amendment("SubscriptionId")) }
+  }
+
+  def sortSubscriptions(subscriptions: Seq[Map[String, String]]) = subscriptions.sortBy(_("Version").toInt)
+}
+
 trait SubscriptionService {
+  import SubscriptionServiceHelpers._
+
   val zuora: ZuoraService
 
   val friendPlan = "2c92c0f945fee1c90146057402c7066b"
@@ -39,13 +52,6 @@ trait SubscriptionService {
       if (annual) plan.annual else plan.monthly
     }
   }
-  def getBasicIds(sfAccountId: String): Future[(String, String)] = {
-    for {
-      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
-      subscriptionId <- queryOne("Id", "Subscription", s"AccountId='$accountId' AND Status='Active'")
-    } yield (accountId, subscriptionId)
-  }
-
   def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
@@ -56,20 +62,49 @@ trait SubscriptionService {
     zuora.Subscribe(sfAccountId, None, friendPlan, name, address).mkRequest().map(Subscription(_))
   }
 
-  def getInvoiceSummary(sfAccountId: String): Future[InvoiceItem] = {
-    val invoiceKeys = Seq("ServiceStartDate", "ServiceEndDate", "ProductName", "ChargeAmount", "TaxAmount")
+  def getAccountId(sfAccountId: String): Future[String] = zuora.queryOne("Id", "Account", s"crmId='$sfAccountId'")
+
+  def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
     for {
-      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
-      // When an upgrade happens, the user is refunded some money. At then moment we ignore negative invoices
-      // because we can only upgrade from a friend
-      // TODO: we will probably want to show the negative invoice item at some point
-      invoice <- queryOne(invoiceKeys, "InvoiceItem", s"SubscriptionId='$subscriptionId' AND ChargeAmount>0")
-    } yield InvoiceItem.fromMap(invoice)
+      accountId <- getAccountId(sfAccountId)
+
+      subscriptions <- zuora.Query(s"SELECT Id, Version FROM Subscription WHERE AccountId='$accountId'").mkRequest()
+        .map { Query(_).results }
+
+      if subscriptions.size > 0
+
+      where = subscriptions.map { sub => s"SubscriptionId='${sub("Id")}'" }.mkString(" OR ")
+      amendments <- zuora.Query(s"SELECT ContractEffectiveDate, SubscriptionId FROM Amendment WHERE $where").mkRequest().map(Query(_).results)
+    } yield {
+      val latestSubscriptionId = sortSubscriptions(subscriptions).last("Id")
+
+      sortAmendments(subscriptions, amendments)
+        .find { amendment => new DateTime(amendment("ContractEffectiveDate")).isAfterNow }
+        .fold(SubscriptionStatus(latestSubscriptionId, None)) { amendment =>
+          SubscriptionStatus(amendment("SubscriptionId"), Some(latestSubscriptionId))
+        }
+    }
+  }
+
+  def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
+    for {
+      ratePlan <- zuora.queryOne(Seq("Id", "Name"), "RatePlan", s"SubscriptionId='$subscriptionId'")
+      ratePlanCharge <- zuora.queryOne(Seq("ChargedThroughDate", "EffectiveStartDate", "Price"), "RatePlanCharge", s"RatePlanId='${ratePlan("Id")}'")
+    } yield SubscriptionDetails(ratePlan ++ ratePlanCharge)
+  }
+
+  def getCurrentSubscriptionId(sfAccountId: String): Future[String] = getSubscriptionStatus(sfAccountId).map(_.current)
+
+  def getCurrentSubscriptionDetails(sfAccountId: String): Future[SubscriptionDetails] = {
+    for {
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+    } yield subscriptionDetails
   }
 
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
     for {
-      accountId <- queryOne("Id", "Account", s"crmId='$sfAccountId'")
+      accountId <- getAccountId(sfAccountId)
       paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest().map(PaymentMethod(_))
       _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
     } yield accountId
@@ -82,9 +117,9 @@ trait SubscriptionService {
     }
 
     for {
-      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
-      ratePlanId <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      chargedThroughDate <- queryOne("ChargedThroughDate", "RatePlanCharge", s"RatePlanId='$ratePlanId'")
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      ratePlanId <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      chargedThroughDate <- zuora.queryOne("ChargedThroughDate", "RatePlanCharge", s"RatePlanId='$ratePlanId'")
       result <- zuora.DowngradePlan(subscriptionId, ratePlanId, newRatePlanId, new DateTime(chargedThroughDate)).mkRequest()
     } yield ""
   }
@@ -93,8 +128,8 @@ trait SubscriptionService {
     val newRatePlanId = PaidPlan(tier, annual)
 
     for {
-      (accountId, subscriptionId) <- getBasicIds(sfAccountId)
-      ratePlanId  <- queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
       result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
     } yield Subscription(result)
   }

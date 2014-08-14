@@ -28,16 +28,16 @@ trait User extends Controller {
       case paidMember: PaidMember =>
         for {
           customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          invoice <- SubscriptionService.getInvoiceSummary(paidMember.salesforceAccountId)
+          subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
         } yield Json.obj(
           "subscription" -> Json.obj(
-            "start" -> invoice.startDate,
-            "end" -> invoice.endDate,
+            "start" -> subscriptionDetails.startDate,
+            "end" -> subscriptionDetails.endDate,
             "cancelledAt" -> false, // TODO
             "plan" -> Json.obj(
-              "name" -> invoice.planName,
-              "amount" -> invoice.planAmount * 100,
-              "interval" -> (if (invoice.annual) "year" else "month")
+              "name" -> subscriptionDetails.planName,
+              "amount" -> subscriptionDetails.planAmount * 100,
+              "interval" -> (if (subscriptionDetails.annual) "year" else "month")
             ),
             "card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`)
           )
