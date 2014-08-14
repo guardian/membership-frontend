@@ -28,12 +28,13 @@ trait User extends Controller {
       case paidMember: PaidMember =>
         for {
           customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+          subscriptionStatus <- SubscriptionService.getSubscriptionStatus(paidMember.salesforceAccountId)
+          subscriptionDetails <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
         } yield Json.obj(
           "subscription" -> Json.obj(
             "start" -> subscriptionDetails.startDate,
             "end" -> subscriptionDetails.endDate,
-            "cancelledAt" -> false, // TODO
+            "cancelledAt" -> subscriptionStatus.future.isDefined,
             "plan" -> Json.obj(
               "name" -> subscriptionDetails.planName,
               "amount" -> subscriptionDetails.planAmount * 100,
