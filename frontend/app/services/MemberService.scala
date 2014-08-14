@@ -49,9 +49,6 @@ trait MemberService {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
-      // Leaving this in until Stripe has been completely removed
-      sub <- StripeService.Subscription.create(customer.id, formData.tier.toString)
-
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
         Keys.DEFAULT_CARD_ID -> customer.card.id
