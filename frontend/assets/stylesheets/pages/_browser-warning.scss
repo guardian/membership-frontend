@@ -1,0 +1,76 @@
+// don't show the site itself to broken browsers :(
+.js-ancient-browser .container-global {
+    display: none !important;
+}
+
+// we hide the "please upgrade" message by default
+.browser-upgrade-msg {
+    display: none;
+}
+
+// hide the main BG image
+html.js-ancient-browser {
+    background: none;
+}
+
+// show the upgrade message when browser isn't modern
+.js-ancient-browser .browser-upgrade-msg {
+    display: block;
+}
+
+.browser-upgrade-msg {
+    padding: 3% 20% 0;
+    text-align: center;
+}
+
+.browser-upgrade-msg__box {
+    background-color: #eeeeee;
+    padding: 20px 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.browser-upgrade-msg__help__item {
+    width: 50%;
+    float: left;
+    padding: 10px 0;
+    margin: 10px 0 0;
+}
+
+.browser-upgrade-msg__help__item--divider {
+    border-right: 1px solid #999999;
+}
+
+.browser-upgrade-msg__header {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.browser-upgrade-msg__subheader,
+.browser-upgrade-msg__blurb {
+    font-size: 18px;
+}
+
+.browser-upgrade-msg__blurb:after {
+    content: '-';
+    display: block;
+    margin-top: 5px;
+    color: #999999;
+    text-align: center;
+}
+
+.browser-upgrade-msg__blurb:last-child:after {
+    content: none;
+    margin: 0;
+}
+
+.browser-upgrade-msg__minor-text {
+    font-size: 11px;
+}
+
+.browser-upgrade-msg__logo {
+    background-color: transparent;
+    margin-bottom: 15px;
+}

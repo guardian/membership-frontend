@@ -12,8 +12,7 @@
 
 // hide all JS warning messages by default
 .js-warning,
-.js-warning__js-off,
-.js-warning__unsupported {
+.js-warning__js-off {
     display: none;
 }
 
@@ -25,10 +24,5 @@
 
 // show the JS off warning to non-JS users
 .js-off .js-warning__js-off {
-    display: block;
-}
-
-// show the ancient browser warning to browsers that don't cut the mustard
-.js-not-modern .js-warning__unsupported {
     display: block;
 }
