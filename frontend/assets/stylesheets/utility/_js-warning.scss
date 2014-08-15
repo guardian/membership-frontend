@@ -10,19 +10,12 @@
     margin: 0;
 }
 
-// hide all JS warning messages by default
-.js-warning,
-.js-warning__js-off {
+// hide JS warning messages by default
+.js-warning {
     display: none;
 }
 
 // show the container if any JS requirement fails
-.js-off .js-warning,
-.js-not-modern .js-warning {
-    display: block;
-}
-
-// show the JS off warning to non-JS users
-.js-off .js-warning__js-off {
+.js-off .js-warning {
     display: block;
 }
