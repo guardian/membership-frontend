@@ -65,19 +65,22 @@
     </head>
     <body>
 
-        @fragments.header()
+        @fragments.unsupportedBrowser()
 
-        <div class="page-container">
+        <div class="container-global">
+            @fragments.header()
 
-            @content
-
+            <div class="page-container">
+                @content
+            </div>
         </div>
 
         @fragments.footer()
 
-        @if(Config.membershipDebug) {
-            @fragments.debug()
-        }
+            @if(Config.membershipDebug) {
+                @fragments.debug()
+            }
+
         @fragments.javaScriptRequireJS()
     </body>
 </html>
