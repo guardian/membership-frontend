@@ -99,3 +99,35 @@ body {
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
+
+
+
+//TODO better names
+.brochure-container-outer {
+    width: 100%;
+}
+
+.brochure-container--white-background {
+    background-color: $white;
+}
+.brochure-container--image-background {
+    background-color: $black;
+}
+
+.brochure-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 $gs-gutter;
+    background-color: rgba(255, 255, 255, .95);
+    margin-bottom: $gs-gutter;
+
+    @include mq(desktop) {
+        width: gs-span(14);
+        padding: 0 $gs-column-width*3 0 $gs-column-width;
+    }
+
+    .brochure-container__inner {
+        border: 1px solid #000000;
+    }
+}
+

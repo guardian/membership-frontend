@@ -9,9 +9,14 @@
     @include fs-headline(7);
 
     border-top: 20px solid $mem-blue;
-    float: left;
-    padding-top: $gs-baseline/3; // 4px
+    display: inline-block;
+    padding-top: $gs-baseline/3;
     margin-bottom: $gs-baseline*4;
+}
+
+.section-headline--border-bottom {
+    padding-bottom: $gs-baseline*4;
+    border-bottom: 1px solid $black;
 }
 
 .section-sub-headline {
