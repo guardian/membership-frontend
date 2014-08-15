@@ -32,11 +32,11 @@ trait IdentityService {
         "country" -> formData.deliveryAddress.country
       )
 
-      val fields = if(formData.isInstanceOf[PaidMemberJoinForm]) {
+      val billingAddress = if(formData.isInstanceOf[PaidMemberJoinForm]) {
         val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
         val billingAddress = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
 
-        basicFields ++ Json.obj(
+        Json.obj(
           "billingAddress1" -> billingAddress.lineOne,
           "billingAddress2" -> billingAddress.lineTwo,
           "billingAddress3" -> billingAddress.town,
@@ -44,7 +44,9 @@ trait IdentityService {
           "billingPostcode" -> billingAddress.postCode,
           "billingCountry" -> billingAddress.postCode
         )
-      } else basicFields
+      } else Json.obj()
+
+      val fields = basicFields ++ billingAddress
 
        val json = Json.obj("privateFields" -> fields)
 
