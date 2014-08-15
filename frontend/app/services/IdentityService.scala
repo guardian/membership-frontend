@@ -21,16 +21,16 @@ trait IdentityService {
   def updateUserBasedOnJoining(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
     cookieOpt.map { cookie =>
 
-      val basicFields = Json.obj(
-        "secondName" -> formData.name.last,
-        "firstName" -> formData.name.first       
-      ) ++ deliveryAddress(formData.deliveryAddress)
-
-      val fields = if(formData.isInstanceOf[PaidMemberJoinForm]) {
+      val billingDetails = if(formData.isInstanceOf[PaidMemberJoinForm]) {
         val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
         val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
-        basicFields ++ billingAddress(billingAddressForm)
-      } else basicFields
+        billingAddress(billingAddressForm)
+      } else Json.obj()
+
+      val fields = Json.obj(
+        "secondName" -> formData.name.last,
+        "firstName" -> formData.name.first
+      ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
        postRequest(fields, user, cookie)
 
@@ -39,13 +39,9 @@ trait IdentityService {
 
   def updateUserBasedOnUpgrade(user:User, formData: PaidMemberChangeForm, cookieOpt:Option[Cookie]) = {
     cookieOpt.map { cookie =>
-
       val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
-
       val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
-
       postRequest(fields, user, cookie)
-
     }.getOrElse(throw IdentityServiceError("User cookie not set"))
   }
 
