@@ -115,8 +115,8 @@ trait ZuoraService {
       </ns1:query>
   }
 
-  case class Subscribe(sfAccountId: String, customerOpt: Option[Stripe.Customer], ratePlanId: String,
-                       name: NameForm, address: AddressForm) extends ZuoraAction {
+  case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
+                       ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction {
 
     val body = {
       val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
@@ -146,6 +146,7 @@ trait ZuoraService {
             <ns2:PaymentTerm>Due Upon Receipt</ns2:PaymentTerm>
             <ns2:Batch>Batch1</ns2:Batch>
             <ns2:CrmId>{sfAccountId}</ns2:CrmId>
+            <ns2:sfContactId__c>{sfContactId}</ns2:sfContactId__c>
           </ns1:Account>
           {payment}
           <ns1:BillToContact xsi:type="ns2:Contact">
