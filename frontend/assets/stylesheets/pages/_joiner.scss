@@ -54,10 +54,27 @@ $card-icon-offset: 2px;
     text-align: center;
     padding: $gs-gutter;
     border-bottom: 1px solid #dfdfdf;
+    
+    @include mq(tablet) {
+        border: 1px solid #dfdfdf;
+        height: gs-height(3);
+
+        flex-grow: 0;
+        flex-basis: 22%;
+        flex-direction: column;
+
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center;
+    }
 }
 
 .benefits-list--left-aligned {
     border: 0;
+
+    @include mq(tablet) {
+        text-align: left;
+    }
 }
 
 /* ==========================================================================
@@ -148,27 +165,12 @@ $card-icon-offset: 2px;
 }
 
 @include mq(tablet) {
-
-    .benefits-list {
-        border: 1px solid #dfdfdf;
-        height: gs-height(3);
-
-        flex-grow: 0;
-        flex-basis: 22%;
-        flex-direction: column;
-
-        display: flex;
-        justify-content: center; /* align horizontal */
-        align-items: center;
-    }
-
-    .benefits-list--left-aligned {
-        text-align: left;
-    }
-
     .benefits-list__item {
         display: table-cell;
         vertical-align: middle;
+        .action {
+            width: 100%;
+        }
     }
 
     .form-secondary-container {

@@ -53,6 +53,12 @@ object Config {
   val zuoraApiUsername = config.getString("zuora.api.username")
   val zuoraApiPassword = config.getString("zuora.api.password")
 
+  val zuoraApiFriend = config.getString("zuora.api.friend")
+  val zuoraApiPartnerMonthly = config.getString("zuora.api.partner.monthly")
+  val zuoraApiPartnerAnnual = config.getString("zuora.api.partner.annual")
+  val zuoraApiPatronMonthly = config.getString("zuora.api.patron.monthly")
+  val zuoraApiPatronAnnual = config.getString("zuora.api.patron.annual")
+
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val corsAllowOrigin = config.getString("cors.allow.origin")

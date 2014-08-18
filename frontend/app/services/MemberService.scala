@@ -49,9 +49,6 @@ trait MemberService {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
-      // Leaving this in until Stripe has been completely removed
-      sub <- StripeService.Subscription.create(customer.id, formData.tier.toString)
-
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
         Keys.DEFAULT_CARD_ID -> customer.card.id
@@ -109,6 +106,12 @@ trait MemberService {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
+    for {
+      _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
+    } yield ""
   }
 
   // TODO: this currently only handles free -> paid

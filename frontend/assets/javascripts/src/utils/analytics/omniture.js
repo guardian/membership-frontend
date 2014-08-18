@@ -2,7 +2,7 @@ define(['omniture'], function () {
 
     function init() {
         var pageTitle = document.getElementsByTagName('title')[0].textContent;
-        var s = s_gi('guardiangudev-code');
+        var s = s_gi('guardiangu-network');
         var s_code;
 
         s.pageName = pageTitle;
