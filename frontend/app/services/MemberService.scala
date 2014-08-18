@@ -92,7 +92,7 @@ trait MemberService {
 
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId)
-      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false))
+      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
     } yield ""
   }
 

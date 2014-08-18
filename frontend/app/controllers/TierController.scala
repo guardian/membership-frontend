@@ -71,9 +71,16 @@ trait CancelTier {
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
+    def subscriptionDetailsFor(memberOpt: Option[Member]) = {
+      memberOpt.collect { case paidMember: PaidMember =>
+        SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+      }
+    }
+
     for {
-      member <- MemberRepository.get(request.user.id)
-    } yield Ok(views.html.tier.cancel.summary(None))
+      memberOpt <- MemberRepository.get(request.user.id)
+      subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
+    } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
   }
 }
 
