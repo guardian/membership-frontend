@@ -24,18 +24,22 @@ html.js-ancient-browser {
 }
 
 .browser-upgrade-msg__box {
+    @include rem((
+        padding: 20px 10px,
+        margin-bottom: 15px,
+        font-size: 14px
+    ));
     background-color: #eeeeee;
-    padding: 20px 10px;
-    margin-bottom: 15px;
-    font-size: 14px;
     overflow: hidden;
 }
 
 .browser-upgrade-msg__help__item {
     width: 50%;
     float: left;
-    padding: 10px 0;
-    margin: 10px 0 0;
+    @include rem((
+        padding: 10px 0,
+        margin: 10px 0 0
+    ));
 }
 
 .browser-upgrade-msg__help__item--divider {
@@ -43,20 +47,26 @@ html.js-ancient-browser {
 }
 
 .browser-upgrade-msg__header {
-    font-size: 26px;
+    @include rem((
+        font-size: 26px,
+        margin-bottom: 15px
+    ));
     font-weight: bold;
-    margin-bottom: 15px;
 }
 
 .browser-upgrade-msg__subheader,
 .browser-upgrade-msg__blurb {
-    font-size: 18px;
+    @include rem((
+        font-size: 18px
+    ));
 }
 
 .browser-upgrade-msg__blurb:after {
     content: '-';
     display: block;
-    margin-top: 5px;
+    @include rem((
+        margin-top: 5px
+    ));
     color: #999999;
     text-align: center;
 }
@@ -67,10 +77,14 @@ html.js-ancient-browser {
 }
 
 .browser-upgrade-msg__minor-text {
-    font-size: 11px;
+    @include rem((
+        font-size: 11px
+    ));
 }
 
 .browser-upgrade-msg__logo {
     background-color: transparent;
-    margin-bottom: 15px;
+    @include rem((
+        margin-bottom: 15px
+    ));
 }
