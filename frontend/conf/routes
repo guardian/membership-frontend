@@ -30,7 +30,7 @@ POST        /choose-tier                              controllers.Joining.tierCh
 # Subscription
 POST        /subscription/subscribe                   controllers.Subscription.subscribe
 POST        /subscription/update-card                 controllers.Subscription.updateCard
-OPTIONS     /subscription/update-card                 controllers.Cors.options
+OPTIONS     /subscription/update-card                 controllers.Subscription.updateCardPreflight
 POST        /subscription/event                       controllers.Subscription.event(secret: String)
 
 # Events
