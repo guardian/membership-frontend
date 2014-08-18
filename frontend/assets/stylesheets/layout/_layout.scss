@@ -112,7 +112,8 @@ body {
     }
 
     &.brochure-container--image-background {
-        background-color: $black;
+        background: url(/assets/images/homepage/mem-bg-promo.jpg) no-repeat center center;
+        background-size: cover;
         padding: $gs-gutter * 3 0 $gs-gutter * 2;
     }
 }
@@ -128,18 +129,23 @@ body {
     @include mq(desktop) {
         width: gs-span(12);
     }
+}
 
-    &.brochure-container--promo-one {
+.brochure-container--promo-one {
+    @include mq(desktop) {
+        padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter;
+        margin-bottom: $gs-gutter * 2;
+    }  
+    .brochure-container__inner {
         @include mq(desktop) {
-            padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter;
-            margin-bottom: $gs-gutter * 2;
-        }  
-        .brochure-container__inner {
-            @include mq(desktop) {
-                width: gs-span(8);
-            }
-        } 
-    }
+            width: gs-span(8);
+        }
+    } 
+}
+
+.brochure-container--promo-two {
+    background-color: rgba(180, 24, 0, .95);
+    color: $black;
 }
 
 .brochure-container__inner {

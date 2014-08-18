@@ -5,7 +5,7 @@
 
 @promoWithImageBackground(title: String, images: List[(String, String)])(content: Html) = {
     <div class="brochure-container-outer brochure-container--image-background">
-        <div class="brochure-container">
+        <div class="brochure-container brochure-container--promo-two">
             <div class="brochure-container__inner">
                 <h2 class="section-headline section-headline--border-bottom">@title</h2>
 
@@ -42,7 +42,9 @@
         </div>
     </div>
 
-    @promoWithImageBackground("Events that bring the Guardian to life", List("imageSrc" -> "altText", "imageSrc1" -> "altText1")) {
-        <p>We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world</strong></p>
+    @promoWithImageBackground("Events that bring the Guardian to life", List("/assets/images/homepage/teaser-image1-1.jpg" -> "altText", "/assets/images/homepage/teaser-image1-2.jpg" -> "altText1")) {
+        <p><strong>Guardian Live</strong> is a programme of discussions, debates, interviews, keynote speeches and festivals that brings the Guardian’s journalism to life. 
+Events that for the first time take the power of open journalism from print and digital into live experiences.</p>
+<a class="action action--join" href="#">See our live events</a>
     }
 }
