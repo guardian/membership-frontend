@@ -33,14 +33,14 @@ trait Subscription extends Controller {
     }
   }
 
-  def updateCard() = PaidMemberAction.async { implicit request =>
+  def updateCard() = Cors(PaidMemberAction).async { implicit request =>
     updateForm.bindFromRequest
-      .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
+      .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
           card <- MemberService.updateDefaultCard(request.member, stripeToken)
-        } yield Cors(Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`)))
+        } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`))
       ).recover {
-        case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
+        case error: Stripe.Error => Forbidden(Json.toJson(error))
       }
   }
 

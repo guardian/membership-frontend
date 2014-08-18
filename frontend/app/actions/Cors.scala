@@ -1,5 +1,6 @@
 package actions
 
+import scala.language.higherKinds
 import scala.concurrent.Future
 
 import play.api.mvc.{ActionBuilder, Request, Result}
@@ -8,17 +9,17 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import configuration.Config
 
-object CorsAction extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
-    block(request).map(_.withHeaders(Cors.headers: _*))
-  }
-}
-
 object Cors {
   val headers = Seq(
     HeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN -> Config.corsAllowOrigin,
     HeaderNames.ACCESS_CONTROL_ALLOW_METHODS -> "GET",
-    HeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true",
-    HeaderNames.ACCESS_CONTROL_ALLOW_HEADERS -> "Csrf-Token"
+    HeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true"
   )
+
+  def apply[R[A]](ab: ActionBuilder[R]): ActionBuilder[R] = {
+    new ActionBuilder[R] {
+      def invokeBlock[A](request: Request[A], block: R[A] => Future[Result]): Future[Result] =
+        ab.invokeBlock(request, block).map(_.withHeaders(headers: _*))
+    }
+  }
 }
