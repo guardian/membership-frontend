@@ -57,9 +57,9 @@ trait AmendSubscription {
 
     for {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      ratePlanId <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      chargedThroughDate <- zuora.queryOne("ChargedThroughDate", "RatePlanCharge", s"RatePlanId='$ratePlanId'")
-      result <- zuora.DowngradePlan(subscriptionId, ratePlanId, newRatePlanId, new DateTime(chargedThroughDate)).mkRequest()
+      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+      result <- zuora.DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
+        subscriptionDetails.endDate).mkRequest()
     } yield ""
   }
 
