@@ -12,7 +12,6 @@ import configuration.Config
 object Cors {
   val headers = Seq(
     HeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN -> Config.corsAllowOrigin,
-    HeaderNames.ACCESS_CONTROL_ALLOW_METHODS -> "GET",
     HeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true"
   )
 
