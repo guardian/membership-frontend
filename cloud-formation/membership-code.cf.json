@@ -195,7 +195,7 @@
             "Properties" : {
                 "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
                 "Comment" : "CNAME for AWS ELB",
-                "Name" :  { "Fn::Join" : [ ".", [ "test.membership.guardianapis.com." ] ] },
+                "Name" :  { "Fn::Join" : [ ".", [ " ." ] ] },
                 "Type" : "CNAME",
                 "TTL" : "120",
                 "ResourceRecords" : [ {"Fn::GetAtt":["FrontendElasticLoadBalancer","DNSName"]} ]

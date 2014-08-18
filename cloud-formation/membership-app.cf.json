@@ -33,14 +33,18 @@
         "AllowedIngressIps" : {
             "Description" : "IP address range (CIDR) that access the site (e.g. '77.91.248.0/21'- Internal Guardian, or '0.0.0.0/0' - the whole internet!)",
             "Type" : "String",
-            "Default" : "77.91.248.0/21"
+            "Default" : "0.0.0.0/0"
         },
         "InstanceType" : {
             "Description" : "EC2 instance type",
             "Type" : "String",
-            "Default" : "m3.medium",
-            "AllowedValues" : [ "t2.micro","m3.medium","m3.medium"],
+            "AllowedValues" : [ "t2.micro","m3.medium" ],
             "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+        "ELBName" : {
+        	"Description" : "DNS for the application (eg, test.membership.guardianapis.com)",
+        	"Type" :  "String",
+        	"Default" : { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] }
         }
     },
     "Resources" : {
@@ -90,11 +94,11 @@
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/membership-keys.conf /etc/gu"]]},
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
-                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
+                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
@@ -116,23 +120,6 @@
                     }]
                 },
                 "Policies": [ {
-                    "PolicyName": "MembersTable",
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "dynamodb:GetItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:Query"
-                                ],
-                                "Resource": "arn:aws:dynamodb:eu-west-1:865473395570:table/members"
-                            }
-                        ]
-                    }
-                },
-                {
                     "PolicyName": "PrivateBucket",
                     "PolicyDocument": {
                         "Version": "2012-10-17",
@@ -210,7 +197,7 @@
             "Properties" : {
                 "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
                 "Comment" : "CNAME for AWS ELB",
-                "Name" :  { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] },
+                "Name" :  { "Ref" : "ELBName" },
                 "Type" : "CNAME",
                 "TTL" : "120",
                 "ResourceRecords" : [ {"Fn::GetAtt":["FrontendElasticLoadBalancer","DNSName"]} ]
