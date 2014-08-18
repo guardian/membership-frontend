@@ -108,21 +108,27 @@ body {
 
     &.brochure-container--white-background {
         background-color: $white;
-        padding: $gs-gutter * 3 0 $gs-gutter * 2;
+        @include rem((
+            padding: $gs-gutter * 3 0 $gs-gutter * 2
+        ));
     }
 
     &.brochure-container--image-background {
         background: url(/assets/images/homepage/mem-bg-promo.jpg) no-repeat center center;
         background-size: cover;
-        padding: $gs-gutter * 3 0 $gs-gutter * 2;
+        @include rem((
+            padding: $gs-gutter * 3 0 $gs-gutter * 2
+        ));
     }
 }
 
 
 .brochure-container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 $gs-gutter;
+    @include rem((
+        width: 100%,
+        margin: 0 auto,
+        padding: 0 $gs-gutter
+    ));
     background-color: rgba(255, 255, 255, .95);
     @include fs-headline(5);
 
@@ -133,8 +139,10 @@ body {
 
 .brochure-container--promo-one {
     @include mq(desktop) {
-        padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter;
-        margin-bottom: $gs-gutter * 2;
+        @include rem((
+            padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter,
+            margin-bottom: $gs-gutter * 2
+        ));
     }  
     .brochure-container__inner {
         @include mq(desktop) {
@@ -152,7 +160,9 @@ body {
 
     .brochure-container__image {
         width: gs-span(4);
-        margin-right: $gs-gutter;
+        @include rem((
+            margin-right: $gs-gutter
+        ));
     }
 
     .brochure-container__teaser {
@@ -162,7 +172,9 @@ body {
 
 .brochure-container__image--holder {
     background-color: $c-neutral6;
-    height: 220px;
-    width: 100%;
+    @include rem((
+        height: 220px,
+        width: 100%
+    ));
 }
 

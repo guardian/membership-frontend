@@ -1,3 +1,4 @@
+//calculates position of where to place side margins
 @mixin side-margins-position($container-width) {
     &:before,
     &:after {
