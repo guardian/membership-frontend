@@ -29,11 +29,6 @@ object Stripe {
     }
 
     val card = cards.data(0)
-
-    // TODO: delete once Stripe subscriptions have been removed
-    val paymentDetails = for {
-      subscription <- subscriptions.data.headOption
-    } yield PaymentDetails(card, subscription)
   }
 
   case class Subscription(

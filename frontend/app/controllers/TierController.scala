@@ -27,11 +27,10 @@ trait DowngradeTier {
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
       currentSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
       futureSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
-    } yield Ok(views.html.tier.downgrade.summary(customer.card, currentSubscription, futureSubscription))
+    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
   }
 }
 
@@ -72,16 +71,9 @@ trait CancelTier {
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
-    def paymentDetailsFor(memberOpt: Option[Member]) = {
-      memberOpt.collect { case paidMember: PaidMember =>
-        StripeService.Customer.read(paidMember.stripeCustomerId).map(_.paymentDetails)
-      }.getOrElse(Future.successful(None))
-    }
-
     for {
       member <- MemberRepository.get(request.user.id)
-      paymentDetails <- paymentDetailsFor(member)
-    } yield Ok(views.html.tier.cancel.summary(paymentDetails))
+    } yield Ok(views.html.tier.cancel.summary(None))
   }
 }
 
