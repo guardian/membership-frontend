@@ -9,6 +9,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   val validCardNumber = "4242 4242 4242 4242"
   val cardWithNoFunds = "4000000000000341"
+  val secondaryCard = "5555555555554444"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
@@ -101,12 +102,20 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def IAmRedirectedToTheChooseTierPage = {
     val loaded = new ChooseTierPage(driver).isPageLoaded
     Assert.assert(loaded, true, "The Choose tier page should be loaded")
+    this
   }
 
   def IAmRedirectedToTheLoginPage = {
     val loaded = new LoginPage(driver).isPageLoaded
     Assert.assert(loaded, true, "Login page is loaded")
     this
+  }
+
+  def ICanBecomeAFriend = {
+    new ChooseTierPage(driver).clickFriend.clickChoose
+    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
+    CookieHandler.register(driver)
+    ICanPurchaseASubscription
   }
 
   def IAmNotRegistered = {
@@ -242,11 +251,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanSeeTheMembershipTabForAPartner = {
-   ICanSeeTheMembershipTab("partner", "15.00")
+   ICanSeeTheMembershipTab("partner", "135.00")
   }
 
   def ICanSeeTheMembershipTabForAPatron = {
-    ICanSeeTheMembershipTab("patron", "60.00")
+    ICanSeeTheMembershipTab("patron", "540.00")
   }
 
   def ICanSeeTheMembershipTabForFriend = {
@@ -284,7 +293,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ICanUpdateMyCardDetails = {
     val page = new IdentityEditPage(driver)
-    page.clickMembershipTab.clickChangeButton.enterCardNumber(validCardNumber)
+    page.clickMembershipTab.clickChangeButton.enterCardNumber(secondaryCard)
       .enterCardSecurityCode("343").enterCardExpirationMonth("11").enterCardExpirationYear("2018").clickUpdateCardDetails
     val success = new IdentityEditPage(driver).isSuccessFlashMessagePresent
     Assert.assert(success, true, "The card update should be successful")
@@ -355,6 +364,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
     "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2031")
 
+//  private def becomeFriend: ThankYouPage = new PaymentPage(driver).cardWidget.e
+
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally
     new SimpleDateFormat("dd MMMM yyyy").parse(dateTime).after(new Date())
@@ -367,38 +378,18 @@ object CookieHandler {
   var secureCookie: Option[Cookie] = None
   val surveyCookie = new Cookie("gu.test", "test")
 
-  def login(driver: WebDriver) = {
-
+  def login(driver: WebDriver) {
     driver.get(Config().getUserValue("identityReturn"))
+    new LoginPage(driver).clickRegister
+    register(driver)
+  }
+
+  def register(driver: WebDriver) {
     driver.manage().addCookie(surveyCookie)
     val user = System.currentTimeMillis().toString
     val password = scala.util.Random.alphanumeric.take(10).mkString
     val email = user + "@testme.com"
-    new LoginPage(driver).clickRegister.enterEmail(email)
-    .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
-    ////////////////////////////////////////////////////////////
-//    driver.get(Config().getUserValue("identityReturn"))
-//    new LoginPage(driver).enterEmail(email).enterPassword(password)
-//    Thread.sleep(5000)
-//    driver.get(Config().getTestBaseUrl())
-    ////////////////////////////////////////////////////////////
-
-//    this.synchronized {
-//      if (None == CookieHandler.loginCookie) {
-//        driver.get(Config().getUserValue("identityReturn"))
-//        driver.manage().addCookie(surveyCookie)
-//        val user = System.currentTimeMillis().toString
-//        new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-//          .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
-//        driver.get(Config().getTestBaseUrl())
-//        CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
-//        CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
-//      } else {
-//        driver.get(Config().getTestBaseUrl())
-//        driver.manage().addCookie(surveyCookie)
-//        driver.manage().addCookie(CookieHandler.loginCookie.get)
-//        driver.manage().addCookie(CookieHandler.secureCookie.get)
-//      }
-//    }
+    new RegisterPage(driver).enterEmail(email)
+      .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
   }
 }
