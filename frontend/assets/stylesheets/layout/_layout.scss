@@ -140,19 +140,23 @@ body {
             }
         } 
     }
+}
 
-    .brochure-container__inner {
+.brochure-container__inner {
 
-        .brochure-container__image {
-            width: gs-span(4);
-            // border: 1px solid red;
-            margin-right: $gs-gutter;
-        }
-
-        .brochure-container__teaser {
-            width: gs-span(7);
-            // border: 1px solid blue;
-        }
+    .brochure-container__image {
+        width: gs-span(4);
+        margin-right: $gs-gutter;
     }
+
+    .brochure-container__teaser {
+        width: gs-span(7);
+    }
+}
+
+.brochure-container__image--holder {
+    background-color: $c-neutral6;
+    height: 220px;
+    width: 100%;
 }
 
