@@ -9,6 +9,7 @@
     "reqwest": "~1.1.0",
     "html5shiv": "~3.7.2",
     "zxcvbn": "*",
-    "curl": "~0.8.10"
+    "curl": "~0.8.10",
+    "imager.js": "latest"
   }
 }
