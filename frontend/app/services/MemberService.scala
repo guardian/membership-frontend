@@ -34,18 +34,18 @@ trait MemberService {
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
   )
 
-  def createFriend(user: User, formData: FriendJoinForm, cookie: Option[Cookie]): Future[String] = {
+  def createFriend(user: User, formData: FriendJoinForm, identityHeaders: List[(String, String)]): Future[String] = {
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityHeaders)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
       memberId.account
     }
   }
 
-  def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
+  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityHeaders: List[(String, String)]): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
@@ -56,7 +56,7 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityHeaders)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       memberId.account
@@ -115,7 +115,7 @@ trait MemberService {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, cookie: Option[Cookie]): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityHeaders: List[(String, String)]): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
@@ -128,7 +128,7 @@ trait MemberService {
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
-      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, cookie)
+      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, identityHeaders)
     } yield memberId.account
   }
 }
