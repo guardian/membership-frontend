@@ -2,7 +2,7 @@ package services
 
 import com.gu.identity.model.User
 import configuration.Config
-import forms.MemberForm.{PaidMemberJoinForm, JoinForm}
+import forms.MemberForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.ws.{WS, WSResponse}
@@ -21,38 +21,57 @@ trait IdentityService {
   def updateUserBasedOnJoining(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
     cookieOpt.map { cookie =>
 
-      val basicFields = Json.obj(
-        "secondName" -> formData.name.last,
-        "firstName" -> formData.name.first,
-        "address1" -> formData.deliveryAddress.lineOne,
-        "address2" -> formData.deliveryAddress.lineTwo,
-        "address3" -> formData.deliveryAddress.town,
-        "address4" -> formData.deliveryAddress.countyOrState,
-        "postcode" -> formData.deliveryAddress.postCode,
-        "country" -> formData.deliveryAddress.country
-      )
-
-      val billingAddress = if(formData.isInstanceOf[PaidMemberJoinForm]) {
+      val billingDetails = if(formData.isInstanceOf[PaidMemberJoinForm]) {
         val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
-        val billingAddress = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
-
-        Json.obj(
-          "billingAddress1" -> billingAddress.lineOne,
-          "billingAddress2" -> billingAddress.lineTwo,
-          "billingAddress3" -> billingAddress.town,
-          "billingAddress4" -> billingAddress.countyOrState,
-          "billingPostcode" -> billingAddress.postCode,
-          "billingCountry" -> billingAddress.postCode
-        )
+        val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
+        billingAddress(billingAddressForm)
       } else Json.obj()
 
-      val fields = basicFields ++ billingAddress
+      val fields = Json.obj(
+        "secondName" -> formData.name.last,
+        "firstName" -> formData.name.first
+      ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-       val json = Json.obj("privateFields" -> fields)
+       postRequest(fields, user, cookie)
 
-      Logger.info(s"Posting updated information to Identity for user :${user.id}")
-      IdentityApi.post(s"user/${user.id}", json, cookie.value)
     }.getOrElse(throw IdentityServiceError("User cookie not set"))
+  }
+
+  def updateUserBasedOnUpgrade(user:User, formData: PaidMemberChangeForm, cookieOpt:Option[Cookie]) = {
+    cookieOpt.map { cookie =>
+      val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
+      val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
+      postRequest(fields, user, cookie)
+    }.getOrElse(throw IdentityServiceError("User cookie not set"))
+  }
+
+  private def postRequest(fields: JsObject, user: User, cookie: Cookie) = {
+    val json = Json.obj("privateFields" -> fields)
+
+    Logger.info(s"Posting updated information to Identity for user :${user.id}")
+    IdentityApi.post(s"user/${user.id}", json, cookie.value)
+  }
+
+  private def deliveryAddress(addressForm: AddressForm): JsObject = {
+    Json.obj(
+      "address1" -> addressForm.lineOne,
+      "address2" -> addressForm.lineTwo,
+      "address3" -> addressForm.town,
+      "address4" -> addressForm.countyOrState,
+      "postcode" -> addressForm.postCode,
+      "country" -> addressForm.country
+    )
+  }
+
+  private def billingAddress(billingAddress: AddressForm): JsObject = {
+    Json.obj(
+      "billingAddress1" -> billingAddress.lineOne,
+      "billingAddress2" -> billingAddress.lineTwo,
+      "billingAddress3" -> billingAddress.town,
+      "billingAddress4" -> billingAddress.countyOrState,
+      "billingPostcode" -> billingAddress.postCode,
+      "billingCountry" -> billingAddress.postCode
+    )
   }
 }
 
