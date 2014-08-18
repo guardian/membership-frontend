@@ -105,29 +105,54 @@ body {
 //TODO better names
 .brochure-container-outer {
     width: 100%;
+
+    &.brochure-container--white-background {
+        background-color: $white;
+        padding: $gs-gutter * 3 0 $gs-gutter * 2;
+    }
+
+    &.brochure-container--image-background {
+        background-color: $black;
+        padding: $gs-gutter * 3 0 $gs-gutter * 2;
+    }
 }
 
-.brochure-container--white-background {
-    background-color: $white;
-}
-.brochure-container--image-background {
-    background-color: $black;
-}
 
 .brochure-container {
     width: 100%;
     margin: 0 auto;
     padding: 0 $gs-gutter;
     background-color: rgba(255, 255, 255, .95);
-    margin-bottom: $gs-gutter;
+    @include fs-headline(5);
 
     @include mq(desktop) {
-        width: gs-span(14);
-        padding: 0 $gs-column-width*3 0 $gs-column-width;
+        width: gs-span(12);
+    }
+
+    &.brochure-container--promo-one {
+        @include mq(desktop) {
+            padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter;
+            margin-bottom: $gs-gutter * 2;
+        }  
+        .brochure-container__inner {
+            @include mq(desktop) {
+                width: gs-span(8);
+            }
+        } 
     }
 
     .brochure-container__inner {
-        border: 1px solid #000000;
+
+        .brochure-container__image {
+            width: gs-span(4);
+            // border: 1px solid red;
+            margin-right: $gs-gutter;
+        }
+
+        .brochure-container__teaser {
+            width: gs-span(7);
+            // border: 1px solid blue;
+        }
     }
 }
 

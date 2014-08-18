@@ -21,18 +21,23 @@
 
 @main("Home Page", true) {
 
-    <div class="brochure-container">
+    <div class="brochure-container brochure-container--promo-one">
         <div class="brochure-container__inner">
             <h2 class="section-headline section-headline--border-bottom">Introducing Guardian @if(Config.membershipHide){Masterclasses}else{Membership}</h2>
-            <p>We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world</strong></p>
+            <p>We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world for the better</strong></p>
+            <p>Guardian Membership is the community for those who share this ideal.</p>
+            <a class="action action--join" href="#">Learn more</a>
         </div>
     </div>
 
     <div class="brochure-container-outer brochure-container--white-background">
         <div class="brochure-container">
-            <div class="brochure-container__inner">
-                <h2 class="section-headline section-headline--border-bottom">Introducing Guardian @if(Config.membershipHide){Masterclasses}else{Membership}</h2>
-                <p>We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world</strong></p>
+            <div class="brochure-container__inner l-row l-row--items-2">
+                <div class="brochure-container__image l-row"></div>
+                <div class="brochure-container__teaser l-row">
+                    <p>Guardian Membership brings you closer to the <strong>stories</strong> of the day, connects you to the <strong>conversations</strong> that matter and introduces you to <strong>fellow members</strong> who share your interests.</p>
+                    <p><a class="action action--join" href="#">Join today</a></p>
+                </div>
             </div>
         </div>
     </div>
