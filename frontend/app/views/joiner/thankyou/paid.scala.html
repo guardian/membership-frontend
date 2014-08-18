@@ -1,9 +1,9 @@
-@(card: model.Stripe.Card, invoice: model.Zuora.InvoiceItem, eventIframeUrlOpt: Option[String])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, eventIframeUrlOpt: Option[String])
 
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Thankyou | " + invoice.planName) {
+@main("Thankyou | " + subscriptionDetails.planName) {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
 
@@ -20,7 +20,7 @@
                     Package
                 </td>
                 <td class="summary-table__cell" role="scope">
-                @invoice.planName
+                @subscriptionDetails.planName
                 </td>
             </tr>
             <tr class="summary-table__row" role="row">
@@ -28,7 +28,7 @@
                     Start Date
                 </td>
                 <td class="summary-table__cell">
-                    @invoice.startDate.pretty
+                    @subscriptionDetails.startDate.pretty
                 </td>
             </tr>
             <tr class="summary-table__row" role="row">
@@ -36,15 +36,15 @@
                     Amount Paid Today
                 </td>
                 <td class="summary-table__cell">
-                    @invoice.planAmount.pretty
+                    @subscriptionDetails.planAmount.pretty
                 </td>
             </tr>
             <tr class="summary-table__row" role="row">
                 <td class="summary-table__cell">
-                    @if(invoice.annual){ Annual } else { Monthly } Payment
+                    @if(subscriptionDetails.annual){ Annual } else { Monthly } Payment
                 </td>
                 <td class="summary-table__cell">
-                    @invoice.planAmount.pretty
+                    @subscriptionDetails.planAmount.pretty
                 </td>
             </tr>
             <tr class="summary-table__row" role="row">
@@ -52,7 +52,7 @@
                     Next Payment
                 </td>
                 <td class="summary-table__cell">
-                   @invoice.endDate.pretty
+                   @subscriptionDetails.endDate.pretty
                 </td>
             </tr>
             <tr class="summary-table__row" role="row">

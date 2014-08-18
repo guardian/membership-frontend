@@ -10,7 +10,7 @@ import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
 import forms.MemberForm._
-import services.{MemberRepository, MemberService, StripeService}
+import services.{SubscriptionService, MemberRepository, MemberService, StripeService}
 
 trait DowngradeTier {
   self: TierController =>
@@ -21,20 +21,17 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
-    } yield {
-      cancelledSubscription.map(_ => Redirect("/tier/change/friend/summary")).getOrElse(NotFound)
-    }
+      cancelledSubscription <- MemberService.downgradeSubscription(request.member, Tier.Friend)
+    } yield Redirect("/tier/change/friend/summary")
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
-    StripeService.Customer.read(request.member.stripeCustomerId).map { customer =>
-      val response = for {
-        paymentDetails <- customer.paymentDetails
-      } yield Ok(views.html.tier.downgrade.summary(paymentDetails))
-
-      response.getOrElse(NotFound)
-    }
+    for {
+      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
+      subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      currentSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+      futureSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
+    } yield Ok(views.html.tier.downgrade.summary(customer.card, currentSubscription, futureSubscription))
   }
 }
 

@@ -1,7 +1,6 @@
 require([
     'src/utils/analytics/omniture',
     'src/utils/router',
-    'domready',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/tier/JoinPaid',
@@ -13,7 +12,6 @@ require([
 ], function(
     omnitureAnalytics,
     router,
-    domready,
     ajax,
     JoinFree,
     JoinPaid,
@@ -50,8 +48,9 @@ require([
         omnitureAnalytics.init();
     });
 
-    domready(function() {
-        router.go();
-    });
-
+    /**
+     * We were using domready here but for an unknown reason it is not firing in our production environment.
+     * Please ask Ben Chidgey or Chris Finch if there are issues around this.
+     */
+    router.go();
 });

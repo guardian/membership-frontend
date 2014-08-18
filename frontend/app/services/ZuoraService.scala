@@ -2,7 +2,7 @@ package services
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.xml.{Null, Elem}
+import scala.xml.{Null, Elem, PrettyPrinter}
 
 import org.joda.time.DateTime
 
@@ -11,7 +11,7 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 
 import forms.MemberForm.{NameForm, AddressForm}
-import model.Stripe
+import model.{Zuora, Stripe}
 import model.Zuora.Authentication
 
 case class ZuoraServiceError(s: String) extends Throwable {
@@ -69,7 +69,7 @@ trait ZuoraService {
 
       WS.url(url).post(xml).map { result =>
         Logger.debug(s"Got result ${result.status}")
-        Logger.debug(result.body)
+        Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
         // TODO: check result for generic errors
         result.xml
       }
@@ -185,6 +185,54 @@ trait ZuoraService {
     }
   }
 
+  case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
+                           date: DateTime) extends ZuoraAction {
+
+    override val singleTransaction = true
+
+    val body = {
+      <ns1:amend>
+        <ns1:requests>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:Name>Downgrade</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:AmendmentSubscriptionRatePlanId>{subscriptionRatePlanId}</ns2:AmendmentSubscriptionRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:ServiceActivationDate/>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>RemoveProduct</ns2:Type>
+          </ns1:Amendments>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:Name>Downgrade</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:ProductRatePlanId>{newRatePlanId}</ns2:ProductRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>NewProduct</ns2:Type>
+          </ns1:Amendments>
+          <ns1:AmendOptions>
+            <ns1:GenerateInvoice>false</ns1:GenerateInvoice>
+            <ns1:ProcessPayments>false</ns1:ProcessPayments>
+          </ns1:AmendOptions>
+          <ns1:PreviewOptions>
+            <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>
+            <ns1:PreviewThroughTermEnd>true</ns1:PreviewThroughTermEnd>
+          </ns1:PreviewOptions>
+        </ns1:requests>
+      </ns1:amend>
+    }
+  }
+
   case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String)
     extends ZuoraAction {
 
@@ -234,4 +282,19 @@ trait ZuoraService {
       </ns1:amend>
     }
   }
+
+  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
+    val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
+    Query(q).mkRequest().map(Zuora.Query(_)).map { case Zuora.Query(results) =>
+      if (results.length != 1) {
+        throw new SubscriptionServiceError(s"Query $q returned more than one result")
+      }
+
+      results(0)
+    }
+  }
+
+  def queryOne(field: String, table: String, where: String): Future[String] =
+    queryOne(Seq(field), table, where).map(_(field))
+
 }

@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     style: 'compressed',
-                    sourcemap: true,
+                    sourcemap: isDev ? true : false,
                     noCache: true,
                     quiet: isDev ? false : true,
                     loadPath: [
@@ -58,17 +58,12 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     name: 'src/main',
-                    include: [
-                        'requireLib'
-                    ],
                     baseUrl: '<%= dirs.assets.javascripts %>',
                     paths: {
-                        'requireLib': 'lib/bower-components/requirejs/require',
                         '$': 'src/utils/$',
                         'bean': 'lib/bower-components/bean/bean',
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
                         'qwery': 'lib/bower-components/qwery/qwery',
-                        'domready': 'lib/bower-components/domready/ready',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
                         'stripe': 'lib/stripe/stripe.min',
@@ -77,7 +72,7 @@ module.exports = function (grunt) {
                     findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
-                    generateSourceMaps: true,
+                    generateSourceMaps: isDev ? true : false,
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }

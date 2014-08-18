@@ -38,16 +38,16 @@ trait MemberService {
     for {
       sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
-      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
-    } yield sfAccountId
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+    } yield {
+      Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
+      sfAccountId
+    }
   }
 
   def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
-
-      // Leaving this in until Stripe has been completely removed
-      sub <- StripeService.Subscription.create(customer.id, formData.tier.toString)
 
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
@@ -56,8 +56,11 @@ trait MemberService {
       sfAccountId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      _ <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
-    } yield sfAccountId
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+    } yield {
+      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
+      sfAccountId
+    }
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
@@ -103,6 +106,12 @@ trait MemberService {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
+    for {
+      _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
+    } yield ""
   }
 
   // TODO: this currently only handles free -> paid

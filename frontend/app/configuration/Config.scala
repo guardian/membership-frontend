@@ -31,7 +31,7 @@ object Config {
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
-  val idApiClientToken = config.getString("id.api.client.token")
+  val idApiClientToken = config.getString("identity.api.client.token")
 
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
   val eventbriteApiToken = config.getString("eventbrite.api.token")
@@ -52,6 +52,12 @@ object Config {
   val zuoraApiUrl = config.getString("zuora.api.url")
   val zuoraApiUsername = config.getString("zuora.api.username")
   val zuoraApiPassword = config.getString("zuora.api.password")
+
+  val zuoraApiFriend = config.getString("zuora.api.friend")
+  val zuoraApiPartnerMonthly = config.getString("zuora.api.partner.monthly")
+  val zuoraApiPartnerAnnual = config.getString("zuora.api.partner.annual")
+  val zuoraApiPatronMonthly = config.getString("zuora.api.patron.monthly")
+  val zuoraApiPatronAnnual = config.getString("zuora.api.patron.annual")
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
