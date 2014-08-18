@@ -186,6 +186,28 @@ trait ZuoraService {
     }
   }
 
+  case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime) extends ZuoraAction {
+    val body =
+      <ns1:amend>
+        <ns1:requests>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:Name>Cancellation</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:AmendmentSubscriptionRatePlanId>{subscriptionRatePlanId}</ns2:AmendmentSubscriptionRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:ServiceActivationDate/>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>Cancellation</ns2:Type>
+          </ns1:Amendments>
+        </ns1:requests>
+      </ns1:amend>
+  }
+
   case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
                            date: DateTime) extends ZuoraAction {
 
