@@ -20,8 +20,6 @@ object Stripe {
   case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
     extends StripeObject
 
-  case class PaymentDetails(card: Card, subscription: Subscription)
-
   case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
     // customers should always have a card
     if (cards.total_count != 1) {
