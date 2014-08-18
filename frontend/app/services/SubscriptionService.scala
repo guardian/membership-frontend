@@ -49,6 +49,14 @@ trait CreateSubscription {
 trait AmendSubscription {
   self: SubscriptionService =>
 
+  def cancelSubscription(sfAccountId: String): Future[String] = {
+    for {
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+      result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, subscriptionDetails.endDate).mkRequest()
+    } yield ""
+  }
+
   def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
     val newRatePlanId = tier match {
       case Tier.Friend => friendPlan

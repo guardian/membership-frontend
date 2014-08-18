@@ -80,32 +80,20 @@ trait MemberService {
     } yield discount.headOption
   }
 
-  def cancelAnySubscriptionPayment(member: Member): Future[Option[Subscription]] = {
-    def cancelSubscription(customer: Customer): Option[Future[Subscription]] = {
-      for {
-        paymentDetails <- customer.paymentDetails
-      } yield {
-        StripeService.Subscription.delete(customer.id, paymentDetails.subscription.id)
-      }
-    }
-
-    member match {
-      case paidMember: PaidMember =>
-        for {
-          customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          cancelledOpt = cancelSubscription(customer)
-          cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
-        } yield cancelledSubscription.headOption
-
-      case _ => Future.successful(None)
-    }
-  }
-
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       memberId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  def cancelSubscription(member: Member): Future[String] = {
+    val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
+
+    for {
+      subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId)
+      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false))
+    } yield ""
   }
 
   def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {

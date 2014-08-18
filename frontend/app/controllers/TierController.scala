@@ -65,17 +65,8 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
+      _ <- MemberService.cancelSubscription(request.member)
     } yield {
-      val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
-      // TODO: move into MemberService
-      MemberRepository.upsert(
-        request.member.identityId,
-        Map(
-          Member.Keys.TIER -> newTier.toString,
-          Member.Keys.OPT_IN -> false
-        )
-      )
       Redirect("/tier/cancel/summary")
     }
   }
