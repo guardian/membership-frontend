@@ -6,14 +6,9 @@ import play.api.mvc.WithFilters
 import play.api.Application
 
 import controllers.Cached
-import filters.CheckCacheHeadersFilter
+import filters.{CheckCacheHeadersFilter, Gzipper}
 import services.{SubscriptionService, MemberRepository, EventbriteService}
 import play.filters.csrf._
-import play.filters.gzip.GzipFilter
-
-object Gzipper extends GzipFilter(
-  shouldGzip = (req, resp) => !resp.headers.get("Content-Type").exists(_.startsWith("image/"))
-)
 
 object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter(), Gzipper) {
   override def onStart(app: Application) {
