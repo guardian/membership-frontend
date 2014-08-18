@@ -36,12 +36,12 @@ trait MemberService {
 
   def createFriend(user: User, formData: FriendJoinForm, cookie: Option[Cookie]): Future[String] = {
     for {
-      sfAccountId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
-      subscription <- SubscriptionService.createFriendSubscription(sfAccountId, formData.name, formData.deliveryAddress)
+      memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
+      subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
       identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
-      sfAccountId
+      memberId.account
     }
   }
 
@@ -53,13 +53,13 @@ trait MemberService {
         Keys.CUSTOMER_ID -> customer.id,
         Keys.DEFAULT_CARD_ID -> customer.card.id
       )
-      sfAccountId <- MemberRepository.upsert(user.id, updatedData)
-      subscription <- SubscriptionService.createPaidSubscription(sfAccountId, customer, formData.tier,
+      memberId <- MemberRepository.upsert(user.id, updatedData)
+      subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
       identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
-      sfAccountId
+      memberId.account
     }
   }
 
@@ -104,7 +104,7 @@ trait MemberService {
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
-      sfAccountId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
+      memberId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
   }
 
@@ -120,7 +120,7 @@ trait MemberService {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
       subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, payment.annual)
-      sfAccountId <- MemberRepository.upsert(
+      memberId <- MemberRepository.upsert(
         member.identityId,
         Map(
           Keys.TIER -> tier.toString,
@@ -128,7 +128,7 @@ trait MemberService {
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
-    } yield sfAccountId
+    } yield memberId.account
   }
 }
 
