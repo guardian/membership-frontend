@@ -49,11 +49,13 @@ trait CreateSubscription {
 trait AmendSubscription {
   self: SubscriptionService =>
 
-  def cancelSubscription(sfAccountId: String): Future[String] = {
+  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[String] = {
     for {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
       subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-      result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, subscriptionDetails.endDate).mkRequest()
+
+      cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
+      result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate).mkRequest()
     } yield ""
   }
 

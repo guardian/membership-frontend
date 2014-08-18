@@ -91,7 +91,7 @@ trait MemberService {
     val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
 
     for {
-      subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId)
+      subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
       _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
     } yield ""
   }
