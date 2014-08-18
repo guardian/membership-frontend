@@ -1,7 +1,7 @@
 package controllers
 
 import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{DateTime, Instant}
+import org.joda.time.Instant
 
 import scala.concurrent.Future
 
@@ -11,19 +11,18 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember}
 
-import actions.{AjaxMemberAction, MemberRequest}
+import actions.{Cors, AjaxMemberAction, MemberRequest}
 import services.{StripeService, SubscriptionService}
-import model.Stripe
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
-  def me = AjaxMemberAction { implicit request =>
-    Cors(Ok(basicDetails(request)))
+  def me = Cors(AjaxMemberAction) { implicit request =>
+    Ok(basicDetails(request))
   }
 
-  def meDetails = AjaxMemberAction.async { implicit request =>
+  def meDetails = Cors(AjaxMemberAction).async { implicit request =>
     val futurePaymentDetails = request.member match {
       case paidMember: PaidMember =>
         for {
@@ -54,7 +53,7 @@ trait User extends Controller {
         Future.successful(paymentDetails)
     }
 
-    futurePaymentDetails.map { paymentDetails => Cors(Ok(basicDetails(request) ++ paymentDetails)) }
+    futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request) ++ paymentDetails) }
   }
 
   def basicDetails(request: MemberRequest[_]) = {
