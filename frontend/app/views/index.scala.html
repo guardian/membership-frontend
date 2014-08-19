@@ -7,11 +7,13 @@
     <div class="brochure-container-outer brochure-container--image-background">
         <div class="brochure-container brochure-container--promo-two">
             <div class="brochure-container__inner">
-                <h2 class="section-headline section-headline--border-bottom">@title</h2>
+                <h2 class="section-headline section-headline--black">@title</h2>
 
-                @for((src, alt) <- images) {
-                    <img src="@src" alt="@alt"/>
-                }
+                <div class="l-row l-row--items-2">
+                    @for((src, alt) <- images) {
+                        <div class="l-row__item"><img src="@src" alt="@alt" /></div>
+                    }
+                </div>
 
                 @content
             </div>
@@ -33,7 +35,7 @@
     <div class="brochure-container-outer brochure-container--white-background">
         <div class="brochure-container">
             <div class="brochure-container__inner l-row l-row--items-2">
-                <div class="brochure-container__image l-row__item"><img src="image-path-here" alt="" class="brochure-container__image--holder"/></div>
+                <div class="brochure-container__image l-row__item"><img src="/assets/images/homepage/teaser-image1.jpg" alt="" class="brochure-container__image--holder"/></div>
                 <div class="brochure-container__teaser l-row__item l-row__item--boost-1">
                     <p>Guardian Membership brings you closer to the <strong>stories</strong> of the day, connects you to the <strong>conversations</strong> that matter and introduces you to <strong>fellow members</strong> who share your interests.</p>
                     <p><a class="action action--join" href="#">Join today</a></p>
@@ -43,8 +45,19 @@
     </div>
 
     @promoWithImageBackground("Events that bring the Guardian to life", List("/assets/images/homepage/teaser-image1-1.jpg" -> "altText", "/assets/images/homepage/teaser-image1-2.jpg" -> "altText1")) {
-        <p><strong>Guardian Live</strong> is a programme of discussions, debates, interviews, keynote speeches and festivals that brings the Guardian’s journalism to life. 
-Events that for the first time take the power of open journalism from print and digital into live experiences.</p>
-<a class="action action--join" href="#">See our live events</a>
+        <p><strong>Guardian Live</strong> is a programme of discussions, debates, interviews, keynote speeches and festivals that brings the Guardian’s journalism to life. </p>
+        <p>Events that for the first time take the power of open journalism from print and digital into live experiences.</p>
+        <a class="action action--secondary-button" href="#">See our live events</a>
     }
+
+    <div class="brochure-container-outer brochure-container--white-background">
+        <div class="brochure-container brochure-container--promo-three">
+            <div class="brochure-container__inner">
+                <h2 class="section-headline section-headline--border-bottom">Membership fuels our jourmalism</h2>
+                <blockquote>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
+                <p>Guardian Membership is the community for those who share this ideal.</p>
+                <a class="action action--join" href="#">Start your journey as patron</a>
+            </div>
+        </div>
+    </div>
 }
