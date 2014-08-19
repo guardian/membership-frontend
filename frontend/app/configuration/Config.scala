@@ -28,6 +28,9 @@ object Config {
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
 
+  def eventImageUrlPath(id: String): String =
+    config.getString("membership.event.images.url") + id
+
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
