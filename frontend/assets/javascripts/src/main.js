@@ -1,5 +1,5 @@
 require([
-    'lib/bower-components/imager.js/Imager',
+    'lib/bower-components/imager.js/dist/Imager.min',
     'src/utils/analytics/omniture',
     'src/utils/router',
     'ajax',
