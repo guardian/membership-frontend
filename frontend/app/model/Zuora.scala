@@ -25,11 +25,11 @@ object Zuora {
   }
 
   object SubscriptionDetails {
-    def apply(map: Map[String, String]): SubscriptionDetails = {
-      val startDate = new DateTime(map("EffectiveStartDate"))
-      val endDate = map.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
+    def apply(ratePlan: Map[String, String], ratePlanCharge: Map[String, String]): SubscriptionDetails = {
+      val startDate = new DateTime(ratePlanCharge("EffectiveStartDate"))
+      val endDate = ratePlanCharge.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
 
-      SubscriptionDetails(map("Name"), map("Price").toFloat, startDate, endDate, map("Id"))
+      SubscriptionDetails(ratePlan("Name"), ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
     }
   }
 
