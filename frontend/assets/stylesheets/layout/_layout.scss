@@ -113,6 +113,13 @@ body {
         ));
     }
 
+    &.brochure-container--no-top-margin {
+        background-color: $white;
+        @include rem((
+            padding: 0 0 $gs-gutter * 2
+        ));
+    }
+
     &.brochure-container--image-background {
         background: url(/assets/images/homepage/mem-bg-promo.jpg) no-repeat center center;
         background-size: cover;
@@ -175,6 +182,14 @@ body {
             color: $black;
         }
     } 
+}
+
+.brochure-container--promo-three {
+
+}
+
+.brochure-container--promo-four {
+
 }
 
 .brochure-container__inner {

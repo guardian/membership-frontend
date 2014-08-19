@@ -50,8 +50,8 @@
         <a class="action action--secondary-button" href="/events">See our live events</a>
     }
 
-    <div class="brochure-container-outer brochure-container--white-background">
-        <div class="brochure-container brochure-container--promo-three">
+    <div class="brochure-container-outer brochure-container--no-top-margin">
+        <div class="brochure-container brochure-container--promo-four">
             <div class="brochure-container__inner">
                 <h2 class="section-headline section-headline--border-bottom">Membership fuels our journalism</h2>
                 <blockquote>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
@@ -60,4 +60,13 @@
             </div>
         </div>
     </div>
+
+    @promoWithImageBackground("A home for the big ideas", List("images/homepage/teaser-image1-1.jpg" -> "altText", "images/homepage/teaser-image1-2.jpg" -> "altText1")) {
+        <p class="brochure-container__copy">In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross. This will mark the coming together of extraordinary cultural and educational institutions with the Guardian, to create a new kind of <strong>civic space.</strong></p>
+        <p class="brochure-container__copy">The building will be a hub for <strong>big ideas</strong> and <strong>conversation,</strong> offering events, activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.</p>
+        <div class="l-row l-row--items-2">
+            <div class="l-row__item"><a class="action action--join" href="/events">More about the building</a></div>
+            <div class="l-row__item"><a class="action action--secondary-button" href="/events">Building progress blog</a></div>
+        </div>
+    }
 }
