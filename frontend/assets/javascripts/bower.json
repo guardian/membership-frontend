@@ -10,6 +10,6 @@
     "html5shiv": "~3.7.2",
     "zxcvbn": "*",
     "curl": "~0.8.10",
-    "imager.js": "latest"
+    "imager.js": "~0.2.0"
   }
 }
