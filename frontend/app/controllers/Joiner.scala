@@ -48,7 +48,7 @@ trait Joiner extends Controller {
 
   private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
     for {
-      salesforceContactId <- MemberService.createFriend(request.user, formData, IdentityHeaders(request))
+      salesforceContactId <- MemberService.createFriend(request.user, formData, IdentityRequest(request))
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
