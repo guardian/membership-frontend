@@ -127,7 +127,7 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
     for {
       ratePlan <- zuora.queryOne(Seq("Id", "Name"), "RatePlan", s"SubscriptionId='$subscriptionId'")
       ratePlanCharge <- zuora.queryOne(Seq("ChargedThroughDate", "EffectiveStartDate", "Price"), "RatePlanCharge", s"RatePlanId='${ratePlan("Id")}'")
-    } yield SubscriptionDetails(ratePlan ++ ratePlanCharge)
+    } yield SubscriptionDetails(ratePlan, ratePlanCharge)
   }
 
   def getCurrentSubscriptionId(sfAccountId: String): Future[String] = getSubscriptionStatus(sfAccountId).map(_.current)
