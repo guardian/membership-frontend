@@ -1,13 +1,10 @@
 package services
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
 
 import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
 import play.api.mvc.Cookie
 
 import com.gu.membership.salesforce._
@@ -19,6 +16,7 @@ import model.Eventbrite.{EBEvent, EBDiscount}
 import model.Stripe.{Card, Customer, Subscription}
 import forms.MemberForm.{PaymentForm, JoinForm, PaidMemberJoinForm, FriendJoinForm}
 import com.gu.membership.salesforce.Member.Keys
+import utils.ScheduledTask
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -134,7 +132,13 @@ trait MemberService {
 
 object MemberService extends MemberService
 
-object MemberRepository extends MemberRepository {
+object MemberRepository extends MemberRepository with ScheduledTask[Authentication] {
+  val initialValue = Authentication("", "")
+  val initialDelay = 0.seconds
+  val interval = 2.hours
+
+  def refresh() = salesforce.getAuthentication
+
   val salesforce = new Scalaforce {
     val consumerKey = Config.salesforceConsumerKey
     val consumerSecret = Config.salesforceConsumerSecret
@@ -144,24 +148,6 @@ object MemberRepository extends MemberRepository {
     val apiPassword = Config.salesforceApiPassword
     val apiToken = Config.salesforceApiToken
 
-    def authentication: Authentication = authenticationAgent.get()
-  }
-
-  private implicit val system = Akka.system
-
-  val authenticationAgent = Agent[Authentication](Authentication("", ""))
-
-  def refresh() {
-    Logger.debug("Refreshing Scalaforce login")
-    authenticationAgent.sendOff(_ => {
-      val auth = Await.result(salesforce.getAuthentication, 15.seconds)
-      Logger.debug(s"Got Scalaforce login $auth")
-      auth
-    })
-  }
-
-  def start() {
-    Logger.info("Starting Scalaforce background tasks")
-    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
+    def authentication: Authentication = agent.get()
   }
 }
