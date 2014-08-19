@@ -13,10 +13,6 @@ import play.api.mvc.{Request, Cookie}
 
 import scala.concurrent.Future
 
-case class IdentityServiceError(s: String) extends Throwable {
-  override def getMessage: String = s
-}
-
 trait IdentityService {
 
   def updateUserBasedOnJoining(user: User, formData: JoinForm, identityHeaders: List[(String, String)]): Future[WSResponse] = {
