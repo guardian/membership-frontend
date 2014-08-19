@@ -1,23 +1,18 @@
 package services
 
 import scala.concurrent.Future
-import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
 
 import org.joda.time.DateTime
 
 import com.gu.membership.salesforce.{MemberId, Tier}
 
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
-
 import configuration.Config
 import forms.MemberForm.{NameForm, AddressForm}
 import model.Zuora._
 import model.Stripe
+import utils.ScheduledTask
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -136,30 +131,18 @@ trait SubscriptionService {
 
 }
 
-object SubscriptionService extends SubscriptionService {
+object SubscriptionService extends SubscriptionService with ScheduledTask[Authentication] {
+  val initialValue = Authentication("", "")
+  val initialDelay = 0.seconds
+  val interval = 2.hours
+
+  def refresh() = zuora.Login().mkRequest().map(Authentication(_))
+
   val zuora = new ZuoraService {
     val apiUrl = Config.zuoraApiUrl
     val apiUsername = Config.zuoraApiUsername
     val apiPassword = Config.zuoraApiPassword
 
-    def authentication: Authentication = authenticationAgent.get()
-  }
-
-  private implicit val system = Akka.system
-
-  val authenticationAgent = Agent[Authentication](Authentication("", ""))
-
-  def refresh() {
-    Logger.debug("Refreshing Zuora login")
-    authenticationAgent.sendOff(_ => {
-      val auth = Await.result(zuora.Login().mkRequest().map(Authentication(_)), 15.seconds)
-      Logger.debug(s"Got Zuora login $auth")
-      auth
-    })
-  }
-
-  def start() {
-    Logger.info("Starting Zuora background tasks")
-    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
+    def authentication: Authentication = agent.get()
   }
 }
