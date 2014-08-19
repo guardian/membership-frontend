@@ -17,25 +17,25 @@ trait IdentityService {
 
   def updateUserBasedOnJoining(user: User, formData: JoinForm, identityHeaders: List[(String, String)]): Future[WSResponse] = {
 
-      val billingDetails = if(formData.isInstanceOf[PaidMemberJoinForm]) {
-        val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
-        val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
-        billingAddress(billingAddressForm)
-      } else Json.obj()
+    val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
+      val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
+      val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
+      billingAddress(billingAddressForm)
+    } else Json.obj()
 
-      val fields = Json.obj(
-        "secondName" -> formData.name.last,
-        "firstName" -> formData.name.first
-      ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
+    val fields = Json.obj(
+      "secondName" -> formData.name.last,
+      "firstName" -> formData.name.first
+    ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-       postRequest(fields, user, identityHeaders)
+    postRequest(fields, user, identityHeaders)
   }
 
-  def updateUserBasedOnUpgrade(user:User, formData: PaidMemberChangeForm, identityHeaders: List[(String, String)]) = {
+  def updateUserBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityHeaders: List[(String, String)]) = {
 
-      val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
-      val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
-      postRequest(fields, user, identityHeaders)
+    val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
+    val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
+    postRequest(fields, user, identityHeaders)
   }
 
   private def postRequest(fields: JsObject, user: User, identityHeaders: List[(String, String)]) = {
