@@ -148,12 +148,33 @@ body {
         @include mq(desktop) {
             width: gs-span(8);
         }
+
+        .section-headline--border-bottom {
+            @include rem((
+                margin-bottom: $gs-gutter
+            ));
+        }
     } 
 }
 
 .brochure-container--promo-two {
     background-color: rgba(180, 24, 0, .95);
     color: $black;
+    @include rem((
+        padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter,
+        margin-bottom: $gs-gutter * 2
+    ));
+
+    .brochure-container__inner {
+        @include mq(desktop) {
+            width: gs-span(8);
+        }
+
+        .section-headline--black {
+            border-top: $gs-gutter solid $black;
+            color: $black;
+        }
+    } 
 }
 
 .brochure-container__inner {
@@ -167,6 +188,12 @@ body {
 
     .brochure-container__teaser {
         width: gs-span(7);
+    }
+
+    .brochure-container__copy {
+        @include rem((
+            margin-bottom: $gs-gutter
+        ));
     }
 }
 
