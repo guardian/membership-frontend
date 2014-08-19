@@ -1,4 +1,4 @@
-@(paymentDetails: model.Stripe.Card, currentSubscription: model.Zuora.SubscriptionDetails, futureSubscription: model.Zuora.SubscriptionDetails)
+@(currentSubscription: model.Zuora.SubscriptionDetails, futureSubscription: model.Zuora.SubscriptionDetails)
 
 @import configuration.Config
 @import views.support.Dates._
@@ -22,40 +22,7 @@
                     <h2>Current Package Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <table class="table table--responsive-font table--striped">
-                        <tr class="table__headline" role="row">
-                            <td class="summary-table__cell" role="scope">
-                                Package
-                            </td>
-                            <td class="summary-table__cell" role="scope">
-                            @currentSubscription.planName
-                            </td>
-                        </tr>
-                        <tr class="summary-table__row" role="row">
-                            <td class="summary-table__cell">
-                                End Date
-                            </td>
-                            <td class="summary-table__cell">
-                                @currentSubscription.endDate.pretty
-                            </td>
-                        </tr>
-                        <tr class="summary-table__row" role="row">
-                            <td class="summary-table__cell">
-                                Monthly Payment
-                            </td>
-                            <td class="summary-table__cell">
-                                @currentSubscription.planAmount.pretty
-                            </td>
-                        </tr>
-                        <tr class="summary-table__row" role="row">
-                            <td class="summary-table__cell">
-                                Last Payment
-                            </td>
-                            <td class="summary-table__cell">
-                                @currentSubscription.startDate.pretty
-                            </td>
-                        </tr>
-                    </table>
+                    @fragments.tier.summary(currentSubscription)
                 </div>
             </section>
         </div>

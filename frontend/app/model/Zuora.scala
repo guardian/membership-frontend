@@ -18,8 +18,8 @@ object Zuora {
 
   case class SubscriptionStatus(current: String, future: Option[String])
 
-  case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime)
-    extends ZuoraObject {
+  case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
+                                 ratePlanId: String) extends ZuoraObject {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
   }
@@ -29,7 +29,7 @@ object Zuora {
       val startDate = new DateTime(map("EffectiveStartDate"))
       val endDate = map.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
 
-      SubscriptionDetails(map("Name"), map("Price").toFloat, startDate, endDate)
+      SubscriptionDetails(map("Name"), map("Price").toFloat, startDate, endDate, map("Id"))
     }
   }
 

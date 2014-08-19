@@ -15,11 +15,12 @@ class SubscriptionServiceTest extends Specification {
           "EffectiveStartDate" -> "2014-10-06T10:00:00",
           "ChargedThroughDate" -> "2014-11-07T10:00:00",
           "Price" -> "12",
-          "Name" -> "Product name"
+          "Name" -> "Product name",
+          "Id" -> "Id"
         )
       )
 
-      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, startDate, endDate)
+      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, startDate, endDate, "Id")
       subscriptionDetails.annual mustEqual false
     }
   }
