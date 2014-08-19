@@ -56,14 +56,20 @@
             <div class="header__primary">
                 <ul class="inline-list">
                     <li class="inline-list__item nav__item">
+                        <a href="/" class="nav__link">home</a>
+                    </li>
+                    <li class="inline-list__item nav__item">
                         <a href="/events" class="nav__link">events</a>
                     </li>
                     @if(!Config.membershipHide) {
                         <li class="inline-list__item nav__item">
-                            <a href="/join" class="nav__link">about membership</a>
+                            <a href="/about" class="nav__link">about membership</a>
                         </li>
                         <li class="inline-list__item nav__item">
                             <a href="/join/patron" class="nav__link">patrons</a>
+                        </li>
+                        <li class="inline-list__item nav__item">
+                            <a href="/join" class="nav__link">pricing</a>
                         </li>
                     }
                 </ul>
