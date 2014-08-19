@@ -135,16 +135,6 @@ body {
     @include mq(desktop) {
         width: gs-span(12);
     }
-
-    p {
-        @include rem((
-            margin-bottom: $gs-gutter
-        ));
-    }
-
-    img {
-        background-color: transparent;
-    }
 }
 
 .brochure-container--promo-one {
@@ -198,6 +188,12 @@ body {
 
     .brochure-container__teaser {
         width: gs-span(7);
+    }
+
+    .brochure-container__copy {
+        @include rem((
+            margin-bottom: $gs-gutter
+        ));
     }
 }
 
