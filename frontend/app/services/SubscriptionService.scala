@@ -8,7 +8,7 @@ import akka.agent.Agent
 
 import org.joda.time.DateTime
 
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{MemberId, Tier}
 
 import play.api.Logger
 import play.api.Play.current
@@ -52,14 +52,14 @@ trait SubscriptionService {
       if (annual) plan.annual else plan.monthly
     }
   }
-  def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
+  def createPaidSubscription(memberId: MemberId, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(sfAccountId, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
+    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
   }
 
-  def createFriendSubscription(sfAccountId: String, name: NameForm, address: AddressForm): Future[Subscription] = {
-    zuora.Subscribe(sfAccountId, None, friendPlan, name, address).mkRequest().map(Subscription(_))
+  def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[Subscription] = {
+    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest().map(Subscription(_))
   }
 
   def getAccountId(sfAccountId: String): Future[String] = zuora.queryOne("Id", "Account", s"crmId='$sfAccountId'")

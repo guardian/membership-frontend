@@ -1,13 +1,64 @@
 @()
 
 @import configuration.Config
+@import views.support.Asset
 
-@main("Home Page") {
+@promoWithImageBackground(title: String, images: List[(String, String)])(content: Html) = {
+    <div class="brochure-container-outer brochure-container--image-background">
+        <div class="brochure-container brochure-container--promo-two">
+            <div class="brochure-container__inner">
+                <h2 class="section-headline section-headline--black">@title</h2>
 
-        <h1 class="section-header">@if(Config.membershipHide){Masterclasses}else{Membership}</h1>
-        <ul class="u-unstyled">
-            @if(!Config.membershipHide){<li><a href="/join" class="action action--join">Become a member</a></li>}
-            <li><a href="/events" class="action action--join">Events</i></a></li>
-        </ul>
+                <div class="l-row l-row--items-2">
+                    @for((src, alt) <- images) {
+                        <div class="l-row__item"><img src="@Asset.at(src)" alt="@alt" /></div>
+                    }
+                </div>
 
+                @content
+                
+            </div>
+        </div>
+    </div>
+}
+
+@main("Home Page", true) {
+
+    <div class="brochure-container brochure-container--promo-one">
+        <div class="brochure-container__inner">
+            <h2 class="section-headline section-headline--border-bottom">Introducing Guardian @if(Config.membershipHide){Masterclasses}else{Membership}</h2>
+            <p class="brochure-container__copy">We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world for the better</strong></p>
+            <p class="brochure-container__copy">Guardian Membership is the community for those who share this ideal.</p>
+            <a class="action action--join" href="#">Learn more</a>
+        </div>
+    </div>
+
+    <div class="brochure-container-outer brochure-container--white-background">
+        <div class="brochure-container">
+            <div class="brochure-container__inner l-row l-row--items-2">
+                <div class="brochure-container__image l-row__item"><img src="@Asset.at("images/homepage/teaser-image1.jpg")" alt="" class="brochure-container__image--holder"/></div>
+                <div class="brochure-container__teaser l-row__item l-row__item--boost-1">
+                    <p class="brochure-container__copy">Guardian Membership brings you closer to the <strong>stories</strong> of the day, connects you to the <strong>conversations</strong> that matter and introduces you to <strong>fellow members</strong> who share your interests.</p>
+                    <p class="brochure-container__copy"><a class="action action--join" href="/join">Join today</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @promoWithImageBackground("Events that bring the Guardian to life", List("images/homepage/teaser-image1-1.jpg" -> "altText", "images/homepage/teaser-image1-2.jpg" -> "altText1")) {
+        <p class="brochure-container__copy"><strong>Guardian Live</strong> is a programme of discussions, debates, interviews, keynote speeches and festivals that brings the Guardian’s journalism to life. </p>
+        <p class="brochure-container__copy">Events that for the first time take the power of open journalism from print and digital into live experiences.</p>
+        <a class="action action--secondary-button" href="/events">See our live events</a>
+    }
+
+    <div class="brochure-container-outer brochure-container--white-background">
+        <div class="brochure-container brochure-container--promo-three">
+            <div class="brochure-container__inner">
+                <h2 class="section-headline section-headline--border-bottom">Membership fuels our journalism</h2>
+                <blockquote>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
+                <p class="brochure-container__copy">Guardian Membership is the community for those who share this ideal.</p>
+                <a class="action action--join" href="/events">Start your journey as patron</a>
+            </div>
+        </div>
+    </div>
 }

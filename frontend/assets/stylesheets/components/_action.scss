@@ -63,7 +63,7 @@
     background-color: $mem-buttonBlue;
     @include rem((
         padding: 8px 8px 8px 18px,
-        width: 220px
+        min-width: 220px
     ));
     
     &:visited,
@@ -73,6 +73,31 @@
     }
     &:hover {
         background-color: darken($mem-buttonBlue, 15%);
+    }
+    i {
+        float: right;
+        @include rem((
+            margin-top: 2px
+        ));   
+    }
+}
+
+.action--secondary-button {
+    text-align: left;
+    background-color: $offWhite;
+    color: $black;
+    @include rem((
+        padding: 8px 8px 8px 18px,
+        width: 220px
+    ));
+    
+    &:visited,
+    &:active,
+    &:focus {
+        background-color: $offWhite;
+    }
+    &:hover {
+        background-color: darken($offWhite, 15%);
     }
     i {
         float: right;

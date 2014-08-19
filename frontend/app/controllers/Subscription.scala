@@ -12,7 +12,7 @@ import services.{MemberService, StripeService}
 import model.Stripe
 import model.StripeSerializer._
 import model.StripeDeserializer.readsEvent
-import actions.{PaidMemberAction, AuthenticatedAction, AuthRequest}
+import actions.{Cors, PaidMemberAction, AuthenticatedAction, AuthRequest}
 import configuration.Config
 import forms.MemberForm._
 
@@ -33,16 +33,18 @@ trait Subscription extends Controller {
     }
   }
 
-  def updateCard() = PaidMemberAction.async { implicit request =>
+  def updateCard() = Cors(PaidMemberAction).async { implicit request =>
     updateForm.bindFromRequest
-      .fold(_ => Future.successful(Cors(BadRequest)), stripeToken =>
+      .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
           card <- MemberService.updateDefaultCard(request.member, stripeToken)
-        } yield Cors(Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`)))
+        } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`))
       ).recover {
-        case error: Stripe.Error => Cors(Forbidden(Json.toJson(error)))
+        case error: Stripe.Error => Forbidden(Json.toJson(error))
       }
   }
+
+  def updateCardPreflight() = Cors(CachedAction) { Ok.withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "Csrf-Token") }
 
   private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
 
