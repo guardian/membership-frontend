@@ -1,4 +1,5 @@
 require([
+    'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
     'src/utils/router',
     'ajax',
@@ -10,6 +11,7 @@ require([
     'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent'
 ], function(
+    Imager,
     omnitureAnalytics,
     router,
     ajax,
@@ -46,6 +48,8 @@ require([
     router.match('*').to(function () {
         (new Header()).init();
         omnitureAnalytics.init();
+
+        return new Imager({ availableWidths: [300, 460], availablePixelRatios: [1, 2] }); // http://stackoverflow.com/questions/3686267/how-do-i-address-the-jslint-warning-do-not-use-new-for-side-effects
     });
 
     /**
