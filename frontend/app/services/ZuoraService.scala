@@ -4,7 +4,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Null, Elem, PrettyPrinter}
 
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 
 import play.api.Logger
 import play.api.libs.ws.WS
@@ -26,7 +26,7 @@ trait ZuoraService {
 
   def authentication: Authentication
 
-  def formatDateTime(dt: DateTime): String = ISODateTimeFormat.dateTime().print(dt)
+  def formatDateTime(dt: DateTime): String = ISODateTimeFormat.dateTime().print(dt.withZone(DateTimeZone.UTC))
 
   trait ZuoraAction {
     val body: Elem
