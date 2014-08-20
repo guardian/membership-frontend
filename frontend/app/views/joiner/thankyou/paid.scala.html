@@ -2,7 +2,6 @@
 
 @import views.support.Dates._
 @import views.support.Prices._
-@import views.support.IFrame
 
 @main("Thankyou | " + subscriptionDetails.planName) {
 
@@ -73,8 +72,7 @@
     </section>
 
     @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
-        <iframe src="@eventIFrameUrl" frameborder="0" height="@IFrame.calcEBIFrameHeight(eventIFrameTicketQty)" width="100%" vspace="0" hspace="0" marginheight="5"
-        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
     }
 
     <div class="separator"></div>

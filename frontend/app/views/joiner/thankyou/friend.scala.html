@@ -1,7 +1,5 @@
 @(ebIFrameDetail: Option[(String, Int)])
 
-@import views.support.IFrame
-
 @main("Thankyou | Friend") {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
@@ -15,8 +13,7 @@
     </section>
 
     @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
-        <iframe src="@eventIFrameUrl" width="100%" height="@IFrame.calcEBIFrameHeight(eventIFrameTicketQty)" frameborder="0" vspace="0" hspace="0" marginheight="5"
-        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
     }
 
     <div class="separator"></div>
