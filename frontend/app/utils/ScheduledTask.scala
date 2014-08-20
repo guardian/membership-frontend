@@ -16,7 +16,7 @@ trait ScheduledTask[T] {
   val interval: FiniteDuration
 
   private implicit val system = Akka.system
-  val agent = Agent[T](initialValue)
+  lazy val agent = Agent[T](initialValue)
 
   def refresh(): Future[T]
 

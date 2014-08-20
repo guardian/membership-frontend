@@ -1,22 +1,19 @@
 package services
 
+import com.gu.identity.model.User
+import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
+import configuration.Config
+import controllers.IdentityRequest
+import forms.MemberForm._
+import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Stripe.Card
+import play.api.Logger
+import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.Logger
-import play.api.mvc.Cookie
-
-import com.gu.membership.salesforce._
-
-import com.gu.identity.model.User
-
-import configuration.Config
-import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.{Card, Customer, Subscription}
-import forms.MemberForm._
-import com.gu.membership.salesforce.Member.Keys
-import utils.ScheduledTask
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -32,18 +29,18 @@ trait MemberService {
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
   )
 
-  def createFriend(user: User, formData: FriendJoinForm, identityHeaders: List[(String, String)]): Future[String] = {
+  def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityHeaders)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
       memberId.account
     }
   }
 
-  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityHeaders: List[(String, String)]): Future[String] = {
+  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
@@ -54,7 +51,7 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityHeaders)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       memberId.account
@@ -78,32 +75,20 @@ trait MemberService {
     } yield discount.headOption
   }
 
-  def cancelAnySubscriptionPayment(member: Member): Future[Option[Subscription]] = {
-    def cancelSubscription(customer: Customer): Option[Future[Subscription]] = {
-      for {
-        paymentDetails <- customer.paymentDetails
-      } yield {
-        StripeService.Subscription.delete(customer.id, paymentDetails.subscription.id)
-      }
-    }
-
-    member match {
-      case paidMember: PaidMember =>
-        for {
-          customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          cancelledOpt = cancelSubscription(customer)
-          cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
-        } yield cancelledSubscription.headOption
-
-      case _ => Future.successful(None)
-    }
-  }
-
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       memberId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  def cancelSubscription(member: Member): Future[String] = {
+    val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
+
+    for {
+      subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
+      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
+    } yield ""
   }
 
   def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
@@ -113,7 +98,7 @@ trait MemberService {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityHeaders: List[(String, String)]): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
@@ -126,7 +111,7 @@ trait MemberService {
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
-      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, identityHeaders)
+      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, identityRequest)
     } yield memberId.account
   }
 }
