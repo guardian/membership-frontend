@@ -1,7 +1,8 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, eventIframeUrlOpt: Option[String])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)])
 
 @import views.support.Dates._
 @import views.support.Prices._
+@import views.support.IFrame
 
 @main("Thankyou | " + subscriptionDetails.planName) {
 
