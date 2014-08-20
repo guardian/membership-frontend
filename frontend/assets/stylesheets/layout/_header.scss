@@ -19,6 +19,24 @@
     }
     .header__secondary {
         float: right;
+        width: 200px;
+        i {
+            background-size: 200px;
+        }
+
+        @include mq(mobileLandscape) {
+            width: 320px;
+            i {
+                background-size: 320px;
+            }
+        }
+
+        @include mq(desktop) {
+            width: auto;
+            i {
+                background-size: auto;
+            }
+        }
     }
     .header__menu {
         display: none;
