@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, isBrochure: Boolean = false)(content: Html)
 
 @import configuration.Config
 @import views.support.Asset
@@ -67,12 +67,18 @@
 
         @fragments.unsupportedBrowser()
 
-        <div class="container-global">
-            @fragments.header()
+        @fragments.header()
 
+        <div class="page-side-margins">
+        @if(isBrochure != true) {
             <div class="page-container">
+        }
+
                 @content
+
+        @if(isBrochure != true) {
             </div>
+        }
         </div>
 
         @fragments.footer()

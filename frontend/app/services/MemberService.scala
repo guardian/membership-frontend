@@ -1,26 +1,19 @@
 package services
 
-import controllers.IdentityRequest
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
-
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
-import play.api.mvc.Cookie
-
-import com.gu.membership.salesforce._
-
 import com.gu.identity.model.User
-
-import configuration.Config
-import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.{Card, Customer, Subscription}
-import forms.MemberForm._
 import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
+import configuration.Config
+import controllers.IdentityRequest
+import forms.MemberForm._
+import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Stripe.Card
+import play.api.Logger
+import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -82,32 +75,20 @@ trait MemberService {
     } yield discount.headOption
   }
 
-  def cancelAnySubscriptionPayment(member: Member): Future[Option[Subscription]] = {
-    def cancelSubscription(customer: Customer): Option[Future[Subscription]] = {
-      for {
-        paymentDetails <- customer.paymentDetails
-      } yield {
-        StripeService.Subscription.delete(customer.id, paymentDetails.subscription.id)
-      }
-    }
-
-    member match {
-      case paidMember: PaidMember =>
-        for {
-          customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          cancelledOpt = cancelSubscription(customer)
-          cancelledSubscription <- Future.sequence(cancelledOpt.toSeq)
-        } yield cancelledSubscription.headOption
-
-      case _ => Future.successful(None)
-    }
-  }
-
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- StripeService.Customer.updateCard(member.stripeCustomerId, token)
       memberId <- MemberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
+  }
+
+  def cancelSubscription(member: Member): Future[String] = {
+    val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
+
+    for {
+      subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
+      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
+    } yield ""
   }
 
   def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
@@ -137,7 +118,13 @@ trait MemberService {
 
 object MemberService extends MemberService
 
-object MemberRepository extends MemberRepository {
+object MemberRepository extends MemberRepository with ScheduledTask[Authentication] {
+  val initialValue = Authentication("", "")
+  val initialDelay = 0.seconds
+  val interval = 2.hours
+
+  def refresh() = salesforce.getAuthentication
+
   val salesforce = new Scalaforce {
     val consumerKey = Config.salesforceConsumerKey
     val consumerSecret = Config.salesforceConsumerSecret
@@ -147,24 +134,6 @@ object MemberRepository extends MemberRepository {
     val apiPassword = Config.salesforceApiPassword
     val apiToken = Config.salesforceApiToken
 
-    def authentication: Authentication = authenticationAgent.get()
-  }
-
-  private implicit val system = Akka.system
-
-  val authenticationAgent = Agent[Authentication](Authentication("", ""))
-
-  def refresh() {
-    Logger.debug("Refreshing Scalaforce login")
-    authenticationAgent.sendOff(_ => {
-      val auth = Await.result(salesforce.getAuthentication, 15.seconds)
-      Logger.debug(s"Got Scalaforce login $auth")
-      auth
-    })
-  }
-
-  def start() {
-    Logger.info("Starting Scalaforce background tasks")
-    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
+    def authentication: Authentication = agent.get()
   }
 }

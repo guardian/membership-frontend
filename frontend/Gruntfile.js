@@ -119,10 +119,15 @@ module.exports = function (grunt) {
         clean: {
             js : ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
-            dist: ['<%= dirs.publicDir.root %>/dist/'],
             assetMap: 'conf/assets.map',
-            hooks: ['../.git/hooks/pre-commit'],
-            images: ['<%= dirs.publicDir.images %>']
+            hooks: {
+                src: ['../.git/hooks/pre-commit'],
+                options: {
+                    force: true // or we can't delete outside cwd
+                }
+            },
+            images: ['<%= dirs.publicDir.images %>'],
+            dist: ['<%= dirs.publicDir.root %>/dist/']
         },
 
         // Recompile on change
@@ -155,17 +160,24 @@ module.exports = function (grunt) {
                 algorithm: 'md5',
                 srcBasePath: 'public/',
                 destBasePath: 'public/',
-                hashType: 'file'
+                hashType: 'file',
+                references: [
+                    '<%= dirs.publicDir.root %>/dist/stylesheets/**/*.css'
+                ]
             },
             staticfiles: {
                 files: [
                     {
-                        src:  ['<%= dirs.publicDir.stylesheets %>/**/*.css', '<%= dirs.publicDir.javascripts %>/**/*.js'],
+                        src:  [
+                            '<%= dirs.publicDir.stylesheets %>/**/*.css',
+                            '<%= dirs.publicDir.javascripts %>/**/*.js',
+                            '<%= dirs.publicDir.images %>/**/*.*'
+                        ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
                     }
                 ]
             }
-          },
+        },
 
         /***********************************************************************
          * Test
@@ -254,7 +266,6 @@ module.exports = function (grunt) {
     });
 
     // Load the plugins
-    grunt.loadNpmTasks('grunt-asset-hash');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -264,11 +275,20 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-asset-hash');
 
-    grunt.registerTask('compile', [
-        'compile:css',
-        'compile:js'
-    ]);
+    grunt.registerTask('compile', function(){
+        grunt.task.run([
+            'clean:public',
+            'compile:css',
+            'compile:js'
+        ]);
+        // only version files for prod builds
+        // and wipe out unused non-versioned assets for good measure
+        if (!isDev) {
+            grunt.task.run(['asset_hash', 'clean:public:prod']);
+        }
+    });
 
     grunt.registerTask('validate', ['jshint', 'scsslint']);
 
@@ -285,7 +305,8 @@ module.exports = function (grunt) {
         grunt.task.run(['test:unit']);
     });
 
-    grunt.registerTask('clean-assets', ['clean:dist', 'clean:assetMap']);
+    grunt.registerTask('clean:public', ['clean:js', 'clean:css', 'clean:images', 'clean:assetMap', 'clean:dist']);
+    grunt.registerTask('clean:public:prod', ['clean:js', 'clean:css', 'clean:images']);
 
     grunt.registerTask('compile:css', function() {
         if (!isDev) {
@@ -293,12 +314,10 @@ module.exports = function (grunt) {
         }
         grunt.task.run([
             'clean:css',
-            'clean-assets',
             'clean:images',
             'copy:images',
             'shell:spriteGeneration',
-            'sass:compile',
-            'asset_hash'
+            'sass:compile'
         ]);
     });
 
@@ -308,12 +327,10 @@ module.exports = function (grunt) {
         }
         grunt.task.run([
             'clean:js',
-            'clean-assets',
             'requirejs:compile',
             'copy:html5shiv',
             'copy:curl',
-            'copy:zxcvbn',
-            'asset_hash'
+            'copy:zxcvbn'
         ]);
     });
 

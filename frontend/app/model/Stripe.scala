@@ -20,8 +20,6 @@ object Stripe {
   case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
     extends StripeObject
 
-  case class PaymentDetails(card: Card, subscription: Subscription)
-
   case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
     // customers should always have a card
     if (cards.total_count != 1) {
@@ -29,11 +27,6 @@ object Stripe {
     }
 
     val card = cards.data(0)
-
-    // TODO: delete once Stripe subscriptions have been removed
-    val paymentDetails = for {
-      subscription <- subscriptions.data.headOption
-    } yield PaymentDetails(card, subscription)
   }
 
   case class Subscription(
