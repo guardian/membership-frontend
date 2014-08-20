@@ -25,9 +25,10 @@ trait Joiner extends Controller {
     Future.sequence(eventIdOpt.map(eventService.getEvent).toSeq).map(_.headOption)
   }
 
-  def getEbIframeUrl(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[String] = {
+  def getEbIFrameDetail(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[(String, Int)] = {
     for (event <- eventOpt) yield {
-      Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))
+      (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString ->
+      event.ticket_classes.length
     }
   }
 
