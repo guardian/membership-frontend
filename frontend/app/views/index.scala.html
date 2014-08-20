@@ -5,13 +5,13 @@
 
 @promoWithImageBackground(title: String, images: List[(String, String)])(content: Html) = {
     <div class="brochure-container-outer brochure-container--image-background">
-        <div class="brochure-container brochure-container--promo-two">
+        <div class="brochure-container brochure-container--promo-three">
             <div class="brochure-container__inner">
                 <h2 class="section-headline section-headline--black">@title</h2>
 
                 <div class="l-row l-row--items-2">
                     @for((src, alt) <- images) {
-                        <div class="l-row__item"><img src="@Asset.at(src)" alt="@alt" /></div>
+                        <div class="brochure-container__image l-row__item"><img src="@Asset.at(src)" alt="@alt" /></div>
                     }
                 </div>
 
@@ -33,9 +33,9 @@
     </div>
 
     <div class="brochure-container-outer brochure-container--white-background">
-        <div class="brochure-container">
+        <div class="brochure-container brochure-container--promo-two">
             <div class="brochure-container__inner l-row l-row--items-2">
-                <div class="brochure-container__image l-row__item"><img src="@Asset.at("images/homepage/teaser-image1.jpg")" alt="" class="brochure-container__image--holder"/></div>
+                <div class="brochure-container__image l-row__item"><img src="@Asset.at("images/homepage/teaser-image1.jpg")" alt="" /></div>
                 <div class="brochure-container__teaser l-row__item l-row__item--boost-1">
                     <p class="brochure-container__copy">Guardian Membership brings you closer to the <strong>stories</strong> of the day, connects you to the <strong>conversations</strong> that matter and introduces you to <strong>fellow members</strong> who share your interests.</p>
                     <p class="brochure-container__copy"><a class="action action--join" href="/join">Join today</a></p>
@@ -53,10 +53,15 @@
     <div class="brochure-container-outer brochure-container--no-top-margin">
         <div class="brochure-container brochure-container--promo-four">
             <div class="brochure-container__inner">
-                <h2 class="section-headline section-headline--border-bottom">Membership fuels our journalism</h2>
-                <blockquote>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
-                <p class="brochure-container__copy">Guardian Membership is the community for those who share this ideal.</p>
-                <a class="action action--join" href="/events">Start your journey as patron</a>
+                <h2 class="section-headline section-headline--with-margins">Membership fuels our journalism</h2>
+                <div class="l-row l-row--items-2">
+                    <div class="brochure-container__image"><img src="@Asset.at("images/homepage/teaser-image2.jpg")" alt="" /></div>
+                    <div class="brochure-container__teaser">
+                        <blockquote class="blockquote--black-line">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
+                        <p class="brochure-container__copy brochure-container__copy--author">Alan Rusbridger, editor of the Guardian</p>
+                        <a class="action action--join" href="/events">Start your journey as patron</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -69,4 +74,24 @@
             <div class="l-row__item"><a class="action action--secondary-button" href="/events">Building progress blog</a></div>
         </div>
     }
+
+    <div class="brochure-container-outer brochure-container--no-top-margin">
+        <div class="brochure-container brochure-container--promo-six">
+            <div class="brochure-container__inner">
+                <h2 class="section-headline section-headline--border-bottom">Founding members: Join us at the start</h2>
+                <div class="l-row l-row--items-2">
+                    <div class="brochure-container__teaser">
+                        <p class="brochure-container__copy">This is membership beta. We have <strong>ambitious plans,</strong> and new features will be added regularly.  Guardian membership will grow into a vibrant, self-organising community of free-thinkers.</p>
+                        <p class="brochure-container__copy">Help <strong>build and shape this community</strong> by joining as a Founding Partner or Patron, with the guarantee that the price you pay today will never rise.</p>
+                        <a class="action action--join" href="/join">Join today</a>
+                    </div>
+                    <div class="brochure-container__image">
+                        <img src="@Asset.at("images/homepage/teaser-image1-1.jpg")" alt="" class="brochure-container__image--holder"/>
+                        <img src="@Asset.at("images/homepage/teaser-image1-2.jpg")" alt="" class="brochure-container__image--holder"/>
+                        <img src="@Asset.at("images/homepage/teaser-image2.jpg")" alt="" class="brochure-container__image--holder"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
