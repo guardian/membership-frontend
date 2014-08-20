@@ -204,6 +204,7 @@ trait ZuoraService {
       <ns1:amend>
         <ns1:requests>
           <ns1:Amendments>
+            <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
             <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Cancellation</ns2:Name>
             <ns2:RatePlanData>
