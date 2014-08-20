@@ -31,6 +31,6 @@ object Cached {
 }
 
 object NoCache {
-  def apply(result: Result): Result = result.withHeaders("Cache-Control" -> "no-cache", "Pragma" -> "no-cache")
+  def apply(result: Result): Result = result.withHeaders("Cache-Control" -> "no-cache, private", "Pragma" -> "no-cache")
 }
 
