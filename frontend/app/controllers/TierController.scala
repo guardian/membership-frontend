@@ -10,7 +10,7 @@ import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
 import forms.MemberForm._
-import services.{SubscriptionService, MemberRepository, MemberService, StripeService}
+import services.{SubscriptionService, MemberRepository, MemberService}
 
 trait DowngradeTier {
   self: TierController =>

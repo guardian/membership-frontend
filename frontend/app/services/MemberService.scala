@@ -8,14 +8,14 @@ import play.api.Logger
 import play.api.mvc.Cookie
 
 import com.gu.membership.salesforce._
+import com.gu.membership.salesforce.Member.Keys
 
 import com.gu.identity.model.User
 
 import configuration.Config
 import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.{Card, Customer, Subscription}
+import model.Stripe.Card
 import forms.MemberForm._
-import com.gu.membership.salesforce.Member.Keys
 import utils.ScheduledTask
 
 case class MemberServiceError(s: String) extends Throwable {
