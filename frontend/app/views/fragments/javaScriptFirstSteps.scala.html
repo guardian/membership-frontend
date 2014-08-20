@@ -65,8 +65,9 @@
 
         document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + ' ' + htmlClassNames.join(' ');
 
-        if (isModern) {
-            document.documentElement.className = document.documentElement.className.replace(/\bjs-not-modern\b/g, '');
+        if (!isModern) {
+            // we add this class so it's off by default (avoiding FOUC)
+            document.documentElement.className += ' js-ancient-browser';
         }
 
     })(guardian.isModernBrowser);

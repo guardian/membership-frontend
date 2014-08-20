@@ -1,11 +1,11 @@
-@(title: String)(content: Html)
+@(title: String, isBrochure: Boolean = false)(content: Html)
 
 @import configuration.Config
 @import views.support.Asset
 
 <!DOCTYPE html>
 
-<html class="js-off js-not-modern">
+<html class="js-off">
     <head>
         @if(!Config.membershipHide){
         <!--
@@ -65,19 +65,28 @@
     </head>
     <body>
 
+        @fragments.unsupportedBrowser()
+
         @fragments.header()
 
-        <div class="page-container">
+        <div class="page-side-margins">
+        @if(isBrochure != true) {
+            <div class="page-container">
+        }
 
-            @content
+                @content
 
+        @if(isBrochure != true) {
+            </div>
+        }
         </div>
 
         @fragments.footer()
 
-        @if(Config.membershipDebug) {
-            @fragments.debug()
-        }
+            @if(Config.membershipDebug) {
+                @fragments.debug()
+            }
+
         @fragments.javaScriptRequireJS()
     </body>
 </html>

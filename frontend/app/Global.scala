@@ -6,11 +6,11 @@ import play.api.mvc.WithFilters
 import play.api.Application
 
 import controllers.Cached
-import filters.CheckCacheHeadersFilter
+import filters.{CheckCacheHeadersFilter, Gzipper}
 import services.{SubscriptionService, MemberRepository, EventbriteService}
 import play.filters.csrf._
 
-object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter()) {
+object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter(), Gzipper) {
   override def onStart(app: Application) {
     EventbriteService.start()
     MemberRepository.start()

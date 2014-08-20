@@ -1,23 +1,18 @@
 package services
 
 import scala.concurrent.Future
-import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
 
 import org.joda.time.DateTime
 
-import com.gu.membership.salesforce.Tier
-
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import com.gu.membership.salesforce.{MemberId, Tier}
 
 import configuration.Config
 import forms.MemberForm.{NameForm, AddressForm}
 import model.Zuora._
 import model.Stripe
+import utils.ScheduledTask
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -32,7 +27,59 @@ object SubscriptionServiceHelpers {
   def sortSubscriptions(subscriptions: Seq[Map[String, String]]) = subscriptions.sortBy(_("Version").toInt)
 }
 
-trait SubscriptionService {
+trait CreateSubscription {
+  self: SubscriptionService =>
+
+  def createPaidSubscription(memberId: MemberId, customer: Stripe.Customer, tier: Tier.Tier,
+                             annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
+    val plan = PaidPlan(tier, annual)
+    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
+  }
+
+  def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[Subscription] = {
+    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest().map(Subscription(_))
+  }
+}
+
+trait AmendSubscription {
+  self: SubscriptionService =>
+
+  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[String] = {
+    for {
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+
+      cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
+      result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate).mkRequest()
+    } yield ""
+  }
+
+  def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
+    val newRatePlanId = tier match {
+      case Tier.Friend => friendPlan
+      case t => PaidPlan(t, annual)
+    }
+
+    for {
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+      result <- zuora.DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
+        subscriptionDetails.endDate).mkRequest()
+    } yield ""
+  }
+
+  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
+    val newRatePlanId = PaidPlan(tier, annual)
+
+    for {
+      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
+      ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
+    } yield Subscription(result)
+  }
+}
+
+trait SubscriptionService extends CreateSubscription with AmendSubscription {
   import SubscriptionServiceHelpers._
 
   val zuora: ZuoraService
@@ -52,16 +99,6 @@ trait SubscriptionService {
       if (annual) plan.annual else plan.monthly
     }
   }
-  def createPaidSubscription(sfAccountId: String, customer: Stripe.Customer, tier: Tier.Tier,
-                             annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
-    val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(sfAccountId, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
-  }
-
-  def createFriendSubscription(sfAccountId: String, name: NameForm, address: AddressForm): Future[Subscription] = {
-    zuora.Subscribe(sfAccountId, None, friendPlan, name, address).mkRequest().map(Subscription(_))
-  }
-
   def getAccountId(sfAccountId: String): Future[String] = zuora.queryOne("Id", "Account", s"crmId='$sfAccountId'")
 
   def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
@@ -90,7 +127,7 @@ trait SubscriptionService {
     for {
       ratePlan <- zuora.queryOne(Seq("Id", "Name"), "RatePlan", s"SubscriptionId='$subscriptionId'")
       ratePlanCharge <- zuora.queryOne(Seq("ChargedThroughDate", "EffectiveStartDate", "Price"), "RatePlanCharge", s"RatePlanId='${ratePlan("Id")}'")
-    } yield SubscriptionDetails(ratePlan ++ ratePlanCharge)
+    } yield SubscriptionDetails(ratePlan, ratePlanCharge)
   }
 
   def getCurrentSubscriptionId(sfAccountId: String): Future[String] = getSubscriptionStatus(sfAccountId).map(_.current)
@@ -110,56 +147,20 @@ trait SubscriptionService {
     } yield accountId
   }
 
-  def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
-    val newRatePlanId = tier match {
-      case Tier.Friend => friendPlan
-      case t => PaidPlan(t, annual)
-    }
-
-    for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      ratePlanId <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      chargedThroughDate <- zuora.queryOne("ChargedThroughDate", "RatePlanCharge", s"RatePlanId='$ratePlanId'")
-      result <- zuora.DowngradePlan(subscriptionId, ratePlanId, newRatePlanId, new DateTime(chargedThroughDate)).mkRequest()
-    } yield ""
-  }
-
-  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
-    val newRatePlanId = PaidPlan(tier, annual)
-
-    for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
-    } yield Subscription(result)
-  }
-
 }
 
-object SubscriptionService extends SubscriptionService {
+object SubscriptionService extends SubscriptionService with ScheduledTask[Authentication] {
+  val initialValue = Authentication("", "")
+  val initialDelay = 0.seconds
+  val interval = 2.hours
+
+  def refresh() = zuora.Login().mkRequest().map(Authentication(_))
+
   val zuora = new ZuoraService {
     val apiUrl = Config.zuoraApiUrl
     val apiUsername = Config.zuoraApiUsername
     val apiPassword = Config.zuoraApiPassword
 
-    def authentication: Authentication = authenticationAgent.get()
-  }
-
-  private implicit val system = Akka.system
-
-  val authenticationAgent = Agent[Authentication](Authentication("", ""))
-
-  def refresh() {
-    Logger.debug("Refreshing Zuora login")
-    authenticationAgent.sendOff(_ => {
-      val auth = Await.result(zuora.Login().mkRequest().map(Authentication(_)), 15.seconds)
-      Logger.debug(s"Got Zuora login $auth")
-      auth
-    })
-  }
-
-  def start() {
-    Logger.info("Starting Zuora background tasks")
-    system.scheduler.schedule(0.seconds, 2.hours) { refresh() }
+    def authentication: Authentication = agent.get()
   }
 }

@@ -27,11 +27,10 @@ trait DowngradeTier {
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
       currentSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
       futureSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
-    } yield Ok(views.html.tier.downgrade.summary(customer.card, currentSubscription, futureSubscription))
+    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
   }
 }
 
@@ -49,7 +48,7 @@ trait UpgradeTier {
     request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
-          MemberService.upgradeSubscription(freeMember, request.user, tier, formData.payment).map(_ => Ok(""))
+          MemberService.upgradeSubscription(freeMember, request.user, tier, formData, request.cookies.get("SC_GU_U")).map(_ => Ok(""))
         })
       case _ => Future.successful(NotFound)
     }
@@ -65,32 +64,23 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
+      _ <- MemberService.cancelSubscription(request.member)
     } yield {
-      val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
-      // TODO: move into MemberService
-      MemberRepository.upsert(
-        request.member.identityId,
-        Map(
-          Member.Keys.TIER -> newTier.toString,
-          Member.Keys.OPT_IN -> false
-        )
-      )
       Redirect("/tier/cancel/summary")
     }
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
-    def paymentDetailsFor(memberOpt: Option[Member]) = {
+    def subscriptionDetailsFor(memberOpt: Option[Member]) = {
       memberOpt.collect { case paidMember: PaidMember =>
-        StripeService.Customer.read(paidMember.stripeCustomerId).map(_.paymentDetails)
-      }.getOrElse(Future.successful(None))
+        SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+      }
     }
 
     for {
-      member <- MemberRepository.get(request.user.id)
-      paymentDetails <- paymentDetailsFor(member)
-    } yield Ok(views.html.tier.cancel.summary(paymentDetails))
+      memberOpt <- MemberRepository.get(request.user.id)
+      subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
+    } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
   }
 }
 
