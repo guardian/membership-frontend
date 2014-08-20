@@ -19,6 +19,25 @@
     }
     .header__secondary {
         float: right;
+
+        width: 280px;
+        i {
+            background-size: 280px;
+        }
+
+        @include mq(tablet) {
+            width: 320px;
+            i {
+                background-size: 320px;
+            }
+        }
+
+        @include mq(desktop) {
+            width: auto;
+            i {
+                background-size: auto;
+            }
+        }
     }
     .header__menu {
         display: none;
