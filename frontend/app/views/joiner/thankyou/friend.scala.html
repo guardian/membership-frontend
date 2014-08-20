@@ -14,10 +14,8 @@
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
     </section>
 
-    @for(
-        ebIframeUrl <- ebIframeUrlOpt
-    ) {
-        <iframe src="@ebIframeUrl" width="100%" height="431px" frameborder="0" vspace="0" hspace="0" marginheight="5"
+    @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
+        <iframe src="@eventIFrameUrl" width="100%" height="@IFrame.calcEBIFrameHeight(eventIFrameTicketQty)" frameborder="0" vspace="0" hspace="0" marginheight="5"
         marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
     }
 
