@@ -33,6 +33,7 @@ trait RemoteAddress {
 
   def clientIp(request: RequestHeader): Option[String] = {
     request.headers.get("X-Forwarded-For").flatMap { xForwardedFor =>
+      Logger.info(s"X-Forwarded-For ${xForwardedFor}")
       xForwardedFor.split(", ").find {
         // leftmost non-private IP from header is client
         case Ip(a, b, c, d) => {
