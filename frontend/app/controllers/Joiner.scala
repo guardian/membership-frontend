@@ -35,10 +35,13 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def enterDetails(tier: Tier.Tier) = AuthenticatedAction { implicit request =>
-    tier match {
-      case Tier.Friend => Ok(views.html.joiner.detail.addressForm())
-      case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier))
+  def enterDetails(tier: Tier.Tier) = AuthenticatedAction.async { implicit request =>
+    for (user <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))) yield {
+      tier match {
+        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(user.privateFields))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, user.privateFields))
+      }
+
     }
   }
 

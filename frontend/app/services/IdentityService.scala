@@ -1,20 +1,24 @@
 package services
 
-import actions.AuthRequest
 import com.gu.identity.model.User
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
+import model.IdentityUser
+import model.UserDeserializer._
 import play.api.Logger
 import play.api.Play.current
+import play.api.libs.json._
 import play.api.libs.ws.{WS, WSResponse}
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.{Request, Cookie}
 
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait IdentityService {
+
+  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[IdentityUser] = {
+    IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+  }
 
   def updateUserBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
 
@@ -72,10 +76,19 @@ trait IdentityService {
 object IdentityService extends IdentityService
 
 trait Http {
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[IdentityUser]
+
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
+
 }
 
 object IdentityApi extends Http {
+
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[IdentityUser] = {
+    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).get().map { response =>
+       (response.json \ "user").as[IdentityUser] //todo handle error
+    }
+  }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
 

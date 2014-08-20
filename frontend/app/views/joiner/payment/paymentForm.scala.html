@@ -1,4 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.support.Asset
 @import helper._
@@ -35,7 +35,7 @@
                 </fieldset>
 
                 @fragments.form.errorMessageDisplay()
-                @fragments.form.nameDetail()
+                @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                 @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true)
 
                 @*
