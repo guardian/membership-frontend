@@ -1,5 +1,7 @@
 package controllers
 
+import model.PrivateFields
+
 import scala.concurrent.Future
 
 import play.api.mvc.{Request, Controller}
@@ -37,10 +39,13 @@ trait Joiner extends Controller {
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedAction.async { implicit request =>
-    for (user <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))) yield {
+    for {
+      userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
+      privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+    } yield {
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(user.privateFields))
-        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, user.privateFields))
+        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields))
       }
 
     }

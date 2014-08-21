@@ -16,7 +16,7 @@ import scala.concurrent.Future
 
 trait IdentityService {
 
-  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[IdentityUser] = {
+  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
     IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
   }
 
@@ -76,7 +76,7 @@ trait IdentityService {
 object IdentityService extends IdentityService
 
 trait Http {
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[IdentityUser]
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
 
@@ -84,9 +84,9 @@ trait Http {
 
 object IdentityApi extends Http {
 
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[IdentityUser] = {
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).get().map { response =>
-       (response.json \ "user").as[IdentityUser] //todo handle error
+       (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
