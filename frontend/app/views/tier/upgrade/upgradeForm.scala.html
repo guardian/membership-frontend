@@ -8,10 +8,12 @@
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
-        @fragments.form.addressDetail("Delivery address", "Where we'll send your welcome pack", "deliveryAddress", true, userFields.address1)
+        @fragments.form.addressDetail("Delivery address", "Where we'll send your welcome pack", "deliveryAddress", true,
+        userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4)
         @fragments.form.cardDetail()
         @fragments.form.billingAddressCTA()
-        @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", true, userFields.billingAddress1)
+        @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", true,
+        userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4)
         @fragments.form.paymentOptions(targetTier)
         @fragments.form.submit("Join now")
 

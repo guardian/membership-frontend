@@ -10,18 +10,18 @@ case class IdentityUser(id: String,
 //this can't be a Map[String,String] as PrivateFields in Identity has other object types
 case class PrivateFields(firstName: Option[String] = None,
                          secondName: Option[String] = None,
-                         country: Option[String] = None,
                          address1: Option[String] = None,
                          address2: Option[String] = None,
                          address3: Option[String] = None,
                          address4: Option[String] = None,
                          postcode: Option[String] = None,
+                         country: Option[String] = None,
                          billingAddress1: Option[String] = None,
                          billingAddress2: Option[String] = None,
                          billingAddress3: Option[String] = None,
                          billingAddress4: Option[String] = None,
-                         billingCountry: Option[String] = None,
-                         billingPostcode: Option[String] = None)
+                         billingPostcode: Option[String] = None,
+                         billingCountry: Option[String] = None)
 
 
 object UserDeserializer {
