@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, isBrochure: Boolean = false)(content: Html)
 
 @import configuration.Config
 @import views.support.Asset
@@ -7,7 +7,6 @@
 
 <html class="js-off">
     <head>
-        @if(!Config.membershipHide){
         <!--
 
              /'\_/`\                   /\ \                          /\ \      __
@@ -19,7 +18,6 @@
                                                                                       \ \_\
                                                                                        \/_/
         -->
-        }
         <meta charset="utf-8">
         <meta name="viewport"                       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="HandheldFriendly"               content="true"/>
@@ -67,12 +65,18 @@
 
         @fragments.unsupportedBrowser()
 
-        <div class="container-global">
-            @fragments.header()
+        @fragments.header()
 
+        <div class="page-side-margins">
+        @if(isBrochure != true) {
             <div class="page-container">
+        }
+
                 @content
+
+        @if(isBrochure != true) {
             </div>
+        }
         </div>
 
         @fragments.footer()

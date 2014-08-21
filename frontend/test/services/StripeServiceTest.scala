@@ -19,22 +19,6 @@ class StripeServiceTest extends Specification {
       )
     }
 
-    "should create a subscription" in TestStripeService { service =>
-      service.Subscription.create("cust_123", "Patron")
-      service.lastRequest mustEqual RequestInfo(
-        url = s"http://localhost:9999/v1/customers/cust_123/subscriptions",
-        body = Map("plan" -> Seq("Patron"))
-      )
-    }
-
-    "should cancel a subscription" in TestStripeService { service =>
-      service.Subscription.delete("cust_123", "sub_123")
-      service.lastRequest mustEqual RequestInfo(
-        url = s"http://localhost:9999/v1/customers/cust_123/subscriptions/sub_123?at_period_end=true",
-        body = Map.empty
-      )
-    }
-
     "should update card details" in TestStripeService { service =>
       service.Customer.updateCard("cust_123", "tok_123")
       service.lastRequest mustEqual RequestInfo(

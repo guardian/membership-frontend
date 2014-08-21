@@ -1,4 +1,4 @@
-@(paymentDetailsOpt: Option[model.Stripe.PaymentDetails])
+@(subscriptionDetailsOpt: Option[model.Zuora.SubscriptionDetails])
 
 @import configuration.Config
 @import views.support.Dates._
@@ -9,15 +9,15 @@
 
         @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
 
-        @for(paymentDetails <- paymentDetailsOpt) {
-            <p>You will continue to receive all the great Membership Benefits until @paymentDetails.subscription.current_period_end.pretty</p>
+        @for(subscriptionDetails <- subscriptionDetailsOpt) {
+            <p>You will continue to receive all the great Membership Benefits until @subscriptionDetails.endDate.pretty</p>
         }
 
         <h2 class="section-sub-headline">Current Package Summary</h2>
 
         <section class="joiner-section joiner-section--no-border">
-            @for(paymentDetails <- paymentDetailsOpt) {
-                @fragments.tier.summary(paymentDetails.subscription)
+            @for(subscriptionDetails <- subscriptionDetailsOpt) {
+                @fragments.tier.summary(subscriptionDetails)
             }
         </section>
 

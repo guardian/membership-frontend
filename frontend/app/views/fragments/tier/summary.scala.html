@@ -1,7 +1,7 @@
-@(subscription: model.Stripe.Subscription)
+@(currentSubscription: model.Zuora.SubscriptionDetails)
 
 @import views.support.Dates._
-@import views.support.Format._
+@import views.support.Prices._
 
 <table class="table table--responsive-font table--striped">
     <tr class="table__headline" role="row">
@@ -9,7 +9,7 @@
             Package
         </td>
         <td class="summary-table__cell" role="scope">
-            @subscription.plan.name
+            @currentSubscription.planName
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -17,7 +17,7 @@
             End Date
         </td>
         <td class="summary-table__cell">
-            @subscription.current_period_end.pretty
+            @currentSubscription.endDate.pretty
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -25,7 +25,7 @@
             Monthly Payment
         </td>
         <td class="summary-table__cell">
-            @formatPence(subscription.plan.amount)
+            @currentSubscription.planAmount.pretty
         </td>
     </tr>
     <tr class="summary-table__row" role="row">
@@ -33,7 +33,7 @@
             Last Payment
         </td>
         <td class="summary-table__cell">
-            @subscription.current_period_start.pretty
+            @currentSubscription.startDate.pretty
         </td>
     </tr>
 </table>

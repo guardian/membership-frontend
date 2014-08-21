@@ -29,8 +29,8 @@ POST        /choose-tier                              controllers.Joining.tierCh
 
 # Subscription
 POST        /subscription/subscribe                   controllers.Subscription.subscribe
-POST        /subscription/update                      controllers.Subscription.updateCard
-POST        /subscription/event                       controllers.Subscription.event(secret: String)
+POST        /subscription/update-card                 controllers.Subscription.updateCard
+OPTIONS     /subscription/update-card                 controllers.Subscription.updateCardPreflight
 
 # Events
 GET         /events                                   controllers.Event.list
@@ -59,7 +59,6 @@ GET         /feedback                                 controllers.Info.feedback
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*assetFile                        controllers.Assets.at(path="/public", assetFile)
-
 
 GET         /user/me                                  controllers.User.me
 GET         /user/me/details                          controllers.User.meDetails

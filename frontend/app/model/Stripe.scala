@@ -2,8 +2,6 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import org.joda.time.Instant
-import com.gu.membership.salesforce.Tier
 
 object Stripe {
 
@@ -17,66 +15,26 @@ object Stripe {
 
   case class Card(id: String, `type`: String, last4: String) extends StripeObject
 
-  case class Charge(amount: Int, currency: String, card: Card, description: Option[String])
-    extends StripeObject
-
-  case class PaymentDetails(card: Card, subscription: Subscription)
-
-  case class Customer(id: String, subscriptions: StripeList[Subscription], cards: StripeList[Card]) extends StripeObject {
+  case class Customer(id: String, cards: StripeList[Card]) extends StripeObject {
     // customers should always have a card
     if (cards.total_count != 1) {
       throw Error("internal", s"Customer $id has ${cards.total_count} cards, should have exactly one", None, None)
     }
 
     val card = cards.data(0)
-
-    // TODO: delete once Stripe subscriptions have been removed
-    val paymentDetails = for {
-      subscription <- subscriptions.data.headOption
-    } yield PaymentDetails(card, subscription)
-  }
-
-  case class Subscription(
-    id: String,
-    start: Instant,
-    current_period_start: Instant,
-    current_period_end: Instant,
-    canceled_at: Option[Instant],
-    customer: String,
-    plan: Plan) extends StripeObject
-
-  case class Plan(id: String, name: String, amount: Int, interval: String) extends StripeObject {
-    val tier = Tier.withName(id.replace(Plan.ANNUAL_SUFFIX, ""))
-  }
-
-  object Plan {
-    val ANNUAL_SUFFIX = "Annual"
-  }
-
-  case class EventData(`object`: JsObject) extends StripeObject
-  case class Event(id: String, `type`: String, data: EventData) extends StripeObject {
-    def extract[T](implicit reads: Reads[T]) = data.`object`.as[T]
   }
 }
 
 object StripeDeserializer {
   import Stripe._
 
-  implicit val readsInstant = JsPath.read[Long].map(l => new Instant(l * 1000))
-
   implicit val readsError = Json.reads[Error]
   implicit val readsCard = Json.reads[Card]
-  implicit val readsCharge = Json.reads[Charge]
-  implicit val readsPlan = Json.reads[Plan]
-  implicit val readsSubscription = Json.reads[Subscription]
 
   implicit def readsList[T](implicit reads: Reads[Seq[T]]): Reads[StripeList[T]] =
     ((JsPath \ "total_count").read[Int] and (JsPath \ "data").read[Seq[T]])(StripeList[T] _)
 
   implicit val readsCustomer = Json.reads[Customer]
-
-  implicit val readsEventData = Json.reads[EventData]
-  implicit val readsEvent = Json.reads[Event]
 }
 
 object StripeSerializer {
