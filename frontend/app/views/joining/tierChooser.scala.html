@@ -1,7 +1,7 @@
 @(eventOpt: Option[model.Eventbrite.EBEvent])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import model.Benefits
 @import model.Eventbrite.EBEventStatus._
 @import views.support.Dates._
 @import helper._
@@ -23,40 +23,43 @@
                 <label for="friend">
                     <input type="radio" value="friend" id="friend" name="tier"/>
                     <h2 class="tickets-select-form__tier-name">Friend</h2>
-                    <p>@Config.benefits(Tier.Friend).leadin</p>
+                    <p>@Benefits.details(Tier.Friend).leadin</p>
 
                     <ul>
-                    @for(item <- Config.benefits(Tier.Friend).list) {
-                        <li>@item</li>
-                    }
+                        @for((header, body) <- Benefits.details(Tier.Friend).list) {
+                            <li>@header</li>
+                            <li>@body</li>
+                        }
                     </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Friend).priceText</span>
+                    <span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span>
                 </label>
 
                 <label for="partner">
                     <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
                     <h2 class="tickets-select-form__tier-name">Partner</h2>
-                    <p>@Config.benefits(Tier.Partner).leadin</p>
+                    <p>@Benefits.details(Tier.Partner).leadin</p>
 
                     <ul>
-                    @for(item <- Config.benefits(Tier.Partner).list) {
-                        <li>@item</li>
+                    @for((header, body) <- Benefits.details(Tier.Partner).list) {
+                        <li>@header</li>
+                        <li>@body</li>
                     }
                     </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Partner).priceText</span>
+                    <span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span>
                 </label>
 
                 <label for="patron">
                     <input type="radio" value="patron" id="patron" name="tier"/>
                     <h2 class="tickets-select-form__tier-name">Patron</h2>
-                    <p>@Config.benefits(Tier.Patron).leadin</p>
+                    <p>@Benefits.details(Tier.Patron).leadin</p>
 
                     <ul>
-                    @for(item <- Config.benefits(Tier.Patron).list) {
-                        <li>@item</li>
+                    @for((header, body) <- Benefits.details(Tier.Patron).list) {
+                        <li>@header</li>
+                        <li>@body</li>
                     }
                     </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Patron).priceText</span>
+                    <span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span>
                 </label>
 
                 <input type="submit" class="submit-input action--logged-in" value="Join today"/>

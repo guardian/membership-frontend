@@ -1,6 +1,6 @@
 @(currentTier: com.gu.membership.salesforce.Tier.Tier, tier: com.gu.membership.salesforce.Tier.Tier)
 
-@import configuration.Config
+@import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
 @defining(currentTier == tier) { isCurrentPackage =>
@@ -10,22 +10,23 @@
         }
         <div class="package__inner">
             <h2 class="package__title">@tier</h2>
-            <p>@Config.benefits(tier).leadin</p>
+            <p>@Benefits.details(tier).leadin</p>
             <ul class="package__list-element">
-                @for(item <- Config.benefits(tier).list) {
-                    <li>@item</li>
+                @for((header, body) <- Benefits.details(tier).list) {
+                    <li>@header</li>
+                    <li>@body</li>
                 }
             </ul>
             <div>
                 <span class="package__price">
-                    @Config.benefits(tier).priceText
+                    @Benefits.details(tier).priceText
                     @if(tier > Tier.Friend){
                         <span class="package__pcm">pcm</span>
                     }
                 </span>
                 @if(!isCurrentPackage) {
                     <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
-                        @Config.benefits(tier).cta
+                        @Benefits.details(tier).cta
                     </a>
                 }
             </div>

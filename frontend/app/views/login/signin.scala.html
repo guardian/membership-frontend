@@ -1,6 +1,8 @@
 @(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
 
+
 @import configuration.Config
+@import model.Benefits
 
 @main("Join membership") {
 
@@ -26,19 +28,18 @@
             </div>
         </div>
 
-        @*
         @for(tier <- tierOpt) {
-            <p>@Config.benefits(tier).leadin</p>
+            <p>@Benefits.details(tier).leadin</p>
 
             <ul class="package__list-element">
-            @for(item <- Config.benefits(tier).list) {
-                <li>@item</li>
+            @for((header, body) <- Benefits.details(tier).list) {
+                <li>@header</li>
+                <li>@body</li>
             }
             </ul>
 
             <br/>
         }
-        *@
 
     </section>
 

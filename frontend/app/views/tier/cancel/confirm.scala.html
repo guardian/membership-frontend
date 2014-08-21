@@ -1,7 +1,7 @@
 @(currentTier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import model.Benefits
 @import helper._
 
 @main("Cancel Tier") {
@@ -23,15 +23,16 @@
                     <div class="package__current-indicator">This is what you'll be missing</div>
                     <div class="package__inner">
                         <h2 class="package__title">@currentTier</h2>
-                        <p>@Config.benefits(currentTier).leadin</p>
+                        <p>@Benefits.details(currentTier).leadin</p>
                         <ul class="package__list-element">
-                        @for(item <- Config.benefits(currentTier).list) {
-                            <li>@item</li>
+                        @for((header, body) <- Benefits.details(currentTier).list) {
+                            <li>@header</li>
+                            <li>@body</li>
                         }
                         </ul>
                         <div>
                             <span class="package__price">
-                                @Config.benefits(currentTier).priceText
+                                @Benefits.details(currentTier).priceText
                                 @if(currentTier > Tier.Friend){
                                     <span class="package__pcm">pcm</span>
                                 }
