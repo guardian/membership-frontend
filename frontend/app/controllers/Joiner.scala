@@ -25,9 +25,10 @@ trait Joiner extends Controller {
     Future.sequence(eventIdOpt.map(eventService.getEvent).toSeq).map(_.headOption)
   }
 
-  def getEbIframeUrl(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[String] = {
+  def getEbIFrameDetail(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[(String, Int)] = {
     for (event <- eventOpt) yield {
-      Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))
+      lazy val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
+      (url, event.ticket_classes.length)
     }
   }
 
@@ -59,7 +60,7 @@ trait Joiner extends Controller {
   def thankyouFriend() = AuthenticatedAction.async { implicit request =>
 
     for (event <- getEbEventFromSession(request)) yield {
-      Ok(views.html.joiner.thankyou.friend(getEbIframeUrl(event, None)))
+      Ok(views.html.joiner.thankyou.friend(getEbIFrameDetail(event, None)))
     }
   }
 
@@ -76,8 +77,7 @@ trait Joiner extends Controller {
       eventOpt <- getEbEventFromSession(request)
       discountOpt <- getDiscount(eventOpt)
     } yield {
-      val urlOpt = getEbIframeUrl(eventOpt, discountOpt)
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, urlOpt))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, getEbIFrameDetail(eventOpt, discountOpt)))
     }
   }
 
