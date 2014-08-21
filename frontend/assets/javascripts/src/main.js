@@ -51,7 +51,7 @@ require([
 
         /* jshint ignore:start */
         // avoid "Do not use 'new' for side effects" error
-        new Imager({ availableWidths: [300, 460], availablePixelRatios: [1, 2] });
+        new Imager({ availableWidths: [300, 460, 940], availablePixelRatios: [1, 2] });
         /* jshint ignore:end */
     });
 
