@@ -1,6 +1,6 @@
 package services
 
-import scala.util.{Failure, Try}
+import scala.util.{Success, Failure, Try}
 
 import com.amazonaws.services.simpleemail._
 import com.amazonaws.services.simpleemail.model._
@@ -24,6 +24,7 @@ trait EmailService {
     Try {
       client.sendEmail(email)
     } match {
+      case Success(_) =>
       case Failure(error) =>
         Logger.debug(s"Failed to send feedback from $from, got ${error.getMessage}")
     }
