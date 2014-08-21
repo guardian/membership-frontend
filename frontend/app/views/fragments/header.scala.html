@@ -43,11 +43,7 @@
                 <span itemscope itemtype="http://schema.org/Organization">
                     <a href="/" itemprop="url" class="icon-wrapper">
                         <span class="u-h" itemprop="name">@Config.siteTitle</span>
-                        @if(Config.membershipHide){
-                            <i class="i i-logo i-logo--masterclass"></i>
-                        }else{
-                            <i class="icon-sprite icon-sprite-mem-brand"></i>
-                        }
+                        <i class="icon-sprite icon-sprite-mem-brand"></i>
                     </a>
                 </span>
             </div>
@@ -61,17 +57,15 @@
                     <li class="inline-list__item nav__item">
                         <a href="/events" class="nav__link">events</a>
                     </li>
-                    @if(!Config.membershipHide) {
-                        <li class="inline-list__item nav__item">
-                            <a href="/about" class="nav__link">about membership</a>
-                        </li>
-                        <li class="inline-list__item nav__item">
-                            <a href="/join/patron" class="nav__link">patrons</a>
-                        </li>
-                        <li class="inline-list__item nav__item">
-                            <a href="/join" class="nav__link">pricing</a>
-                        </li>
-                    }
+                    <li class="inline-list__item nav__item">
+                        <a href="/about" class="nav__link">about membership</a>
+                    </li>
+                    <li class="inline-list__item nav__item">
+                        <a href="/join/patron" class="nav__link">patrons</a>
+                    </li>
+                    <li class="inline-list__item nav__item">
+                        <a href="/join" class="nav__link">pricing</a>
+                    </li>
                 </ul>
             </div>
             <div class="header__secondary">
