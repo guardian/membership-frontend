@@ -1,6 +1,6 @@
 @(heading: String, note: String, formType: String, addressRequired: Boolean = true,
 address1: Option[String], address2: Option[String], town: Option[String], postcode: Option[String],
-county: Option[String])
+county: Option[String], userCountry: Option[String])
 
 @import model.Countries
 
@@ -71,7 +71,7 @@ county: Option[String])
                 <div class="input">
                     <select name="@(formType).country" id="country-@(formType)">
                         @for(country <- Countries.all) {
-                        <option value="@country">@country</option>
+                        <option value="@country" @if(userCountry.getOrElse("") == country){selected}>@country</option>
                         }
                     </select>
                 </div>
