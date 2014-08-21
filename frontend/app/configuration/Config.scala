@@ -17,7 +17,6 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val membershipUrl = config.getString("membership.url")
-  val membershipHide = config.getBoolean("membership.hide")
   val membershipDebug = config.getBoolean("membership.debug")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
@@ -40,7 +39,6 @@ object Config {
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
-  val stripeApiWebhookSecret = config.getString("stripe.api.webhook.secret")
 
   val salesforceConsumerKey = config.getString("salesforce.consumer.key")
   val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")

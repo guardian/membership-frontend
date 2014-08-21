@@ -10,7 +10,7 @@ import com.gu.membership.salesforce.Tier.Tier
 
 import actions._
 import forms.MemberForm._
-import services.{SubscriptionService, MemberRepository, MemberService, StripeService}
+import services.{SubscriptionService, MemberRepository, MemberService}
 
 trait DowngradeTier {
   self: TierController =>
@@ -48,7 +48,7 @@ trait UpgradeTier {
     request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
-          MemberService.upgradeSubscription(freeMember, request.user, tier, formData, request.cookies.get("SC_GU_U")).map(_ => Ok(""))
+          MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).map(_ => Ok(""))
         })
       case _ => Future.successful(NotFound)
     }

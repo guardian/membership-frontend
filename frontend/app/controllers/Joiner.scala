@@ -49,7 +49,7 @@ trait Joiner extends Controller {
 
   private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
     for {
-      salesforceContactId <- MemberService.createFriend(request.user, formData, request.cookies.get("SC_GU_U"))
+      salesforceContactId <- MemberService.createFriend(request.user, formData, IdentityRequest(request))
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
