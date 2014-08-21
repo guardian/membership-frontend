@@ -1,19 +1,22 @@
 package services
 
-import com.gu.identity.model.User
-import com.gu.membership.salesforce.Member.Keys
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import com.gu.membership.salesforce._
+import com.gu.membership.salesforce.Member.Keys
+
+import com.gu.identity.model.User
+
+import play.api.Logger
+
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
-import play.api.Logger
 import utils.ScheduledTask
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s

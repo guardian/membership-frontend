@@ -25,17 +25,6 @@ trait StripeService {
     }
   }
 
-  object Charge {
-    def create(amount: Int, currency: String, card: String, description: String): Future[Charge] = {
-      post[Charge]("charges", Map(
-        "amount" -> Seq(amount.toString),
-        "currency" -> Seq(currency),
-        "card" -> Seq(card),
-        "description" -> Seq(description)
-      ))
-    }
-  }
-
   object Customer {
     def create(email: String, card: String): Future[Customer] =
       post[Customer]("customers", Map("email" -> Seq(email), "card" -> Seq(card)))
@@ -45,38 +34,6 @@ trait StripeService {
 
     def updateCard(customerId: String, card: String): Future[Customer] =
       post[Customer](s"customers/$customerId", Map("card" -> Seq(card)))
-  }
-
-  object Subscription {
-    def create(customerId: String, planId: String): Future[Subscription] =
-      post[Subscription](s"customers/$customerId/subscriptions", Map("plan" -> Seq(planId)))
-
-    def delete(customerId: String, subscriptionId: String): Future[Subscription] =
-      StripeService.this.delete[Subscription](s"customers/$customerId/subscriptions/$subscriptionId?at_period_end=true")
-
-    def update(customerId: String, subscriptionId: String, planId: String, card: String): Future[Subscription] =
-      post[Subscription](s"customers/$customerId/subscriptions/$subscriptionId", Map("plan" -> Seq(planId), "card" -> Seq(card)))
-  }
-
-  object Events {
-    val eventHandlers = Map(
-      "customer.subscription.deleted" -> customerSubscriptionDeleted _
-    )
-
-    def customerSubscriptionDeleted(event: Event) {
-      val subscription = event.extract[Subscription]
-      // TODO: This whole section will soon be deleted when we switch to Zuora
-      MemberRepository.get(subscription.customer, Member.Keys.CUSTOMER_ID).foreach {
-        _.filter(_.optedIn).map { member =>
-          MemberRepository.upsert(member.identityId, Map(Member.Keys.TIER -> Tier.Friend.toString))
-        }
-      }
-    }
-
-    def handle(event: Event) {
-      Logger.debug(s"Got event ${event.`type`}")
-      eventHandlers.get(event.`type`).map(_(event))
-    }
   }
 }
 
