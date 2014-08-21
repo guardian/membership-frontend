@@ -5,7 +5,7 @@ import play.api.data.Forms._
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
-
+import model.{States, Countries}
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,
@@ -28,6 +28,12 @@ object MemberForm {
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
 
+  def verifyAddress(address: AddressForm): Boolean = address match {
+    case AddressForm(_, _, _, state, _, Countries.US) => States.US.contains(state)
+    case AddressForm(_, _, _, province, _, Countries.Canada) => States.Canada.contains(province)
+    case _ => true
+  }
+
   val friendAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> text,
     "lineTwo" -> text,
@@ -35,7 +41,7 @@ object MemberForm {
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
     "country" -> nonEmptyText
-  )(AddressForm.apply)(AddressForm.unapply)
+  )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val paidAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> nonEmptyText,
@@ -44,7 +50,7 @@ object MemberForm {
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
     "country" -> nonEmptyText
-  )(AddressForm.apply)(AddressForm.unapply)
+  )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val nameMapping: Mapping[NameForm] = mapping(
     "first" -> nonEmptyText,

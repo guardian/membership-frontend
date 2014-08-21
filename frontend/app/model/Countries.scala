@@ -42,7 +42,7 @@ object Countries {
     "Burundi",
     "Cambodia",
     "Cameroon",
-    "Canada",
+    Canada,
     "Canary Islands",
     "Cape Verde",
     "Cayman Islands",
@@ -236,6 +236,7 @@ object Countries {
     "Zimbabwe"
   )
 
+  lazy val Canada = "Canada"
   lazy val UK = "United Kingdom"
   lazy val US = "United States"
 }
