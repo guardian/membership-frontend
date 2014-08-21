@@ -19,14 +19,22 @@ case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
+object ZuoraServiceHelpers {
+  def formatDateTime(dt: DateTime): String = {
+    val str = ISODateTimeFormat.dateTime().print(dt.withZone(DateTimeZone.UTC))
+    // Zuora doesn't accept Z for timezone
+    str.replace("Z", "+00:00")
+  }
+}
+
 trait ZuoraService {
+  import ZuoraServiceHelpers._
+
   val apiUrl: String
   val apiUsername: String
   val apiPassword: String
 
   def authentication: Authentication
-
-  def formatDateTime(dt: DateTime): String = ISODateTimeFormat.dateTime().print(dt.withZone(DateTimeZone.UTC))
 
   trait ZuoraAction {
     val body: Elem
@@ -196,6 +204,7 @@ trait ZuoraService {
       <ns1:amend>
         <ns1:requests>
           <ns1:Amendments>
+            <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
             <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Cancellation</ns2:Name>
             <ns2:RatePlanData>

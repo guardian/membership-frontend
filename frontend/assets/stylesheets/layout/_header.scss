@@ -19,13 +19,12 @@
     }
     .header__secondary {
         float: right;
-
-        width: 280px;
+        width: 200px;
         i {
-            background-size: 280px;
+            background-size: 200px;
         }
 
-        @include mq(tablet) {
+        @include mq(mobileLandscape) {
             width: 320px;
             i {
                 background-size: 320px;

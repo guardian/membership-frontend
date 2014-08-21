@@ -6,7 +6,11 @@
 }
 
 .section-headline {
-    @include fs-headline(7);
+    @include fs-headline(4);
+
+    @include mq(desktop) {
+        @include fs-headline(7); 
+    }
 
     border-top: 20px solid $mem-blue;
     display: inline-block;
