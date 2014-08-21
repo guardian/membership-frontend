@@ -85,7 +85,7 @@ trait Http {
 object IdentityApi extends Http {
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
-    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).get().map { response =>
+    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
        (response.json \ "user").asOpt[IdentityUser]
     }
   }
