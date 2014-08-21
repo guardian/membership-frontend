@@ -40,7 +40,7 @@ object MemberForm {
     "town" -> text,
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
-    "country" -> nonEmptyText
+    "country" -> text.verifying(Countries.all.contains _)
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val paidAddressMapping: Mapping[AddressForm] = mapping(
@@ -49,7 +49,7 @@ object MemberForm {
     "town" -> nonEmptyText,
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
-    "country" -> nonEmptyText
+    "country" -> text.verifying(Countries.all.contains _)
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val nameMapping: Mapping[NameForm] = mapping(
