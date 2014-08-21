@@ -4,7 +4,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Null, Elem, PrettyPrinter}
 
-import org.joda.time.DateTime
+import org.joda.time.{DateTimeZone, DateTime}
 
 import play.api.Logger
 import play.api.libs.ws.WS
@@ -13,12 +13,23 @@ import play.api.Play.current
 import forms.MemberForm.{NameForm, AddressForm}
 import model.{Zuora, Stripe}
 import model.Zuora.Authentication
+import org.joda.time.format.ISODateTimeFormat
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
+object ZuoraServiceHelpers {
+  def formatDateTime(dt: DateTime): String = {
+    val str = ISODateTimeFormat.dateTime().print(dt.withZone(DateTimeZone.UTC))
+    // Zuora doesn't accept Z for timezone
+    str.replace("Z", "+00:00")
+  }
+}
+
 trait ZuoraService {
+  import ZuoraServiceHelpers._
+
   val apiUrl: String
   val apiUsername: String
   val apiPassword: String
@@ -119,7 +130,7 @@ trait ZuoraService {
                        ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction {
 
     val body = {
-      val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
+      val now = formatDateTime(DateTime.now)
 
       val payment = customerOpt.map { customer =>
         <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
@@ -186,17 +197,43 @@ trait ZuoraService {
     }
   }
 
+  case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime) extends ZuoraAction {
+    val body = {
+      val dateStr = formatDateTime(date)
+
+      <ns1:amend>
+        <ns1:requests>
+          <ns1:Amendments>
+            <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
+            <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+            <ns2:Name>Cancellation</ns2:Name>
+            <ns2:RatePlanData>
+              <ns1:RatePlan>
+                <ns2:AmendmentSubscriptionRatePlanId>{subscriptionRatePlanId}</ns2:AmendmentSubscriptionRatePlanId>
+              </ns1:RatePlan>
+            </ns2:RatePlanData>
+            <ns2:ServiceActivationDate/>
+            <ns2:Status>Completed</ns2:Status>
+            <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+            <ns2:Type>Cancellation</ns2:Type>
+          </ns1:Amendments>
+        </ns1:requests>
+      </ns1:amend>
+    }
+  }
+
   case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
                            date: DateTime) extends ZuoraAction {
 
     override val singleTransaction = true
 
     val body = {
+      val dateStr = formatDateTime(date)
+
       <ns1:amend>
         <ns1:requests>
           <ns1:Amendments>
-            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
-            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Downgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
@@ -209,8 +246,7 @@ trait ZuoraService {
             <ns2:Type>RemoveProduct</ns2:Type>
           </ns1:Amendments>
           <ns1:Amendments>
-            <ns2:EffectiveDate>{date}</ns2:EffectiveDate>
-            <ns2:ContractEffectiveDate>{date}</ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Downgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
@@ -240,11 +276,12 @@ trait ZuoraService {
     override val singleTransaction = true
 
     val body = {
-      val now = DateTime.now.toString("YYYY-MM-dd'T'HH:mm:ss")
+      val dateStr = formatDateTime(DateTime.now)
+
       <ns1:amend>
         <ns1:requests>
           <ns1:Amendments>
-            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Upgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
@@ -257,7 +294,7 @@ trait ZuoraService {
             <ns2:Type>RemoveProduct</ns2:Type>
           </ns1:Amendments>
           <ns1:Amendments>
-            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
+            <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
             <ns2:Name>Upgrade</ns2:Name>
             <ns2:RatePlanData>
               <ns1:RatePlan>
@@ -271,7 +308,7 @@ trait ZuoraService {
           <ns1:AmendOptions>
             <ns1:GenerateInvoice>true</ns1:GenerateInvoice>
             <ns1:InvoiceProcessingOptions>
-              <ns1:InvoiceTargetDate>{now}</ns1:InvoiceTargetDate>
+              <ns1:InvoiceTargetDate>{dateStr}</ns1:InvoiceTargetDate>
             </ns1:InvoiceProcessingOptions>
             <ns1:ProcessPayments>true</ns1:ProcessPayments>
           </ns1:AmendOptions>

@@ -1,7 +1,7 @@
 package services
 
 import play.api.test.PlaySpecification
-import model.Eventbrite.{EBError, EBObject}
+import model.Eventbrite.{EBEvent, EBError, EBObject}
 import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
@@ -51,6 +51,8 @@ class EventbriteServiceTest extends PlaySpecification {
       lastRequest = RequestInfo(s"$apiURL/$endpoint", data)
       Future.failed[A](EBError("internal", "Not implemented", 500)) // don't care
     }
+
+    def events: Seq[EBEvent] = Nil
   }
 
   object TestEventbriteService {

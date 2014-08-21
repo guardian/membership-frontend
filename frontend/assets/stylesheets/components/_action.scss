@@ -10,7 +10,7 @@
     position: relative;
     @include fs-textsans(4);
     @include rem((
-        padding: 8px 18px,
+        padding: 8px 8px 8px 18px
     ));
     @include border-radius(50%);
 
@@ -22,6 +22,16 @@
     }
     &:hover {
         background-color: darken(#0096C9, 10%);
+    }
+
+    &:after {
+        content: '';
+        @extend .icon-sprite-arrow-right-white;
+        fill: #000000;
+        float: right;
+        @include rem((
+            margin: 2px 0 0 30px
+        ));  
     }
 }
 
@@ -53,7 +63,7 @@
     background-color: $mem-buttonBlue;
     @include rem((
         padding: 8px 8px 8px 18px,
-        width: 220px
+        min-width: 220px
     ));
     
     &:visited,

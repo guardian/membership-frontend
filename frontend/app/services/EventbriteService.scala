@@ -1,20 +1,19 @@
 package services
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import akka.agent.Agent
 
 import play.api.Play.current
 import play.api.libs.ws._
 import play.api.libs.iteratee.{Iteratee, Enumerator}
-import play.api.libs.concurrent.Akka
 import play.api.Logger
 
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import configuration.Config
 import play.api.libs.json.Reads
+import utils.ScheduledTask
 
 trait EventbriteService {
 
@@ -23,12 +22,7 @@ trait EventbriteService {
   def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
 
-  val allEvents = Agent[Seq[EBEvent]](Nil)
-
-  def refresh() {
-    Logger.debug("Refreshing EventbriteService events")
-    allEvents.sendOff(_ => Await.result(getAllEvents, 15.seconds))
-  }
+  def events: Seq[EBEvent]
 
   private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -51,7 +45,7 @@ trait EventbriteService {
 
   private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
 
-  def getLiveEvents: Seq[EBEvent] = allEvents().filter { event =>
+  def getLiveEvents: Seq[EBEvent] = events.filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
   }
 
@@ -78,7 +72,15 @@ trait EventbriteService {
   }
 }
 
-object EventbriteService extends EventbriteService {
+object EventbriteService extends EventbriteService with ScheduledTask[Seq[EBEvent]] {
+  val initialValue = Nil
+  val initialDelay = 5.seconds
+  val interval = 60.seconds
+
+  def refresh(): Future[Seq[EBEvent]] = getAllEvents
+
+  def events: Seq[EBEvent] = agent.get()
+
   val apiUrl = Config.eventbriteApiUrl
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
@@ -94,13 +96,5 @@ object EventbriteService extends EventbriteService {
 
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
-
-  import play.api.Play.current
-  private implicit val system = Akka.system
-
-  def start() {
-    Logger.info("Starting EventbriteService background tasks")
-    system.scheduler.schedule(5.seconds, 60.seconds) { refresh() }
-  }
 }
 
