@@ -14,10 +14,10 @@ trait EmailService {
   val client = new AmazonSimpleEmailServiceClient()
   client.setRegion(Region.getRegion(Regions.EU_WEST_1))
 
-  def sendEmail(from: String, body: String) = {
+  def sendEmail(from: String, bodyStr: String) = {
     val to = new Destination().withToAddresses(Config.membershipFeedback)
-    val subject = new Content().withData("Membership feedback")
-    val body = new Body().withText(body)
+    val subject = new Content("Membership feedback")
+    val body = new Body().withText(new Content(bodyStr))
     val message = new Message().withSubject(subject).withBody(body)
     val email = new SendEmailRequest().withSource(from).withDestination(to).withMessage(message)
 
@@ -29,3 +29,5 @@ trait EmailService {
     }
   }
 }
+
+object EmailService extends EmailService

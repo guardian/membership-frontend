@@ -31,13 +31,12 @@ object MemberForm {
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
 
-
   val countriesRequiringState = Seq(Countries.Canada, Countries.US).map(c => c.name -> c).toMap
 
   def verifyAddress(address: AddressForm): Boolean =
     countriesRequiringState.get(address.country).fold(true)(_.states.contains(address.countyOrState))
 
-  case class FeedbackForm(category: String, page: String, Feedback: String, name: String, email: String)
+  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
   val friendAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> text,

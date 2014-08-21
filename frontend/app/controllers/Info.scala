@@ -3,7 +3,7 @@ package controllers
 import actions.{AuthenticatedAction, AuthRequest}
 import forms.MemberForm._
 import play.api.mvc.{Action, Controller}
-import services.MemberService
+import services.{EmailService, MemberService}
 
 import scala.concurrent.Future
 
@@ -26,8 +26,7 @@ trait Info extends Controller {
   }
 
   private def sendFeedback(formData: FeedbackForm)(implicit request: AuthRequest[_]) = {
-
-    // Do stuff
+    EmailService.sendEmail(formData.email, formData.feedback)
 
     Future.successful(Redirect(routes.Info.feedbackThankyou()))
   }
