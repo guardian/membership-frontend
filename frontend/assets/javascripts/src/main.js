@@ -1,4 +1,5 @@
 require([
+    'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
     'src/utils/router',
     'ajax',
@@ -10,6 +11,7 @@ require([
     'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent'
 ], function(
+    Imager,
     omnitureAnalytics,
     router,
     ajax,
@@ -46,6 +48,11 @@ require([
     router.match('*').to(function () {
         (new Header()).init();
         omnitureAnalytics.init();
+
+        /* jshint ignore:start */
+        // avoid "Do not use 'new' for side effects" error
+        new Imager({ availableWidths: [300, 460], availablePixelRatios: [1, 2] });
+        /* jshint ignore:end */
     });
 
     /**
