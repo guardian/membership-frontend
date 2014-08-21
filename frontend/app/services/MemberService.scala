@@ -4,18 +4,18 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import play.api.Logger
-import play.api.mvc.Cookie
-
 import com.gu.membership.salesforce._
 import com.gu.membership.salesforce.Member.Keys
 
 import com.gu.identity.model.User
 
+import play.api.Logger
+
 import configuration.Config
-import model.Eventbrite.{EBEvent, EBDiscount}
-import model.Stripe.Card
+import controllers.IdentityRequest
 import forms.MemberForm._
+import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Stripe.Card
 import utils.ScheduledTask
 
 case class MemberServiceError(s: String) extends Throwable {
@@ -32,18 +32,18 @@ trait MemberService {
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
   )
 
-  def createFriend(user: User, formData: FriendJoinForm, cookie: Option[Cookie]): Future[String] = {
+  def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
       memberId.account
     }
   }
 
-  def createPaidMember(user: User, formData: PaidMemberJoinForm, cookie: Option[Cookie]): Future[String] = {
+  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
@@ -54,7 +54,7 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, cookie)
+      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
       memberId.account
@@ -101,7 +101,7 @@ trait MemberService {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, cookie: Option[Cookie]): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
@@ -114,7 +114,7 @@ trait MemberService {
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
-      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, cookie)
+      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, identityRequest)
     } yield memberId.account
   }
 }
