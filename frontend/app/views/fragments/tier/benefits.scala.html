@@ -10,12 +10,6 @@
         }
         <div class="package__inner">
             <h2 class="package__title">@tier</h2>
-            <p>@Config.benefits(tier).leadin</p>
-            <ul class="package__list-element">
-                @for(item <- Config.benefits(tier).list) {
-                    <li>@item</li>
-                }
-            </ul>
             <div>
                 <span class="package__price">
                     @Config.benefits(tier).priceText
@@ -24,11 +18,26 @@
                     }
                 </span>
                 @if(!isCurrentPackage) {
-                    <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
-                        @Config.benefits(tier).cta
-                    </a>
+                    @defining(
+                        (Config.benefits(currentTier).level == 1 && Config.benefits(tier).level != 2) ||
+                        (Config.benefits(currentTier).level == 2 && Config.benefits(tier).level != 1)
+                    ) { canChangeTier =>
+                        <@if(canChangeTier){a href="/tier/change/@tier.toString.toLowerCase"} else {span} class="action-cta action-cta--full-width-mobile action-cta--confirm@if(!canChangeTier) { action-cta--cancel}">
+                            @if(canChangeTier) {
+                                @Config.benefits(tier).cta
+                            } else {
+                                Coming soon
+                            }
+                        </@if(canChangeTier){a} else {span}>
+                    }
                 }
             </div>
+            <p>@Config.benefits(tier).leadin</p>
+            <ul class="package__list-element">
+                @for(item <- Config.benefits(tier).list) {
+                    <li>@item</li>
+                }
+            </ul>
         </div>
     </div>
 }
