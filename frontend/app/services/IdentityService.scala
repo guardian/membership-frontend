@@ -1,55 +1,49 @@
 package services
 
+import actions.AuthRequest
 import com.gu.identity.model.User
 import configuration.Config
+import controllers.IdentityRequest
 import forms.MemberForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.ws.{WS, WSResponse}
 import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.Cookie
+import play.api.mvc.{Request, Cookie}
 
 
 import scala.concurrent.Future
 
-case class IdentityServiceError(s: String) extends Throwable {
-  override def getMessage: String = s
-}
-
 trait IdentityService {
 
-  def updateUserBasedOnJoining(user: User, formData: JoinForm, cookieOpt: Option[Cookie]): Future[WSResponse] = {
-    cookieOpt.map { cookie =>
+  def updateUserBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
 
-      val billingDetails = if(formData.isInstanceOf[PaidMemberJoinForm]) {
-        val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
-        val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
-        billingAddress(billingAddressForm)
-      } else Json.obj()
+    val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
+      val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
+      val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
+      billingAddress(billingAddressForm)
+    } else Json.obj()
 
-      val fields = Json.obj(
-        "secondName" -> formData.name.last,
-        "firstName" -> formData.name.first
-      ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
+    val fields = Json.obj(
+      "secondName" -> formData.name.last,
+      "firstName" -> formData.name.first
+    ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-       postRequest(fields, user, cookie)
-
-    }.getOrElse(throw IdentityServiceError("User cookie not set"))
+    postRequest(fields, user, identityRequest)
   }
 
-  def updateUserBasedOnUpgrade(user:User, formData: PaidMemberChangeForm, cookieOpt:Option[Cookie]) = {
-    cookieOpt.map { cookie =>
-      val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
-      val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
-      postRequest(fields, user, cookie)
-    }.getOrElse(throw IdentityServiceError("User cookie not set"))
+  def updateUserBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
+
+    val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
+    val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
+    postRequest(fields, user, identityRequest)
   }
 
-  private def postRequest(fields: JsObject, user: User, cookie: Cookie) = {
+  private def postRequest(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
     val json = Json.obj("privateFields" -> fields)
 
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
-    IdentityApi.post(s"user/${user.id}", json, cookie.value)
+    IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters)
   }
 
   private def deliveryAddress(addressForm: AddressForm): JsObject = {
@@ -77,17 +71,14 @@ trait IdentityService {
 
 object IdentityService extends IdentityService
 
-
 trait Http {
-  def post(endpoint: String, data: JsObject, cookieValue: String): Future[WSResponse]
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
 }
 
 object IdentityApi extends Http {
 
-  def post(endpoint: String, data: JsObject, identityCookieValue: String): Future[WSResponse] = {
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
 
-    val headers = List(("X-GU-ID-Client-Access-Token" -> s"Bearer ${Config.idApiClientToken}"), ("X-GU-ID-FOWARDED-SC-GU-U" -> identityCookieValue))
-
-    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withRequestTimeout(2000).post(data)
+    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
   }
 }
