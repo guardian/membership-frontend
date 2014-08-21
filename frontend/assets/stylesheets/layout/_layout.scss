@@ -196,7 +196,8 @@ body {
 }
 
 // promo block three
-.brochure-container--promo-three {
+.brochure-container--promo-three,
+.brochure-container--promo-five {
     background-color: rgba(180, 24, 0, .95);
     color: $black;
     @include mq(desktop) {
@@ -259,7 +260,6 @@ body {
 // promo block five
 .brochure-container--promo-five {
     background-color: rgba(170, 216, 1, .95);
-    @extend .brochure-container--promo-three;
 }
 
 // promo block six
@@ -299,7 +299,7 @@ body {
     }
 
     .brochure-container__join-box {
-        border: 1px solid red;
+        border: 1px solid $c-neutral5;
 
         @include mq(desktop) {
             @include rem((
