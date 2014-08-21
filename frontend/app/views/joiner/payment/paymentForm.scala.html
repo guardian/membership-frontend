@@ -36,7 +36,8 @@
 
                 @fragments.form.errorMessageDisplay()
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-                @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true)
+                @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true,
+                userFields.address1)
 
                 @*
                 //TODO write scala for the functionality to show password
@@ -45,7 +46,8 @@
 
                 @fragments.form.paymentOptions(tier)
                 @fragments.form.billingAddressCTA()
-                @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", true)
+                @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", true,
+                userFields.billingAddress1)
                 @fragments.form.cardDetail()
                 @fragments.form.submit("Pay now")
             </form>

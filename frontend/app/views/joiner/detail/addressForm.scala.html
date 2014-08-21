@@ -13,7 +13,8 @@
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
         @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-        @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false)
+        @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false,
+        userFields.address1)
         @fragments.form.submit("Join now")
     </form>
 

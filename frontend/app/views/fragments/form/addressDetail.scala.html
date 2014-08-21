@@ -1,4 +1,4 @@
-@(heading: String, note: String, formType: String, addressRequired: Boolean = true)
+@(heading: String, note: String, formType: String, addressRequired: Boolean = true, address1: Option[String])
 
 @import model.Countries
 
@@ -19,6 +19,7 @@
                        name="@(formType).lineOne"
                        id="address-line-one-@(formType)"
                        class="text-input text-input--block js-address-line-one"
+                       value="@address1"
                        data-error-message="Please enter your @heading.toLowerCase() first line"
                        @if(addressRequired == true){data-validation="required"} />
             </div>
