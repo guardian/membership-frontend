@@ -8,13 +8,17 @@
 
 @main("Join membership") {
 
+
+
     <section class="section-two-thirds">
 
         @fragments.layout.sectionHeader("Choose a membership tier")
 
         @fragments.tickets.ticketsFunnel(1, StepTwo = "", StepThree = "", StepFour = "")
 
-        <section class="thirds two-thirds">
+        <div class="l-row">
+
+        <section class="two-thirds">
 
             <h2 class="section-sub-headline">Tiers</h2>
 
@@ -22,54 +26,54 @@
                 @CSRF.formField
                 <label for="friend">
                     <input type="radio" value="friend" id="friend" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Friend</h2>
+                    <h2 class="tickets-select-form__tier-name">Friend<span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span></h2>
                     <p>@Benefits.details(Tier.Friend).leadin</p>
 
                     <ul>
                         @for((header, body) <- Benefits.details(Tier.Friend).list) {
-                            <li>@header</li>
-                            <li>@body</li>
+                            <li class="tickets-select-form__header-title">@header</li>
+                            <li class="tickets-select-form__header-copy">@body</li>
                         }
                     </ul>
-                    <span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span>
+                    
                 </label>
 
                 <label for="partner">
                     <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
-                    <h2 class="tickets-select-form__tier-name">Partner</h2>
+                    <h2 class="tickets-select-form__tier-name">Partner<span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span></h2>
                     <p>@Benefits.details(Tier.Partner).leadin</p>
 
                     <ul>
                     @for((header, body) <- Benefits.details(Tier.Partner).list) {
-                        <li>@header</li>
-                        <li>@body</li>
+                        <li class="tickets-select-form__header-title">@header</li>
+                        <li class="tickets-select-form__header-copy">@body</li>
                     }
                     </ul>
-                    <span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span>
+                    
                 </label>
 
                 <label for="patron">
                     <input type="radio" value="patron" id="patron" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Patron</h2>
+                    <h2 class="tickets-select-form__tier-name">Patron<span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span></h2>
                     <p>@Benefits.details(Tier.Patron).leadin</p>
 
                     <ul>
                     @for((header, body) <- Benefits.details(Tier.Patron).list) {
-                        <li>@header</li>
-                        <li>@body</li>
+                        <li class="tickets-select-form__header-title">@header</li>
+                        <li class="tickets-select-form__header-copy">@body</li>
                     }
                     </ul>
-                    <span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span>
+                    
                 </label>
 
-                <input type="submit" class="submit-input action--logged-in" value="Join today"/>
+                <input type="submit" class="submit-input action action--logged-in" value="Join today"/>
 
             </form>
         </section>@*
 
             //inline-block whitespace
 
-        *@<section class="thirds one-third">
+        *@<section class="one-third">
 
             @for(event <- eventOpt) {
 
@@ -115,7 +119,9 @@
             }
 
         </section>
-
+        </div>
     </section>
+
+
 
 }

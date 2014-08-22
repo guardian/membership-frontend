@@ -33,6 +33,15 @@
 
         .tickets-select-form__price {
             @include fs-bodyHeading(4);
+            float: right;
+        }
+
+        .tickets-select-form__header-title {
+            @include fs-bodyHeading(2);
+        }
+
+        .tickets-select-form__header-copy {
+            @include fs-bodyCopy(1);
         }
 
         input:checked + .tickets-select-form__tier-name {
@@ -42,7 +51,12 @@
         &:hover {
             border-color: $c-brandLightBlue;
         }
+
+        ul {
+            list-style-type: none;
+        }
     }
+
     .submit-input {
         float: right;
         margin-right: 0;

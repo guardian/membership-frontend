@@ -70,22 +70,38 @@ body {
 // Two thirds section
 
 .section-two-thirds {
+    @include rem((
+        width: 100%,
+        margin: 0 auto,
+        padding: 0 $gs-gutter
+    ));
+    @include fs-headline(2);
 
-    section.thirds {
-        overflow: hidden;
-        display: inline-block;
-        vertical-align: top;
+    @include mq(desktop) {
+        @include fs-headline(5);
+        @include rem((
+            width: gs-span(12)
+        ));
     }
 
     section.two-thirds {
-        width: 66.7%;
-        padding-right: $gs-gutter*2;
-        border-right: 1px solid $c-neutral3;
+        @include mq(tablet) {
+            border-right: 1px solid $c-neutral3;
+            @include rem((
+                width: gs-span(8),
+                padding-right: $gs-gutter
+            ));
+            
+        }
     }
 
     section.one-third {
-        width: 33.3%;
-        padding-left: $gs-gutter*2;
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(4),
+                padding-left: $gs-gutter
+            ));
+        }
     }
 
 }
