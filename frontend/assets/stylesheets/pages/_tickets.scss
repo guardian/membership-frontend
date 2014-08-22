@@ -1,5 +1,5 @@
 .tickets-select-form {
-    label {
+    .tickets-select-form__label {
         position: relative;
         display: block;
         width: 100%;
@@ -9,52 +9,54 @@
             padding: $gs-baseline $gs-gutter $gs-baseline $gs-gutter*2,
             margin: 0 0 $gs-baseline
         ));
+    }
 
-        input {
-            @include rem((
-                top: $gs-baseline*1.5,
-                left: $gs-gutter
-            ));
-            position: absolute;
-            margin: 0;
-        }
+    .tickets-select-form__input {
+        @include rem((
+            top: $gs-baseline*1.5,
+            left: $gs-gutter
+        ));
+        position: absolute;
+        margin: 0;
+    }
 
-        p, li {
-            @include fs-bodyCopy(1);
-        }
+    .tickets-select-form__leadin {
+        @include fs-bodyCopy(1);
+    }
 
-        .tickets-select-form__tier-name {
-            @include rem((
-                margin-bottom: $gs-baseline,
-                padding-bottom: $gs-baseline,
-                border-bottom: 1px solid $c-neutral4
-            ));
-        }
+    .tickets-select-form__tier-name {
+        @include rem((
+            margin-bottom: $gs-baseline,
+            padding-bottom: $gs-baseline,
+            border-bottom: 1px solid $c-neutral4
+        ));
+    }
 
-        .tickets-select-form__price {
-            @include fs-bodyHeading(4);
-            float: right;
-        }
+    .tickets-select-form__price {
+        @include fs-bodyHeading(4);
+        float: right;
+    }
 
-        .tickets-select-form__header-title {
-            @include fs-bodyHeading(2);
-        }
+    .tickets-select-form__header-title {
+        @include fs-bodyHeading(2);
+        @include rem((
+            padding-bottom: $gs-baseline/6
+        ));
+    }
 
-        .tickets-select-form__header-copy {
-            @include fs-bodyCopy(1);
-        }
+    .tickets-select-form__header-copy {
+        @include fs-bodyCopy(1);
+        @include rem((
+            padding-bottom: $gs-baseline/2
+        ));
+    }
 
-        input:checked + .tickets-select-form__tier-name {
-            text-decoration: underline;
-        }
+    input:checked + .tickets-select-form__tier-name {
+        text-decoration: underline;
+    }
 
-        &:hover {
-            border-color: $c-brandLightBlue;
-        }
-
-        ul {
-            list-style-type: none;
-        }
+    &:hover {
+        border-color: $c-brandLightBlue;
     }
 
     .submit-input {
