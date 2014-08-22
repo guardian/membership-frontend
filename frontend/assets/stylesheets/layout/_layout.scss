@@ -177,6 +177,13 @@ body {
         margin-bottom: $gs-gutter*2
     ));
 
+    @include mq(tablet) {
+        @include rem((
+            padding: 0 gs-span(2) 0 $gs-column-width+$gs-gutter,
+            margin-bottom: $gs-gutter*2
+        ));
+    }  
+
     @include mq(desktop) {
         @include rem((
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
@@ -184,8 +191,16 @@ body {
         ));
     }  
     .brochure-container__inner {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
+        }
+
         @include mq(desktop) {
-            width: gs-span(8);
+            @include rem((
+                width: gs-span(8)
+            ));
         }
     } 
 
@@ -193,6 +208,12 @@ body {
         @include rem((
             margin-bottom: $gs-gutter/2
         ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
+        }
 
         @include mq(desktop) {
             @include rem((
@@ -240,6 +261,10 @@ body {
     }
 
     .brochure-container__inner {
+        @include mq(tablet) {
+            width: gs-span(6);
+        }
+
         @include mq(desktop) {
             width: gs-span(8);
         }
@@ -247,6 +272,13 @@ body {
         .section-headline--black {
             border-top: $gs-gutter solid $black;
             color: $black;
+
+            @include mq(tablet) {
+                @include rem((
+                    width: gs-span(8),
+                    margin-bottom: $gs-gutter*3
+                ));
+            }
 
             @include mq(desktop) {
                 @include rem((
@@ -281,6 +313,13 @@ body {
     }
 
     .brochure-container__image {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(3),
+                margin-right: $gs-gutter
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(4),
@@ -315,6 +354,12 @@ body {
             margin-bottom: $gs-gutter/2
         ));
 
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(8)
@@ -323,6 +368,13 @@ body {
     }
 
     .brochure-container__teaser {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(8),
+                margin-right: $gs-gutter
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(8),
@@ -331,6 +383,12 @@ body {
         }
     }
     .brochure-container__image {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(2)
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(3)
@@ -355,6 +413,13 @@ body {
         @include rem((
             margin-bottom: $gs-gutter
         ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(3),
+                margin-right: $gs-gutter
+            ));
+        }
 
         @include mq(desktop) {
             @include rem((
@@ -398,13 +463,17 @@ body {
         }
 
         &.brochure-container__join-box--header--patron {
-            background-color: $mem-brandBlue;
+            background-color: $mem-brandDarkBlue;
             color: $white;
         }
     }
 
     .brochure-container__price {
         @include fs-headline(2);
+
+        @include mq(tablet) {
+            @include fs-headline(2);
+        }
 
         @include mq(desktop) {
             @include fs-headline(3);
