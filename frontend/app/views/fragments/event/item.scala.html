@@ -1,5 +1,6 @@
 @(event: model.Eventbrite.EBEvent)
 @import views.support.Dates._
+@import configuration.Config
 @import model.Eventbrite.EBEventStatus._
 
 <li class="events-list__item">
@@ -11,7 +12,9 @@
                     @if(event.getStatus == SoldOut){
                         <span class="event-status event-status--sold-out">Sold Out</span>
                     }
-                        <img src="@event.logoUrl" alt="Event Image">
+
+                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.png" data-alt="Please upload an event image"></div>
+
                     </div>
                 </div>
                 <h2 class="item__title truncate">
