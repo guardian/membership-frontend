@@ -153,7 +153,7 @@ body {
 
 .brochure-container {
     @include fs-headline(2);
-    background-color: rgba(255, 255, 255, .95);
+    background-color: $mem-trans-white;
     @include rem((
         padding: 0 $gs-gutter/2,
         margin: 0 $gs-gutter/2,
@@ -170,14 +170,17 @@ body {
 }
 
 // promo block one
+// =============================================================================
+
 .brochure-container--promo-one {
     @include rem((
-        margin-bottom: $gs-gutter * 2
+        margin-bottom: $gs-gutter*2
     ));
+
     @include mq(desktop) {
         @include rem((
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
-            margin-bottom: $gs-gutter * 2
+            margin-bottom: $gs-gutter*2
         ));
     }  
     .brochure-container__inner {
@@ -190,6 +193,7 @@ body {
         @include rem((
             margin-bottom: $gs-gutter/2
         ));
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(8)
@@ -199,6 +203,8 @@ body {
 }
 
 // promo block two
+// =============================================================================
+
 .brochure-container--promo-two {
 
     .brochure-container__teaser {
@@ -220,10 +226,13 @@ body {
 }
 
 // promo block three
+// =============================================================================
+
 .brochure-container--promo-three,
 .brochure-container--promo-five {
-    background-color: rgba(180, 24, 0, .95);
+    background-color: $mem-trans-red;
     color: $black;
+
     @include mq(desktop) {
         @include rem((
             padding: 0 gs-span(3)+$gs-gutter 0 gs-span(1)+$gs-gutter
@@ -238,6 +247,7 @@ body {
         .section-headline--black {
             border-top: $gs-gutter solid $black;
             color: $black;
+
             @include mq(desktop) {
                 @include rem((
                     width: gs-span(8),
@@ -257,6 +267,8 @@ body {
 }
 
 // promo block four
+// =============================================================================
+
 .brochure-container--promo-four {
     background-color: $white;
 
@@ -279,13 +291,18 @@ body {
 }
 
 // promo block five
+// =============================================================================
+
 .brochure-container--promo-five {
-    background-color: rgba(170, 216, 1, .95);
+    background-color: $mem-trans-green;
 }
 
 // promo block six
+// =============================================================================
+
 .brochure-container--promo-six {
     background-color: $white;
+
     @include mq(desktop) {
         @include rem((
             padding: 0 0 0 $gs-column-width+$gs-gutter,
@@ -297,6 +314,7 @@ body {
         @include rem((
             margin-bottom: $gs-gutter/2
         ));
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(8)
@@ -322,6 +340,8 @@ body {
 }
 
 // promo block seven
+// =============================================================================
+
 .brochure-container--promo-seven {
 
     .brochure-container__inner {
@@ -405,6 +425,13 @@ body {
             }
         }
 
+        .brochure-container__price--bold-free {
+            @include rem((
+                width: gs-span(2),
+                padding-left: $gs-gutter
+            ));
+        }
+
         .save-price {
             @include fs-bodyCopy(1);
             color: $c-neutral3;
@@ -430,6 +457,7 @@ body {
         @include rem((
             margin-left: $gs-gutter/2
         ));
+
         @include mq(desktop) {
             @include rem((
                 margin-left: $gs-gutter
@@ -456,6 +484,7 @@ body {
 
 .brochure-container__copy--author {
     @include fs-headline(1);
+
     @include mq(desktop) {
         @include fs-headline(3);
     }
