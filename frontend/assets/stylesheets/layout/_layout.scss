@@ -63,7 +63,7 @@ body {
 
 .l-row__item {
     @include rem((
-        padding-bottom: $gs-gutter * 2
+        padding-bottom: $gs-gutter*2
     ));
 }
 
@@ -109,15 +109,30 @@ body {
     &.brochure-container--white-background {
         background-color: $white;
         @include rem((
-            padding: $gs-gutter * 3 0 $gs-gutter * 2
+            padding: $gs-gutter*3 0 $gs-gutter*2
         ));
     }
 
-    &.brochure-container--image-background {
+    &.brochure-container--no-top-margin {
+        background-color: $white;
+        @include rem((
+            padding: 0 0 $gs-gutter*2
+        ));
+    }
+
+    &.brochure-container--image-background-one {
         background: url(/assets/images/homepage/mem-bg-promo.jpg) no-repeat center center;
         background-size: cover;
         @include rem((
-            padding: $gs-gutter * 3 0 $gs-gutter * 2
+            padding: $gs-gutter*3 0 $gs-gutter*2
+        ));
+    }
+
+    &.brochure-container--image-background-two {
+        background: url(/assets/images/homepage/mem-bg-promo2.jpg) no-repeat center center;
+        background-size: cover;
+        @include rem((
+            padding: $gs-gutter*3 0 $gs-gutter*2
         ));
     }
 }
@@ -130,17 +145,19 @@ body {
         padding: 0 $gs-gutter
     ));
     background-color: rgba(255, 255, 255, .95);
-    @include fs-headline(5);
+    @include fs-headline(2);
 
     @include mq(desktop) {
+        @include fs-headline(5);
         width: gs-span(12);
     }
 }
 
+// promo block one
 .brochure-container--promo-one {
     @include mq(desktop) {
         @include rem((
-            padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter,
+            padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter * 2
         ));
     }  
@@ -157,13 +174,38 @@ body {
     } 
 }
 
+// promo block two
 .brochure-container--promo-two {
+
+    .brochure-container__teaser {
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(7)
+            ));
+        }
+    }
+
+    .brochure-container__image {
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(4),
+                margin-right: $gs-gutter
+            )); 
+        }
+    }
+}
+
+// promo block three
+.brochure-container--promo-three,
+.brochure-container--promo-five {
     background-color: rgba(180, 24, 0, .95);
     color: $black;
-    @include rem((
-        padding: 0 $gs-column-width * 3 0 $gs-column-width + $gs-gutter,
-        margin-bottom: $gs-gutter * 2
-    ));
+    @include mq(desktop) {
+        @include rem((
+            padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
+            margin-bottom: $gs-gutter * 2
+        ));
+    }
 
     .brochure-container__inner {
         @include mq(desktop) {
@@ -174,34 +216,156 @@ body {
             border-top: $gs-gutter solid $black;
             color: $black;
         }
+
+        .brochure-container__image:first-child {
+            @include mq(desktop) {
+                @include rem((
+                    margin-right: $gs-gutter
+                ));
+            }
+        }
     } 
 }
 
-.brochure-container__inner {
+// promo block four
+.brochure-container--promo-four {
+    background-color: $white;
+
+    .section-headline--with-margins {
+        @include mq(desktop) {
+            @include rem((
+                margin: 0 $gs-column-width*3 $gs-gutter*3 $gs-column-width+$gs-gutter
+            ));
+        }
+    }
+
+    .brochure-container__teaser {
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(7)
+            ));
+        }
+    }
 
     .brochure-container__image {
-        width: gs-span(4);
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(4),
+                margin-right: $gs-gutter
+            ));
+        }
+    }
+}
+
+// promo block five
+.brochure-container--promo-five {
+    background-color: rgba(170, 216, 1, .95);
+}
+
+// promo block six
+.brochure-container--promo-six {
+    background-color: $white;
+    @include mq(desktop) {
         @include rem((
-            margin-right: $gs-gutter
+            padding: 0 0 0 $gs-column-width+$gs-gutter,
+            margin-bottom: $gs-gutter * 2
+        ));
+    } 
+
+    .brochure-container__teaser {
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(8),
+                margin-right: $gs-gutter
+            ));
+        }
+    }
+    .brochure-container__image {
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(3)
+            ));
+        }
+    }
+}
+
+// promo block seven
+.brochure-container--promo-seven {
+
+    .brochure-container__inner {
+        @include mq(desktop) {
+            width: gs-span(12);
+        }
+    }
+
+    .brochure-container__join-box {
+        border: 1px solid $c-neutral5;
+
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(4),
+                margin-right: $gs-gutter
+            ));
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    .brochure-container__join-box--header {
+        @include fs-headline(3);
+        @include rem((
+            padding: $gs-gutter
         ));
     }
 
     .brochure-container__teaser {
-        width: gs-span(7);
-    }
+        @include fs-headline(2);
 
-    .brochure-container__copy {
+        @include mq(desktop) {
+            @include fs-headline(3);
+        }
+    }
+}
+
+.brochure-container__copy,
+.brochure-container__image {
+    @include rem((
+        margin-bottom: $gs-gutter
+    ));
+}
+
+.brochure-container__copy--author {
+    @include fs-headline(1);
+    @include mq(desktop) {
+        @include fs-headline(3);
+    }
+}
+
+blockquote {
+    font-style: italic;
+    font-weight: 300;
+    @include rem((
+        margin-bottom: 10px
+    ));
+
+    &:before {
+        @extend %icon-sprite;
+        @extend %icon-sprite-quote-blue;
+        content: '';
+        display: block;
+        float: left;
         @include rem((
-            margin-bottom: $gs-gutter
+            margin-right: 5px
         ));
     }
 }
 
-.brochure-container__image--holder {
-    background-color: $c-neutral6;
+.blockquote--black-line { 
+    border-top: 1px solid $black;
     @include rem((
-        height: 220px,
-        width: 100%
+        padding-top: 10px
     ));
 }
 
