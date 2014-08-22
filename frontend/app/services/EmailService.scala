@@ -9,26 +9,42 @@ import com.amazonaws.regions.{Region, Regions}
 import play.api.Logger
 
 import configuration.Config
+import forms.MemberForm.FeedbackForm
 
 trait EmailService {
+  val feedbackAddress: String
+
   val client = new AmazonSimpleEmailServiceClient()
   client.setRegion(Region.getRegion(Regions.EU_WEST_1))
 
-  def sendEmail(from: String, bodyStr: String) = {
-    val to = new Destination().withToAddresses(Config.membershipFeedback)
-    val subject = new Content("Membership feedback")
-    val body = new Body().withText(new Content(bodyStr))
-    val message = new Message().withSubject(subject).withBody(body)
-    val email = new SendEmailRequest().withSource(from).withDestination(to).withMessage(message)
+  def sendFeedback(feedback: FeedbackForm) = {
+    val to = new Destination().withToAddresses(feedbackAddress)
+    val subjectContent = new Content("Membership feedback")
+
+    val body =
+      s"""
+        Category: ${feedback.category}<br />
+        Page: ${feedback.page}<br />
+        Comments: ${feedback.feedback}<br />
+        <br />
+        Name: ${feedback.name}<br />
+        Email address: ${feedback.email}
+      """.stripMargin
+
+    val bodyContent = new Body().withHtml(new Content(body))
+    val message = new Message(subjectContent, bodyContent)
+    val email = new SendEmailRequest(feedbackAddress, to, message)
 
     Try {
       client.sendEmail(email)
     } match {
       case Success(_) =>
       case Failure(error) =>
-        Logger.debug(s"Failed to send feedback from $from, got ${error.getMessage}")
+        Logger.debug(s"Failed to send feedback, got ${error.getMessage}")
     }
   }
 }
 
-object EmailService extends EmailService
+object EmailService extends EmailService {
+  val feedbackAddress = Config.membershipFeedback
+}

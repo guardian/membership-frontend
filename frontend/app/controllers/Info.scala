@@ -26,7 +26,7 @@ trait Info extends Controller {
   }
 
   private def sendFeedback(formData: FeedbackForm)(implicit request: AuthRequest[_]) = {
-    EmailService.sendEmail(formData.email, formData.feedback)
+    EmailService.sendFeedback(formData)
 
     Future.successful(Redirect(routes.Info.feedbackThankyou()))
   }
