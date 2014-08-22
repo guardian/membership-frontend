@@ -25,9 +25,11 @@
     }
 
     &:after {
-        content: '';
         @extend .icon-sprite-arrow-right-white;
-        fill: #000000;
+        &.action--secondary-button {
+            @extend .icon-sprite-arrow-right-black;
+        }
+        content: '';
         float: right;
         @include rem((
             margin: 2px 0 0 30px
@@ -88,8 +90,15 @@
     color: $black;
     @include rem((
         padding: 8px 8px 8px 18px,
-        width: 220px
+        min-width: 220px,
+        width: auto
     ));
+
+    .brochure-container__join-box & {
+        @include rem((
+            margin-left: $gs-baseline+3
+        ));
+    }
     
     &:visited,
     &:active,
