@@ -24,46 +24,49 @@
 
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
                 @CSRF.formField
-                <label for="friend">
-                    <input type="radio" value="friend" id="friend" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Friend<span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span></h2>
-                    <p>@Benefits.details(Tier.Friend).leadin</p>
-
-                    <ul>
-                        @for((header, body) <- Benefits.details(Tier.Friend).list) {
-                            <li class="tickets-select-form__header-title">@header</li>
-                            <li class="tickets-select-form__header-copy">@body</li>
-                        }
+                <a class="mobile-only js-benefit-header" href="#">
+                    <h2 class="u-cf tickets-select-form__tier-name">@Tier.Friend<span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span></h2>
+                </a>
+                <label class="hidden-mobile tickets-select-form__label" for="friend">
+                    <input class="tickets-select-form__input" type="radio" value="friend" id="friend" name="tier"/>
+                    <h2 class="u-cf hidden-mobile tickets-select-form__tier-name">@Tier.Friend<span class="tickets-select-form__price">@Benefits.details(Tier.Friend).priceText</span></h2>
+                    <p class="tickets-select-form__leadin">@Benefits.details(Tier.Friend).leadin</p>
+                    <ul class="u-unstyled">
+                    @for((header, body) <- Benefits.details(Tier.Friend).list) {
+                        <li class="tickets-select-form__header-title">@header</li>
+                        <li class="tickets-select-form__header-copy">@body</li>
+                    }
                     </ul>
-                    
                 </label>
 
-                <label for="partner">
-                    <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
-                    <h2 class="tickets-select-form__tier-name">Partner<span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span></h2>
-                    <p>@Benefits.details(Tier.Partner).leadin</p>
-
-                    <ul>
+                <a class="mobile-only js-benefit-header" href="#">
+                    <h2 class="u-cf tickets-select-form__tier-name">@Tier.Partner<span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span></h2>
+                </a>
+                <label class="hidden-mobile tickets-select-form__label" for="partner">
+                    <input class="tickets-select-form__input" type="radio" value="partner" id="partner" name="tier" checked="checked"/>
+                    <h2 class="u-cf hidden-mobile tickets-select-form__tier-name">@Tier.Partner<span class="tickets-select-form__price">@Benefits.details(Tier.Partner).priceText</span></h2>
+                    <p class="tickets-select-form__leadin">@Benefits.details(Tier.Partner).leadin</p>
+                    <ul class="u-unstyled">
                     @for((header, body) <- Benefits.details(Tier.Partner).list) {
                         <li class="tickets-select-form__header-title">@header</li>
                         <li class="tickets-select-form__header-copy">@body</li>
                     }
                     </ul>
-                    
                 </label>
 
-                <label for="patron">
-                    <input type="radio" value="patron" id="patron" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Patron<span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span></h2>
-                    <p>@Benefits.details(Tier.Patron).leadin</p>
-
-                    <ul>
+                <a class="mobile-only js-benefit-header" href="#">
+                    <h2 class="u-cf tickets-select-form__tier-name">@Tier.Patron<span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span></h2>
+                </a>
+                <label class="hidden-mobile tickets-select-form__label" for="patron">
+                    <input class="tickets-select-form__input" type="radio" value="patron" id="patron" name="tier"/>
+                    <h2 class="u-cf hidden-mobile tickets-select-form__tier-name">@Tier.Patron<span class="tickets-select-form__price">@Benefits.details(Tier.Patron).priceText</span></h2>
+                    <p class="tickets-select-form__leadin">@Benefits.details(Tier.Patron).leadin</p>
+                    <ul class="u-unstyled">
                     @for((header, body) <- Benefits.details(Tier.Patron).list) {
                         <li class="tickets-select-form__header-title">@header</li>
                         <li class="tickets-select-form__header-copy">@body</li>
                     }
                     </ul>
-                    
                 </label>
 
                 <input type="submit" class="submit-input action action--logged-in" value="Join today"/>
