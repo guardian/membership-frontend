@@ -83,6 +83,7 @@ html.js-ancient-browser {
 }
 
 .browser-upgrade-msg__logo {
+    width: auto;
     background-color: transparent;
     @include rem((
         margin-bottom: 15px
