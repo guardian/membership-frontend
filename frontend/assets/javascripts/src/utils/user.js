@@ -1,17 +1,10 @@
 define([
+    'src/utils/storage',
     'src/utils/atob',
     'ajax'
-], function(AtoB, ajax){
+], function(storage, AtoB, ajax){
 
-    var getUserOrSignIn = function(returnUrl){
-        var user = getUserFromCookie();
-        returnUrl = returnUrl || document.location.href;
-        if (user) {
-            return user;
-        } else {
-            window.location.href = '/signin?returnUrl=' + returnUrl;
-        }
-    };
+    var MEM_USER_STORAGE_KEY = 'memUser';
 
     var isLoggedIn = function(){
         return !!getUserFromCookie();
@@ -54,27 +47,36 @@ define([
     };
 
     var getMemberDetail = function (callback) {
-        var tier = null;
-        if (tier) {
-            callback(tier);
-        } else {
-            ajax.init({page: {ajaxUrl: ''}});
-            ajax({
-                url: '/user/me',
-                method: 'get',
-                success: function (resp) {
-                    callback(resp);
-                },
-                error: function (err) {
-                    callback(null, err);
-                }
-            });
+        var store = storage.local;
+        var membershipUser = store.get(MEM_USER_STORAGE_KEY);
+        var identityUser = getUserFromCookie();
+        var today = new Date();
+        var todayPlus24Hours = today.setDate(today.getDate() + 1);
+
+        if (identityUser) {
+            if ((membershipUser && membershipUser.userId) === identityUser.id) {
+                callback(membershipUser);
+            } else {
+                ajax({
+                    url: '/user/me',
+                    method: 'get',
+                    success: function (resp) {
+                        callback(resp);
+                        store.set(MEM_USER_STORAGE_KEY, resp, todayPlus24Hours)
+                    },
+                    error: function (err) {
+                        callback(null, err);
+                        /* we get a 403 error for guardian users who are not members id added to stop this from
+                        being called on each page */
+                        store.set(MEM_USER_STORAGE_KEY, { userId: identityUser.id }, todayPlus24Hours)
+                    }
+                });
+            }
         }
     };
 
     return {
         isLoggedIn: isLoggedIn,
-        getUserOrSignIn: getUserOrSignIn,
         getUserFromCookie: getUserFromCookie,
         getMemberDetail: getMemberDetail
     };
