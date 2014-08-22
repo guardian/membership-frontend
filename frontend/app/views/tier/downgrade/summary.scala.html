@@ -51,7 +51,7 @@
                         </tr>
                         <tr class="summary-table__row" role="row">
                             <td class="summary-table__cell">
-                                Monthly Payment
+                                @if(futureSubscription.annual){ Annual } else { Monthly } Payment
                             </td>
                             <td class="summary-table__cell">
                                 @futureSubscription.planAmount.pretty
