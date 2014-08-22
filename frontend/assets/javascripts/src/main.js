@@ -8,7 +8,8 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
-    'src/modules/events/modifyEvent'
+    'src/modules/events/modifyEvent',
+    'src/utils/storage'
 ], function(
     omnitureAnalytics,
     router,
@@ -19,16 +20,32 @@ require([
     Cta,
     Header,
     DatetimeEnhance,
-    modifyEvent
-    ) {
+    modifyEvent,
+    storage
+) {
     'use strict';
 
+    var MEM_USER_STORAGE_KEY = 'memUser';
+    var header;
+
     ajax.init({page: {ajaxUrl: ''}});
+
+    router.match('*').to(function () {
+        header = new Header();
+        header.init();
+        omnitureAnalytics.init();
+    });
 
     router.match('/event/').to(function () {
         (new DatetimeEnhance()).init();
         (new Cta()).init();
         modifyEvent.init();
+    });
+
+    router.match(['*/thankyou', '*/summary']).to(function () {
+        //TODO potentially abstract this into its own class if user details stuff grows
+        storage.local.remove(MEM_USER_STORAGE_KEY);
+        header.populateUserDetails();
     });
 
     router.match('*/friend/enter-details').to(function () {
@@ -41,11 +58,6 @@ require([
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
         (new Upgrade()).init();
-    });
-
-    router.match('*').to(function () {
-        (new Header()).init();
-        omnitureAnalytics.init();
     });
 
     /**
