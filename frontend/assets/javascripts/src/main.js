@@ -8,7 +8,8 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
-    'src/modules/events/modifyEvent'
+    'src/modules/events/modifyEvent',
+    'src/modules/tier/Choose'
 ], function(
     omnitureAnalytics,
     router,
@@ -19,7 +20,8 @@ require([
     Cta,
     Header,
     DatetimeEnhance,
-    modifyEvent
+    modifyEvent,
+    Choose
     ) {
     'use strict';
 
@@ -41,6 +43,10 @@ require([
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
         (new Upgrade()).init();
+    });
+
+    router.match('/choose-tier').to(function () {
+        (new Choose()).init();
     });
 
     router.match('*').to(function () {
