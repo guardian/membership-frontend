@@ -65,18 +65,21 @@
 
         @fragments.unsupportedBrowser()
 
-        @fragments.header()
+        <div class="container-global">
 
-        <div class="page-side-margins">
-        @if(isBrochure != true) {
-            <div class="page-container">
-        }
+            @fragments.header()
 
-                @content
+            <div class="page-side-margins">
+            @if(isBrochure != true) {
+                <div class="page-container">
+            }
 
-        @if(isBrochure != true) {
+                    @content
+
+            @if(isBrochure != true) {
+                </div>
+            }
             </div>
-        }
         </div>
 
         @fragments.footer()
