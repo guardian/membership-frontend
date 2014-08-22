@@ -1,3 +1,5 @@
+@(firstName: Option[String], lastName: Option[String])
+
 <fieldset class="fieldset address-fieldset">
 
     <div class="fieldset__heading">
@@ -13,6 +15,7 @@
                 <input type="text"
                        name="name.first"
                        id="name-first"
+                       value="@firstName"
                        class="text-input text-input--block js-name-first"
                        data-error-message="Please enter your first name"
                        data-validation="required"/>
@@ -23,6 +26,7 @@
                 <input type="text"
                        name="name.last"
                        id="name-last"
+                       value="@lastName"
                        class="text-input text-input--block js-name-last"
                        data-error-message="Please enter your last name"
                        data-validation="required"/>

@@ -1,4 +1,6 @@
-@(heading: String, note: String, formType: String, addressRequired: Boolean = true)
+@(heading: String, note: String, formType: String, addressRequired: Boolean = true,
+address1: Option[String], address2: Option[String], town: Option[String], postcode: Option[String],
+county: Option[String], userCountry: Option[String])
 
 @import model.Countries
 
@@ -17,6 +19,7 @@
                 <label class="label" for="address-line-one-@(formType)">Address line 1</label>
                 <input type="text"
                        name="@(formType).lineOne"
+                       value="@address1"
                        id="address-line-one-@(formType)"
                        class="text-input text-input--block js-address-line-one"
                        data-error-message="Please enter your @heading.toLowerCase() first line"
@@ -27,6 +30,7 @@
                 <label class="label" for="address-line-two-@(formType)">Address line 2</label>
                 <input type="text"
                        name="@(formType).lineTwo"
+                       value="@address2"
                        id="address-line-two-@(formType)"
                        class="text-input text-input--block js-address-line-two"/>
             </div>
@@ -35,6 +39,7 @@
                 <label class="label" for="town-@(formType)">Town</label>
                 <input type="text"
                        name="@(formType).town"
+                       value="@town"
                        id="town-@(formType)"
                        class="text-input text-input--block js-town"
                        data-error-message="Please enter your @heading.toLowerCase() town"
@@ -45,6 +50,7 @@
                 <label class="label" for="postCode-@(formType)">Post code</label>
                 <input type="text"
                        name="@(formType).postCode"
+                       value="@postcode"
                        id="postCode-@(formType)"
                        class="text-input text-input--block js-post-code"
                        data-error-message="Please enter your @heading.toLowerCase() post code"
@@ -55,6 +61,7 @@
                 <label class="label" for="county-or-state-@(formType)">County or State</label>
                 <input type="text"
                        name="@(formType).countyOrState"
+                       value="@county"
                        id="county-or-state-@(formType)"
                        class="text-input text-input--block js-county-state"/>
             </div>
@@ -64,7 +71,7 @@
                 <div class="input">
                     <select name="@(formType).country" id="country-@(formType)">
                         @for(country <- Countries.all) {
-                        <option value="@country">@country</option>
+                        <option value="@country" @if(userCountry.getOrElse("") == country){selected}>@country</option>
                         }
                     </select>
                 </div>

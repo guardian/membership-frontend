@@ -7,10 +7,11 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
+import model.PrivateFields
 
 import actions._
 import forms.MemberForm._
-import services.{SubscriptionService, MemberRepository, MemberService}
+import services._
 
 trait DowngradeTier {
   self: TierController =>
@@ -37,11 +38,14 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
-  def upgrade(tier: Tier) = MemberAction { implicit request =>
+  def upgrade(tier: Tier) = MemberAction.async { implicit request =>
     if (request.member.tier < tier)
-      Ok(views.html.tier.upgrade.upgradeForm(tier))
+      for {
+        userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
+        privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+      }  yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
     else
-      NotFound
+      Future.successful(NotFound)
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
