@@ -1,6 +1,3 @@
-/**
- * Created by cfinch on 07/08/2014.
- */
 define([
     '$',
     'bean',
