@@ -9,7 +9,7 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
-    'src/modules/events/modifyEvent'
+    'src/modules/events/eventPriceEnhance'
 ], function(
     Imager,
     omnitureAnalytics,
@@ -21,7 +21,7 @@ require([
     Cta,
     Header,
     DatetimeEnhance,
-    modifyEvent
+    eventPriceEnhance
     ) {
     'use strict';
 
@@ -30,7 +30,7 @@ require([
     router.match('/event/').to(function () {
         (new DatetimeEnhance()).init();
         (new Cta()).init();
-        modifyEvent.init();
+        eventPriceEnhance.init();
     });
 
     router.match('*/friend/enter-details').to(function () {
