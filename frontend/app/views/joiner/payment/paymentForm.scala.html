@@ -1,4 +1,5 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields,
+marketingChoices: model.StatusFields)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.support.Asset
 @import helper._
@@ -38,6 +39,7 @@
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                 @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true,
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
+                @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
                 @*
                 //TODO write scala for the functionality to show password
