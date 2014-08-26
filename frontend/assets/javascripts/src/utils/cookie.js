@@ -1,6 +1,9 @@
 define(function () {
 
-    // Cookie functions from http://www.quirksmode.org/js/cookies.html
+    /*
+     Cookie functions originally from http://www.quirksmode.org/js/cookies.html
+     These are secure cookies and the value is JSON.stringify on set and JSON.parse on get
+     */
     var doc = document;
 
     function setCookie(name, value, days) {
@@ -15,7 +18,7 @@ define(function () {
             expires = '';
         }
 
-        doc.cookie = [name, '=', value, expires, '; path=/'].join('');
+        doc.cookie = [name, '=', JSON.stringify(value), expires, '; path=/', '; secure' ].join('');
     }
 
     function getCookie(name) {
@@ -29,7 +32,13 @@ define(function () {
                 c = c.substring(1, c.length);
             }
             if (c.indexOf(nameEQ) === 0) {
-                return c.substring(nameEQ.length, c.length);
+                var value;
+
+                try {
+                    value = JSON.parse(c.substring(nameEQ.length, c.length));
+                } catch(e){}
+
+                return value;
             }
         }
         return null;
