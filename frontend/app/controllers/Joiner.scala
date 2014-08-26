@@ -1,6 +1,7 @@
 package controllers
 
 import model.{StatusFields, PrivateFields}
+import play.api.Logger
 
 import scala.concurrent.Future
 
@@ -44,8 +45,8 @@ trait Joiner extends Controller {
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
       marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
       passwordExists = userOpt.flatMap(_.passwordExists).getOrElse(false)
-
     } yield {
+      Logger.info(s"Enter details, password exists value: ${passwordExists}")
       tier match {
         case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices))
         case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
