@@ -1,4 +1,4 @@
-@(targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
+@(targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields, passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 
 @main("Upgrade Payment") {
@@ -16,6 +16,11 @@
         userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode,
         userFields.billingAddress4, userFields.billingCountry)
         @fragments.form.paymentOptions(targetTier)
+
+        @if(passwordExists != true) {
+            @fragments.form.passwordDetail()
+        }
+
         @fragments.form.submit("Join now")
 
     </form>

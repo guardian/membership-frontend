@@ -1,5 +1,5 @@
 @(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields,
-marketingChoices: model.StatusFields)(implicit token: play.filters.csrf.CSRF.Token)
+marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.support.Asset
 @import helper._
@@ -41,10 +41,10 @@ marketingChoices: model.StatusFields)(implicit token: play.filters.csrf.CSRF.Tok
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
                 @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
-                @*
-                //TODO write scala for the functionality to show password
-                @fragments.form.passwordDetail()
-                *@
+                @if(passwordExists != true) {
+                    @fragments.form.passwordDetail()
+                }
+
 
                 @fragments.form.paymentOptions(tier)
                 @fragments.form.billingAddressCTA()

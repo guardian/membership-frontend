@@ -43,10 +43,12 @@ trait Joiner extends Controller {
       userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
       marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
+      passwordExists = userOpt.flatMap(_.passwordExists).getOrElse(false)
+
     } yield {
       tier match {
         case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices))
-        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
       }
 
     }

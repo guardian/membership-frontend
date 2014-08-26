@@ -17,7 +17,10 @@ import scala.concurrent.Future
 trait IdentityService {
 
   def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
-    IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+    for {
+      userDetails <- IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+      passwordExists <- IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
+    } yield userDetails.map(_.copy(passwordExists = passwordExists))
   }
 
   def updateUserBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
@@ -76,6 +79,8 @@ trait IdentityService {
 object IdentityService extends IdentityService
 
 trait Http {
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[Boolean]]
+
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
@@ -84,12 +89,15 @@ trait Http {
 
 object IdentityApi extends Http {
 
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[Boolean]] = {
+    WS.url(s"${Config.idApiUrl}/user/password-exists").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+      (response.json \ "passwordExists").asOpt[Boolean]
+    }
+  }
+
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-      Logger.info("***********")
-      Logger.info(response.body)
-      Logger.info("***********")
-       (response.json \ "user").asOpt[IdentityUser]
+      (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
