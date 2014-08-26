@@ -106,7 +106,8 @@ define([
     };
 
     /**
-     * Populate user details in the header account information container
+     * Populate user details in the header account information container,
+     * If a Identity user is logged in then populate the user details found in the header.
      */
     Header.prototype.populateUserDetails = function() {
         var user = this.user;
