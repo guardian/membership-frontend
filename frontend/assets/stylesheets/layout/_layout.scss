@@ -12,9 +12,16 @@ html {
 
 body {
     min-height: 100%;
+
     @include rem((
         margin-bottom: 198px
     ));
+
+    @include mq(desktop) {
+        @include rem((
+            margin-bottom: 100px
+        ));
+    }
 }
 
 .header {
@@ -109,8 +116,14 @@ body {
     &.brochure-container--white-background {
         background-color: $white;
         @include rem((
-            padding: $gs-gutter*3 0 $gs-gutter*2
+            padding: $gs-gutter 0
         ));
+
+        @include mq(desktop) {
+            @include rem((
+                padding: $gs-gutter*3 0 $gs-gutter*2
+            ));
+        }
     }
 
     &.brochure-container--no-top-margin {
@@ -139,42 +152,80 @@ body {
 
 
 .brochure-container {
-    @include rem((
-        width: 100%,
-        margin: 0 auto,
-        padding: 0 $gs-gutter
-    ));
-    background-color: rgba(255, 255, 255, .95);
     @include fs-headline(2);
+    background-color: $mem-trans-white;
+    @include rem((
+        padding: 0 $gs-gutter/2,
+        margin: 0 $gs-gutter/2,
+    ));
 
     @include mq(desktop) {
         @include fs-headline(5);
-        width: gs-span(12);
+        @include rem((
+            width: gs-span(12),
+            margin: 0 auto,
+            padding: 0 $gs-gutter
+        ));
     }
 }
 
 // promo block one
+// =============================================================================
+
 .brochure-container--promo-one {
+    @include rem((
+        margin-bottom: $gs-gutter*2
+    ));
+
+    @include mq(tablet) {
+        @include rem((
+            padding: 0 gs-span(2) 0 $gs-column-width+$gs-gutter,
+            margin-bottom: $gs-gutter*2
+        ));
+    }  
+
     @include mq(desktop) {
         @include rem((
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
-            margin-bottom: $gs-gutter * 2
+            margin-bottom: $gs-gutter*2
         ));
     }  
     .brochure-container__inner {
-        @include mq(desktop) {
-            width: gs-span(8);
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
         }
 
-        .section-headline--border-bottom {
+        @include mq(desktop) {
             @include rem((
-                margin-bottom: $gs-gutter
+                width: gs-span(8)
             ));
         }
     } 
+
+    .section-headline--border-bottom {
+        @include rem((
+            margin-bottom: $gs-gutter/2
+        ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
+        }
+
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(8)
+            ));
+        }
+    }
 }
 
 // promo block two
+// =============================================================================
+
 .brochure-container--promo-two {
 
     .brochure-container__teaser {
@@ -196,18 +247,24 @@ body {
 }
 
 // promo block three
+// =============================================================================
+
 .brochure-container--promo-three,
 .brochure-container--promo-five {
-    background-color: rgba(180, 24, 0, .95);
+    background-color: $mem-trans-red;
     color: $black;
+
     @include mq(desktop) {
         @include rem((
-            padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
-            margin-bottom: $gs-gutter * 2
+            padding: 0 gs-span(3)+$gs-gutter 0 gs-span(1)+$gs-gutter
         ));
     }
 
     .brochure-container__inner {
+        @include mq(tablet) {
+            width: gs-span(6);
+        }
+
         @include mq(desktop) {
             width: gs-span(8);
         }
@@ -215,6 +272,20 @@ body {
         .section-headline--black {
             border-top: $gs-gutter solid $black;
             color: $black;
+
+            @include mq(tablet) {
+                @include rem((
+                    width: gs-span(8),
+                    margin-bottom: $gs-gutter*3
+                ));
+            }
+
+            @include mq(desktop) {
+                @include rem((
+                    width: gs-span(8),
+                    margin-bottom: $gs-gutter*3
+                ));
+            }
         }
 
         .brochure-container__image:first-child {
@@ -228,16 +299,10 @@ body {
 }
 
 // promo block four
+// =============================================================================
+
 .brochure-container--promo-four {
     background-color: $white;
-
-    .section-headline--with-margins {
-        @include mq(desktop) {
-            @include rem((
-                margin: 0 $gs-column-width*3 $gs-gutter*3 $gs-column-width+$gs-gutter
-            ));
-        }
-    }
 
     .brochure-container__teaser {
         @include mq(desktop) {
@@ -248,6 +313,13 @@ body {
     }
 
     .brochure-container__image {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(3),
+                margin-right: $gs-gutter
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(4),
@@ -258,13 +330,18 @@ body {
 }
 
 // promo block five
+// =============================================================================
+
 .brochure-container--promo-five {
-    background-color: rgba(170, 216, 1, .95);
+    background-color: $mem-trans-green;
 }
 
 // promo block six
+// =============================================================================
+
 .brochure-container--promo-six {
     background-color: $white;
+
     @include mq(desktop) {
         @include rem((
             padding: 0 0 0 $gs-column-width+$gs-gutter,
@@ -272,7 +349,32 @@ body {
         ));
     } 
 
+    .section-headline--border-bottom {
+        @include rem((
+            margin-bottom: $gs-gutter/2
+        ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(6)
+            ));
+        }
+
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(8)
+            ));
+        }
+    }
+
     .brochure-container__teaser {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(8),
+                margin-right: $gs-gutter
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(8),
@@ -281,6 +383,12 @@ body {
         }
     }
     .brochure-container__image {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(2)
+            ));
+        }
+
         @include mq(desktop) {
             @include rem((
                 width: gs-span(3)
@@ -290,6 +398,8 @@ body {
 }
 
 // promo block seven
+// =============================================================================
+
 .brochure-container--promo-seven {
 
     .brochure-container__inner {
@@ -300,6 +410,16 @@ body {
 
     .brochure-container__join-box {
         border: 1px solid $c-neutral5;
+        @include rem((
+            margin-bottom: $gs-gutter
+        ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(3),
+                margin-right: $gs-gutter
+            ));
+        }
 
         @include mq(desktop) {
             @include rem((
@@ -316,16 +436,111 @@ body {
     .brochure-container__join-box--header {
         @include fs-headline(3);
         @include rem((
-            padding: $gs-gutter
+            padding: $gs-gutter $gs-gutter $gs-gutter 65px
         ));
+        position: relative;
+
+        &:before {
+            @extend %icon-sprite;
+            @extend %icon-sprite-g-white-36;
+            content: '';
+            display: block;
+            position: absolute;
+            @include rem((
+                left: $gs-gutter,
+                top: 15px
+            ));
+        }
+
+        &.brochure-container__join-box--header--friends {
+            background-color: $c-neutral1;
+            color: $white;
+        }
+
+        &.brochure-container__join-box--header--partner {
+            background-color: $mem-brandLightblue;
+            color: $black;
+        }
+
+        &.brochure-container__join-box--header--patron {
+            background-color: $mem-brandDarkBlue;
+            color: $white;
+        }
     }
 
-    .brochure-container__teaser {
+    .brochure-container__price {
         @include fs-headline(2);
+
+        @include mq(tablet) {
+            @include fs-headline(2);
+        }
 
         @include mq(desktop) {
             @include fs-headline(3);
         }
+        @include rem((
+            height: 45px,
+            margin-top: $gs-gutter
+        ));
+
+        .brochure-container__price--bold {
+            @include rem((
+                width: gs-span(2),
+                padding-left: $gs-gutter
+            ));
+
+            &:last-child {
+                text-align: right;
+            }
+        }
+
+        .brochure-container__price--bold-free {
+            @include rem((
+                width: gs-span(2),
+                padding-left: $gs-gutter
+            ));
+        }
+
+        .save-price {
+            @include fs-bodyCopy(1);
+            color: $c-neutral3;
+            display: block;
+        }
+    }
+
+    .brochure-container__teaser--description {
+        @include rem((
+            margin: $gs-gutter,
+            padding-top: $gs-gutter,
+            min-height: 120px
+        ));
+        @include fs-bodyCopy(2);
+        border-top: 1px solid $c-neutral5;
+
+        @include mq(desktop) {
+            @include fs-bodyCopy(3);
+        }
+    }
+
+    .action--join {
+        @include rem((
+            margin-left: $gs-gutter/2
+        ));
+
+        @include mq(desktop) {
+            @include rem((
+                margin-left: $gs-gutter
+            ));
+        }
+    }
+}
+
+.section-headline--with-margins {
+    @include mq(desktop) {
+        @include rem((
+            width: gs-span(8),
+            margin: 0 gs-span(3)+$gs-gutter*2 $gs-gutter*3 gs-span(1)
+        ));
     }
 }
 
@@ -338,6 +553,7 @@ body {
 
 .brochure-container__copy--author {
     @include fs-headline(1);
+
     @include mq(desktop) {
         @include fs-headline(3);
     }

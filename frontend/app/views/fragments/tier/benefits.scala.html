@@ -10,13 +10,6 @@
         }
         <div class="package__inner">
             <h2 class="package__title">@tier</h2>
-            <p>@Config.benefits(tier).leadin</p>
-            <ul class="package__list-element">
-                @for(item <- Config.benefits(tier).list) {
-                    <li>@item</li>
-                }
-            </ul>
-            <div>
                 <span class="package__price">
                     @Config.benefits(tier).priceText
                     @if(tier > Tier.Friend){
@@ -24,11 +17,22 @@
                     }
                 </span>
                 @if(!isCurrentPackage) {
-                    <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
-                        @Config.benefits(tier).cta
-                    </a>
+                    @if(currentTier == Tier.Friend || tier == Tier.Friend) {
+                        <a href="/tier/change/@tier.toString.toLowerCase" class="action-cta action-cta--full-width-mobile action-cta--confirm">
+                            @Config.benefits(tier).cta
+                        </a>
+                    } else {
+                        <span class="action-cta action-cta--full-width-mobile action-cta--cancel">
+                            Coming soon
+                        </span>
+                    }
                 }
-            </div>
+            <p>@Config.benefits(tier).leadin</p>
+            <ul class="package__list-element">
+                @for(item <- Config.benefits(tier).list) {
+                    <li>@item</li>
+                }
+            </ul>
         </div>
     </div>
 }

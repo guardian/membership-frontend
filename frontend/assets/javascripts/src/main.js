@@ -1,4 +1,5 @@
 require([
+    'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
     'src/utils/router',
     'ajax',
@@ -8,9 +9,10 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
-    'src/modules/events/modifyEvent',
-    'src/utils/cookie'
+    'src/utils/cookie',
+    'src/modules/events/eventPriceEnhance'
 ], function(
+    Imager,
     omnitureAnalytics,
     router,
     ajax,
@@ -20,9 +22,9 @@ require([
     Cta,
     Header,
     DatetimeEnhance,
-    modifyEvent,
-    cookie
-) {
+    cookie,
+    eventPriceEnhance
+    ) {
     'use strict';
 
     var MEM_USER_COOKIE_KEY = 'memUser';
@@ -34,12 +36,17 @@ require([
         header = new Header();
         header.init();
         omnitureAnalytics.init();
+
+        /* jshint ignore:start */
+        // avoid "Do not use 'new' for side effects" error
+        new Imager({ availableWidths: [300, 460, 940], availablePixelRatios: [1, 2] });
+        /* jshint ignore:end */
     });
 
     router.match('/event/').to(function () {
         (new DatetimeEnhance()).init();
         (new Cta()).init();
-        modifyEvent.init();
+        eventPriceEnhance.init();
     });
 
     router.match(['*/thankyou', '*/summary']).to(function () {
