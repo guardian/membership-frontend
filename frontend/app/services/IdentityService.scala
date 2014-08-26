@@ -86,6 +86,9 @@ object IdentityApi extends Http {
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+      Logger.info("***********")
+      Logger.info(response.body)
+      Logger.info("***********")
        (response.json \ "user").asOpt[IdentityUser]
     }
   }
