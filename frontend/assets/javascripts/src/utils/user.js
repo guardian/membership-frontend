@@ -1,17 +1,11 @@
 define([
     'src/utils/atob',
-    'ajax'
-], function(AtoB, ajax){
+    'ajax',
+    'src/utils/cookie',
+    'config/appCredentials'
+], function(AtoB, ajax, cookie, appCredentials){
 
-    var getUserOrSignIn = function(returnUrl){
-        var user = getUserFromCookie();
-        returnUrl = returnUrl || document.location.href;
-        if (user) {
-            return user;
-        } else {
-            window.location.href = '/signin?returnUrl=' + returnUrl;
-        }
-    };
+    var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
 
     var isLoggedIn = function(){
         return !!getUserFromCookie();
@@ -53,28 +47,51 @@ define([
         return userFromCookieCache;
     };
 
+    /**
+     * get the membership user details.
+     * This will call '/user/me' if a valid identity user is logged in and the membership cookie is not stored and the
+     * membershipUserId does not match the identity userId,
+     * If the identity member does not have a membership tier then the cookie is stored with the identity user id,
+     * If the identity member does have a membership tier then the membership details are stored in the membershipUser
+     * cookie.
+     * If membership cookie exists and matches identity credentials then this is used over preference of calling
+     * '/user/me'
+     * @param callback
+     */
     var getMemberDetail = function (callback) {
-        var tier = null;
-        if (tier) {
-            callback(tier);
-        } else {
-            ajax.init({page: {ajaxUrl: ''}});
-            ajax({
-                url: '/user/me',
-                method: 'get',
-                success: function (resp) {
-                    callback(resp);
-                },
-                error: function (err) {
-                    callback(null, err);
-                }
-            });
+        var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
+        var identityUser = getUserFromCookie();
+
+        if (identityUser) {
+            if ((membershipUser && membershipUser.userId) === identityUser.id) {
+                callback(membershipUser);
+            } else {
+                /* until cookies are destroyed kill cookies if they are around - this is the use case of logging in and
+                   out with different users */
+                cookie.removeCookie(MEM_USER_COOKIE_KEY);
+                ajax({
+                    url: '/user/me',
+                    method: 'get',
+                    success: function (resp) {
+                        callback(resp);
+                        cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
+                    },
+                    error: function (err) {
+                        callback(null, err);
+                        /* we get a 403 error for guardian users who are not members id added to stop this from
+                           being called on each page. We however do not want to set this cookie if there has been an
+                           error when a user is a member */
+                        if (!membershipUser) {
+                            cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
+                        }
+                    }
+                });
+            }
         }
     };
 
     return {
         isLoggedIn: isLoggedIn,
-        getUserOrSignIn: getUserOrSignIn,
         getUserFromCookie: getUserFromCookie,
         getMemberDetail: getMemberDetail
     };
