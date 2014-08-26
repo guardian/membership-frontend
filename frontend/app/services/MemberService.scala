@@ -29,7 +29,10 @@ trait MemberService {
     Keys.LAST_NAME -> formData.name.last,
     Keys.OPT_IN -> true,
     Keys.TIER -> tier.toString,
-    Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode
+    Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
+    Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
+    Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm,
+    Keys.ALLOW_MEMBERSHOP_MAIL -> true
   )
 
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
