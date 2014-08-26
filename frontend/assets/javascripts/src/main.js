@@ -10,7 +10,8 @@ require([
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
     'src/utils/cookie',
-    'src/modules/events/eventPriceEnhance'
+    'src/modules/events/eventPriceEnhance',
+    'config/appCredentials'
 ], function(
     Imager,
     omnitureAnalytics,
@@ -23,11 +24,12 @@ require([
     Header,
     DatetimeEnhance,
     cookie,
-    eventPriceEnhance
+    eventPriceEnhance,
+    appCredentials
     ) {
     'use strict';
 
-    var MEM_USER_COOKIE_KEY = 'memUser';
+    var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
     var header;
 
     ajax.init({page: {ajaxUrl: ''}});
@@ -50,7 +52,8 @@ require([
     });
 
     router.match(['*/thankyou', '*/summary']).to(function () {
-        //TODO potentially abstract this into its own class if user details stuff grows
+        // TODO potentially abstract this into its own class if user details stuff grows
+        // user has upgraded or joined so remove cookie then populate the user details in the header
         cookie.removeCookie(MEM_USER_COOKIE_KEY);
         header.populateUserDetails();
     });

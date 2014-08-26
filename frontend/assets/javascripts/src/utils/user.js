@@ -1,10 +1,11 @@
 define([
     'src/utils/atob',
     'ajax',
-    'src/utils/cookie'
-], function(AtoB, ajax, cookie){
+    'src/utils/cookie',
+    'config/appCredentials'
+], function(AtoB, ajax, cookie, appCredentials){
 
-    var MEM_USER_COOKIE_KEY = 'memUser';
+    var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
 
     var isLoggedIn = function(){
         return !!getUserFromCookie();
@@ -46,6 +47,17 @@ define([
         return userFromCookieCache;
     };
 
+    /**
+     * get the membership user details.
+     * This will call '/user/me' if a valid identity user is logged in and the membership cookie is not stored and the
+     * membershipUserId does not match the identity userId,
+     * If the identity member does not have a membership tier then the cookie is stored with the identity user id,
+     * If the identity member does have a membership tier then the membership details are stored in the membershipUser
+     * cookie.
+     * If membership cookie exists and matches identity credentials then this is used over preference of calling
+     * '/user/me'
+     * @param callback
+     */
     var getMemberDetail = function (callback) {
         var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
         var identityUser = getUserFromCookie();
