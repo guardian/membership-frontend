@@ -1,10 +1,10 @@
 define([
-    'src/utils/storage',
     'src/utils/atob',
-    'ajax'
-], function(storage, AtoB, ajax){
+    'ajax',
+    'src/utils/cookie'
+], function(AtoB, ajax, cookie){
 
-    var MEM_USER_STORAGE_KEY = 'memUser';
+    var MEM_USER_COOKIE_KEY = 'memUser';
 
     var isLoggedIn = function(){
         return !!getUserFromCookie();
@@ -47,28 +47,31 @@ define([
     };
 
     var getMemberDetail = function (callback) {
-        var store = storage.local;
-        var membershipUser = store.get(MEM_USER_STORAGE_KEY);
+        var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
         var identityUser = getUserFromCookie();
-        var today = new Date();
-        var todayPlus24Hours = today.setDate(today.getDate() + 1);
 
         if (identityUser) {
             if ((membershipUser && membershipUser.userId) === identityUser.id) {
                 callback(membershipUser);
             } else {
+                /* until cookies are destroyed kill cookies if they are around - this is the use case of logging in and
+                   out with different users */
+                cookie.removeCookie(MEM_USER_COOKIE_KEY);
                 ajax({
                     url: '/user/me',
                     method: 'get',
                     success: function (resp) {
                         callback(resp);
-                        store.set(MEM_USER_STORAGE_KEY, resp, todayPlus24Hours)
+                        cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
                     },
                     error: function (err) {
                         callback(null, err);
                         /* we get a 403 error for guardian users who are not members id added to stop this from
-                        being called on each page */
-                        store.set(MEM_USER_STORAGE_KEY, { userId: identityUser.id }, todayPlus24Hours)
+                           being called on each page. We however do not want to set this cookie if there has been an
+                           error when a user is a member */
+                        if (!membershipUser) {
+                            cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
+                        }
                     }
                 });
             }
