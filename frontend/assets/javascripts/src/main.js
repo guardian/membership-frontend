@@ -9,7 +9,7 @@ require([
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
     'src/modules/events/modifyEvent',
-    'src/utils/storage'
+    'src/utils/cookie'
 ], function(
     omnitureAnalytics,
     router,
@@ -21,11 +21,11 @@ require([
     Header,
     DatetimeEnhance,
     modifyEvent,
-    storage
+    cookie
 ) {
     'use strict';
 
-    var MEM_USER_STORAGE_KEY = 'memUser';
+    var MEM_USER_COOKIE_KEY = 'memUser';
     var header;
 
     ajax.init({page: {ajaxUrl: ''}});
@@ -44,7 +44,7 @@ require([
 
     router.match(['*/thankyou', '*/summary']).to(function () {
         //TODO potentially abstract this into its own class if user details stuff grows
-        storage.local.remove(MEM_USER_STORAGE_KEY);
+        cookie.removeCookie(MEM_USER_COOKIE_KEY);
         header.populateUserDetails();
     });
 
