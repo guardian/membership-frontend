@@ -39,7 +39,7 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
       new Actions(driver).moveToElement(submitButton).perform
       submitButton.click()
     } catch {
-      case _ => ; driver.asInstanceOf[JavascriptExecutor].executeScript("document.forms[0].submit()")
+      case _ : Throwable => ; driver.asInstanceOf[JavascriptExecutor].executeScript("document.forms[0].submit()")
     }
 
       new CheckEmailPage(driver)

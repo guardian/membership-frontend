@@ -8,9 +8,9 @@ import org.openqa.selenium.{By, WebDriver}
 
    private def eventsButton = driver.findElement(By.xpath("//div[2]/nav/div[1]/ul/li[1]/a"))
 
-   private def joinButton = driver.findElement(By.linkText("Become a member"))
+   private def joinButton = driver.findElement(By.id("qa-join"))
 
-   def getTitle(): String = title.getText
+   def getTitle() = title.getText
 
    def clickEventsButton: EventsListPage = {
      eventsButton.click
