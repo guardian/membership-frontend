@@ -1,7 +1,7 @@
 package com.gu.membership.pages
 
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.{By, WebDriver}
+import org.openqa.selenium.{By, JavascriptExecutor, WebDriver}
 
 /**
  * Created by jao on 16/06/2014.
@@ -36,11 +36,12 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
   def clickSubmit: CheckEmailPage = {
     try {
       closeBetaButton.click()
-    } catch {
-      case _ => ; // do nothing - element appears randomly
-    }
       new Actions(driver).moveToElement(submitButton).perform
       submitButton.click()
+    } catch {
+      case _ => ; driver.asInstanceOf[JavascriptExecutor].executeScript("document.forms[0].submit()")
+    }
+
       new CheckEmailPage(driver)
   }
 }

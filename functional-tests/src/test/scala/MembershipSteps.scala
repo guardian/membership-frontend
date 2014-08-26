@@ -115,7 +115,21 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     new ChooseTierPage(driver).clickFriend.clickChoose
     new JoinFlowRegisterOrSignUpPage(driver).clickRegister
     CookieHandler.register(driver)
-    ICanPurchaseASubscription
+    becomeFriend
+    this
+  }
+
+  def ICanBecomeAPartner = {
+    new ChooseTierPage(driver).clickPartner.clickChoose
+    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
+    CookieHandler.register(driver)
+    pay
+    this
+  }
+
+  def ICanSeeTheTicketIframe = {
+    Assert.assert(new EventbriteIframe(driver).isIframeLoaded, true, "EventBrite iframe should be loaded")
+    this
   }
 
   def IAmNotRegistered = {
@@ -364,7 +378,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
     "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2031")
 
-//  private def becomeFriend: ThankYouPage = new PaymentPage(driver).cardWidget.e
+  private def becomeFriend = new PaymentPage(driver).cardWidget.enterFirstName("test")
+    .enterLastName("Automation").enterPostCode("N1 9GU").clickSubmitPayment
 
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally

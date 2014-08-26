@@ -116,18 +116,34 @@ class MembershipEventTests extends BaseMembershipTest {
       }
     }
 
-//    scenarioWeb("27. Non-registered user can become a friend and purchase a ticket") {
-//      implicit driver =>
-//      given {
-//        MembershipSteps().IAmNotLoggedIn
-//      }
-//      .when {
-//        _.IClickThePurchaseButton
-//      }
-//      .then {
-//        _.IAmRedirectedToTheChooseTierPage
-//        .ICanBecomeAFriend
-//      }
-//    }
+    scenarioWeb("27. Non-registered user can become a friend and purchase a ticket") {
+      implicit driver =>
+      given {
+        MembershipSteps().IAmNotLoggedIn
+      }
+      .when {
+        _.IClickThePurchaseButton
+      }
+      .then {
+        _.IAmRedirectedToTheChooseTierPage
+        .ICanBecomeAFriend
+        .ICanSeeTheTicketIframe
+      }
+    }
+
+    scenarioWeb("38. Non-registered user can become a partner and purchase a ticket") {
+      implicit driver =>
+        given {
+          MembershipSteps().IAmNotLoggedIn
+        }
+          .when {
+          _.IClickThePurchaseButton
+        }
+          .then {
+          _.IAmRedirectedToTheChooseTierPage
+            .ICanBecomeAPartner
+            .ICanSeeTheTicketIframe
+        }
+    }
   }
 }

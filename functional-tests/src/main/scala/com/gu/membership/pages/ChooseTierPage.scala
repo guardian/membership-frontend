@@ -1,6 +1,6 @@
 package com.gu.membership.pages
 
-import org.openqa.selenium.{By, WebDriver}
+import org.openqa.selenium.{JavascriptExecutor, By, WebDriver}
 
 /**
  * Created by jao on 11/08/2014.
@@ -21,6 +21,8 @@ class ChooseTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   }
 
   def clickPartner = {
+    val y = partnerInput.getLocation
+    driver.asInstanceOf[JavascriptExecutor].executeScript(s"window.scrollTo(0, $y)")
     partnerInput.click()
     this
   }
