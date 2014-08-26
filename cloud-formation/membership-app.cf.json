@@ -44,7 +44,8 @@
         "ELBName" : {
         	"Description" : "DNS for the application (eg, test.membership.guardianapis.com)",
         	"Type" :  "String",
-        	"Default" : { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] }
+        	"AllowedValues" : [ "membership.theguardian.com.origin.membership.guardianapis.com", "test.membership.guardianapis.com"],
+        	"Default" : "membership.theguardian.com.origin.membership.guardianapis.com"
         }
     },
     "Resources" : {
@@ -98,7 +99,7 @@
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
-                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
+                        {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
