@@ -38,7 +38,36 @@
         height: 35px,
         font-size: 13px
     ));
+    color: #000000;
+    font-weight: bold;
+}
+
+// workaround for text-decoration magic
+// (lots of elements inside <a>, not all of them underlined)
+.control__user-account:hover {
     color: #ffffff;
+    .control__info {
+        color: #ffffff;
+    }
+    .icon-sprite-user-black {
+        @extend .icon-sprite-user-white;
+    }
+    .control {
+        border-color: #ffffff;
+    }
+}
+// todo: refactor this plz
+.control__join-us:hover {
+    color: #ffffff;
+    .control__info {
+        color: #ffffff;
+    }
+    .icon-sprite-g-black {
+        @extend .icon-sprite-g-white;
+    }
+    .control {
+        border-color: #ffffff;
+    }
 }
 
 /* Active control icon

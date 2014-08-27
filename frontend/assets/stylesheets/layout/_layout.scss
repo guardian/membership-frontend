@@ -26,10 +26,6 @@ body {
 
 .header {
     position: relative;
-    z-index: 999;
-    @include rem((
-        margin: 0 0 $headerMargin 0
-    ));
 }
 
 .page-container {
@@ -41,7 +37,7 @@ body {
     position: relative;
     margin: 0 auto;
     @include rem((
-        max-width: 1100px
+        max-width: gs-span(14)
     ));
 
     h2 {
@@ -182,12 +178,12 @@ body {
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter*2
         ));
-    }  
+    }
     .brochure-container__inner {
         @include mq(desktop) {
             width: gs-span(8);
         }
-    } 
+    }
 
     .section-headline--border-bottom {
         @include rem((
@@ -220,7 +216,7 @@ body {
             @include rem((
                 width: gs-span(4),
                 margin-right: $gs-gutter
-            )); 
+            ));
         }
     }
 }
@@ -263,7 +259,7 @@ body {
                 ));
             }
         }
-    } 
+    }
 }
 
 // promo block four
@@ -308,7 +304,7 @@ body {
             padding: 0 0 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter * 2
         ));
-    } 
+    }
 
     .section-headline--border-bottom {
         @include rem((
@@ -509,7 +505,7 @@ blockquote {
     }
 }
 
-.blockquote--black-line { 
+.blockquote--black-line {
     border-top: 1px solid $black;
     @include rem((
         padding-top: 10px
