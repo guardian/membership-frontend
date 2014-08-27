@@ -57,7 +57,7 @@ body {
     }
 
     @include mq(mem-full) {
-        max-width: gs-span(14)
+        max-width: gs-span(14);
     }
 
     h2 {
