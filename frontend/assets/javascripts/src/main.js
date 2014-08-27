@@ -9,7 +9,9 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
-    'src/modules/events/eventPriceEnhance'
+    'src/utils/cookie',
+    'src/modules/events/eventPriceEnhance',
+    'config/appCredentials'
 ], function(
     Imager,
     omnitureAnalytics,
@@ -21,16 +23,39 @@ require([
     Cta,
     Header,
     DatetimeEnhance,
-    eventPriceEnhance
+    cookie,
+    eventPriceEnhance,
+    appCredentials
     ) {
     'use strict';
 
+    var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
+    var header;
+
     ajax.init({page: {ajaxUrl: ''}});
+
+    router.match('*').to(function () {
+        header = new Header();
+        header.init();
+        omnitureAnalytics.init();
+
+        /* jshint ignore:start */
+        // avoid "Do not use 'new' for side effects" error
+        new Imager({ availableWidths: [300, 460, 940], availablePixelRatios: [1, 2] });
+        /* jshint ignore:end */
+    });
 
     router.match('/event/').to(function () {
         (new DatetimeEnhance()).init();
         (new Cta()).init();
         eventPriceEnhance.init();
+    });
+
+    router.match(['*/thankyou', '*/summary']).to(function () {
+        // TODO potentially abstract this into its own class if user details stuff grows
+        // user has upgraded or joined so remove cookie then populate the user details in the header
+        cookie.removeCookie(MEM_USER_COOKIE_KEY);
+        header.populateUserDetails();
     });
 
     router.match('*/friend/enter-details').to(function () {
@@ -43,16 +68,6 @@ require([
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
         (new Upgrade()).init();
-    });
-
-    router.match('*').to(function () {
-        (new Header()).init();
-        omnitureAnalytics.init();
-
-        /* jshint ignore:start */
-        // avoid "Do not use 'new' for side effects" error
-        new Imager({ availableWidths: [300, 460, 940], availablePixelRatios: [1, 2] });
-        /* jshint ignore:end */
     });
 
     /**

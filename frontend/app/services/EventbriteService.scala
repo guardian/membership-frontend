@@ -1,19 +1,20 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.Play.current
-import play.api.libs.ws._
-import play.api.libs.iteratee.{Iteratee, Enumerator}
-import play.api.Logger
-
+import akka.agent.Agent
+import configuration.Config
+import model.EventPortfolio
 import model.Eventbrite._
 import model.EventbriteDeserializer._
-import configuration.Config
+import play.api.Logger
+import play.api.Play.current
+import play.api.libs.concurrent.Akka
+import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.json.Reads
-import utils.ScheduledTask
+import play.api.libs.ws._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 trait EventbriteService {
 
@@ -23,6 +24,9 @@ trait EventbriteService {
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
 
   def events: Seq[EBEvent]
+
+  lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
+  lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
 
   private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -44,6 +48,17 @@ trait EventbriteService {
   }
 
   private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
+
+  private def getPriorityEventIds(): Future[Seq[String]] =  for {
+    ordering <- WS.url(Config.eventOrderingJsonUrl).get()
+  } yield (ordering.json \ "order").as[Seq[String]]
+
+  def getEventPortfolio: EventPortfolio = {
+    val priorityIds = priorityOrderedEventIds.get()
+    val (priorityEvents, normal) = getLiveEvents.partition(e => priorityIds.contains(e.id))
+
+    EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
+  }
 
   def getLiveEvents: Seq[EBEvent] = events.filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
@@ -72,18 +87,12 @@ trait EventbriteService {
   }
 }
 
-object EventbriteService extends EventbriteService with ScheduledTask[Seq[EBEvent]] {
-  val initialValue = Nil
-  val initialDelay = 5.seconds
-  val interval = 60.seconds
-
-  def refresh(): Future[Seq[EBEvent]] = getAllEvents
-
-  def events: Seq[EBEvent] = agent.get()
-
+object EventbriteService extends EventbriteService {
   val apiUrl = Config.eventbriteApiUrl
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
+
+  def events: Seq[EBEvent] = allEvents.get()
 
   def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
@@ -96,5 +105,17 @@ object EventbriteService extends EventbriteService with ScheduledTask[Seq[EBEven
 
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
-}
 
+  import play.api.Play.current
+
+  def start() {
+    def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
+      Akka.system.scheduler.schedule(1.second, intervalPeriod) {
+        agent.sendOff(_ => Await.result(refresher, 15.seconds))
+      }
+    }
+    Logger.info("Starting EventbriteService background tasks")
+    scheduleAgentRefresh(allEvents, getAllEvents, 59.seconds)
+    scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, 29.seconds)
+  }
+}

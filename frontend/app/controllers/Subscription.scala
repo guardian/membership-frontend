@@ -17,7 +17,7 @@ import forms.MemberForm._
 
 trait Subscription extends Controller {
   def subscribe = AuthenticatedAction.async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makePayment)
+    paidMemberJoinForm.bindFromRequest.fold(form => Future.successful(BadRequest("form errors: "+form.errors.mkString(", "))), makePayment)
   }
 
   private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {

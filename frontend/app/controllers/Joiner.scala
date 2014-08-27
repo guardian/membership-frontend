@@ -1,6 +1,6 @@
 package controllers
 
-import model.PrivateFields
+import model.{StatusFields, PrivateFields}
 
 import scala.concurrent.Future
 
@@ -42,10 +42,11 @@ trait Joiner extends Controller {
     for {
       userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+      marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
     } yield {
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields))
-        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields))
+        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices))
       }
 
     }
