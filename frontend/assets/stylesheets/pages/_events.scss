@@ -300,15 +300,11 @@ div.event {
             @include fs-header(4);
         }
 
-        .events-list {
-            .events-list__item {
-                //margin-bottom: $gs-gutter/2;
-                @include mq(tablet) {
-                    @include rem((
-                        //margin-bottom: $gs-gutter,
-                        height: 420px
-                    ));
-                }
+        .events-list__item {
+            @include mq(tablet) {
+                @include rem((
+                    height: 420px
+                ));
             }
         }
 

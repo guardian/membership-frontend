@@ -35,18 +35,13 @@
                 <h2 class="event-block-title">what's on</h2>
             </div>
             <div class="events-list-container">
-                <ul class="events-list u-unstyled">
-                    @for((event, index) <- eventPortfolio.normal.zipWithIndex) {
-
-                        @fragments.event.item(event, false)
-
-                        @if(((index+1)%3) == 0 && index !=0 && (index+1) != eventPortfolio.normal.length){
-                            </ul>
-                            <ul class="events-list u-unstyled">
+                @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
+                    <ul class="events-list u-unstyled">
+                        @for(event <- eventChunk) {
+                            @fragments.event.item(event, false)
                         }
-
-                    }
-                </ul>
+                    </ul>
+                }
             </div>
         </div>
     </section>
