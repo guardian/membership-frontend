@@ -233,13 +233,8 @@ div.event {
         border-top: 1px solid $mem-live-accent;
 
         @include rem((
-            padding: $gs-baseline $gs-gutter/2 $gs-baseline*2 $gs-gutter/2
+            padding: $gs-gutter/2 $gs-gutter/2 $gs-gutter $gs-gutter/2
         ));
-        @include mq(tablet) {
-            @include rem((
-                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
-            ));
-        }
 
         .events-title-container {
             display: block;
@@ -248,13 +243,26 @@ div.event {
             ));
         }
 
-        $guss-column-min-width: 240px;
-        @include guss-columns('.events-list');
+        @include mq(tablet) {
+
+            @include guss-row('.events-list');
+
+            @include rem((
+                padding: $gs-gutter $gs-gutter $gs-gutter*2 $gs-gutter
+            ));
+
+            .events-list__item {
+                margin: 10px;
+                &:first-child {
+                    margin-left: 0;
+                }
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
 
         @include mq(desktop) {
-
-            $guss-column-min-width: 300px;
-            @include guss-columns('.events-list');
 
             .events-list-container {
                 display: block;
@@ -292,15 +300,11 @@ div.event {
             @include fs-header(4);
         }
 
-        .events-list {
-            .events-list__item {
-                margin-bottom: $gs-gutter/2;
-                @include mq(tablet) {
-                    @include rem((
-                        margin-bottom: $gs-gutter,
-                        height: 420px
-                    ));
-                }
+        .events-list__item {
+            @include mq(tablet) {
+                @include rem((
+                    height: 420px
+                ));
             }
         }
 
@@ -441,7 +445,7 @@ div.event {
 
         @include mq(tablet) {
             @include rem((
-                margin-bottom: $gs-gutter
+                margin-bottom: $gs-gutter/2
             ));
             height: auto;
             overflow: hidden;
