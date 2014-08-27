@@ -3,7 +3,7 @@
    ========================================================================== */
 
 div.event {
-    background-color: #ffffff;
+    background-color: $white;
     .event__content {
 
         .event__price-amount {
@@ -76,11 +76,11 @@ div.event {
         margin: 0;
     }
 }
-//
-///* ==========================================================================
-//   Temp events hacky stuff (this needs a revisit once design has been confirmed)
-//   ========================================================================== */
-//
+
+/* ==========================================================================
+   Temp events hacky stuff (this needs a revisit once design has been confirmed)
+   ========================================================================== */
+
 .old-price {
     display: block;
 }
@@ -141,7 +141,7 @@ div.event {
 }
 
 .event {
-    background-color: #ffffff;
+    background-color: $white;
     width: 100%;
     overflow: hidden;
 }
@@ -159,7 +159,7 @@ div.event {
     top: 0;
     padding: 8px 14px;
     text-align: center;
-    color: #ffffff;
+    color: $white;
 }
 
 .event-status--sold-out {
@@ -177,7 +177,7 @@ div.event {
 .tooltip__cta {
     @include border-radius(20px);
     color: #0096c9;
-    background-color: #ffffff;
+    background-color: $white;
     @include rem((
         padding: 3px 8px,
         border: 1px solid #0096c9
@@ -191,7 +191,7 @@ div.event {
 .tooltip__detail {
     position: absolute;
     display: block;
-    background-color: #ffffff;
+    background-color: $white;
     @include rem((
         min-width: 200px,
         bottom: 32px,
@@ -203,7 +203,7 @@ div.event {
 }
 
 .tooltip__stem {
-    border-color: #ffffff transparent transparent;
+    border-color: $white transparent transparent;
     border-style: solid;
     position: absolute;
     @include rem((
@@ -334,14 +334,14 @@ div.event {
 
         .event-item__title {
             @include fs-headline(1);
-            color: #000000;
+            color: $black;
             @include rem((
                 margin-bottom: $gs-baseline
             ));
         }
         .event-item__time {
             @include fs-data(4);
-            color: #000000;
+            color: $black;
         }
         .event-item__location {
             @include fs-data(3);
@@ -353,7 +353,7 @@ div.event {
             @include rem((
                 padding: $gs-baseline 0 0
             ));
-            color: #000000;
+            color: $black;
         }
 
         .event-item__cta {
@@ -362,7 +362,7 @@ div.event {
             .event-item__price-amount {
                 display: block;
                 @include fs-header(4);
-                color: #000000;
+                color: $black;
             }
 
             .event-item__price-amout-discount {
@@ -390,7 +390,7 @@ div.event {
                 &:after {
                     @extend .icon-sprite-arrow-right-white;
                     content: '';
-                    fill: #000000;
+                    fill: $black;
                     float: right;
                 }
             }
