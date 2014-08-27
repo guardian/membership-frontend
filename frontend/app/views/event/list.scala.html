@@ -36,8 +36,15 @@
             </div>
             <div class="events-list-container">
                 <ul class="events-list u-unstyled">
-                    @for(event <- eventPortfolio.normal) {
-                        @fragments.event.item(event)
+                    @for((event, index) <- eventPortfolio.normal.zipWithIndex) {
+
+                        @fragments.event.item(event, false)
+
+                        @if(((index+1)%3) == 0 && index !=0 && (index+1) != eventPortfolio.normal.length){
+                            </ul>
+                            <ul class="events-list u-unstyled">
+                        }
+
                     }
                 </ul>
             </div>
