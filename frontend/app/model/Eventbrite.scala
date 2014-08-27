@@ -46,7 +46,8 @@ object Eventbrite {
                        address_1: Option[String],
                        address_2: Option[String],
                        region: Option[String],
-                       country: Option[String]) extends EBObject
+                       country: Option[String],
+                       postal_code: Option[String]) extends EBObject
 
   case class EBVenue(id: Option[String],
                      address: Option[EBAddress],
