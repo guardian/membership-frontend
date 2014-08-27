@@ -87,8 +87,8 @@ $header-margin: 36px;
     color: #ffffff;
 
     .icon-sprite-user-black {
+        @extend %icon-sprite-user-white;
         color: #ffffff !important;
-        @extend .icon-sprite-user-white;
     }
     .control {
         border: 1px solid #ffffff !important;
@@ -101,7 +101,7 @@ $header-margin: 36px;
 .menu-hamburger--active {
     border-color: #ffffff;
     .icon-sprite-menu-black {
-        @extend .icon-sprite-menu-white;
+        @extend %icon-sprite-menu-white;
     }
 }
 

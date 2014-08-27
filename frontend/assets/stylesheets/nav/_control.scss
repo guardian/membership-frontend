@@ -50,7 +50,7 @@
         color: #ffffff;
     }
     .icon-sprite-user-black {
-        @extend .icon-sprite-user-white;
+        @extend %icon-sprite-user-white;
     }
     .control {
         border-color: #ffffff;
@@ -63,7 +63,7 @@
         color: #ffffff;
     }
     .icon-sprite-g-black {
-        @extend .icon-sprite-g-white;
+        @extend %icon-sprite-g-white;
     }
     .control {
         border-color: #ffffff;
