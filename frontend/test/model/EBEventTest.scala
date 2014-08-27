@@ -42,7 +42,7 @@ class EBEventTest extends PlaySpecification {
 
   "getPrice" should {
     "be pleasantly formatted" in {
-      expensivePricing.formattedPrice mustEqual("£1234.25")
+      expensivePricing.formattedPrice mustEqual("£1234")
     }
   }
 }

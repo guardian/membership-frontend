@@ -1,11 +1,11 @@
-@(title: String, isBrochure: Boolean = false)(content: Html)
+@(title: String, isBrochure: Boolean = false, containerPadding: Boolean = true, htmlClass: String = "")(content: Html)
 
 @import configuration.Config
 @import views.support.Asset
 
 <!DOCTYPE html>
 
-<html class="js-off">
+<html class="js-off @htmlClass">
     <head>
         <!--
 
@@ -65,16 +65,15 @@
 
         @fragments.unsupportedBrowser()
 
+        @fragments.header()
+
         <div class="container-global">
-
-            @fragments.header()
-
             <div class="page-side-margins">
             @if(isBrochure != true) {
-                <div class="page-container">
+                <div class="page-container @if(containerPadding){page-container--with-padding}">
             }
 
-                    @content
+                @content
 
             @if(isBrochure != true) {
                 </div>

@@ -1,76 +1,9 @@
 /* ==========================================================================
-   Event List
-   ========================================================================== */
-.events__list {
-    text-align: center;
-}
-
-.events-list {
-    width: 100%;
-}
-
-.events-list__item {
-    display: inline-block;
-    width: 100%;
-    margin-right: 2%;
-}
-
-.item__image-container img {
-    width: 100%;
-}
-
-/* ==========================================================================
-   An Event List item
-   ========================================================================== */
-
-li.event {
-    text-align: left;
-    display: block;
-    margin-bottom: $gs-gutter;
-    background-color: #ffffff;
-    padding: .125em;
-    @include border-radius(.2em);
-
-    &:hover {
-        background-color: #ffffff;
-    }
-
-    .event__image {
-        overflow: hidden;
-        img {
-            width: 100%;
-        }
-    }
-
-    .event__meta {
-        padding: $gutter/2;
-        @include rem((
-            height: 130px
-        ));
-        width: auto;
-        overflow: hidden;
-    }
-
-    .event__name {
-        @include fs-headline(2);
-        @include rem((
-            margin-top: $gs-baseline/2,
-            margin-bottom: $gs-baseline
-        ));
-    }
-
-    .event__location,
-    .event__time {
-        @include fs-textsans(2);
-        display: block;
-    }
-}
-
-/* ==========================================================================
    An event on an event page
    ========================================================================== */
 
 div.event {
+    background-color: $white;
     .event__content {
 
         .event__price-amount {
@@ -87,7 +20,8 @@ div.event {
 
         .event__content-body {
             @include rem((
-                max-width: 620px
+                max-width: 620px,
+                padding-top: $gs-baseline
             ));
             margin: 0 auto;
         }
@@ -207,7 +141,7 @@ div.event {
 }
 
 .event {
-    background-color: #ffffff;
+    background-color: $white;
     width: 100%;
     overflow: hidden;
 }
@@ -219,68 +153,13 @@ div.event {
     }
 }
 
-.event__meta {
-    padding-top: 1.2em;
-}
-
-.event__content.container {
-    padding-left: 240px;
-}
-
-.facia-slice__item:before,
-.events-list__item {
-    @include mq($to: tablet) {
-        border-left: 1px solid #ffffff !important;
-    }
-}
-
-.facia-slice__item:nth-of-type(3n+1):before,
-.events-list__item:nth-of-type(3n+1) {
-    border-left: 1px solid #ffffff;
-}
-
-@include mq(tablet) {
-
-    .events-sidebar {
-        width: 5%;
-        float: left;
-        overflow: hidden;
-    }
-
-    .events-list {
-        width: 95%;
-        float: right;
-    }
-
-    .events-list__item {
-        width: 30%;
-    }
-
-    li.event {
-        width: gs-span(5);
-        margin-right: $gs-gutter;
-        display: inline-block;
-
-        .event__image {
-            width: auto;
-            img {
-                width: auto;
-            }
-        }
-    }
-}
-
-.event-image-container {
-    position: relative;
-}
-
 .event-status {
     position: absolute;
     right: 1em;
     top: 0;
     padding: 8px 14px;
     text-align: center;
-    color: #ffffff;
+    color: $white;
 }
 
 .event-status--sold-out {
@@ -298,7 +177,7 @@ div.event {
 .tooltip__cta {
     @include border-radius(20px);
     color: #0096c9;
-    background-color: #ffffff;
+    background-color: $white;
     @include rem((
         padding: 3px 8px,
         border: 1px solid #0096c9
@@ -312,7 +191,7 @@ div.event {
 .tooltip__detail {
     position: absolute;
     display: block;
-    background-color: #ffffff;
+    background-color: $white;
     @include rem((
         min-width: 200px,
         bottom: 32px,
@@ -324,7 +203,7 @@ div.event {
 }
 
 .tooltip__stem {
-    border-color: #ffffff transparent transparent;
+    border-color: $white transparent transparent;
     border-style: solid;
     position: absolute;
     @include rem((
@@ -345,4 +224,258 @@ div.event {
     @include rem((
         margin-top: 8px
     ));
+}
+
+.event-blocks {
+    .event-block {
+        position: relative;
+        background-color: $white;
+        border-top: 1px solid $mem-live-accent;
+
+        @include rem((
+            padding: $gs-baseline $gs-gutter/2 $gs-baseline*2 $gs-gutter/2
+        ));
+        @include mq(tablet) {
+            @include rem((
+                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
+            ));
+        }
+
+        .events-title-container {
+            display: block;
+            @include rem((
+                padding: 0 0 $gs-baseline
+            ));
+        }
+
+        $guss-column-min-width: 240px;
+        @include guss-columns('.events-list');
+
+        @include mq(desktop) {
+
+            $guss-column-min-width: 300px;
+            @include guss-columns('.events-list');
+
+            .events-list-container {
+                display: block;
+                @include rem((
+                    width: gs-span(12)
+                ));
+                margin: 0 auto;
+            }
+
+        }
+
+        @include mq(mem-full) {
+            font-size: 0; // Inline-block white space
+            .events-title-container {
+                display: inline-block;
+                vertical-align: top;
+                @include rem((
+                    width: gs-span(2)+$gs-gutter
+                ));
+            }
+            .events-list-container {
+                display: inline-block;
+                vertical-align: top;
+                @include rem((
+                    width: gs-span(12)
+                ));
+            }
+        }
+
+        &:first-child {
+            border-top: 0;
+        }
+
+        .event-block-title {
+            @include fs-header(4);
+        }
+
+        .events-list {
+            .events-list__item {
+                margin-bottom: $gs-gutter/2;
+                @include mq(tablet) {
+                    @include rem((
+                        margin-bottom: $gs-gutter,
+                        height: 420px
+                    ));
+                }
+            }
+        }
+
+    }
+}
+
+/* ==========================================================================
+   An Event List item
+   ========================================================================== */
+
+.event-item {
+    position: relative;
+    width: 100%;
+
+    background-color: $c-neutral7;
+
+    .event-item__media {
+        a, img {
+            vertical-align: text-bottom; // remove descenders
+        }
+    }
+
+    .event-item__meta {
+        @include rem((
+            padding: $gs-baseline $gs-gutter/2
+        ));
+
+        @include mq(tablet) {
+            height: auto;
+        }
+
+        .event-item__title {
+            @include fs-headline(1);
+            color: $black;
+            @include rem((
+                margin-bottom: $gs-baseline
+            ));
+        }
+        .event-item__time {
+            @include fs-data(4);
+            color: $black;
+        }
+        .event-item__location {
+            @include fs-data(3);
+            color: $c-neutral2;
+        }
+
+        .event-item__description {
+            @include fs-bodyCopy(1);
+            @include rem((
+                padding: $gs-baseline 0 0
+            ));
+            color: $black;
+        }
+
+        .event-item__cta {
+            width: 100%;
+            padding: $gs-baseline 0 0;
+            .event-item__price-amount {
+                display: block;
+                @include fs-header(4);
+                color: $black;
+            }
+
+            .event-item__price-amout-discount {
+                display: block;
+                @include fs-data(3);
+                color: $c-neutral2;
+            }
+
+            .event-item__action {
+                position: absolute;
+                @include rem((
+                    bottom: $gs-gutter,
+                    right: $gs-gutter,
+                    width: 36px,
+                    height: 36px,
+                    padding: 0 8px 0 0
+                ));
+                background-color: $mem-live-accent;
+                @include border-radius(50px);
+                border: 0;
+                &:focus {
+                    outline: 0;
+                }
+
+                &:after {
+                    @extend .icon-sprite-arrow-right-white;
+                    content: '';
+                    fill: $black;
+                    float: right;
+                }
+            }
+        }
+
+        @include mq(tablet) {
+
+            .event-item__title {
+                @include fs-headline(2);
+            }
+
+            .event-item__meta {
+                @include rem((
+                    padding: $gs-baseline $gs-gutter
+                ));
+            }
+
+            .event-item__cta {
+                position: absolute;
+                @include rem((
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: 0 $gs-gutter $gs-gutter
+                ));
+            }
+        }
+
+        @include mq(desktop) {
+            .event-item__description {
+                @include fs-headline(1);
+                @include rem((
+                    padding: $gs-baseline*2 0 0
+                ));
+            }
+        }
+
+    }
+
+    @include guss-row('&.event-item--hero');
+
+    &.event-item--hero {
+        @include rem((
+            margin-bottom: $gs-gutter/2
+        ));
+        width: 100%;
+
+        @include mq(tablet) {
+            @include rem((
+                margin-bottom: $gs-gutter
+            ));
+            height: auto;
+            overflow: hidden;
+
+            .event-item__media {
+                display: inline-block;
+                vertical-align: top;
+                @include flex(1, 0, percentage(gs-span(8)/gs-span(12)))
+            }
+
+            .event-item__meta {
+                display: inline-block;
+                vertical-align: top;
+                position: relative;
+                @include flex();
+            }
+        }
+
+        @include mq(desktop) {
+            .event-item__title {
+                @include fs-headline(4);
+            }
+
+            .event-item__time {
+                @include fs-headline(1);
+            }
+        }
+
+    }
+
+    *:hover, &:hover {
+        text-decoration: none;
+        background-color: $c-neutral5;
+        .event-item__title {
+            text-decoration: underline;
+        }
+    }
 }

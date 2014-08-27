@@ -4,7 +4,8 @@ import play.api.libs.json.Json
 
 
 case class IdentityUser(id: String,
-                        privateFields: PrivateFields)
+                        privateFields: PrivateFields,
+                        statusFields: StatusFields )
 
 
 //this can't be a Map[String,String] as PrivateFields in Identity has other object types
@@ -23,8 +24,11 @@ case class PrivateFields(firstName: Option[String] = None,
                          billingPostcode: Option[String] = None,
                          billingCountry: Option[String] = None)
 
+case class StatusFields(receiveGnmMarketing: Option[Boolean] = None,
+                        receive3rdPartyMarketing: Option[Boolean] = None)
 
 object UserDeserializer {
+  implicit val readsStatusFields = Json.reads[StatusFields]
   implicit val readsPrivateFields = Json.reads[PrivateFields]
   implicit val readsUser = Json.reads[model.IdentityUser]
 }

@@ -2,12 +2,24 @@ html {
     position: relative;
     min-height: 100%;
     background-color: #ffffff;
-
-    background: url(/assets/images/mem-bg-default.jpg) no-repeat center center fixed;
+    background: url(/assets/images/mem-bg-default.jpg) repeat-y center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+
+    &.events-bg {
+        background-attachment: fixed;
+        background-repeat: repeat-y;
+        background-position-x: left;
+        background-position-y: center;
+        background-image: url(/assets/images/mem-bg-events.jpg);
+
+        @include mq(tablet) {
+            background-position-x: center; // this image has white at the top center so on mobile it looks as though no image has loaded - left aligning on mobile as a temp fix.
+        }
+    }
+
 }
 
 body {
@@ -34,15 +46,23 @@ body {
 
 .page-container {
     @include rem((
-        padding: 0 $gs-gutter/4
+        padding: 0 $gs-gutter/2
     ));
-    background-color: #ffffff;
+    @include mq(tablet) {
+        padding: 0 $gs-gutter;
+        max-width: gs-span(12)+($gs-gutter*2);
+    }
     @include clearfix;
     position: relative;
     margin: 0 auto;
-    @include rem((
-        max-width: 1100px
-    ));
+
+    @include mq(desktop) {
+        padding: 0;
+    }
+
+    @include mq(mem-full) {
+        max-width: gs-span(14)+($gs-gutter*2);
+    }
 
     h2 {
         @include fs-header(2);
@@ -52,10 +72,13 @@ body {
         }
     }
 
-    @include mq(tablet) {
-        @include rem((
-            padding: 0 $gs-gutter*4 $gs-gutter*8
-        ));
+    &.page-container--with-padding {
+        background-color: #ffffff;
+        @include mq(tablet) {
+            @include rem((
+                padding: 0 $gs-gutter*4 $gs-gutter*8
+            ));
+        }
     }
 }
 
@@ -182,14 +205,14 @@ body {
             padding: 0 gs-span(2) 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter*2
         ));
-    }  
+    }
 
     @include mq(desktop) {
         @include rem((
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter*2
         ));
-    }  
+    }
     .brochure-container__inner {
         @include mq(tablet) {
             @include rem((
@@ -202,7 +225,7 @@ body {
                 width: gs-span(8)
             ));
         }
-    } 
+    }
 
     .section-headline--border-bottom {
         @include rem((
@@ -241,7 +264,7 @@ body {
             @include rem((
                 width: gs-span(4),
                 margin-right: $gs-gutter
-            )); 
+            ));
         }
     }
 }
@@ -251,7 +274,7 @@ body {
 
 .brochure-container--promo-three,
 .brochure-container--promo-five {
-    background-color: $mem-trans-red;
+    background-color: $mem-live-red-trans;
     color: $black;
 
     @include mq(desktop) {
@@ -295,7 +318,7 @@ body {
                 ));
             }
         }
-    } 
+    }
 }
 
 // promo block four
@@ -347,7 +370,7 @@ body {
             padding: 0 0 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter * 2
         ));
-    } 
+    }
 
     .section-headline--border-bottom {
         @include rem((
@@ -578,7 +601,7 @@ blockquote {
     }
 }
 
-.blockquote--black-line { 
+.blockquote--black-line {
     border-top: 1px solid $black;
     @include rem((
         padding-top: 10px
