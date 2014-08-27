@@ -3,7 +3,7 @@
 # ~~~~
 
 GET         /robots.txt                               controllers.Assets.at(path="/public", file="robots.txt")
-GET         /favicon.ico                              controllers.Assets.at(path="/public/images/favicons", file="32x32.ico")
+GET         /favicon.ico                              controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 
 # Home page
 GET         /                                         controllers.FrontPage.index
