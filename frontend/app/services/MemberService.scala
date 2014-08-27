@@ -32,8 +32,8 @@ trait MemberService {
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
     Keys.ALLOW_MEMBERSHOP_MAIL -> true
   ) ++
-    formData.marketingChoices.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _.thirdParty) ++
-    formData.marketingChoices.map( Keys.ALLOW_GU_RELATED_MAIL -> _.gnm)
+    formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
+    formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
 
 
