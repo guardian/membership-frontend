@@ -40,6 +40,8 @@ object Config {
   val eventbriteApiEventListUrl = config.getString("eventbrite.api.event-list-url")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
 
+  val eventOrderingJsonUrl = config.getString("event.ordering.json")
+
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
 
