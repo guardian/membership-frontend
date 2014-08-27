@@ -1,5 +1,7 @@
 package services
 
+import model.EventPortfolio
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,6 +46,11 @@ trait EventbriteService {
   }
 
   private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
+
+  def getEventPortfolio: EventPortfolio = {
+    val (priority, normal) = getLiveEvents.splitAt(4) // TODO Use data from event-ordering tool
+    EventPortfolio(priority, normal)
+  }
 
   def getLiveEvents: Seq[EBEvent] = events.filter { event =>
     event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
