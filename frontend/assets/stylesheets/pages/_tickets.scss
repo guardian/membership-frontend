@@ -3,7 +3,7 @@
     .tickets-select-form__section {
         background-color: $c-neutral7;
         @include rem((
-            margin-bottom: $gs-baseline,
+            margin-bottom: $gs-baseline
         ));
     }
 

@@ -35,8 +35,8 @@
 
             <ul class="package__list-element">
             @for((header, body) <- Benefits.details(tier).list) {
-                <li>@header</li>
-                <li>@body</li>
+                <li class="benefits-title">@header</li>
+                <li class="benefits-copy">@body</li>
             }
             </ul>
 
