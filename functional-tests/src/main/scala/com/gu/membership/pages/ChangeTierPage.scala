@@ -7,7 +7,7 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class ChangeTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def becomeAFriendButton = driver.findElement(By.xpath("//main/div[2]/div[1]/section/div[1]/div/div/a"))
+  private def becomeAFriendButton = driver.findElement(By.xpath("//div[2]/div/div/main/div[2]/div[1]/section/div[1]/div/a"))
 
   private def becomeAPartnerButton = driver.findElement(By.xpath("//main/div[2]/div[1]/section/div[2]/div/div/a"))
 

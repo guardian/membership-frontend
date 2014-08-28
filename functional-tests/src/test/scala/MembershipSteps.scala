@@ -404,7 +404,7 @@ object CookieHandler {
     val user = System.currentTimeMillis().toString
     val password = scala.util.Random.alphanumeric.take(10).mkString
     val email = user + "@testme.com"
-    new RegisterPage(driver).enterEmail(email)
+    new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
       .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
   }
 }
