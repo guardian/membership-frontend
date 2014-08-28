@@ -1,0 +1,15 @@
+//TODO start of splitting benefits work into one set of styles where it makes sense
+
+.benefits-title {
+    @include fs-bodyHeading(2);
+    @include rem((
+        padding-bottom: $gs-baseline/6
+    ));
+}
+
+.benefits-copy {
+    @include fs-bodyCopy(1);
+    @include rem((
+        padding-bottom: $gs-baseline
+    ));
+}
