@@ -19,7 +19,7 @@
             </ul>
             <div>
                 <span class="package__price">
-                    @Benefits.details(tier).priceText
+                    @fragments.benefits.priceInfo(Benefits.details(tier))
                     @if(tier > Tier.Friend){
                         <span class="package__pcm">pcm</span>
                     }
