@@ -16,9 +16,15 @@
         @include rem((
             // magic number: we shift these margins up to skip the header gap
             // and the (fixed) height of the nav bar
-            margin-top: -$header-margin*2
+            top: $side-margins-top-magic-number
         ));
         height: 100%;
+
+        height: -webkit-calc(100% - #{$side-margins-top-magic-number});
+        height: -moz-calc(100% - #{$side-margins-top-magic-number});
+        height: -o-calc(100% - #{$side-margins-top-magic-number});
+        height: calc(100% - #{$side-margins-top-magic-number});
+
         width: 0;
     }
     &:before {
