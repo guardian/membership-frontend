@@ -14,8 +14,11 @@ import forms.MemberForm.FeedbackForm
 trait EmailService {
   val feedbackAddress: String
 
-  val client = new AmazonSimpleEmailServiceClient()
-  client.setRegion(Region.getRegion(Regions.EU_WEST_1))
+  val client = {
+    val c= new AmazonSimpleEmailServiceClient()
+    c.setRegion(Region.getRegion(Regions.EU_WEST_1))
+    c
+  }
 
   def sendFeedback(feedback: FeedbackForm) = {
     val to = new Destination().withToAddresses(feedbackAddress)
