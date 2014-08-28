@@ -13,7 +13,7 @@ trait Info extends Controller {
     Ok(views.html.info.help())
   }
 
-  def feedback = CachedAction { implicit request =>
+  def feedback = NoCacheAction { implicit request =>
     Ok(views.html.info.feedback())
   }
 
