@@ -333,10 +333,6 @@ div.event {
             padding: $gs-baseline $gs-gutter/2
         ));
 
-        @include mq(tablet) {
-            height: auto;
-        }
-
         .event-item__title {
             @include fs-headline(1);
             color: $black;
@@ -402,15 +398,13 @@ div.event {
         }
 
         @include mq(tablet) {
+            @include rem((
+                padding: $gs-baseline $gs-gutter
+            ));
+            height: auto;
 
             .event-item__title {
                 @include fs-headline(2);
-            }
-
-            .event-item__meta {
-                @include rem((
-                    padding: $gs-baseline $gs-gutter
-                ));
             }
 
             .event-item__cta {
@@ -432,7 +426,6 @@ div.event {
                 ));
             }
         }
-
     }
 
     @include guss-row('&.event-item--hero');
@@ -481,6 +474,15 @@ div.event {
         background-color: $c-neutral5;
         .event-item__title {
             text-decoration: underline;
+        }
+    }
+
+    &.event-item--standalone {
+        .event-item__cta {
+            position: static;
+            @include rem((
+                padding: $gs-baseline*2 0 0
+            ));
         }
     }
 }
