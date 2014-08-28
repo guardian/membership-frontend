@@ -41,9 +41,10 @@ trait EmailService {
     Try {
       client.sendEmail(email)
     } match {
-      case Success(_) =>
+      case Success(details) =>
+        Logger.error(s"Sent feedback. MessageId=${details.getMessageId}")
       case Failure(error) =>
-        Logger.debug(s"Failed to send feedback, got ${error.getMessage}")
+        Logger.error(s"Failed to send feedback, got ${error.getMessage}")
     }
   }
 }
