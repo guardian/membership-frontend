@@ -15,7 +15,7 @@ object MemberForm {
 
   case class PaymentForm(annual: Boolean, token: String)
 
-  case class MarketingChoicesForm(gnm: Boolean, thirdParty: Boolean)
+  case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
   trait JoinForm {
     val name: NameForm
@@ -35,6 +35,8 @@ object MemberForm {
 
   def verifyAddress(address: AddressForm): Boolean =
     countriesRequiringState.get(address.country).fold(true)(_.states.contains(address.countyOrState))
+
+  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
   val friendAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> text,
@@ -60,14 +62,22 @@ object MemberForm {
   )(NameForm.apply)(NameForm.unapply)
 
   val marketingChoicesMapping: Mapping[MarketingChoicesForm] = mapping(
-    "gnnMarketing" -> boolean,
-    "thirdParty" -> boolean
+    "gnnMarketing" -> optional(boolean),
+    "thirdParty" -> optional(boolean)
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
     "annual" -> boolean,
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
+
+  val feedbackMapping: Mapping[FeedbackForm] =   mapping(
+    "category" -> nonEmptyText,
+    "page" -> text,
+    "feedback" -> nonEmptyText,
+    "name" -> nonEmptyText,
+    "email" -> email
+  )(FeedbackForm.apply)(FeedbackForm.unapply)
 
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
@@ -94,5 +104,15 @@ object MemberForm {
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
+  )
+
+  val feedbackForm: Form[FeedbackForm] = Form(
+    mapping(
+      "category" -> nonEmptyText,
+      "page" -> text,
+      "feedback" -> nonEmptyText,
+      "name" -> nonEmptyText,
+      "email" -> email
+    )(FeedbackForm.apply)(FeedbackForm.unapply)
   )
 }

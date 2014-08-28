@@ -4,7 +4,7 @@
 
     <section class="header-bar header-bar--guardian-live">
         <h1 class="header-bar__title">Events, discussions, debates, interviews,
-            keynote speeches and festivals exclusivley for Guardian Members</h1>
+            keynote speeches and festivals exclusively for Guardian Members</h1>
         <div class="header-bar__guardian-live-logo">
             <i class="icon-sprite icon-sprite-guardian-live"></i>
         </div>
@@ -35,11 +35,13 @@
                 <h2 class="event-block-title">what's on</h2>
             </div>
             <div class="events-list-container">
-                <ul class="events-list u-unstyled">
-                    @for(event <- eventPortfolio.normal) {
-                        @fragments.event.item(event)
-                    }
-                </ul>
+                @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
+                    <ul class="events-list u-unstyled">
+                        @for(event <- eventChunk) {
+                            @fragments.event.item(event, false)
+                        }
+                    </ul>
+                }
             </div>
         </div>
     </section>
