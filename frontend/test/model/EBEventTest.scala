@@ -5,6 +5,7 @@ import model.Eventbrite._
 import model.Eventbrite.EBEventStatus._
 import play.api.test.PlaySpecification
 import org.joda.time.Instant
+import utils.Resource
 
 class EBEventTest extends PlaySpecification {
 
@@ -37,7 +38,13 @@ class EBEventTest extends PlaySpecification {
     "be PreLive" in {
       ebPreLiveEvent.getStatus mustEqual(PreLive)
     }
+    "be PreLive when status=draft" in {
+      import EventbriteDeserializer._ // class under test
 
+      val event = Resource.getJson("model/eventbrite/events.12016047321.json").as[EBEvent]
+
+      event.getStatus === PreLive
+    }
   }
 
   "getPrice" should {

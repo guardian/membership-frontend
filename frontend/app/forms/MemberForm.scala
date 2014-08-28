@@ -15,18 +15,18 @@ object MemberForm {
 
   case class PaymentForm(annual: Boolean, token: String)
 
-  case class MarketingChoicesForm(gnm: Boolean, thirdParty: Boolean)
+  case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
   trait JoinForm {
     val name: NameForm
     val deliveryAddress: AddressForm
-    val marketingChoices: Option[MarketingChoicesForm]
+    val marketingChoices: MarketingChoicesForm
   }
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: Option[MarketingChoicesForm]) extends JoinForm
+  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: MarketingChoicesForm) extends JoinForm
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
-                                billingAddress: Option[AddressForm], marketingChoices: Option[MarketingChoicesForm]) extends JoinForm
+                                billingAddress: Option[AddressForm], marketingChoices: MarketingChoicesForm) extends JoinForm
 
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
@@ -60,8 +60,8 @@ object MemberForm {
   )(NameForm.apply)(NameForm.unapply)
 
   val marketingChoicesMapping: Mapping[MarketingChoicesForm] = mapping(
-    "gnnMarketing" -> boolean,
-    "thirdParty" -> boolean
+    "gnnMarketing" -> optional(boolean),
+    "thirdParty" -> optional(boolean)
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
@@ -73,7 +73,7 @@ object MemberForm {
     mapping(
       "name" -> nameMapping,
       "deliveryAddress" -> friendAddressMapping,
-      "marketingChoices" -> optional(marketingChoicesMapping)
+      "marketingChoices" -> marketingChoicesMapping
     )(FriendJoinForm.apply)(FriendJoinForm.unapply)
   )
 
@@ -84,7 +84,7 @@ object MemberForm {
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
-      "marketingChoices" -> optional(marketingChoicesMapping)
+      "marketingChoices" -> marketingChoicesMapping
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
