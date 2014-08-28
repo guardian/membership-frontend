@@ -1,0 +1,19 @@
+@(benefits: model.Benefits.Benefits)
+
+@priceInfoYear(prependDetail: String, subDetail: String = "", saving: String = "") = {
+    <div class="price-info__container-inner@if(saving ==""){ price-info__container-inner--no-border}">
+        <div class="price-info__detail">@prependDetail<span class="price-info__sub-detail">@subDetail</span></div>
+        <div class="price-info__sub-detail">@saving</div>
+    </div>
+}
+
+@priceInfoMonth(prependDetail: String, subDetail: String = "") = {
+    <div class="price-info__container-inner price-info__container-inner--last">
+        <div class="price-info__detail">@prependDetail<span class="price-info__sub-detail">@subDetail</span></div>
+    </div>
+}
+
+<div class="price-info">
+    @benefits.priceYear.map(p => priceInfoYear("£" + p, "/year", benefits.saving.map(s => "( Save £" + s + ")").getOrElse(""))).getOrElse(priceInfoYear("Free"))
+    @benefits.priceMonth.map(price => priceInfoMonth("£" + price, "/month")).getOrElse("")
+</div>
