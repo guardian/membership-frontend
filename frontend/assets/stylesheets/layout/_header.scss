@@ -14,17 +14,23 @@ $header-margin: 36px;
         z-index: 2;
         position: relative;
         background-color: transparentize($mem-blue, .2);
-        padding-top: 10px;
-        padding-bottom: 5px;
+        @include rem((
+            padding-top: 10px,
+            padding-bottom: 5px
+        ));
         @include side-margins-calc('padding-left');
         @include side-margins-calc('padding-right');
     }
     .header__primary {
-        margin-left: $header-padding;
+        @include rem((
+            margin-left: $header-padding
+        ));
         float: left;
     }
     .header__secondary {
-        margin-right: $header-padding;
+        @include rem((
+            margin-right: $header-padding
+        ));
         float: right;
         width: 200px;
         i {
@@ -67,7 +73,7 @@ $header-margin: 36px;
     }
 
     &:hover {
-        color: #ffffff;
+        color: $white;
     }
 }
 
@@ -84,22 +90,22 @@ $header-margin: 36px;
 
 .menu-item--active {
     // for text underlines
-    color: #ffffff;
+    color: $white;
 
     .icon-sprite-user-black {
         @extend %icon-sprite-user-white;
-        color: #ffffff !important;
+        color: $white !important;
     }
     .control {
-        border: 1px solid #ffffff !important;
+        border: 1px solid $white !important;
     }
     .control__info {
-        color: #ffffff !important;
+        color: $white !important;
     }
 }
 
 .menu-hamburger--active {
-    border-color: #ffffff;
+    border-color: $white;
     .icon-sprite-menu-black {
         @extend %icon-sprite-menu-white;
     }
@@ -128,8 +134,10 @@ $header-margin: 36px;
 @include mq(tablet) {
     .header {
         .i-logo {
-            margin-top: $gs-gutter/2;
-            margin-bottom: $gs-gutter/2;
+            @include rem((
+                margin-top: $gs-gutter/2,
+                margin-bottom: $gs-gutter/2
+            ));
         }
     }
 }

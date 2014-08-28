@@ -13,9 +13,11 @@
         position: absolute;
         z-index: 1;
         background: rgba(51, 51, 51, .05);
-        // magic number: we shift these margins up to skip the header gap
-        //               and the (fixed) height of the nav bar
-        margin-top: -$header-margin*2;
+        @include rem((
+            // magic number: we shift these margins up to skip the header gap
+            // and the (fixed) height of the nav bar
+            margin-top: -$header-margin*2
+        ));
         height: 100%;
         width: 0;
     }
