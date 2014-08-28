@@ -10,6 +10,7 @@
     position: relative;
     @include fs-textsans(4);
     @include rem((
+        min-width: 100%,
         padding: 8px 8px 8px 18px
     ));
     @include border-radius(50%);
@@ -31,7 +32,13 @@
         float: right;
         @include rem((
             margin: 2px 0 0 30px
-        ));  
+        ));
+    }
+
+    @include mq(tablet){
+        @include rem((
+            min-width: 220px
+        ));
     }
 }
 
@@ -62,10 +69,9 @@
     text-align: left;
     background-color: $mem-buttonBlue;
     @include rem((
-        padding: 8px 8px 8px 18px,
-        min-width: 220px
+        padding: 8px 8px 8px 18px
     ));
-    
+
     &:visited,
     &:active,
     &:focus {
@@ -78,7 +84,7 @@
         float: right;
         @include rem((
             margin-top: 2px
-        ));   
+        ));
     }
 }
 
@@ -90,7 +96,7 @@
         padding: 8px 8px 8px 18px,
         width: 220px
     ));
-    
+
     &:visited,
     &:active,
     &:focus {
@@ -103,7 +109,7 @@
         float: right;
         @include rem((
             margin-top: 2px
-        ));   
+        ));
     }
 }
 

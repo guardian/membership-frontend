@@ -1,40 +1,81 @@
 .tickets-select-form {
-    .tickets-select-form__label {
-        position: relative;
-        display: block;
-        width: 100%;
+
+    .tickets-select-form__section {
         background-color: $c-neutral7;
         @include rem((
-            border-top: 1px solid $c-neutral4,
-            padding: $gs-baseline $gs-gutter $gs-baseline $gs-gutter*2,
-            margin: 0 0 $gs-baseline
+            margin-bottom: $gs-baseline,
+        ));
+    }
+
+    .tickets-select-form__label {
+        position: relative;
+        display: inline-block;
+        float: left;
+        @include rem((
+            padding: 36px $gs-gutter*1.5
         ));
     }
 
     .tickets-select-form__input {
-        @include rem((
-            top: $gs-baseline*1.5,
-            left: $gs-gutter
-        ));
-        position: absolute;
         margin: 0;
     }
 
+    .tickets-select-form__header {
+        border-bottom: 1px solid $c-neutral4;
+    }
+
+    .tickets-select-form-header__secondary {
+        position: relative;
+        @include rem((
+            padding: $gs-baseline $gs-baseline $gs-baseline 0,
+            margin-left: 73px
+        ));
+    }
+
+    .tickets-select-form__detail {
+        @include rem((
+            padding: $gs-baseline $gs-baseline $gs-baseline $gs-row-height*2
+        ));
+        background-color: $c-neutral9;
+    }
+
     .tickets-select-form__leadin {
-        @include fs-bodyCopy(1);
+        @include fs-bodyHeading(2);
     }
 
     .tickets-select-form__tier-name {
         @include rem((
-            margin-bottom: $gs-baseline,
-            padding-bottom: $gs-baseline,
-            border-bottom: 1px solid $c-neutral4
+            padding-bottom: $gs-baseline
+        ));
+
+        @include mq(tablet) {
+            float: left;
+            @include rem((
+                line-height: 64px
+            ));
+        }
+    }
+
+    .tickets-select-form__toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        @include rem((
+            width: 100%,
+            height: 100%
         ));
     }
 
-    .tickets-select-form__price {
-        @include fs-bodyHeading(4);
-        float: right;
+    .tickets-select-form__toggle-icon {
+        position: absolute;
+        @include rem((
+            right: 20px,
+            top: 40px
+        ));
+    }
+
+    .tickets-select-form__toggle-icon--open {
+        @include rotate(180deg);
     }
 
     .tickets-select-form__header-title {
@@ -47,7 +88,7 @@
     .tickets-select-form__header-copy {
         @include fs-bodyCopy(1);
         @include rem((
-            padding-bottom: $gs-baseline/2
+            padding-bottom: $gs-baseline
         ));
     }
 
@@ -57,11 +98,6 @@
 
     &:hover {
         border-color: $c-brandLightBlue;
-    }
-
-    .submit-input {
-        float: right;
-        margin-right: 0;
     }
 }
 
@@ -87,7 +123,59 @@
     }
 }
 
+.price-info-container {
+    vertical-align: middle;
+    display: inline-block;
+    width: 28%;
 
+    &.price-info-container--last {
+        display: block;
+        width: 70%;
+
+        @include mq(tablet) {
+            display: inline-block;
+        }
+    }
+}
+
+.price-info {
+    @include mq(tablet) {
+        float: right;
+        @include rem((
+            line-height: 64px
+        ));
+    }
+
+    .price-info__container-inner {
+        float: left;
+        border-right: 1px solid $c-neutral4;
+        @include rem((
+            padding: $gs-gutter/6 $gs-gutter $gs-gutter/6 0,
+            margin-bottom: $gs-gutter/2,
+        ));
+    }
+
+    .price-info__container-inner--no-border {
+        border: 0;
+        padding-right: 0;
+    }
+
+    .price-info__container-inner--last {
+        border: 0;
+        @include rem((
+            padding-left: $gs-gutter,
+            padding-right: 0
+        ));
+    }
+
+    .price-info__detail {
+        @include fs-bodyHeading(3);
+    }
+
+    .price-info__sub-detail {
+        @include fs-textsans(1);
+    }
+}
 
 /* funnel ------------------------------------------------------------------------ */
 
@@ -98,53 +186,46 @@
     position: relative;
     @include rem((
         margin-top: $gs-baseline*4,
-        margin-bottom: $gs-baseline*4,
-        height: 72px
+        margin-bottom: $gs-baseline*4
     ));
 
     .funnel__rail {
-        @extend %flexbox-container-justify;
+        margin: 0;
+        text-align: justify;
+        @include fs-headline(2);
+    }
 
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .funnel-stretch {
         width: 100%;
-        @include rem((
-            height: 16px
-        ));
+        display: inline-block;
         background-color: $c-neutral6;
-        @include border-radius(rem(50px));
+        position: relative;
+        @include rem((
+            top: -32px,
+            height: 4px
+        ));
+        z-index: 1;
     }
 
     .funnel__step {
-        display: block;
+        width: auto;
+        display: inline-block;
         position: relative;
-
-        -webkit-flex-grow: 0;
-        flex-grow: 0;
-        @include rem((
-            -webkit-flex-basis: 16px,
-            flex-basis: 16px
-        ));
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-
+        z-index: 2;
         @include rem((
             height: 20px,
-            width: 16px
+            width: 20px
         ));
 
         .funnel__point {
-            display: block;
-            background-color: #ffffff;
+            display: inline-block;
+            background-color: $white;
+            border: 2px solid $c-neutral6;
             @include rem((
-                width: 16px,
-                height: 16px,
-                border: 2px solid $c-neutral4
+                width: 20px,
+                height: 20px
             ));
-            @include border-radius(rem(50px));
+            @include border-radius(50px);
         }
 
         &.active .funnel__point {
@@ -161,7 +242,7 @@
                 width: 106px,
                 left: 50%,
                 margin-left: -53px,
-                top: -($gs-baseline*4)
+                top: -($gs-baseline*2)
             ));
         }
 

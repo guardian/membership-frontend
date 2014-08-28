@@ -26,10 +26,8 @@ body {
 }
 
 .page-container {
-    @include rem((
-        padding: 0 $gs-gutter/4
-    ));
     background-color: #ffffff;
+    border-top: 2px solid $mem-blue;
     @include clearfix;
     position: relative;
     margin: 0 auto;
@@ -73,7 +71,7 @@ body {
     @include rem((
         width: 100%,
         margin: 0 auto,
-        padding: 0 $gs-gutter
+        padding: 0 $gs-gutter/2
     ));
     @include fs-headline(2);
 
@@ -84,18 +82,18 @@ body {
         ));
     }
 
-    section.two-thirds {
+    .two-thirds {
         @include mq(tablet) {
-            border-right: 1px solid $c-neutral3;
+            border-right: 1px solid $c-neutral4;
             @include rem((
                 width: gs-span(8),
                 padding-right: $gs-gutter
             ));
-            
+
         }
     }
 
-    section.one-third {
+    .one-third {
         @include mq(tablet) {
             @include rem((
                 width: gs-span(4),
@@ -176,7 +174,7 @@ body {
             padding: 0 gs-span(3) 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter * 2
         ));
-    }  
+    }
     .brochure-container__inner {
         @include mq(desktop) {
             width: gs-span(8);
@@ -187,7 +185,7 @@ body {
                 margin-bottom: $gs-gutter
             ));
         }
-    } 
+    }
 }
 
 // promo block two
@@ -206,7 +204,7 @@ body {
             @include rem((
                 width: gs-span(4),
                 margin-right: $gs-gutter
-            )); 
+            ));
         }
     }
 }
@@ -240,7 +238,7 @@ body {
                 ));
             }
         }
-    } 
+    }
 }
 
 // promo block four
@@ -286,7 +284,7 @@ body {
             padding: 0 0 0 $gs-column-width+$gs-gutter,
             margin-bottom: $gs-gutter * 2
         ));
-    } 
+    }
 
     .brochure-container__teaser {
         @include mq(desktop) {
@@ -378,7 +376,7 @@ blockquote {
     }
 }
 
-.blockquote--black-line { 
+.blockquote--black-line {
     border-top: 1px solid $black;
     @include rem((
         padding-top: 10px
