@@ -29,7 +29,7 @@
             <h2 class="section-headline section-headline--border-bottom">Introducing Guardian Membership</h2>
             <p class="brochure-container__copy">We believe the <strong>open exchange</strong> of information, ideas and opinions has the power to <strong>change the world for the better</strong></p>
             <p class="brochure-container__copy">Guardian Membership is the community for those who share this ideal.</p>
-            <a class="action action--join" href="#">Learn more</a>
+            <a class="action action--join" href="/about">Learn more</a>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
                 <div class="brochure-container__image"><img src="@Asset.at("images/homepage/teaser-image1.jpg")" alt="" /></div>
                 <div class="brochure-container__teaser">
                     <p class="brochure-container__copy">Guardian Membership brings you closer to the <strong>stories</strong> of the day, connects you to the <strong>conversations</strong> that matter and introduces you to <strong>fellow members</strong> who share your interests.</p>
-                    <p class="brochure-container__copy"><a class="action action--join" href="/join">Join today</a></p>
+                    <p class="brochure-container__copy"><a class="action action--join" id="qa-join" href="/join">Join today</a></p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
                     <div class="brochure-container__teaser">
                         <blockquote class="blockquote--black-line">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
                         <p class="brochure-container__copy brochure-container__copy--author">Alan Rusbridger, editor of the Guardian</p>
-                        <a class="action action--join" href="/events">Start your journey as patron</a>
+                        <a class="action action--join" href="/join/patron">Start your journey as patron</a>
                     </div>
                 </div>
             </div>
@@ -71,8 +71,8 @@
         <p class="brochure-container__copy">In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross. This will mark the coming together of extraordinary cultural and educational institutions with the Guardian, to create a new kind of <strong>civic space.</strong></p>
         <p class="brochure-container__copy">The building will be a hub for <strong>big ideas</strong> and <strong>conversation,</strong> offering events, activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.</p>
         <div class="l-row l-row--items-2">
-            <div class="l-row__item"><a class="action action--join" href="/events">More about the building</a></div>
-            <div class="l-row__item"><a class="action action--secondary-button" href="/events">Building progress blog</a></div>
+            <div class="l-row__item"><a class="action action--join" href="http://www.theguardian.com/membership">More about the building</a></div>
+            <div class="l-row__item"><a class="action action--secondary-button" href="http://www.theguardian.com/membership">Building progress blog</a></div>
         </div>
     }
 
@@ -99,22 +99,33 @@
     <div class="brochure-container-outer brochure-container--no-top-margin">
         <div class="brochure-container brochure-container--promo-seven">
             <div class="brochure-container__inner">
-                <h2 class="section-headline section-headline--border-bottom">Join membership today</h2>
+                <h2 class="section-headline section-headline--with-margins">Join membership today</h2>
                 <div class="l-row">
                     <div class="brochure-container__join-box">
-                        <div class="brochure-container__join-box--header">Friend</div>
-                        <p class="brochure-container__teaser">Stay up to date and book tickets to Guardian Live events</p>
-                        <a class="action action--join" href="/join">Learn more about Membership</a>
+                        <div class="brochure-container__join-box--header brochure-container__join-box--header--friends">Friend</div>
+                        <div class="brochure-container__price">
+                        <div class="brochure-container__price--bold-free">£FREE</div>
+                        </div>
+                        <p class="brochure-container__teaser brochure-container__teaser--description">Stay up to date and book tickets to Guardian Live events</p>
+                        <a class="action action--secondary-button" href="/join">Learn more about membership</a>
                     </div>
                     <div class="brochure-container__join-box">
-                        <div class="brochure-container__join-box--header">Partner</div>
-                        <p class="brochure-container__teaser">Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets</p>
-                        <a class="action action--join" href="/join">Learn more about Membership</a>
+                        <div class="brochure-container__join-box--header brochure-container__join-box--header--partner">Partner</div>
+                        <div class="brochure-container__price l-row">
+                            <div class="brochure-container__price--bold">£135/yr<span class="save-price">Save £45/yr</span></div>
+                            <div class="brochure-container__price--bold">£15/mo</div>
+                        </div>
+                        <p class="brochure-container__teaser brochure-container__teaser--description">Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets</p>
+                        <a class="action action--secondary-button" href="/join">Learn more about membership</a>
                     </div>
                     <div class="brochure-container__join-box">
-                        <div class="brochure-container__join-box--header">Patron</div>
-                        <p class="brochure-container__teaser">Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian</p>
-                        <a class="action action--join" href="/join">Learn more about Membership</a>
+                        <div class="brochure-container__join-box--header brochure-container__join-box--header--patron">Patron</div>
+                        <div class="brochure-container__price l-row">
+                            <div class="brochure-container__price--bold">£540/yr<span class="save-price">Save £135/yr</span></div>
+                            <div class="brochure-container__price--bold">£60/mo</div>
+                        </div>
+                        <p class="brochure-container__teaser brochure-container__teaser--description">Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian</p>
+                        <a class="action action--secondary-button" href="/join/patron">Learn more about patron</a>
                     </div>
                 </div>
             </div>

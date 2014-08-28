@@ -1,30 +1,62 @@
-@(event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent, isHero: Boolean = false)
 @import views.support.Dates._
+@import configuration.Config
+@import model.Eventbrite._
 @import model.Eventbrite.EBEventStatus._
 
-<li class="events-list__item">
-    <div class="item item--has-image">
-        <div class="item__container">
-            <a href="/event/@event.id">
-                <div class="item__media-wrapper">
-                    <div class="item__image-container event-image-container">
+<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}">
+            <div class="event-item__media">
+                <a href="/event/@event.id">
                     @if(event.getStatus == SoldOut){
                         <span class="event-status event-status--sold-out">Sold Out</span>
                     }
-                        <img src="@event.logoUrl" alt="Event Image">
+                    <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.png" data-alt="Please upload an event image"></div>
+                </a>
+            </div>@*
+
+                // Inline-block whitespace
+
+             *@<div class="event-item__meta">
+                <a href="/event/@event.id">
+                    <h2 class="event-item__title">
+                        @event.name.text
+                    </h2>
+
+                    <div class="event-item__time">@event.start.pretty</div>
+
+                    <div class="event-item__location">
+                        @if(event.venue.name){
+                            <span class="event-item__location-name">@event.venue.name</span>
+                        }
+                        @for(address <- event.venue.address) {
+                            @if(event.venue.name){, }
+                            <span class="event-item__location-address">@address.city, @address.postal_code</span>
+                        }
                     </div>
-                </div>
-                <h2 class="item__title truncate">
-                    @event.name.text
-                </h2>
-            </a>
-            <div class="item__meta">
-                <time class="item__timestamp js-item__timestamp">
-                    <i class="i i-clock-light-grey"></i>
-                    <div class="event__location"><span class="icon location--icon"></span>@event.venue.name</div>
-                    <div class="event__time"><span class="icon time--icon"></span>@event.start.pretty</div>
-                </time>
+
+                    @if(isHero){
+                        @for(desc <- event.description) {
+                            <div class="event-item__description">
+                                @desc.text.take(200)@if(desc.text.length > 200){&hellip;}
+                            </div>
+                        }
+                    }
+
+                    <div class="event-item__cta">
+
+                        <div class="event-item__price">
+                        @for(ticket <- event.ticketClassesHead) {
+                            @for(pricing <- ticket.cost) {
+                                <span class="event-item__price-amount">@pricing.formattedPrice</span>
+                                <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                            }
+                        }
+                        </div>
+
+                        <button class="event-item__action"></button>
+
+                    </div>
+                </a>
             </div>
-        </div>
-    </div>
+
 </li>

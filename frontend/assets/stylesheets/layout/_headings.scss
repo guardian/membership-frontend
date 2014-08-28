@@ -51,3 +51,80 @@
     text-overflow: ellipsis;
     @include fs-headline(2);
 }
+
+.header-bar {
+
+    @include rem((
+        padding-left: $gs-gutter/2
+    ));
+
+    .header-bar__title {
+        @include fs-headline(3);
+        @include rem((
+            padding: $gs-baseline 0,
+            max-width: gs-span(8)
+        ));
+    }
+
+    &.header-bar--guardian-live {
+        position: relative;
+        background-color: transparentize($mem-live-accent, .1);
+        @include rem((
+            padding-right: 102px
+        ));
+        .header-bar__title {
+            color: $white;
+        }
+
+        .header-bar__guardian-live-logo {
+            position: absolute;
+            @include rem((
+                right: $gs-gutter/2,
+                top: $gs-baseline
+            ));
+        }
+
+        i {
+            background-size: 100%;
+            @include rem((
+                width: 31px,
+                height: 45px
+            ));
+        }
+    }
+
+    @include mq(tablet) {
+        @include rem((
+            min-height: 132px,
+            padding-left: $gs-gutter
+        ));
+        .header-bar__title {
+            @include fs-headline(5);
+        }
+        &.header-bar--guardian-live {
+            .header-bar__guardian-live-logo {
+                @include rem((
+                    right: $gs-gutter,
+                    top: $gs-baseline*2
+                ));
+            }
+            i {
+                @include rem((
+                    width: 62px,
+                    height: 90px,
+                    background-size: 100%
+                ));
+            }
+        }
+    }
+
+    @include mq(mem-full) {
+        @include rem((
+            padding-left: gs-span(2)+$gs-gutter*2 //180
+        ));
+        .header-bar__title {
+            @include fs-headline(5);
+        }
+    }
+}
+
