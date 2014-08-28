@@ -39,6 +39,12 @@ object Eventbrite {
       val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
       clean
     }
+
+    def blurb = {
+      val l = 200
+      if (text.length <= l) text
+      else text.take(text.lastIndexWhere(_.isSpaceChar, l + 1)) + " …"
+    }
   }
 
   case class EBAddress(country_name: Option[String],
