@@ -96,14 +96,11 @@ $current-indicator: rem(47px);
         padding: $gs-gutter/2 0 $gs-gutter
     ));
     margin-bottom: 0;
+    list-style: none;
     > li {
-        list-style-position: inside;
-        list-style: none;
         @include rem((
             margin: $gs-baseline 0
         ));
-        @include faux-bullet-point(#333333, $right-space: 4px);
-
         &:last-child {
             margin-bottom: 0;
         }
@@ -112,8 +109,8 @@ $current-indicator: rem(47px);
 }
 
 .package__price {
+    clear: both;
     @include fs-headline(6);
-    display: block;
     @include rem((
         margin-bottom: 20px
     ));
@@ -121,6 +118,14 @@ $current-indicator: rem(47px);
 
 .package__pcm {
     @include fs-headline(1);
+}
+
+.package__leadin {
+    @include fs-headline(3);
+    border-bottom: 1px solid $c-neutral4;
+    @include rem((
+        padding-bottom: $gs-gutter
+    ));
 }
 
 /* Upgrade

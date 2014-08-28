@@ -38,20 +38,20 @@ body {
 
 .header {
     position: relative;
-    z-index: 999;
-    @include rem((
-        margin: 0 0 $headerMargin 0
-    ));
 }
 
 .page-container {
+    background-color: #ffffff;
+    border-top: 2px solid $mem-blue;
     @include rem((
         padding: 0 $gs-gutter/2
     ));
+
     @include mq(tablet) {
         padding: 0 $gs-gutter;
         max-width: gs-span(12)+($gs-gutter*2);
     }
+
     @include clearfix;
     position: relative;
     margin: 0 auto;
@@ -61,7 +61,7 @@ body {
     }
 
     @include mq(mem-full) {
-        max-width: gs-span(14)+($gs-gutter*2);
+        max-width: gs-span(14);
     }
 
     h2 {
@@ -100,22 +100,35 @@ body {
 // Two thirds section
 
 .section-two-thirds {
+    @include rem((
+        width: 100%,
+        margin: 0 auto,
+        padding: 0 $gs-gutter/2
+    ));
+    @include fs-headline(2);
 
-    section.thirds {
-        overflow: hidden;
-        display: inline-block;
-        vertical-align: top;
+    @include mq(desktop) {
+        @include fs-headline(5);
     }
 
-    section.two-thirds {
-        width: 66.7%;
-        padding-right: $gs-gutter*2;
-        border-right: 1px solid $c-neutral3;
+    .two-thirds {
+        @include mq(tablet) {
+            border-right: 1px solid $c-neutral4;
+            @include rem((
+                width: gs-span(8),
+                padding-right: $gs-gutter
+            ));
+
+        }
     }
 
-    section.one-third {
-        width: 33.3%;
-        padding-left: $gs-gutter*2;
+    .one-third {
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(4),
+                padding-left: $gs-gutter
+            ));
+        }
     }
 
 }

@@ -120,3 +120,13 @@
     }
 }
 
+// a dynamic mixin so we can reuse these measurements
+// for other properties – this used to include a gutter
+// but now it just matches the width of the main page container
+// (eg. 14 columns) so it lines up all the way to the edges
+@mixin side-margins-calc($property, $container-width:gs-span(14), $offset:0px) {
+    @include mq(wide) {
+        #{$property}: -webkit-calc(((100% - #{rem($container-width)}) / 2) + #{$offset});
+        #{$property}: calc(((100% - #{rem($container-width)}) / 2) + #{$offset});
+    }
+}

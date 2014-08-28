@@ -1,22 +1,23 @@
 @(tier: com.gu.membership.salesforce.Tier.Tier)
 
 @import views.support.Dates._
-@import configuration.Config
+@import model.Benefits
 
 <aside class="form-secondary-container">
     <ul class="form-detail u-unstyled">
         <li class="form-detail__item">
             <h2 class="form__heading">What's included</h2>
             <ul>
-                @for(item <- Config.benefits(tier).list) {
-                    <li>@item</li>
+                @for((header, body) <- Benefits.details(tier).list) {
+                    <li>@header</li>
+                    <li>@body</li>
                 }
             </ul>
         </li>
         <li class="form-detail__item">
             <h2 class="form__heading">Payments</h2>
             <p><strong>First payment</strong> will be taken today under the name Guardian Membership.</p>
-            <p><strong>Ongoing payments</strong> Your card will be charged @Config.benefits(tier).priceText every month. Payments will taken on or shortly after the @dayInMonthWithSuffix() of every month. You can change the payment date at any time.</p>
+            <p><strong>Ongoing payments</strong> Your card will be charged @fragments.benefits.priceInfo(Benefits.details(tier)) every month. Payments will taken on or shortly after the @dayInMonthWithSuffix() of every month. You can change the payment date at any time.</p>
         </li>
         <li class="form-detail__item">
             <h2 class="form__heading">Changed you mind?</h2>

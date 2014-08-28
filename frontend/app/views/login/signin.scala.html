@@ -1,12 +1,16 @@
 @(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
 
+
 @import configuration.Config
+@import model.Benefits
 
 @main("Join membership") {
 
     <section class="section-signin">
 
-        @fragments.tickets.ticketsFunnel(2, StepThree = "", StepFour = "")
+        @fragments.tickets.ticketsFunnel(2, StepOne = "", StepThree = "", StepFour = "")
+
+        <h1 class="section-sub-headline">Sign into your Guardian account</h1>
 
         <div class="signin__jumbotron">
             <h1 class="signin__tagline">Progress comes through the free expression of ideas</h1>
@@ -26,19 +30,18 @@
             </div>
         </div>
 
-        @*
         @for(tier <- tierOpt) {
-            <p>@Config.benefits(tier).leadin</p>
+            <p>@Benefits.details(tier).leadin</p>
 
             <ul class="package__list-element">
-            @for(item <- Config.benefits(tier).list) {
-                <li>@item</li>
+            @for((header, body) <- Benefits.details(tier).list) {
+                <li class="benefits-title">@header</li>
+                <li class="benefits-copy">@body</li>
             }
             </ul>
 
             <br/>
         }
-        *@
 
     </section>
 

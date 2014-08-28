@@ -17,9 +17,20 @@
     ));
     background: #ffffff;
     width: 100%;
+
     .nav-popup__cta_container {
-        text-align: center;
+        // duplicated in nav--columns to align with menu
+        @include rem((
+            padding: 0 $gs-gutter/2
+        ));
+        @include mq(mobileLandscape) {
+            @include rem((
+                padding-left: $gs-gutter,
+                padding-right: $gs-gutter
+            ));
+        }
     }
+
     .nav-popup__cta {
         background-color: #005689;
         @include rem((
@@ -32,9 +43,6 @@
     }
 
     @include mq(mobile) {
-        .nav-popup__cta_container {
-            text-align: right;
-        }
         .nav-popup__cta {
             float: left;
             width: auto;
@@ -66,7 +74,7 @@
 
         @include rem((
             top: 40px,
-            right: $gs-gutter,
+            left: 30px,
             padding-top: $gs-baseline/3,
             width: gs-span(4) + $gs-gutter * 2
         ));
@@ -102,7 +110,7 @@
 
 .nav-popup--profile {
     @include mq(tablet) {
-        right: auto;
+        left: 30px;
         @include rem((
             top: 44px,
             width: gs-span(3)
