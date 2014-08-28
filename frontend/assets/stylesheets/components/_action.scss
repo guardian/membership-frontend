@@ -33,7 +33,7 @@
         float: right;
         @include rem((
             margin: 2px 0 0 30px
-        ));  
+        ));
     }
 }
 
@@ -67,7 +67,7 @@
         padding: 8px 8px 8px 18px,
         min-width: 220px
     ));
-    
+
     &:visited,
     &:active,
     &:focus {
@@ -80,7 +80,7 @@
         float: right;
         @include rem((
             margin-top: 2px
-        ));   
+        ));
     }
 }
 
@@ -99,7 +99,7 @@
             margin-left: $gs-baseline+3
         ));
     }
-    
+
     &:visited,
     &:active,
     &:focus {
@@ -112,7 +112,7 @@
         float: right;
         @include rem((
             margin-top: 2px
-        ));   
+        ));
     }
 }
 
@@ -179,6 +179,10 @@
 
 .action-cta--cancel {
     background-color: $mem-button-cancel;
+}
+
+.action-cta--disabled {
+    cursor: default;
 }
 
 .action-cta--full-width-mobile {
