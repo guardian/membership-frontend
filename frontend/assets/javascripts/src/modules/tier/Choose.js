@@ -14,7 +14,8 @@ define([
 
     Choose.prototype.classes = {
         TICKETS_SELECT_FORM: 'tickets-select-form',
-        BENEFIT_HEADER: 'js-benefit-header'
+        BENEFIT_HEADER: 'js-benefit-header',
+        TOGGLE_ICON: 'js-toggle-icon'
     };
 
     Choose.prototype.init = function () {
@@ -33,7 +34,8 @@ define([
     Choose.prototype.addClickEvent = function ($benefit) {
         bean.on($benefit[0], 'click', function (e) {
             e.preventDefault();
-            $benefit.next().toggleClass('hidden-mobile');
+            $benefit.parent().parent().next().toggleClass('hidden-mobile');
+            $(self.getElem('TOGGLE_ICON'), $benefit).toggleClass('tickets-select-form__toggle-icon--open');
         });
     };
 
