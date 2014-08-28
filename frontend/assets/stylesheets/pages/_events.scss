@@ -484,5 +484,12 @@ div.event {
                 padding: $gs-baseline*2 0 0
             ));
         }
+
+        *:hover, &:hover {
+            background-color: $c-neutral7;
+            .event-item__title {
+                text-decoration: none;
+            }
+        }
     }
 }
