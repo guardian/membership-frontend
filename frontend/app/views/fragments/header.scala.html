@@ -88,7 +88,7 @@
                             </a>
                         </div>
                         <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
-                            @fragments.nav(navMode=None)
+                            @fragments.nav()
                         </ul>
                     </nav>
                 </div>
@@ -97,7 +97,7 @@
         <nav role="navigation" class="nav nav--global nav--global--header">
             <div class="header__primary">
                 <ul class="inline-list">
-                    @fragments.nav(navMode=Some("inline"))
+                    @fragments.nav(inlineMode=true)
                 </ul>
             </div>
         </nav>
