@@ -28,8 +28,8 @@
             <p class="tickets-select-form__leadin">@Benefits.details(tier).leadin</p>
             <ul class="u-unstyled">
                 @for((header, body) <- Benefits.details(tier).list) {
-                <li class="tickets-select-form__header-title">@header</li>
-                <li class="tickets-select-form__header-copy">@body</li>
+                <li class="benefits-title">@header</li>
+                <li class="benefits-copy">@body</li>
                 }
             </ul>
         </div>
