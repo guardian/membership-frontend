@@ -7,11 +7,16 @@
 @import helper._
 @import configuration.Config
 
-@benefit(tier: com.gu.membership.salesforce.Tier.Tier) = {
+@benefit(tier: com.gu.membership.salesforce.Tier.Tier, defaultSelection: com.gu.membership.salesforce.Tier.Tier) = {
     <div class="tickets-select-form__section">
         <div class="tickets-select-form__header u-cf">
             <label class="tickets-select-form__label" for="@tier.toString.toLowerCase">
-                <input class="tickets-select-form__input" type="radio" value="@tier.toString.toLowerCase" id="@tier.toString.toLowerCase" name="tier"/>
+                <input class="tickets-select-form__input"
+                       type="radio"
+                       value="@tier.toString.toLowerCase"
+                       id="@tier.toString.toLowerCase"
+                       name="tier"
+                       @if(tier == defaultSelection){checked="checked"}/>
             </label>
             <div class="tickets-select-form-header__secondary u-cf">
                 <div class="price-info-container">
@@ -54,7 +59,7 @@
 
                 @for(tier <- Tier.values.toSeq.sorted){
                     @if(tier != Tier.None){
-                        @benefit(tier)
+                        @benefit(tier, Tier.Partner)
                     }
                 }
 
