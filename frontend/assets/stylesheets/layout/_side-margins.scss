@@ -16,7 +16,6 @@
         @include rem((
             // magic number: we shift these margins up to skip the header gap
             // and the (fixed) height of the nav bar
-            //margin-top: -$header-margin*2
             top: $side-margins-top-magic-number
         ));
         height: 100%;

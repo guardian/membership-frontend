@@ -1,0 +1,37 @@
+.home-slice {
+    .home-slice__inner {
+        width: 100%;
+        @include mq(mem-full) {
+            width: gs-span(14);
+            margin: 0 auto;
+        }
+
+        .home-slice__headline-block {
+            width: 480px;
+            height: 160px;
+            padding: $gs-gutter $gs-gutter*8 $gs-gutter $gs-gutter;
+            background-color: transparentize($mem-blue, .05);
+            .home-slice__headline {
+                @include fs-headline(6);
+                color: $black;
+            }
+        }
+
+        .home-slice__copy-block {
+            width: 660px;
+            margin-top: 236px; // 560-160-164
+            background-color: $white;
+            padding: $gs-gutter;
+
+            .home-slice__copy {
+                @include fs-headline(4);
+            }
+        }
+    }
+
+
+
+    &.home-slice--epic {
+        padding-top: 164px; // 200 - 36 header margin
+    }
+}
