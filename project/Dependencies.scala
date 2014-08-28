@@ -10,13 +10,13 @@ object Dependencies {
   val akkaAgent = "com.typesafe.akka" %% "akka-agent" % "2.2.0"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
-  val awsScala = "com.github.seratch" %% "awscala" % "0.2.1"
+  val awsSdk="com.amazonaws" % "aws-java-sdk" % "1.8.9.1"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
   val salesforce = "com.gu" %% "membership-salesforce" % "0.14"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
 
   //projects
-  val frontendDependencies = Seq(nScalaTime, akkaAgent, identityCookie, identityModel, awsScala,
+  val frontendDependencies = Seq(nScalaTime, akkaAgent, identityCookie, identityModel, awsSdk,
     scalaUri, salesforce, playWS, playFilters)
 }
