@@ -78,26 +78,51 @@
         @include rotate(180deg);
     }
 
-    .tickets-select-form__header-title {
-        @include fs-bodyHeading(2);
-        @include rem((
-            padding-bottom: $gs-baseline/6
-        ));
-    }
-
-    .tickets-select-form__header-copy {
-        @include fs-bodyCopy(1);
-        @include rem((
-            padding-bottom: $gs-baseline
-        ));
-    }
-
     input:checked + .tickets-select-form__tier-name {
         text-decoration: underline;
     }
 
     &:hover {
         border-color: $c-brandLightBlue;
+    }
+
+    .price-info {
+        @include mq(tablet) {
+            float: right;
+            @include rem((
+                line-height: 64px
+            ));
+        }
+
+        .price-info__container-inner {
+            float: left;
+            border-right: 1px solid $c-neutral4;
+            @include rem((
+                padding: $gs-gutter/6 $gs-gutter $gs-gutter/6 0,
+                margin-bottom: $gs-gutter/2,
+            ));
+        }
+
+        .price-info__container-inner--no-border {
+            border: 0;
+            padding-right: 0;
+        }
+
+        .price-info__container-inner--last {
+            border: 0;
+            @include rem((
+                padding-left: $gs-gutter,
+                padding-right: 0
+            ));
+        }
+
+        .price-info__detail {
+            @include fs-bodyHeading(3);
+        }
+
+        .price-info__sub-detail {
+            @include fs-textsans(1);
+        }
     }
 }
 
@@ -138,44 +163,7 @@
     }
 }
 
-.price-info {
-    @include mq(tablet) {
-        float: right;
-        @include rem((
-            line-height: 64px
-        ));
-    }
 
-    .price-info__container-inner {
-        float: left;
-        border-right: 1px solid $c-neutral4;
-        @include rem((
-            padding: $gs-gutter/6 $gs-gutter $gs-gutter/6 0,
-            margin-bottom: $gs-gutter/2,
-        ));
-    }
-
-    .price-info__container-inner--no-border {
-        border: 0;
-        padding-right: 0;
-    }
-
-    .price-info__container-inner--last {
-        border: 0;
-        @include rem((
-            padding-left: $gs-gutter,
-            padding-right: 0
-        ));
-    }
-
-    .price-info__detail {
-        @include fs-bodyHeading(3);
-    }
-
-    .price-info__sub-detail {
-        @include fs-textsans(1);
-    }
-}
 
 /* funnel ------------------------------------------------------------------------ */
 

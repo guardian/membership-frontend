@@ -113,9 +113,6 @@ body {
 
     @include mq(desktop) {
         @include fs-headline(5);
-        @include rem((
-            width: gs-span(12)
-        ));
     }
 
     .two-thirds {
