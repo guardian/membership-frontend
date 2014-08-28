@@ -38,10 +38,6 @@ body {
 
 .header {
     position: relative;
-    z-index: 999;
-    @include rem((
-        margin: 0 0 $headerMargin 0
-    ));
 }
 
 .page-container {
@@ -61,7 +57,7 @@ body {
     }
 
     @include mq(mem-full) {
-        max-width: gs-span(14)+($gs-gutter*2);
+        max-width: gs-span(14);
     }
 
     h2 {

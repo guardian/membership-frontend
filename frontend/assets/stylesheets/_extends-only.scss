@@ -19,9 +19,9 @@
 %icon-holder-circle {
     display: inline-block;
     overflow: hidden;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ffffff;
+    width: 36px;
+    height: 36px;
+    border: 1px solid $black;
     padding: 0;
     margin: 0;
     @include border-radius(50%);

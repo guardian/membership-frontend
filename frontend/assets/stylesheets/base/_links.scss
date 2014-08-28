@@ -23,4 +23,11 @@ a,
     &:active {
         text-decoration: none;
     }
+
+    // useful for disabling underline on images inside links
+    // but enabling it for text nodes inside those links
+    &:hover .no-underline--override {
+        text-decoration: underline;
+    }
+
 }
