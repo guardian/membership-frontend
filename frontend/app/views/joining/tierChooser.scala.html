@@ -5,12 +5,13 @@
 @import model.Eventbrite.EBEventStatus._
 @import views.support.Dates._
 @import helper._
+@import configuration.Config
 
 @benefit(tier: com.gu.membership.salesforce.Tier.Tier) = {
     <div class="tickets-select-form__section">
         <div class="tickets-select-form__header u-cf">
             <label class="tickets-select-form__label" for="@tier.toString.toLowerCase">
-                <input class="tickets-select-form__input" type="radio" value="friend" id="@tier.toString.toLowerCase" name="tier"/>
+                <input class="tickets-select-form__input" type="radio" value="@tier.toString.toLowerCase" id="@tier.toString.toLowerCase" name="tier"/>
             </label>
             <div class="tickets-select-form-header__secondary u-cf">
                 <div class="price-info-container">
