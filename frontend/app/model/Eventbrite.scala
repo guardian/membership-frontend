@@ -9,6 +9,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
+import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
 
@@ -40,11 +41,7 @@ object Eventbrite {
       clean
     }
 
-    def blurb = {
-      val l = 200
-      if (text.length <= l) text
-      else text.take(text.lastIndexWhere(_.isSpaceChar, l + 1)) + " …"
-    }
+    lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
   case class EBAddress(country_name: Option[String],
