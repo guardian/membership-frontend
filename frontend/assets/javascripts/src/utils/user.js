@@ -73,17 +73,17 @@ define([
                     url: '/user/me',
                     method: 'get',
                     success: function (resp) {
-                        callback(resp);
                         cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
+                        callback(resp);
                     },
                     error: function (err) {
-                        callback(null, err);
                         /* we get a 403 error for guardian users who are not members id added to stop this from
-                           being called on each page. We however do not want to set this cookie if there has been an
-                           error when a user is a member */
+                         being called on each page. We however do not want to set this cookie if there has been an
+                         error when a user is a member */
                         if (!membershipUser) {
                             cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
                         }
+                        callback(null, err);
                     }
                 });
             }
