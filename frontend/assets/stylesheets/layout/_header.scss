@@ -18,8 +18,10 @@ $header-margin: 36px;
             padding-top: 10px,
             padding-bottom: 5px
         ));
-        @include side-margins-calc('padding-left');
-        @include side-margins-calc('padding-right');
+        @include mq($from: desktop) {
+            @include side-margins-calc('padding-left');
+            @include side-margins-calc('padding-right');
+        }
     }
     .header__primary {
         @include rem((

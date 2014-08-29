@@ -34,8 +34,6 @@
         right: 0;
     }
 
-    @include mq(wide) {
-        @include side-margins-position();
-    }
+    @include side-margins-position();
 }
 

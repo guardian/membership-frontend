@@ -40,6 +40,11 @@ body {
     position: relative;
 }
 
+// note: the max-widths set here
+// are duplicated in mixins.scss
+// for the side-margins function
+// please duplicate your changes
+// this alignment is too perfect
 .page-container {
     background-color: #ffffff;
     @include rem((
@@ -60,7 +65,7 @@ body {
     }
 
     @include mq(mem-full) {
-        max-width: gs-span(14);
+        max-width: gs-span(14)+($gs-gutter*2);
     }
 
     h2 {
