@@ -13,7 +13,6 @@ object Benefits {
   val friendBenefits = Benefits("As a friend:", Seq(
     "Book tickets" -> "Book tickets to Guardian Live events",
     "Digital Digest email" -> "Receive weekly updates on the upcoming programme",
-    "Exclusive offers" -> "Discounts and special offers from Guardian Discover",
     "Video highlights" -> "Watch highlights of selected Guardian Live events"
   ), None, "Become a Friend")
 
