@@ -42,7 +42,6 @@ body {
 
 .page-container {
     background-color: #ffffff;
-    border-top: 2px solid $mem-blue;
     @include rem((
         padding: 0 $gs-gutter/2
     ));
