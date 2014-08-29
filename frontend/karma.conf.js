@@ -59,7 +59,9 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'PhantomJS'],
+    // ** switched to Chrome only due to the way phantomJS escapes cookies
+    // https://github.com/ariya/phantomjs/issues/12186 **
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode
