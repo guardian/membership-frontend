@@ -99,18 +99,19 @@ object IdentityApi extends Http {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[Boolean]] = {
     WS.url(s"${Config.idApiUrl}/user/password-exists").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+      Logger.info(s"Identity: GET password exists response code: ${response.status}")
       (response.json \ "passwordExists").asOpt[Boolean]
     }
   }
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+      Logger.info(s"Identity: user GET response code: ${response.status}")
       (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
-
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
   }
 }
