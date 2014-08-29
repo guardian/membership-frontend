@@ -26,7 +26,7 @@ trait IdentityService {
     }
   }
 
-  def updateUserBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
+  def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
 
     val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
       val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
@@ -39,17 +39,22 @@ trait IdentityService {
       "firstName" -> formData.name.first
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-    postRequest(fields, user, identityRequest)
+    postFields(fields, user, identityRequest)
   }
 
-  def updateUserBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
+  def updateUserPassword(password: String, identityRequest: IdentityRequest): Future[WSResponse] = {
+    val json = Json.obj("newPassword" -> password)
+    IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters)
+  }
+
+  def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
 
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
-    postRequest(fields, user, identityRequest)
+    postFields(fields, user, identityRequest)
   }
 
-  private def postRequest(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
+  private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
     val json = Json.obj("privateFields" -> fields)
 
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
