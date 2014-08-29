@@ -87,6 +87,7 @@
     }
 
     .price-info {
+
         @include mq(tablet) {
             float: right;
             @include rem((
