@@ -92,7 +92,8 @@ $fs-bodyCopy: (
         14 20, // 1
         14 22, // 2
         16 24, // 3
-        18 28  // 4
+        18 28, // 4
+        28 34  // 5 - blockquotes
 );
 
 $fs-data: (
@@ -217,6 +218,7 @@ $mem-trans-red: rgba(180, 24, 0, .95);
 $mem-trans-green: rgba(170, 216, 1, .95);
 $mem-black: #333333;
 $mem-blue: #4bc6df;
+$mem-green: #aad802;
 $mem-buttonBlue: #197caa;
 
 $mem-button-confirm: #1a4683;
