@@ -43,18 +43,18 @@ class MembershipEventTests extends BaseMembershipTest {
 //     As a user
 //     I want to see the details of an event
 //     */
-    scenarioWeb("3. Logged in user sees details for an event") {
-      implicit driver =>
-      given {
-        MembershipSteps().IAmLoggedIn
-      }
-      .when {
-        _.IClickOnAnEvent
-      }
-      .then {
-        _.ISeeTheEventDetails
-      }
-    }
+//    scenarioWeb("3. Logged in user sees details for an event") {
+//      implicit driver =>
+//      given {
+//        MembershipSteps().IAmLoggedIn
+//      }
+//      .when {
+//        _.IClickOnAnEvent
+//      }
+//      .then {
+//        _.ISeeTheEventDetails
+//      }
+//    }
 //
 //    scenarioWeb("4. Non logged in user sees details for an event") {
 //      implicit driver =>
@@ -68,19 +68,19 @@ class MembershipEventTests extends BaseMembershipTest {
 //        _.ISeeTheEventDetails
 //      }
 //    }
-//
-//    scenarioWeb("5. Event details are the same as on the event provider") {
-//      implicit driver =>
-//      given {
-//        MembershipSteps().IAmLoggedInAsAFriend
-//      }
-//      .when {
-//        _.IClickOnAnEvent
-//      }
-//      .then {
-//        _.TheDetailsAreTheSameAsOnTheEventProvider
-//      }
-//    }
+
+    scenarioWeb("5. Event details are the same as on the event provider") {
+      implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAFriend
+      }
+      .when {
+        _.IClickOnAnEvent
+      }
+      .then {
+        _.TheDetailsAreTheSameAsOnTheEventProvider
+      }
+    }
 //  }
 //
 //  feature("Require login for purchase") {
