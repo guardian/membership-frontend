@@ -11,8 +11,7 @@ import play.api.libs.json.Json
 import services.MemberService
 import model.Stripe
 import model.StripeSerializer._
-import actions.{Cors, PaidMemberAction, AuthenticatedAction, AuthRequest}
-import configuration.Config
+import actions.{PaidMemberAction, AuthenticatedAction, AuthRequest}
 import forms.MemberForm._
 
 trait Subscription extends Controller {
@@ -30,7 +29,7 @@ trait Subscription extends Controller {
     }
   }
 
-  def updateCard() = Cors(PaidMemberAction).async { implicit request =>
+  def updateCard() = Cors.andThen(PaidMemberAction).async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
@@ -41,7 +40,7 @@ trait Subscription extends Controller {
       }
   }
 
-  def updateCardPreflight() = Cors(CachedAction) { Ok.withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "Csrf-Token") }
+  def updateCardPreflight() = Cors.andThen(CachedAction) { Ok.withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "Csrf-Token") }
 
   private val updateForm = Form { single("stripeToken" -> nonEmptyText) }
 }

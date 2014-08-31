@@ -11,18 +11,18 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember}
 
-import actions.{Cors, AjaxMemberAction, MemberRequest}
+import actions.{AjaxMemberAction, MemberRequest}
 import services.{StripeService, SubscriptionService}
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
-  def me = Cors(AjaxMemberAction) { implicit request =>
+  def me = Cors.andThen(AjaxMemberAction) { implicit request =>
     Ok(basicDetails(request))
   }
 
-  def meDetails = Cors(AjaxMemberAction).async { implicit request =>
+  def meDetails = Cors.andThen(AjaxMemberAction).async { implicit request =>
     val futurePaymentDetails = request.member match {
       case paidMember: PaidMember =>
         for {
