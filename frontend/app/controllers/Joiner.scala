@@ -47,7 +47,7 @@ trait Joiner extends Controller {
       passwordExists = userOpt.flatMap(_.passwordExists).getOrElse(false)
     } yield {
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices))
+        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
         case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
       }
 

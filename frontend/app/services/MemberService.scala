@@ -38,6 +38,7 @@ trait MemberService {
 
 
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
+    formData.password.map(updateUserPassword(user, _ , identityRequest))
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
@@ -49,10 +50,7 @@ trait MemberService {
   }
 
   def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
-    formData.password.map { password =>
-      for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
-      yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
-    }
+    formData.password.map(updateUserPassword(user, _ , identityRequest))
 
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
@@ -69,6 +67,11 @@ trait MemberService {
       Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
       memberId.account
     }
+  }
+
+  private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
+  for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
+    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
@@ -112,6 +115,7 @@ trait MemberService {
 
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+    //todo add upgrade flow for password
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
