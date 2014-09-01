@@ -75,5 +75,8 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     successFlashMessage.isDisplayed
   }
 
-  def isMembershipCancelled = cancelledMembershipH2.isDisplayed
+  def isMembershipCancelled = {
+    new WebDriverWait(driver, 35).until(ExpectedConditions.visibilityOf(cancelledMembershipH2))
+    cancelledMembershipH2.isDisplayed
+  }
 }

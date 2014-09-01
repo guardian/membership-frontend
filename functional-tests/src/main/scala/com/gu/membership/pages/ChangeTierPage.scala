@@ -13,7 +13,7 @@ class ChangeTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def becomeAPatronButton = driver.findElement(By.xpath("//main/div[2]/div[1]/section/div[3]/div/div/a"))
 
-  private def cancelLink = driver.findElement(By.xpath("//div[1]/main/div[2]/div[2]/ul/li[5]/a"))
+  private def cancelLink = driver.findElement(By.id("qa-cancel-membership"))
 
   def clickBecomeAPartner = {
     becomeAPartnerButton.click()

@@ -11,7 +11,7 @@ abstract class BaseMembershipTest extends WebDriverFeatureSpec with TestRetries 
     override def startDriver(testName: String, targetBrowser: Browser, extraCapabilities: Map[String, String] = Map()) = {
       val capabilities = extraCapabilities + ("browserstack.local" -> "true");
       val driver = super.startDriver(testName, Browser("chrome", None), capabilities)
-      driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
+      driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS)
       driver
     }
 }
