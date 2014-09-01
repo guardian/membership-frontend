@@ -18,7 +18,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
         userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
         @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
-        @if(passwordExists != true) {
+        @if(!passwordExists) {
             @fragments.form.passwordDetail()
         }
 

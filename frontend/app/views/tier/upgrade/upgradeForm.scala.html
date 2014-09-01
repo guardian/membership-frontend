@@ -17,7 +17,7 @@
         userFields.billingAddress4, userFields.billingCountry)
         @fragments.form.paymentOptions(targetTier)
 
-        @if(passwordExists != true) {
+        @if(!passwordExists) {
             @fragments.form.passwordDetail()
         }
 
