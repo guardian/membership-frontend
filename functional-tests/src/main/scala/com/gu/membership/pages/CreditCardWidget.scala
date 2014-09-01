@@ -102,6 +102,10 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
     errorMessage.getText
   }
 
+  def isErrorMessageDisplayed = {
+    !getErrorMessage.isEmpty
+  }
+
   def clickUpdateCardDetails = {
     updateCCButton.click()
     this

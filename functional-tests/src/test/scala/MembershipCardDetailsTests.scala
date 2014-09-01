@@ -9,7 +9,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
 
   feature("Manage card payment details") {
 
-    scenarioWeb("User can update card details") { implicit driver =>
+    scenarioWeb("39. User can update card details") { implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
       }
@@ -21,7 +21,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("User can't add an incorrect card") { implicit driver =>
+    scenarioWeb("40. User can't add an incorrect card") { implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
       }
@@ -33,7 +33,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("User can't add a card with incorrect CVC") { implicit driver =>
+    scenarioWeb("41. User can't add a card with incorrect CVC") { implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
       }
@@ -46,7 +46,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("User can't add a card with invalid expiry date") {
+    scenarioWeb("42. User can't add a card with invalid expiry date") {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner

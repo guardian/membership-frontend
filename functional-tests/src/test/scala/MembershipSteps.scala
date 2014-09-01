@@ -185,9 +185,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ErrorMessageIsDisplayedWhenIEnterAnInvalidCard = {
     val errorMessage = new PaymentPage(driver).cardWidget
-      .enterCardNumber("1234 5678 9098 7654").enterCardSecurityCode(" ").getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the card number that you have entered is incorrect. Please check and retype.",
-      "Invalid card message should be shown")
+      .enterCardNumber("1234 5678 9098 7654").enterCardSecurityCode(" ").isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "Invalid card message should be shown")
     this
   }
 
@@ -203,18 +202,16 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ISeeAnErrorWhenMyCVCIsInvalid = {
     val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
-      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the security code that you have entered is incorrect. Please check and retype.",
-      "We should display a valid CVC error message")
+      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "We should display a valid CVC error message")
     this
   }
 
   def ISeeAnErrorMessageWhenMyExpiryDateIsInThePast = {
     val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
       .enterCardSecurityCode("666").enterCardExpirationMonth("1")
-      .enterCardExpirationYear("2014").focusOnCvc.getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the expiry date that you have entered is invalid. Please check and re-enter."
-      , "We should display an error message when the card is expired")
+      .enterCardExpirationYear("2014").focusOnCvc.isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "We should display an error message when the card is expired")
     this
   }
 

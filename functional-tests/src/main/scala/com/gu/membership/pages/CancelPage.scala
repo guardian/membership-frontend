@@ -7,7 +7,7 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class CancelPage(driver: WebDriver) extends BasePage(driver) {
 
-  private def confirmCancelLink = driver.findElement(By.cssSelector(".action-cta"))
+  private def confirmCancelLink = driver.findElement(By.id("qa-confirm-cancel"))
 
   def clickConfirmCancellation = {
     confirmCancelLink.click()

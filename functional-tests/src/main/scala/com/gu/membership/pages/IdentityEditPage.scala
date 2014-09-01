@@ -27,7 +27,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def changeTierButton = driver.findElement(By.xpath("id('tabs-account-profile-3')/div/ul[1]/li[1]/div[2]/div/a"))
 
-  private def cancelledMembershipH2 = driver.findElement(By.cssSelector("subscription-change__title"))
+  private def cancelledMembershipH2 = driver.findElement(By.cssSelector(".subscription-change__title"))
 
   val cardWidget = new CreditCardWidget(driver)
 
