@@ -94,7 +94,7 @@ define([
          * End-to-end so includes testing of atob.js
          ********************************************************/
 
-        xit('should read an Identity GU_U cookie correctly', function(){
+        it('should read an Identity GU_U cookie correctly', function(){
 
             var user = userUtil.getUserFromCookie();
 
