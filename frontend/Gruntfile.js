@@ -192,8 +192,6 @@ module.exports = function (grunt) {
             unit: {
                 configFile: 'karma.conf.js',
                 browsers: ['PhantomJS']
-                // switched to Chrome only due to the way phantomJS escapes cookies
-                // https://github.com/ariya/phantomjs/issues/12186
             }
         },
 
