@@ -13,19 +13,6 @@
                 <div class="package__price">
                     @fragments.benefits.priceInfo(Benefits.details(tier))
                 </div>
-                <div class="u-cf">
-                @if(!isCurrentPackage) {
-                    @if(currentTier == Tier.Friend || tier == Tier.Friend) {
-                        <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm">
-                            @Benefits.details(tier).cta
-                        </a>
-                    } else {
-                        <span class="action action-cta--cancel">
-                            Coming soon
-                        </span>
-                    }
-                }
-                </div>
                 <p class="package__leadin">@Benefits.details(tier).leadin</p>
                 <ul class="package__list-element">
                     @for((header, body) <- Benefits.details(tier).list) {
@@ -33,6 +20,19 @@
                     <li class="benefits-copy">@body</li>
                     }
                 </ul>
+                <div class="u-cf">
+                @if(!isCurrentPackage) {
+                    @if(currentTier == Tier.Friend || tier == Tier.Friend) {
+                        <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm">
+                            @Benefits.details(tier).cta
+                        </a>
+                    } else {
+                        <span class="action action-cta--cancel action-cta--disabled">
+                            Coming soon
+                        </span>
+                    }
+                }
+                </div>
         </div>
     </div>
 }
