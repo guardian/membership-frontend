@@ -28,6 +28,14 @@
         background-image: url(/assets/images/mem-bg-events.jpg);
     }
 
+    &.home-slice--slice-two:after {
+        background-image: url(/assets/images/homepage/new/morn_conf_w_russ_brand.jpg);
+    }
+
+    &.home-slice--slice-four:after {
+        background-image: url(/assets/images/homepage/new/guardian_space002.png);
+    }
+
     .home-slice__inner {
         position: relative;
         width: 100%;
@@ -54,7 +62,7 @@
             padding: $gs-gutter;
 
             .home-slice__copy {
-                @include fs-headline(4);
+                @include fs-headline(9);
                 font-weight: 100;
             }
         }
@@ -97,6 +105,7 @@
                 float: left;
                 width: 700px;
                 height: 420px;
+                overflow: hidden;
             }
             .home-slice__offset-copy {
                 display: block;
@@ -159,10 +168,12 @@
         }
 
         .join-today__join-box {
+            position: relative;
             background-color: $c-neutral9;
             border: 1px solid $c-neutral5;
             @include rem((
-                margin-bottom: $gs-gutter
+                margin-bottom: $gs-gutter,
+                padding: 68px $gs-gutter/2 $gs-gutter/2
             ));
 
             @include mq(tablet) {
@@ -175,21 +186,25 @@
             @include mq(desktop) {
                 @include rem((
                     width: gs-span(4),
-                    margin-right: $gs-gutter
+                    margin-right: $gs-gutter,
+                    padding: 68px $gs-gutter $gs-gutter
                 ));
+            }
 
-                &:last-child {
-                    margin-right: 0;
-                }
+            &:last-child {
+                margin-right: 0;
             }
         }
 
         .join-today__join-box--header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             @include fs-headline(3);
             @include rem((
                 padding: $gs-gutter $gs-gutter $gs-gutter 65px
             ));
-            position: relative;
 
             &:before {
                 @extend %icon-sprite;
@@ -231,18 +246,18 @@
             }
             @include rem((
                 height: 45px,
-                margin-top: $gs-gutter
+                margin-top: $gs-gutter,
+                padding: $gs-baseline/2 0
             ));
 
-            .join-today__price--bold {
-                @include rem((
-                    width: gs-span(2),
-                    padding-left: $gs-gutter
-                ));
+            .join-today__sep {
+                @include flex($flex-grow: 0, $flex-shrink: 0, $flex-basis: 1px);
+                background-color: $c-neutral5;
+                height: 100%;
+            }
 
-                &:last-child {
-                    text-align: right;
-                }
+            .join-today__price--bold:last-child {
+                text-align: right;
             }
 
             .join-today__price--bold-free {
@@ -261,28 +276,19 @@
 
         .join-today__teaser--description {
             @include rem((
-                margin: $gs-gutter,
                 padding-top: $gs-gutter,
-                min-height: 120px
+                margin-bottom: $gs-gutter,
+                min-height: 140px
             ));
             @include fs-bodyCopy(2);
-            border-top: 1px solid $c-neutral5;
 
             @include mq(desktop) {
                 @include fs-bodyCopy(3);
             }
         }
-    }
 
-    .action--join {
-        @include rem((
-            margin-left: $gs-gutter/2
-        ));
-
-        @include mq(desktop) {
-            @include rem((
-                margin-left: $gs-gutter
-            ));
+        .action {
+            margin: 0;
         }
     }
 
@@ -291,12 +297,16 @@
 
     @include mq(tablet) {
         .home-slice__inner {
-            width: gs-span(12)+$gs-gutter*2;
+            width: 100%;
             margin: 0 auto;
         }
     }
 
     @include mq(desktop) {
+        .home-slice__inner {
+            width: gs-span(12)+$gs-gutter*2;
+        }
+
         .home-slice__inner .home-slice__headline-block {
             width: 320px;
         }
