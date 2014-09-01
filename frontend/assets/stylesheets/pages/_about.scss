@@ -1,0 +1,36 @@
+/* ==========================================================================
+   About Membership page
+   ========================================================================== */
+
+.benefits-container {
+    background-color: $c-neutral6;
+
+    @include mq(desktop) {
+        @include rem((
+            width: gs-span(12)
+        ));
+    }
+
+    &:after {
+        clear: both;
+        content: '';
+        display: block;
+    }
+
+    .benefits__list-items {
+        float: left;
+        border-right: 1px solid $c-neutral3; 
+        @include rem((
+            width: gs-span(3),
+            padding: $gs-gutter/2,
+            min-height: $gs-gutter*7,
+            margin-bottom: 50px
+        ));
+
+        &:nth-child(4),
+        &:nth-child(8) {
+            border-right: 0;
+        }
+    }
+}
+
