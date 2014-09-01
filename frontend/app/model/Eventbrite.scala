@@ -108,6 +108,8 @@ object Eventbrite {
 
     lazy val country = venue.address.flatMap(_.country).getOrElse("")
 
+    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
+
     import EBEventStatus._
 
     def getStatus: EBEventStatus = {
