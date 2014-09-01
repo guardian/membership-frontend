@@ -18,11 +18,15 @@ trait CommonActions {
 
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
+  val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
+
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
   val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => Forbidden)
+
+  val AjaxAuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter(onPaidMember = _ => Forbidden)
 
   val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => Forbidden)
 
