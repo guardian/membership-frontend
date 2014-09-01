@@ -6,9 +6,11 @@ define(function () {
      */
     var doc = document;
 
-    function setCookie(name, value, days) {
+    function setCookie(name, value, days, isUnSecure) {
         var date;
         var expires;
+        // used for testing purposes, cookies are secure by default
+        var secureCookieString = isUnSecure ? '' : '; secure';
 
         if (days) {
             date = new Date();
@@ -18,7 +20,11 @@ define(function () {
             expires = '';
         }
 
-        doc.cookie = [name, '=', JSON.stringify(value), expires, '; path=/', '; secure' ].join('');
+        if (typeof value === 'object') {
+            value = JSON.stringify(value);
+        }
+
+        doc.cookie = [name, '=', value, expires, '; path=/', secureCookieString ].join('');
     }
 
     function getCookie(name) {
@@ -32,13 +38,14 @@ define(function () {
                 c = c.substring(1, c.length);
             }
             if (c.indexOf(nameEQ) === 0) {
-                var value;
+
+                var returnValue;
 
                 try {
-                    value = JSON.parse(c.substring(nameEQ.length, c.length));
+                    returnValue = JSON.parse(returnValue = c.substring(nameEQ.length, c.length));
                 } catch(e){}
 
-                return value;
+                return returnValue;
             }
         }
         return null;
