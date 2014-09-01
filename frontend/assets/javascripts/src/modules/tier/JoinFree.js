@@ -2,8 +2,9 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'src/utils/form/Form'
-], function ($, bean, component, Form) {
+    'src/utils/form/Form',
+    'src/utils/form/Password'
+], function ($, bean, component, Form, Password) {
     'use strict';
 
     var self;
@@ -27,6 +28,7 @@ define([
 
     JoinFree.prototype.init = function () {
         this.setupForm();
+        this.setupPasswordStrength();
     };
 
 
@@ -34,6 +36,10 @@ define([
         var formElement = this.elem = this.getElem('ADDRESS_FORM');
         this.form = new Form(formElement);
         this.form.init();
+    };
+
+    JoinFree.prototype.setupPasswordStrength = function () {
+        (new Password()).init();
     };
 
     return JoinFree;
