@@ -59,7 +59,7 @@ object Eventbrite {
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
-    def priceFormat(priceInPence: Double) = f"£${priceInPence/100}%2.0f"
+    def priceFormat(priceInPence: Double) = "£" + f"${priceInPence/100}%2.0f".trim
 
     lazy val formattedPrice = priceFormat(value)
 
