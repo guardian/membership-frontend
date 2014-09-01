@@ -253,6 +253,12 @@ div.event {
             ));
         }
 
+        .events-list__item {
+            @include rem((
+                margin-bottom: $gs-baseline
+            ));
+        }
+
         @include mq(tablet) {
 
             @include guss-row('.events-list');
@@ -340,7 +346,7 @@ div.event {
 
     .event-item__meta {
         @include rem((
-            padding: $gs-baseline $gs-gutter/2
+            padding: $gs-gutter/2
         ));
 
         .event-item__title {
@@ -385,12 +391,19 @@ div.event {
             .event-item__action {
                 position: absolute;
                 @include rem((
-                    bottom: $gs-gutter,
-                    right: $gs-gutter,
+                    bottom: $gs-gutter/2,
+                    right: $gs-gutter/2,
                     width: 36px,
                     height: 36px,
                     padding: 0 8px 0 0
                 ));
+
+                @include mq(desktop) {
+                    @include rem((
+                        bottom: $gs-gutter,
+                        right: $gs-gutter,
+                    ));
+                }
                 background-color: $mem-live-accent;
                 @include border-radius(50px);
                 border: 0;
@@ -423,19 +436,25 @@ div.event {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    padding: 0 $gs-gutter $gs-gutter
+                    padding: 0 $gs-gutter/2 $gs-gutter/2
                 ));
             }
         }
 
         @include mq(desktop) {
             @include rem((
-                padding: $gs-baseline $gs-gutter
+                padding: $gs-gutter
             ));
             .event-item__description {
                 @include fs-headline(1);
                 @include rem((
                     padding: $gs-baseline*2 0 0
+                ));
+            }
+
+            .event-item__cta {
+                @include rem((
+                    padding: 0 $gs-gutter $gs-gutter
                 ));
             }
         }
@@ -468,6 +487,10 @@ div.event {
                 position: relative;
                 @include flex();
             }
+
+            .event-item__description {
+                display: none;
+            }
         }
 
         @include mq(desktop) {
@@ -477,6 +500,10 @@ div.event {
 
             .event-item__time {
                 @include fs-headline(1);
+            }
+
+            .event-item__description {
+                display: block;
             }
         }
 
