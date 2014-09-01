@@ -91,6 +91,8 @@ object EventbriteService extends EventbriteService {
   val apiUrl = Config.eventbriteApiUrl
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
+  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
+  val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   def events: Seq[EBEvent] = allEvents.get()
 
@@ -115,7 +117,7 @@ object EventbriteService extends EventbriteService {
       }
     }
     Logger.info("Starting EventbriteService background tasks")
-    scheduleAgentRefresh(allEvents, getAllEvents, 59.seconds)
-    scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, 29.seconds)
+    scheduleAgentRefresh(allEvents, getAllEvents, refreshTimeAllEvents)
+    scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, refreshTimePriorityEvents)
   }
 }
