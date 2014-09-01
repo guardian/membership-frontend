@@ -21,7 +21,6 @@ trait IdentityService {
       userDetails <- IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       passwordExists <- IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
     } yield {
-      Logger.info(s"Password exists value: ${passwordExists} for ${user.id}")
       userDetails.map(_.copy(passwordExists = passwordExists))
     }
   }
