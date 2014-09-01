@@ -4,7 +4,7 @@ import org.openqa.selenium.{By, WebDriver}
 
 class EventBritePage(driver: WebDriver) extends BasePage(driver) {
 
-  private def eventNameSpan = driver.findElement(By.cssSelector(".ticket_type_name"))
+  private def eventNameSpan = driver.findElement(By.cssSelector(".summary"))
 
   private def descriptionSpan = driver.findElement(By.cssSelector(".description"))
 
