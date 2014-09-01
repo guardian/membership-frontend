@@ -4,8 +4,9 @@ define([
     'stripe',
     'src/modules/tier/JoinPaid',
     'src/utils/form/Form',
-    'config/stripeErrorMessages'
-], function ($, ajax, stripe, JoinPaid, Form, stripeErrorMessages) {
+    'config/stripeErrorMessages',
+    'src/utils/helper'
+], function ($, ajax, stripe, JoinPaid, Form, stripeErrorMessages, helper) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -17,6 +18,7 @@ define([
             EMPTY_STRING = '',
             SUCCESS_POST_URL = '/success/post/url',
             SUCCESS_REDIRECT_URL = '/success/redirect/url',
+            YOUR_FORM_HAS_ERRORS = 'Your form has errors',
             joinPaidForm,
             paymentFormFixtureElement,
             canonicalPaymentFormFixtureElement,
@@ -33,7 +35,21 @@ define([
             postcodeElement,
             firstNameElement,
             lastNameElement,
-            differentBillingAddress;
+            differentBillingAddress,
+            $creditCardNumberInputElementParent,
+            $creditCardVerificationCodeInputElementParent,
+            $expiryMonthElementParent,
+            $firstNameElementParent,
+            $addressLineOneElementParent,
+            $townElementParent,
+            $postcodeElementParent,
+            billingAddressFieldSetElement,
+            billingAddressLineOneElement,
+            billingTownElement,
+            billingPostcodeElement,
+            $billingAddressLineOneElementParent,
+            $billingTownElementParent,
+            $billingPostcodeElementParent;
 
         // PhantomJS doesn't support bind yet
         Function.prototype.bind = Function.prototype.bind || function (context) {
@@ -111,10 +127,12 @@ define([
         });
 
         it('should detect an invalid credit card number', function (done) {
+            var $elementParent = helper.getSpecifiedParent($(creditCardNumberInputElement), 'form-field');
             creditCardNumberInputElement.value = INVALID_CREDIT_CARD_NUMBER;
             triggerEvent(creditCardNumberInputElement, 'blur');
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_number);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_number);
 
             done();
         });
@@ -125,17 +143,17 @@ define([
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
-            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
 
             done();
         });
 
         it('should detect an invalid Card Verification Code number', function (done) {
+            var $elementParent = helper.getSpecifiedParent($(creditCardVerificationCodeInputElement), 'form-field');
             creditCardVerificationCodeInputElement.value = EMPTY_STRING;
             triggerEvent(creditCardVerificationCodeInputElement, 'blur');
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_cvc);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_cvc);
 
             done();
         });
@@ -146,7 +164,6 @@ define([
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
-            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
 
             done();
         });
@@ -158,36 +175,36 @@ define([
 
             expect(errorMessageDisplayElement.innerHTML).toEqual(EMPTY_STRING);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeTruthy();
-            expect(submitButtonElement.hasAttribute('disabled')).toBeFalsy();
 
             done();
         });
 
         it('error when month does have an entry and year does not', function (done) {
+            var $elementParent = helper.getSpecifiedParent($(expiryMonthElement), 'form-field');
             expiryMonthElement.value = 2;
             expiryYearElement.selectedIndex = 0;
             triggerEvent(expiryYearElement, 'change');
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
 
             done();
         });
 
         it('error when month is in the past', function (done) {
 
-            var currentMonth = now.getMonth() + 1,
-                currentYear = now.getFullYear();
+            var $elementParent = helper.getSpecifiedParent($(expiryMonthElement), 'form-field');
+            var currentMonth = now.getMonth() + 1;
+            var currentYear = now.getFullYear();
 
             expiryMonthElement.value = currentMonth - 1;
             expiryYearElement.value = currentYear;
 
             triggerEvent(expiryYearElement, 'change');
-
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
 
             done();
         });
@@ -235,21 +252,66 @@ define([
             done();
         });
 
+        function getFormInputParents() {
+            $creditCardNumberInputElementParent = helper.getSpecifiedParent($(creditCardNumberInputElement), 'form-field');
+            $creditCardVerificationCodeInputElementParent = helper.getSpecifiedParent($(creditCardVerificationCodeInputElement), 'form-field');
+            $expiryMonthElementParent = helper.getSpecifiedParent($(expiryMonthElement), 'form-field');
+            $firstNameElementParent = helper.getSpecifiedParent($(firstNameElement), 'form-field');
+            $addressLineOneElementParent = helper.getSpecifiedParent($(addressLineOneElement), 'form-field');
+            $townElementParent = helper.getSpecifiedParent($(townElement), 'form-field');
+            $postcodeElementParent = helper.getSpecifiedParent($(postcodeElement), 'form-field');
+        }
+
+        function getBillingAddressInputsAndParents() {
+            billingAddressFieldSetElement = $('.js-billingAddress-fieldset', paymentFormFixtureElement)[0];
+            billingAddressLineOneElement = $('.js-address-line-one', billingAddressFieldSetElement)[0];
+            billingTownElement = $('.js-town', billingAddressFieldSetElement)[0];
+            billingPostcodeElement = $('.js-post-code', billingAddressFieldSetElement)[0];
+            $billingAddressLineOneElementParent = helper.getSpecifiedParent($(billingAddressLineOneElement), 'form-field');
+            $billingTownElementParent = helper.getSpecifiedParent($(billingTownElement), 'form-field');
+            $billingPostcodeElementParent = helper.getSpecifiedParent($(billingPostcodeElement), 'form-field');
+        }
+
+        function formErrorAssertions(){
+            expect($creditCardNumberInputElementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_number);
+            expect($creditCardVerificationCodeInputElementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_cvc);
+            expect($expiryMonthElementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
+            expect($firstNameElementParent[0].lastElementChild.textContent).toEqual(firstNameElement.getAttribute('data-error-message'));
+            expect($addressLineOneElementParent[0].lastElementChild.textContent).toEqual(addressLineOneElement.getAttribute('data-error-message'));
+            expect($townElementParent[0].lastElementChild.textContent).toEqual(townElement.getAttribute('data-error-message'));
+            expect($postcodeElementParent[0].lastElementChild.textContent).toEqual(postcodeElement.getAttribute('data-error-message'));
+        }
+
+        function billingAddressAssertions() {
+            expect($billingAddressLineOneElementParent[0].lastElementChild.textContent).toEqual(billingAddressLineOneElement.getAttribute('data-error-message'));
+            expect($billingTownElementParent[0].lastElementChild.textContent).toEqual(billingTownElement.getAttribute('data-error-message'));
+            expect($billingPostcodeElementParent[0].lastElementChild.textContent).toEqual(billingPostcodeElement.getAttribute('data-error-message'));
+        }
+
         it('should prevent submission of an empty form', function (done) {
+            getFormInputParents();
+
             triggerEvent(paymentFormFixtureElement, 'submit');
 
-            expect(errorMessageDisplayElement.children.length).toBe(8);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+            formErrorAssertions();
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(joinPaidForm.form.errorMessages.length).toBe(8);
 
             done();
         });
 
         it('should prevent submission of an empty form with billing address', function (done) {
+            getFormInputParents();
+
             triggerEvent(differentBillingAddress, 'click');
             triggerEvent(paymentFormFixtureElement, 'submit');
 
-            expect(errorMessageDisplayElement.children.length).toBe(11);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+            getBillingAddressInputsAndParents();
+            formErrorAssertions();
+            billingAddressAssertions();
+
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(joinPaidForm.form.errorMessages.length).toBe(11);
 
             done();
         });
@@ -260,15 +322,19 @@ define([
             triggerEvent(differentBillingAddress, 'click');
             triggerEvent(paymentFormFixtureElement, 'submit');
 
-            expect(errorMessageDisplayElement.children.length).toBe(11);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+            getBillingAddressInputsAndParents();
+            formErrorAssertions();
+            billingAddressAssertions();
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(joinPaidForm.form.errorMessages.length).toBe(11);
 
             //close billing address
             triggerEvent(differentBillingAddress, 'click');
             triggerEvent(paymentFormFixtureElement, 'submit');
 
-            expect(errorMessageDisplayElement.children.length).toBe(8);
-            expect(submitButtonElement.hasAttribute('disabled')).toBeTruthy();
+            expect(joinPaidForm.form.errorMessages.length).toBe(8);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            formErrorAssertions();
 
             done();
         });
