@@ -23,11 +23,6 @@ nav ol {
 %u-unstyled {
     margin: 0;
     list-style: none;
-    &.events-list {
-        &:first-child {
-            margin-top: -10px;
-        }
-    }
 }
 
 // List of inline items

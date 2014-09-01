@@ -226,6 +226,16 @@ div.event {
     ));
 }
 
+.events-list {
+    &.u-unstyled {
+        &:first-child {
+            @include rem((
+                margin-top: -10px
+            ));
+        }
+    }
+}
+
 .event-blocks {
     .event-block {
         position: relative;
