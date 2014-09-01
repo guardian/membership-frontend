@@ -124,14 +124,31 @@
 
 .i-wait {
     display: none;
-    img {
-        margin-top: 9px;
-    }
 }
 
-.actions.js-waiting .i-wait {
-    display: inline-block;
-    vertical-align: top;
+.actions.js-waiting {
+
+    .i-wait {
+        display: inline-block;
+        vertical-align: middle;
+
+        .i-wait__throbber {
+            vertical-align: middle;
+            @include rem((
+                width: 21px,
+                height: 21px
+            ));
+        }
+
+        .i-wait__message {
+            vertical-align: middle;
+            @include fs-bodyCopy(1);
+            color: $c-neutral2;
+            @include rem((
+                margin-left: 2px
+            ));
+        }
+    }
 }
 
 .action--ticket-button {

@@ -56,6 +56,7 @@ define([
             } else {
                 // closed
                 $('.form-field', $billingDetails).removeClass('form-field--error');
+                $('.form-field__error-message', $billingDetails).remove();
 
                 $billingCTA.text('Different billing address?');
                 self.removeValidatorFromValidationProfile();
