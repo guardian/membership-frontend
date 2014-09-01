@@ -1,7 +1,11 @@
 package actions
 
+import actions.Fallbacks._
+import com.gu.membership.salesforce.PaidMember
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
+import services.AuthenticationService
 
 import scala.concurrent.Future
 
@@ -16,5 +20,26 @@ object Functions {
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
+
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] =
+    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor(_), onUnauthenticated)
+
+
+  def memberRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =
+    new ActionRefiner[AuthRequest, AnyMemberTierRequest] {
+      override def refine[A](request: AuthRequest[A]) = request.forMemberOpt {
+        _.map(member => MemberRequest(member, request)).toRight(onNonMember(request))
+      }
+    }
+
+  def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
+    new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
+      override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {
+        request.member match {
+          case paidMember: PaidMember => Right(MemberRequest(paidMember, request.request))
+          case _ => Left(onFreeMember(request))
+        }
+      }
+    }
 
 }

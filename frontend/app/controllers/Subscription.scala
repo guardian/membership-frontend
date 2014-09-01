@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 import services.MemberService
 import model.Stripe
 import model.StripeSerializer._
-import actions.{PaidMemberAction, AuthenticatedAction, AuthRequest}
+import actions.AuthRequest
 import forms.MemberForm._
 
 trait Subscription extends Controller {
@@ -29,7 +29,7 @@ trait Subscription extends Controller {
     }
   }
 
-  def updateCard() = Cors.andThen(PaidMemberAction).async { implicit request =>
+  def updateCard() = AjaxPaidMemberAction.async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
