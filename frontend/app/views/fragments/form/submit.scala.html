@@ -6,7 +6,10 @@
     <div class="fieldset__fields">
         <div class="actions js-waiting-container">
             <button type="submit" class="submit-input action action--logged-in js-submit-input">@ctaText</button>
-            <div class="i-wait"><img src="@Asset.at("images/wait.gif")" alt=""/></div>
+            <div class="i-wait">
+                <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
+                <span class="i-wait__message js-waiting-message"></span>
+            </div>
         </div>
     </div>
 </fieldset>
