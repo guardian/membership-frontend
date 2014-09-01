@@ -27,6 +27,8 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def changeTierButton = driver.findElement(By.xpath("id('tabs-account-profile-3')/div/ul[1]/li[1]/div[2]/div/a"))
 
+  private def cancelledMembershipH2 = driver.findElement(By.cssSelector("subscription-change__title"))
+
   val cardWidget = new CreditCardWidget(driver)
 
   def clickChangeButton = {
@@ -53,6 +55,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickChangeTier = {
+    new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeTierButton))
     changeTierButton.click
     new ChangeTierPage(driver)
   }
@@ -71,4 +74,6 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(successFlashMessage))
     successFlashMessage.isDisplayed
   }
+
+  def isMembershipCancelled = cancelledMembershipH2.isDisplayed
 }

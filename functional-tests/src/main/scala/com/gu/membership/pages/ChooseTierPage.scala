@@ -13,7 +13,7 @@ class ChooseTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def patronInput = driver.findElement(By.id("patron"))
 
-  private def chooseButton = driver.findElement(By.cssSelector(".submit-input.action--logged-in"))
+  private def chooseButton = driver.findElement(By.cssSelector(".action"))
 
   def clickFriend = {
     friendInput.click()

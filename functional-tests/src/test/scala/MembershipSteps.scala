@@ -260,7 +260,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICancelMembership = {
-    new LandingPage(driver).clickAccountControl.clickEditProfile.clickChangeTier
+    new LandingPage(driver).clickAccountControl.clickEditProfile.clickChangeTier.clickCancelLink
+      .clickConfirmCancellation.clickBackToMyProfile
     this
   }
 
@@ -363,8 +364,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IAmAPatron = verifyTier("£540.00")
 
-  def IAmNotAMember = {
-    // TODO james oram verify user has cancelled (blocked by )
+  def IAmNotAMember {
+    Assert.assert(new IdentityEditPage(driver).isMembershipCancelled, true, "Membership should be cancelled")
   }
 
   private def verifyTier(yearlyPayment: String) = {
