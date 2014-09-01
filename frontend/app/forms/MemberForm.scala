@@ -32,7 +32,7 @@ object MemberForm {
                                 password: Option[String]) extends JoinForm
 
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
-                                  billingAddress: Option[AddressForm])
+                                  billingAddress: Option[AddressForm], password: Option[String])
 
   val countriesRequiringState = Seq(Countries.Canada, Countries.US).map(c => c.name -> c).toMap
 
@@ -107,7 +107,8 @@ object MemberForm {
     mapping(
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
-      "billingAddress" -> optional(paidAddressMapping)
+      "billingAddress" -> optional(paidAddressMapping),
+      "password" -> optional(nonEmptyText)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
 
