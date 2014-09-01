@@ -1,0 +1,29 @@
+@(inlineMode: Boolean = false)
+
+@navItemClass() = @{
+    if (inlineMode) "inline-list__item nav__item" else "nav__item"
+}
+
+@if(inlineMode) {
+    <li class="@navItemClass()">
+        <a href="/" class="nav__link"><i class="icon-sprite icon-sprite-home"></i></a>
+    </li>
+}
+<li class="@navItemClass()">
+    <a href="/events" class="nav__link case--lower">Events</a>
+</li>
+<li class="@navItemClass()">
+    <a href="/about" class="nav__link case--lower">About membership</a>
+</li>
+<li class="@navItemClass()">
+    <a href="/join/patron" class="nav__link case--lower">Patrons</a>
+</li>
+<li class="@navItemClass()">
+    <a href="/join" class="nav__link case--lower">Pricing</a>
+</li>
+<li class="@navItemClass()">
+    <a href="/help" class="nav__link case--lower">Help</a>
+</li>
+<li class="@navItemClass()">
+    <a href="/feedback" class="nav__link nav__link--last case--lower">Feedback</a>
+</li>

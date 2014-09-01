@@ -9,6 +9,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
+import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
 
@@ -39,6 +40,8 @@ object Eventbrite {
       val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
       clean
     }
+
+    lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
   case class EBAddress(country_name: Option[String],
@@ -56,7 +59,7 @@ object Eventbrite {
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
-    def priceFormat(priceInPence: Double) = f"£${priceInPence/100}%2.0f"
+    def priceFormat(priceInPence: Double) = "£" + f"${priceInPence/100}%2.0f".trim
 
     lazy val formattedPrice = priceFormat(value)
 

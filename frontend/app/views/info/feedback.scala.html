@@ -1,5 +1,21 @@
-@()
+@()(implicit token: play.filters.csrf.CSRF.Token)
+
+@import helper.CSRF
 
 @main("Feedback") {
     @fragments.layout.sectionHeader("Feedback")
+
+    <p>Help us improve our membership experience.  Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
+
+    <p>We read all feedback carefully, but please note we cannot respond all comments submitted.</p>
+
+    <p>If you’re having any problems please visit our help section.</p>
+
+    <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
+        @CSRF.formField
+
+        @fragments.form.errorMessageDisplay()
+        @fragments.form.feedback()
+        @fragments.form.submit("Send feedback now")
+    </form>
 }

@@ -5,10 +5,12 @@ require([
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/tier/JoinPaid',
+    'src/modules/info/Feedback',
     'src/modules/tier/Upgrade',
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
+    'src/modules/tier/Choose',
     'src/utils/cookie',
     'src/modules/events/eventPriceEnhance',
     'config/appCredentials'
@@ -19,10 +21,12 @@ require([
     ajax,
     JoinFree,
     JoinPaid,
+    FeedbackForm,
     Upgrade,
     Cta,
     Header,
     DatetimeEnhance,
+    Choose,
     cookie,
     eventPriceEnhance,
     appCredentials
@@ -68,6 +72,14 @@ require([
 
     router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
         (new Upgrade()).init();
+    });
+
+    router.match('/choose-tier').to(function () {
+        (new Choose()).init();
+    });
+
+    router.match('/feedback').to(function () {
+        (new FeedbackForm()).init();
     });
 
     /**

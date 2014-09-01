@@ -37,6 +37,8 @@ object MemberForm {
   def verifyAddress(address: AddressForm): Boolean =
     countriesRequiringState.get(address.country).fold(true)(_.states.contains(address.countyOrState))
 
+  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
+
   val friendAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> text,
     "lineTwo" -> text,
@@ -70,6 +72,14 @@ object MemberForm {
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
+  val feedbackMapping: Mapping[FeedbackForm] =   mapping(
+    "category" -> nonEmptyText,
+    "page" -> text,
+    "feedback" -> nonEmptyText,
+    "name" -> nonEmptyText,
+    "email" -> email
+  )(FeedbackForm.apply)(FeedbackForm.unapply)
+
   val friendJoinForm: Form[FriendJoinForm] = Form(
     mapping(
       "name" -> nameMapping,
@@ -96,5 +106,15 @@ object MemberForm {
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping)
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
+  )
+
+  val feedbackForm: Form[FeedbackForm] = Form(
+    mapping(
+      "category" -> nonEmptyText,
+      "page" -> text,
+      "feedback" -> nonEmptyText,
+      "name" -> nonEmptyText,
+      "email" -> email
+    )(FeedbackForm.apply)(FeedbackForm.unapply)
   )
 }

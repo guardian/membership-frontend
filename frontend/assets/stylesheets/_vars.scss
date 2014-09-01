@@ -130,6 +130,7 @@ $c-neutral5: #dfdfdf;
 $c-neutral6: #eaeaea;
 $c-neutral7: #f1f1f1;
 $c-neutral8: #f6f6f6;
+$c-neutral9: #fdfdfd;
 
 $c-live: #e81818;
 $c-media-icon: #fbba0f;
@@ -215,7 +216,7 @@ $mem-trans-white: rgba(255, 255, 255, .95);
 $mem-trans-red: rgba(180, 24, 0, .95);
 $mem-trans-green: rgba(170, 216, 1, .95);
 $mem-black: #333333;
-$mem-blue: rgba(2, 199, 225, 1);
+$mem-blue: #4bc6df;
 $mem-buttonBlue: #197caa;
 
 $mem-button-confirm: #1a4683;
@@ -226,6 +227,7 @@ $mem-header: rgba(0, 0, 0, .7);
 $white: #ffffff;
 $offWhite: #d6d6d6;
 $black: #000000;
+$offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .5);
 $white-trans: rgba(255, 255, 255, .5);
 
@@ -234,3 +236,5 @@ $mem-live-red: transparentize(#b51800, .15);
 $mem-live-accent: #cc2b12;
 
 $mem-live-red-trans: rgba(180, 24, 0, .95);
+
+$side-margins-top-magic-number: 114px;

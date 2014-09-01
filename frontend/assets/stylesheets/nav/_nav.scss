@@ -67,15 +67,44 @@
     .nav__link:focus,
     .nav__link:hover {
         color: #ffffff !important;
+        text-decoration: underline;
     }
     .nav__link--last {
         margin-right: 0 !important;
     }
 }
 
+
 /* ==========================================================================
    Nav Modifiers
    ========================================================================== */
+
+.nav--global--header {
+    background-color: darken($mem-blue, 10%);
+    height: $header-margin;
+    @include side-margins-calc('padding-left');
+    @include side-margins-calc('padding-right');
+    padding-top: 3px;
+    padding-bottom: 0;
+}
+
+.nav-global--mini {
+    display: none;
+    text-align: right;
+
+    @include rem((
+        font-size: 14px,
+        padding-top: 6px // magic number, aligns with left icons
+    ));
+
+    > li:last-child .nav__link {
+        margin-right: 0;
+    }
+
+    @include mq($from: tablet) {
+        display: block;
+    }
+}
 
 /* Columns
    ========================================================================== */
