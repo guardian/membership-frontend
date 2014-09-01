@@ -248,7 +248,7 @@ div.event {
             @include guss-row('.events-list');
 
             @include rem((
-                padding: $gs-gutter $gs-gutter $gs-gutter*2 $gs-gutter
+                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
             ));
 
             .events-list__item {
@@ -399,7 +399,7 @@ div.event {
 
         @include mq(tablet) {
             @include rem((
-                padding: $gs-baseline $gs-gutter
+                padding: $gs-baseline $gs-gutter/2
             ));
             height: auto;
 
@@ -419,6 +419,9 @@ div.event {
         }
 
         @include mq(desktop) {
+            @include rem((
+                padding: $gs-baseline $gs-gutter
+            ));
             .event-item__description {
                 @include fs-headline(1);
                 @include rem((
