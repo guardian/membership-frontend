@@ -69,6 +69,11 @@ trait MemberService {
     }
   }
 
+  private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
+  for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
+    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
+  }
+
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
     def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
@@ -110,8 +115,7 @@ trait MemberService {
 
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
-    form.password.map(updateUserPassword(user, _ , identityRequest))
-
+    //todo add upgrade flow for password
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
@@ -126,11 +130,6 @@ trait MemberService {
       )
       identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
     } yield memberId.account
-  }
-
-  private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
-    for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
-    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
   }
 }
 
