@@ -3,10 +3,13 @@ define([
     'bean',
     'src/utils/component',
     'src/utils/form/Form',
-    'src/utils/form/Password'
-], function ($, bean, component, Form, Password) {
+    'src/utils/form/Password',
+    'src/utils/helper'
+], function ($, bean, component, Form, Password, helper) {
     'use strict';
 
+    var UNITED_STATES_STRING = 'united states';
+    var CANADA_STRING = 'canada';
     var self;
     var JoinPaid = function() {
         self = this;
@@ -15,19 +18,14 @@ define([
     component.define(JoinPaid);
 
     JoinPaid.prototype.classes = {
-        NAME_FIRST: 'js-name-first',
-        NAME_LAST: 'js-name-last',
         STRIPE_FORM: 'js-stripe-form',
-        CREDIT_CARD_NUMBER: 'js-credit-card-number',
-        CREDIT_CARD_CVC: 'js-credit-card-cvc',
-        CREDIT_CARD_EXPIRY_MONTH: 'js-credit-card-exp-month',
-        CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
         ADDRESS_LINE_ONE: 'js-address-line-one',
         TOWN: 'js-town',
         POST_CODE: 'js-post-code',
         BILLING: 'js-toggle-billing-address',
         BILLING_CTA: 'js-toggle-billing-address-cta',
-        BILLING_FIELDSET: 'js-billingAddress-fieldset'
+        BILLING_FIELDSET: 'js-billingAddress-fieldset',
+        FORM_FIELD: 'form-field'
     };
 
     JoinPaid.prototype.data = {
@@ -36,12 +34,14 @@ define([
 
     JoinPaid.prototype.init = function () {
         this.setupForm();
-        this.toggleBillingAddressListener();
+        this.setupToggleBillingAddressListener();
+        this.setupDeliveryToggleState();
         this.setupPasswordStrength();
     };
 
-    JoinPaid.prototype.toggleBillingAddressListener = function() {
+    JoinPaid.prototype.setupToggleBillingAddressListener = function() {
         this.removeValidatorFromValidationProfile();
+        this.setupBillingToggleState();
 
         var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
         var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).detach();
@@ -62,6 +62,65 @@ define([
                 $billingCTA.text('Different billing address?');
                 self.removeValidatorFromValidationProfile();
                 $billingDetails.detach();
+            }
+        });
+    };
+
+    JoinPaid.prototype.detachElements = function($elements) {
+        for (var i = 0, $elementsLength = $elements.length; i < $elementsLength; i++) {
+            var $element = $elements[i];
+            if ($element.parent().length !== 0) {
+                $element = $element.detach();
+            }
+        }
+    };
+
+    JoinPaid.prototype.selectedOptionName = function(optionIndex, selectElementOptions) {
+        return selectElementOptions[optionIndex].textContent.toLowerCase();
+    };
+
+    JoinPaid.prototype.setupDeliveryToggleState = function() {
+        this.setupToggleState(
+            $('#country-deliveryAddress', this.form.formElement),
+            $('#county-deliveryAddress', this.form.formElement),
+            $('#state-deliveryAddress', this.form.formElement),
+            $('#provence-deliveryAddress', this.form.formElement)
+        );
+    };
+
+    JoinPaid.prototype.setupBillingToggleState = function() {
+        this.setupToggleState(
+            $('#country-billingAddress', this.form.formElement),
+            $('#county-billingAddress', this.form.formElement),
+            $('#state-billingAddress', this.form.formElement),
+            $('#provence-billingAddress', this.form.formElement)
+        );
+    };
+
+    JoinPaid.prototype.setupToggleState = function($countrySelect, $countySelect, $stateSelect, $provenceSelect) {
+
+        var formFieldClass = this.getClass('FORM_FIELD', true);
+        var $selectElements = [];
+        var $countrySelectParent = helper.getSpecifiedParent($countrySelect, formFieldClass);
+        var $countySelectParent = helper.getSpecifiedParent($countySelect, formFieldClass);
+        var $usaStateSelectParent = helper.getSpecifiedParent($stateSelect, formFieldClass).detach();
+        var $canadaProvenceSelectParent = helper.getSpecifiedParent($provenceSelect, formFieldClass).detach();
+
+        $selectElements.push($countySelectParent, $usaStateSelectParent, $canadaProvenceSelectParent);
+
+        bean.on($countrySelect[0], 'change', function (e) {
+
+            var optionIndex = e && e.target.selectedIndex;
+            var selectedName = self.selectedOptionName(optionIndex, $countrySelect[0].options);
+
+            self.detachElements($selectElements);
+
+            if (selectedName === UNITED_STATES_STRING) {
+                $usaStateSelectParent.removeClass('u-h').insertAfter($countrySelectParent);
+            } else if (selectedName === CANADA_STRING) {
+                $canadaProvenceSelectParent.removeClass('u-h').insertAfter($countrySelectParent);
+            } else {
+                $countySelectParent.removeClass('u-h').insertAfter($countrySelectParent);
             }
         });
     };
