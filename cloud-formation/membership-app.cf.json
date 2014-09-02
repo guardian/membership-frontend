@@ -42,7 +42,6 @@
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
         "ELBName" : {
-        	"Description" : "DNS for the application (eg, test.membership.guardianapis.com)",
         	"Type" :  "String",
         	"AllowedValues" : [ "membership.theguardian.com.origin.membership.guardianapis.com", "test.membership.guardianapis.com"],
         	"Default" : "membership.theguardian.com.origin.membership.guardianapis.com"
