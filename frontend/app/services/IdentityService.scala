@@ -19,9 +19,7 @@ trait IdentityService {
   def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
     for {
       userDetails <- IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
-    } yield {
-      userDetails
-    }
+    } yield userDetails
   }
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] = {
