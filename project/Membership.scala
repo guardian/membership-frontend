@@ -17,11 +17,11 @@ trait Membership {
       name,
       BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
       BuildInfoKey.constant("buildTime", System.currentTimeMillis),
-      BuildInfoKey.constant("gitCommitId", try {
+      BuildInfoKey.constant("gitCommitId", Option(System.getenv("BUILD_VCS_NUMBER")) getOrElse(try {
         "git rev-parse HEAD".!!.trim
       } catch {
           case e: Exception => "unknown"
-      })
+      }))
     ),
     buildInfoPackage := "app"
   )
