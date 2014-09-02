@@ -16,16 +16,11 @@ import scala.concurrent.Future
 
 trait IdentityService {
 
-  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
-    for {
-      userDetails <- IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
-    } yield userDetails
-  }
+  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] =
+    IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
 
-  def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] = {
-    for (passwordExists <- IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters))
-    yield passwordExists
-  }
+  def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
+    IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
   def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
 
@@ -49,7 +44,6 @@ trait IdentityService {
   }
 
   def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
-
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     postFields(fields, user, identityRequest)
@@ -57,7 +51,6 @@ trait IdentityService {
 
   private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
     val json = Json.obj("privateFields" -> fields)
-
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters)
   }
