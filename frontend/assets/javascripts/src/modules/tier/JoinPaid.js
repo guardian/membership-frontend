@@ -41,7 +41,7 @@ define([
 
     JoinPaid.prototype.setupToggleBillingAddressListener = function() {
         this.removeValidatorFromValidationProfile();
-        this.setupBillingToggleState();
+        //this.setupBillingToggleState();
 
         var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
         var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).detach();
@@ -82,7 +82,7 @@ define([
     JoinPaid.prototype.setupDeliveryToggleState = function() {
         this.setupToggleState(
             $('#country-deliveryAddress', this.form.formElement),
-            $('#county-deliveryAddress', this.form.formElement),
+            $('#county-or-state-deliveryAddress', this.form.formElement),
             $('#state-deliveryAddress', this.form.formElement),
             $('#provence-deliveryAddress', this.form.formElement)
         );
@@ -91,7 +91,7 @@ define([
     JoinPaid.prototype.setupBillingToggleState = function() {
         this.setupToggleState(
             $('#country-billingAddress', this.form.formElement),
-            $('#county-billingAddress', this.form.formElement),
+            $('#county-or-state-billingAddress', this.form.formElement),
             $('#state-billingAddress', this.form.formElement),
             $('#provence-billingAddress', this.form.formElement)
         );
