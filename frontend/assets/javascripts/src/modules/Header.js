@@ -61,7 +61,7 @@ define([
 
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
             config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-hidden');
-
+            config.DOM.MENU_ICON.toggleClass('menu-hamburger--active');
             self.setMenuListener.call(self, config.DOM.SECTIONS_POP_UP_NAV);
         });
 
@@ -106,7 +106,8 @@ define([
     };
 
     /**
-     * Populate user details in the header account information container
+     * Populate user details in the header account information container,
+     * If a Identity user is logged in then populate the user details found in the header.
      */
     Header.prototype.populateUserDetails = function() {
         var user = this.user;

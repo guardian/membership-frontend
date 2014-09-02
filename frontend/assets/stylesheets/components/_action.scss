@@ -10,7 +10,8 @@
     position: relative;
     @include fs-textsans(4);
     @include rem((
-        padding: 8px 18px,
+        min-width: 100%,
+        padding: 8px 8px 8px 18px
     ));
     @include border-radius(50%);
 
@@ -22,6 +23,24 @@
     }
     &:hover {
         background-color: darken(#0096C9, 10%);
+    }
+
+    &:after {
+        @extend .icon-sprite-arrow-right-white;
+        &.action--secondary-button {
+            @extend .icon-sprite-arrow-right-black;
+        }
+        content: '';
+        float: right;
+        @include rem((
+            margin: 2px 0 0 30px
+        ));
+    }
+
+    @include mq(tablet){
+        @include rem((
+            min-width: 220px
+        ));
     }
 }
 
@@ -52,10 +71,9 @@
     text-align: left;
     background-color: $mem-buttonBlue;
     @include rem((
-        padding: 8px 8px 8px 18px,
-        width: 220px
+        padding: 8px 8px 8px 18px
     ));
-    
+
     &:visited,
     &:active,
     &:focus {
@@ -68,20 +86,69 @@
         float: right;
         @include rem((
             margin-top: 2px
-        ));   
+        ));
+    }
+}
+
+.action--secondary-button {
+    text-align: left;
+    background-color: $offWhite;
+    color: $black;
+    @include rem((
+        padding: 8px 8px 8px 18px,
+        min-width: 220px,
+        width: auto
+    ));
+
+    .brochure-container__join-box & {
+        @include rem((
+            margin-left: $gs-baseline+3
+        ));
+    }
+
+    &:visited,
+    &:active,
+    &:focus {
+        background-color: $offWhite;
+    }
+    &:hover {
+        background-color: darken($offWhite, 15%);
+    }
+    i {
+        float: right;
+        @include rem((
+            margin-top: 2px
+        ));
     }
 }
 
 .i-wait {
     display: none;
-    img {
-        margin-top: 9px;
-    }
 }
 
-.actions.js-waiting .i-wait {
-    display: inline-block;
-    vertical-align: top;
+.actions.js-waiting {
+
+    .i-wait {
+        display: inline-block;
+        vertical-align: middle;
+
+        .i-wait__throbber {
+            vertical-align: middle;
+            @include rem((
+                width: 21px,
+                height: 21px
+            ));
+        }
+
+        .i-wait__message {
+            vertical-align: middle;
+            @include fs-bodyCopy(1);
+            color: $c-neutral2;
+            @include rem((
+                margin-left: 2px
+            ));
+        }
+    }
 }
 
 .action--ticket-button {
@@ -135,6 +202,10 @@
 
 .action-cta--cancel {
     background-color: $mem-button-cancel;
+}
+
+.action-cta--disabled {
+    cursor: default;
 }
 
 .action-cta--full-width-mobile {

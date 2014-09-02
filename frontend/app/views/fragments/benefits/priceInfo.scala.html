@@ -1,0 +1,17 @@
+@(benefits: model.Benefits.Benefits)
+
+<div class="price-info">
+    @benefits.pricing.fold {
+        <div class="price-info__container-inner price-info__container-inner--no-border">
+            <div class="price-info__detail">Free</div>
+        </div>
+    } { pricing =>
+        <div class="price-info__container-inner">
+            <div class="price-info__detail">£@pricing.yearly<span class="price-info__sub-detail">/year</span></div>
+            <div class="price-info__sub-detail">(save £@pricing.yearlySaving)</div>
+        </div>
+        <div class="price-info__container-inner price-info__container-inner--last">
+            <div class="price-info__detail">£@pricing.monthly<span class="price-info__sub-detail">/month</span></div>
+        </div>
+    }
+</div>

@@ -1,0 +1,39 @@
+//calculates position of where to place side margins
+@mixin side-margins-position() {
+    &:before,
+    &:after {
+        @include side-margins-calc('width')
+    }
+}
+
+.page-side-margins {
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        background: rgba(51, 51, 51, .05);
+        @include rem((
+            // magic number: we shift these margins up to skip the header gap
+            // and the (fixed) height of the nav bar
+            top: $side-margins-top-magic-number
+        ));
+        height: 100%;
+
+        height: -webkit-calc(100% - #{$side-margins-top-magic-number});
+        height: -moz-calc(100% - #{$side-margins-top-magic-number});
+        height: -o-calc(100% - #{$side-margins-top-magic-number});
+        height: calc(100% - #{$side-margins-top-magic-number});
+
+        width: 0;
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+
+    @include side-margins-position();
+}
+

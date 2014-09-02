@@ -4,9 +4,6 @@ import com.netaporter.uri.dsl._
 
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
-import com.gu.membership.salesforce.Tier
-
-import collection.convert.wrapAsScala._
 
 object Config {
   val config = ConfigFactory.load()
@@ -17,8 +14,8 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val membershipUrl = config.getString("membership.url")
-  val membershipHide = config.getBoolean("membership.hide")
   val membershipDebug = config.getBoolean("membership.debug")
+  val membershipFeedback = config.getString("membership.feedback")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
@@ -27,6 +24,9 @@ object Config {
 
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
+
+  def eventImageUrlPath(id: String): String =
+    config.getString("membership.event.images.url") + id
 
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
@@ -37,10 +37,13 @@ object Config {
   val eventbriteApiToken = config.getString("eventbrite.api.token")
   val eventbriteApiEventListUrl = config.getString("eventbrite.api.event-list-url")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
+  val eventbriteRefreshTimeForAllEvents = config.getInt("eventbrite.api.refresh-time-all-events-seconds")
+  val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
+
+  val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
   val stripeApiURL = config.getString("stripe.api.url")
   val stripeApiSecret = config.getString("stripe.api.secret")
-  val stripeApiWebhookSecret = config.getString("stripe.api.webhook.secret")
 
   val salesforceConsumerKey = config.getString("salesforce.consumer.key")
   val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")
@@ -64,25 +67,4 @@ object Config {
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
-
-
-  case class Benefits(leadin: String, list: Seq[String], priceText: String, cta: String)
-
-  val benefits: Map[Tier.Value, Benefits] = Tier.values.toSeq.map {
-    t =>
-      val benefits =
-        if (t >= Tier.Friend) {
-          val configKey = s"benefits.${t.toString.toLowerCase}."
-          Benefits(
-            config.getString(configKey + "leadin"),
-            config.getStringList(configKey + "list").toSeq,
-            config.getString(configKey + "priceText"),
-            config.getString(configKey + "cta")
-          )
-        } else {
-          Benefits("", Seq.empty, "", "")
-        }
-      t -> benefits
-  }.toMap
-
 }

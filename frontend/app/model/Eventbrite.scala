@@ -9,6 +9,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
+import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
 
@@ -39,6 +40,8 @@ object Eventbrite {
       val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
       clean
     }
+
+    lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
   case class EBAddress(country_name: Option[String],
@@ -46,7 +49,8 @@ object Eventbrite {
                        address_1: Option[String],
                        address_2: Option[String],
                        region: Option[String],
-                       country: Option[String]) extends EBObject
+                       country: Option[String],
+                       postal_code: Option[String]) extends EBObject
 
   case class EBVenue(id: Option[String],
                      address: Option[EBAddress],
@@ -55,7 +59,7 @@ object Eventbrite {
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
-    def priceFormat(priceInPence: Double) = f"£${priceInPence/100}%2.2f"
+    def priceFormat(priceInPence: Double) = "£" + f"${priceInPence/100}%2.0f".trim
 
     lazy val formattedPrice = priceFormat(value)
 
@@ -104,25 +108,29 @@ object Eventbrite {
 
     lazy val country = venue.address.flatMap(_.country).getOrElse("")
 
+    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
+
     import EBEventStatus._
 
     def getStatus: EBEventStatus = {
       val numberSoldTickets = ticket_classes.flatMap(_.quantity_sold).sum
 
-      status match {
-        case Some("completed") => Completed
+      status.collect {
+        case "completed" => Completed
 
-        case Some("canceled") => Cancelled // American spelling
+        case "canceled" => Cancelled // American spelling
 
-        case Some("live") if numberSoldTickets >= capacity.getOrElse(0) => SoldOut
+        case "live" if numberSoldTickets >= capacity.getOrElse(0) => SoldOut
 
-        case Some("live") => {
+        case "live" => {
           val startDates = ticket_classes.map(_.sales_start.getOrElse(Instant.now))
           if (startDates.exists(_ <= Instant.now)) Live else PreLive
         }
 
+        case "draft" => PreLive
+
         case _ => Live
-      }
+      }.getOrElse(PreLive)
     }
 
     def ticketClassesHead = ticket_classes.headOption

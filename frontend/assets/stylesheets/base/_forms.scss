@@ -103,6 +103,14 @@
     }
 }
 
+.form-field__error-message {
+    @include fs-data(3);
+    color: $newsRed;
+    @include rem((
+        margin-top: 2px
+    ));
+}
+
 // Allows for two up form field and label layout as in address form
 .form-field__half {
     display: inline-block;
@@ -325,14 +333,14 @@
 }
 
 .required-marker {
-    &:before {
+    &:after {
         vertical-align: middle;
         content: '*';
         color: guss-colour('tone-live-2');
         font-family: $sans-serif;
         @include rem((
             font-size: 18px,
-            margin-right: $gs-baseline / 2
+            margin-left: 4px
         ));
 
     }

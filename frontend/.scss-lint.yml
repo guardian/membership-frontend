@@ -71,7 +71,7 @@ linters:
     convention: BEM
 
   PlaceholderInExtend:
-    enabled: true
+    enabled: false
 
   PropertySortOrder:
     enabled: false

@@ -1,118 +1,132 @@
 @(eventOpt: Option[model.Eventbrite.EBEvent])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import model.Benefits
 @import model.Eventbrite.EBEventStatus._
 @import views.support.Dates._
 @import helper._
+@import configuration.Config
+
+@benefit(tier: com.gu.membership.salesforce.Tier.Tier, defaultSelection: com.gu.membership.salesforce.Tier.Tier) = {
+    <div class="tickets-select-form__section">
+        <div class="tickets-select-form__header u-cf">
+            <label class="tickets-select-form__label" for="@tier.toString.toLowerCase">
+                <input class="tickets-select-form__input"
+                       type="radio"
+                       value="@tier.toString.toLowerCase"
+                       id="@tier.toString.toLowerCase"
+                       name="tier"
+                       @if(tier == defaultSelection){checked="checked"}/>
+            </label>
+            <div class="tickets-select-form-header__secondary u-cf">
+                <div class="price-info-container">
+                    <h2 class="tickets-select-form__tier-name">@tier</h2>
+                </div>
+                <div class="price-info-container price-info-container--last">
+                    @fragments.benefits.priceInfo(Benefits.details(tier))
+                </div>
+                <a class="tickets-select-form__toggle mobile-only js-benefit-header" href="#">
+                    <i class="i icon-sprite-arrow-grey-large tickets-select-form__toggle-icon js-toggle-icon"></i>
+                </a>
+            </div>
+        </div>
+        <div class="tickets-select-form__detail hidden-mobile">
+            <p class="tickets-select-form__leadin">@Benefits.details(tier).leadin</p>
+            <ul class="u-unstyled">
+                @for((header, body) <- Benefits.details(tier).list) {
+                <li class="benefits-title">@header</li>
+                <li class="benefits-copy">@body</li>
+                }
+            </ul>
+        </div>
+    </div>
+}
 
 @main("Join membership") {
 
     <section class="section-two-thirds">
 
-        @fragments.layout.sectionHeader("Choose a membership tier")
-
         @fragments.tickets.ticketsFunnel(1, StepTwo = "", StepThree = "", StepFour = "")
 
-        <section class="thirds two-thirds">
+        <div class="l-row">
 
-            <h2 class="section-sub-headline">Tiers</h2>
+        <section class="two-thirds">
+
+            <h1 class="section-sub-headline">Choose a membership tier</h1>
 
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
                 @CSRF.formField
-                <label for="friend">
-                    <input type="radio" value="friend" id="friend" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Friend</h2>
-                    <p>@Config.benefits(Tier.Friend).leadin</p>
 
-                    <ul>
-                    @for(item <- Config.benefits(Tier.Friend).list) {
-                        <li>@item</li>
+                @for(tier <- Tier.values.toSeq.sorted){
+                    @if(tier != Tier.None){
+                        @benefit(tier, Tier.Partner)
                     }
-                    </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Friend).priceText</span>
-                </label>
+                }
 
-                <label for="partner">
-                    <input type="radio" value="partner" id="partner" name="tier" checked="checked"/>
-                    <h2 class="tickets-select-form__tier-name">Partner</h2>
-                    <p>@Config.benefits(Tier.Partner).leadin</p>
-
-                    <ul>
-                    @for(item <- Config.benefits(Tier.Partner).list) {
-                        <li>@item</li>
-                    }
-                    </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Partner).priceText</span>
-                </label>
-
-                <label for="patron">
-                    <input type="radio" value="patron" id="patron" name="tier"/>
-                    <h2 class="tickets-select-form__tier-name">Patron</h2>
-                    <p>@Config.benefits(Tier.Patron).leadin</p>
-
-                    <ul>
-                    @for(item <- Config.benefits(Tier.Patron).list) {
-                        <li>@item</li>
-                    }
-                    </ul>
-                    <span class="tickets-select-form__price">@Config.benefits(Tier.Patron).priceText</span>
-                </label>
-
-                <input type="submit" class="submit-input action--logged-in" value="Choose"/>
+                <input type="submit" class="action action--logged-in" value="Join today"/>
 
             </form>
         </section>@*
 
             //inline-block whitespace
 
-        *@<section class="thirds one-third">
+        *@<section class="one-third">
 
             @for(event <- eventOpt) {
 
                 <h2 class="section-sub-headline">You're buying tickets for:</h2>
 
-                <a href="/event/@event.id">
-                    <div class="item__media-wrapper">
-                        <div class="item__image-container event-image-container">
-                            @if(event.getStatus == SoldOut){
-                                <span class="event-status event-status--sold-out">Sold Out</span>
-                            }
-                            <img src="@event.logoUrl" alt="Event Image">
-                        </div>
-                    </div>
-                    <h2 class="item__title truncate">
-                    @event.name.text
-                    </h2>
-                </a>
-                <div class="item__meta">
-                    <time class="item__timestamp js-item__timestamp">
-                        <div class="event__location">@event.venue.name</div>
-                        <div class="event__time">@event.start.pretty</div>
-                    </time>
-                </div>
-                @for(ticket <- event.ticketClassesHead) {
-                    <div class="event__tickets">
+                <div class="event-item events-list__item event-item--standalone">
+                    <div class="event-item__media">
+                        @if(event.getStatus == SoldOut){
+                            <span class="event-status event-status--sold-out">Sold Out</span>
+                        }
+                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.png" data-alt="Please upload an event image"></div>
+                    </div>@*
 
-                    @if(ticket.free) {
-                        <div class="event__price">
-                            <span class="event__price-amount js-event-price">Free</span>
+                          // Inline-block whitespace
+
+                    *@<div class="event-item__meta">
+                        <h2 class="event-item__title">
+                        @event.name.text
+                        </h2>
+
+                        <div class="event-item__time">@event.start.pretty</div>
+
+                        <div class="event-item__location">
+                            @if(event.venue.name){
+                                <span class="event-item__location-name">@event.venue.name</span>
+                            }
+                            @for(address <- event.venue.address) {
+                                @if(event.venue.name){, }
+                                <span class="event-item__location-address">@address.city, @address.postal_code</span>
+                            }
                         </div>
-                    } else {
-                        @for(pricing <- ticket.cost) {
-                            <div class="event__price">
-                                <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
-                                <span class="event__price-note js-event-price-note"> per ticket</span>
+
+                        @for(desc <- event.description) {
+                            <div class="event-item__description">
+                                @desc.blurb
                             </div>
                         }
-                    }
 
+                        <div class="event-item__cta">
+
+                            <div class="event-item__price">
+                            @for(ticket <- event.ticketClassesHead) {
+                                @for(pricing <- ticket.cost) {
+                                    <span class="event-item__price-amount">@pricing.formattedPrice</span>
+                                    <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                }
+                            }
+                            </div>
+                        </div>
                     </div>
-                }
+
+                </div>
+
             }
 
         </section>
-
+        </div>
     </section>
-
 }

@@ -51,6 +51,17 @@ $current-indicator: rem(47px);
         display: table-cell;
         max-width: 330px;
     }
+
+    @include mq(desktop) {
+        // this is defined in tickets.scss
+        // but we re-use the HTML for benefits tier page
+        .price-info {
+            @include fs-headline(4);
+            @include rem((
+                height: 110px // magic number
+            ));
+        }
+    }
 }
 
 .package__current-indicator {
@@ -64,12 +75,28 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         margin-top: -$current-indicator;
     }
+    // this prevents the text splitting onto 2 lines
+    @include mq($from: desktop, $to: mem-full) {
+        @include rem((
+            font-size: 14px
+        ));
+    }
 }
 
 .package__inner {
     @include rem((
         padding: $gs-gutter
     ));
+    @include mq(mem-full) {
+        @include rem((
+            height: 840px // magic number
+        ));
+    }
+    @include mq(desktop) {
+        @include rem((
+            height: 940px // magic number
+        ));
+    }
     @include border-radius(4px);
     background-color: #ffffff;
 }
@@ -95,23 +122,42 @@ $current-indicator: rem(47px);
     @include rem((
         padding: $gs-gutter/2 0 $gs-gutter
     ));
+    margin-bottom: 0;
+    list-style: none;
     > li {
-        list-style-position: inside;
-        list-style: none;
         @include rem((
             margin: $gs-baseline 0
         ));
-        @include faux-bullet-point(#333333, $right-space: 4px);
+        &:last-child {
+            margin-bottom: 0;
+        }
 
     }
 }
 
 .package__price {
+    clear: both;
     @include fs-headline(6);
+    @include rem((
+        margin-bottom: 20px
+    ));
 }
 
 .package__pcm {
     @include fs-headline(1);
+}
+
+.package__leadin {
+    @include fs-headline(3);
+    border-bottom: 1px solid $c-neutral4;
+    @include rem((
+        padding-bottom: $gs-gutter
+    ));
+    @include mq(desktop) {
+        @include rem((
+            height: 97px // magic number
+        ));
+    }
 }
 
 /* Upgrade

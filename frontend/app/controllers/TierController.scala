@@ -7,10 +7,11 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
+import model.PrivateFields
 
 import actions._
 import forms.MemberForm._
-import services.{SubscriptionService, MemberRepository, MemberService, StripeService}
+import services._
 
 trait DowngradeTier {
   self: TierController =>
@@ -27,29 +28,33 @@ trait DowngradeTier {
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
       currentSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
       futureSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
-    } yield Ok(views.html.tier.downgrade.summary(customer.card, currentSubscription, futureSubscription))
+    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
   }
 }
 
 trait UpgradeTier {
   self: TierController =>
 
-  def upgrade(tier: Tier) = MemberAction { implicit request =>
-    if (request.member.tier < tier)
-      Ok(views.html.tier.upgrade.upgradeForm(tier))
+  def upgrade(tier: Tier) = MemberAction.async { implicit request =>
+    if (request.member.tier < tier) {
+      val identityRequest = IdentityRequest(request)
+      for {
+        userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
+        privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+      } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
+    }
     else
-      NotFound
+      Future.successful(NotFound)
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
     request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
-          MemberService.upgradeSubscription(freeMember, request.user, tier, formData.payment).map(_ => Ok(""))
+          MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).map(_ => Ok(""))
         })
       case _ => Future.successful(NotFound)
     }
@@ -65,32 +70,23 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      cancelledSubscription <- MemberService.cancelAnySubscriptionPayment(request.member)
+      _ <- MemberService.cancelSubscription(request.member)
     } yield {
-      val newTier = if (request.member.tier == Tier.Friend) Tier.None else request.member.tier
-      // TODO: move into MemberService
-      MemberRepository.upsert(
-        request.member.identityId,
-        Map(
-          Member.Keys.TIER -> newTier.toString,
-          Member.Keys.OPT_IN -> false
-        )
-      )
       Redirect("/tier/cancel/summary")
     }
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
-    def paymentDetailsFor(memberOpt: Option[Member]) = {
+    def subscriptionDetailsFor(memberOpt: Option[Member]) = {
       memberOpt.collect { case paidMember: PaidMember =>
-        StripeService.Customer.read(paidMember.stripeCustomerId).map(_.paymentDetails)
-      }.getOrElse(Future.successful(None))
+        SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+      }
     }
 
     for {
-      member <- MemberRepository.get(request.user.id)
-      paymentDetails <- paymentDetailsFor(member)
-    } yield Ok(views.html.tier.cancel.summary(paymentDetails))
+      memberOpt <- MemberRepository.get(request.user.id)
+      subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
+    } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
   }
 }
 

@@ -1,4 +1,4 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, eventIframeUrlOpt: Option[String])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)])
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -9,7 +9,7 @@
 
         @fragments.layout.sectionHeader("Thank You")
 
-        @fragments.tickets.ticketsFunnel(4)
+        @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
 
     </section>
 
@@ -71,9 +71,8 @@
         <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
     </section>
 
-    @for(eventIframeUrl <- eventIframeUrlOpt) {
-        <iframe src="@eventIframeUrl" frameborder="0" height="340" width="100%" vspace="0" hspace="0" marginheight="5"
-        marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+    @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
+        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
     }
 
     <div class="separator"></div>

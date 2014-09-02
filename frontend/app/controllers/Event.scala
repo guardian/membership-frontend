@@ -1,12 +1,13 @@
 package controllers
 
+import model.EventPortfolio
+
 import scala.concurrent.Future
 
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import services.{MemberService, EventbriteService}
-import actions.{MemberAction, AuthenticatedAction}
 import model.Eventbrite.EBError
 
 import com.netaporter.uri.dsl._
@@ -23,12 +24,12 @@ trait Event extends Controller {
   }
 
   def list = CachedAction { implicit request =>
-    Ok(views.html.event.list(eventService.getLiveEvents))
+    Ok(views.html.event.list(eventService.getEventPortfolio))
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
     val tag = urlTagText.replace('-', ' ')
-    Ok(views.html.event.list(eventService.getEventsTagged(tag)))
+    Ok(views.html.event.list(EventPortfolio(Seq.empty, eventService.getEventsTagged(tag))))
   }
 
   def buy(id: String) = MemberAction.async { implicit request =>

@@ -1,7 +1,7 @@
 package controllers
 
 import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{DateTime, Instant}
+import org.joda.time.Instant
 
 import scala.concurrent.Future
 
@@ -9,18 +9,16 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.{FreeMember, PaidMember}
+import com.gu.membership.salesforce.{Member, FreeMember, PaidMember}
 
-import actions.{AjaxMemberAction, MemberRequest}
 import services.{StripeService, SubscriptionService}
-import model.Stripe
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
   def me = AjaxMemberAction { implicit request =>
-    Cors(Ok(basicDetails(request)))
+    Ok(basicDetails(request.member))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
@@ -54,19 +52,15 @@ trait User extends Controller {
         Future.successful(paymentDetails)
     }
 
-    futurePaymentDetails.map { paymentDetails => Cors(Ok(basicDetails(request) ++ paymentDetails)) }
+    futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
-  def basicDetails(request: MemberRequest[_]) = {
-    val member = request.member
-
-    Json.obj(
-      "userId" -> member.identityId,
-      "tier" -> member.tier.toString,
-      "joinDate" -> member.joinDate,
-      "optIn" -> member.optedIn
-    )
-  }
+  def basicDetails(member: Member) = Json.obj(
+    "userId" -> member.identityId,
+    "tier" -> member.tier.toString,
+    "joinDate" -> member.joinDate,
+    "optIn" -> member.optedIn
+  )
 }
 
 object User extends User

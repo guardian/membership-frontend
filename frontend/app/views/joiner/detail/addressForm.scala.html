@@ -1,4 +1,5 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(userFields: model.PrivateFields, marketingChoices: model.StatusFields,
+passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
 @import helper._
@@ -7,13 +8,20 @@
 
     @fragments.layout.sectionHeader(Config.siteTitle + " events in your area")
 
-    @fragments.tickets.ticketsFunnel(3, StepThree= "Enter location details", StepFour = "")
+    @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepThree= "Location", StepFour = "")
 
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
-        @fragments.form.nameDetail()
-        @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false)
+        @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+        @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false,
+        userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
+        @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+
+        @if(!passwordExists) {
+            @fragments.form.passwordDetail()
+        }
+
         @fragments.form.submit("Join now")
     </form>
 

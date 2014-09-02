@@ -119,3 +119,19 @@
         zoom: 1;
     }
 }
+
+// a dynamic mixin so we can reuse these measurements
+// for other properties – the media queries and widths
+// need to match the ones in layout.scss
+@mixin side-margins-calc($property) {
+    @include mq(tablet) {
+        $width: gs-span(12);
+        #{$property}: -webkit-calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
+    }
+    @include mq(mem-full) {
+        $width: gs-span(14);
+        #{$property}: -webkit-calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
+    }
+}

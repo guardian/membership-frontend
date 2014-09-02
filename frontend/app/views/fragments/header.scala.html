@@ -4,136 +4,104 @@
 
 <header class="header" role="banner">
     <div class="js-warning">
-        <!-- placeholder until real design and copy arrives -->
-        <p>Please enable JavaScript.</p>
+        <p>Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership. <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.</p>
     </div>
     <div class="header__inner">
-        <div class="u-cf">
+        <div class="u-cf header__branding">
             <div class="header__primary">
                 <nav>
                     <ul class="inline-list u-cf" role="menubar">
                         <li class="menu-item mobile-only">
-                            <a href="#" role="menuitem" class="control js-menu-icon">
+                            <a href="#" role="menuitem" class="control js-menu-icon" title="Menu">
                                 <span class="control__icon">
-                                    <i class="i i-menu"></i>
+                                    <i class="icon-sprite icon-sprite-menu-black"></i>
                                 </span>
                             </a>
                         </li>
-                        <li class="menu-item menu-item--large hidden-mobile is-hidden js-header-join-us-cta">
-                            <a href="/join" role="menuitem" class="menu-cta no-underline">Join us</a>
-                        </li>
-                        <li class="menu-item menu-item--last">
-                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon">
+                        <li class="menu-item">
+                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon control__user-account" title="Your account">
                                 <span class="control">
                                     <span class="control__icon">
-                                        <i class="i i-user"></i>
+                                        <i class="icon-sprite icon-sprite-user-black"></i>
                                     </span>
                                 </span>
-                                <span class="hidden-mobile ">
+                                <span class="hidden-mobile">
                                     <span class="identity__notice control__info">Sign in</span>
-                                    <span class="identity__account control__info u-h"></span>
-                                    <span class="identity__tier control__info u-h"></span>
+                                    <span class="identity__account control__info u-h no-underline--override"></span>
+                                    <span class="identity__tier control__info u-h no-underline--override"></span>
                                 </span>
+                            </a>
+                        </li>
+                        <li class="menu-item menu-item--last is-hidden js-header-join-us-cta">
+                            <a href="/join" role="menuitem" class="no-underline hidden-mobile control__join-us" title="Join us">
+                                <span class="control"><i class="icon-sprite icon-sprite-g-black"></i></span>
+                                <span class="control__info no-underline--override hidden-mobile">Join us</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
             </div>
             <div class="header__secondary">
+                <ul class="nav nav--global nav-global--mini nav--top-border-off">
+                    <li><a href="http://www.theguardian.com/" class="nav__link case--lower">The Guardian</a></li>
+                    <li><a href="http://jobs.theguardian.com/" class="nav__link case--lower">Jobs</a></li>
+                    <li><a href="https://soulmates.theguardian.com/" class="nav__link case--lower">Soulmates</a></li>
+                </ul>
+            </div>
+
+            <div class="header__secondary header__logo">
                 <span itemscope itemtype="http://schema.org/Organization">
                     <a href="/" itemprop="url" class="icon-wrapper">
                         <span class="u-h" itemprop="name">@Config.siteTitle</span>
-                        @if(Config.membershipHide){
-                            <i class="i i-logo i-logo--masterclass"></i>
-                        }else{
-                            <i class="icon-sprite icon-sprite-mem-brand"></i>
-                        }
+                        <i class="icon-sprite icon-sprite-logo-beta"></i>
                     </a>
                 </span>
             </div>
+
+            <div class="header__inner header__inner--popup">
+                <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
+                    <nav role="navigation" aria-label="Profile menu">
+                        <ul class="nav nav--columns">
+                            <li class="nav__item">
+                                <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
+                            </li>
+                            <li class="nav__item">
+                                <a href="@Config.idWebAppUrl/membership/edit" class="nav__link">Edit profile</a>
+                            </li>
+                            <li class="nav__item">
+                                <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>
+                            </li>
+                            <li class="nav__item">
+                                <a href="@Config.idWebAppUrl/password/change" class="nav__link"
+                                   data-link-name="Change password">Change password</a>
+                            </li>
+                            <li class="nav__item">
+                                <a href="@Config.idWebAppUrl/signout" class="nav__link">Sign out</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="nav-popup--sections nav-popup nav-popup--small is-hidden js-sections-nav-popup">
+                    <nav role="navigation" aria-label="@Config.siteTitle sections">
+                        <div class="nav-popup__cta_container u-cf u-h js-sections-nav-join-us">
+                            <a href="/join" role="menuitem" class="no-underline">
+                                <span class="control"><i class="icon-sprite icon-sprite-g-black"></i></span>
+                                <span class="control__info no-underline--override">Join us</span>
+                            </a>
+                        </div>
+                        <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
+                            @fragments.nav()
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
-        <nav role="navigation" class="nav nav--global">
+        <nav role="navigation" class="nav nav--global nav--global--header">
             <div class="header__primary">
                 <ul class="inline-list">
-                    <li class="inline-list__item nav__item">
-                        <a href="/events" class="nav__link">events</a>
-                    </li>
-                    @if(!Config.membershipHide) {
-                        <li class="inline-list__item nav__item">
-                            <a href="/join" class="nav__link">about membership</a>
-                        </li>
-                        <li class="inline-list__item nav__item">
-                            <a href="/join/patron" class="nav__link">patrons</a>
-                        </li>
-                    }
-                </ul>
-            </div>
-            <div class="header__secondary">
-                <ul class="inline-list">
-                    <li class="inline-list__item nav__item">
-                        <a href="/help" class="nav__link">help</a>
-                    </li>
-                    <li class="inline-list__item nav__item">
-                        <a href="/feedback" class="nav__link nav__link--last">feedback</a>
-                    </li>
+                    @fragments.nav(inlineMode=true)
                 </ul>
             </div>
         </nav>
-    </div>
-    <div class="header__inner header__inner--popup">
-        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
-            <nav role="navigation" aria-label="Profile menu">
-                <ul class="nav nav--columns">
-                    <li class="nav__item">
-                        <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="@Config.idWebAppUrl/membership/edit" class="nav__link">Edit profile</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="@Config.idWebAppUrl/password/change" class="nav__link"
-                           data-link-name="Change password">Change password</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="@Config.idWebAppUrl/signout" class="nav__link">Sign out</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="nav-popup--sections nav-popup nav-popup--small is-hidden js-sections-nav-popup">
-            <nav role="navigation" aria-label="@Config.siteTitle sections">
-                <div class="nav-popup__cta_container u-cf u-h js-sections-nav-join-us">
-                    <a href="/join" class="nav-popup__cta no-underline">Join us</a>
-                </div>
-                <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
-                    <li class="nav__item">
-                        <a href="/events" class="nav__link">
-                            events
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="/join" class="nav__link">
-                            become a member
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="/join/patron" class="nav__link">
-                            become a patron
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav nav--columns nav--services nav--top-border-off u-cf">
-                    <li class="nav__item">
-                        <a class="nav__link" href="/help">help</a>
-                    </li>
-                    <li class="nav__item">
-                        <a class="nav__link" href="/feedback">feedback</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
     </div>
 </header>

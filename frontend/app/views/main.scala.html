@@ -1,13 +1,12 @@
-@(title: String)(content: Html)
+@(title: String, isBrochure: Boolean = false, containerPadding: Boolean = true, htmlClass: String = "")(content: Html)
 
 @import configuration.Config
 @import views.support.Asset
 
 <!DOCTYPE html>
 
-<html class="js-off">
+<html class="js-off @htmlClass">
     <head>
-        @if(!Config.membershipHide){
         <!--
 
              /'\_/`\                   /\ \                          /\ \      __
@@ -19,7 +18,6 @@
                                                                                       \ \_\
                                                                                        \/_/
         -->
-        }
         <meta charset="utf-8">
         <meta name="viewport"                       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <meta name="HandheldFriendly"               content="true"/>
@@ -67,11 +65,19 @@
 
         @fragments.unsupportedBrowser()
 
-        <div class="container-global">
-            @fragments.header()
+        @fragments.header()
 
-            <div class="page-container">
+        <div class="container-global">
+            <div class="page-side-margins">
+            @if(isBrochure != true) {
+                <div class="page-container @if(containerPadding){page-container--with-padding}">
+            }
+
                 @content
+
+            @if(isBrochure != true) {
+                </div>
+            }
             </div>
         </div>
 

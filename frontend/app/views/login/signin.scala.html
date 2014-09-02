@@ -1,12 +1,16 @@
 @(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
 
+
 @import configuration.Config
+@import model.Benefits
 
 @main("Join membership") {
 
     <section class="section-signin">
 
-        @fragments.tickets.ticketsFunnel(2, StepThree = "", StepFour = "")
+        @fragments.tickets.ticketsFunnel(2, StepOne = "", StepThree = "", StepFour = "")
+
+        <h1 class="section-sub-headline">Sign into your Guardian account</h1>
 
         <div class="signin__jumbotron">
             <h1 class="signin__tagline">Progress comes through the free expression of ideas</h1>
@@ -17,28 +21,27 @@
         <div class="signin__actions">
             <div class="signin__login">
                 <h3 class="signin__action-prompt">Sign in to your Guardian account</h3>
-                <a class="action action--join" href="@Config.idWebAppSigninUrl(returnUrl)">Sign in<i class="icon-sprite icon-sprite-arrow-right-white"></i></a>
+                <a class="action action--join" href="@Config.idWebAppSigninUrl(returnUrl)">Sign in</a>
             </div>
             <div class="signin__register">
                 <h3 class="signin__action-prompt">New to the guardian?</h3>
                 <h4>Please take a few short moments to register</h4>
-                <a class="action action--join" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now<i class="icon-sprite icon-sprite-arrow-right-white"></i></a>
+                <a class="action action--join" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now</a>
             </div>
         </div>
 
-        @*
         @for(tier <- tierOpt) {
-            <p>@Config.benefits(tier).leadin</p>
+            <p>@Benefits.details(tier).leadin</p>
 
             <ul class="package__list-element">
-            @for(item <- Config.benefits(tier).list) {
-                <li>@item</li>
+            @for((header, body) <- Benefits.details(tier).list) {
+                <li class="benefits-title">@header</li>
+                <li class="benefits-copy">@body</li>
             }
             </ul>
 
             <br/>
         }
-        *@
 
     </section>
 

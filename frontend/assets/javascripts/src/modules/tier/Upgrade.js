@@ -2,9 +2,8 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'src/utils/form/Form',
-    'src/utils/form/Password'
-], function ($, bean, component, Form, Password) {
+    'src/utils/form/Form'
+], function ($, bean, component, Form) {
     'use strict';
 
     var self;
@@ -36,7 +35,6 @@ define([
     Upgrade.prototype.init = function () {
         this.setupForm();
         this.toggleBillingAddressListener();
-        this.setupPasswordStrength();
     };
 
     Upgrade.prototype.toggleBillingAddressListener = function() {
@@ -56,6 +54,7 @@ define([
             } else {
                 // closed
                 $('.form-field', $billingDetails).removeClass('form-field--error');
+                $('.form-field__error-message', $billingDetails).remove();
 
                 $billingCTA.text('Different billing address?');
                 self.removeValidatorFromValidationProfile();
@@ -107,10 +106,6 @@ define([
             changeToTier = formElement.getAttribute('data-change-to-tier').toLowerCase();
         this.form = new Form(formElement,  '/tier/change/' + changeToTier, '/tier/change/' + changeToTier + '/summary');
         this.form.init();
-    };
-
-    Upgrade.prototype.setupPasswordStrength = function () {
-        (new Password()).init();
     };
 
     return Upgrade;

@@ -23,7 +23,7 @@ $inArticleInlineImgWidth: 114px;
 $trailblockImgWidth: 100%;
 $trailblockImgWidthLarge: 140px;
 $mobilePopupOffset: 55px;
-$headerMargin: 48px;
+$headerMargin: 36px;
 
 // Guss defaults overrides
 // =============================================================================
@@ -44,6 +44,7 @@ $mq-breakpoints: (
     mobile: gs-span(4)  + $gs-gutter, // 320px
     tablet: gs-span(9)  + $gs-gutter*2, // 740px
     desktop: gs-span(12) + $gs-gutter*2, // 980px
+    mem-full: gs-span(14) + $gs-gutter*2, // 1140px
     wide: gs-span(16) + $gs-gutter*2, // 1300px
     // Tweakpoints
     mobileLandscape: gs-span(6) + $gs-gutter, // 480px
@@ -129,6 +130,7 @@ $c-neutral5: #dfdfdf;
 $c-neutral6: #eaeaea;
 $c-neutral7: #f1f1f1;
 $c-neutral8: #f6f6f6;
+$c-neutral9: #fdfdfd;
 
 $c-live: #e81818;
 $c-media-icon: #fbba0f;
@@ -208,9 +210,13 @@ $action-icon-rightspace: 7px;
 $mem-brandOrange: #ce6f14;
 $mem-brandBlue: #82c2d6;
 $mem-brandGrey: #dcddda;
-$mem-trans-white: rgba(255, 255, 255, .8);
+$mem-brandDarkBlue: $c-newsDefault;
+$mem-brandLightblue: #02c7e1;
+$mem-trans-white: rgba(255, 255, 255, .95);
+$mem-trans-red: rgba(180, 24, 0, .95);
+$mem-trans-green: rgba(170, 216, 1, .95);
 $mem-black: #333333;
-$mem-blue: rgba(2, 199, 225, 1);
+$mem-blue: #4bc6df;
 $mem-buttonBlue: #197caa;
 
 $mem-button-confirm: #1a4683;
@@ -221,6 +227,14 @@ $mem-header: rgba(0, 0, 0, .7);
 $white: #ffffff;
 $offWhite: #d6d6d6;
 $black: #000000;
+$offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .5);
 $white-trans: rgba(255, 255, 255, .5);
 
+$mem-live-red: transparentize(#b51800, .15);
+
+$mem-live-accent: #cc2b12;
+
+$mem-live-red-trans: rgba(180, 24, 0, .95);
+
+$side-margins-top-magic-number: 114px;

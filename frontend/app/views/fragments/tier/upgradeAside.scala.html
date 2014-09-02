@@ -2,15 +2,16 @@
 
 @import views.support.Dates._
 @import views.support.Format._
-@import configuration.Config
+@import model.Benefits
 
 <aside class="form-secondary-container">
     <ul class="form-detail u-unstyled">
         <li class="form-detail__item">
             <h2 class="form__heading">What's included</h2>
             <ul>
-                @for(item <- Config.benefits(tier).list) {
-                    <li>@item</li>
+                @for((header, body) <- Benefits.details(tier).list) {
+                    <li>@header</li>
+                    <li>@body</li>
                 }
             </ul>
         </li>

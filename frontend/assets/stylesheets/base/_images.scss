@@ -10,5 +10,9 @@
 }
 
 img {
-    background-color: #f2f2f2;
+    background-color: transparent;
+    @include rem((
+        height: auto,
+        width: 100%
+    ));
 }

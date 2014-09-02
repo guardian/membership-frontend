@@ -1,9 +1,84 @@
 package model
 
 object Countries {
+
+  lazy val US = Country("United States", List(
+    "Alaska",
+    "Alabama",
+    "Arkansas",
+    "Arizona",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "District of Columbia",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Guam",
+    "Hawaii",
+    "Iowa",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Massachusetts",
+    "Maryland",
+    "Maine",
+    "Michigan",
+    "Minnesota",
+    "Missouri",
+    "Mississippi",
+    "Montana",
+    "North Carolina",
+    "North Dakota",
+    "Nebraska",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "Nevada",
+    "New York",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Puerto Rico",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Virginia",
+    "Virgin Islands",
+    "Vermont",
+    "Washington",
+    "Washington DC",
+    "Wisconsin",
+    "West Virginia",
+    "Wyoming"
+  ))
+
+  lazy val Canada = Country("Canada", List(
+    "Alberta",
+    "British Columbia",
+    "Manitoba",
+    "New Brunswick",
+    "Newfoundland and Labrador",
+    "Nova Scotia",
+    "Northwest Territories",
+    "Nunavut",
+    "Ontario",
+    "Prince Edward Island",
+    "Quebec",
+    "Saskatchewan",
+    "Yukon")
+  )
+
   lazy val all = List(
     UK,
-    US,
+    US.name,
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -42,7 +117,7 @@ object Countries {
     "Burundi",
     "Cambodia",
     "Cameroon",
-    "Canada",
+    Canada.name,
     "Canary Islands",
     "Cape Verde",
     "Cayman Islands",
@@ -237,5 +312,4 @@ object Countries {
   )
 
   lazy val UK = "United Kingdom"
-  lazy val US = "United States"
 }
