@@ -21,12 +21,15 @@ object MemberForm {
     val name: NameForm
     val deliveryAddress: AddressForm
     val marketingChoices: MarketingChoicesForm
+    val password: Option[String]
   }
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: MarketingChoicesForm) extends JoinForm
+  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: MarketingChoicesForm,
+                            password: Option[String] ) extends JoinForm
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
-                                billingAddress: Option[AddressForm], marketingChoices: MarketingChoicesForm) extends JoinForm
+                                billingAddress: Option[AddressForm], marketingChoices: MarketingChoicesForm,
+                                password: Option[String]) extends JoinForm
 
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
@@ -83,7 +86,8 @@ object MemberForm {
     mapping(
       "name" -> nameMapping,
       "deliveryAddress" -> friendAddressMapping,
-      "marketingChoices" -> marketingChoicesMapping
+      "marketingChoices" -> marketingChoicesMapping,
+      "password" -> optional(nonEmptyText)
     )(FriendJoinForm.apply)(FriendJoinForm.unapply)
   )
 
@@ -94,7 +98,8 @@ object MemberForm {
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
-      "marketingChoices" -> marketingChoicesMapping
+      "marketingChoices" -> marketingChoicesMapping,
+      "password" -> optional(nonEmptyText)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
