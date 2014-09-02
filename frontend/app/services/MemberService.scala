@@ -43,7 +43,7 @@ trait MemberService {
       identity <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
-      IdentityApiCloudWatch.put(Map("identity-update-user-details" -> identity.status))
+      IdentityApiCloudWatch.putStatus("identity-update-user-details", identity.status)
       memberId.account
     }
   }
@@ -64,7 +64,7 @@ trait MemberService {
       updateFields <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.put(Map("identity-update-user-details" -> updateFields.status))
+      IdentityApiCloudWatch.putStatus("identity-update-user-details", updateFields.status)
       memberId.account
     }
   }
@@ -73,7 +73,7 @@ trait MemberService {
     for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.put(Map("identity-password-update-response" -> updatePassword.status))
+      IdentityApiCloudWatch.putStatus("identity-password-update-response", updatePassword.status)
     }
   }
 

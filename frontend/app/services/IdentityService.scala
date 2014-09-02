@@ -96,7 +96,7 @@ object IdentityApi extends Http {
     val url = s"${Config.idApiUrl}/user/password-exists"
     WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
       Logger.info(s"Identity: GET password exists response code: ${response.status}")
-      record("identity-get-user-password-exists", response.status)
+      IdentityApiCloudWatch.putStatus("identity-get-user-password-exists", response.status)
       (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
   }
@@ -104,17 +104,13 @@ object IdentityApi extends Http {
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
       Logger.info(s"Identity: user GET response code: ${response.status}")
-      record("identity-get-user-details", response.status)
+      IdentityApiCloudWatch.putStatus("identity-get-user-details", response.status)
       (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
-  }
-
-  private def record(key: String, status: Double) {
-    IdentityApiCloudWatch.put(Map(key -> status))
   }
 }
 
