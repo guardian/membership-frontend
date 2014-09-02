@@ -8,7 +8,6 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import services.{MemberService, EventbriteService}
-import actions.{MemberAction, AuthenticatedAction}
 import model.Eventbrite.EBError
 
 import com.netaporter.uri.dsl._
