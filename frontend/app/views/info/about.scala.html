@@ -1,6 +1,6 @@
 @()
 
-@main("About") {
+@main("About", containerPadding = false, htmlClass = "events-bg") {
 
     @fragments.layout.sectionHeader("About Membership")
 
@@ -10,29 +10,45 @@
 
     <div class="benefits-container">
         <h2 class="about-block-title">what's included</h2>
-        <ul class="u-unstyled">
-            <li class="benefits__list-items">Book tickets
+        <ul class="benefits__list u-unstyled">
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-book_tickets"></i>
+                <span class="benefits__list--header">Book tickets</span>
                 <p>Book tickets to Guardian Live events</p>
             </li>
-            <li class="benefits__list-items">Digital Digest email
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-dig_digest"></i>
+                <span class="benefits__list--header">Digital Digest email</span>
                 <p>Receive weekly updates on the upcoming programme</p>
             </li>
-            <li class="benefits__list-items">Video highlights
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-video_highlights"></i>
+                <span class="benefits__list--header">Video highlights</span>
                 <p>Watch highlights of selected Guardian Live events</p>
             </li>
-            <li class="benefits__list-items">20% Discount
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-discount"></i>
+                <span class="benefits__list--header">20% Discount</span>
                 <p>20% discount on Guardian Live tickets</p>
             </li>
-            <li class="benefits__list-items">+1 Guest
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-plus_1_guest"></i>
+                <span class="benefits__list--header">+1 Guest</span>
                 <p>Bring a guest to Guardian Live with the same discount and priority booking advantages</p>
             </li>
-            <li class="benefits__list-items">Live stream events
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-live_stream"></i>
+                <span class="benefits__list--header">Live stream events</span>
                 <p>Watch live streams of Flagship events</p>
             </li>
-            <li class="benefits__list-items">Membership card
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-membership_card"></i>
+                <span class="benefits__list--header">Membership card</span>
                 <p>Unlock additional experiences</p>
             </li>
-            <li class="benefits__list-items">Early Booking
+            <li class="benefits__list--items">
+                <i class="icon-sprite icon-sprite-early_booking"></i>
+                <span class="benefits__list--header">Early Booking</span>
                 <p>Additional priority ticket booking (one week before friends)</p>
             </li>
         </ul>

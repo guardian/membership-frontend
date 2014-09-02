@@ -3,34 +3,75 @@
    ========================================================================== */
 
 .benefits-container {
+    @include clearfix;
     background-color: $c-neutral6;
+    @include rem((
+        width: 100%
+    ));
 
-    @include mq(desktop) {
+    .about-block-title {
+        @include fs-headline(6);
         @include rem((
-            width: gs-span(12)
+            padding: $gs-baseline $gs-gutter 0 $gs-gutter
         ));
     }
 
-    &:after {
-        clear: both;
-        content: '';
-        display: block;
+    .benefits__list {
+        @include clearfix;
+
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(11),
+                margin: 80px $gs-gutter 0 gs-span(2),
+                padding-bottom: $gs-gutter+10
+            ));
+        }
+
+        @include mq(wide) {
+            @include rem((
+                width: gs-span(12),
+                margin: 80px $gs-gutter 0 gs-span(2)+$gs-gutter*2
+            ));
+        }
     }
 
-    .benefits__list-items {
+    .benefits__list--items {
         float: left;
-        border-right: 1px solid $c-neutral3; 
-        @include rem((
-            width: gs-span(3),
-            padding: $gs-gutter/2,
-            min-height: $gs-gutter*7,
-            margin-bottom: 50px
-        ));
+        @include fs-bodyCopy(3);
 
         &:nth-child(4),
         &:nth-child(8) {
             border-right: 0;
         }
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(3),
+                padding: 0 $gs-gutter/2,
+                height: 220px,
+                margin-bottom: 50px
+            ));
+        }
+
+        @include mq(desktop) {
+            border-right: 1px solid $c-neutral3; 
+            @include rem((
+                width: gs-span(3)-10,
+                height: 220px
+            ));
+        }
+
+        @include mq(wide) {
+            @include rem((
+                width: gs-span(3),
+                height: 190px
+            ));
+        }
+    }
+
+    .benefits__list--header {
+        @include fs-bodyHeading(3);
+        display: block;
     }
 }
 
