@@ -1,22 +1,20 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Member.Keys
-
 import com.gu.identity.model.User
-
-import play.api.Logger
-
+import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
+import monitoring.IdentityApiCloudWatch
+import play.api.Logger
 import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -45,6 +43,7 @@ trait MemberService {
       identity <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
+      IdentityApiCloudWatch.put(Map("identity-update-user-details" -> identity.status))
       memberId.account
     }
   }
@@ -65,13 +64,17 @@ trait MemberService {
       updateFields <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
+      IdentityApiCloudWatch.put(Map("identity-update-user-details" -> updateFields.status))
       memberId.account
     }
   }
 
   private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
-  for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
-    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
+    for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
+    yield {
+      Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
+      IdentityApiCloudWatch.put(Map("identity-password-update-response" -> updatePassword.status))
+    }
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
