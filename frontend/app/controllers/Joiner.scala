@@ -40,11 +40,12 @@ trait Joiner extends Controller {
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedAction.async { implicit request =>
+    val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
+      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
       marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
-      passwordExists = userOpt.flatMap(_.passwordExists).getOrElse(false)
+      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
     } yield {
       tier match {
         case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))

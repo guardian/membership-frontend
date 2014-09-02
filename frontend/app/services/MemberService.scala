@@ -115,7 +115,6 @@ trait MemberService {
 
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
-    //todo add upgrade flow for password
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)

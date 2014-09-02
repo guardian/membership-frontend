@@ -19,10 +19,14 @@ trait IdentityService {
   def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
     for {
       userDetails <- IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
-      passwordExists <- IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
     } yield {
-      userDetails.map(_.copy(passwordExists = passwordExists))
+      userDetails
     }
+  }
+
+  def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] = {
+    for (passwordExists <- IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters))
+    yield passwordExists
   }
 
   def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
@@ -86,7 +90,7 @@ trait IdentityService {
 object IdentityService extends IdentityService
 
 trait Http {
-  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[Boolean]]
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean]
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
@@ -96,10 +100,11 @@ trait Http {
 
 object IdentityApi extends Http {
 
-  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[Boolean]] = {
-    WS.url(s"${Config.idApiUrl}/user/password-exists").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
+    val url = s"${Config.idApiUrl}/user/password-exists"
+    WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
       Logger.info(s"Identity: GET password exists response code: ${response.status}")
-      (response.json \ "passwordExists").asOpt[Boolean]
+      (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
   }
 
@@ -113,4 +118,8 @@ object IdentityApi extends Http {
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
   }
+}
+
+case class IdentityApiError(s: String) extends Throwable {
+  override def getMessage: String = s
 }
