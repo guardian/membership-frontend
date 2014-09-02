@@ -16,7 +16,12 @@ trait Membership {
     buildInfoKeys := Seq[BuildInfoKey](
       name,
       BuildInfoKey.constant("buildNumber", Option(System.getenv("BUILD_NUMBER")) getOrElse "DEV"),
-      BuildInfoKey.constant("buildTime", System.currentTimeMillis)
+      BuildInfoKey.constant("buildTime", System.currentTimeMillis),
+      BuildInfoKey.constant("gitCommitId", try {
+        "git rev-parse HEAD".!!.trim
+      } catch {
+          case e: Exception => "unknown"
+      })
     ),
     buildInfoPackage := "app"
   )
