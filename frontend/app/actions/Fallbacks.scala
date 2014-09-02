@@ -6,7 +6,7 @@ import play.api.mvc.{Call, RequestHeader}
 
 object Fallbacks {
 
-  def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.Joining.tierChooser())
+  def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.TierController.change())
 
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joining.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
