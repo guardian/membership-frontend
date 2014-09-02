@@ -18,6 +18,8 @@ define([
      * TODO-ben: simplify class
      * TODO-ben: move errors to above inputs (confirm with UX and Design)
      */
+    var MAKING_PAYMENT_MESSAGE = 'Making Payment...';
+    var PROCESSING_PAYMENT_MESSAGE = 'Processing Payment...';
     var self;
 
     function Form (formElement, successPostUrl, successRedirectUrl) {
@@ -34,6 +36,7 @@ define([
     Form.prototype.classes = {
         HIDE: 'is-hidden',
         PAYMENT_ERRORS: 'js-payment-errors',
+        FORM_FIELD_ERROR_MESSAGE: 'form-field__error-message',
         FORM_SUBMIT: 'js-submit-input',
         CREDIT_CARD_NUMBER: 'js-credit-card-number',
         CREDIT_CARD_CVC: 'js-credit-card-cvc',
@@ -41,6 +44,7 @@ define([
         CREDIT_CARD_EXPIRY_YEAR: 'js-credit-card-exp-year',
         CREDIT_CARD_IMAGE: 'js-credit-card-image',
         THROBBER: 'js-waiting-container',
+        THROBBER_MESSAGE: 'js-waiting-message',
         ICON_PREFIX: 'icon-sprite-card-'
     };
 
@@ -100,7 +104,11 @@ define([
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
             if (errorMessage) {
-                self.displayErrors([errorMessage]);
+                self.manageErrors({
+                    isValid: false,
+                    errorMessage: errorMessage,
+                    $element: $(this.getElem('CREDIT_CARD_NUMBER'))
+                });
             }
         } else {
 
@@ -109,16 +117,18 @@ define([
                 'payment.token': token
             });
 
+            self.setThrobberMessage(MAKING_PAYMENT_MESSAGE);
+
             ajax({
                 url: self.successPostUrl,
                 method: 'post',
                 data: data,
                 success: function () {
                     self.stopLoader();
+                    self.setThrobberMessage();
                     window.location.assign(self.successRedirectUrl);
                 },
                 error: function (error) {
-
                     var errorObj,
                         errorMessage;
 
@@ -126,11 +136,16 @@ define([
                         errorObj = error.response && JSON.parse(error.response);
                         errorMessage = self.getErrorMessage(errorObj);
                         if (errorMessage) {
-                            self.displayErrors([errorMessage]);
+                            self.manageErrors({
+                                isValid: false,
+                                errorMessage: errorMessage,
+                                $element: $(self.getElem('CREDIT_CARD_NUMBER'))
+                            });
                         }
                     } catch (e) {}
 
                     self.stopLoader();
+                    self.setThrobberMessage();
                 }
             });
 
@@ -172,26 +187,21 @@ define([
      * disable or enable the submit button dependant on if we have errors
      * @param errorMessages
      */
-    Form.prototype.displayErrors = function (errorMessages) {
-        var $paymentErrorsElement = $(this.getClass('PAYMENT_ERRORS'), this.formElement),
-            $formSubmitButton = $(this.getClass('FORM_SUBMIT'), this.formElement),
-            errorString = '';
+    Form.prototype.displayGlobalErrors = function (errorMessages) {
+        var $paymentErrorsElement = $(this.getClass('PAYMENT_ERRORS'), this.formElement);
+        var errorString = '';
 
         if (errorMessages.length) {
             //display errors and disable submit
-            errorMessages.forEach(function (element) {
-                errorString += '<li>' + element + '</li>';
-            });
+            errorString += '<li>Your form has errors</li>';
 
             $paymentErrorsElement.removeClass(this.classes.HIDE);
             $paymentErrorsElement.html(errorString);
 
-            $formSubmitButton.attr('disabled', true);
         } else {
             //hide errors and enable submit
             $paymentErrorsElement.html('');
             $paymentErrorsElement.addClass(this.classes.HIDE);
-            $formSubmitButton.removeAttr('disabled');
         }
     };
 
@@ -450,6 +460,7 @@ define([
             if (formValidationResult.isValid) {
 
                 self.startLoader();
+                self.setThrobberMessage(PROCESSING_PAYMENT_MESSAGE);
 
                 if( self.isStripeForm ){
                     stripe.card.createToken({
@@ -492,7 +503,7 @@ define([
                 this.errorMessages.map(removeErrorMessage);
             }
 
-            this.displayErrors(this.errorMessages);
+            this.displayGlobalErrors(this.errorMessages);
         }
     };
 
@@ -632,17 +643,24 @@ define([
 
     /**
      * add 'form-field--error' class to 'form-field' element to give error styles to element
+     * add localised error message
      * @param validationResult
      */
-    Form.prototype.addErrorStylesForInput = function (validationResult) {
+    Form.prototype.addErrorDetail = function (validationResult) {
         var $elementParentFormField = utilsHelper.getSpecifiedParent(validationResult.$element, 'form-field');
 
         if (!validationResult.isValid) {
             $elementParentFormField.addClass('form-field--error');
+            if ($(this.getClass('FORM_FIELD_ERROR_MESSAGE'), $elementParentFormField).length === 0) {
+                $.create('<p class="' + this.getClass('FORM_FIELD_ERROR_MESSAGE', true) + '">' + validationResult.errorMessage + '</p>')
+                    .insertAfter($elementParentFormField[0].lastElementChild);
+            }
         } else {
             $elementParentFormField.removeClass('form-field--error');
+            $(this.getClass('FORM_FIELD_ERROR_MESSAGE'), $elementParentFormField[0]).remove();
         }
     };
+
 
     /**
      * this will add or remove the error from the errorMessages array and add error styles to the inputs
@@ -652,7 +670,7 @@ define([
 
         var messageIndex = this.errorMessages.indexOf(validationResult.errorMessage);
 
-        this.addErrorStylesForInput(validationResult);
+        this.addErrorDetail(validationResult);
 
         if (messageIndex === -1 && !validationResult.isValid) {
             //add error
@@ -662,9 +680,8 @@ define([
             this.errorMessages.splice(messageIndex, 1);
         }
 
-        this.displayErrors(this.errorMessages);
+        this.displayGlobalErrors(this.errorMessages);
     };
-
 
     /**
      * start loading throbber
@@ -678,6 +695,11 @@ define([
      */
     Form.prototype.stopLoader = function () {
         $(this.getClass('THROBBER'), this.formElement).removeClass('js-waiting');
+    };
+
+    Form.prototype.setThrobberMessage = function (message) {
+        message = message || '';
+        $(this.getElem('THROBBER_MESSAGE')).text(message);
     };
 
     /**

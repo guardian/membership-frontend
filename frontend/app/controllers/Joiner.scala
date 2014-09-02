@@ -11,7 +11,7 @@ import com.gu.membership.salesforce.Tier
 
 import com.netaporter.uri.dsl._
 
-import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
+import actions.AuthRequest
 import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
@@ -38,7 +38,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def enterDetails(tier: Tier.Tier) = AuthenticatedAction.async { implicit request =>
+  def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     for {
       userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
@@ -52,7 +52,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def joinFriend() = AuthenticatedAction.async { implicit request =>
+  def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makeFriend)
   }
 

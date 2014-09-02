@@ -16,7 +16,7 @@ object Dates {
     lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
   }
 
-  def prettyDate(dt: DateTime): String = dt.toString("dd MMMMM YYYY")
+  def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
 
   def prettyDateWithTime(dt: DateTime): String =
     prettyDate(dt) + dt.toString(", h:mm ") + dt.toString("a").toLowerCase

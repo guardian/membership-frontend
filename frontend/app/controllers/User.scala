@@ -9,20 +9,19 @@ import play.api.mvc.Controller
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import com.gu.membership.salesforce.{FreeMember, PaidMember}
+import com.gu.membership.salesforce.{Member, FreeMember, PaidMember}
 
-import actions.{Cors, AjaxMemberAction, MemberRequest}
 import services.{StripeService, SubscriptionService}
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
-  def me = Cors(AjaxMemberAction) { implicit request =>
-    Ok(basicDetails(request))
+  def me = AjaxMemberAction { implicit request =>
+    Ok(basicDetails(request.member))
   }
 
-  def meDetails = Cors(AjaxMemberAction).async { implicit request =>
+  def meDetails = AjaxMemberAction.async { implicit request =>
     val futurePaymentDetails = request.member match {
       case paidMember: PaidMember =>
         for {
@@ -53,19 +52,15 @@ trait User extends Controller {
         Future.successful(paymentDetails)
     }
 
-    futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request) ++ paymentDetails) }
+    futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
-  def basicDetails(request: MemberRequest[_]) = {
-    val member = request.member
-
-    Json.obj(
-      "userId" -> member.identityId,
-      "tier" -> member.tier.toString,
-      "joinDate" -> member.joinDate,
-      "optIn" -> member.optedIn
-    )
-  }
+  def basicDetails(member: Member) = Json.obj(
+    "userId" -> member.identityId,
+    "tier" -> member.tier.toString,
+    "joinDate" -> member.joinDate,
+    "optIn" -> member.optedIn
+  )
 }
 
 object User extends User

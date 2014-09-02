@@ -78,7 +78,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
     scenarioWeb("29. Membership tab does not appear if you are not a member") {
       implicit driver =>
       given {
-        MembershipSteps().IAmNotLoggedIn
+        MembershipSteps().IAmLoggedIn
       }
       .when {
         _.IGoToIdentity
