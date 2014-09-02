@@ -17,7 +17,7 @@ trait DowngradeTier {
   self: TierController =>
 
   def downgradeToFriend() = PaidMemberAction { implicit request =>
-    Ok(views.html.tier.downgrade.confirm())
+    Ok(views.html.tier.downgrade.confirm(request.member.tier))
   }
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST

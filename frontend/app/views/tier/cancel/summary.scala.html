@@ -10,7 +10,7 @@
         @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
 
         @for(subscriptionDetails <- subscriptionDetailsOpt) {
-            <p>You will continue to receive all the great Membership Benefits until @subscriptionDetails.endDate.pretty</p>
+            <p>You will continue to receive all the great Membership benefits until @subscriptionDetails.endDate.pretty</p>
         }
 
         <h2 class="section-sub-headline">Current Package Summary</h2>
@@ -24,8 +24,7 @@
         <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community</p>
 
         <div class="content__container right-align">
-            <a href="">Profile FAQ's</a>
-            <a href="@Config.idWebAppUrl/membership/edit" class="action-cta action-cta--confirm">My Profile</a>
+            <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta action-cta--confirm">My Profile</a>
         </div>
 
     </section>
