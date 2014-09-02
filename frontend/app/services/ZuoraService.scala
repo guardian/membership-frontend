@@ -5,6 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Null, Elem, PrettyPrinter}
 
 import org.joda.time.{DateTimeZone, DateTime}
+import org.joda.time.format.ISODateTimeFormat
 
 import play.api.Logger
 import play.api.libs.ws.WS
@@ -12,8 +13,8 @@ import play.api.Play.current
 
 import forms.MemberForm.{NameForm, AddressForm}
 import model.{Zuora, Stripe}
-import model.Zuora.Authentication
-import org.joda.time.format.ISODateTimeFormat
+import model.Zuora._
+import model.ZuoraDeserializer._
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -36,7 +37,7 @@ trait ZuoraService {
 
   def authentication: Authentication
 
-  trait ZuoraAction {
+  trait ZuoraAction[T <: ZuoraObject] {
     val body: Elem
 
     val authRequired = true
@@ -68,7 +69,7 @@ trait ZuoraService {
       </soapenv:Envelope>.toString()
     }
 
-    def mkRequest(): Future[Elem] = {
+    def mkRequest()(implicit reader: ZuoraReader[T]): Future[T] = {
       val url = if (authRequired) authentication.url else apiUrl
 
       if (authRequired && authentication.url.length == 0) {
@@ -82,12 +83,12 @@ trait ZuoraService {
         Logger.debug(s"Got result ${result.status}")
         Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
         // TODO: check result for generic errors
-        result.xml
+        reader.read(result.xml)
       }
     }
   }
 
-  case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) extends ZuoraAction {
+  case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) extends ZuoraAction[PaymentMethod] {
     val body =
       <ns1:create>
         <ns1:zObjects xsi:type="ns2:PaymentMethod">
@@ -99,17 +100,18 @@ trait ZuoraService {
       </ns1:create>
   }
 
-  case class SetDefaultPaymentMethod(accountId: String, paymentMethodId: String) extends ZuoraAction {
+  // TODO: create model and reader
+  case class SetDefaultPaymentMethod(accountId: String, paymentMethodId: String) extends ZuoraAction[Subscription] {
     val body =
       <ns1:update>
         <ns1:zObjects xsi:type="ns2:Account">
           <ns2:Id>{accountId}</ns2:Id>
           <ns2:DefaultPaymentMethodId>{paymentMethodId}</ns2:DefaultPaymentMethodId>
-      </ns1:zObjects>
-    </ns1:update>
+        </ns1:zObjects>
+      </ns1:update>
   }
 
-  case class Login() extends ZuoraAction {
+  case class Login() extends ZuoraAction[Authentication] {
     override val authRequired = false
 
     val body =
@@ -119,7 +121,7 @@ trait ZuoraService {
       </api:login>
   }
 
-  case class Query(query: String) extends ZuoraAction {
+  case class Query(query: String) extends ZuoraAction[Zuora.Query] {
     val body =
       <ns1:query>
         <ns1:queryString>{query}</ns1:queryString>
@@ -127,7 +129,7 @@ trait ZuoraService {
   }
 
   case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
-                       ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction {
+                       ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction[Subscription] {
 
     val body = {
       val now = formatDateTime(DateTime.now)
@@ -197,7 +199,9 @@ trait ZuoraService {
     }
   }
 
-  case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime) extends ZuoraAction {
+  case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime)
+    extends ZuoraAction[Subscription] {
+
     val body = {
       val dateStr = formatDateTime(date)
 
@@ -222,8 +226,9 @@ trait ZuoraService {
     }
   }
 
+  // TODO: make amendment model and reader
   case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
-                           date: DateTime) extends ZuoraAction {
+                           date: DateTime) extends ZuoraAction[Subscription] {
 
     override val singleTransaction = true
 
@@ -270,8 +275,9 @@ trait ZuoraService {
     }
   }
 
+  // TODO: make amendment model and reader
   case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String)
-    extends ZuoraAction {
+    extends ZuoraAction[Subscription] {
 
     override val singleTransaction = true
 
@@ -323,7 +329,7 @@ trait ZuoraService {
 
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    Query(q).mkRequest().map(Zuora.Query(_)).map { case Zuora.Query(results) =>
+    Query(q).mkRequest().map { case Zuora.Query(results) =>
       if (results.length != 1) {
         throw new SubscriptionServiceError(s"Query $q returned more than one result")
       }

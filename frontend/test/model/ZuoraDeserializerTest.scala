@@ -1,18 +1,18 @@
 package model
 
 import org.specs2.mutable.Specification
-import model.Zuora._
+import model.ZuoraDeserializer._
 import utils.Resource
 
-class ZuoraTest extends Specification {
+class ZuoraDeserializerTest extends Specification {
   "Zuora" should {
     "deserialize query with no results" in {
-      val query = Query(Resource.getXML("model/zuora/query-empty.xml"))
+      val query = queryReader.read(Resource.getXML("model/zuora/query-empty.xml"))
       query.results.size mustEqual 0
     }
 
     "deserialize query with one result" in {
-      val query = Query(Resource.getXML("model/zuora/query-single.xml"))
+      val query = queryReader.read(Resource.getXML("model/zuora/query-single.xml"))
 
       query.results.size mustEqual 1
 
@@ -21,7 +21,7 @@ class ZuoraTest extends Specification {
     }
 
     "deserialize query with multiple results" in {
-      val query = Query(Resource.getXML("model/zuora/subscriptions.xml"))
+      val query = queryReader.read(Resource.getXML("model/zuora/subscriptions.xml"))
 
       query.results.size mustEqual 3
 

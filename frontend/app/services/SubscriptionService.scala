@@ -33,11 +33,11 @@ trait CreateSubscription {
   def createPaidSubscription(memberId: MemberId, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest().map(Subscription(_))
+    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest()
   }
 
   def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[Subscription] = {
-    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest().map(Subscription(_))
+    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest()
   }
 }
 
@@ -75,7 +75,7 @@ trait AmendSubscription {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
       ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
       result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
-    } yield Subscription(result)
+    } yield result
   }
 }
 
@@ -106,12 +106,12 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
       accountId <- getAccountId(sfAccountId)
 
       subscriptions <- zuora.Query(s"SELECT Id, Version FROM Subscription WHERE AccountId='$accountId'").mkRequest()
-        .map { Query(_).results }
+        .map(_.results)
 
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub("Id")}'" }.mkString(" OR ")
-      amendments <- zuora.Query(s"SELECT ContractEffectiveDate, SubscriptionId FROM Amendment WHERE $where").mkRequest().map(Query(_).results)
+      amendments <- zuora.Query(s"SELECT ContractEffectiveDate, SubscriptionId FROM Amendment WHERE $where").mkRequest().map(_.results)
     } yield {
       val latestSubscriptionId = sortSubscriptions(subscriptions).last("Id")
 
@@ -142,7 +142,7 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
     for {
       accountId <- getAccountId(sfAccountId)
-      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest().map(PaymentMethod(_))
+      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest()
       _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
     } yield accountId
   }
@@ -154,7 +154,7 @@ object SubscriptionService extends SubscriptionService with ScheduledTask[Authen
   val initialDelay = 0.seconds
   val interval = 2.hours
 
-  def refresh() = zuora.Login().mkRequest().map(Authentication(_))
+  def refresh() = zuora.Login().mkRequest()
 
   val zuora = new ZuoraService {
     val apiUrl = Config.zuoraApiUrl

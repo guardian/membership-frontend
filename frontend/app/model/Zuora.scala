@@ -3,8 +3,6 @@ package model
 import scala.xml.Elem
 import org.joda.time.DateTime
 
-import com.gu.membership.salesforce.Tier
-
 object Zuora {
   trait ZuoraObject
 
@@ -19,7 +17,7 @@ object Zuora {
   case class SubscriptionStatus(current: String, future: Option[String])
 
   case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
-                                 ratePlanId: String) extends ZuoraObject {
+                                 ratePlanId: String) {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
   }
@@ -32,23 +30,31 @@ object Zuora {
       SubscriptionDetails(ratePlan("Name"), ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
     }
   }
+}
 
-  object Authentication {
-    def apply(elem: Elem): Authentication = {
+object ZuoraDeserializer {
+  import Zuora._
+
+  trait ZuoraReader[T <: ZuoraObject] {
+    def read(elem: Elem): T
+  }
+
+  implicit val authenticationReader = new ZuoraReader[Authentication] {
+    def read(elem: Elem): Authentication = {
       val result = elem \\ "loginResponse" \ "result"
       Authentication((result \ "Session").text, (result \ "ServerUrl").text)
     }
   }
 
-  object PaymentMethod {
-    def apply(elem: Elem): PaymentMethod = {
+  implicit val paymentMethodReader = new ZuoraReader[PaymentMethod] {
+    def read(elem: Elem): PaymentMethod = {
       val result = elem \\ "createResponse" \ "result"
       PaymentMethod((result \ "Id").text)
     }
   }
 
-  object Query {
-    def apply(elem: Elem): Query = {
+  implicit val queryReader = new ZuoraReader[Query] {
+    def read(elem: Elem): Query = {
       val resultNode = elem \\ "queryResponse" \ "result"
       val size = (resultNode \ "size").text.toInt
 
@@ -64,8 +70,8 @@ object Zuora {
     }
   }
 
-  object Subscription {
-    def apply(elem: Elem): Subscription = {
+  implicit val subscriptionReader = new ZuoraReader[Subscription] {
+    def read(elem: Elem): Subscription = {
       val result = elem \\ "subscribeResponse" \ "result"
       Subscription((result \ "SubscriptionId").text)
     }

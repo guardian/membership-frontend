@@ -2,14 +2,14 @@ package services
 
 import org.specs2.mutable.Specification
 import utils.Resource
-import model.Zuora.Query
+import model.ZuoraDeserializer.queryReader
 
 class SubscriptionServiceHelpersTest extends Specification {
 
   "SubscriptionServiceHelpers" should {
     "sort amendments by subscription version" in {
-      val subscriptions = Query(Resource.getXML("model/zuora/subscriptions.xml")).results
-      val amendments = Query(Resource.getXML("model/zuora/amendments.xml")).results
+      val subscriptions = queryReader.read(Resource.getXML("model/zuora/subscriptions.xml")).results
+      val amendments = queryReader.read(Resource.getXML("model/zuora/amendments.xml")).results
 
       val sortedAmendments = SubscriptionServiceHelpers.sortAmendments(subscriptions, amendments)
 
@@ -18,7 +18,7 @@ class SubscriptionServiceHelpersTest extends Specification {
     }
 
     "sort subscriptions by version" in {
-      val subscriptions = Query(Resource.getXML("model/zuora/subscriptions.xml")).results
+      val subscriptions = queryReader.read(Resource.getXML("model/zuora/subscriptions.xml")).results
 
       val sortedSubscriptions = SubscriptionServiceHelpers.sortSubscriptions(subscriptions)
 
