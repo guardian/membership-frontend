@@ -20,6 +20,11 @@ html {
         }
     }
 
+    &.about-bg {
+        @extend .events-bg;
+        background-image: url(/assets/images/mem-bg-events.jpg);
+    }
+
 }
 
 body {

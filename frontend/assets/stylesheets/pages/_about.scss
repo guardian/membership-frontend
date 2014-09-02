@@ -2,19 +2,20 @@
    About Membership page
    ========================================================================== */
 
+
+h2.about-block-title {
+    @include fs-headline(6);
+    @include rem((
+       padding: $gs-baseline $gs-gutter 0 $gs-gutter
+    ));
+}
+
 .benefits-container {
     @include clearfix;
     background-color: $c-neutral6;
     @include rem((
         width: 100%
     ));
-
-    .about-block-title {
-        @include fs-headline(6);
-        @include rem((
-            padding: $gs-baseline $gs-gutter 0 $gs-gutter
-        ));
-    }
 
     .benefits__list {
         @include clearfix;
@@ -73,5 +74,9 @@
         @include fs-bodyHeading(3);
         display: block;
     }
+}
+
+.join-membership-container {
+
 }
 

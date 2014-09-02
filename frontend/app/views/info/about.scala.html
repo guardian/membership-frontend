@@ -1,12 +1,19 @@
 @()
 
-@main("About", containerPadding = false, htmlClass = "events-bg") {
+@main("About", containerPadding = false, htmlClass = "about-bg") {
 
-    @fragments.layout.sectionHeader("About Membership")
+    <!-- @fragments.layout.sectionHeader("About Membership") -->
 
-    <p>Guardian membership bring together diverse, progressive minds, journalistic skills and the best of what others create to give you a richer understanding of the world and the opportunity of shaping it.</p> 
-    <p>Join now as a Founding Partner or Patron and guarantee that the price you pay today will never rise.</p>
-    <a class="action action--join" href="/join">Join today</a>
+    <div class="home-slice home-slice--epic u-cf">
+        <div class="home-slice__headline-block">
+            <h1 class="home-slice__headline">About Membership</h1>
+        </div>
+        <div class="home-slice__copy-block">
+            <p>Guardian membership bring together diverse, progressive minds, journalistic skills and the best of what others create to give you a richer understanding of the world and the opportunity of shaping it.</p> 
+            <p>Join now as a Founding Partner or Patron and guarantee that the price you pay today will never rise.</p>
+            <a class="action action--join" href="/join">Join today</a>
+        </div>
+    </div>
 
     <div class="benefits-container">
         <h2 class="about-block-title">what's included</h2>
@@ -53,5 +60,53 @@
             </li>
         </ul>
     </div>
+
+    <div class="home-slice home-slice--join-today">
+            <div class="home-slice__inner u-cf">
+                <h2 class="about-block-title">Join Guardian Membership today</h2>
+                <ul class="l-row u-unstyled join-today__join-boxes">
+                    <li class="join-today__join-box l-row__item">
+                        <div class="join-today__join-box--header join-today__join-box--header--friends">Friend</div>
+                        <div class="join-today__price">
+                        <div class="join-today__price--bold-free">£FREE</div>
+                        </div>
+                        <div class="join-today__teaser">
+                            <p class="join-today__teaser--description">Stay up to date and book tickets to Guardian Live events</p>
+                            <a class="action action--secondary-button" href="/join">
+                                <span class="action__text">Learn more about membership</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="join-today__join-box l-row__item">
+                        <div class="join-today__join-box--header join-today__join-box--header--partner">Partner</div>
+                        <div class="join-today__price l-row">
+                            <div class="join-today__price--bold l-row__item">£135/yr<span class="save-price">Save £45/yr</span></div>
+                            <div class="join-today__sep l-row__item"></div>
+                            <div class="join-today__price--bold l-row__item">£15/mo</div>
+                        </div>
+                        <div class="join-today__teaser">
+                            <p class="join-today__teaser--description">Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets</p>
+                            <a class="action action--secondary-button" href="/join">
+                                <span class="action__text">Learn more about membership</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="join-today__join-box l-row__item">
+                        <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
+                        <div class="join-today__price l-row">
+                            <div class="join-today__price--bold l-row__item">£540/yr<span class="save-price">Save £135/yr</span></div>
+                            <div class="join-today__sep l-row__item"></div>
+                            <div class="join-today__price--bold l-row__item">£60/mo</div>
+                        </div>
+                        <div class="join-today__teaser">
+                            <p class="join-today__teaser--description">Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian</p>
+                            <a class="action action--secondary-button" href="/join/patron">
+                                <span class="action__text">Learn more about patron</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
 }
