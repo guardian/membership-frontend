@@ -331,7 +331,7 @@ trait ZuoraService {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
     Query(q).mkRequest().map { case Zuora.Query(results) =>
       if (results.length != 1) {
-        throw new SubscriptionServiceError(s"Query $q returned more than one result")
+        throw new SubscriptionServiceError(s"Query $q returned ${results.length} results, expected one")
       }
 
       results(0)
