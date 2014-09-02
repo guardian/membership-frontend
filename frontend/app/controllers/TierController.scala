@@ -44,8 +44,7 @@ trait UpgradeTier {
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
-        passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
-      } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields, passwordExists))
+      } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
     }
     else
       Future.successful(NotFound)
