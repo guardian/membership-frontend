@@ -1,9 +1,9 @@
 package controllers
 
-import actions.{AuthenticatedAction, AuthRequest}
+import actions.AuthRequest
 import forms.MemberForm._
 import play.api.mvc.{Action, Controller}
-import services.{EmailService, MemberService}
+import services.EmailService
 
 import scala.concurrent.Future
 

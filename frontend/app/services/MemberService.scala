@@ -38,10 +38,11 @@ trait MemberService {
 
 
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
+    formData.password.map(updateUserPassword(user, _ , identityRequest))
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
+      identity <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
       memberId.account
@@ -49,6 +50,8 @@ trait MemberService {
   }
 
   def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
+    formData.password.map(updateUserPassword(user, _ , identityRequest))
+
     for {
       customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
 
@@ -59,11 +62,16 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserBasedOnJoining(user, formData, identityRequest)
+      updateFields <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response: ${identity.status.toString} for user ${user.id}")
+      Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
       memberId.account
     }
+  }
+
+  private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
+  for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
+    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
   }
 
   def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
@@ -119,7 +127,7 @@ trait MemberService {
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
-      identity <- IdentityService.updateUserBasedOnUpgrade(user, form, identityRequest)
+      identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
     } yield memberId.account
   }
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import model.{StatusFields, PrivateFields}
+import play.api.Logger
 
 import scala.concurrent.Future
 
@@ -11,7 +12,7 @@ import com.gu.membership.salesforce.Tier
 
 import com.netaporter.uri.dsl._
 
-import actions.{AuthRequest, PaidMemberAction, AuthenticatedAction}
+import actions.AuthRequest
 import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
@@ -38,21 +39,23 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList())
   }
 
-  def enterDetails(tier: Tier.Tier) = AuthenticatedAction.async { implicit request =>
+  def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+    val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
+      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
       privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
       marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
+      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
     } yield {
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices))
-        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices))
+        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
       }
 
     }
   }
 
-  def joinFriend() = AuthenticatedAction.async { implicit request =>
+  def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makeFriend)
   }
 

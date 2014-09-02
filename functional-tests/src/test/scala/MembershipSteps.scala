@@ -9,6 +9,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   val validCardNumber = "4242 4242 4242 4242"
   val cardWithNoFunds = "4000000000000341"
+  val secondaryCard = "5555555555554444"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
@@ -59,6 +60,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def ISelectFriend = {
+    new ChooseTierPage(driver).clickFriend.clickChoose.enterFirstName("Test")
+      .enterLastName("Automation").enterPostCode("N19GU").clickJoinNow
+    this
+  }
+
   def ISeeTheEventDetails = {
     val page = new EventPage(driver)
     Assert.assertNotEmpty(page.getEventDescription)
@@ -72,8 +79,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def TheDetailsAreTheSameAsOnTheEventProvider = {
     val page = new EventPage(driver)
     val eventName = page.getEventName
+    println("event name: " + eventName)
     // assumes we are logged in
     val eventBritePage = page.clickBuyButton
+    println("Other name: " + eventBritePage.getEventName)
     Assert.assert(eventBritePage.getEventName.contains(eventName),
       true, "The event name should be the same on Eventbrite")
     this
@@ -90,9 +99,36 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmRedirectedToTheChooseTierPage = {
+    val loaded = new ChooseTierPage(driver).isPageLoaded
+    Assert.assert(loaded, true, "The Choose tier page should be loaded")
+    this
+  }
+
   def IAmRedirectedToTheLoginPage = {
     val loaded = new LoginPage(driver).isPageLoaded
     Assert.assert(loaded, true, "Login page is loaded")
+    this
+  }
+
+  def ICanBecomeAFriend = {
+    new ChooseTierPage(driver).clickFriend.clickChoose
+    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
+    CookieHandler.register(driver)
+    becomeFriend
+    this
+  }
+
+  def ICanBecomeAPartner = {
+    new ChooseTierPage(driver).clickPartner.clickChoose
+    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
+    CookieHandler.register(driver)
+    pay
+    this
+  }
+
+  def ICanSeeTheTicketIframe = {
+    Assert.assert(new EventbriteIframe(driver).isIframeLoaded, true, "EventBrite iframe should be loaded")
     this
   }
 
@@ -102,7 +138,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnThePurchaseSubscriptionCTA = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPartner.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
     this
   }
 
@@ -113,7 +149,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IHaveToLogIn = {
     IAmLoggedIn
-    driver.get(Config().getUserValue("partnerPayment"))
     this
   }
 
@@ -140,9 +175,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICanSeeMyPaymentDetails = {
     val thankYouPage = pay
     val paidAmount = thankYouPage.getAmountPaidToday
-    Assert.assert(paidAmount, "£15.00", "Should have paid £15")
+    Assert.assert(paidAmount, "£135.00", "Should have paid £15")
     val nextPaymentAmount = thankYouPage.getPaymentAmount
-    Assert.assert(nextPaymentAmount, "£15.00", "Next payment should be £15")
+    Assert.assert(nextPaymentAmount, "£135.00", "Next payment should be £15")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assert(cardNumber.endsWith("4242"), true, "Should see correct card details")
     this
@@ -150,15 +185,15 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ErrorMessageIsDisplayedWhenIEnterAnInvalidCard = {
     val errorMessage = new PaymentPage(driver).cardWidget
-      .enterCardNumber("1234 5678 9098 7654").enterCardSecurityCode(" ").getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the card number that you have entered is incorrect. Please check and retype.",
-      "Invalid card message should be shown")
+      .enterCardNumber("1234 5678 9098 7654").enterCardSecurityCode(" ").isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "Invalid card message should be shown")
     this
   }
 
   def ISeeAnErrorWhenMyCardHasNoFunds = {
     val page = new PaymentPage(driver).cardWidget
-    page.submitPayment(cardWithNoFunds, "111", "12", "2018")
+    page.submitPayment("Test", "Automation", "90 York", " Way", "London", "UK", "N19GU", cardWithNoFunds, "111", "12",
+      "2018")
     val errorMessage = page.getErrorMessage
     Assert.assert(errorMessage, "We're sorry. Your card has been declined.",
       "We display stripe's error message correctly")
@@ -167,18 +202,16 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ISeeAnErrorWhenMyCVCIsInvalid = {
     val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
-      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the security code that you have entered is incorrect. Please check and retype.",
-      "We should display a valid CVC error message")
+      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "We should display a valid CVC error message")
     this
   }
 
   def ISeeAnErrorMessageWhenMyExpiryDateIsInThePast = {
     val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
       .enterCardSecurityCode("666").enterCardExpirationMonth("1")
-      .enterCardExpirationYear("2014").focusOnCvc.getErrorMessage
-    Assert.assert(errorMessage, "Sorry, the expiry date that you have entered is invalid. Please check and re-enter."
-      , "We should display an error message when the card is expired")
+      .enterCardExpirationYear("2014").focusOnCvc.isErrorMessageDisplayed
+    Assert.assert(errorMessage, true, "We should display an error message when the card is expired")
     this
   }
 
@@ -212,22 +245,29 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAPatron = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPatron.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAPatron
     ICanPurchaseASubscription
     this
   }
 
   def IBecomeAFriend = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.clickJoinButton
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterFirstName("Test").enterLastName("Automation")
+      .enterPostCode("N19GU").clickJoinNow
+    this
+  }
+
+  def ICancelMembership = {
+    new LandingPage(driver).clickAccountControl.clickEditProfile.clickChangeTier.clickCancelLink
+      .clickConfirmCancellation.clickBackToMyProfile
     this
   }
 
   def ICanSeeTheMembershipTabForAPartner = {
-   ICanSeeTheMembershipTab("partner", "15.00")
+   ICanSeeTheMembershipTab("partner", "135.00")
   }
 
   def ICanSeeTheMembershipTabForAPatron = {
-    ICanSeeTheMembershipTab("patron", "60.00")
+    ICanSeeTheMembershipTab("patron", "540.00")
   }
 
   def ICanSeeTheMembershipTabForFriend = {
@@ -259,13 +299,13 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IGoToMembershipTabToChangeDetails = {
     driver.get(Config().getUserValue("membershipEdit"))
-    new IdentityEditPage(driver).clickChangebutton
+    new IdentityEditPage(driver).clickChangeButton
     this
   }
 
   def ICanUpdateMyCardDetails = {
     val page = new IdentityEditPage(driver)
-    page.clickMembershipTab.clickChangebutton.enterCardNumber(validCardNumber)
+    page.clickMembershipTab.clickChangeButton.enterCardNumber(secondaryCard)
       .enterCardSecurityCode("343").enterCardExpirationMonth("11").enterCardExpirationYear("2018").clickUpdateCardDetails
     val success = new IdentityEditPage(driver).isSuccessFlashMessagePresent
     Assert.assert(success, true, "The card update should be successful")
@@ -296,18 +336,16 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IChooseToBecomeAPartner = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
-      .clickBecomeAPartner.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
-      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
-      .enterCardSecurityCode("566")
+      .clickBecomeAPartner.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
+        "12", "2031")
     new UpgradePage(driver).clickSubmit
     this
   }
 
   def IChooseToBecomeAPatron = {
     new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
-      .clickBecomeAPatron.enterCity("London").enterPostCode("N1 9GU").enterStreet("York Way")
-      .creditCard.enterCardNumber(validCardNumber).enterCardExpirationMonth("12").enterCardExpirationYear("2030")
-      .enterCardSecurityCode("566")
+      .clickBecomeAPatron.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
+        "12", "2031")
     new UpgradePage(driver).clickSubmit
     this
   }
@@ -323,6 +361,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IAmAPatron = verifyTier("£540.00")
 
+  def IAmNotAMember {
+    Assert.assert(new IdentityEditPage(driver).isMembershipCancelled, true, "Membership should be cancelled")
+  }
+
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
     Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
@@ -331,7 +373,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
 
-  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment(validCardNumber, "111", "12", "2031")
+  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
+    "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2031")
+
+  private def becomeFriend = new PaymentPage(driver).cardWidget.enterFirstName("test")
+    .enterLastName("Automation").enterPostCode("N1 9GU").clickSubmitPayment
 
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally
@@ -343,22 +389,20 @@ object CookieHandler {
 
   var loginCookie: Option[Cookie] = None
   var secureCookie: Option[Cookie] = None
+  val surveyCookie = new Cookie("gu.test", "test")
 
-  def login(driver: WebDriver) = {
-    this.synchronized {
-      if (None == CookieHandler.loginCookie) {
-        driver.get(Config().getUserValue("identityReturn"))
-        val user = System.currentTimeMillis().toString
-        new LoginPage(driver).clickRegister.enterEmail(user + "@testme.com")
-          .enterPassword(scala.util.Random.alphanumeric.take(10).mkString).enterUserName(user).clickSubmit.clickCompleteRegistration
-        driver.get(Config().getTestBaseUrl())
-        CookieHandler.loginCookie = Option(driver.manage().getCookieNamed("GU_U"))
-        CookieHandler.secureCookie = Option(driver.manage().getCookieNamed("SC_GU_U"))
-      } else {
-        driver.get(Config().getTestBaseUrl())
-        driver.manage().addCookie(CookieHandler.loginCookie.get)
-        driver.manage().addCookie(CookieHandler.secureCookie.get)
-      }
-    }
+  def login(driver: WebDriver) {
+    driver.get(Config().getUserValue("identityReturn"))
+    new LoginPage(driver).clickRegister
+    register(driver)
+  }
+
+  def register(driver: WebDriver) {
+    driver.manage().addCookie(surveyCookie)
+    val user = System.currentTimeMillis().toString
+    val password = scala.util.Random.alphanumeric.take(10).mkString
+    val email = user + "@testme.com"
+    new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
+      .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
   }
 }

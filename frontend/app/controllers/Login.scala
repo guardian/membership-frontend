@@ -1,7 +1,6 @@
 package controllers
 
 import com.gu.membership.salesforce.Tier
-import actions.{PaidMemberAction, MemberAction, AuthenticatedAction}
 import com.gu.membership.salesforce.Tier
 import play.api.mvc.Controller
 import play.api.data.Form

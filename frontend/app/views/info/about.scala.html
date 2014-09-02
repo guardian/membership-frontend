@@ -1,17 +1,18 @@
 @()
 
-@main("About", containerPadding = false, htmlClass = "about-bg") {
-
-    <!-- @fragments.layout.sectionHeader("About Membership") -->
+@main("About", isBrochure = true, containerPadding = false, htmlClass = "about-membership about-bg") {
 
     <div class="home-slice home-slice--epic u-cf">
-        <div class="home-slice__headline-block">
-            <h1 class="home-slice__headline">About Membership</h1>
-        </div>
-        <div class="home-slice__copy-block">
-            <p>Guardian membership bring together diverse, progressive minds, journalistic skills and the best of what others create to give you a richer understanding of the world and the opportunity of shaping it.</p> 
-            <p>Join now as a Founding Partner or Patron and guarantee that the price you pay today will never rise.</p>
-            <a class="action action--join" href="/join">Join today</a>
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h1 class="home-slice__headline">About <br/>Membership</h1>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy"></p>
+                <p class="home-slice__copy">Guardian membership bring together diverse, progressive minds, journalistic skills and the best of what others create to give you a richer understanding of the world and the opportunity of shaping it.</p> 
+                <p class="home-slice__copy">Join now as a Founding Partner or Patron and guarantee that the price you pay today will never rise.</p>
+                <a class="action action--join" href="/join">Join today</a>
+            </div>
         </div>
     </div>
 
@@ -56,7 +57,7 @@
             <li class="benefits__list--items">
                 <i class="icon-sprite icon-sprite-early_booking"></i>
                 <span class="benefits__list--header">Early Booking</span>
-                <p>Additional priority ticket booking (one week before friends)</p>
+                <p>Early booking for Partners and Patrons</p>
             </li>
         </ul>
     </div>

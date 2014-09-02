@@ -24,6 +24,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
       .then {
         _.IHaveToLogIn
+        .IClickOnThePurchaseSubscriptionCTA
         .andICanPurchaseASubscription
       }
     }
@@ -67,18 +68,19 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("21. User with no funds in account cannot make a purchase") {
-      implicit driver =>
-      given {
-        MembershipSteps().IAmLoggedIn
-      }
-      .when {
-        _.IClickOnThePurchaseSubscriptionCTA
-      }
-      .then {
-        _.ISeeAnErrorWhenMyCardHasNoFunds
-      }
-    }
+// disabled due to https://jira.gutools.co.uk/browse/MEM-282
+//    scenarioWeb("21. User with no funds in account cannot make a purchase") {
+//      implicit driver =>
+//      given {
+//        MembershipSteps().IAmLoggedIn
+//      }
+//      .when {
+//        _.IClickOnThePurchaseSubscriptionCTA
+//      }
+//      .then {
+//        _.ISeeAnErrorWhenMyCardHasNoFunds
+//      }
+//    }
 
     scenarioWeb("22. User with incorrect CVC in card cannot make a purchase") {
       implicit driver =>
