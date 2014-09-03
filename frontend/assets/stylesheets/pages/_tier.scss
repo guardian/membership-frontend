@@ -34,7 +34,7 @@ $current-indicator: rem(47px);
 // .package-list is a flexbox
 // so each .package inside is equal width
 .package-list {
-    @include mq(tablet) {
+    @include mq(desktop) {
         @include flexbox;
         @include align-items(stretch);
         margin: 0 auto;
@@ -67,13 +67,15 @@ $current-indicator: rem(47px);
         margin-right: 0;
     }
 
-    @include mq(tablet) {
+    @include mq(desktop) {
         @include flex-grow(1);
         @include flex-basis(0); // this fixes a bug, dunno why
     }
 
-    @include mq($to: tablet) {
+    @include mq($to: desktop) {
         margin-right: 0;
+        display: block;
+        overflow: hidden;
         @include rem((
             margin-bottom: $gs-gutter
         ));
@@ -93,6 +95,10 @@ $current-indicator: rem(47px);
     @include rem((
         height: 100px
     ));
+    @include mq($from: tablet, $to: desktop) {
+        width: 55%;
+        float: right;
+    }
 }
 
 .package__current-indicator {
@@ -121,6 +127,12 @@ $current-indicator: rem(47px);
     @include rem((
         padding: $gs-gutter
     ));
+    @include mq($from: tablet, $to: desktop) {
+        @include rem((
+            padding-top: $gs-gutter*2,
+            padding-bottom: 0
+        ));
+    }
 }
 
 .package__inner--cancel {
@@ -221,6 +233,15 @@ $current-indicator: rem(47px);
         margin-bottom: 20px,
         height: 45px
     ));
+
+    @include mq($from: tablet, $to: desktop) {
+        display: inline-block;
+        width: 30%;
+        margin-right: 14%;
+        margin-top: 0;
+        vertical-align: top;
+        height: auto;
+    }
 }
 
 .price-info {
@@ -233,13 +254,25 @@ $current-indicator: rem(47px);
         }
     }
 
-    .price-info__container-inner {
-        width: 50%;
-        float: left;
+    @include mq(desktop) {
+        .price-info__container-inner {
+            width: 50%;
+            float: left;
+        }
+
+        .price-info__container-inner--last {
+            text-align: right;
+        }
     }
 
-    .price-info__container-inner--last {
-        text-align: right;
+    @include mq($from: tablet, $to: desktop) {
+        .price-info__container-inner--last {
+            @include rem((
+                margin-top: $gs-gutter,
+                padding-top: $gs-gutter
+            ));
+            border-top: 1px solid $c-neutral5;
+        }
     }
 
     .price-info__sub-detail {
@@ -268,18 +301,24 @@ $current-indicator: rem(47px);
 }
 
 .package__description {
-    @include rem((
-        padding-top: $gs-gutter,
-        min-height: 60px
-    ));
     @include fs-bodyCopy(2);
-    border-top: 1px solid $c-neutral5;
 
     @include mq(desktop) {
         @include fs-bodyCopy(3);
         @include rem((
             min-height: 120px
         ));
+        @include rem((
+            padding-top: $gs-gutter,
+            min-height: 60px
+        ));
+        border-top: 1px solid $c-neutral5;
+    }
+
+    @include mq($from: tablet, $to: desktop) {
+        display: inline-block;
+        width: 55%;
+        vertical-align: top;
     }
 }
 
