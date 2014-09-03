@@ -10,7 +10,7 @@ html {
 
     &.home-page,
     &.events-bg,
-    &.about-bg {
+    &.about-membership {
         background-attachment: fixed;
         background-repeat: repeat-y;
         background-position-x: left;
@@ -26,7 +26,7 @@ html {
         background-image: url(/assets/images/homepage/new/top_crowd.jpg);
     }
 
-    &.about-bg {
+    &.about-membership {
         background-image: url(/assets/images/mem-bg-events.jpg);
     }
 

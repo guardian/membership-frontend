@@ -17,7 +17,7 @@ h2.about-block-title {
         ));
     }
 
-    .home-slice {
+    .home-slice__inner {
         @include mq(desktop) {
             @include rem((
                 width: gs-span(14)+$gs-gutter*2,
@@ -44,12 +44,22 @@ h2.about-block-title {
 
     .benefits__list {
         @include clearfix;
+        @include rem((
+            margin: $gs-gutter
+        ));
+
+        @include mq(tablet) {
+            @include rem((
+                width: gs-span(9),
+                margin: 80px $gs-gutter 0 gs-span(1),
+                padding-bottom: $gs-gutter+10
+            ));
+        }
 
         @include mq(desktop) {
             @include rem((
                 width: gs-span(11),
-                margin: 80px $gs-gutter 0 gs-span(2),
-                padding-bottom: $gs-gutter+10
+                margin: 80px $gs-gutter 0 gs-span(2)
             ));
         }
 
@@ -63,7 +73,11 @@ h2.about-block-title {
 
     .benefits__list--items {
         float: left;
-        @include fs-bodyCopy(3);
+        @include fs-bodyCopy(2);
+        @include rem((
+            width: gs-span(4),
+            height: 130px
+        ));
 
         &:nth-child(4),
         &:nth-child(8) {
@@ -71,11 +85,11 @@ h2.about-block-title {
         }
 
         @include mq(tablet) {
+            @include fs-bodyCopy(3);
             @include rem((
                 width: gs-span(3),
                 padding: 0 $gs-gutter/2,
-                height: 220px,
-                margin-bottom: 50px
+                height: 220px
             ));
         }
 
@@ -83,7 +97,8 @@ h2.about-block-title {
             border-right: 1px solid $c-neutral3; 
             @include rem((
                 width: gs-span(3)-10,
-                height: 220px
+                height: 220px,
+                margin-bottom: 50px
             ));
         }
 
@@ -92,6 +107,17 @@ h2.about-block-title {
                 width: gs-span(3),
                 height: 190px
             ));
+        }
+
+        i {
+            float: left;
+            @include rem((
+                margin-right: $gs-gutter
+            ));
+
+            @include mq(tablet) {
+                float: none;
+            }
         }
     }
 
