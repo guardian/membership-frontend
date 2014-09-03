@@ -1,0 +1,27 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:subscribeResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:AccountId>8a80812a4733a5bb0147a1a483994104</ns1:AccountId>
+                <ns1:AccountNumber>A00000011</ns1:AccountNumber>
+                <ns1:GatewayResponse/>
+                <ns1:GatewayResponseCode>Approved</ns1:GatewayResponseCode>
+                <ns1:InvoiceId>8a80812a4733a5bb0147a1a489144118</ns1:InvoiceId>
+                <ns1:InvoiceNumber>INV00000011</ns1:InvoiceNumber>
+                <ns1:InvoiceResult>
+                    <ns1:Invoice xmlns:ns2="http://object.api.zuora.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:Invoice">
+                        <ns2:Id>8a80812a4733a5bb0147a1a489144118</ns2:Id>
+                        <ns2:InvoiceNumber>INV00000011</ns2:InvoiceNumber>
+                    </ns1:Invoice>
+                </ns1:InvoiceResult>
+                <ns1:PaymentId>8a80812a4733a5bb0147a1a489664122</ns1:PaymentId>
+                <ns1:PaymentTransactionNumber>ch_4Wr8CMYwAb01zm</ns1:PaymentTransactionNumber>
+                <ns1:SubscriptionId>8a80812a4733a5bb0147a1a4887f410a</ns1:SubscriptionId>
+                <ns1:SubscriptionNumber>A-S00000011</ns1:SubscriptionNumber>
+                <ns1:Success>true</ns1:Success>
+                <ns1:TotalMrr>15.000000000</ns1:TotalMrr>
+                <ns1:TotalTcv>180.000000000</ns1:TotalTcv>
+            </ns1:result>
+        </ns1:subscribeResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

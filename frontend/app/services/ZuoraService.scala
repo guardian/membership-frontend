@@ -12,9 +12,10 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 
 import forms.MemberForm.{NameForm, AddressForm}
-import model.{Zuora, Stripe}
+import model.Stripe
 import model.Zuora._
 import model.ZuoraDeserializer._
+import model.ZuoraReaders.ZuoraReader
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -82,13 +83,18 @@ trait ZuoraService {
       WS.url(url).post(xml).map { result =>
         Logger.debug(s"Got result ${result.status}")
         Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
-        // TODO: check result for generic errors
-        reader.read(result.xml)
+
+        reader.read(result.xml) match {
+          case Left(error) =>
+            throw new ZuoraServiceError(s"Zuora error ${error.code}, ${error.message}")
+
+          case Right(obj) => obj
+        }
       }
     }
   }
 
-  case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) extends ZuoraAction[PaymentMethod] {
+  case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
     val body =
       <ns1:create>
         <ns1:zObjects xsi:type="ns2:PaymentMethod">
@@ -100,8 +106,7 @@ trait ZuoraService {
       </ns1:create>
   }
 
-  // TODO: create model and reader
-  case class SetDefaultPaymentMethod(accountId: String, paymentMethodId: String) extends ZuoraAction[Subscription] {
+  case class SetDefaultPaymentMethod(accountId: String, paymentMethodId: String) extends ZuoraAction[UpdateResult] {
     val body =
       <ns1:update>
         <ns1:zObjects xsi:type="ns2:Account">
@@ -121,7 +126,7 @@ trait ZuoraService {
       </api:login>
   }
 
-  case class Query(query: String) extends ZuoraAction[Zuora.Query] {
+  case class Query(query: String) extends ZuoraAction[QueryResult] {
     val body =
       <ns1:query>
         <ns1:queryString>{query}</ns1:queryString>
@@ -129,7 +134,7 @@ trait ZuoraService {
   }
 
   case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
-                       ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction[Subscription] {
+                       ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction[SubscribeResult] {
 
     val body = {
       val now = formatDateTime(DateTime.now)
@@ -200,7 +205,7 @@ trait ZuoraService {
   }
 
   case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime)
-    extends ZuoraAction[Subscription] {
+    extends ZuoraAction[AmendResult] {
 
     val body = {
       val dateStr = formatDateTime(date)
@@ -226,9 +231,8 @@ trait ZuoraService {
     }
   }
 
-  // TODO: make amendment model and reader
   case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
-                           date: DateTime) extends ZuoraAction[Subscription] {
+                           date: DateTime) extends ZuoraAction[AmendResult] {
 
     override val singleTransaction = true
 
@@ -275,9 +279,8 @@ trait ZuoraService {
     }
   }
 
-  // TODO: make amendment model and reader
   case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String)
-    extends ZuoraAction[Subscription] {
+    extends ZuoraAction[AmendResult] {
 
     override val singleTransaction = true
 
@@ -329,9 +332,9 @@ trait ZuoraService {
 
   def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    Query(q).mkRequest().map { case Zuora.Query(results) =>
+    Query(q).mkRequest().map { case QueryResult(results) =>
       if (results.length != 1) {
-        throw new SubscriptionServiceError(s"Query $q returned ${results.length} results, expected one")
+        throw new ZuoraServiceError(s"Query $q returned ${results.length} results, expected one")
       }
 
       results(0)

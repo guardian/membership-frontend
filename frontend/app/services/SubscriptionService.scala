@@ -11,6 +11,7 @@ import com.gu.membership.salesforce.{MemberId, Tier}
 import configuration.Config
 import forms.MemberForm.{NameForm, AddressForm}
 import model.Zuora._
+import model.ZuoraDeserializer._
 import model.Stripe
 import utils.ScheduledTask
 
@@ -31,13 +32,13 @@ trait CreateSubscription {
   self: SubscriptionService =>
 
   def createPaidSubscription(memberId: MemberId, customer: Stripe.Customer, tier: Tier.Tier,
-                             annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
+                             annual: Boolean, name: NameForm, address: AddressForm): Future[String] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest()
+    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest().map(_.id)
   }
 
-  def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[Subscription] = {
-    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest()
+  def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[String] = {
+    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest().map(_.id)
   }
 }
 
@@ -51,7 +52,7 @@ trait AmendSubscription {
 
       cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
       result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate).mkRequest()
-    } yield ""
+    } yield result.id.head // TODO: id.head needs fixing
   }
 
   def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
@@ -65,17 +66,17 @@ trait AmendSubscription {
       subscriptionDetails <- getSubscriptionDetails(subscriptionId)
       result <- zuora.DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
         subscriptionDetails.endDate).mkRequest()
-    } yield ""
+    } yield result.id.head // TODO: id.head needs fixing
   }
 
-  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Subscription] = {
+  def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[String] = {
     val newRatePlanId = PaidPlan(tier, annual)
 
     for {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
       ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
       result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
-    } yield result
+    } yield result.id.head // TODO: id.head needs fixing
   }
 }
 
@@ -143,7 +144,7 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
     for {
       accountId <- getAccountId(sfAccountId)
       paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest()
-      _ <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
+      result <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
     } yield accountId
   }
 
