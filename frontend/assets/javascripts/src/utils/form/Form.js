@@ -126,8 +126,6 @@ define([
                 method: 'post',
                 data: data,
                 success: function () {
-                    self.stopLoader();
-                    self.setThrobberMessage();
                     window.location.assign(self.successRedirectUrl);
                 },
                 error: function (error) {
