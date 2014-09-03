@@ -8,7 +8,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
-import monitoring.IdentityApiMetrics
+import monitoring.{MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
 
@@ -42,8 +42,9 @@ trait MemberService {
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
+      Logger.info(s"Identity status response: ${identityResponse.status.toString} for user ${user.id}")
       IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
+      MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
   }
@@ -65,6 +66,7 @@ trait MemberService {
     } yield {
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
       IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
+      MemberMetrics.putSignUp(formData.tier)
       memberId.account
     }
   }
@@ -98,13 +100,19 @@ trait MemberService {
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
       _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
-    } yield ""
+    } yield {
+      MemberMetrics.putCancel(newTier)
+      ""
+    }
   }
 
   def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
     for {
       _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
-    } yield ""
+    } yield {
+      MemberMetrics.putDowngrade(tier)
+      ""
+    }
   }
 
   // TODO: this currently only handles free -> paid
@@ -122,7 +130,10 @@ trait MemberService {
         )
       )
       identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
-    } yield memberId.account
+    } yield {
+      MemberMetrics.putUpgrade(tier)
+      memberId.account
+    }
   }
 }
 
