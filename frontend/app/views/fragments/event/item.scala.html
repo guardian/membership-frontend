@@ -7,9 +7,6 @@
 <li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}">
             <div class="event-item__media">
                 <a href="/event/@event.id">
-                    @if(event.getStatus == SoldOut){
-                        <span class="event-status event-status--sold-out">Sold Out</span>
-                    }
                     <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.png" data-alt="Please upload an event image"></div>
                 </a>
             </div>@*
@@ -19,6 +16,9 @@
              *@<div class="event-item__meta">
                 <a href="/event/@event.id">
                     <h2 class="event-item__title">
+                        @if(event.getStatus == SoldOut){
+                            <span class="event-status--sold-out">Sold Out</span>
+                        }
                         @event.name.text
                     </h2>
 

@@ -153,19 +153,6 @@ div.event {
     }
 }
 
-.event-status {
-    position: absolute;
-    right: 1em;
-    top: 0;
-    padding: 8px 14px;
-    text-align: center;
-    color: $white;
-}
-
-.event-status--sold-out {
-    background-color: $mem-brandOrange;
-}
-
 .js-off .booking-dates {
     display: none;
 }
@@ -355,6 +342,17 @@ div.event {
             @include rem((
                 margin-bottom: $gs-baseline
             ));
+            position: relative;
+        }
+        .event-status--sold-out {
+            display: inline-block;
+            color: $white;
+            background-color: $mem-live-accent;
+            @include fs-data(2);
+            position: relative;
+            top: -3px;
+            padding: 1px 3px;
+            margin-right: 4px;
         }
         .event-item__time {
             @include fs-data(4);
