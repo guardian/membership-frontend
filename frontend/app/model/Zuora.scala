@@ -119,7 +119,7 @@ object ZuoraDeserializer {
 
       Right(QueryResult(records))
     } else {
-      Left(Error("internal", "NOT_DONE", "The query was not complete (we don't support iterating query results)"))
+      Left(Error("internal", "QUERY_ERROR", "The query was not complete (we don't support iterating query results)"))
     }
   }
 

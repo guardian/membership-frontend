@@ -68,7 +68,7 @@ class ZuoraDeserializerTest extends Specification {
 
     "not allow iterable queries" in {
       val error = queryResultReader.read(Resource.getXML("model/zuora/query-not-done.xml")).left.get
-      error.code mustEqual "NOT_DONE"
+      error.code mustEqual "QUERY_ERROR"
     }
   }
 
