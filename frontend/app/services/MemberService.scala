@@ -52,7 +52,7 @@ trait MemberService {
     formData.password.map(updateUserPassword(user, _ , identityRequest))
 
     for {
-      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, formData.payment.token)
+      customer <- StripeService.Customer.create(user.id, formData.payment.token)
 
       updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
@@ -110,7 +110,7 @@ trait MemberService {
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     for {
-      customer <- StripeService.Customer.create(user.getPrimaryEmailAddress, form.payment.token)
+      customer <- StripeService.Customer.create(user.id, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
       subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, form.payment.annual)
       memberId <- MemberRepository.upsert(

@@ -26,8 +26,8 @@ trait StripeService {
   }
 
   object Customer {
-    def create(email: String, card: String): Future[Customer] =
-      post[Customer]("customers", Map("email" -> Seq(email), "card" -> Seq(card)))
+    def create(identityId: String, card: String): Future[Customer] =
+      post[Customer]("customers", Map("description" -> Seq(s"IdentityID - $identityId"), "card" -> Seq(card)))
 
     def read(customerId: String): Future[Customer] =
       get[Customer](s"customers/$customerId")
