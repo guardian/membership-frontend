@@ -27,7 +27,7 @@
             "Default" : "PROD"
         },
         "SiteDomain" : {
-            "Description" : "Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or 'membership.theguardian.com')",
+            "Description" : "Site domain Name",
             "Type" : "String"
         },
         "AllowedIngressIps" : {
@@ -134,6 +134,18 @@
                         "Statement":[{
                             "Effect":"Allow",
                             "Action":["ses:SendEmail", "ses:SendRawEmail"],
+                            "Resource":"*"
+                        }
+                        ]
+                    }
+                },
+                {
+                    "PolicyName": "PushMetrics",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement":[{
+                            "Effect":"Allow",
+                            "Action":["cloudwatch:PutMetricData"],
                             "Resource":"*"
                         }
                         ]
