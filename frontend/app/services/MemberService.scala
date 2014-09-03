@@ -8,7 +8,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
-import monitoring.IdentityApiCloudWatch
+import monitoring.IdentityApiMetrics
 import play.api.Logger
 import utils.ScheduledTask
 
@@ -43,7 +43,7 @@ trait MemberService {
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
-      IdentityApiCloudWatch.putUpdateUserDetailsResponse(identityResponse.status)
+      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
@@ -64,7 +64,7 @@ trait MemberService {
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.putUpdateUserDetailsResponse(identityResponse.status)
+      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
@@ -73,7 +73,7 @@ trait MemberService {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.putPasswordUpdateResponse(identityResponse.status)
+      IdentityApiMetrics.putPasswordUpdateResponse(identityResponse.status)
     }
   }
 

@@ -56,7 +56,7 @@ trait CloudWatch {
     put(namespace, metrics, Seq(stageDimension))
 }
 
-object IdentityApiCloudWatch extends CloudWatch {
+object IdentityApiMetrics extends CloudWatch {
 
   def putPasswordsExistsResponse(status: Int) {
     putStatus("identity-get-user-password-exists-response", status)
