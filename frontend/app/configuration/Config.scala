@@ -67,4 +67,6 @@ object Config {
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
+
+  val stage = config.getString("stage")
 }
