@@ -10,7 +10,7 @@ object Zuora {
 
   case class Error(origin: String, code: String, message: String) extends ZuoraObject
 
-  case class AmendResult(id: Seq[String]) extends ZuoraObject
+  case class AmendResult(ids: Seq[String]) extends ZuoraObject
   case class CreateResult(id: String) extends ZuoraObject
   case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraObject
   case class SubscribeResult(id: String) extends ZuoraObject

@@ -23,9 +23,9 @@ class ZuoraDeserializerTest extends Specification {
     "have multiple ids" in {
       val amend = amendResultReader.read(Resource.getXML("model/zuora/amend-result.xml")).right.get
 
-      amend.id.length mustEqual 2
-      amend.id(0) mustEqual "2c92c0f847f1dcf00147fe0a50520707"
-      amend.id(1) mustEqual "2c92c0f847f1dcf00147fe0a50f3071f"
+      amend.ids.length mustEqual 2
+      amend.ids(0) mustEqual "2c92c0f847f1dcf00147fe0a50520707"
+      amend.ids(1) mustEqual "2c92c0f847f1dcf00147fe0a50f3071f"
     }
   }
 
