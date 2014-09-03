@@ -114,9 +114,9 @@
     background-color: $offWhite;
     color: $black;
     @include rem((
-        padding: 8px 8px 8px 18px,
-        min-width: 220px,
-        width: auto
+        padding: 8px 8px 8px 18px
+//        min-width: 220px,
+//        width: auto
     ));
 
     &:visited,

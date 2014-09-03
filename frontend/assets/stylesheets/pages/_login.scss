@@ -1,21 +1,5 @@
 .section-signin {
     text-align: center;
-    .signin__jumbotron {
-        width: 100%;
-        text-align: center;
-        @include rem((
-            padding-bottom: $gs-baseline*3,
-            margin-bottom: $gs-baseline*3,
-            border-bottom: 1px solid #000000
-        ));
-        .signin__tagline {
-            @include fs-headline(7);
-        }
-        .signin__sub-tagline {
-            @include fs-bodyHeading(5);
-            font-weight: 100;
-        }
-    }
 
     .signin__actions {
         display: inline-block;

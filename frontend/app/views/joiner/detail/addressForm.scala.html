@@ -1,4 +1,5 @@
-@(userFields: model.PrivateFields, marketingChoices: model.StatusFields)(implicit token: play.filters.csrf.CSRF.Token)
+@(userFields: model.PrivateFields, marketingChoices: model.StatusFields,
+passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
 @import helper._
@@ -16,6 +17,11 @@
         @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false,
         userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
         @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+
+        @if(!passwordExists) {
+            @fragments.form.passwordDetail()
+        }
+
         @fragments.form.submit("Join now")
     </form>
 

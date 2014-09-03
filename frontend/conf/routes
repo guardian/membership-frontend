@@ -58,6 +58,7 @@ GET         /help                              controllers.Info.help
 GET         /feedback                          controllers.Info.feedback
 GET         /feedback/thankyou                 controllers.Info.feedbackThankyou
 POST        /feedback                          controllers.Info.submitFeedback
+GET         /about                             controllers.Info.about
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)

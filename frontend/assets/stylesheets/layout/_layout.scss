@@ -8,7 +8,9 @@ html {
     -o-background-size: cover;
     background-size: cover;
 
-    &.events-bg {
+    &.home-page,
+    &.events-bg,
+    &.about-membership {
         background-attachment: fixed;
         background-repeat: repeat-y;
         background-position-x: left;
@@ -18,6 +20,14 @@ html {
         @include mq(tablet) {
             background-position-x: center; // this image has white at the top center so on mobile it looks as though no image has loaded - left aligning on mobile as a temp fix.
         }
+    }
+
+    &.home-page {
+        background-image: url(/assets/images/homepage/new/top_crowd.jpg);
+    }
+
+    &.about-membership {
+        background-image: url(/assets/images/mem-bg-events.jpg);
     }
 
 }
@@ -146,8 +156,6 @@ body {
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
-
-
 
 //TODO better names
 .brochure-container-outer {
@@ -510,4 +518,3 @@ blockquote {
         padding-top: 10px
     ));
 }
-

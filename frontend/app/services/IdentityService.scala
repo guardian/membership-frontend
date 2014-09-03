@@ -6,6 +6,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.IdentityUser
 import model.UserDeserializer._
+import monitoring.IdentityApiMetrics
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json._
@@ -16,11 +17,13 @@ import scala.concurrent.Future
 
 trait IdentityService {
 
-  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] = {
+  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] =
     IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
-  }
 
-  def updateUserBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
+  def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
+    IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
+
+  def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
 
     val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
       val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
@@ -33,19 +36,22 @@ trait IdentityService {
       "firstName" -> formData.name.first
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-    postRequest(fields, user, identityRequest)
+    postFields(fields, user, identityRequest)
   }
 
-  def updateUserBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
+  def updateUserPassword(password: String, identityRequest: IdentityRequest): Future[WSResponse] = {
+    val json = Json.obj("newPassword" -> password)
+    IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters)
+  }
 
+  def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
-    postRequest(fields, user, identityRequest)
+    postFields(fields, user, identityRequest)
   }
 
-  private def postRequest(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
+  private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
     val json = Json.obj("privateFields" -> fields)
-
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters)
   }
@@ -76,6 +82,8 @@ trait IdentityService {
 object IdentityService extends IdentityService
 
 trait Http {
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean]
+
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
@@ -84,14 +92,28 @@ trait Http {
 
 object IdentityApi extends Http {
 
+  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
+    val url = s"${Config.idApiUrl}/user/password-exists"
+    WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
+      Logger.info(s"Identity: GET password exists response code: ${response.status}")
+      IdentityApiMetrics.putPasswordsExistsResponse(response.status)
+      (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
+    }
+  }
+
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-       (response.json \ "user").asOpt[IdentityUser]
+      Logger.info(s"Identity: user GET response code: ${response.status}")
+      IdentityApiMetrics.putUserDetailsResponse(response.status)
+      (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
-
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
   }
+}
+
+case class IdentityApiError(s: String) extends Throwable {
+  override def getMessage: String = s
 }

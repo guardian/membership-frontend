@@ -5,7 +5,7 @@ import play.api.libs.json.Json
 
 case class IdentityUser(id: String,
                         privateFields: PrivateFields,
-                        statusFields: StatusFields )
+                        statusFields: StatusFields)
 
 
 //this can't be a Map[String,String] as PrivateFields in Identity has other object types
