@@ -19,7 +19,9 @@ define([
      * TODO-ben: move errors to above inputs (confirm with UX and Design)
      */
     var MAKING_PAYMENT_MESSAGE = 'Making Payment...';
-    var PROCESSING_PAYMENT_MESSAGE = 'Processing Payment...';
+    var PROCESSING_MESSAGE = 'Processing';
+    var PAYMENT_MESSAGE = 'Payment';
+    var ELLIPSE = '...';
     var self;
 
     function Form (formElement, successPostUrl, successRedirectUrl) {
@@ -459,8 +461,12 @@ define([
 
             if (formValidationResult.isValid) {
 
+                var throbberMessage = self.isStripeForm
+                    ? [PROCESSING_MESSAGE , ' ', PAYMENT_MESSAGE, ELLIPSE].join('')
+                    : PROCESSING_MESSAGE + ELLIPSE;
+
                 self.startLoader();
-                self.setThrobberMessage(PROCESSING_PAYMENT_MESSAGE);
+                self.setThrobberMessage(throbberMessage);
 
                 if( self.isStripeForm ){
                     stripe.card.createToken({
