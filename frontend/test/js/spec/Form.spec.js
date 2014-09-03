@@ -68,7 +68,7 @@ define([
             //pull this in once and cache it
             if (!form) {
                 ajax({
-                    url: '/base/test/fixtures/paymentForm.fixture.html',
+                    url: '/base/test/fixtures/form.fixture.html',
                     method: 'get',
                     success: function (resp) {
                         canonicalFormElement = $.create(resp)[0];

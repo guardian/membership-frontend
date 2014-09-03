@@ -4,6 +4,24 @@ county: Option[String], userCountry: Option[String])
 
 @import model.Countries
 
+@subdivisionSelect(subdivisionsList: List[String], subdivisionType: String, subdivisionLabel: String, isStateOrProvence: Boolean = false) = {
+    <div class="form-field address-fieldset__country@if(isStateOrProvence == true){ u-h}">
+        <label class="label" for="@subdivisionLabel-@(formType)">@subdivisionLabel.capitalize</label>
+        <div class="input">
+            <select name="@(formType).@(subdivisionType)"
+                    id="@subdivisionLabel-@(formType)"
+                    @if(isStateOrProvence == true) {
+                    data-error-message="Please enter your @subdivisionLabel.capitalize"
+                    data-validation="required"
+                    }>
+            @for(subdivision <- subdivisionsList) {
+                <option value="@subdivision"@if(userCountry.getOrElse("") == subdivision){selected}>@subdivision</option>
+            }
+            </select>
+        </div>
+    </div>
+}
+
 <fieldset class="fieldset address-fieldset js-@(formType)-fieldset">
 
     <div class="address-fieldset__inner">
@@ -57,28 +75,18 @@ county: Option[String], userCountry: Option[String])
                        data-validation="required"/>
             </div>
 
-            <div class="form-field">
-                <label class="label" for="county-or-state-@(formType)">County or State</label>
+            @subdivisionSelect(Countries.all, "country", "country")
+            @subdivisionSelect(Countries.US.states.toList, "countyOrState", "state", true)
+            @subdivisionSelect(Countries.Canada.states.toList, "countyOrState", "province", true)
+
+            <div class="form-field js-county-section">
+                <label class="label" for="county-or-state-@(formType)">County</label>
                 <input type="text"
                        name="@(formType).countyOrState"
                        value="@county"
                        id="county-or-state-@(formType)"
                        class="text-input text-input--block js-county-state"/>
             </div>
-
-            <div class="form-field address-fieldset__country">
-                <label class="label" for="country-@(formType)">Country</label>
-                <div class="input">
-                    <select name="@(formType).country" id="country-@(formType)">
-                        @for(country <- Countries.all) {
-                        <option value="@country" @if(userCountry.getOrElse("") == country){selected}>@country</option>
-                        }
-                    </select>
-                </div>
-            </div>
-
         </div>
-
     </div>
-
 </fieldset>

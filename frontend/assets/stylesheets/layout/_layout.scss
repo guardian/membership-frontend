@@ -9,7 +9,8 @@ html {
     background-size: cover;
 
     &.home-page,
-    &.events-bg {
+    &.events-bg,
+    &.about-membership {
         background-attachment: fixed;
         background-repeat: repeat-y;
         background-position-x: left;
@@ -23,6 +24,10 @@ html {
 
     &.home-page {
         background-image: url(/assets/images/homepage/new/top_crowd.jpg);
+    }
+
+    &.about-membership {
+        background-image: url(/assets/images/mem-bg-events.jpg);
     }
 
 }
