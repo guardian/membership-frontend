@@ -50,38 +50,38 @@ object ZuoraReaders {
         val resultNode = if (multiResults) "results" else "result"
         val result = body \ responseTag \ resultNode
 
-        extract(result.head)
+        extractEither(result.head)
       }
     }
 
-    protected def extract(result: Node): Either[Error, T]
+    protected def extractEither(result: Node): Either[Error, T]
   }
 
   object ZuoraReader {
     def apply[T <: ZuoraObject](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
       val responseTag = tag
-      protected def extract(result: Node): Either[Error, T] = extractFn(result)
+      protected def extractEither(result: Node): Either[Error, T] = extractFn(result)
     }
   }
 
   trait ZuoraResultReader[T <: ZuoraObject] extends ZuoraReader[T] {
-    protected def extract(result: Node): Either[Error, T] = {
+    protected def extractEither(result: Node): Either[Error, T] = {
       if ((result \ "Success").text == "true") {
-        Right(extract2(result))
+        Right(extract(result))
       } else {
         val errors = (result \ "Errors").map { node => Error("error", (node \ "Code").text, (node \ "Message").text) }
         Left(errors.head) // TODO: return more than just the first error
       }
     }
 
-    protected def extract2(result: Node): T
+    protected def extract(result: Node): T
   }
 
   object ZuoraResultReader {
     def create[T <: ZuoraObject](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
       val responseTag = tag
       override val multiResults: Boolean = multi
-      protected def extract2(result: Node) = extractFn(result)
+      protected def extract(result: Node) = extractFn(result)
     }
 
     def apply[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
