@@ -15,23 +15,8 @@
         <div class="package-container">
             <div class="package-list">
 
-                <div class="package package--current">
-                    <div class="package__current-indicator">This is what you're giving up</div>
-                    <div class="package__inner package__inner--cancel">
-                        @fragments.tier.details(currentTier)
-                        <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
-                    </div>
-                </div>
-
-                <div class="package package--current">
-                    <div class="package__inner package__inner--cancel">
-                        @fragments.tier.details(Tier.Friend)
-                        <form action="/tier/change/friend" method="POST">
-                            @CSRF.formField
-                            <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
-                        </form>
-                    </div>
-                </div>
+                @fragments.tier.benefits(currentTier=Some(currentTier), tier=currentTier, mode="downgrade")
+                @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="downgrade")
 
             </div>
         </div>
