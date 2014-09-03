@@ -16,7 +16,7 @@ GET         /join                              controllers.Joiner.tierList
 GET         /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST        /join/friend/enter-details         controllers.Joiner.joinFriend
 
-GET         /join/patron                       controllers.Joiner.patron
+GET         /patrons                           controllers.Joiner.patron
 
 GET         /join/friend/thankyou              controllers.Joiner.thankyouFriend
 GET         /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
