@@ -40,11 +40,6 @@
             "Type" : "String",
             "AllowedValues" : [ "t2.micro","m3.medium" ],
             "ConstraintDescription" : "must be a valid EC2 instance type."
-        },
-        "ELBName" : {
-        	"Type" :  "String",
-        	"AllowedValues" : [ "membership.theguardian.com.origin.membership.guardianapis.com", "test.membership.guardianapis.com"],
-        	"Default" : "membership.theguardian.com.origin.membership.guardianapis.com"
         }
     },
     "Resources" : {
@@ -209,7 +204,7 @@
             "Properties" : {
                 "HostedZoneId" : "/hostedzone/Z1E4V12LQGXFEC",
                 "Comment" : "CNAME for AWS ELB",
-                "Name" :  { "Ref" : "ELBName" },
+                "Name" :  "Name" :  { "Fn::Join" : [ ".", [ { "Ref" : "SiteDomain" }, "origin.membership.guardianapis.com." ] ] },
                 "Type" : "CNAME",
                 "TTL" : "120",
                 "ResourceRecords" : [ {"Fn::GetAtt":["FrontendElasticLoadBalancer","DNSName"]} ]
