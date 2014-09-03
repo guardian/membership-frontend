@@ -49,6 +49,7 @@ object ZuoraReaders {
       }.getOrElse {
         val resultNode = if (multiResults) "results" else "result"
         val result = body \ responseTag \ resultNode
+
         extract(result.head)
       }
     }
@@ -68,8 +69,8 @@ object ZuoraReaders {
       if ((result \ "Success").text == "true") {
         Right(extract2(result))
       } else {
-        val errors = result \ "Error" // TODO
-        Left(Error("error", "UNSUCCESSFUL", ""))
+        val errors = (result \ "Errors").map { node => Error("error", (node \ "Code").text, (node \ "Message").text) }
+        Left(errors.head) // TODO: return more than just the first error
       }
     }
 

@@ -3,6 +3,7 @@ package model
 import org.specs2.mutable.Specification
 import model.ZuoraDeserializer._
 import utils.Resource
+import model.Zuora.Error
 
 class ZuoraDeserializerTest extends Specification {
   "Authentication" should {
@@ -66,8 +67,8 @@ class ZuoraDeserializerTest extends Specification {
     }
 
     "not allow iterable queries" in {
-      val query = queryResultReader.read(Resource.getXML("model/zuora/query-not-done.xml")).left.get
-      query.code mustEqual "NOT_DONE"
+      val error = queryResultReader.read(Resource.getXML("model/zuora/query-not-done.xml")).left.get
+      error.code mustEqual "NOT_DONE"
     }
   }
 
@@ -75,6 +76,11 @@ class ZuoraDeserializerTest extends Specification {
     "have an id on success" in {
       val subscribe = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-result.xml")).right.get
       subscribe.id mustEqual "8a80812a4733a5bb0147a1a4887f410a"
+    }
+
+    "return an error on failure" in {
+      val error = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-error.xml")).left.get
+      error mustEqual Error("error", "TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
     }
   }
 

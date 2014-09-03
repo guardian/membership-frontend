@@ -86,7 +86,7 @@ trait ZuoraService {
 
         reader.read(result.xml) match {
           case Left(error) =>
-            throw new ZuoraServiceError(s"Zuora error ${error.code}, ${error.message}")
+            throw new ZuoraServiceError(s"Zuora deserialization failed - ${error.origin} ${error.code}: ${error.message}")
 
           case Right(obj) => obj
         }
