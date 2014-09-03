@@ -14,7 +14,7 @@ object Joining extends Controller {
   /*
   *   Tier selection page ===============================================
   */
-  def tierChooser() = CachedAction.async { implicit request =>
+  def tierChooser() = NoCacheAction.async { implicit request =>
 
     val eventService = EventbriteService
     val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
@@ -29,7 +29,7 @@ object Joining extends Controller {
 
   private val tierForm = Form { single("tier" -> nonEmptyText) }
 
-  def tierChooserRedirect() = CachedAction { implicit request =>
+  def tierChooserRedirect() = NoCacheAction { implicit request =>
 
     def redirect(formData: (String)) = {
       val tierString = formData

@@ -39,11 +39,13 @@ trait UpgradeTier {
   self: TierController =>
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
-    if (request.member.tier < tier)
+    if (request.member.tier < tier) {
+      val identityRequest = IdentityRequest(request)
       for {
-        userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
+        userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
-      }  yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
+      } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
+    }
     else
       Future.successful(NotFound)
   }

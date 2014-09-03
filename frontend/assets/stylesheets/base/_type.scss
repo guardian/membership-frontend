@@ -48,3 +48,32 @@ h3 {
     margin-bottom: 7px;
     @include fs-bodyCopy(3);
 }
+
+/* Membership specific type elements
+   ========================================================================== */
+
+blockquote {
+    font-style: italic;
+    font-weight: 300;
+    @include rem((
+        margin-bottom: 10px
+    ));
+
+    &:before {
+        @extend %icon-sprite;
+        @extend %icon-sprite-quote-blue;
+        content: '';
+        display: block;
+        float: left;
+        @include rem((
+            margin-right: 5px
+        ));
+    }
+}
+
+.blockquote--black-line {
+    border-top: 1px solid $black;
+    @include rem((
+        padding-top: 10px
+    ));
+}

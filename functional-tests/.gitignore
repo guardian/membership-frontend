@@ -21,3 +21,4 @@ assets/javascripts/lib/bower-components/
 .bundle
 Gemfile.lock
 dev
+local.conf
