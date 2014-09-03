@@ -4,10 +4,13 @@
 
 
 h2.about-block-title {
-    @include fs-headline(6);
+    @include fs-headline(4);
     @include rem((
        padding: $gs-baseline $gs-gutter 0 $gs-gutter
     ));
+    @include mq(tablet) {
+        @include fs-headline(6);
+    }
 }
 
 .about-membership {
@@ -17,7 +20,8 @@ h2.about-block-title {
         ));
     }
 
-    .home-slice__inner {
+    .home-slice__inner,
+    .home-slice--join-today {
         @include mq(desktop) {
             @include rem((
                 width: gs-span(14)+$gs-gutter*2,
@@ -32,7 +36,6 @@ h2.about-block-title {
 }
 
 .benefits-container {
-    @include clearfix;
     background-color: $c-neutral6;
     
     @include mq(desktop) {
@@ -43,7 +46,6 @@ h2.about-block-title {
     }
 
     .benefits__list {
-        @include clearfix;
         @include rem((
             margin: $gs-gutter
         ));
@@ -109,14 +111,17 @@ h2.about-block-title {
             ));
         }
 
-        i {
+        .icon-sprite__left {
             float: left;
             @include rem((
-                margin-right: $gs-gutter
+                margin: 0 $gs-gutter $gs-gutter 0
             ));
 
             @include mq(tablet) {
                 float: none;
+                @include rem((
+                    margin: 0 $gs-gutter 0 0
+                ));
             }
         }
     }
