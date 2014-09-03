@@ -1,0 +1,26 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:queryResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:done>false</ns1:done>
+                <ns1:queryLocator xsi:nil="1"
+                                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                <ns1:records xsi:type="ns2:Amendment"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                             xmlns:ns2="http://object.api.zuora.com/">
+                    <ns2:Id>2c92c0f847cdc31e0147cf2439b76ae6</ns2:Id>
+                    <ns2:ContractEffectiveDate>2015-08-13T12:29:15.000-08:00</ns2:ContractEffectiveDate>
+                    <ns2:SubscriptionId>2c92c0f847cdc31e0147cf24396f6ae1</ns2:SubscriptionId>
+                </ns1:records>
+                <ns1:records xsi:type="ns2:Amendment"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                             xmlns:ns2="http://object.api.zuora.com/">
+                    <ns2:Id>2c92c0f847cdc31e0147cf24390d6ad7</ns2:Id>
+                    <ns2:ContractEffectiveDate>2015-08-13T12:29:15.000-08:00</ns2:ContractEffectiveDate>
+                    <ns2:SubscriptionId>2c92c0f847cdc31e0147cf2111ba6173</ns2:SubscriptionId>
+                </ns1:records>
+                <ns1:size>2</ns1:size>
+            </ns1:result>
+        </ns1:queryResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
