@@ -16,10 +16,10 @@
              *@<div class="event-item__meta">
                 <a href="/event/@event.id">
                     <h2 class="event-item__title">
-                        @event.name.text
                         @if(event.getStatus == SoldOut){
                             <span class="event-status--sold-out">Sold Out</span>
                         }
+                        @event.name.text
                     </h2>
 
                     <div class="event-item__time">@event.start.pretty</div>

@@ -153,15 +153,6 @@ div.event {
     }
 }
 
-.event-status {
-    position: absolute;
-    right: 1em;
-    top: 0;
-    padding: 8px 14px;
-    text-align: center;
-    color: $white;
-}
-
 .js-off .booking-dates {
     display: none;
 }
@@ -361,7 +352,7 @@ div.event {
             position: relative;
             top: -3px;
             padding: 1px 3px;
-            margin-left: 4px;
+            margin-right: 4px;
         }
         .event-item__time {
             @include fs-data(4);
