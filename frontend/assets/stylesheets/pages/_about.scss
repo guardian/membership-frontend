@@ -18,7 +18,6 @@ h2.about-block-title {
     }
 
     .home-slice {
-        
         @include mq(desktop) {
             @include rem((
                 width: gs-span(14)+$gs-gutter*2,
@@ -35,6 +34,7 @@ h2.about-block-title {
 .benefits-container {
     @include clearfix;
     background-color: $c-neutral6;
+    
     @include mq(desktop) {
         @include rem((
             width: gs-span(14)+$gs-gutter*2,
