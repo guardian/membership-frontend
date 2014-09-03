@@ -35,9 +35,7 @@ define([
     Upgrade.prototype.init = function () {
         this.setupForm();
         this.toggleBillingAddressListener();
-
         this.setupDeliveryToggleState();
-        this.setupPasswordStrength();
     };
 
     Upgrade.prototype.toggleBillingAddressListener = function() {
@@ -83,7 +81,7 @@ define([
     Upgrade.prototype.setupDeliveryToggleState = function() {
         this.setupToggleState(
             $('#country-deliveryAddress', this.form.formElement),
-            $('#county-deliveryAddress', this.form.formElement),
+            $('#county-or-state-deliveryAddress', this.form.formElement),
             $('#state-deliveryAddress', this.form.formElement),
             $('#province-deliveryAddress', this.form.formElement)
         );
@@ -92,7 +90,7 @@ define([
     Upgrade.prototype.setupBillingToggleState = function() {
         this.setupToggleState(
             $('#country-billingAddress', this.form.formElement),
-            $('#county-billingAddress', this.form.formElement),
+            $('#county-or-state-billingAddress', this.form.formElement),
             $('#state-billingAddress', this.form.formElement),
             $('#province-billingAddress', this.form.formElement)
         );
