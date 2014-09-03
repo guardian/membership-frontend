@@ -41,7 +41,7 @@ define([
 
     JoinPaid.prototype.setupToggleBillingAddressListener = function() {
         this.removeValidatorFromValidationProfile();
-        //this.setupBillingToggleState();
+        this.setupBillingToggleState();
 
         var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
         var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).detach();
