@@ -1,22 +1,20 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Member.Keys
-
 import com.gu.identity.model.User
-
-import play.api.Logger
-
+import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
+import monitoring.IdentityApiMetrics
+import play.api.Logger
 import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -42,9 +40,10 @@ trait MemberService {
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
+      Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
+      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
@@ -62,33 +61,28 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      updateFields <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
+      Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
+      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
 
   private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
-  for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
-    yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
+    for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
+    yield {
+      Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
+      IdentityApiMetrics.putPasswordUpdateResponse(identityResponse.status)
+    }
   }
 
-  def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
-    def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
-      // code should be unique for each user/event combination
-      memberOpt
-        .filter(_.tier >= Tier.Partner)
-        .map { member =>
-          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}"))
-        }
-    }
-
-    for {
-      member <- MemberRepository.get(userId)
-      discount <- Future.sequence(createDiscountFor(member).toSeq)
-    } yield discount.headOption
+  def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBDiscount]] = {
+    // code should be unique for each user/event combination
+    if (member.tier >= Tier.Partner) {
+      EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}")).map(Some(_))
+    } else Future.successful(None)
   }
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {

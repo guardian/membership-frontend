@@ -4,7 +4,7 @@ import com.gu.membership.salesforce.Tier
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
-import services.EventbriteService
+import services.{PreMembershipJoiningEventFromSessionExtractor, EventbriteService}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
@@ -14,22 +14,16 @@ object Joining extends Controller {
   /*
   *   Tier selection page ===============================================
   */
-  def tierChooser() = CachedAction.async { implicit request =>
+  def tierChooser() = NoCacheAction { implicit request =>
 
-    val eventService = EventbriteService
-    val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-    val eventOpt = eventIdOpt.map(eventService.getEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
 
-    for (
-      event <- Future.sequence(eventOpt.toSeq)
-    ) yield {
-      Ok(views.html.joining.tierChooser(event.headOption))
-    }
+    Ok(views.html.joining.tierChooser(eventOpt))
   }
 
   private val tierForm = Form { single("tier" -> nonEmptyText) }
 
-  def tierChooserRedirect() = CachedAction { implicit request =>
+  def tierChooserRedirect() = NoCacheAction { implicit request =>
 
     def redirect(formData: (String)) = {
       val tierString = formData
