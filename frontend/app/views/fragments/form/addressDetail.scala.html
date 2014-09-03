@@ -77,7 +77,7 @@ county: Option[String], userCountry: Option[String])
 
             @subdivisionSelect(Countries.all, "country", "country")
             @subdivisionSelect(Countries.US.states.toList, "countyOrState", "state", true)
-            @subdivisionSelect(Countries.Canada.states.toList, "countyOrState", "provence", true)
+            @subdivisionSelect(Countries.Canada.states.toList, "countyOrState", "province", true)
 
             <div class="form-field js-county-section">
                 <label class="label" for="county-or-state-@(formType)">County</label>

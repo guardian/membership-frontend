@@ -84,7 +84,7 @@ define([
             $('#country-deliveryAddress', this.form.formElement),
             $('#county-deliveryAddress', this.form.formElement),
             $('#state-deliveryAddress', this.form.formElement),
-            $('#provence-deliveryAddress', this.form.formElement)
+            $('#province-deliveryAddress', this.form.formElement)
         );
     };
 
@@ -93,20 +93,20 @@ define([
             $('#country-billingAddress', this.form.formElement),
             $('#county-billingAddress', this.form.formElement),
             $('#state-billingAddress', this.form.formElement),
-            $('#provence-billingAddress', this.form.formElement)
+            $('#province-billingAddress', this.form.formElement)
         );
     };
 
-    Upgrade.prototype.setupToggleState = function($countrySelect, $countySelect, $stateSelect, $provenceSelect) {
+    Upgrade.prototype.setupToggleState = function($countrySelect, $countySelect, $stateSelect, $provinceSelect) {
 
         var formFieldClass = this.getClass('FORM_FIELD', true);
         var $selectElements = [];
         var $countrySelectParent = helper.getSpecifiedParent($countrySelect, formFieldClass);
         var $countySelectParent = helper.getSpecifiedParent($countySelect, formFieldClass);
         var $usaStateSelectParent = helper.getSpecifiedParent($stateSelect, formFieldClass).detach();
-        var $canadaProvenceSelectParent = helper.getSpecifiedParent($provenceSelect, formFieldClass).detach();
+        var $canadaProvinceSelectParent = helper.getSpecifiedParent($provinceSelect, formFieldClass).detach();
 
-        $selectElements.push($countySelectParent, $usaStateSelectParent, $canadaProvenceSelectParent);
+        $selectElements.push($countySelectParent, $usaStateSelectParent, $canadaProvinceSelectParent);
 
         bean.on($countrySelect[0], 'change', function (e) {
 
@@ -118,7 +118,7 @@ define([
             if (selectedName === UNITED_STATES_STRING) {
                 $usaStateSelectParent.removeClass('u-h').insertAfter($countrySelectParent);
             } else if (selectedName === CANADA_STRING) {
-                $canadaProvenceSelectParent.removeClass('u-h').insertAfter($countrySelectParent);
+                $canadaProvinceSelectParent.removeClass('u-h').insertAfter($countrySelectParent);
             } else {
                 $countySelectParent.removeClass('u-h').insertAfter($countrySelectParent);
             }
