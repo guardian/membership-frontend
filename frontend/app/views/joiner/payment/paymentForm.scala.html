@@ -17,27 +17,9 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
 
-                <fieldset class="fieldset">
-
-                    <div class="fieldset__heading">
-                        <h2 class="form__heading">Where shall we send your welcome pack?</h2>
-                        <div class="payment__flyer-image">
-                            <img src="@Asset.at("images/welcome_pack.jpg")" alt=""/>
-                        </div>
-                    </div>
-
-                    <div class="fieldset__fields">
-                        <p>Once you’ve joined Guardian membership we’ll send you a welcome pack in the post.</p>
-                        <p>Each pack contains all the information you need to discover the benefits of becoming a Guardian Membership
-                            partner.</p>
-                    </div>
-
-
-                </fieldset>
-
                 @fragments.form.errorMessageDisplay()
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-                @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", true,
+                @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
                 @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
