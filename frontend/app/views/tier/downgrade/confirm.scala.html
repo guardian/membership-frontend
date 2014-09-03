@@ -1,81 +1,41 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(currentTier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
 @import helper._
 
 @main("Downgrade Tier") {
 
-    <main role="main">
-        <div class="content__container">
-            <section class="l-row l-row--items-2 content__section">
-                <article class="l-row__item l-row__item--boost-2 secondary-content">
-                    <h1 class="content__headline">Are you sure?</h1>
-                    <p class="item__title">You will no longer receive all the great benefits</p>
-                </article>
-                <aside class="l-row__item">
-                    <h2 class="content__heading tone-news-one">Become a friend</h2>
-                </aside>
-            </section>
-        </div>
-        <div class="content__container">
-            <section class="l-row l-row--items-4">
-                <div class="l-row__item">
-                    <h2>Your current benefits</h2>
-                </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Digital</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
-                        </div>
-                        <ul class="item__list-element">
-                            <li>Vestibulum ante ipsum primis</li>
-                            <li>Fusce non sagittis ligula</li>
-                            <li>Phasellus et urna non orci</li>
-                            <li>Lorem ipsum dolor sit amet</li>
-                        </ul>
+    <section>
+
+        @fragments.layout.sectionHeader("Are you sure?")
+        <p>You will no longer receive all the great benefits</p>
+        <a href="/tier/change" class="action action--arrow-left action-cta action-cta--cancel">Back</a>
+
+        <div class="package-container">
+            <div class="package-list">
+
+                <div class="package package--current">
+                    <div class="package__current-indicator">This is what you're giving up</div>
+                    <div class="package__inner package__inner--cancel">
+                        @fragments.tier.details(currentTier)
+                        <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
                     </div>
                 </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Community</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
-                        </div>
-                        <ul class="item__list-element">
-                            <li>Sit amet libero congue pulvinar</li>
-                            <li>Vehicula tellus et, commodo</li>
-                            <li>Adipiscing in risus et consequat</li>
-                            <li>Maecenas tincidunt auctor</li>
-                        </ul>
+
+                <div class="package package--current">
+                    <div class="package__inner package__inner--cancel">
+                        @fragments.tier.details(Tier.Friend)
+                        <form action="/tier/change/friend" method="POST">
+                            @CSRF.formField
+                            <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
+                        </form>
                     </div>
                 </div>
-                <div class="l-row__item">
-                    <div class="item">
-                        <h3 class="item__title">Live</h3>
-                        <div class="u-responsive-ratio">
-                            <img src="" alt=""/>
-                        </div>
-                        <ul class="item__list-element">
-                            <li>Donec rhoncus tristique</li>
-                            <li>Leo congue imperdiet ultricies</li>
-                            <li>Non facilisis tellus mauris</li>
-                            <li>Orci volutpat varius</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <section>
-            <div class="l-row l-row--items-2">
-                <div class="l-row__item"></div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <form action="/tier/change/friend" method="POST">
-                        @CSRF.formField
-                        <a href="/tier/change" class="action-cta action-cta--cancel">Back</a>
-                        <input type="submit" value="Continue" class="action-cta action-cta--confirm"/>
-                    </form>
-                </div>
+
             </div>
-        </section>
-    </main>
+        </div>
+
+    </section>
 
 }

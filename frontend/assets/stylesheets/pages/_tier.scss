@@ -101,6 +101,12 @@ $current-indicator: rem(47px);
     background-color: #ffffff;
 }
 
+.package__inner--cancel {
+    @include rem((
+        height: 740px // magic number
+    ));
+}
+
 .package--current .package__inner {
     border: 1px solid #9c9c9c;
 }

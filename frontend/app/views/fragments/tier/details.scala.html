@@ -1,0 +1,16 @@
+@(currentTier: com.gu.membership.salesforce.Tier.Tier)
+@import model.Benefits
+@import com.gu.membership.salesforce.Tier
+
+<h2 class="package__title">@currentTier</h2>
+<div class="package__price">
+    @fragments.benefits.priceInfo(Benefits.details(currentTier))
+</div>
+<p class="package__leadin">@Benefits.details(currentTier).leadin</p>
+
+<ul class="package__list-element">
+    @for((header, body) <- Benefits.details(currentTier).list) {
+        <li class="benefits-title">@header</li>
+        <li class="benefits-copy">@body</li>
+    }
+</ul>

@@ -44,6 +44,25 @@
     }
 }
 
+// this variant moves the arrow to the other side
+// and hides the one on the right
+.action.action--arrow-left {
+    &:before {
+        @extend .icon-sprite-arrow-left-white;
+        &.action--secondary-button {
+            @extend .icon-sprite-arrow-left-black;
+        }
+        content: '';
+        float: left;
+        @include rem((
+            margin: 2px 30px 0 0
+        ));
+    }
+    &:after {
+        display: none;
+    }
+}
+
 .action--disabled {
     &,
     &:visited,
