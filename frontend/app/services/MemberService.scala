@@ -40,10 +40,10 @@ trait MemberService {
     for {
       memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identity <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response: ${identity.status.toString} : ${identity.body} for user ${user.id}")
-      IdentityApiCloudWatch.putStatus("identity-update-user-details-response", identity.status)
+      Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
+      IdentityApiCloudWatch.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
@@ -61,19 +61,19 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      updateFields <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response for fields update: ${updateFields.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.putStatus("identity-update-user-details-response", updateFields.status)
+      Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
+      IdentityApiCloudWatch.putUpdateUserDetailsResponse(identityResponse.status)
       memberId.account
     }
   }
 
   private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
-    for (updatePassword <- IdentityService.updateUserPassword(password, identityRequest))
+    for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
-      Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
-      IdentityApiCloudWatch.putStatus("identity-password-update-response", updatePassword.status)
+      Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
+      IdentityApiCloudWatch.putPasswordUpdateResponse(identityResponse.status)
     }
   }
 
