@@ -62,7 +62,7 @@
                 <div class="home-slice__offset-copy">
                     <blockquote class="home-slice__copy--quote">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
                     <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-                    <a class="action action--join" href="/join/patron">Start your journey as Patron</a>
+                    <a class="action action--join" href="/patrons">Start your journey as Patron</a>
                 </div>
             </div>
         </div>
@@ -118,9 +118,11 @@
     <div class="home-slice home-slice--join-today">
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join membership today</h2>
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo")
+            <div class="join-today__join-boxes package-list package-list--bordered">
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo")
+            </div>
         </div>
     </div>
 }
