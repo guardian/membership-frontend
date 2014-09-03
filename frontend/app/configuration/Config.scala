@@ -14,7 +14,6 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val membershipUrl = config.getString("membership.url")
-  val membershipDebug = config.getBoolean("membership.debug")
   val membershipFeedback = config.getString("membership.feedback")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
