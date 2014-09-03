@@ -15,7 +15,7 @@ package object actions {
     } yield f(memberOpt)
   }
 
-  case class MemberRequest[A, M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+  case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user
   }
 

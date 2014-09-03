@@ -74,21 +74,12 @@ trait MemberService {
     yield Logger.info(s"Identity status response for password update: ${updatePassword.status.toString} for user ${user.id}")
   }
 
-  def createEventDiscount(userId: String, event: EBEvent): Future[Option[EBDiscount]] = {
 
-    def createDiscountFor(memberOpt: Option[Member]): Option[Future[EBDiscount]] = {
-      // code should be unique for each user/event combination
-      memberOpt
-        .filter(_.tier >= Tier.Partner)
-        .map { member =>
-          EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}"))
-        }
-    }
-
-    for {
-      member <- MemberRepository.get(userId)
-      discount <- Future.sequence(createDiscountFor(member).toSeq)
-    } yield discount.headOption
+  def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBDiscount]] = {
+    // code should be unique for each user/event combination
+    if (member.tier >= Tier.Partner) {
+      EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}")).map(Some(_))
+    } else Future.successful(None)
   }
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {

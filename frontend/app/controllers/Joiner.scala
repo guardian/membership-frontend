@@ -12,7 +12,7 @@ import com.gu.membership.salesforce.Tier
 
 import com.netaporter.uri.dsl._
 
-import actions.AuthRequest
+import actions.{AnyMemberTierRequest, AuthRequest}
 import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
@@ -23,16 +23,20 @@ trait Joiner extends Controller {
   val memberService: MemberService
   val eventService: EventbriteService
 
-  def getEbEventFromSession(request: Request[_]): Future[Option[EBEvent]] = {
-    val eventIdOpt = services.PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-    Future.sequence(eventIdOpt.map(eventService.getEvent).toSeq).map(_.headOption)
-  }
+  def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
+    def getEbEventFromSession(request: Request[_]): Option[EBEvent] =
+      PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
 
-  def getEbIFrameDetail(eventOpt: Option[EBEvent], discountOpt: Option[EBDiscount]): Option[(String, Int)] = {
-    for (event <- eventOpt) yield {
-      lazy val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
+    def detailsFor(event: EBEvent, discountOpt: Option[EBDiscount]): (String, Int) = {
+      val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
       (url, event.ticket_classes.length)
     }
+
+    Future.sequence {
+      (for (event <- getEbEventFromSession(request)) yield {
+        for (discountOpt <- memberService.createDiscountForMember(request.member, event)) yield detailsFor(event, discountOpt)
+      }).toSeq
+    }.map(_.headOption)
   }
 
   def tierList = CachedAction { implicit request =>
@@ -69,27 +73,19 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tier.patron())
   }
 
-  def thankyouFriend() = AuthenticatedAction.async { implicit request =>
-
-    for (event <- getEbEventFromSession(request)) yield {
-      Ok(views.html.joiner.thankyou.friend(getEbIFrameDetail(event, None)))
+  def thankyouFriend() = MemberAction.async { implicit request =>
+    for (eventbriteFrameDetail <- getEbIFrameDetail(request)) yield {
+      Ok(views.html.joiner.thankyou.friend(eventbriteFrameDetail))
     }
   }
 
   def thankyouPaid(tier: Tier.Tier) = PaidMemberAction.async { implicit request =>
-
-    def getDiscount(eventOpt: Option[EBEvent]): Future[Option[EBDiscount]] = {
-      val discountOpt = eventOpt.map(memberService.createEventDiscount(request.user.id, _))
-      Future.sequence(discountOpt.toSeq).map(_.headOption.flatten)
-    }
-
     for {
       customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
-      eventOpt <- getEbEventFromSession(request)
-      discountOpt <- getDiscount(eventOpt)
+      eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, getEbIFrameDetail(eventOpt, discountOpt)))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail))
     }
   }
 
