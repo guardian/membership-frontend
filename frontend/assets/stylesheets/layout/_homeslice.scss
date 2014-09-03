@@ -467,8 +467,7 @@
 
     .join-today__price--bold-free {
         @include rem((
-            width: gs-span(2),
-            padding-left: $gs-gutter
+            width: gs-span(2)
         ));
     }
 
