@@ -57,8 +57,9 @@ trait CloudWatch {
 }
 
 object IdentityApiCloudWatch extends CloudWatch {
-  def putStatus(name: String, status: Double): Unit = {
-    val metrics = Map(s"${name}-${status}" -> 1.00)
+  def putStatus(name: String, status: Int): Unit = {
+    val statusClass = status / 100
+    val metrics = Map(s"$name-${statusClass}XX" -> 1.00)
     put("Identity API", metrics)
   }
 }
