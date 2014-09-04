@@ -66,14 +66,17 @@
     }
 
     &.home-slice--slice-two:after {
-        background-image: url(/assets/images/homepage/new/cropped/740-Russell-Brand.jpg);
+        background-image: url(/assets/images/homeslice/740-Russell-Brand.jpg);
         @include mq(tablet) {
-            background-image: url(/assets/images/homepage/new/cropped/1140-Russell-Brand.jpg);
+            background-image: url(/assets/images/homeslice/1140-Russell-Brand.jpg);
         }
     }
 
     &.home-slice--slice-four:after {
-        background-image: url(/assets/images/homepage/new/guardian_space002.jpg);
+        background-image: url(/assets/images/homeslice/740-Midland-goods-shed.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homeslice/1140-Midland-goods-shed.jpg);
+        }
     }
 
     .home-slice__inner {
@@ -83,7 +86,8 @@
 
         .home-slice__headline-block {
             width: 100%;
-            padding: $gs-gutter/2;
+            min-height: 104px;
+            padding: $gs-gutter $gs-gutter/2 $gs-gutter;
             background-color: transparentize($mem-blue, .1);
 
             margin-top: -webkit-calc(((100%/5)*3) - #{$gs-gutter/2});
@@ -108,8 +112,11 @@
         }
 
         .home-slice__headline {
-            @include fs-headline(6);
+            @include fs-headline(4);
             color: $black;
+            @include mq(tablet) {
+                @include fs-headline(6);
+            }
         }
 
         .home-slice__copy-block {
@@ -125,9 +132,12 @@
             }
 
             .home-slice__copy {
-                @include fs-headline(9);
+                @include fs-headline(10);
                 font-weight: 100;
                 margin-bottom: 17px;
+                @include mq(tablet) {
+                    @include fs-headline(9);
+                }
             }
 
             .action {
@@ -157,7 +167,6 @@
 
         .home-slice__headline-block {
             width: 100%;
-            padding: $gs-gutter/2;
             background-color: transparentize($mem-blue, .1);
             margin-top: -$gs-gutter/2;
             position: relative;
@@ -224,14 +233,20 @@
 
                 .home-slice__copy--quote {
                     display: block;
-                    @include fs-bodyCopy(5);
+                    @include fs-bodyCopy(6);
+                    @include mq(tablet) {
+                        @include fs-bodyCopy(5);
+                    }
                 }
                 .home-slice__copy--cite {
                     display: block;
-                    @include fs-headline(2);
+                    @include fs-headline(1);
                     font-style: normal;
                     font-weight: lighter;
                     margin-bottom: 17px;
+                    @include mq(tablet) {
+                        @include fs-headline(2);
+                    }
                 }
             }
         }
@@ -266,7 +281,9 @@
         }
 
         .home-slice__copy-block {
-            margin-top: 396px; // 560-200-160
+            @include mq(tablet) {
+                margin-top: 396px; // 560-200-160
+            }
         }
 
     }

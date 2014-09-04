@@ -78,7 +78,8 @@ $fs-headlines: (
         36 40, // 6
         40 44, // 7
         44 48, // 8
-        28 34  // 9 - brochure copy
+        28 34, // 9 - brochure copy
+        20 26  // 10 - brochure copy-mobile
 );
 
 $fs-bodyHeadings: (
@@ -94,7 +95,8 @@ $fs-bodyCopy: (
         14 22, // 2
         16 24, // 3
         18 28, // 4
-        28 34  // 5 - blockquotes
+        28 34, // 5 - blockquotes
+        20 26  // 6 - blockquotes-mobile
 );
 
 $fs-data: (
