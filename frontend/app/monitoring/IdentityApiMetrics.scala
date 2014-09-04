@@ -4,19 +4,19 @@ object IdentityApiMetrics extends StatusMetrics {
 
   val namespace = "Identity API"
 
-  def putPasswordsExistsResponse(status: Int) {
+  def recordGetPasswordExistsResponse(status: Int) {
     putResponseCode("identity-get-user-password-exists-response", status)
   }
 
-  def putUserDetailsResponse(status: Int) {
+  def recordGetResponse(status: Int) {
     putResponseCode("identity-get-user-details-response", status)
   }
 
-  def putUpdateUserDetailsResponse(status : Int) {
+  def recordUpdateUserDetailsPostResponse(status : Int) {
     putResponseCode("identity-update-user-details-response", status)
   }
 
-  def putPasswordUpdateResponse(status: Int) {
+  def recordPasswordUpdatePostResponse(status: Int) {
     putResponseCode("identity-password-update-response", status)
   }
 }
