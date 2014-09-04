@@ -17,66 +17,14 @@
 
         <div class="package-container">
             <div class="package-list">
-                <div class="package package--current">
-                    <div class="package__current-indicator">This is what you'll be missing</div>
-                    <div class="package__inner package__inner--cancel">
-                        @fragments.tier.details(currentTier)
-                        <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
-                    </div>
-                </div>
-
-                @if(currentTier != Tier.Friend) {
-                    <div class="package package--current">
-                        <div class="package__current-indicator">Can we still be Friends?</div>
-
-                        <div class="package__inner package__inner--cancel">
-                            @fragments.tier.details(Tier.Friend)
-                            <form action="/tier/change/friend" method="POST">
-                                @CSRF.formField
-                                <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
-                            </form>
-                        </div>
-                    </div>
-                }
+                @fragments.tier.benefits(currentTier=Some(currentTier), tier=currentTier, mode="cancel")
+                @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="cancel")
             </div>
         </div>
 
-        <h2 class="section-sub-headline">How can we make Guardian Membership better? Tell us what you think.</h2>
-
         <form method="POST" action="/tier/cancel/confirm">
             @CSRF.formField
-            <fieldset class="fieldset">
-                <div class="form-field">
-                    <p>What is the main reason you are leaving Guardian Membership?</p>
-                    <select name="leavingReason">
-                        <option>Please select</option>
-                        <option>Too many emails</option>
-                        <option>Too expensive</option>
-                        <option>Going on holiday</option>
-                        <option>No events in my area</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <p>How likely is it that you would recommend Guardian Membership to a friend?</p>
-                    <select name="recommend">
-                        <option>Please select</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                    </select>
-                </div>
-
-                <button id="qa-confirm-cancel" class="action action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership</button>
-
-            </fieldset>
+            <button id="qa-confirm-cancel" class="action action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership</button>
         </form>
 
     </section>
