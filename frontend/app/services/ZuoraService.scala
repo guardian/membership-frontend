@@ -85,9 +85,7 @@ trait ZuoraService {
         Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
 
         reader.read(result.xml) match {
-          case Left(error) =>
-            throw new ZuoraServiceError(s"Zuora deserialization failed - ${error.origin} ${error.code}: ${error.message}")
-
+          case Left(error) => throw error
           case Right(obj) => obj
         }
       }
