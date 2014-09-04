@@ -135,8 +135,7 @@
     cursor: default;
     position: relative;
     @include rem((
-        margin-top: $gs-baseline*4,
-        margin-bottom: $gs-baseline*4
+        margin-top: $gs-baseline*4
     ));
 
     .funnel__rail {
