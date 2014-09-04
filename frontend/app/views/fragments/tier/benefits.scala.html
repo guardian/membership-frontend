@@ -2,7 +2,8 @@
     currentTier: Option[com.gu.membership.salesforce.Tier.Tier],
     tier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
-    mode: String = ""
+    mode: String = "",
+    showBenefitCopy: Boolean = true
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
@@ -33,7 +34,7 @@
                 <h2 class="package__title">@tier</h2>
             </div>
             <div class="package__inner">
-                @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails)
+                @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails, showBenefitCopy=showBenefitCopy)
             </div>
         </div>
         <div class="package__item package__item-cta@if(mode == "promo") { package__item--promo}">
