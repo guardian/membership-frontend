@@ -3,7 +3,8 @@
     tier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
     mode: String = "",
-    showBenefitCopy: Boolean = true
+    showBenefitCopy: Boolean = true,
+    showLearnMore: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
@@ -37,13 +38,15 @@
                 @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails, showBenefitCopy=showBenefitCopy)
             </div>
         </div>
-        <div class="package__item package__item-cta@if(mode == "promo") { package__item--promo}">
+        <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
             @if(mode == "promo") {
                 <a class="action action-cta" href="/join/@tier.toString.toLowerCase/enter-details">Become a @tier</a>
-                @if(tier == Tier.Patron) {
-                    <a class="action action--secondary-button" href="/patrons">Learn more about @tier</a>
-                } else {
-                    <a class="action action--secondary-button" href="/about">Learn more about @tier</a>
+                @if(showLearnMore) {
+                    @if(tier == Tier.Patron) {
+                        <a class="action action--secondary-button" href="/patrons">Learn more about @tier</a>
+                    } else {
+                        <a class="action action--secondary-button" href="/about">Learn more about @tier</a>
+                    }
                 }
             }
             @if(!isCurrentPackage && mode != "promo") {
