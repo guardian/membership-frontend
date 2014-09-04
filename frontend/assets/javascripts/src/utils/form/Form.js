@@ -22,6 +22,7 @@ define([
     var PROCESSING_MESSAGE = 'Processing';
     var PAYMENT_MESSAGE = 'Payment';
     var ELLIPSE = '...';
+    var GLOBAL_FORM_MESSAGE = 'This form has errors';
     var self;
 
     function Form (formElement, successPostUrl, successRedirectUrl) {
@@ -193,7 +194,7 @@ define([
 
         if (errorMessages.length) {
             //display errors and disable submit
-            errorString += '<li>Your form has errors</li>';
+            errorString += '<li>' + GLOBAL_FORM_MESSAGE + '</li>';
 
             $paymentErrorsElement.removeClass(this.classes.HIDE);
             $paymentErrorsElement.html(errorString);
