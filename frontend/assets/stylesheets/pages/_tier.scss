@@ -246,6 +246,8 @@ $current-indicator: rem(47px);
 
 .price-info {
 
+    height: 100%;
+
     .price-info__detail {
         @include fs-headline(2);
 
@@ -262,6 +264,8 @@ $current-indicator: rem(47px);
 
         .price-info__container-inner--last {
             text-align: right;
+            height: 100%;
+            border-left: 1px solid $c-neutral5;
         }
     }
 
@@ -272,6 +276,7 @@ $current-indicator: rem(47px);
                 padding-top: $gs-gutter
             ));
             border-top: 1px solid $c-neutral5;
+            border-left: 0;
         }
     }
 
