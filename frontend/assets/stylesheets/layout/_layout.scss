@@ -29,7 +29,10 @@ html {
     }
 
     &.about-membership {
-        background-image: url(/assets/images/mem-bg-events.jpg);
+        background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
+        @include mq(tablet) {
+            background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
+        }
     }
 
 }
