@@ -18,7 +18,7 @@ define([
             EMPTY_STRING = '',
             SUCCESS_POST_URL = '/success/post/url',
             SUCCESS_REDIRECT_URL = '/success/redirect/url',
-            YOUR_FORM_HAS_ERRORS = 'Your form has errors',
+            GLOBAL_FORM_ERROR = 'This form has errors',
             joinPaidForm,
             paymentFormFixtureElement,
             canonicalPaymentFormFixtureElement,
@@ -131,7 +131,7 @@ define([
             creditCardNumberInputElement.value = INVALID_CREDIT_CARD_NUMBER;
             triggerEvent(creditCardNumberInputElement, 'blur');
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_number);
 
             done();
@@ -152,7 +152,7 @@ define([
             creditCardVerificationCodeInputElement.value = EMPTY_STRING;
             triggerEvent(creditCardVerificationCodeInputElement, 'blur');
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.incorrect_cvc);
 
             done();
@@ -185,7 +185,7 @@ define([
             expiryYearElement.selectedIndex = 0;
             triggerEvent(expiryYearElement, 'change');
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
 
@@ -202,7 +202,7 @@ define([
             expiryYearElement.value = currentYear;
 
             triggerEvent(expiryYearElement, 'change');
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect($elementParent[0].lastElementChild.textContent).toEqual(stripeErrorMessages.card_error.invalid_expiry);
             expect(errorMessageDisplayElement.classList.contains('is-hidden')).toBeFalsy();
 
@@ -294,7 +294,7 @@ define([
             triggerEvent(paymentFormFixtureElement, 'submit');
 
             formErrorAssertions();
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect(joinPaidForm.form.errorMessages.length).toBe(8);
 
             done();
@@ -310,7 +310,7 @@ define([
             formErrorAssertions();
             billingAddressAssertions();
 
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect(joinPaidForm.form.errorMessages.length).toBe(11);
 
             done();
@@ -325,7 +325,7 @@ define([
             getBillingAddressInputsAndParents();
             formErrorAssertions();
             billingAddressAssertions();
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             expect(joinPaidForm.form.errorMessages.length).toBe(11);
 
             //close billing address
@@ -333,7 +333,7 @@ define([
             triggerEvent(paymentFormFixtureElement, 'submit');
 
             expect(joinPaidForm.form.errorMessages.length).toBe(8);
-            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(YOUR_FORM_HAS_ERRORS);
+            expect(errorMessageDisplayElement.firstChild.textContent).toEqual(GLOBAL_FORM_ERROR);
             formErrorAssertions();
 
             done();
