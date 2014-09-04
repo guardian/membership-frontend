@@ -14,13 +14,6 @@ h2.about-block-title {
 }
 
 .about-membership {
-    .home-slice__copy-block {
-        @include mq(desktop) {
-            @include rem((
-                margin-top: 250px!important
-            ));
-        }
-    }
 
     .home-slice--join-today {
         background-color: $white;
