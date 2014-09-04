@@ -101,6 +101,13 @@ $current-indicator: rem(47px);
     }
 }
 
+.package__item--promo {
+    // see above – we show 2 buttons here so need more space
+    @include rem((
+        height: 170px
+    ));
+}
+
 .package__current-indicator {
     color: #ffffff;
     background-color: #9c9c9c;
