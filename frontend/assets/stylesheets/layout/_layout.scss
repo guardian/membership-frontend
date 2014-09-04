@@ -38,8 +38,14 @@ body {
     min-height: 100%;
 
     @include rem((
-        margin-bottom: 198px
+        margin-bottom: 154px
     ));
+
+    @include mq(tablet) {
+        @include rem((
+            margin-bottom: 111px
+        ));
+    }
 
     @include mq(desktop) {
         @include rem((
