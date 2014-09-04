@@ -23,6 +23,10 @@ object Dates {
 
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
 
+  def dayInMonthWithSuffixAndMonth(date: DateTime = DateTime.now): Html = {
+    Html(addSuffix(date.toString("dd").toInt) + " " + date.toString("MMMM"))
+  }
+
   def addSuffix(day: Int): Html = Html(day + "<sup>" + suffix(day) + "</sup>")
 
   def suffix(day: Int) = day match {
