@@ -119,12 +119,6 @@
 //        width: auto
     ));
 
-    .brochure-container__join-box & {
-        @include rem((
-            margin-left: $gs-baseline+3
-        ));
-    }
-
     &:visited,
     &:active,
     &:focus {

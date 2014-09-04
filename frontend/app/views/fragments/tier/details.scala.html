@@ -1,16 +1,22 @@
-@(currentTier: com.gu.membership.salesforce.Tier.Tier)
+@(currentTier: com.gu.membership.salesforce.Tier.Tier, showBenefitDetails: Boolean = true)
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-<h2 class="package__title">@currentTier</h2>
 <div class="package__price">
     @fragments.benefits.priceInfo(Benefits.details(currentTier))
 </div>
-<p class="package__leadin">@Benefits.details(currentTier).leadin</p>
-
-<ul class="package__list-element">
-    @for((header, body) <- Benefits.details(currentTier).list) {
-        <li class="benefits-title">@header</li>
-        <li class="benefits-copy">@body</li>
-    }
-</ul>
+<p class="package__description">@Benefits.details(currentTier).desc</p>
+@if(showBenefitDetails) {
+    <div class="package__list-benefits">
+        @for(t <- Tier.values.toSeq.sorted){
+            @if(t >= Tier.Friend & t <= currentTier){
+                <ul class="package__list-benefits-element">
+                    @for((header, body) <- Benefits.details(t).list) {
+                        <li class="benefits-title">@header</li>
+                        <li class="benefits-copy">@body</li>
+                    }
+                </ul>
+            }
+        }
+    </div>
+}
