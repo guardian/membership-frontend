@@ -111,13 +111,12 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
     for {
       accountId <- getAccountId(sfAccountId)
 
-      subscriptions <- zuora.Query(s"SELECT Id, Version FROM Subscription WHERE AccountId='$accountId'").mkRequest()
-        .map(_.results)
+      subscriptions <- zuora.query(Seq("Id", "Version"), "Subscription", s"AccountId='$accountId'")
 
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub("Id")}'" }.mkString(" OR ")
-      amendments <- zuora.Query(s"SELECT ContractEffectiveDate, SubscriptionId FROM Amendment WHERE $where").mkRequest().map(_.results)
+      amendments <- zuora.query(Seq("ContractEffectiveDate", "SubscriptionId"), "Amendment", where)
     } yield {
       val latestSubscriptionId = sortSubscriptions(subscriptions).last("Id")
 

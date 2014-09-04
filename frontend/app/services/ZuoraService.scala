@@ -330,11 +330,15 @@ trait ZuoraService {
     }
   }
 
-  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
+  def query(fields: Seq[String], table: String, where: String): Future[Seq[Map[String, String]]] = {
     val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    Query(q).mkRequest().map { case QueryResult(results) =>
+    Query(q).mkRequest().map { case QueryResult(results) => results }
+  }
+
+  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
+    query(fields, table, where).map { results =>
       if (results.length != 1) {
-        throw new ZuoraServiceError(s"Query $q returned ${results.length} results, expected one")
+        throw new ZuoraServiceError(s"Query '$fields $table $where' returned ${results.length} results, expected one")
       }
 
       results(0)
