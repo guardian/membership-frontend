@@ -4,13 +4,14 @@ import scala.concurrent.Future
 
 import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
-import model.PrivateFields
+import model.{Zuora, Stripe, PrivateFields}
 
-import actions._
 import forms.MemberForm._
+import model.StripeSerializer._
 import services._
 
 trait DowngradeTier {
@@ -51,12 +52,17 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    request.member match {
+    val futureConfirm = request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
           MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).map(_ => Ok(""))
         })
       case _ => Future.successful(NotFound)
+    }
+
+    futureConfirm.recover {
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
+      case error: Zuora.ResultError => Forbidden
     }
   }
 }

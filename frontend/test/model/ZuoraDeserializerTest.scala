@@ -1,9 +1,10 @@
 package model
 
 import org.specs2.mutable.Specification
+
+import model.Zuora.ResultError
 import model.ZuoraDeserializer._
 import utils.Resource
-import model.Zuora.Error
 
 class ZuoraDeserializerTest extends Specification {
   "Authentication" should {
@@ -80,7 +81,7 @@ class ZuoraDeserializerTest extends Specification {
 
     "return an error on failure" in {
       val error = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-error.xml")).left.get
-      error mustEqual Error("error", "TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
+      error mustEqual ResultError("TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
     }
   }
 
