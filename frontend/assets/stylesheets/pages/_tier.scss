@@ -229,10 +229,12 @@ $current-indicator: rem(47px);
     clear: both;
     overflow: hidden;
 
-    @include rem((
-        margin-bottom: 20px,
-        height: 45px
-    ));
+    @include mq($from: tablet) {
+        @include rem((
+            margin-bottom: 20px,
+            height: 45px
+        ));
+    }
 
     @include mq($from: tablet, $to: desktop) {
         display: inline-block;
@@ -253,6 +255,14 @@ $current-indicator: rem(47px);
 
         @include mq(desktop) {
             @include fs-headline(3);
+        }
+    }
+
+    @include mq(mobile) {
+        .price-info__container-inner {
+            @include rem((
+                margin-bottom: $gs-gutter
+            ));
         }
     }
 
