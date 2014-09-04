@@ -7,7 +7,8 @@ object Benefits {
   case class Benefits(leadin: String, list: Seq[(String, String)], pricing: Option[Pricing], cta: String)
 
   case class Pricing(yearly: Int, monthly: Int) {
-    lazy val yearlySaving = (12 * monthly) - yearly
+    lazy val yearlyMonthlyCost = (12 * monthly)
+    lazy val yearlySaving = yearlyMonthlyCost - yearly
   }
 
   val friendBenefits = Benefits("As a friend:", Seq(
