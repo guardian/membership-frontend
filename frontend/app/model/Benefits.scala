@@ -4,6 +4,7 @@ import com.gu.membership.salesforce.Tier
 
 object Benefits {
 
+// List parameters includes three property and are heading, copy and icons
   case class Benefits(
     leadin: String,
     list: Seq[(String, String, String)],
@@ -34,7 +35,7 @@ object Benefits {
     ("Priority Booking", "Additional priority ticket booking (one week before Partners)", "early_booking"),
     ("Unique experiences", "Get closer to the Guardian’s journalism and better understand the impact of our campaigns", "unique_experiences"),
     ("Complimentary items", "Thank you for your support", "complim_items")
-  ), Some(Pricing(540, 60)), "Become a Partner", "Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian")
+  ), Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian")
 
   val details = Map(
     Tier.Friend -> friendBenefits,
