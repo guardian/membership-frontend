@@ -1,26 +1,32 @@
 package monitoring
 
-object IdentityApiMetrics extends CloudWatch {
+object IdentityApiMetrics extends StatusMetrics {
+
+  val namespace = "Identity API"
 
   def putPasswordsExistsResponse(status: Int) {
-    putStatus("identity-get-user-password-exists-response", status)
+    putResponseCode("identity-get-user-password-exists-response", status)
   }
 
   def putUserDetailsResponse(status: Int) {
-    putStatus("identity-get-user-details-response", status)
+    putResponseCode("identity-get-user-details-response", status)
   }
 
   def putUpdateUserDetailsResponse(status : Int) {
-    putStatus("identity-update-user-details-response", status)
+    putResponseCode("identity-update-user-details-response", status)
   }
 
   def putPasswordUpdateResponse(status: Int) {
-    putStatus("identity-password-update-response", status)
+    putResponseCode("identity-password-update-response", status)
   }
+}
 
-  private def putStatus(name: String, status: Int) {
+abstract class StatusMetrics extends CloudWatch {
+  val namespace : String
+
+  def putResponseCode(name: String, status: Int) {
     val statusClass = status / 100
     val metrics = Map(s"$name-${statusClass}XX" -> 1.00)
-    put("Identity API", metrics)
+    put(namespace, metrics)
   }
 }
