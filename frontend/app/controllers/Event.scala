@@ -17,10 +17,10 @@ trait Event extends Controller {
   val eventService: EventbriteService
   val memberService: MemberService
 
-  def details(id: String) = CachedAction.async { implicit request =>
-    eventService.getEvent(id)
-      .map(event => Ok(views.html.event.page(event)))
-      .recover { case error: EBError if error.status_code == NOT_FOUND => NotFound }
+  def details(id: String) = CachedAction {
+    eventService.getEvent(id).map {
+      event => Ok(views.html.event.page(event))
+    }.getOrElse(NotFound)
   }
 
   def list = CachedAction { implicit request =>
@@ -33,10 +33,12 @@ trait Event extends Controller {
   }
 
   def buy(id: String) = MemberAction.async { implicit request =>
-    for {
-      event <- eventService.getEvent(id)
-      discount <- memberService.createEventDiscount(request.user.id, event)
-    } yield Found(event.url ? ("discount" -> discount.map(_.code)))
+    eventService.getEvent(id).map {
+      event =>
+        for {
+          discountOpt <- memberService.createDiscountForMember(request.member, event)
+        } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+    }.getOrElse(Future.successful(NotFound))
   }
 }
 

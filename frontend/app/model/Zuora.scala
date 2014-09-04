@@ -1,25 +1,34 @@
 package model
 
-import scala.xml.Elem
+import scala.xml.Node
 import org.joda.time.DateTime
-
-import com.gu.membership.salesforce.Tier
 
 object Zuora {
   trait ZuoraObject
 
   case class Authentication(token: String, url: String) extends ZuoraObject
 
-  case class PaymentMethod(id: String) extends ZuoraObject
+  case class AmendResult(ids: Seq[String]) extends ZuoraObject
+  case class CreateResult(id: String) extends ZuoraObject
+  case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraObject
+  case class SubscribeResult(id: String) extends ZuoraObject
+  case class UpdateResult(id: String) extends ZuoraObject
 
-  case class Query(results: Seq[Map[String, String]]) extends ZuoraObject
+  trait Error extends Throwable {
+    val code: String
+    val message: String
 
-  case class Subscription(id: String) extends ZuoraObject
+    override def getMessage: String = s"$code: $message"
+  }
+
+  case class FaultError(code: String, message: String) extends Error
+  case class ResultError(code: String, message: String) extends Error
+  case class InternalError(code: String, message: String) extends Error
 
   case class SubscriptionStatus(current: String, future: Option[String])
 
   case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
-                                 ratePlanId: String) extends ZuoraObject {
+                                 ratePlanId: String) {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
   }
@@ -32,42 +41,102 @@ object Zuora {
       SubscriptionDetails(ratePlan("Name"), ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
     }
   }
+}
 
-  object Authentication {
-    def apply(elem: Elem): Authentication = {
-      val result = elem \\ "loginResponse" \ "result"
-      Authentication((result \ "Session").text, (result \ "ServerUrl").text)
-    }
-  }
+object ZuoraReaders {
+  import Zuora._
 
-  object PaymentMethod {
-    def apply(elem: Elem): PaymentMethod = {
-      val result = elem \\ "createResponse" \ "result"
-      PaymentMethod((result \ "Id").text)
-    }
-  }
+  trait ZuoraReader[T <: ZuoraObject] {
+    val responseTag: String
+    val multiResults = false
 
-  object Query {
-    def apply(elem: Elem): Query = {
-      val resultNode = elem \\ "queryResponse" \ "result"
-      val size = (resultNode \ "size").text.toInt
+    def read(node: Node): Either[Error, T] = {
+      val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
 
-      // Zuora still returns an empty records node even if there were no results
-      if (size == 0) {
-        Query(Nil)
-      } else {
-        val results = (resultNode \ "records").map { record =>
-          record.child.map { node => (node.label, node.text)}.toMap
-        }
-        Query(results)
+      (body \ "Fault").headOption.map { fault =>
+        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
+      }.getOrElse {
+        val resultNode = if (multiResults) "results" else "result"
+        val result = body \ responseTag \ resultNode
+
+        extractEither(result.head)
       }
     }
+
+    protected def extractEither(result: Node): Either[Error, T]
   }
 
-  object Subscription {
-    def apply(elem: Elem): Subscription = {
-      val result = elem \\ "subscribeResponse" \ "result"
-      Subscription((result \ "SubscriptionId").text)
+  object ZuoraReader {
+    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
+      val responseTag = tag
+      protected def extractEither(result: Node): Either[Error, T] = extractFn(result)
     }
+  }
+
+  trait ZuoraResultReader[T <: ZuoraObject] extends ZuoraReader[T] {
+    protected def extractEither(result: Node): Either[Error, T] = {
+      if ((result \ "Success").text == "true") {
+        Right(extract(result))
+      } else {
+        val errors = (result \ "Errors").map { node => ResultError((node \ "Code").text, (node \ "Message").text) }
+        Left(errors.head) // TODO: return more than just the first error
+      }
+    }
+
+    protected def extract(result: Node): T
+  }
+
+  object ZuoraResultReader {
+    def create[T <: ZuoraObject](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
+      val responseTag = tag
+      override val multiResults: Boolean = multi
+      protected def extract(result: Node) = extractFn(result)
+    }
+
+    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
+    def multi[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=true, extractFn)
+  }
+}
+
+object ZuoraDeserializer {
+  import Zuora._
+  import ZuoraReaders._
+
+  implicit val authenticationReader = ZuoraReader("loginResponse") { result =>
+    Right(Authentication((result \ "Session").text, (result \ "ServerUrl").text))
+  }
+
+  implicit val amendResultReader = ZuoraResultReader.multi("amendResponse") { result =>
+    AmendResult((result \ "AmendmentIds").map(_.text))
+  }
+
+  implicit val createResultReader = ZuoraResultReader("createResponse") { result =>
+    CreateResult((result \ "Id").text)
+  }
+
+  implicit val queryResultReader = ZuoraReader("queryResponse") { result =>
+    if ((result \ "done").text == "true") {
+      val records =
+        // Zuora still returns a records node even if there were no results
+        if ((result \ "size").text.toInt == 0) {
+          Nil
+        } else {
+          (result \ "records").map { record =>
+            record.child.map { node => (node.label, node.text)}.toMap
+          }
+        }
+
+      Right(QueryResult(records))
+    } else {
+      Left(InternalError("QUERY_ERROR", "The query was not complete (we don't support iterating query results)"))
+    }
+  }
+
+  implicit val subscribeResultReader = ZuoraResultReader("subscribeResponse") { result =>
+    SubscribeResult((result \ "SubscriptionId").text)
+  }
+
+  implicit val updateResultReader = ZuoraResultReader("updateResponse") { result =>
+    UpdateResult((result \ "Id").text)
   }
 }

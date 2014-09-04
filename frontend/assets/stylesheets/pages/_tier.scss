@@ -31,37 +31,81 @@ $current-indicator: rem(47px);
     border-bottom: 1px dotted #333333;
 }
 
+// .package-list is a flexbox
+// so each .package inside is equal width
 .package-list {
     @include mq(desktop) {
-        display: table;
+        @include flexbox;
+        @include align-items(stretch);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
         padding-top: $current-indicator;
     }
 }
 
+.package-list--bordered .package {
+    border: 1px solid $c-neutral5;
+}
+
 .package {
-    vertical-align: top;
+    @include border-radius(4px);
+    background-color: #ffffff;
+    position: relative;
+
+    // .package is a flexbox too to
+    // align CTA buttons to bottom
+    // regardless of package length(!)
+    @include flexbox;
+    @include justify-content(space-between);
+    @include flex-direction(column);
 
     @include rem((
-        margin: 30px $gs-gutter $gs-gutter
+        margin-right: $gs-gutter
     ));
 
-    @include mq(desktop) {
-        display: table-cell;
-        max-width: 330px;
+    &:last-child {
+        margin-right: 0;
     }
 
     @include mq(desktop) {
-        // this is defined in tickets.scss
-        // but we re-use the HTML for benefits tier page
-        .price-info {
-            @include fs-headline(4);
-            @include rem((
-                height: 110px // magic number
-            ));
-        }
+        @include flex-grow(1);
+        @include flex-basis(0); // this fixes a bug, dunno why
     }
+
+    @include mq($to: desktop) {
+        margin-right: 0;
+        display: block;
+        overflow: hidden;
+        @include rem((
+            margin-bottom: $gs-gutter
+        ));
+    }
+
+    // override button widths for flexbox
+    .action {
+        width: auto;
+        min-width: 100%;
+    }
+}
+
+.package__item-cta {
+    padding: $gs-gutter;
+    // this is annoying but removes an ~8px height gap
+    // between buttons in columns. if you can fix it, bravo!
+    @include rem((
+        height: 100px
+    ));
+    @include mq($from: tablet, $to: desktop) {
+        width: 55%;
+        float: right;
+    }
+}
+
+.package__item--promo {
+    // see above – we show 2 buttons here so need more space
+    @include rem((
+        height: 170px
+    ));
 }
 
 .package__current-indicator {
@@ -75,6 +119,9 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         margin-top: -$current-indicator;
     }
+    @include mq($to: desktop) {
+        margin: 0;
+    }
     // this prevents the text splitting onto 2 lines
     @include mq($from: desktop, $to: mem-full) {
         @include rem((
@@ -87,40 +134,76 @@ $current-indicator: rem(47px);
     @include rem((
         padding: $gs-gutter
     ));
-    @include mq(mem-full) {
+    @include mq($from: tablet, $to: desktop) {
         @include rem((
-            height: 840px // magic number
+            padding-top: $gs-gutter*2,
+            padding-bottom: 0
         ));
     }
-    @include mq(desktop) {
-        @include rem((
-            height: 940px // magic number
-        ));
-    }
-    @include border-radius(4px);
-    background-color: #ffffff;
 }
 
-.package--current .package__inner {
+.package__inner--cancel {
+    @include rem((
+        height: 740px // magic number
+    ));
+}
+
+// we always want buttons to appear below the main benefits copy
+.package__cta {
+    position: absolute;
+    bottom: $gs-gutter;
+    padding: $gs-gutter;
+    width: 100%;
+}
+
+.package--current {
     border: 1px solid #9c9c9c;
 }
 
-.package__title {
+.package__title-container {
     position: relative;
+
     @include rem((
-        padding-bottom: $gs-baseline,
-        margin-bottom: $gs-baseline * 2
+        padding: $gs-gutter $gs-gutter $gs-gutter 65px
     ));
-    @include fs-headline(1, true);
-    word-wrap: break-word;
-    @include f-headline;
-    border-bottom: 1px dotted #dcdcdc;
+
+    .package__title {
+        @include fs-headline(3);
+        color: $white;
+        word-wrap: break-word;
+        position: relative;
+    }
+
+    &:before {
+        @extend %icon-sprite;
+        @extend %icon-sprite-g-white-36;
+        content: '';
+        display: block;
+        position: absolute;
+        @include rem((
+            left: $gs-gutter,
+            top: 15px
+        ));
+    }
+
+    &--friend {
+        background-color: $c-neutral1;
+    }
+
+    &--partner {
+        background-color: $mem-brandLightblue;
+        .package__title { color: $black; }
+    }
+
+    &--patron {
+        background-color: $mem-brandDarkBlue;
+    }
 }
 
-.package__list-element {
+.package__list-benefits-element {
     @include fs-bodyCopy(1);
     @include rem((
-        padding: $gs-gutter/2 0 $gs-gutter
+        padding-bottom: $gs-gutter
     ));
     margin-bottom: 0;
     list-style: none;
@@ -130,17 +213,96 @@ $current-indicator: rem(47px);
         ));
         &:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
         }
 
     }
 }
 
+.package__list-benefits .package__list-benefits-element:before {
+    content: 'Plus:';
+    display: block;
+    @include fs-bodyCopy(1);
+    color: $c-neutral3;
+    border-bottom: 1px solid $c-neutral3;
+}
+
+// bit fugly - hides the "Plus:" text for first list item
+.package__list-benefits .package__list-benefits-element:first-of-type:before {
+    display: none;
+}
+
 .package__price {
     clear: both;
-    @include fs-headline(6);
-    @include rem((
-        margin-bottom: 20px
-    ));
+    overflow: hidden;
+
+    @include mq($from: tablet) {
+        @include rem((
+            margin-bottom: 20px,
+            height: 45px
+        ));
+    }
+
+    @include mq($from: tablet, $to: desktop) {
+        display: inline-block;
+        width: 30%;
+        margin-right: 14%;
+        margin-top: 0;
+        vertical-align: top;
+        height: auto;
+    }
+}
+
+.price-info {
+
+    height: 100%;
+
+    .price-info__detail {
+        @include fs-headline(2);
+
+        @include mq(desktop) {
+            @include fs-headline(3);
+        }
+    }
+
+    @include mq(mobile) {
+        .price-info__container-inner {
+            @include rem((
+                margin-bottom: $gs-gutter
+            ));
+        }
+    }
+
+    @include mq(desktop) {
+        .price-info__container-inner {
+            width: 50%;
+            float: left;
+        }
+
+        .price-info__container-inner--last {
+            text-align: right;
+            height: 100%;
+            border-left: 1px solid $c-neutral5;
+        }
+    }
+
+    @include mq($from: tablet, $to: desktop) {
+        .price-info__container-inner--last {
+            @include rem((
+                margin-top: $gs-gutter,
+                padding-top: $gs-gutter
+            ));
+            border-top: 1px solid $c-neutral5;
+            border-left: 0;
+        }
+    }
+
+    .price-info__sub-detail {
+        @include fs-bodyCopy(1);
+        color: $c-neutral3;
+        display: block;
+    }
+
 }
 
 .package__pcm {
@@ -157,6 +319,28 @@ $current-indicator: rem(47px);
         @include rem((
             height: 97px // magic number
         ));
+    }
+}
+
+.package__description {
+    @include fs-bodyCopy(2);
+
+    @include mq(desktop) {
+        @include fs-bodyCopy(3);
+        @include rem((
+            min-height: 120px
+        ));
+        @include rem((
+            padding-top: $gs-gutter,
+            min-height: 60px
+        ));
+        border-top: 1px solid $c-neutral5;
+    }
+
+    @include mq($from: tablet, $to: desktop) {
+        display: inline-block;
+        width: 55%;
+        vertical-align: top;
     }
 }
 

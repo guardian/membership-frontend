@@ -27,19 +27,18 @@
             "Default" : "PROD"
         },
         "SiteDomain" : {
-            "Description" : "Site domain Name (e.g. 'masterclasses-alpha.theguardian.com' or 'membership.theguardian.com')",
+            "Description" : "Site domain Name",
             "Type" : "String"
         },
         "AllowedIngressIps" : {
             "Description" : "IP address range (CIDR) that access the site (e.g. '77.91.248.0/21'- Internal Guardian, or '0.0.0.0/0' - the whole internet!)",
             "Type" : "String",
-            "Default" : "77.91.248.0/21"
+            "Default" : "0.0.0.0/0"
         },
         "InstanceType" : {
             "Description" : "EC2 instance type",
             "Type" : "String",
-            "Default" : "m3.medium",
-            "AllowedValues" : [ "t2.micro","m3.medium","m3.medium"],
+            "AllowedValues" : [ "t2.micro","m3.medium" ],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         }
     },
@@ -90,11 +89,11 @@
 
                         "mkdir /etc/gu",
 
-                        {"Fn::Join":[" ", ["aws --region", { "Ref": "AWS::Region" }, "s3 cp s3://membership-private/membership-keys.conf /etc/gu"]]},
+                        {"Fn::Join":["", ["aws --region ", { "Ref": "AWS::Region" }, " s3 cp s3://membership-private/", { "Ref" : "Stage" }, "/membership-keys.conf /etc/gu"]]},
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
-                        {"Fn::Join":["", ["sed 's/__STACK/", { "Ref" : "Stack" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
+                        {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
@@ -116,23 +115,6 @@
                     }]
                 },
                 "Policies": [ {
-                    "PolicyName": "MembersTable",
-                    "PolicyDocument": {
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "dynamodb:GetItem",
-                                    "dynamodb:PutItem",
-                                    "dynamodb:Query"
-                                ],
-                                "Resource": "arn:aws:dynamodb:eu-west-1:865473395570:table/members"
-                            }
-                        ]
-                    }
-                },
-                {
                     "PolicyName": "PrivateBucket",
                     "PolicyDocument": {
                         "Version": "2012-10-17",
@@ -152,6 +134,18 @@
                         "Statement":[{
                             "Effect":"Allow",
                             "Action":["ses:SendEmail", "ses:SendRawEmail"],
+                            "Resource":"*"
+                        }
+                        ]
+                    }
+                },
+                {
+                    "PolicyName": "PushMetrics",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement":[{
+                            "Effect":"Allow",
+                            "Action":["cloudwatch:PutMetricData"],
                             "Resource":"*"
                         }
                         ]

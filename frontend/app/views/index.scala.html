@@ -1,3 +1,9 @@
+@()(implicit token: play.filters.csrf.CSRF.Token)
+
+@import configuration.Config
+@import views.support.Asset
+@import com.gu.membership.salesforce.Tier
+@import helper._
 @import views.support.Asset
 @import model.Benefits
 
@@ -5,7 +11,7 @@
 
     @* ===== Homepage hero ===== *@
 
-    <div class="home-slice home-slice--epic u-cf">
+    <div class="home-slice home-slice--epic home-slice--epic-lower-copy-block u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
                 <h1 class="home-slice__headline">We believe that the open exchange of information,
@@ -25,7 +31,7 @@
 
     @* ===== Bring the Guardian to life ===== *@
 
-    <div class="home-slice u-cf home-slice--red home-slice--slice-two">
+    <div class="home-slice u-cf home-slice--red home-slice--home-two">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
                 <h2 class="home-slice__headline">Events that bring the Guardian to life</h2>
@@ -46,17 +52,17 @@
 
     <div class="home-slice home-slice--content u-cf">
         <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Membership fuels our journalism</h2>
-            </div>
             <div class="home-slice__copy-block">
                 <div class="home-slice__media">
-                    <img src="@Asset.at("images/homepage/new/alan_pulitzer_prize_speech.jpg")" alt="" />
+                    <img src="@Asset.at("images/homeslice/740-Alan-Desk.jpg")" alt="" />
+                </div>
+                <div class="home-slice__headline-block">
+                    <h2 class="home-slice__headline">Membership fuels our journalism</h2>
                 </div>
                 <div class="home-slice__offset-copy">
                     <blockquote class="home-slice__copy--quote">Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed molestie augue sit amet leo consequat posuere.</blockquote>
                     <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-                    <a class="action action--join" href="/join/patron">Start your journey as Patron</a>
+                    <a class="action action--join" href="/patrons">Start your journey as Patron</a>
                 </div>
             </div>
         </div>
@@ -64,10 +70,10 @@
 
     @* ===== Big ideas ===== *@
 
-    <div class="home-slice u-cf home-slice--green home-slice--slice-four">
+    <div class="home-slice u-cf home-slice--green home-slice--home-four">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">A home for big ideas</h2>
+                <h2 class="home-slice__headline">A home for <br />big ideas</h2>
             </div>
             <div class="home-slice__copy-block">
                 <p class="home-slice__copy">
@@ -87,16 +93,16 @@
 
     <div class="home-slice home-slice--content u-cf">
         <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Founding members: join us at the start</h2>
-            </div>
             <div class="home-slice__copy-block">
                 <div class="home-slice__media">
-                    <img src="@Asset.at("images/homepage/new/audience_discussion1.jpg")" alt="" />
+                    <img src="@Asset.at("images/homeslice/740-crowd.jpg")" alt="" />
+                </div>
+                <div class="home-slice__headline-block">
+                    <h2 class="home-slice__headline">Founding members: join us at the start</h2>
                 </div>
                 <div class="home-slice__offset-copy">
                     <p class="home-slice__copy">
-                        Guardian membership is launching in beta. We have ambitious plans, and new features will be added regularly. Guardian membership will grow into a vibrant, self-organising community of free-thinkers.
+                        Guardian Membership is launching in beta. We have ambitious plans, and new features will be added regularly. Guardian membership will grow into a vibrant, self-organising community of free-thinkers.
                     </p>
                     <p class="home-slice__copy">
                         Help to build and shape this community by joining as a Founding Partner or Patron,
@@ -112,61 +118,11 @@
     <div class="home-slice home-slice--join-today">
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join membership today</h2>
-            <ul class="l-row u-unstyled join-today__join-boxes">
-
-                @* === Friend === *@
-
-                <li class="join-today__join-box l-row__item">
-                    <div class="join-today__join-box--header join-today__join-box--header--friends">Friend</div>
-                    <div class="join-today__price">
-                    <div class="join-today__price--bold-free">FREE</div>
-                    </div>
-                    <div class="join-today__teaser">
-                        <p class="join-today__teaser--description">Stay up to date and book tickets to Guardian Live events</p>
-                        <a class="action action--secondary-button" href="/join">
-                            <span class="action__text">Learn more about membership</span>
-                        </a>
-                    </div>
-                </li>
-
-                @* === Partner === *@
-
-                <li class="join-today__join-box l-row__item">
-                    <div class="join-today__join-box--header join-today__join-box--header--partner">Partner</div>
-                    <div class="join-today__price l-row">
-                        <div class="join-today__price--bold l-row__item">£135/year<span class="save-price">Save
-                            £45/yr</span></div>
-                        <div class="join-today__sep l-row__item"></div>
-                        <div class="join-today__price--bold l-row__item">£15/month</div>
-                    </div>
-                    <div class="join-today__teaser">
-                        <p class="join-today__teaser--description">Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets</p>
-                        <a class="action action--secondary-button" href="/join">
-                            <span class="action__text">Learn more about membership</span>
-                        </a>
-                    </div>
-                </li>
-
-                @* === Patron === *@
-
-                <li class="join-today__join-box l-row__item">
-                    <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
-                    <div class="join-today__price l-row">
-                        <div class="join-today__price--bold l-row__item">£540/year<span class="save-price">Save
-                            £135/yr</span></div>
-                        <div class="join-today__sep l-row__item"></div>
-                        <div class="join-today__price--bold l-row__item">£60/month</div>
-                    </div>
-                    <div class="join-today__teaser">
-                        <p class="join-today__teaser--description">Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian</p>
-                        <a class="action action--secondary-button" href="/join/patron">
-                            <span class="action__text">Learn more about Patrons</span>
-                        </a>
-                    </div>
-                </li>
-
-
-            </ul>
+            <div class="join-today__join-boxes package-list package-list--bordered">
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo")
+            </div>
         </div>
     </div>
 }

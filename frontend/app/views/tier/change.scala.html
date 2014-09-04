@@ -1,7 +1,8 @@
-@(currentTier: com.gu.membership.salesforce.Tier.Tier)
+@(currentTier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
 @import com.gu.membership.salesforce.Tier
+@import helper._
 
 @main("Change Tier") {
 
@@ -9,7 +10,7 @@
         <div class="content__container">
             <section class="content__section">
                 <h1 class="content__headline">Change your tier</h1>
-                <a href="@Config.idWebAppUrl/account/edit" class="action action-cta--confirm">Back to 'My Profile'</a>
+                <a href="@Config.idWebAppUrl/membership/edit" class="action action--arrow-left action-cta--confirm">Edit profile</a>
             </section>
         </div>
         <div class="package-container">
@@ -18,7 +19,7 @@
                 <section class="package-list">
 
                     @for(tier <- Tier.values.toSeq.sorted){
-                        @if(tier >= Tier.Friend){ @fragments.tier.benefits(currentTier, tier) }
+                        @if(tier >= Tier.Friend){ @fragments.tier.benefits(Some(currentTier), tier) }
                     }
 
                 </section>

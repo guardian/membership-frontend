@@ -2,14 +2,17 @@ html {
     position: relative;
     min-height: 100%;
     background-color: #ffffff;
-    background: url(/assets/images/mem-bg-default.jpg) repeat-y center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: url(/assets/images/mem-bg-events.jpg) repeat-y center center fixed;
 
-    &.home-page,
-    &.events-bg {
+    @include mq(tablet) {
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    &.events-bg,
+    &.about-membership {
         background-attachment: fixed;
         background-repeat: repeat-y;
         background-position-x: left;
@@ -22,7 +25,18 @@ html {
     }
 
     &.home-page {
-        background-image: url(/assets/images/homepage/new/top_crowd.jpg);
+        background-image: url(/assets/images/top_crowd.jpg);
+    }
+
+    &.about-membership {
+        background-image: url(/assets/images/mem-bg-events.jpg);
+    }
+
+    &.patron-page {
+        background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
+        @include mq(tablet) {
+            background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
+        }
     }
 
 }
@@ -31,8 +45,14 @@ body {
     min-height: 100%;
 
     @include rem((
-        margin-bottom: 198px
+        margin-bottom: 154px
     ));
+
+    @include mq(tablet) {
+        @include rem((
+            margin-bottom: 111px
+        ));
+    }
 
     @include mq(desktop) {
         @include rem((
@@ -151,4 +171,3 @@ body {
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
-

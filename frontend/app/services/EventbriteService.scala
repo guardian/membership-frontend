@@ -69,7 +69,7 @@ trait EventbriteService {
    */
   def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
 
-  def getEvent(id: String): Future[EBEvent] = get[EBEvent](s"events/$id")
+  def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
 
   def createOrGetDiscount(eventId: String, code: String): Future[EBDiscount] = {
     val uri = s"events/$eventId/discounts"

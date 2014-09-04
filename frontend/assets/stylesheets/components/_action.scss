@@ -44,6 +44,25 @@
     }
 }
 
+// this variant moves the arrow to the other side
+// and hides the one on the right
+.action.action--arrow-left {
+    &:before {
+        @extend .icon-sprite-arrow-left-white;
+        &.action--secondary-button {
+            @extend .icon-sprite-arrow-left-black;
+        }
+        content: '';
+        float: left;
+        @include rem((
+            margin: 2px 30px 0 0
+        ));
+    }
+    &:after {
+        display: none;
+    }
+}
+
 .action--disabled {
     &,
     &:visited,
@@ -99,12 +118,6 @@
 //        min-width: 220px,
 //        width: auto
     ));
-
-    .brochure-container__join-box & {
-        @include rem((
-            margin-left: $gs-baseline+3
-        ));
-    }
 
     &:visited,
     &:active,
@@ -201,7 +214,10 @@
 }
 
 .action-cta--cancel {
-    background-color: $mem-button-cancel;
+    &,
+    &:hover {
+      background-color: $mem-button-cancel;
+    }
 }
 
 .action-cta--disabled {

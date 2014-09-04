@@ -12,10 +12,10 @@ class StripeServiceTest extends Specification {
   "SubscriptionService" should {
 
     "create customers" in TestStripeService { service =>
-      service.Customer.create("test@example.com", "tok_104Bpz2eZvKYlo2CRWVWL4Ou")
+      service.Customer.create("10000001", "tok_104Bpz2eZvKYlo2CRWVWL4Ou")
       service.lastRequest mustEqual RequestInfo(
         url = "http://localhost:9999/v1/customers",
-        body = Map("email" -> Seq("test@example.com"), "card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou"))
+        body = Map("description" -> Seq("IdentityID - 10000001"), "card" -> Seq("tok_104Bpz2eZvKYlo2CRWVWL4Ou"))
       )
     }
 

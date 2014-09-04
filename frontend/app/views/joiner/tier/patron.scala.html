@@ -1,63 +1,105 @@
-@()
+@()(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Join | Patron") {
+@import views.support.Asset
+@import helper._
+@import model.Benefits
+@import com.gu.membership.salesforce.Tier
 
-    <section class="content-section">
+@main("Patrons", isBrochure = true, htmlClass = "patron-page") {
 
-        @fragments.layout.sectionHeader("Purpose/Value")
+    @* ===== Patron hero ===== *@
 
-        <div class="action-inline-combo">
-            <h2 class="section-sub-headline u-text-hyphenate">Patron &#163;60</h2>
-            <a class="action action--inline-text action--join" href="/join/patron/enter-details">Join</a>
+    <div class="home-slice home-slice--epic u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h1 class="home-slice__headline">Patrons of the Guardian</h1>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">The Patron tier is for those who care deeply about the Guardian’s journalism and the impact it has on the world.</p>
+                <p class="home-slice__copy">From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
+
+                @* === Patron === *@
+
+                <div class="join-today__join-box join-today__join-box--stripped-down-standalone">
+                    <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
+                    @fragments.benefits.priceInfo(Benefits.details(Tier.Patron))
+                    <div class="join-today__teaser">
+                        <a class="action action--secondary-button" href="/join/patron/enter-details">
+                            <span class="action__text">Become a Patron today</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <section class="joiner-navigation hidden-mobile">
-        <ul class="u-unstyled">
-            <li class="joiner-navigation__tab inline-list__item">
-                <a href="#digital" class="joiner-navigation__btn">Digital</a>
-            </li>
-            <li class="joiner-navigation__tab inline-list__item">
-                <a href="#community" class="joiner-navigation__btn">Community</a>
-            </li>
-            <li class="joiner-navigation__tab inline-list__item">
-                <a href="#live" class="joiner-navigation__btn">Live</a>
-            </li>
-        </ul>
-    </section>
+    @* ===== Ensuring our independence ===== *@
 
-    <div class="separator"></div>
-    <section id="digital" class="joiner-section">
-        <h2 class="section-body-headline">Digital Benefits</h2>
-    </section>
+    <div class="home-slice u-cf home-slice--red home-slice--patron-two">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h2 class="home-slice__headline">Ensuring our independence</h2>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">The Guardian has no proprietor.  Our editor has total independence.</p>
+                <p class="home-slice__copy">The support of Patrons ensures that the Guardian remains standing witness to the world, without interference.</p>
+            </div>
+        </div>
+    </div>
 
-    <section id="community" class="joiner-section">
-        <h2 class="section-body-headline">Community Benefits</h2>
-    </section>
+    @* ===== Founding Members ===== *@
 
-    <section id="live" class="joiner-section joiner-section--no-border">
-        <h2 class="section-body-headline">Live Benefits</h2>
-    </section>
+    <div class="home-slice home-slice--content u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h2 class="home-slice__headline">Backstage pass to the Guardian</h2>
+            </div>
+            <div class="home-slice__copy-block">
+                <div class="home-slice__media">
+                    <img src="@Asset.at("images/homeslice/patrons/740-backstage.jpg")" alt="" />
+                </div>
+                <div class="home-slice__offset-copy">
+                    <p class="home-slice__copy">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
+                    <a class="action action--join home-slice__action" href="/join/patron/enter-details">Become a Patron today</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="separator"></div>
-    <section id="whats-included">
-        <h2>Whats Included</h2>
-        <ul class="benefits u-unstyled l-row l-row--items-4">
-            <li class="benefits-list l-row__item">
-                <span class="benefits-list__item">Digital</span>
-            </li>
-            <li class="benefits-list l-row__item">
-                <span class="benefits-list__item">Community</span>
-            </li>
-            <li class="benefits-list l-row__item">
-                <span class="benefits-list__item">Live</span>
-            </li>
-            <li class="benefits-list l-row__item">
-                <span class="benefits-list__item action-inline-combo action-inline-combo--nomargin">Patron £60
-                    <a class="action action--join" href="/join/patron/enter-details">Join</a>
-                </span>
-            </li>
-        </ul>
-    </section>
+    @* ===== Backstage pass to the Guardian ===== *@
+
+    <div class="home-slice u-cf home-slice--green home-slice--patron-four">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h2 class="home-slice__headline">Choose to get involved</h2>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">Patrons are crucial to the future development of Membership, and there will be opportunities to get involved.  From hosting your own events to connecting members to one another, you will shape the future of the community.</p>
+                @* === Patron === *@
+
+                <div class="join-today__join-box join-today__join-box--stripped-down-standalone">
+                    <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
+                    @fragments.benefits.priceInfo(Benefits.details(Tier.Patron))
+                    <div class="join-today__teaser">
+                        <a class="action action--secondary-button" href="/join/patron/enter-details">
+                            <span class="action__text">Become a Patron today</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Join Today ===== *@
+
+    <div class="home-slice home-slice--join-today">
+        <div class="home-slice__inner u-cf">
+            <h2 class="home-slice__headline">Not ready for the Patron tier yet?<br />Join as a Friend or a Partner</h2>
+            <div class="join-today__join-boxes package-list package-list--bordered">
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
+            </div>
+        </div>
+    </div>
 
 }
