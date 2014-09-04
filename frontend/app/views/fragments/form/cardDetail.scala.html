@@ -1,20 +1,49 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)
+
 @import views.support.selectDates
 @import views.support.Asset
-
+@import model.Benefits
+@import views.support.Dates
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">
         <h2 class="form__heading">Card details</h2>
-        <div class="form__note">
-            <p>We accept all major cards</p>
-            <p><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This form is secure</p></div>
+        <div class="form__note js-card-details-note">
+            <p><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This site is secure</p>
+            <p class="credit-card-note"><span class="credit-card-note__header">First payment</span> will be taken today under the name Guardian News & Media.</p>
+            <p class="credit-card-note"><span class="credit-card-note__header">Ongoing payments</span>
+                @Benefits.details(tier).pricing.fold{
+                }{ pricing =>
+                    Your card will be charged £<span class="js-card-note-pricing-charge" data-annual="@pricing.yearly" data-month="@pricing.monthly">@pricing.yearly</span> every <span class="js-card-note-pricing-period" data-annual="year" data-month="month">year</span>.
+                    Payments will taken on or shortly after the <span class="js-card-note-payment-taken" data-annual="@Dates.dayInMonthWithSuffixAndMonth()" data-month="@Dates.dayInMonthWithSuffix()">@Dates.dayInMonthWithSuffixAndMonth()</span> every <span class="js-card-note-pricing-period" data-annual="year" data-month="month">year</span>.
+                }
+            </p>
+        </div>
     </div>
 
     <div class="fieldset__fields">
         <div class="form-field">
-            <label class="label" for="cc-num">Card Number</label>
-            <div class="input credit-card-container">
-                <i class="js-credit-card-image credit-card icon-sprite icon-sprite-card-unknown"></i>
+            <div class="u-cf">
+                <label class="label form-field__note form-field__note--left" for="cc-num">Card Number</label>
+                <div class="form-field__note form-field__note--right">
+                    <ul class="credit-card-container inline-list">
+                        <li class="credit-card-container-list__item inline-list__item">
+                            We accept
+                        </li>
+                        <li class="credit-card-container-list__item inline-list__item">
+                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-visa"></i>
+                        </li>
+                        <li class="credit-card-container-list__item inline-list__item">
+                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-mastercard"></i>
+                        </li>
+                        <li class="credit-card-container-list__item inline-list__item">
+                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-american-express"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="credit-card-container">
+                <i class="js-credit-card-image credit-card credit-card--input-representation icon-sprite icon-sprite-card-unknown"></i>
                 <input type="tel"
                        size="20"
                        data-stripe="number"
@@ -39,6 +68,27 @@
                    maxlength="4"
                    autocomplete="off"
                    data-validation="creditCardCVC"/>
+            <a class="cvc-cta js-cvc-cta" href="#">Whats this?</a>
+            <div class="cvc u-h u-cf js-cvc-image-container">
+                <div class="cvc__primary">
+                    <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                </div>
+                <div class="cvc__secondary">
+                    <h3 class="cvc__heading">Visa, Mastercard</h3>
+                    <p class="cvc__body">
+                    The last 3 digits printed on the back within the signiture strip
+                    </p>
+                </div>
+                <div class="cvc__primary">
+                    <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
+                </div>
+                <div class="cvc__secondary">
+                    <h3 class="cvc__heading">American Express</h3>
+                    <p class="cvc__body">
+                    The 4 digits printed on the front above the card number
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="form-field">
