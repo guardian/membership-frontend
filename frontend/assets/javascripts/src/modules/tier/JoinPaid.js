@@ -105,7 +105,7 @@ define([
     };
 
     JoinPaid.prototype.setupBillingToggleState = function() {
-        var billingFieldset = $(this.getElem('BILLING_FIELDSET'));
+        var billingFieldset = $(this.getClass('BILLING_FIELDSET'), this.form.formElement);
         this.setupToggleState(
             $('#country-billingAddress', billingFieldset),
             $('#county-or-state-billingAddress', billingFieldset),
@@ -148,8 +148,8 @@ define([
     };
 
     JoinPaid.prototype.setupCtaPaymentOptionPriceListeners = function() {
-        var $paymentOptionsContainer = $(this.getElem('PAYMENT_OPTIONS_CONTAINER'));
-        var $ctaOptionPrice = $(this.getElem('CTA_PAYMENT_OPTION_PRICE'));
+        var $paymentOptionsContainer = $(this.getClass('PAYMENT_OPTIONS_CONTAINER'), this.form.formElement);
+        var $ctaOptionPrice = $(this.getClass('CTA_PAYMENT_OPTION_PRICE'), this.form.formElement);
 
         bean.on($paymentOptionsContainer[0], 'click', 'input', function (e) {
             var input = e && e.target;
@@ -172,8 +172,8 @@ define([
 
 
     JoinPaid.prototype.setupCvcToggle = function() {
-        var $cvcDescriptionContainer = $(this.getElem('CVC_DESCRIPTION_CONTAINER'));
-        var $cvcCta = $(this.getElem('CVC_CTA'));
+        var $cvcDescriptionContainer = $(this.getClass('CVC_DESCRIPTION_CONTAINER'), this.form.formElement);
+        var $cvcCta = $(this.getClass('CVC_CTA'), this.form.formElement);
 
         bean.on($cvcCta[0], 'click', function (e) {
             e.preventDefault();
