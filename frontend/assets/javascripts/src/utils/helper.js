@@ -14,7 +14,7 @@ define(function () {
             $element = $element.parent();
 
             if (i > 10) {
-                throw 'You are traversing a lot of elements! Is this wise?';
+                throw 'You are either traversing a lot of elements! Is this wise? Or your $element argument is undefined';
             }
             i++;
 

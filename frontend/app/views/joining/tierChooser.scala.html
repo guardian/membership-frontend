@@ -78,17 +78,17 @@
 
                 <div class="event-item events-list__item event-item--standalone">
                     <div class="event-item__media">
-                        @if(event.getStatus == SoldOut){
-                            <span class="event-status event-status--sold-out">Sold Out</span>
-                        }
-                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.png" data-alt="Please upload an event image"></div>
+                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image"></div>
                     </div>@*
 
                           // Inline-block whitespace
 
                     *@<div class="event-item__meta">
                         <h2 class="event-item__title">
-                        @event.name.text
+                            @if(event.getStatus == SoldOut){
+                                <span class="event-status--sold-out">Sold Out</span>
+                            }
+                            @event.name.text
                         </h2>
 
                         <div class="event-item__time">@event.start.pretty</div>

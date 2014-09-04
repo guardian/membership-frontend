@@ -11,54 +11,29 @@
         @fragments.layout.sectionHeader("We don't like goodbyes&hellip;")
 
         <p>
-                &hellip;so instead we're going to try and tempt you to stay by reminding you of all the good things
+            &hellip;so instead we're going to try and tempt you to stay by reminding you of all the good things
             you get from Guardian Membership
         </p>
-
-        <h2 class="section-sub-headline">Sure you want to cancel?</h2>
 
         <div class="package-container">
             <div class="package-list">
                 <div class="package package--current">
                     <div class="package__current-indicator">This is what you'll be missing</div>
-                    <div class="package__inner">
-                        <h2 class="package__title">@currentTier</h2>
-                        <p>@Benefits.details(currentTier).leadin</p>
-                        <ul class="package__list-element">
-                        @for((header, body) <- Benefits.details(currentTier).list) {
-                            <li>@header</li>
-                            <li>@body</li>
-                        }
-                        </ul>
-                        <div>
-                            <span class="package__price">
-                                @fragments.benefits.priceInfo(Benefits.details(currentTier))
-                                @if(currentTier > Tier.Friend){
-                                    <span class="package__pcm">pcm</span>
-                                }
-                            </span>
-                        </div>
+                    <div class="package__inner package__inner--cancel">
+                        @fragments.tier.details(currentTier)
+                        <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
                     </div>
                 </div>
 
                 @if(currentTier != Tier.Friend) {
                     <div class="package package--current">
                         <div class="package__current-indicator">Can we still be Friends?</div>
-                        <div class="package__inner">
 
-                            <h2 class="package__title">Still not convinced?</h2>
-                            <p>
-                                As a friend you can book tickets to any of our events. We will keep you in the
-                                know about events coming up in your area
-                            </p>
-
-                            <span class="package__price">
-                                &pound;FREE
-                            </span>
-
-                            <form style="float: right" action="/tier/change/friend" method="POST">
+                        <div class="package__inner package__inner--cancel">
+                            @fragments.tier.details(Tier.Friend)
+                            <form action="/tier/change/friend" method="POST">
                                 @CSRF.formField
-                                <button class="action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
+                                <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">Become a friend</button>
                             </form>
                         </div>
                     </div>
@@ -98,7 +73,9 @@
                         <option>10</option>
                     </select>
                 </div>
-                <button id="qa-confirm-cancel" class="action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership account</button>
+
+                <button id="qa-confirm-cancel" class="action action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership</button>
+
             </fieldset>
         </form>
 

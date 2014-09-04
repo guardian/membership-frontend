@@ -2,14 +2,14 @@ html {
     position: relative;
     min-height: 100%;
     background-color: #ffffff;
-    background: url(/assets/images/mem-bg-default.jpg) repeat-y center center fixed;
+    background: url(/assets/images/mem-bg-events.jpg) repeat-y center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 
-    &.home-page,
-    &.events-bg {
+    &.events-bg,
+    &.about-membership {
         background-attachment: fixed;
         background-repeat: repeat-y;
         background-position-x: left;
@@ -23,6 +23,10 @@ html {
 
     &.home-page {
         background-image: url(/assets/images/homepage/new/top_crowd.jpg);
+    }
+
+    &.about-membership {
+        background-image: url(/assets/images/mem-bg-events.jpg);
     }
 
 }

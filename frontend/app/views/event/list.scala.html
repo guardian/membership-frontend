@@ -40,6 +40,9 @@
                         @for(event <- eventChunk) {
                             @fragments.event.item(event, false)
                         }
+                        @for(i <- Range(0, 3-eventChunk.length)) {
+                            <li class="event-item events-list__item event-item--blank"></li>
+                        }
                     </ul>
                 }
             </div>
