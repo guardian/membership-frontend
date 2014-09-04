@@ -27,16 +27,29 @@ $header-margin: 36px;
         @include rem((
             margin-left: $header-padding
         ));
+        @include mq(mobile) {
+            margin-left: $header-padding/2;
+        }
         float: left;
     }
     .header__secondary {
         @include rem((
             margin-right: $header-padding
         ));
+        @include mq(mobile) {
+            margin-right: $header-padding/2;
+        }
         float: right;
         width: 200px;
         i {
             background-size: 200px;
+            @include mq(mobile) {
+                background-size: 190px;
+            }
+        }
+
+        @include mq(mobile) {
+            width: 190px;
         }
 
         @include mq(mobileLandscape) {
