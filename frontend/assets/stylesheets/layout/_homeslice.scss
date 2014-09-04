@@ -20,17 +20,56 @@
         z-index: -1;
         display: block;
         width: 100%;
-        height: 560px;
+        //height: 192px;
+
+        padding-bottom: -webkit-calc((100% / 5) * 3);
+        padding-bottom: -moz-calc((100% / 5) * 3);
+        padding-bottom: -o-calc((100% / 5) * 3);
+        padding-bottom: calc((100% / 5) * 3);
+
         //background-attachment: fixed;
-        background-repeat: repeat-y;
-        background-position: center center;
+        background-repeat: no-repeat;
         background-position-x: center;
-        background-position-y: center;
+        background-position-y: top;
+        background-position: top center;
         background-image: url(/assets/images/mem-bg-events.jpg);
+        background-size: contain;
+
+        @include mq(tablet) {
+            content: '';
+            position: absolute;
+            top: 0;
+            z-index: -1;
+            display: block;
+            width: 100%;
+            height: 560px;
+            padding-bottom: 0;
+            //background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-position-x: center;
+            background-position-y: center;
+            background-image: url(/assets/images/mem-bg-events.jpg);
+            background-size: cover;
+        }
+
+        @include mq(desktop) {
+            left: 50%;
+            margin-left: -#{(gs-span(12)+$gs-gutter*2)/2};
+            width: gs-span(12)+$gs-gutter*2;
+        }
+
+        @include mq(mem-full) {
+            margin-left: -#{(gs-span(14)+$gs-gutter*2)/2};
+            width: gs-span(14)+$gs-gutter*2;
+        }
     }
 
     &.home-slice--slice-two:after {
-        background-image: url(/assets/images/homepage/new/morn_conf_w_russ_brand.jpg);
+        background-image: url(/assets/images/homepage/new/cropped/740-Russell-Brand.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homepage/new/cropped/1140-Russell-Brand.jpg);
+        }
     }
 
     &.home-slice--slice-four:after {
@@ -43,15 +82,22 @@
         padding-bottom: $gs-gutter;
 
         .home-slice__headline-block {
-            float: left;
-            width: 320px;
-            min-height: 160px;
-            padding: $gs-gutter;
+            width: 100%;
+            padding: $gs-gutter/2;
             background-color: transparentize($mem-blue, .1);
 
+            margin-top: -webkit-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: -moz-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: -o-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: calc(((100%/5)*3) - #{$gs-gutter/2});
+
             @include mq(tablet) {
+                float: left;
                 width: 320px;
+                min-height: 160px;
+                padding: $gs-gutter;
                 position: absolute;
+                margin-top: 0;
             }
 
             @include mq(mem-full) {
@@ -68,11 +114,11 @@
 
         .home-slice__copy-block {
             width: 100%;
-            margin-top: 400px; // 560-160
             background-color: $white;
             padding: $gs-gutter/2;
 
             @include mq(tablet) {
+                margin-top: 400px; // 560-160
                 padding: $gs-gutter;
                 float: right;
                 width: 660px;
@@ -110,13 +156,22 @@
         }
 
         .home-slice__headline-block {
-            position: absolute;
+            width: 100%;
+            padding: $gs-gutter/2;
+            background-color: transparentize($mem-blue, .1);
+            margin-top: -$gs-gutter/2;
+            position: relative;
             z-index: 2;
-            right: 0;
-            top: 0;
-            width: 320px;
+
             @include mq(tablet) {
+                margin: 0;
+                position: absolute;
+                float: none;
+                z-index: 2;
+                right: 0;
+                top: 0;
                 width: 320px;
+                min-height: 160px;
             }
 
             @include mq(mem-full) {
@@ -125,10 +180,10 @@
         }
 
         .home-slice__copy-block {
-            position: relative;
             z-index: 1;
             margin-top: 0;
             width: 100%;
+            padding: 0;
 
             @include mq(tablet) {
                 padding: 0 $gs-gutter $gs-gutter;
@@ -142,10 +197,11 @@
 
             .home-slice__media {
                 width: 100%;
-
                 overflow: hidden;
+                font-size: 0;
 
                 @include mq(tablet) {
+                    position: static;
                     max-width: 460px;
                     max-height: 276px;
                 }
@@ -158,7 +214,7 @@
             }
             .home-slice__offset-copy {
                 display: block;
-                padding-top: 20px;
+                padding: $gs-gutter $gs-gutter/2 $gs-gutter/2;
                 width: 100%;
 
                 @include mq(desktop) {
