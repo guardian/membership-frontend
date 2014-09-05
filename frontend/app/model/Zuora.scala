@@ -38,7 +38,11 @@ object Zuora {
       val startDate = new DateTime(ratePlanCharge("EffectiveStartDate"))
       val endDate = ratePlanCharge.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
 
-      SubscriptionDetails(ratePlan("Name"), ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
+      // Zuora requires rate plan names to be unique, even though they are never used as identifiers
+      // We want to show the same name for annual and monthly, so remove the " - annual" or " - monthly"
+      val planName = ratePlan("Name").split(" - ")(0)
+
+      SubscriptionDetails(planName, ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
     }
   }
 }
