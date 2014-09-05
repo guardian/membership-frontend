@@ -10,7 +10,6 @@
 
 .form {
     @include rem((
-        margin-top: $gs-baseline*2,
         margin-bottom: $gs-baseline*2
     ));
 }
@@ -23,9 +22,6 @@
     @include fs-headline(5);
     margin-left: 0;
     margin-right: 0;
-    @include rem((
-        padding-bottom: $gs-baseline
-    ));
     font-weight: bold;
 }
 
