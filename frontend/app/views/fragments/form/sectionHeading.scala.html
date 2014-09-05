@@ -1,2 +1,5 @@
-@(title: String)
+@(title: String, showRequired: Boolean = false)
 <div class="form__section-heading">@title</div>
+@if(showRequired == true) {
+    <div class="form__note"><span class="required-marker"></span> required fields</div>
+}
