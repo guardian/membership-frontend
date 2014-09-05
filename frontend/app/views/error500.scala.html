@@ -1,0 +1,6 @@
+@(ex: Throwable)
+@main("Internal Server Error") {
+    <h1>Error 500</h1>
+    <p>Sorry, there was an error on this page. We're aware of the problem.</p>
+    <pre>Error code: @Integer.toHexString(ex.hashCode)</pre>
+}
