@@ -1,25 +1,19 @@
 @(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields,
 marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
-@import views.support.Asset
 @import helper._
 
     @main("Payment | " + tier) {
-
-        <section>
-
-            @fragments.layout.sectionHeader("Billing")
-
+        <section class="u-cf">
             @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepFour = "")
 
             <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
-
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
-
                 @fragments.form.errorMessageDisplay()
+                @fragments.form.sectionHeading("Address")
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-                @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
+                @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
                 @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
@@ -27,14 +21,12 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
                     @fragments.form.passwordDetail()
                 }
 
-
+                @fragments.form.sectionHeading("Billing")
                 @fragments.form.paymentOptions(tier)
-                @fragments.form.billingAddressCTA()
-                @fragments.form.addressDetail("Billing address", "The billing address for your card", "billingAddress", true,
-                userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode,
-                userFields.billingAddress4, userFields.billingCountry)
-                @fragments.form.cardDetail()
-                @fragments.form.submit("Pay now")
+                @fragments.form.billingAddress("Billing address")
+                @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)
+                @fragments.form.cardDetail(tier)
+                @fragments.form.submit("Pay", "now", Some(tier))
             </form>
 
         </section>

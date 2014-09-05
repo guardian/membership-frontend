@@ -35,7 +35,8 @@ define([
                 'billingAddress.countyOrState' : '',
                 'billingAddress.postCode' : '',
                 'billingAddress.country' : 'United Kingdom',
-                'payment.type' : 'annual'
+                'payment.type' : 'annual',
+                'address.type': 'true'
             },
             stripeErrorObjects = {
                 valid: {type: 'card_error', code: 'incorrect_number'},

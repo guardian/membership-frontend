@@ -19,6 +19,16 @@
     display: inline-block;
 }
 
+.form__section-heading {
+    @include fs-headline(5);
+    margin-left: 0;
+    margin-right: 0;
+    @include rem((
+        padding-bottom: $gs-baseline
+    ));
+    font-weight: bold;
+}
+
 .form__heading {
     @include fs-bodyHeading(3);
     margin-left: 0;
@@ -42,6 +52,10 @@
         padding: (($gs-baseline/3)*4 - 1) 0 ($gs-baseline*2)
     ));
     margin: 0;
+}
+
+.fieldset--no-top-border {
+    border-top: 0;
 }
 
 @include mq(desktop) {
@@ -332,6 +346,14 @@
 
 }
 
+.inside-radio {
+    float: left;
+    margin-left: 0;
+    @include rem((
+        margin-right: 6px
+    ));
+}
+
 .required-marker {
     &:after {
         vertical-align: middle;
@@ -393,3 +415,38 @@
         margin-top: 14px;
     }
 }
+
+.cvc-cta {
+    font-family: $sans-serif;
+    @include rem((
+        font-size: 13px,
+        line-height: 16px
+    ));
+}
+
+
+.cvc {
+    font-family: $sans-serif;
+    @include rem((
+        padding: $gs-baseline/2 $gs-baseline/2 $gs-baseline/2 0,
+        font-size: 13px,
+        line-height: 16px
+    ));
+    .cvc__primary {
+        float: left;
+    }
+    .cvc__secondary {
+        @include rem((
+            margin-left: 70px
+        ));
+    }
+    .cvc__heading {
+        font-weight: bold;
+        font-family: $sans-serif;
+        @include rem((
+            font-size: 13px,
+            line-height: 16px
+        ));
+    }
+}
+
