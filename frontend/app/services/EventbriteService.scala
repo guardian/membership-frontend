@@ -5,6 +5,7 @@ import configuration.Config
 import model.EventPortfolio
 import model.Eventbrite._
 import model.EventbriteDeserializer._
+import monitoring.EventbriteMetrics
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -98,15 +99,20 @@ object EventbriteService extends EventbriteService {
 
   def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map(extract[A])
-      .recover { case e =>
+      .map { response =>
+      EventbriteMetrics.recordResponse("GET", url, response.status)
+      extract[A](response)
+    }.recover { case e =>
       Logger.error(s"Eventbrite request $url", e)
       throw e
     }
   }
 
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map(extract[A])
+    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
+      EventbriteMetrics.recordResponse("POST", url, response.status)
+      extract[A](response)
+    }
 
   import play.api.Play.current
 

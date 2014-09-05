@@ -96,7 +96,7 @@ object IdentityApi extends Http {
     val url = s"${Config.idApiUrl}/user/password-exists"
     WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
       Logger.info(s"Identity: GET password exists response code: ${response.status}")
-      IdentityApiMetrics.putPasswordsExistsResponse(response.status)
+      IdentityApiMetrics.recordGetPasswordExistsResponse(response.status)
       (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
   }
@@ -104,7 +104,7 @@ object IdentityApi extends Http {
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
       Logger.info(s"Identity: user GET response code: ${response.status}")
-      IdentityApiMetrics.putUserDetailsResponse(response.status)
+      IdentityApiMetrics.recordGetResponse(response.status)
       (response.json \ "user").asOpt[IdentityUser]
     }
   }

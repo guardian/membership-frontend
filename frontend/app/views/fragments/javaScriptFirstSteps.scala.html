@@ -1,4 +1,4 @@
-@()
+@import configuration.Config
 @import views.support.Asset
 
 @* Critical scripts that should execute as soon as possible, preventing layout thrashing *@
@@ -45,7 +45,8 @@
               || 'XDomainRequest' in window)),
         css: {
             loaded: false
-        }
+        },
+        stripePublicKey: '@Config.stripeApiConfig.publicKey'
     };
 
     (function(isModern) {

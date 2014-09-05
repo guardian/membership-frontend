@@ -70,3 +70,13 @@
 .icon-wrapper {
     display: block;
 }
+
+// Putting in the class twice renders as the class important is SASS
+.icon-sprite--small.icon-sprite--small {
+    @include rem((
+        background-size: $gs-gutter+5 $gs-gutter+5,
+        width: $gs-gutter+5,
+        height: $gs-gutter+5,
+        margin: 0 $gs-gutter -7px 0
+    ));
+}

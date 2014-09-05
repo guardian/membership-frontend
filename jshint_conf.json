@@ -23,9 +23,10 @@
     "jquery"   : true,
 
     "globals"   : {
-        "require": false,
-        "define" : false,
-        "s"      : false,
-        "Swipe"  : false
+        "require"  : false,
+        "define"   : false,
+        "s"        : false,
+        "Swipe"    : false,
+        "guardian" : false
     }
 }

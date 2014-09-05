@@ -9,7 +9,7 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 
 import services.MemberService
-import model.Stripe
+import model.{Zuora, Stripe}
 import model.StripeSerializer._
 import actions.AuthRequest
 import forms.MemberForm._
@@ -26,6 +26,7 @@ trait Subscription extends Controller {
 
     payment.recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
+      case error: Zuora.ResultError => Forbidden
     }
   }
 

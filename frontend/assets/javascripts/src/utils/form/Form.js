@@ -2,14 +2,13 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'config/appCredentials',
     'src/utils/user',
     'src/utils/masker',
     'stripe',
     'ajax',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, bean, component, appCredentials, userUtil, masker, stripe, ajax, stripeErrorMessages, utilsHelper) {
+], function ($, bean, component, userUtil, masker, stripe, ajax, stripeErrorMessages, utilsHelper) {
     'use strict';
 
     /**
@@ -22,6 +21,7 @@ define([
     var PROCESSING_MESSAGE = 'Processing';
     var PAYMENT_MESSAGE = 'Payment';
     var ELLIPSE = '...';
+    var GLOBAL_FORM_MESSAGE = 'This form has errors';
     var self;
 
     function Form (formElement, successPostUrl, successRedirectUrl) {
@@ -193,7 +193,7 @@ define([
 
         if (errorMessages.length) {
             //display errors and disable submit
-            errorString += '<li>Your form has errors</li>';
+            errorString += '<li>' + GLOBAL_FORM_MESSAGE + '</li>';
 
             $paymentErrorsElement.removeClass(this.classes.HIDE);
             $paymentErrorsElement.html(errorString);
@@ -750,7 +750,7 @@ define([
         this.submitButton();
 
         if (self.isStripeForm) {
-            stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+            stripe.setPublishableKey(guardian.stripePublicKey);
         }
     };
 

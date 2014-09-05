@@ -10,6 +10,6 @@
 .benefits-copy {
     @include fs-bodyCopy(1);
     @include rem((
-        padding-bottom: $gs-baseline
+        padding: 0 0 $gs-baseline 45px
     ));
 }

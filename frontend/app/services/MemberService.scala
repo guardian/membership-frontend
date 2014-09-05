@@ -8,7 +8,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
-import monitoring.IdentityApiMetrics
+import monitoring.{MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
 
@@ -21,12 +21,11 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 trait MemberService {
-  def commonData(user: User, formData: JoinForm, tier: Tier.Tier) = Map(
+  def commonData(user: User, formData: JoinForm) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
     Keys.OPT_IN -> true,
-    Keys.TIER -> tier.toString,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
     Keys.ALLOW_MEMBERSHOP_MAIL -> true
   ) ++
@@ -36,14 +35,17 @@ trait MemberService {
 
 
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
+    val updatedData = commonData(user, formData) + (Keys.TIER -> Tier.Friend.toString)
+
     formData.password.map(updateUserPassword(user, _ , identityRequest))
     for {
-      memberId <- MemberRepository.upsert(user.id, commonData(user: User, formData, Tier.Friend))
+      memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
-      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
+      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
   }
@@ -54,17 +56,22 @@ trait MemberService {
     for {
       customer <- StripeService.Customer.create(user.id, formData.payment.token)
 
-      updatedData = commonData(user, formData, formData.tier) ++ Map(
+      updatedData = commonData(user, formData) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
         Keys.DEFAULT_CARD_ID -> customer.card.id
       )
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
+
+      // update tier once we know subscription has been successful
+      _ <- MemberRepository.upsert(user.id, Map(Keys.TIER -> formData.tier.toString))
+
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putUpdateUserDetailsResponse(identityResponse.status)
+      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      MemberMetrics.putSignUp(formData.tier)
       memberId.account
     }
   }
@@ -73,7 +80,7 @@ trait MemberService {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putPasswordUpdateResponse(identityResponse.status)
+      IdentityApiMetrics.recordPasswordUpdatePostResponse(identityResponse.status)
     }
   }
 
@@ -95,16 +102,25 @@ trait MemberService {
   def cancelSubscription(member: Member): Future[String] = {
     val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
 
+    // TODO: ultra hacky, but we're going to change all the Tier stuff to case classes anyway
+    val newTierStr = if (newTier == Tier.None) "" else newTier.toString
+
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
-      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTier.toString))
-    } yield ""
+      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTierStr))
+    } yield {
+      MemberMetrics.putCancel(newTier)
+      ""
+    }
   }
 
   def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
     for {
       _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
-    } yield ""
+    } yield {
+      MemberMetrics.putDowngrade(tier)
+      ""
+    }
   }
 
   // TODO: this currently only handles free -> paid
@@ -122,7 +138,10 @@ trait MemberService {
         )
       )
       identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
-    } yield memberId.account
+    } yield {
+      MemberMetrics.putUpgrade(tier)
+      memberId.account
+    }
   }
 }
 

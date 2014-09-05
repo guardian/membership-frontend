@@ -70,7 +70,7 @@ object MemberForm {
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "annual" -> boolean,
+    "type" -> nonEmptyText.transform[Boolean](_ == "annual", x => if (x) "annual" else "month"),
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
