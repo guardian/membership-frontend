@@ -1,5 +1,7 @@
 package services
 
+import services.zuora._
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,13 +37,13 @@ trait CreateSubscription {
   def createPaidSubscription(memberId: MemberId, customer: Stripe.Customer, tier: Tier.Tier,
                              annual: Boolean, name: NameForm, address: AddressForm): Future[Subscription] = {
     val plan = PaidPlan(tier, annual)
-    zuora.Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address).mkRequest().map { result =>
+    zuora.mkRequest(Subscribe(memberId.account, memberId.contact, Some(customer), plan, name, address)).map { result =>
       Subscription(result.id)
     }
   }
 
   def createFriendSubscription(memberId: MemberId, name: NameForm, address: AddressForm): Future[Subscription] = {
-    zuora.Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address).mkRequest().map { result =>
+    zuora.mkRequest(Subscribe(memberId.account, memberId.contact, None, friendPlan, name, address)).map { result =>
       Subscription(result.id)
     }
   }
@@ -56,7 +58,7 @@ trait AmendSubscription {
       subscriptionDetails <- getSubscriptionDetails(subscriptionId)
 
       cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
-      result <- zuora.CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate).mkRequest()
+      result <- zuora.mkRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
     } yield Amendment(result.ids)
   }
 
@@ -69,8 +71,8 @@ trait AmendSubscription {
     for {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
       subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-      result <- zuora.DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
-        subscriptionDetails.endDate).mkRequest()
+      result <- zuora.mkRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
+        subscriptionDetails.endDate))
     } yield Amendment(result.ids)
   }
 
@@ -80,7 +82,7 @@ trait AmendSubscription {
     for {
       subscriptionId <- getCurrentSubscriptionId(sfAccountId)
       ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      result <- zuora.UpgradePlan(subscriptionId, ratePlanId, newRatePlanId).mkRequest()
+      result <- zuora.mkRequest(UpgradePlan(subscriptionId, ratePlanId, newRatePlanId))
     } yield Amendment(result.ids)
   }
 }
@@ -147,25 +149,15 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
     for {
       accountId <- getAccountId(sfAccountId)
-      paymentMethod <- zuora.CreatePaymentMethod(accountId, customer).mkRequest()
-      result <- zuora.SetDefaultPaymentMethod(accountId, paymentMethod.id).mkRequest()
+      paymentMethod <- zuora.mkRequest(CreatePaymentMethod(accountId, customer))
+      result <- zuora.mkRequest(SetDefaultPaymentMethod(accountId, paymentMethod.id))
     } yield accountId
   }
 
 }
 
-object SubscriptionService extends SubscriptionService with ScheduledTask[Authentication] {
-  val initialValue = Authentication("", "")
-  val initialDelay = 0.seconds
-  val interval = 2.hours
+object SubscriptionService extends SubscriptionService {
 
-  def refresh() = zuora.Login().mkRequest()
+  val zuora = new ZuoraService(Config.zuoraApiConfig)
 
-  val zuora = new ZuoraService {
-    val apiUrl = Config.zuoraApiUrl
-    val apiUsername = Config.zuoraApiUsername
-    val apiPassword = Config.zuoraApiPassword
-
-    def authentication: Authentication = agent.get()
-  }
 }

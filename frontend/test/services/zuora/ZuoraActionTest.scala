@@ -1,11 +1,15 @@
-package services
+package services.zuora
 
+import model.Zuora.{Authentication, ZuoraObject}
 import org.specs2.mutable.Specification
-import model.Zuora.{ZuoraObject, Authentication}
+
 import scala.xml.XML
 
-class ZuoraServiceTest extends Specification {
-  "ZuoraService" should {
+class ZuoraActionTest extends Specification {
+
+  implicit val auth = Authentication("token", "http://example.com/")
+
+  "ZuoraAction" should {
     "create a standard action" in {
       val xml = XML.loadString(TestAction().xml)
       (xml \ "Body" \ "test").length mustEqual 1
@@ -45,16 +49,8 @@ class ZuoraServiceTest extends Specification {
 
   case class TestObject() extends ZuoraObject
 
-  case class TestAction() extends ZuoraService.ZuoraAction[TestObject] {
+  case class TestAction() extends ZuoraAction[TestObject] {
     val body = <test></test>
-  }
-
-  object ZuoraService extends ZuoraService {
-    val apiUrl = ""
-    val apiUsername = ""
-    val apiPassword = ""
-
-    def authentication: Authentication = Authentication("token", "url")
   }
 
 }

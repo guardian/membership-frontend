@@ -1,7 +1,7 @@
-package services
+package services.zuora
 
-import org.specs2.mutable.Specification
 import org.joda.time.DateTime
+import org.specs2.mutable.Specification
 
 class ZuoraServiceHelpersTest extends Specification {
   "ZuoraServiceHelpers" should {
