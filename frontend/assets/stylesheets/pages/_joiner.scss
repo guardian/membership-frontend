@@ -139,8 +139,10 @@ $card-icon-offset: 2px;
 
     &.credit-card--input-representation {
         position: absolute;
-        right: $card-icon-offset;
-        top: $card-icon-offset;
+        @include rem((
+            right: $card-icon-offset,
+            top: $card-icon-offset
+        ));
     }
 
     &.icon-sprite-card-unknown {
