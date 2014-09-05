@@ -206,6 +206,17 @@ $current-indicator: rem(47px);
     }
 }
 
+.package__list-benefits {
+    margin-left: 0;
+    @include mq(tablet) {
+        margin-left: 45%;
+    }
+
+    @include mq(desktop) {
+        margin-left: 0;
+    }
+}
+
 .package__list-benefits-element {
     @include fs-bodyCopy(1);
     @include rem((
