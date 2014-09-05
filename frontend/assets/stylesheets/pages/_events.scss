@@ -21,18 +21,31 @@ div.event {
         .event__content-body {
             @include rem((
                 max-width: 620px,
-                padding-top: $gs-baseline
+                padding: $gs-gutter/2
             ));
+            @include mq(tablet) {
+                @include rem((
+                    padding: $gs-gutter
+                ));
+            }
             margin: 0 auto;
         }
 
         .event__meta > div {
-            display: inline-block;
-            margin: 0 12px 10px 0;
+            display: block;
+            margin: 0 0 $gs-gutter;
         }
 
-        .event__location,
-        .event__time,
+        .event__time {
+            @include fs-data(5);
+            color: $black;
+        }
+
+        .event__location {
+            @include fs-data(4);
+            color: $c-neutral2;
+        }
+
         .event__trail {
             @include fs-textsans(4);
             display: block;
@@ -109,23 +122,6 @@ div.event {
 .inner-container {
     float: right;
     width: 100%;
-}
-
-.icon {
-    background-image: url('/assets/images/icons.png');
-    width: 34px;
-    height: 33px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: .4em;
-}
-
-.location--icon {
-    background-position: 0 0;
-}
-
-.time--icon {
-    background-position: -33px 0;
 }
 
 .event__location {
