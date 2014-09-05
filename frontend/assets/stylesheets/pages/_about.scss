@@ -50,13 +50,24 @@ h2.about-block-title {
 }
 
 .benefits-container {
-    background-color: $c-neutral6;
-    
-    @include mq(wide) {
-        @include rem((
-            width: gs-span(14)+$gs-gutter*2,
-            margin: 0 auto
-        ));
+    background-color: $white;
+
+    .benefits-inner {
+        background-color: $c-neutral6;
+        width: 100%;
+
+        @include mq(desktop) {
+            @include rem((
+                width: gs-span(12)+$gs-gutter*2,
+                margin: 0 auto
+            ));
+        }
+
+        @include mq(mem-full) {
+            @include rem((
+                width: gs-span(14)+$gs-gutter*2
+            ));
+        }
     }
 
     .benefits__list {
@@ -75,11 +86,11 @@ h2.about-block-title {
         @include mq(desktop) {
             @include rem((
                 width: gs-span(11),
-                margin: 80px $gs-gutter 0 gs-span(3)
+                margin: 80px $gs-gutter 0
             ));
         }
 
-        @include mq(wide) {
+        @include mq(mem-full) {
             @include rem((
                 width: gs-span(12),
                 margin: 80px $gs-gutter 0 gs-span(2)+$gs-gutter*2
@@ -110,7 +121,7 @@ h2.about-block-title {
         }
 
         @include mq(desktop) {
-            border-right: 1px solid $c-neutral3; 
+            border-right: 1px solid $c-neutral3;
             @include rem((
                 width: gs-span(3)-10,
                 height: 220px,
@@ -118,7 +129,7 @@ h2.about-block-title {
             ));
         }
 
-        @include mq(wide) {
+        @include mq(mem-full) {
             @include rem((
                 width: gs-span(3),
                 height: 190px
@@ -128,7 +139,7 @@ h2.about-block-title {
         .icon-sprite__left {
             float: left;
             @include rem((
-                margin: 0 $gs-gutter $gs-gutter 0
+                margin: 0 $gs-gutter $gs-gutter*2 0
             ));
 
             @include mq(tablet) {
