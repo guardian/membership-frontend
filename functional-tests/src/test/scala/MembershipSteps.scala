@@ -99,9 +99,16 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IAmRedirectedToTheSignInOrRegisterPage = {
+    val loaded = new JoinFlowChooseTierPage(driver).isPageLoaded
+    Assert.assert(loaded, true, "The Sign In or Register page should be loaded")
+    this
+  }
+
   def IAmRedirectedToTheChooseTierPage = {
+    theFlowSignIn
     val loaded = new ChooseTierPage(driver).isPageLoaded
-    Assert.assert(loaded, true, "The Choose tier page should be loaded")
+    Assert.assert(loaded, true, "The Choose Tier page should be loaded")
     this
   }
 
@@ -113,16 +120,17 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ICanBecomeAFriend = {
     new ChooseTierPage(driver).clickFriend.clickChoose
-    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
-    CookieHandler.register(driver)
     becomeFriend
     this
   }
 
+  def theFlowSignIn = {
+    new JoinFlowRegisterOrSignInPage(driver).clickRegister
+    CookieHandler.register(driver)
+  }
+
   def ICanBecomeAPartner = {
     new ChooseTierPage(driver).clickPartner.clickChoose
-    new JoinFlowRegisterOrSignUpPage(driver).clickRegister
-    CookieHandler.register(driver)
     pay
     this
   }
@@ -195,7 +203,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     page.submitPayment("Test", "Automation", "90 York", " Way", "London", "UK", "N19GU", cardWithNoFunds, "111", "12",
       "2018")
     val errorMessage = page.getErrorMessage
-    Assert.assert(errorMessage, "We're sorry. Your card has been declined.",
+    Assert.assert(errorMessage, "This form has errors",
       "We display stripe's error message correctly")
     this
   }
