@@ -6,13 +6,12 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Address Details") {
 
-    @fragments.layout.sectionHeader(Config.siteTitle + " events in your area")
-
     @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepThree= "Location", StepFour = "")
 
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
+        @fragments.form.sectionHeading("Guardian membership events in your area")
         @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
         @fragments.form.addressDetail("Delivery address", "Where shall we send your welcome pack", "deliveryAddress", false,
         userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)

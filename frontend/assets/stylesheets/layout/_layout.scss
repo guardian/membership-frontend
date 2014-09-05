@@ -35,6 +35,13 @@ html {
         }
     }
 
+    &.patron-page {
+        background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
+        @include mq(tablet) {
+            background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
+        }
+    }
+
 }
 
 body {

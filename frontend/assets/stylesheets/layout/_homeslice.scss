@@ -360,8 +360,18 @@
         .home-slice__copy-block {
             @include mq(tablet) {
                 @include rem((
-                    margin-top: 396px // 560-200-160
+                    margin-top: 250px
                 ));
+            }
+        }
+
+        &.home-slice--epic-lower-copy-block {
+            .home-slice__copy-block {
+                @include mq(tablet) {
+                    @include rem((
+                        margin-top: 396px // 560-200-160
+                    ));
+                }
             }
         }
 

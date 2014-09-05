@@ -1,12 +1,19 @@
-@(ctaText: String)
+@(ctaTextPrepend: String, ctaTextAppend: String = "", tier: Option[com.gu.membership.salesforce.Tier.Tier] = None)
+
 @import views.support.Asset
+@import model.Benefits
 
 <fieldset class="fieldset">
+    @fragments.form.errorMessageDisplay()
     <div class="fieldset__heading"></div>
     <div class="fieldset__fields">
         <div class="actions js-waiting-container">
-            @fragments.form.errorMessageDisplay()
-            <button type="submit" class="submit-input action action--logged-in js-submit-input">@ctaText</button>
+            <button type="submit" class="submit-input action action--logged-in js-submit-input">
+            @Html(tier.fold(ctaTextPrepend)(tier =>
+                ctaTextPrepend + " £<span class=\"js-cta-payment-option-price\">" +
+                    Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
+            ))
+            </button>
             <div class="i-wait">
                 <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
                 <span class="i-wait__message js-waiting-message"></span>
