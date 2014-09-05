@@ -25,11 +25,11 @@ trait Info extends Controller {
     Ok(views.html.info.feedbackThankyou())
   }
 
-  def submitFeedback = AuthenticatedAction.async { implicit request =>
+  def submitFeedback = NoCacheAction.async { implicit request =>
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
-  private def sendFeedback(formData: FeedbackForm)(implicit request: AuthRequest[_]) = {
+  private def sendFeedback(formData: FeedbackForm) = {
     EmailService.sendFeedback(formData)
 
     Future.successful(Redirect(routes.Info.feedbackThankyou()))
