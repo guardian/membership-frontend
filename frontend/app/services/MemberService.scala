@@ -45,7 +45,7 @@ trait MemberService {
     } yield {
       Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
       IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
-      MemberMetrics.putSignUp(Tier.Friend)      
+      MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
   }
