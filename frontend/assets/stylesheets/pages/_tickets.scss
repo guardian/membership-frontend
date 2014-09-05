@@ -153,14 +153,13 @@
             top: -32px,
             height: 4px
         ));
-        z-index: 1;
     }
 
     .funnel__step {
         width: auto;
         display: inline-block;
         position: relative;
-        z-index: 2;
+        z-index: 1;
         @include rem((
             height: 20px,
             width: 20px
