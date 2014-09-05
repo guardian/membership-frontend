@@ -2,14 +2,13 @@ define([
     '$',
     'bean',
     'src/utils/component',
-    'config/appCredentials',
     'src/utils/user',
     'src/utils/masker',
     'stripe',
     'ajax',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, bean, component, appCredentials, userUtil, masker, stripe, ajax, stripeErrorMessages, utilsHelper) {
+], function ($, bean, component, userUtil, masker, stripe, ajax, stripeErrorMessages, utilsHelper) {
     'use strict';
 
     /**
@@ -751,7 +750,7 @@ define([
         this.submitButton();
 
         if (self.isStripeForm) {
-            stripe.setPublishableKey(appCredentials.stripe.stripePublishableKey);
+            stripe.setPublishableKey(guardian.stripePublicKey);
         }
     };
 
