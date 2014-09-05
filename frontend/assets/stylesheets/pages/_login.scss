@@ -4,9 +4,6 @@
     .signin__actions {
         display: inline-block;
         text-align: center;
-        @include rem((
-            width: 40%
-        ));
         .signin__action-prompt {
             @include fs-bodyHeading(5);
             font-weight: 100;
