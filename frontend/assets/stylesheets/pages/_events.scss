@@ -33,7 +33,9 @@ div.event {
 
         .event__meta > div {
             display: block;
-            margin: 0 0 $gs-gutter;
+            @include rem((
+                margin: 0 0 $gs-gutter
+            ));
         }
 
         .event__time {
