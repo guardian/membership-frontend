@@ -104,6 +104,7 @@ $current-indicator: rem(47px);
     @include mq($from: tablet, $to: desktop) {
         width: 55%;
         float: right;
+        padding-left: 0;
     }
 }
 
