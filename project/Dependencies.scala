@@ -12,7 +12,7 @@ object Dependencies {
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val awsSdk="com.amazonaws" % "aws-java-sdk" % "1.8.9.1"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.17"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.17.1"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
 
