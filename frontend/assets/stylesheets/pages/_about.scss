@@ -23,8 +23,14 @@ h2.about-block-title {
         @include fs-bodyHeading(1);
         border-top: 1px solid $c-neutral5;
         @include rem((
-            padding: $gs-gutter/2 0 0 0
+            padding: $gs-gutter/2 0
         ));
+
+        &:last-child {
+            @include rem((
+                padding-bottom: $gs-gutter/2
+            ));
+        }
     }
 
     .package {

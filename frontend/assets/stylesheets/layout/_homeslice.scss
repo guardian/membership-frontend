@@ -333,14 +333,6 @@
             padding-top: 284px
         ));
 
-        @include mq(tablet) {
-            .home-slice__inner {
-                @include rem((
-                    height: 834px
-                ));
-            }
-        }
-
         &:before {
             content: '';
             position: absolute;
@@ -411,6 +403,14 @@
         }
 
         &.home-slice--epic-home-page {
+            @include mq(tablet) {
+                .home-slice__inner {
+                    @include rem((
+                        height: 834px
+                    ));
+                }
+            }
+
             .home-slice__headline-block {
                 @include mq(tablet) {
                     position: absolute;

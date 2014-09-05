@@ -111,7 +111,7 @@ class MembershipEventTests extends BaseMembershipTest {
         _.IClickThePurchaseButton
       }
       .then {
-        _.IAmRedirectedToTheChooseTierPage
+        _.IAmRedirectedToTheSignInOrRegisterPage
       }
     }
 
