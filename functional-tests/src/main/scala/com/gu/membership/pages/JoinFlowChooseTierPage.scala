@@ -7,9 +7,9 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class JoinFlowChooseTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def registerButton = driver.findElement(By.xpath("//div[1]/section/div[3]/div[2]/a"))
+  private def registerButton = driver.findElement(By.xpath("//div[2]/div/div/section/div[2]/div[2]/a"))
 
-  private def friendButton = driver.findElement(By.xpath("//div[1]/section/ul[1]/li[1]/a"))
+  private def signInButton = driver.findElement(By.xpath("//div[2]/div/div/section/div[2]/div[1]/a"))
 
   def clickRegisterButton = {
     registerButton.click()
@@ -17,7 +17,9 @@ class JoinFlowChooseTierPage(driver: WebDriver) extends BaseMembershipPage(drive
   }
 
   def clickFriendButton = {
-    friendButton.click()
-    new JoinFlowRegisterOrSignUpPage(driver)
+    signInButton.click()
+    new JoinFlowRegisterOrSignInPage(driver)
   }
+
+  def isPageLoaded = registerButton.isDisplayed && signInButton.isDisplayed
 }
