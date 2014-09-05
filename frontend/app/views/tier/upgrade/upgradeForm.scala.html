@@ -15,6 +15,6 @@
         @fragments.form.billingAddress("Billing address")
         @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)
         @fragments.form.cardDetail(targetTier)
-        @fragments.form.submit("Join", "now", Some(targetTier))
+        @fragments.form.submit("Pay", "now", Some(targetTier))
     </form>
 }
