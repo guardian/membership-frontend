@@ -1,23 +1,31 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.Play.current
-import play.api.libs.json.Reads
-import play.api.libs.ws.{WSResponse, WS}
-import play.api.Logger
-
-import com.gu.membership.salesforce.{Member, Tier}
-
 import model.Stripe._
 import model.StripeDeserializer._
-import configuration.Config
+import play.api.Play.current
+import play.api.libs.json.Reads
+import play.api.libs.ws.{WS, WSRequestHolder, WSResponse}
 
-trait StripeService {
-  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
-  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A]
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+case class StripeApiConfig(url: String, secretKey: String, publicKey: String)
+
+class StripeService(apiConfig: StripeApiConfig) {
+
+  val apiAuthHeader = ("Authorization", s"Bearer ${apiConfig.secretKey}")
+
+  def apiRequest(endpoint: String): WSRequestHolder =
+    WS.url(s"${apiConfig.url}/$endpoint").withHeaders(apiAuthHeader)
+
+  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
+    apiRequest(endpoint).get().map(extract[A])
+
+  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
+    apiRequest(endpoint).post(data).map(extract[A])
+
+  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
+    apiRequest(endpoint).delete().map(extract[A])
 
   private def extract[A <: StripeObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
@@ -35,18 +43,4 @@ trait StripeService {
     def updateCard(customerId: String, card: String): Future[Customer] =
       post[Customer](s"customers/$customerId", Map("card" -> Seq(card)))
   }
-}
-
-object StripeService extends StripeService {
-  val apiURL = Config.stripeApiURL
-  val apiAuthHeader = ("Authorization", s"Bearer ${Config.stripeApiKeySecret}")
-
-  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiURL/$endpoint").withHeaders(apiAuthHeader).get().map(extract[A])
-
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiURL/$endpoint").withHeaders(apiAuthHeader).post(data).map(extract[A])
-
-  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiURL/$endpoint").withHeaders(apiAuthHeader).delete().map(extract[A])
 }
