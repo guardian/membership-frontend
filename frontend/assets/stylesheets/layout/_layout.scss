@@ -25,7 +25,25 @@ html {
     }
 
     &.home-page {
-        background-image: url(/assets/images/top_crowd.jpg);
+
+        background: url(/assets/images/backgrounds/400-Home-hero.jpg) no-repeat top center fixed;
+
+        @media
+        (-webkit-min-device-pixel-ratio: 2),
+        (min-resolution: 192dpi) {
+            background: url(/assets/images/backgrounds/400-Home-hero-2x.jpg) no-repeat top center fixed;
+            background-size: 400px 444px;
+        }
+
+        @include mq(400px) {
+            background: url(/assets/images/backgrounds/740-Home-hero.jpg) no-repeat top center fixed;
+            background-size: auto auto;
+        }
+
+        @include mq(tablet) {
+            background: url(/assets/images/backgrounds/1920-Home-hero.jpg) no-repeat top center fixed;
+            background-size: auto auto;
+        }
     }
 
     &.about-membership {
