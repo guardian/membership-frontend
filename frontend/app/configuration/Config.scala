@@ -4,6 +4,7 @@ import com.netaporter.uri.dsl._
 
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
+import services.StripeApiConfig
 
 object Config {
   val config = ConfigFactory.load()
@@ -41,9 +42,11 @@ object Config {
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
-  val stripeApiURL = config.getString("stripe.api.url")
-  val stripeApiKeySecret = config.getString("stripe.api.key.secret")
-  val stripeApiKeyPublic = config.getString("stripe.api.key.public")
+  val stripeApiConfig = StripeApiConfig(
+    url = config.getString("stripe.api.url"),
+    secretKey = config.getString("stripe.api.key.secret"),
+    publicKey = config.getString("stripe.api.key.public")
+  )
 
   val salesforceConsumerKey = config.getString("salesforce.consumer.key")
   val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")
