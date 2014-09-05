@@ -20,7 +20,7 @@ object Benefits {
 
   val friendBenefits = Benefits("As a friend:", Seq(
     ("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
-    ("Digital Digest email", "Receive weekly updates on the upcoming programme", "dig_digest"),
+    ("Digital Digest email", "Receive weekly updates on the upcoming programme", "digital_digest"),
     ("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights")
   ), None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events")
 
@@ -33,7 +33,7 @@ object Benefits {
   ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets");
 
   val patronBenefits = Benefits("All benefits of a partner plus:", Seq(
-    ("Priority Booking", "Additional priority ticket booking (one week before Partners)", "early_booking"),
+    ("Priority Booking", "Additional priority ticket booking (one week before Partners)", "priority_booking"),
     ("Unique experiences", "Get closer to the Guardian’s journalism and better understand the impact of our campaigns", "unique_experiences"),
     ("Complimentary items", "Thank you for your support", "complim_items")
   ), Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian")
