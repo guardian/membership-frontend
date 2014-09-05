@@ -70,6 +70,12 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         @include flex-grow(1);
         @include flex-basis(0); // this fixes a bug, dunno why
+        width: 31%;
+        float: left;
+
+        .patron-page & {
+            width: 45%;
+        }
     }
 
     @include mq($to: desktop) {
@@ -208,9 +214,7 @@ $current-indicator: rem(47px);
     margin-bottom: 0;
     list-style: none;
     > li {
-        @include rem((
-            margin: $gs-baseline 0
-        ));
+
         &:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
@@ -225,6 +229,9 @@ $current-indicator: rem(47px);
     @include fs-bodyCopy(1);
     color: $c-neutral3;
     border-bottom: 1px solid $c-neutral3;
+    @include rem((
+        margin-bottom: $gs-baseline
+    ));
 }
 
 // bit fugly - hides the "Plus:" text for first list item
