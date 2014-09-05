@@ -329,11 +329,15 @@
     }
 
     &.home-slice--epic {
-        padding-top: 284px;
+        @include rem((
+            padding-top: 284px
+        ));
 
         @include mq(tablet) {
             .home-slice__inner {
-                height: 834px;
+                @include rem((
+                    height: 834px
+                ));
             }
         }
 
@@ -384,13 +388,17 @@
                 top: 0;
                 right: 0;
                 left: auto;
-                width: 660px;
+                @include rem((
+                    width: 660px
+                ));
             }
 
             @include mq(mem-full) {
                 left: 0;
                 right: auto;
-                width: 480px;
+                @include rem((
+                    width: 480px
+                ));
             }
         }
 
@@ -406,8 +414,10 @@
             .home-slice__headline-block {
                 @include mq(tablet) {
                     position: absolute;
-                    bottom: 478px;
                     top: auto;
+                    @include rem((
+                        bottom: 478px
+                    ));
                 }
             }
             .home-slice__copy-block {
