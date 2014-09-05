@@ -14,7 +14,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
   override def onStart(app: Application) {
     EventbriteService.start()
     MemberRepository.start()
-    SubscriptionService.start()
+    SubscriptionService.zuora.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

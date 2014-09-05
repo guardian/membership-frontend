@@ -5,6 +5,7 @@ import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
 import services.StripeApiConfig
+import services.zuora.ZuoraApiConfig
 
 object Config {
   val config = ConfigFactory.load()
@@ -55,9 +56,11 @@ object Config {
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
 
-  val zuoraApiUrl = config.getString("zuora.api.url")
-  val zuoraApiUsername = config.getString("zuora.api.username")
-  val zuoraApiPassword = config.getString("zuora.api.password")
+  val zuoraApiConfig = ZuoraApiConfig(
+    url = config.getString("zuora.api.url"),
+    username = config.getString("zuora.api.username"),
+    password = config.getString("zuora.api.password")
+  )
 
   val zuoraApiFriend = config.getString("zuora.api.friend")
   val zuoraApiPartnerMonthly = config.getString("zuora.api.partner.monthly")
