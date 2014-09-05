@@ -25,6 +25,12 @@ h2.about-block-title {
         @include rem((
             padding: $gs-gutter/2 0
         ));
+
+        &:last-child {
+            @include rem((
+                padding-bottom: $gs-gutter/2
+            ));
+        }
     }
 
     .package {
