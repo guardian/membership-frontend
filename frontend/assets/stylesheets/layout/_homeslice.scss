@@ -159,6 +159,9 @@
             @include mq(tablet) {
                 @include fs-headline(6);
             }
+            .headline-highlight {
+                color: $white;
+            }
         }
 
         .home-slice__copy-block {
@@ -327,8 +330,16 @@
 
     &.home-slice--epic {
         @include rem((
-            padding-top: 164px // 200 - 36 header margin
+            padding-top: 284px
         ));
+
+        @include mq(tablet) {
+            .home-slice__inner {
+                @include rem((
+                    height: 834px
+                ));
+            }
+        }
 
         &:before {
             content: '';
@@ -340,10 +351,22 @@
             background-color: $white;
             width: 100%;
 
-            height: -webkit-calc(100% - 560px);
-            height: -moz-calc(100% - 560px);
-            height: -o-calc(100% - 560px);
-            height: calc(100% - 560px);
+            height: -webkit-calc(100% - 294px);
+            height: -moz-calc(100% - 294px);
+            height: -o-calc(100% - 294px);
+            height: calc(100% - 294px);
+        }
+
+        @include mq(tablet) {
+            @include rem((
+                padding-top: 164px // 200 - 36 header margin
+            ));
+            &:before {
+                height: -webkit-calc(100% - 560px);
+                height: -moz-calc(100% - 560px);
+                height: -o-calc(100% - 560px);
+                height: calc(100% - 560px);
+            }
         }
 
         &:after {
@@ -355,6 +378,28 @@
             @include rem((
                 padding-right: $gs-gutter*3
             ));
+
+            @include mq($to: tablet) {
+                margin-top: 0;
+            }
+
+            @include mq(tablet) {
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: auto;
+                @include rem((
+                    width: 660px
+                ));
+            }
+
+            @include mq(mem-full) {
+                left: 0;
+                right: auto;
+                @include rem((
+                    width: 480px
+                ));
+            }
         }
 
         .home-slice__copy-block {
@@ -365,7 +410,16 @@
             }
         }
 
-        &.home-slice--epic-lower-copy-block {
+        &.home-slice--epic-home-page {
+            .home-slice__headline-block {
+                @include mq(tablet) {
+                    position: absolute;
+                    top: auto;
+                    @include rem((
+                        bottom: 478px
+                    ));
+                }
+            }
             .home-slice__copy-block {
                 @include mq(tablet) {
                     @include rem((
