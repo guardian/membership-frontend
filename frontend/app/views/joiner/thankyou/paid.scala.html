@@ -6,18 +6,16 @@
 @main("Thankyou | " + subscriptionDetails.planName) {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
-
-        @fragments.layout.sectionHeader("Thank You")
-
         @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
-
+        @fragments.form.sectionHeading("Thank You")
+        @fragments.layout.welcomeUser()
     </section>
 
     <section class="joiner-section joiner-section--no-border">
         <table class="table table--responsive-font table--striped">
             <tr class="table__headline" role="row">
                 <td class="summary-table__cell" role="scope">
-                    Package
+                    Tier
                 </td>
                 <td class="summary-table__cell" role="scope">
                 @subscriptionDetails.planName
@@ -67,27 +65,9 @@
         </table>
     </section>
 
-    <section class="align-center">
-        <a class="action action--inline-text action--join action--wide" href="/events">Get Started</a>
-    </section>
+    <a class="action action--join" href="/events">Get Started</a>
 
     @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
         @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
     }
-
-    <div class="separator"></div>
-    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border" id="whats-included">
-        <h2 class="section-body-headline">Questions</h2>
-        <ul class="questions u-unstyled">
-            <li class="questions__list">
-                <h3 class="section-sub-body-headline">What happens next?</h3>
-                <p>Donec convallis sem non facilisis dapibus. Suspendisse tincidunt tellus at mattis porttitor. Donec nibh odio, hendrerit sed est in, fringilla imperdiet tellus. Vestibulum sapien urna, auctor nec eleifend nec, ornare eget nisi.</p>
-            </li>
-            <li class="questions__list">
-                <h3 class="section-sub-body-headline">I haven't received an email?</h3>
-                <p>In quis nunc tristique, aliquam lectus nec, hendrerit nibh. Fusce eleifend nunc vel ante vestibulum, in ultrices augue fermentum. Etiam laoreet mauris quis sem semper, at feugiat nisi commodo.</p>
-            </li>
-        </ul>
-    </section>
-
 }

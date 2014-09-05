@@ -13,7 +13,8 @@ require([
     'src/modules/tier/Choose',
     'src/utils/cookie',
     'src/modules/events/eventPriceEnhance',
-    'config/appCredentials'
+    'config/appCredentials',
+    'src/modules/tier/Thankyou'
 ], function(
     Imager,
     omnitureAnalytics,
@@ -29,7 +30,8 @@ require([
     Choose,
     cookie,
     eventPriceEnhance,
-    appCredentials
+    appCredentials,
+    Thankyou
     ) {
     'use strict';
 
@@ -60,6 +62,7 @@ require([
         // user has upgraded or joined so remove cookie then populate the user details in the header
         cookie.removeCookie(MEM_USER_COOKIE_KEY);
         header.populateUserDetails();
+        (new Thankyou()).init();
     });
 
     router.match('*/friend/enter-details').to(function () {

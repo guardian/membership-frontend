@@ -11,7 +11,7 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
                 @fragments.form.errorMessageDisplay()
-                @fragments.form.sectionHeading("Address")
+                @fragments.form.sectionHeading("Address", true)
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                 @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)

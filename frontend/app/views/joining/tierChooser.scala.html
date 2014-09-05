@@ -52,7 +52,7 @@
 
         <section class="two-thirds">
 
-            <h1 class="section-sub-headline">Choose a membership tier</h1>
+            @fragments.form.sectionHeading("Choose a membership tier")
 
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
                 @CSRF.formField
