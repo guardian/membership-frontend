@@ -2,6 +2,8 @@ $header-padding: 20px;
 $header-margin: 36px;
 
 .header {
+    z-index: 100;
+
     @include rem((
         margin-bottom: $header-margin
     ));
