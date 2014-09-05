@@ -1,25 +1,74 @@
-@(currentTier: com.gu.membership.salesforce.Tier.Tier, tier: com.gu.membership.salesforce.Tier.Tier)
+@(
+    currentTier: Option[com.gu.membership.salesforce.Tier.Tier],
+    tier: com.gu.membership.salesforce.Tier.Tier,
+    showBenefitDetails: Boolean = true,
+    mode: String = "",
+    showBenefitCopy: Boolean = true,
+    showLearnMore: Boolean = false
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
+@import helper._
 
-@defining(currentTier == tier) { isCurrentPackage =>
+@defining(currentTier.getOrElse("") == tier) { isCurrentPackage =>
     <div class="package@if(isCurrentPackage){ package--current}">
-        @if(isCurrentPackage) {
-            <div class="package__current-indicator">Your Current Package</div>
-        }
-        <div class="package__inner">
+        <div class="package__item">
+            @if(isCurrentPackage || mode == "cancel") {
+                <div class="package__current-indicator">
+                    @if(mode == "downgrade") {
+                        This is what you're giving up
+                    }
+                    @if(mode == "cancel" && isCurrentPackage) {
+                        This is what you'll be missing
+                    }
 
-            @fragments.tier.details(tier)
-            @if(!isCurrentPackage) {
-                @if(currentTier == Tier.Friend || tier == Tier.Friend) {
-                    <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm">
-                        @Benefits.details(tier).cta
-                    </a>
+                    @if(mode == "cancel" && !isCurrentPackage) {
+                        Can we still be Friends?
+                    }
+                    @if(mode == "") {
+                        Your Current Package
+                    }
+                </div>
+            }
+            <div class="package__title-container package__title-container--@tier.toString.toLowerCase">
+                <h2 class="package__title">@tier</h2>
+            </div>
+            <div class="package__inner">
+                @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails, showBenefitCopy=showBenefitCopy)
+            </div>
+        </div>
+        <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
+            @if(mode == "promo") {
+                <a class="action action-cta" href="/join/@tier.toString.toLowerCase/enter-details">Become a @tier</a>
+                @if(showLearnMore) {
+                    @if(tier == Tier.Patron) {
+                        <a class="action action--secondary-button" href="/patrons">Learn more about @tier</a>
+                    } else {
+                        <a class="action action--secondary-button" href="/about">Learn more about @tier</a>
+                    }
+                }
+            }
+            @if(!isCurrentPackage && mode != "promo") {
+                @if(currentTier.getOrElse("") == Tier.Friend || tier == Tier.Friend) {
+                    @if(mode == "downgrade") {
+                        <form action="/tier/change/@tier.toString.toLowerCase" method="POST">
+                            @CSRF.formField
+                            <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">@Benefits.details(tier).cta</button>
+                        </form>
+                    } else {
+                        <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm">
+                            @Benefits.details(tier).cta
+                        </a>
+                    }
                 } else {
                     <span class="action action-cta--cancel action-cta--disabled">
                         Coming soon
                     </span>
+                }
+            } else {
+                @if(mode == "downgrade" || mode == "cancel") {
+                    <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
                 }
             }
         </div>

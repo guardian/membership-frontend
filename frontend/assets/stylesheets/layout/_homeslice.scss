@@ -1,7 +1,19 @@
+/*
+
+    .home-slice containers display site brochure content wether full width or cropped to breakpoint with
+    modifiers for content oriented blocks (.home-slice--content) or hero style blocks (.home-slice--epic).
+
+    Responsiveness is a little scrappy right now but works well - could do with a refactor.
+
+     - Chris Finch, 04/09/14
+
+*/
+
 .home-slice {
 
     position: relative;
 
+    // White backing for homeslice containers (layered with images)
     &:before {
         content: '';
         position: absolute;
@@ -13,6 +25,7 @@
         height: 100%;
     }
 
+    // Background images for homeslice containers (can be full with with modifier)
     &:after {
         content: '';
         position: absolute;
@@ -20,76 +33,173 @@
         z-index: -1;
         display: block;
         width: 100%;
-        height: 560px;
-        //background-attachment: fixed;
-        background-repeat: repeat-y;
-        background-position: center center;
+
+        padding-bottom: -webkit-calc((100% / 5) * 3);
+        padding-bottom: -moz-calc((100% / 5) * 3);
+        padding-bottom: -o-calc((100% / 5) * 3);
+        padding-bottom: calc((100% / 5) * 3);
+
+        background-repeat: no-repeat;
         background-position-x: center;
-        background-position-y: center;
+        background-position-y: top;
+        background-position: top center;
         background-image: url(/assets/images/mem-bg-events.jpg);
+        background-size: contain;
+
+        @include mq(tablet) {
+            content: '';
+            position: absolute;
+            top: 0;
+            z-index: -1;
+            display: block;
+            width: 100%;
+            padding-bottom: 0;
+            @include rem((
+                height: 560px
+            ));
+
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-position-x: center;
+            background-position-y: center;
+            background-image: url(/assets/images/mem-bg-events.jpg);
+            background-size: cover;
+        }
+
+        @include mq(desktop) {
+            left: 50%;
+            @include rem((
+                margin-left: -#{(gs-span(12)+$gs-gutter*2)/2},
+                width: gs-span(12)+$gs-gutter*2
+            ));
+        }
+
+        @include mq(mem-full) {
+            @include rem((
+                margin-left: -#{(gs-span(14)+$gs-gutter*2)/2},
+                width: gs-span(14)+$gs-gutter*2
+            ));
+        }
     }
 
-    &.home-slice--slice-two:after {
-        background-image: url(/assets/images/homepage/new/morn_conf_w_russ_brand.jpg);
+    // Per-homeslice images ================================================ //
+
+    &.home-slice--home-two:after {
+        background-image: url(/assets/images/homeslice/740-Russell-Brand.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homeslice/1140-Russell-Brand.jpg);
+        }
     }
 
-    &.home-slice--slice-four:after {
-        background-image: url(/assets/images/homepage/new/guardian_space002.jpg);
+    &.home-slice--home-four:after {
+        background-image: url(/assets/images/homeslice/740-Midland-goods-shed.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homeslice/1140-Midland-goods-shed.jpg);
+        }
     }
 
+    &.home-slice--patron-two:after {
+        background-image: url(/assets/images/homeslice/patrons/740-Alan-profile.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homeslice/patrons/1140-Alan-profile.jpg);
+        }
+    }
+
+    &.home-slice--patron-four:after {
+        background-image: url(/assets/images/homeslice/patrons/740-Get-involved.jpg);
+        @include mq(tablet) {
+            background-image: url(/assets/images/homeslice/patrons/1140-Get-involved.jpg);
+        }
+    }
+
+    // Inner container set to breakpoint width for content
     .home-slice__inner {
         position: relative;
         width: 100%;
-        padding-bottom: $gs-gutter;
+        @include rem((
+            padding-bottom: $gs-gutter
+        ));
 
         .home-slice__headline-block {
-            float: left;
-            width: 320px;
-            min-height: 160px;
-            padding: $gs-gutter;
+            width: 100%;
+            @include rem((
+                min-height: 104px,
+                padding: $gs-gutter $gs-gutter/2 $gs-gutter
+            ));
             background-color: transparentize($mem-blue, .1);
 
+            margin-top: -webkit-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: -moz-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: -o-calc(((100%/5)*3) - #{$gs-gutter/2});
+            margin-top: calc(((100%/5)*3) - #{$gs-gutter/2});
+
             @include mq(tablet) {
-                width: 320px;
+                float: left;
                 position: absolute;
+                margin-top: 0;
+                @include rem((
+                    width: 320px,
+                    min-height: 160px,
+                    padding: $gs-gutter
+                ));
             }
 
             @include mq(mem-full) {
-                width: 480px;
                 position: static;
-                padding: $gs-gutter $gs-gutter*8 $gs-gutter $gs-gutter;
+                @include rem((
+                    width: 480px,
+                    padding: $gs-gutter $gs-gutter*8 $gs-gutter $gs-gutter
+                ));
             }
         }
 
         .home-slice__headline {
-            @include fs-headline(6);
+            @include fs-headline(4);
             color: $black;
+            @include mq(tablet) {
+                @include fs-headline(6);
+            }
+            .headline-highlight {
+                color: $white;
+            }
         }
 
         .home-slice__copy-block {
             width: 100%;
-            margin-top: 400px; // 560-160
-            background-color: $white;
-            padding: $gs-gutter/2;
+            @include rem((
+                background-color: $white,
+                padding: $gs-gutter/2
+            ));
 
             @include mq(tablet) {
-                padding: $gs-gutter;
                 float: right;
-                width: 660px;
+                @include rem((
+                    margin-top: 400px, // 560-160
+                    padding: $gs-gutter,
+                    width: 660px
+                ));
             }
 
             .home-slice__copy {
-                @include fs-headline(9);
+                @include fs-headline(10);
                 font-weight: 100;
-                margin-bottom: 17px;
+                @include rem((
+                    margin-bottom: 17px
+                ));
+                @include mq(tablet) {
+                    @include fs-headline(9);
+                }
             }
 
             .action {
-                margin: 0 0 17px;
-
+                @include rem((
+                    margin: 0 0 17px
+                ));
             }
         }
     }
+
+    // Title block colour modifiers ======================================== //
 
     &.home-slice--red .home-slice__headline-block {
         background-color: transparentize($mem-live-accent, .1);
@@ -102,6 +212,8 @@
         background-color: transparentize($mem-green, .1);
     }
 
+    // Type modifiers ====================================================== //
+
     &.home-slice--content {
         background-color: $white;
         &:before,
@@ -110,79 +222,124 @@
         }
 
         .home-slice__headline-block {
-            position: absolute;
+            width: 100%;
+            background-color: transparentize($mem-blue, .1);
+            position: relative;
             z-index: 2;
-            right: 0;
-            top: 0;
-            width: 320px;
+            @include rem((
+                margin-top: -$gs-gutter/2
+            ));
+
             @include mq(tablet) {
-                width: 320px;
+                margin: 0;
+                position: absolute;
+                float: none;
+                z-index: 2;
+                right: 0;
+                top: 0;
+                @include rem((
+                    width: 320px,
+                    min-height: 160px
+                ));
             }
 
             @include mq(mem-full) {
-                width: 500px;
+                @include rem((
+                    width: 500px
+                ));
             }
         }
 
         .home-slice__copy-block {
-            position: relative;
             z-index: 1;
             margin-top: 0;
             width: 100%;
+            padding: 0;
 
             @include mq(tablet) {
-                padding: 0 $gs-gutter $gs-gutter;
+                @include rem((
+                    padding: 0 $gs-gutter $gs-gutter
+                ));
             }
 
             @include mq(desktop) {
                 float: left;
-                width: 800px;
-                padding: 0 0 $gs-gutter $gs-gutter;
+                @include rem((
+                    width: 800px,
+                    padding: 0 0 $gs-gutter $gs-gutter
+                ));
             }
 
             .home-slice__media {
                 width: 100%;
-
                 overflow: hidden;
+                font-size: 0;
 
                 @include mq(tablet) {
-                    max-width: 460px;
-                    max-height: 276px;
+                    position: static;
+                    @include rem((
+                        max-width: 460px,
+                        max-height: 276px
+                    ));
                 }
 
                 @include mq(desktop) {
                     float: left;
-                    max-width: 700px;
-                    max-height: 420px;
+                    @include rem((
+                        max-width: 700px,
+                        max-height: 420px
+                    ));
                 }
             }
             .home-slice__offset-copy {
                 display: block;
-                padding-top: 20px;
                 width: 100%;
+                @include rem((
+                    padding: $gs-gutter $gs-gutter/2 $gs-gutter/2
+                ));
 
                 @include mq(desktop) {
                     float: right;
-                    width: 620px;
+                    @include rem((
+                        width: 620px
+                    ));
                 }
 
                 .home-slice__copy--quote {
                     display: block;
-                    @include fs-bodyCopy(5);
+                    @include fs-bodyCopy(6);
+                    @include mq(tablet) {
+                        @include fs-bodyCopy(5);
+                    }
                 }
                 .home-slice__copy--cite {
                     display: block;
-                    @include fs-headline(2);
+                    @include fs-headline(1);
                     font-style: normal;
                     font-weight: lighter;
-                    margin-bottom: 17px;
+                    @include rem((
+                        margin-bottom: 17px
+                    ));
+                    @include mq(tablet) {
+                        @include fs-headline(2);
+                    }
                 }
             }
         }
     }
 
     &.home-slice--epic {
-        padding-top: 164px; // 200 - 36 header margin
+        @include rem((
+            padding-top: 284px
+        ));
+
+        @include mq(tablet) {
+            .home-slice__inner {
+                @include rem((
+                    height: 834px
+                ));
+            }
+        }
 
         &:before {
             content: '';
@@ -194,10 +351,22 @@
             background-color: $white;
             width: 100%;
 
-            height: -webkit-calc(100% - 560px);
-            height: -moz-calc(100% - 560px);
-            height: -o-calc(100% - 560px);
-            height: calc(100% - 560px);
+            height: -webkit-calc(100% - 294px);
+            height: -moz-calc(100% - 294px);
+            height: -o-calc(100% - 294px);
+            height: calc(100% - 294px);
+        }
+
+        @include mq(tablet) {
+            @include rem((
+                padding-top: 164px // 200 - 36 header margin
+            ));
+            &:before {
+                height: -webkit-calc(100% - 560px);
+                height: -moz-calc(100% - 560px);
+                height: -o-calc(100% - 560px);
+                height: calc(100% - 560px);
+            }
         }
 
         &:after {
@@ -206,11 +375,58 @@
         }
 
         .home-slice__headline-block {
-            padding-right: $gs-gutter*3;
+            @include rem((
+                padding-right: $gs-gutter*3
+            ));
+
+            @include mq($to: tablet) {
+                margin-top: 0;
+            }
+
+            @include mq(tablet) {
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: auto;
+                @include rem((
+                    width: 660px
+                ));
+            }
+
+            @include mq(mem-full) {
+                left: 0;
+                right: auto;
+                @include rem((
+                    width: 480px
+                ));
+            }
         }
 
         .home-slice__copy-block {
-            margin-top: 396px; // 560-200-160
+            @include mq(tablet) {
+                @include rem((
+                    margin-top: 250px
+                ));
+            }
+        }
+
+        &.home-slice--epic-home-page {
+            .home-slice__headline-block {
+                @include mq(tablet) {
+                    position: absolute;
+                    top: auto;
+                    @include rem((
+                        bottom: 478px
+                    ));
+                }
+            }
+            .home-slice__copy-block {
+                @include mq(tablet) {
+                    @include rem((
+                        margin-top: 396px // 560-200-160
+                    ));
+                }
+            }
         }
 
     }
@@ -219,7 +435,14 @@
         background-color: $c-neutral6;
 
         .home-slice__headline {
-            padding: $gs-gutter $gs-gutter 80px;
+            @include rem((
+                padding: $gs-gutter
+            ));
+            @include mq(tablet) {
+                @include rem((
+                    padding-bottom: $gs-gutter*4
+                ));
+            }
         }
 
     }
@@ -236,11 +459,15 @@
 
     @include mq(desktop) {
         .home-slice__inner {
-            width: gs-span(12)+$gs-gutter*2;
+            @include rem((
+                width: gs-span(12)+$gs-gutter*2
+            ));
         }
 
         &.home-slice--content .home-slice__inner .home-slice__headline-block {
-            width: 340px;
+            @include rem((
+                width: 340px
+            ));
         }
 
 
@@ -248,15 +475,21 @@
 
     @include mq(mem-full) {
         .home-slice__inner {
-            width: gs-span(14)+$gs-gutter*2;
+            @include rem((
+                width: gs-span(14)+$gs-gutter*2
+            ));
         }
 
         &.home-slice--content .home-slice__inner .home-slice__headline-block {
-            width: 500px;
+            @include rem((
+                width: 500px
+            ));
         }
 
         &.home-slice--join-today .join-today__join-boxes {
-            padding-left: 180px;
+            @include rem((
+                padding-left: 180px
+            ));
         }
     }
 
@@ -267,9 +500,13 @@
    ================================================================= */
 
 .join-today__join-boxes {
-    padding: $gs-gutter/2;
+    @include rem((
+        padding: $gs-gutter/2
+    ));
     @include mq(tablet) {
-        padding: $gs-gutter;
+        @include rem((
+            padding: $gs-gutter
+        ));
     }
 
     @include mq($from: mobile, $to: desktop) {
@@ -408,73 +645,6 @@
     &.join-today__join-box--header--patron {
         background-color: $mem-brandDarkBlue;
         color: $white;
-    }
-}
-
-.join-today__price {
-    @include fs-headline(2);
-
-    @include rem((
-        min-height: 60px,
-        margin-top: $gs-gutter,
-        padding: $gs-baseline/2 0
-    ));
-
-    @include mq(tablet) {
-        @include fs-headline(2);
-        .join-today__price--bold:last-child {
-            text-align: right;
-        }
-    }
-
-    @include mq($from: tablet, $to: desktop) {
-        display: inline-block;
-        width: 30%;
-        margin-right: 14%;
-        margin-top: 0;
-        vertical-align: top;
-        .join-today__price--bold:last-child {
-            text-align: left;
-        }
-    }
-
-    @include mq(desktop) {
-        @include fs-headline(3);
-    }
-
-    .join-today__price--bold {
-        padding: 0;
-        @include mq($from: tablet, $to: desktop) {
-            width: 100%;
-            text-align: left;
-        }
-    }
-
-    .join-today__sep {
-        @include flex($flex-grow: 0, $flex-shrink: 0, $flex-basis: 1px);
-        background-color: $c-neutral5;
-        height: 100%;
-        @include mq($to: tablet) {
-            display: none;
-        }
-        @include mq($from: tablet, $to: desktop) {
-            width: 100%;
-            height: 1px;
-            padding: 0;
-            margin: $gs-gutter 0;
-        }
-    }
-
-    .join-today__price--bold-free {
-        @include rem((
-            width: gs-span(2)
-        ));
-    }
-
-    .save-price {
-        @include fs-bodyCopy(1);
-        color: $c-neutral3;
-        display: block;
     }
 }
 

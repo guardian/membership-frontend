@@ -1,0 +1,21 @@
+@(heading: String)
+
+<fieldset class="fieldset js-toggle-billing-address u-h">
+    <div class="address-fieldset__inner">
+        <div class="fieldset__heading">
+            <h2 class="form__heading">@heading</h2>
+        </div>
+        <div class="fieldset__fields">
+            <div class="form-field js-billing-address-container">
+                <label class="label" for="use-delivery-address">
+                    <input class="inside-radio" type="radio" name="address.type" id="use-delivery-address" value="true" checked="checked"/>
+                    <span class="payment-label__title">Use delivery address</span>
+                </label>
+                <label class="label" for="use-billing-address">
+                    <input class="inside-radio" type="radio" name="address.type" id="use-billing-address" value="false"/>
+                    <span class="payment-label__title">Add a different billing address</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</fieldset>

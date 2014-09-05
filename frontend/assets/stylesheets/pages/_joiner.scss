@@ -54,7 +54,7 @@ $card-icon-offset: 2px;
     text-align: center;
     padding: $gs-gutter;
     border-bottom: 1px solid #dfdfdf;
-    
+
     @include mq(tablet) {
         border: 1px solid #dfdfdf;
         height: gs-height(3);
@@ -119,19 +119,42 @@ $card-icon-offset: 2px;
    ========================================================================== */
 .credit-card-container {
     position: relative;
+    .credit-card-container-list__item {
+        vertical-align: middle;
+    }
 }
 
 .credit-card {
-    position: absolute;
-    right: $card-icon-offset;
-    top: $card-icon-offset;
     width: 54px;
     height: $large-card;
+
+    &.credit-card--form-field-note {
+        @include rem((
+            background-size: 35px 23px,
+            width: 35px,
+            height: 23px,
+            padding-right: 3px
+        ));
+    }
+
+    &.credit-card--input-representation {
+        position: absolute;
+        @include rem((
+            right: $card-icon-offset,
+            top: $card-icon-offset
+        ));
+    }
 
     &.icon-sprite-card-unknown {
         visibility: hidden;
     }
+}
 
+.credit-card-note {
+    color: $mem-darkGrey;
+    .credit-card-note__header {
+        color: $black;
+    }
 }
 
 .credit-card-input {
@@ -186,4 +209,3 @@ $card-icon-offset: 2px;
         float: left;
     }
 }
-

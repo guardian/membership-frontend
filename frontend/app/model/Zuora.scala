@@ -8,13 +8,22 @@ object Zuora {
 
   case class Authentication(token: String, url: String) extends ZuoraObject
 
-  case class Error(origin: String, code: String, message: String) extends ZuoraObject
-
   case class AmendResult(ids: Seq[String]) extends ZuoraObject
   case class CreateResult(id: String) extends ZuoraObject
   case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraObject
   case class SubscribeResult(id: String) extends ZuoraObject
   case class UpdateResult(id: String) extends ZuoraObject
+
+  trait Error extends Throwable {
+    val code: String
+    val message: String
+
+    override def getMessage: String = s"$code: $message"
+  }
+
+  case class FaultError(code: String, message: String) extends Error
+  case class ResultError(code: String, message: String) extends Error
+  case class InternalError(code: String, message: String) extends Error
 
   case class SubscriptionStatus(current: String, future: Option[String])
 
@@ -35,7 +44,7 @@ object Zuora {
 }
 
 object ZuoraReaders {
-  import Zuora.{Error, ZuoraObject}
+  import Zuora._
 
   trait ZuoraReader[T <: ZuoraObject] {
     val responseTag: String
@@ -45,7 +54,7 @@ object ZuoraReaders {
       val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
 
       (body \ "Fault").headOption.map { fault =>
-        Left(Error("fault", (fault \ "faultcode").text, (fault \ "faultstring").text))
+        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
       }.getOrElse {
         val resultNode = if (multiResults) "results" else "result"
         val result = body \ responseTag \ resultNode
@@ -69,7 +78,7 @@ object ZuoraReaders {
       if ((result \ "Success").text == "true") {
         Right(extract(result))
       } else {
-        val errors = (result \ "Errors").map { node => Error("error", (node \ "Code").text, (node \ "Message").text) }
+        val errors = (result \ "Errors").map { node => ResultError((node \ "Code").text, (node \ "Message").text) }
         Left(errors.head) // TODO: return more than just the first error
       }
     }
@@ -119,7 +128,7 @@ object ZuoraDeserializer {
 
       Right(QueryResult(records))
     } else {
-      Left(Error("internal", "QUERY_ERROR", "The query was not complete (we don't support iterating query results)"))
+      Left(InternalError("QUERY_ERROR", "The query was not complete (we don't support iterating query results)"))
     }
   }
 
