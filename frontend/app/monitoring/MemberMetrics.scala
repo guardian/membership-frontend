@@ -2,7 +2,7 @@ package monitoring
 
 import com.gu.membership.salesforce.Tier
 
-object MemberMetrics extends CloudWatch {
+object MemberMetrics extends Metrics {
 
   def putSignUp(tier: Tier.Tier) {
     put(s"sign-ups-${tier.toString}")
@@ -23,5 +23,4 @@ object MemberMetrics extends CloudWatch {
   private def put(metricName: String) {
     put("Member", Map(metricName -> 1))
   }
-
 }
