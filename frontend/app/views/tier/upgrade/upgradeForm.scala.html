@@ -6,7 +6,7 @@
     <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
-        @fragments.form.sectionHeading("Payment")
+        @fragments.form.sectionHeading("Payment", true)
         @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
         userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
 
