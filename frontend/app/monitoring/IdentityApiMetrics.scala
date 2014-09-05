@@ -1,5 +1,16 @@
 package monitoring
 
+
+abstract class StatusMetrics extends CloudWatch {
+  val namespace : String
+
+  def putResponseCode(name: String, status: Int) {
+    val statusClass = status / 100
+    val metrics = Map(s"$name-${statusClass}XX" -> 1.00)
+    put(namespace, metrics)
+  }
+}
+
 object IdentityApiMetrics extends StatusMetrics {
 
   val namespace = "Identity API"
@@ -21,12 +32,12 @@ object IdentityApiMetrics extends StatusMetrics {
   }
 }
 
-abstract class StatusMetrics extends CloudWatch {
-  val namespace : String
+object EventbriteMetrics extends StatusMetrics {
+  val namespace = "Eventbrite"
 
-  def putResponseCode(name: String, status: Int) {
-    val statusClass = status / 100
-    val metrics = Map(s"$name-${statusClass}XX" -> 1.00)
-    put(namespace, metrics)
+  def recordResponse(responseType: String, url: String, status:Int) {
+    val name = s"$responseType-${url.replace("/", "-")}"
+    putResponseCode(name, status)
   }
 }
+
