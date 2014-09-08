@@ -13,6 +13,7 @@ define([
     var TICKETS_AVAILABLE_NOW = ' to you now';
     var TIER_CHANGE_URL = '/tier/change';
     var JOIN_URL = '/join';
+    var UPGRADE_COMING_SOON = 'Upgrade coming soon';
 
     var Cta = function (containerElem) {
         this.elem = containerElem;
@@ -78,6 +79,8 @@ define([
 
         if (memberTier === PATRON) {
             $(this.getElem('MEMBER_CTA')).addClass('u-h');
+        } else if (memberTier === PARTNER) {
+            $(this.getClass('MEMBER_CTA'), this.elem).text(UPGRADE_COMING_SOON).addClass('action--disabled').removeAttr('href');
         } else if (memberTier) {
             $(this.getElem('MEMBER_CTA')).text('Upgrade').attr('href', TIER_CHANGE_URL);
         } else {
