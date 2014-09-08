@@ -13,7 +13,7 @@
         case SoldOut => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Sold Out</button> }
         case Cancelled => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Cancelled</button> }
         case PreLive => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Buy Tickets</button> }
-        case _ => { <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a> }
+        case _ => { <a class='action action--join js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a> }
     }
 }
 
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                             <div>
-                                <a class='action js-member-cta' href='/join'>Become a member</a>
+                                <a class='action action--join js-member-cta' href='/join'>Become a member</a>
                             </div>
 
                             <div class="event__sale-ends">
