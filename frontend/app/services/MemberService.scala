@@ -25,17 +25,19 @@ trait MemberService {
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
-    Keys.OPT_IN -> true,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
     Keys.ALLOW_MEMBERSHOP_MAIL -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
-
+  def memberData(tier: Tier.Tier) = Map(
+    Keys.TIER -> tier.toString,
+    Keys.OPT_IN -> true
+  )
 
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
-    val updatedData = commonData(user, formData) + (Keys.TIER -> Tier.Friend.toString)
+    val updatedData = commonData(user, formData) ++ memberData(Tier.Friend)
 
     formData.password.map(updateUserPassword(user, _ , identityRequest))
     for {
@@ -44,7 +46,7 @@ trait MemberService {
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
-      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
       MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
@@ -65,12 +67,12 @@ trait MemberService {
         formData.payment.annual, formData.name, formData.deliveryAddress)
 
       // update tier once we know subscription has been successful
-      _ <- MemberRepository.upsert(user.id, Map(Keys.TIER -> formData.tier.toString))
+      _ <- MemberRepository.upsert(user.id, memberData(formData.tier))
 
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
       MemberMetrics.putSignUp(formData.tier)
       memberId.account
     }
@@ -80,7 +82,7 @@ trait MemberService {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.recordPasswordUpdatePostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
     }
   }
 

@@ -93,24 +93,28 @@ trait Http {
 object IdentityApi extends Http {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
-    val url = s"${Config.idApiUrl}/user/password-exists"
+    val endpoint = "user/password-exists"
+    val url = s"${Config.idApiUrl}/$endpoint"
     WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-      Logger.info(s"Identity: GET password exists response code: ${response.status}")
-      IdentityApiMetrics.recordGetPasswordExistsResponse(response.status)
+      recordAndLogResponse(response.status, "GET", endpoint)
       (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
     }
   }
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-      Logger.info(s"Identity: user GET response code: ${response.status}")
-      IdentityApiMetrics.recordGetResponse(response.status)
+      recordAndLogResponse(response.status, "GET", endpoint)
       (response.json \ "user").asOpt[IdentityUser]
     }
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
     WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+  }
+
+  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
+    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
+    IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }
 

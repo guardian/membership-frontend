@@ -29,11 +29,11 @@ object Benefits {
     ("+1 Guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "plus_1_guest"),
     ("Live stream events", "Watch live streams of Flagship events", "live_stream"),
     ("Membership card", "Be part of the Guardian", "membership_card"),
-    ("Early Booking", "Early ticket booking (one week before Friends)", "early_booking")
+    ("Early Booking", "Early ticket booking (before Friends)", "early_booking")
   ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets");
 
   val patronBenefits = Benefits("All benefits of a partner plus:", Seq(
-    ("Priority Booking", "Additional priority ticket booking (one week before Partners)", "priority_booking"),
+    ("Priority Booking", "Additional priority ticket booking (before Partners)", "priority_booking"),
     ("Unique experiences", "Get closer to the Guardian’s journalism and better understand the impact of our campaigns", "unique_experiences"),
     ("Complimentary items", "Thank you for your support", "complim_items")
   ), Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian")
