@@ -9,6 +9,7 @@ define([
         var GU_U_USER_COOKIE = 'WyIxMDAwMDAyNyIsImRldmd1MzJAZmVlZG15cGl4ZWwuY29tIiwiZm1wZGV2MzIiLCIyIiwxNDE3MDA4ODMxNjg2LDAsMTQwODYwODM3MjAwMCxmYWxzZV0.MC0CFQCMS2P02pzUixTwIk6dqw-Y755E6AIUDP5E1jp8yDwb2gnRyHPyN-yDWSM;';
         var MEM_USER_COOKIE_KEY = 'GU_MEM';
         var GU_USER_COOKIE_KEY = 'GU_U';
+        var NO_MEMBERSHIP_USER = 'no membership user';
         var errorResponse = { message: 403 };
 
         var friendUserDetails =  { userId: '10000027', tier: 'Friend', joinDate: 1408608382000, optIn: true };
@@ -130,36 +131,27 @@ define([
 
         describe('Not a GU user', function() {
 
-            it('Get Membership info /user/me not called and cookie not stored', function () {
-
-                var callbackMethod = {
-                    notCalled: function () { /*not called*/ }
-                };
-
-                var callback = function (membershipUser, err) {
-                    callbackMethod.notCalled(membershipUser, err);
-                };
+            it('Get Membership info /user/me not called and cookie not stored, callback fired with err string "' + NO_MEMBERSHIP_USER + '"', function () {
 
                 removeCookie();
 
                 spyOn(ajax, 'reqwest');
                 spyOn(cookie, 'setCookie');
-                spyOn(callbackMethod, 'notCalled')
 
-                userUtil.getMemberDetail(callback);
+                userUtil.getMemberDetail(function (membershipUser, err) {
 
-                expect(cookie.setCookie).not.toHaveBeenCalled();
-                expect(cookie.setCookie.calls.any()).toEqual(false);
-                expect(cookie.setCookie.calls.count()).toEqual(0);
+                    expect(cookie.setCookie).not.toHaveBeenCalled();
+                    expect(cookie.setCookie.calls.any()).toEqual(false);
+                    expect(cookie.setCookie.calls.count()).toEqual(0);
 
-                expect(callbackMethod.notCalled).not.toHaveBeenCalled();
-                expect(callbackMethod.notCalled.calls.any()).toEqual(false);
-                expect(callbackMethod.notCalled.calls.count()).toEqual(0);
+                    expect(membershipUser).toBeNull();
+                    expect(err).not.toBeNull();
+                    expect(err.message).toEqual(NO_MEMBERSHIP_USER);
 
-                expect(ajax.reqwest).not.toHaveBeenCalled();
-                expect(ajax.reqwest.calls.any()).toEqual(false);
-                expect(ajax.reqwest.calls.count()).toEqual(0);
-
+                    expect(ajax.reqwest).not.toHaveBeenCalled();
+                    expect(ajax.reqwest.calls.any()).toEqual(false);
+                    expect(ajax.reqwest.calls.count()).toEqual(0);
+                });
             });
         });
     });

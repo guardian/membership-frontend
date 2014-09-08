@@ -3,6 +3,7 @@ package services.zuora
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders.ZuoraReader
+import monitoring.ZuoraMetrics
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
@@ -43,6 +44,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
     val url = if (action.authRequired) authentication.url else apiConfig.url
 
     if (action.authRequired && authentication.url.length == 0) {
+      ZuoraMetrics.putAuthenticationError
       throw ZuoraServiceError(s"Can't build authenticated request for ${getClass.getSimpleName}, no Zuora authentication")
     }
 
@@ -50,10 +52,14 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
     WS.url(url).post(action.xml).map { result =>
       Logger.debug(s"Got result ${result.status}")
+      ZuoraMetrics.putResponseCode(result.status, "POST")
       Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
 
       reader.read(result.xml) match {
-        case Left(error) => throw error
+        case Left(error) => {
+          ZuoraMetrics.recordError
+          throw error
+        }
         case Right(obj) => obj
       }
     }

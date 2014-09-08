@@ -1,25 +1,28 @@
 /* ==========================================================================
-   Help page
+   faq page
    ========================================================================== */
-.help {
 
-    .help-intro {
+.feedback {
+
+    .feedback-intro {
         @include rem((
             padding-bottom: $gs-gutter*2
         ));
     }
 
-    .help-list li {
-        @include rem((
-            padding: 0 0 5px
-        ));
+    .fieldset {
+        border-top: 1px solid $c-neutral2;
+
+        &:last-child {
+            border: 0;
+        }
     }
 
-    .help-faqs {
+    .fieldset__heading {
         @include rem((
-            padding: $gs-gutter 0
+            padding-right: $gs-gutter*2
         ));
     }
-
 }
+
 
