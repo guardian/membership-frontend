@@ -1,6 +1,12 @@
 @(ex: Throwable)
 @main("Internal Server Error") {
-    <h1>Error 500</h1>
-    <p>Sorry, there was an error on this page. We're aware of the problem.</p>
-    <pre>Error code: @Integer.toHexString(ex.hashCode)</pre>
+    @fragments.layout.sectionHeader("Error 500 &ndash; Internal server error")
+    <p>
+        Sorry, there was an error on this page. We're aware of the problem. If this error persists, please contact
+        support on <a href="mailto:membershipsupport@@theguardian.com">membershipsupport@@theguardian.com</a>.
+    </p>
+    @ex match { case err: play.api.UsefulException =>
+        <p>Please provide the following error code to help identify the issue.</p>
+        <pre>Error code: @err.id</pre>
+    }
 }
