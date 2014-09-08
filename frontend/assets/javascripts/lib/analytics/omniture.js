@@ -190,9 +190,6 @@ function s_doPlugins(s) {
     if (s.prop74 && !s.eVar15) {
         s.eVar15="D=c74";//Sub Category
     }
-    if (s.prop75 && !s.eVar5) {
-        s.eVar5="D=c75";//Category
-    }
     /* Set hier1 to the concatenation of prop19 and prop72 */
     if (s.prop19 && s.prop72) {
         s.hier3='D=c19+":"+c72';
