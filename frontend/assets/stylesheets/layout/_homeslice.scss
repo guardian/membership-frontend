@@ -559,18 +559,12 @@
             width: 100%;
             margin: 0;
             min-width: 0;
-            // text-align: right;
             .action__text {
                 max-width: 67%;
                 display: inline-block;
                 vertical-align: middle;
                 text-align: left;
             }
-            // &:after {
-            //     float: none;
-            //     display: inline-block;
-            //     vertical-align: middle;
-            // }
         }
 
         @include mq($from: tablet, $to: desktop) {
