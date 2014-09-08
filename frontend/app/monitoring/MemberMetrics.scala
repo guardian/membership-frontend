@@ -4,6 +4,8 @@ import com.gu.membership.salesforce.Tier
 
 object MemberMetrics extends Metrics {
 
+  val service: String = "Member"
+
   def putSignUp(tier: Tier.Tier) {
     put(s"sign-ups-${tier.toString}")
   }
@@ -21,6 +23,6 @@ object MemberMetrics extends Metrics {
   }
 
   private def put(metricName: String) {
-    put("Member", Map(metricName -> 1))
+    put(metricName, 1)
   }
 }

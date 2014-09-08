@@ -5,6 +5,7 @@ import com.gu.monitoring.CloudWatch
 import configuration.Config
 
 trait Metrics extends CloudWatch {
-  val region: Region = Region.getRegion(Regions.EU_WEST_1)
-  val stage: String = Config.stage
+  val region = Region.getRegion(Regions.EU_WEST_1)
+  val stage = Config.stage
+  val application = "Frontend"
 }
