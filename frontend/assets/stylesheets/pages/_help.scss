@@ -3,7 +3,6 @@
    ========================================================================== */
 
 .help-container {
-    // border: 1px solid $mem-brandOrange;
 
     @include mq(desktop) {
         @include rem((
