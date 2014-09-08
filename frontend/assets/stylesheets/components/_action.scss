@@ -2,7 +2,6 @@
     background-color: #0096C9;
     margin: $gs-baseline 0;
     display: inline-block;
-    text-align: center;
     color: #ffffff;
     cursor: pointer;
     border: 0;
@@ -20,6 +19,7 @@
     &:focus,
     &:active {
         text-decoration: none;
+        color: #ffffff;
     }
     &:hover {
         background-color: darken(#0096C9, 10%);
@@ -199,8 +199,6 @@
 .action-cta {
     color: #ffffff;
     border: 0;
-    padding: $gs-gutter / 2;
-    text-align: center;
     display: inline-block;
     cursor: pointer;
     @include rem((
