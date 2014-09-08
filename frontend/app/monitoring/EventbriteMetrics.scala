@@ -3,10 +3,9 @@ package monitoring
 import com.gu.monitoring.StatusMetrics
 
 object EventbriteMetrics extends Metrics with StatusMetrics {
-  val namespace = "Eventbrite"
+  val service = "Eventbrite"
 
-  def recordResponse(responseType: String, url: String, status:Int) {
-    val name = s"$responseType-${url.replace("/", "-")}"
-    putResponseCode(namespace, name, status)
+  def recordResponse(status:Int, responseType: String) {
+    putResponseCode(status, responseType)
   }
 }

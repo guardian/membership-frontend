@@ -4,21 +4,21 @@ import com.gu.monitoring.StatusMetrics
 
 object IdentityApiMetrics extends Metrics with StatusMetrics {
 
-  val namespace = "Identity API"
+  val service = "Identity API"
 
   def recordGetPasswordExistsResponse(status: Int) {
-    putResponseCode(namespace, "identity-get-user-password-exists-response", status)
+    putResponseCode(status, "GET")
   }
 
   def recordGetResponse(status: Int) {
-    putResponseCode(namespace, "identity-get-user-details-response", status)
+    putResponseCode(status, "GET")
   }
 
   def recordUpdateUserDetailsPostResponse(status : Int) {
-    putResponseCode(namespace, "identity-update-user-details-response", status)
+    putResponseCode(status, "POST")
   }
 
   def recordPasswordUpdatePostResponse(status: Int) {
-    putResponseCode(namespace, "identity-password-update-response", status)
+    putResponseCode(status, "POST")
   }
 }
