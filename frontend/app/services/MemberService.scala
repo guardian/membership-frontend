@@ -163,6 +163,9 @@ object MemberRepository extends MemberRepository with ScheduledTask[Authenticati
     val apiPassword = Config.salesforceApiPassword
     val apiToken = Config.salesforceApiToken
 
+    val stage = Config.stage
+    val application = "Frontend"
+
     def authentication: Authentication = agent.get()
   }
 }
