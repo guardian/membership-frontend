@@ -87,6 +87,8 @@ define([
                     }
                 });
             }
+        } else {
+            callback(null, 'no user');
         }
     };
 
