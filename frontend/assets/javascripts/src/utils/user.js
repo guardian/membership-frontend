@@ -88,7 +88,7 @@ define([
                 });
             }
         } else {
-            callback(null, 'no user');
+            callback(null, { message: 'no membership user' });
         }
     };
 
