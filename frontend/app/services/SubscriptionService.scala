@@ -52,38 +52,50 @@ trait CreateSubscription {
 trait AmendSubscription {
   self: SubscriptionService =>
 
-  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[Amendment] = {
-    for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+  private def checkForPendingAmendments(sfAccountId: String)(fn: String => Future[Amendment]): Future[Amendment] = {
+    getSubscriptionStatus(sfAccountId).flatMap { subscriptionStatus =>
+      if (subscriptionStatus.future.isEmpty) {
+        fn(subscriptionStatus.current)
+      } else {
+        throw SubscriptionServiceError("Cannot amend subscription, amendments are already pending")
+      }
+    }
+  }
 
-      cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
-      result <- zuora.mkRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
-    } yield Amendment(result.ids)
+  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[Amendment] = {
+    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+      for {
+        subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+        cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
+        result <- zuora.mkRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
+      } yield Amendment(result.ids)
+    }
   }
 
   def downgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Amendment] = {
-    val newRatePlanId = tier match {
-      case Tier.Friend => friendPlan
-      case t => PaidPlan(t, annual)
-    }
+    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+      val newRatePlanId = tier match {
+        case Tier.Friend => friendPlan
+        case t => PaidPlan(t, annual)
+      }
 
-    for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-      result <- zuora.mkRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId, newRatePlanId,
-        subscriptionDetails.endDate))
-    } yield Amendment(result.ids)
+      for {
+        subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+        result <- zuora.mkRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
+          newRatePlanId, subscriptionDetails.endDate))
+      } yield Amendment(result.ids)
+    }
   }
 
   def upgradeSubscription(sfAccountId: String, tier: Tier.Tier, annual: Boolean): Future[Amendment] = {
-    val newRatePlanId = PaidPlan(tier, annual)
+    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+      val newRatePlanId = PaidPlan(tier, annual)
 
-    for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      ratePlanId  <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-      result <- zuora.mkRequest(UpgradePlan(subscriptionId, ratePlanId, newRatePlanId))
-    } yield Amendment(result.ids)
+      for {
+        ratePlanId <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
+        result <- zuora.mkRequest(UpgradePlan(subscriptionId, ratePlanId, newRatePlanId))
+      } yield Amendment(result.ids)
+    }
   }
 }
 
