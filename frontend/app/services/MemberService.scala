@@ -44,7 +44,7 @@ trait MemberService {
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
-      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
       MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
@@ -70,7 +70,7 @@ trait MemberService {
       identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.recordUpdateUserDetailsPostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
       MemberMetrics.putSignUp(formData.tier)
       memberId.account
     }
@@ -80,7 +80,7 @@ trait MemberService {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.recordPasswordUpdatePostResponse(identityResponse.status)
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
     }
   }
 
