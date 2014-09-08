@@ -46,7 +46,10 @@
         css: {
             loaded: false
         },
-        stripePublicKey: '@Config.stripeApiConfig.publicKey'
+        stripePublicKey: '@Config.stripeApiConfig.publicKey',
+        membership: {
+            buildNumber: '@app.BuildInfo.buildNumber'
+        }
     };
 
     (function(isModern) {

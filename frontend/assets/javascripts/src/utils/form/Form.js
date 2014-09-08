@@ -1,3 +1,4 @@
+/*global Raven */
 define([
     '$',
     'bean',
@@ -142,7 +143,9 @@ define([
                                 $element: $(self.getElem('CREDIT_CARD_NUMBER'))
                             });
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        Raven.captureException(e);
+                    }
 
                     self.stopLoader();
                     self.setThrobberMessage();
