@@ -7,8 +7,9 @@ import scala.concurrent.Future
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import actions.Functions.{authenticated, memberRefiner}
+import actions.Fallbacks.notYetAMemberOn
 import services.{MemberService, EventbriteService}
-import model.Eventbrite.EBError
 
 import com.netaporter.uri.dsl._
 
@@ -16,6 +17,8 @@ trait Event extends Controller {
 
   val eventService: EventbriteService
   val memberService: MemberService
+
+  val BuyAction = NoCacheAction andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction {
     eventService.getEvent(id).map {
@@ -32,7 +35,7 @@ trait Event extends Controller {
     Ok(views.html.event.list(EventPortfolio(Seq.empty, eventService.getEventsTagged(tag))))
   }
 
-  def buy(id: String) = MemberAction.async { implicit request =>
+  def buy(id: String) = BuyAction.async { implicit request =>
     eventService.getEvent(id).map {
       event =>
         for {
