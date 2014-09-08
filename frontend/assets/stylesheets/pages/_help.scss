@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Help page
+   ========================================================================== */
+
+.help-container {
+
+    @include mq(desktop) {
+        @include rem((
+            margin: 0 gs-span(1) 0 gs-span(2)
+        ));
+    }
+
+    @include mq(mem-full) {
+        @include rem((
+            margin: 0 gs-span(1) 0 gs-span(3)
+        ));
+    }
+
+    .help-intro {
+        @include rem((
+            padding-bottom: $gs-gutter*2
+        ));
+    }
+
+    .help-list {
+        li {
+            @include rem((
+                padding: 0 0 5px
+            ));
+        }
+
+    }
+
+    section {
+        @include rem((
+            padding: $gs-gutter 0
+        ));
+    }
+
+}
+
