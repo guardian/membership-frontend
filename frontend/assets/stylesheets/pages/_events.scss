@@ -228,7 +228,7 @@ div.event {
         border-top: 1px solid $mem-live-accent;
 
         @include rem((
-            padding: $gs-gutter/2 $gs-gutter/2 $gs-gutter $gs-gutter/2
+            padding: $gs-gutter/2 0 $gs-gutter
         ));
 
         .events-title-container {
@@ -249,7 +249,7 @@ div.event {
             @include guss-row('.events-list');
 
             @include rem((
-                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
+                padding: $gs-baseline 0 $gs-baseline*2
             ));
 
             .events-list__item {
@@ -264,6 +264,10 @@ div.event {
         }
 
         @include mq(desktop) {
+
+            @include rem((
+                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
+            ));
 
             .events-list-container {
                 display: block;
