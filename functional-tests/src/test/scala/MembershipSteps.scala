@@ -49,7 +49,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
         Assert.assertNotEmpty(page.getEventLocationByIndex(index))
         val eventTime = page.getEventTimeByIndex(index)
         Assert.assertNotEmpty(eventTime)
-        Assert.assert(isInFuture(eventTime), true, "The event should be in the future")
+        Assert.assert(isNotInPast(eventTime), true, "The event should be in the future")
         loop(index - 1)
     }
     this
@@ -57,12 +57,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IClickOnAnEvent = {
     new LandingPage(driver).clickEventsButton.clickLastEvent
-    this
-  }
-
-  def ISelectFriend = {
-    new ChooseTierPage(driver).clickFriend.clickChoose.enterFirstName("Test")
-      .enterLastName("Automation").enterPostCode("N19GU").clickJoinNow
     this
   }
 
@@ -100,7 +94,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IAmRedirectedToTheSignInOrRegisterPage = {
-    val loaded = new JoinFlowChooseTierPage(driver).isPageLoaded
+    val loaded = new JoinFlowRegisterOrSignInPage(driver).isPageLoaded
     Assert.assert(loaded, true, "The Sign In or Register page should be loaded")
     this
   }
@@ -362,7 +356,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val page = new DowngradeConfirmationPage(driver)
     Assert.assert(page.getCurrentPackage.equals("Friend plan"), false, "Current package should not be friend")
     Assert.assert(page.getEndDate, page.getStartDate, "The new date should be the same as the old date")
-    Assert.assert(page.getNewPackage, "Friend plan", "The new package should be Friend")
+    Assert.assert(page.getNewPackage, "Friend", "The new package should be Friend")
   }
 
   def IAmAPartner = verifyTier("£135.00")
@@ -371,6 +365,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IAmNotAMember {
     Assert.assert(new IdentityEditPage(driver).isMembershipCancelled, true, "Membership should be cancelled")
+  }
+
+  def ICantBecomeAFriendAgain = {
+    new EventsListPage(driver).clickPricing.clickFriendButton
+    Assert.assert(new JoinFlowChooseTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
   private def verifyTier(yearlyPayment: String) = {
@@ -389,7 +388,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally
-    new SimpleDateFormat("dd MMMM yyyy").parse(dateTime).after(new Date())
+    val sdf = new SimpleDateFormat("d MMMM yyyy")
+    sdf.parse(dateTime).after(new Date())
+  }
+
+  private def isNotInPast(dateTime: String) = {
+    isInFuture(dateTime) || new SimpleDateFormat("d MMMM yyyy").format(new Date()).equals(dateTime)
   }
 }
 
