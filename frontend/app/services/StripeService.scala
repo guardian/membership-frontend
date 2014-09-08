@@ -2,6 +2,8 @@ package services
 
 import model.Stripe._
 import model.StripeDeserializer._
+import monitoring.StripeMetrics
+import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json.Reads
 import play.api.libs.ws.{WS, WSRequestHolder, WSResponse}
@@ -19,18 +21,32 @@ class StripeService(apiConfig: StripeApiConfig) {
     WS.url(s"${apiConfig.url}/$endpoint").withHeaders(apiAuthHeader)
 
   def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).get().map(extract[A])
+    apiRequest(endpoint).get().map { response =>
+      recordAndLogResponse(response.status, "GET", endpoint)
+      extract[A](response)
+    }
 
   def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).post(data).map(extract[A])
+    apiRequest(endpoint).post(data).map { response =>
+      recordAndLogResponse(response.status, "POST", endpoint)
+      extract[A](response)
+    }
 
   def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).delete().map(extract[A])
+    apiRequest(endpoint).delete().map { response =>
+      recordAndLogResponse(response.status, "DELETE", endpoint)
+      extract[A](response)
+    }
 
   private def extract[A <: StripeObject](response: WSResponse)(implicit reads: Reads[A]): A = {
     response.json.asOpt[A].getOrElse {
       throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object", None, None))
     }
+  }
+
+  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
+    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
+    StripeMetrics.putResponseCode(status, responseMethod)
   }
 
   object Customer {
