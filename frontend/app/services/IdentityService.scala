@@ -74,7 +74,7 @@ trait IdentityService {
       "billingAddress3" -> billingAddress.town,
       "billingAddress4" -> billingAddress.countyOrState,
       "billingPostcode" -> billingAddress.postCode,
-      "billingCountry" -> billingAddress.postCode
+      "billingCountry" -> billingAddress.country
     )
   }
 }
