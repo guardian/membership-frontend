@@ -330,7 +330,7 @@
 
     &.home-slice--epic {
         @include rem((
-            padding-top: 284px
+            padding-top: 224px
         ));
 
         &:before {
@@ -343,10 +343,10 @@
             background-color: $white;
             width: 100%;
 
-            height: -webkit-calc(100% - 294px);
-            height: -moz-calc(100% - 294px);
-            height: -o-calc(100% - 294px);
-            height: calc(100% - 294px);
+            height: -webkit-calc(100% - 234px);
+            height: -moz-calc(100% - 234px);
+            height: -o-calc(100% - 234px);
+            height: calc(100% - 234px);
         }
 
         @include mq(tablet) {
