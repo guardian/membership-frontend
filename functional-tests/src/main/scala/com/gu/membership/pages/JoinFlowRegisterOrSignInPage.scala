@@ -20,4 +20,8 @@ class JoinFlowRegisterOrSignInPage(driver: WebDriver) extends BaseMembershipPage
     registerButton.click()
     new RegisterPage(driver)
   }
+
+  def isPageLoaded = {
+    registerButton.isDisplayed && signInButton.isDisplayed
+  }
 }

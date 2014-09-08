@@ -50,20 +50,20 @@ class MembershipChangeTierTests extends BaseMembershipTest {
           _.IAmAPartner
         }
     }
-//
-//    // TODO this functionality is not implemented yet
-////    scenarioWeb("35. A Partner can upgrade to a Patron") {
-////      implicit driver =>
-////        given {
-////          MembershipSteps().IAmLoggedInAsAPartner
-////        }
-////        .when {
-////          _.IChooseToBecomeAPatron
-////        }
-////        .then {
-////          _.IAmAPatron
-////        }
-////    }
+
+    // TODO this functionality is not implemented yet
+//    scenarioWeb("35. A Partner can upgrade to a Patron") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IAmLoggedInAsAPartner
+//        }
+//        .when {
+//          _.IChooseToBecomeAPatron
+//        }
+//        .then {
+//          _.IAmAPatron
+//        }
+//    }
 
     scenarioWeb("36. A Friend can upgrade to a Patron") {
       implicit driver =>
@@ -100,7 +100,9 @@ class MembershipChangeTierTests extends BaseMembershipTest {
 //      }
 //      .when {
 //        _.IGoToTheEventsPage
-//        .IBecomeAFriend
+//      }
+//      .then {
+//        _.ICantBecomeAFriendAgain
 //      }
 //  }
 
