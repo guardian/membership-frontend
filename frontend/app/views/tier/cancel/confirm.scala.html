@@ -18,7 +18,9 @@
         <div class="package-container">
             <div class="package-list">
                 @fragments.tier.benefits(currentTier=Some(currentTier), tier=currentTier, mode="cancel")
-                @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="cancel")
+                @if(currentTier != Tier.Friend) {
+                    @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="cancel")
+                }
             </div>
         </div>
 
