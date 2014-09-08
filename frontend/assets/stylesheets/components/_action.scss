@@ -1,8 +1,7 @@
 .action {
-    background-color: #0096C9;
+    background-color: $mem-buttonBlue;
     margin: $gs-baseline 0;
     display: inline-block;
-    color: #ffffff;
     cursor: pointer;
     border: 0;
     text-decoration: none;
@@ -19,10 +18,9 @@
     &:focus,
     &:active {
         text-decoration: none;
-        color: #ffffff;
     }
     &:hover {
-        background-color: darken(#0096C9, 10%);
+        background-color: darken($mem-buttonBlue, 10%);
     }
 
     &:after {
@@ -84,11 +82,14 @@
     margin: $gs-baseline;
 }
 
+
 .action--join,
 .action--logged-out,
-.action--logged-in {
+.action--logged-in,
+.js-ticket-cta {
     text-align: left;
     background-color: $mem-buttonBlue;
+    color: $white;
     @include rem((
         padding: 8px 8px 8px 18px
     ));
@@ -97,6 +98,7 @@
     &:active,
     &:focus {
         background-color: $mem-buttonBlue;
+        color: $white;
     }
     &:hover {
         background-color: darken($mem-buttonBlue, 15%);
