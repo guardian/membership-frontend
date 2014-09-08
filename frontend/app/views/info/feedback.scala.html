@@ -2,21 +2,24 @@
 
 @import helper.CSRF
 
-@main("Feedback") {
+@main("Feedback", htmlClass = "feedback") {
     @fragments.layout.sectionHeader("Feedback")
 
-    <p>Help us improve our membership experience.  Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
+    <div class="info-container">
 
-    <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
+        <div class="feedback-intro">
+            <p>Help us improve our membership experience.  Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
+            <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
+            <p>If you’re having any problems please visit our <a href="/help" class="u-underline">help section</a>.</p>
+        </div>
 
-    <p>If you’re having any problems please visit our <a href="/help" class="u-underline">help section</a>.</p>
+        <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
+            @CSRF.formField
 
-    <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
-        @CSRF.formField
+            @fragments.form.errorMessageDisplay()
+            @fragments.form.feedback()
+            @fragments.form.submit("Send feedback now")
+        </form>
 
-        @fragments.form.errorMessageDisplay()
-        @fragments.form.sectionHeading("Tell us what you think", true)
-        @fragments.form.feedback()
-        @fragments.form.submit("Send feedback now")
-    </form>
+    </div>
 }

@@ -183,6 +183,24 @@ body {
 
 }
 
+// Info - help and feedback containers
+
+.info-container {
+
+    @include mq(desktop) {
+        @include rem((
+            margin: 0 gs-span(1) 0 gs-span(2)
+        ));
+    }
+
+    @include mq(mem-full) {
+        @include rem((
+            margin: 0 gs-span(1) 0 gs-span(3)
+        ));
+    }
+
+}
+
 // Flexbox
 
 %flexbox-container-justify {
