@@ -13,6 +13,7 @@ define([
         var JOIN_URL = '/join';
         var UPGRADE_TEXT = 'Upgrade';
         var TEST_EVENT_URL = '/test/event/url';
+        var UPGRADE_COMING_SOON = 'Upgrade coming soon';
         var canonicalTicketAvailabilityFixtureElement;
         var ticketAvailabilityFixtureElement;
         var cta;
@@ -246,7 +247,7 @@ define([
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
@@ -254,8 +255,9 @@ define([
                 expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual(TIER_CHANGE_URL);
+                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
+                expect($memberCTA.attr('href')).toBeNull();
+                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
@@ -326,7 +328,7 @@ define([
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
 
                 var tier = 'Partner';
 
@@ -335,8 +337,9 @@ define([
                 expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual(TIER_CHANGE_URL);
+                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
+                expect($memberCTA.attr('href')).toBeNull();
+                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
@@ -408,7 +411,7 @@ define([
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL + ', "to you now" ticket availability text displayed', function (done) {
+            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '", "to you now" ticket availability text displayed', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
@@ -416,8 +419,9 @@ define([
                 expect($ticketsOnSaleNow.text()).toEqual(' to you now');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual('/tier/change');
+                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
+                expect($memberCTA.attr('href')).toBeNull();
+                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
@@ -488,7 +492,7 @@ define([
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
@@ -496,8 +500,9 @@ define([
                 expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual(TIER_CHANGE_URL);
+                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
+                expect($memberCTA.attr('href')).toBeNull();
+                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
