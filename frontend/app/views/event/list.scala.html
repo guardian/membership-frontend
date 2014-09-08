@@ -1,4 +1,7 @@
-@(eventPortfolio: model.EventPortfolio)
+@(eventPortfolio: model.EventPortfolio)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
 
 @main("Events", containerPadding = false, htmlClass = "events-bg") {
 
@@ -49,4 +52,16 @@
         </div>
     </section>
 
+    @* ===== Join Today ===== *@
+
+    <div class="home-slice home-slice--join-today">
+        <div class="home-slice__inner u-cf">
+            <h2 class="home-slice__headline">Join membership today</h2>
+            <div class="join-today__join-boxes package-list package-list--bordered">
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            </div>
+        </div>
+    </div>
 }
