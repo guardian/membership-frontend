@@ -43,10 +43,8 @@ trait MemberService {
     for {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response: ${identityResponse.status.toString} : ${identityResponse.body} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
+      IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
       MemberMetrics.putSignUp(Tier.Friend)
       memberId.account
     }
@@ -65,14 +63,11 @@ trait MemberService {
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-
       // update tier once we know subscription has been successful
       _ <- MemberRepository.upsert(user.id, memberData(formData.tier))
-
-      identityResponse <- IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
     } yield {
-      Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
+      IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+
       MemberMetrics.putSignUp(formData.tier)
       memberId.account
     }
