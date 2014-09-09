@@ -86,6 +86,14 @@
         border-color: $c-brandLightBlue;
     }
 
+    input[type=submit] {
+        @extend .icon-sprite-arrow-right-white;
+        height: auto;
+        @include rem((
+            background-position: 94% 9px!important
+        ));
+    }
+
 }
 
 .tickets__payment {
