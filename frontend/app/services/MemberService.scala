@@ -15,29 +15,27 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import model.Zuora
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
 trait MemberService {
-  def commonData(user: User, formData: JoinForm) = Map(
+  def commonData(user: User, formData: JoinForm, tier: Tier.Tier) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-    Keys.ALLOW_MEMBERSHOP_MAIL -> true
+    Keys.ALLOW_MEMBERSHOP_MAIL -> true,
+    Keys.TIER -> tier.toString,
+    Keys.OPT_IN -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
-  def memberData(tier: Tier.Tier) = Map(
-    Keys.TIER -> tier.toString,
-    Keys.OPT_IN -> true
-  )
-
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
-    val updatedData = commonData(user, formData) ++ memberData(Tier.Friend)
+    val updatedData = commonData(user, formData, Tier.Friend)
 
     formData.password.map(updateUserPassword(user, _ , identityRequest))
     for {
@@ -53,23 +51,26 @@ trait MemberService {
   def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
     formData.password.map(updateUserPassword(user, _ , identityRequest))
 
-    for {
+    val futureSubscription = for {
       customer <- StripeService.Customer.create(user.id, formData.payment.token)
 
-      updatedData = commonData(user, formData) ++ Map(
+      updatedData = commonData(user, formData, formData.tier) ++ Map(
         Keys.CUSTOMER_ID -> customer.id,
         Keys.DEFAULT_CARD_ID -> customer.card.id
       )
       memberId <- MemberRepository.upsert(user.id, updatedData)
       subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
         formData.payment.annual, formData.name, formData.deliveryAddress)
-      // update tier once we know subscription has been successful
-      _ <- MemberRepository.upsert(user.id, memberData(formData.tier))
     } yield {
       IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
       MemberMetrics.putSignUp(formData.tier)
       memberId.account
+    }
+
+    futureSubscription.recoverWith {
+      case err: Zuora.Error =>
+        MemberRepository.upsert(user.id, Map(Keys.TIER -> "", Keys.OPT_IN -> false)).map { throw err }
     }
   }
 
