@@ -33,6 +33,8 @@ trait Membership {
     resolvers ++= Seq(
       "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
       Resolver.sonatypeRepo("releases")),
+    sources in (Compile,doc) := Seq.empty,
+    publishArtifact in (Compile, packageDoc) := false,
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin
