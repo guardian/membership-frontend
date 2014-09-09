@@ -3,12 +3,13 @@ package services
 import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
+import com.gu.membership.util.Timing
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.Card
-import monitoring.{MemberMetrics, IdentityApiMetrics}
+import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
 
@@ -34,45 +35,47 @@ trait MemberService {
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
-  def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] = {
-    val updatedData = commonData(user, formData, Tier.Friend)
+  def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] =
+    Timing.record(MembershipMetrics, "createFriend") {
+      val updatedData = commonData(user, formData, Tier.Friend)
 
-    formData.password.map(updateUserPassword(user, _ , identityRequest))
-    for {
-      memberId <- MemberRepository.upsert(user.id, updatedData)
-      subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-    } yield {
-      IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
-      MemberMetrics.putSignUp(Tier.Friend)
-      memberId.account
-    }
-  }
-
-  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] = {
-    formData.password.map(updateUserPassword(user, _ , identityRequest))
-
-    val futureSubscription = for {
-      customer <- StripeService.Customer.create(user.id, formData.payment.token)
-
-      updatedData = commonData(user, formData, formData.tier) ++ Map(
-        Keys.CUSTOMER_ID -> customer.id,
-        Keys.DEFAULT_CARD_ID -> customer.card.id
-      )
-      memberId <- MemberRepository.upsert(user.id, updatedData)
-      subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
-        formData.payment.annual, formData.name, formData.deliveryAddress)
-    } yield {
-      IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
-
-      MemberMetrics.putSignUp(formData.tier)
-      memberId.account
+      formData.password.map(updateUserPassword(user, _ , identityRequest))
+      for {
+        memberId <- MemberRepository.upsert(user.id, updatedData)
+        subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
+      } yield {
+        IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+        MemberMetrics.putSignUp(Tier.Friend)
+        memberId.account
+      }
     }
 
-    futureSubscription.recoverWith {
-      case err: Zuora.Error =>
-        MemberRepository.upsert(user.id, Map(Keys.TIER -> "", Keys.OPT_IN -> false)).map { throw err }
+  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] =
+    Timing.record(MembershipMetrics, "createPaidMember") {
+      formData.password.map(updateUserPassword(user, _ , identityRequest))
+
+      val futureSubscription = for {
+        customer <- StripeService.Customer.create(user.id, formData.payment.token)
+
+        updatedData = commonData(user, formData, formData.tier) ++ Map(
+          Keys.CUSTOMER_ID -> customer.id,
+          Keys.DEFAULT_CARD_ID -> customer.card.id
+        )
+        memberId <- MemberRepository.upsert(user.id, updatedData)
+        subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
+          formData.payment.annual, formData.name, formData.deliveryAddress)
+      } yield {
+        IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+
+        MemberMetrics.putSignUp(formData.tier)
+        memberId.account
+      }
+
+      futureSubscription.recoverWith {
+        case err: Zuora.Error =>
+          MemberRepository.upsert(user.id, Map(Keys.TIER -> "", Keys.OPT_IN -> false)).map { throw err }
+      }
     }
-  }
 
   private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
