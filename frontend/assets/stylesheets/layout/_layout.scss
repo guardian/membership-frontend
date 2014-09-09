@@ -165,29 +165,14 @@ body {
         @include mq(tablet) {
             border-right: 1px solid $c-neutral4;
             @include rem((
-                width: gs-span(6),
+                width: gs-span(8),
                 padding-right: $gs-gutter
-            ));
-        }
-
-        @include mq(desktop) {
-            float: left;
-            @include rem((
-                width: gs-span(8)
             ));
         }
     }
 
     .one-third {
         @include mq(tablet) {
-            @include rem((
-                width: gs-span(3),
-                padding-left: $gs-gutter
-            ));
-        }
-
-        @include mq(desktop) {
-            float: right;
             @include rem((
                 width: gs-span(4),
                 padding-left: $gs-gutter

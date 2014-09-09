@@ -1,3 +1,18 @@
 .events-list .events-list__item {
     margin: 0 0 $gs-gutter 0 !important;
 }
+
+.section-two-thirds {
+    .two-thirds {
+        @include mq(desktop) {
+            float: left;
+        }
+    }
+
+    .one-third {
+        @include mq(desktop) {
+            float: right;
+        }
+    }
+}
+
