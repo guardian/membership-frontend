@@ -203,11 +203,18 @@ div.event {
     line-height: 0;
 }
 
+.terms-info,
 .ticket-info {
     @include fs-textsans(1);
     color: #878787;
     @include rem((
         margin-top: 8px
+    ));
+}
+
+.terms-info {
+    @include rem((
+        padding-top: $gs-baseline*2
     ));
 }
 
