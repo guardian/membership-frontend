@@ -35,7 +35,17 @@
         <meta name="google-site-verification" content="_NUisUl-ebru2EHJCXG4oFs1FfRcmFDDjWO9EfP4eX8" />
         <title>@(Config.siteTitle + " - " + title)</title>
         @fragments.javaScriptFirstSteps()
+
         <link rel="stylesheet" media="screen" href="@Asset.at("stylesheets/style.css")">
+
+        @*
+            TODO: Stop IE9 getting the stylesheet twice.
+        *@
+
+        <!--[if (IE 9)&(!IEMobile)]>
+        <link rel="stylesheet" type="text/css" href="@Asset.at("stylesheets/ie9.css")" />
+        <![endif]-->
+
         @fragments.javaScriptLaterSteps()
 
         <link rel="shortcut icon" type="image/png" href="@Asset.at("images/favicons/32x32.ico")">

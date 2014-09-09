@@ -25,7 +25,7 @@
                         @fragments.event.item(heroEvent, true)
                     }
                 </ul>
-                <ul class="events-list u-unstyled">
+                <ul class="events-list events-list--items-3 u-unstyled">
                     @for(event <- eventPortfolio.priority) {
                         @fragments.event.item(event)
                     }
@@ -39,7 +39,7 @@
             </div>
             <div class="events-list-container">
                 @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
-                    <ul class="events-list u-unstyled">
+                    <ul class="events-list events-list--items-3 u-unstyled">
                         @for(event <- eventChunk) {
                             @fragments.event.item(event, false)
                         }
