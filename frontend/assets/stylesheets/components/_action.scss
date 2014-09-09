@@ -117,17 +117,17 @@
     color: $black;
     @include rem((
         padding: 8px 8px 8px 18px
-//        min-width: 220px,
-//        width: auto
     ));
 
     &:visited,
     &:active,
     &:focus {
         background-color: $offWhite;
+        color: $black;
     }
     &:hover {
         background-color: darken($offWhite, 15%);
+        color: $black;
     }
     i {
         float: right;
