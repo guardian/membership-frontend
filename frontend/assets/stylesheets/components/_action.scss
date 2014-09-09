@@ -4,6 +4,7 @@
     display: inline-block;
     cursor: pointer;
     border: 0;
+    color: #ffffff;
     text-decoration: none;
     position: relative;
     @include fs-textsans(4);
@@ -18,6 +19,7 @@
     &:focus,
     &:active {
         text-decoration: none;
+        color: #ffffff;
     }
     &:hover {
         background-color: darken($mem-buttonBlue, 10%);
