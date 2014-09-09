@@ -5,10 +5,11 @@ $wideFooterCols:    9;
 footer {
     position: absolute;
     left: 0;
-    bottom: 0;
-    min-height: 100px;
     width: 100%;
     background-color: $c-neutral8;
+    @include rem((
+        min-height: 100px
+    ));
     .copy {
         @include fs-data(6);
         text-align: center;
