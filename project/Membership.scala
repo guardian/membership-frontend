@@ -30,7 +30,9 @@ trait Membership {
     organization := "com.gu",
     version := appVersion,
     scalaVersion := "2.10.4",
-    resolvers += "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
+    resolvers ++= Seq(
+      "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
+      Resolver.sonatypeRepo("releases")),
     parallelExecution in Global := false,
     javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin
