@@ -45,10 +45,10 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
     if (action.authRequired && authentication.url.length == 0) {
       ZuoraMetrics.putAuthenticationError
-      throw ZuoraServiceError(s"Can't build authenticated request for ${getClass.getSimpleName}, no Zuora authentication")
+      throw ZuoraServiceError(s"Can't build authenticated request for ${action.getClass.getSimpleName}, no Zuora authentication")
     }
 
-    Logger.debug(s"Zuora action ${getClass.getSimpleName}")
+    Logger.debug(s"Zuora action ${action.getClass.getSimpleName}")
 
     WS.url(url).post(action.xml).map { result =>
       Logger.debug(s"Got result ${result.status}")
