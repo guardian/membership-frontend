@@ -23,7 +23,7 @@ trait IdentityService {
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
-  def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[WSResponse] = {
+  def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest) {
 
     val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
       val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
@@ -36,7 +36,10 @@ trait IdentityService {
       "firstName" -> formData.name.first
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-    postFields(fields, user, identityRequest)
+    postFields(fields, user, identityRequest).map { identityResponse =>
+      Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
+    }
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest): Future[WSResponse] = {
