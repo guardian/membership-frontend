@@ -1,3 +1,4 @@
+/*global Raven */
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
@@ -14,7 +15,8 @@ require([
     'src/utils/cookie',
     'src/modules/events/eventPriceEnhance',
     'config/appCredentials',
-    'src/modules/tier/Thankyou'
+    'src/modules/tier/Thankyou',
+    'lib/bower-components/raven-js/dist/raven' // add new deps ABOVE this
 ], function(
     Imager,
     omnitureAnalytics,
@@ -90,4 +92,11 @@ require([
      * Please ask Ben Chidgey or Chris Finch if there are issues around this.
      */
     router.go();
+
+    // set up Raven, which speaks to Sentry to track errors
+    Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
+        whitelistUrls: ['membership.theguardian.com/assets/'],
+        tags: { build_number: guardian.membership.buildNumber }
+    }).install();
+
 });
