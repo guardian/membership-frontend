@@ -1,5 +1,8 @@
 package controllers
 
+import monitoring.MembershipMetrics
+import play.api.Logger
+
 import scala.concurrent.Future
 
 import play.api.mvc._
@@ -20,9 +23,17 @@ trait Subscription extends Controller {
   }
 
   private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
+    val startTime = System.currentTimeMillis()
     val payment = for {
       salesforceContactId <- MemberService.createPaidMember(request.user, formData, IdentityRequest(request))
-    } yield Ok("")
+    } yield {
+      val endTime = System.currentTimeMillis()
+      Logger.info(endTime.toString)
+      val timeTaken = endTime - startTime
+      Logger.info(s"Time taken to subscribe user ${timeTaken.toString}ms")
+      MembershipMetrics.recordTiming(timeTaken)
+      Ok("")
+    }
 
     payment.recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
