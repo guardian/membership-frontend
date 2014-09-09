@@ -30,7 +30,7 @@ object Benefits {
     ("Live stream events", "Watch live streams of Flagship events", "live_stream"),
     ("Membership card", "Be part of the Guardian", "membership_card"),
     ("Early Booking", "Early ticket booking (before Friends)", "early_booking")
-  ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with priority booking and discounted tickets");
+  ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with early booking and discounted tickets");
 
   val patronBenefits = Benefits("All benefits of a partner plus:", Seq(
     ("Priority Booking", "Additional priority ticket booking (before Partners)", "priority_booking"),
