@@ -1,5 +1,6 @@
 package services.zuora
 
+import com.gu.membership.util.Timing
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders.ZuoraReader
@@ -7,7 +8,7 @@ import monitoring.ZuoraMetrics
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
-import play.api.libs.ws.WS
+import play.api.libs.ws.{WSResponse, WS}
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,7 +51,9 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
     Logger.debug(s"Zuora action ${action.getClass.getSimpleName}")
 
-    WS.url(url).post(action.xml).map { result =>
+    Timing.record(ZuoraMetrics, action.getClass.getSimpleName) {
+      WS.url(url).post(action.xml)
+    }.map { result =>
       Logger.debug(s"Got result ${result.status}")
       ZuoraMetrics.putResponseCode(result.status, "POST")
       Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
