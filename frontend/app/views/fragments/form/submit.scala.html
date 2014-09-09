@@ -3,6 +3,7 @@
 
 @import views.support.Asset
 @import model.Benefits
+@import configuration.Config
 
 <fieldset class="fieldset">
     @fragments.form.errorMessageDisplay()
@@ -10,10 +11,8 @@
     <div class="fieldset__fields">
 
         @if(membershipTermsAndConditions){
-            <p>By joining Guardian Membership, you are agreeing to our <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">terms and conditions</a> and <a href="http://www.theguardian.com/help/privacy-policy">Privacy
+            <p class="terms-info">By joining Guardian Membership, you are agreeing to our <a href="@Config.guardianMembershipTermsUrl" target="_blank">Terms and Conditions</a> and <a href="@Config.guardianPrivacyUrl">Privacy
                 Policy</a>.</p>
-        }else{
-            <p>By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">Terms of Service</a> and <a href="http://www.theguardian.com/help/privacy-policy">Privacy Policy</a>.
         }
 
         <div class="actions js-waiting-container">
