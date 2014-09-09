@@ -1,11 +1,8 @@
 @()(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
-@import views.support.Asset
 @import com.gu.membership.salesforce.Tier
-@import helper._
 @import views.support.Asset
-@import model.Benefits
 
 @main("Home Page", isBrochure = true, htmlClass = "home-page") {
 
@@ -83,8 +80,8 @@
                     The building will be a hub for big ideas and stimulating conversations. It will host events,
                     activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.
                 </p>
-                <a class="action action--join" href="http://www.theguardian.com/membership">More about the building</a>
-                <a class="action action--secondary-button" href="http://www.theguardian.com/membership">Building progress blog</a>
+                <a class="action action--join" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
+                <a class="action action--secondary-button" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
             </div>
         </div>
     </div>
