@@ -1,5 +1,5 @@
 @(ctaTextPrepend: String, ctaTextAppend: String = "", tier: Option[com.gu.membership.salesforce.Tier.Tier] = None,
-    showTermsAndConditions: Boolean = true)
+    membershipTermsAndConditions: Boolean = true)
 
 @import views.support.Asset
 @import model.Benefits
@@ -9,9 +9,11 @@
     <div class="fieldset__heading"></div>
     <div class="fieldset__fields">
 
-        @if(showTermsAndConditions){
+        @if(membershipTermsAndConditions){
             <p>By joining Guardian Membership, you are agreeing to our <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">terms and conditions</a> and <a href="http://www.theguardian.com/help/privacy-policy">Privacy
                 Policy</a>.</p>
+        }else{
+            <p>By proceeding, you agree to the Guardian's <a href="http://www.theguardian.com/help/terms-of-service" target="_blank">Terms of Service</a> and <a href="http://www.theguardian.com/help/privacy-policy">Privacy Policy</a>.
         }
 
         <div class="actions js-waiting-container">
