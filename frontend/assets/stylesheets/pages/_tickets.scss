@@ -33,10 +33,16 @@
     }
 
     .tickets-select-form__detail {
-        @include rem((
-            padding: $gs-baseline $gs-baseline $gs-baseline $gs-row-height*2
-        ));
         background-color: $c-neutral9;
+        @include rem((
+            padding: $gs-baseline
+        ));
+
+        @include mq(tablet) {
+            @include rem((
+                padding: $gs-baseline $gs-baseline $gs-baseline $gs-row-height*2
+            ));
+        }
     }
 
     .tickets-select-form__leadin {
