@@ -10,6 +10,10 @@ footer {
     @include rem((
         min-height: 100px
     ));
+
+    @include mq(tablet) {
+        bottom: 0;
+    }
     .copy {
         @include fs-data(6);
         text-align: center;
