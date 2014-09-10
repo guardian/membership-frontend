@@ -212,7 +212,8 @@ body {
 
 .user-welcome {
     @include rem((
-        margin-bottom: $gs-gutter
+        margin-bottom: $gs-gutter,
+        margin-top: $gs-gutter
     ));
     .user-welcome__email {
         font-weight: bold;
