@@ -28,7 +28,7 @@ object Benefits {
     ("20% Discount", "20% discount on Guardian Live tickets", "discount"),
     ("+1 Guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "plus_1_guest"),
     ("Live stream events", "Watch live streams of Flagship events", "live_stream"),
-    ("Membership card", "Be part of the Guardian", "membership_card"),
+    ("Membership card", "", "membership_card"),
     ("Early Booking", "Early ticket booking (before Friends)", "early_booking")
   ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with early booking and discounted tickets");
 
