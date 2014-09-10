@@ -80,7 +80,7 @@ object Eventbrite {
                        cost: Option[EBPricing] = None,
                        sales_end: Option[Instant] = None,
                        sales_start: Option[Instant] = None,
-                       hidden: Boolean = false) extends EBObject
+                       hidden: Option[Boolean] = None) extends EBObject
 
   case class EBEvent(
                       name: EBRichText,
@@ -135,7 +135,7 @@ object Eventbrite {
     }
 
     // This currently extracts all none hidden tickets and gets the first one
-    def ticketClassesHead = ticket_classes.find(_.hidden == false)
+    def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
