@@ -135,7 +135,7 @@ object Eventbrite {
     }
 
     // This currently extracts all none hidden tickets and gets the first one
-    def ticketClassesHead = ticket_classes.filter(_.hidden == false).headOption
+    def ticketClassesHead = ticket_classes.find(_.hidden == false)
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
