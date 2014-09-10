@@ -1,0 +1,21 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:queryResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:done>true</ns1:done>
+                <ns1:queryLocator
+                        xsi:nil="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                </ns1:queryLocator>
+                <ns1:records xsi:type="ns2:Account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://object.api.zuora.com/">
+                    <ns2:Id>2c92c0f8483f1ca401485f0168f1614c</ns2:Id>
+                    <ns2:CreatedDate>2014-09-10T03:00:00.000-08:00</ns2:CreatedDate>
+                </ns1:records>
+                <ns1:records xsi:type="ns2:Account" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://object.api.zuora.com/">
+                    <ns2:Id>2c92c0f9483f301e01485efe9af6743e</ns2:Id>
+                    <ns2:CreatedDate>2014-09-10T02:56:57.000-08:00</ns2:CreatedDate>
+                </ns1:records>
+                <ns1:size>2</ns1:size>
+            </ns1:result>
+        </ns1:queryResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
