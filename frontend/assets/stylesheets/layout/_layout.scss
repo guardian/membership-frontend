@@ -172,6 +172,10 @@ body {
     }
 
     .one-third {
+        @include rem((
+            margin-bottom: $gs-gutter
+        ));
+        
         @include mq(tablet) {
             @include rem((
                 width: gs-span(4),
