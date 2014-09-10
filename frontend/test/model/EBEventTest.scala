@@ -10,16 +10,16 @@ import utils.Resource
 class EBEventTest extends PlaySpecification {
 
   val quantitySold = Some(10)
-  val ebTicketsQuantitySoldTen = new EBTickets(None, None, false, None, quantitySold, None, None, None)
-  val ebTicketsStartInPast     = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.plus(1000)))
-  val ebTicketsStartInFuture   = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.minus(1000)))
+  val ebTicketsQuantitySoldTen = new EBTickets(None, None, false, None, quantitySold, None, None, None, Some(true))
+  val ebTicketsStartInPast     = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.plus(1000)), Some(true))
+  val ebTicketsStartInFuture   = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.minus(1000)), Some(true))
 
   val ebCompletedEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, Seq.empty, Some("completed"))
   val ebCanceledEvent = new EBEvent(eventName("Canceled Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, Seq.empty, Some("canceled"))
   val ebSoldOutEvent = new EBEvent(eventName("Sold Out Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(1), Seq(ebTicketsQuantitySoldTen), Some("live"))
   val ebLiveEvent = new EBEvent(eventName("Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInFuture), Some("live"))
   val ebPreLiveEvent = new EBEvent(eventName("Pre Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInPast), Some("live"))
-  val freeTicket = EBTickets(None, None, true, None, None, None, None, None)
+  val freeTicket = EBTickets(None, None, true, None, None, None, None, None, Some(true))
   val expensivePricing = EBPricing("GBP", "\u00a31234.25", 123425)
 
   "getStatus" should {
