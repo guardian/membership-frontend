@@ -75,9 +75,9 @@
 
         @fragments.unsupportedBrowser()
 
-        @fragments.header()
-
+        @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
+            @fragments.header()
             <div class="page-side-margins">
             @if(isBrochure != true) {
                 <div class="page-container @if(containerPadding){page-container--with-padding}">
