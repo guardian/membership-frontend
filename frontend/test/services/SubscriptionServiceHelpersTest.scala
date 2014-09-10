@@ -26,5 +26,14 @@ class SubscriptionServiceHelpersTest extends Specification {
       sortedSubscriptions(1)("Id") mustEqual "2c92c0f847cdc31e0147cf24396f6ae1"
       sortedSubscriptions(2)("Id") mustEqual "2c92c0f847cdc31e0147cf243a166af0"
     }
+
+    "sort accounts by created date" in {
+      val accounts = queryResultReader.read(Resource.getXML("model/zuora/accounts.xml")).right.get.results
+
+      val sortedAccounts = SubscriptionServiceHelpers.sortAccounts(accounts)
+
+      sortedAccounts(0)("Id") mustEqual "2c92c0f9483f301e01485efe9af6743e"
+      sortedAccounts(1)("Id") mustEqual "2c92c0f8483f1ca401485f0168f1614c"
+    }
   }
 }

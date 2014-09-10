@@ -3,10 +3,9 @@ package services
 import services.zuora._
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.joda.time.DateTime
+import com.github.nscala_time.time.Imports._
 
 import com.gu.membership.salesforce.{MemberId, Tier}
 
@@ -16,7 +15,6 @@ import model.Stripe
 import model.Subscription._
 import model.Zuora._
 import model.ZuoraDeserializer._
-import utils.ScheduledTask
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -29,6 +27,10 @@ object SubscriptionServiceHelpers {
   }
 
   def sortSubscriptions(subscriptions: Seq[Map[String, String]]) = subscriptions.sortBy(_("Version").toInt)
+
+  def sortAccounts(accounts: Seq[Map[String, String]]) = accounts.sortBy { account =>
+    new DateTime(account("CreatedDate"))
+  }
 }
 
 trait CreateSubscription {
@@ -119,7 +121,9 @@ trait SubscriptionService extends CreateSubscription with AmendSubscription {
       if (annual) plan.annual else plan.monthly
     }
   }
-  def getAccountId(sfAccountId: String): Future[String] = zuora.queryOne("Id", "Account", s"crmId='$sfAccountId'")
+
+  def getAccountId(sfAccountId: String): Future[String] =
+    zuora.query(Seq("Id", "CreatedDate"), "Account", s"crmId='$sfAccountId'").map(sortAccounts(_).last("Id"))
 
   def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
     for {
