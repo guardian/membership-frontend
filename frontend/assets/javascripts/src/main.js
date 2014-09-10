@@ -51,6 +51,8 @@ require([
         // avoid "Do not use 'new' for side effects" error
         new Imager({ availableWidths: [300, 460, 620, 940], availablePixelRatios: [1, 2] });
         /* jshint ignore:end */
+
+        require('ophan/ng', function () {});
     });
 
     router.match('/event/').to(function () {
