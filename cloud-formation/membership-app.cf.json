@@ -67,7 +67,7 @@
         "FrontendLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-c8fe2dbf",
+                "ImageId" : "ami-7a6acf0d",
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
