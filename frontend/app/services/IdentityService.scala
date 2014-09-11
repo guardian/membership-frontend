@@ -1,6 +1,7 @@
 package services
 
 import com.gu.identity.model.User
+import com.gu.membership.util.Timing
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -98,21 +99,29 @@ object IdentityApi extends Http {
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"
     val url = s"${Config.idApiUrl}/$endpoint"
-    WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-      recordAndLogResponse(response.status, "GET", endpoint)
-      (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
+    Timing.record(IdentityApiMetrics, "get-user-password-exists") {
+      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
+        recordAndLogResponse(response.status, "GET", endpoint)
+        (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
+      }
     }
   }
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
-    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(500).get().map { response =>
-      recordAndLogResponse(response.status, "GET", endpoint)
-      (response.json \ "user").asOpt[IdentityUser]
+    Timing.record(IdentityApiMetrics, "get-user") {
+      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
+        recordAndLogResponse(response.status, "GET", endpoint)
+        (response.json \ "user").asOpt[IdentityUser]
+      }.recover {
+        case _ => None
+      }
     }
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
-    WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+    Timing.record(IdentityApiMetrics, "post-user") {
+      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+    }
   }
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
