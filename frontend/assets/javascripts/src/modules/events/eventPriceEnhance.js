@@ -19,7 +19,7 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
             }
         }
 
-        userUtil.getMemberDetail(enhanceWithTier);
+        userUtil.requestMemberDetail.request(enhanceWithTier);
     };
 
     var enhanceWithTier = function (memberDetail) {

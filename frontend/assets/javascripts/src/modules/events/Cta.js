@@ -138,7 +138,7 @@ define([
         this.elem = this.elem || this.getElem('EVENT_TICKETS_CONTAINER');
         this.userIsLoggedIn = user.isLoggedIn();
 
-        user.getMemberDetail(function (memberDetail) {
+        user.requestMemberDetail.request(function (memberDetail) {
             self.memberTier = memberDetail && memberDetail.tier;
             self.parseDates();
             self.buyTicketCta();
