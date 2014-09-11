@@ -1,4 +1,3 @@
-/*global Raven */
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
@@ -52,6 +51,13 @@ require([
         new Imager({ availableWidths: [300, 460, 620, 940], availablePixelRatios: [1, 2] });
         /* jshint ignore:end */
 
+        /*global Raven */
+        // set up Raven, which speaks to Sentry to track errors
+        Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
+            whitelistUrls: ['membership.theguardian.com/assets/'],
+            tags: { build_number: guardian.membership.buildNumber }
+        }).install();
+
         require('ophan/ng', function () {});
     });
 
@@ -94,11 +100,4 @@ require([
      * Please ask Ben Chidgey or Chris Finch if there are issues around this.
      */
     router.go();
-
-    // set up Raven, which speaks to Sentry to track errors
-    Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
-        whitelistUrls: ['membership.theguardian.com/assets/'],
-        tags: { build_number: guardian.membership.buildNumber }
-    }).install();
-
 });
