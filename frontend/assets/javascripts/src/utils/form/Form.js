@@ -110,8 +110,10 @@ define([
                 self.manageErrors({
                     isValid: false,
                     errorMessage: errorMessage,
-                    $element: $(this.getElem('CREDIT_CARD_NUMBER'))
+                    $element: $(self.getElem('CREDIT_CARD_NUMBER'))
                 });
+                self.stopLoader();
+                self.setThrobberMessage();
             }
         } else {
 
@@ -668,6 +670,32 @@ define([
         }
     };
 
+    /**
+     * remove message if it exists from error messages array
+     * @param message
+     */
+    Form.prototype.removeMessage = function(message) {
+        if (message) {
+            var errorIndex = this.errorMessages.indexOf(message);
+            if (errorIndex !== -1) {
+                this.errorMessages.splice(errorIndex, 1);
+            }
+        }
+    };
+
+    /**
+     * recursively loop through an abject calling removeMessage on the string value
+     * @param objectProperty
+     */
+    Form.prototype.removeErrorMessages = function (objectProperty) {
+        if (Object.prototype.toString.call(objectProperty) === '[object Object]') {
+            for (var prop in objectProperty) {
+                this.removeErrorMessages(objectProperty[prop]);
+            }
+        } else if (typeof objectProperty === 'string') {
+            this.removeMessage(objectProperty);
+        }
+    };
 
     /**
      * this will add or remove the error from the errorMessages array and add error styles to the inputs
@@ -685,6 +713,15 @@ define([
         } else if (messageIndex >= 0 && validationResult.isValid) {
             //remove error
             this.errorMessages.splice(messageIndex, 1);
+
+        } else if (messageIndex === -1 && this.errorMessages.length) {
+
+            //make sure that none of the stripe error messages are in the errorMessages array
+            for (var stripeProp in stripeErrorMessages) {
+                var eMessage = stripeErrorMessages[stripeProp];
+
+                this.removeErrorMessages(eMessage);
+            }
         }
 
         this.displayGlobalErrors(this.errorMessages);
