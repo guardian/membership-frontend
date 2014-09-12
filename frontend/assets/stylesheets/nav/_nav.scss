@@ -39,10 +39,10 @@
     width: 100%;
     overflow: hidden;
     overflow-x: scroll;
-    @include fs-header(2);
+    @include fs-header(1);
     @include rem((
         padding: $gs-baseline/2 0,
-        height: 44px
+        height: $gs-gutter*2+4
     ));
 
     &::-webkit-scrollbar {
@@ -50,6 +50,7 @@
     }
 
     @include mq(tablet) {
+        @include fs-header(2);
         display: block;
     }
 
@@ -58,12 +59,16 @@
     }
     .nav__link {
         position: relative;
-        color: #000000;
+        color: $black;
         display: block;
         @include rem((
-            margin: 0 26px 0 0,
+            margin: 0 $gs-gutter 0 0,
             padding: 5px 0 6px
         ));
+
+        @include mq(tablet) {
+            margin-right: 26px;
+        }
     }
     .nav__link,
     .nav__link:active,
@@ -82,7 +87,7 @@
 
     .navigation__scroll {
         @include rem((
-            width: 500px,
+            width: 580px,
             margin: 0 $gs-gutter/2
         ));
 
@@ -190,3 +195,24 @@
         padding-top: $gs-baseline !important;
     }
 }
+
+.mobile-menu {
+    position: absolute;
+    right: 0;
+    background-color: lighten($black, 20%);
+    z-index: 1;
+    @include rem((
+        top: 75px
+    ));
+
+    a.mobile-menu__button {
+        color: $white;
+        display: block;
+        text-decoration: none;
+        @include rem((
+            padding: 3px 5px 9px 5px,
+            box-shadow: -2px 0px 5px #000000
+        ));
+    }
+}
+
