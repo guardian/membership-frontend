@@ -60,17 +60,13 @@ object Eventbrite {
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
     def priceFormat(priceInPence: Double) = {
-      val price = priceInPence/100
-      if (price.isWhole) {
-        "£" + f"${priceInPence/100}%2.0f".trim
-      } else {
-        "£" + f"${priceInPence/100}%2.2f".trim
-      }
+      val priceInPounds = priceInPence.round / 100f
+      if (priceInPounds.isWhole) f"£$priceInPounds%.0f" else f"£$priceInPounds%.2f"
     }
 
     lazy val formattedPrice = priceFormat(value)
-    lazy val discountPrice = priceFormat((value * Config.discountMultiplier).round)
-    lazy val savingPrice = priceFormat((value * (1-Config.discountMultiplier)).round)
+    lazy val discountPrice = priceFormat(value * Config.discountMultiplier)
+    lazy val savingPrice = priceFormat(value * (1 - Config.discountMultiplier))
   }
 
 
