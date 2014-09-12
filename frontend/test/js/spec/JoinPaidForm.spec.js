@@ -300,6 +300,10 @@ define([
             done();
         });
 
+        //TODO-ben add these tests once the delegate event isue is fixed
+        xit('should display stripe error message when error returned from initial stripe call', function () {});
+        xit('should clear stripe error message credit card element is blurred', function () {});
+
         //TODO-ben trigger needs work to work with delegate elements
         xit('should prevent submission of an empty form with billing address', function (done) {
             getFormInputParents();
