@@ -48,6 +48,8 @@ $mq-breakpoints: (
     wide: gs-span(16) + $gs-gutter*2, // 1300px
     // Tweakpoints
     mobileLandscape: gs-span(6) + $gs-gutter, // 480px
+
+    leftCol:  gs-span(13) + $gs-gutter*2, // 1060px
 );
 
 // Fonts
