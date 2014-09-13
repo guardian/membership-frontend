@@ -110,7 +110,7 @@ define([
                 self.manageErrors({
                     isValid: false,
                     errorMessage: errorMessage,
-                    $element: $(self.getElem('CREDIT_CARD_NUMBER'))
+                    $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
                 });
                 self.stopLoader();
                 self.setThrobberMessage();
@@ -142,7 +142,7 @@ define([
                             self.manageErrors({
                                 isValid: false,
                                 errorMessage: errorMessage,
-                                $element: $(self.getElem('CREDIT_CARD_NUMBER'))
+                                $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
                             });
                         }
                     } catch (e) {
