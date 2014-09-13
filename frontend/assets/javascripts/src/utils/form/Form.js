@@ -684,7 +684,7 @@ define([
     };
 
     /**
-     * recursively loop through an abject calling removeMessage on the string value
+     * recursively loop through an object calling removeMessage on the string value
      * @param objectProperty
      */
     Form.prototype.removeErrorMessages = function (objectProperty) {
