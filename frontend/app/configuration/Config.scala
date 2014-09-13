@@ -81,4 +81,6 @@ object Config {
   val discountMultiplier = config.getDouble("event.discountMultiplier")
 
   val stage = config.getString("stage")
+
+  val ophanJsUrl = config.getString("ophan.js.url")
 }
