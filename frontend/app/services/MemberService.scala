@@ -27,7 +27,11 @@ trait MemberService {
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
+    Keys.MAILING_STREET -> formData.deliveryAddress.line,
+    Keys.MAILING_CITY -> formData.deliveryAddress.town,
+    Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
+    Keys.MAILING_COUNTRY -> formData.deliveryAddress.country,
     Keys.ALLOW_MEMBERSHOP_MAIL -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
