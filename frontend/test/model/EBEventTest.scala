@@ -20,8 +20,6 @@ class EBEventTest extends PlaySpecification {
   val ebLiveEvent = new EBEvent(eventName("Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInFuture), Some("live"))
   val ebPreLiveEvent = new EBEvent(eventName("Pre Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInPast), Some("live"))
   val freeTicket = EBTickets(None, None, true, None, None, None, None, None, Some(true))
-  val expensivePricingWithPence = EBPricing("GBP", "\u00a31234.25", 123425)
-  val expensivePricingNoPence = EBPricing("GBP", "\u00a31234", 123425)
 
   "getStatus" should {
     "be Completed" in {
@@ -49,8 +47,11 @@ class EBEventTest extends PlaySpecification {
   }
 
   "getPrice" should {
-    "be pleasantly formatted with pence" in {
-      expensivePricingWithPence.formattedPrice mustEqual("£1234.25")
+    "be pleasantly formatted with pence if the value is not whole pounds" in {
+      EBPricing("GBP", "\u00a31234.25", 123425).formattedPrice mustEqual("£1234.25")
+    }
+    "be pleasantly formatted as whole pounds if there are no pence" in {
+      EBPricing("GBP", "\u00a31234.00", 123400).formattedPrice mustEqual("£1234")
     }
   }
 }

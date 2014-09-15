@@ -9,7 +9,10 @@ import model.Countries
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,
-                         postCode: String, country: String)
+                         postCode: String, country: String) {
+    // Salesforce only has one address line field, so merge our two together
+    val line = Seq(lineOne, lineTwo).filter(_.nonEmpty).mkString(", ")
+  }
 
   case class NameForm(first: String, last: String)
 
