@@ -8,7 +8,7 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
-import model.Stripe.Card
+import model.Stripe.{Customer, Card}
 import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
@@ -23,21 +23,33 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 trait MemberService {
-  def commonData(user: User, formData: JoinForm, tier: Tier.Tier) = Map(
+  def commonData(user: User, formData: JoinForm) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
+    Keys.MAILING_STREET -> formData.deliveryAddress.line,
+    Keys.MAILING_CITY -> formData.deliveryAddress.town,
+    Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-    Keys.ALLOW_MEMBERSHOP_MAIL -> true,
-    Keys.TIER -> tier.toString,
-    Keys.OPT_IN -> true
+    Keys.MAILING_COUNTRY -> formData.deliveryAddress.country,
+    Keys.ALLOW_MEMBERSHOP_MAIL -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
+  def memberData(tier: Tier.Tier) = Map(
+    Keys.TIER -> tier.toString,
+    Keys.OPT_IN -> true
+  )
+
+  def paymentData(customer: Customer) = Map(
+    Keys.CUSTOMER_ID -> customer.id,
+    Keys.DEFAULT_CARD_ID -> customer.card.id
+  )
+
   def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] =
     Timing.record(MembershipMetrics, "createFriend") {
-      val updatedData = commonData(user, formData, Tier.Friend)
+      val updatedData = commonData(user, formData) ++ memberData(Tier.Friend)
 
       formData.password.map(updateUserPassword(user, _ , identityRequest))
       for {
@@ -45,6 +57,7 @@ trait MemberService {
         subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+
         MemberMetrics.putSignUp(Tier.Friend)
         memberId.account
       }
@@ -54,26 +67,20 @@ trait MemberService {
     Timing.record(MembershipMetrics, "createPaidMember") {
       formData.password.map(updateUserPassword(user, _ , identityRequest))
 
-      val futureSubscription = for {
+      for {
         customer <- StripeService.Customer.create(user.id, formData.payment.token)
 
-        updatedData = commonData(user, formData, formData.tier) ++ Map(
-          Keys.CUSTOMER_ID -> customer.id,
-          Keys.DEFAULT_CARD_ID -> customer.card.id
-        )
-        memberId <- MemberRepository.upsert(user.id, updatedData)
+        memberId <- MemberRepository.upsert(user.id, commonData(user, formData))
         subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
           formData.payment.annual, formData.name, formData.deliveryAddress)
+
+        // Set some fields once subscription has been successful
+        _ <- MemberRepository.upsert(user.id, memberData(formData.tier) ++ paymentData(customer))
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         MemberMetrics.putSignUp(formData.tier)
         memberId.account
-      }
-
-      futureSubscription.recoverWith {
-        case err: Zuora.Error =>
-          MemberRepository.upsert(user.id, Map(Keys.TIER -> "", Keys.OPT_IN -> false)).map { throw err }
       }
     }
 
