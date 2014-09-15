@@ -1,4 +1,5 @@
 @import views.support.Asset
+@import configuration.Config
 
 @* Scripts that should be executed after CSS is loaded *@
 
@@ -6,7 +7,8 @@
     var curl = {
         apiName: 'require',
         paths: {
-            zxcvbn: '@Asset.at("javascripts/lib/zxcvbn/zxcvbn.js")'
+            zxcvbn: '@Asset.at("javascripts/lib/zxcvbn/zxcvbn.js")',
+            'ophan/ng': '@Config.ophanJsUrl'
         }
     };
 </script>

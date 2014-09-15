@@ -44,7 +44,7 @@ define([
             beforeEach(setUpCookie);
             afterEach(removeCookie);
 
-            it('Get Membership info from /user/me and store in GU_MEM cookie', function () {
+            xit('Get Membership info from /user/me and store in GU_MEM cookie', function () {
 
                 spyOn(ajax, 'reqwest').and.callFake(function (ajaxParams) {
                     ajaxParams.success(friendUserDetails);
@@ -66,7 +66,7 @@ define([
                 });
             });
 
-            it('Get Membership info from GU_MEM cookie without hitting /user/me', function () {
+            xit('Get Membership info from GU_MEM cookie without hitting /user/me', function () {
 
                 spyOn(ajax, 'reqwest');
 
@@ -91,7 +91,7 @@ define([
             beforeEach(setUpCookie);
             afterEach(removeCookie);
 
-            it('Get Membership info from /user/me and store userId in GU_MEM cookie', function () {
+            xit('Get Membership info from /user/me and store userId in GU_MEM cookie', function () {
 
                 spyOn(ajax, 'reqwest').and.callFake(function (ajaxParams) {
                     //mimic 403 from /user/me
@@ -112,7 +112,7 @@ define([
                 });
             });
 
-            it('Get Membership info from GU_MEM cookie without hitting /user/me', function () {
+            xit('Get Membership info from GU_MEM cookie without hitting /user/me', function () {
 
                 spyOn(ajax, 'reqwest');
 

@@ -59,13 +59,18 @@ object Eventbrite {
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
-    def priceFormat(priceInPence: Double) = "£" + f"${priceInPence/100}%2.0f".trim
+    def priceFormat(priceInPence: Double) = {
+      val price = priceInPence/100
+      if (price.isWhole) {
+        "£" + f"${priceInPence/100}%2.0f".trim
+      } else {
+        "£" + f"${priceInPence/100}%2.2f".trim
+      }
+    }
 
     lazy val formattedPrice = priceFormat(value)
-
-    lazy val discountPrice = priceFormat(value * Config.discountMultiplier)
-
-    lazy val savingPrice = priceFormat(value * (1-Config.discountMultiplier))
+    lazy val discountPrice = priceFormat((value * Config.discountMultiplier).round)
+    lazy val savingPrice = priceFormat((value * (1-Config.discountMultiplier)).round)
   }
 
 
@@ -79,7 +84,8 @@ object Eventbrite {
                        quantity_sold: Option[Int] = None,
                        cost: Option[EBPricing] = None,
                        sales_end: Option[Instant] = None,
-                       sales_start: Option[Instant] = None) extends EBObject
+                       sales_start: Option[Instant] = None,
+                       hidden: Option[Boolean] = None) extends EBObject
 
   case class EBEvent(
                       name: EBRichText,
@@ -133,7 +139,8 @@ object Eventbrite {
       }.getOrElse(PreLive)
     }
 
-    def ticketClassesHead = ticket_classes.headOption
+    // This currently extracts all none hidden tickets and gets the first one
+    def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject

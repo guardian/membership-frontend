@@ -48,7 +48,8 @@
                     "quantity_total": 999,
                     "quantity_sold": 0,
                     "sales_start": null,
-                    "sales_end": "2014-06-04T18:00:00Z"
+                    "sales_end": "2014-06-04T18:00:00Z",
+                    "hidden": false
                 }
             ],
             "category": null,
@@ -115,7 +116,8 @@
                     "quantity_total": 42,
                     "quantity_sold": 0,
                     "sales_start": null,
-                    "sales_end": "2014-06-04T18:00:00Z"
+                    "sales_end": "2014-06-04T18:00:00Z",
+                    "hidden": false
                 }
             ],
             "category": null,
@@ -179,7 +181,8 @@
                     "quantity_total": 123,
                     "quantity_sold": 0,
                     "sales_start": null,
-                    "sales_end": "2014-06-20T18:00:00Z"
+                    "sales_end": "2014-06-20T18:00:00Z",
+                    "hidden": true
                 }
             ],
             "category": null,
