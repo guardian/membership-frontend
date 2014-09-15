@@ -164,7 +164,7 @@
     .nav__link {
         display: block;
         @include rem((
-            padding: 3px 0 ($gs-baseline/3)*4
+            padding: $gs-baseline 0
         ));
         border-top: 1px solid lighten($c-neutral4, 8%);
         height: auto;
@@ -202,7 +202,7 @@
     background-color: lighten($black, 20%);
     z-index: 1;
     @include rem((
-        top: 75px
+        top: 57px
     ));
 
     a.mobile-menu__button {
@@ -211,7 +211,7 @@
         text-decoration: none;
         @include rem((
             padding: 3px 5px 9px 5px,
-            box-shadow: -2px 0px 5px #000000
+            box-shadow: -2px 0px 5px $black
         ));
     }
 }

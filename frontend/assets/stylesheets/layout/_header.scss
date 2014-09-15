@@ -44,12 +44,17 @@ $header-margin: 36px;
         i {
             background-size: 200px;
             @include mq(mobile) {
-                background-size: 190px;
+                background-size: 245px;
+                height: 35px;
+            }
+
+            @include mq(tablet) {
+                height: 55px;
             }
         }
 
         @include mq(mobile) {
-            width: 190px;
+            width: 245px;
         }
 
         @include mq(mobileLandscape) {
