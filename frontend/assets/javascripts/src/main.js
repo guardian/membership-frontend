@@ -48,7 +48,11 @@ require([
 
         /* jshint ignore:start */
         // avoid "Do not use 'new' for side effects" error
-        new Imager({ availableWidths: [300, 460, 620, 940], availablePixelRatios: [1, 2] });
+        // these values are defined in application.conf
+        new Imager({
+            availableWidths: guardian.membership.eventImages.widths,
+            availablePixelRatios: guardian.membership.eventImages.ratios
+        });
         /* jshint ignore:end */
 
         /*global Raven */
