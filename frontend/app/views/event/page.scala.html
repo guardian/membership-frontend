@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
 @import org.joda.time.Instant
@@ -34,7 +34,7 @@
     }
 }
 
-@main("Event Detail | " + event.name.text) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo) {
 
     <div class="event">
         <div class="event__content">

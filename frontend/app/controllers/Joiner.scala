@@ -1,6 +1,6 @@
 package controllers
 
-import model.{StatusFields, PrivateFields}
+import model.{StatusFields, PrivateFields, PageInfo}
 import play.api.Logger
 
 import scala.concurrent.Future
@@ -40,7 +40,12 @@ trait Joiner extends Controller {
   }
 
   def tierList = CachedAction { implicit request =>
-    Ok(views.html.joiner.tierList())
+    val pageInfo = PageInfo(
+      Config.copyTitleJoin,
+      request.path,
+      Some(Config.copyDescriptionJoin)
+    )
+    Ok(views.html.joiner.tierList(pageInfo))
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
@@ -70,7 +75,12 @@ trait Joiner extends Controller {
   }
 
   def patron() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.patron())
+    val pageInfo = PageInfo(
+      Config.copyTitlePatrons,
+      request.path,
+      Some(Config.copyDescriptionPatrons)
+    )
+    Ok(views.html.joiner.tier.patron(pageInfo))
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>

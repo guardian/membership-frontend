@@ -1,6 +1,9 @@
 package controllers
 
+import model.PageInfo
 import com.gu.membership.salesforce.Tier
+import configuration.Config
+
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
@@ -17,8 +20,12 @@ object Joining extends Controller {
   def tierChooser() = NoCacheAction { implicit request =>
 
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-
-    Ok(views.html.joining.tierChooser(eventOpt))
+    val pageInfo = PageInfo(
+      Config.copyTitleChooseTier,
+      request.path,
+      Some(Config.copyDescriptionChooseTier)
+    )
+    Ok(views.html.joining.tierChooser(eventOpt, pageInfo))
   }
 
   private val tierForm = Form { single("tier" -> nonEmptyText) }

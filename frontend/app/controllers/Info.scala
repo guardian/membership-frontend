@@ -2,8 +2,10 @@ package controllers
 
 import actions.AuthRequest
 import forms.MemberForm._
+import model.PageInfo
 import play.api.mvc.{Action, Controller}
 import services.EmailService
+import configuration.Config
 
 import scala.concurrent.Future
 
@@ -14,7 +16,12 @@ trait Info extends Controller {
   }
 
   def about = CachedAction { implicit request =>
-    Ok(views.html.info.about())
+    val pageInfo = PageInfo(
+      Config.copyTitleAbout,
+      request.path,
+      Some(Config.copyDescriptionAbout)
+    )
+    Ok(views.html.info.about(pageInfo))
   }
 
   def feedback = NoCacheAction { implicit request =>

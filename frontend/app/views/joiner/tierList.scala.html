@@ -1,9 +1,9 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@main("Join") {
+@main("Join", pageInfo=pageInfo) {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border ">
 
