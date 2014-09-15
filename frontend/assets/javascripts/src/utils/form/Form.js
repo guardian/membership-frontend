@@ -363,9 +363,9 @@ define([
      */
     Form.prototype.length = function (element) {
         var args = JSON.parse(element.getAttribute('data-arguments'));
+        args.unshift(element);
 
-        bean.on(element, 'blur', function (e) {
-            args.unshift(e.target);
+        bean.on(element, 'blur', function () {
             var validationResult = self.lengthValidator.apply(this, args);
             self.manageErrors(validationResult);
         });
