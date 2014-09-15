@@ -73,7 +73,6 @@
     </head>
     <body>
 
-        @fragments.unsupportedBrowser()
 
         @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
@@ -91,6 +90,7 @@
             </div>
         </div>
 
+        @fragments.unsupportedBrowser()
         @fragments.footer()
 
         @fragments.javaScriptRequireJS()
