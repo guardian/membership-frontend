@@ -16,7 +16,7 @@ import actions.{AnyMemberTierRequest, AuthRequest}
 import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
-import configuration.Config
+import configuration.{Config, CopyConfig}
 
 trait Joiner extends Controller {
 
@@ -41,9 +41,9 @@ trait Joiner extends Controller {
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      Config.copyTitleJoin,
+      CopyConfig.copyTitleJoin,
       request.path,
-      Some(Config.copyDescriptionJoin)
+      Some(CopyConfig.copyDescriptionJoin)
     )
     Ok(views.html.joiner.tierList(pageInfo))
   }
@@ -76,9 +76,9 @@ trait Joiner extends Controller {
 
   def patron() = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      Config.copyTitlePatrons,
+      CopyConfig.copyTitlePatrons,
       request.path,
-      Some(Config.copyDescriptionPatrons)
+      Some(CopyConfig.copyDescriptionPatrons)
     )
     Ok(views.html.joiner.tier.patron(pageInfo))
   }

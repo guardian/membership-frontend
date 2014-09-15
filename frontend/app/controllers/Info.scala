@@ -5,7 +5,7 @@ import forms.MemberForm._
 import model.PageInfo
 import play.api.mvc.{Action, Controller}
 import services.EmailService
-import configuration.Config
+import configuration.{Config, CopyConfig}
 
 import scala.concurrent.Future
 
@@ -17,9 +17,9 @@ trait Info extends Controller {
 
   def about = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      Config.copyTitleAbout,
+      CopyConfig.copyTitleAbout,
       request.path,
-      Some(Config.copyDescriptionAbout)
+      Some(CopyConfig.copyDescriptionAbout)
     )
     Ok(views.html.info.about(pageInfo))
   }

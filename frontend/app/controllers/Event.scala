@@ -10,7 +10,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import actions.Functions.{authenticated, memberRefiner}
 import actions.Fallbacks.notYetAMemberOn
 import services.{MemberService, EventbriteService}
-import configuration.Config
+import configuration.{Config, CopyConfig}
 
 import com.netaporter.uri.dsl._
 
@@ -34,8 +34,6 @@ trait Event extends Controller {
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
-        Some(eventDescription),
-        Some(Config.eventImageFullPath(event.id))
         Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine),
         Some(eventImageFullPath(event.id))
       )
@@ -45,9 +43,9 @@ trait Event extends Controller {
 
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      Config.copyTitleEvents,
+      CopyConfig.copyTitleEvents,
       request.path,
-      Some(Config.copyDescriptionEvents)
+      Some(CopyConfig.copyDescriptionEvents)
     )
     Ok(views.html.event.list(eventService.getEventPortfolio, pageInfo))
   }
@@ -55,9 +53,9 @@ trait Event extends Controller {
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
     val tag = urlTagText.replace('-', ' ')
     val pageInfo = PageInfo(
-      Config.copyTitleEvents,
+      CopyConfig.copyTitleEvents,
       request.path,
-      Some(Config.copyDescriptionEvents)
+      Some(CopyConfig.copyDescriptionEvents)
     )
     Ok(views.html.event.list(EventPortfolio(Seq.empty, eventService.getEventsTagged(tag)), pageInfo))
   }

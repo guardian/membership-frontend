@@ -1,6 +1,6 @@
 package model
 import views.support.Asset
-import configuration.Config
+import configuration.{Config, CopyConfig}
 
 case class PageInfo(
   title: String,
@@ -14,8 +14,8 @@ object PageInfo {
 
   // url has the domain prepended in templates
   val default = PageInfo(
-    Config.copyTitleDefault,
+    CopyConfig.copyTitleDefault,
     "/",
-    Some(Config.copyDescriptionDefault)
+    Some(CopyConfig.copyDescriptionDefault)
   )
 }
