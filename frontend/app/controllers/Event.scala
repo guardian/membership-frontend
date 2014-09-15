@@ -23,20 +23,12 @@ trait Event extends Controller {
 
   def details(id: String) = CachedAction { implicit request =>
     eventService.getEvent(id).map { event =>
-      val eventDescription = Array(
-        event.venue.name.getOrElse(""),
-        event.addressOne,
-        event.addressTwo,
-        event.city,
-        event.region,
-        event.countryName,
-        event.postal_code
-      ).filter(!_.isEmpty).mkString(", ")
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
         Some(eventDescription),
         Some(Config.eventImageFullPath(event.id))
+        Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine),
       )
       Ok(views.html.event.page(event, pageInfo))
     }.getOrElse(NotFound)
