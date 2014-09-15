@@ -11,10 +11,9 @@
     ));
     list-style: none;
     @include rem((
-        margin-bottom: -4px,
-        border-bottom: 2px solid $c-brandBlue
+        margin-bottom: -4px
     ));
-    background: #ffffff;
+    background-color: darken($mem-blue, 10%);
     width: 100%;
 
     .nav-popup__cta_container {
@@ -62,7 +61,7 @@
 
 .nav-popup--small {
     @include rem((
-        padding-top: $gs-baseline/3,
+        padding-top: 54px,
         padding-bottom: $gs-baseline,
         top: $mobilePopupOffset,
         min-height: 47px
