@@ -180,6 +180,10 @@
                     "UnhealthyThreshold" : "2",
                     "Interval" : "10",
                     "Timeout" : "5"
+                },
+                "ConnectionDrainingPolicy": {
+                    "Enabled" : "true",
+                    "Timeout" : "60"
                 }
             }
         },

@@ -100,10 +100,6 @@ case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Opti
       </ns1:PaymentMethod>
     }.getOrElse(Null)
 
-    // We can't use Zuora's Address2 field because Salesforce doesn't have an Address2 field which
-    // means that when SF address changes are pushed to Zuora, Address2 would not be updated.
-    val addressLine = Seq(address.lineOne, address.lineTwo).filter(_.nonEmpty).mkString(", ")
-
     // NOTE: This appears to be white-space senstive in some way. Zuora rejected
     // the XML after Intellij auto-reformatted the code.
     <ns1:subscribe>
@@ -123,7 +119,7 @@ case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Opti
         <ns1:BillToContact xsi:type="ns2:Contact">
           <ns2:FirstName>{name.first}</ns2:FirstName>
           <ns2:LastName>{name.last}</ns2:LastName>
-          <ns2:Address1>{addressLine}</ns2:Address1>
+          <ns2:Address1>{address.line}</ns2:Address1>
           <ns2:City>{address.town}</ns2:City>
           <ns2:PostalCode>{address.postCode}</ns2:PostalCode>
           <ns2:State>{address.countyOrState}</ns2:State>
