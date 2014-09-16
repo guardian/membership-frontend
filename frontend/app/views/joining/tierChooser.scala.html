@@ -1,4 +1,4 @@
-@(eventOpt: Option[model.Eventbrite.EBEvent])(implicit token: play.filters.csrf.CSRF.Token)
+@(eventOpt: Option[model.Eventbrite.EBEvent], pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
@@ -42,7 +42,7 @@
     </div>
 }
 
-@main("Join membership") {
+@main("Join membership", pageInfo=pageInfo) {
 
     <section class="section-two-thirds">
 

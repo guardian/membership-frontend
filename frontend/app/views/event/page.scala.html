@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
 @import org.joda.time.Instant
@@ -34,7 +34,7 @@
     }
 }
 
-@main("Event Detail | " + event.name.text) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo) {
 
     <div class="event">
         <div class="event__content">
@@ -55,12 +55,7 @@
                         <div class="event__location">
                             <span class="event__venue-name">@event.venue.name</span>,
                             <span class="event__address">
-                                @if(!event.addressOne.isEmpty){ <span>@event.addressOne</span>, }
-                                @if(!event.addressTwo.isEmpty){ <span>@event.addressTwo</span>, }
-                                @if(!event.city.isEmpty){ <span>@event.city</span>, }
-                                @if(!event.region.isEmpty){ <span>@event.region</span>, }
-                                @if(!event.countryName.isEmpty){ <span>@event.countryName</span> }
-                                @if(!event.postal_code.isEmpty){ <span>@event.postal_code</span> }
+                                @event.eventAddressLine
                             </span>
                         </div>
                     </div>

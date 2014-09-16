@@ -112,6 +112,15 @@ object Eventbrite {
 
     lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
 
+    lazy val eventAddressLine = Seq(
+      addressOne,
+      addressTwo,
+      city,
+      region,
+      countryName,
+      postal_code
+    ).filter(_.nonEmpty).mkString(", ")
+
     import EBEventStatus._
 
     def getStatus: EBEventStatus = {

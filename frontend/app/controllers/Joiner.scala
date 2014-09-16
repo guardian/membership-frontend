@@ -1,6 +1,6 @@
 package controllers
 
-import model.{StatusFields, PrivateFields}
+import model.{StatusFields, PrivateFields, PageInfo}
 import play.api.Logger
 
 import scala.concurrent.Future
@@ -16,7 +16,7 @@ import actions.{AnyMemberTierRequest, AuthRequest}
 import services._
 import forms.MemberForm.{FriendJoinForm, friendJoinForm}
 import model.Eventbrite.{EBDiscount, EBEvent}
-import configuration.Config
+import configuration.{Config, CopyConfig}
 
 trait Joiner extends Controller {
 
@@ -40,7 +40,12 @@ trait Joiner extends Controller {
   }
 
   def tierList = CachedAction { implicit request =>
-    Ok(views.html.joiner.tierList())
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleJoin,
+      request.path,
+      Some(CopyConfig.copyDescriptionJoin)
+    )
+    Ok(views.html.joiner.tierList(pageInfo))
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
@@ -70,7 +75,12 @@ trait Joiner extends Controller {
   }
 
   def patron() = CachedAction { implicit request =>
-    Ok(views.html.joiner.tier.patron())
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitlePatrons,
+      request.path,
+      Some(CopyConfig.copyDescriptionPatrons)
+    )
+    Ok(views.html.joiner.tier.patron(pageInfo))
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
