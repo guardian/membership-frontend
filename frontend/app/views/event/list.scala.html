@@ -1,9 +1,9 @@
-@(eventPortfolio: model.EventPortfolio)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
-@main("Events", containerPadding = false, htmlClass = "events-bg") {
+@main("Events", containerPadding = false, htmlClass = "events-bg", pageInfo=pageInfo) {
 
     <section class="header-bar header-bar--guardian-live">
         <h1 class="header-bar__title">Events, discussions, debates, interviews,

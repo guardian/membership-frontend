@@ -48,7 +48,11 @@
         },
         stripePublicKey: '@Config.stripeApiConfig.publicKey',
         membership: {
-            buildNumber: '@app.BuildInfo.buildNumber'
+            buildNumber: '@app.BuildInfo.buildNumber',
+            eventImages: {
+                widths: [@Config.eventImageWidths.mkString(",")],
+                ratios: [@Config.eventImageRatios.mkString(",")]
+            }
         }
     };
 

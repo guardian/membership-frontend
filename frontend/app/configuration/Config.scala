@@ -35,6 +35,9 @@ object Config {
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
 
+  val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
+  val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
+
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
@@ -83,4 +86,5 @@ object Config {
   val stage = config.getString("stage")
 
   val ophanJsUrl = config.getString("ophan.js.url")
+
 }

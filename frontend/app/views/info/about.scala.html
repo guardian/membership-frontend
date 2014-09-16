@@ -1,9 +1,9 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@main("About", isBrochure = true, containerPadding = false, htmlClass = "about-membership") {
+@main("About", isBrochure = true, containerPadding = false, htmlClass = "about-membership", pageInfo=pageInfo) {
 
     <div class="home-slice home-slice--epic u-cf">
         <div class="home-slice__inner u-cf">
