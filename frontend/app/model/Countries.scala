@@ -10,7 +10,6 @@ object Countries {
     "California",
     "Colorado",
     "Connecticut",
-    "District of Columbia",
     "Delaware",
     "Florida",
     "Georgia",
