@@ -61,7 +61,7 @@ define([
 
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
             config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-hidden');
-            config.DOM.MENU_ICON.toggleClass('menu-hamburger--active');
+            config.DOM.MENU_ICON.toggleClass('close-icon-white--active');
             self.setMenuListener.call(self, config.DOM.SECTIONS_POP_UP_NAV);
         });
 

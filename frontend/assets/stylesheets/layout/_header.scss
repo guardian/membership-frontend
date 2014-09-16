@@ -49,7 +49,11 @@ $header-margin: 36px;
             }
 
             @include mq(tablet) {
-                height: 55px;
+                height: 40px;
+            }
+
+            @include mq(desktop) {
+                height: 60px;
             }
         }
 
@@ -124,10 +128,10 @@ $header-margin: 36px;
     }
 }
 
-.menu-hamburger--active {
+.close-icon-white--active {
     border-color: $white;
-    .icon-sprite-menu-black {
-        @extend %icon-sprite-menu-white;
+    .icon-sprite-menu-white {
+        @extend %icon-sprite-close-icon-white;
     }
 }
 
