@@ -1,3 +1,9 @@
+.nav--global--header {
+    overflow-x: hidden!important;
+    @include side-margins-calc('padding-left');
+    @include side-margins-calc('padding-right');
+}
+
 .events-list .events-list__item {
     margin: 0 0 $gs-gutter 0 !important;
 }

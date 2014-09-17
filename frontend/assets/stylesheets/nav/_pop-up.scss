@@ -110,6 +110,12 @@
     padding-top: 0;
     padding-bottom: 0;
     z-index: 4;
+    background-color: $white;
+    
+    @include rem((
+        width: 175px,
+        margin-left: $gs-gutter/2
+    ));
 
     @include mq(tablet) {
         left: 30px;
@@ -117,6 +123,30 @@
             top: 44px,
             width: gs-span(3)
         ));
+    }
+
+    &:after {
+        bottom: 100%;
+        left: 10%;
+        border: solid transparent;
+        content: '';
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-bottom-color: $white;
+        @include rem((
+            border-width: 6px,
+            margin-left: -6px
+        ));
+
+        @include mq(desktop) {
+            left: 18%;
+            @include rem((
+                border-width: 10px,
+                margin-left: -10px
+            ));
+        }
     }
 
     .nav {
@@ -134,12 +164,8 @@
             float: none;
             width: auto;
             display: block;
-            @include mq(mobileLandscape) {
-                @include rem((
-                    padding-left: $gs-gutter/2,
-                    padding-right: $gs-gutter/2
-                ));
-            }
+            border-right: 0;
+
             @include mq(tablet) {
                 @include rem((
                     padding-left: $gs-gutter,
@@ -160,6 +186,7 @@
                 border-bottom: 0;
             }
             .nav__link {
+                border-top: 0;
                 @include mq(tablet) {
                     @include rem((
                         padding: 10px 0
