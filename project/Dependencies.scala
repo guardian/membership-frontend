@@ -6,7 +6,7 @@ object Dependencies {
   val identity = "3.40"
 
   //libraries
-  val nScalaTime = "com.github.nscala-time" %% "nscala-time" % "1.0.0"
+  val nScalaTime = "com.github.nscala-time" %% "nscala-time" % "1.4.0"
   val akkaAgent = "com.typesafe.akka" %% "akka-agent" % "2.2.0"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
