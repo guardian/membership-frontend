@@ -143,8 +143,8 @@
         @include mq(desktop) {
             left: 18%;
             @include rem((
-                border-width: 10px,
-                margin-left: -10px
+                border-width: $gs-gutter/2,
+                margin-left: -$gs-gutter/2
             ));
         }
     }

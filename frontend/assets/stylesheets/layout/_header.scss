@@ -64,7 +64,7 @@ $header-margin: 36px;
             ));
         }
 
-        @include mq($from: mobileLandscape) {
+        @include mq(mobileLandscape) {
             width: 50%;
             @include rem((
                 height: 40px
@@ -93,24 +93,24 @@ $header-margin: 36px;
             font-weight: bold;
             @include rem((
                 padding: 3px 3px 0 3px,
-                top: -$gs-gutter/2
+                bottom: 14
             ));
 
-            @include mq(tablet) {
+            @include mq($from: tablet) {
                 @include rem((
-                    top: -16px
+                    bottom: 17px
                 ));
             }
 
             @include mq(desktop) {
                 @include rem((
-                    top: -18px
+                    bottom: 18px
                 ));
             }
 
             @include mq(mem-full) {
                 @include rem((
-                    top: -$gs-gutter
+                    bottom: $gs-gutter
                 ));
             }
         }
