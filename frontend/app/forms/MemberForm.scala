@@ -21,14 +21,19 @@ object MemberForm {
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
   trait JoinForm {
+    val tier: Tier
     val name: NameForm
     val deliveryAddress: AddressForm
+    val payment: PaymentForm
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: MarketingChoicesForm,
-                            password: Option[String] ) extends JoinForm
+                            password: Option[String] ) extends JoinForm {
+    val tier = Tier.Friend
+    val payment = PaymentForm(false, "")
+  }
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
                                 billingAddress: Option[AddressForm], marketingChoices: MarketingChoicesForm,
