@@ -67,7 +67,7 @@
         "FrontendLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-7a6acf0d",
+                "ImageId" : "ami-d03d98a7",
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
@@ -180,6 +180,10 @@
                     "UnhealthyThreshold" : "2",
                     "Interval" : "10",
                     "Timeout" : "5"
+                },
+                "ConnectionDrainingPolicy": {
+                    "Enabled" : "true",
+                    "Timeout" : "60"
                 }
             }
         },

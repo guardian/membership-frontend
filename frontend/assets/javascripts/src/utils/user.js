@@ -87,10 +87,11 @@ define([
      * '/user/me'
      * @param callback
      */
-    var getMemberDetail = (function (callback) {
+    var getMemberDetail = (function () {
 
-        var ajaxIsRunning = false;
-        var cachedAjax = null;
+        var pendingXHR;
+
+        var callbacks = [];
 
         return function (callback) {
 
@@ -98,40 +99,29 @@ define([
             var identityUser = getUserFromCookie();
 
             if (identityUser) {
-                if ((membershipUser && membershipUser.userId) === identityUser.id) {
+                if (membershipUser && membershipUser.userId === identityUser.id) {
                     callback(membershipUser);
                 } else {
-
-                    if (!ajaxIsRunning) {
-                        ajaxIsRunning = true;
-
-                        /* until cookies are destroyed kill cookies if they are around - this is the use case of logging in and
-                         out with different users */
+                    if (!pendingXHR) {
                         cookie.removeCookie(MEM_USER_COOKIE_KEY);
-                        cachedAjax = ajax({
+
+                        pendingXHR = ajax({
                             url: '/user/me',
                             method: 'get'
                         }).then(function (resp) {
                             cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
-                            callback(resp);
-                            ajaxIsRunning = false;
+                            callbacks.forEach(function (callback) { callback(resp); });
                         }).fail(function (err) {
-                            /* we get a 403 error for guardian users who are not members id added to stop this from
-                             being called on each page. We however do not want to set this cookie if there has been an
-                             error when a user is a member */
-                            if (!membershipUser) {
+                            if (err.status === 403) {
                                 cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
                             }
-                            callback(null, err);
-                            ajaxIsRunning = false;
-                        });
-
-                    } else {
-                        cachedAjax.then(callback).fail(function (err) {
-                            callback(null, err);
+                            callbacks.forEach(function (callback) { callback(null, err); });
+                        }).always(function () {
+                            pendingXHR = undefined;
                         });
                     }
 
+                    callbacks.push(callback);
                 }
             } else {
                 callback(null, { message: 'no membership user' });

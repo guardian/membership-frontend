@@ -2,67 +2,68 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /robots.txt                               controllers.Assets.at(path="/public", file="robots.txt")
-GET         /favicon.ico                              controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
+GET            /robots.txt                        controllers.Assets.at(path="/public", file="robots.txt")
+GET            /humans.txt                        controllers.Assets.at(path="/public", file="humans.txt")
+GET            /favicon.ico                       controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 
 # Home page
-GET         /                                  controllers.FrontPage.index
+GET            /                                  controllers.FrontPage.index
 
 # Healthcheck
-GET         /healthcheck                       controllers.Healthcheck.healthcheck
+GET            /healthcheck                       controllers.Healthcheck.healthcheck
 
 # Join
-GET         /join                              controllers.Joiner.tierList
-GET         /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
-POST        /join/friend/enter-details         controllers.Joiner.joinFriend
+GET            /join                              controllers.Joiner.tierList
+GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
+POST           /join/friend/enter-details         controllers.Joiner.joinFriend
 
-GET         /patrons                           controllers.Joiner.patron
+GET            /patrons                           controllers.Joiner.patron
 
-GET         /join/friend/thankyou              controllers.Joiner.thankyouFriend
-GET         /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
+GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
+GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
-GET         /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
+GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
-GET         /choose-tier                       controllers.Joining.tierChooser()
-POST        /choose-tier                       controllers.Joining.tierChooserRedirect()
+GET            /choose-tier                       controllers.Joining.tierChooser()
+POST           /choose-tier                       controllers.Joining.tierChooserRedirect()
 
 
 # Subscription
-POST        /subscription/subscribe                   controllers.Subscription.subscribe
-POST        /subscription/update-card                 controllers.Subscription.updateCard
-OPTIONS     /subscription/update-card                 controllers.Subscription.updateCardPreflight
+POST           /subscription/subscribe            controllers.Subscription.subscribe
+POST           /subscription/update-card          controllers.Subscription.updateCard
+OPTIONS        /subscription/update-card          controllers.Subscription.updateCardPreflight
 
 # Events
-GET         /events                            controllers.Event.list
-GET         /events/:tag                       controllers.Event.listFilteredBy(tag)
-GET         /event/:id                         controllers.Event.details(id)
-GET         /event/:id/buy                     controllers.Event.buy(id)
+GET            /events                            controllers.Event.list
+GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
+GET            /event/:id                         controllers.Event.details(id)
+GET            /event/:id/buy                     controllers.Event.buy(id)
 
 # Tier
-GET         /tier/change                       controllers.TierController.change
+GET            /tier/change                       controllers.TierController.change
 
-GET         /tier/cancel                       controllers.TierController.cancelTier
-POST        /tier/cancel/confirm               controllers.TierController.cancelTierConfirm
-GET         /tier/cancel/summary               controllers.TierController.cancelTierSummary
+GET            /tier/cancel                       controllers.TierController.cancelTier
+POST           /tier/cancel/confirm               controllers.TierController.cancelTierConfirm
+GET            /tier/cancel/summary               controllers.TierController.cancelTierSummary
 
-GET         /tier/change/friend                controllers.TierController.downgradeToFriend
-POST        /tier/change/friend                controllers.TierController.downgradeToFriendConfirm
-GET         /tier/change/friend/summary        controllers.TierController.downgradeToFriendSummary
+GET            /tier/change/friend                controllers.TierController.downgradeToFriend
+POST           /tier/change/friend                controllers.TierController.downgradeToFriendConfirm
+GET            /tier/change/friend/summary        controllers.TierController.downgradeToFriendSummary
 
-GET         /tier/change/:tier                 controllers.TierController.upgrade(tier: Tier.Value)
-POST        /tier/change/:tier                 controllers.TierController.upgradeConfirm(tier: Tier.Value)
-GET         /tier/change/:tier/summary         controllers.Joiner.thankyouPaid(tier: Tier.Value)
+GET            /tier/change/:tier                 controllers.TierController.upgrade(tier: Tier.Value)
+POST           /tier/change/:tier                 controllers.TierController.upgradeConfirm(tier: Tier.Value)
+GET            /tier/change/:tier/summary         controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
 # Information
-GET         /help                              controllers.Info.help
-GET         /feedback                          controllers.Info.feedback
-GET         /feedback/thankyou                 controllers.Info.feedbackThankyou
-POST        /feedback                          controllers.Info.submitFeedback
-GET         /about                             controllers.Info.about
+GET            /help                              controllers.Info.help
+GET            /feedback                          controllers.Info.feedback
+GET            /feedback/thankyou                 controllers.Info.feedbackThankyou
+POST           /feedback                          controllers.Info.submitFeedback
+GET            /about                             controllers.Info.about
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)
+GET            /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)
 
 
-GET         /user/me                           controllers.User.me
-GET         /user/me/details                   controllers.User.meDetails
+GET            /user/me                           controllers.User.me
+GET            /user/me/details                   controllers.User.meDetails

@@ -25,7 +25,7 @@ define([
         TOWN: 'js-town',
         POST_CODE: 'js-post-code',
         BILLING: 'js-toggle-billing-address',
-        BILLING_ADDRESS_OPTION_CONTAINER: 'js-billing-address-container',
+        BILLING_ADDRESS_INPUTS: 'js-billing-input',
         BILLING_FIELDSET: 'js-billingAddress-fieldset',
         FORM_FIELD: 'form-field',
         COUNTY_CONTAINER_DELIVERY: 'js-county-container-deliveryAddress',
@@ -61,10 +61,8 @@ define([
 
         var $billing = $(this.getClass('BILLING'), this.form.formElement).removeClass('u-h');
         var $billingDetails = $(this.getClass('BILLING_FIELDSET'), this.form.formElement).addClass('fieldset--no-top-border').detach();
-        var $billingOptionsContainer = $(this.getClass('BILLING_ADDRESS_OPTION_CONTAINER'), this.form.formElement);
-
-        bean.on($billingOptionsContainer[0], 'click', 'input', function () {
-
+        var $billingInputs = $(this.getClass('BILLING_ADDRESS_INPUTS'), this.form.formElement);
+        var toggleBillingDeliveryDetails = function () {
             if ($billingDetails.parent().length === 0) {
                 // open
                 $billingDetails.insertAfter($billing);
@@ -77,6 +75,11 @@ define([
                 self.removeValidatorFromValidationProfile();
                 $billingDetails.detach();
             }
+        };
+
+        //made like this for testing purposes, its tricky to test delegate events
+        $billingInputs.each(function (input) {
+            bean.on(input, 'click', toggleBillingDeliveryDetails);
         });
     };
 
