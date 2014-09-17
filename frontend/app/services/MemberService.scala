@@ -95,16 +95,10 @@ trait MemberService {
   }
 
   def cancelSubscription(member: Member): Future[String] = {
-    val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
-
-    // TODO: ultra hacky, but we're going to change all the Tier stuff to case classes anyway
-    val newTierStr = if (newTier == Tier.None) "" else newTier.toString
-
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
-      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTierStr))
     } yield {
-      MemberMetrics.putCancel(newTier)
+      MemberMetrics.putCancel(member.tier)
       ""
     }
   }
