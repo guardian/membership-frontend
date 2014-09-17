@@ -7,7 +7,7 @@ object Dependencies {
 
   //libraries
   val nScalaTime = "com.github.nscala-time" %% "nscala-time" % "1.4.0"
-  val akkaAgent = "com.typesafe.akka" %% "akka-agent" % "2.2.0"
+  val akkaAgent = "com.typesafe.akka" %% "akka-agent" % "2.3.4"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val awsSdk="com.amazonaws" % "aws-java-sdk" % "1.8.9.1"
