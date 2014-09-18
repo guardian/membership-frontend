@@ -88,46 +88,52 @@ define([
      * @param callback
      */
     var getMemberDetail = (function () {
-
         var pendingXHR;
-
         var callbacks = [];
+        var invokeCallbacks = function (args) {
+            for (var i = callbacks.length - 1; i >= 0; --i) {
+                var callback = callbacks.splice(i, 1)[0];
+                callback.apply(this, args);
+            }
+        }
 
-        return function (callback) {
+        return function (callback, overRideCallbacks) {
+            // for testing purposes to mimic a reload of the javascript and hence a clearing of the callbacks array
+            callbacks = overRideCallbacks || callbacks;
 
             var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
             var identityUser = getUserFromCookie();
 
             if (identityUser) {
-                if (membershipUser && membershipUser.userId === identityUser.id) {
+                if ((membershipUser && membershipUser.userId) === identityUser.id) {
                     callback(membershipUser);
                 } else {
+                    callbacks.push(callback);
+
                     if (!pendingXHR) {
                         cookie.removeCookie(MEM_USER_COOKIE_KEY);
-
                         pendingXHR = ajax({
                             url: '/user/me',
-                            method: 'get'
-                        }).then(function (resp) {
-                            cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
-                            callbacks.forEach(function (callback) { callback(resp); });
-                        }).fail(function (err) {
-                            if (err.status === 403) {
-                                cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
+                            method: 'get',
+                            success: function (resp) {
+                                cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
+                                invokeCallbacks([resp]);
+                                pendingXHR = null;
+                            },
+                            error: function (err) {
+                                if (err.status === 403) {
+                                    cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
+                                }
+                                invokeCallbacks([null, err]);
+                                pendingXHR = null;
                             }
-                            callbacks.forEach(function (callback) { callback(null, err); });
-                        }).always(function () {
-                            pendingXHR = undefined;
                         });
                     }
-
-                    callbacks.push(callback);
                 }
             } else {
                 callback(null, { message: 'no membership user' });
             }
         };
-
     })();
 
     return {
