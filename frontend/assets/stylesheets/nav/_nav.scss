@@ -126,6 +126,10 @@
     &::-webkit-scrollbar {
         display: none;
     }
+
+    @include mq(tablet) {
+        overflow-x: hidden;
+    }
 }
 
 .nav-global--mini {
