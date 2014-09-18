@@ -1,13 +1,15 @@
 package controllers
 
+import com.gu.membership.util.Timing
 import model.{EventPortfolio, PageInfo}
+import monitoring.EventbriteMetrics
 
 import scala.concurrent.Future
 
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import actions.Functions.{authenticated, memberRefiner}
+import actions.Functions.{authenticated, memberRefiner, metricRecord}
 import actions.Fallbacks.notYetAMemberOn
 import services.{MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
@@ -19,7 +21,7 @@ trait Event extends Controller {
   val eventService: EventbriteService
   val memberService: MemberService
 
-  val BuyAction = NoCacheAction andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
+  val BuyAction = NoCacheAction andThen metricRecord(EventbriteMetrics, "buy-action-invoked") andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction { implicit request =>
     eventService.getEvent(id).map { event =>
@@ -63,9 +65,11 @@ trait Event extends Controller {
   def buy(id: String) = BuyAction.async { implicit request =>
     eventService.getEvent(id).map {
       event =>
-        for {
-          discountOpt <- memberService.createDiscountForMember(request.member, event)
-        } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+        Timing.record(EventbriteMetrics, "user-sent-to-eventbrite") {
+          for {
+            discountOpt <- memberService.createDiscountForMember(request.member, event)
+          } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+        }
     }.getOrElse(Future.successful(NotFound))
   }
 }
