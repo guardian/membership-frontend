@@ -153,40 +153,29 @@
         padding-left: 0;
         padding-right: 0;
 
-        @include mq(tablet) {
-            @include rem((
-                padding-left: 2px,
-                padding-right: 2px
-            ));
-        }
-
         > .nav__item {
             float: none;
             width: auto;
             display: block;
             border-right: 0;
 
-            @include mq(tablet) {
-                @include rem((
-                    padding-left: $gs-gutter,
-                    padding-right: $gs-gutter
-                ));
-            }
-
             &:first-child .nav__link {
-                
                 @include mq(tablet) {
                     border-top: 0;
-                    @include rem((
-                        padding-top: 10px
-                    ));
                 }
             }
             &:last-child .nav__link {
                 border-bottom: 0;
             }
+
             .nav__link {
                 border-top: 0;
+                border-bottom: 1px solid $c-neutral7;
+                padding-left: 0;
+                @include rem((
+                    margin: 0 $gs-gutter/2
+                ));
+
                 @include mq(tablet) {
                     @include rem((
                         padding: 10px 0

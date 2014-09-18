@@ -23,7 +23,7 @@ $header-margin: 36px;
         @include mq(tablet) {
             height: auto;
         }
-        
+
         @include mq($from: desktop) {
             @include side-margins-calc('padding-left');
             @include side-margins-calc('padding-right');
@@ -56,69 +56,19 @@ $header-margin: 36px;
 
     .header__logo {
         clear: right;
-        width: 64%;
+        width: 243px;
         float: right;
         @include rem((
             margin-right: $header-padding/2,
             height: 25px
         ));
 
-        @include mq(mobile) {
-            width: 75%;
-            @include rem((
-                margin-right: $header-padding/2
-            ));
-        }
-
-        @include mq(mobileLandscape) {
-            width: 50%;
-            @include rem((
-                height: 40px
-            ));
-        }
-
         @include mq(tablet) {
+            width: auto;
             @include rem((
-                margin-bottom: $gs-gutter
-            ));
-        }
-
-        @include mq(desktop) {
-            width: 44%;
-            @include rem((
+                margin-bottom: $gs-gutter,
                 height: 50px
             ));
-        }
-
-        &:after {
-            content: 'beta';
-            position: relative;
-            background-color: #fdba3b;
-            font-size: 1.2rem;
-            left: 50%;
-            font-weight: bold;
-            @include rem((
-                padding: 3px 3px 0 3px,
-                bottom: 14
-            ));
-
-            @include mq($from: tablet) {
-                @include rem((
-                    bottom: 17px
-                ));
-            }
-
-            @include mq(desktop) {
-                @include rem((
-                    bottom: 18px
-                ));
-            }
-
-            @include mq(mem-full) {
-                @include rem((
-                    bottom: $gs-gutter
-                ));
-            }
         }
     }
 }
