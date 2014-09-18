@@ -1,9 +1,10 @@
 package configuration
 
+import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
+import com.gu.membership.salesforce.Tier.{Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
-
 import com.typesafe.config.ConfigFactory
-import com.gu.identity.cookie.{ PreProductionKeys, ProductionKeys }
+import model.Subscription._
 import services.StripeApiConfig
 import services.zuora.ZuoraApiConfig
 
@@ -71,11 +72,17 @@ object Config {
     password = config.getString("zuora.api.password")
   )
 
-  val zuoraApiFriend = config.getString("zuora.api.friend")
-  val zuoraApiPartnerMonthly = config.getString("zuora.api.partner.monthly")
-  val zuoraApiPartnerAnnual = config.getString("zuora.api.partner.annual")
-  val zuoraApiPatronMonthly = config.getString("zuora.api.patron.monthly")
-  val zuoraApiPatronAnnual = config.getString("zuora.api.patron.annual")
+  def plansFor(paidTier: Tier) = {
+    def paidTierPlan(annual: Boolean) = {
+      val period = if (annual) "annual" else "monthly"
+      PaidTierPlan(paidTier, annual) -> config.getString(s"zuora.api.${paidTier.toString.toLowerCase}.$period")
+    }
+
+    Map (paidTierPlan(false), paidTierPlan(true))
+  }
+
+  val tierRatePlanIds: Map[TierPlan, String] =
+    Map(FriendTierPlan -> config.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
