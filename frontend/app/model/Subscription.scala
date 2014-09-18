@@ -4,10 +4,6 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
 
 object Subscription {
-  case class Subscription(id: String)
-
-  case class Amendment(ids: Seq[String])
-
   case class PaidPlan(monthly: String, annual: String)
 
   trait TierPlan {
