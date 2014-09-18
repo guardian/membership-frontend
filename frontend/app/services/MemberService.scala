@@ -2,6 +2,7 @@ package services
 
 import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce.Tier.Tier
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
 import configuration.Config
@@ -9,6 +10,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.{Customer, Card}
+import model.Subscription.{TierPlan, FriendTierPlan, PaidTierPlan}
 import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
@@ -62,11 +64,11 @@ trait MemberService {
         subscription <- SubscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
-        updatedMember <- MemberRepository.upsert(user.id, memberData(formData.tier, customerOpt))
+        updatedMember <- MemberRepository.upsert(user.id, memberData(formData.tierPlan.tier, customerOpt))
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
-        MemberMetrics.putSignUp(formData.tier)
+        MemberMetrics.putSignUp(formData.tierPlan.tier)
         memberId.account
       }
     }
@@ -104,32 +106,32 @@ trait MemberService {
     }
   }
 
-  def downgradeSubscription(member: Member, tier: Tier.Tier): Future[String] = {
+  def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
     for {
-      _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, tier, false)
+      _ <- SubscriptionService.downgradeSubscription(member.salesforceAccountId, FriendTierPlan)
     } yield {
-      MemberMetrics.putDowngrade(tier)
+      MemberMetrics.putDowngrade(tierPlan.tier)
       ""
     }
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: User, tier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: User, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.id, form.payment.token)
       _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
-      subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, tier, form.payment.annual)
+      subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, PaidTierPlan(newTier, form.payment.annual))
       memberId <- MemberRepository.upsert(
         member.identityId,
         Map(
-          Keys.TIER -> tier.toString,
+          Keys.TIER -> newTier.toString,
           Keys.CUSTOMER_ID -> customer.id,
           Keys.DEFAULT_CARD_ID -> customer.card.id
         )
       )
       identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
     } yield {
-      MemberMetrics.putUpgrade(tier)
+      MemberMetrics.putUpgrade(newTier)
       memberId.account
     }
   }

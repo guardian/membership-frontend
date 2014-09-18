@@ -1,5 +1,7 @@
 package controllers
 
+import model.Subscription.FriendTierPlan
+
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
@@ -23,7 +25,7 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.downgradeSubscription(request.member, Tier.Friend)
+      cancelledSubscription <- MemberService.downgradeSubscription(request.member, FriendTierPlan)
     } yield Redirect("/tier/change/friend/summary")
   }
 
