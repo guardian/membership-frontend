@@ -47,35 +47,6 @@ define([
         return userFromCookieCache;
     };
 
-    var requestMemberDetail = (function () {
-
-        var queue = [];
-
-        return {
-            request: function (callback) {
-
-                var self = this;
-
-                if (callback) {
-
-                    queue.push(callback);
-                    if (queue.length === 1) self.request.apply(self);
-
-                } else if (queue.length) {
-
-                    var queuePop = function () {
-                        var cb = queue.shift();
-                        self.request.apply(self);
-                        cb.apply(this, arguments);
-                    };
-
-                    getMemberDetail(queuePop);
-                }
-            }
-        };
-
-    })();
-
     /**
      * get the membership user details.
      * This will call '/user/me' if a valid identity user is logged in and the membership cookie is not stored and the
