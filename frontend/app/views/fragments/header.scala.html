@@ -11,13 +11,6 @@
             <div class="header__primary">
                 <nav>
                     <ul class="inline-list u-cf" role="menubar">
-                        <li class="menu-item mobile-only">
-                            <a href="#" role="menuitem" class="control js-menu-icon" title="Menu">
-                                <span class="control__icon">
-                                    <i class="icon-sprite icon-sprite-menu-black"></i>
-                                </span>
-                            </a>
-                        </li>
                         <li class="menu-item">
                             <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon control__user-account" title="Your account">
                                 <span class="control">
@@ -53,7 +46,8 @@
                 <span itemscope itemtype="http://schema.org/Organization">
                     <a href="/" itemprop="url" class="icon-wrapper">
                         <span class="u-h" itemprop="name">@Config.siteTitle</span>
-                        <i class="icon-sprite icon-sprite-logo-beta"></i>
+                        <i class="icon-sprite icon-sprite-membership_beta_mobile mobile-only"></i>
+                        <i class="icon-sprite icon-sprite-logo-beta hidden-mobile"></i>
                     </a>
                 </span>
             </div>
@@ -81,14 +75,17 @@
                         </ul>
                     </nav>
                 </div>
+                <div class="mobile-menu mobile-only">
+                    <a href="#" role="menuitem" class="mobile-menu__button js-menu-icon" title="Menu">
+                        <span class="control__icon">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </span>
+                    </a>
+                </div>
                 <div class="nav-popup--sections nav-popup nav-popup--small is-hidden js-sections-nav-popup">
                     <nav role="navigation" aria-label="@Config.siteTitle sections">
-                        <div class="nav-popup__cta_container u-cf u-h js-sections-nav-join-us">
-                            <a href="/join" role="menuitem" class="no-underline">
-                                <span class="control control--no-border"><i class="icon-sprite icon-sprite-g-black"></i></span>
-                                <span class="control__info no-underline--override">Join us</span>
-                            </a>
-                        </div>
                         <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
                             @fragments.nav()
                         </ul>
@@ -97,7 +94,7 @@
             </div>
         </div>
         <nav role="navigation" class="nav nav--global nav--global--header">
-            <div class="header__primary">
+            <div class="header__primary navigation__scroll">
                 <ul class="inline-list">
                     @fragments.nav(inlineMode=true)
                 </ul>

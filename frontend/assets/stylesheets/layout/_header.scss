@@ -15,63 +15,61 @@ $header-margin: 36px;
         position: relative;
         background-color: transparentize($mem-blue, .2);
         @include rem((
-            padding-top: 10px,
-            padding-bottom: 5px
+            padding-top: 5px,
+            padding-bottom: 5px,
+            height: 48px
         ));
+
+        @include mq(tablet) {
+            height: auto;
+        }
+
         @include mq($from: desktop) {
             @include side-margins-calc('padding-left');
             @include side-margins-calc('padding-right');
         }
     }
     .header__primary {
-        @include rem((
-            margin-left: $header-padding
-        ));
-        @include mq(mobile) {
-            margin-left: $header-padding/2;
-        }
         float: left;
-    }
-    .header__secondary {
         @include rem((
-            margin-right: $header-padding
+            margin-left: $header-padding/2
         ));
-        @include mq(mobile) {
-            margin-right: $header-padding/2;
-        }
+    }
+
+    .header__secondary {
         float: right;
-        width: 200px;
-        i {
-            background-size: 200px;
-            @include mq(mobile) {
-                background-size: 190px;
-            }
-        }
+        width: auto;
+        @include rem((
+            margin-right: $header-padding/2
+        ));
 
         @include mq(mobile) {
-            width: 190px;
-        }
-
-        @include mq(mobileLandscape) {
-            width: 320px;
-            i {
-                background-size: 320px;
-            }
-        }
-
-        @include mq(desktop) {
-            width: auto;
-            i {
-                background-size: auto;
-            }
+            @include rem((
+                margin-right: $header-padding/2
+            ));
         }
     }
+
     .header__menu {
         display: none;
     }
 
     .header__logo {
         clear: right;
+        width: 243px;
+        float: right;
+        @include rem((
+            margin-right: $header-padding/2,
+            height: 25px
+        ));
+
+        @include mq(tablet) {
+            width: auto;
+            @include rem((
+                margin-bottom: $gs-gutter,
+                height: 50px
+            ));
+        }
     }
 }
 
@@ -81,6 +79,7 @@ $header-margin: 36px;
         padding-top: 0,
         margin-right: 15px
     ));
+
     @include mq(tablet) {
         @include rem((
             padding-top: 8px
@@ -119,10 +118,10 @@ $header-margin: 36px;
     }
 }
 
-.menu-hamburger--active {
+.close-icon-white--active {
     border-color: $white;
-    .icon-sprite-menu-black {
-        @extend %icon-sprite-menu-white;
+    .icon-sprite-menu-white {
+        @extend %icon-sprite-close-icon-white;
     }
 }
 
