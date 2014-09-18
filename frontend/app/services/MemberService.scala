@@ -98,6 +98,7 @@ trait MemberService {
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
     } yield {
+      MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false))
       MemberMetrics.putCancel(member.tier)
       ""
     }
