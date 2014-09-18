@@ -16,8 +16,14 @@ $header-margin: 36px;
         background-color: transparentize($mem-blue, .2);
         @include rem((
             padding-top: 5px,
-            padding-bottom: 0
+            padding-bottom: 5px,
+            height: 48px
         ));
+
+        @include mq(tablet) {
+            height: auto;
+        }
+        
         @include mq($from: desktop) {
             @include side-margins-calc('padding-left');
             @include side-margins-calc('padding-right');

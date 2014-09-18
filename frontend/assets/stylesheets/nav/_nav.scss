@@ -208,7 +208,9 @@
     right: 0;
     background-color: lighten($black, 20%);
     z-index: 3;
-    top: 43px;
+    @include rem((
+        top: 43px
+    ));
 
     a.mobile-menu__button {
         color: $white;
