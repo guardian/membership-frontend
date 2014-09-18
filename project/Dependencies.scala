@@ -3,7 +3,7 @@ import play._
 
 object Dependencies {
 
-  val identity = "3.40"
+  val identity = "3.42"
 
   //libraries
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
