@@ -58,39 +58,54 @@ define([
      * '/user/me'
      * @param callback
      */
-    var getMemberDetail = function (callback) {
-        var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
-        var identityUser = getUserFromCookie();
-
-        if (identityUser) {
-            if ((membershipUser && membershipUser.userId) === identityUser.id) {
-                callback(membershipUser);
-            } else {
-                /* until cookies are destroyed kill cookies if they are around - this is the use case of logging in and
-                   out with different users */
-                cookie.removeCookie(MEM_USER_COOKIE_KEY);
-                ajax({
-                    url: '/user/me',
-                    method: 'get',
-                    success: function (resp) {
-                        cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
-                        callback(resp);
-                    },
-                    error: function (err) {
-                        /* we get a 403 error for guardian users who are not members id added to stop this from
-                         being called on each page. We however do not want to set this cookie if there has been an
-                         error when a user is a member */
-                        if (!membershipUser) {
-                            cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
-                        }
-                        callback(null, err);
-                    }
-                });
+    var getMemberDetail = (function () {
+        var pendingXHR;
+        var callbacks = [];
+        var invokeCallbacks = function (args) {
+            for (var i = callbacks.length - 1; i >= 0; --i) {
+                var callback = callbacks.splice(i, 1)[0];
+                callback.apply(this, args);
             }
-        } else {
-            callback(null, { message: 'no membership user' });
         }
-    };
+
+        return function (callback, overRideCallbacks) {
+            // for testing purposes to mimic a reload of the javascript and hence a clearing of the callbacks array
+            callbacks = overRideCallbacks || callbacks;
+
+            var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
+            var identityUser = getUserFromCookie();
+
+            if (identityUser) {
+                if ((membershipUser && membershipUser.userId) === identityUser.id) {
+                    callback(membershipUser);
+                } else {
+                    callbacks.push(callback);
+
+                    if (!pendingXHR) {
+                        cookie.removeCookie(MEM_USER_COOKIE_KEY);
+                        pendingXHR = ajax({
+                            url: '/user/me',
+                            method: 'get',
+                            success: function (resp) {
+                                cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
+                                invokeCallbacks([resp]);
+                                pendingXHR = null;
+                            },
+                            error: function (err) {
+                                if (err.status === 403) {
+                                    cookie.setCookie(MEM_USER_COOKIE_KEY, { userId: identityUser.id });
+                                }
+                                invokeCallbacks([null, err]);
+                                pendingXHR = null;
+                            }
+                        });
+                    }
+                }
+            } else {
+                callback(null, { message: 'no membership user' });
+            }
+        };
+    })();
 
     return {
         isLoggedIn: isLoggedIn,

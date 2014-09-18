@@ -18,7 +18,7 @@ define([
         s.channel = MEMBERSHIP_STRING;
         s.eVar5 = NONE_STRING;
 
-        user.getMemberDetail(function (memberDetail, err) {
+        user.getMemberDetail(function (memberDetail) {
             if (memberDetail) {
                 var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
                 if (tier) {
