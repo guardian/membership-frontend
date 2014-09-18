@@ -23,7 +23,7 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 trait MemberService {
-  def commonData(user: User, formData: JoinForm) = Map(
+  def initialData(user: User, formData: JoinForm) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
@@ -37,45 +37,32 @@ trait MemberService {
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
-  def memberData(tier: Tier.Tier) = Map(
+  def memberData(tier: Tier.Tier, customerOpt: Option[Customer]) = Map(
     Keys.TIER -> tier.toString,
     Keys.OPT_IN -> true
-  )
+  ) ++ customerOpt.map { customer =>
+    Map(
+      Keys.CUSTOMER_ID -> customer.id,
+      Keys.DEFAULT_CARD_ID -> customer.card.id
+    )
+  }.getOrElse(Map.empty)
 
-  def paymentData(customer: Customer) = Map(
-    Keys.CUSTOMER_ID -> customer.id,
-    Keys.DEFAULT_CARD_ID -> customer.card.id
-  )
-
-  def createFriend(user: User, formData: FriendJoinForm, identityRequest: IdentityRequest): Future[String] =
-    Timing.record(MembershipMetrics, "createFriend") {
-      val updatedData = commonData(user, formData) ++ memberData(Tier.Friend)
-
-      formData.password.map(updateUserPassword(user, _ , identityRequest))
-      for {
-        memberId <- MemberRepository.upsert(user.id, updatedData)
-        subscription <- SubscriptionService.createFriendSubscription(memberId, formData.name, formData.deliveryAddress)
-      } yield {
-        IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
-
-        MemberMetrics.putSignUp(Tier.Friend)
-        memberId.account
+  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] =
+    Timing.record(MembershipMetrics, "createMember") {
+      def futureCustomerOpt = formData match {
+        case paid: PaidMemberJoinForm => StripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
+        case friend: FriendJoinForm => Future.successful(None)
       }
-    }
 
-  def createPaidMember(user: User, formData: PaidMemberJoinForm, identityRequest: IdentityRequest): Future[String] =
-    Timing.record(MembershipMetrics, "createPaidMember") {
       formData.password.map(updateUserPassword(user, _ , identityRequest))
 
       for {
-        customer <- StripeService.Customer.create(user.id, formData.payment.token)
-
-        memberId <- MemberRepository.upsert(user.id, commonData(user, formData))
-        subscription <- SubscriptionService.createPaidSubscription(memberId, customer, formData.tier,
-          formData.payment.annual, formData.name, formData.deliveryAddress)
+        customerOpt <- futureCustomerOpt
+        memberId <- MemberRepository.upsert(user.id, initialData(user, formData))
+        subscription <- SubscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
-        _ <- MemberRepository.upsert(user.id, memberData(formData.tier) ++ paymentData(customer))
+        updatedMember <- MemberRepository.upsert(user.id, memberData(formData.tier, customerOpt))
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
@@ -108,16 +95,11 @@ trait MemberService {
   }
 
   def cancelSubscription(member: Member): Future[String] = {
-    val newTier = if (member.tier == Tier.Friend) Tier.None else member.tier
-
-    // TODO: ultra hacky, but we're going to change all the Tier stuff to case classes anyway
-    val newTierStr = if (newTier == Tier.None) "" else newTier.toString
-
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
-      _ <- MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false, Keys.TIER -> newTierStr))
     } yield {
-      MemberMetrics.putCancel(newTier)
+      MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false))
+      MemberMetrics.putCancel(member.tier)
       ""
     }
   }

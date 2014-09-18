@@ -3,20 +3,16 @@ import play._
 
 object Dependencies {
 
-  val identity = "3.40"
+  val identity = "3.42"
 
   //libraries
-  val nScalaTime = "com.github.nscala-time" %% "nscala-time" % "1.0.0"
-  val akkaAgent = "com.typesafe.akka" %% "akka-agent" % "2.2.0"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
-  val awsSdk="com.amazonaws" % "aws-java-sdk" % "1.8.9.1"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.24"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.26"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
 
   //projects
-  val frontendDependencies = Seq(nScalaTime, akkaAgent, identityCookie, identityModel, awsSdk,
-    scalaUri, membershipCommon, playWS, playFilters)
+  val frontendDependencies = Seq(identityCookie, identityModel, scalaUri, membershipCommon, playWS, playFilters)
 }

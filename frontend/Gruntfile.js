@@ -72,7 +72,7 @@ module.exports = function (grunt) {
                     findNestedDependencies: false,
                     wrapShim: true,
                     optimize: isDev ? 'none' : 'uglify2',
-                    generateSourceMaps: isDev ? true : false,
+                    generateSourceMaps: true,
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
@@ -154,13 +154,12 @@ module.exports = function (grunt) {
         // and move/rename built files to /dist/
         asset_hash: {
             options: {
-                preserveSourceMaps: false,
+                preserveSourceMaps: true,
                 assetMap: isDev ? false : 'conf/assets.map',
                 hashLength: 8,
                 algorithm: 'md5',
                 srcBasePath: 'public/',
                 destBasePath: 'public/',
-                hashType: 'file',
                 references: [
                     '<%= dirs.publicDir.root %>/dist/stylesheets/**/*.css'
                 ]
@@ -171,6 +170,7 @@ module.exports = function (grunt) {
                         src:  [
                             '<%= dirs.publicDir.stylesheets %>/**/*.css',
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
+                            '<%= dirs.publicDir.javascripts %>/**/*.map',
                             '<%= dirs.publicDir.images %>/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
