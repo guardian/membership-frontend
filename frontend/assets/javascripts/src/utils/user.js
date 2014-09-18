@@ -110,7 +110,6 @@ define([
     return {
         isLoggedIn: isLoggedIn,
         getUserFromCookie: getUserFromCookie,
-        getMemberDetail: getMemberDetail,
-        requestMemberDetail: requestMemberDetail
+        getMemberDetail: getMemberDetail
     };
 });
