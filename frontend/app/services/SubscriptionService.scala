@@ -12,7 +12,7 @@ import com.gu.membership.salesforce.{MemberId, Tier}
 import configuration.Config
 import forms.MemberForm.JoinForm
 import model.Stripe
-import model.Subscription.TierPlan
+import model.TierPlan.TierPlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 

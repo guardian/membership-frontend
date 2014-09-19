@@ -1,7 +1,7 @@
 package services
 
 import org.specs2.mutable.Specification
-import model.Zuora.SubscriptionDetails
+import model.Zuora.{RatePlanCharge, RatePlan, SubscriptionDetails}
 import org.joda.time.DateTime
 
 class SubscriptionServiceTest extends Specification {

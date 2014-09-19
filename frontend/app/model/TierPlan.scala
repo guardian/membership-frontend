@@ -3,7 +3,7 @@ package model
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
 
-object Subscription {
+object TierPlan {
   case class PaidPlan(monthly: String, annual: String)
 
   trait TierPlan {

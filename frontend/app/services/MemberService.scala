@@ -10,7 +10,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.{Customer, Card}
-import model.Subscription.{TierPlan, FriendTierPlan, PaidTierPlan}
+import model.TierPlan._
 import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask

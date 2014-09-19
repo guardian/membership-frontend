@@ -1,12 +1,13 @@
 package forms
 
-import model.Subscription.{PaidTierPlan, FriendTierPlan, TierPlan}
 import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
+
 import model.Countries
+import model.TierPlan._
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,

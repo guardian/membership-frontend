@@ -1,6 +1,6 @@
 package controllers
 
-import model.Subscription.FriendTierPlan
+import model.TierPlan.FriendTierPlan
 
 import scala.concurrent.Future
 
