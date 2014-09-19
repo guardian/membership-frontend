@@ -122,6 +122,14 @@ body {
         }
     }
 
+    h3 {
+        @include fs-header(1);
+
+        @include mq(tablet) {
+            @include fs-header(1, true);
+        }
+    }
+
     &.page-container--with-padding {
         background-color: #ffffff;
         @include mq(tablet) {
