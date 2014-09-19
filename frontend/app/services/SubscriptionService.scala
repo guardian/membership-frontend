@@ -93,8 +93,8 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
 
       sortAmendments(subscriptions, amendments)
         .find(_.contractEffectiveDate.isAfterNow)
-        .fold(SubscriptionStatus(latestSubscriptionId, None)) { amendment =>
-          SubscriptionStatus(amendment.subscriptionId, Some(latestSubscriptionId))
+        .fold(SubscriptionStatus(latestSubscriptionId, None, None)) { amendment =>
+          SubscriptionStatus(amendment.subscriptionId, Some(latestSubscriptionId), Some(amendment.amendType))
         }
     }
   }

@@ -22,35 +22,33 @@ trait User extends Controller {
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
-    val futurePaymentDetails = request.member match {
+    def futureCardDetails = request.member match {
       case paidMember: PaidMember =>
         for {
           customer <- StripeService.Customer.read(paidMember.stripeCustomerId)
-          subscriptionStatus <- SubscriptionService.getSubscriptionStatus(paidMember.salesforceAccountId)
-          subscriptionDetails <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-        } yield Json.obj(
-          "subscription" -> Json.obj(
-            "start" -> subscriptionDetails.startDate,
-            "end" -> subscriptionDetails.endDate,
-            "cancelledAt" -> subscriptionStatus.future.isDefined,
-            "plan" -> Json.obj(
-              "name" -> subscriptionDetails.planName,
-              "amount" -> subscriptionDetails.planAmount * 100,
-              "interval" -> (if (subscriptionDetails.annual) "year" else "month")
-            ),
-            "card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`)
-          )
-        )
+        } yield Json.obj("card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`))
 
       case member: FreeMember =>
-        val paymentDetails = Json.obj(
-          "subscription" -> Json.obj(
-            "plan" -> Json.obj("name" -> member.tier.toString, "amount" -> 0)
-          )
-        )
-
-        Future.successful(paymentDetails)
+        Future.successful(Json.obj())
     }
+
+    val futurePaymentDetails = for {
+      cardDetails <- futureCardDetails
+      subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      subscriptionDetails <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+    } yield cardDetails ++ Json.obj(
+      "optIn" -> !subscriptionStatus.cancelled,
+      "subscription" -> Json.obj(
+        "start" -> subscriptionDetails.startDate,
+        "end" -> subscriptionDetails.endDate,
+        "cancelledAt" -> subscriptionStatus.future.isDefined,
+        "plan" -> Json.obj(
+          "name" -> subscriptionDetails.planName,
+          "amount" -> subscriptionDetails.planAmount * 100,
+          "interval" -> (if (subscriptionDetails.annual) "year" else "month")
+        )
+      )
+    )
 
     futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
@@ -58,8 +56,7 @@ trait User extends Controller {
   def basicDetails(member: Member) = Json.obj(
     "userId" -> member.identityId,
     "tier" -> member.tier.toString,
-    "joinDate" -> member.joinDate,
-    "optIn" -> member.optedIn
+    "joinDate" -> member.joinDate
   )
 }
 
