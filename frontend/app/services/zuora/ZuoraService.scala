@@ -37,11 +37,11 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
   val initialDelay = 0.seconds
   val interval = 2.hours
 
-  def refresh() = mkRequest(Login(apiConfig))
+  def refresh() = request(Login(apiConfig))
 
   implicit def authentication: Authentication = agent.get()
 
-  def mkRequest[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
+  def request[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
     val url = if (action.authRequired) authentication.url else apiConfig.url
 
     if (action.authRequired && authentication.url.length == 0) {
@@ -70,7 +70,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
   def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
     val q = s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
-    mkRequest(Query(q)).map { case QueryResult(results) => reader.read(results) }
+    request(Query(q)).map { case QueryResult(results) => reader.read(results) }
   }
 
   def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {

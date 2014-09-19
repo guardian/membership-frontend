@@ -49,7 +49,7 @@ trait AmendSubscription {
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
-        result <- zuora.mkRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
+        result <- zuora.request(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
       } yield result
     }
   }
@@ -58,7 +58,7 @@ trait AmendSubscription {
     checkForPendingAmendments(sfAccountId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-        result <- zuora.mkRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
+        result <- zuora.request(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
           tierPlanRateIds(newTierPlan), subscriptionDetails.endDate))
       } yield result
     }
@@ -68,7 +68,7 @@ trait AmendSubscription {
     checkForPendingAmendments(sfAccountId) { subscriptionId =>
       for {
         ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
-        result <- zuora.mkRequest(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
+        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
       } yield result
     }
   }
@@ -119,13 +119,13 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
       account <- getAccount(sfAccountId)
-      paymentMethod <- zuora.mkRequest(CreatePaymentMethod(account.id, customer))
-      result <- zuora.mkRequest(SetDefaultPaymentMethod(account.id, paymentMethod.id))
+      paymentMethod <- zuora.request(CreatePaymentMethod(account.id, customer))
+      result <- zuora.request(SetDefaultPaymentMethod(account.id, paymentMethod.id))
     } yield result
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
-    zuora.mkRequest(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.tierPlan),
+    zuora.request(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.tierPlan),
       joinData.name, joinData.deliveryAddress))
   }
 }
