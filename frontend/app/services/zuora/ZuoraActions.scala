@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.xml.{Elem, Null, PrettyPrinter}
 
-trait ZuoraAction[T <: ZuoraObject] {
+trait ZuoraAction[T <: ZuoraResult] {
   val body: Elem
 
   val authRequired = true

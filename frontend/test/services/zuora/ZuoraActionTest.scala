@@ -1,6 +1,6 @@
 package services.zuora
 
-import model.Zuora.{Authentication, ZuoraObject}
+import model.Zuora.{Authentication, ZuoraResult}
 import org.specs2.mutable.Specification
 
 import scala.xml.XML
@@ -47,9 +47,9 @@ class ZuoraActionTest extends Specification {
     }
   }
 
-  case class TestObject() extends ZuoraObject
+  case class TestResult() extends ZuoraResult
 
-  case class TestAction() extends ZuoraAction[TestObject] {
+  case class TestAction() extends ZuoraAction[TestResult] {
     val body = <test></test>
   }
 

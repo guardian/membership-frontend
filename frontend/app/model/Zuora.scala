@@ -4,15 +4,15 @@ import scala.xml.Node
 import org.joda.time.DateTime
 
 object Zuora {
-  trait ZuoraObject
+  trait ZuoraResult
 
-  case class Authentication(token: String, url: String) extends ZuoraObject
+  case class Authentication(token: String, url: String) extends ZuoraResult
 
-  case class AmendResult(ids: Seq[String]) extends ZuoraObject
-  case class CreateResult(id: String) extends ZuoraObject
-  case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraObject
-  case class SubscribeResult(id: String) extends ZuoraObject
-  case class UpdateResult(id: String) extends ZuoraObject
+  case class AmendResult(ids: Seq[String]) extends ZuoraResult
+  case class CreateResult(id: String) extends ZuoraResult
+  case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraResult
+  case class SubscribeResult(id: String) extends ZuoraResult
+  case class UpdateResult(id: String) extends ZuoraResult
 
   trait ZuoraQuery
 
@@ -59,7 +59,7 @@ object Zuora {
 object ZuoraReaders {
   import Zuora._
 
-  trait ZuoraReader[T <: ZuoraObject] {
+  trait ZuoraReader[T <: ZuoraResult] {
     val responseTag: String
     val multiResults = false
 
@@ -80,13 +80,13 @@ object ZuoraReaders {
   }
 
   object ZuoraReader {
-    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
+    def apply[T <: ZuoraResult](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
       val responseTag = tag
       protected def extractEither(result: Node): Either[Error, T] = extractFn(result)
     }
   }
 
-  trait ZuoraResultReader[T <: ZuoraObject] extends ZuoraReader[T] {
+  trait ZuoraResultReader[T <: ZuoraResult] extends ZuoraReader[T] {
     protected def extractEither(result: Node): Either[Error, T] = {
       if ((result \ "Success").text == "true") {
         Right(extract(result))
@@ -100,14 +100,14 @@ object ZuoraReaders {
   }
 
   object ZuoraResultReader {
-    def create[T <: ZuoraObject](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
+    def create[T <: ZuoraResult](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
       val responseTag = tag
       override val multiResults: Boolean = multi
       protected def extract(result: Node) = extractFn(result)
     }
 
-    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
-    def multi[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=true, extractFn)
+    def apply[T <: ZuoraResult](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
+    def multi[T <: ZuoraResult](tag: String)(extractFn: Node => T) = create(tag, multi=true, extractFn)
   }
 
   trait ZuoraQueryReader[T <: ZuoraQuery] {

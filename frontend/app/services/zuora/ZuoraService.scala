@@ -41,7 +41,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
   implicit def authentication: Authentication = agent.get()
 
-  def mkRequest[T <: ZuoraObject](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
+  def mkRequest[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
     val url = if (action.authRequired) authentication.url else apiConfig.url
 
     if (action.authRequired && authentication.url.length == 0) {
