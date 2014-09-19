@@ -211,6 +211,8 @@ $card-icon-offset: 2px;
 }
 
 .complete-purchase {
-    margin-bottom: $gutter*2;
-    margin-top: $gutter;
+    @include rem((
+        margin-bottom: $gs-gutter,
+        margin-top: $gs-gutter
+    ));
 }
