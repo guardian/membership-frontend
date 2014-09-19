@@ -34,16 +34,13 @@
 .nav--global {
     clear: both;
     display: block;
-    @include fs-header(1);
+    @include fs-headline(1);
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
     @include rem((
         padding: $gs-baseline/2 0,
         height: $gs-gutter*2+4
     ));
-
-    @include mq(tablet) {
-        @include fs-header(2);
-        display: block;
-    }
 
     .nav__item {
         float: left;
