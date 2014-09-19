@@ -64,21 +64,25 @@
     }
 
     .nav__link {
-        &:link,
-        &:active {
-            text-decoration: none;
-            color: $black;
-        }
 
-        &:active,
         &:focus,
-        &:hover {
+        &:active {
             text-decoration: underline;
             color: $white;
         }
 
-        &:active {
-            text-decoration: none;
+        @include mq(desktop) {
+            &,
+            &:active {
+                text-decoration: none;
+                color: $black;
+            }
+
+            &:focus,
+            &:hover {
+                text-decoration: underline;
+                color: $white;
+            }
         }
     }
 
@@ -92,14 +96,14 @@
             margin: 0 $gs-gutter/2
         ));
 
-        @include mq(mobile) {
-            -webkit-overflow-scrolling: touch;
-        }
-
         @include mq(tablet) {
             width: 100%;
         }
     }
+}
+
+.touch {
+    -webkit-overflow-scrolling: touch;
 }
 
 
@@ -169,22 +173,19 @@
             padding: $gs-baseline/2 0 $gs-baseline $gs-baseline
         ));
 
-        @include mq(tablet) {
-            border-top: 0;
+        &,
+        &:active,
+        &:focus {
+            color: $black;
+            text-decoration: none;
         }
 
-        &:link,
-        &:visited {
-            color: $black;
-        }
-        &:hover,
-        &:focus {
+        &:hover {
             text-decoration: underline;
         }
 
-        &:active {
-            color: $white;
-            text-decoration: none;
+        @include mq(tablet) {
+            border-top: 0;
         }
     }
 }
