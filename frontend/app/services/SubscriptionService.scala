@@ -118,8 +118,8 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
   def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
       account <- getAccount(sfAccountId)
-      paymentMethod <- zuora.request(CreatePaymentMethod(account.id, customer))
-      result <- zuora.request(SetDefaultPaymentMethod(account.id, paymentMethod.id))
+      paymentMethod <- zuora.request(CreatePaymentMethod(account, customer))
+      result <- zuora.request(SetDefaultPaymentMethod(account, paymentMethod))
     } yield result
   }
 

@@ -47,11 +47,11 @@ trait ZuoraAction[T <: ZuoraResult] {
   }
 }
 
-case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
+case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
   val body =
     <ns1:create>
       <ns1:zObjects xsi:type="ns2:PaymentMethod">
-        <ns2:AccountId>{accountId}</ns2:AccountId>
+        <ns2:AccountId>{account.id}</ns2:AccountId>
         <ns2:TokenId>{customer.card.id}</ns2:TokenId>
         <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
         <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
@@ -59,12 +59,12 @@ case class CreatePaymentMethod(accountId: String, customer: Stripe.Customer) ext
     </ns1:create>
 }
 
-case class SetDefaultPaymentMethod(accountId: String, paymentMethodId: String) extends ZuoraAction[UpdateResult] {
+case class SetDefaultPaymentMethod(account: Account, paymentMethod: CreateResult) extends ZuoraAction[UpdateResult] {
   val body =
     <ns1:update>
       <ns1:zObjects xsi:type="ns2:Account">
-        <ns2:Id>{accountId}</ns2:Id>
-        <ns2:DefaultPaymentMethodId>{paymentMethodId}</ns2:DefaultPaymentMethodId>
+        <ns2:Id>{account.id}</ns2:Id>
+        <ns2:DefaultPaymentMethodId>{paymentMethod.id}</ns2:DefaultPaymentMethodId>
       </ns1:zObjects>
     </ns1:update>
 }
