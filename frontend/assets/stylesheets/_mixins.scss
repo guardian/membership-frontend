@@ -15,19 +15,19 @@
 // =============================================================================
 
 // Vertical linear gradient with a plain fallback for older browsers
-@mixin simple-gradient($from, $to) {
+@mixin simple-gradient($from, $until) {
     // Fix for browsers not understanding transparent
     @if $from == transparent {
-        $from: transparentize($to, 1);
+        $from: transparentize($until, 1);
     }
 
-    @if $to == transparent {
-        $to: transparentize($from, 1);
+    @if $until == transparent {
+        $until: transparentize($from, 1);
     }
     background-color: $from;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($to));
-    background-image: -webkit-linear-gradient($from, $to);
-    background-image: linear-gradient(to bottom, $from, $to);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($until));
+    background-image: -webkit-linear-gradient($from, $until);
+    background-image: linear-gradient(to bottom, $from, $until);
 }
 
 @function aspect-ratio-height($x, $y, $startingWidth: 100%) {

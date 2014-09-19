@@ -371,7 +371,7 @@
                 padding-right: $gs-gutter*3
             ));
 
-            @include mq($to: tablet) {
+            @include mq($until: tablet) {
                 margin-top: 0;
             }
 
@@ -509,7 +509,7 @@
         ));
     }
 
-    @include mq($from: mobile, $to: desktop) {
+    @include mq($from: mobile, $until: desktop) {
         display: block;
     }
 }
@@ -530,7 +530,7 @@
         ));
     }
 
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         width: 100%;
         padding: 68px+$gs-gutter*2 $gs-gutter $gs-gutter*2;
     }
@@ -555,7 +555,7 @@
             margin-left: 0;
         }
 
-        @include mq($to: tablet) {
+        @include mq($until: tablet) {
             width: 100%;
             margin: 0;
             min-width: 0;
@@ -567,7 +567,7 @@
             }
         }
 
-        @include mq($from: tablet, $to: desktop) {
+        @include mq($from: tablet, $until: desktop) {
             width: auto;
             min-width: 260px;
         }
@@ -656,7 +656,7 @@
         }
     }
 
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         display: inline-block;
         width: 55%;
         vertical-align: top;

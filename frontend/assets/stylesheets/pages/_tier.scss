@@ -78,7 +78,7 @@ $current-indicator: rem(47px);
         }
     }
 
-    @include mq($to: desktop) {
+    @include mq($until: desktop) {
         margin-right: 0;
         display: block;
         overflow: hidden;
@@ -101,7 +101,7 @@ $current-indicator: rem(47px);
     @include rem((
         height: 100px
     ));
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         width: 55%;
         float: right;
         padding-left: 0;
@@ -126,11 +126,11 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         margin-top: -$current-indicator;
     }
-    @include mq($to: desktop) {
+    @include mq($until: desktop) {
         margin: 0;
     }
     // this prevents the text splitting onto 2 lines
-    @include mq($from: desktop, $to: mem-full) {
+    @include mq($from: desktop, $until: mem-full) {
         @include rem((
             font-size: 14px
         ));
@@ -141,7 +141,7 @@ $current-indicator: rem(47px);
     @include rem((
         padding: $gs-gutter
     ));
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         @include rem((
             padding-top: $gs-gutter*2,
             padding-bottom: 0
@@ -262,7 +262,7 @@ $current-indicator: rem(47px);
         ));
     }
 
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         display: inline-block;
         width: 30%;
         margin-right: 14%;
@@ -305,7 +305,7 @@ $current-indicator: rem(47px);
         }
     }
 
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         .price-info__container-inner--last {
             @include rem((
                 margin-top: $gs-gutter,
@@ -356,7 +356,7 @@ $current-indicator: rem(47px);
         border-top: 1px solid $c-neutral5;
     }
 
-    @include mq($from: tablet, $to: desktop) {
+    @include mq($from: tablet, $until: desktop) {
         display: inline-block;
         width: 55%;
         vertical-align: top;
