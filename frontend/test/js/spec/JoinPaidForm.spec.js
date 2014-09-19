@@ -5,9 +5,11 @@ define([
     'bean',
     'src/modules/tier/JoinPaid',
     'src/utils/form/Form',
+    'src/utils/form/Password',
+    'src/utils/form/Address',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, ajax, stripe, bean, JoinPaid, Form, stripeErrorMessages, helper) {
+], function ($, ajax, stripe, bean, JoinPaid, Form, Password, Address, stripeErrorMessages, helper) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -105,8 +107,15 @@ define([
                 joinPaidForm = new JoinPaid();
 
                 spyOn(joinPaidForm, 'setupForm').and.callFake(function() {
+                    var addressHelper;
                     joinPaidForm.form = new Form(paymentFormFixtureElement, SUCCESS_POST_URL, SUCCESS_REDIRECT_URL);
                     joinPaidForm.form.init();
+
+                    addressHelper = new Address(joinPaidForm.form);
+                    addressHelper.setupDeliveryToggleState();
+                    addressHelper.setupToggleBillingAddressListener();
+
+                    (new Password()).init();
                 });
 
                 joinPaidForm.init();
