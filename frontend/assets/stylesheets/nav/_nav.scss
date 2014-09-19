@@ -102,11 +102,6 @@
     }
 }
 
-.touch {
-    -webkit-overflow-scrolling: touch;
-}
-
-
 /* ==========================================================================
    Nav Modifiers
    ========================================================================== */
@@ -120,6 +115,7 @@
     @include side-margins-calc('padding-right');
     padding-top: 3px;
     padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
         display: none;
