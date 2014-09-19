@@ -2,6 +2,8 @@ package actions
 
 import actions.Fallbacks._
 import com.gu.membership.salesforce.PaidMember
+import com.gu.membership.util.Timing
+import com.gu.monitoring.CloudWatch
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
@@ -46,4 +48,10 @@ object Functions {
       }
     }
 
+  def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
+      Timing.record(cloudWatch, metricName) {
+        block(request)
+      }
+  }
 }
