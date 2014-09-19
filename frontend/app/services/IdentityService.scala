@@ -39,13 +39,15 @@ trait IdentityService {
 
     postFields(fields, user, identityRequest).map { identityResponse =>
       Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user")
     }
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest): Future[WSResponse] = {
-    val json = Json.obj("newPassword" -> password)
-    IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters)
+    Timing.record(IdentityApiMetrics, "update-user-password") {
+      val json = Json.obj("newPassword" -> password)
+      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters)
+    }
   }
 
   def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {

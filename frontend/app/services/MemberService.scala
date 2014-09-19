@@ -77,7 +77,7 @@ trait MemberService {
     for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
     yield {
       Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST")
+      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user-password")
     }
   }
 
