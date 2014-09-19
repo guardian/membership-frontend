@@ -123,10 +123,11 @@ body {
     }
 
     h3 {
-        @include fs-header(1);
+        margin: 0;
+        @include fs-bodyHeading(2);
 
         @include mq(tablet) {
-            @include fs-header(1, true);
+            @include fs-bodyHeading(3, true);
         }
     }
 
