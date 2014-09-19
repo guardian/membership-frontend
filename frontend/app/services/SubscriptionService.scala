@@ -9,10 +9,9 @@ import com.github.nscala_time.time.Imports._
 
 import com.gu.membership.salesforce.{MemberId, Tier}
 
-import configuration.Config
 import forms.MemberForm.JoinForm
 import model.Stripe
-import model.TierPlan.TierPlan
+import model.TierPlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 

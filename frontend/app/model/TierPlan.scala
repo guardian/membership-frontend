@@ -3,18 +3,16 @@ package model
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
 
-object TierPlan {
-  case class PaidPlan(monthly: String, annual: String)
+case class PaidPlan(monthly: String, annual: String)
 
-  trait TierPlan {
-    val tier: Tier
-  }
+trait TierPlan {
+  val tier: Tier
+}
 
-  object FriendTierPlan extends TierPlan {
-    val tier = Tier.Friend
-  }
+object FriendTierPlan extends TierPlan {
+  val tier = Tier.Friend
+}
 
-  case class PaidTierPlan(tier: Tier, annual: Boolean) extends TierPlan {
-    assert(tier >= Tier.Partner)
-  }
+case class PaidTierPlan(tier: Tier, annual: Boolean) extends TierPlan {
+  assert(tier >= Tier.Partner)
 }

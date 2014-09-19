@@ -6,8 +6,7 @@ import play.api.data.Forms._
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
 
-import model.Countries
-import model.TierPlan._
+import model.{Countries, TierPlan, FriendTierPlan, PaidTierPlan}
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,

@@ -1,7 +1,5 @@
 package controllers
 
-import model.TierPlan.FriendTierPlan
-
 import scala.concurrent.Future
 
 import play.api.mvc.Controller
@@ -10,7 +8,7 @@ import play.api.libs.json.Json
 
 import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
 import com.gu.membership.salesforce.Tier.Tier
-import model.{Zuora, Stripe, PrivateFields}
+import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
 
 import forms.MemberForm._
 import model.StripeSerializer._
