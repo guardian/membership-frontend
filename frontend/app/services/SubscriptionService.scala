@@ -77,14 +77,13 @@ trait AmendSubscription {
 class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora: ZuoraService) extends AmendSubscription {
   import SubscriptionServiceHelpers._
 
-  def getAccountId(sfAccountId: String): Future[String] =
-    zuora.query[Account](s"crmId='$sfAccountId'").map(sortAccounts(_).last.id)
+  def getAccount(sfAccountId: String): Future[Account] =
+    zuora.query[Account](s"crmId='$sfAccountId'").map(sortAccounts(_).last)
 
   def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
     for {
-      accountId <- getAccountId(sfAccountId)
-
-      subscriptions <- zuora.query[Subscription](s"AccountId='$accountId'")
+      account <- getAccount(sfAccountId)
+      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
 
       if subscriptions.size > 0
 
@@ -117,12 +116,12 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
     } yield subscriptionDetails
   }
 
-  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
+  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
-      accountId <- getAccountId(sfAccountId)
-      paymentMethod <- zuora.mkRequest(CreatePaymentMethod(accountId, customer))
-      result <- zuora.mkRequest(SetDefaultPaymentMethod(accountId, paymentMethod.id))
-    } yield accountId
+      account <- getAccount(sfAccountId)
+      paymentMethod <- zuora.mkRequest(CreatePaymentMethod(account.id, customer))
+      result <- zuora.mkRequest(SetDefaultPaymentMethod(account.id, paymentMethod.id))
+    } yield result
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
