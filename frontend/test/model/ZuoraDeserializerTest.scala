@@ -2,9 +2,10 @@ package model
 
 import org.specs2.mutable.Specification
 
-import model.Zuora.ResultError
+import model.Zuora._
 import model.ZuoraDeserializer._
 import utils.Resource
+import org.joda.time.DateTime
 
 class ZuoraDeserializerTest extends Specification {
   "Authentication" should {
@@ -89,6 +90,58 @@ class ZuoraDeserializerTest extends Specification {
     "have an id" in {
       val update = updateResultReader.read(Resource.getXML("model/zuora/update-result.xml")).right.get
       update.id mustEqual "2c92c0f847ae39b80147c584947b7ea3"
+    }
+  }
+
+  "ZuoraQueryReader" should {
+    def query(resource: String) = queryResultReader.read(Resource.getXML(resource)).right.get.results
+
+    "extract an Account" in {
+      val accounts = accountReader.read(query("model/zuora/accounts.xml"))
+
+      accounts.size mustEqual 2
+
+      accounts(0) mustEqual Account("2c92c0f8483f1ca401485f0168f1614c", new DateTime("2014-09-10T03:00:00.000-08:00"))
+      accounts(1) mustEqual Account("2c92c0f9483f301e01485efe9af6743e", new DateTime("2014-09-10T02:56:57.000-08:00"))
+    }
+
+    "extract an Amendment" in {
+      val amendments = amendmentReader.read(query("model/zuora/amendments.xml"))
+
+      amendments.size mustEqual 2
+
+      amendments(0) mustEqual Amendment("2c92c0f847cdc31e0147cf2439b76ae6", "RemoveProduct",
+        new DateTime("2015-08-13T12:29:15.000-08:00"), "2c92c0f847cdc31e0147cf24396f6ae1")
+      amendments(1) mustEqual Amendment("2c92c0f847cdc31e0147cf24390d6ad7", "NewProduct",
+        new DateTime("2015-08-13T12:29:15.000-08:00"), "2c92c0f847cdc31e0147cf2111ba6173")
+
+    }
+
+    "extract a RatePlan" in {
+      val ratePlans = ratePlanReader.read(query("model/zuora/rateplans.xml"))
+
+      ratePlans.size mustEqual 1
+
+      ratePlans(0) mustEqual RatePlan("2c92c0f94878e828014879176ff831c4", "Partner - annual")
+    }
+
+    "extract a RatePlanCharge" in {
+      val ratePlanCharges = ratePlanChargeReader.read(query("model/zuora/rateplancharges.xml"))
+
+      ratePlanCharges.size mustEqual 1
+
+      ratePlanCharges(0) mustEqual RatePlanCharge("2c92c0f94878e82801487917701931c5",
+        Some(new DateTime("2015-09-15T03:34:10.000-08:00")), new DateTime("2014-09-15T03:34:10.000-08:00"), 135.0f)
+    }
+
+    "extract a Subscription" in {
+      val subscriptions = subscriptionReader.read(query("model/zuora/subscriptions.xml"))
+
+      subscriptions.size mustEqual 3
+
+      subscriptions(0) mustEqual Subscription("2c92c0f847cdc31e0147cf2111ba6173", 1)
+      subscriptions(1) mustEqual Subscription("2c92c0f847cdc31e0147cf243a166af0", 3)
+      subscriptions(2) mustEqual Subscription("2c92c0f847cdc31e0147cf24396f6ae1", 2)
     }
   }
 }
