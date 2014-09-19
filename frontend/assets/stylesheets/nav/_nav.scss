@@ -34,16 +34,13 @@
 .nav--global {
     clear: both;
     display: block;
-    @include fs-header(1);
+    @include fs-headline(1);
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
     @include rem((
         padding: $gs-baseline/2 0,
         height: $gs-gutter*2+4
     ));
-
-    @include mq(tablet) {
-        @include fs-header(2);
-        display: block;
-    }
 
     .nav__item {
         float: left;
@@ -64,21 +61,25 @@
     }
 
     .nav__link {
-        &:link,
-        &:active {
-            text-decoration: none;
-            color: $black;
-        }
 
-        &:active,
         &:focus,
-        &:hover {
+        &:active {
             text-decoration: underline;
             color: $white;
         }
 
-        &:active {
-            text-decoration: none;
+        @include mq(desktop) {
+            &,
+            &:active {
+                text-decoration: none;
+                color: $black;
+            }
+
+            &:focus,
+            &:hover {
+                text-decoration: underline;
+                color: $white;
+            }
         }
     }
 
@@ -92,16 +93,11 @@
             margin: 0 $gs-gutter/2
         ));
 
-        @include mq(mobile) {
-            -webkit-overflow-scrolling: touch;
-        }
-
         @include mq(tablet) {
             width: 100%;
         }
     }
 }
-
 
 /* ==========================================================================
    Nav Modifiers
@@ -116,6 +112,7 @@
     @include side-margins-calc('padding-right');
     padding-top: 3px;
     padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
         display: none;
@@ -169,22 +166,19 @@
             padding: $gs-baseline/2 0 $gs-baseline $gs-baseline
         ));
 
-        @include mq(tablet) {
-            border-top: 0;
+        &,
+        &:active,
+        &:focus {
+            color: $black;
+            text-decoration: none;
         }
 
-        &:link,
-        &:visited {
-            color: $black;
-        }
-        &:hover,
-        &:focus {
+        &:hover {
             text-decoration: underline;
         }
 
-        &:active {
-            color: $white;
-            text-decoration: none;
+        @include mq(tablet) {
+            border-top: 0;
         }
     }
 }
