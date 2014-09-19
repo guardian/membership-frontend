@@ -15,7 +15,8 @@ require([
     'src/modules/events/eventPriceEnhance',
     'config/appCredentials',
     'src/modules/tier/Thankyou',
-    'lib/bower-components/raven-js/dist/raven' // add new deps ABOVE this
+    'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
+    'src/utils/modernizr'
 ], function(
     Imager,
     omnitureAnalytics,
