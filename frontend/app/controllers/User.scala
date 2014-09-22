@@ -36,9 +36,9 @@ trait User extends Controller {
       cardDetails <- futureCardDetails
       subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
       subscriptionDetails <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-    } yield cardDetails ++ Json.obj(
+    } yield Json.obj(
       "optIn" -> !subscriptionStatus.cancelled,
-      "subscription" -> Json.obj(
+      "subscription" -> (cardDetails ++ Json.obj(
         "start" -> subscriptionDetails.startDate,
         "end" -> subscriptionDetails.endDate,
         "cancelledAt" -> subscriptionStatus.future.isDefined,
@@ -46,7 +46,7 @@ trait User extends Controller {
           "name" -> subscriptionDetails.planName,
           "amount" -> subscriptionDetails.planAmount * 100,
           "interval" -> (if (subscriptionDetails.annual) "year" else "month")
-        )
+        ))
       )
     )
 
