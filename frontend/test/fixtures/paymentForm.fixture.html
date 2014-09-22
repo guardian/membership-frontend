@@ -65,7 +65,7 @@
             <label class="label" for="country-deliveryAddress">Country</label>
 
             <div class="input">
-                <select name="deliveryAddress.country" id="country-deliveryAddress">
+                <select name="deliveryAddress.country" id="country-deliveryAddress" class="js-country-deliveryAddress">
                     <option value="United Kingdom">United Kingdom</option>
                     <option value="United States">United States</option>
                 </select>
@@ -74,7 +74,7 @@
 
         <div class="form-field js-county-section">
             <label class="label" for="county-or-state-deliveryAddress">County</label>
-            <input type="text" name="deliveryAddress.countyOrState" value="" id="county-or-state-deliveryAddress" class="text-input text-input--block js-county-state">
+            <input type="text" name="deliveryAddress.countyOrState" value="" id="county-or-state-deliveryAddress" class="text-input text-input--block js-county-or-state-deliveryAddress">
         </div>
 
         <div class="form-field address-fieldset__country u-h">
@@ -82,6 +82,7 @@
             <div class="input">
                 <select name="deliveryAddress.countyOrState"
                         id="state-deliveryAddress"
+                        class="js-state-deliveryAddress"
                         data-error-message="Please enter your State"
                         data-validation="required">
                     <option value="Alaska">Alaska</option>
@@ -110,6 +111,7 @@
             <div class="input">
                 <select name="deliveryAddress.countyOrState"
                         id="province-deliveryAddress"
+                        class="js-province-deliveryAddress"
                         data-error-message="Please enter your Provence"
                         data-validation="required">
                     <option value="Alberta">Alberta</option>
@@ -282,7 +284,7 @@
         <div class="form-field address-fieldset__country">
             <label class="label" for="country-billingAddress">Country</label>
             <div class="input">
-                <select name="billingAddress.country" id="country-billingAddress">
+                <select name="billingAddress.country" id="country-billingAddress" class="js-country-billingAddress">
                     <option value="United Kingdom">United Kingdom</option>
                     <option value="United States">United States</option>
                 </select>
@@ -291,7 +293,7 @@
 
         <div class="form-field js-county-section">
             <label class="label" for="county-or-state-billingAddress">County</label>
-            <input type="text" name="deliveryAddress.countyOrState" value="" id="county-or-state-billingAddress" class="text-input text-input--block js-county-state">
+            <input type="text" name="deliveryAddress.countyOrState" value="" id="county-or-state-billingAddress" class="text-input text-input--block js-county-or-state-billingAddress">
         </div>
 
         <div class="form-field address-fieldset__country u-h">
@@ -299,6 +301,7 @@
             <div class="input">
                 <select name="billingAddress.countyOrState"
                         id="state-billingAddress"
+                        class="js-state-billingAddress"
                         data-error-message="Please enter your State"
                         data-validation="required">
                     <option value="Alaska">Alaska</option>
@@ -328,6 +331,7 @@
             <div class="input">
                 <select name="billingAddress.countyOrState"
                         id="province-billingAddress"
+                        class="js-province-billingAddress"
                         data-error-message="Please enter your Provence"
                         data-validation="required">
                     <option value="Alberta">Alberta</option>
