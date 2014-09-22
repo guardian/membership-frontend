@@ -71,19 +71,6 @@ define([
         });
     };
 
-    /**
-     * detach specified elements from the dom
-     * @param $elements
-     */
-    Address.prototype.detachElements = function($elements) {
-        for (var i = 0, $elementsLength = $elements.length; i < $elementsLength; i++) {
-            var $element = $elements[i];
-            if ($element.parent().length !== 0) {
-                $element = $element.detach();
-            }
-        }
-    };
-
     Address.prototype.selectedOptionName = function(optionIndex, selectElementOptions) {
         return selectElementOptions[optionIndex].textContent.toLowerCase();
     };
@@ -115,12 +102,12 @@ define([
         $countrySelect, $countySelect, $stateSelect, $provinceSelect, $countyContainer, $postcodeLabel) {
 
         var formFieldClass = this.getClass('FORM_FIELD', true);
-        var $selectElements = [];
         var $countySelectParent = helper.getSpecifiedParent($countySelect, formFieldClass);
         var $usaStateSelectParent = helper.getSpecifiedParent($stateSelect, formFieldClass).detach();
         var $canadaProvinceSelectParent = helper.getSpecifiedParent($provinceSelect, formFieldClass).detach();
+        var $selectElements = $($countySelectParent, $usaStateSelectParent, $canadaProvinceSelectParent);
         var toggleSelectElements = function (selectedItemName) {
-            self.detachElements($selectElements);
+            $selectElements.detach();
 
             if (selectedItemName === UNITED_STATES_STRING) {
                 $countyContainer.append($usaStateSelectParent.removeClass('u-h'));
@@ -133,12 +120,10 @@ define([
                 $postcodeLabel.text(POST_CODE);
             }
         };
-
         // on page load correctly display country and relevant fields
         var onLoadSelectedItemName = self.selectedOptionName($countrySelect[0].selectedIndex, $countrySelect[0].options);
-        toggleSelectElements(onLoadSelectedItemName);
 
-        $selectElements.push($countySelectParent, $usaStateSelectParent, $canadaProvinceSelectParent);
+        toggleSelectElements(onLoadSelectedItemName);
 
         bean.on($countrySelect[0], 'change', function (e) {
             var optionIndex = e && e.target.selectedIndex;
