@@ -4,15 +4,25 @@ import scala.xml.Node
 import org.joda.time.DateTime
 
 object Zuora {
-  trait ZuoraObject
+  trait ZuoraResult
 
-  case class Authentication(token: String, url: String) extends ZuoraObject
+  case class Authentication(token: String, url: String) extends ZuoraResult
 
-  case class AmendResult(ids: Seq[String]) extends ZuoraObject
-  case class CreateResult(id: String) extends ZuoraObject
-  case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraObject
-  case class SubscribeResult(id: String) extends ZuoraObject
-  case class UpdateResult(id: String) extends ZuoraObject
+  case class AmendResult(ids: Seq[String]) extends ZuoraResult
+  case class CreateResult(id: String) extends ZuoraResult
+  case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraResult
+  case class SubscribeResult(id: String) extends ZuoraResult
+  case class UpdateResult(id: String) extends ZuoraResult
+
+  trait ZuoraQuery
+
+  case class Account(id: String, createdDate: DateTime) extends ZuoraQuery
+  case class Amendment(id: String, amendType: String, contractEffectiveDate: DateTime, subscriptionId: String)
+    extends ZuoraQuery
+  case class RatePlan(id: String, name: String) extends ZuoraQuery
+  case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
+                            price: Float) extends ZuoraQuery
+  case class Subscription(id: String, version: Int) extends ZuoraQuery
 
   trait Error extends Throwable {
     val code: String
@@ -34,15 +44,14 @@ object Zuora {
   }
 
   object SubscriptionDetails {
-    def apply(ratePlan: Map[String, String], ratePlanCharge: Map[String, String]): SubscriptionDetails = {
-      val startDate = new DateTime(ratePlanCharge("EffectiveStartDate"))
-      val endDate = ratePlanCharge.get("ChargedThroughDate").fold(DateTime.now)(new DateTime(_))
+    def apply(ratePlan: RatePlan, ratePlanCharge: RatePlanCharge): SubscriptionDetails = {
+      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now)
 
       // Zuora requires rate plan names to be unique, even though they are never used as identifiers
       // We want to show the same name for annual and monthly, so remove the " - annual" or " - monthly"
-      val planName = ratePlan("Name").split(" - ")(0)
+      val planName = ratePlan.name.split(" - ")(0)
 
-      SubscriptionDetails(planName, ratePlanCharge("Price").toFloat, startDate, endDate, ratePlan("Id"))
+      SubscriptionDetails(planName, ratePlanCharge.price, ratePlanCharge.effectiveStartDate, endDate, ratePlan.id)
     }
   }
 }
@@ -50,7 +59,7 @@ object Zuora {
 object ZuoraReaders {
   import Zuora._
 
-  trait ZuoraReader[T <: ZuoraObject] {
+  trait ZuoraReader[T <: ZuoraResult] {
     val responseTag: String
     val multiResults = false
 
@@ -71,13 +80,13 @@ object ZuoraReaders {
   }
 
   object ZuoraReader {
-    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
+    def apply[T <: ZuoraResult](tag: String)(extractFn: Node => Either[Error, T]) = new ZuoraReader[T] {
       val responseTag = tag
       protected def extractEither(result: Node): Either[Error, T] = extractFn(result)
     }
   }
 
-  trait ZuoraResultReader[T <: ZuoraObject] extends ZuoraReader[T] {
+  trait ZuoraResultReader[T <: ZuoraResult] extends ZuoraReader[T] {
     protected def extractEither(result: Node): Either[Error, T] = {
       if ((result \ "Success").text == "true") {
         Right(extract(result))
@@ -91,14 +100,33 @@ object ZuoraReaders {
   }
 
   object ZuoraResultReader {
-    def create[T <: ZuoraObject](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
+    def create[T <: ZuoraResult](tag: String, multi: Boolean, extractFn: Node => T) = new ZuoraResultReader[T] {
       val responseTag = tag
       override val multiResults: Boolean = multi
       protected def extract(result: Node) = extractFn(result)
     }
 
-    def apply[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
-    def multi[T <: ZuoraObject](tag: String)(extractFn: Node => T) = create(tag, multi=true, extractFn)
+    def apply[T <: ZuoraResult](tag: String)(extractFn: Node => T) = create(tag, multi=false, extractFn)
+    def multi[T <: ZuoraResult](tag: String)(extractFn: Node => T) = create(tag, multi=true, extractFn)
+  }
+
+  trait ZuoraQueryReader[T <: ZuoraQuery] {
+    val table: String
+    val fields: Seq[String]
+
+    def read(results: Seq[Map[String, String]]): Seq[T] = results.map(extract)
+
+    def extract(result: Map[String, String]): T
+  }
+
+  object ZuoraQueryReader {
+    def apply[T <: ZuoraQuery](tableName: String, fieldSeq: Seq[String])(extractFn: Map[String, String] => T) =
+      new ZuoraQueryReader[T] {
+        val table = tableName
+        val fields = fieldSeq
+
+        def extract(results: Map[String, String]) = extractFn(results)
+      }
   }
 }
 
@@ -142,5 +170,26 @@ object ZuoraDeserializer {
 
   implicit val updateResultReader = ZuoraResultReader("updateResponse") { result =>
     UpdateResult((result \ "Id").text)
+  }
+
+  implicit val accountReader = ZuoraQueryReader("Account", Seq("Id", "CreatedDate")) { result =>
+    Account(result("Id"), new DateTime(result("CreatedDate")))
+  }
+
+  implicit val amendmentReader = ZuoraQueryReader("Amendment", Seq("Id", "Type", "ContractEffectiveDate", "SubscriptionId")) { result =>
+    Amendment(result("Id"), result("Type"), new DateTime(result("ContractEffectiveDate")), result("SubscriptionId"))
+  }
+
+  implicit val ratePlanReader = ZuoraQueryReader("RatePlan", Seq("Id", "Name")) { result =>
+    RatePlan(result("Id"), result("Name"))
+  }
+
+  implicit val ratePlanChargeReader = ZuoraQueryReader("RatePlanCharge", Seq("Id", "ChargedThroughDate", "EffectiveStartDate", "Price")) { result =>
+    RatePlanCharge(result("Id"), result.get("ChargedThroughDate").map(new DateTime(_)),
+      new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
+  }
+
+  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version")) { result =>
+    Subscription(result("Id"), result("Version").toInt)
   }
 }

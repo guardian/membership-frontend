@@ -3,12 +3,12 @@ package services.zuora
 import com.gu.membership.util.Timing
 import model.Zuora._
 import model.ZuoraDeserializer._
-import model.ZuoraReaders.ZuoraReader
+import model.ZuoraReaders._
 import monitoring.ZuoraMetrics
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
-import play.api.libs.ws.{WSResponse, WS}
+import play.api.libs.ws.WS
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -37,11 +37,11 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
   val initialDelay = 0.seconds
   val interval = 2.hours
 
-  def refresh() = mkRequest(Login(apiConfig))
+  def refresh() = request(Login(apiConfig))
 
   implicit def authentication: Authentication = agent.get()
 
-  def mkRequest[T <: ZuoraObject](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
+  def request[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
     val url = if (action.authRequired) authentication.url else apiConfig.url
 
     if (action.authRequired && authentication.url.length == 0) {
@@ -68,22 +68,18 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
     }
   }
 
-  def query(fields: Seq[String], table: String, where: String): Future[Seq[Map[String, String]]] = {
-    val q = s"SELECT ${fields.mkString(",")} FROM $table WHERE $where"
-    mkRequest(Query(q)).map { case QueryResult(results) => results }
+  def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
+    val q = s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
+    request(Query(q)).map { case QueryResult(results) => reader.read(results) }
   }
 
-  def queryOne(fields: Seq[String], table: String, where: String): Future[Map[String, String]] = {
-    query(fields, table, where).map { results =>
+  def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {
+    query(where)(reader).map { results =>
       if (results.length != 1) {
-        throw new ZuoraServiceError(s"Query '$fields $table $where' returned ${results.length} results, expected one")
+        throw new ZuoraServiceError(s"Query '${reader.getClass.getSimpleName} $where' returned ${results.length} results, expected one")
       }
 
       results(0)
     }
   }
-
-  def queryOne(field: String, table: String, where: String): Future[String] =
-    queryOne(Seq(field), table, where).map(_(field))
-
 }

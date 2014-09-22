@@ -1,0 +1,23 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:queryResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:done>true</ns1:done>
+                <ns1:queryLocator xsi:nil="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                </ns1:queryLocator>
+                <ns1:records xsi:type="ns2:RatePlanCharge" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://object.api.zuora.com/">
+                    <ns2:Id>2c92c0f94878e82801487917701931c5</ns2:Id>
+                    <ns2:ChargedThroughDate>
+                        2015-09-15T03:34:10.000-08:00
+                    </ns2:ChargedThroughDate>
+                    <ns2:EffectiveStartDate>
+                        2014-09-15T03:34:10.000-08:00
+                    </ns2:EffectiveStartDate>
+                    <ns2:Price>135</ns2:Price>
+                </ns1:records>
+                <ns1:size>1</ns1:size>
+            </ns1:result>
+        </ns1:queryResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
+

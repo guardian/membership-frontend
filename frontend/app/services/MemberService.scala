@@ -10,7 +10,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.{Customer, Card}
-import model.Subscription.{TierPlan, FriendTierPlan, PaidTierPlan}
+import model.{PaidTierPlan, FriendTierPlan, TierPlan, Zuora}
 import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
 import play.api.Logger
 import utils.ScheduledTask
@@ -18,7 +18,6 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import model.Zuora
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s

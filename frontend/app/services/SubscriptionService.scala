@@ -9,10 +9,9 @@ import com.github.nscala_time.time.Imports._
 
 import com.gu.membership.salesforce.{MemberId, Tier}
 
-import configuration.Config
-import forms.MemberForm.{JoinForm, NameForm, AddressForm}
+import forms.MemberForm.JoinForm
 import model.Stripe
-import model.Subscription._
+import model.TierPlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 
@@ -21,22 +20,20 @@ case class SubscriptionServiceError(s: String) extends Throwable {
 }
 
 object SubscriptionServiceHelpers {
-  def sortAmendments(subscriptions: Seq[Map[String, String]], amendments: Seq[Map[String, String]]) = {
-    val versions = subscriptions.map { amendment => (amendment("Id"), amendment("Version").toInt) }.toMap
-    amendments.sortBy { amendment => versions(amendment("SubscriptionId")) }
+  def sortAmendments(subscriptions: Seq[Subscription], amendments: Seq[Amendment]) = {
+    val versions = subscriptions.map { amendment => (amendment.id, amendment.version) }.toMap
+    amendments.sortBy { amendment => versions(amendment.subscriptionId) }
   }
 
-  def sortSubscriptions(subscriptions: Seq[Map[String, String]]) = subscriptions.sortBy(_("Version").toInt)
+  def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
-  def sortAccounts(accounts: Seq[Map[String, String]]) = accounts.sortBy { account =>
-    new DateTime(account("CreatedDate"))
-  }
+  def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
 }
 
 trait AmendSubscription {
   self: SubscriptionService =>
 
-  private def checkForPendingAmendments(sfAccountId: String)(fn: String => Future[Amendment]): Future[Amendment] = {
+  private def checkForPendingAmendments(sfAccountId: String)(fn: String => Future[AmendResult]): Future[AmendResult] = {
     getSubscriptionStatus(sfAccountId).flatMap { subscriptionStatus =>
       if (subscriptionStatus.future.isEmpty) {
         fn(subscriptionStatus.current)
@@ -46,32 +43,32 @@ trait AmendSubscription {
     }
   }
 
-  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[Amendment] = {
+  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[AmendResult] = {
     checkForPendingAmendments(sfAccountId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
-        result <- zuora.mkRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
-      } yield Amendment(result.ids)
+        result <- zuora.request(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
+      } yield result
     }
   }
 
-  def downgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[Amendment] = {
+  def downgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[AmendResult] = {
     checkForPendingAmendments(sfAccountId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-        result <- zuora.mkRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
+        result <- zuora.request(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
           tierPlanRateIds(newTierPlan), subscriptionDetails.endDate))
-      } yield Amendment(result.ids)
+      } yield result
     }
   }
 
-  def upgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[Amendment] = {
+  def upgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[AmendResult] = {
     checkForPendingAmendments(sfAccountId) { subscriptionId =>
       for {
-        ratePlanId <- zuora.queryOne("Id", "RatePlan", s"SubscriptionId='$subscriptionId'")
-        result <- zuora.mkRequest(UpgradePlan(subscriptionId, ratePlanId, tierPlanRateIds(newTierPlan)))
-      } yield Amendment(result.ids)
+        ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
+        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
+      } yield result
     }
   }
 }
@@ -79,34 +76,33 @@ trait AmendSubscription {
 class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora: ZuoraService) extends AmendSubscription {
   import SubscriptionServiceHelpers._
 
-  def getAccountId(sfAccountId: String): Future[String] =
-    zuora.query(Seq("Id", "CreatedDate"), "Account", s"crmId='$sfAccountId'").map(sortAccounts(_).last("Id"))
+  def getAccount(sfAccountId: String): Future[Account] =
+    zuora.query[Account](s"crmId='$sfAccountId'").map(sortAccounts(_).last)
 
   def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
     for {
-      accountId <- getAccountId(sfAccountId)
-
-      subscriptions <- zuora.query(Seq("Id", "Version"), "Subscription", s"AccountId='$accountId'")
+      account <- getAccount(sfAccountId)
+      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
 
       if subscriptions.size > 0
 
-      where = subscriptions.map { sub => s"SubscriptionId='${sub("Id")}'" }.mkString(" OR ")
-      amendments <- zuora.query(Seq("ContractEffectiveDate", "SubscriptionId"), "Amendment", where)
+      where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
+      amendments <- zuora.query[Amendment](where)
     } yield {
-      val latestSubscriptionId = sortSubscriptions(subscriptions).last("Id")
+      val latestSubscriptionId = sortSubscriptions(subscriptions).last.id
 
       sortAmendments(subscriptions, amendments)
-        .find { amendment => new DateTime(amendment("ContractEffectiveDate")).isAfterNow }
+        .find(_.contractEffectiveDate.isAfterNow)
         .fold(SubscriptionStatus(latestSubscriptionId, None)) { amendment =>
-          SubscriptionStatus(amendment("SubscriptionId"), Some(latestSubscriptionId))
+          SubscriptionStatus(amendment.subscriptionId, Some(latestSubscriptionId))
         }
     }
   }
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
-      ratePlan <- zuora.queryOne(Seq("Id", "Name"), "RatePlan", s"SubscriptionId='$subscriptionId'")
-      ratePlanCharge <- zuora.queryOne(Seq("ChargedThroughDate", "EffectiveStartDate", "Price"), "RatePlanCharge", s"RatePlanId='${ratePlan("Id")}'")
+      ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
+      ratePlanCharge <- zuora.queryOne[RatePlanCharge](s"RatePlanId='${ratePlan.id}'")
     } yield SubscriptionDetails(ratePlan, ratePlanCharge)
   }
 
@@ -119,18 +115,16 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
     } yield subscriptionDetails
   }
 
-  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[String] = {
+  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
-      accountId <- getAccountId(sfAccountId)
-      paymentMethod <- zuora.mkRequest(CreatePaymentMethod(accountId, customer))
-      result <- zuora.mkRequest(SetDefaultPaymentMethod(accountId, paymentMethod.id))
-    } yield accountId
+      account <- getAccount(sfAccountId)
+      paymentMethod <- zuora.request(CreatePaymentMethod(account, customer))
+      result <- zuora.request(SetDefaultPaymentMethod(account, paymentMethod))
+    } yield result
   }
 
-  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[Subscription] = {
-    zuora.mkRequest(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.tierPlan), joinData.name,
-      joinData.deliveryAddress)).map { result =>
-      Subscription(result.id)
-    }
+  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
+    zuora.request(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.tierPlan),
+      joinData.name, joinData.deliveryAddress))
   }
 }

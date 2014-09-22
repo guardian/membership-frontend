@@ -4,7 +4,7 @@ import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
-import model.Subscription._
+import model.{FriendTierPlan, PaidTierPlan, TierPlan}
 import services.StripeApiConfig
 import services.zuora.ZuoraApiConfig
 
