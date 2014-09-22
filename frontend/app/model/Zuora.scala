@@ -35,7 +35,9 @@ object Zuora {
   case class ResultError(code: String, message: String) extends Error
   case class InternalError(code: String, message: String) extends Error
 
-  case class SubscriptionStatus(current: String, future: Option[String])
+  case class SubscriptionStatus(current: String, future: Option[String], amendType: Option[String]) {
+    val cancelled = amendType.exists(_ == "Cancellation")
+  }
 
   case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
                                  ratePlanId: String) {

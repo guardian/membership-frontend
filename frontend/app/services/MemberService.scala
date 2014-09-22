@@ -33,14 +33,13 @@ trait MemberService {
     Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
     Keys.MAILING_COUNTRY -> formData.deliveryAddress.country,
-    Keys.ALLOW_MEMBERSHOP_MAIL -> true
+    Keys.ALLOW_MEMBERSHIP_MAIL -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
     formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
 
   def memberData(tier: Tier.Tier, customerOpt: Option[Customer]) = Map(
-    Keys.TIER -> tier.toString,
-    Keys.OPT_IN -> true
+    Keys.TIER -> tier.toString
   ) ++ customerOpt.map { customer =>
     Map(
       Keys.CUSTOMER_ID -> customer.id,
@@ -99,7 +98,6 @@ trait MemberService {
     for {
       subscription <- SubscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
     } yield {
-      MemberRepository.upsert(member.identityId, Map(Keys.OPT_IN -> false))
       MemberMetrics.putCancel(member.tier)
       ""
     }
