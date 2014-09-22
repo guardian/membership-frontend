@@ -59,10 +59,10 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
       Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
 
       reader.read(result.xml) match {
-        case Left(error) => {
+        case Left(error) =>
           ZuoraMetrics.recordError
           throw error
-        }
+
         case Right(obj) => obj
       }
     }
