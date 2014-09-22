@@ -74,14 +74,6 @@ trait Joiner extends Controller {
     } yield Redirect(routes.Joiner.thankyouFriend())
   }
 
-  def patron() = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitlePatrons,
-      request.path,
-      Some(CopyConfig.copyDescriptionPatrons)
-    )
-    Ok(views.html.joiner.tier.patron(pageInfo))
-  }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
     for (eventbriteFrameDetail <- getEbIFrameDetail(request)) yield {

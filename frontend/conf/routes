@@ -16,9 +16,6 @@ GET            /healthcheck                       controllers.Healthcheck.health
 GET            /join                              controllers.Joiner.tierList
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST           /join/friend/enter-details         controllers.Joiner.joinFriend
-
-GET            /patrons                           controllers.Joiner.patron
-
 GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
 GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
@@ -60,6 +57,7 @@ GET            /feedback                          controllers.Info.feedback
 GET            /feedback/thankyou                 controllers.Info.feedbackThankyou
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /about                             controllers.Info.about
+GET            /patrons                           controllers.Info.patron
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)
