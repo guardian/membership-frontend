@@ -38,13 +38,7 @@ printf "> Installing bower JS modules in assets/javascripts ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
 pushd assets/javascripts
-if [ -d "lib/bower-components" ]; then
-    printf "\n\r\n\r====================================\n\r\n\r"
-    printf "> Removing JavaScripts Bower Components folder ..."
-    printf "\n\r\n\r====================================\n\r\n\r"
-    rm -rf lib/bower-components
-fi
-
+rm -rf lib/bower-components
 bower install
 
 popd
@@ -58,13 +52,7 @@ printf "> Installing bower SASS modules in assets/stylesheets ..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
 pushd assets/stylesheets
-if [ -d "components/bower-components" ]; then
-    printf "\n\r\n\r====================================\n\r\n\r"
-    printf "> Removing Stylesheets Bower Components folder ..."
-    printf "\n\r\n\r====================================\n\r\n\r"
-    rm -rf components/bower-components
-fi
-
+rm -rf components/bower-components
 bower install
 
 popd
