@@ -1,22 +1,22 @@
 package controllers
 
-import model.{StatusFields, PrivateFields, PageInfo}
-import play.api.Logger
-
 import scala.concurrent.Future
-
-import play.api.mvc.{Request, Controller}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.gu.membership.salesforce.Tier
 
 import com.netaporter.uri.dsl._
 
+import play.api.mvc.{Request, Controller}
+import play.api.libs.json.Json
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
+import com.gu.membership.salesforce.{ScalaforceError, Tier}
+
 import actions.{AnyMemberTierRequest, AuthRequest}
-import services._
-import forms.MemberForm.{FriendJoinForm, friendJoinForm}
-import model.Eventbrite.{EBDiscount, EBEvent}
 import configuration.{Config, CopyConfig}
+import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
+import model._
+import model.StripeSerializer._
+import model.Eventbrite.{EBDiscount, EBEvent}
+import services._
 
 trait Joiner extends Controller {
 
@@ -65,15 +65,22 @@ trait Joiner extends Controller {
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
-    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), makeFriend)
+    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+      makeMember(_).map { _ => Redirect(routes.Joiner.thankyouFriend()) })
   }
 
-  private def makeFriend(formData: FriendJoinForm)(implicit request: AuthRequest[_]) = {
-    for {
-      salesforceContactId <- MemberService.createMember(request.user, formData, IdentityRequest(request))
-    } yield Redirect(routes.Joiner.thankyouFriend())
+  def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+      makeMember(_).map { _ => Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) })
   }
 
+  private def makeMember(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+    MemberService.createMember(request.user, formData, IdentityRequest(request)).recover {
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
+      case error: Zuora.ResultError => Forbidden
+      case error: ScalaforceError => Forbidden
+    }
+  }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
     for (eventbriteFrameDetail <- getEbIFrameDetail(request)) yield {
@@ -90,7 +97,6 @@ trait Joiner extends Controller {
       Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail))
     }
   }
-
 }
 
 object Joiner extends Joiner {

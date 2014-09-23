@@ -222,9 +222,8 @@ define([
     };
 
     Upgrade.prototype.setupForm = function () {
-        var formElement = this.elem = this.getElem('STRIPE_FORM'),
-            changeToTier = formElement.getAttribute('data-change-to-tier').toLowerCase();
-        this.form = new Form(formElement,  '/tier/change/' + changeToTier, '/tier/change/' + changeToTier + '/summary');
+        var formElement = this.elem = this.getElem('STRIPE_FORM');
+        this.form = new Form(formElement);
         this.form.init();
     };
 

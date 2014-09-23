@@ -224,7 +224,7 @@ define([
 
     JoinPaid.prototype.setupForm = function () {
         var formElement = this.elem = this.getElem('STRIPE_FORM');
-        this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('enter-details', 'thankyou'));
+        this.form = new Form(formElement);
         this.form.init();
     };
 
