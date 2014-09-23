@@ -48,7 +48,7 @@ GET            /tier/change/friend/summary        controllers.TierController.dow
 
 GET            /tier/change/:tier                 controllers.TierController.upgrade(tier: Tier.Value)
 POST           /tier/change/:tier                 controllers.TierController.upgradeConfirm(tier: Tier.Value)
-GET            /tier/change/:tier/summary         controllers.Joiner.thankyouPaid(tier: Tier.Value)
+GET            /tier/change/:tier/summary         controllers.TierController.upgradeThankyou(tier: Tier.Value)
 
 # Information
 GET            /help                              controllers.Info.help

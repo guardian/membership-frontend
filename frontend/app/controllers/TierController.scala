@@ -56,7 +56,7 @@ trait UpgradeTier {
     request.member match {
       case freeMember: FreeMember =>
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-          doUpgrade(freeMember, tier)(_).map { _ => Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) })
+          doUpgrade(freeMember, tier)(_).map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) })
       case _ => Future.successful(NotFound)
     }
   }
@@ -68,6 +68,8 @@ trait UpgradeTier {
       case error: ScalaforceError => Forbidden
     }
   }
+
+  def upgradeThankyou(tier: Tier) = Joiner.thankyouPaid(tier)
 }
 
 trait CancelTier {
