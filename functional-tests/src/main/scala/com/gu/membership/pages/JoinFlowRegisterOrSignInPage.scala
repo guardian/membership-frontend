@@ -9,7 +9,7 @@ class JoinFlowRegisterOrSignInPage(driver: WebDriver) extends BaseMembershipPage
 
   private def signInButton = driver.findElement(By.xpath("//div[2]/div/div/section/div[2]/div[1]/a"))
 
-  private def registerButton = driver.findElement(By.xpath("//div[2]/div/div/section/div[2]/div[2]/a"))
+  private def registerButton = driver.findElement(By.xpath("//div[1]/div/div/section/div[2]/div[2]/a"))
 
   def clickSignIn = {
     signInButton.click()

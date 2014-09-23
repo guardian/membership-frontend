@@ -80,7 +80,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
   }
 
   // cancel membership
-  scenarioWeb("37. A Friend can cancel membership") {
+  scenarioWeb("37. A Partner can cancel membership") {
     implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
