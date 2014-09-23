@@ -4,6 +4,8 @@ import org.specs2.mutable.Specification
 
 import play.api.data.Form
 
+import com.gu.membership.zuora.Countries
+
 import MemberForm._
 
 class MemberFormTest extends Specification {
@@ -76,6 +78,20 @@ class MemberFormTest extends Specification {
 
       val goodProvince = paidAddressForm.bind(address("80 Elgin St", "", "Ottawa", "Ontario", "K1P 5K7", "CA"))
       goodProvince.hasErrors must beFalse
+    }
+
+    "require a valid country" in {
+      val badCountryPaid = paidAddressForm.bind(address("No where", "", "City", "State", "Postcode", "Not a country"))
+      badCountryPaid.hasErrors must beTrue
+
+      val badCountryFriend = friendAddressForm.bind(address("No where", "", "City", "State", "Postcode", "Not a country"))
+      badCountryFriend.hasErrors must beTrue
+    }
+
+    "concatenate lineOne and lineTwo" in {
+      AddressForm("one", "two", "town", "county", "postcode", Countries.UK).line mustEqual "one, two"
+      AddressForm("one", "", "town", "county", "postcode", Countries.UK).line mustEqual "one"
+      AddressForm("", "two", "town", "county", "postcode", Countries.UK).line mustEqual "two"
     }
   }
 }
