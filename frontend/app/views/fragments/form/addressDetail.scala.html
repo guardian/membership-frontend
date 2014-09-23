@@ -10,10 +10,11 @@ county: Option[String], userCountry: Option[String])
         <div class="input">
             <select name="@(formType).countyOrState"
                     id="@countyOrStateLabel-@(formType)"
+                    class="js-@countyOrStateLabel-@(formType)"
                     data-error-message="Please enter your @countyOrStateLabel.capitalize"
                     data-validation="required">
-            @for(county <- countyOrStateList) {
-                <option value="@county"@if(userCountry.getOrElse("") == county){selected}>@county</option>
+            @for(countyOrState <- countyOrStateList) {
+                <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){selected}>@countyOrState</option>
             }
             </select>
         </div>
@@ -26,6 +27,7 @@ county: Option[String], userCountry: Option[String])
         <div class="input">
             <select name="@(formType).country"
                     id="country-@(formType)"
+                    class="js-country-@(formType)"
                     data-error-message="Please enter your Country"
                     data-validation="required">
             @for(country <- countryList) {
@@ -90,7 +92,7 @@ county: Option[String], userCountry: Option[String])
                     name="@(formType).countyOrState"
                     value="@county"
                     id="county-or-state-@(formType)"
-                    class="text-input text-input--block js-county-state"/>
+                    class="text-input text-input--block js-county-or-state-@(formType)"/>
                 </div>
             </div>
 

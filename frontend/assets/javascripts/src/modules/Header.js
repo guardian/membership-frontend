@@ -20,7 +20,8 @@ define([
             IDENTITY_TIER: '.identity__tier',
             IDENTITY_ICON: '.js-identity-icon',
             IDENTITY_POP_UP_NAV: '.js-profile-nav-popup',
-            COMMENT_ACTIVITY_LINK: '.js-comment-activity'
+            COMMENT_ACTIVITY_LINK: '.js-comment-activity',
+            EDIT_PROFILE_LINK: '.js-edit-profile'
         },
         text: {
             SIGNED_IN_PREFIX: 'You are signed in as'
@@ -120,6 +121,7 @@ define([
                 var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
                 if (tier) {
                     config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+                    config.DOM.EDIT_PROFILE_LINK.attr('href', config.DOM.EDIT_PROFILE_LINK.attr('data-member-href'));
                 }
             });
 

@@ -5,9 +5,11 @@ define([
     'bean',
     'src/modules/tier/JoinPaid',
     'src/utils/form/Form',
+    'src/utils/form/Password',
+    'src/utils/form/Address',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, ajax, stripe, bean, JoinPaid, Form, stripeErrorMessages, helper) {
+], function ($, ajax, stripe, bean, JoinPaid, Form, Password, Address, stripeErrorMessages, helper) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -17,8 +19,6 @@ define([
             INVALID_CREDIT_CARD_NUMBER = '1234123412341234',
             VALID_CVC_NUMBER = '123',
             EMPTY_STRING = '',
-            SUCCESS_POST_URL = '/success/post/url',
-            SUCCESS_REDIRECT_URL = '/success/redirect/url',
             GLOBAL_FORM_ERROR = 'This form has errors',
             STRIPE_RESPONSE_STATUS = 'ERROR',
             FORM_FIELD_ERROR_CLASS = 'form-field--error',
@@ -105,8 +105,15 @@ define([
                 joinPaidForm = new JoinPaid();
 
                 spyOn(joinPaidForm, 'setupForm').and.callFake(function() {
-                    joinPaidForm.form = new Form(paymentFormFixtureElement, SUCCESS_POST_URL, SUCCESS_REDIRECT_URL);
+                    var addressHelper;
+                    joinPaidForm.form = new Form(paymentFormFixtureElement);
                     joinPaidForm.form.init();
+
+                    addressHelper = new Address(joinPaidForm.form);
+                    addressHelper.setupDeliveryToggleState();
+                    addressHelper.setupToggleBillingAddressListener();
+
+                    (new Password()).init();
                 });
 
                 joinPaidForm.init();
@@ -194,8 +201,6 @@ define([
         it('should correctly initialise itself', function (done) {
             expect(joinPaidForm).toBeDefined();
             expect(joinPaidForm.form.validationProfiles.length).toBe(12);
-            expect(joinPaidForm.form.successPostUrl).toEqual(SUCCESS_POST_URL);
-            expect(joinPaidForm.form.successRedirectUrl).toEqual(SUCCESS_REDIRECT_URL);
 
             done();
         });

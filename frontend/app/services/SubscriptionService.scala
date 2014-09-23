@@ -76,7 +76,7 @@ trait AmendSubscription {
 class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora: ZuoraService) extends AmendSubscription {
   import SubscriptionServiceHelpers._
 
-  def getAccount(sfAccountId: String): Future[Account] =
+  private def getAccount(sfAccountId: String): Future[Account] =
     zuora.query[Account](s"crmId='$sfAccountId'").map(sortAccounts(_).last)
 
   def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
@@ -106,12 +106,10 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
     } yield SubscriptionDetails(ratePlan, ratePlanCharge)
   }
 
-  def getCurrentSubscriptionId(sfAccountId: String): Future[String] = getSubscriptionStatus(sfAccountId).map(_.current)
-
   def getCurrentSubscriptionDetails(sfAccountId: String): Future[SubscriptionDetails] = {
     for {
-      subscriptionId <- getCurrentSubscriptionId(sfAccountId)
-      subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+      subscriptionStatus <- getSubscriptionStatus(sfAccountId)
+      subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
     } yield subscriptionDetails
   }
 
