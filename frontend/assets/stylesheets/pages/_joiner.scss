@@ -209,3 +209,10 @@ $card-icon-offset: 2px;
         float: left;
     }
 }
+
+.complete-purchase {
+    @include rem((
+        margin-bottom: $gs-gutter,
+        margin-top: $gs-gutter
+    ));
+}
