@@ -73,13 +73,6 @@
 /* Active control icon
    ========================================================================== */
 
-.control__icon-wrapper {
-    @extend %icon-holder-circle;
-    float: left;
-    height: 34px;
-    width: 34px;
-}
-
 .control__icon {
     display: block;
     text-align: center;

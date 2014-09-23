@@ -135,3 +135,25 @@
         #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
     }
 }
+
+@mixin columns($cols: 1, $gap: 0) {
+    @if $browser-supports-columns {
+        -webkit-column-count: $cols;
+        -moz-column-count: $cols;
+        column-count: $cols;
+
+        -webkit-column-gap: $gap;
+        -moz-column-gap: $gap;
+        column-gap: $gap;
+    } @else {
+        margin-left: 0 - $gap * .5;
+        margin-right: 0 - $gap * .5;
+        & > * {
+            @include box-sizing(border-box);
+            width: (100% / $cols);
+            float: left;
+            padding-left: $gap * .5;
+            padding-right: $gap * .5;
+        }
+    }
+}

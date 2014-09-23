@@ -1,15 +1,9 @@
-$tabletFooterCols:  4;
-$desktopFooterCols: 6;
-$wideFooterCols:    9;
 
 footer {
     position: absolute;
     left: 0;
     width: 100%;
     background-color: $c-neutral8;
-    @include rem((
-        min-height: 100px
-    ));
 
     @include mq(tablet) {
         bottom: 0;
@@ -45,8 +39,6 @@ footer {
     }
 
     .gs-container {
-        @include box-sizing(border-box);
-
         @include mq(desktop) {
             @include rem((
                 width: gs-span(12)+$gs-gutter*2
@@ -58,6 +50,12 @@ footer {
                 width: gs-span(14)+$gs-gutter*2
             ));
         }
+    }
+
+    .control {
+        float: left;
+        height: 34px;
+        width: 34px;
     }
 
     .control__info {
@@ -93,114 +91,54 @@ footer {
 }
 
 .l-footer__secondary {
+    @include box-sizing(border-box);
     @include font($sans-serif, normal, 13, 19);
-    color: lighten($c-neutral2, 15%);
-    @include rem((
-        padding: ($gs-baseline/3)*5 $gs-gutter/2 ($gs-baseline/3)
-    ));
+    padding-right: $gs-gutter / 2;
+    padding-left: $gs-gutter / 2;
 
-    @include mq(mobileLandscape) {
-        @include rem((
-            padding-left: $gs-gutter,
-            padding-right: $gs-gutter
-        ));
-    }
     @include mq(tablet) {
-        @include rem((
-            padding-top: ($gs-baseline/3)*2
-        ));
+        padding-right: $gs-gutter;
+        padding-left: $gs-gutter;
     }
 
+    &,
     a {
-        color: darken($c-neutral2, 3%); // Enhance contrast on non-white background
+        color: $c-neutral1;
     }
 }
 
 .colophon {
+    @include fs-bodyHeading(1);
     list-style: none;
-    @include rem((
-        margin: 0 0 $gs-baseline
-    ));
+    margin: 0;
+    padding-top: $gs-baseline * 2;
+    padding-bottom: $gs-baseline / 2;
+    @include columns(2);
 
     @include mq(tablet) {
-        float: right;
-        @include rem((
-            width: gs-span($tabletFooterCols),
-            margin-left: gs-span(1)
-        ));
+        @include columns(3);
     }
-    @include mq(desktop) {
-        @include rem((
-            width: gs-span($desktopFooterCols)
-        ));
-    }
+
     @include mq(wide) {
-        @include rem((
-            width: gs-span($wideFooterCols)
-        ));
+        @include columns(4);
     }
 
     a {
-        @include rem((
-            margin-bottom: 6px
-        ));
-        display: block;
+        display: inline-block;
+        padding-bottom: $gs-baseline / 2;
     }
 }
 
 .colophon__item {
-    float: left;
-    width: 50%;
     @include box-sizing(border-box);
-
-    @include mq($from: tablet) {
-        @include rem((
-            margin-right: $gs-gutter
-        ));
-    }
-
-    @include mq(tablet, desktop) {
-        @include rem((
-            width: gs-span($tabletFooterCols/2),
-        ));
-        &:nth-child(2n) {
-            margin-right: 0;
-        }
-    }
-
-    @include mq(desktop, wide) {
-        @include rem((
-            width: gs-span($desktopFooterCols/3),
-        ));
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
-
-    @include mq(wide) {
-        @include rem((
-            width: gs-span($wideFooterCols/3),
-        ));
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
 }
 
 .l-footer__misc {
-    border-top: 1px solid lighten($c-neutral2, 40%);
-    @include rem((
-        padding-top: $gs-baseline/3 - 1
-    ));
-
-    @include mq(tablet) {
-        padding-top: 0;
-        border-top: 0;
-    }
+    padding-top: $gs-baseline / 2;
+    padding-bottom: $gs-baseline * 1.5;
+    border-top: 1px solid $c-neutral4;
 }
 
 .really-serious-copyright {
-    @include rem((
-        margin-bottom: $gs-baseline/3
-    ));
+    margin-bottom: $gs-baseline/3;
 }
