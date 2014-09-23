@@ -52,8 +52,8 @@ trait Joiner extends Controller {
     val identityRequest = IdentityRequest(request)
     for {
       userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-      privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
-      marketingChoices = userOpt.map(_.statusFields).getOrElse(StatusFields.apply())
+      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
+      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
       passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
     } yield {
       tier match {

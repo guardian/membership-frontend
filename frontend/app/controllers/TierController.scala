@@ -44,7 +44,7 @@ trait UpgradeTier {
       val identityRequest = IdentityRequest(request)
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-        privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+        privateFields = userOpt.fold(PrivateFields())(_.privateFields)
       } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
     }
     else
