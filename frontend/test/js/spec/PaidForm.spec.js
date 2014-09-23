@@ -3,13 +3,13 @@ define([
     'ajax',
     'stripe',
     'bean',
-    'src/modules/tier/JoinPaid',
+    'src/modules/tier/PaidForm',
     'src/utils/form/Form',
     'src/utils/form/Password',
     'src/utils/form/Address',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, ajax, stripe, bean, JoinPaid, Form, Password, Address, stripeErrorMessages, helper) {
+], function ($, ajax, stripe, bean, PaidForm, Form, Password, Address, stripeErrorMessages, helper) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -102,7 +102,7 @@ define([
             function callback(canonicalPaymentFormFixtureElement) {
 
                 paymentFormFixtureElement = canonicalPaymentFormFixtureElement.cloneNode(true);
-                joinPaidForm = new JoinPaid();
+                joinPaidForm = new PaidForm();
 
                 spyOn(joinPaidForm, 'setupForm').and.callFake(function() {
                     var addressHelper;
