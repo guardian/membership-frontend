@@ -33,7 +33,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("42. User can't add a card with invalid expiry date") {
+    scenarioWeb("41. User can't add a card with invalid expiry date") {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
