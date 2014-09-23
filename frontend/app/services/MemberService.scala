@@ -116,18 +116,12 @@ trait MemberService {
   def upgradeSubscription(member: FreeMember, user: User, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     for {
       customer <- StripeService.Customer.create(user.id, form.payment.token)
-      _ <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
-      subscription <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, PaidTierPlan(newTier, form.payment.annual))
-      memberId <- MemberRepository.upsert(
-        member.identityId,
-        Map(
-          Keys.TIER -> newTier.toString,
-          Keys.CUSTOMER_ID -> customer.id,
-          Keys.DEFAULT_CARD_ID -> customer.card.id
-        )
-      )
-      identity <- IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
+      paymentResult <- SubscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
+      subscriptionResult <- SubscriptionService.upgradeSubscription(member.salesforceAccountId, PaidTierPlan(newTier, form.payment.annual))
+      memberId <- MemberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
     } yield {
+      IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
+
       MemberMetrics.putUpgrade(newTier)
       memberId.account
     }
