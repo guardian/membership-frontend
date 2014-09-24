@@ -2,11 +2,11 @@
 
 @import com.gu.membership.salesforce.Tier
 
-@label = {
-    @tier match {
-        case Tier.Patron => { 8OIRCKrKtFYQ-fOZzQM }
-        case Tier.Partner => { 967SCKD1tFYQ-fOZzQM }
-        case Tier.Friend => { 2Am1CLrttFYQ-fOZzQM }
+@label = @{
+    tier match {
+        case Tier.Patron => "8OIRCKrKtFYQ-fOZzQM"
+        case Tier.Partner => "967SCKD1tFYQ-fOZzQM"
+        case Tier.Friend => "2Am1CLrttFYQ-fOZzQM"
     }
 }
 
