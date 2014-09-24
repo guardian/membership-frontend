@@ -1,9 +1,10 @@
 //TODO start of splitting benefits work into one set of styles where it makes sense
 
 .benefits-title {
+	border-top: 1px solid $c-neutral3;
     @include fs-bodyHeading(2);
     @include rem((
-        padding-bottom: $gs-baseline/6
+        padding: 7px 0 $gs-baseline/6 0
     ));
 }
 

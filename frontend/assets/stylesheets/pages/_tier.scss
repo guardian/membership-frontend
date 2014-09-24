@@ -48,8 +48,7 @@ $current-indicator: rem(47px);
 }
 
 .package {
-    @include border-radius(4px);
-    background-color: #ffffff;
+    background-color: $c-neutral7;
     position: relative;
 
     // .package is a flexbox too to
@@ -241,10 +240,9 @@ $current-indicator: rem(47px);
     content: 'Plus:';
     display: block;
     @include fs-bodyCopy(1);
-    color: $c-neutral3;
-    border-bottom: 1px solid $c-neutral3;
+    color: $c-neutral1;
     @include rem((
-        margin-bottom: $gs-baseline
+        margin-bottom: $gs-baseline/2
     ));
 }
 
@@ -282,6 +280,10 @@ $current-indicator: rem(47px);
         @include fs-headline(2);
 
         @include mq(desktop) {
+            @include fs-headline(2);
+        }
+
+        @include mq(mem-full) {
             @include fs-headline(3);
         }
     }
@@ -303,7 +305,7 @@ $current-indicator: rem(47px);
         .price-info__container-inner--last {
             text-align: right;
             height: 100%;
-            border-left: 1px solid $c-neutral5;
+            border-left: 1px solid $c-neutral3;
         }
     }
 
@@ -320,7 +322,7 @@ $current-indicator: rem(47px);
 
     .price-info__sub-detail {
         @include fs-bodyCopy(1);
-        color: $c-neutral3;
+        color: #666666;
         display: block;
     }
 
@@ -349,13 +351,9 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         @include fs-bodyCopy(3);
         @include rem((
+            padding-top: $gs-gutter/2,
             min-height: 120px
         ));
-        @include rem((
-            padding-top: $gs-gutter,
-            min-height: 60px
-        ));
-        border-top: 1px solid $c-neutral5;
     }
 
     @include mq($from: tablet, $until: desktop) {
