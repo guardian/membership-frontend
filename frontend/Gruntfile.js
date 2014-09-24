@@ -261,6 +261,17 @@ module.exports = function (grunt) {
                     failOnError: true
                 }
             }
+        },
+
+        imagemin: {
+            dynamic: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.publicDir.images %>',
+                    src: ['**/*.{png,jpg}', '!**/svgs/**'],
+                    dest: '<%= dirs.publicDir.images %>'
+                }]
+            }
         }
 
     });
@@ -276,6 +287,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-asset-hash');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
 
     grunt.registerTask('compile', function(){
         grunt.task.run([
@@ -317,7 +329,8 @@ module.exports = function (grunt) {
             'clean:images',
             'copy:images',
             'shell:spriteGeneration',
-            'sass:compile'
+            'sass:compile',
+            'imagemin'
         ]);
     });
 
