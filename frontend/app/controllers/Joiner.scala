@@ -94,7 +94,7 @@ trait Joiner extends Controller {
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier))
     }
   }
 }
