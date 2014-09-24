@@ -233,14 +233,13 @@ define([
     };
 
     /**
-     * add validation to the form,
+     * setup validation for the form,
      * this will add specific validator events to specified elements,
      * it will throw an error if an incorrect validation event method has been supplied
      * @param validationDetail
      * @returns {Form}
      */
-    Form.prototype.addValidation = function (validationDetail) {
-
+    Form.prototype.setupValidation = function (validationDetail) {
         var args;
         var validator;
 
@@ -261,55 +260,40 @@ define([
         return this;
     };
 
+    Form.prototype.addValidation = function ($elements) {
+        $elements.forEach(function ($element) {
+            $element.attr('data-validation', 'required');
+        });
+
+        this.setupFormValidation();
+    };
+
+    Form.prototype.removeValidation = function ($elements) {
+        var errorMessages = [];
+
+        $elements.forEach(function ($element) {
+            var $formField = utilsHelper.getSpecifiedParent($element, 'form-field');
+
+            errorMessages.push($element.attr('data-error-message'));
+            $element.removeAttr('data-validation');
+            $formField.removeClass('form-field--error');
+            $('.label', $formField).removeClass('required-marker');
+            $('.form-field__error-message', $formField).remove();
+        });
+
+        if (errorMessages.length) {
+            this.flushErrors(errorMessages);
+        }
+
+        this.setupFormValidation();
+    };
+
     Form.prototype.checkValidatorExistsException = function (validatorName) {
         if (!self[validatorName] && typeof self[validatorName] !== 'function') {
             throw 'please specify an existing validation profile';
         }
     };
 
-    /**
-     * remove validator from the validation profile, this takes the validator out of the internal
-     * validation profile array and stops messages being displayed and stops this validation being fired on submit
-     * @param validationDetail
-     *
-     * Note to dev: Currently this removes the validationProfile because it is being used for the billing address,
-     * when the billing address is closed it is detached from the dom so there is no need to add validation events and
-     * remove them, potentially there may be a need for this if this is used for other elements.
-     * This also works on name attributes if inputs without name attributes (credit card inputs) need to be
-     * removed then this will need a rework.
-     */
-    Form.prototype.removeValidatorFromValidationProfile = function (validationDetail) {
-        var validator;
-        var errorMessages = [];
-        var validationMessage;
-        var args;
-
-        var removeValidators = function (validationProfile, i, validationProfiles) {
-
-            if (validator.elem.name === validationProfile.elem.name &&
-                validator.validator === validationProfile.validator) {
-
-                validationProfiles.splice(i, 1);
-
-                // remove any error messages from validation Profiles that are being removed
-                if (self.errorMessages.length) {
-                    args = self.createArgsArray(validator.elem);
-                    validationMessage = self[validator.validator].apply(self, args);
-                    errorMessages.push(validationMessage.errorMessage);
-                }
-            }
-        };
-
-        for(var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
-            validator = validationDetail[i];
-
-            this.validationProfiles.map(removeValidators);
-        }
-
-        if (errorMessages.length) {
-            this.flushErrors(errorMessages);
-        }
-    };
 
     /**
      * create arguments array to be used with apply function
@@ -327,18 +311,6 @@ define([
         }
 
         return argsArray;
-    };
-
-    /**
-     * add a validator back in to the validation profile array so messages will be displayed and validation will fire
-     * on submit
-     * @param validationDetail
-     */
-    Form.prototype.addValidatorFromValidationProfile = function (validationDetail) {
-
-        for(var i = 0, validationDetailLength = validationDetail.length; i < validationDetailLength; i++) {
-            this.validationProfiles.push(validationDetail[i]);
-        }
     };
 
     /**
@@ -757,6 +729,9 @@ define([
         var elem;
         var validationProfiles = [];
 
+        //reset validationProfiles array
+        this.validationProfiles.length = 0;
+
         for (var i = 0, validationLength = $validation.length; i < validationLength; i++) {
             elem = $validation[i];
 
@@ -775,7 +750,7 @@ define([
         }
 
         if (validationProfiles.length) {
-            this.addValidation(validationProfiles);
+            this.setupValidation(validationProfiles);
         }
     };
 
