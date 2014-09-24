@@ -273,7 +273,9 @@ define([
             var $formField = utilsHelper.getSpecifiedParent($element, 'form-field');
 
             errorMessages.push($element.attr('data-error-message'));
+            //tidy up potential error messages, error classes and remove element events
             $element.removeAttr('data-validation');
+            bean.off($element[0], 'blur');
             $formField.removeClass('form-field--error');
             $('.label', $formField).removeClass('required-marker');
             $('.form-field__error-message', $formField).remove();
