@@ -6,7 +6,7 @@ import com.netaporter.uri.dsl._
 trait VanityUrl extends Controller {
 
   def redirect = CachedAction { implicit request =>
-    Redirect(routes.FrontPage.index().url ? ("INTCMP" -> "pap_233874"), MOVED_PERMANENTLY)
+    MovedPermanently(routes.FrontPage.index().url ? ("INTCMP" -> "pap_233874"))
   }
 }
 
