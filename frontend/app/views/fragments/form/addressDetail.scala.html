@@ -2,7 +2,7 @@
 address1: Option[String], address2: Option[String], town: Option[String], postcode: Option[String],
 county: Option[String], userCountry: Option[String])
 
-@import model.Countries
+@import com.gu.membership.zuora.{Country, Countries}
 
 @countyOrStateSelect(countyOrStateList: List[String], countyOrStateLabel: String) = {
     <div class="form-field address-fieldset__country u-h">
@@ -14,24 +14,7 @@ county: Option[String], userCountry: Option[String])
                     data-error-message="Please enter your @countyOrStateLabel.capitalize"
                     data-validation="required">
             @for(countyOrState <- countyOrStateList) {
-                <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){selected}>@countyOrState</option>
-            }
-            </select>
-        </div>
-    </div>
-}
-
-@countrySelect(countryList: List[String]) = {
-    <div class="form-field address-fieldset__country">
-        <label class="label" for="country-@(formType)">Country</label>
-        <div class="input">
-            <select name="@(formType).country"
-                    id="country-@(formType)"
-                    class="js-country-@(formType)"
-                    data-error-message="Please enter your Country"
-                    data-validation="required">
-            @for(country <- countryList) {
-                <option value="@country"@if(userCountry.getOrElse("") == country){selected}>@country</option>
+                <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
             }
             </select>
         </div>
@@ -49,7 +32,21 @@ county: Option[String], userCountry: Option[String])
 
         <div class="fieldset__fields">
 
-            @countrySelect(Countries.all)
+            <div class="form-field address-fieldset__country">
+                <label class="label" for="country-@(formType)">Country</label>
+                <div class="input">
+                    <select name="@(formType).country"
+                        id="country-@(formType)"
+                        class="js-country-@(formType)"
+                        data-error-message="Please enter your Country"
+                        data-validation="required">
+
+                        @for(country <- Countries.allSorted) {
+                            <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.alpha2){ selected}>@country.name</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
             <div class="form-field">
                 <label class="label" for="address-line-one-@(formType)">Address line 1</label>

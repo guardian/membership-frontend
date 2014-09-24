@@ -5,12 +5,13 @@ import play.api.data.Forms._
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
+import com.gu.membership.zuora.{Country, Countries}
 
-import model.{Countries, TierPlan, FriendTierPlan, PaidTierPlan}
+import model.{TierPlan, FriendTierPlan, PaidTierPlan}
 
 object MemberForm {
   case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,
-                         postCode: String, country: String) {
+                         postCode: String, country: Country) {
     // Salesforce only has one address line field, so merge our two together
     val line = Seq(lineOne, lineTwo).filter(_.nonEmpty).mkString(", ")
   }
@@ -43,10 +44,13 @@ object MemberForm {
   case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
                                   billingAddress: Option[AddressForm])
 
-  val countriesRequiringState = Seq(Countries.Canada, Countries.US).map(c => c.name -> c).toMap
+  val countriesRequiringState = Countries.all.filter(_.states.nonEmpty).map { c => c.alpha2 -> c }.toMap
+
+  val countryText = nonEmptyText.verifying(Countries.allCodes.contains _)
+    .transform[Country](Countries.allCodes.apply, _.alpha2)
 
   def verifyAddress(address: AddressForm): Boolean =
-    countriesRequiringState.get(address.country).fold(true)(_.states.contains(address.countyOrState))
+    countriesRequiringState.get(address.country.alpha2).forall(_.states.contains(address.countyOrState))
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
@@ -56,7 +60,7 @@ object MemberForm {
     "town" -> text,
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
-    "country" -> text.verifying(Countries.all.contains _)
+    "country" -> countryText
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val paidAddressMapping: Mapping[AddressForm] = mapping(
@@ -65,7 +69,7 @@ object MemberForm {
     "town" -> nonEmptyText,
     "countyOrState" -> text,
     "postCode" -> nonEmptyText,
-    "country" -> text.verifying(Countries.all.contains _)
+    "country" -> countryText
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
   val nameMapping: Mapping[NameForm] = mapping(

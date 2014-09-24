@@ -4,9 +4,8 @@ require([
     'src/utils/router',
     'ajax',
     'src/modules/tier/JoinFree',
-    'src/modules/tier/JoinPaid',
     'src/modules/info/Feedback',
-    'src/modules/tier/Upgrade',
+    'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
@@ -15,16 +14,16 @@ require([
     'src/modules/events/eventPriceEnhance',
     'config/appCredentials',
     'src/modules/tier/Thankyou',
-    'lib/bower-components/raven-js/dist/raven' // add new deps ABOVE this
+    'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
+    'src/utils/modernizr'
 ], function(
     Imager,
     omnitureAnalytics,
     router,
     ajax,
     JoinFree,
-    JoinPaid,
     FeedbackForm,
-    Upgrade,
+    PaidForm,
     Cta,
     Header,
     DatetimeEnhance,
@@ -79,16 +78,12 @@ require([
         (new Thankyou()).init();
     });
 
-    router.match('*/friend/enter-details').to(function () {
+    router.match('/join/friend/enter-details').to(function () {
         (new JoinFree()).init();
     });
 
-    router.match(['*/payment', '*/partner/enter-details', '*/patron/enter-details']).to(function () {
-        (new JoinPaid()).init();
-    });
-
-    router.match(['*/tier/change/partner', '*/tier/change/patron']).to(function () {
-        (new Upgrade()).init();
+    router.match(['/join/(partner|patron)/enter-details', '/tier/change/(partner|patron)']).to(function () {
+        (new PaidForm()).init();
     });
 
     router.match('/choose-tier').to(function () {

@@ -23,7 +23,7 @@ define([
 
     FeedbackForm.prototype.setupForm = function () {
         var formElement = this.elem = this.getElem('FEEDBACK_FORM');
-        if(this.form) {
+        if (formElement) {
             this.form = new Form(formElement);
             this.form.init();
         }

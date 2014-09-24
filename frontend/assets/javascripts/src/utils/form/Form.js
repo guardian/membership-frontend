@@ -25,11 +25,9 @@ define([
     var GLOBAL_FORM_MESSAGE = 'This form has errors';
     var self;
 
-    function Form (formElement, successPostUrl, successRedirectUrl) {
+    function Form (formElement) {
         self = this;
         this.formElement = formElement;
-        this.successPostUrl = successPostUrl;
-        this.successRedirectUrl = successRedirectUrl;
         this.errorMessages = [];
         this.validationProfiles = [];
     }
@@ -125,11 +123,11 @@ define([
             self.setThrobberMessage(MAKING_PAYMENT_MESSAGE);
 
             ajax({
-                url: self.successPostUrl,
+                url: self.formElement.action,
                 method: 'post',
                 data: data,
-                success: function () {
-                    window.location.assign(self.successRedirectUrl);
+                success: function (data) {
+                    window.location.assign(data.redirect);
                 },
                 error: function (error) {
                     var errorObj,

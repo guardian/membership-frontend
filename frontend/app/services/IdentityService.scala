@@ -15,6 +15,7 @@ import play.api.libs.ws.{WS, WSResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import com.gu.membership.zuora.Countries
 
 trait IdentityService {
 
@@ -26,11 +27,12 @@ trait IdentityService {
 
   def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest) {
 
-    val billingDetails = if (formData.isInstanceOf[PaidMemberJoinForm]) {
-      val billingForm = formData.asInstanceOf[PaidMemberJoinForm]
-      val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
-      billingAddress(billingAddressForm)
-    } else Json.obj()
+    val billingDetails = formData match {
+      case billingForm: PaidMemberJoinForm =>
+        val billingAddressForm = billingForm.billingAddress.getOrElse(billingForm.deliveryAddress)
+        billingAddress(billingAddressForm)
+      case _ => Json.obj()
+    }
 
     val fields = Json.obj(
       "secondName" -> formData.name.last,
@@ -69,7 +71,7 @@ trait IdentityService {
       "address3" -> addressForm.town,
       "address4" -> addressForm.countyOrState,
       "postcode" -> addressForm.postCode,
-      "country" -> addressForm.country
+      "country" -> addressForm.country.name
     )
   }
 
@@ -80,7 +82,7 @@ trait IdentityService {
       "billingAddress3" -> billingAddress.town,
       "billingAddress4" -> billingAddress.countyOrState,
       "billingPostcode" -> billingAddress.postCode,
-      "billingCountry" -> billingAddress.country
+      "billingCountry" -> billingAddress.country.name
     )
   }
 }

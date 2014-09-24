@@ -3,13 +3,13 @@ define([
     'ajax',
     'stripe',
     'bean',
-    'src/modules/tier/JoinPaid',
+    'src/modules/tier/PaidForm',
     'src/utils/form/Form',
     'src/utils/form/Password',
     'src/utils/form/Address',
     'config/stripeErrorMessages',
     'src/utils/helper'
-], function ($, ajax, stripe, bean, JoinPaid, Form, Password, Address, stripeErrorMessages, helper) {
+], function ($, ajax, stripe, bean, PaidForm, Form, Password, Address, stripeErrorMessages, helper) {
 
     ajax.init({page: {ajaxUrl: ''}});
 
@@ -19,8 +19,6 @@ define([
             INVALID_CREDIT_CARD_NUMBER = '1234123412341234',
             VALID_CVC_NUMBER = '123',
             EMPTY_STRING = '',
-            SUCCESS_POST_URL = '/success/post/url',
-            SUCCESS_REDIRECT_URL = '/success/redirect/url',
             GLOBAL_FORM_ERROR = 'This form has errors',
             STRIPE_RESPONSE_STATUS = 'ERROR',
             FORM_FIELD_ERROR_CLASS = 'form-field--error',
@@ -104,11 +102,11 @@ define([
             function callback(canonicalPaymentFormFixtureElement) {
 
                 paymentFormFixtureElement = canonicalPaymentFormFixtureElement.cloneNode(true);
-                joinPaidForm = new JoinPaid();
+                joinPaidForm = new PaidForm();
 
                 spyOn(joinPaidForm, 'setupForm').and.callFake(function() {
                     var addressHelper;
-                    joinPaidForm.form = new Form(paymentFormFixtureElement, SUCCESS_POST_URL, SUCCESS_REDIRECT_URL);
+                    joinPaidForm.form = new Form(paymentFormFixtureElement);
                     joinPaidForm.form.init();
 
                     addressHelper = new Address(joinPaidForm.form);
@@ -203,9 +201,6 @@ define([
         it('should correctly initialise itself', function (done) {
             expect(joinPaidForm).toBeDefined();
             expect(joinPaidForm.form.validationProfiles.length).toBe(10);
-            expect(joinPaidForm.form.successPostUrl).toEqual(SUCCESS_POST_URL);
-            expect(joinPaidForm.form.successRedirectUrl).toEqual(SUCCESS_REDIRECT_URL);
-
             done();
         });
 

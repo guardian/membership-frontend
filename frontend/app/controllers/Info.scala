@@ -32,6 +32,15 @@ trait Info extends Controller {
     Ok(views.html.info.feedbackThankyou())
   }
 
+  def patron() = CachedAction { implicit request =>
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitlePatrons,
+      request.path,
+      Some(CopyConfig.copyDescriptionPatrons)
+    )
+    Ok(views.html.joiner.tier.patron(pageInfo))
+  }
+
   def submitFeedback = NoCacheAction.async { implicit request =>
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
