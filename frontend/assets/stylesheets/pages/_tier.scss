@@ -278,6 +278,10 @@ $current-indicator: rem(47px);
         @include fs-headline(2);
 
         @include mq(desktop) {
+            @include fs-headline(2);
+        }
+
+        @include mq(mem-full) {
             @include fs-headline(3);
         }
     }
@@ -299,7 +303,7 @@ $current-indicator: rem(47px);
         .price-info__container-inner--last {
             text-align: right;
             height: 100%;
-            border-left: 1px solid $c-neutral5;
+            border-left: 1px solid $c-neutral3;
         }
     }
 
@@ -345,11 +349,8 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         @include fs-bodyCopy(3);
         @include rem((
-            min-height: 120px
-        ));
-        @include rem((
             padding-top: $gs-gutter/2,
-            min-height: 60px
+            min-height: 120px
         ));
     }
 
