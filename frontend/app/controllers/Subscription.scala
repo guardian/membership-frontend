@@ -1,9 +1,5 @@
 package controllers
 
-import com.gu.membership.util.Timing
-import monitoring.MembershipMetrics
-import play.api.Logger
-
 import scala.concurrent.Future
 
 import play.api.mvc._
@@ -12,28 +8,11 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.libs.json.Json
 
-import services.MemberService
-import model.{Zuora, Stripe}
+import model.Stripe
 import model.StripeSerializer._
-import actions.AuthRequest
-import forms.MemberForm._
+import services.MemberService
 
 trait Subscription extends Controller {
-  def subscribe = AjaxAuthenticatedNonMemberAction.async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(form => Future.successful(BadRequest("form errors: "+form.errors.mkString(", "))), makePayment)
-  }
-
-  private def makePayment(formData: PaidMemberJoinForm)(implicit request: AuthRequest[_]) = {
-    val payment = for {
-      salesforceContactId <- MemberService.createMember(request.user, formData, IdentityRequest(request))
-    } yield Ok("")
-
-    payment.recover {
-      case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case error: Zuora.ResultError => Forbidden
-    }
-  }
-
   def updateCard() = AjaxPaidMemberAction.async { implicit request =>
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>

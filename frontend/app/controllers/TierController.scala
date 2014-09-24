@@ -6,12 +6,13 @@ import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 
-import com.gu.membership.salesforce.{FreeMember, PaidMember, Member, Tier}
+import com.gu.membership.salesforce._
 import com.gu.membership.salesforce.Tier.Tier
-import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
 
+import actions.MemberRequest
 import forms.MemberForm._
 import model.StripeSerializer._
+import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
 import services._
 
 trait DowngradeTier {
@@ -44,7 +45,7 @@ trait UpgradeTier {
       val identityRequest = IdentityRequest(request)
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-        privateFields = userOpt.map(_.privateFields).getOrElse(PrivateFields.apply())
+        privateFields = userOpt.fold(PrivateFields())(_.privateFields)
       } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
     }
     else
@@ -52,19 +53,23 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    val futureConfirm = request.member match {
+    request.member match {
       case freeMember: FreeMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), formData => {
-          MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).map(_ => Ok(""))
-        })
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+          doUpgrade(freeMember, tier)(_).map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) })
       case _ => Future.successful(NotFound)
     }
+  }
 
-    futureConfirm.recover {
+  private def doUpgrade(freeMember: FreeMember, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
+    MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error: Zuora.ResultError => Forbidden
+      case error: ScalaforceError => Forbidden
     }
   }
+
+  def upgradeThankyou(tier: Tier) = Joiner.thankyouPaid(tier)
 }
 
 trait CancelTier {

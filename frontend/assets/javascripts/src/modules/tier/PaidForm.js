@@ -11,15 +11,14 @@ define([
     var self;
 
     // TODO abstract out common functionality in this class
-    var JoinPaid = function() {
+    var PaidForm = function () {
         self = this;
     };
 
-    component.define(JoinPaid);
+    component.define(PaidForm);
 
-    JoinPaid.prototype.classes = {
+    PaidForm.prototype.classes = {
         STRIPE_FORM: 'js-stripe-form',
-        POST_CODE: 'js-post-code',
         CTA_PAYMENT_OPTION_PRICE: 'js-cta-payment-option-price',
         PAYMENT_OPTIONS_CONTAINER: 'js-payment-options-container',
         CVC_CTA: 'js-cvc-cta',
@@ -30,23 +29,22 @@ define([
         CARD_NOTE_PAYMENT_TAKEN: 'js-card-note-payment-taken'
     };
 
-    JoinPaid.prototype.data = {
+    PaidForm.prototype.data = {
         CARD_TYPE: 'data-card-type'
     };
 
-    JoinPaid.prototype.init = function () {
+    PaidForm.prototype.init = function () {
         this.setupForm();
         this.setupCtaPaymentOptionPriceListeners();
         this.setupCvcToggle();
     };
 
-
     // setup form, passwordStrength, Address toggle for delivery and billing
-    JoinPaid.prototype.setupForm = function () {
+    PaidForm.prototype.setupForm = function () {
         var formElement = this.elem = this.getElem('STRIPE_FORM');
         var addressHelper;
 
-        this.form = new Form(formElement, '/subscription/subscribe', window.location.href.replace('enter-details', 'thankyou'));
+        this.form = new Form(formElement);
         this.form.init();
 
         addressHelper = new Address(this.form);
@@ -56,7 +54,7 @@ define([
         (new Password()).init();
     };
 
-    JoinPaid.prototype.setupCtaPaymentOptionPriceListeners = function() {
+    PaidForm.prototype.setupCtaPaymentOptionPriceListeners = function() {
         var $paymentOptionsContainer = $(this.getClass('PAYMENT_OPTIONS_CONTAINER'), this.form.formElement);
         var $ctaOptionPrice = $(this.getClass('CTA_PAYMENT_OPTION_PRICE'), this.form.formElement);
 
@@ -68,7 +66,7 @@ define([
         });
     };
 
-    JoinPaid.prototype.populateCardNote = function(period) {
+    PaidForm.prototype.populateCardNote = function(period) {
         var $cardNote = $(this.getElem('CARD_DETAILS_NOTE'));
         var $cardNoteCharge = $(this.getClass('CARD_NOTE_CHARGE'), $cardNote);
         var $cardNotePeriod = $(this.getClass('CARD_NOTE_PERIOD'), $cardNote);
@@ -80,7 +78,7 @@ define([
     };
 
 
-    JoinPaid.prototype.setupCvcToggle = function() {
+    PaidForm.prototype.setupCvcToggle = function() {
         var $cvcDescriptionContainer = $(this.getClass('CVC_DESCRIPTION_CONTAINER'), this.form.formElement);
         var $cvcCta = $(this.getClass('CVC_CTA'), this.form.formElement);
 
@@ -90,5 +88,5 @@ define([
         });
     };
 
-    return JoinPaid;
+    return PaidForm;
 });
