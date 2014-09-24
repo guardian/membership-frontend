@@ -32,7 +32,7 @@ trait MemberService {
     Keys.MAILING_CITY -> formData.deliveryAddress.town,
     Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
     Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-    Keys.MAILING_COUNTRY -> formData.deliveryAddress.country,
+    Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
     Keys.ALLOW_MEMBERSHIP_MAIL -> true
   ) ++
     formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
