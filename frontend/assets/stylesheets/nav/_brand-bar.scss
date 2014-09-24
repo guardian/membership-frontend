@@ -4,12 +4,12 @@ $headerHeight: 48px;
     background-color: darken($mem-blue, 10%);
     line-height: 0;
     @include box-sizing(border-box);
-    padding-left: $gs-gutter * .25;
-    padding-right: $gs-gutter * .25;
+    padding-left: rem($gs-gutter * .25);
+    padding-right: rem($gs-gutter * .25);
 
     @include mq(mobileLandscape) {
-        padding-left: $gs-gutter / 2;
-        padding-right: $gs-gutter / 2;
+        padding-left: rem($gs-gutter / 2);
+        padding-right: rem($gs-gutter / 2);
     }
 }
 
@@ -21,15 +21,15 @@ $headerHeight: 48px;
     @include fs-bodyHeading(1);
     float: left;
     color: #ffffff;
-    height: $headerHeight;
-    padding-top: $gs-baseline / 2;
-    padding-bottom: $gs-baseline / 2;
-    margin-right: $gs-baseline * .25;
-    margin-left: $gs-baseline * .25;
+    height: rem($headerHeight);
+    padding-top: rem($gs-baseline / 2);
+    padding-bottom: rem($gs-baseline / 2);
+    margin-right: rem($gs-baseline * .25);
+    margin-left: rem($gs-baseline * .25);
 
     @include mq(tablet) {
-        margin-right: $gs-gutter / 2;
-        margin-left: $gs-gutter / 2;
+        margin-right: rem($gs-gutter / 2);
+        margin-left: rem($gs-gutter / 2);
     }
 }
 

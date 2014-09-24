@@ -64,22 +64,14 @@ html {
 
 body {
     min-height: 100%;
-
-    // Magic numbers refer to footer height
-    @include rem((
-        margin-bottom: 252px
-    ));
+    margin-bottom: rem(252px); // Magic numbers refer to footer height
 
     @include mq(tablet) {
-        @include rem((
-            margin-bottom: 218px
-        ));
+        margin-bottom: rem(218px);
     }
 
     @include mq(wide) {
-        @include rem((
-            margin-bottom: 220px
-        ));
+        margin-bottom: rem(220px);
     }
 }
 

@@ -142,18 +142,18 @@
         -moz-column-count: $cols;
         column-count: $cols;
 
-        -webkit-column-gap: $gap;
-        -moz-column-gap: $gap;
-        column-gap: $gap;
+        -webkit-column-gap: rem($gap);
+        -moz-column-gap: rem($gap);
+        column-gap: rem($gap);
     } @else {
-        margin-left: 0 - $gap * .5;
-        margin-right: 0 - $gap * .5;
+        margin-left: 0 - rem($gap / 2);
+        margin-right: 0 - rem($gap / 2);
         & > * {
             @include box-sizing(border-box);
             width: (100% / $cols);
             float: left;
-            padding-left: $gap * .5;
-            padding-right: $gap * .5;
+            padding-left: rem($gap / 2);
+            padding-right: rem($gap / 2);
         }
     }
 }
