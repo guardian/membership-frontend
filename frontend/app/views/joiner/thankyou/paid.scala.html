@@ -7,7 +7,7 @@
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
         @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
-        @fragments.form.sectionHeading("Hello! Welcome to Guardian Membership")
+        <h1 class="section-sub-headline">Hello! Welcome to Guardian Membership</h1>
         @fragments.layout.welcomeUser()
     </section>
 
@@ -65,9 +65,5 @@
         </table>
     </section>
 
-    <a class="action action--join" href="/events">Get Started</a>
-
-    @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
-        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
-    }
+    @fragments.joiner.completePurchase(ebIFrameDetail)
 }

@@ -124,23 +124,14 @@ object Eventbrite {
     import EBEventStatus._
 
     def getStatus: EBEventStatus = {
-      val numberSoldTickets = ticket_classes.flatMap(_.quantity_sold).sum
+      val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity.getOrElse(0)
+      val isLive = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
 
       status.collect {
-        case "completed" => Completed
-
+        case "completed" | "started" | "ended" => Completed
         case "canceled" => Cancelled // American spelling
-
-        case "live" if numberSoldTickets >= capacity.getOrElse(0) => SoldOut
-
-        case "live" => {
-          val startDates = ticket_classes.map(_.sales_start.getOrElse(Instant.now))
-          if (startDates.exists(_ <= Instant.now)) Live else PreLive
-        }
-
-        case "draft" => PreLive
-
-        case _ => Live
+        case "live" if isSoldOut => SoldOut
+        case "live" if isLive => Live
       }.getOrElse(PreLive)
     }
 

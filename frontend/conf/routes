@@ -16,9 +16,7 @@ GET            /healthcheck                       controllers.Healthcheck.health
 GET            /join                              controllers.Joiner.tierList
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST           /join/friend/enter-details         controllers.Joiner.joinFriend
-
-GET            /patrons                           controllers.Joiner.patron
-
+POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(tier: Tier.Value)
 GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
 GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
@@ -27,9 +25,7 @@ GET            /signin                            controllers.Login.chooseSignin
 GET            /choose-tier                       controllers.Joining.tierChooser()
 POST           /choose-tier                       controllers.Joining.tierChooserRedirect()
 
-
 # Subscription
-POST           /subscription/subscribe            controllers.Subscription.subscribe
 POST           /subscription/update-card          controllers.Subscription.updateCard
 OPTIONS        /subscription/update-card          controllers.Subscription.updateCardPreflight
 
@@ -52,7 +48,7 @@ GET            /tier/change/friend/summary        controllers.TierController.dow
 
 GET            /tier/change/:tier                 controllers.TierController.upgrade(tier: Tier.Value)
 POST           /tier/change/:tier                 controllers.TierController.upgradeConfirm(tier: Tier.Value)
-GET            /tier/change/:tier/summary         controllers.Joiner.thankyouPaid(tier: Tier.Value)
+GET            /tier/change/:tier/summary         controllers.TierController.upgradeThankyou(tier: Tier.Value)
 
 # Information
 GET            /help                              controllers.Info.help
@@ -60,6 +56,7 @@ GET            /feedback                          controllers.Info.feedback
 GET            /feedback/thankyou                 controllers.Info.feedbackThankyou
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /about                             controllers.Info.about
+GET            /patrons                           controllers.Info.patron
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)

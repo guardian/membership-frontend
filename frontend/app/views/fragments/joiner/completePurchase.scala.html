@@ -1,0 +1,17 @@
+@(ebIFrameDetail: Option[(String, Int)])
+
+@if(ebIFrameDetail) {
+    <section class="complete-purchase">
+        <h2>Complete your discounted ticket purchase</h2>
+        <h3>Please bear with us</h3>
+
+        <p>We're currently improving our ticket purchasing system but in the meantime you will have to enter some details again.</p>
+        <p>We'll have a much smoother solution soon.</p>
+    </section>
+
+    @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
+        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
+    }
+} else {
+    <a class="action action--join" href="/events">Get Started</a>
+}
