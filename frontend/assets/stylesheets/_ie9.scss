@@ -25,19 +25,3 @@
         }
     }
 }
-
-.event-item--hero {
-    .event-item__media {
-        width: 60%;
-        display: inline-block;
-    }
-
-    .event-item__meta {
-        width: 40%;
-        display: inline-block;
-        .event-item__cta {
-            position: static;
-        }
-    }
-}
-

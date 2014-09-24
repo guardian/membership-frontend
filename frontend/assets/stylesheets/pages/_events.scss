@@ -485,7 +485,11 @@ div.event {
             .event-item__media {
                 display: inline-block;
                 vertical-align: top;
-                @include flex(1, 0, percentage(gs-span(8)/gs-span(12)))
+                @include flex(1, 0, percentage(gs-span(8)/gs-span(12)));
+                .no-flexbox & {
+                    width: 60%;
+                    display: inline-block;
+                }
             }
 
             .event-item__meta {
@@ -493,6 +497,12 @@ div.event {
                 vertical-align: top;
                 position: relative;
                 @include flex();
+                .no-flexbox & {
+                    width: 40%;
+                    .event-item__cta {
+                        position: static;
+                    }
+                }
             }
 
             .event-item__description {

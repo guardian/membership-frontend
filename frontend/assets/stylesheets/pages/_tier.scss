@@ -70,11 +70,13 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         @include flex-grow(1);
         @include flex-basis(0); // this fixes a bug, dunno why
-        width: 31%;
-        float: left;
-
-        .patron-page & {
-            width: 45%;
+        // give them manual widths for no flexbox browsers
+        .no-flexbox & {
+            width: 31%;
+            float: left;
+            .patron-page & {
+                width: 45%;
+            }
         }
     }
 

@@ -61,16 +61,6 @@
         @* we want to add/remove classes to HTML ASAP to avoid FOUC *@
         var htmlClassNames = ['js-on']; // we know we have JS
 
-        @* http://modernizr.com/download/#-svg *@
-        function hasSvgSupport() {
-            var ns = {'svg': 'http://www.w3.org/2000/svg'};
-            return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
-        }
-
-        if (hasSvgSupport()) {
-            htmlClassNames.push('svg');
-        }
-
         document.documentElement.className = document.documentElement.className.replace(/\bjs-off\b/g, '') + ' ' + htmlClassNames.join(' ');
 
         if (!isModern) {
