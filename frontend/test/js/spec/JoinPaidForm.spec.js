@@ -202,7 +202,7 @@ define([
 
         it('should correctly initialise itself', function (done) {
             expect(joinPaidForm).toBeDefined();
-            expect(joinPaidForm.form.validationProfiles.length).toBe(12);
+            expect(joinPaidForm.form.validationProfiles.length).toBe(10);
             expect(joinPaidForm.form.successPostUrl).toEqual(SUCCESS_POST_URL);
             expect(joinPaidForm.form.successRedirectUrl).toEqual(SUCCESS_REDIRECT_URL);
 
