@@ -9,7 +9,7 @@ object TicketSaleDates {
   def datesFor(eventStart: DateTime, tickets: EBTickets): Map[Tier.Value, Instant] = {
     val saleStart = tickets.sales_start.get
 
-    if (saleStart > eventStart - 3.weeks) {
+    if (saleStart > eventStart - 2.weeks) {
       Map(Tier.Patron -> saleStart, Tier.Partner -> saleStart, Tier.Friend -> saleStart)
     } else {
       val saleStartDateTime = saleStart.toDateTime(eventStart.getChronology)
