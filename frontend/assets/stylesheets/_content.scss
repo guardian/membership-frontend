@@ -1,9 +1,7 @@
 .content__headline {
     @include fs-headline(4);
-    @include rem((
-        padding-bottom: $gs-baseline,
-        padding-top: $gs-baseline/2
-    ));
+    padding-bottom: rem($gs-baseline);
+    padding-top: rem($gs-baseline / 2);
 
     @include mq(mobileLandscape) {
         @include fs-headline(6, true);
@@ -30,17 +28,15 @@
 }
 
 .content__container {
-    @include rem((
-        margin-bottom: $gs-gutter
-    ));
+    margin-bottom: rem($gs-gutter);
 }
 
 .content__container--border {
-    border-top: 1px dotted guss-colour('neutral-5');
+    border-top: rem(1px) dotted guss-colour('neutral-5');
 }
 
 .content__container--border-dark {
-    border-top: 1px dotted #333333;
+    border-top: rem(1px) dotted #333333;
 }
 
 .content__footer {

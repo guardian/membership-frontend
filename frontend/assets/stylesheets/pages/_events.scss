@@ -11,7 +11,7 @@ div.event {
         }
 
         .event__sale-ends {
-            padding-bottom: 20px;
+            padding-bottom: rem(20px);
         }
 
         .event__content__masthead {
@@ -19,23 +19,18 @@ div.event {
         }
 
         .event__content-body {
-            @include rem((
-                max-width: 620px,
-                padding: $gs-gutter/2
-            ));
+            max-width: rem(620px);
+            padding: rem($gs-gutter/2);
+
             @include mq(tablet) {
-                @include rem((
-                    padding: $gs-gutter
-                ));
+                padding: rem($gs-gutter);
             }
             margin: 0 auto;
         }
 
         .event__meta > div {
             display: block;
-            @include rem((
-                margin: 0 0 $gs-gutter
-            ));
+            margin: 0 0 rem($gs-gutter);
         }
 
         .event__time {
@@ -65,7 +60,7 @@ div.event {
 .event__description {
     h2 {
         @include fs-headline(2);
-        margin: 8px 0 16px;
+        margin: rem(8px) 0 rem(16px);
     }
     p, li {
         @include fs-bodyCopy(3);
@@ -74,17 +69,14 @@ div.event {
     ul {
         list-style-position: inside;
         padding: 0;
-        margin: 0 0 8px;
+        margin: 0 0 rem(8px);
     }
 
     blockquote {
-        @include rem((
-            padding-left: 14px
-        ));
-
-        border-left: 2px solid #cfcfcd;
+        padding-left: rem(14px);
+        border-left: rem(2px) solid #cfcfcd;
         font-style: italic;
-        margin: 0 0 16px;
+        margin: 0 0 rem(16px);
     }
 
     blockquote p {
@@ -106,13 +98,13 @@ div.event {
 
 .event__content__inner--sub {
     background-color: #e1e1e1;
-    margin-bottom: 20px;
+    margin-bottom: rem(20px);
 }
 
 .event__masthead {
     position: relative;
     .event__name {
-        padding: 40px 40px 20px 0;
+        padding: rem(40px) rem(40px) rem(20px) 0;
     }
 }
 
@@ -163,10 +155,8 @@ div.event {
     @include border-radius(20px);
     color: #0096c9;
     background-color: $white;
-    @include rem((
-        padding: 3px 8px,
-        border: 1px solid #0096c9
-    ));
+    padding: rem(3px) rem(8px);
+    border: rem(1px) solid #0096c9;
     vertical-align: middle;
     cursor: pointer;
     z-index: 10000;
@@ -177,13 +167,11 @@ div.event {
     position: absolute;
     display: block;
     background-color: $white;
-    @include rem((
-        min-width: 200px,
-        bottom: 32px,
-        left: -27px,
-        z-index: 1000,
-        padding: 20px
-    ));
+    min-width: rem(200px);
+    bottom: rem(32px);
+    left: rem(-27px);
+    z-index: rem(1000);
+    padding: rem(20px);
     @include border-radius(10px);
 }
 
@@ -191,11 +179,9 @@ div.event {
     border-color: $white transparent transparent;
     border-style: solid;
     position: absolute;
-    @include rem((
-        border-width: 15px,
-        left: 22px,
-        bottom: -30px
-    ));
+    border-width: rem(15px);
+    left: rem(22px);
+    bottom: rem(-30px);
     height: 0;
     width: 0;
     z-index: 1;
@@ -207,23 +193,17 @@ div.event {
 .ticket-info {
     @include fs-textsans(1);
     color: #878787;
-    @include rem((
-        margin-top: 8px
-    ));
+    margin-top: rem(8px);
 }
 
 .terms-info {
-    @include rem((
-        padding-top: $gs-baseline*2
-    ));
+    padding-top: rem($gs-baseline * 2);
 }
 
 .events-list {
     &.u-unstyled {
         &:first-child {
-            @include rem((
-                margin-top: -10px
-            ));
+            margin-top: rem(-10px);
         }
     }
 }
@@ -232,35 +212,26 @@ div.event {
     .event-block {
         position: relative;
         background-color: $white;
-        border-top: 1px solid $mem-live-accent;
-
-        @include rem((
-            padding: $gs-gutter/2 0 $gs-gutter
-        ));
+        border-top: rem(1px) solid $mem-live-accent;
+        padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
 
         .events-title-container {
             display: block;
-            @include rem((
-                padding: 0 0 $gs-baseline
-            ));
+            padding: 0 0 rem($gs-baseline);
         }
 
         .events-list__item {
-            @include rem((
-                margin-bottom: $gs-baseline
-            ));
+            margin-bottom: rem($gs-baseline);
         }
 
         @include mq(tablet) {
 
             @include guss-row('.events-list');
 
-            @include rem((
-                padding: $gs-baseline 0 $gs-baseline*2
-            ));
+            padding: rem($gs-baseline) 0 rem($gs-baseline * 2);
 
             .events-list__item {
-                margin: 10px;
+                margin: rem(10px);
                 &:first-child {
                     margin-left: 0;
                 }
@@ -272,15 +243,11 @@ div.event {
 
         @include mq(desktop) {
 
-            @include rem((
-                padding: $gs-baseline $gs-gutter $gs-baseline*2 $gs-gutter
-            ));
+            padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline * 2);
 
             .events-list-container {
                 display: block;
-                @include rem((
-                    width: gs-span(12)
-                ));
+                width: rem(gs-span(12));
                 margin: 0 auto;
             }
 
@@ -291,16 +258,12 @@ div.event {
             .events-title-container {
                 display: inline-block;
                 vertical-align: top;
-                @include rem((
-                    width: gs-span(2)+$gs-gutter
-                ));
+                width: rem(gs-span(2) + $gs-gutter);
             }
             .events-list-container {
                 display: inline-block;
                 vertical-align: top;
-                @include rem((
-                    width: gs-span(12)
-                ));
+                width: rem(gs-span(12));
             }
         }
 
@@ -314,9 +277,7 @@ div.event {
 
         .events-list__item {
             @include mq(tablet) {
-                @include rem((
-                    height: 420px
-                ));
+                height: rem(420px);
             }
         }
 
@@ -341,16 +302,12 @@ div.event {
     }
 
     .event-item__meta {
-        @include rem((
-            padding: $gs-gutter/2
-        ));
+        padding: rem($gs-gutter / 2);
 
         .event-item__title {
             @include fs-headline(1);
             color: $black;
-            @include rem((
-                margin-bottom: $gs-baseline
-            ));
+            margin-bottom: rem($gs-baseline);
             position: relative;
         }
         .event-status--sold-out {
@@ -359,9 +316,9 @@ div.event {
             background-color: $mem-live-accent;
             @include fs-data(2);
             position: relative;
-            top: -3px;
-            padding: 1px 3px;
-            margin-right: 4px;
+            top: rem(-3px);
+            padding: rem(1px) rem(3px);
+            margin-right: rem(4px);
         }
         .event-item__time {
             @include fs-data(4);
@@ -374,9 +331,7 @@ div.event {
 
         .event-item__description {
             @include fs-bodyCopy(1);
-            @include rem((
-                padding: $gs-baseline 0 0
-            ));
+            padding: rem($gs-baseline) 0 0;
             color: $black;
         }
 
@@ -397,19 +352,15 @@ div.event {
 
             .event-item__action {
                 position: absolute;
-                @include rem((
-                    bottom: $gs-gutter/2,
-                    right: $gs-gutter/2,
-                    width: 36px,
-                    height: 36px,
-                    padding: 0 8px 0 0
-                ));
+                bottom: rem($gs-gutter / 2);
+                right: rem($gs-gutter / 2);
+                width: rem(36px);
+                height: rem(36px);
+                padding: 0 rem(8px) 0 0;
 
                 @include mq(desktop) {
-                    @include rem((
-                        bottom: $gs-gutter,
-                        right: $gs-gutter,
-                    ));
+                    bottom: rem($gs-gutter);
+                    right: rem($gs-gutter);
                 }
                 background-color: $mem-live-accent;
                 @include border-radius(50px);
@@ -428,9 +379,7 @@ div.event {
         }
 
         @include mq(tablet) {
-            @include rem((
-                padding: $gs-baseline $gs-gutter/2
-            ));
+            padding: rem($gs-baseline) rem($gs-gutter / 2);
             height: auto;
 
             .event-item__title {
@@ -439,30 +388,22 @@ div.event {
 
             .event-item__cta {
                 position: absolute;
-                @include rem((
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: 0 $gs-gutter/2 $gs-gutter/2
-                ));
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
             }
         }
 
         @include mq(desktop) {
-            @include rem((
-                padding: $gs-gutter
-            ));
+            padding: rem($gs-gutter);
             .event-item__description {
                 @include fs-headline(1);
-                @include rem((
-                    padding: $gs-baseline*2 0 0
-                ));
+                padding: rem($gs-baseline * 2) 0 0;
             }
 
             .event-item__cta {
-                @include rem((
-                    padding: 0 $gs-gutter $gs-gutter
-                ));
+                padding: 0 rem($gs-gutter) rem($gs-gutter);
             }
         }
     }
@@ -470,15 +411,11 @@ div.event {
     @include guss-row('&.event-item--hero');
 
     &.event-item--hero {
-        @include rem((
-            margin-bottom: $gs-gutter/2
-        ));
+        margin-bottom: rem($gs-gutter / 2);
         width: 100%;
 
         @include mq(tablet) {
-            @include rem((
-                margin-bottom: $gs-gutter/2
-            ));
+            margin-bottom: rem($gs-gutter / 2);
             height: auto;
             overflow: hidden;
 
@@ -537,9 +474,7 @@ div.event {
     &.event-item--standalone {
         .event-item__cta {
             position: static;
-            @include rem((
-                padding: $gs-baseline*2 0 0
-            ));
+            padding: rem($gs-baseline * 2) 0 0;
         }
 
         *:hover, &:hover {

@@ -2,9 +2,7 @@ $header-padding: 20px;
 $header-margin: 36px;
 
 .header {
-    @include rem((
-        margin-bottom: $header-margin
-    ));
+    margin-bottom: rem($header-margin);
     .header__inner--popup {
         padding: 0;
         position: relative;
@@ -14,11 +12,9 @@ $header-margin: 36px;
         z-index: 2;
         position: relative;
         background-color: transparentize($mem-blue, .2);
-        @include rem((
-            padding-top: 5px,
-            padding-bottom: 5px,
-            height: 48px
-        ));
+        padding-top: rem(5px);
+        padding-bottom: rem(5px);
+        height: rem(48px);
 
         @include mq(tablet) {
             height: auto;
@@ -31,22 +27,16 @@ $header-margin: 36px;
     }
     .header__primary {
         float: left;
-        @include rem((
-            margin-left: $header-padding/2
-        ));
+        margin-left: rem($header-padding / 2);
     }
 
     .header__secondary {
         float: right;
         width: auto;
-        @include rem((
-            margin-right: $header-padding/2
-        ));
+        margin-right: rem($header-padding / 2);
 
         @include mq(mobile) {
-            @include rem((
-                margin-right: $header-padding/2
-            ));
+            margin-right: rem($header-padding / 2);
         }
     }
 
@@ -56,34 +46,26 @@ $header-margin: 36px;
 
     .header__logo {
         clear: right;
-        width: 243px;
+        width: rem(243px);
         float: right;
-        @include rem((
-            margin-right: $header-padding/2,
-            height: 25px
-        ));
+        margin-right: rem($header-padding / 2);
+        height: rem(25px);
 
         @include mq(tablet) {
             width: auto;
-            @include rem((
-                margin-bottom: $gs-gutter,
-                height: 50px
-            ));
+            margin-bottom: rem($gs-gutter);
+            height: rem(50px);
         }
     }
 }
 
 .menu-item {
     float: left;
-    @include rem((
-        padding-top: 0,
-        margin-right: 15px
-    ));
+    padding-top: 0;
+    margin-right: rem(15px);
 
     @include mq(tablet) {
-        @include rem((
-            padding-top: 8px
-        ));
+        padding-top: rem(8px);
     }
 
     &:hover {
@@ -92,9 +74,7 @@ $header-margin: 36px;
 }
 
 .menu-item--large {
-    @include rem((
-        padding-top: 3px
-    ));
+    padding-top: rem(3px);
 }
 
 .menu-item--last {
@@ -111,7 +91,7 @@ $header-margin: 36px;
         color: $white !important;
     }
     .control {
-        border: 1px solid $white !important;
+        border: rem(1px) solid $white !important;
     }
     .control__info {
         color: $white !important;
@@ -126,10 +106,8 @@ $header-margin: 36px;
 }
 
 .menu-cta {
-    @include rem((
-        padding: 8px 35px,
-        border: 1px solid $white
-    ));
+    padding: rem(8px) rem(35px);
+    border: rem(1px) solid $white;
     color: $white;
     display: block;
     &:hover {
@@ -148,10 +126,8 @@ $header-margin: 36px;
 @include mq(tablet) {
     .header {
         .i-logo {
-            @include rem((
-                margin-top: $gs-gutter/2,
-                margin-bottom: $gs-gutter/2
-            ));
+            margin-top: rem($gs-gutter / 2);
+            margin-bottom: rem($gs-gutter / 2);
         }
     }
 }

@@ -9,9 +9,7 @@
 }
 
 .form {
-    @include rem((
-        margin-bottom: $gs-baseline*2
-    ));
+    margin-bottom: rem($gs-baseline * 2);
 }
 
 .form--inline {
@@ -34,19 +32,15 @@
 .form__note,
 .form-field__note {
     font-family: $sans-serif;
-    @include rem((
-        font-size: 13px,
-        margin-bottom: 8px
-    ));
+    font-size: rem(13px);
+    margin-bottom: rem(8px);
 }
 
 .fieldset {
     border: 0;
-    border-top: 1px solid $c-neutral7;
+    border-top: rem(1px) solid $c-neutral7;
     display: table;
-    @include rem((
-        padding: (($gs-baseline/3)*4 - 1) 0 ($gs-baseline*2)
-    ));
+    padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline * 2);
     margin: 0;
 }
 
@@ -57,19 +51,15 @@
 @include mq(desktop) {
     .fieldset__heading {
         display: table-cell;
-        @include rem((
-            padding-right: $gs-gutter*5,
-            width: gs-span(4)
-        ));
+        padding-right: rem($gs-gutter * 5);
+        width: rem(gs-span(4));
         vertical-align: top;
     }
 
     .fieldset__fields {
         display: table-cell;
         vertical-align: top;
-        @include rem((
-            width: gs-span(6)
-        ));
+        width: rem(gs-span(6));
     }
 }
 
@@ -79,17 +69,13 @@
 
 .form-field {
     list-style: none;
-    @include rem((
-        margin: 0 0 $gs-baseline*2
-    ));
+    margin: 0 0 rem($gs-baseline * 2);
     padding: 0;
 }
 
 .form-field__submit {
     .form-field__note {
-        @include rem((
-            margin: 0 0 $gs-baseline*2
-        ));
+        margin: 0 0 rem($gs-baseline * 2);
         @include mq(desktop) {
             float: right;
             width: 60%;
@@ -116,58 +102,48 @@
 .form-field__error-message {
     @include fs-data(3);
     color: $newsRed;
-    @include rem((
-        margin-top: 2px
-    ));
+    margin-top: rem(2px);
 }
 
 // Allows for two up form field and label layout as in address form
 .form-field__half {
     display: inline-block;
     width: 50%;
-    padding-right: 12px;
+    padding-right: rem(12px);
     &:last-of-type {
         padding-right: 0;
-        padding-left: 12px;
+        padding-left: rem(12px);
     }
 }
 
 .form__error {
     @include fs-data(4);
     background-color: #fdf4f3;
-    border-bottom: 1px solid lighten($newsRed, 35%);
-    border-top: 1px solid lighten($newsRed, 35%);
+    border-bottom: rem(1px) solid lighten($newsRed, 35%);
+    border-top: rem(1px) solid lighten($newsRed, 35%);
     color: $newsRed;
-    @include rem((
-        margin-top: 6px,
-        padding: 7px ($gs-baseline/3)*2
-    ));
+    margin-top: rem(6px);
+    padding: rem(7px) rem(($gs-baseline / 3) * 2);
 }
 
 .form__success {
     @include fs-data(4);
     background-color: lighten($environmentGreen, 70%);
-    border-bottom: 1px solid lighten($environmentGreen, 35%);
-    border-top: 1px solid lighten($environmentGreen, 35%);
+    border-bottom: rem(1px) solid lighten($environmentGreen, 35%);
+    border-top: rem(1px) solid lighten($environmentGreen, 35%);
     color: $environmentGreen;
-    @include rem((
-        margin-top: $gs-baseline/2,
-        padding: 7px ($gs-baseline/3)*2
-    ));
+    margin-top: rem($gs-baseline / 2);
+    padding: rem(7px) rem(($gs-baseline / 3) * 2);
 }
 
 .form-field__error {
     color: $newsRed;
-    @include rem((
-        margin-top: $gs-baseline/2
-    ));
+    margin-top: rem($gs-baseline / 2);
 }
 
 .form-field__note--below {
     margin-bottom: 0;
-    @include rem((
-        margin-top: $gs-baseline/2
-    ));
+    margin-top: rem($gs-baseline / 2);
 }
 
 .form-field__note--left {
@@ -176,9 +152,7 @@
 
 .form-field__note--right {
     float: right;
-    @include rem((
-        margin-left: $gs-gutter
-    ));
+    margin-left: rem($gs-gutter);
 }
 
 .form-fields__inline {
@@ -193,28 +167,22 @@
 
     .form-fields__heading {
         @include fs-bodyHeading(3, true);
-        @include rem((
-            margin: 0 0 $gs-baseline
-        ));
+        margin: 0 0 rem($gs-baseline);
         display: block;
     }
 }
 
 .form-fields--date-of-birth .form-field {
-    @include rem((
-        margin: 0 18px 0 0
-    ));
+    margin: 0 rem(18px) 0 0;
 }
 
 .label {
     color: $c-neutral1;
     cursor: pointer;
     display: block;
-    @include rem((
-        font-size: 16px,
-        line-height: 24px,
-        margin-bottom: 6px
-    ));
+    font-size: rem(16px);
+    line-height: rem(24px);
+    margin-bottom: rem(6px);
 }
 
 .label--inline {
@@ -223,16 +191,14 @@
 
 .text-input,
 .textarea {
-    border: 1px solid $c-neutral4;
+    border: rem(1px) solid $c-neutral4;
     @include box-shadow(none);
     @include box-sizing(border-box);
     color: $c-body;
     display: inline-block;
     font-family: $sans-serif;
-    @include rem((
-        font-size: 16px,
-        padding: 8px 8px 7px
-    ));
+    font-size: rem(16px);
+    padding: rem(8px) rem(8px) rem(7px);
     line-height: 1.4;
     outline: none;
     @include border-radius(0);
@@ -244,9 +210,7 @@
     }
 
     @include mq(tablet) {
-        @include rem((
-            font-size: 14px
-        ));
+        font-size: rem(14px);
     }
 }
 
@@ -263,22 +227,16 @@
 }
 
 .textarea--no-resize {
-    @include rem((
-        min-height: ($gs-baseline/3)*20
-    ));
+    min-height: rem(($gs-baseline / 3) * 20);
     resize: none;
 }
 
 .textarea--mid {
-    @include rem((
-        min-height: $gs-baseline*9
-    ));
+    min-height: rem($gs-baseline * 9);
 }
 
 .textarea--long {
-    @include rem((
-        min-height: ($gs-baseline/3)*40
-    ));
+    min-height: rem(($gs-baseline / 3) * 40);
 }
 
 .submit-input {
@@ -287,12 +245,10 @@
     color: #ffffff;
     cursor: pointer;
     display: inline-block;
-    @include rem((
-        font-size: 14px,
-        margin: 0 $gs-gutter 0 0,
-        min-width: gs-span(2),
-        padding: 11px $gutter/2
-    ));
+    font-size: rem(14px);
+    margin: 0 rem($gs-gutter) 0 0;
+    min-width: rem(gs-span(2));
+    padding: rem(11px) rem($gutter / 2);
     outline: none;
     text-align: center;
 
@@ -318,11 +274,9 @@
 .radio-label {
     display: block;
     font-family: $sans-serif;
-    @include rem((
-        font-size: 13px,
-        margin-bottom: $gs-baseline/3,
-        padding-left: $gs-gutter
-    ));
+    font-size: rem(13px);
+    margin-bottom: rem($gs-baseline / 3);
+    padding-left: rem($gs-gutter);
 }
 
 .check-label--helper {
@@ -333,21 +287,16 @@
 [type=checkbox],
 [type=radio] {
     float: left;
-    @include rem((
-        height: 13px,
-        margin-left: -$gs-gutter,
-        margin-top: 3px,
-        width: 13px
-    ));
-
+    height: rem(13px);
+    margin-left: rem(-$gs-gutter);
+    margin-top: rem(3px);
+    width: rem(13px);
 }
 
 .inside-radio {
     float: left;
     margin-left: 0;
-    @include rem((
-        margin-right: 6px
-    ));
+    margin-right: rem(6px);
 }
 
 .required-marker {
@@ -356,11 +305,8 @@
         content: '*';
         color: guss-colour('tone-live-2');
         font-family: $sans-serif;
-        @include rem((
-            font-size: 18px,
-            margin-left: 4px
-        ));
-
+        font-size: rem(18px);
+        margin-left: rem(4px);
     }
 }
 
@@ -368,25 +314,21 @@
     overflow: hidden;
     padding: 0;
     .address-fieldset__inner {
-        @include rem((
-            padding: (($gs-baseline/3)*4 - 1) 0 ($gs-baseline*2)
-        ));
+        padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline*2);
     }
     &.address-fieldset--showable {
         max-height: 0;
         @include transition(all .75s ease-in-out);
         &.address-fieldset--show {
-            @include rem((
-                max-height: 536px
-            ));
+            max-height: rem(536px);
         }
     }
 }
 
 .password-strength-indicator {
     background-color: #ebebeb;
-    height: 8px;
-    margin-top: 4px;
+    height: rem(8px);
+    margin-top: rem(4px);
     position: relative;
 
     /* Indicator bar */
@@ -407,42 +349,34 @@
 
     .password-strength {
         display: inline-block;
-        height: 40px;
-        margin-top: 14px;
+        height: rem(40px);
+        margin-top: rem(14px);
     }
 }
 
 .cvc-cta {
     font-family: $sans-serif;
-    @include rem((
-        font-size: 13px,
-        line-height: 16px
-    ));
+    font-size: rem(13px);
+    line-height: rem(16px);
 }
 
 
 .cvc {
     font-family: $sans-serif;
-    @include rem((
-        padding: $gs-baseline/2 $gs-baseline/2 $gs-baseline/2 0,
-        font-size: 13px,
-        line-height: 16px
-    ));
+    padding: rem($gs-baseline / 2) rem($gs-baseline / 2) rem($gs-baseline / 2) 0;
+    font-size: rem(13px);
+    line-height: rem(16px);
     .cvc__primary {
         float: left;
     }
     .cvc__secondary {
-        @include rem((
-            margin-left: 70px
-        ));
+        margin-left: rem(70px);
     }
     .cvc__heading {
         font-weight: bold;
         font-family: $sans-serif;
-        @include rem((
-            font-size: 13px,
-            line-height: 16px
-        ));
+        font-size: rem(13px);
+        line-height: rem(16px);
     }
 }
 

@@ -11,8 +11,6 @@
 
 img {
     background-color: transparent;
-    @include rem((
-        height: auto,
-        width: 100%
-    ));
+    height: auto;
+    width: 100%;
 }

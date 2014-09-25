@@ -11,15 +11,11 @@
 
         .signin__login,
         .signin__register {
-            @include rem((
-                padding: $gs-baseline*2 0
-            ));
+            padding: rem($gs-baseline * 2) 0;
         }
 
         .signin__login {
-            @include rem((
-                border-bottom: 1px solid #000000
-            ));
+            border-bottom: rem(1px) solid #000000;
         }
     }
 }
