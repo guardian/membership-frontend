@@ -34,9 +34,11 @@
 .nav--global {
     clear: both;
     display: block;
-    @include fs-headline(1);
+    @include fs-headline(2);
     font-weight: normal;
+    -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: subpixel-antialiased;
+    -webkit-font-feature-settings: "kern" 1;
     @include rem((
         padding: $gs-baseline/2 0,
         height: $gs-gutter*2+4
@@ -156,7 +158,7 @@
     }
 
     .nav__link {
-        @include fs-bodyHeading(1);
+        @include fs-bodyHeading(2);
         border-top: 1px solid $mem-blue-border;
         display: block;
         background-color: transparent;

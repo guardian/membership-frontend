@@ -1,8 +1,10 @@
 {
-    "name": "membership stylesheets",
-    "version": "0.0.0",
-    "dependencies": {
-        "guss": "~1.1.0",
-        "guss-colours": "~1.0.0"
-    }
+  "name": "membership stylesheets",
+  "version": "0.0.0",
+  "dependencies": {
+    "guss": "~1.1.0",
+    "guss-colours": "~1.0.0",
+    "guss-webfonts": "~3.0.0",
+    "guss-typography": "~3.0.0"
+  }
 }

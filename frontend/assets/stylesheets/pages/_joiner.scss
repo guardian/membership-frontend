@@ -27,7 +27,7 @@ $card-icon-offset: 2px;
 }
 
 .joiner-navigation__btn {
-    @include fs-bodyCopy(4);
+    @include fs-bodyCopy(3);
     background-color: #eaeaea;
     height: gs-height(2);
     width: 100%;

@@ -199,7 +199,7 @@
             display: block;
             text-align: center;
             position: absolute;
-            @include fs-textsans(2);
+            @include fs-textSans(2);
             @include rem((
                 width: 106px,
                 left: 50%,

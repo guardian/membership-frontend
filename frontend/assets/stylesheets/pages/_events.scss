@@ -49,14 +49,14 @@ div.event {
         }
 
         .event__trail {
-            @include fs-textsans(4);
+            @include fs-textSans(4);
             display: block;
         }
 
         .event__price-note,
         .event__sale_ends_note,
         .event__sale_ends_time {
-            @include fs-textsans(4);
+            @include fs-textSans(4);
             display: inline-block;
         }
     }
@@ -205,7 +205,7 @@ div.event {
 
 .terms-info,
 .ticket-info {
-    @include fs-textsans(1);
+    @include fs-textSans(1);
     color: #878787;
     @include rem((
         margin-top: 8px

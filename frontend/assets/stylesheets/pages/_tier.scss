@@ -374,7 +374,7 @@ $current-indicator: rem(47px);
 
     span {
         display: block;
-        @include fs-textsans(4);
+        @include fs-textSans(4);
         margin: 0 0 $gs-baseline;
         &.payment-label__title {
             @include fs-headline(2);
