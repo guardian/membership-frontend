@@ -39,11 +39,11 @@ footer {
 
     .gs-container {
         @include mq(desktop) {
-            width: rem(gs-span(12) + $gs-gutter * 2);
+            max-width: rem(gs-span(12) + $gs-gutter * 2);
         }
 
         @include mq(mem-full) {
-            width: rem(gs-span(14) + $gs-gutter * 2);
+            max-width: rem(gs-span(14) + $gs-gutter * 2);
         }
     }
 
