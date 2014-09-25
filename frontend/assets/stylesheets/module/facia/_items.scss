@@ -1,14 +1,10 @@
 .container {
     position: relative;
     overflow: hidden;
-    @include rem((
-        margin-top: $gs-baseline
-    ));
+    margin-top: rem($gs-baseline);
 
     @include mq(tablet) {
-        @include rem((
-            margin-top: $gs-baseline*2
-        ));
+        margin-top: rem($gs-baseline * 2);
     }
 }
 
@@ -24,16 +20,12 @@
 }
 
 .item {
-    @include rem((
-        padding-bottom: $gs-gutter
-    ));
+    padding-bottom: rem($gs-gutter);
     position: relative;
     @include mq(tablet) {
-        @include rem((
-            padding-left: $gs-gutter/2,
-            padding-right: $gs-gutter/2,
-            padding-bottom: 18px
-        ));
+        padding-left: rem($gs-gutter / 2);
+        padding-right: rem($gs-gutter / 2);
+        padding-bottom: rem(18px);
         display: inline-block;
         vertical-align: top;
         @include vertical-item-separator;
@@ -45,7 +37,7 @@
 }
 
 .item__image-container {
-    margin-top: 4px;
+    margin-top: rem(4px);
 
     .js-off & {
         display: none;
@@ -54,9 +46,7 @@
 
 .item__title {
     position: relative;
-    @include rem((
-        padding-bottom: $gs-baseline
-    ));
+    padding-bottom: rem($gs-baseline);
     @include fs-headline(1, true);
     word-wrap: break-word;
     @include f-headline;
@@ -73,9 +63,7 @@
 
 .item__byline {
     @include fs-headline(2);
-    @include rem((
-        margin-bottom: $gs-baseline/3
-    ));
+    margin-bottom: rem($gs-baseline / 3);
 }
 
 .item__standfirst,
@@ -103,28 +91,21 @@
         }
     }
     .item__timestamp {
-        @include rem((
-            min-width: 50px - $gs-gutter/2 - 14px,
-            padding-right: $gs-gutter/2,
-            padding-left: 14px
-        ));
+        min-width: rem(50px - $gs-gutter / 2 - 14px);
+        padding-right: rem($gs-gutter / 2);
+        padding-left: rem(14px);
 
         i {
             left: 0;
-            @include rem((
-                top: 3px
-            ));
+            top: rem(3px);
+
             @include mq(tablet) {
-                @include rem((
-                    top: 2px
-                ));
+                top: rem(2px);
             }
         }
     }
     .trail__count {
-        @include rem((
-            padding-left: 18px
-        ));
+        padding-left: rem(18px);
         top: 0;
 
         a {
@@ -132,10 +113,8 @@
             color: inherit;
         }
         i {
-            @include rem((
-                top: 3px,
-                left: 0
-            ));
+            top: rem(3px);
+            left: 0;
         }
     }
 }

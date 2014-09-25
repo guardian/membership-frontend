@@ -12,7 +12,9 @@ footer {
     .copy {
         @include fs-data(6);
         text-align: center;
-        margin: rem(48px) 0 0;
+        @include rem((
+            margin: 48px 0 0
+        ));
     }
 }
 
@@ -20,7 +22,9 @@ footer {
    ========================================================================== */
 
 .guardian-logo-footer {
-    margin-top: rem($gs-baseline * .75);
+    @include rem((
+        margin-top: $gs-baseline * .75
+    ));
     float: right;
     line-height: 0;
 }
@@ -29,7 +33,9 @@ footer {
    ========================================================================== */
 
 .l-footer {
-    padding: 0 0 rem(($gs-baseline / 3) * 4);
+    @include rem((
+        padding: 0 0 ($gs-baseline / 3) * 4
+    ));
     background: $c-neutral6;
     z-index: 1; // Above side margins
 
@@ -39,23 +45,31 @@ footer {
 
     .gs-container {
         @include mq(desktop) {
-            max-width: rem(gs-span(12) + $gs-gutter * 2);
+            @include rem((
+                max-width: gs-span(12) + $gs-gutter * 2
+            ));
         }
 
         @include mq(mem-full) {
-            max-width: rem(gs-span(14) + $gs-gutter * 2);
+            @include rem((
+                max-width: gs-span(14) + $gs-gutter * 2
+            ));
         }
     }
 
     .control {
         float: left;
-        height: rem(34px);
-        width: rem(34px);
+        @include rem((
+            height: 34px,
+            width: 34px
+        ));
     }
 
     .control__info {
         display: inline-block;
-        padding-left: rem($gs-gutter / 2);
+        @include rem((
+            padding-left: $gs-gutter / 2
+        ));
     }
 }
 
@@ -64,8 +78,10 @@ footer {
 }
 
 .l-footer__banner {
-    border-top: 2px solid $c-brandBlue;
-    margin-bottom: rem(($gs-baseline / 3) * 2);
+    @include rem((
+        border-top: 2px solid $c-brandBlue,
+        margin-bottom: ($gs-baseline / 3) * 2
+    ));
 }
 
 @include mq(tablet) {
@@ -83,12 +99,16 @@ footer {
 .l-footer__secondary {
     @include box-sizing(border-box);
     @include font($sans-serif, normal, 13, 19);
-    padding-right: rem($gs-gutter / 2);
-    padding-left: rem($gs-gutter / 2);
+    @include rem((
+        padding-right: $gs-gutter / 2,
+        padding-left: $gs-gutter / 2
+    ));
 
     @include mq(tablet) {
-        padding-right: rem($gs-gutter);
-        padding-left: rem($gs-gutter);
+        @include rem((
+            padding-right: $gs-gutter,
+            padding-left: $gs-gutter
+        ));
     }
 
     &,
@@ -101,8 +121,11 @@ footer {
     @include fs-bodyHeading(1);
     list-style: none;
     margin: 0;
-    padding-top: rem($gs-baseline * 2);
-    padding-bottom: rem($gs-baseline / 2);
+    @include rem((
+        padding-top: $gs-baseline * 2,
+        padding-bottom: $gs-baseline / 2
+    ));
+
     @include columns(2);
 
     @include mq(tablet) {
@@ -115,7 +138,9 @@ footer {
 
     a {
         display: inline-block;
-        padding-bottom: rem($gs-baseline / 2);
+        @include rem((
+            padding-bottom: $gs-baseline / 2
+        ));
     }
 }
 
@@ -124,11 +149,15 @@ footer {
 }
 
 .l-footer__misc {
-    padding-top: rem($gs-baseline / 2);
-    padding-bottom: rem($gs-baseline * 1.5);
-    border-top: 1px solid $c-neutral4;
+    @include rem((
+        padding-top: $gs-baseline / 2,
+        padding-bottom: $gs-baseline * 1.5,
+        border-top: 1px solid $c-neutral4
+    ));
 }
 
 .really-serious-copyright {
-    margin-bottom: rem($gs-baseline / 3);
+    @include rem((
+        margin-bottom: $gs-baseline / 3
+    ));
 }
