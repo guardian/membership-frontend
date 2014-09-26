@@ -2,8 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET            /robots.txt                        controllers.Assets.at(path="/public", file="robots.txt")
-GET            /humans.txt                        controllers.Assets.at(path="/public", file="humans.txt")
+GET            /robots.txt                        controllers.CachedAssets.at(path="/public", file="robots.txt")
+GET            /humans.txt                        controllers.CachedAssets.at(path="/public", file="humans.txt")
 GET            /favicon.ico                       controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 
 # Home page
@@ -59,7 +59,7 @@ GET            /about                             controllers.Info.about
 GET            /patrons                           controllers.Info.patron
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                 controllers.Assets.at(path="/public", assetFile)
+GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)
 
 
 GET            /user/me                           controllers.User.me
