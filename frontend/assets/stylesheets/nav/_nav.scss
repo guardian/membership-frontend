@@ -39,10 +39,8 @@
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: subpixel-antialiased;
     -webkit-font-feature-settings: "kern" 1;
-    @include rem((
-        padding: $gs-baseline/2 0,
-        height: $gs-gutter*2+4
-    ));
+    padding: rem($gs-baseline / 2 0);
+    height: rem($gs-gutter * 2 + 4);
 
     .nav__item {
         float: left;
@@ -52,13 +50,11 @@
         position: relative;
         color: $black;
         display: block;
-        @include rem((
-            margin: 0 $gs-gutter 0 0,
-            padding: 5px 0 6px
-        ));
+        margin: 0 rem($gs-gutter) 0 0;
+        padding: rem(5px) 0 rem(6px);
 
         @include mq(tablet) {
-            margin-right: 26px;
+            margin-right: rem(26px);
         }
     }
 
@@ -90,10 +86,8 @@
     }
 
     .navigation__scroll {
-        @include rem((
-            width: 580px,
-            margin: 0 $gs-gutter/2
-        ));
+        width: rem(580px);
+        margin: 0 rem($gs-gutter / 2);
 
         @include mq(tablet) {
             width: 100%;
@@ -112,7 +106,7 @@
     height: $header-margin;
     @include side-margins-calc('padding-left');
     @include side-margins-calc('padding-right');
-    padding-top: 3px;
+    padding-top: rem(3px);
     padding-bottom: 0;
     -webkit-overflow-scrolling: touch;
 
@@ -128,10 +122,8 @@
 .nav-global--mini {
     display: none;
     text-align: right;
-    @include rem((
-        font-size: 14px,
-        padding-top: 6px // magic number, aligns with left icons
-    ));
+    font-size: rem(14px);
+    padding-top: rem(6px); // magic number, aligns with left icons
 
     > li:last-child .nav__link {
         margin-right: 0;
@@ -159,14 +151,12 @@
 
     .nav__link {
         @include fs-bodyHeading(2);
-        border-top: 1px solid $mem-blue-border;
+        border-top: rem(1px) solid $mem-blue-border;
         display: block;
         background-color: transparent;
         -webkit-font-smoothing: subpixel-antialiased;
         text-decoration: none;
-        @include rem((
-            padding: $gs-baseline/2 0 $gs-baseline $gs-baseline
-        ));
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
 
         &,
         &:active,
@@ -197,27 +187,21 @@
     right: 0;
     background-color: lighten($black, 20%);
     z-index: 3;
-    @include rem((
-        top: 43px
-    ));
+    top: rem(43px);
 
     a.mobile-menu__button {
         color: $white;
         display: block;
         text-decoration: none;
-        @include rem((
-            padding: 3px 9px 9px 9px,
-            box-shadow: -3px 0px 4px 0px rgba(50, 50, 50, .30)
-        ));
+        padding: rem(3px) rem(9px) rem(9px);
+        box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
     }
 
     .mobile-menu__button i {
-        border-top: 2px solid rgba(255, 255, 255, .9);
+        border-top: rem(2px) solid rgba(255, 255, 255, .9);
         display: block;
-        @include rem((
-            width: 20px,
-            margin-top: 3px
-        ));
+        width: rem(20px);
+        margin-top: rem(3px);
         @include transform-origin(60%);
         -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
         transition: opacity .1s, transform .1s ease-in;

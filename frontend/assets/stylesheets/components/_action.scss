@@ -8,10 +8,8 @@
     text-decoration: none;
     position: relative;
     @include fs-textSans(4);
-    @include rem((
-        min-width: 100%,
-        padding: 8px 8px 8px 18px
-    ));
+    min-width: 100%;
+    padding: rem(8px) rem(8px) rem(8px) rem(18px);
     @include border-radius(50%);
 
     &:visited,
@@ -32,15 +30,11 @@
         }
         content: '';
         float: right;
-        @include rem((
-            margin: 2px 0 0 30px
-        ));
+        margin: rem(2px) 0 0 rem(30px);
     }
 
     @include mq(tablet){
-        @include rem((
-            min-width: 220px
-        ));
+        min-width: rem(220px);
     }
 }
 
@@ -54,9 +48,7 @@
         }
         content: '';
         float: left;
-        @include rem((
-            margin: 2px 18px 0 0
-        ));
+        margin: rem(2px) rem(18px) 0 0;
     }
     &:after {
         display: none;
@@ -90,9 +82,7 @@
     text-align: left;
     background-color: $mem-buttonBlue;
     color: $white;
-    @include rem((
-        padding: 8px 8px 8px 18px
-    ));
+    padding: rem(8px) rem(8px) rem(8px) rem(18px);
 
     &:visited,
     &:active,
@@ -105,9 +95,7 @@
     }
     i {
         float: right;
-        @include rem((
-            margin-top: 2px
-        ));
+        margin-top: rem(2px);
     }
 }
 
@@ -115,9 +103,7 @@
     text-align: left;
     background-color: $offWhite;
     color: $black;
-    @include rem((
-        padding: 8px 8px 8px 18px
-    ));
+    padding: rem(8px) rem(8px) rem(8px) rem(18px);
 
     &:visited,
     &:active,
@@ -131,9 +117,7 @@
     }
     i {
         float: right;
-        @include rem((
-            margin-top: 2px
-        ));
+        margin-top: rem(2px);
     }
 }
 
@@ -149,19 +133,15 @@
 
         .i-wait__throbber {
             vertical-align: middle;
-            @include rem((
-                width: 21px,
-                height: 21px
-            ));
+            width: rem(21px);
+            height: rem(21px);
         }
 
         .i-wait__message {
             vertical-align: middle;
             @include fs-bodyCopy(1);
             color: $c-neutral2;
-            @include rem((
-                margin-left: 2px
-            ));
+            margin-left: rem(2px);
         }
     }
 }
@@ -173,26 +153,26 @@
         content: ' ';
         position: absolute;
         z-index: 2;
-        height: 10px;
-        width: 10px;
+        height: rem(10px);
+        width: rem(10px);
         display: block;
-        border-radius: 50px;
+        border-radius: rem(50px);
         background-color: #ffffff;
         top: 50%;
-        margin-top: -5px;
+        margin-top: rem(-5px);
     }
 
     &:before {
-        left: -5px;
+        left: rem(-5px);
     }
 
     &:after {
-        right: -5px;
+        right: rem(-5px);
     }
 }
 
 .action--ticket-button--grey {
-    margin: 40px 0 5px;
+    margin: rem(40px) 0 rem(5px);
     &:before, &:after {
         background-color: #e1e1e1;
     }
@@ -203,10 +183,8 @@
     border: 0;
     display: inline-block;
     cursor: pointer;
-    @include rem((
-        min-width: $gs-baseline * 6,
-        line-height: $gs-gutter
-    ));
+    min-width: rem($gs-baseline * 6);
+    line-height: rem($gs-gutter);
 }
 
 .action-cta--confirm {

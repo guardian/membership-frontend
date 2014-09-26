@@ -1,5 +1,5 @@
 %section-header {
-    background-color: #ffffff;
+    background-color: $white;
 }
 
 .section-headline {
@@ -9,27 +9,21 @@
         @include fs-headline(7);
     }
 
-    border-top: 20px solid $mem-blue;
+    border-top: rem(20px) solid $mem-blue;
     display: inline-block;
-    @include rem((
-        padding-top: $gs-baseline/3,
-        margin-bottom: $gs-baseline*4
-    ));
+    padding-top: rem($gs-baseline / 3);
+    margin-bottom: rem($gs-baseline * 4);
 }
 
 .section-headline--border-bottom {
-    border-bottom: 1px solid $black;
-    @include rem((
-        padding-bottom: $gs-baseline*4
-    ));
+    border-bottom: rem(1px) solid $black;
+    padding-bottom: rem($gs-baseline * 4);
 }
 
 .section-sub-headline {
     @extend %section-header;
     @include fs-headline(4);
-    @include rem((
-        padding-top: $gs-baseline/2
-    ));
+    padding-top: rem($gs-baseline / 2);
 }
 
 .section-body-headline {
@@ -50,92 +44,69 @@
 }
 
 .header-bar {
-
-    @include rem((
-        padding-left: $gs-gutter/2
-    ));
+    padding-left: rem($gs-gutter / 2);
 
     .header-bar__title {
         @include fs-headline(4);
-        @include rem((
-            padding: $gs-gutter/2 0 55px 0,
-            max-width: gs-span(8)
-        ));
+        padding: rem($gs-gutter / 2) 0 rem(55px);
+        max-width: rem(gs-span(8));
     }
 
     &.header-bar--guardian-live {
         position: relative;
         background-color: transparentize($mem-live-accent, .1);
-        @include rem((
-            padding-right: $gs-gutter/2
-        ));
+        padding-right: rem($gs-gutter / 2);
+
         .header-bar__title {
             color: $white;
         }
 
         .header-bar__guardian-live-logo {
             position: absolute;
-            @include rem((
-                right: $gs-gutter/2,
-                top: 150px
-            ));
+            right: rem($gs-gutter / 2);
+            top: rem(150px);
         }
 
         i {
             background-size: 100%;
-            @include rem((
-                width: 31px,
-                height: 45px
-            ));
+            width: rem(31px);
+            height: rem(45px);
         }
     }
 
     @include mq(tablet) {
-        @include rem((
-            min-height: 132px,
-            padding-left: $gs-gutter
-        ));
+        min-height: rem(132px);
+        padding-left: rem($gs-gutter);
+
         .header-bar__title {
             @include fs-headline(6);
-            @include rem((
-                padding: $gs-gutter 0
-            ));
+            padding: rem($gs-gutter) 0;
         }
         &.header-bar--guardian-live {
             .header-bar__guardian-live-logo {
-                @include rem((
-                    right: $gs-gutter,
-                    top: $gs-gutter*2
-                ));
+                right: rem($gs-gutter);
+                top: rem($gs-gutter * 2);
             }
             i {
-                @include rem((
-                    width: 62px,
-                    height: 90px,
-                    background-size: 100%
-                ));
+                width: rem(62px);
+                height: rem(90px);
+                background-size: 100%;
             }
         }
     }
 
     @include mq(desktop) {
         &.header-bar--guardian-live {
-            @include rem((
-                padding-right: 102px
-            ));
+            padding-right: rem(102px);
             .header-bar__guardian-live-logo {
-                @include rem((
-                    right: $gs-gutter,
-                    top: $gs-gutter*2+$gs-baseline
-                ));
+                right: rem($gs-gutter);
+                top: rem($gs-gutter * 2 + $gs-baseline);
             }
         }
     }
 
     @include mq(mem-full) {
-        @include rem((
-            padding-left: gs-span(2)+$gs-gutter*2 //180
-        ));
+        padding-left: rem(gs-span(2) + $gs-gutter * 2); // 180
         .header-bar__title {
             @include fs-headline(7);
         }

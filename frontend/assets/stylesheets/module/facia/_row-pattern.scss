@@ -5,10 +5,7 @@
         position: static; // Children should be relative to the row__item
         padding-bottom: 0;
         @include clearfix;
-
-        @include rem((
-            margin-bottom: $gs-baseline/2
-        ));
+        margin-bottom: rem($gs-baseline / 2);
 
         &:before {
             // Remove inter-item separator

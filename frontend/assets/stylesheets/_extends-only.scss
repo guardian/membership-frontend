@@ -1,27 +1,12 @@
 // Misc
 // =============================================================================
 
-%d-badge-icon {
-    display: inline-block;
-    position: relative;
-    top: -.1em;
-    width: 1em;
-    height: 1em;
-    margin-left: .2em;
-    vertical-align: middle;
-    background: $c-newsDefault;
-    font: bold 13px/1 $serifheadline;
-    color: #ffffff;
-    text-align: center;
-    cursor: help;
-}
-
 %icon-holder-circle {
     display: inline-block;
     overflow: hidden;
-    width: 36px;
-    height: 36px;
-    border: 1px solid $black;
+    width: rem(36px);
+    height: rem(36px);
+    border: rem(1px) solid $black;
     padding: 0;
     margin: 0;
     @include border-radius(50%);

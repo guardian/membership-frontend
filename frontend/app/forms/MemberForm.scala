@@ -1,5 +1,6 @@
 package forms
 
+import play.api.data.validation.Constraints
 import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
@@ -54,12 +55,14 @@ object MemberForm {
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
+  val verifyPostCode = text(maxLength = 20).verifying(Constraints.nonEmpty)
+
   val friendAddressMapping: Mapping[AddressForm] = mapping(
     "lineOne" -> text,
     "lineTwo" -> text,
     "town" -> text,
     "countyOrState" -> text,
-    "postCode" -> nonEmptyText,
+    "postCode" -> verifyPostCode,
     "country" -> countryText
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 
@@ -68,7 +71,7 @@ object MemberForm {
     "lineTwo" -> text,
     "town" -> nonEmptyText,
     "countyOrState" -> text,
-    "postCode" -> nonEmptyText,
+    "postCode" -> verifyPostCode,
     "country" -> countryText
   )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
 

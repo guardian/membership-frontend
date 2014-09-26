@@ -5,13 +5,11 @@
 .feedback {
 
     .feedback-intro {
-        @include rem((
-            padding-bottom: $gs-gutter*2
-        ));
+        padding-bottom: rem($gs-gutter * 2);
     }
 
     .fieldset {
-        border-top: 1px solid $c-neutral2;
+        border-top: rem(1px) solid $c-neutral2;
 
         &:last-child {
             border: 0;
@@ -19,9 +17,7 @@
     }
 
     .fieldset__heading {
-        @include rem((
-            padding-right: $gs-gutter*2
-        ));
+        padding-right: rem($gs-gutter * 2);
     }
 }
 

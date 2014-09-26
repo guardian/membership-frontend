@@ -8,9 +8,7 @@
 .control {
     @extend %icon-holder-circle;
     font-family: $serif;
-    @include rem((
-        font-size: 13px
-    ));
+    font-size: rem(13px);
 
     .is-signed-in & {
         color: $c-brandBlue;
@@ -31,13 +29,11 @@
     text-overflow: ellipsis;
     text-align: left;
     font-family: $serif;
-    @include rem((
-        line-height: 35px,
-        max-width: 200px,
-        padding-left: $gs-gutter/4,
-        height: 35px,
-        font-size: 13px
-    ));
+    line-height: rem(35px);
+    max-width: rem(200px);
+    padding-left: rem($gs-gutter / 4);
+    height: rem(35px);
+    font-size: rem(13px);
     color: #000000;
     font-weight: bold;
 }
@@ -76,10 +72,8 @@
 .control__icon {
     display: block;
     text-align: center;
-    @include rem((
-        height: 24px,
-        padding-top: 5px
-    ));
+    height: rem(24px);
+    padding-top: rem(5px);
 
     .i {
         display: none;
