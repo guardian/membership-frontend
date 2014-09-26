@@ -157,7 +157,7 @@
             @include fs-headline(4);
             color: $black;
             @include mq(tablet) {
-                @include fs-headline(6);
+                @include fs-headline(7);
             }
             .headline-highlight {
                 color: $white;
@@ -181,13 +181,13 @@
             }
 
             .home-slice__copy {
-                @include fs-headline(9);
+                @include fs-headline(5);
                 font-weight: 100;
                 @include rem((
                     margin-bottom: 17px
                 ));
                 @include mq(tablet) {
-                    @include fs-headline(9);
+                    @include fs-headline(5);
                 }
             }
 

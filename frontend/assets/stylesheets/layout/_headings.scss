@@ -56,7 +56,7 @@
     ));
 
     .header-bar__title {
-        @include fs-headline(3);
+        @include fs-headline(4);
         @include rem((
             padding: $gs-gutter/2 0 55px 0,
             max-width: gs-span(8)
@@ -96,7 +96,7 @@
             padding-left: $gs-gutter
         ));
         .header-bar__title {
-            @include fs-headline(5);
+            @include fs-headline(6);
             @include rem((
                 padding: $gs-gutter 0
             ));
@@ -137,7 +137,7 @@
             padding-left: gs-span(2)+$gs-gutter*2 //180
         ));
         .header-bar__title {
-            @include fs-headline(6);
+            @include fs-headline(7);
         }
     }
 }
