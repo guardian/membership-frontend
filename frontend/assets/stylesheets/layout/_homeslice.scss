@@ -267,19 +267,19 @@
 
                 .home-slice__copy--quote {
                     display: block;
-                    @include fs-headline(6);
+                    @include fs-headline(3);
                     @include mq(tablet) {
-                        @include fs-headline(5);
+                        @include fs-headline(6);
                     }
                 }
                 .home-slice__copy--cite {
                     display: block;
-                    @include fs-headline(1);
+                    @include fs-headline(2);
                     font-style: normal;
                     font-weight: lighter;
                     margin-bottom: rem(17px);
                     @include mq(tablet) {
-                        @include fs-headline(2);
+                        @include fs-headline(3);
                     }
                 }
             }
