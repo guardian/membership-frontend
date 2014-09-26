@@ -19,7 +19,9 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
             }
         }
 
-        userUtil.getMemberDetail(enhanceWithTier);
+        if (config.DOM.EVENT_PRICE && config.DOM.EVENT_PRICE_DISCOUNT) {
+            userUtil.getMemberDetail(enhanceWithTier);
+        }
     };
 
     var enhanceWithTier = function (memberDetail) {

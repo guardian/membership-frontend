@@ -1,7 +1,6 @@
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
-    'src/utils/router',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
@@ -10,16 +9,13 @@ require([
     'src/modules/Header',
     'src/modules/events/DatetimeEnhance',
     'src/modules/tier/Choose',
-    'src/utils/cookie',
     'src/modules/events/eventPriceEnhance',
-    'config/appCredentials',
     'src/modules/tier/Thankyou',
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
     Imager,
     omnitureAnalytics,
-    router,
     ajax,
     JoinFree,
     FeedbackForm,
@@ -28,75 +24,47 @@ require([
     Header,
     DatetimeEnhance,
     Choose,
-    cookie,
     eventPriceEnhance,
-    appCredentials,
     Thankyou
-    ) {
+) {
     'use strict';
 
-    var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
-    var header;
+    /*global Raven */
+    // set up Raven, which speaks to Sentry to track errors
+    Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
+        whitelistUrls: ['membership.theguardian.com/assets/'],
+        tags: { build_number: guardian.membership.buildNumber }
+    }).install();
 
     ajax.init({page: {ajaxUrl: ''}});
 
-    router.match('*').to(function () {
-        header = new Header();
-        header.init();
-        omnitureAnalytics.init();
-
-        /* jshint ignore:start */
-        // avoid "Do not use 'new' for side effects" error
-        // these values are defined in application.conf
-        new Imager({
-            availableWidths: guardian.membership.eventImages.widths,
-            availablePixelRatios: guardian.membership.eventImages.ratios
-        });
-        /* jshint ignore:end */
-
-        /*global Raven */
-        // set up Raven, which speaks to Sentry to track errors
-        Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
-            whitelistUrls: ['membership.theguardian.com/assets/'],
-            tags: { build_number: guardian.membership.buildNumber }
-        }).install();
-
-        require('ophan/ng', function () {});
+    /* jshint ignore:start */
+    // avoid "Do not use 'new' for side effects" error
+    // these values are defined in application.conf
+    new Imager({
+        availableWidths: guardian.membership.eventImages.widths,
+        availablePixelRatios: guardian.membership.eventImages.ratios
     });
+    /* jshint ignore:end */
 
-    router.match('/event/').to(function () {
-        (new DatetimeEnhance()).init();
-        (new Cta()).init();
-        eventPriceEnhance.init();
-    });
+    require('ophan/ng', function () {});
 
-    router.match(['*/thankyou', '*/summary']).to(function () {
-        // TODO potentially abstract this into its own class if user details stuff grows
-        // user has upgraded or joined so remove cookie then populate the user details in the header
-        cookie.removeCookie(MEM_USER_COOKIE_KEY);
-        header.populateUserDetails();
-        (new Thankyou()).init();
-    });
+    // Global
+    var header = new Header();
+    header.init();
+    omnitureAnalytics.init();
 
-    router.match('/join/friend/enter-details').to(function () {
-        (new JoinFree()).init();
-    });
+    // Events
+    (new DatetimeEnhance()).init();
+    (new Cta()).init();
+    eventPriceEnhance.init();
 
-    router.match(['/join/(partner|patron)/enter-details', '/tier/change/(partner|patron)']).to(function () {
-        (new PaidForm()).init();
-    });
+    // Join
+    (new Choose()).init();
+    (new JoinFree()).init();
+    (new PaidForm()).init();
+    (new Thankyou()).init(header);
 
-    router.match('/choose-tier').to(function () {
-        (new Choose()).init();
-    });
-
-    router.match('/feedback').to(function () {
-        (new FeedbackForm()).init();
-    });
-
-    /**
-     * We were using domready here but for an unknown reason it is not firing in our production environment.
-     * Please ask Ben Chidgey or Chris Finch if there are issues around this.
-     */
-    router.go();
+    // Feedback
+    (new FeedbackForm()).init();
 });
