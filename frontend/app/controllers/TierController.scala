@@ -55,18 +55,19 @@ trait UpgradeTier {
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
     request.member match {
       case freeMember: FreeMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-          doUpgrade(freeMember, tier)(_).map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) })
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(freeMember, tier))
       case _ => Future.successful(NotFound)
     }
   }
 
   private def doUpgrade(freeMember: FreeMember, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
-    MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request)).recover {
-      case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case error: Zuora.ResultError => Forbidden
-      case error: ScalaforceError => Forbidden
-    }
+    MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request))
+      .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) }
+      .recover {
+        case error: Stripe.Error => Forbidden(Json.toJson(error))
+        case error: Zuora.ResultError => Forbidden
+        case error: ScalaforceError => Forbidden
+      }
   }
 
   def upgradeThankyou(tier: Tier) = Joiner.thankyouPaid(tier)
