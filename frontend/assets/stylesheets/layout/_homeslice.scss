@@ -140,7 +140,7 @@
         }
 
         .home-slice__headline {
-            @include fs-headline(4);
+            @include fs-headline(5);
             color: $black;
             @include mq(tablet) {
                 @include fs-headline(7);
@@ -163,7 +163,7 @@
             }
 
             .home-slice__copy {
-                @include fs-headline(5);
+                @include fs-headline(3);
                 font-weight: 100;
                 margin-bottom: rem(17px);
                 @include mq(tablet) {

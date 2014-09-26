@@ -150,7 +150,7 @@
     }
 
     .nav__link {
-        @include fs-bodyHeading(2);
+        @include fs-bodyHeading(1);
         border-top: rem(1px) solid $mem-blue-border;
         display: block;
         background-color: transparent;
