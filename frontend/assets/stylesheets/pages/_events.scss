@@ -11,7 +11,7 @@ div.event {
         }
 
         .event__sale-ends {
-            padding-bottom: rem(20px);
+            padding: rem($gs-baseline) 0 rem(20px);
         }
 
         .event__content__masthead {
@@ -143,61 +143,25 @@ div.event {
     }
 }
 
-.js-off .booking-dates {
-    display: none;
+.ticket-info {
+    @include fs-textsans(1);
+    color: #878787;
 }
 
-.tooltip {
-    position: relative;
+.ticket-info__header {
+    @include fs-textsans(4);
+    color: #878787;
 }
 
-.tooltip__cta {
-    @include border-radius(20px);
-    color: #0096c9;
-    background-color: $white;
-    padding: rem(3px) rem(8px);
-    border: rem(1px) solid #0096c9;
-    vertical-align: middle;
-    cursor: pointer;
-    z-index: 10000;
-    position: relative;
-}
-
-.tooltip__detail {
-    position: absolute;
-    display: block;
-    background-color: $white;
-    min-width: rem(200px);
-    bottom: rem(32px);
-    left: rem(-27px);
-    z-index: rem(1000);
-    padding: rem(20px);
-    @include border-radius(10px);
-}
-
-.tooltip__stem {
-    border-color: $white transparent transparent;
-    border-style: solid;
-    position: absolute;
-    border-width: rem(15px);
-    left: rem(22px);
-    bottom: rem(-30px);
-    height: 0;
-    width: 0;
-    z-index: 1;
-    font-size: 0;
-    line-height: 0;
+.ticket-info__item {
+    margin: rem(4px) 0;
 }
 
 .terms-info,
 .ticket-info {
     @include fs-textSans(1);
     color: #878787;
-    margin-top: rem(8px);
-}
-
-.terms-info {
-    padding-top: rem($gs-baseline * 2);
+    padding-top: rem($gs-baseline/2);
 }
 
 .events-list {

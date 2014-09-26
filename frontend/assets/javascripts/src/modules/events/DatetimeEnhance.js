@@ -9,9 +9,10 @@ define(function () {
                 SALES_END: 'datetime'
             },
             string: {
-                SALE_ENDS_TODAY: 'Sale ends Today',
-                SALE_ENDS_TOMORROW: 'Sale ends Tomorrow',
-                SALE_ENDS_IN: 'Sale ends in',
+                SALE_ENDS: '<strong>Sale ends</strong>',
+                TODAY: 'Today',
+                TOMORROW: 'Tomorrow',
+                IN: 'in',
                 DAY: 'day',
                 PLURAL: 's',
                 SPACE: ' ',
@@ -53,14 +54,14 @@ define(function () {
                 config = this.config;
 
             if (timeDifference.isToday) {
-                timeLeft = config.string.SALE_ENDS_TODAY;
+                timeLeft = config.string.SALE_ENDS + config.string.SPACE + config.string.TODAY;
                 saleEnd = saleEndTime;
             } else if (timeDifference.isTomorrow) {
-                timeLeft = config.string.SALE_ENDS_TOMORROW;
+                timeLeft = config.string.SALE_ENDS + config.string.SPACE + config.string.TOMORROW;
                 saleEnd = saleEndTime;
             } else if (timeDifference.days > 0) {
                 timeLeft = [
-                        config.string.SALE_ENDS_IN,
+                        config.string.SALE_ENDS, config.string.SPACE, config.string.IN,
                         config.string.SPACE, timeDifference.days,
                         config.string.SPACE, config.string.DAY,
                         (timeDifference.days > 1 ? config.string.PLURAL : '')

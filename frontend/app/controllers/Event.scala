@@ -15,6 +15,7 @@ import services.{MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
 
 import com.netaporter.uri.dsl._
+import views.support.Dates._
 
 trait Event extends Controller {
 
@@ -36,7 +37,7 @@ trait Event extends Controller {
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
-        Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine),
+        Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine + " - " + prettyDateWithTime(event.start)),
         Some(eventImageFullPath(event.id))
       )
       Ok(views.html.event.page(event, pageInfo))

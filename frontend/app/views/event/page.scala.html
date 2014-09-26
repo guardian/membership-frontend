@@ -12,8 +12,8 @@
         case Completed => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Past Event</button> }
         case SoldOut => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Sold Out</button> }
         case Cancelled => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Cancelled</button> }
-        case PreLive => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Buy Tickets</button> }
-        case _ => { <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a> }
+        case PreLive => { <button class='action action--disabled js-ticket-cta js-opt-become-member' disabled='disabled'>Buy Tickets</button> }
+        case _ => { <a class='action js-ticket-cta js-opt-become-member' href='/event/@event.id/buy'>Buy Tickets</a> }
     }
 }
 
@@ -23,14 +23,10 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-        <div class="tooltip__detail u-h js-booking-dates">
-            <h2>Booking Dates</h2>
-            @for((tier, salesDate) <- ticketSaleDates) {
-                <p class="ticket-info">@(tier + "s") @dateOrNow(tier, salesDate)</p>
-            }
-            <p class="ticket-info">General Booking @dateOrNow(Tier.Friend, ticketSaleDates(Tier.Friend))</p>
-            <div class="tooltip__stem"></div>
-        </div>
+        <h4 class="ticket-info__header">Ticket sales</h4>
+        @for((tier, salesDate) <- ticketSaleDates) {
+            <p class="ticket-info__item"><strong>@(tier + "s")</strong> @dateOrNow(tier, salesDate)</p>
+        }
     }
 }
 
@@ -64,6 +60,17 @@
 
                         <div class="event__tickets">
 
+                            <div class="ticket-info">
+                                @ticketBookingDates(ticket)
+                            </div>
+
+                            <div class="event__sale-ends ticket-info">
+                                <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
+                                <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                                 @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
+                                </time>
+                            </div>
+
                             @if(ticket.free) {
                                 <div class="event__price">
                                     <span class="event__price-amount js-event-price">Free</span>
@@ -81,34 +88,12 @@
                                     </div>
                                 }
                             }
-                        <p class="terms-info">By proceeding, you agree to the Guardian Live events <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a></p>
-                            @ticketCta
-                            <div class="ticket-info">
-                                <p>General release <strong><time class="js-ticket-sale-start" datetime="@event.ticketClassesHead.flatMap(_.sales_start).getOrElse("")">
-                                    @model.TicketSaleDates.datesFor(event.start, ticket)(Tier.Friend).pretty</time></strong>
-                                </p>
-                                <div>Pre-sale tickets available<span class="js-ticket-on-sale-now"></span>.
-                                    <span class="booking-dates">Booking Dates
-                                        <span class="tooltip"><i class="tooltip__cta">i</i>@ticketBookingDates(ticket)</span>
-                                    </span>
-                                </div>
-                                <div class="ticket-info">
-                                    <p class="u-h">Existing members
-                                        <strong>
-                                            <a class="js-ticket-sale-sign-in" href="@Config.idWebAppSigninUrl("")">sign in</a>
-                                        </strong>
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <a class='action js-member-cta' href='/join'>Become a member</a>
-                            </div>
 
-                            <div class="event__sale-ends">
-                                <span class="event__sale_ends_note js-datetime-enhance-note">Sales @if(event.getStatus == Completed){ended on}else{end on} </span>
-                                <time class="event__sale_ends_time js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)</time>
-                            </div>
+                            @ticketCta
+
+                            <p class="terms-info">By proceeding, you agree to the Guardian Live events
+                                <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
+                            </p>
                         </div>
                     }
                 </div>

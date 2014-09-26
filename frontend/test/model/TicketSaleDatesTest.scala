@@ -14,20 +14,20 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
 
   "Ticket Sales Dates" should {
 
-    "all be the sale-start date if sale-start is less than 3 weeks from Event start" in {
-      val saleStart = (eventDate - 20.days).toInstant
+    "all be the sale-start date if sale-start is less than 2 weeks from Event start" in {
+      val saleStart = (eventDate - 13.days).toInstant
       val datesByTier = TicketSaleDates.datesFor(eventDate, EBTickets(sales_start = Some(saleStart)))
 
       datesByTier.values.toSet mustEqual Set(saleStart)
-      datesByTier.keys.toSet mustEqual Set(Tier.Friend, Tier.Partner, Tier.Patron)
+      datesByTier.keys.toSet mustEqual Set(Tier.Partner, Tier.Patron, Tier.Friend)
     }
 
-    "give patrons and partners preferential times if sale-start is 3 or more weeks from Event start" in {
-      val saleStart = (eventDate - 3.weeks)
+    "give patrons and partners preferential times if sale-start is 2 or more weeks from Event start" in {
+      val saleStart = (eventDate - 2.weeks)
       val datesByTier = TicketSaleDates.datesFor(eventDate, EBTickets(sales_start = Some(saleStart.toInstant)))
 
       datesByTier must havePairs(
-        Tier.Friend -> (saleStart + 2.weeks).toInstant,
+        Tier.Friend -> (saleStart + 2.week).toInstant,
         Tier.Partner -> (saleStart + 1.week).toInstant,
         Tier.Patron -> (saleStart).toInstant
       )
