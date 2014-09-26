@@ -4,21 +4,15 @@
 .help {
 
     .help-intro {
-        @include rem((
-            padding-bottom: $gs-gutter*2
-        ));
+        padding-bottom: rem($gs-gutter * 2);
     }
 
     .help-list li {
-        @include rem((
-            padding: 0 0 5px
-        ));
+        padding: 0 0 rem(5px);
     }
 
     .help-faqs {
-        @include rem((
-            padding: $gs-gutter 0
-        ));
+        padding: rem($gs-gutter) 0;
     }
 
 }

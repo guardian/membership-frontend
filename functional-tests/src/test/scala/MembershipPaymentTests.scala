@@ -68,7 +68,6 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-// disabled due to https://jira.gutools.co.uk/browse/MEM-282
     scenarioWeb("21. User with no funds in account cannot make a purchase") {
       implicit driver =>
       given {

@@ -99,6 +99,7 @@ county: Option[String], userCountry: Option[String])
                        name="@(formType).postCode"
                        value="@postcode"
                        id="postCode-@(formType)"
+                       maxlength="20"
                        class="text-input text-input--block js-post-code"
                        data-error-message="Please enter your @heading.toLowerCase() post code"
                        data-validation="required"/>

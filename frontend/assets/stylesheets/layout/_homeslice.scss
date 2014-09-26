@@ -54,9 +54,7 @@
             display: block;
             width: 100%;
             padding-bottom: 0;
-            @include rem((
-                height: 560px
-            ));
+            height: rem(560px);
 
             background-repeat: no-repeat;
             background-position: center center;
@@ -68,17 +66,13 @@
 
         @include mq(desktop) {
             left: 50%;
-            @include rem((
-                margin-left: -#{(gs-span(12)+$gs-gutter*2)/2},
-                width: gs-span(12)+$gs-gutter*2
-            ));
+            margin-left: rem(-#{(gs-span(12) + $gs-gutter * 2) / 2});
+            width: rem(gs-span(12) + $gs-gutter * 2);
         }
 
         @include mq(mem-full) {
-            @include rem((
-                margin-left: -#{(gs-span(14)+$gs-gutter*2)/2},
-                width: gs-span(14)+$gs-gutter*2
-            ));
+            margin-left: rem(-#{(gs-span(14) + $gs-gutter * 2) / 2});
+            width: rem(gs-span(14) + $gs-gutter * 2);
         }
     }
 
@@ -116,16 +110,12 @@
     .home-slice__inner {
         position: relative;
         width: 100%;
-        @include rem((
-            padding-bottom: $gs-gutter
-        ));
+        padding-bottom: rem($gs-gutter);
 
         .home-slice__headline-block {
             width: 100%;
-            @include rem((
-                min-height: 104px,
-                padding: $gs-gutter $gs-gutter/2 $gs-gutter
-            ));
+            min-height: rem(104px);
+            padding: rem($gs-gutter) rem($gs-gutter / 2);
             background-color: transparentize($mem-blue, .1);
 
             margin-top: -webkit-calc(((100%/5)*3) - #{$gs-gutter/2});
@@ -137,19 +127,15 @@
                 float: left;
                 position: absolute;
                 margin-top: 0;
-                @include rem((
-                    width: 320px,
-                    min-height: 160px,
-                    padding: $gs-gutter
-                ));
+                width: rem(320px);
+                min-height: rem(160px);
+                padding: rem($gs-gutter);
             }
 
             @include mq(mem-full) {
                 position: static;
-                @include rem((
-                    width: 480px,
-                    padding: $gs-gutter $gs-gutter*8 $gs-gutter $gs-gutter
-                ));
+                width: rem(480px);
+                padding: rem($gs-gutter) rem($gs-gutter * 8) rem($gs-gutter) rem($gs-gutter);
             }
         }
 
@@ -166,35 +152,27 @@
 
         .home-slice__copy-block {
             width: 100%;
-            @include rem((
-                background-color: $white,
-                padding: $gs-gutter/2
-            ));
+            background-color: $white;
+            padding: rem($gs-gutter / 2);
 
             @include mq(tablet) {
                 float: right;
-                @include rem((
-                    margin-top: 400px, // 560-160
-                    padding: $gs-gutter,
-                    width: 660px
-                ));
+                margin-top: rem(400px); // 560-160
+                padding: rem($gs-gutter);
+                width: rem(660px);
             }
 
             .home-slice__copy {
                 @include fs-headline(10);
                 font-weight: 100;
-                @include rem((
-                    margin-bottom: 17px
-                ));
+                margin-bottom: rem(17px);
                 @include mq(tablet) {
                     @include fs-headline(9);
                 }
             }
 
             .action {
-                @include rem((
-                    margin: 0 0 17px
-                ));
+                margin: 0 0 rem(17px);
             }
         }
     }
@@ -226,9 +204,7 @@
             background-color: transparentize($mem-blue, .1);
             position: relative;
             z-index: 2;
-            @include rem((
-                margin-top: -$gs-gutter/2
-            ));
+            margin-top: rem(-$gs-gutter/2);
 
             @include mq(tablet) {
                 margin: 0;
@@ -237,16 +213,12 @@
                 z-index: 2;
                 right: 0;
                 top: 0;
-                @include rem((
-                    width: 320px,
-                    min-height: 160px
-                ));
+                width: rem(320px);
+                min-height: rem(160px);
             }
 
             @include mq(mem-full) {
-                @include rem((
-                    width: 500px
-                ));
+                width: rem(500px);
             }
         }
 
@@ -257,17 +229,13 @@
             padding: 0;
 
             @include mq(tablet) {
-                @include rem((
-                    padding: 0 $gs-gutter $gs-gutter
-                ));
+                padding: 0 rem($gs-gutter) rem($gs-gutter);
             }
 
             @include mq(desktop) {
                 float: left;
-                @include rem((
-                    width: 800px,
-                    padding: 0 0 $gs-gutter $gs-gutter
-                ));
+                width: rem(800px);
+                padding: 0 0 rem($gs-gutter) rem($gs-gutter);
             }
 
             .home-slice__media {
@@ -277,32 +245,24 @@
 
                 @include mq(tablet) {
                     position: static;
-                    @include rem((
-                        max-width: 460px,
-                        max-height: 276px
-                    ));
+                    max-width: rem(460px);
+                    max-height: rem(276px);
                 }
 
                 @include mq(desktop) {
                     float: left;
-                    @include rem((
-                        max-width: 700px,
-                        max-height: 420px
-                    ));
+                    max-width: rem(700px);
+                    max-height: rem(420px);
                 }
             }
             .home-slice__offset-copy {
                 display: block;
                 width: 100%;
-                @include rem((
-                    padding: $gs-gutter $gs-gutter/2 $gs-gutter/2
-                ));
+                padding: rem($gs-gutter) rem($gs-gutter / 2) rem($gs-gutter / 2);
 
                 @include mq(desktop) {
                     float: right;
-                    @include rem((
-                        width: 620px
-                    ));
+                    width: rem(620px);
                 }
 
                 .home-slice__copy--quote {
@@ -317,9 +277,7 @@
                     @include fs-headline(1);
                     font-style: normal;
                     font-weight: lighter;
-                    @include rem((
-                        margin-bottom: 17px
-                    ));
+                    margin-bottom: rem(17px);
                     @include mq(tablet) {
                         @include fs-headline(2);
                     }
@@ -329,9 +287,7 @@
     }
 
     &.home-slice--epic {
-        @include rem((
-            padding-top: 224px
-        ));
+        padding-top: rem(224px);
 
         &:before {
             content: '';
@@ -350,9 +306,7 @@
         }
 
         @include mq(tablet) {
-            @include rem((
-                padding-top: 164px // 200 - 36 header margin
-            ));
+            padding-top: rem(164px); // 200 - 36 header margin
             &:before {
                 height: -webkit-calc(100% - 560px);
                 height: -moz-calc(100% - 560px);
@@ -367,9 +321,7 @@
         }
 
         .home-slice__headline-block {
-            @include rem((
-                padding-right: $gs-gutter*3
-            ));
+            padding-right: rem($gs-gutter * 3);
 
             @include mq($until: tablet) {
                 margin-top: 0;
@@ -380,34 +332,26 @@
                 top: 0;
                 right: 0;
                 left: auto;
-                @include rem((
-                    width: 660px
-                ));
+                width: rem(660px);
             }
 
             @include mq(mem-full) {
                 left: 0;
                 right: auto;
-                @include rem((
-                    width: 480px
-                ));
+                width: rem(480px);
             }
         }
 
         .home-slice__copy-block {
             @include mq(tablet) {
-                @include rem((
-                    margin-top: 250px
-                ));
+                margin-top: rem(250px);
             }
         }
 
         &.home-slice--epic-home-page {
             @include mq(tablet) {
                 .home-slice__inner {
-                    @include rem((
-                        height: 834px
-                    ));
+                    height: rem(834px);
                 }
             }
 
@@ -415,16 +359,12 @@
                 @include mq(tablet) {
                     position: absolute;
                     top: auto;
-                    @include rem((
-                        bottom: 478px
-                    ));
+                    bottom: rem(478px);
                 }
             }
             .home-slice__copy-block {
                 @include mq(tablet) {
-                    @include rem((
-                        margin-top: 396px // 560-200-160
-                    ));
+                    margin-top: rem(396px); // 560-200-160
                 }
             }
         }
@@ -435,13 +375,10 @@
         background-color: $c-neutral6;
 
         .home-slice__headline {
-            @include rem((
-                padding: $gs-gutter
-            ));
+            padding: rem($gs-gutter);
+
             @include mq(tablet) {
-                @include rem((
-                    padding-bottom: $gs-gutter*4
-                ));
+                padding-bottom: rem($gs-gutter * 4);
             }
         }
 
@@ -459,15 +396,11 @@
 
     @include mq(desktop) {
         .home-slice__inner {
-            @include rem((
-                width: gs-span(12)+$gs-gutter*2
-            ));
+            width: rem(gs-span(12) + $gs-gutter * 2);
         }
 
         &.home-slice--content .home-slice__inner .home-slice__headline-block {
-            @include rem((
-                width: 340px
-            ));
+            width: rem(340px);
         }
 
 
@@ -475,21 +408,15 @@
 
     @include mq(mem-full) {
         .home-slice__inner {
-            @include rem((
-                width: gs-span(14)+$gs-gutter*2
-            ));
+            width: rem(gs-span(14) + $gs-gutter * 2);
         }
 
         &.home-slice--content .home-slice__inner .home-slice__headline-block {
-            @include rem((
-                width: 500px
-            ));
+            width: rem(500px);
         }
 
         &.home-slice--join-today .join-today__join-boxes {
-            @include rem((
-                padding-left: 180px
-            ));
+            padding-left: rem(180px);
         }
     }
 
@@ -500,13 +427,10 @@
    ================================================================= */
 
 .join-today__join-boxes {
-    @include rem((
-        padding: $gs-gutter/2
-    ));
+    padding: rem($gs-gutter / 2);
+
     @include mq(tablet) {
-        @include rem((
-            padding: $gs-gutter
-        ));
+        padding: rem($gs-gutter);
     }
 
     @include mq($from: mobile, $until: desktop) {
@@ -517,17 +441,13 @@
 .join-today__join-box {
     position: relative;
     background-color: $c-neutral9;
-    border: 1px solid $c-neutral5;
-    @include rem((
-        margin-bottom: $gs-gutter,
-        padding: 68px $gs-gutter/2 $gs-gutter/2
-    ));
+    border: rem(1px) solid $c-neutral5;
+    margin-bottom: rem($gs-gutter);
+    padding: rem(68px) rem($gs-gutter / 2) rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        @include rem((
-            width: gs-span(3),
-            margin-right: $gs-gutter
-        ));
+        width: rem(gs-span(3));
+        margin-right: rem($gs-gutter);
     }
 
     @include mq($from: tablet, $until: desktop) {
@@ -536,12 +456,10 @@
     }
 
     @include mq(desktop) {
-        @include rem((
-            width: gs-span(4),
-            margin-right: $gs-gutter,
-            padding: 68px $gs-gutter $gs-gutter,
-            min-height: 400px
-        ));
+        width: rem(gs-span(4));
+        margin-right: rem($gs-gutter);
+        padding: rem(68px) rem($gs-gutter) rem($gs-gutter);
+        min-height: rem(400px);
     }
 
     &:last-child {
@@ -569,7 +487,7 @@
 
         @include mq($from: tablet, $until: desktop) {
             width: auto;
-            min-width: 260px;
+            min-width: rem(260px);
         }
         @include mq(desktop) {
             position: absolute;
@@ -610,9 +528,7 @@
     left: 0;
     right: 0;
     @include fs-headline(3);
-    @include rem((
-        padding: $gs-gutter $gs-gutter $gs-gutter 65px
-    ));
+    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
 
     &:before {
         @extend %icon-sprite;
@@ -620,10 +536,8 @@
         content: '';
         display: block;
         position: absolute;
-        @include rem((
-            left: $gs-gutter,
-            top: 15px
-        ));
+        left: rem($gs-gutter);
+        top: rem(15px);
     }
 
     &.join-today__join-box--header--friends {
@@ -644,11 +558,9 @@
 
 .join-today__teaser {
     .join-today__teaser--description {
-        @include rem((
-            padding-top: $gs-gutter,
-            margin-bottom: $gs-gutter,
-            min-height: 140px
-        ));
+        padding-top: rem($gs-gutter);
+        margin-bottom: rem($gs-gutter);
+        min-height: rem(140px);
         @include fs-bodyCopy(2);
 
         @include mq(tablet) {
