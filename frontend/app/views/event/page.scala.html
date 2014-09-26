@@ -15,6 +15,9 @@
         case PreLive => { <button class='action action--disabled js-ticket-cta js-opt-become-member' disabled='disabled'>Buy Tickets</button> }
         case _ => { <a class='action js-ticket-cta js-opt-become-member' href='/event/@event.id/buy'>Buy Tickets</a> }
     }
+    <p class="terms-info">By proceeding, you agree to the Guardian Live events
+        <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
+    </p>
 }
 
 @dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
@@ -90,10 +93,6 @@
                             }
 
                             @ticketCta
-
-                            <p class="terms-info">By proceeding, you agree to the Guardian Live events
-                                <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
-                            </p>
                         </div>
                     }
                 </div>
