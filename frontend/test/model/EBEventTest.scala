@@ -1,48 +1,53 @@
 package model
 
-import model.EventbriteTestObjects._
 import model.Eventbrite._
-import model.Eventbrite.EBEventStatus._
 import play.api.test.PlaySpecification
-import org.joda.time.Instant
+import org.joda.time.{ Instant, DateTime }
 import utils.Resource
+import EventbriteDeserializer._
 
 class EBEventTest extends PlaySpecification {
 
-  val quantitySold = Some(10)
-  val ebTicketsQuantitySoldTen = new EBTickets(None, None, false, None, quantitySold, None, None, None, Some(true))
-  val ebTicketsStartInPast     = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.plus(1000)), Some(true))
-  val ebTicketsStartInFuture   = new EBTickets(None, None, false, None, quantitySold, None, None, Some(Instant.now.minus(1000)), Some(true))
+  val event = Resource.getJson("model/eventbrite/events.2014-26-09.dev.account.json")
+  val ebResponse = event.as[EBResponse[EBEvent]]
+  val ebCompletedEvent = ebResponse.data.find(_.id == "11582434373").get
+  val ebStartedEvent = ebResponse.data.find(_.id == "11585910771").get
+  val ebEndedEvent = ebResponse.data.find(_.id == "11583186623").get
+  val ebCancelledEvent = ebResponse.data.find(_.id == "11582307995").get
+  val ebSoldOutEvent = ebResponse.data.find(_.id == "11582929855").get
+  val ebLiveEvent = ebResponse.data.find(_.id == "11582592847").get
+  val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
+  val ebDraftEvent = ebResponse.data.find(_.id == "11583116413").get
 
-  val ebCompletedEvent = new EBEvent(eventName("Completed Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, Seq.empty, Some("completed"))
-  val ebCanceledEvent = new EBEvent(eventName("Canceled Event"), None, None, "", "", eventTime, eventTime, eventVenue, None, Seq.empty, Some("canceled"))
-  val ebSoldOutEvent = new EBEvent(eventName("Sold Out Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(1), Seq(ebTicketsQuantitySoldTen), Some("live"))
-  val ebLiveEvent = new EBEvent(eventName("Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInFuture), Some("live"))
-  val ebPreLiveEvent = new EBEvent(eventName("Pre Live Event"), None, None, "", "", eventTime, eventTime, eventVenue, Some(20), Seq(ebTicketsStartInPast), Some("live"))
-  val freeTicket = EBTickets(None, None, true, None, None, None, None, None, Some(true))
 
-  "getStatus" should {
-    "be Completed" in {
+ "getStatus on event " should {
+    "that has a status='completed' should return Completed" in {
       ebCompletedEvent.getStatus mustEqual(Completed)
     }
-    "be Cancelled" in {
-      ebCanceledEvent.getStatus mustEqual(Cancelled)
+
+    "that has a status='started' should return Completed" in {
+      ebStartedEvent.getStatus mustEqual(Completed)
     }
-    "be SoldOut" in {
+
+    "that has a status='ended' should return Completed" in {
+      ebEndedEvent.getStatus mustEqual(Completed)
+    }
+
+    "that has a status='cancelled' should return Cancelled" in {
+      ebCancelledEvent.getStatus mustEqual(Cancelled)
+    }
+
+    "that has a status='live' with ticket quantity sold equalling quantity total should return SoldOut" in {
       ebSoldOutEvent.getStatus mustEqual(SoldOut)
     }
-    "be Live" in {
+    "that has a status='live' should return Live" in {
       ebLiveEvent.getStatus mustEqual(Live)
     }
-    "be PreLive" in {
-      ebPreLiveEvent.getStatus mustEqual(PreLive)
+   "that has a status='live' but tickets are not yet on sale should return PreLive" in {
+     ebLiveEventTicketsNotOnSale.getStatus mustEqual(PreLive)
     }
-    "be PreLive when status=draft" in {
-      import EventbriteDeserializer._ // class under test
-
-      val event = Resource.getJson("model/eventbrite/events.12016047321.json").as[EBEvent]
-
-      event.getStatus === PreLive
+    "that has a status='draft' should return Draft" in {
+      ebDraftEvent.getStatus mustEqual(Draft)
     }
   }
 

@@ -56,19 +56,17 @@ trait EventbriteService {
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityOrderedEventIds.get()
-    val (priorityEvents, normal) = getLiveEvents.partition(e => priorityIds.contains(e.id))
+    val (priorityEvents, normal) = getPortfolioEvents.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
-  def getLiveEvents: Seq[EBEvent] = events.filter { event =>
-    event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
-  }
+  def getPortfolioEvents: Seq[EBEvent] = events.filter(_.getStatus.isInstanceOf[DisplayableEvent])
 
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
+  def getEventsTagged(tag: String) = getPortfolioEvents.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
 

@@ -7,9 +7,9 @@ import org.openqa.selenium.{Cookie, WebDriver}
 
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
-  val validCardNumber = "4242 4242 4242 4242"
+  val validCardNumber = "4242424242424242"
   val cardWithNoFunds = "4000000000000341"
-  val secondaryCard = "5555555555554444"
+  val secondaryCard   = "5555555555554444"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
