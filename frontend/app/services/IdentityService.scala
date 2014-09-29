@@ -39,19 +39,13 @@ trait IdentityService {
       "firstName" -> formData.name.first
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-    postFields(fields, user, identityRequest).map { identityResponse =>
-      Logger.info(s"Identity status response for fields update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user")
-    }
+    postFields(fields, user, identityRequest)
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
     Timing.record(IdentityApiMetrics, "update-user-password") {
       val json = Json.obj("newPassword" -> password)
-      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters).map { identityResponse =>
-        Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user $userId")
-        IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user-password")
-      }
+      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
     }
   }
 
@@ -64,7 +58,7 @@ trait IdentityService {
   private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
     val json = Json.obj("privateFields" -> fields)
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
-    IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters)
+    IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
 
   private def deliveryAddress(addressForm: AddressForm): JsObject = {
@@ -97,7 +91,7 @@ trait Http {
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse]
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[WSResponse]
 
 }
 
@@ -108,7 +102,7 @@ object IdentityApi extends Http {
     val url = s"${Config.idApiUrl}/$endpoint"
     Timing.record(IdentityApiMetrics, "get-user-password-exists") {
       WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
-        recordAndLogResponse(response.status, "GET", endpoint)
+        recordAndLogResponse(response.status, "GET user-password-exists", endpoint)
         (response.json \ "passwordExists").asOpt[Boolean].getOrElse(throw new IdentityApiError(s"$url did not return a boolean"))
       }
     }
@@ -117,7 +111,7 @@ object IdentityApi extends Http {
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
-        recordAndLogResponse(response.status, "GET", endpoint)
+        recordAndLogResponse(response.status, "GET user", endpoint)
         (response.json \ "user").asOpt[IdentityUser]
       }.recover {
         case _ => None
@@ -125,9 +119,11 @@ object IdentityApi extends Http {
     }
   }
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)]): Future[WSResponse] = {
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[WSResponse] = {
     Timing.record(IdentityApiMetrics, "post-user") {
-      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+      val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+      response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
+      response
     }
   }
 
