@@ -93,18 +93,44 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       }
   }
 
-//  scenarioWeb("43. An existing friend cannot become a friend again") {
-//    implicit driver =>
-//      given {
-//        MembershipSteps().IAmLoggedInAsAFriend
-//      }
-//      .when {
-//        _.IGoToTheEventsPage
-//      }
-//      .then {
-//        _.ICantBecomeAFriendAgain
-//      }
-//  }
+  scenarioWeb("43. An existing friend cannot become a friend again") {
+    implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAFriend
+      }
+      .when {
+        _.IGoToTheEventsPage
+      }
+      .then {
+        _.ICantBecomeAFriendAgain
+      }
+  }
+
+  scenarioWeb("44. An existing partner cannot become a partner again") {
+    implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAPartner
+      }
+      .when {
+        _.IGoToTheEventsPage
+      }
+      .then {
+        _.ICantBecomeAFriendAgain
+      }
+  }
+
+  scenarioWeb("45. An existing patron cannot become a patron again") {
+    implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAPatron
+      }
+        .when {
+        _.IGoToTheEventsPage
+      }
+        .then {
+        _.ICantBecomeAPatronAgain
+      }
+  }
 
   // patron to partner
 
