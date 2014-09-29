@@ -45,7 +45,6 @@ class StripeService(apiConfig: StripeApiConfig) {
   }
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
     StripeMetrics.putResponseCode(status, responseMethod)
   }
 
