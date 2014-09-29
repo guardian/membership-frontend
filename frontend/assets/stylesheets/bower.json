@@ -1,6 +1,7 @@
 {
   "name": "membership stylesheets",
   "dependencies": {
-    "guss": "3.3.0"
+    "guss": "3.3.0",
+    "pasteup-palette": "3.3.0"
   }
 }
