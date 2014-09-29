@@ -13,22 +13,17 @@ $current-indicator: rem(47px);
 }
 
 .package-container {
-    background-color: #f2f2f2;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
+    border-top: rem(1px) solid transparent;
+    border-bottom: rem(1px) solid transparent;
     padding: rem($gs-gutter);
 }
 
 .package-container__header {
-    @include rem((
-        padding-bottom: $gs-gutter,
-    ));
+    padding-bottom: rem($gs-gutter);
     @include mq(tablet) {
-        @include rem((
-            margin-bottom: 40px
-        ));
+        margin-bottom: rem(40px);
     }
-    border-bottom: 1px dotted #333333;
+    border-bottom: rem(1px) dotted #333333;
 }
 
 // .package-list is a flexbox
@@ -44,12 +39,11 @@ $current-indicator: rem(47px);
 }
 
 .package-list--bordered .package {
-    border: 1px solid $c-neutral5;
+    border: rem(1px) solid $c-neutral5;
 }
 
 .package {
-    @include border-radius(4px);
-    background-color: #ffffff;
+    background-color: $c-neutral7;
     position: relative;
 
     // .package is a flexbox too to
@@ -59,9 +53,7 @@ $current-indicator: rem(47px);
     @include justify-content(space-between);
     @include flex-direction(column);
 
-    @include rem((
-        margin-right: $gs-gutter
-    ));
+    margin-right: rem($gs-gutter);
 
     &:last-child {
         margin-right: 0;
@@ -84,9 +76,7 @@ $current-indicator: rem(47px);
         margin-right: 0;
         display: block;
         overflow: hidden;
-        @include rem((
-            margin-bottom: $gs-gutter
-        ));
+        margin-bottom: rem($gs-gutter);
     }
 
     // override button widths for flexbox
@@ -100,9 +90,7 @@ $current-indicator: rem(47px);
     padding: $gs-gutter;
     // this is annoying but removes an ~8px height gap
     // between buttons in columns. if you can fix it, bravo!
-    @include rem((
-        height: 100px
-    ));
+    height: rem(100px);
     @include mq($from: tablet, $until: desktop) {
         width: 55%;
         float: right;
@@ -112,19 +100,15 @@ $current-indicator: rem(47px);
 
 .package__item--promo {
     // see above – we show 2 buttons here so need more space
-    @include rem((
-        height: 170px
-    ));
+    height: rem(170px);
 }
 
 .package__current-indicator {
     color: #ffffff;
     background-color: #9c9c9c;
     text-align: center;
-    @include rem((
-        padding: $gs-baseline,
-        margin: 0 $gs-baseline/2 0
-    ));
+    padding: rem($gs-baseline);
+    margin: 0 rem($gs-baseline / 2);
     @include mq(desktop) {
         margin-top: -$current-indicator;
     }
@@ -133,28 +117,20 @@ $current-indicator: rem(47px);
     }
     // this prevents the text splitting onto 2 lines
     @include mq($from: desktop, $until: mem-full) {
-        @include rem((
-            font-size: 14px
-        ));
+        font-size: rem(14px);
     }
 }
 
 .package__inner {
-    @include rem((
-        padding: $gs-gutter
-    ));
+    padding: rem($gs-gutter);
     @include mq($from: tablet, $until: desktop) {
-        @include rem((
-            padding-top: $gs-gutter*2,
-            padding-bottom: 0
-        ));
+        padding-top: rem($gs-gutter * 2);
+        padding-bottom: 0;
     }
 }
 
 .package__inner--cancel {
-    @include rem((
-        height: 740px // magic number
-    ));
+    height: rem(740px); // magic number
 }
 
 // we always want buttons to appear below the main benefits copy
@@ -166,15 +142,12 @@ $current-indicator: rem(47px);
 }
 
 .package--current {
-    border: 1px solid #9c9c9c;
+    border: rem(1px) solid #9c9c9c;
 }
 
 .package__title-container {
     position: relative;
-
-    @include rem((
-        padding: $gs-gutter $gs-gutter $gs-gutter 65px
-    ));
+    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
 
     .package__title {
         @include fs-headline(3);
@@ -189,10 +162,8 @@ $current-indicator: rem(47px);
         content: '';
         display: block;
         position: absolute;
-        @include rem((
-            left: $gs-gutter,
-            top: 15px
-        ));
+        left: rem($gs-gutter);
+        top: rem(15px);
     }
 
     &--friend {
@@ -222,9 +193,7 @@ $current-indicator: rem(47px);
 
 .package__list-benefits-element {
     @include fs-bodyCopy(1);
-    @include rem((
-        padding-bottom: $gs-gutter
-    ));
+    padding-bottom: rem($gs-gutter);
     margin-bottom: 0;
     list-style: none;
     > li {
@@ -241,11 +210,8 @@ $current-indicator: rem(47px);
     content: 'Plus:';
     display: block;
     @include fs-bodyCopy(1);
-    color: $c-neutral3;
-    border-bottom: 1px solid $c-neutral3;
-    @include rem((
-        margin-bottom: $gs-baseline
-    ));
+    color: $c-neutral1;
+    margin-bottom: rem($gs-baseline / 2);
 }
 
 // bit fugly - hides the "Plus:" text for first list item
@@ -258,10 +224,8 @@ $current-indicator: rem(47px);
     overflow: hidden;
 
     @include mq($from: tablet) {
-        @include rem((
-            margin-bottom: 20px,
-            height: 45px
-        ));
+        margin-bottom: rem(20px);
+        height: rem(45px);
     }
 
     @include mq($from: tablet, $until: desktop) {
@@ -282,15 +246,17 @@ $current-indicator: rem(47px);
         @include fs-headline(2);
 
         @include mq(desktop) {
+            @include fs-headline(2);
+        }
+
+        @include mq(mem-full) {
             @include fs-headline(3);
         }
     }
 
     @include mq(mobile) {
         .price-info__container-inner {
-            @include rem((
-                margin-bottom: $gs-gutter
-            ));
+            margin-bottom: rem($gs-gutter);
         }
     }
 
@@ -303,24 +269,22 @@ $current-indicator: rem(47px);
         .price-info__container-inner--last {
             text-align: right;
             height: 100%;
-            border-left: 1px solid $c-neutral5;
+            border-left: rem(1px) solid $c-neutral3;
         }
     }
 
     @include mq($from: tablet, $until: desktop) {
         .price-info__container-inner--last {
-            @include rem((
-                margin-top: $gs-gutter,
-                padding-top: $gs-gutter
-            ));
-            border-top: 1px solid $c-neutral5;
+            margin-top: rem($gs-gutter);
+            padding-top: rem($gs-gutter);
+            border-top: rem(1px) solid $c-neutral5;
             border-left: 0;
         }
     }
 
     .price-info__sub-detail {
         @include fs-bodyCopy(1);
-        color: $c-neutral3;
+        color: #666666;
         display: block;
     }
 
@@ -332,14 +296,10 @@ $current-indicator: rem(47px);
 
 .package__leadin {
     @include fs-headline(3);
-    border-bottom: 1px solid $c-neutral4;
-    @include rem((
-        padding-bottom: $gs-gutter
-    ));
+    border-bottom: rem(1px) solid $c-neutral4;
+    padding-bottom: rem($gs-gutter);
     @include mq(desktop) {
-        @include rem((
-            height: 97px // magic number
-        ));
+        height: rem(97px); // magic number
     }
 }
 
@@ -348,14 +308,8 @@ $current-indicator: rem(47px);
 
     @include mq(desktop) {
         @include fs-bodyCopy(3);
-        @include rem((
-            min-height: 120px
-        ));
-        @include rem((
-            padding-top: $gs-gutter,
-            min-height: 60px
-        ));
-        border-top: 1px solid $c-neutral5;
+        padding-top: rem($gs-gutter / 2);
+        min-height: rem(120px);
     }
 
     @include mq($from: tablet, $until: desktop) {
@@ -371,7 +325,7 @@ $current-indicator: rem(47px);
 .upgrade__payment-label {
     display: block;
     position: relative;
-    border: 1px solid #cccccc;
+    border: rem(1px) solid #cccccc;
     padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
     @include border-radius(5px);
 
@@ -388,8 +342,8 @@ $current-indicator: rem(47px);
         margin: 0;
         padding: 0;
         position: absolute;
-        top: 10px;
-        left: 6px;
+        top: rem(10px);
+        left: rem(6px);
     }
 
     input[type=radio]:checked + .payment-label__title {

@@ -102,6 +102,8 @@ define([
             function callback(canonicalPaymentFormFixtureElement) {
 
                 paymentFormFixtureElement = canonicalPaymentFormFixtureElement.cloneNode(true);
+                $(document.body).append(paymentFormFixtureElement.cloneNode(true));
+
                 joinPaidForm = new PaidForm();
 
                 spyOn(joinPaidForm, 'setupForm').and.callFake(function() {

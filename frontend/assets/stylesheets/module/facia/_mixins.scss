@@ -6,8 +6,8 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 1px;
+        width: rem(1px);
         height: 100%;
-        border-left: 1px solid $c-neutral5;
+        border-left: rem(1px) solid $c-neutral5;
     }
 }

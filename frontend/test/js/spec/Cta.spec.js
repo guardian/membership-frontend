@@ -9,11 +9,7 @@ define([
 
     describe('Early bird tickets', function() {
 
-        var TIER_CHANGE_URL = '/tier/change';
-        var JOIN_URL = '/join';
-        var UPGRADE_TEXT = 'Upgrade';
         var TEST_EVENT_URL = '/test/event/url';
-        var UPGRADE_COMING_SOON = 'Upgrade coming soon';
         var canonicalTicketAvailabilityFixtureElement;
         var ticketAvailabilityFixtureElement;
         var cta;
@@ -22,9 +18,6 @@ define([
         var $saleStartPartnerElem;
         var $saleStartFriendElem;
         var $buyTicketsCTA;
-        var $memberCTA;
-        var $ticketsOnSaleNow;
-        var $existingMembersSignIn;
 
         // PhantomJS doesn't support bind yet
         Function.prototype.bind = Function.prototype.bind || function (context) {
@@ -182,9 +175,6 @@ define([
                 $saleStartPatronElem = $('.js-ticket-sale-start-patron', ticketAvailabilityFixtureElement);
                 $saleStartPartnerElem = $('.js-ticket-sale-start-partner', ticketAvailabilityFixtureElement);
                 $saleStartFriendElem = $('.js-ticket-sale-start-friend', ticketAvailabilityFixtureElement);
-                $ticketsOnSaleNow = $('.js-ticket-on-sale-now', ticketAvailabilityFixtureElement);
-                $memberCTA = $('.js-member-cta', ticketAvailabilityFixtureElement);
-                $existingMembersSignIn = $('.js-ticket-sale-sign-in', ticketAvailabilityFixtureElement);
 
                 spyOn(cta, 'parseDates').and.callFake(function () {
                     cta.ticketDates = {
@@ -233,71 +223,55 @@ define([
             var salesStartOneWeekInTheFuture = new Date();
             salesStartOneWeekInTheFuture.setDate(salesStartOneWeekInTheFuture.getDate() + 7);
 
-            it('loggedIn Friend - "Buy Tickets" disabled, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Friend - "Buy Tickets" disabled' , function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual(TIER_CHANGE_URL);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
+            it('loggedIn Partner - "Buy Tickets" disabled', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
-                expect($memberCTA.attr('href')).toBeNull();
-                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" disabled, "Upgrade" button hidden', function (done) {
+            it('loggedIn Patron - "Buy Tickets" disabled', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.hasClass('u-h')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn NOT a member - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL, function (done) {
+            it('loggedIn NOT a member - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(salesStartOneWeekInTheFuture, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual(JOIN_URL);
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL + ', "Existing members sign in" displayed', function (done) {
+            it('loggedOut - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(salesStartOneWeekInTheFuture, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual(JOIN_URL);
-                expect($existingMembersSignIn.parent().parent().hasClass('u-h')).toBeFalsy();
 
                 done();
             });
@@ -314,73 +288,57 @@ define([
             var saleStartedYesterday = new Date();
             saleStartedYesterday.setDate(saleStartedYesterday.getDate() - 1);
 
-            it('loggedIn Friend - "Buy Tickets" disabled, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Friend - "Buy Tickets" disabled', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStartedYesterday, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual(TIER_CHANGE_URL);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
+            it('loggedIn Partner - "Buy Tickets" disabled', function (done) {
 
                 var tier = 'Partner';
 
                 fixtureSetup(saleStartedYesterday, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
-                expect($memberCTA.attr('href')).toBeNull();
-                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url, "Upgrade" button hidden, "to you now" ticket availability text displayed', function (done) {
+            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
 
                 fixtureSetup(saleStartedYesterday, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual(' to you now');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.hasClass('u-h')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL, function (done) {
+            it('loggedIn not a member - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(saleStartedYesterday, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL + ', "Existing members sign in" displayed', function (done) {
+            it('loggedOut - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(saleStartedYesterday, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
-                expect($existingMembersSignIn.parent().parent().hasClass('u-h')).toBeFalsy();
 
                 done();
             });
@@ -397,71 +355,55 @@ define([
             var saleStarted8DaysAgo = new Date();
             saleStarted8DaysAgo.setDate(saleStarted8DaysAgo.getDate() - 8);
 
-            it('loggedIn Friend - "Buy Tickets" disabled, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Friend - "Buy Tickets" disabled', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual('/tier/change');
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '", "to you now" ticket availability text displayed', function (done) {
+            it('loggedIn Partner - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual(' to you now');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
-                expect($memberCTA.attr('href')).toBeNull();
-                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url, "Upgrade" button hidden, "to you now" ticket availability text displayed', function (done) {
+            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual(' to you now');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.hasClass('u-h')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL, function (done) {
+            it('loggedIn not a member - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(saleStarted8DaysAgo, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled, "Become a member" button displayed and links to ' + JOIN_URL + ', "Existing members sign in" displayed', function (done) {
+            it('loggedOut - "Buy Tickets" disabled', function (done) {
 
                 fixtureSetup(saleStarted8DaysAgo, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
-                expect($existingMembersSignIn.parent().parent().hasClass('u-h')).toBeFalsy();
 
                 done();
             });
@@ -478,71 +420,55 @@ define([
             var saleStarted15DaysAgo = new Date();
             saleStarted15DaysAgo.setDate(saleStarted15DaysAgo.getDate() - 15);
 
-            it('loggedIn Friend - "Buy Tickets" enabled and links to event url, "Upgrade" button displayed and links to ' + TIER_CHANGE_URL, function (done) {
+            it('loggedIn Friend - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual(UPGRADE_TEXT);
-                expect($memberCTA.attr('href')).toEqual('/tier/change');
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url, "Upgrade" button disabled, no link and text says "' + UPGRADE_COMING_SOON + '"', function (done) {
+            it('loggedIn Partner - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual(UPGRADE_COMING_SOON);
-                expect($memberCTA.attr('href')).toBeNull();
-                expect($memberCTA.hasClass('action--disabled')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url, "Upgrade" button hidden', function (done) {
+            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.hasClass('u-h')).toBeTruthy();
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" enabled and links to event url, "Upgrade" button hidden, "Become a member" button displayed and links to ' + JOIN_URL, function (done) {
+            it('loggedIn not a member - "Buy Tickets" enabled and links to event url', function (done) {
 
                 fixtureSetup(saleStarted15DaysAgo, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" enabled and links to event url, "Become a member" button displayed and links to ' + JOIN_URL + ', "Existing members sign in" displayed', function (done) {
+            it('loggedOut - "Buy Tickets" enabled and links to event url', function (done) {
 
                 fixtureSetup(saleStarted15DaysAgo, null, true)
 
-                expect($ticketsOnSaleNow.text()).toEqual('');
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($memberCTA.text()).toEqual('Become a member');
-                expect($memberCTA.attr('href')).toEqual('/join');
-                expect($existingMembersSignIn.parent().parent().hasClass('u-h')).toBeFalsy();
 
                 done();
             });

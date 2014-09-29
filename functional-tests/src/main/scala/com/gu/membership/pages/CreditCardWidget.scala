@@ -30,7 +30,7 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def cardExpirationYearDropdown = driver.findElement(By.id("cc-exp-year"))
 
-  private def submitPaymentButton = driver.findElement(By.cssSelector(".js-submit-input"))
+  private def submitPaymentButton = driver.findElement(By.xpath("//button[contains(@class,'submit-input')]"))
 
   private def updateCCButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-submit"))
 

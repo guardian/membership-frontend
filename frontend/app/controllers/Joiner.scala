@@ -4,7 +4,7 @@ import scala.concurrent.Future
 
 import com.netaporter.uri.dsl._
 
-import play.api.mvc.{Request, Controller}
+import play.api.mvc.{Result, Request, Controller}
 import play.api.libs.json.Json
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -66,20 +66,22 @@ trait Joiner extends Controller {
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember(_).map { _ => Redirect(routes.Joiner.thankyouFriend()) })
+      makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember(_).map { _ => Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) })
+      makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) } )
   }
 
-  private def makeMember(formData: JoinForm)(implicit request: AuthRequest[_]) = {
-    MemberService.createMember(request.user, formData, IdentityRequest(request)).recover {
-      case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case error: Zuora.ResultError => Forbidden
-      case error: ScalaforceError => Forbidden
-    }
+  private def makeMember(result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+    MemberService.createMember(request.user, formData, IdentityRequest(request))
+      .map { _ => result }
+      .recover {
+        case error: Stripe.Error => Forbidden(Json.toJson(error))
+        case error: Zuora.ResultError => Forbidden
+        case error: ScalaforceError => Forbidden
+      }
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
@@ -94,7 +96,7 @@ trait Joiner extends Controller {
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier))
     }
   }
 }

@@ -1,24 +1,32 @@
-$tabletFooterCols:  4;
-$desktopFooterCols: 6;
-$wideFooterCols:    9;
 
 footer {
     position: absolute;
     left: 0;
     width: 100%;
     background-color: $c-neutral8;
-    @include rem((
-        min-height: 100px
-    ));
 
     @include mq(tablet) {
         bottom: 0;
     }
+
     .copy {
         @include fs-data(6);
         text-align: center;
-        margin: 48px 0 0;
+        @include rem((
+            margin: 48px 0 0
+        ));
     }
+}
+
+/* Elements modifiers specific to the footer
+   ========================================================================== */
+
+.guardian-logo-footer {
+    @include rem((
+        margin-top: $gs-baseline * .75
+    ));
+    float: right;
+    line-height: 0;
 }
 
 /* Footer
@@ -26,12 +34,42 @@ footer {
 
 .l-footer {
     @include rem((
-        padding: 0 0 ($gs-baseline/3)*4
+        padding: 0 0 ($gs-baseline / 3) * 4
     ));
-    background: $c-neutral8;
+    background: $c-neutral6;
+    z-index: 1; // Above side margins
 
     .hide-in-footer {
         display: none !important;
+    }
+
+    .gs-container {
+        @include mq(desktop) {
+            @include rem((
+                max-width: gs-span(12) + $gs-gutter * 2
+            ));
+        }
+
+        @include mq(mem-full) {
+            @include rem((
+                max-width: gs-span(14) + $gs-gutter * 2
+            ));
+        }
+    }
+
+    .control {
+        float: left;
+        @include rem((
+            height: 34px,
+            width: 34px
+        ));
+    }
+
+    .control__info {
+        display: inline-block;
+        @include rem((
+            padding-left: $gs-gutter / 2
+        ));
     }
 }
 
@@ -40,9 +78,9 @@ footer {
 }
 
 .l-footer__banner {
-    border-top: 2px solid $c-brandBlue;
     @include rem((
-        margin-bottom: ($gs-baseline/3)*2
+        border-top: 2px solid $c-brandBlue,
+        margin-bottom: ($gs-baseline / 3) * 2
     ));
 }
 
@@ -52,128 +90,74 @@ footer {
     }
 }
 
+.l-footer__primary {
+    position: relative;
+    overflow: hidden;
+    background-color: darken($mem-blue, 12%);
+}
+
 .l-footer__secondary {
     @include box-sizing(border-box);
     @include font($sans-serif, normal, 13, 19);
-    color: lighten($c-neutral2, 15%);
     @include rem((
-        padding: ($gs-baseline/3)*5 $gs-gutter/2 ($gs-baseline/3)
+        padding-right: $gs-gutter / 2,
+        padding-left: $gs-gutter / 2
     ));
 
-    @include mq(mobileLandscape) {
-        @include rem((
-            padding-left: $gs-gutter,
-            padding-right: $gs-gutter
-        ));
-    }
     @include mq(tablet) {
         @include rem((
-            padding-top: ($gs-baseline/3)*2
+            padding-right: $gs-gutter,
+            padding-left: $gs-gutter
         ));
     }
 
-    @include mq(desktop) {
-        @include rem((
-            width: gs-span(12)+$gs-gutter*2
-        ));
-    }
-
-    @include mq(mem-full) {
-        @include rem((
-            width: gs-span(14)+$gs-gutter*2
-        ));
-    }
-
+    &,
     a {
-        color: darken($c-neutral2, 3%); // Enhance contrast on non-white background
+        color: $c-neutral1;
     }
 }
 
 .colophon {
+    @include fs-bodyHeading(1);
     list-style: none;
+    margin: 0;
     @include rem((
-        margin: 0 0 $gs-baseline
+        padding-top: $gs-baseline * 2,
+        padding-bottom: $gs-baseline / 2
     ));
 
+    @include columns(2);
+
     @include mq(tablet) {
-        float: right;
-        @include rem((
-            width: gs-span($tabletFooterCols),
-            margin-left: gs-span(1)
-        ));
+        @include columns(3);
     }
-    @include mq(desktop) {
-        @include rem((
-            width: gs-span($desktopFooterCols)
-        ));
-    }
+
     @include mq(wide) {
-        @include rem((
-            width: gs-span($wideFooterCols)
-        ));
+        @include columns(4);
     }
 
     a {
+        display: inline-block;
         @include rem((
-            margin-bottom: 6px
+            padding-bottom: $gs-baseline / 2
         ));
-        display: block;
     }
 }
 
 .colophon__item {
-    float: left;
-    width: 50%;
     @include box-sizing(border-box);
-
-    @include mq($from: tablet) {
-        @include rem((
-            margin-right: $gs-gutter
-        ));
-    }
-
-    @include mq(tablet, desktop) {
-        @include rem((
-            width: gs-span($tabletFooterCols/2),
-        ));
-        &:nth-child(2n) {
-            margin-right: 0;
-        }
-    }
-
-    @include mq(desktop, wide) {
-        @include rem((
-            width: gs-span($desktopFooterCols/3),
-        ));
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
-
-    @include mq(wide) {
-        @include rem((
-            width: gs-span($wideFooterCols/3),
-        ));
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
 }
 
 .l-footer__misc {
-    border-top: 1px solid lighten($c-neutral2, 40%);
     @include rem((
-        padding-top: $gs-baseline/3 - 1
+        padding-top: $gs-baseline / 2,
+        padding-bottom: $gs-baseline * 1.5,
+        border-top: 1px solid $c-neutral4
     ));
-
-    @include mq(tablet) {
-        padding-top: 0;
-        border-top: 0;
-    }
 }
 
 .really-serious-copyright {
     @include rem((
-        margin-bottom: $gs-baseline/3
+        margin-bottom: $gs-baseline / 3
     ));
 }

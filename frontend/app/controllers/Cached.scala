@@ -6,7 +6,7 @@ import com.github.nscala_time.time.Imports._
 
 object Cached {
 
-  private val cacheableStatusCodes = Seq(200, 404)
+  private val cacheableStatusCodes = Seq(200, 301, 404)
 
   def apply(result: Result): Result = apply(60)(result)
 

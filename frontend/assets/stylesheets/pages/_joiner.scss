@@ -20,7 +20,7 @@ $card-icon-offset: 2px;
 
 .joiner-navigation__tab {
     text-align: center;
-    border: 1px solid #dfdfdf;
+    border: rem(1px) solid #dfdfdf;
     display: table;
     float: left;
     width: 33.3%;
@@ -53,10 +53,10 @@ $card-icon-offset: 2px;
 .benefits-list {
     text-align: center;
     padding: $gs-gutter;
-    border-bottom: 1px solid #dfdfdf;
+    border-bottom: rem(1px) solid #dfdfdf;
 
     @include mq(tablet) {
-        border: 1px solid #dfdfdf;
+        border: rem(1px) solid #dfdfdf;
         height: gs-height(3);
 
         flex-grow: 0;
@@ -86,7 +86,7 @@ $card-icon-offset: 2px;
 }
 
 .form-secondary-container {
-    border-top: 1px solid #f1f1f1;
+    border-top: rem(1px) solid #f1f1f1;
     width: 100%;
     padding-top: $gutter;
 }
@@ -100,7 +100,7 @@ $card-icon-offset: 2px;
 }
 
 .fieldset {
-    border-width: 2px;
+    border-width: rem(2px);
 }
 
 .form-terms {
@@ -108,10 +108,8 @@ $card-icon-offset: 2px;
 }
 
 .form-padlock {
-    @include rem((
-        width: 18px,
-        height: 18px
-    ));
+    width: rem(18px);
+    height: rem(18px);
 }
 
 /* ==========================================================================
@@ -125,24 +123,20 @@ $card-icon-offset: 2px;
 }
 
 .credit-card {
-    width: 54px;
+    width: rem(54px);
     height: $large-card;
 
     &.credit-card--form-field-note {
-        @include rem((
-            background-size: 35px 23px,
-            width: 35px,
-            height: 23px,
-            padding-right: 3px
-        ));
+        background-size: rem(35px) rem(23px);
+        width: rem(35px);
+        height: rem(23px);
+        padding-right: rem(3px);
     }
 
     &.credit-card--input-representation {
         position: absolute;
-        @include rem((
-            right: $card-icon-offset,
-            top: $card-icon-offset
-        ));
+        right: rem($card-icon-offset);
+        top: rem($card-icon-offset);
     }
 
     &.icon-sprite-card-unknown {
@@ -159,7 +153,7 @@ $card-icon-offset: 2px;
 
 .credit-card-input {
     // bit messy but needs to account for outline plus icon offset
-    height: $large-card+$card-icon-offset+2px;
+    height: rem($large-card + $card-icon-offset + 2px);
 }
 
 .credit-card--inline-block {
@@ -198,7 +192,7 @@ $card-icon-offset: 2px;
 
     .form-secondary-container {
         border-top: 0;
-        border-left: 1px solid #f1f1f1;
+        border-left: rem(1px) solid #f1f1f1;
         padding: $gutter 0 0 $gutter*3;
         float: left;
         width: 35%;
@@ -211,8 +205,6 @@ $card-icon-offset: 2px;
 }
 
 .complete-purchase {
-    @include rem((
-        margin-bottom: $gs-gutter,
-        margin-top: $gs-gutter
-    ));
+    margin-bottom: rem($gs-gutter);
+    margin-top: rem($gs-gutter);
 }

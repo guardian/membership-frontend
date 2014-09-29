@@ -13,11 +13,10 @@
         position: absolute;
         z-index: 1;
         background: rgba(51, 51, 51, .05);
-        @include rem((
-            // magic number: we shift these margins up to skip the header gap
-            // and the (fixed) height of the nav bar
-            top: $side-margins-top-magic-number
-        ));
+
+        // magic number: we shift these margins up to skip the header gap
+        // and the (fixed) height of the nav bar
+        top: rem($side-margins-top-magic-number);
         height: 100%;
 
         height: -webkit-calc(100% - #{$side-margins-top-magic-number});

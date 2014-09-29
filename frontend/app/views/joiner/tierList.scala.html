@@ -9,7 +9,7 @@
 
         @fragments.layout.sectionHeader("Become a member")
 
-        <div class="package-list package-list--bordered">
+        <div class="package-list">
             @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo")
             @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo")
             @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo")

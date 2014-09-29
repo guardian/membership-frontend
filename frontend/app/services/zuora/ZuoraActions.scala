@@ -123,7 +123,8 @@ case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Opti
           <ns2:City>{address.town}</ns2:City>
           <ns2:PostalCode>{address.postCode}</ns2:PostalCode>
           <ns2:State>{address.countyOrState}</ns2:State>
-          <ns2:Country>{address.country}</ns2:Country>
+          <ns2:Country>{address.country.alpha2}</ns2:Country>
+          <ns2:NickName>{address.country.alpha2}</ns2:NickName>
         </ns1:BillToContact>
         <ns1:PreviewOptions>
           <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>

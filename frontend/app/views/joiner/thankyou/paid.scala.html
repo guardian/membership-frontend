@@ -1,4 +1,4 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier)
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -66,4 +66,6 @@
     </section>
 
     @fragments.joiner.completePurchase(ebIFrameDetail)
+
+    @fragments.analytics.googleJoinerConversion(tier)
 }

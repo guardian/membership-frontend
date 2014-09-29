@@ -7,9 +7,9 @@ import org.openqa.selenium.{Cookie, WebDriver}
 
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
-  val validCardNumber = "4242 4242 4242 4242"
+  val validCardNumber = "4242424242424242"
   val cardWithNoFunds = "4000000000000341"
-  val secondaryCard = "5555555555554444"
+  val secondaryCard   = "5555555555554444"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
@@ -100,7 +100,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IAmRedirectedToTheChooseTierPage = {
-    theFlowSignIn
     val loaded = new ChooseTierPage(driver).isPageLoaded
     Assert.assert(loaded, true, "The Choose Tier page should be loaded")
     this
@@ -114,6 +113,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ICanBecomeAFriend = {
     new ChooseTierPage(driver).clickFriend.clickChoose
+    theFlowSignIn
     becomeFriend
     this
   }
@@ -125,6 +125,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ICanBecomeAPartner = {
     new ChooseTierPage(driver).clickPartner.clickChoose
+    theFlowSignIn
     pay
     this
   }
@@ -203,8 +204,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ISeeAnErrorWhenMyCVCIsInvalid = {
-    val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
-      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").isErrorMessageDisplayed
+    new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
+      .enterCardSecurityCode(" ").enterCardExpirationMonth("1").clickSubmitPayment
+    val errorMessage = new CreditCardWidget(driver).isErrorMessageDisplayed
     Assert.assert(errorMessage, true, "We should display a valid CVC error message")
     this
   }

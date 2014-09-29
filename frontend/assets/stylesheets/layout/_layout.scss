@@ -32,7 +32,7 @@ html {
         (-webkit-min-device-pixel-ratio: 2),
         (min-resolution: 192dpi) {
             background: url(/assets/images/backgrounds/400-Home-hero-2x.jpg) no-repeat top center fixed;
-            background-size: 400px 444px;
+            background-size: rem(400px) rem(444px);
         }
 
         @include mq(400px) {
@@ -64,21 +64,14 @@ html {
 
 body {
     min-height: 100%;
-
-    @include rem((
-        margin-bottom: 154px
-    ));
+    margin-bottom: rem(252px); // Magic numbers refer to footer height
 
     @include mq(tablet) {
-        @include rem((
-            margin-bottom: 111px
-        ));
+        margin-bottom: rem(218px);
     }
 
-    @include mq(desktop) {
-        @include rem((
-            margin-bottom: 100px
-        ));
+    @include mq(wide) {
+        margin-bottom: rem(220px);
     }
 }
 
@@ -93,9 +86,7 @@ body {
 // this alignment is too perfect
 .page-container {
     background-color: #ffffff;
-    @include rem((
-        padding: 0 $gs-gutter/2
-    ));
+    padding: 0 rem($gs-gutter / 2);
 
     @include mq(tablet) {
         padding: 0 $gs-gutter;
@@ -134,15 +125,13 @@ body {
     &.page-container--with-padding {
         background-color: #ffffff;
         @include mq(tablet) {
-            @include rem((
-                padding: 0 $gs-gutter*4 $gs-gutter*8
-            ));
+            padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
         }
     }
 }
 
 .separator {
-    border-top: 2px solid $c-newsAccent;
+    border-top: rem(2px) solid $c-newsAccent;
     margin: $gs-baseline 0 $gs-baseline/2;
 }
 
@@ -151,19 +140,15 @@ body {
 }
 
 .l-row__item {
-    @include rem((
-        padding-bottom: $gs-gutter*2
-    ));
+    padding-bottom: rem($gs-gutter * 2);
 }
 
 // Two thirds section
 
 .section-two-thirds {
-    @include rem((
-        width: 100%,
-        margin: 0 auto,
-        padding: 0 $gs-gutter/2
-    ));
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 rem($gs-gutter / 2);
     @include fs-headline(2);
 
     @include mq(desktop) {
@@ -172,24 +157,18 @@ body {
 
     .two-thirds {
         @include mq(tablet) {
-            border-right: 1px solid $c-neutral4;
-            @include rem((
-                width: gs-span(8),
-                padding-right: $gs-gutter
-            ));
+            border-right: rem(1px) solid $c-neutral4;
+            width: rem(gs-span(8));
+            padding-right: $gs-gutter;
         }
     }
 
     .one-third {
-        @include rem((
-            margin-bottom: $gs-gutter
-        ));
+        margin-bottom: rem($gs-gutter);
         
         @include mq(tablet) {
-            @include rem((
-                width: gs-span(4),
-                padding-left: $gs-gutter
-            ));
+            width: rem(gs-span(4));
+            padding-left: rem($gs-gutter);
         }
     }
 
@@ -200,15 +179,11 @@ body {
 .info-container {
 
     @include mq(desktop) {
-        @include rem((
-            margin: 0 gs-span(1) 0 gs-span(2)
-        ));
+        margin: 0 rem(gs-span(1)) 0 rem(gs-span(2));
     }
 
     @include mq(mem-full) {
-        @include rem((
-            margin: 0 gs-span(1) 0 gs-span(3)
-        ));
+        margin: 0 rem(gs-span(1)) 0 rem(gs-span(3));
     }
 
 }
@@ -224,12 +199,10 @@ body {
 }
 
 .user-welcome {
-    @include rem((
-        margin-bottom: $gs-gutter,
-        margin-top: $gs-gutter
-    ));
+    margin-bottom: rem($gs-gutter);
+    margin-top: rem($gs-gutter);
+
     .user-welcome__email {
         font-weight: bold;
     }
-
 }

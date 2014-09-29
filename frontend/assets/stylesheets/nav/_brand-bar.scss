@@ -1,0 +1,73 @@
+$headerHeight: 48px;
+
+.brand-bar {
+    background-color: darken($mem-blue, 10%);
+    line-height: 0;
+    @include box-sizing(border-box);
+    @include rem((
+        padding-left: $gs-gutter * .25,
+        padding-right: $gs-gutter * .25
+    ));
+
+    @include mq(mobileLandscape) {
+        @include rem((
+            padding-left: $gs-gutter / 2,
+            padding-right: $gs-gutter / 2
+        ));
+    }
+}
+
+.brand-bar__item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    @include fs-bodyHeading(1);
+    float: left;
+    color: #ffffff;
+    @include rem((
+        height: $headerHeight,
+        padding-top: $gs-baseline / 2,
+        padding-bottom: $gs-baseline / 2,
+        margin-right: $gs-baseline * .25,
+        margin-left: $gs-baseline * .25
+    ));
+
+    @include mq(tablet) {
+        @include rem((
+            margin-right: $gs-gutter / 2,
+            margin-left: $gs-gutter / 2
+        ));
+    }
+}
+
+.brand-bar__item--action,
+.brand-bar__item--action:focus {
+    margin: 0;
+    cursor: pointer;
+    color: $white;
+    display: inline-block;
+    text-decoration: none;
+    line-height: $headerHeight;
+}
+
+.brand-bar__item--action {
+    &:focus,
+    &:active {
+        &,
+        .control__info {
+            text-decoration: underline;
+        }
+    }
+
+    &:hover {
+        &,
+        .control__info {
+            // stops links staying underlined
+            // after closing a popup on mobile
+            @include mq(tablet) {
+                text-decoration: underline;
+            }
+        }
+    }
+}

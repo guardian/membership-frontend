@@ -48,11 +48,9 @@
         display: inline-block;
         content: '';
         @include border-radius(6px);
-        @include rem((
-            height: 12px,
-            width: 12px,
-            margin-right: $right-space
-        ));
+        height: rem(12px);
+        width: rem(12px);
+        margin-right: rem($right-space);
         background-color: $color;
     }
 }
@@ -81,9 +79,7 @@
     // Fallback for non-Webkit browsers
     // (won't show `…` at the end of the block)
     @if $line-height {
-        @include rem((
-            max-height: $line-height * $lines
-        ));
+        max-height: rem($line-height * $lines);
     }
 }
 
@@ -97,7 +93,7 @@
 
     .i {
         position: absolute;
-        text-indent: -9999px;
+        text-indent: rem(-9999px);
         top: 50%;
         left: 50%;
         margin-top: $iconOffsetX;
@@ -133,5 +129,27 @@
         $width: gs-span(14);
         #{$property}: -webkit-calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
         #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
+    }
+}
+
+@mixin columns($cols: 1, $gap: 0) {
+    @if $browser-supports-columns {
+        -webkit-column-count: $cols;
+        -moz-column-count: $cols;
+        column-count: $cols;
+
+        -webkit-column-gap: rem($gap);
+        -moz-column-gap: rem($gap);
+        column-gap: rem($gap);
+    } @else {
+        margin-left: 0 - rem($gap / 2);
+        margin-right: 0 - rem($gap / 2);
+        & > * {
+            @include box-sizing(border-box);
+            width: (100% / $cols);
+            float: left;
+            padding-left: rem($gap / 2);
+            padding-right: rem($gap / 2);
+        }
     }
 }
