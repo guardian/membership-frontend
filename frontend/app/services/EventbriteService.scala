@@ -56,19 +56,17 @@ trait EventbriteService {
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityOrderedEventIds.get()
-    val (priorityEvents, normal) = getLiveEvents.partition(e => priorityIds.contains(e.id))
+    val (priorityEvents, normal) = getPortfolioEvents.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
-  def getLiveEvents: Seq[EBEvent] = events.filter { event =>
-    event.getStatus == EBEventStatus.SoldOut || event.getStatus == EBEventStatus.Live
-  }
+  def getPortfolioEvents: Seq[EBEvent] = events.filter(_.getStatus.isInstanceOf[DisplayableEvent])
 
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getLiveEvents.filter(_.name.text.toLowerCase.contains(tag))
+  def getEventsTagged(tag: String) = getPortfolioEvents.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
 
@@ -100,7 +98,7 @@ object EventbriteService extends EventbriteService {
   def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
       .map { response =>
-      recordAndLogResponse(response.status, "GET", url)
+      EventbriteMetrics.putResponseCode(response.status, "GET")
       extract[A](response)
     }.recover { case e =>
       Logger.error(s"Eventbrite request $url", e)
@@ -110,14 +108,9 @@ object EventbriteService extends EventbriteService {
 
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
-      recordAndLogResponse(response.status, "POST", url)
+      EventbriteMetrics.putResponseCode(response.status, "POST")
       extract[A](response)
     }
-
-  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
-    EventbriteMetrics.putResponseCode(status, responseMethod)
-  }
 
   import play.api.Play.current
 

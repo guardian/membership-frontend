@@ -1,7 +1,6 @@
 package controllers
 
 import configuration.Config
-import play.api.Logger
 import play.api.mvc.{Request, RequestHeader}
 
 case class IdentityRequest(headers: List[(String, String)], trackingParameters: List[(String, String)])
@@ -19,9 +18,6 @@ object IdentityRequest extends RemoteAddress {
       request.headers.get("User-Agent").map(("trackingUserAgent" -> _)) ++
       ipAddress.map(("trackingIpAddress" -> _))
 
-    //Logging to check ELB sends the tracking details
-    Logger.info(s"Identity tracking parameters: ${trackingParameters.mkString(",")}")
-
     IdentityRequest(headers, trackingParameters)
 
   }
@@ -33,7 +29,6 @@ trait RemoteAddress {
 
   def clientIp(request: RequestHeader): Option[String] = {
     request.headers.get("X-Forwarded-For").flatMap { xForwardedFor =>
-      Logger.info(s"X-Forwarded-For ${xForwardedFor}")
       xForwardedFor.split(", ").find {
         // leftmost non-private IP from header is client
         case Ip(a, b, c, d) => {

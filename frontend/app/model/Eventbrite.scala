@@ -15,10 +15,17 @@ object Eventbrite {
 
   trait EBObject
 
-  object EBEventStatus extends Enumeration {
-    type EBEventStatus = Value
-    val Completed, Cancelled, SoldOut, PreLive, Live = Value
-  }
+  sealed trait EBEventStatus
+
+  sealed trait DisplayableEvent extends EBEventStatus
+
+  case object Completed extends EBEventStatus
+  case object Cancelled extends EBEventStatus
+  case object SoldOut extends DisplayableEvent
+  case object Live extends DisplayableEvent
+  case object PreLive extends DisplayableEvent
+  case object Draft extends EBEventStatus
+
 
   case class EBError(error: String, error_description: String, status_code: Int) extends Throwable with EBObject {
     override def getMessage: String = s"$status_code $error - $error_description"
@@ -94,7 +101,7 @@ object Eventbrite {
                       venue: EBVenue,
                       capacity: Option[Int],
                       ticket_classes: Seq[EBTickets],
-                      status: Option[String]) extends EBObject {
+                      status: String) extends EBObject {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
@@ -121,18 +128,21 @@ object Eventbrite {
       postal_code
     ).filter(_.nonEmpty).mkString(", ")
 
-    import EBEventStatus._
+    lazy val isSoldOut = getStatus == SoldOut
 
     def getStatus: EBEventStatus = {
       val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity.getOrElse(0)
-      val isLive = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
+      val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
 
-      status.collect {
+
+      status match {
         case "completed" | "started" | "ended" => Completed
         case "canceled" => Cancelled // American spelling
         case "live" if isSoldOut => SoldOut
-        case "live" if isLive => Live
-      }.getOrElse(PreLive)
+        case "live" if isTicketSalesStarted => Live
+        case "draft" => Draft
+        case _ => PreLive
+      }
     }
 
     // This currently extracts all none hidden tickets and gets the first one
