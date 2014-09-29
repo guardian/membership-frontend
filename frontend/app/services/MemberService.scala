@@ -112,7 +112,6 @@ trait MemberService {
       memberId <- MemberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
     } yield {
       IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
-
       MemberMetrics.putUpgrade(newTier)
       memberId.account
     }

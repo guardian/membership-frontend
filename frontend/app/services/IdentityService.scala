@@ -43,19 +43,17 @@ trait IdentityService {
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
-    Timing.record(IdentityApiMetrics, "update-user-password") {
-      val json = Json.obj("newPassword" -> password)
-      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
-    }
+    val json = Json.obj("newPassword" -> password)
+    IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
-  def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) = {
+  def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     postFields(fields, user, identityRequest)
   }
 
-  private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) = {
+  private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) {
     val json = Json.obj("privateFields" -> fields)
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
@@ -91,7 +89,7 @@ trait Http {
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[WSResponse]
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String)
 
 }
 
@@ -119,11 +117,10 @@ object IdentityApi extends Http {
     }
   }
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[WSResponse] = {
-    Timing.record(IdentityApiMetrics, "post-user") {
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String) {
+    Timing.record(IdentityApiMetrics, metricName) {
       val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
-      response
     }
   }
 
