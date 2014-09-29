@@ -45,10 +45,13 @@ trait IdentityService {
     }
   }
 
-  def updateUserPassword(password: String, identityRequest: IdentityRequest): Future[WSResponse] = {
+  def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
     Timing.record(IdentityApiMetrics, "update-user-password") {
       val json = Json.obj("newPassword" -> password)
-      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters)
+      IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters).map { identityResponse =>
+        Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user $userId")
+        IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user-password")
+      }
     }
   }
 

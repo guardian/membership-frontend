@@ -54,7 +54,7 @@ trait MemberService {
         case friend: FriendJoinForm => Future.successful(None)
       }
 
-      formData.password.map(updateUserPassword(user, _ , identityRequest))
+      formData.password.map(IdentityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
         customerOpt <- futureCustomerOpt
@@ -70,15 +70,6 @@ trait MemberService {
         memberId.account
       }
     }
-
-  private def updateUserPassword(user: User, password: String, identityRequest: IdentityRequest) {
-    for (identityResponse <- IdentityService.updateUserPassword(password, identityRequest))
-    yield {
-      Logger.info(s"Identity status response for password update: ${identityResponse.status.toString} for user ${user.id}")
-      IdentityApiMetrics.putResponseCode(identityResponse.status, "POST update-user-password")
-    }
-  }
-
 
   def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBDiscount]] = {
     // code should be unique for each user/event combination
