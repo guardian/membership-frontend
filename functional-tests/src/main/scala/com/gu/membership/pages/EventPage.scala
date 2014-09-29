@@ -9,7 +9,7 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventTimeP = driver.findElement(By.cssSelector(".event__time"))
 
-  private def eventSalesEndSpan = driver.findElement(By.cssSelector(".event__sale_ends_time"))
+  private def eventSalesEndSpan = driver.findElement(By.cssSelector(".event__sale-ends>span>strong"))
 
   private def eventPriceSpan = driver.findElement(By.cssSelector(".event__price"))
 

@@ -1,10 +1,8 @@
 define([
-    'src/utils/router',
-    'domready',
     'src/utils/user',
     'src/utils/cookie',
     '$'
-], function (router, domready, userUtil, cookie, $) {
+], function (userUtil, cookie, $) {
 
     describe('Base application utilities', function() {
 
@@ -18,64 +16,6 @@ define([
 
         afterEach(function () {
             cookie.removeCookie(GU_USER_COOKIE_KEY);
-        });
-
-        /********************************************************
-         * Router - router.js
-         ********************************************************/
-
-        it('should correctly execute a matched route', function() {
-            var bar = null;
-            var foo = {
-                setBar: function() {
-                    bar = 'foo';
-                }
-            };
-
-            spyOn(foo, 'setBar');
-
-            router.match('/context.html').to(foo.setBar); // Karma default route
-
-            domready(function () {
-                router.go();
-                expect(foo.setBar).toHaveBeenCalled();
-            });
-        });
-
-        it('should correctly execute a wildcard route', function() {
-            var bar = null;
-            var foo = {
-                setBar: function() {
-                    bar = 'foo';
-                }
-            };
-
-            spyOn(foo, 'setBar');
-
-            router.match('*').to(foo.setBar); // Karma default route
-
-            domready(function () {
-                router.go();
-                expect(foo.setBar).toHaveBeenCalled();
-            });
-        });
-
-        it('should correctly execute a suffix route', function() {
-            var bar = null;
-            var foo = {
-                setBar: function() {
-                    bar = 'foo';
-                }
-            };
-
-            spyOn(foo, 'setBar');
-
-            router.match('*/context.html').to(foo.setBar); // Karma default route
-
-            domready(function () {
-                router.go();
-                expect(foo.setBar).toHaveBeenCalled();
-            });
         });
 
         /********************************************************

@@ -34,20 +34,21 @@ define([
     };
 
     PaidForm.prototype.init = function () {
-        this.setupForm();
-        this.setupCtaPaymentOptionPriceListeners();
-        this.setupCvcToggle();
+        this.elem = this.getElem('STRIPE_FORM');
+        if (this.elem) {
+            this.setupForm();
+            this.setupCtaPaymentOptionPriceListeners();
+            this.setupCvcToggle();
+        }
     };
 
     // setup form, passwordStrength, Address toggle for delivery and billing
     PaidForm.prototype.setupForm = function () {
-        var formElement = this.elem = this.getElem('STRIPE_FORM');
-        var addressHelper;
 
-        this.form = new Form(formElement);
+        this.form = new Form(this.elem);
         this.form.init();
 
-        addressHelper = new Address(this.form);
+        var addressHelper = new Address(this.form);
         addressHelper.setupDeliveryToggleState();
         addressHelper.setupToggleBillingAddressListener();
 

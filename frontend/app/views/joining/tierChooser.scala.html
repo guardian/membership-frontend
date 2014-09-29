@@ -2,9 +2,9 @@
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
-@import model.Eventbrite.EBEventStatus._
 @import views.support.Dates._
 @import helper._
+@import model.Eventbrite._
 @import configuration.Config
 
 @benefit(tier: com.gu.membership.salesforce.Tier.Tier, defaultSelection: com.gu.membership.salesforce.Tier.Tier) = {
@@ -85,7 +85,7 @@
 
                     *@<div class="event-item__meta">
                         <h2 class="event-item__title">
-                            @if(event.getStatus == SoldOut){
+                            @if(event.isSoldOut){
                                 <span class="event-status--sold-out">Sold Out</span>
                             }
                             @event.name.text

@@ -26,15 +26,17 @@ define([
 
     JoinFree.prototype.init = function () {
         var formElement = this.elem = this.getElem('ADDRESS_FORM');
-        var addressHelper;
+        if (formElement) {
+            var addressHelper;
 
-        this.form = new Form(formElement);
-        this.form.init();
+            this.form = new Form(formElement);
+            this.form.init();
 
-        addressHelper = new Address(this.form);
-        addressHelper.setupDeliveryToggleState();
+            addressHelper = new Address(this.form);
+            addressHelper.setupDeliveryToggleState();
 
-        (new Password()).init();
+            (new Password()).init();
+        }
     };
 
     return JoinFree;

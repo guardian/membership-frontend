@@ -20,7 +20,9 @@ define([
 
     Choose.prototype.init = function () {
         this.elem = this.getElem('TICKETS_SELECT_FORM');
-        this.addListeners();
+        if (this.elem) {
+            this.addListeners();
+        }
     };
 
     Choose.prototype.addListeners = function () {
