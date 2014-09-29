@@ -7,7 +7,7 @@
 
 .control {
     @extend %icon-holder-circle;
-    font-family: $serif;
+    font-family: $f-serif-text;
     font-size: rem(13px);
 
     .is-signed-in & {
@@ -28,7 +28,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
-    font-family: $serif;
+    font-family: $f-serif-text;
     line-height: rem(35px);
     max-width: rem(200px);
     padding-left: rem($gs-gutter / 4);
