@@ -9,11 +9,12 @@ define([
 
     describe('Early bird tickets', function() {
 
+        var BUY_TICKETS = 'Buy Tickets';
+        var COMING_SOON = 'Coming Soon';
         var TEST_EVENT_URL = '/test/event/url';
         var canonicalTicketAvailabilityFixtureElement;
         var ticketAvailabilityFixtureElement;
         var cta;
-        var $saleStartElem;
         var $saleStartPatronElem;
         var $saleStartPartnerElem;
         var $saleStartFriendElem;
@@ -55,8 +56,6 @@ define([
             datePlusOneWeek.setDate(datePlusOneWeek.getDate() + 7);
             datePlusTwoWeeks.setDate(datePlusTwoWeeks.getDate() + 14);
 
-            $saleStartElem.attr('datetime', date.toISOString());
-            $saleStartElem.text(formatDate(date));
             $saleStartPatronElem.attr('datetime', date.toISOString());
             $saleStartPatronElem.text(formatDate(date));
             $saleStartPartnerElem.attr('datetime', datePlusOneWeek.toISOString());
@@ -141,7 +140,6 @@ define([
             expect($saleStartPatronElem.text()).toEqual(formatDate(bookingDates.patronStart));
             expect($saleStartPartnerElem.text()).toEqual(formatDate(bookingDates.partnerStart));
             expect($saleStartFriendElem.text()).toEqual(formatDate(bookingDates.friendStart));
-            expect($saleStartElem.text()).toEqual(formatDate(bookingDates.salesStart));
             expect(user.isLoggedIn).toHaveBeenCalled();
             expect(user.getMemberDetail).toHaveBeenCalled();
             expect(cta.memberTier).toEqual(tier);
@@ -171,7 +169,6 @@ define([
                 cta = new Cta(ticketAvailabilityFixtureElement);
                 cta.elems = []; //reset component.js internal element cache
 
-                $saleStartElem = $('.js-ticket-sale-start', ticketAvailabilityFixtureElement);
                 $saleStartPatronElem = $('.js-ticket-sale-start-patron', ticketAvailabilityFixtureElement);
                 $saleStartPartnerElem = $('.js-ticket-sale-start-partner', ticketAvailabilityFixtureElement);
                 $saleStartFriendElem = $('.js-ticket-sale-start-friend', ticketAvailabilityFixtureElement);
@@ -223,55 +220,60 @@ define([
             var salesStartOneWeekInTheFuture = new Date();
             salesStartOneWeekInTheFuture.setDate(salesStartOneWeekInTheFuture.getDate() + 7);
 
-            it('loggedIn Friend - "Buy Tickets" disabled' , function (done) {
+            it('loggedIn Friend - "' + COMING_SOON + '" disabled' , function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled', function (done) {
+            it('loggedIn Partner - "' + COMING_SOON + '" disabled', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" disabled', function (done) {
+            it('loggedIn Patron - "' + COMING_SOON + '" disabled', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
 
                 done();
             });
 
-            it('loggedIn NOT a member - "Buy Tickets" disabled', function (done) {
+            it('loggedIn NOT a member - "' + COMING_SOON + '" disabled', function (done) {
 
                 fixtureSetup(salesStartOneWeekInTheFuture, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled', function (done) {
+            it('loggedOut - "' + COMING_SOON + '" disabled', function (done) {
 
                 fixtureSetup(salesStartOneWeekInTheFuture, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
 
                 done();
             });
@@ -288,18 +290,19 @@ define([
             var saleStartedYesterday = new Date();
             saleStartedYesterday.setDate(saleStartedYesterday.getDate() - 1);
 
-            it('loggedIn Friend - "Buy Tickets" disabled', function (done) {
+            it('loggedIn Friend - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStartedYesterday, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" disabled', function (done) {
+            it('loggedIn Partner - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 var tier = 'Partner';
 
@@ -307,11 +310,12 @@ define([
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
 
@@ -319,26 +323,29 @@ define([
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" disabled', function (done) {
+            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 fixtureSetup(saleStartedYesterday, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled', function (done) {
+            it('loggedOut - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 fixtureSetup(saleStartedYesterday, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
@@ -355,55 +362,60 @@ define([
             var saleStarted8DaysAgo = new Date();
             saleStarted8DaysAgo.setDate(saleStarted8DaysAgo.getDate() - 8);
 
-            it('loggedIn Friend - "Buy Tickets" disabled', function (done) {
+            it('loggedIn Friend - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(saleStarted8DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" disabled', function (done) {
+            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 fixtureSetup(saleStarted8DaysAgo, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" disabled', function (done) {
+            it('loggedOut - "' + BUY_TICKETS + '" disabled', function (done) {
 
                 fixtureSetup(saleStarted8DaysAgo, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
                 expect($buyTicketsCTA.attr('href')).toBeNull();
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
@@ -420,55 +432,60 @@ define([
             var saleStarted15DaysAgo = new Date();
             saleStarted15DaysAgo.setDate(saleStarted15DaysAgo.getDate() - 15);
 
-            it('loggedIn Friend - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Friend - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Friend';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Partner - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Partner';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn Patron - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 var tier = 'Patron';
                 fixtureSetup(saleStarted15DaysAgo, tier, true);
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedIn not a member - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedIn not a member - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 fixtureSetup(saleStarted15DaysAgo, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });
 
-            it('loggedOut - "Buy Tickets" enabled and links to event url', function (done) {
+            it('loggedOut - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
 
                 fixtureSetup(saleStarted15DaysAgo, null, true)
 
                 expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
                 expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
+                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
 
                 done();
             });

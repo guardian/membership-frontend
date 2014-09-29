@@ -3,17 +3,24 @@
 @import views.support.Dates._
 @import org.joda.time.Instant
 @import model.Eventbrite._
-@import model.Eventbrite.EBEventStatus._
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
 @ticketCta = {
     @event.getStatus match {
-        case Completed => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Past Event</button> }
-        case SoldOut => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Sold Out</button> }
-        case Cancelled => { <button class='action action--disabled js-ticket-cta' disabled='disabled'>Cancelled</button> }
-        case PreLive => { <button class='action action--disabled js-ticket-cta js-opt-become-member' disabled='disabled'>Buy Tickets</button> }
-        case _ => { <a class='action js-ticket-cta js-opt-become-member' href='/event/@event.id/buy'>Buy Tickets</a> }
+        case Live => {
+            <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a>
+        }
+        case nonLive => {
+            <button class='action action--disabled js-ticket-cta' disabled='disabled'>
+            @nonLive match {
+                case Completed => { Past Event }
+                case Cancelled => { Cancelled }
+                case SoldOut => { Sold Out }
+                case PreLive => { Coming Soon }
+            }
+            </button>
+        }
     }
     <p class="terms-info">By proceeding, you agree to the Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
