@@ -144,12 +144,12 @@ div.event {
 }
 
 .ticket-info {
-    @include fs-textsans(1);
+    @include fs-textSans(1);
     color: #878787;
 }
 
 .ticket-info__header {
-    @include fs-textsans(4);
+    @include fs-textSans(4);
     color: #878787;
 }
 
