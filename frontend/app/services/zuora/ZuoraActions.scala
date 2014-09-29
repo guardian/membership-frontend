@@ -3,16 +3,10 @@ package services.zuora
 import forms.MemberForm.{AddressForm, NameForm}
 import model.Stripe
 import model.Zuora._
-import model.ZuoraReaders.ZuoraReader
 import org.joda.time.DateTime
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.ws.WS
 import services.zuora.ZuoraServiceHelpers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.xml.{Elem, Null, PrettyPrinter}
+import scala.xml.{Elem, Null}
 
 trait ZuoraAction[T <: ZuoraResult] {
   val body: Elem

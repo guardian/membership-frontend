@@ -56,7 +56,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
     }.map { result =>
       Logger.debug(s"Got result ${result.status}")
       ZuoraMetrics.putResponseCode(result.status, "POST")
-      Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
+      Logger.trace(new PrettyPrinter(70, 2).format(result.xml))
 
       reader.read(result.xml) match {
         case Left(error) =>
