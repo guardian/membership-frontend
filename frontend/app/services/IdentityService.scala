@@ -1,21 +1,24 @@
 package services
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+import play.api.Logger
+import play.api.Play.current
+import play.api.libs.json._
+import play.api.libs.ws.{WS, WSResponse}
+
 import com.gu.identity.model.User
+
 import com.gu.membership.util.Timing
+import com.gu.membership.zuora.Address
+
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.IdentityUser
 import model.UserDeserializer._
 import monitoring.IdentityApiMetrics
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.json._
-import play.api.libs.ws.{WS, WSResponse}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import com.gu.membership.zuora.Countries
 
 trait IdentityService {
 
@@ -64,7 +67,7 @@ trait IdentityService {
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters)
   }
 
-  private def deliveryAddress(addressForm: AddressForm): JsObject = {
+  private def deliveryAddress(addressForm: Address): JsObject = {
     Json.obj(
       "address1" -> addressForm.lineOne,
       "address2" -> addressForm.lineTwo,
@@ -75,7 +78,7 @@ trait IdentityService {
     )
   }
 
-  private def billingAddress(billingAddress: AddressForm): JsObject = {
+  private def billingAddress(billingAddress: Address): JsObject = {
     Json.obj(
       "billingAddress1" -> billingAddress.lineOne,
       "billingAddress2" -> billingAddress.lineTwo,

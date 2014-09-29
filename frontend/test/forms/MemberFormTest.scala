@@ -4,8 +4,6 @@ import org.specs2.mutable.Specification
 
 import play.api.data.Form
 
-import com.gu.membership.zuora.Countries
-
 import MemberForm._
 
 class MemberFormTest extends Specification {
@@ -25,17 +23,17 @@ class MemberFormTest extends Specification {
   }
 
   "AddressForm" should {
-    "always require a country and postcode" in {
-      friendAddressForm.bind(address("a", "b", "c", "d", "N1 9GU", "GB")).hasErrors must beFalse
-      friendAddressForm.bind(address("a", "b", "c", "d", "", "")).hasErrors must beTrue
+    "always require a country" in {
+      friendAddressForm.bind(address("Kings Place", "90 York Way", "London", "", "N1 9GU", "GB")).hasErrors must beFalse
+      friendAddressForm.bind(address("Kings Place", "90 York Way", "London", "", "N1 9GU", "")).hasErrors must beTrue
 
-      paidAddressForm.bind(address("a", "b", "c", "d", "N1 9GU", "GB")).hasErrors must beFalse
-      paidAddressForm.bind(address("a", "b", "c", "d", "", "")).hasErrors must beTrue
+      paidAddressForm.bind(address("Kings Place", "90 York Way", "London", "", "N1 9GU", "GB")).hasErrors must beFalse
+      paidAddressForm.bind(address("Kings Place", "90 York Way", "London", "", "N1 9GU", "")).hasErrors must beTrue
     }
 
-    "also require line one and town for paid members" in {
-      paidAddressForm.bind(address("a", "b", "c", "d", "N1 9GU", "GB")).hasErrors must beFalse
-      paidAddressForm.bind(address("", "b", "", "d", "N1 9GU", "GB")).hasErrors must beTrue
+    "always require line one and town for paid members" in {
+      paidAddressForm.bind(address("Kings Place", "90 York Way", "London", "Greater London", "N1 9GU", "GB")).hasErrors must beFalse
+      paidAddressForm.bind(address("", "90 York Way", "", "Greater London", "N1 9GU", "GB")).hasErrors must beTrue
     }
 
     "allow empty state for friends for any country except US/Canada" in {
@@ -86,12 +84,6 @@ class MemberFormTest extends Specification {
 
       val badCountryFriend = friendAddressForm.bind(address("No where", "", "City", "State", "Postcode", "Not a country"))
       badCountryFriend.hasErrors must beTrue
-    }
-
-    "concatenate lineOne and lineTwo" in {
-      AddressForm("one", "two", "town", "county", "postcode", Countries.UK).line mustEqual "one, two"
-      AddressForm("one", "", "town", "county", "postcode", Countries.UK).line mustEqual "one"
-      AddressForm("", "two", "town", "county", "postcode", Countries.UK).line mustEqual "two"
     }
   }
 }

@@ -1,18 +1,15 @@
 package services.zuora
 
-import forms.MemberForm.{AddressForm, NameForm}
+import scala.xml.{Elem, Null}
+
+import org.joda.time.DateTime
+
+import com.gu.membership.zuora.Address
+
+import forms.MemberForm.NameForm
 import model.Stripe
 import model.Zuora._
-import model.ZuoraReaders.ZuoraReader
-import org.joda.time.DateTime
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.ws.WS
 import services.zuora.ZuoraServiceHelpers._
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.xml.{Elem, Null, PrettyPrinter}
 
 trait ZuoraAction[T <: ZuoraResult] {
   val body: Elem
@@ -87,7 +84,7 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
-                     ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction[SubscribeResult] {
+                     ratePlanId: String, name: NameForm, address: Address) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = formatDateTime(DateTime.now)

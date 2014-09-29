@@ -6,17 +6,11 @@ import play.api.data.Forms._
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.Tier
-import com.gu.membership.zuora.{Country, Countries}
+import com.gu.membership.zuora.{Address, Country, Countries}
 
 import model.{TierPlan, FriendTierPlan, PaidTierPlan}
 
 object MemberForm {
-  case class AddressForm(lineOne: String, lineTwo: String, town: String, countyOrState: String,
-                         postCode: String, country: Country) {
-    // Salesforce only has one address line field, so merge our two together
-    val line = Seq(lineOne, lineTwo).filter(_.nonEmpty).mkString(", ")
-  }
-
   case class NameForm(first: String, last: String)
 
   case class PaymentForm(annual: Boolean, token: String)
@@ -25,55 +19,48 @@ object MemberForm {
 
   trait JoinForm {
     val name: NameForm
-    val deliveryAddress: AddressForm
+    val deliveryAddress: Address
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
     val tierPlan: TierPlan
   }
 
-  case class FriendJoinForm(name: NameForm, deliveryAddress: AddressForm, marketingChoices: MarketingChoicesForm,
+  case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String] ) extends JoinForm {
     val tierPlan = FriendTierPlan
   }
 
-  case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: AddressForm,
-                                billingAddress: Option[AddressForm], marketingChoices: MarketingChoicesForm,
+  case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
+                                billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
                                 password: Option[String]) extends JoinForm {
     val tierPlan = PaidTierPlan(tier, payment.annual)
   }
 
-  case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: AddressForm,
-                                  billingAddress: Option[AddressForm])
+  case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: Address,
+                                  billingAddress: Option[Address])
 
-  val countriesRequiringState = Countries.all.filter(_.states.nonEmpty).map { c => c.alpha2 -> c }.toMap
+  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
   val countryText = nonEmptyText.verifying(Countries.allCodes.contains _)
     .transform[Country](Countries.allCodes.apply, _.alpha2)
 
-  def verifyAddress(address: AddressForm): Boolean =
-    countriesRequiringState.get(address.country.alpha2).forall(_.states.contains(address.countyOrState))
-
-  case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
-
-  val verifyPostCode = text(maxLength = 20).verifying(Constraints.nonEmpty)
-
-  val friendAddressMapping: Mapping[AddressForm] = mapping(
+  val friendAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> text,
     "lineTwo" -> text,
     "town" -> text,
     "countyOrState" -> text,
-    "postCode" -> verifyPostCode,
+    "postCode" -> text(maxLength=20),
     "country" -> countryText
-  )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
+  )(Address.apply)(Address.unapply).verifying(_.valid)
 
-  val paidAddressMapping: Mapping[AddressForm] = mapping(
+  val paidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> nonEmptyText,
     "lineTwo" -> text,
     "town" -> nonEmptyText,
     "countyOrState" -> text,
-    "postCode" -> verifyPostCode,
+    "postCode" -> text(maxLength=20),
     "country" -> countryText
-  )(AddressForm.apply)(AddressForm.unapply).verifying(verifyAddress _)
+  )(Address.apply)(Address.unapply).verifying(_.valid)
 
   val nameMapping: Mapping[NameForm] = mapping(
     "first" -> nonEmptyText,
