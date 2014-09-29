@@ -32,7 +32,7 @@
 }
 
 .content__container--border {
-    border-top: rem(1px) dotted guss-colour('neutral-5');
+    border-top: rem(1px) dotted $c-neutral5;
 }
 
 .content__container--border-dark {

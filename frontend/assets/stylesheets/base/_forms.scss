@@ -303,7 +303,7 @@
     &:after {
         vertical-align: middle;
         content: '*';
-        color: guss-colour('tone-live-2');
+        color: $error;
         font-family: $sans-serif;
         font-size: rem(18px);
         margin-left: rem(4px);
