@@ -1,8 +1,10 @@
 define([
     '$',
+    'config/appCredentials',
+    'src/utils/cookie',
     'src/utils/component',
     'src/utils/user'
-], function ($, component, user) {
+], function ($, appCredentials, cookie, component, user) {
     'use strict';
 
     var self;
@@ -23,9 +25,17 @@ define([
         }
     };
 
-    Thankyou.prototype.init = function () {
-        this.user = user.getUserFromCookie();
-        this.populateUserDetails();
+    Thankyou.prototype.init = function (header) {
+        var emailElem = this.getElem('USER_EMAIL');
+        if (emailElem) {
+            // TODO potentially abstract this into its own class if user details stuff grows
+            // user has upgraded or joined so remove cookie then populate the user details in the header
+            cookie.removeCookie(appCredentials.membership.userCookieKey);
+            header.populateUserDetails();
+
+            this.user = user.getUserFromCookie();
+            this.populateUserDetails();
+        }
     };
 
     return Thankyou;

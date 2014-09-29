@@ -207,7 +207,7 @@ define(function () {
             this.saleEndTextElement = document.querySelectorAll('.js-datetime-enhance-note')[0];
             this.saleEndTimeElement = document.querySelectorAll('.js-datetime-enhance-time')[0];
 
-            if (this.saleEndTextElement) {
+            if (this.saleEndTextElement && this.saleEndTimeElement) {
 
                 var utcTimeString = this.saleEndTimeElement.getAttribute('datetime'),
                     timeDifference = this.calculateTimeDifference(utcTimeString),
