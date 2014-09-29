@@ -49,18 +49,16 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
       throw ZuoraServiceError(s"Can't build authenticated request for ${action.getClass.getSimpleName}, no Zuora authentication")
     }
 
-    Logger.debug(s"Zuora action ${action.getClass.getSimpleName}")
-
     Timing.record(ZuoraMetrics, action.getClass.getSimpleName) {
       WS.url(url).post(action.xml)
     }.map { result =>
-      Logger.debug(s"Got result ${result.status}")
       ZuoraMetrics.putResponseCode(result.status, "POST")
-      Logger.debug(new PrettyPrinter(70, 2).format(result.xml))
 
       reader.read(result.xml) match {
         case Left(error) =>
           ZuoraMetrics.recordError
+          Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
+          Logger.error(new PrettyPrinter(70, 2).format(result.xml))
           throw error
 
         case Right(obj) => obj

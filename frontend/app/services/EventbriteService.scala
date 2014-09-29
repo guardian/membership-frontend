@@ -98,7 +98,7 @@ object EventbriteService extends EventbriteService {
   def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
       .map { response =>
-      recordAndLogResponse(response.status, "GET", url)
+      EventbriteMetrics.putResponseCode(response.status, "GET")
       extract[A](response)
     }.recover { case e =>
       Logger.error(s"Eventbrite request $url", e)
@@ -108,14 +108,9 @@ object EventbriteService extends EventbriteService {
 
   def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
     WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
-      recordAndLogResponse(response.status, "POST", url)
+      EventbriteMetrics.putResponseCode(response.status, "POST")
       extract[A](response)
     }
-
-  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
-    EventbriteMetrics.putResponseCode(status, responseMethod)
-  }
 
   import play.api.Play.current
 
