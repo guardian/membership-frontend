@@ -17,6 +17,9 @@ echo "  ^    ^    ^    ^    ^    ^    ^    ^  "
 echo " /f\  /r\  /o\  /n\  /t\  /e\  /n\  /d\ "
 echo "<___><___><___><___><___><___><___><___>"
 
+# fix the issues with bower installs
+git config --local url."https://".insteadOf git://
+
 cd frontend
 
 #####################################################
