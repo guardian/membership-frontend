@@ -4,7 +4,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 @import configuration.Config
 @import helper._
 
-@main("Address Details") {
+@main("Address details | Friend") {
 
     @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepThree= "Location", StepFour = "")
 
