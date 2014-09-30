@@ -1,5 +1,10 @@
 /* TEAM */
 
+Tech Lead: Roberto Tyley
+Twitter: @rtyley
+From: Blyth, England
+Location: London, England
+
 Senior Developer: Chris Finch
 Twitter: @chrisfinchy
 Linkedin: chrisfinch
