@@ -42,7 +42,7 @@ county: Option[String], userCountry: Option[String])
                         data-validation="required">
 
                         @for(country <- Countries.allSorted) {
-                            <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.alpha2){ selected}>@country.name</option>
+                            <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
                         }
                     </select>
                 </div>
