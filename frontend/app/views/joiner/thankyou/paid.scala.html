@@ -5,13 +5,12 @@
 
 @main("Thankyou | " + subscriptionDetails.planName) {
 
-    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
-        @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
+    <section class="content__container">
         @fragments.layout.welcomeUser(userFields, userEmail)
     </section>
 
-    <h2>Your membership summary</h2>
-    <section class="joiner-section joiner-section--no-border">
+    <section class="content__container content__container--border-blue">
+        <h2 class="section-sub-headline">Your membership summary</h2>
         <table class="table table--responsive-font table--striped">
             <tr class="table__headline" role="row">
                 <td class="summary-table__cell" role="scope">

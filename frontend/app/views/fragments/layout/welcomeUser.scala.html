@@ -1,7 +1,5 @@
 @(userFields: model.PrivateFields, userEmail: String)
 
-<h1 class="section-sub-headline">Hello @userFields.firstName, welcome to Guardian Membership!</h1>
-<div class="user-welcome">
-    <p>You're the newest member of the Guardian membership community and we're thrilled to have you on board.</p>
-    <p>We've sent confirmation of your membership to <span class="user-welcome__email js-user-email">@userEmail</span></p>
-</div>
+@fragments.layout.sectionHeader("Hello " + userFields.firstName.getOrElse("") + ",<br/> welcome to Guardian Membership!")
+<p>You're the newest member of the Guardian membership community and we're thrilled to have you on board.</p>
+<p>We've sent confirmation of your membership to <span class="js-user-email">@userEmail</span></p>

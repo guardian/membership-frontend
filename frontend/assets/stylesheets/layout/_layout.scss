@@ -197,12 +197,3 @@ body {
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
-
-.user-welcome {
-    margin-bottom: rem($gs-gutter);
-    margin-top: rem($gs-gutter);
-
-    .user-welcome__email {
-        font-weight: bold;
-    }
-}

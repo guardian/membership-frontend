@@ -39,6 +39,10 @@
     border-top: rem(1px) dotted #333333;
 }
 
+.content__container--border-blue {
+    border-top: rem(1px) solid $c-newsAccent;
+}
+
 .content__footer {
     color: #1a4683;
     text-align: center;
