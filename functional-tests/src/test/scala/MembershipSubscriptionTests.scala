@@ -18,5 +18,4 @@ class MembershipSubscriptionTests extends BaseMembershipTest {
         }
     }
   }
-
 }

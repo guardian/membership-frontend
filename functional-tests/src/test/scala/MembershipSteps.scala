@@ -144,6 +144,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(details.getCounty, "London", "County / state should be pulled from identity")
     Assert.assert(details.getTown, "London", "Town should be pulled from identity")
     Assert.assert(details.getPostCode, "N1 9GU", "Postcode should be pulled from identity")
+    // check country
     this
   }
 
