@@ -1,6 +1,7 @@
 @(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
+@import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import com.gu.membership.salesforce.Tier
@@ -25,6 +26,15 @@
     <p class="terms-info">By proceeding, you agree to the Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
     </p>
+}
+
+@becomeMemberCta(ticket: EBTickets) = @{
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event.start, ticket)
+    val friendSaleStartDate = ticketSaleDates.get(Tier.Friend).get
+
+    if(friendSaleStartDate > Instant.now) {
+        Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
+    }
 }
 
 @dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
@@ -100,6 +110,7 @@
                             }
 
                             @ticketCta
+                            @becomeMemberCta(ticket)
                         </div>
                     }
                 </div>
