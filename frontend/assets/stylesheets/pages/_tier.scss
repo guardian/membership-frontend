@@ -150,7 +150,7 @@ $current-indicator: rem(47px);
     padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
 
     .package__title {
-        @include fs-headline(3);
+        @include fs-headline(4);
         color: $white;
         word-wrap: break-word;
         position: relative;
@@ -243,14 +243,14 @@ $current-indicator: rem(47px);
     height: 100%;
 
     .price-info__detail {
-        @include fs-headline(2);
+        @include fs-headline(3);
 
         @include mq(desktop) {
-            @include fs-headline(2);
+            @include fs-headline(3);
         }
 
         @include mq(mem-full) {
-            @include fs-headline(3);
+            @include fs-headline(4);
         }
     }
 
@@ -304,10 +304,10 @@ $current-indicator: rem(47px);
 }
 
 .package__description {
-    @include fs-bodyCopy(2);
+    @include fs-bodyCopy(1);
 
     @include mq(desktop) {
-        @include fs-bodyCopy(3);
+        @include fs-bodyCopy(2);
         padding-top: rem($gs-gutter / 2);
         min-height: rem(120px);
     }
@@ -331,7 +331,7 @@ $current-indicator: rem(47px);
 
     span {
         display: block;
-        @include fs-textsans(4);
+        @include fs-textSans(4);
         margin: 0 0 $gs-baseline;
         &.payment-label__title {
             @include fs-headline(2);

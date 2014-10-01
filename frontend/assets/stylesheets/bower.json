@@ -1,8 +1,7 @@
 {
-    "name": "membership stylesheets",
-    "version": "0.0.0",
-    "dependencies": {
-        "guss": "~1.1.0",
-        "guss-colours": "~1.0.0"
-    }
+  "name": "membership stylesheets",
+  "dependencies": {
+    "guss": "3.3.0",
+    "pasteup-palette": "3.3.0"
+  }
 }

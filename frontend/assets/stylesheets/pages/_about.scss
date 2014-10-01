@@ -4,10 +4,10 @@
 
 
 h2.about-block-title {
-    @include fs-headline(4);
+    @include fs-headline(5);
     padding: rem($gs-baseline) rem($gs-gutter) 0;
     @include mq(tablet) {
-        @include fs-headline(6);
+        @include fs-headline(7);
     }
 }
 
@@ -86,7 +86,7 @@ h2.about-block-title {
 
     .benefits__list--items {
         float: left;
-        @include fs-bodyCopy(2);
+        @include fs-bodyCopy(1);
         width: rem(gs-span(4));
         height: rem(130px);
 
@@ -96,7 +96,7 @@ h2.about-block-title {
         }
 
         @include mq(tablet) {
-            @include fs-bodyCopy(3);
+            @include fs-bodyCopy(2);
             width: rem(gs-span(3));
             padding: 0 rem($gs-gutter / 2);
             height: rem(220px);

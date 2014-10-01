@@ -7,7 +7,7 @@
     color: #ffffff;
     text-decoration: none;
     position: relative;
-    @include fs-textsans(4);
+    @include fs-textSans(4);
     min-width: 100%;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
     @include border-radius(50%);
