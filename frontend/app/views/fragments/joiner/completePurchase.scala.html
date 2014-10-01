@@ -1,13 +1,14 @@
-@(ebIFrameDetail: Option[(String, Int)])
+@(ebIFrameDetail: Option[(String, Int)], event: Option[model.Eventbrite.EBEvent])
 
-@if(ebIFrameDetail) {
+@if(event) {
     <section class="complete-purchase">
-        <h2>Complete your discounted ticket purchase</h2>
-        <h3>Please bear with us</h3>
-
-        <p>We're currently improving our ticket purchasing system but in the meantime you will have to enter some details again.</p>
-        <p>We'll have a much smoother solution soon.</p>
+        <h2>Complete your ticket purchase</h2>
+        <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again. We'll have a much smoother solution soon.</p>
     </section>
+
+    @for(event <- event) {
+        <h3>@event.name.text</h3>
+    }
 
     @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
         @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)

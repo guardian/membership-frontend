@@ -1,4 +1,7 @@
+@(userFields: model.PrivateFields, userEmail: String)
+
+<h1 class="section-sub-headline">Hello @userFields.firstName, welcome to Guardian Membership!</h1>
 <div class="user-welcome">
-    <p>You're the newest member of our community. It's great to have you with us.</p>
-    <p>We've sent confirmation of your membership to <span class="user-welcome__email js-user-email"></span>.</p>
+    <p>You're the newest member of the Guardian membership community and we're thrilled to have you on board.</p>
+    <p>We've sent confirmation of your membership to <span class="user-welcome__email js-user-email">@userEmail</span></p>
 </div>

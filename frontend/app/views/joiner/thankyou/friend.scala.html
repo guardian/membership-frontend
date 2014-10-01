@@ -1,14 +1,13 @@
-@(ebIFrameDetail: Option[(String, Int)])
+@(ebIFrameDetail: Option[(String, Int)], userFields: model.PrivateFields, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
 @main("Thankyou | Friend") {
 
     <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
         @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
-        <h1 class="section-sub-headline">Hello! Welcome to Guardian Membership</h1>
-        @fragments.layout.welcomeUser()
+        @fragments.layout.welcomeUser(userFields, userEmail)
     </section>
 
-    @fragments.joiner.completePurchase(ebIFrameDetail)
+    @fragments.joiner.completePurchase(ebIFrameDetail, event)
 
     @fragments.analytics.googleJoinerConversion()
 }
