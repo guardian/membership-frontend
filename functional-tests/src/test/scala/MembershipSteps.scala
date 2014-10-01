@@ -123,6 +123,36 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     CookieHandler.register(driver)
   }
 
+  def IHaveInformationInIdentity = {
+    IAmLoggedIn
+    IGoToIdentity
+    IEnterInfoIntoIdentity
+    this
+  }
+
+  def IEnterInfoIntoIdentity = {
+    new IdentityEditPage(driver).clickAccountDetailsTab.enterName("Test", "Automation").enterAddress("somewhere", "nice")
+      .enterCountry("Angola").enterPostcode("N1 9GU").enterState("London").enterTown("London").clickSave
+    this
+  }
+
+  def TheInformationHasBeenLoadedFromIdentity = {
+    val details = new PaymentPage(driver).cardWidget
+    Thread.sleep(5000)
+    Assert.assert(details.getAddressLineOne, "somewhere", "Address line 1 should be pulled from identity")
+    Assert.assert(details.getAddressLineTwo, "nice", "Address line 2 should be pulled from identity")
+    Assert.assert(details.getCounty, "London", "County / state should be pulled from identity")
+    Assert.assert(details.getTown, "London", "Town should be pulled from identity")
+    Assert.assert(details.getPostCode, "N1 9GU", "Postcode should be pulled from identity")
+    this
+  }
+
+  def IGoToBecomeAPartner = {
+    driver.get(Config().getTestBaseUrl())
+    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
+    this
+  }
+
   def ICanBecomeAPartner = {
     new ChooseTierPage(driver).clickPartner.clickChoose
     theFlowSignIn

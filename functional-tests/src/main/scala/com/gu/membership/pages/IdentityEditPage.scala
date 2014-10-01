@@ -29,6 +29,8 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def cancelledMembershipH2 = driver.findElement(By.cssSelector(".subscription-change__title"))
 
+  private def accountDetailsTab = driver.findElement(By.cssSelector("#tabs-account-profile-2-tab>a"))
+
   val cardWidget = new CreditCardWidget(driver)
 
   def clickChangeButton = {
@@ -73,6 +75,11 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
   def isSuccessFlashMessagePresent: Boolean = {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(successFlashMessage))
     successFlashMessage.isDisplayed
+  }
+
+  def clickAccountDetailsTab = {
+    accountDetailsTab.click
+    new IdentityEnterDetailsPage(driver)
   }
 
   def isMembershipCancelled = {

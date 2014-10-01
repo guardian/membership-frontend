@@ -79,7 +79,6 @@ class MembershipChangeTierTests extends BaseMembershipTest {
     }
   }
 
-  // cancel membership
   scenarioWeb("37. A Partner can cancel membership") {
     implicit driver =>
       given {
@@ -124,10 +123,10 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       given {
         MembershipSteps().IAmLoggedInAsAPatron
       }
-        .when {
+      .when {
         _.IGoToTheEventsPage
       }
-        .then {
+      .then {
         _.ICantBecomeAPatronAgain
       }
   }

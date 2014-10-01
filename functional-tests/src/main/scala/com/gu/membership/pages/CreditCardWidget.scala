@@ -47,10 +47,14 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
     this
   }
 
-  def enterCountry(country: String) = {
+  def getAddressLineTwo = address2Textbox.getAttribute("value")
+
+  def enterCounty(country: String) = {
     countyTextbox.sendKeys(country)
     this
   }
+
+  def getCounty = countyTextbox.getAttribute("value")
 
   def enterFirstName(name: String) = {
     firstNameTextbox.sendKeys(name)
@@ -62,15 +66,21 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
     this
   }
 
+  def getAddressLineOne = address1Textbox.getAttribute("value")
+
   def enterTown(town: String) = {
     townTextbox.sendKeys(town)
     this
   }
 
+  def getTown = townTextbox.getAttribute("value")
+
   def enterPostCode(postCode: String) = {
     postCodeTextbox.sendKeys(postCode)
     this
   }
+
+  def getPostCode = postCodeTextbox.getAttribute("value")
 
   def enterLastName(surname: String) = {
     lastNameTextbox.sendKeys(surname)
@@ -127,7 +137,7 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
   def submitPayment(address1: String, address2: String, country: String, town: String, postCode: String,
                     cardNumber: String, cardSecurityCode: String, cardExpirationMonth: String,
                     cardExpirationYear: String): ThankYouPage = enterAddressLineOne(address1)
-      .enterAddressLineTwo(address2).enterTown(town).enterCountry(country)
+      .enterAddressLineTwo(address2).enterTown(town).enterCounty(country)
       .enterPostCode(postCode).enterCardNumber(cardNumber).enterCardSecurityCode(cardSecurityCode)
       .enterCardExpirationMonth(cardExpirationMonth).enterCardExpirationYear(cardExpirationYear).clickSubmitPayment
 }
