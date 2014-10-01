@@ -73,7 +73,7 @@ define([
 
     Cta.prototype.disableBuyTicketsCtaButton = function () {
         $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
-    }
+    };
 
     Cta.prototype.memberCta = function () {
 
