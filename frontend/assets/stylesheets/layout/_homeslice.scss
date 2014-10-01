@@ -140,10 +140,10 @@
         }
 
         .home-slice__headline {
-            @include fs-headline(4);
+            @include fs-headline(5);
             color: $black;
             @include mq(tablet) {
-                @include fs-headline(6);
+                @include fs-headline(7);
             }
             .headline-highlight {
                 color: $white;
@@ -163,11 +163,11 @@
             }
 
             .home-slice__copy {
-                @include fs-headline(10);
+                @include fs-headline(3);
                 font-weight: 100;
                 margin-bottom: rem(17px);
                 @include mq(tablet) {
-                    @include fs-headline(9);
+                    @include fs-headline(5);
                 }
             }
 
@@ -267,19 +267,19 @@
 
                 .home-slice__copy--quote {
                     display: block;
-                    @include fs-bodyCopy(6);
+                    @include fs-headline(3);
                     @include mq(tablet) {
-                        @include fs-bodyCopy(5);
+                        @include fs-headline(6);
                     }
                 }
                 .home-slice__copy--cite {
                     display: block;
-                    @include fs-headline(1);
+                    @include fs-headline(2);
                     font-style: normal;
                     font-weight: lighter;
                     margin-bottom: rem(17px);
                     @include mq(tablet) {
-                        @include fs-headline(2);
+                        @include fs-headline(3);
                     }
                 }
             }

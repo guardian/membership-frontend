@@ -5,7 +5,7 @@
         display: inline-block;
         text-align: center;
         .signin__action-prompt {
-            @include fs-bodyHeading(5);
+            @include fs-bodyHeading(4);
             font-weight: 100;
         }
 

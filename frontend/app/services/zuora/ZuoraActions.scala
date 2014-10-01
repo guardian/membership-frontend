@@ -1,12 +1,15 @@
 package services.zuora
 
-import forms.MemberForm.{AddressForm, NameForm}
+import scala.xml.{Elem, Null}
+
+import org.joda.time.DateTime
+
+import com.gu.membership.zuora.Address
+
+import forms.MemberForm.NameForm
 import model.Stripe
 import model.Zuora._
-import org.joda.time.DateTime
 import services.zuora.ZuoraServiceHelpers._
-
-import scala.xml.{Elem, Null}
 
 trait ZuoraAction[T <: ZuoraResult] {
   val body: Elem
@@ -81,7 +84,7 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
-                     ratePlanId: String, name: NameForm, address: AddressForm) extends ZuoraAction[SubscribeResult] {
+                     ratePlanId: String, name: NameForm, address: Address) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = formatDateTime(DateTime.now)

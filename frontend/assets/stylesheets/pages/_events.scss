@@ -44,14 +44,14 @@ div.event {
         }
 
         .event__trail {
-            @include fs-textsans(4);
+            @include fs-textSans(4);
             display: block;
         }
 
         .event__price-note,
         .event__sale_ends_note,
         .event__sale_ends_time {
-            @include fs-textsans(4);
+            @include fs-textSans(4);
             display: inline-block;
         }
     }
@@ -144,12 +144,12 @@ div.event {
 }
 
 .ticket-info {
-    @include fs-textsans(1);
+    @include fs-textSans(1);
     color: #878787;
 }
 
 .ticket-info__header {
-    @include fs-textsans(4);
+    @include fs-textSans(4);
     color: #878787;
 }
 
@@ -157,8 +157,9 @@ div.event {
     margin: rem(4px) 0;
 }
 
-.terms-info {
-    @include fs-textsans(1);
+.terms-info,
+.ticket-info {
+    @include fs-textSans(1);
     color: #878787;
     padding-top: rem($gs-baseline/2);
 }
@@ -268,7 +269,7 @@ div.event {
         padding: rem($gs-gutter / 2);
 
         .event-item__title {
-            @include fs-headline(1);
+            @include fs-headline(2);
             color: $black;
             margin-bottom: rem($gs-baseline);
             position: relative;
@@ -346,7 +347,7 @@ div.event {
             height: auto;
 
             .event-item__title {
-                @include fs-headline(2);
+                @include fs-headline(3);
             }
 
             .event-item__cta {
@@ -361,7 +362,7 @@ div.event {
         @include mq(desktop) {
             padding: rem($gs-gutter);
             .event-item__description {
-                @include fs-headline(1);
+                @include fs-headline(2);
                 padding: rem($gs-baseline * 2) 0 0;
             }
 
@@ -412,11 +413,11 @@ div.event {
 
         @include mq(desktop) {
             .event-item__title {
-                @include fs-headline(4);
+                @include fs-headline(5);
             }
 
             .event-item__time {
-                @include fs-headline(1);
+                @include fs-headline(2);
             }
 
             .event-item__description {

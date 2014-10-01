@@ -1,23 +1,23 @@
 package services
 
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import com.gu.identity.model.User
-import com.gu.membership.salesforce.Member.Keys
-import com.gu.membership.salesforce.Tier.Tier
+
 import com.gu.membership.salesforce._
+import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.util.Timing
+
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBDiscount, EBEvent}
 import model.Stripe.{Customer, Card}
-import model.{PaidTierPlan, FriendTierPlan, TierPlan, Zuora}
-import monitoring.{MembershipMetrics, ZuoraMetrics, MemberMetrics, IdentityApiMetrics}
-import play.api.Logger
+import model.{PaidTierPlan, FriendTierPlan, TierPlan}
+import monitoring.MemberMetrics
 import utils.ScheduledTask
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -48,7 +48,7 @@ trait MemberService {
   }.getOrElse(Map.empty)
 
   def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] =
-    Timing.record(MembershipMetrics, "createMember") {
+    Timing.record(MemberMetrics, "createMember") {
       def futureCustomerOpt = formData match {
         case paid: PaidMemberJoinForm => StripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case friend: FriendJoinForm => Future.successful(None)
