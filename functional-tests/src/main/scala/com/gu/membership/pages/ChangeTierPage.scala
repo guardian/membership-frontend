@@ -34,4 +34,6 @@ class ChangeTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
     cancelLink.click()
     new CancelPage(driver)
   }
+
+  def isPageLoaded = cancelLink.isDisplayed
 }

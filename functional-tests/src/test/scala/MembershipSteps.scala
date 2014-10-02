@@ -73,10 +73,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def TheDetailsAreTheSameAsOnTheEventProvider = {
     val page = new EventPage(driver)
     val eventName = page.getEventName
-    println("event name: " + eventName)
     // assumes we are logged in
     val eventBritePage = page.clickBuyButton
-    println("Other name: " + eventBritePage.getEventName)
     Assert.assert(eventBritePage.getEventName.contains(eventName),
       true, "The event name should be the same on Eventbrite")
     this
@@ -121,6 +119,36 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def theFlowSignIn = {
     new JoinFlowRegisterOrSignInPage(driver).clickRegister
     CookieHandler.register(driver)
+  }
+
+  def IHaveInformationInIdentity = {
+    IAmLoggedIn
+    IGoToIdentity
+    IEnterInfoIntoIdentity
+    this
+  }
+
+  def IEnterInfoIntoIdentity = {
+    new IdentityEditPage(driver).clickAccountDetailsTab.enterName("Test", "Automation").enterAddress("somewhere", "nice")
+      .enterCountry("Angola").enterPostcode("N1 9GU").enterState("London").enterTown("London").clickSave
+    this
+  }
+
+  def TheInformationHasBeenLoadedFromIdentity = {
+    val details = new PaymentPage(driver).cardWidget
+    Assert.assert(details.getAddressLineOne, "somewhere", "Address line 1 should be pulled from identity")
+    Assert.assert(details.getAddressLineTwo, "nice", "Address line 2 should be pulled from identity")
+    Assert.assert(details.getCounty, "London", "County / state should be pulled from identity")
+    Assert.assert(details.getTown, "London", "Town should be pulled from identity")
+    Assert.assert(details.getPostCode, "N1 9GU", "Postcode should be pulled from identity")
+    // check country
+    this
+  }
+
+  def IGoToBecomeAPartner = {
+    driver.get(Config().getTestBaseUrl())
+    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
+    this
   }
 
   def ICanBecomeAPartner = {
@@ -369,9 +397,19 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(new IdentityEditPage(driver).isMembershipCancelled, true, "Membership should be cancelled")
   }
 
+  def ICantBecomeAPatronAgain = {
+    new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAPatron
+    Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
+  }
+
+  def ICantBecomeAPartnerAgain = {
+    new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAPartner
+    Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
+  }
+
   def ICantBecomeAFriendAgain = {
-    new EventsListPage(driver).clickPricing.clickFriendButton
-    Assert.assert(new JoinFlowChooseTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
+    new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAFriend
+    Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
   private def verifyTier(yearlyPayment: String) = {
