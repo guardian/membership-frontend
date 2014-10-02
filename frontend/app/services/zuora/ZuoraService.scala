@@ -27,11 +27,15 @@ object ZuoraServiceHelpers {
     // Zuora doesn't accept Z for timezone
     str.replace("Z", "+00:00")
   }
+
+  def formatQuery[T <: ZuoraQuery](reader: ZuoraQueryReader[T], where: String) =
+    s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
 case class ZuoraApiConfig(url: String, username: String, password: String)
 
 class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
+  import ZuoraServiceHelpers._
 
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
@@ -67,8 +71,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
   }
 
   def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
-    val q = s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
-    request(Query(q)).map { case QueryResult(results) => reader.read(results) }
+    request(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
   }
 
   def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {
