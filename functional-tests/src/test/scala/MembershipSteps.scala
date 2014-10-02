@@ -136,7 +136,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def TheInformationHasBeenLoadedFromIdentity = {
     val details = new PaymentPage(driver).cardWidget
-    Thread.sleep(5000)
     Assert.assert(details.getAddressLineOne, "somewhere", "Address line 1 should be pulled from identity")
     Assert.assert(details.getAddressLineTwo, "nice", "Address line 2 should be pulled from identity")
     Assert.assert(details.getCounty, "London", "County / state should be pulled from identity")
