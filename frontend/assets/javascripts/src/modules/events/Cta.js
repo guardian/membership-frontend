@@ -8,6 +8,10 @@ define([
 
     var FRIEND = 'Friend';
     var PARTNER = 'Partner';
+    var PATRON = 'Patron';
+    var TIER_CHANGE_URL = '/tier/change';
+    var UPGRADE = 'Upgrade membership';
+    var UPGRADE_COMING_SOON = 'Upgrade coming soon';
 
     var Cta = function (containerElem) {
         this.elem = containerElem;
@@ -18,6 +22,7 @@ define([
     Cta.prototype.ticketDates = {};
 
     Cta.prototype.classes = {
+        MEMBER_CTA: 'js-member-cta',
         EVENT_TICKETS_CONTAINER: 'event__tickets',
         SALE_START: 'js-ticket-sale-start',
         SALE_START_FRIEND: 'js-ticket-sale-start-friend',
@@ -35,32 +40,90 @@ define([
         var patronSaleStart = this.ticketDates.saleStartPatron.getTime();
         var memberTier = this.memberTier;
         var now = Date.now();
+        var $buyTicketsCtaButton = $(this.getElem('BUY_TICKET_CTA'));
 
-        if (this.userIsLoggedIn && salesStart < now) {
+        if ($buyTicketsCtaButton.length) {
+            if (this.userIsLoggedIn && salesStart < now) {
 
-            // tickets on sale < 7 days
-            if (patronSaleStart < now && partnerSaleStart > now) {
-                if (memberTier === PARTNER || memberTier === FRIEND) {
-                    $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
+                // tickets on sale < 7 days
+                if (patronSaleStart < now && partnerSaleStart > now) {
+                    if (memberTier === PARTNER || memberTier === FRIEND) {
+                        this.disableBuyTicketsCtaButton();
+                    }
+                }
+
+                // tickets on sale > 8 days < 14 days
+                if (partnerSaleStart < now && friendSaleStart > now) {
+                    if (memberTier === FRIEND) {
+                        this.disableBuyTicketsCtaButton();
+                    }
+                }
+
+                // if we don't have a member tier and the user is logged in and friend sale has not passed
+                if (!memberTier && friendSaleStart > now) {
+                    this.disableBuyTicketsCtaButton();
                 }
             }
 
-            // tickets on sale > 8 days < 14 days
-            if (partnerSaleStart < now && friendSaleStart > now) {
-                if (memberTier === FRIEND) {
-                    $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
+            if (!this.userIsLoggedIn && friendSaleStart > now) {
+                this.disableBuyTicketsCtaButton();
+            }
+        }
+    };
+
+    Cta.prototype.disableBuyTicketsCtaButton = function () {
+        $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+    };
+
+    Cta.prototype.memberCta = function () {
+
+        var salesStart = this.ticketDates.saleStart.getTime();
+        var friendSaleStart = this.ticketDates.saleStartFriend.getTime();
+        var partnerSaleStart = this.ticketDates.saleStartPartner.getTime();
+        var memberTier = this.memberTier;
+        var now = Date.now();
+        var $memberCtaElement = $(this.getElem('MEMBER_CTA'));
+
+        if ($memberCtaElement.length) {
+            if (this.userIsLoggedIn) {
+                if (memberTier) {
+                    // tickets not yet on sale
+                    if (salesStart > now) {
+                        this.removeMemberCtaButton();
+                    }
+                    // tickets on sale < 7 days
+                    if (salesStart < now && partnerSaleStart > now) {
+                        if (memberTier === PARTNER) {
+                            this.upgradeComingSoonMemberCtaButton();
+                        } else if (memberTier === FRIEND) {
+                            this.upgradeMemberCtaButton();
+                        } else if (memberTier === PATRON) {
+                            this.removeMemberCtaButton();
+                        }
+                    }
+                    // tickets on sale > 8 days < 14 days
+                    if (partnerSaleStart < now && friendSaleStart > now) {
+                        if (memberTier === FRIEND) {
+                            this.upgradeMemberCtaButton();
+                        } else if (memberTier === PARTNER || memberTier === PATRON) {
+                            this.removeMemberCtaButton();
+                        }
+                    }
                 }
             }
-
-            // if we don't have a member tier and the user is logged in and general sale is not released
-            if (!memberTier && friendSaleStart > now) {
-                $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
-            }
         }
+    };
 
-        if (!this.userIsLoggedIn && friendSaleStart > now) {
-            $(this.getClass('BUY_TICKET_CTA'), this.elem).addClass('action--disabled').removeAttr('href');
-        }
+    Cta.prototype.upgradeComingSoonMemberCtaButton = function () {
+        $(this.getElem('MEMBER_CTA')).text(UPGRADE_COMING_SOON).addClass('action--disabled').removeAttr('href');
+    };
+
+    Cta.prototype.upgradeMemberCtaButton = function () {
+        $(this.getElem('MEMBER_CTA')).text(UPGRADE).attr('href', TIER_CHANGE_URL);
+    };
+
+    Cta.prototype.removeMemberCtaButton = function () {
+        $(this.getElem('MEMBER_CTA')).remove();
     };
 
     Cta.prototype.parseDates = function () {
@@ -83,6 +146,7 @@ define([
                 self.memberTier = memberDetail && memberDetail.tier;
                 self.parseDates();
                 self.buyTicketCta();
+                self.memberCta();
             });
         }
     };
