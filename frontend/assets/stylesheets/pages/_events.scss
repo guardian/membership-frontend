@@ -494,19 +494,26 @@ div.event {
         padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
     }
 
+    .event-item__location {
+        line-height: rem(18px);
+    }
+
     .event-item__location-name,
     .event-item__location-address,
     .event-item__location-city {
         display: block;
     }
 
-    .icon-sprite-early_booking-grey,
-    .icon-sprite-location {
+    .icon-sprite-location,
+    .icon-sprite-early_booking-grey {
         background-size: rem(25px);
         float: left;
-        margin-top: rem(-2px);
         margin-left: rem(-$gs-gutter * 2);
         height: rem(25px);
         width: rem(25px);
+    }
+
+    .icon-sprite-early_booking-grey {
+        margin-top: rem(-2px);
     }
 }
