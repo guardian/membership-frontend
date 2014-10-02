@@ -97,8 +97,7 @@
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
                         "wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py",
-                        {"Fn:Join": ["", ["sed -i 's/__LOG_GROUP/", { "Ref": "FrontendLogGroup" }, "/' $CONF_DIR/logger.conf"]]},
-                        {"Fn:Join": [" ", ["python awslogs-agent-setup.py -nr", { "Ref": "AWS::Region" }, "-c $CONF_DIR/logger.conf" ]]},
+                        {"Fn::Join": [" ", ["python awslogs-agent-setup.py -nr", { "Ref": "AWS::Region" }, "-c $CONF_DIR/logger.conf" ]]},
 
                         {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' $CONF_DIR/upstart.conf > /etc/init/membership-app.conf"]]},
 
@@ -179,10 +178,6 @@
                     "Ref": "MembershipAppRole"
                 } ]
             }
-        },
-
-        "FrontendLogGroup": {
-            "Type": "AWS::Logs::LogGroup"
         },
 
         "FrontendElasticLoadBalancer" : {
