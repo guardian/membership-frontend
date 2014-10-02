@@ -156,14 +156,6 @@ $card-icon-offset: 2px;
     height: rem($large-card + $card-icon-offset + 2px);
 }
 
-.credit-card--inline-block {
-    visibility: visible;
-    vertical-align: middle;
-    position: static;
-    display: inline-block;
-    margin-right: $gutter / 2;
-}
-
 /* ==========================================================================
    Thank You
    ========================================================================== */
