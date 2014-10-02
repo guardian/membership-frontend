@@ -74,7 +74,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val page = new EventPage(driver)
     val eventName = page.getEventName
     // assumes we are logged in
-    val eventBritePage = page.clickBuyButton)
+    val eventBritePage = page.clickBuyButton
     Assert.assert(eventBritePage.getEventName.contains(eventName),
       true, "The event name should be the same on Eventbrite")
     this
