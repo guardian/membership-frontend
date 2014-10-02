@@ -459,3 +459,54 @@ div.event {
         }
     }
 }
+
+.event-summary {
+    @include clearfix;
+    margin-bottom: rem($gs-baseline * 2);
+
+    .event-item__media {
+        @include mq(tablet) {
+            float: left;
+            width: rem(gs-span(3));
+        }
+    }
+
+    .event-item__title {
+        @include f-header;
+        @include font-size(rem(18px), rem(22px));
+        margin-bottom: rem($gs-baseline * 2);
+    }
+
+    .event-item__meta {
+        @include f-data;
+        @include font-size(rem(14px), rem(22px));
+
+        @include mq(tablet) {
+            border-top: rem(1px) dotted $c-neutral3;
+            margin-left: rem(gs-span(3) + $gs-gutter);
+            padding-top: rem($gs-baseline / 2);
+        }
+    }
+
+    .event-item__time,
+    .event-item__location {
+        border-top: rem(1px) dotted $c-neutral3;
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
+    }
+
+    .event-item__location-name,
+    .event-item__location-address,
+    .event-item__location-city {
+        display: block;
+    }
+
+    .icon-sprite-early_booking-grey,
+    .icon-sprite-location {
+        background-size: rem(25px);
+        float: left;
+        margin-top: rem(-2px);
+        margin-left: rem(-$gs-gutter * 2);
+        height: rem(25px);
+        width: rem(25px);
+    }
+}

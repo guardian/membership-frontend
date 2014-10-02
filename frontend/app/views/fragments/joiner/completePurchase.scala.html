@@ -7,7 +7,7 @@
     </section>
 
     @for(event <- event) {
-        <h3>@event.name.text</h3>
+        @fragments.event.itemSummary(event)
     }
 
     @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
