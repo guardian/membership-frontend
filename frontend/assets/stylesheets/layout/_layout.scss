@@ -128,6 +128,13 @@ body {
             padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
         }
     }
+
+    &.page-container--slim {
+        @include mq(tablet) {
+            padding-left: rem($gs-gutter * 13);
+            padding-right: rem($gs-gutter * 13);
+        }
+    }
 }
 
 .separator {

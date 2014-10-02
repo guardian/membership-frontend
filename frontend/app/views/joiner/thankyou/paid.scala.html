@@ -3,7 +3,7 @@
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Thankyou | " + subscriptionDetails.planName) {
+@main("Thankyou | " + subscriptionDetails.planName, containerSlim = true) {
 
     <section class="content__container">
         @fragments.layout.welcomeUser(userFields, userEmail)
