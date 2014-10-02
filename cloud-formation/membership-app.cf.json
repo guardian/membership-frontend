@@ -76,6 +76,9 @@
                 "UserData" : { "Fn::Base64": {
                     "Fn::Join":["\n", [
                         "#!/bin/bash -ev",
+
+                        "CONF_DIR=/membership/frontend-1.0-SNAPSHOT/conf",
+
                         {"Fn::Join":["", ["wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/authorized_keys &"]]},
                         "apt-get -y update",
                         "apt-get -y install language-pack-en openjdk-7-jre-headless unzip awscli",
@@ -93,7 +96,11 @@
                         "chown membership /etc/gu/membership-keys.conf",
                         "chmod 0600 /etc/gu/membership-keys.conf",
 
-                        {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' /membership/frontend-1.0-SNAPSHOT/conf/upstart.conf > /etc/init/membership-app.conf"]]},
+                        "wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py",
+                        {"Fn:Join": ["", ["sed -i 's/__LOG_GROUP/", { "Ref": "FrontendLogGroup" }, "/' $CONF_DIR/logger.conf"]]},
+                        {"Fn:Join": [" ", ["python awslogs-agent-setup.py -nr", { "Ref": "AWS::Region" }, "-c $CONF_DIR/logger.conf" ]]},
+
+                        {"Fn::Join":["", ["sed 's/__STAGE/", { "Ref" : "Stage" } ,"/' $CONF_DIR/upstart.conf > /etc/init/membership-app.conf"]]},
 
                         "chown -R membership /membership/",
 
@@ -150,6 +157,17 @@
                         }
                         ]
                     }
+                },
+                {
+                    "PolicyName": "PushLogs",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Effect": "Allow",
+                            "Action": ["logs:*"],
+                            "Resource": ["arn:aws:logs:*:*:*"]
+                        }]
+                    }
                 }]
             }
         },
@@ -161,6 +179,10 @@
                     "Ref": "MembershipAppRole"
                 } ]
             }
+        },
+
+        "FrontendLogGroup": {
+            "Type": "AWS::Logs::LogGroup"
         },
 
         "FrontendElasticLoadBalancer" : {
