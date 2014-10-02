@@ -51,7 +51,7 @@
     </div>
 
     <div class="event__content__header event__content__header--shade">
-        <div class="event__content-container">
+        <div class="event__content-container event__content-container--details">
             <div class="event__details">
                 <div class="event__time">@prettyDateWithTime(event.start)</div>
                 <div class="event__location">
@@ -80,14 +80,15 @@
                             </div>
                         }
                     }
-
-                    @ticketCta
                 </div>
+
+                @ticketCta
             }
+            <div class="header-bar__guardian-live-logo">
+                <i class="icon-sprite icon-sprite-guardian-live"></i>
+            </div>
         </div>
-        <div class="header-bar__guardian-live-logo">
-            <i class="icon-sprite icon-sprite-guardian-live"></i>
-        </div>
+        
     </div>
 
     <div class="event">
@@ -96,59 +97,100 @@
             <div class="event__image">
                 <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image"></div>
             </div>
-            <div class="event__content__inner event__content__inner--sub">
-                <div class="event__content-body">
-                    <div class="event__meta">
-                        <div class="event__time">@prettyDateWithTime(event.start)</div>
-                        <div class="event__location">
-                            <span class="event__venue-name">@event.venue.name</span>,
-                            <span class="event__address">
-                                @event.eventAddressLine
-                            </span>
-                        </div>
-                    </div>
 
-                    @for(ticket <- event.ticketClassesHead) {
-
-                        <div class="event__tickets">
-
-                            <div class="ticket-info">
-                                @ticketBookingDates(ticket)
-                            </div>
-
-                            <div class="event__sale-ends ticket-info">
-                                <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
-                                <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                 @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
-                                </time>
-                            </div>
-
-                            @if(ticket.free) {
-                                <div class="event__price">
-                                    <span class="event__price-amount js-event-price">Free</span>
-                                </div>
-                            } else {
-                                @for(pricing <- ticket.cost) {
-                                    <div class="event__price">
-                                        <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
-                                        <span class="event__price-note js-event-price-note"> per ticket</span>
-                                    </div>
-                                    <div class="event__trail">
-                                        <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
-                                        <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
-                                    </div>
-                                }
-                            }
-
-                            @ticketCta
-                        </div>
-                    }
-                </div>
+            <div class="event__picture__byline">
+                <p>Picture byline here picture byline here</p>
             </div>
+
+            <div class="event__social">
+                <div class="event__social__header">Share this</div>
+                <ul class="social u-unstyled u-cf" data-component="social" data-link-name="social">
+                    <li class="social__item" data-link-name="email">
+                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                        <span class="u-h">Share via Email</span>
+                        <span class="social-icon">
+                            <i class="icon-sprite icon-sprite-share-email"></i>
+                        </span>
+                        </a>
+                    </li>
+                    <li class="social__item" data-link-name="facebook">
+                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                        <span class="u-h">Share on Facebook</span>
+                        <span class="social-icon">
+                            <i class="icon-sprite icon-sprite-share-facebook"></i>
+                        </span>
+                        </a>
+                    </li>
+                    <li class="social__item" data-link-name="twitter">
+                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                        <span class="u-h">Share on Twitter</span>
+                        <span class="social-icon">
+                            <i class="icon-sprite icon-sprite-share-twitter"></i>
+                        </span>
+                        </a>
+                    </li>
+                    <li class="social__item" data-link-name="gplus">
+                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                        <span class="u-h">Share on Google+</span>
+                        <span class="social-icon">
+                            <i class="icon-sprite icon-sprite-share-gplus"></i>
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="event__content-body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
-                @ticketCta
+            </div>
+
+            <div class="event__content-info">
+                <div class="event__meta">
+                    <div class="event__time">@prettyDateWithTime(event.start)</div>
+                    <div class="event__location">
+                        <span class="event__venue-name">@event.venue.name</span>,
+                        <span class="event__address">
+                            @event.eventAddressLine
+                        </span>
+                    </div>
+                </div>
+
+                @for(ticket <- event.ticketClassesHead) {
+
+                    <div class="event__tickets">
+
+                        <div class="ticket-info">
+                            @ticketBookingDates(ticket)
+                        </div>
+
+                        <div class="event__sale-ends ticket-info">
+                            <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
+                            <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
+                            </time>
+                        </div>
+
+                        @if(ticket.free) {
+                            <div class="event__price">
+                                <span class="event__price-amount js-event-price">Free</span>
+                            </div>
+                        } else {
+                            @for(pricing <- ticket.cost) {
+                                <div class="event__price">
+                                    <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <span class="event__price-note js-event-price-note"> per ticket</span>
+                                </div>
+                                <div class="event__trail">
+                                    <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                    <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                    <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                </div>
+                            }
+                        }
+
+                        @ticketCta
+                    </div>
+                }
             </div>
         </div>
     </div>

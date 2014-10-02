@@ -21,13 +21,20 @@
         }
 
         .event__content-body {
-            max-width: rem(620px);
             padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
+            float: left;
 
             @include mq(tablet) {
-                padding: rem($gs-gutter);
+                padding: 0 rem($gs-gutter);
             }
-            margin: 0 auto;
+
+            @include mq(desktop) {
+                width: rem(gs-span(6) + $gs-gutter);
+            }
+
+            @include mq(mem-full) {
+                width: rem(gs-span(8) + $gs-gutter);
+            }
         }
 
         .event__meta > div {
@@ -65,7 +72,7 @@
         margin: rem(8px) 0 rem(16px);
     }
     p, li {
-        @include fs-bodyCopy(3);
+        @include fs-bodyCopy(2);
     }
     ol,
     ul {
@@ -98,7 +105,7 @@
         @include mq(tablet) {
             float: left;
             width: rem(gs-span(2) + $gs-gutter * 2);
-            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter);
+            padding: 0 rem($gs-gutter) 0 0;
         }
 
         @include mq(mem-full) {
@@ -109,21 +116,164 @@
 
 .event__content__header--shade {
     background-color: $mem-live-red-trans;
+    padding: 0;
+    color: $white;
 
     .event__details {
+        
+        @include mq(tablet) {
+            padding: rem($gs-baseline / 2) rem($gs-gutter) 0 rem(gs-span(2) + $gs-gutter * 2);
+        }
+
+        @include mq(mem-full) {
+            
+        }
+
+        .event__time {
+            @include fs-headline(4);
+        }
+
+        .event__location {
+            @include fs-headline(2);
+        }
+    }
+
+    .event__tickets {
         color: $white;
+
+        @include mq(tablet) {
+            float: left;
+            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 2);
+        }
+
+        @include mq(mem-full) {
+            
+        }
+
+        .event__price-amount {
+            @include fs-header(5);
+        }
+
+        .event__trail {
+            @include fs-textSans(1);
+        }
+        
+    }
+
+    .action {
+        background-color: $black;
+        margin-right: rem($gs-gutter);
+
+        @include mq(tablet) {
+            float: left;
+        }
+
+        &:hover {
+            background-color: $c-neutral3;
+        }
+    }
+
+    .terms-info {
+        color: $white;
+        width: rem(gs-span(3) + $gs-gutter * 2);
+
+        @include mq(tablet) {
+            float: left;
+            padding-top: rem($gs-gutter);
+        }
+
+        a {
+            color: $white;
+            text-decoration: underline;
+        }
     }
 
     .header-bar__guardian-live-logo {
-        margin-left: 87%;
+        position: absolute;
+        bottom: rem($gs-gutter / 2);
+        right: rem($gs-gutter);
     }
 }
 
 .event__content-container {
     @extend %page-container;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
     background-color: transparent;
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter + $gs-baseline);
+    }
 }
 
+.event__content-container--details {
+    padding: 0 rem($gs-gutter /2);
+
+    @include mq(tablet) {
+        padding: 0 rem($gs-gutter);
+    }
+}
+
+.event__picture__byline {
+    clear: both;
+    @include fs-textSans(1);
+    color: $c-neutral2;
+
+    @include mq(tablet) {
+        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 3);
+    }
+}
+
+.event__social {
+    float: left;
+    width: rem(gs-span(2) + $gs-gutter * 2);
+    padding-left: rem(20px);
+
+    .event__social__header {
+        border-top: rem(1px) solid $c-neutral6;
+        @include fs-textSans(1);
+        padding-bottom: rem($gs-baseline / 2);
+        padding-top: rem(3px);
+    }
+
+    .social {
+        height: rem(32px);
+        margin-left: rem(-$gs-gutter / 5);
+    }
+
+    .social__item {
+        float: left;
+        width: rem(36px);
+        padding: 0 rem($gs-gutter / 5);
+
+        @include mq(tablet) {
+            width: rem(40px);
+            padding-right: 0;
+        }
+    }
+    .social__action {
+        display: block;
+    }
+
+    $social-icon: (
+        width: rem(32px),
+        height: rem(32px),
+        color: $c-neutral2,
+        space-in-between: rem(2px)
+    );
+
+    .social-icon {
+        @extend %icon-holder-circle;
+        border-color: map-get($social-icon, color);
+    }
+}
+
+.event__content-info {
+    background-color: $c-neutral6;
+    margin-bottom: rem($gs-gutter);
+    width: rem(gs-span(4));
+    padding: rem($gs-gutter);
+    float: left;
+}
 
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
@@ -140,12 +290,14 @@
 .event__content__inner--sub {
     background-color: #e1e1e1;
     margin-bottom: rem(20px);
+    width: rem(gs-span(4));
 }
 
 .event__masthead {
     position: relative;
 
     .event__name {
+        @include fs-headline(7);
         color: $white;
     }
 }
