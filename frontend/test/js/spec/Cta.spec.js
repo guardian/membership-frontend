@@ -11,14 +11,10 @@ define([
 
         var BUY_TICKETS = 'Buy Tickets';
         var COMING_SOON = 'Coming Soon';
-        var TEST_EVENT_URL = '/test/event/url';
-        var canonicalTicketAvailabilityFixtureElement;
-        var ticketAvailabilityFixtureElement;
+        var BECOME_A_MEMBER = 'Become a member';
+        var UPGRADE_MEMBERSHIP = 'Upgrade membership';
+        var UPGRADE_COMING_COON = 'Upgrade coming soon';
         var cta;
-        var $saleStartPatronElem;
-        var $saleStartPartnerElem;
-        var $saleStartFriendElem;
-        var $buyTicketsCTA;
 
         // PhantomJS doesn't support bind yet
         Function.prototype.bind = Function.prototype.bind || function (context) {
@@ -29,22 +25,7 @@ define([
         };
 
         /**
-         * scala controls the button state dependant on its status Completed, SoldOut, Cancelled, PreLive, Live
-         * this helper changes a buy CTA to the live state if the sales_start date has passed
-         * @param startDateTimestamp
-         */
-        function mimicScalaButtonStates(saleStartTimestamp) {
-            var nowTimestamp = (new Date()).getTime();
-
-            if (nowTimestamp > saleStartTimestamp) {
-                $('.js-ticket-cta', ticketAvailabilityFixtureElement).replaceWith("<a class='action js-ticket-cta' href=" + TEST_EVENT_URL + ">Buy Tickets</a>");
-            }
-
-            $buyTicketsCTA = $('.js-ticket-cta', ticketAvailabilityFixtureElement);
-        }
-
-        /**
-         * set the dates in the fixture. This is mimicking scala behaviour and gives us control over setting the dates
+         * set the dates up for use in the class. This is mimicking scala behaviour and gives us control over setting the dates
          * per test
          * @param date
          * @returns {{salesStart: *, patronStart: *, partnerStart: Date, friendStart: Date}}
@@ -55,13 +36,6 @@ define([
 
             datePlusOneWeek.setDate(datePlusOneWeek.getDate() + 7);
             datePlusTwoWeeks.setDate(datePlusTwoWeeks.getDate() + 14);
-
-            $saleStartPatronElem.attr('datetime', date.toISOString());
-            $saleStartPatronElem.text(formatDate(date));
-            $saleStartPartnerElem.attr('datetime', datePlusOneWeek.toISOString());
-            $saleStartPartnerElem.text(formatDate(datePlusOneWeek));
-            $saleStartFriendElem.attr('datetime', datePlusTwoWeeks.toISOString());
-            $saleStartFriendElem.text(formatDate(datePlusTwoWeeks));
 
             return {
                 salesStart: date,
@@ -97,30 +71,6 @@ define([
         }
 
         /**
-         * format date to membership pretty date format
-         * @param date
-         * @returns {string}
-         */
-        function formatDate(date) {
-            var months = [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December'
-            ];
-
-            return date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
-        }
-
-        /**
          * setup the fixture
          * init the cta class
          * run standard validations
@@ -128,18 +78,28 @@ define([
          * @param tier
          * @param isLoggedIn
          */
-        function fixtureSetup(salesStart, tier, isLoggedIn) {
+        function ctaClassSetup(salesStart, tier, isLoggedIn) {
             var bookingDates = setUpBookingDates(salesStart);
 
-            mimicScalaButtonStates(bookingDates.salesStart);
             setUserLoggedInStatus(isLoggedIn);
             setUserTier(tier);
 
+            spyOn(cta, 'parseDates').and.callFake(function () {
+                cta.ticketDates = {
+                    saleStart: bookingDates.salesStart,
+                    saleStartFriend: bookingDates.friendStart,
+                    saleStartPartner: bookingDates.partnerStart,
+                    saleStartPatron: bookingDates.patronStart
+                };
+            });
+
+            spyOn(cta, 'disableBuyTicketsCtaButton').and.callThrough();
+            spyOn(cta, 'upgradeComingSoonMemberCtaButton').and.callThrough();
+            spyOn(cta, 'upgradeMemberCtaButton').and.callThrough();
+            spyOn(cta, 'removeMemberCtaButton').and.callThrough();
+
             cta.init();
 
-            expect($saleStartPatronElem.text()).toEqual(formatDate(bookingDates.patronStart));
-            expect($saleStartPartnerElem.text()).toEqual(formatDate(bookingDates.partnerStart));
-            expect($saleStartFriendElem.text()).toEqual(formatDate(bookingDates.friendStart));
             expect(user.isLoggedIn).toHaveBeenCalled();
             expect(user.getMemberDetail).toHaveBeenCalled();
             expect(cta.memberTier).toEqual(tier);
@@ -147,50 +107,12 @@ define([
         }
 
         function memBeforeEach(done) {
+            cta = new Cta($.create('<div class="event__tickets"><div class="js-ticket-cta"></div><div class="js-member-cta"></div></div>'));
+            cta.elems = []; //reset component.js internal element cache
 
-            //pull this in once and cache it
-            if (!canonicalTicketAvailabilityFixtureElement) {
-                ajax({
-                    url: '/base/test/fixtures/ticketAvailabilityDetail.fixture.html',
-                    method: 'get',
-                    success: function (resp) {
-                        canonicalTicketAvailabilityFixtureElement = $.create(resp)[0];
-                        callback(canonicalTicketAvailabilityFixtureElement);
-                    }
-                });
-            } else {
-                callback(canonicalTicketAvailabilityFixtureElement);
-            }
+            spyOn(user, 'getMemberDetail');
 
-            function callback(canonicalTicketAvailabilityFixtureElement) {
-
-                ticketAvailabilityFixtureElement = canonicalTicketAvailabilityFixtureElement.cloneNode(true);
-
-                cta = new Cta(ticketAvailabilityFixtureElement);
-                cta.elems = []; //reset component.js internal element cache
-
-                $saleStartPatronElem = $('.js-ticket-sale-start-patron', ticketAvailabilityFixtureElement);
-                $saleStartPartnerElem = $('.js-ticket-sale-start-partner', ticketAvailabilityFixtureElement);
-                $saleStartFriendElem = $('.js-ticket-sale-start-friend', ticketAvailabilityFixtureElement);
-
-                spyOn(cta, 'parseDates').and.callFake(function () {
-                    cta.ticketDates = {
-                        saleStart: new Date($(cta.getElem('SALE_START')).attr('datetime')),
-                        saleStartFriend: new Date($(cta.getElem('SALE_START_FRIEND')).attr('datetime')),
-                        saleStartPartner: new Date($(cta.getElem('SALE_START_PARTNER')).attr('datetime')),
-                        saleStartPatron: new Date($(cta.getElem('SALE_START_PATRON')).attr('datetime'))
-                    };
-                });
-
-                spyOn(user, 'getMemberDetail');
-
-                done();
-            }
-        }
-
-        function memAfterEach() {
-            delete ticketAvailabilityFixtureElement;
-            delete cta;
+            done();
         }
 
         describe('Fixture and CTA class', function () {
@@ -199,11 +121,10 @@ define([
                 memBeforeEach(done);
             });
 
-            afterEach(memAfterEach);
 
             it(' is correctly initialised', function (done) {
                 var tier = 'Friend';
-                fixtureSetup(new Date(), tier, true)
+                ctaClassSetup(new Date(), tier, true)
                 done();
             });
 
@@ -215,66 +136,52 @@ define([
                 memBeforeEach(done);
             });
 
-            afterEach(memAfterEach);
 
             var salesStartOneWeekInTheFuture = new Date();
             salesStartOneWeekInTheFuture.setDate(salesStartOneWeekInTheFuture.getDate() + 7);
 
-            it('loggedIn Friend - "' + COMING_SOON + '" disabled' , function (done) {
-
-                var tier = 'Friend';
-                fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
-
+            it('loggedIn Friend - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed' , function (done) {
+                ctaClassSetup(salesStartOneWeekInTheFuture, 'Friend', true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Partner - "' + COMING_SOON + '" disabled', function (done) {
-
-                var tier = 'Partner';
-                fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
-
+            it('loggedIn Partner - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed', function (done) {
+                ctaClassSetup(salesStartOneWeekInTheFuture, 'Partner', true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Patron - "' + COMING_SOON + '" disabled', function (done) {
-
-                var tier = 'Patron';
-                fixtureSetup(salesStartOneWeekInTheFuture, tier, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
-
+            it('loggedIn Patron - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed', function (done) {
+                ctaClassSetup(salesStartOneWeekInTheFuture, 'Patron', true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn NOT a member - "' + COMING_SOON + '" disabled', function (done) {
-
-                fixtureSetup(salesStartOneWeekInTheFuture, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
-
+            it('loggedIn NOT a member - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
+                ctaClassSetup(salesStartOneWeekInTheFuture, null, true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedOut - "' + COMING_SOON + '" disabled', function (done) {
-
-                fixtureSetup(salesStartOneWeekInTheFuture, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(COMING_SOON);
-
+            it('loggedOut - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
+                ctaClassSetup(salesStartOneWeekInTheFuture, null, true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
         });
@@ -285,67 +192,59 @@ define([
                 memBeforeEach(done);
             });
 
-            afterEach(memAfterEach);
-
             var saleStartedYesterday = new Date();
             saleStartedYesterday.setDate(saleStartedYesterday.getDate() - 1);
 
-            it('loggedIn Friend - "' + BUY_TICKETS + '" disabled', function (done) {
+            it('loggedIn Friend - "' + BUY_TICKETS + '" button disabled and "' + UPGRADE_MEMBERSHIP + '" button displayed', function (done) {
+                ctaClassSetup(saleStartedYesterday, 'Friend', true);
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
+                done();
+            });
 
-                var tier = 'Friend';
-                fixtureSetup(saleStartedYesterday, tier, true);
+            it('loggedIn Partner - "' + BUY_TICKETS + '" button disabled and "' + UPGRADE_COMING_COON + '" button displayed', function (done) {
+                ctaClassSetup(saleStartedYesterday, 'Partner', true);
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
+                done();
+            });
 
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+
+                ctaClassSetup(saleStartedYesterday, 'Patron', true);
+
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
 
                 done();
             });
 
-            it('loggedIn Partner - "' + BUY_TICKETS + '" disabled', function (done) {
+            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
 
-                var tier = 'Partner';
+                ctaClassSetup(saleStartedYesterday, null, true)
 
-                fixtureSetup(saleStartedYesterday, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
-                done();
-            });
-
-            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Patron';
-
-                fixtureSetup(saleStartedYesterday, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
 
                 done();
             });
 
-            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled', function (done) {
+            it('loggedOut - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
 
-                fixtureSetup(saleStartedYesterday, null, true)
+                ctaClassSetup(saleStartedYesterday, null, true)
 
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
-                done();
-            });
-
-            it('loggedOut - "' + BUY_TICKETS + '" disabled', function (done) {
-
-                fixtureSetup(saleStartedYesterday, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
 
                 done();
             });
@@ -357,136 +256,106 @@ define([
                 memBeforeEach(done);
             });
 
-            afterEach(memAfterEach);
-
             var saleStarted8DaysAgo = new Date();
             saleStarted8DaysAgo.setDate(saleStarted8DaysAgo.getDate() - 8);
 
-            it('loggedIn Friend - "' + BUY_TICKETS + '" disabled', function (done) {
-
-                var tier = 'Friend';
-                fixtureSetup(saleStarted8DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Friend - "' + BUY_TICKETS + '" disabled  and "' + UPGRADE_MEMBERSHIP + '" button displayed', function (done) {
+                ctaClassSetup(saleStarted8DaysAgo, 'Friend', true);
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Partner';
-                fixtureSetup(saleStarted8DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted8DaysAgo, 'Partner', true);
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Patron';
-                fixtureSetup(saleStarted8DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted8DaysAgo, 'Patron', true);
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled', function (done) {
-
-                fixtureSetup(saleStarted8DaysAgo, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn not a member - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
+                ctaClassSetup(saleStarted8DaysAgo, null, true)
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedOut - "' + BUY_TICKETS + '" disabled', function (done) {
-
-                fixtureSetup(saleStarted8DaysAgo, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeTruthy();
-                expect($buyTicketsCTA.attr('href')).toBeNull();
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedOut - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
+                ctaClassSetup(saleStarted8DaysAgo, null, true)
+                expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
         });
 
-        describe('Tickets on sale GENERAL release', function () {
+        describe('Tickets on sale FRIEND release', function () {
 
             beforeEach(function (done) {
                 memBeforeEach(done);
             });
 
-            afterEach(memAfterEach);
-
             var saleStarted15DaysAgo = new Date();
             saleStarted15DaysAgo.setDate(saleStarted15DaysAgo.getDate() - 15);
 
-            it('loggedIn Friend - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Friend';
-                fixtureSetup(saleStarted15DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Friend - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted15DaysAgo, 'Friend', true);
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Partner';
-                fixtureSetup(saleStarted15DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted15DaysAgo, 'Partner', true);
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                var tier = 'Patron';
-                fixtureSetup(saleStarted15DaysAgo, tier, true);
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted15DaysAgo, 'Patron', true);
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedIn not a member - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                fixtureSetup(saleStarted15DaysAgo, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedIn not a member - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted15DaysAgo, null, true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
 
-            it('loggedOut - "' + BUY_TICKETS + '" enabled and links to event url', function (done) {
-
-                fixtureSetup(saleStarted15DaysAgo, null, true)
-
-                expect($buyTicketsCTA.hasClass('action--disabled')).toBeFalsy();
-                expect($buyTicketsCTA.attr('href')).toEqual(TEST_EVENT_URL);
-                expect($buyTicketsCTA.text()).toEqual(BUY_TICKETS);
-
+            it('loggedOut - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
+                ctaClassSetup(saleStarted15DaysAgo, null, true)
+                expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
         });
