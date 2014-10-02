@@ -1,5 +1,3 @@
-$table-baseline: 8px;
-$table-gutter: 8px;
 $table-breakpoint-importance-1: tablet;
 $table-breakpoint-importance-2: mobile;
 $table-breakpoint-importance-3: 220px;
@@ -58,14 +56,14 @@ td {
 
 .table {
     background: $c-neutral8;
-    border-top: rem(2px) solid $c-newsAccent;
     color: $c-neutral1;
 
     th,
     td,
     .table__caption {
         @include fs-data(3);
-        padding: rem($table-baseline) rem($table-gutter);
+        line-height: rem(18px);
+        padding: rem(16px) rem(10px) rem(15px);
         vertical-align: top;
     }
 
@@ -73,6 +71,12 @@ td {
     thead td {
         color: $c-neutral1;
         font-weight: 800;
+    }
+
+    tbody th {
+        @include mq($from: tablet) {
+            width: gs-span(3);
+        }
     }
 
     td {
@@ -100,18 +104,21 @@ td {
         th,
         td,
         thead td {
-            @include fs-data(5, true);
-            padding: rem($table-baseline * 1.5) rem($table-gutter * 1.5);
+            font-size: rem(14px);
+            line-height: rem(22px);
+            padding: rem(14px) rem(12px) rem(13px);
         }
     }
 }
 
 .table--striped {
+    th,
     td {
         border-top: 0;
     }
 
-    tr:nth-child(odd) > td {
+    tr:nth-child(even) > th,
+    tr:nth-child(even) > td {
         background-color: darken($c-neutral8, 4%);
     }
 }
@@ -142,7 +149,7 @@ td {
 // then move the caption over the top border
 // This is because the caption is outside the flow of the table
 .table__caption {
-    padding: rem($table-baseline * 2);
+    padding: rem(16px);
     background: $c-neutral8;
     border-bottom: rem(1px) solid darken($c-neutral8, 4%);
     border-top: rem(2px) solid $c-newsAccent;
