@@ -85,31 +85,23 @@ trait Joiner extends Controller {
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
-    val identityRequest = IdentityRequest(request)
     for {
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
-      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      userEmail = request.user.primaryEmailAddress
-      event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
     } yield {
-      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, privateFields, userEmail, event))
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 
   def thankyouPaid(tier: Tier.Tier) = PaidMemberAction.async { implicit request =>
-    val identityRequest = IdentityRequest(request)
     for {
       customer <- StripeService.Customer.read(request.member.stripeCustomerId)
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
-      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      userEmail = request.user.primaryEmailAddress
-      event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, privateFields, userEmail, event))
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 }

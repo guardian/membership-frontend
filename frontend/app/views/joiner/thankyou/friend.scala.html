@@ -1,11 +1,11 @@
-@(subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], userFields: model.PrivateFields, userEmail: String, event: Option[model.Eventbrite.EBEvent])
+@(subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
 @import views.support.Dates._
 
 @main("Thankyou | Friend", containerPadding = false) {
 
     <section class="content__container content__container--slim">
-        @fragments.layout.welcomeUser(userFields, userEmail)
+        @fragments.layout.welcomeUser(firstName, userEmail)
     </section>
 
     <section class="content__container content__container--slim">

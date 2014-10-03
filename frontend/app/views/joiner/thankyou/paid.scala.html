@@ -1,4 +1,4 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields, userEmail: String, event: Option[model.Eventbrite.EBEvent])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier, firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -6,7 +6,7 @@
 @main("Thankyou | " + subscriptionDetails.planName, containerPadding = false) {
 
     <section class="content__container content__container--slim">
-        @fragments.layout.welcomeUser(userFields, userEmail)
+        @fragments.layout.welcomeUser(firstName, userEmail)
     </section>
 
     <section class="content__container content__container--slim">
