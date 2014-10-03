@@ -10,7 +10,7 @@
 @ticketCta = {
     @event.getStatus match {
         case Live => {
-            <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy Tickets</a>
+            <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy tickets</a>
         }
         case nonLive => {
             <button class='action action--disabled js-ticket-cta' disabled='disabled'>
@@ -43,9 +43,11 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-        <h4 class="ticket-info__header">Ticket sales</h4>
+        
         @for((tier, salesDate) <- ticketSaleDates) {
-            <p class="ticket-info__item"><strong>@(tier + "s")</strong> @dateOrNow(tier, salesDate)</p>
+            <ul class="ticket-info__list u-unstyled u-cf">
+                <li class="ticket-info__item"><span class="ticket-info__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
+            </ul>
         }
     }
 }
@@ -81,7 +83,7 @@
                         @for(pricing <- ticket.cost) {
                             <div class="event__price">
                                 <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
-                                <span class="event__price-note js-event-price-note"> per ticket</span>
+                                <!-- <span class="event__price-note js-event-price-note"> per ticket</span> -->
                             </div>
                             <div class="event__trail">
                                 <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
@@ -154,26 +156,26 @@
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
             </div>
 
-            <div class="event__content-info">
-                <div class="event__meta">
-                    <div class="event__time">@prettyDateWithTime(event.start)</div>
-                    <div class="event__location">
-                        <span class="event__venue-name">@event.venue.name</span>,
-                        <span class="event__address">
-                            @event.eventAddressLine
-                        </span>
-                    </div>
-                </div>
+            <div class="event-info">
 
+                <div class="event-info__name">@event.name.text</div>
+                <div class="event-info__time"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
+                <div class="event-info__location">
+                    <span class="event-info__venue-name"><i class="icon-sprite icon-sprite-location icon-sprite--small"></i>@event.venue.name</span>,
+                    <span class="event-info__address">@event.eventAddressLine
+                    </span>
+                </div>
+                
                 @for(ticket <- event.ticketClassesHead) {
 
-                    <div class="event__tickets">
+                    <div class="event-info__tickets">
 
                         <div class="ticket-info">
+                            <div class="ticket-info__header"><i class="icon-sprite icon-sprite-book_tickets icon-sprite--small"></i>Ticket sales</div>
                             @ticketBookingDates(ticket)
                         </div>
 
-                        <div class="event__sale-ends ticket-info">
+                        <div class="event-info__sale-ends">
                             <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
                             <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
                              @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
@@ -181,16 +183,16 @@
                         </div>
 
                         @if(ticket.free) {
-                            <div class="event__price">
-                                <span class="event__price-amount js-event-price">Free</span>
+                            <div class="event-info__price">
+                                <span class="event-info__price-amount js-event-price">Free</span>
                             </div>
                         } else {
                             @for(pricing <- ticket.cost) {
-                                <div class="event__price">
-                                    <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
-                                    <span class="event__price-note js-event-price-note"> per ticket</span>
+                                <div class="event-info__price">
+                                    <span class="event-info__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <!-- <span class="event__price-note js-event-price-note"> per ticket</span> -->
                                 </div>
-                                <div class="event__trail">
+                                <div class="event-info__trail">
                                     <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
                                     <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
                                     <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>

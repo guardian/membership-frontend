@@ -69,4 +69,11 @@
     width: rem($gs-gutter + 5);
     height: rem($gs-gutter + 5);
     margin: 0 rem($gs-gutter) rem(-7px) 0;
+
+    .event & {
+        background-size: rem($gs-gutter) auto!important;
+        width: rem($gs-gutter);
+        height: rem($gs-gutter);
+        background-position: 0px -1px;
+    }
 }

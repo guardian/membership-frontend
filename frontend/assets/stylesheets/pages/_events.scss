@@ -226,7 +226,7 @@
 .event__social {
     float: left;
     width: rem(gs-span(2) + $gs-gutter * 2);
-    padding-left: rem(20px);
+    padding-left: rem($gs-gutter);
 
     .event__social__header {
         border-top: rem(1px) solid $c-neutral6;
@@ -267,17 +267,94 @@
     }
 }
 
-.event__content-info {
-    background-color: $c-neutral6;
+.event-info {
+    background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
     width: rem(gs-span(4));
     padding: rem($gs-gutter);
     float: left;
+    @include fs-data(4);
+
+    .event-info__name {
+        @include fs-header(2);
+        padding-bottom: rem($gs-gutter + 8px);
+    }
+
+    .event-info__time,
+    .event-info__location,
+    .event-info__tickets,
+    .event-info__price {
+        border-top: rem(1px) solid $c-neutral3;
+        padding: rem(5px) 0;
+        @include fs-data(4);
+    }
+
+    .event-info__location {
+        .event-info__address {
+            clear: both;
+            display: block;
+            margin-left: rem(40px);
+        }
+    }
+
+    .event-info__price {
+        padding-bottom: 0;
+        .event-info__price-amount {
+            @include fs-header(5);
+        }
+    }
+
+    .event-info__sale-ends {
+        padding: 0 0 rem(5px) rem($gs-gutter * 2);
+
+        strong {
+            font-weight: 400;
+        }
+    }
+
+    .action {
+        background-color: $mem-live-accent;
+        margin-right: rem($gs-gutter);
+        margin-right: 0px;
+        min-width: 100%;
+
+        &:hover {
+            background-color: darken($mem-live-accent, 5%);
+        }
+    } 
+    
 }
+
+
+.ticket-info {
+
+    .ticket-info__header {
+        @include fs-textSans(4);
+        font-weight: bold;
+    }
+
+    .ticket-info__item {
+        @include fs-data(4);
+        padding-left: rem($gs-gutter * 2);
+        text-align: right;
+
+        .ticket-info__item--left {
+            float: left;
+        }
+
+    }
+
+}
+
+
 
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
+
+.icon-sprite--small {
+    background-size: 20px auto!important;
+}
 
 .old-price {
     display: block;
@@ -331,28 +408,12 @@
 }
 
 .event__image {
-    background-color: $mem-brandBlue;
     img {
         width: 100%;
     }
 }
 
-.ticket-info {
-    @include fs-textSans(1);
-    color: #878787;
-}
-
-.ticket-info__header {
-    @include fs-textSans(4);
-    color: #878787;
-}
-
-.ticket-info__item {
-    margin: rem(4px) 0;
-}
-
-.terms-info,
-.ticket-info {
+.terms-info {
     @include fs-textSans(1);
     color: #878787;
     padding-top: rem($gs-baseline/2);
