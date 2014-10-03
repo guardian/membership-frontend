@@ -3,36 +3,36 @@
 @import views.support.Dates._
 @import views.support.Prices._
 
-<table class="table table--responsive-font table--striped">
-    <tr class="table__headline" role="row">
-        <td class="summary-table__cell" role="scope">
+<table class="table table--responsive-font table--striped" role="grid">
+    <tr role="row">
+        <th role="rowheader">
             Tier
-        </td>
-        <td class="summary-table__cell" role="scope">
+        </th>
+        <td>
             @currentSubscription.planName
         </td>
     </tr>
-    <tr class="summary-table__row" role="row">
-        <td class="summary-table__cell">
+    <tr role="row">
+        <th role="rowheader">
             End Date
-        </td>
-        <td class="summary-table__cell">
+        </th>
+        <td>
             @currentSubscription.endDate.pretty
         </td>
     </tr>
-    <tr class="summary-table__row" role="row">
-        <td class="summary-table__cell">
+    <tr role="row">
+        <th role="rowheader">
             @if(currentSubscription.annual){ Annual } else { Monthly } Payment
-        </td>
-        <td class="summary-table__cell">
+        </th>
+        <td>
             @currentSubscription.planAmount.pretty
         </td>
     </tr>
-    <tr class="summary-table__row" role="row">
-        <td class="summary-table__cell">
+    <tr role="row">
+        <th role="rowheader">
             Last Payment
-        </td>
-        <td class="summary-table__cell">
+        </th>
+        <td>
             @currentSubscription.startDate.pretty
         </td>
     </tr>
