@@ -40,6 +40,10 @@
             "Type" : "String",
             "AllowedValues" : [ "t2.micro","m3.medium" ],
             "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+        "ImageId": {
+            "Description": "AMI ID",
+            "Type": "String"
         }
     },
     "Resources" : {
@@ -67,7 +71,7 @@
         "FrontendLaunchConfig" : {
             "Type" : "AWS::AutoScaling::LaunchConfiguration",
             "Properties" : {
-                "ImageId" : "ami-96f556e1",
+                "ImageId" : { "Ref": "ImageId" },
                 "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
