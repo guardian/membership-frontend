@@ -87,13 +87,14 @@ trait Joiner extends Controller {
   def thankyouFriend() = MemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
+      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
       userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
       privateFields = userOpt.fold(PrivateFields())(_.privateFields)
       userEmail = request.user.primaryEmailAddress
       event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
     } yield {
-      Ok(views.html.joiner.thankyou.friend(eventbriteFrameDetail, privateFields, userEmail, event))
+      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, privateFields, userEmail, event))
     }
   }
 
