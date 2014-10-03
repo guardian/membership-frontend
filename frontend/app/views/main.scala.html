@@ -2,7 +2,6 @@
     title: String,
     isBrochure: Boolean = false,
     containerPadding: Boolean = true,
-    containerSlim: Boolean = false,
     htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
@@ -96,7 +95,7 @@
             @fragments.header()
             <div class="page-side-margins">
             @if(isBrochure != true) {
-                <div class="page-container @if(containerPadding){page-container--with-padding} @if(containerSlim){page-container--slim}">
+                <div class="page-container @if(containerPadding){page-container--with-padding}">
             }
 
                 @content

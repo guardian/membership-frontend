@@ -462,7 +462,7 @@ div.event {
 
 .event-summary {
     @include clearfix;
-    margin-bottom: rem($gs-baseline * 2);
+    margin: rem($gs-baseline * 2) 0;
 
     .event-item__media {
         @include mq(tablet) {

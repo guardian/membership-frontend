@@ -75,7 +75,7 @@ td {
 
     tbody th {
         @include mq($from: tablet) {
-            width: gs-span(3);
+            width: rem(gs-span(3));
         }
     }
 

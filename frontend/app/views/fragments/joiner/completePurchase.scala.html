@@ -1,18 +1,20 @@
 @(ebIFrameDetail: Option[(String, Int)], event: Option[model.Eventbrite.EBEvent])
 
 @if(event) {
-    <section class="content__container content__container--border-blue">
-        <h2 class="section-sub-headline">Complete your ticket purchase</h2>
-        <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again. We'll have a much smoother solution soon.</p>
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Complete your ticket purchase</h2>
+        <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again.</p>
+
+        @for(event <- event) {
+            @fragments.event.itemSummary(event)
+        }
+
+        @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
+            @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
+        }
     </section>
-
-    @for(event <- event) {
-        @fragments.event.itemSummary(event)
-    }
-
-    @for((eventIFrameUrl, eventIFrameTicketQty) <- ebIFrameDetail) {
-        @fragments.form.eventBriteIFrame(eventIFrameUrl, eventIFrameTicketQty)
-    }
 } else {
-    <a class="action action--join" href="/events">Get Started</a>
+    <section class="content__container content__container--slim">
+        <a class="action action--join" href="/events">Get Started</a>
+    </section>
 }

@@ -2,9 +2,8 @@ define([
     '$',
     'config/appCredentials',
     'src/utils/cookie',
-    'src/utils/component',
-    'src/utils/user'
-], function ($, appCredentials, cookie, component, user) {
+    'src/utils/component'
+], function ($, appCredentials, cookie, component) {
     'use strict';
 
     var self;

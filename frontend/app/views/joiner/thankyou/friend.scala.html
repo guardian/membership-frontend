@@ -1,8 +1,8 @@
 @(ebIFrameDetail: Option[(String, Int)], userFields: model.PrivateFields, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
-@main("Thankyou | Friend", containerSlim = true) {
+@main("Thankyou | Friend", containerPadding = false) {
 
-    <section class="content__container">
+    <section class="content__container content__container--slim">
         @fragments.layout.welcomeUser(userFields, userEmail)
     </section>
 

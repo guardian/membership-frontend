@@ -3,14 +3,14 @@
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Thankyou | " + subscriptionDetails.planName, containerSlim = true) {
+@main("Thankyou | " + subscriptionDetails.planName, containerPadding = false) {
 
-    <section class="content__container">
+    <section class="content__container content__container--slim">
         @fragments.layout.welcomeUser(userFields, userEmail)
     </section>
 
-    <section class="content__container content__container--border-blue">
-        <h2 class="section-sub-headline">Your membership summary</h2>
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Your membership summary</h2>
         <table class="table table--responsive-font table--striped" role="grid">
             <tr role="row">
                 <th role="rowheader">

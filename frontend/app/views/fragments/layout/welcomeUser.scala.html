@@ -1,5 +1,5 @@
 @(userFields: model.PrivateFields, userEmail: String)
 
-@fragments.layout.sectionHeader("Hello " + userFields.firstName.getOrElse("") + ",<br/> welcome to Guardian Membership!")
-<p>You're the newest member of the Guardian membership community and we're thrilled to have you on board.</p>
+<h1 class="section-headline section-headline--no-border">Hello @userFields.firstName.<br/> Welcome to Guardian Membership!</h1>
+<p>You're the newest member of the Guardian Membership community and we're thrilled to have you on board.</p>
 <p>We've sent confirmation of your membership to <span class="js-user-email">@userEmail</span></p>

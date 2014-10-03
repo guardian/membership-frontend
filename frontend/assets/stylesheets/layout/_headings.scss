@@ -15,9 +15,9 @@
     margin-bottom: rem($gs-baseline * 4);
 }
 
-.section-headline--border-bottom {
-    border-bottom: rem(1px) solid $black;
-    padding-bottom: rem($gs-baseline * 4);
+.section-headline--no-border {
+    padding-top: rem($gs-baseline);
+    border-top: 0;
 }
 
 .section-sub-headline {
