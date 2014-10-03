@@ -67,6 +67,8 @@
 }
 
 .event__description {
+    margin-bottom: rem($gs-gutter * 2);
+
     h2 {
         @include fs-headline(2);
         margin: rem(8px) 0 rem(16px);
@@ -95,7 +97,7 @@
 
 .event__content__header {
     width: 100%;
-    background-color: $mem-live-red;
+    background-color: $mem-live-red-trans;
 
     .event__title {
         @include fs-headline(4);
@@ -115,7 +117,7 @@
 }
 
 .event__content__header--shade {
-    background-color: $mem-live-red-trans;
+    background-color: $mem-live-accent-trans;
     padding: 0;
     color: $white;
 
