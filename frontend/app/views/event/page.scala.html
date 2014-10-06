@@ -23,9 +23,9 @@
             </button>
         }
     }
-    <p class="terms-info">By proceeding, you agree to the Guardian Live events
+    <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
-    </p>
+    </div>
 }
 
 @becomeMemberCta(ticket: EBTickets) = @{
@@ -56,7 +56,7 @@
     <div class="event__content__header">
         <div class="event__content-container">
             <div class="event__masthead">
-                <h1 class="event__title section-header page-header">events</h1>
+                <div class="event__title section-header page-header">events</div>
                 <h1 class="event__name section-header page-header">@event.name.text</h1>
             </div>
         </div>
@@ -114,46 +114,45 @@
                 <p>Picture byline here picture byline here</p>
             </div>
 
-            <div class="event__social">
-                <div class="event__social__header">Share this</div>
-                <ul class="social u-unstyled u-cf" data-component="social" data-link-name="social">
-                    <li class="social__item" data-link-name="email">
-                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
-                        <span class="u-h">Share via Email</span>
-                        <span class="social-icon">
-                            <i class="icon-sprite icon-sprite-share-email"></i>
-                        </span>
-                        </a>
-                    </li>
-                    <li class="social__item" data-link-name="facebook">
-                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
-                        <span class="u-h">Share on Facebook</span>
-                        <span class="social-icon">
-                            <i class="icon-sprite icon-sprite-share-facebook"></i>
-                        </span>
-                        </a>
-                    </li>
-                    <li class="social__item" data-link-name="twitter">
-                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
-                        <span class="u-h">Share on Twitter</span>
-                        <span class="social-icon">
-                            <i class="icon-sprite icon-sprite-share-twitter"></i>
-                        </span>
-                        </a>
-                    </li>
-                    <li class="social__item" data-link-name="gplus">
-                        <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
-                        <span class="u-h">Share on Google+</span>
-                        <span class="social-icon">
-                            <i class="icon-sprite icon-sprite-share-gplus"></i>
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
             <div class="event__content-body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__social">
+                    <div class="event__social__header">Share this</div>
+                    <ul class="social u-unstyled u-cf" data-component="social" data-link-name="social">
+                        <li class="social__item" data-link-name="email">
+                            <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                            <span class="u-h">Share via Email</span>
+                            <span class="social-icon">
+                                <i class="icon-sprite icon-sprite-share-email"></i>
+                            </span>
+                            </a>
+                        </li>
+                        <li class="social__item" data-link-name="facebook">
+                            <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                            <span class="u-h">Share on Facebook</span>
+                            <span class="social-icon">
+                                <i class="icon-sprite icon-sprite-share-facebook"></i>
+                            </span>
+                            </a>
+                        </li>
+                        <li class="social__item" data-link-name="twitter">
+                            <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                            <span class="u-h">Share on Twitter</span>
+                            <span class="social-icon">
+                                <i class="icon-sprite icon-sprite-share-twitter"></i>
+                            </span>
+                            </a>
+                        </li>
+                        <li class="social__item" data-link-name="gplus">
+                            <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
+                            <span class="u-h">Share on Google+</span>
+                            <span class="social-icon">
+                                <i class="icon-sprite icon-sprite-share-gplus"></i>
+                            </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="event-info">
