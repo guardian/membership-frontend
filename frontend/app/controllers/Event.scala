@@ -74,11 +74,11 @@ trait Event extends Controller {
     }.getOrElse(Future.successful(NotFound))
   }
 
-  def thankyou(id: String) = NoCacheAction.async { implicit request =>
+  def thankyou(id: String) = MemberAction.async { implicit request =>
     eventService.getEvent(id).map {
       event =>
         Timing.record(EventbriteMetrics, "user-returned-from-eventbrite") {
-          Future.successful(Ok(views.html.event.thankyou(event)))
+          Future.successful(Ok(views.html.event.thankyou(request.member.firstName.getOrElse(""), event)))
         }
     }.getOrElse(Future.successful(NotFound))
   }
