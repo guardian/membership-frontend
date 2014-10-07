@@ -8,18 +8,6 @@
 
     .event__content {
 
-        .event__price-amount {
-            @include fs-headline(2);
-        }
-
-        .event__sale-ends {
-            padding: rem($gs-baseline) 0 rem(20px);
-        }
-
-        .event__content__masthead {
-            background-color: #f5f5f5;
-        }
-
         .event__content-body {
             position: relative;
 
@@ -37,26 +25,6 @@
             @include mq(mem-full) {
                 width: rem(gs-span(10) + $gs-gutter * 2);
             }
-        }
-
-        .event__meta > div {
-            display: block;
-            margin: 0 0 rem($gs-gutter);
-        }
-
-        .event__time {
-            @include fs-data(5);
-            color: $black;
-        }
-
-        .event__location {
-            @include fs-data(4);
-            color: $c-neutral2;
-        }
-
-        .event__trail {
-            @include fs-textSans(4);
-            display: block;
         }
 
         .event__price-note,
@@ -170,6 +138,7 @@
 
             @include mq(tablet) {
                 @include fs-headline(2);
+                margin-bottom: rem(4px);
             }
         }
     }
@@ -210,6 +179,7 @@
     }
 
     .terms-info {
+        @include fs-textSans(1);
         color: $white;
         padding: 0 0 rem($gs-gutter);
 
@@ -276,10 +246,6 @@
         float: left;
     }
 
-    @include mq(desktop) {
-        
-    }
-
     @include mq(mem-full) {
         top: 0;
         left: 0;
@@ -340,6 +306,11 @@
         width: rem(gs-span(4));
     }
 
+    .event-info--line-divider {
+        border-top: rem(1px) solid $c-neutral3;
+        padding: rem(5px) 0;
+    }
+
     .event-info__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
@@ -349,12 +320,11 @@
     .event-info__location,
     .event-info__tickets,
     .event-info__price {
-        border-top: rem(1px) solid $c-neutral3;
-        padding: rem(5px) 0;
         @include fs-data(4);
     }
 
     .event-info__location {
+
         .event-info__address {
             clear: both;
             display: block;
@@ -364,6 +334,7 @@
 
     .event-info__price {
         padding-bottom: 0;
+
         .event-info__price-amount {
             @include fs-header(5);
         }
@@ -387,7 +358,12 @@
             background-color: darken($mem-live-accent, 5%);
         }
     } 
-    
+
+    .terms-info {
+        @include fs-textSans(1);
+        padding-top: rem($gs-baseline/2);
+    }
+
 }
 
 
@@ -406,9 +382,7 @@
         .ticket-info__item--left {
             float: left;
         }
-
     }
-
 }
 
 
@@ -417,62 +391,10 @@
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
 
-.icon-sprite--small {
-    background-size: 20px auto!important;
-}
-
-.old-price {
-    display: block;
-}
-
-.event__content__inner {
-    background-color: $mem-live-red;
-}
-
-.event__content__inner--sub {
-    background-color: #e1e1e1;
-    margin-bottom: rem(20px);
-    width: rem(gs-span(4));
-}
-
-.item__meta {
-    position: relative;
-    overflow: hidden;
-}
-
-.inner-container {
-    float: right;
-    width: 100%;
-}
-
-.event__location {
-    margin-bottom: .4em;
-}
-
-.container--people .facia-slice-wrapper--position-1 .item__title {
-    min-height: 0;
-}
-
-.item__meta .item__timestamp {
-    padding-left: 0;
-}
-
-.event {
-    background-color: $white;
-    width: 100%;
-    overflow: hidden;
-}
-
 .event__image {
     img {
         width: 100%;
     }
-}
-
-.terms-info {
-    @include fs-textSans(1);
-    color: #878787;
-    padding-top: rem($gs-baseline/2);
 }
 
 .events-list {
