@@ -39,7 +39,7 @@
 
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
-                    <span class="event-item__location-detail">An email confirmation of your ticket purchase has been sent and the order is saved in My Tickets on Eventbrite.</span>
+                    <span class="event-item__location-detail">An email confirmation of your ticket purchase has been sent and the order is saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite.</span>
                     <i class="icon-sprite icon-sprite-evenbrite"></i>
                 </div>
             </div>
@@ -47,12 +47,12 @@
     </section>
 
     <section class="content__container content__container--slim">
-        <h2 class="content__headline">After the event</h2>
-        <p>Read our reviews and what other members have to say about it at <a href="http://www.theguardian.com/membership">theguardian.com/membership</a>. you'll also see all the latest news, highlights and ideas from our membership community.</p>
+        <h2 class="content__headline">Before the event</h2>
+        <p>Read related articles and what other members have to say at <a href="@(Config.guardianUrl + "/membership")">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
     </section>
 
     <section class="content__container content__container--slim">
-        <h2 class="content__headline">Find more Guardian Live events you may be interested in</h2>
+        <h2 class="content__headline">Find more Guardian Live events</h2>
         <a class="action" href="/events">See all events</a>
     </section>
 }
