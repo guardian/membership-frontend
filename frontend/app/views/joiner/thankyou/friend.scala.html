@@ -1,14 +1,36 @@
-@(ebIFrameDetail: Option[(String, Int)])
+@(subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
-@main("Thankyou | Friend") {
+@import views.support.Dates._
 
-    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
-        @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
-        <h1 class="section-sub-headline">Hello! Welcome to Guardian Membership</h1>
-        @fragments.layout.welcomeUser()
+@main("Thankyou | Friend", containerPadding = false) {
+
+    <section class="content__container content__container--slim">
+        @fragments.layout.welcomeUser(firstName, userEmail)
     </section>
 
-    @fragments.joiner.completePurchase(ebIFrameDetail)
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Your membership summary</h2>
+        <table class="table table--responsive-font table--striped" role="grid">
+            <tr role="row">
+                <th role="rowheader">
+                    Tier
+                </th>
+                <td>
+                    @subscriptionDetails.planName
+                </td>
+            </tr>
+            <tr role="row">
+                <th role="rowheader">
+                    Start date
+                </th>
+                <td>
+                    @subscriptionDetails.startDate.pretty
+                </td>
+            </tr>
+        </table>
+    </section>
+
+    @fragments.joiner.completePurchase(ebIFrameDetail, event)
 
     @fragments.analytics.joinerConversion()
 }
