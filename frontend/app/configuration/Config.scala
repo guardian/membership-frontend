@@ -1,7 +1,7 @@
 package configuration
 
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.membership.salesforce.Tier.{Partner, Patron, Tier}
+import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.{FriendTierPlan, PaidTierPlan, TierPlan}
@@ -86,13 +86,17 @@ object Config {
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
-  def facebookJoinerConversionTrackingId(tier: Tier) = {
-    config.getString(s"facebook.joiner.conversion.${tier.toString.toLowerCase}")
-  }
+  val facebookJoinerConversionTrackingId = Map(
+    Friend -> config.getString("facebook.joiner.conversion.friend"),
+    Partner -> config.getString("facebook.joiner.conversion.partner"),
+    Patron -> config.getString("facebook.joiner.conversion.patron")
+  )
 
-  def googleAdwordsJoinerConversionLabel(tier: Tier) = {
-    config.getString(s"google.adwords.joiner.conversion.${tier.toString.toLowerCase}")
-  }
+  val googleAdwordsJoinerConversionLabel = Map(
+    Friend -> config.getString("google.adwords.joiner.conversion.friend"),
+    Partner -> config.getString("google.adwords.joiner.conversion.partner"),
+    Patron -> config.getString("google.adwords.joiner.conversion.patron")
+  )
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
