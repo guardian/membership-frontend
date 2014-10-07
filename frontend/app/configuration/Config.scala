@@ -86,6 +86,14 @@ object Config {
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
+  def facebookJoinerConversionTrackingId(tier: Tier) = {
+    config.getString(s"facebook.joiner.conversion.${tier.toString.toLowerCase}")
+  }
+
+  def googleAdwordsJoinerConversionLabel(tier: Tier) = {
+    config.getString(s"google.adwords.joiner.conversion.${tier.toString.toLowerCase}")
+  }
+
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
