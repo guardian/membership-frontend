@@ -9,7 +9,7 @@ object Dependencies {
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.31"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.32"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
 
