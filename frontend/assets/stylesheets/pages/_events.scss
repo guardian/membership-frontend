@@ -262,8 +262,6 @@ div.event {
         a, img {
             vertical-align: text-bottom; // remove descenders
             display: block;
-            height: auto;
-            width: 100%;
         }
     }
 
@@ -467,11 +465,6 @@ div.event {
     margin: rem($gs-baseline * 2) 0;
 
     .event-item__media {
-        img {
-            height: auto;
-            width: 100%;
-        }
-
         @include mq(tablet) {
             float: left;
             width: rem(gs-span(3));

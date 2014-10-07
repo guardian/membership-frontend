@@ -243,11 +243,6 @@
                 overflow: hidden;
                 font-size: 0;
 
-                img {
-                    width: 100%;
-                    height: auto;
-                }
-
                 @include mq(tablet) {
                     position: static;
                     max-width: rem(460px);
