@@ -3,7 +3,7 @@
 @import configuration.Config
 @import views.support.Dates._
 
-@main("Event Thankyou |" + event.id) {
+@main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
     <section class="content__container content__container--slim">
         <h1 class="section-headline section-headline--no-border">Thanks @firstName.<br/> See you there!</h1>
