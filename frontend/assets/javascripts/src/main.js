@@ -1,6 +1,7 @@
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
+    'src/utils/user',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
@@ -16,6 +17,7 @@ require([
 ], function(
     Imager,
     omnitureAnalytics,
+    userUtil,
     ajax,
     JoinFree,
     FeedbackForm,
@@ -53,6 +55,7 @@ require([
     var header = new Header();
     header.init();
     omnitureAnalytics.init();
+    userUtil.init();
 
     // Events
     (new DatetimeEnhance()).init();
