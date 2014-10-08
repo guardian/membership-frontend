@@ -8,7 +8,7 @@
 
     @* ===== Homepage hero ===== *@
 
-    <div class="home-slice home-slice--epic home-slice--epic-home-page u-cf">
+    <div class="home-slice home-slice--epic home-slice--epic-home-page tier-hidden u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
                 <h1 class="home-slice__headline">We believe that the open exchange of information,
@@ -26,6 +26,22 @@
                         your interests.</p>
                     <a class="action action--join home-slice__action" href="/join">Join today</a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Member homepage hero ===== *@
+
+    <div class="home-slice home-slice--epic tier-required u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h1 class="home-slice__headline">Hello. Welcome back to Guardian Membership.</h1>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">Stay up-to-date with the latest news and developments from the membership community and watch highlights of Guardian Live events by visiting <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>.</p>
+                <p class="home-slice__copy">Book your tickets and discover the Autumn lineup for Guardian Live on our <a href="/events">listings page</a>.</p>
+                <a class="action home-slice__action" href="@(Config.guardianMembershipUrl)">Membership on the Guardian</a>
+                <a class="action home-slice__action action--secondary-button" href="/events">See all events</a>
             </div>
         </div>
     </div>
@@ -92,7 +108,7 @@
 
     @* ===== Founding Members ===== *@
 
-    <div class="home-slice home-slice--content u-cf">
+    <div class="home-slice home-slice--content tier-hidden u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__copy-block">
                 <div class="home-slice__media">
@@ -116,7 +132,7 @@
 
     @* ===== Join Today ===== *@
 
-    <div class="home-slice home-slice--join-today">
+    <div class="home-slice home-slice--join-today tier-hidden">
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join membership today</h2>
             <div class="join-today__join-boxes package-list package-list--bordered">
