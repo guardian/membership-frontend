@@ -1,15 +1,6 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier = com.gu.membership.salesforce.Tier.Friend)
+@(tier: com.gu.membership.salesforce.Tier.Tier)
 
-@import com.gu.membership.salesforce.Tier
 @import configuration.Config
-
-@label = @{
-    tier match {
-        case Tier.Patron => "8OIRCKrKtFYQ-fOZzQM"
-        case Tier.Partner => "967SCKD1tFYQ-fOZzQM"
-        case Tier.Friend => "2Am1CLrttFYQ-fOZzQM"
-    }
-}
 
 @if(Config.stage == "PROD") {
 	<script type="text/javascript">
@@ -17,13 +8,13 @@
 		var google_conversion_language = "en";
 		var google_conversion_format = "3";
 		var google_conversion_color = "ffffff";
-		var google_conversion_label = "@label";
+		var google_conversion_label = "@Config.googleAdwordsJoinerConversionLabel(tier)";
 		var google_remarketing_only = false;
 	</script>
 	<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
 	<noscript>
 		<div style="display:inline;">
-			<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/967211513/?label=@label&amp;guid=ON&amp;script=0"/>
+			<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/967211513/?label=@Config.googleAdwordsJoinerConversionLabel(tier)&amp;guid=ON&amp;script=0"/>
 		</div>
 	</noscript>
 }

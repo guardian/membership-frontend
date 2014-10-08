@@ -29,28 +29,28 @@
                     <h2>New Membership Summary</h2>
                 </div>
                 <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <table class="table table--responsive-font table--striped">
-                        <tr class="table__headline" role="row">
-                            <td class="summary-table__cell" role="scope">
+                    <table class="table table--responsive-font table--striped" role="grid">
+                        <tr role="row">
+                            <th role="rowheader">
                                 Tier
-                            </td>
-                            <td class="summary-table__cell" role="scope">
+                            </th>
+                            <td>
                                 Friend
                             </td>
                         </tr>
-                        <tr class="summary-table__row" role="row">
-                            <td class="summary-table__cell">
+                        <tr role="row">
+                            <th role="rowheader">
                                 Start Date
-                            </td>
-                            <td class="summary-table__cell">
+                            </th>
+                            <td>
                                 @futureSubscription.startDate.pretty
                             </td>
                         </tr>
-                        <tr class="summary-table__row" role="row">
-                            <td class="summary-table__cell">
+                        <tr role="row">
+                            <th role="rowheader">
                                 @if(futureSubscription.annual){ Annual } else { Monthly } Payment
-                            </td>
-                            <td class="summary-table__cell">
+                            </th>
+                            <td>
                                 @futureSubscription.planAmount.pretty
                             </td>
                         </tr>

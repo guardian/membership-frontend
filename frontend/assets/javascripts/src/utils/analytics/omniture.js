@@ -13,6 +13,15 @@ define([
         var s_code;
         var identityUser = user.getUserFromCookie();
         var identityId = identityUser && identityUser.id;
+        var referrerArray = document.referrer.split('/');
+        var referrerDomain;
+
+        if (referrerArray.length > 2) {
+            referrerDomain = referrerArray[2];
+            if (referrerDomain !== document.location.host) {
+                s.eVar14 = document.referrer;
+            }
+        }
 
         s.pageName = pageTitle;
         s.channel = MEMBERSHIP_STRING;

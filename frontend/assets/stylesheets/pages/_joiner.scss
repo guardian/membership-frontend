@@ -156,14 +156,6 @@ $card-icon-offset: 2px;
     height: rem($large-card + $card-icon-offset + 2px);
 }
 
-.credit-card--inline-block {
-    visibility: visible;
-    vertical-align: middle;
-    position: static;
-    display: inline-block;
-    margin-right: $gutter / 2;
-}
-
 /* ==========================================================================
    Thank You
    ========================================================================== */
@@ -202,9 +194,4 @@ $card-icon-offset: 2px;
         width: 50%;
         float: left;
     }
-}
-
-.complete-purchase {
-    margin-bottom: rem($gs-gutter);
-    margin-top: rem($gs-gutter);
 }
