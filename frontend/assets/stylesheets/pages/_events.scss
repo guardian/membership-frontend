@@ -501,6 +501,14 @@
             }
         }
 
+        .events-list__hero-descendant {
+            .events-list__item {
+                @include mq(tablet) {
+                    height: rem(450px);
+                }
+            }
+        }
+
     }
 }
 

@@ -6,7 +6,7 @@
 <li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}">
             <div class="event-item__media">
                 <a href="/event/@event.id">
-                    <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text"></div>
+                    <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
                 </a>
             </div>@*
 
