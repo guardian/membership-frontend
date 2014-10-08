@@ -53,7 +53,8 @@
                 widths: [@Config.eventImageWidths.mkString(",")],
                 ratios: [@Config.eventImageRatios.mkString(",")]
             }
-        }
+        },
+        isDev: @(Config.stage == "DEV")
     };
 
     (function(isModern) {
