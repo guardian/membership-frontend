@@ -6,11 +6,8 @@
 <div class="event-summary">
     <div class="event-item__media">
         <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text"></div>
-    </div>@*
-
-        // Inline-block whitespace
-
-     *@<div class="event-item__meta">
+    </div>
+    <div class="event-item__meta">
         <h2 class="event-item__title">
             @if(event.getStatus == SoldOut){
                 <span class="event-status--sold-out">Sold Out</span>
