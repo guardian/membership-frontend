@@ -85,8 +85,12 @@ trait Joiner extends Controller {
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
-    for (eventbriteFrameDetail <- getEbIFrameDetail(request)) yield {
-      Ok(views.html.joiner.thankyou.friend(eventbriteFrameDetail))
+    for {
+      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      eventbriteFrameDetail <- getEbIFrameDetail(request)
+    } yield {
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 
@@ -96,7 +100,8 @@ trait Joiner extends Controller {
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier))
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 }

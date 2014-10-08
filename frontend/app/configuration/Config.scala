@@ -1,7 +1,7 @@
 package configuration
 
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.membership.salesforce.Tier.{Partner, Patron, Tier}
+import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.{FriendTierPlan, PaidTierPlan, TierPlan}
@@ -85,6 +85,18 @@ object Config {
     Map(FriendTierPlan -> config.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
+
+  val facebookJoinerConversionTrackingId = Map(
+    Friend -> config.getString("facebook.joiner.conversion.friend"),
+    Partner -> config.getString("facebook.joiner.conversion.partner"),
+    Patron -> config.getString("facebook.joiner.conversion.patron")
+  )
+
+  val googleAdwordsJoinerConversionLabel = Map(
+    Friend -> config.getString("google.adwords.joiner.conversion.friend"),
+    Partner -> config.getString("google.adwords.joiner.conversion.partner"),
+    Patron -> config.getString("google.adwords.joiner.conversion.patron")
+  )
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
 
