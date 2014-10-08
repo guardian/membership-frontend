@@ -66,8 +66,7 @@ module.exports = function (grunt) {
                         'qwery': 'lib/bower-components/qwery/qwery',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
-                        'stripe': 'lib/stripe/stripe.min',
-                        'omniture': 'lib/analytics/omniture'
+                        'stripe': 'lib/stripe/stripe.min'
                     },
                     findNestedDependencies: false,
                     wrapShim: true,
@@ -103,6 +102,12 @@ module.exports = function (grunt) {
             zxcvbn: {
                 src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/zxcvbn.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
+                expand: true,
+                flatten: true
+            },
+            omniture: {
+                src: '<%= dirs.assets.javascripts %>/lib/analytics/omniture.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/omniture/',
                 expand: true,
                 flatten: true
             },
@@ -343,7 +348,8 @@ module.exports = function (grunt) {
             'requirejs:compile',
             'copy:html5shiv',
             'copy:curl',
-            'copy:zxcvbn'
+            'copy:zxcvbn',
+            'copy:omniture'
         ]);
     });
 
