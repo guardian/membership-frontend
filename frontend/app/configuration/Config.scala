@@ -16,6 +16,7 @@ object Config {
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
+  val guardianMembershipUrl = config.getString("guardian.membership.url")
   val guardianLiveEventsTermsUrl = config.getString("guardian.live.events.terms.url")
   val guardianMembershipTermsUrl = config.getString("guardian.membership.terms.url")
   val guardianPrivacyUrl = config.getString("guardian.privacy.url")
