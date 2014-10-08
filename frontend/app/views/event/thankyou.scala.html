@@ -56,5 +56,10 @@
         <a class="action" href="/events">See all events</a>
     </section>
 
-    @fragments.analytics.omnitureEventBriteOrderTracking()
+    <script type="text/javascript">
+        require(['omniture'], function () {
+            s.products = 'event;@event.id;';
+            s.events = 'order';
+        });
+    </script>
 }
