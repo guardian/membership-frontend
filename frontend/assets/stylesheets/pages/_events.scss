@@ -78,7 +78,7 @@
         @include fs-headline(2);
         font-weight: bold;
         color: $white;
-        border-bottom: rem(1px) dotted $c-neutral6;
+        border-bottom: rem(1px) dotted $border-bottom-color;
         padding-bottom: rem(5px);
 
         @include mq(tablet) {
@@ -143,6 +143,15 @@
         }
     }
 
+    .event__tickets__wapper {
+        @include clearfix;
+        padding: rem($gs-gutter) 0;
+
+        @include mq(mem-full) {
+            padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 2);
+        }
+    }
+
     .event__tickets {
         color: $white;
 
@@ -150,11 +159,7 @@
             float: left;
             padding-right: rem($gs-gutter);
         }
-
-        @include mq(mem-full) {
-            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 2);
-        }
-
+        
         .event__price-amount {
             @include fs-header(5);
         }
@@ -171,6 +176,7 @@
 
         @include mq(tablet) {
             float: left;
+            margin: rem(6px $gs-gutter 0 0);
         }
 
         &:hover {
@@ -181,29 +187,46 @@
     .terms-info {
         @include fs-textSans(1);
         color: $white;
-        padding: 0 0 rem($gs-gutter);
+        padding-top: rem(12px);
 
         @include mq(tablet) {
             width: rem(gs-span(3) + $gs-gutter * 2);
             float: left;
-            padding-top: rem($gs-gutter);
         }
 
         a {
             color: $white;
             padding-bottom: rem(2px);
-            border-bottom: rem(1px) solid $c-neutral8;
+            border-bottom: rem(1px) solid $mem-underline-white-trans;
 
             &:hover {
                 text-decoration: none;
+                border-bottom: rem(1px) solid $white; 
             }
         }
     }
 
     .header-bar__guardian-live-logo {
         position: absolute;
-        bottom: rem($gs-gutter / 2);
-        right: rem($gs-gutter);
+        bottom: rem($gs-gutter / 2 + 2);
+        right: rem($gs-gutter / 2);
+
+        @include mq(tablet) {
+            right: rem($gs-gutter);
+        }
+
+        .icon-sprite-guardian-live {
+            background-size: 30px auto;
+            width: 30px;
+            height: 44px;
+
+
+            @include mq(tablet) {
+                background-size: 100% auto;
+                width: 62px;
+                height: 90px;
+            }
+        }
     }
 }
 
