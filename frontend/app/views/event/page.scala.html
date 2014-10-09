@@ -69,55 +69,62 @@
                     <div class="event__meta">
                         <div class="event__time">@prettyDateWithTime(event.start)</div>
                         <div class="event__location">
-                            <span class="event__venue-name">@event.venue.name</span>,
-                            <span class="event__address">
-                                @event.eventAddressLine
-                            </span>
+                            <span class="event__venue-name">@event.venue.name</span>
+                            @if(event.addressOne) {
+                                <span class="event__address">
+                                    , @event.eventAddressLine
+                                </span>
+                            }
                         </div>
                     </div>
 
                     @for(ticket <- event.ticketClassesHead) {
 
-                        <div class="event__tickets">
+                        @if(event.isNoTicketEvent == false) {
+                            <div class="event__tickets">
 
-                            <div class="ticket-info">
+                                <div class="ticket-info">
                                 @ticketBookingDates(ticket)
-                            </div>
-
-                            <div class="event__sale-ends ticket-info">
-                                <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
-                                <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                 @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
-                                </time>
-                            </div>
-
-                            @if(ticket.free) {
-                                <div class="event__price">
-                                    <span class="event__price-amount js-event-price">Free</span>
                                 </div>
-                            } else {
-                                @for(pricing <- ticket.cost) {
-                                    <div class="event__price">
-                                        <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
-                                        <span class="event__price-note js-event-price-note"> per ticket</span>
-                                    </div>
-                                    <div class="event__trail">
-                                        <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
-                                        <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
-                                    </div>
-                                }
-                            }
 
-                            @ticketCta
-                            @becomeMemberCta(ticket)
-                        </div>
+                                <div class="event__sale-ends ticket-info">
+                                    <span class="js-datetime-enhance-note"><strong>
+                                        Sales @if(event.getStatus == Completed) {ended on} else {end on}</strong></span>
+                                    <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                                    @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
+                                    </time>
+                                </div>
+
+                                @if(ticket.free) {
+                                    <div class="event__price">
+                                        <span class="event__price-amount js-event-price">Free</span>
+                                    </div>
+                                } else {
+                                    @for(pricing <- ticket.cost) {
+                                        <div class="event__price">
+                                            <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                            <span class="event__price-note js-event-price-note"> per ticket</span>
+                                        </div>
+                                        <div class="event__trail">
+                                            <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                            <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                            <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                        </div>
+                                    }
+                                }
+
+                                @ticketCta
+                                @becomeMemberCta(ticket)
+                            </div>
+                        }
                     }
                 </div>
             </div>
             <div class="event__content-body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
-                @ticketCta
+                @if(event.isNoTicketEvent == false) {
+                    @ticketCta
+                }
             </div>
         </div>
     </div>

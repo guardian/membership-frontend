@@ -22,10 +22,12 @@
 
                     <div class="event-item__location">
                         @if(event.venue.name){
-                            <span class="event-item__location-name">@event.venue.name, </span>
+                            <span class="event-item__location-name">@event.venue.name</span>
                         }
                         @for(address <- event.venue.address) {
-                            <span>@address.city, @address.postal_code</span>
+                            @if(address.city) {
+                                <span class="event-item__location-address">, @address.city, @address.postal_code</span>
+                            }
                         }
                     </div>
 
@@ -39,14 +41,16 @@
 
                     <div class="event-item__cta">
 
-                        <div class="event-item__price">
-                        @for(ticket <- event.ticketClassesHead) {
-                            @for(pricing <- ticket.cost) {
-                                <span class="event-item__price-amount">@pricing.formattedPrice</span>
-                                <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                        @if(event.isNoTicketEvent == false) {
+                            <div class="event-item__price">
+                            @for(ticket <- event.ticketClassesHead) {
+                                @for(pricing <- ticket.cost) {
+                                    <span class="event-item__price-amount">@pricing.formattedPrice</span>
+                                    <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                }
                             }
+                            </div>
                         }
-                        </div>
 
                         <button class="event-item__action"></button>
 
