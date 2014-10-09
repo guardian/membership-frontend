@@ -1,13 +1,13 @@
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
-    'src/utils/user',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
     'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
     'src/modules/Header',
+    'src/modules/UserDetails',
     'src/modules/events/DatetimeEnhance',
     'src/modules/tier/Choose',
     'src/modules/events/eventPriceEnhance',
@@ -17,13 +17,13 @@ require([
 ], function(
     Imager,
     omnitureAnalytics,
-    userUtil,
     ajax,
     JoinFree,
     FeedbackForm,
     PaidForm,
     Cta,
     Header,
+    UserDetails,
     DatetimeEnhance,
     Choose,
     eventPriceEnhance,
@@ -55,7 +55,7 @@ require([
     var header = new Header();
     header.init();
     omnitureAnalytics.init();
-    userUtil.init();
+    (new UserDetails()).init();
 
     // Events
     (new DatetimeEnhance()).init();

@@ -1,10 +1,9 @@
 define([
-    '$',
     'src/utils/atob',
     'ajax',
     'src/utils/cookie',
     'config/appCredentials'
-], function($, AtoB, ajax, cookie, appCredentials){
+], function(AtoB, ajax, cookie, appCredentials){
 
     var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
 
@@ -108,22 +107,9 @@ define([
         };
     })();
 
-    var init = function(){
-        if (isLoggedIn()) {
-            $(document.documentElement).removeClass('id--signed-out').addClass('id--signed-in');
-
-            getMemberDetail(function (memberDetail) {
-                if (memberDetail && memberDetail.tier) {
-                    $(document.documentElement).addClass('member--has-tier');
-                }
-            });
-        }
-    };
-
     return {
         isLoggedIn: isLoggedIn,
         getUserFromCookie: getUserFromCookie,
-        getMemberDetail: getMemberDetail,
-        init: init
+        getMemberDetail: getMemberDetail
     };
 });
