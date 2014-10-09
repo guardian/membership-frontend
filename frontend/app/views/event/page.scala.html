@@ -54,7 +54,7 @@
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
     <div class="event__content__header">
-        <div class="event__content-container">
+        <div class="event__content__container">
             <div class="event__masthead">
                 <div class="event__title section-header page-header">events</div>
                 <h1 class="event__name section-header page-header">@event.name.text</h1>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="event__content__header event__content__header--shade">
-        <div class="event__content-container event__content-container--details">
+        <div class="event__content__container event__content__container--details">
             <div class="event__details">
                 <div class="event__time">@prettyDateWithTime(event.start)</div>
                 <div class="event__location">
@@ -73,7 +73,7 @@
             </div>
             @for(ticket <- event.ticketClassesHead) {
 
-                <div class="event__tickets__wapper">
+                <div class="event__tickets__wapper u-cf">
                     <div class="event__tickets">
 
                         @if(ticket.free) {
@@ -106,15 +106,17 @@
         
     </div>
 
-    <div class="event">
-        <div class="event__content">
-            
-            <div class="event__image">
-                <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
-            </div>
+    
+    <div class="event__content">
+        
+        <div class="event__image">
+            <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
+        </div>
 
-            <div class="event__picture__byline">
-                <p>Picture byline here picture byline here</p>
+        <div class="event__content-wapper u-cf">
+
+            <div class="event__picture-byline">
+                <p><i class="icon-sprite icon-sprite-caption-camera icon-sprite--margin-right"></i>Picture byline here picture byline here</p>
             </div>
 
             <div class="event__content-body">
@@ -160,7 +162,7 @@
 
             <div class="event-info">
 
-                <div class="event-info__name event-info--line-divider">@event.name.text</div>
+                <div class="event-info__name">@event.name.text</div>
                 <div class="event-info__time event-info--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
                 <div class="event-info__location event-info--line-divider">
                     <span class="event-info__venue-name"><i class="icon-sprite icon-sprite-location icon-sprite--small"></i>@event.venue.name</span>,
@@ -208,4 +210,5 @@
             </div>
         </div>
     </div>
+  
 }

@@ -70,9 +70,13 @@
     height: rem($gs-gutter + 5);
     margin: 0 rem($gs-gutter) rem(-7px) 0;
 
-    .event & {
+    .event-info & {
         background-size: rem($gs-gutter) auto!important;
         width: rem($gs-gutter);
         height: rem($gs-gutter);
     }
+}
+
+.icon-sprite--margin-right {
+    margin-right: rem($gs-gutter / 2);
 }

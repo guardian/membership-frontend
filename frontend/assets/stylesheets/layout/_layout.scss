@@ -124,7 +124,7 @@ body {
     }
 
     &.page-container--with-padding {
-        background-color: #ffffff;
+        background-color: $white;
         @include mq(tablet) {
             padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
         }
