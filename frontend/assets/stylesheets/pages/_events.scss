@@ -14,10 +14,6 @@ div.event {
             padding: rem($gs-baseline) 0 rem(20px);
         }
 
-        .event__content__masthead {
-            background-color: #f5f5f5;
-        }
-
         .event__content-body {
             max-width: rem(620px);
             padding: rem($gs-gutter/2);
@@ -48,9 +44,7 @@ div.event {
             display: block;
         }
 
-        .event__price-note,
-        .event__sale_ends_note,
-        .event__sale_ends_time {
+        .event__price-note {
             @include fs-textSans(4);
             display: inline-block;
         }
@@ -88,10 +82,6 @@ div.event {
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
 
-.old-price {
-    display: block;
-}
-
 .event__content__inner {
     background-color: #f1f1f1;
 }
@@ -108,11 +98,6 @@ div.event {
     }
 }
 
-.item__meta {
-    position: relative;
-    overflow: hidden;
-}
-
 .inner-container {
     float: right;
     width: 100%;
@@ -120,14 +105,6 @@ div.event {
 
 .event__location {
     margin-bottom: .4em;
-}
-
-.container--people .facia-slice-wrapper--position-1 .item__title {
-    min-height: 0;
-}
-
-.item__meta .item__timestamp {
-    padding-left: 0;
 }
 
 .event {

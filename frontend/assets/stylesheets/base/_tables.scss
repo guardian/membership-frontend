@@ -2,49 +2,6 @@ $table-breakpoint-importance-1: tablet;
 $table-breakpoint-importance-2: mobile;
 $table-breakpoint-importance-3: 220px;
 
-@mixin table--hide-none {
-    th, td {
-        display: table-cell !important;
-    }
-}
-
-@mixin table--hide-from-importance-1 {
-    .table-column--importance-1 {
-        display: none;
-    }
-}
-
-@mixin table--hide-from-importance-2 {
-    .table-column--importance-1,
-    .table-column--importance-2 {
-        display: none;
-    }
-}
-
-@mixin table--hide-from-importance-3 {
-    .table-column--importance-1,
-    .table-column--importance-2,
-    .table-column--importance-3 {
-        display: none;
-    }
-}
-
-.table--hide-none {
-    @include table--hide-none;
-}
-
-.table--hide-from-importance-1 {
-    @include table--hide-from-importance-1;
-}
-
-.table--hide-from-importance-2 {
-    @include table--hide-from-importance-2;
-}
-
-.table--hide-from-importance-3 {
-    @include table--hide-from-importance-3;
-}
-
 table {
     width: 100%;
 }
@@ -59,8 +16,7 @@ td {
     color: $c-neutral1;
 
     th,
-    td,
-    .table__caption {
+    td {
         @include fs-data(3);
         line-height: rem(18px);
         padding: rem(16px) rem(10px) rem(15px);
@@ -87,16 +43,6 @@ td {
         border-bottom: rem(1px) dotted $c-neutral8;
     }
 
-    // Show / hide functionality
-    @include mq($until: $table-breakpoint-importance-1) {
-        @include table--hide-from-importance-1;
-    }
-    @include mq($until: $table-breakpoint-importance-2) {
-        @include table--hide-from-importance-2;
-    }
-    @include mq($until: $table-breakpoint-importance-3) {
-        @include table--hide-from-importance-3;
-    }
 }
 
 .table--responsive-font {
@@ -145,25 +91,3 @@ td {
     padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
 }
 
-// We replicate the table style
-// then move the caption over the top border
-// This is because the caption is outside the flow of the table
-.table__caption {
-    padding: rem(16px);
-    background: $c-neutral8;
-    border-bottom: rem(1px) solid darken($c-neutral8, 4%);
-    border-top: rem(2px) solid $c-newsAccent;
-    font-weight: bold;
-    margin-bottom: rem(-2px);
-    position: relative;
-    text-align: left;
-    z-index: 2;
-}
-
-.table__caption--bottom {
-    font-weight: normal;
-    border-bottom: 0 none;
-    border-top: rem(1px) solid darken($c-neutral8, 4%);
-    caption-side: bottom;
-    text-align: center;
-}

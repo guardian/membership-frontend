@@ -14,69 +14,6 @@ $card-icon-offset: 2px;
     border: 0;
 }
 
-.joiner-navigation {
-    @include clearfix;
-}
-
-.joiner-navigation__tab {
-    text-align: center;
-    border: rem(1px) solid #dfdfdf;
-    display: table;
-    float: left;
-    width: 33.3%;
-}
-
-.joiner-navigation__btn {
-    @include fs-bodyCopy(3);
-    background-color: #eaeaea;
-    height: gs-height(2);
-    width: 100%;
-    vertical-align: middle;
-    display: table-cell;
-    &:hover {
-        background-color: darken(#eaeaea, 15%);
-    }
-}
-
-/* ==========================================================================
-   Tier List
-   ========================================================================== */
-
-.tier-list {
-    padding: $gs-gutter;
-}
-
-/* ==========================================================================
-   Tier
-   ========================================================================== */
-
-.benefits-list {
-    text-align: center;
-    padding: $gs-gutter;
-    border-bottom: rem(1px) solid #dfdfdf;
-
-    @include mq(tablet) {
-        border: rem(1px) solid #dfdfdf;
-        height: gs-height(3);
-
-        flex-grow: 0;
-        flex-basis: 22%;
-        flex-direction: column;
-
-        display: flex;
-        justify-content: center; /* align horizontal */
-        align-items: center;
-    }
-}
-
-.benefits-list--left-aligned {
-    border: 0;
-
-    @include mq(tablet) {
-        text-align: left;
-    }
-}
-
 /* ==========================================================================
    Payment Form
    ========================================================================== */
@@ -101,10 +38,6 @@ $card-icon-offset: 2px;
 
 .fieldset {
     border-width: rem(2px);
-}
-
-.form-terms {
-    @include fs-bodyCopy(1);
 }
 
 .form-padlock {
@@ -132,16 +65,12 @@ $card-icon-offset: 2px;
         height: rem(23px);
         padding-right: rem(3px);
     }
+}
 
-    &.credit-card--input-representation {
-        position: absolute;
-        right: rem($card-icon-offset);
-        top: rem($card-icon-offset);
-    }
-
-    &.icon-sprite-card-unknown {
-        visibility: hidden;
-    }
+.credit-card--input-representation {
+    position: absolute;
+    right: rem($card-icon-offset);
+    top: rem($card-icon-offset);
 }
 
 .credit-card-note {
@@ -160,38 +89,13 @@ $card-icon-offset: 2px;
    Thank You
    ========================================================================== */
 
-.questions {
-    @include clearfix;
-}
-
-.questions__list {
-    width: 100%;
-    padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
-}
-
-.benefits {
-    @extend %flexbox-container-justify;
-}
 
 @include mq(tablet) {
-    .benefits-list__item {
-        display: table-cell;
-        vertical-align: middle;
-        .action {
-            width: 100%;
-        }
-    }
-
     .form-secondary-container {
         border-top: 0;
         border-left: rem(1px) solid #f1f1f1;
         padding: $gutter 0 0 $gutter*3;
         float: left;
         width: 35%;
-    }
-
-    .questions__list {
-        width: 50%;
-        float: left;
     }
 }
