@@ -507,8 +507,7 @@ div.event {
         }
     }
 
-    .event-item__time,
-    .event-item__location {
+    .event-item__detail {
         border-top: rem(1px) dotted $c-neutral3;
         padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
     }
@@ -517,19 +516,20 @@ div.event {
         line-height: rem(18px);
     }
 
-    .event-item__location-name,
-    .event-item__location-address,
-    .event-item__location-city {
+    .event-item__location-detail {
         display: block;
     }
 
-    .icon-sprite-location,
-    .icon-sprite-early_booking-grey {
+    .event-item__icon {
         background-size: rem(25px);
         float: left;
         margin-left: rem(-$gs-gutter * 2);
         height: rem(25px);
         width: rem(25px);
+    }
+
+    .icon-sprite-eventbrite {
+        margin-top: rem(8px);
     }
 
     .icon-sprite-early_booking-grey {
