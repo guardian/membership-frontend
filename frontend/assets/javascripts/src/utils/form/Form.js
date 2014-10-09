@@ -46,7 +46,7 @@ define([
         CREDIT_CARD_IMAGE: 'js-credit-card-image',
         THROBBER: 'js-waiting-container',
         THROBBER_MESSAGE: 'js-waiting-message',
-        ICON_PREFIX: 'icon-sprite-card-'
+        ICON_PREFIX: 'sprite-card--'
     };
 
     Form.prototype.data = {
