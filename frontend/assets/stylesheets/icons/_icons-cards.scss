@@ -1,0 +1,43 @@
+$sprite-card-width: 108px; // target = 35 aka n/3
+$sprite-card-height: 70px;
+$sprite-card-offset-american-express:        0;
+$sprite-card-offset-diners-club:         -71px;
+$sprite-card-offset-discover:           -142px;
+$sprite-card-offset-jcb:                -213px;
+$sprite-card-offset-mastercard:         -284px;
+$sprite-card-offset-visa:               -355px;
+
+// by default we scale the 2x image down by half
+// for retina displays
+.sprite-card {
+    background: url(/assets/images/card-sprite.png) no-repeat top left;
+    display: inline-block;
+    background-size: $sprite-card-width/2 auto; // scales 2x image down
+    width: $sprite-card-width/2;
+    height: $sprite-card-height/2;
+}
+
+.sprite-card--american-express { background-position: 0 $sprite-card-offset-american-express/2; }
+.sprite-card--diners-club { background-position: 0 $sprite-card-offset-diners-club/2; }
+.sprite-card--discover { background-position: 0 $sprite-card-offset-discover/2; }
+.sprite-card--jcb { background-position: 0 $sprite-card-offset-jcb/2; }
+.sprite-card--mastercard { background-position: 0 $sprite-card-offset-mastercard/2; }
+.sprite-card--visa { background-position: 0 $sprite-card-offset-visa/2; }
+
+// variant for 1/3rd size
+.sprite-card--smaller {
+    background-size: $sprite-card-width/3 auto;
+    width: $sprite-card-width/3;
+    height: $sprite-card-height/3;
+    &.sprite-card--american-express { background-position: 0 $sprite-card-offset-american-express/3; }
+    &.sprite-card--diners-club { background-position: 0 $sprite-card-offset-diners-club/3; }
+    &.sprite-card--discover { background-position: 0 $sprite-card-offset-discover/3; }
+    &.sprite-card--jcb { background-position: 0 $sprite-card-offset-jcb/3; }
+    &.sprite-card--mastercard { background-position: 0 $sprite-card-offset-mastercard/3; }
+    &.sprite-card--visa { background-position: 0 $sprite-card-offset-visa/3; }
+}
+
+// used to toggle unknown types
+.sprite-card--unknown {
+    visibility: hidden;
+}
