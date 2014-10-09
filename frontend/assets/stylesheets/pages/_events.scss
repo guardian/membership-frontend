@@ -39,8 +39,13 @@ div.event {
         }
 
         .event__location {
-            @include fs-data(4);
+            font-size: 0; /** space between inline block elements **/
             color: $c-neutral2;
+        }
+
+        .event__venue-name,
+        .event__address {
+            @include fs-data(4);
         }
 
         .event__trail {
@@ -59,7 +64,7 @@ div.event {
 
 .event__description {
     h2 {
-        @include fs-headline(2);
+        @include fs-headline(1);
         margin: rem(8px) 0 rem(16px);
     }
     p, li {
@@ -70,6 +75,14 @@ div.event {
         list-style-position: inside;
         padding: 0;
         margin: 0 0 rem(8px);
+    }
+    .no-style-list {
+        list-style: none;
+    }
+    .section-header {
+        @include fs-headline(3);
+        font-weight: 900;
+        margin: rem(27px) 0 rem(10px);
     }
 
     blockquote {
@@ -296,9 +309,15 @@ div.event {
             @include fs-data(4);
             color: $black;
         }
+
         .event-item__location {
-            @include fs-data(3);
+            font-size: 0; /** space between inline block elements **/
             color: $c-neutral2;
+        }
+
+        .event-item__location-name,
+        .event-item__location-address {
+            @include fs-data(3);
         }
 
         .event-item__description {
@@ -435,12 +454,16 @@ div.event {
 
     }
 
-    *:hover, &:hover {
+    &:hover {
         text-decoration: none;
         background-color: $c-neutral5;
         .event-item__title {
             text-decoration: underline;
         }
+    }
+
+    *:hover {
+        text-decoration: none;
     }
 
     &.event-item--standalone {
