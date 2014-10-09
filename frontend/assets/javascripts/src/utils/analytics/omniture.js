@@ -18,10 +18,6 @@ define([
             var referrerArray = document.referrer.split('/');
             var referrerDomain;
 
-            if (guardian && guardian.isDev) {
-                s.debugTracking = 'YES';
-            }
-
             if (referrerArray.length > 2) {
                 referrerDomain = referrerArray[2];
                 if (referrerDomain !== document.location.host) {
