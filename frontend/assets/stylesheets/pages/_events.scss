@@ -84,19 +84,6 @@
     @include mq(tablet) {
         right: rem($gs-gutter);
     }
-
-    .icon-sprite-guardian-live {
-        background-size: rem(30px) auto;
-        width: rem(30px);
-        height: rem(44px);
-
-
-        @include mq(tablet) {
-            background-size: 100% auto;
-            width: rem(62px);
-            height: rem(90px);
-        }
-    }
 }
 
 .event__tickets__wapper {
@@ -104,23 +91,6 @@
 
     @include mq(mem-full) {
         padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 2);
-    }
-
-    .event__tickets {
-        color: $white;
-
-        @include mq(tablet) {
-            float: left;
-            padding-right: rem($gs-gutter);
-        }
-        
-        .event__price-amount {
-            @include fs-header(5);
-        }
-
-        .event__trail {
-            @include fs-textSans(1);
-        }
     }
     
     .action {
@@ -156,6 +126,23 @@
                 border-bottom: rem(1px) solid $white; 
             }
         }
+    }
+}
+
+.event__tickets {
+    color: $white;
+
+    @include mq(tablet) {
+        float: left;
+        padding-right: rem($gs-gutter);
+    }
+    
+    .event__price-amount {
+        @include fs-header(5);
+    }
+
+    .event__trail {
+        @include fs-textSans(1);
     }
 }
 
@@ -293,7 +280,7 @@
     }
 }
 
-.event__social__header {
+.event__social-header {
     display: none;
 
     @include mq(desktop) {
@@ -505,7 +492,6 @@
 .event-item {
     position: relative;
     width: 100%;
-
     background-color: $c-neutral7;
 
     .event-item__media {

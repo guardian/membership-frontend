@@ -52,7 +52,7 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "event") {
     <div class="event__content__header">
         <div class="event__content__container">
             <div class="event__masthead">
@@ -100,7 +100,7 @@
                 </div>
             }
             <div class="header-bar__guardian-live-logo">
-                <i class="icon-sprite icon-sprite-guardian-live"></i>
+                <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
             </div>
         </div>
         
@@ -122,7 +122,7 @@
             <div class="event__content-body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
                 <div class="event__social">
-                    <div class="event__social__header">Share this</div>
+                    <div class="event__social-header">Share this</div>
                     <ul class="social u-unstyled u-cf" data-component="social" data-link-name="social">
                         <li class="social__item" data-link-name="email">
                             <a class="social__action social-icon-wrapper" data-link-name="top" href="#">
