@@ -1,0 +1,61 @@
+@(firstName: String, event: model.Eventbrite.EBEvent)
+
+@import configuration.Config
+@import views.support.Dates._
+
+@main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
+
+    <section class="content__container content__container--slim">
+        <h1 class="section-headline section-headline--no-border">Thanks @firstName.<br/> See you there!</h1>
+        <h2 class="content__headline">You're going to</h2>
+
+        <div class="event-summary">
+            <div class="event-item__media">
+                <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
+            </div><div class="event-item__meta">
+                <h2 class="event-item__title">
+                    @event.name.text
+                </h2>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-early_booking-grey event-item__icon"></i>
+                    <time datetime="@event.start">@prettyDateWithTimeAndDayName(event.start)</time>
+                </div>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-location event-item__icon"></i>
+                    @if(event.venue.name){
+                        <span class="event-item__location-name">@event.venue.name </span>
+                    }
+                    @for(address <- event.venue.address) {
+                        <span class="event-item__location-detail">@address.address_1 </span>
+                        <span class="event-item__location-detail">@address.city @address.postal_code </span>
+                    }
+                </div>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
+                    <span class="event-item__location-detail">An email confirmation of your ticket purchase has been sent and the order is saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite.</span>
+                    <i class="icon-sprite icon-sprite-evenbrite"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Before the event</h2>
+        <p>Read related articles and what other members have to say at <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Find more Guardian Live events</h2>
+        <a class="action" href="/events">See all events</a>
+    </section>
+
+    <script type="text/javascript">
+        require(['js!omniture'], function () {
+            s.products = 'event;@event.id;';
+            s.events = 'order';
+        });
+    </script>
+}

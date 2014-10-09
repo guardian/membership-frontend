@@ -8,11 +8,8 @@
                 <a href="/event/@event.id">
                     <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
                 </a>
-            </div>@*
-
-                // Inline-block whitespace
-
-             *@<div class="event-item__meta">
+            </div>
+            <div class="event-item__meta">
                 <a href="/event/@event.id">
                     <h2 class="event-item__title">
                         @if(event.getStatus == SoldOut){
