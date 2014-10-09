@@ -4,6 +4,4 @@ $guss-webfonts-base-url: '//pasteup.guim.co.uk/fonts/';
 
 @include guss-webfonts();
 
-// @import 'components/bower-components/guss-typography/_typography.scss';
-
 @include guss-typography-defaults;

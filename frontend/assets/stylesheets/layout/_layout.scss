@@ -86,7 +86,7 @@ body {
 // this alignment is too perfect
 %page-container,
 .page-container {
-    background-color: #ffffff;
+    background-color: $white;
     padding: 0 rem($gs-gutter / 2);
 
     @include mq(tablet) {
