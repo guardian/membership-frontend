@@ -117,10 +117,6 @@ $header-margin: 36px;
     }
 }
 
-.identity__notice {
-    @include fs-data(4);
-}
-
 /* Media Queries
    ========================================================================== */
 @include mq(tablet) {

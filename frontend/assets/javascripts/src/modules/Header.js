@@ -16,8 +16,6 @@ define([
             SECTIONS_POP_UP_PAGE_LIST: '.js-sections-nav-popup-page-list',
             MENU_ICON: '.js-menu-icon',
             IDENTITY_NOTICE: '.identity__notice',
-            IDENTITY_ACCOUNT: '.identity__account',
-            IDENTITY_TIER: '.identity__tier',
             IDENTITY_ICON: '.js-identity-icon',
             IDENTITY_POP_UP_NAV: '.js-profile-nav-popup',
             COMMENT_ACTIVITY_LINK: '.js-comment-activity',
@@ -115,12 +113,9 @@ define([
 
         if (user) {
             config.DOM.IDENTITY_NOTICE.text(config.text.SIGNED_IN_PREFIX).addClass('u-h');
-            config.DOM.IDENTITY_ACCOUNT.text(user.displayname).removeClass('u-h');
 
             userUtil.getMemberDetail(function (memberDetail) {
-                var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
-                if (tier) {
-                    config.DOM.IDENTITY_TIER.text(tier).removeClass('u-h');
+                if (memberDetail.tier) {
                     config.DOM.EDIT_PROFILE_LINK.attr('href', config.DOM.EDIT_PROFILE_LINK.attr('data-member-href'));
                 }
             });
