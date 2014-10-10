@@ -14,7 +14,7 @@ define([
     UserDetails.prototype.populateUserDetails = function (obj) {
         for (var i = 0; i < this.availableDetails.length; i++) {
             var detail = this.availableDetails[i];
-            if (detail) {
+            if (obj[detail]) {
                 $('.js-user-' + detail).removeClass('u-h').text(obj[detail]);
             }
         }
