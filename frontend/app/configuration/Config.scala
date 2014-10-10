@@ -45,6 +45,8 @@ object Config {
   val idApiUrl = config.getString("identity.api.url")
   val idApiClientToken = config.getString("identity.api.client.token")
 
+  val eventbriteUrl = config.getString("eventbrite.url")
+
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
   val eventbriteApiToken = config.getString("eventbrite.api.token")
   val eventbriteApiEventListUrl = config.getString("eventbrite.api.event-list-url")

@@ -137,9 +137,11 @@ define([
 
     Cta.prototype.init = function () {
         var self = this;
-
         this.elem = this.elem || this.getElem('EVENT_TICKETS_CONTAINER');
-        if (this.elem) {
+
+        /* buttons are either both not here, both here, or only one is here */
+        if (this.getElem('MEMBER_CTA') || this.getElem('BUY_TICKET_CTA')) {
+
             this.userIsLoggedIn = user.isLoggedIn();
 
             user.getMemberDetail(function (memberDetail) {

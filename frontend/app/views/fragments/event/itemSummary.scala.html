@@ -6,11 +6,8 @@
 <div class="event-summary">
     <div class="event-item__media">
         <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
-    </div>@*
-
-        // Inline-block whitespace
-
-     *@<div class="event-item__meta">
+    </div>
+    <div class="event-item__meta">
         <h2 class="event-item__title">
             @if(event.getStatus == SoldOut){
                 <span class="event-status--sold-out">Sold Out</span>
@@ -18,19 +15,19 @@
             @event.name.text
         </h2>
 
-        <div class="event-item__time">
-            <i class="icon-sprite icon-sprite-early_booking-grey"></i>
+        <div class="event-item__detail">
+            <i class="icon-sprite icon-sprite-early_booking-grey event-item__icon"></i>
             <time datetime="@event.start">@prettyDateWithTimeAndDayName(event.start)</time>
         </div>
 
-        <div class="event-item__location">
-            <i class="icon-sprite icon-sprite-location"></i>
+        <div class="event-item__detail">
+            <i class="icon-sprite icon-sprite-location event-item__icon"></i>
             @if(event.venue.name){
                 <span class="event-item__location-name">@event.venue.name </span>
             }
             @for(address <- event.venue.address) {
-                <span class="event-item__location-address">@address.address_1 </span>
-                <span class="event-item__location-city">@address.city @address.postal_code </span>
+                <span class="event-item__location-detail">@address.address_1 </span>
+                <span class="event-item__location-detail">@address.city @address.postal_code </span>
             }
         </div>
     </div>
