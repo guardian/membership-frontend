@@ -10,7 +10,7 @@
 @ticketCta = {
     @event.getStatus match {
         case Live => {
-            <a class='action js-ticket-cta' href='/event/@event.id/buy'>Buy tickets</a>
+            <a class='action action--event-buy js-ticket-cta' href='/event/@event.id/buy'>Buy tickets</a>
         }
         case nonLive => {
             <button class='action action--disabled js-ticket-cta' disabled='disabled'>

@@ -90,19 +90,18 @@
 }
 
 .event__tickets__wapper {
-    padding: rem($gs-gutter) 0;
+    padding-top: rem($gs-gutter);
 
-    @include mq(mem-full) {
-        padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 2);
-    }
-    
-    .action {
-        background-color: $black;
-
+    .action--event-buy,
+    .action--disabled {
         @include mq(tablet) {
             float: left;
             margin: rem(6px $gs-gutter 0 0);
         }
+    }
+    
+    .action--event-buy {
+        background-color: $black;
 
         &:hover {
             background-color: $c-neutral3;
@@ -353,22 +352,25 @@
 
     .event-info__sale-ends {
         padding: 0 0 rem(5px) rem($gs-gutter * 2);
+    }
 
-        strong {
-            font-weight: 400;
-        }
+    time {
+        float: right;
     }
 
     .action {
-        background-color: $mem-live-accent;
         margin-right: rem($gs-gutter);
         margin-right: 0px;
         min-width: 100%;
+    }
+
+    .action--event-buy {
+        background-color: $mem-live-accent;
 
         &:hover {
             background-color: darken($mem-live-accent, 5%);
         }
-    } 
+    }
 
     .terms-info {
         @include fs-textSans(1);
