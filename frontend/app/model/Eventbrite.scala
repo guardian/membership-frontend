@@ -145,11 +145,7 @@ object Eventbrite {
       }
     }
 
-    lazy val isNoTicketEvent = getNoTicketEventStatus
-
-    def getNoTicketEventStatus: Boolean = {
-      description.map(_.toString.contains("<!-- noTicketEvent -->")).getOrElse(false)
-    }
+    lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     // This currently extracts all none hidden tickets and gets the first one
     def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
