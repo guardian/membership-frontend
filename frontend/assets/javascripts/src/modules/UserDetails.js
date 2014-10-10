@@ -15,7 +15,7 @@ define([
         for (var i = 0; i < this.availableDetails.length; i++) {
             var detail = this.availableDetails[i];
             if (detail) {
-                $('.js-user-' + detail).text(obj[detail]);
+                $('.js-user-' + detail).removeClass('u-h').text(obj[detail]);
             }
         }
     };
