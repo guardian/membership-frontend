@@ -185,9 +185,9 @@
                             </div>
 
                             <div class="event-info__sale-ends">
-                                <span class="js-datetime-enhance-note"><strong>Sales @if(event.getStatus == Completed){ended on}else{end on}</strong></span>
-                                <time class="js-datetime-enhance-time" datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                 @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.prettyWithTime)
+                                <span>Sale @if(event.getStatus == Completed){ended}else{ends}</span>
+                                <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                                 @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
                                 </time>
                             </div>
 
