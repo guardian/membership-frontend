@@ -30,11 +30,17 @@
 }
 
 .event__content__container--details {
-    padding: 0 rem($gs-gutter /2);
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter);
     position: relative;
+    min-height: rem(75px);
 
     @include mq(tablet) {
-        padding: 0 rem($gs-gutter);
+        padding: rem($gs-gutter);
+        min-height: rem(120px);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 3);
     }
 }
 
@@ -60,19 +66,18 @@
 }
 
 .event__title {
-    @include fs-headline(2);
-    font-weight: bold;
+    @include fs-header(1);
     color: $white;
     border-bottom: rem(1px) dotted $border-bottom-color;
     padding-bottom: rem(5px);
 
     @include mq(tablet) {
-        @include fs-headline(4);
-        font-weight: bold;
+        @include fs-header(4);
         padding: 0 rem($gs-gutter) 0 0;
     }
 
     @include mq(mem-full) {
+        @include fs-header(5);
         width: rem(gs-span(2) + $gs-gutter * 2);
         border-bottom: 0;
         float: left;
@@ -141,6 +146,7 @@
     
     .event__price-amount {
         @include fs-header(5);
+        -webkit-font-smoothing: antialiased;
     }
 
     .event__trail {
@@ -149,10 +155,15 @@
 }
 
 .event__details {
-    padding-top: rem($gs-baseline / 2);
 
-    @include mq(mem-full) {
-        padding: rem($gs-baseline / 2) rem($gs-gutter) 0 rem(gs-span(2) + $gs-gutter * 2);
+    .event__location {
+        font-size: 0; /** space between inline block elements **/
+        // color: $c-neutral2;
+    }
+
+    .event__venue-name,
+    .event__address {
+        @include fs-data(4);
     }
 
     .event__location {
@@ -172,6 +183,7 @@
             @include fs-headline(4);
         }
     }
+
 }
 
 .event__picture-byline {
@@ -191,11 +203,11 @@
     padding: 0;
 
     .event__content-wapper {
-        padding: 0 rem($gs-gutter / 2);
+        padding: rem($gs-gutter) rem($gs-gutter / 2);
 
         @include mq(tablet) {
             width: rem(gs-span(9) + $gs-gutter * 2);
-            padding: 0;
+            padding: rem($gs-gutter * 3) 0;
             margin: 0 auto;
         }
 
