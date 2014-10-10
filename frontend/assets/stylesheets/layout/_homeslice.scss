@@ -169,10 +169,17 @@
                 @include mq(tablet) {
                     @include fs-headline(5);
                 }
+
+                & + .action {
+                    margin-top: 0;
+                }
             }
 
             .action {
-                margin: 0 0 rem(17px);
+                margin: rem(13px) 0 rem(17px);
+                & + .action {
+                    margin-left: $gs-gutter / 2;
+                }
             }
         }
     }
