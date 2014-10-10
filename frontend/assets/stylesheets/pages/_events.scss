@@ -46,12 +46,14 @@
         color: $white;
         padding-top: rem($gs-baseline / 2);
 
+
         @include mq(tablet) {
             padding-top: rem($gs-baseline);
             @include fs-headline(7);
         }
 
         @include mq(mem-full) {
+            float: left;
             padding-top: 0;
         }
     }
@@ -66,6 +68,7 @@
 
     @include mq(tablet) {
         @include fs-headline(4);
+        font-weight: bold;
         padding: 0 rem($gs-gutter) 0 0;
     }
 
