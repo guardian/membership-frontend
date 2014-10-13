@@ -93,8 +93,46 @@
     }
 }
 
-.event-tickets-wapper {
+.event-details {
+
+    .event-details__time {
+        @include fs-headline(2);
+
+        @include mq(tablet) {
+            @include fs-headline(4);
+        }
+    }
+
+    .event-details__location {
+        font-size: 0; /** space between inline block elements **/
+
+        .event-details__venue-name,
+        .event-details__address {
+            @include fs-data(4);
+        }
+    }
+}
+
+.event-ticket {
     padding-top: rem($gs-gutter);
+
+    .event-ticket__details {
+        color: $white;
+
+        @include mq(tablet) {
+            float: left;
+            padding-right: rem($gs-gutter);
+        }
+        
+        .event-ticket__price-amount {
+            @include fs-header(5);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .event-ticket__trail {
+            @include fs-textSans(1);
+        }
+    }
 
     .action--event-buy,
     .action--disabled {
@@ -133,45 +171,6 @@
             }
         }
     }
-}
-
-.event__tickets {
-    color: $white;
-
-    @include mq(tablet) {
-        float: left;
-        padding-right: rem($gs-gutter);
-    }
-    
-    .event__price-amount {
-        @include fs-header(5);
-        -webkit-font-smoothing: antialiased;
-    }
-
-    .event__trail {
-        @include fs-textSans(1);
-    }
-}
-
-.event-details {
-
-    .event-details__time {
-        @include fs-headline(2);
-
-        @include mq(tablet) {
-            @include fs-headline(4);
-        }
-    }
-
-    .event-details__location {
-        font-size: 0; /** space between inline block elements **/
-
-        .event-details__location__venue-name,
-        .event-details__location__address {
-            @include fs-data(4);
-        }
-    }
-
 }
 
 .event__picture-byline {
@@ -287,7 +286,7 @@
     }
 }
 
-.event-info {
+.event-content__info {
     background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
     padding: rem($gs-gutter);
@@ -298,36 +297,54 @@
         width: gs-span(4);
     }
 
-    .event-info__name {
+    .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
     }
 
-    .event-info__time,
-    .event-info__location,
-    .event-info__tickets,
-    .event-info__price {
+    .event-content__time,
+    .event-content__location,
+    .event-content__tickets,
+    .event-content__price {
         @include fs-data(4);
     }
 
-    .event-info__location {
+    .event-content__location {
 
-        .event-info__address {
+        .event-content__address {
             clear: both;
             display: block;
             margin-left: rem(40px);
         }
     }
 
-    .event-info__price {
+    .event-content__price {
         padding-bottom: 0;
 
-        .event-info__price-amount {
+        .event-content__price-amount {
             @include fs-header(5);
         }
     }
 
-    .event-info__sale-ends {
+    .event-content__sale-dates {
+
+        .sale-dates__header {
+            @include fs-textSans(4);
+            font-weight: bold;
+        }
+
+        .sale-dates__item {
+            @include fs-data(4);
+            padding-left: rem($gs-gutter * 2);
+            text-align: right;
+
+            .sale-dates__item--left {
+                float: left;
+            }
+        }
+    }
+
+    .event-content__sale-ends {
         padding: 0 0 rem(5px) rem($gs-gutter * 2);
     }
 
@@ -356,27 +373,9 @@
 
 }
 
-.event-info--line-divider {
+.event-content--line-divider {
     border-top: rem(1px) solid $c-neutral3;
     padding: rem(5px) 0;
-}
-
-.ticket-info {
-
-    .ticket-info__header {
-        @include fs-textSans(4);
-        font-weight: bold;
-    }
-
-    .ticket-info__item {
-        @include fs-data(4);
-        padding-left: rem($gs-gutter * 2);
-        text-align: right;
-
-        .ticket-info__item--left {
-            float: left;
-        }
-    }
 }
 
 /* ==========================================================================

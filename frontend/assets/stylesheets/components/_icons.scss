@@ -70,7 +70,7 @@
     height: rem($gs-gutter + 5);
     margin: 0 rem($gs-gutter) rem(-7px) 0;
 
-    .event-info & {
+    .event-content__info & {
         background-size: rem($gs-gutter) auto!important;
         width: rem($gs-gutter);
         height: rem($gs-gutter);

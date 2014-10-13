@@ -45,8 +45,8 @@
     @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
         
         @for((tier, salesDate) <- ticketSaleDates) {
-            <ul class="ticket-info__list u-unstyled u-cf">
-                <li class="ticket-info__item"><span class="ticket-info__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
+            <ul class="sale-dates__list u-unstyled u-cf">
+                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
             </ul>
         }
     }
@@ -77,22 +77,22 @@
             </div>
             @if(event.isNoTicketEvent == false) {
                 @for(ticket <- event.ticketClassesHead) {
-                    <div class="event-tickets-wapper u-cf">
-                        <div class="event__tickets">
+                    <div class="event-ticket u-cf">
+                        <div class="event-ticket__details">
 
                             @if(ticket.free) {
-                                <div class="event__price">
-                                    <span class="event__price-amount js-event-price">Free</span>
+                                <div class="event-ticket__price">
+                                    <span class="event-ticket__price-amount js-event-price">Free</span>
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event__price">
-                                        <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <div class="event-ticket__price">
+                                        <span class="event-ticket__price-amount js-event-price">@pricing.formattedPrice</span>
                                     </div>
-                                    <div class="event__trail">
-                                        <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
-                                        <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                    <div class="event-ticket__trail">
+                                        <span class="event-ticket__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                        <span class="event-ticket__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                        <span class="event-ticket__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
                                     </div>
                                 }
                             }
@@ -121,12 +121,12 @@
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
             </div>
 
-            <div class="event-info">
-                <div class="event-info__name">@event.name.text</div>
-                <div class="event-info__time event-info--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
-                <div class="event-info__location event-info--line-divider">
-                    <span class="event-info__venue-name"><i class="icon-sprite icon-sprite-location icon-sprite--small"></i>@event.venue.name</span>@if(event.addressOne){, 
-                    <span class="event-info__address">@event.eventAddressLine</span>
+            <div class="event-content__info">
+                <div class="event-content__name">@event.name.text</div>
+                <div class="event-content__time event-content--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
+                <div class="event-content__location event-content--line-divider">
+                    <span class="event-content__venue-name"><i class="icon-sprite icon-sprite-location icon-sprite--small"></i>@event.venue.name</span>@if(event.addressOne){, 
+                    <span class="event-content__address">@event.eventAddressLine</span>
                     }
 
                 </div>
@@ -135,14 +135,14 @@
                 
                     @for(ticket <- event.ticketClassesHead) {
 
-                        <div class="event-info__tickets event-info--line-divider">
+                        <div class="event-content__tickets event-content--line-divider">
 
-                            <div class="ticket-info">
-                                <div class="ticket-info__header"><i class="icon-sprite icon-sprite-book_tickets icon-sprite--small"></i>Ticket sales</div>
+                            <div class="event-content__sale-dates">
+                                <div class="sale-dates__header"><i class="icon-sprite icon-sprite-book_tickets icon-sprite--small"></i>Ticket sales</div>
                                 @ticketBookingDates(ticket)
                             </div>
 
-                            <div class="event-info__sale-ends">
+                            <div class="event-content__sale-ends">
                                 <span>Sale @if(event.getStatus == Completed){ended}else{ends}</span>
                                 <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
                                  @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
@@ -150,15 +150,15 @@
                             </div>
 
                             @if(ticket.free) {
-                                <div class="event-info__price event-info--line-divider">
-                                    <span class="event-info__price-amount js-event-price">Free</span>
+                                <div class="event-content__price event-content--line-divider">
+                                    <span class="event-content__price-amount js-event-price">Free</span>
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event-info__price event-info--line-divider">
-                                        <span class="event-info__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <div class="event-content__price event-content--line-divider">
+                                        <span class="event-content__price-amount js-event-price">@pricing.formattedPrice</span>
                                     </div>
-                                    <div class="event-info__trail">
+                                    <div class="event-content__trail">
                                         <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
                                         <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
                                         <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
