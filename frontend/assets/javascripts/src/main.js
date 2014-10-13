@@ -8,7 +8,6 @@ require([
     'src/modules/events/Cta',
     'src/modules/Header',
     'src/modules/UserDetails',
-    'src/modules/events/DatetimeEnhance',
     'src/modules/tier/Choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
@@ -24,7 +23,6 @@ require([
     Cta,
     Header,
     UserDetails,
-    DatetimeEnhance,
     Choose,
     eventPriceEnhance,
     Thankyou
@@ -58,7 +56,6 @@ require([
     (new UserDetails()).init();
 
     // Events
-    (new DatetimeEnhance()).init();
     (new Cta()).init();
     eventPriceEnhance.init();
 

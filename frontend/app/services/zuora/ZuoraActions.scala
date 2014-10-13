@@ -251,6 +251,15 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
         </ns1:Amendments>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
+          <ns2:Name>Upgrade</ns2:Name>
+          <ns2:Status>Completed</ns2:Status>
+          <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+          <ns2:TermStartDate>{dateStr}</ns2:TermStartDate>
+          <ns2:Type>TermsAndConditions</ns2:Type>
+        </ns1:Amendments>
+        <ns1:Amendments>
+          <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
           <ns2:Name>Upgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>

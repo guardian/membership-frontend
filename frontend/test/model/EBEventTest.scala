@@ -8,7 +8,7 @@ import EventbriteDeserializer._
 
 class EBEventTest extends PlaySpecification {
 
-  val event = Resource.getJson("model/eventbrite/events.2014-26-09.dev.account.json")
+  val event = Resource.getJson("model/eventbrite/events.2014-10-10.dev.account.json")
   val ebResponse = event.as[EBResponse[EBEvent]]
   val ebCompletedEvent = ebResponse.data.find(_.id == "11582434373").get
   val ebStartedEvent = ebResponse.data.find(_.id == "11585910771").get
@@ -18,7 +18,8 @@ class EBEventTest extends PlaySpecification {
   val ebLiveEvent = ebResponse.data.find(_.id == "11582592847").get
   val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
   val ebDraftEvent = ebResponse.data.find(_.id == "11583116413").get
-
+  val nonTicketedEvent = ebResponse.data.find(_.id == "13631162173").get
+  val ticketedEvent = ebLiveEvent;
 
  "getStatus on event " should {
     "that has a status='completed' should return Completed" in {
@@ -48,6 +49,15 @@ class EBEventTest extends PlaySpecification {
     }
     "that has a status='draft' should return Draft" in {
       ebDraftEvent.getStatus mustEqual(Draft)
+    }
+  }
+
+  "isNoTicketEvent on event " should {
+    "should return true when comment <!-- noTicketEvent --> is present in description" in {
+      nonTicketedEvent.isNoTicketEvent mustEqual(true)
+    }
+    "should return false when comment <!-- noTicketEvent --> is NOT in description" in {
+      ticketedEvent.isNoTicketEvent mustEqual(false)
     }
   }
 
