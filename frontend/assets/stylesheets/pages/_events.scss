@@ -2,8 +2,10 @@
    An event on an event page
    ========================================================================== */
 
-div.event {
+.event {
+    @extend %page-container; 
     background-color: $white;
+
     .event__content {
 
         .event__price-amount {
@@ -20,7 +22,7 @@ div.event {
 
         .event__content-body {
             max-width: rem(620px);
-            padding: rem($gs-gutter/2);
+            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
 
             @include mq(tablet) {
                 padding: rem($gs-gutter);
@@ -84,6 +86,45 @@ div.event {
     }
 }
 
+.event__content__header {
+    width: 100%;
+    background-color: $mem-live-red;
+
+    .event__title {
+        @include fs-headline(4);
+        color: $white;
+        padding: rem($gs-gutter / 2);
+
+        @include mq(tablet) {
+            float: left;
+            width: rem(gs-span(2) + $gs-gutter * 2);
+            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(2) + $gs-gutter * 2);
+        }
+    }
+}
+
+.event__content__header--shade {
+    background-color: $mem-live-red-trans;
+
+    .event__details {
+        color: $white;
+    }
+
+    .header-bar__guardian-live-logo {
+        margin-left: 87%;
+    }
+}
+
+.event__content-container {
+    @extend %page-container;
+    background-color: transparent;
+}
+
+
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
@@ -93,7 +134,7 @@ div.event {
 }
 
 .event__content__inner {
-    background-color: #f1f1f1;
+    background-color: $mem-live-red;
 }
 
 .event__content__inner--sub {
@@ -103,8 +144,9 @@ div.event {
 
 .event__masthead {
     position: relative;
+
     .event__name {
-        padding: rem(40px) rem(40px) rem(20px) 0;
+        color: $white;
     }
 }
 

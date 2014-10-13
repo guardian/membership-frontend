@@ -40,19 +40,61 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
+    <div class="event__content__header">
+        <div class="event__content-container">
+            <div class="event__masthead">
+                <h1 class="event__title section-header page-header">events</h1>
+                <h1 class="event__name section-header page-header">@event.name.text</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="event__content__header event__content__header--shade">
+        <div class="event__content-container">
+            <div class="event__details">
+                <div class="event__time">@prettyDateWithTime(event.start)</div>
+                <div class="event__location">
+                    <span class="event__venue-name">@event.venue.name</span>,
+                    <span class="event__address">@event.eventAddressLine</span>
+                </div>
+            </div>
+            @for(ticket <- event.ticketClassesHead) {
+
+                <div class="event__tickets">
+
+                    @if(ticket.free) {
+                        <div class="event__price">
+                            <span class="event__price-amount js-event-price">Free</span>
+                        </div>
+                    } else {
+                        @for(pricing <- ticket.cost) {
+                            <div class="event__price">
+                                <span class="event__price-amount js-event-price">@pricing.formattedPrice</span>
+                                <span class="event__price-note js-event-price-note"> per ticket</span>
+                            </div>
+                            <div class="event__trail">
+                                <span class="event__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                <span class="event__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                <span class="event__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                            </div>
+                        }
+                    }
+
+                    @ticketCta
+                </div>
+            }
+        </div>
+        <div class="header-bar__guardian-live-logo">
+            <i class="icon-sprite icon-sprite-guardian-live"></i>
+        </div>
+    </div>
 
     <div class="event">
         <div class="event__content">
+            
             <div class="event__image">
                 <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image"></div>
-            </div>
-            <div class="event__content__inner">
-                <div class="event__content-body">
-                    <div class="event__masthead">
-                        <h1 class="event__name section-header page-header">@event.name.text</h1>
-                    </div>
-                </div>
             </div>
             <div class="event__content__inner event__content__inner--sub">
                 <div class="event__content-body">
