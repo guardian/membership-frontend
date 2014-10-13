@@ -13,7 +13,7 @@ class JoinFriendPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def postCodeTextbox = driver.findElement(By.id("postCode-deliveryAddress"))
 
-  private def joinNowButton = driver.findElement(By.cssSelector(".submit-input.action--logged-in.js-submit-input"))
+  private def joinNowButton = driver.findElement(By.cssSelector(".action"))
 
   def enterFirstName(firstName: String) = {
     firstNameTextbox.sendKeys(firstName)

@@ -166,13 +166,26 @@
                 @include fs-headline(3);
                 font-weight: 100;
                 margin-bottom: rem(17px);
+
                 @include mq(tablet) {
                     @include fs-headline(5);
+
+                    & + .action {
+                        margin-top: 0;
+                    }
                 }
             }
 
             .action {
                 margin: 0 0 rem(17px);
+
+                @include mq(tablet) {
+                    margin: rem(13px) 0 rem(17px);
+
+                    & + .action {
+                        margin-left: $gs-gutter / 2;
+                    }
+                }
             }
         }
     }
