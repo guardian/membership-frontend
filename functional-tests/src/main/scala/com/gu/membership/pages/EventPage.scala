@@ -17,7 +17,7 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventDescriptionDiv = driver.findElement(By.cssSelector(".event__description"))
 
-  private def buyButton = driver.findElement(By.xpath("//div[@class[contains(., 'event__content')]]/a[1]"))
+  private def buyButton = driver.findElement(By.xpath("//div[contains(@class, 'event-info__tickets')]/a[contains(@class, 'action')]"))
 
   private def eventName = driver.findElement(By.cssSelector(".event__name"))
 
