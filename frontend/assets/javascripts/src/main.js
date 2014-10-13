@@ -7,6 +7,7 @@ require([
     'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
     'src/modules/Header',
+    'src/modules/UserDetails',
     'src/modules/tier/Choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
@@ -21,6 +22,7 @@ require([
     PaidForm,
     Cta,
     Header,
+    UserDetails,
     Choose,
     eventPriceEnhance,
     Thankyou
@@ -51,6 +53,7 @@ require([
     var header = new Header();
     header.init();
     omnitureAnalytics.init();
+    (new UserDetails()).init();
 
     // Events
     (new Cta()).init();

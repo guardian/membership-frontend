@@ -5,6 +5,7 @@
     cursor: pointer;
     border: 0;
     color: #ffffff;
+    text-align: left;
     text-decoration: none;
     position: relative;
     @include fs-textSans(4);
@@ -68,39 +69,7 @@
     cursor: default;
 }
 
-.action--wide {
-    min-width: 12em;
-}
-
-.action--inline-text {
-    margin: $gs-baseline;
-}
-
-.action--join,
-.action--logged-out,
-.action--logged-in {
-    text-align: left;
-    background-color: $mem-buttonBlue;
-    color: $white;
-    padding: rem(8px) rem(8px) rem(8px) rem(18px);
-
-    &:visited,
-    &:active,
-    &:focus {
-        background-color: $mem-buttonBlue;
-        color: $white;
-    }
-    &:hover {
-        background-color: darken($mem-buttonBlue, 15%);
-    }
-    i {
-        float: right;
-        margin-top: rem(2px);
-    }
-}
-
 .action--secondary-button {
-    text-align: left;
     background-color: $offWhite;
     color: $black;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
@@ -146,38 +115,6 @@
     }
 }
 
-.action--ticket-button {
-    position: relative;
-    z-index: 1;
-    &:before, &:after {
-        content: ' ';
-        position: absolute;
-        z-index: 2;
-        height: rem(10px);
-        width: rem(10px);
-        display: block;
-        border-radius: rem(50px);
-        background-color: #ffffff;
-        top: 50%;
-        margin-top: rem(-5px);
-    }
-
-    &:before {
-        left: rem(-5px);
-    }
-
-    &:after {
-        right: rem(-5px);
-    }
-}
-
-.action--ticket-button--grey {
-    margin: rem(40px) 0 rem(5px);
-    &:before, &:after {
-        background-color: #e1e1e1;
-    }
-}
-
 .action-cta {
     color: #ffffff;
     border: 0;
@@ -210,19 +147,3 @@
         float: right;
     }
 }
-
-// Heading/Text with an action button inline next to it
-.action-inline-combo {
-    margin-bottom: $gs-baseline;
-    &.action-inline-combo--nomargin {
-        margin: 0;
-    }
-    > * {
-        display: inline-block;
-        vertical-align: middle;
-        margin-top: 0;
-        margin-bottom: 0;
-
-    }
-}
-

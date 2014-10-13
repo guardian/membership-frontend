@@ -6,14 +6,6 @@ $card-icon-offset: 2px;
    Joiner
    ========================================================================== */
 
-.joiner-section--left-aligned {
-    text-align: left;
-}
-
-.joiner-section--no-border {
-    border: 0;
-}
-
 .joiner-navigation {
     @include clearfix;
 }
