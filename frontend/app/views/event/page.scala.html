@@ -65,7 +65,7 @@
     <div class="event-header event-header--shade">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
-                <div class="event-details__time">@prettyDateWithTime(event.start)</div>
+                <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
                     @if(event.addressOne) {
@@ -123,7 +123,7 @@
 
             <div class="event-content__info">
                 <div class="event-content__name">@event.name.text</div>
-                <div class="event-content__time event-content--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
+                <div class="event-content__time event-content--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTimeAndDayName(event.start)</div>
                 <div class="event-content__location event-content--line-divider">
                     <span class="event-content__venue-name"><i class="icon-sprite icon-sprite-location icon-sprite--small"></i>@event.venue.name</span>@if(event.addressOne){, 
                     <span class="event-content__address">@event.eventAddressLine</span>
