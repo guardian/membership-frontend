@@ -53,23 +53,23 @@
 }
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "event") {
-    <div class="event__content__header">
-        <div class="event__content__container">
-            <div class="event__masthead u-cf">
-                <div class="event__title section-header page-header">events</div>
-                <h1 class="event__name">@event.name.text</h1>
+    <div class="event-header">
+        <div class="event-header__container">
+            <div class="event-masthead u-cf">
+                <div class="event-masthead__title section-header page-header">events</div>
+                <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>
     </div>
 
-    <div class="event__content__header event__content__header--shade">
-        <div class="event__content__container event__content__container--details">
-            <div class="event__details">
-                <div class="event__time">@prettyDateWithTime(event.start)</div>
-                <div class="event__location">
-                    <span class="event__venue-name">@event.venue.name</span>
+    <div class="event-header event-header--shade">
+        <div class="event-header__container event-header__container--details">
+            <div class="event-details">
+                <div class="event-details__time">@prettyDateWithTime(event.start)</div>
+                <div class="event-details__location">
+                    <span class="event-details__location__venue-name">@event.venue.name</span>
                     @if(event.addressOne) {
-                        <span class="event__address">
+                        <span class="event-details__location__address">
                             , @event.eventAddressLine
                         </span>
                     }
@@ -77,7 +77,7 @@
             </div>
             @if(event.isNoTicketEvent == false) {
                 @for(ticket <- event.ticketClassesHead) {
-                    <div class="event__tickets__wapper u-cf">
+                    <div class="event-tickets-wapper u-cf">
                         <div class="event__tickets">
 
                             @if(ticket.free) {
@@ -101,7 +101,7 @@
                     </div>
                 }
             }
-            <div class="header-bar__guardian-live-logo">
+            <div class="guardian-live-logo">
                 <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
             </div>
         </div>
@@ -109,20 +109,19 @@
     </div>
 
     
-    <div class="event__content">
+    <div class="event-content">
         
-        <div class="event__image">
+        <div class="event-content__image">
             <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
 
-        <div class="event__content-wapper u-cf">
+        <div class="event-content__wapper u-cf">
 
-            <div class="event__content-body">
+            <div class="event-content__body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
             </div>
 
             <div class="event-info">
-
                 <div class="event-info__name">@event.name.text</div>
                 <div class="event-info__time event-info--line-divider"><i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>@prettyDateWithTime(event.start)</div>
                 <div class="event-info__location event-info--line-divider">

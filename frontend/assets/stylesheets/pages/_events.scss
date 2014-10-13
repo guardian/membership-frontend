@@ -2,16 +2,16 @@
    An event on an event page
    ========================================================================== */
 
-.event__content__header {
+.event-header {
     background-color: $mem-live-red-trans;
     color: $white;
 }
 
-.event__content__header--shade {
+.event-header--shade {
     background-color: $mem-live-accent-trans;
 }
 
-.event__content__container {
+.event-header__container {
     margin: 0 auto;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
     background-color: transparent;
@@ -29,7 +29,7 @@
     }
 }
 
-.event__content__container--details {
+.event-header__container--details {
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter);
     position: relative;
     min-height: rem(75px);
@@ -44,10 +44,10 @@
     }
 }
 
-.event__masthead {
+.event-masthead {
     position: relative;
 
-    .event__name {
+    .event-masthead__name {
         @include fs-headline(5);
         color: $white;
         padding-top: rem($gs-baseline / 2);
@@ -63,28 +63,27 @@
             padding-top: 0;
         }
     }
+    .event-masthead__title {
+        @include fs-header(1);
+        color: $white;
+        border-bottom: rem(1px) dotted $border-bottom-color;
+        padding-bottom: rem(5px);
+
+        @include mq(tablet) {
+            @include fs-header(4);
+            padding: 0 rem($gs-gutter) 0 0;
+        }
+
+        @include mq(mem-full) {
+            @include fs-header(5);
+            width: rem(gs-span(2) + $gs-gutter * 2);
+            border-bottom: 0;
+            float: left;
+        }
+    }
 }
 
-.event__title {
-    @include fs-header(1);
-    color: $white;
-    border-bottom: rem(1px) dotted $border-bottom-color;
-    padding-bottom: rem(5px);
-
-    @include mq(tablet) {
-        @include fs-header(4);
-        padding: 0 rem($gs-gutter) 0 0;
-    }
-
-    @include mq(mem-full) {
-        @include fs-header(5);
-        width: rem(gs-span(2) + $gs-gutter * 2);
-        border-bottom: 0;
-        float: left;
-    }
-}
-
-.header-bar__guardian-live-logo {
+.guardian-live-logo {
     position: absolute;
     bottom: rem($gs-gutter / 2 + 2);
     right: rem($gs-gutter / 2);
@@ -94,7 +93,7 @@
     }
 }
 
-.event__tickets__wapper {
+.event-tickets-wapper {
     padding-top: rem($gs-gutter);
 
     .action--event-buy,
@@ -154,12 +153,7 @@
     }
 }
 
-.event__details {
-
-    .event__location {
-        font-size: 0; /** space between inline block elements **/
-        // color: $c-neutral2;
-    }
+.event-details {
 
     .event__venue-name,
     .event__address {
@@ -176,11 +170,20 @@
         @include fs-data(4);
     }
 
-    .event__time {
+    .event-details__time {
         @include fs-headline(2);
 
         @include mq(tablet) {
             @include fs-headline(4);
+        }
+    }
+
+    .event-details__location {
+        font-size: 0; /** space between inline block elements **/
+
+        .event-details__location__venue-name,
+        .event-details__location__address {
+            @include fs-data(4);
         }
     }
 
@@ -198,11 +201,17 @@
     }
 }
 
-.event__content {
+.event-content {
     background-color: $white;
     padding: 0;
 
-    .event__content-wapper {
+    .event-content__image {
+        img {
+            width: 100%;
+        }
+    }
+
+    .event-content__wapper {
         padding: rem($gs-gutter) rem($gs-gutter / 2);
 
         @include mq(tablet) {
@@ -219,7 +228,7 @@
             width: rem(gs-span(14));
         }
 
-        .event__content-body {
+        .event-content__body {
             position: relative;
 
             @include mq(tablet) {
@@ -372,7 +381,7 @@
 
     .action {
         margin-right: rem($gs-gutter);
-        margin-right: 0px;
+        margin-right: 0;
         min-width: 100%;
     }
 
@@ -417,12 +426,6 @@
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
-
-.event__image {
-    img {
-        width: 100%;
-    }
-}
 
 .events-list {
     &.u-unstyled {
