@@ -195,7 +195,7 @@
         }
     }
 
-    .event-content__wapper {
+    .event-content__container {
         padding: rem($gs-gutter) rem($gs-gutter / 2);
 
         @include mq(tablet) {
@@ -232,7 +232,7 @@
     }
 }
 
-.event__trail {
+.event-content__trail {
     @include fs-textSans(4);
     display: block;
 }
