@@ -64,7 +64,7 @@
         .header-bar__guardian-live-logo {
             position: absolute;
             right: rem($gs-gutter / 2);
-            top: rem(150px);
+            bottom: rem($gs-gutter / 2);
         }
 
         i {

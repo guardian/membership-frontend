@@ -23,7 +23,7 @@ define([
 
     Cta.prototype.classes = {
         MEMBER_CTA: 'js-member-cta',
-        EVENT_TICKETS_CONTAINER: 'event__tickets',
+        EVENT: 'js-event',
         SALE_START: 'js-ticket-sale-start',
         SALE_START_FRIEND: 'js-ticket-sale-start-friend',
         SALE_START_PARTNER: 'js-ticket-sale-start-partner',
@@ -137,7 +137,7 @@ define([
 
     Cta.prototype.init = function () {
         var self = this;
-        this.elem = this.elem || this.getElem('EVENT_TICKETS_CONTAINER');
+        this.elem = this.elem || this.getElem('EVENT');
 
         /* buttons are either both not here, both here, or only one is here */
         if (this.getElem('MEMBER_CTA') || this.getElem('BUY_TICKET_CTA')) {

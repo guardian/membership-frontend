@@ -7,7 +7,6 @@ require([
     'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
     'src/modules/Header',
-    'src/modules/events/DatetimeEnhance',
     'src/modules/tier/Choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
@@ -22,7 +21,6 @@ require([
     PaidForm,
     Cta,
     Header,
-    DatetimeEnhance,
     Choose,
     eventPriceEnhance,
     Thankyou
@@ -55,7 +53,6 @@ require([
     omnitureAnalytics.init();
 
     // Events
-    (new DatetimeEnhance()).init();
     (new Cta()).init();
     eventPriceEnhance.init();
 
