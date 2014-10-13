@@ -170,15 +170,22 @@
                     @include fs-headline(5);
                 }
 
-                & + .action {
-                    margin-top: 0;
+                @include mq(tablet) {
+                    & + .action {
+                        margin-top: 0;
+                    }
                 }
             }
 
             .action {
-                margin: rem(13px) 0 rem(17px);
-                & + .action {
-                    margin-left: $gs-gutter / 2;
+                margin: 0 0 rem(17px);
+
+                @include mq(tablet) {
+                    margin: rem(13px) 0 rem(17px);
+
+                    & + .action {
+                        margin-left: $gs-gutter / 2;
+                    }
                 }
             }
         }
