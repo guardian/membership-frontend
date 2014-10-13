@@ -302,35 +302,6 @@
     }
 }
 
-.event__social {
-    width: rem(gs-span(2) + $gs-gutter * 2);
-    margin-bottom: rem($gs-gutter * 2);
-    padding-right: rem($gs-gutter);
-
-    @include mq(tablet) {
-        float: left;
-    }
-
-    @include mq(mem-full) {
-        top: 0;
-        left: 0;
-    }
-}
-
-.event__social-header {
-    display: none;
-
-    @include mq(desktop) {
-        // Hiding soical bottons this for now
-        display: none;
-        // display: block;
-        border-top: rem(1px) solid $c-neutral6;
-        @include fs-textSans(1);
-        padding-bottom: rem($gs-baseline / 2);
-        padding-top: rem(3px);
-    }
-}
-
 .event-info {
     background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
