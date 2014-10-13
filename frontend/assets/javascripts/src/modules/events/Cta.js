@@ -23,7 +23,7 @@ define([
 
     Cta.prototype.classes = {
         MEMBER_CTA: 'js-member-cta',
-        EVENT: 'event',
+        EVENT: 'js-event',
         SALE_START: 'js-ticket-sale-start',
         SALE_START_FRIEND: 'js-ticket-sale-start-friend',
         SALE_START_PARTNER: 'js-ticket-sale-start-partner',
