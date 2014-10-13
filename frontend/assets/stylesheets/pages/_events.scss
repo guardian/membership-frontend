@@ -155,21 +155,6 @@
 
 .event-details {
 
-    .event__venue-name,
-    .event__address {
-        @include fs-data(4);
-    }
-
-    .event__location {
-        font-size: 0; /** space between inline block elements **/
-        // color: $c-neutral2;
-    }
-
-    .event__venue-name,
-    .event__address {
-        @include fs-data(4);
-    }
-
     .event-details__time {
         @include fs-headline(2);
 
