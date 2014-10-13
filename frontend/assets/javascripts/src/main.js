@@ -1,6 +1,7 @@
 require([
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/omniture',
+    'src/utils/cookieRefresh',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
@@ -16,6 +17,7 @@ require([
 ], function(
     Imager,
     omnitureAnalytics,
+    cookieRefresh,
     ajax,
     JoinFree,
     FeedbackForm,
@@ -48,6 +50,9 @@ require([
     /* jshint ignore:end */
 
     require('ophan/ng', function () {});
+
+    // TODO: Remove this, see module
+    cookieRefresh.init();
 
     // Global
     var header = new Header();
