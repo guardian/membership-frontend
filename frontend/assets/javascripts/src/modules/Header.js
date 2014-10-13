@@ -115,7 +115,7 @@ define([
             config.DOM.IDENTITY_NOTICE.text(config.text.SIGNED_IN_PREFIX).addClass('u-h');
 
             userUtil.getMemberDetail(function (memberDetail) {
-                if (memberDetail.tier) {
+                if (memberDetail && memberDetail.tier) {
                     config.DOM.EDIT_PROFILE_LINK.attr('href', config.DOM.EDIT_PROFILE_LINK.attr('data-member-href'));
                 }
             });
