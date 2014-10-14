@@ -16,4 +16,26 @@
     width: rem($gs-gutter + 5);
     height: rem($gs-gutter + 5);
     margin: 0 rem($gs-gutter) rem(-7px) 0;
+
+    .event-content__info & {
+        background-size: rem($gs-gutter) auto!important;
+        width: rem($gs-gutter);
+        height: rem($gs-gutter);
+    }
+}
+
+.icon-sprite--margin-right {
+    margin-right: rem($gs-gutter / 2);
+}
+
+.icon-sprite--resize-live-logo.icon-sprite--resize-live-logo {
+    background-size: rem(30px) auto;
+    width: rem(30px);
+    height: rem(44px);
+
+    @include mq(tablet) {
+        background-size: 100% auto;
+        width: rem(62px);
+        height: rem(90px);
+    }
 }

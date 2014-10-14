@@ -5,6 +5,7 @@
     cursor: pointer;
     border: 0;
     color: #ffffff;
+    text-align: left;
     text-decoration: none;
     position: relative;
     @include fs-textSans(4);
@@ -91,7 +92,6 @@
 }
 
 .action--secondary-button {
-    text-align: left;
     background-color: $offWhite;
     color: $black;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);

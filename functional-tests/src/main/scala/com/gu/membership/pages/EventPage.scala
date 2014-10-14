@@ -5,29 +5,29 @@ import org.openqa.selenium.{By, WebDriver}
 
 class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def eventLocationP = driver.findElement(By.cssSelector(".event__location"))
+  private def eventLocationSpan = driver.findElement(By.cssSelector(".event-content__venue-name"))
 
-  private def eventTimeP = driver.findElement(By.cssSelector(".event__time"))
+  private def eventTimeDiv = driver.findElement(By.cssSelector(".event-content__time"))
 
-  private def eventSalesEndSpan = driver.findElement(By.cssSelector(".event__sale-ends>span>strong"))
+  private def eventSalesEndSpan = driver.findElement(By.cssSelector(".event-content__sale-ends>time"))
 
-  private def eventPriceSpan = driver.findElement(By.cssSelector(".event__price"))
+  private def eventPriceSpan = driver.findElement(By.cssSelector(".event-ticket__price-amount"))
 
-  private def discountedEventPriceSpan = driver.findElement(By.cssSelector(".event__price-amount"))
+  private def discountedEventPriceSpan = driver.findElement(By.cssSelector(".event-ticket__trail-upsell"))
 
-  private def eventDescriptionDiv = driver.findElement(By.cssSelector(".event__description"))
+  private def eventDescriptionDiv = driver.findElement(By.cssSelector(".event-content__body"))
 
-  private def buyButton = driver.findElement(By.xpath("//div[@class[contains(., 'event__content')]]/a[1]"))
+  private def buyButton = driver.findElement(By.cssSelector(".event-ticket>.action"))
 
-  private def eventName = driver.findElement(By.cssSelector(".event__name"))
+  private def eventName = driver.findElement(By.cssSelector(".event-masthead__name"))
 
-  private def originalPriceSpan = driver.findElement(By.cssSelector(".event__price-amount"))
+  private def originalPriceSpan = driver.findElement(By.cssSelector(".event-ticket__price-amount"))
 
-  def getEventLocation: String = eventLocationP.getText
+  def getEventLocation: String = eventLocationSpan.getText
 
   def getEventSalesEndTime: String = eventSalesEndSpan.getText
 
-  def getEventTime: String = eventTimeP.getText
+  def getEventTime: String = eventTimeDiv.getText
 
   def getEventPrice: String = eventPriceSpan.getText
 
@@ -38,7 +38,7 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   def getOriginalPrice: String = originalPriceSpan.getText
 
   def clickSignInButton: LoginPage = {
-   clickConversionButton
+    clickConversionButton
     new LoginPage(driver)
   }
 

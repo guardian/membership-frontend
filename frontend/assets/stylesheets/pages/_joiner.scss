@@ -14,6 +14,69 @@ $card-icon-offset: 2px;
     border: 0;
 }
 
+.joiner-navigation {
+    @include clearfix;
+}
+
+.joiner-navigation__tab {
+    text-align: center;
+    border: rem(1px) solid #dfdfdf;
+    display: table;
+    float: left;
+    width: 33.3%;
+}
+
+.joiner-navigation__btn {
+    @include fs-bodyCopy(3);
+    background-color: #eaeaea;
+    height: gs-height(2);
+    width: 100%;
+    vertical-align: middle;
+    display: table-cell;
+    &:hover {
+        background-color: darken(#eaeaea, 15%);
+    }
+}
+
+/* ==========================================================================
+   Tier List
+   ========================================================================== */
+
+.tier-list {
+    padding: $gs-gutter;
+}
+
+/* ==========================================================================
+   Tier
+   ========================================================================== */
+
+.benefits-list {
+    text-align: center;
+    padding: $gs-gutter;
+    border-bottom: rem(1px) solid #dfdfdf;
+
+    @include mq(tablet) {
+        border: rem(1px) solid #dfdfdf;
+        height: gs-height(3);
+
+        flex-grow: 0;
+        flex-basis: 22%;
+        flex-direction: column;
+
+        display: flex;
+        justify-content: center; /* align horizontal */
+        align-items: center;
+    }
+}
+
+.benefits-list--left-aligned {
+    border: 0;
+
+    @include mq(tablet) {
+        text-align: left;
+    }
+}
+
 /* ==========================================================================
    Payment Form
    ========================================================================== */

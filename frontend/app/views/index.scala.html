@@ -8,24 +8,35 @@
 
     @* ===== Homepage hero ===== *@
 
-    <div class="home-slice home-slice--epic home-slice--epic-home-page u-cf">
+    <div class="home-slice home-slice--epic home-slice--epic-home-page tier-hidden u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
                 <h1 class="home-slice__headline">We believe that the open exchange of information,
                     ideas and opinions<br /><span class="headline-highlight">has the power to change the world for the better</span></h1>
             </div>
             <div class="home-slice__copy-block">
-                <p class="home-slice__copy"></p>
-                <div class="js-opt-home-slice-1">
-                    <p class="home-slice__copy">Guardian Membership is the community for those who share this belief.</p>
-                    <a class="action home-slice__action action--secondary-button" href="/about">Learn more</a>
-                </div>
-                <div class="js-opt-home-slice-2">
-                    <p class="home-slice__copy">Guardian Membership brings you closer to the stories of the day,
-                        connects you to the conversations that matter and introduces you to fellow members who share
-                        your interests.</p>
-                    <a class="action action--join home-slice__action" href="/join">Join today</a>
-                </div>
+                <p class="home-slice__copy">Guardian Membership is the community for those who share this belief.</p>
+                <a class="action home-slice__action action--secondary-button" href="/about">Learn more</a>
+                <p class="home-slice__copy">Guardian Membership brings you closer to the stories of the day,
+                    connects you to the conversations that matter and introduces you to fellow members who share
+                    your interests.</p>
+                <a class="action home-slice__action" href="/join">Join today</a>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Member homepage hero ===== *@
+
+    <div class="home-slice home-slice--epic tier-required u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h1 class="home-slice__headline">Hello <span class="js-user-firstName"></span>. Welcome back to Guardian Membership.</h1>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">Stay up-to-date with the latest news and developments from the membership community and watch highlights of Guardian Live events by visiting <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>.</p>
+                <p class="home-slice__copy">Book your tickets and discover the Autumn lineup for Guardian Live on our <a href="/events">listings page</a>.</p>
+                <a class="action home-slice__action" href="@(Config.guardianMembershipUrl)">Membership on the Guardian</a>
+                <a class="action home-slice__action action--secondary-button" href="/events">See all events</a>
             </div>
         </div>
     </div>
@@ -44,7 +55,7 @@
                 <p class="home-slice__copy">Members can attend events that take the power of open journalism
                     from print and digital into live experiences.
                 </p>
-                <a class="action action--join" href="/events">See our live events</a>
+                <a class="action" href="/events">See our live events</a>
             </div>
         </div>
     </div>
@@ -63,7 +74,7 @@
                 <div class="home-slice__offset-copy">
                     <blockquote class="home-slice__copy--quote">The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.</blockquote>
                     <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-                    <a class="action action--join" href="/patrons">Start your journey as Patron</a>
+                    <a class="action" href="/patrons">Start your journey as Patron</a>
                 </div>
             </div>
         </div>
@@ -84,7 +95,7 @@
                     The building will be a hub for big ideas and stimulating conversations. It will host events,
                     activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.
                 </p>
-                <a class="action action--join" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
+                <a class="action" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
                 <a class="action action--secondary-button" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
             </div>
         </div>
@@ -92,7 +103,7 @@
 
     @* ===== Founding Members ===== *@
 
-    <div class="home-slice home-slice--content u-cf">
+    <div class="home-slice home-slice--content tier-hidden u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__copy-block">
                 <div class="home-slice__media">
@@ -108,7 +119,7 @@
                     <p class="home-slice__copy">
                         Help to build and shape this community by joining as a Founding Partner or Patron,
                         with the guarantee that the price you pay today will not rise.</p>
-                    <a class="action action--join" href="/join" id="qa-join">Join today</a>
+                    <a class="action" href="/join" id="qa-join">Join today</a>
                 </div>
             </div>
         </div>
@@ -116,7 +127,7 @@
 
     @* ===== Join Today ===== *@
 
-    <div class="home-slice home-slice--join-today">
+    <div class="home-slice home-slice--join-today tier-hidden">
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join membership today</h2>
             <div class="join-today__join-boxes package-list package-list--bordered">

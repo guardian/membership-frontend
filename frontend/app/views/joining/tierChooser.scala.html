@@ -63,7 +63,7 @@
                     }
                 }
 
-                <input type="submit" class="action action--logged-in" value="Join today"/>
+                <input type="submit" class="action" value="Join today"/>
 
             </form>
         </section>@*
@@ -99,7 +99,7 @@
                             }
                             @for(address <- event.venue.address) {
                                 @if(event.venue.name){, }
-                                <span class="event-item__location-address">@address.city, @address.postal_code</span>
+                                <span class="event-item__location-detail">@address.city, @address.postal_code</span>
                             }
                         </div>
 
