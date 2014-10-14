@@ -19,7 +19,7 @@ object Dates {
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
 
   def prettyDateWithTime(dt: DateTime): String =
-    prettyDate(dt) + dt.toString(", h:mm ") + dt.toString("a").toLowerCase
+    prettyDate(dt) + dt.toString(", h:mm") + dt.toString("a").toLowerCase
 
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
