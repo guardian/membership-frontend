@@ -146,7 +146,7 @@
         background-color: $black;
 
         &:hover {
-            background-color: $c-neutral3;
+            background-color: $mem-event-button-hover;
         }
     }
 
@@ -186,10 +186,20 @@
 }
 
 .event-content {
-    background-color: $white;
     padding: 0;
+    background-color: $white;
+
+    @include mq(desktop) {
+        background-color: transparent;
+    }
 
     .event-content__image {
+        margin: 0 auto;
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+
         img {
             width: 100%;
         }
@@ -197,6 +207,7 @@
 
     .event-content__container {
         padding: rem($gs-gutter) rem($gs-gutter / 2);
+        background-color: $white;
 
         @include mq(tablet) {
             width: rem(gs-span(9) + $gs-gutter * 2);
@@ -205,11 +216,12 @@
         }
 
         @include mq(desktop) {
-            width: rem(gs-span(12));
+            width: rem(gs-span(12) + $gs-gutter * 2);
+            margin-top: rem(-8px);
         }
 
         @include mq(mem-full) {
-            width: rem(gs-span(14));
+            width: rem(gs-span(14) + $gs-gutter * 2);
         }
 
         .event-content__body {
@@ -222,19 +234,15 @@
             }
 
             @include mq(desktop) {
-                width: rem(gs-span(8) + $gs-gutter);
+                width: rem(gs-span(8) + $gs-gutter * 2);
+                padding: 0 rem($gs-gutter);
             }
 
             @include mq(mem-full) {
-                width: rem(gs-span(10) + $gs-gutter);
+                width: rem(gs-span(10) + $gs-gutter * 2);
             }
         }
     }
-}
-
-.event-content__trail {
-    @include fs-textSans(4);
-    display: block;
 }
 
 .event__price-note,
@@ -290,7 +298,6 @@
     background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
     padding: rem($gs-gutter);
-    @include fs-data(4);
 
     @include mq(tablet) {
         float: left;
@@ -306,7 +313,7 @@
     .event-content__location,
     .event-content__tickets,
     .event-content__price {
-        @include fs-data(4);
+        @include fs-textSans(3);
     }
 
     .event-content__location {
@@ -315,6 +322,17 @@
             clear: both;
             display: block;
             margin-left: rem(40px);
+        }
+    }
+
+    .event-content__time {
+        .icon-sprite-large-early_booking {
+            display: block;
+            float: left;
+
+            @include mq(tablet) {
+                margin-bottom: rem($gs-gutter - 2px);
+            }
         }
     }
 
@@ -329,12 +347,12 @@
     .event-content__sale-dates {
 
         .sale-dates__header {
-            @include fs-textSans(4);
+            @include fs-textSans(3);
             font-weight: bold;
         }
 
         .sale-dates__item {
-            @include fs-data(4);
+            @include fs-textSans(3);
             padding-left: rem($gs-gutter * 2);
             text-align: right;
 
@@ -346,6 +364,11 @@
 
     .event-content__sale-ends {
         padding: 0 0 rem(5px) rem($gs-gutter * 2);
+    }
+
+    .event-content__trail {
+        @include fs-textSans(1);
+        display: block;
     }
 
     time {
@@ -374,7 +397,7 @@
 }
 
 .event-content--line-divider {
-    border-top: rem(1px) solid $c-neutral3;
+    border-top: rem(1px) dotted $c-neutral3;
     padding: rem(5px) 0;
 }
 
