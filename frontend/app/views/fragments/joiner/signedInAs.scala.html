@@ -1,0 +1,7 @@
+@(returnUri: String)
+
+@import configuration.Config
+
+<div class="content__container">
+    <p>You're signed in as <strong class="js-user-displayname"></strong>. <a href="@Config.idWebAppSignOutThenInUrl(returnUri)">Sign in with another account</a>.</p>
+</div>

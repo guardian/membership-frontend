@@ -34,6 +34,9 @@ object Config {
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
 
+  def idWebAppSignOutThenInUrl(uri: String): String =
+    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri))
+
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
 

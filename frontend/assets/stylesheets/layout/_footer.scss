@@ -9,15 +9,19 @@ footer {
         bottom: 0;
     }
 
+    .copy {
+        @include fs-data(6);
+        text-align: center;
+        margin: rem(48px) 0 0;
+    }
+
 }
 
 /* Elements modifiers specific to the footer
    ========================================================================== */
 
 .guardian-logo-footer {
-    @include rem((
-        margin-top: $gs-baseline * .75
-    ));
+    margin-top: rem($gs-baseline * .75);
     float: right;
     line-height: 0;
 }
@@ -26,44 +30,45 @@ footer {
    ========================================================================== */
 
 .l-footer {
-    @include rem((
-        padding: 0 0 ($gs-baseline / 3) * 4
-    ));
+    padding: rem(0 0 ($gs-baseline / 3) * 4);
     background: $c-neutral6;
     z-index: 1; // Above side margins
 
     .gs-container {
         @include mq(desktop) {
-            @include rem((
-                max-width: gs-span(12) + $gs-gutter * 2
-            ));
+            max-width: rem(gs-span(12) + $gs-gutter * 2);
         }
 
         @include mq(mem-full) {
-            @include rem((
-                max-width: gs-span(14) + $gs-gutter * 2
-            ));
+            max-width: rem(gs-span(14) + $gs-gutter * 2);
         }
     }
 
     .control {
         float: left;
-        @include rem((
-            height: 34px,
-            width: 34px
-        ));
+        height: rem(34px);
+        width: rem(34px);
     }
 
     .control__info {
         display: inline-block;
-        @include rem((
-            padding-left: $gs-gutter / 2
-        ));
+        padding-left: rem($gs-gutter / 2);
     }
 }
 
 .l-footer__primary {
-    background: #ffffff;
+    background: $white;
+}
+
+.l-footer__banner {
+    border-top: rem(2px) solid $c-brandBlue;
+    margin-bottom: rem(($gs-baseline / 3) * 2);
+}
+
+@include mq(tablet) {
+    .js-on .l-footer__navigation-wrapper {
+        display: none;
+    }
 }
 
 .l-footer__primary {
@@ -75,16 +80,12 @@ footer {
 .l-footer__secondary {
     @include box-sizing(border-box);
     @include font($f-sans-serif-text, normal, 13, 19);
-    @include rem((
-        padding-right: $gs-gutter / 2,
-        padding-left: $gs-gutter / 2
-    ));
+    padding-right: rem($gs-gutter / 2);
+    padding-left: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        @include rem((
-            padding-right: $gs-gutter,
-            padding-left: $gs-gutter
-        ));
+        padding-right: rem($gs-gutter);
+        padding-left: rem($gs-gutter);
     }
 
     &,
@@ -97,10 +98,8 @@ footer {
     @include fs-bodyHeading(1);
     list-style: none;
     margin: 0;
-    @include rem((
-        padding-top: $gs-baseline * 2,
-        padding-bottom: $gs-baseline / 2
-    ));
+    padding-top: rem($gs-baseline * 2);
+    padding-bottom: rem($gs-baseline / 2);
 
     @include columns(2);
 
@@ -114,9 +113,7 @@ footer {
 
     a {
         display: inline-block;
-        @include rem((
-            padding-bottom: $gs-baseline / 2
-        ));
+        padding-bottom: rem($gs-baseline / 2);
     }
 }
 
@@ -125,15 +122,11 @@ footer {
 }
 
 .l-footer__misc {
-    @include rem((
-        padding-top: $gs-baseline / 2,
-        padding-bottom: $gs-baseline * 1.5,
-        border-top: 1px solid $c-neutral4
-    ));
+    padding-top: rem($gs-baseline / 2);
+    padding-bottom: rem($gs-baseline * 1.5);
+    border-top: rem(1px) solid $c-neutral4;
 }
 
 .really-serious-copyright {
-    @include rem((
-        margin-bottom: $gs-baseline / 3
-    ));
+    margin-bottom: rem($gs-baseline / 3);
 }
