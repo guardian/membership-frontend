@@ -66,12 +66,14 @@ define([
         it('Should add member tier class for authenticated members', function () {
             addCookies(true);
             (new UserDetails()).init();
+            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeTruthy();
             expect($(document.documentElement).hasClass(UserDetails.prototype.classes.hasTier)).toBeTruthy();
         });
 
         it('Should not add member tier class for authenticated non-members', function () {
             addCookies(false);
             (new UserDetails()).init();
+            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeTruthy();
             expect($(document.documentElement).hasClass(UserDetails.prototype.classes.hasTier)).toBeFalsy();
         });
     });
