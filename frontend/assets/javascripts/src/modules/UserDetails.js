@@ -7,6 +7,12 @@ define([
 
     UserDetails.prototype.availableDetails = ['displayname', 'primaryemailaddress', 'firstName', 'tier'];
 
+    UserDetails.prototype.classes = {
+        signedOut: 'id--signed-out',
+        signedIn: 'id--signed-in',
+        hasTier: 'member--has-tier'
+    };
+
     /**
      * Given a user object, checks which details we're interested in
      * and inserts into matching HTML elements.
@@ -27,7 +33,7 @@ define([
     UserDetails.prototype.init = function () {
         var self = this;
         if (userUtil.isLoggedIn()) {
-            $(document.documentElement).removeClass('id--signed-out').addClass('id--signed-in');
+            $(document.documentElement).removeClass(self.classes.signedOut).addClass(self.classes.signedIn);
 
             var identityDetail = userUtil.getUserFromCookie();
             self.populateUserDetails(identityDetail);
@@ -37,7 +43,7 @@ define([
                     self.populateUserDetails(memberDetail);
 
                     if (memberDetail.tier) {
-                        $(document.documentElement).addClass('member--has-tier');
+                        $(document.documentElement).addClass(self.classes.hasTier);
                     }
                 }
             });
