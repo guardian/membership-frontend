@@ -72,14 +72,15 @@ class EBEventTest extends PlaySpecification {
 
   "Event location" should {
     "be correct with all fields present" in {
-      ebCompletedEvent.venue.location.flatMap(_.address_1).getOrElse("") mustEqual("Kings Place")
-      ebCompletedEvent.venue.location.flatMap(_.address_2).getOrElse("") mustEqual("90 York Way")
-      ebCompletedEvent.venue.location.flatMap(_.city).getOrElse("") mustEqual("London")
-      ebCompletedEvent.venue.location.flatMap(_.region).getOrElse("") mustEqual("")
-      ebCompletedEvent.venue.location.flatMap(_.postal_code).getOrElse("") mustEqual("N1 9AG")
-      ebCompletedEvent.venue.location.flatMap(_.country).getOrElse("") mustEqual("GB")
-      ebCompletedEvent.venue.location.flatMap(_.latitude).getOrElse("") mustEqual("51.5350708")
-      ebCompletedEvent.venue.location.flatMap(_.longitude).getOrElse("") mustEqual("-0.12212329999999838")
+      val location = ebCompletedEvent.venue.location.get
+      location.address_1.get mustEqual("Kings Place")
+      location.address_2.get mustEqual("90 York Way")
+      location.city.get mustEqual("London")
+      location.region.getOrElse("") mustEqual("")
+      location.postal_code.get mustEqual("N1 9AG")
+      location.country.get mustEqual("GB")
+      location.latitude.get mustEqual("51.5350708")
+      location.longitude.get mustEqual("-0.12212329999999838")
     }
   }
 }
