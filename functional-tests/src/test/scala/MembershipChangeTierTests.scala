@@ -114,7 +114,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
         _.IGoToTheEventsPage
       }
       .then {
-        _.ICantBecomeAFriendAgain
+        _.ICantBecomeAPartnerAgain
       }
   }
 
