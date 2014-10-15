@@ -235,10 +235,12 @@ $black-trans: rgba(0, 0, 0, .5);
 $white-trans: rgba(255, 255, 255, .5);
 
 $mem-live-red: transparentize(#b51800, .15);
-
 $mem-live-accent: #cc2b12;
-
+$mem-live-accent-trans: rgba(204, 43, 18, .95);
 $mem-live-red-trans: rgba(180, 24, 0, .95);
+$mem-underline-white-trans: rgba(229, 208, 212, .5);
+$mem-event-button-hover: rgba(0, 0, 0, .65);
 
 $side-margins-top-magic-number: 114px;
+$border-bottom-color: rgba(255, 255, 255, .29);
 

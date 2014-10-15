@@ -85,7 +85,7 @@ body {
 // please duplicate your changes
 // this alignment is too perfect
 .page-container {
-    background-color: #ffffff;
+    background-color: $white;
     padding: 0 rem($gs-gutter / 2);
 
     @include mq(tablet) {
@@ -123,20 +123,11 @@ body {
     }
 
     &.page-container--with-padding {
-        background-color: #ffffff;
+        background-color: $white;
         @include mq(tablet) {
             padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
         }
     }
-}
-
-.separator {
-    border-top: rem(2px) solid $c-newsAccent;
-    margin: $gs-baseline 0 $gs-baseline/2;
-}
-
-.align-center {
-    text-align: center;
 }
 
 .l-row__item {
@@ -165,7 +156,7 @@ body {
 
     .one-third {
         margin-bottom: rem($gs-gutter);
-        
+
         @include mq(tablet) {
             width: rem(gs-span(4));
             padding-left: rem($gs-gutter);

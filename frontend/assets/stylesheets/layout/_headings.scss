@@ -31,18 +31,6 @@
     @include fs-headline(4);
 }
 
-.section-sub-body-headline {
-    @extend %section-header;
-    @include fs-bodyHeading(4);
-}
-
-.truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    @include fs-headline(2);
-}
-
 .header-bar {
     padding-left: rem($gs-gutter / 2);
 
@@ -64,7 +52,7 @@
         .header-bar__guardian-live-logo {
             position: absolute;
             right: rem($gs-gutter / 2);
-            top: rem(150px);
+            bottom: rem($gs-gutter / 2);
         }
 
         i {

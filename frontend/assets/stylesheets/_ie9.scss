@@ -25,3 +25,36 @@
         }
     }
 }
+
+.event-content {
+    padding-bottom: rem(70px)!important;
+}
+
+/* Footer ie9 fix
+   ========================================================================== */
+
+.colophon {
+    margin-bottom: rem($gs-gutter);
+    overflow: hidden;
+
+    @include mq(tablet) {
+        width: rem(gs-span(8));
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(10));
+    }
+
+    li { 
+        width: 50%;
+
+        @include mq(tablet) {
+            width: 33.333%; 
+        }
+    }
+
+    .colophon__item {
+        float: left;
+        display: inline;
+    }
+}

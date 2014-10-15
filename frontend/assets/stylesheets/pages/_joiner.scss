@@ -103,10 +103,6 @@ $card-icon-offset: 2px;
     border-width: rem(2px);
 }
 
-.form-terms {
-    @include fs-bodyCopy(1);
-}
-
 .form-padlock {
     width: rem(18px);
     height: rem(18px);
@@ -132,16 +128,12 @@ $card-icon-offset: 2px;
         height: rem(23px);
         padding-right: rem(3px);
     }
+}
 
-    &.credit-card--input-representation {
-        position: absolute;
-        right: rem($card-icon-offset);
-        top: rem($card-icon-offset);
-    }
-
-    &.icon-sprite-card-unknown {
-        visibility: hidden;
-    }
+.credit-card--input-representation {
+    position: absolute;
+    right: rem($card-icon-offset);
+    top: rem($card-icon-offset);
 }
 
 .credit-card-note {
@@ -160,38 +152,13 @@ $card-icon-offset: 2px;
    Thank You
    ========================================================================== */
 
-.questions {
-    @include clearfix;
-}
-
-.questions__list {
-    width: 100%;
-    padding: $gs-gutter/4 $gs-gutter $gs-gutter 0;
-}
-
-.benefits {
-    @extend %flexbox-container-justify;
-}
 
 @include mq(tablet) {
-    .benefits-list__item {
-        display: table-cell;
-        vertical-align: middle;
-        .action {
-            width: 100%;
-        }
-    }
-
     .form-secondary-container {
         border-top: 0;
         border-left: rem(1px) solid #f1f1f1;
         padding: $gutter 0 0 $gutter*3;
         float: left;
         width: 35%;
-    }
-
-    .questions__list {
-        width: 50%;
-        float: left;
     }
 }

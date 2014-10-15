@@ -3,7 +3,6 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
     var config = {
         classes: {
             EVENT_PRICE: 'js-event-price',
-            EVENT_PRICE_NOTE: 'js-event-price-note',
             EVENT_PRICE_DISCOUNT: 'js-event-price-discount',
             EVENT_SAVING: 'js-event-price-saving',
             EVENT_TRAIL_TAG: 'js-event-price-tag'

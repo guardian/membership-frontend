@@ -11,38 +11,6 @@
     margin-bottom: rem(-4px);
     background-color: darken($mem-blue, 10%);
     width: 100%;
-
-    .nav-popup__cta_container {
-        // duplicated in nav--columns to align with menu
-        padding: 0 rem($gs-gutter / 2);
-        @include mq(mobileLandscape) {
-
-            padding-left: rem($gs-gutter);
-            padding-right: rem($gs-gutter);
-        }
-    }
-
-    .nav-popup__cta {
-        background-color: #005689;
-        padding: rem($gs-baseline) rem($gs-baseline * 2);
-        margin: rem($gs-gutter) 0;
-        color: #ffffff;
-        display: inline-block;
-        width: 90%;
-    }
-
-    @include mq(mobile) {
-        .nav-popup__cta {
-            float: left;
-            width: auto;
-            margin-left: $gs-gutter;
-        }
-    }
-    @include mq(mobileLandscape) {
-        .nav-popup__cta {
-            margin-left: rem($gs-gutter);
-        }
-    }
 }
 
 /* Small
@@ -63,13 +31,6 @@
         @include box-sizing(border-box);
         background-color: $white;
         border: rem(1px) solid $c-neutral4;
-
-        .nav--additional-sections > .nav__item {
-            > .nav__link {
-                border-top: 0;
-                border-bottom: rem(1px) solid lighten($c-neutral4, 8%);
-            }
-        }
 
         .nav__link {
             padding: rem(10px) 0;
