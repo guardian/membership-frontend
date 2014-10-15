@@ -123,7 +123,7 @@
             float: left;
             padding-right: rem($gs-gutter);
         }
-        
+
         .event-ticket__price-amount {
             @include fs-header(5);
             -webkit-font-smoothing: antialiased;
@@ -141,7 +141,7 @@
             margin: rem(6px $gs-gutter 0 0);
         }
     }
-    
+
     .action--event-buy {
         background-color: $black;
 
@@ -167,7 +167,7 @@
 
             &:hover {
                 text-decoration: none;
-                border-bottom: rem(1px) solid $white; 
+                border-bottom: rem(1px) solid $white;
             }
         }
     }
@@ -191,7 +191,7 @@
 
     @include mq(desktop) {
         background-color: transparent;
-    }    
+    }
 
     .event-content__image {
         margin: 0 auto;
@@ -298,7 +298,7 @@
     background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
     padding: rem($gs-gutter);
-    
+
     @include mq(tablet) {
         float: left;
         width: gs-span(4);

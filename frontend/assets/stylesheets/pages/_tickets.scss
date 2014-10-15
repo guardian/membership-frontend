@@ -82,25 +82,6 @@
 
 }
 
-.tickets__payment {
-    .payment__flyer {
-        float: left;
-        width: 63%;
-        padding: rem($gs-baseline) 0;
-        border-bottom: rem(1px) solid $c-neutral1;
-        margin-bottom: rem($gs-baseline);
-
-        .payment__flyer-image {
-            padding-right: rem($gs-gutter);
-            float: left;
-        }
-    }
-
-    .form-secondary-container {
-        border: 0;
-    }
-}
-
 .price-info-container {
     vertical-align: middle;
     display: inline-block;
