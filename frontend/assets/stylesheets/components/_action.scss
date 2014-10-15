@@ -69,6 +69,28 @@
     cursor: default;
 }
 
+.action--join,
+.action--logged-in {
+    text-align: left;
+    background-color: $mem-buttonBlue;
+    color: $white;
+    padding: rem(8px) rem(8px) rem(8px) rem(18px);
+
+    &:visited,
+    &:active,
+    &:focus {
+        background-color: $mem-buttonBlue;
+        color: $white;
+    }
+    &:hover {
+        background-color: darken($mem-buttonBlue, 15%);
+    }
+    i {
+        float: right;
+        margin-top: rem(2px);
+    }
+}
+
 .action--secondary-button {
     background-color: $offWhite;
     color: $black;
@@ -83,10 +105,6 @@
     &:hover {
         background-color: darken($offWhite, 15%);
         color: $black;
-    }
-    i {
-        float: right;
-        margin-top: rem(2px);
     }
 }
 

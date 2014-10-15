@@ -131,18 +131,6 @@ $current-indicator: rem(47px);
     }
 }
 
-.package__inner--cancel {
-    height: rem(740px); // magic number
-}
-
-// we always want buttons to appear below the main benefits copy
-.package__cta {
-    position: absolute;
-    bottom: $gs-gutter;
-    padding: $gs-gutter;
-    width: 100%;
-}
-
 .package--current {
     border: rem(1px) solid #9c9c9c;
 }
@@ -307,19 +295,6 @@ $current-indicator: rem(47px);
         .package__title-container--partner & {
             color: $black;
         }
-    }
-}
-
-.package__pcm {
-    @include fs-headline(1);
-}
-
-.package__leadin {
-    @include fs-headline(3);
-    border-bottom: rem(1px) solid $c-neutral4;
-    padding-bottom: rem($gs-gutter);
-    @include mq(desktop) {
-        height: rem(97px); // magic number
     }
 }
 

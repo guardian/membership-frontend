@@ -130,15 +130,6 @@ body {
     }
 }
 
-.separator {
-    border-top: rem(2px) solid $c-newsAccent;
-    margin: $gs-baseline 0 $gs-baseline/2;
-}
-
-.align-center {
-    text-align: center;
-}
-
 .l-row__item {
     padding-bottom: rem($gs-gutter * 2);
 }
@@ -165,7 +156,7 @@ body {
 
     .one-third {
         margin-bottom: rem($gs-gutter);
-        
+
         @include mq(tablet) {
             width: rem(gs-span(4));
             padding-left: rem($gs-gutter);
