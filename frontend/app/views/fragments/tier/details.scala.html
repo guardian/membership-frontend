@@ -6,9 +6,6 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-<div class="package__price">
-    @fragments.benefits.priceInfo(Benefits.details(currentTier))
-</div>
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
     <div class="package__list-benefits">

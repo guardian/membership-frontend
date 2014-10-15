@@ -2,13 +2,13 @@
 
 <div class="price-info">
     @benefits.pricing.fold {
-        <div class="price-info__container-inner price-info__container-inner--no-border">
-            <div class="price-info__detail">Free</div>
+        <div class="price-info__container-inner price-info__container-inner--full-width">
+            <div class="price-info__detail price-info__detail--right">Free</div>
         </div>
     } { pricing =>
         <div class="price-info__container-inner">
-            <div class="price-info__detail">£@pricing.yearly/year</div>
             <div class="price-info__sub-detail">Save £@pricing.yearlySaving/year</div>
+            <div class="price-info__detail">£@pricing.yearly/year</div>
         </div>
         <div class="price-info__container-inner price-info__container-inner--last">
             <div class="price-info__detail">£@pricing.monthly/month</div>

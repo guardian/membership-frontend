@@ -33,6 +33,7 @@
             }
             <div class="package__title-container package__title-container--@tier.toString.toLowerCase">
                 <h2 class="package__title">@tier</h2>
+                @fragments.benefits.priceInfo(Benefits.details(tier))
             </div>
             <div class="package__inner">
                 @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails, showBenefitCopy=showBenefitCopy)

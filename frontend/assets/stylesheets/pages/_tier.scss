@@ -147,13 +147,20 @@ $current-indicator: rem(47px);
 
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
+    padding: rem($gs-gutter);
 
     .package__title {
         @include fs-headline(4);
         color: $white;
         word-wrap: break-word;
         position: relative;
+        padding-left: rem($gs-gutter * 2);
+    }
+
+    .price-info { 
+        height: rem(50px);
+        margin-top: rem($gs-gutter);
+        color: $white;
     }
 
     &:before {
@@ -172,7 +179,8 @@ $current-indicator: rem(47px);
 
     &--partner {
         background-color: $mem-brandLightblue;
-        .package__title { color: $black; }
+        .package__title,
+        .price-info { color: $black; }
     }
 
     &--patron {
@@ -239,7 +247,6 @@ $current-indicator: rem(47px);
 }
 
 .price-info {
-
     height: 100%;
 
     .price-info__detail {
@@ -252,6 +259,15 @@ $current-indicator: rem(47px);
         @include mq(mem-full) {
             @include fs-headline(4);
         }
+
+        .price-info__container-inner--last & {
+            margin-top: rem($gs-gutter);
+        }
+
+        &--right {
+            float: right;
+            margin-top: rem($gs-gutter);
+        }
     }
 
     @include mq(mobile) {
@@ -260,7 +276,7 @@ $current-indicator: rem(47px);
         }
     }
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         .price-info__container-inner {
             width: 50%;
             float: left;
@@ -270,24 +286,26 @@ $current-indicator: rem(47px);
             text-align: right;
             height: 100%;
             border-left: rem(1px) solid $c-neutral3;
+
+            .price-info__detail {
+                margin-top: rem($gs-gutter);
+            }
         }
     }
 
-    @include mq($from: tablet, $until: desktop) {
-        .price-info__container-inner--last {
-            margin-top: rem($gs-gutter);
-            padding-top: rem($gs-gutter);
-            border-top: rem(1px) solid $c-neutral5;
-            border-left: 0;
-        }
+    .price-info__container-inner--full-width {
+        width: 100%;
     }
 
     .price-info__sub-detail {
         @include fs-bodyCopy(1);
-        color: #666666;
+        color: $white;
         display: block;
-    }
 
+        .package__title-container--partner & {
+            color: $black;
+        }
+    }
 }
 
 .package__pcm {
