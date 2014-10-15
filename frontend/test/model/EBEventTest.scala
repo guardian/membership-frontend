@@ -8,7 +8,7 @@ import EventbriteDeserializer._
 
 class EBEventTest extends PlaySpecification {
 
-  val event = Resource.getJson("model/eventbrite/events.2014-10-10.dev.account.json")
+  val event = Resource.getJson("model/eventbrite/events.2014-15-10.dev.account.json")
   val ebResponse = event.as[EBResponse[EBEvent]]
   val ebCompletedEvent = ebResponse.data.find(_.id == "11582434373").get
   val ebStartedEvent = ebResponse.data.find(_.id == "11585910771").get
@@ -67,6 +67,19 @@ class EBEventTest extends PlaySpecification {
     }
     "be pleasantly formatted as whole pounds if there are no pence" in {
       EBPricing("GBP", "\u00a31234.00", 123400).formattedPrice mustEqual("£1234")
+    }
+  }
+
+  "Event location" should {
+    "be correct with all fields present" in {
+      ebCompletedEvent.venue.location.flatMap(_.address_1).getOrElse("") mustEqual("Kings Place")
+      ebCompletedEvent.venue.location.flatMap(_.address_2).getOrElse("") mustEqual("90 York Way")
+      ebCompletedEvent.venue.location.flatMap(_.city).getOrElse("") mustEqual("London")
+      ebCompletedEvent.venue.location.flatMap(_.region).getOrElse("") mustEqual("")
+      ebCompletedEvent.venue.location.flatMap(_.postal_code).getOrElse("") mustEqual("N1 9AG")
+      ebCompletedEvent.venue.location.flatMap(_.country).getOrElse("") mustEqual("GB")
+      ebCompletedEvent.venue.location.flatMap(_.latitude).getOrElse("") mustEqual("51.5350708")
+      ebCompletedEvent.venue.location.flatMap(_.longitude).getOrElse("") mustEqual("-0.12212329999999838")
     }
   }
 }
