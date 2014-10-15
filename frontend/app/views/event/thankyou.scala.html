@@ -27,9 +27,9 @@
                     @if(event.venue.name){
                         <span class="event-item__location-name">@event.venue.name </span>
                     }
-                    @for(address <- event.venue.address) {
-                        <span class="event-item__location-detail">@address.address_1 </span>
-                        <span class="event-item__location-detail">@address.city @address.postal_code </span>
+                    @for(location <- event.venue.location) {
+                        <span class="event-item__location-detail">@location.address_1 </span>
+                        <span class="event-item__location-detail">@location.city @location.postal_code </span>
                     }
                 </div>
 
