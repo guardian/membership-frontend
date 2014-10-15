@@ -16,19 +16,12 @@
     padding: 0;
     z-index: 100; //To ensure it sits above anything else
 
-    .nav__item--full {
-        width: 100%;
-        margin: 0;
-    }
     > li,
     > li > a {
         display: inline-block;
         zoom: 1;
     }
 
-    li.is-active {
-        font-weight: bold;
-    }
 }
 
 .nav--global {
@@ -172,13 +165,6 @@
         @include mq(tablet) {
             border-top: 0;
         }
-    }
-}
-
-.nav--services {
-    background-color: #bcd0dc;
-    .nav__link {
-        padding-top: $gs-baseline !important;
     }
 }
 
