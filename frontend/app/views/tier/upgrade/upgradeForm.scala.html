@@ -3,7 +3,7 @@
 
 @main("Upgrade Payment") {
 
-    <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
+    <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
         @fragments.form.sectionHeading("Payment", true)
