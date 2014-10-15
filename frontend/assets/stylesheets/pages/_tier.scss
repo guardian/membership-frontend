@@ -29,6 +29,7 @@ $current-indicator: rem(47px);
 // .package-list is a flexbox
 // so each .package inside is equal width
 .package-list {
+
     @include mq(desktop) {
         @include flexbox;
         @include align-items(stretch);
@@ -52,6 +53,7 @@ $current-indicator: rem(47px);
     @include flexbox;
     @include justify-content(space-between);
     @include flex-direction(column);
+    align-items: stretch;
 
     margin-right: rem($gs-gutter);
 
@@ -87,7 +89,7 @@ $current-indicator: rem(47px);
 }
 
 .package__item-cta {
-    padding: $gs-gutter;
+    padding: rem($gs-gutter);
     // this is annoying but removes an ~8px height gap
     // between buttons in columns. if you can fix it, bravo!
     height: rem(100px);
@@ -104,7 +106,7 @@ $current-indicator: rem(47px);
 }
 
 .package__current-indicator {
-    color: #ffffff;
+    color: $white;
     background-color: #9c9c9c;
     text-align: center;
     padding: rem($gs-baseline);
@@ -370,5 +372,25 @@ $current-indicator: rem(47px);
 
     &:hover {
         background-color: #eeeeee;
+    }
+}
+
+/* Join - Become a member
+======================================================================= */
+
+.join {
+    section {
+
+        @include mq(tablet) {
+            padding: rem($gs-gutter);
+        }
+
+        @include mq(desktop) {
+            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+        }
     }
 }
