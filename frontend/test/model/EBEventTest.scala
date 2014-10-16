@@ -8,7 +8,7 @@ import EventbriteDeserializer._
 
 class EBEventTest extends PlaySpecification {
 
-  val event = Resource.getJson("model/eventbrite/events.2014-10-10.dev.account.json")
+  val event = Resource.getJson("model/eventbrite/events.2014-15-10.dev.account.json")
   val ebResponse = event.as[EBResponse[EBEvent]]
   val ebCompletedEvent = ebResponse.data.find(_.id == "11582434373").get
   val ebStartedEvent = ebResponse.data.find(_.id == "11585910771").get
@@ -67,6 +67,20 @@ class EBEventTest extends PlaySpecification {
     }
     "be pleasantly formatted as whole pounds if there are no pence" in {
       EBPricing("GBP", "\u00a31234.00", 123400).formattedPrice mustEqual("£1234")
+    }
+  }
+
+  "Event location" should {
+    "be correct with all fields present" in {
+      val location = ebCompletedEvent.venue.location.get
+      location.address_1.get mustEqual("Kings Place")
+      location.address_2.get mustEqual("90 York Way")
+      location.city.get mustEqual("London")
+      location.region.getOrElse("") mustEqual("")
+      location.postal_code.get mustEqual("N1 9AG")
+      location.country.get mustEqual("GB")
+      location.latitude.get mustEqual("51.5350708")
+      location.longitude.get mustEqual("-0.12212329999999838")
     }
   }
 }

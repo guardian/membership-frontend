@@ -51,18 +51,17 @@ object Eventbrite {
     lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
-  case class EBAddress(country_name: Option[String],
-                       city: Option[String],
-                       address_1: Option[String],
+  case class EBLocation(address_1: Option[String],
                        address_2: Option[String],
+                       city: Option[String],
                        region: Option[String],
+                       postal_code: Option[String],
                        country: Option[String],
-                       postal_code: Option[String]) extends EBObject
+                       latitude: Option[String],
+                       longitude: Option[String]) extends EBObject
 
   case class EBVenue(id: Option[String],
-                     address: Option[EBAddress],
-                     latitude: Option[String],
-                     longitude: Option[String],
+                     location: Option[EBLocation],
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
@@ -105,26 +104,23 @@ object Eventbrite {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
-    lazy val countryName = venue.address.flatMap(_.country_name).getOrElse("")
+    lazy val city = venue.location.flatMap(_.city).getOrElse("")
 
-    lazy val city = venue.address.flatMap(_.city).getOrElse("")
+    lazy val addressOne = venue.location.flatMap(_.address_1).getOrElse("")
 
-    lazy val addressOne = venue.address.flatMap(_.address_1).getOrElse("")
+    lazy val addressTwo = venue.location.flatMap(_.address_2).getOrElse("")
 
-    lazy val addressTwo = venue.address.flatMap(_.address_2).getOrElse("")
+    lazy val region = venue.location.flatMap(_.region).getOrElse("")
 
-    lazy val region = venue.address.flatMap(_.region).getOrElse("")
+    lazy val country = venue.location.flatMap(_.country).getOrElse("")
 
-    lazy val country = venue.address.flatMap(_.country).getOrElse("")
-
-    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
+    lazy val postal_code = venue.location.flatMap(_.postal_code).getOrElse("")
 
     lazy val eventAddressLine = Seq(
       addressOne,
       addressTwo,
       city,
       region,
-      countryName,
       postal_code
     ).filter(_.nonEmpty).mkString(", ")
 
@@ -177,7 +173,7 @@ object EventbriteDeserializer {
     )(convertDateText _)
 
   implicit val ebError = Json.reads[EBError]
-  implicit val ebAddress = Json.reads[EBAddress]
+  implicit val ebLocation = Json.reads[EBLocation]
   implicit val ebVenue = Json.reads[EBVenue]
 
   implicit val ebRichText: Reads[EBRichText] = (
