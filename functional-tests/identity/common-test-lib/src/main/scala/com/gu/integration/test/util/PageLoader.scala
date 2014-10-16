@@ -37,7 +37,7 @@ object PageLoader extends TestLogging {
    * localhost so had to make a check
    */
   def forceBetaSite(useBetaRedirect: Boolean, url: String): String = {
-    if (frontsBaseUrl.contains("localhost") || !useBetaRedirect) {
+    if (frontsBaseUrl.contains("local") || !useBetaRedirect) {
       url
     } else {
       frontsBaseUrl + "/preference/platform/mobile?page=" + url + "&view=mobile"
