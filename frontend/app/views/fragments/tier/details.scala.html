@@ -14,7 +14,7 @@
                 <ul class="package__list-benefits-element js-opt-benefit-level-@i">
                     @for(((header, body, icon), index) <- Benefits.details(t).list.zipWithIndex) {
                         <div class="js-opt-benefit-level-@i-item-@{index+1}">
-                            <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
+                             <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
                             @if(showBenefitCopy) {
                                 <li class="benefits-copy">@body</li>
                             }
