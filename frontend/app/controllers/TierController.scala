@@ -46,7 +46,7 @@ trait UpgradeTier {
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      } yield Ok(views.html.tier.upgrade.upgradeForm(tier, privateFields))
+      } yield Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields))
     }
     else
       Future.successful(NotFound)
