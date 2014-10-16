@@ -52,10 +52,5 @@
         <a class="action" href="/events">See all events</a>
     </section>
 
-    <script type="text/javascript">
-        require(['js!omniture'], function () {
-            s.products = 'event;@event.id;';
-            s.events = 'order';
-        });
-    </script>
+    @fragments.analytics.eventConversion(event)
 }
