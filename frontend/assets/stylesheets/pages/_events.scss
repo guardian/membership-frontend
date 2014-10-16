@@ -699,6 +699,11 @@
             padding: rem($gs-baseline * 2) 0 0;
         }
 
+        .event-item__location-name,
+        .event-item__location-detail {
+            @include fs-data(3);
+        }
+
         *:hover, &:hover {
             background-color: $c-neutral7;
             .event-item__title {
