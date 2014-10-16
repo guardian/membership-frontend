@@ -331,6 +331,12 @@
             font-weight: bold;
         }
 
+        .sale-dates__list {
+            &:last-child {
+                padding-bottom: rem(5px);
+            }
+        }
+
         .sale-dates__item {
             @include fs-textSans(3);
             text-align: right;
@@ -357,11 +363,7 @@
 
     .event-content__second {
         float: left;
-        width: 84%;
-    }
-
-    time {
-        float: right;
+        width: 220px;
     }
 
     .action {

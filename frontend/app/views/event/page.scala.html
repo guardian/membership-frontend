@@ -153,10 +153,14 @@
                                 <div class="event-content__second">
                                     <div class="sale-dates__header">Ticket sales</div>
                                     @ticketBookingDates(ticket)
-                                    <span>Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                    <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                     @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
-                                    </time>
+                                    <ul class="sale-dates__list u-unstyled u-cf">
+                                        <li class="sale-dates__item">
+                                            <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
+                                            <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
+                                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
+                                            </time>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
 
