@@ -155,12 +155,12 @@ $current-indicator: rem(47px);
 
     &:before {
         @extend %icon-sprite;
-        @extend %icon-sprite-g-white-36;
+        @extend %icon-sprite-g-white-28;
         content: '';
         display: block;
         position: absolute;
         left: rem($gs-gutter);
-        top: rem(15px);
+        top: rem($gs-gutter);
     }
 
     &--friend {
