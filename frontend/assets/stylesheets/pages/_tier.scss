@@ -137,14 +137,14 @@ $current-indicator: rem(47px);
 
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter);
+    padding: rem($gs-gutter - 5) rem($gs-gutter);
 
     .package__title {
-        @include fs-headline(4);
+        @include fs-headline(5);
         color: $white;
         word-wrap: break-word;
         position: relative;
-        padding-left: rem($gs-gutter * 2);
+        padding-left: rem($gs-gutter + 16);
     }
 
     .price-info { 
@@ -160,7 +160,7 @@ $current-indicator: rem(47px);
         display: block;
         position: absolute;
         left: rem($gs-gutter);
-        top: rem($gs-gutter);
+        top: rem($gs-gutter - 2);
     }
 
     &--friend {
@@ -243,11 +243,11 @@ $current-indicator: rem(47px);
         @include fs-headline(3);
 
         @include mq(desktop) {
-            @include fs-headline(3);
+            @include fs-headline(4);
         }
 
         @include mq(mem-full) {
-            @include fs-headline(4);
+            @include fs-headline(5);
         }
 
         .price-info__container-inner--last & {
@@ -288,7 +288,7 @@ $current-indicator: rem(47px);
     }
 
     .price-info__sub-detail {
-        @include fs-bodyCopy(1);
+        @include fs-textSans(1);
         color: $white;
         display: block;
 
