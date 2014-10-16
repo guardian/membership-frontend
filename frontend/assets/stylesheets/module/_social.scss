@@ -1,32 +1,19 @@
 .social {
-    // Hiding soical bottons this for now
-    display: none;
-    height: rem(32px);
-    margin-left: rem(-$gs-gutter / 5);
+    height: rem(36px);
+    margin-left: rem(-10px);
 }
 
 .social__item {
     float: left;
-    width: rem(36px);
-    padding: 0 rem($gs-gutter / 5);
-
-    @include mq(tablet) {
-        width: rem(40px);
-        padding-right: 0;
-    }
+    padding-left: rem(10px);
+    width: rem(36px + 10px);
 }
+
 .social__action {
     display: block;
 }
 
-$social-icon: (
-    width: rem(32px),
-    height: rem(32px),
-    color: $c-neutral2,
-    space-in-between: rem(2px)
-);
-
 .social-icon {
     @extend %icon-holder-circle;
-    border-color: map-get($social-icon, color);
+    border-color: $c-neutral2;
 }
