@@ -691,6 +691,11 @@
         .event-item__location-name,
         .event-item__location-detail {
             @include fs-data(3);
+            display: block;
+        }
+
+        .event-item__location-name {
+            float: left;
         }
 
         *:hover, &:hover {
