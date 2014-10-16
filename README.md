@@ -106,7 +106,7 @@ You can download and update credentials like this
     aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
     aws s3 cp /etc/gu/membership-keys.conf s3://membership-private/DEV/
     
-For a reminder on why we do these, here's @tackley:
+For a reminder on why we do this, here's @tackley on the subject:
 
 >NEVER commit access keys, passwords or other sensitive credentials to any source code repository*. 
 
