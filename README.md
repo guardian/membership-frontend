@@ -99,7 +99,7 @@ idrun
 
 ## Committing config credentials
 
-For the Membership project, we put both `DEV` and `PROD` credentials in 'membership-keys.conf' files in the private S3 bucket 'membership-private', and if private credentials need adding or updating, they need to be updated there in S3.
+For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
 
 You can download and update credentials like this 
 
