@@ -86,12 +86,33 @@ idrun
 
 ## To run frontend tests
 
-+ $ karma start
+    karma start
 
 # Grunt Tasks
 
 ## Watch and compile front-end files
-+ $ grunt watch
+    grunt watch
 
 ## Compile front-end files
-+ $ grunt compile
+    grunt compile
+
+
+## Committing config credentials
+
+For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
+
+You can download and update credentials like this 
+
+    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
+    aws s3 cp /etc/gu/membership-keys.conf s3://membership-private/DEV/
+    
+For a reminder on why we do this, here's @tackley on the subject:
+
+>NEVER commit access keys, passwords or other sensitive credentials to any source code repository*. 
+
+>That's especially true for public repos, but also applies to any private repos. (Why? 1. it's easy to make it public and 2. every person who ever worked on your project almost certainly has a copy of your repo somewhere. It's too easy for a subsequently-disaffected individual to take advantage of this.)
+
+>For AWS access keys, always prefer to use instance profiles instead.
+
+>For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
+
