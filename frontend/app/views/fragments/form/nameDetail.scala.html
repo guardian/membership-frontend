@@ -1,4 +1,9 @@
 @(firstName: Option[String], lastName: Option[String])
+@import configuration.Config
+
+@if(Config.testUsers.isValid(firstName.getOrElse(""))) {
+    <!-- VALID TEST USER -->
+}
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">

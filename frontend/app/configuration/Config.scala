@@ -1,6 +1,7 @@
 package configuration
 
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
+import com.gu.identity.testing.usernames.TestUsernames
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
@@ -25,6 +26,10 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
+
+  val testUsers = TestUsernames(com.gu.identity.testing.usernames.Encoder.withSecret(config.getString("identity.test.users.secret")))
+
+  def isTestUser(userPrivateFields: model.PrivateFields): Boolean = userPrivateFields.firstName.map(testUsers.isValid).getOrElse(false)
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
