@@ -163,6 +163,10 @@ $current-indicator: rem(47px);
         top: rem($gs-gutter - 2);
     }
 
+    &:after {
+        display: block;
+    }
+
     &--friend {
         background-color: $c-neutral1;
     }
@@ -179,22 +183,13 @@ $current-indicator: rem(47px);
 }
 
 .package__list-benefits {
-    margin-left: 0;
-    @include mq(tablet) {
-        margin-left: 45%;
-    }
-
-    @include mq(desktop) {
-        margin-left: 0;
-    }
-
     &:before {
         @include fs-bodyHeading(2);
         content: "What's included";
         display: block;
         border-top: 1px solid $c-neutral3;
         position: relative;
-        padding-top: rem($gs-gutter / 2);
+        padding: rem($gs-gutter / 2) 0;
     }
 }
 
@@ -202,7 +197,6 @@ $current-indicator: rem(47px);
     @include fs-bodyCopy(1);
     padding-bottom: rem($gs-gutter);
     margin-bottom: 0;
-    list-style: none;
     > li {
 
         &:last-child {
@@ -211,15 +205,22 @@ $current-indicator: rem(47px);
         }
 
     }
+
+    > .u-cf {
+        &:before,
+        &:after {
+            display: block;
+        }
+    }
 }
 
-.package__list-benefits .package__list-benefits-element:before {
-    content: 'Plus:';
-    display: block;
-    @include fs-bodyCopy(1);
-    color: $c-neutral1;
-    margin-bottom: rem($gs-baseline / 2);
-}
+// .package__list-benefits .package__list-benefits-element:before {
+//     content: 'Plus:';
+//     display: block;
+//     @include fs-bodyCopy(1);
+//     color: $c-neutral1;
+//     margin-bottom: rem($gs-baseline / 2);
+// }
 
 // bit fugly - hides the "Plus:" text for first list item
 .package__list-benefits .package__list-benefits-element:first-of-type:before {
@@ -248,6 +249,16 @@ $current-indicator: rem(47px);
 .price-info {
     height: 100%;
 
+    @include mq(tablet) {
+        width: rem(280px);
+        float: right;
+    }
+
+    @include mq(desktop) {
+        width: 100%;
+        float: none;
+    }
+
     .price-info__detail {
         @include fs-headline(3);
 
@@ -273,26 +284,18 @@ $current-indicator: rem(47px);
         }
     }
 
-    @include mq(mobile) {
-        .price-info__container-inner {
-            margin-bottom: rem($gs-gutter);
-        }
+    .price-info__container-inner {
+        width: 50%;
+        float: left;
     }
 
-    @include mq(tablet) {
-        .price-info__container-inner {
-            width: 50%;
-            float: left;
-        }
+    .price-info__container-inner--last {
+        text-align: right;
+        height: 100%;
+        border-left: rem(1px) solid $white-trans;
 
-        .price-info__container-inner--last {
-            text-align: right;
-            height: 100%;
-            border-left: rem(1px) solid $c-neutral3;
-
-            .price-info__detail {
-                margin-top: rem($gs-gutter - 4);
-            }
+        .price-info__detail {
+            margin-top: rem($gs-gutter - 4);
         }
     }
 
@@ -323,7 +326,6 @@ $current-indicator: rem(47px);
 
     @include mq($from: tablet, $until: desktop) {
         display: inline-block;
-        width: 55%;
         vertical-align: top;
     }
 }

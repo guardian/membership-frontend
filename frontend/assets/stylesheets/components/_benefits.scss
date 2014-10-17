@@ -1,12 +1,39 @@
 //TODO start of splitting benefits work into one set of styles where it makes sense
+.benefits-item {
+	@include mq(tablet) {
+	    width: 30%;
+	    float: left;
+	    height: rem(150px);
+	    margin: 0 rem(1.66%);
+	}
+
+	@include mq(desktop) {
+		width: 100%;
+		float: none;
+		height: auto;
+		margin: 0;
+	}
+}
 
 .benefits-title {
+	@include fs-bodyHeading(2);
     border-top: rem(1px) solid $c-neutral3;
-    @include fs-bodyHeading(2);
     padding: rem(7px) 0 rem($gs-baseline / 6) 0;
+    clear: both;
 }
 
 .benefits-copy {
     @include fs-bodyCopy(1);
     padding: 0 0 rem($gs-baseline) rem(45px);
+    display: block;
+    float: left;
+}
+
+.benefits-title__first {
+    float: left;
+    width: rem($gs-gutter * 2 + 5);
+}
+
+.benefits-title__second {
+    width: auto;
 }

@@ -11,10 +11,13 @@
     <div class="package__list-benefits">
         @for((t, i) <- Tier.values.toSeq.sorted.zipWithIndex) {
             @if(t >= Tier.Friend & t <= currentTier){
-                <ul class="package__list-benefits-element js-opt-benefit-level-@i">
+                <ul class="package__list-benefits-element u-unstyled js-opt-benefit-level-@i">
                     @for(((header, body, icon), index) <- Benefits.details(t).list.zipWithIndex) {
-                        <div class="js-opt-benefit-level-@i-item-@{index+1}">
-                             <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
+                        <div class="benefits-item js-opt-benefit-level-@i-item-@{index+1} u-cf">
+                            <li class="benefits-title">
+                                <div class="benefits-title__first"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i></div>
+                                <div class="benefits-title__second">@header</div>
+                            </li>
                             @if(showBenefitCopy) {
                                 <li class="benefits-copy">@body</li>
                             }
