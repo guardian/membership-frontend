@@ -29,13 +29,13 @@ object Config {
   val idWebAppUrl = config.getString("identity.webapp.url")
 
   def idWebAppSigninUrl(uri: String): String =
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppRegisterUrl(uri: String): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppSignOutThenInUrl(uri: String): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri))
+    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
 
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
