@@ -187,6 +187,15 @@ $current-indicator: rem(47px);
     @include mq(desktop) {
         margin-left: 0;
     }
+
+    &:before {
+        @include fs-bodyHeading(2);
+        content: "What's included";
+        display: block;
+        border-top: 1px solid $c-neutral3;
+        position: relative;
+        padding-top: rem($gs-gutter / 2);
+    }
 }
 
 .package__list-benefits-element {
@@ -256,7 +265,11 @@ $current-indicator: rem(47px);
 
         &--right {
             float: right;
-            margin-top: rem($gs-gutter);
+            margin-top: rem($gs-gutter - 4);
+        }
+
+        &--sm-date {
+            @include fs-headline(2);
         }
     }
 
@@ -278,7 +291,7 @@ $current-indicator: rem(47px);
             border-left: rem(1px) solid $c-neutral3;
 
             .price-info__detail {
-                margin-top: rem($gs-gutter);
+                margin-top: rem($gs-gutter - 4);
             }
         }
     }
@@ -292,6 +305,7 @@ $current-indicator: rem(47px);
         color: $white;
         display: block;
 
+        .patron-page &,
         .package__title-container--partner & {
             color: $black;
         }
