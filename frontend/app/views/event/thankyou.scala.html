@@ -1,12 +1,28 @@
-@(firstName: String, event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent, order: model.Eventbrite.EBOrder)
 
 @import configuration.Config
 @import views.support.Dates._
+@import model.Eventbrite._
+
+@ticketText(quantity: Int) = {
+    ticket@if(quantity>1){s}
+}
+
+@ticketPrice(grossValue: Int) = {
+    @if(grossValue > 0){£@grossValue}else{free}
+}
+
+@eventBriteOrderInformation(order: EBOrder) = {
+    <i class="icon-sprite icon-sprite-eventbrite"></i>
+    <p>Order no. <strong>@order.attendeeHead.order_id</strong></p>
+    <p>@order.attendeeHead.quantity @ticketText(order.attendeeHead.quantity) @ticketPrice(order.attendeeHead.costs.gross.value)</p>
+    <p>Your ticket has been sent to <strong>@order.email</strong></p>
+}
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
     <section class="content__container content__container--slim">
-        <h1 class="section-headline section-headline--no-border">Thanks @firstName.<br/> See you there!</h1>
+        <h1 class="section-headline section-headline--no-border">Thanks @order.first_name.<br/> See you there!</h1>
         <h2 class="content__headline">You're going to</h2>
 
         <div class="event-summary">
@@ -36,7 +52,7 @@
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
                     <span class="event-item__location-detail">An email confirmation of your ticket purchase has been sent and the order is saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite.</span>
-                    <i class="icon-sprite icon-sprite-evenbrite"></i>
+                    @eventBriteOrderInformation(order)
                 </div>
             </div>
         </div>
