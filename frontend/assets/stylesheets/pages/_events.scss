@@ -316,26 +316,6 @@
         @include fs-textSans(3);
     }
 
-    .event-content__location {
-
-        .event-content__address {
-            clear: both;
-            display: block;
-            margin-left: rem(40px);
-        }
-    }
-
-    .event-content__time {
-        .icon-sprite-large-early_booking {
-            display: block;
-            float: left;
-
-            @include mq(tablet) {
-                margin-bottom: rem($gs-gutter - 2px);
-            }
-        }
-    }
-
     .event-content__price {
         padding-bottom: 0;
 
@@ -351,9 +331,14 @@
             font-weight: bold;
         }
 
+        .sale-dates__list {
+            &:last-child {
+                padding-bottom: rem(5px);
+            }
+        }
+
         .sale-dates__item {
             @include fs-textSans(3);
-            padding-left: rem($gs-gutter * 2);
             text-align: right;
 
             .sale-dates__item--left {
@@ -371,8 +356,14 @@
         display: block;
     }
 
-    time {
-        float: right;
+    .event-content__first {
+        float: left;
+        width: rem($gs-gutter * 2);
+    }
+
+    .event-content__second {
+        float: left;
+        width: rem(220px);
     }
 
     .action {
@@ -702,6 +693,11 @@
         .event-item__location-name,
         .event-item__location-detail {
             @include fs-data(3);
+            display: block;
+        }
+
+        .event-item__location-name {
+            float: left;
         }
 
         *:hover, &:hover {
