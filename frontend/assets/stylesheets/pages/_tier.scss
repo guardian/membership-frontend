@@ -183,19 +183,25 @@ $current-indicator: rem(47px);
 }
 
 .package__list-benefits {
+    position: relative;
+    padding-top: 45px;
+
     &:before {
         @include fs-bodyHeading(2);
         content: "What's included";
         display: block;
         border-top: 1px solid $c-neutral3;
-        position: relative;
+        border-bottom: 1px solid $c-neutral3;
+        position: absolute;
         padding: rem($gs-gutter / 2) 0;
+        top: 0;
+        width: 100%;
     }
 }
 
 .package__list-benefits-element {
     @include fs-bodyCopy(1);
-    padding-bottom: rem($gs-gutter);
+    // padding-bottom: rem($gs-gutter);
     margin-bottom: 0;
     > li {
 
@@ -320,7 +326,6 @@ $current-indicator: rem(47px);
 
     @include mq(desktop) {
         @include fs-bodyCopy(2);
-        padding-top: rem($gs-gutter / 2);
         min-height: rem(120px);
     }
 
