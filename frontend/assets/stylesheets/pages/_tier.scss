@@ -326,7 +326,11 @@ $current-indicator: rem(47px);
 
     @include mq(desktop) {
         @include fs-bodyCopy(2);
-        min-height: rem(120px);
+        height: rem(120px);
+
+        .patron-page & {
+            height: auto;
+        }
     }
 
     @include mq($from: tablet, $until: desktop) {

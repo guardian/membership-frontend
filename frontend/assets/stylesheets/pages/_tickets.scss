@@ -6,10 +6,12 @@
     }
 
     .tickets-select-form__label {
-        position: relative;
+        position: absolute;
         display: inline-block;
         float: left;
-        padding: rem(36px) rem($gs-gutter * 1.5);
+        padding: rem($gs-gutter) rem($gs-gutter * 1.5);
+        top: 0;
+        left: 0;
     }
 
     .tickets-select-form__input {
@@ -18,6 +20,37 @@
 
     .tickets-select-form__header {
         border-bottom: rem(1px) solid $c-neutral4;
+        position: relative;
+        color: $white;
+
+        &:before {
+            @extend %icon-sprite;
+            @extend %icon-sprite-g-white-28;
+            content: '';
+            display: block;
+            position: absolute;
+            left: rem(70px);
+            top: rem($gs-gutter/ 2);
+        }
+
+        &:after {
+            display: block;
+        }
+
+        &--friend {
+            background-color: $c-neutral1;
+        }
+
+        &--partner {
+            background-color: $mem-brandLightblue;
+            .package__title,
+            .price-info { color: $black; }
+        }
+
+        &--patron {
+            background-color: $mem-brandDarkBlue;
+        }
+
     }
 
     .tickets-select-form-header__secondary {
@@ -41,10 +74,10 @@
 
     .tickets-select-form__tier-name {
         padding-bottom: rem($gs-baseline);
+        color: $white;
 
         @include mq(tablet) {
-            float: left;
-            line-height: rem(64px);
+            margin-left: rem(35px);
         }
     }
 
@@ -84,15 +117,16 @@
 
 .price-info-container {
     vertical-align: middle;
-    display: inline-block;
-    width: 28%;
+    display: block;
 
     &.price-info-container--last {
         display: block;
         width: 70%;
 
         @include mq(tablet) {
-            display: inline-block;
+            clear: both;
+            width: 50%;
+            float: right;
         }
     }
 }

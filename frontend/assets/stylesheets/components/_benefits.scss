@@ -9,6 +9,14 @@
 	    .about-membership & {
 	    	height: rem(62px);
 	    }
+
+	    &:first-child {
+	    	margin-left: 0;
+	    }
+	    &:nth-child(3n+3) {
+	    	margin-left: rem($gs-gutter / 2);
+	    	margin-right: 0;
+	    }
 	}
 
 	@include mq(desktop) {
@@ -20,16 +28,10 @@
 		.about-membership & {
 			height: auto;
 		}
-	}
-}
 
-@include mq(tablet) {
-	.benefits-item:first-child {
-		margin-left: 0;
-	}
-	.benefits-item:nth-child(3n+3) {
-		margin-left: rem($gs-gutter / 2);
-		margin-right: 0;
+		&:nth-child(3n+3) {
+			margin: 0;
+		}
 	}
 }
 
