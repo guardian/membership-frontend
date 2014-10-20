@@ -74,13 +74,11 @@ object Config {
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
 
-  object twitter {
-    lazy val username = config.getString("twitter.username")
-    lazy val iphoneAppName = config.getString("twitter.app.iphone.name")
-    lazy val iphoneAppId = config.getString("twitter.app.iphone.id")
-    lazy val googleplayAppName = config.getString("twitter.app.googleplay.name")
-    lazy val googleplayAppId = config.getString("twitter.app.googleplay.id")
-  }
+  val twitterUsername = config.getString("twitter.username")
+  val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
+  val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
+  val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
+  val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
 
   val zuoraApiConfig = ZuoraApiConfig(
     url = config.getString("zuora.api.url"),
