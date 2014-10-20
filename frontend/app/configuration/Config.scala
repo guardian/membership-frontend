@@ -59,6 +59,8 @@ object Config {
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
+  val facebookAppId = config.getString("facebook.app.id")
+
   val stripeApiConfig = StripeApiConfig(
     url = config.getString("stripe.api.url"),
     secretKey = config.getString("stripe.api.key.secret"),
@@ -71,6 +73,14 @@ object Config {
   val salesforceApiUsername = config.getString("salesforce.api.username")
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
+
+  object twitter {
+    lazy val username = config.getString("twitter.username")
+    lazy val iphoneAppName = config.getString("twitter.app.iphone.name")
+    lazy val iphoneAppId = config.getString("twitter.app.iphone.id")
+    lazy val googleplayAppName = config.getString("twitter.app.googleplay.name")
+    lazy val googleplayAppId = config.getString("twitter.app.googleplay.id")
+  }
 
   val zuoraApiConfig = ZuoraApiConfig(
     url = config.getString("zuora.api.url"),
