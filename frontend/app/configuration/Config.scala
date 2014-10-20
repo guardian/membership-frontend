@@ -29,13 +29,13 @@ object Config {
   val idWebAppUrl = config.getString("identity.webapp.url")
 
   def idWebAppSigninUrl(uri: String): String =
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppRegisterUrl(uri: String): String =
-    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri")
+    (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppSignOutThenInUrl(uri: String): String =
-    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri))
+    (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
 
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
@@ -59,6 +59,8 @@ object Config {
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
+  val facebookAppId = config.getString("facebook.app.id")
+
   val stripeApiConfig = StripeApiConfig(
     url = config.getString("stripe.api.url"),
     secretKey = config.getString("stripe.api.key.secret"),
@@ -71,6 +73,12 @@ object Config {
   val salesforceApiUsername = config.getString("salesforce.api.username")
   val salesforceApiPassword = config.getString("salesforce.api.password")
   val salesforceApiToken = config.getString("salesforce.api.token")
+
+  val twitterUsername = config.getString("twitter.username")
+  val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
+  val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
+  val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
+  val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
 
   val zuoraApiConfig = ZuoraApiConfig(
     url = config.getString("zuora.api.url"),

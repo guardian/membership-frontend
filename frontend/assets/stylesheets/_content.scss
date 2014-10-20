@@ -39,30 +39,9 @@
     max-width: rem(gs-span(8));
 
     .content__headline {
+        border-top: rem(1px) solid $c-newsAccent;
         margin-bottom: rem($gs-baseline);
-        padding-top: rem($gs-baseline / 2);
-        position: relative;
-
-        &:before {
-            content: '';
-            display: block;
-            height: rem(1px);
-            width: 100%;
-            background: $c-newsAccent;
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            // Numbers refer to gs-span(8) plus half of
-            // difference to page-container width, minus $gs-gutter
-            @include mq(desktop) {
-                width: rem(gs-span(10));
-            }
-
-            @include mq(mem-full) {
-                width: rem(gs-span(11));
-            }
-        }
+        padding-top: rem($gs-baseline / 2 - 1px);
     }
 }
 
