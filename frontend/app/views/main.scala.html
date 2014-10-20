@@ -30,12 +30,12 @@
         <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
 
         <meta property="og:type" content="website"/>
-        <meta property="fb:app_id" content="180444840287"/>
-        <meta name="twitter:site" content="@@guardian"/>
-        <meta name="twitter:app:name:iphone" content="The Guardian"/>
-        <meta name="twitter:app:id:iphone" content="409128287"/>
-        <meta name="twitter:app:name:googleplay" content="The Guardian"/>
-        <meta name="twitter:app:id:googleplay" content="com.guardian"/>
+        <meta property="fb:app_id" content="@Config.facebookAppId"/>
+        <meta name="twitter:site" content="@Config.twitter.username"/>
+        <meta name="twitter:app:name:iphone" content="@Config.twitter.iphoneAppName"/>
+        <meta name="twitter:app:id:iphone" content="@Config.twitter.iphoneAppId"/>
+        <meta name="twitter:app:name:googleplay" content="@Config.twitter.googleplayAppName"/>
+        <meta name="twitter:app:id:googleplay" content="@Config.twitter.googleplayAppId"/>
         <meta name="twitter:card" content="summary"/>
 
         <title>@(Config.siteTitle + " - " + title)</title>
