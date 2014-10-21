@@ -1,30 +1,34 @@
-@(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String, twitterUrl: String = "")
+@(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String, twitterUrl: String = "", colourSprites: Boolean = false)
 
 @import configuration.Config
 @import play.utils.UriEncoding.encodePathSegment
+
+@colourSuffix() = @{
+    if (colourSprites) "-colour" else ""
+}
 
     <ul class="social u-unstyled u-cf">
         <li class="social__item">
             <a class="social__action" href="mailto:?subject=@encodePathSegment(emailSubject, "utf-8")&amp;body=@encodePathSegment(emailMessage, "utf-8")">
                 <span class="u-h">Share via Email</span>
-                <span class="social-icon">
-                    <i class="icon-sprite icon-sprite-share-email-colour"></i>
+                <span class="social-icon @if(colourSuffix){social-icon-@colourSuffix}">
+                    <i class="icon-sprite icon-sprite-share-email@colourSuffix"></i>
                 </span>
             </a>
         </li>
         <li class="social__item">
             <a class="social__action" href="https://www.facebook.com/sharer/sharer.php?u=@encodePathSegment(facebookUrl, "utf-8")">
                 <span class="u-h">Share on Facebook</span>
-                <span class="social-icon">
-                    <i class="icon-sprite icon-sprite-share-facebook-colour"></i>
+                <span class="social-icon @if(colourSuffix){social-icon-@colourSuffix}">
+                    <i class="icon-sprite icon-sprite-share-facebook@colourSuffix"></i>
                 </span>
             </a>
         </li>
         <li class="social__item">
             <a class="social__action" href="https://twitter.com/intent/tweet?text=@encodePathSegment(twitterMessage, "utf-8")&amp;related=@Config.twitterUsername@if(twitterUrl){&amp;url=@twitterUrl}">
                 <span class="u-h">Share on Twitter</span>
-                <span class="social-icon">
-                    <i class="icon-sprite icon-sprite-share-twitter-colour"></i>
+                <span class="social-icon @if(colourSuffix){social-icon-@colourSuffix}">
+                    <i class="icon-sprite icon-sprite-share-twitter@colourSuffix"></i>
                 </span>
             </a>
         </li>
