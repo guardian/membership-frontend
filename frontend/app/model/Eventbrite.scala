@@ -150,9 +150,7 @@ object Eventbrite {
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
 
   //https://developer.eventbrite.com/docs/order-object/
-  case class EBOrder(first_name: String,
-                    email: String,
-                    attendees: Seq[EBAttendee]) extends EBObject {
+  case class EBOrder(first_name: String, email: String, attendees: Seq[EBAttendee]) extends EBObject {
     lazy val attendeeHead = attendees.head
   }
 
@@ -160,9 +158,7 @@ object Eventbrite {
 
   case class EBGrossCost(value: Int) extends EBObject
 
-  case class EBAttendee(quantity: Int,
-                        order_id: String,
-                        costs: EBCosts) extends EBObject
+  case class EBAttendee(quantity: Int, order_id: String, costs: EBCosts) extends EBObject
 }
 
 object EventbriteDeserializer {

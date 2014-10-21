@@ -85,12 +85,7 @@ trait EventbriteService {
     } yield discount
   }
 
-  //https://developer.eventbrite.com/docs/order-details/
-  def getOrder(id: String): Future[EBOrder] = {
-    for {
-      orders <- WS.url(Config.eventbriteApiUrl + s"/orders/$id").withQueryString("token" -> Config.eventbriteApiToken).get()
-    } yield (orders.json).as[EBOrder]
-  }
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
 object EventbriteService extends EventbriteService {
