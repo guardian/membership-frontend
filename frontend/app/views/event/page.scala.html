@@ -121,7 +121,7 @@
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
                 <div class="event__social">
                     <div class="event__social-header hidden-mobile">Share this</div>
-                    @fragments.social(event.name.text, "The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n" + event.name.text + "\n" + Config.membershipUrl + "/event/" + event.id, Config.membershipUrl + "/event/" + event.id, "#GuardianLive: " + event.name.text + " " + Config.membershipUrl + "/event/" + event.id + " @" + Config.twitterUsername)
+                    @fragments.social(event.name.text, "The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n" + event.name.text + "\n" + Config.membershipUrl + pageInfo.url, Config.membershipUrl + pageInfo.url, event.name.text + " " + Config.membershipUrl + pageInfo.url + " @" + Config.twitterUsername +" #GuardianLive")
                 </div>
             </div>
 
