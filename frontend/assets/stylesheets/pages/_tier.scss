@@ -89,14 +89,19 @@ $current-indicator: rem(47px);
 }
 
 .package__item-cta {
-    padding: rem($gs-gutter);
-    // this is annoying but removes an ~8px height gap
-    // between buttons in columns. if you can fix it, bravo!
-    height: rem(100px);
+    padding: rem($gs-gutter / 2);
+    height: auto;
+
     @include mq($from: tablet, $until: desktop) {
+        height: rem(100px);
+        padding: rem($gs-gutter);
         width: 55%;
         float: right;
         padding-left: 0;
+    }
+
+    .action {
+        margin: 0;
     }
 }
 
@@ -124,10 +129,10 @@ $current-indicator: rem(47px);
 }
 
 .package__inner {
-    padding: rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
+
     @include mq($from: tablet, $until: desktop) {
-        padding-top: rem($gs-gutter * 2);
-        padding-bottom: 0;
+        padding: rem($gs-gutter * 2) rem($gs-gutter) 0;
     }
 }
 
@@ -137,7 +142,11 @@ $current-indicator: rem(47px);
 
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter - 5) rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter - 5) rem($gs-gutter);
+    }
 
     .package__title {
         @include fs-headline(5);
@@ -149,8 +158,8 @@ $current-indicator: rem(47px);
 
     .price-info { 
         height: rem(50px);
-        margin-top: rem($gs-gutter);
         color: $white;
+        position: relative;
     }
 
     &:before {
@@ -159,8 +168,13 @@ $current-indicator: rem(47px);
         content: '';
         display: block;
         position: absolute;
-        left: rem($gs-gutter);
-        top: rem($gs-gutter - 2);
+        left: rem($gs-gutter / 2);
+        top: rem($gs-baseline);
+
+        @include mq(tablet) {
+            left: rem($gs-gutter);
+            top: rem($gs-gutter - 2);
+        }
     }
 
     &:after {
@@ -253,7 +267,7 @@ $current-indicator: rem(47px);
 }
 
 .price-info {
-    height: 100%;
+    height: rem($gs-gutter * 2);
 
     @include mq(tablet) {
         width: rem(280px);
@@ -261,12 +275,16 @@ $current-indicator: rem(47px);
     }
 
     @include mq(desktop) {
+        height: rem($gs-gutter * 2.5);
         width: 100%;
         float: none;
     }
 
     .price-info__detail {
         @include fs-headline(3);
+        position: absolute;
+        bottom: 0;
+        left: 0;
 
         @include mq(desktop) {
             @include fs-headline(4);
@@ -281,8 +299,8 @@ $current-indicator: rem(47px);
         }
 
         &--right {
-            float: right;
-            margin-top: rem($gs-gutter - 4);
+            right: 0;
+            text-align: right;
         }
 
         &--sm-date {
@@ -293,16 +311,15 @@ $current-indicator: rem(47px);
     .price-info__container-inner {
         width: 50%;
         float: left;
+        position: relative;
+        display: block;
+        height: 100%;
     }
 
     .price-info__container-inner--last {
         text-align: right;
         height: 100%;
         border-left: rem(1px) solid $white-trans;
-
-        .price-info__detail {
-            margin-top: rem($gs-gutter - 4);
-        }
     }
 
     .price-info__container-inner--full-width {

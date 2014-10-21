@@ -9,10 +9,14 @@
         position: absolute;
         display: inline-block;
         float: left;
-        padding: rem($gs-gutter) rem($gs-gutter * 1.5);
+        padding: rem($gs-gutter) rem($gs-gutter + 8px);
         top: 0;
         left: 0;
         z-index: 5;
+
+        @include mq(tablet) {
+            padding: rem($gs-gutter) rem($gs-gutter * 1.5);
+        }
     }
 
     .tickets-select-form__input {
