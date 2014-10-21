@@ -1,7 +1,7 @@
 @(firstName: Option[String], lastName: Option[String])
-@import configuration.Config
+@import configuration.Config.testUsers
 
-@if(Config.testUsers.isValid(firstName.getOrElse(""))) {
+@if(firstName.exists(testUsers.isValid)) {
     <!-- VALID TEST USER -->
 }
 
