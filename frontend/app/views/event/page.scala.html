@@ -43,7 +43,7 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-        
+
         @for((tier, salesDate) <- ticketSaleDates) {
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
@@ -105,12 +105,12 @@
                 <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
             </div>
         </div>
-        
+
     </div>
 
-    
+
     <div class="event-content">
-        
+
         <div class="event-content__image">
             <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
@@ -119,6 +119,10 @@
 
             <div class="event-content__body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__social">
+                    <div class="event__social-header hidden-mobile">Share this</div>
+                    @fragments.social(event.name.text, "The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n" + event.name.text + "\n" + Config.membershipUrl + "/event/" + event.id, Config.membershipUrl + "/event/" + event.id, "#GuardianLive: " + event.name.text + " " + Config.membershipUrl + "/event/" + event.id + " @" + Config.twitterUsername)
+                </div>
             </div>
 
             <div class="event-content__info">
@@ -142,7 +146,7 @@
                 </div>
 
                 @if(event.isNoTicketEvent == false) {
-                
+
                     @for(ticket <- event.ticketClassesHead) {
 
                         <div class="event-content__tickets event-content--line-divider u-cf">
@@ -188,5 +192,5 @@
             </div>
         </div>
     </div>
-  
+
 }
