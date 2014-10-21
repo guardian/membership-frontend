@@ -123,7 +123,7 @@ object MemberService extends MemberService
 object MemberRepository extends MemberRepository with ScheduledTask[Authentication] {
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
-  val interval = 2.hours
+  val interval = 30.minutes
 
   def refresh() = salesforce.getAuthentication
 

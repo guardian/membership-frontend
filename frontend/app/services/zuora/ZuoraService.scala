@@ -39,7 +39,7 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
-  val interval = 2.hours
+  val interval = 30.minutes
 
   def refresh() = request(Login(apiConfig))
 
