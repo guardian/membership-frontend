@@ -74,11 +74,10 @@ trait Event extends Controller {
     }.getOrElse(Future.successful(NotFound))
   }
 
-  def thankyou(id: String) = MemberAction.async { implicit request =>
-    val orderId: String = request.queryString.get("oid").flatMap(_.headOption).getOrElse("")
+  def thankyou(id: String, oid: String) = MemberAction.async { implicit request =>
     eventService.getEvent(id).map { event =>
       for {
-        order <- eventService.getOrder(orderId)
+        order <- eventService.getOrder(oid)
       } yield Ok(views.html.event.thankyou(event, order))
     }.getOrElse(Future.successful(NotFound))
   }
