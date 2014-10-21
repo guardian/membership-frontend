@@ -2,22 +2,6 @@
 
 @import configuration.Config
 @import views.support.Dates._
-@import model.Eventbrite._
-
-@ticketText(quantity: Int) = {
-    ticket@if(quantity>1){s}
-}
-
-@ticketPrice(grossValue: Int) = {
-    @if(grossValue > 0){£@grossValue}else{free}
-}
-
-@eventBriteOrderInformation(order: EBOrder) = {
-    <i class="icon-sprite icon-sprite-eventbrite"></i>
-    <p>Order no. <strong>@order.attendeeHead.order_id</strong></p>
-    <p>@order.attendeeHead.quantity @ticketText(order.attendeeHead.quantity) @ticketPrice(order.attendeeHead.costs.gross.value)</p>
-    <p>Your ticket has been sent to <strong>@order.email</strong></p>
-}
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
@@ -51,7 +35,17 @@
 
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
-                    @eventBriteOrderInformation(order)
+                    <i class="icon-sprite icon-sprite-eventbrite"></i>
+                    <p>Order no. <strong>@order.attendeeHead.order_id</strong></p>
+                    <p>
+                        @order.attendeeHead.quantity ticket@if(order.attendeeHead.quantity > 1){s}
+                        @if(order.attendeeHead.costs.gross.value > 0) {
+                            £@order.attendeeHead.costs.gross.value
+                        } else {
+                            free
+                        }
+                    </p>
+                    <p>Your ticket has been sent to <strong>@order.email</strong></p>
                 </div>
             </div>
         </div>
