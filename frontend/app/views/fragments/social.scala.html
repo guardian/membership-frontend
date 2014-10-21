@@ -1,10 +1,11 @@
+@(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String, twitterUrl: String)
 
 @import configuration.Config
 @import play.utils.UriEncoding.encodePathSegment
 
     <ul class="social u-unstyled u-cf">
         <li class="social__item">
-            <a class="social__action" href="mailto:?subject=@encodePathSegment("I've just joined Guardian Membership", "utf-8")&amp;body=@encodePathSegment("The Guardian is coming to life through live events and meet-ups. I've joined to take part in the conversations and experiences that matter.\n\nCheck it out:\n" + Config.membershipUrl, "utf-8")">
+            <a class="social__action" href="mailto:?subject=@encodePathSegment(emailSubject, "utf-8")&amp;body=@encodePathSegment(emailMessage, "utf-8")">
                 <span class="u-h">Share via Email</span>
                 <span class="social-icon">
                     <i class="icon-sprite icon-sprite-share-email-colour"></i>
@@ -12,7 +13,7 @@
             </a>
         </li>
         <li class="social__item">
-            <a class="social__action" href="https://www.facebook.com/sharer/sharer.php?u=@encodePathSegment(Config.membershipUrl, "utf-8")">
+            <a class="social__action" href="https://www.facebook.com/sharer/sharer.php?u=@encodePathSegment(facebookUrl, "utf-8")">
                 <span class="u-h">Share on Facebook</span>
                 <span class="social-icon">
                     <i class="icon-sprite icon-sprite-share-facebook-colour"></i>
@@ -20,7 +21,7 @@
             </a>
         </li>
         <li class="social__item">
-            <a class="social__action" href="https://twitter.com/intent/tweet?text=@encodePathSegment("With @" + Config.twitterUsername + ", the Guardian is coming to life through events and meet-ups. I've just joined. Check it out.", "utf-8");url=@Config.membershipUrl;related=@Config.twitterUsername">
+            <a class="social__action" href="https://twitter.com/intent/tweet?text=@encodePathSegment(twitterMessage, "utf-8");url=@twitterUrl;related=@Config.twitterUsername">
                 <span class="u-h">Share on Twitter</span>
                 <span class="social-icon">
                     <i class="icon-sprite icon-sprite-share-twitter-colour"></i>
