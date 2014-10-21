@@ -1,4 +1,4 @@
-@(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String, twitterUrl: String)
+@(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String, twitterUrl: String = "")
 
 @import configuration.Config
 @import play.utils.UriEncoding.encodePathSegment
@@ -21,7 +21,7 @@
             </a>
         </li>
         <li class="social__item">
-            <a class="social__action" href="https://twitter.com/intent/tweet?text=@encodePathSegment(twitterMessage, "utf-8")&amp;related=@Config.twitterUsername&amp;url=@twitterUrl">
+            <a class="social__action" href="https://twitter.com/intent/tweet?text=@encodePathSegment(twitterMessage, "utf-8")&amp;related=@Config.twitterUsername@if(twitterUrl){&amp;url=@twitterUrl}">
                 <span class="u-h">Share on Twitter</span>
                 <span class="social-icon">
                     <i class="icon-sprite icon-sprite-share-twitter-colour"></i>
