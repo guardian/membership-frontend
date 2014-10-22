@@ -1,9 +1,16 @@
 package views.support
 
+import play.utils.UriEncoding.encodePathSegment
+
 import configuration.Config
 import model.Eventbrite.EBEvent
 
-case class Social(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String)
+case class Social(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String) {
+  val encodedEmailSubject = encodePathSegment(emailSubject, "utf-8")
+  val encodedEmailMessage = encodePathSegment(emailMessage, "utf-8")
+  val encodedFacebookUrl = encodePathSegment(facebookUrl, "utf-8")
+  val encodedTwitterMessage = encodePathSegment(twitterMessage, "utf-8")
+}
 
 object Social {
   val twitterHandle = "@" + Config.twitterUsername
