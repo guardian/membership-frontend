@@ -72,7 +72,10 @@ define([
     };
 
     Cta.prototype.disableBuyTicketsCtaButton = function () {
-        $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+        // todo: improve – this.getElem only returns first match
+        // and we have two CTAs on event pages
+        // so this should disable all of them
+        $('.' + this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
     };
 
     Cta.prototype.memberCta = function () {

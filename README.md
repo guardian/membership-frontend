@@ -96,6 +96,11 @@ idrun
 ## Compile front-end files
     grunt compile
 
+## Test Users
+
+See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
+Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
+
 
 ## Committing config credentials
 

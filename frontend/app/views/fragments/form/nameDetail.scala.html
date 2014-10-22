@@ -1,4 +1,9 @@
 @(firstName: Option[String], lastName: Option[String])
+@import utils.TestUsers.testUsers
+
+@if(firstName.exists(testUsers.isValid)) {
+    <!-- VALID TEST USER -->
+}
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">

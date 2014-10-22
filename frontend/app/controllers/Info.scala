@@ -28,6 +28,10 @@ trait Info extends Controller {
     Ok(views.html.info.feedback())
   }
 
+  def giftingPlaceholder = NoCacheAction { implicit request =>
+    Ok(views.html.info.giftingPlaceholder())
+  }
+
   def feedbackThankyou() = CachedAction { implicit request =>
     Ok(views.html.info.feedbackThankyou())
   }
