@@ -35,7 +35,7 @@ $current-indicator: rem(47px);
         @include align-items(stretch);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
-        padding-top: $current-indicator;
+        padding-top: rem(72px);
     }
 }
 
@@ -355,6 +355,10 @@ $current-indicator: rem(47px);
         display: inline-block;
         vertical-align: top;
     }
+}
+
+.toggle--open {
+    @include rotate(180deg);
 }
 
 /* Upgrade
