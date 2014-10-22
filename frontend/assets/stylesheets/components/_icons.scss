@@ -39,3 +39,7 @@
         height: rem(90px);
     }
 }
+
+.toggle--open {
+    @include rotate(180deg);
+}

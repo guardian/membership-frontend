@@ -157,9 +157,15 @@ $current-indicator: rem(47px);
     }
 
     .price-info { 
-        height: rem(50px);
+        padding-top: rem($gs-gutter + 10);
+        height: rem($gs-gutter * 3 + 10);
         color: $white;
         position: relative;
+
+        @include mq(desktop) {
+            height: rem($gs-gutter * 4);
+        }
+
     }
 
     &:before {
@@ -215,7 +221,6 @@ $current-indicator: rem(47px);
 
 .package__list-benefits-element {
     @include fs-bodyCopy(1);
-    // padding-bottom: rem($gs-gutter);
     margin-bottom: 0;
     > li {
 
@@ -233,14 +238,6 @@ $current-indicator: rem(47px);
         }
     }
 }
-
-// .package__list-benefits .package__list-benefits-element:before {
-//     content: 'Plus:';
-//     display: block;
-//     @include fs-bodyCopy(1);
-//     color: $c-neutral1;
-//     margin-bottom: rem($gs-baseline / 2);
-// }
 
 // bit fugly - hides the "Plus:" text for first list item
 .package__list-benefits .package__list-benefits-element:first-of-type:before {
@@ -336,6 +333,10 @@ $current-indicator: rem(47px);
             color: $black;
         }
     }
+}
+
+.package__select-toggle {
+    @extend %mobile-expand-collapse;
 }
 
 .package__description {

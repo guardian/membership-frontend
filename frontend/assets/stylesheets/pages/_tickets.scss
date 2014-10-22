@@ -97,21 +97,7 @@
     }
 
     .tickets-select-form__toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: rem(60px);
-        height: rem(60px);
-    }
-
-    .tickets-select-form__toggle-icon {
-        position: absolute;
-        right: rem($gs-gutter);
-        top: rem($gs-gutter);
-    }
-
-    .tickets-select-form__toggle-icon--open {
-        @include rotate(180deg);
+        @extend %mobile-expand-collapse;
     }
 
     input:checked + .tickets-select-form__tier-name {

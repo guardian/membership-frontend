@@ -25,12 +25,10 @@
                 <div class="price-info-container price-info-container--last">
                     @fragments.benefits.priceInfo(Benefits.details(tier))
                 </div>
-                <a class="tickets-select-form__toggle mobile-only js-benefit-header" href="#">
-                    <i class="i icon-sprite-arrow-grey-large tickets-select-form__toggle-icon js-toggle-icon"></i>
-                </a>
+                <a class="tickets-select-form__toggle mobile-only js-benefit-header" href="#"></a>
             </div>
         </div>
-        <div class="tickets-select-form__detail hidden-mobile u-cf">
+        <div class="tickets-select-form__detail hidden-mobile u-cf js-select-tier">
             <p class="tickets-select-form__leadin">@Benefits.details(tier).leadin</p>
             <ul class="u-unstyled">
                 @for((header, body, icon) <- Benefits.details(tier).list) {
