@@ -1,6 +1,7 @@
 @(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
+@import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
@@ -121,7 +122,7 @@
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
                 <div class="event__social">
                     <div class="event__social-header hidden-mobile">Share this</div>
-                    @fragments.social(event.name.text, "The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n" + event.name.text + "\n" + Config.membershipUrl + pageInfo.url, Config.membershipUrl + pageInfo.url, event.name.text + " " + Config.membershipUrl + pageInfo.url + " @" + Config.twitterUsername +" #GuardianLive")
+                    @fragments.social(eventDetail(event))
                 </div>
             </div>
 
