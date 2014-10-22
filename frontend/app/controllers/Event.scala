@@ -74,12 +74,21 @@ trait Event extends Controller {
     }.getOrElse(Future.successful(NotFound))
   }
 
-  def thankyou(id: String, oid: String) = MemberAction.async { implicit request =>
-    eventService.getEvent(id).map { event =>
-      for {
-        order <- eventService.getOrder(oid)
-      } yield Ok(views.html.event.thankyou(event, order))
-    }.getOrElse(Future.successful(NotFound))
+  def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
+    orderIdOpt.fold {
+      val resultOpt = for {
+        oid <- request.flash.get("oid")
+        event <- eventService.getEvent(id)
+      } yield {
+        eventService.getOrder(oid).map { order =>
+          Ok(views.html.event.thankyou(event, order))
+        }
+      }
+
+      resultOpt.getOrElse(Future.successful(NotFound))
+    }{ orderId =>
+      Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
+    }
   }
 }
 
