@@ -96,7 +96,7 @@ $current-indicator: rem(72px);
     @include mq($from: tablet, $until: desktop) {
         position: relative;
         padding: rem($gs-gutter);
-        width: 250px;
+        width: rem(290px);
         float: right;
     }
 
@@ -111,7 +111,7 @@ $current-indicator: rem(72px);
     }
 
     .action {
-        margin: 0;
+        margin: rem($gs-gutter) 0 0;
     }
 }
 
