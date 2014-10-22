@@ -1,7 +1,7 @@
 //TODO start of splitting benefits work into one set of styles where it makes sense
 .benefits-item {
 	@include mq(tablet) {
-	    width: rem(200px);
+		width: rem(200px);
 	    float: left;
 	    height: rem(150px);
 	    margin: 0 rem($gs-gutter / 2);

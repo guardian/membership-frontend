@@ -1,4 +1,4 @@
-$current-indicator: rem(47px);
+$current-indicator: rem(72px);
 
 .secondary-content {
     flex-basis: 16em;
@@ -20,22 +20,24 @@ $current-indicator: rem(47px);
 
 .package-container__header {
     padding-bottom: rem($gs-gutter);
+    border-bottom: rem(1px) dotted $c-neutral1;
+
     @include mq(tablet) {
         margin-bottom: rem(40px);
     }
-    border-bottom: rem(1px) dotted #333333;
 }
 
 // .package-list is a flexbox
 // so each .package inside is equal width
 .package-list {
+    padding-top: rem($gs-gutter * 2);
 
     @include mq(desktop) {
         @include flexbox;
         @include align-items(stretch);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
-        padding-top: rem(72px);
+        padding-top: $current-indicator;
     }
 }
 
@@ -54,7 +56,6 @@ $current-indicator: rem(47px);
     @include justify-content(space-between);
     @include flex-direction(column);
     align-items: stretch;
-
     margin-right: rem($gs-gutter);
 
     &:last-child {
@@ -93,11 +94,20 @@ $current-indicator: rem(47px);
     height: auto;
 
     @include mq($from: tablet, $until: desktop) {
-        height: rem(100px);
+        position: relative;
         padding: rem($gs-gutter);
-        width: 55%;
+        width: 250px;
         float: right;
-        padding-left: 0;
+    }
+
+    .about-membership &,
+    .join & {
+        @include mq (desktop) {
+            position: absolute;
+            padding: 1rem;
+            width: 100%;
+            bottom: 0;
+        }
     }
 
     .action {
@@ -107,7 +117,7 @@ $current-indicator: rem(47px);
 
 .package__item--promo {
     // see above – we show 2 buttons here so need more space
-    height: rem(170px);
+    height: auto;
 }
 
 .package__current-indicator {
@@ -128,11 +138,23 @@ $current-indicator: rem(47px);
     }
 }
 
+.package__outer {
+    @include flex-grow(1);
+}
+
 .package__inner {
     padding: rem($gs-gutter / 2);
+    min-height: rem($gs-gutter * 4);
 
     @include mq($from: tablet, $until: desktop) {
         padding: rem($gs-gutter * 2) rem($gs-gutter) 0;
+    }
+
+    .about-membership &,
+    .join & {
+        @include mq(desktop) {
+            margin-bottom: rem($gs-gutter * 3);
+        }
     }
 }
 

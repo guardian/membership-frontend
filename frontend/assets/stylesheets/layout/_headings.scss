@@ -27,7 +27,11 @@
 }
 
 .section-intro {
-    @include fs-bodyCopy(3);
+    @include fs-bodyCopy(2);
+
+    @include mq(desktop) {
+        @include fs-bodyCopy(3);
+    }
 }
 
 .section-sub-headline {
