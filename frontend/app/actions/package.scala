@@ -1,15 +1,15 @@
-import com.gu.identity.model.User
+import com.gu.identity
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
-import configuration.Config
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
 import services.MemberRepository
+import utils.TestUsers
 
 import scala.concurrent.{ExecutionContext, Future}
 
 package object actions {
-  type AuthRequest[A] = AuthenticatedRequest[A, User]
+  type AuthRequest[A] = AuthenticatedRequest[A, identity.model.User]
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) {
     def forMemberOpt[A, T](f: Option[Member] => T)(implicit executor: ExecutionContext): Future[T] =
@@ -20,10 +20,8 @@ package object actions {
       }
     }
 
-  implicit class RichUser(user: User) {
-    lazy val isTestUser: Boolean = {
-      user.publicFields.displayName.map(dn => Config.testUsers.validate(dn.split(' ')(0)).isDefined).getOrElse(false)
-    }
+  implicit class RichUser(user: identity.model.User) {
+    lazy val isTestUser: Boolean = TestUsers.validate(user)
   }
 
   case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {

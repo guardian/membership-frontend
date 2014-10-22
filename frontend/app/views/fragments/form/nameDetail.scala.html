@@ -1,5 +1,5 @@
 @(firstName: Option[String], lastName: Option[String])
-@import configuration.Config.testUsers
+@import utils.TestUsers.testUsers
 
 @if(firstName.exists(testUsers.isValid)) {
     <!-- VALID TEST USER -->
