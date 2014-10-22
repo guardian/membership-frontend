@@ -36,11 +36,11 @@
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
                     <i class="icon-sprite icon-sprite-eventbrite"></i>
-                    <p>Order no. <strong>@order.attendeeHead.order_id</strong></p>
+                    <p>Order no. <strong>@order.id</strong></p>
                     <p>
-                        @order.attendeeHead.quantity ticket@if(order.attendeeHead.quantity > 1){s}
-                        @if(order.attendeeHead.costs.gross.value > 0) {
-                            £@order.attendeeHead.costs.gross.value
+                        @order.ticketCount ticket@if(order.ticketCount > 1){s}
+                        @if(order.totalCost > 0) {
+                            £@order.totalCost
                         } else {
                             free
                         }
