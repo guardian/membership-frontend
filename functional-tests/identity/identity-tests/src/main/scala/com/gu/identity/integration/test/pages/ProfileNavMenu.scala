@@ -7,8 +7,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 
 class ProfileNavMenu(implicit driver: WebDriver) extends ParentPage {
-  private val menuList: WebElement = findByTestAttribute("nav-popup-profile")
+  private def menuList: WebElement = findByTestAttribute("nav-popup-profile")
   private def menuElement(dataLinkName: String): By = By.cssSelector(s"a[data-link-name='$dataLinkName']")
+  private def profileInfoList = driver.findElement(By.cssSelector("[data-test-id=\"sign-in-name\"]"))
 
   def clickEditProfile(): EditProfilePage = {
     clickMenuElement("Edit profile")
@@ -28,7 +29,8 @@ class ProfileNavMenu(implicit driver: WebDriver) extends ParentPage {
   }
 
   def clickMenuElement(dataLinkName: String) = {
-    waitUntil(visibilityOf(menuList))
-    menuList.findElement(menuElement(dataLinkName)).click()
+    waitUntil(visibilityOf(profileInfoList))
+    profileInfoList.click
+    driver.findElement(menuElement(dataLinkName)).click()
   }
 }

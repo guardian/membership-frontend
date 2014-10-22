@@ -20,7 +20,8 @@ case class UserSteps(implicit driver: WebDriver) extends TestLogging with Matche
   def goToEditProfilePage(pageWithSignInModule: ContainerWithSigninModulePage): EditProfilePage = {
     logger.step("Going to the edit profile page")
     val profileNavMenu = pageWithSignInModule.signInModule().clickSignInLinkWhenLoggedIn()
-    profileNavMenu.clickEditProfile()
+//    profileNavMenu.clickEditProfile()
+    new EditProfilePage
   }
 
   def createRandomBasicUser(): Either[List[FormError], User] = {
@@ -103,8 +104,8 @@ case class UserSteps(implicit driver: WebDriver) extends TestLogging with Matche
   def changePassword(pageWithSignInModule: ContainerWithSigninModulePage, userBeforeChange: User):
   NewPasswordAndContainerWithSigninModule = {
     logger.step("Changing user password")
-    val profileNavMenu = pageWithSignInModule.signInModule().clickSignInLinkWhenLoggedIn()
-    val changePwdPage = profileNavMenu.clickChangePassword()
+    val changePwdPage = pageWithSignInModule.signInModule().clickChangePassword
+//     = profileNavMenu.clickChangePassword()
 
     changePwdPage.enterOldPassword(userBeforeChange.pwd.get)
     val newPwd = generateRandomAlphaNumericString(10)
