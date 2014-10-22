@@ -24,8 +24,8 @@
 
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-location event-item__icon"></i>
-                    @if(event.venue.name){
-                        <span class="event-item__location-name">@event.venue.name </span>
+                    @for(name <- event.venue.name) {
+                        <span class="event-item__location-name">@name</span>
                     }
                     @for(location <- event.venue.location) {
                         <span class="event-item__location-detail">@location.address_1 </span>
@@ -53,7 +53,7 @@
 
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Before the event</h2>
-        <p>Read related articles and what other members have to say at <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+        <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
     </section>
 
     <section class="content__container content__container--slim">
