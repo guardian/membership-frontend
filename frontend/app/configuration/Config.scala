@@ -1,6 +1,7 @@
 package configuration
 
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
+import com.gu.identity.testing.usernames.TestUsernames
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
