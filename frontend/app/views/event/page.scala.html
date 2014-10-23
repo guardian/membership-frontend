@@ -138,11 +138,11 @@
                         <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
                     </div>
                     <div class="event-content__second">
-                        <span class="event-content__venue-name">@event.venue.name@if(event.addressOne){,</span><br />
-                        <span class="event-content__address">@event.eventAddressLine</span>
+                        <span class="event-content__venue-name">@event.venue.name</span>
+                        @if(event.addressOne) {
+                            <span class="event-content__address">@event.eventAddressLine</span>
+                        }
                     </div>
-                    }
-
                 </div>
 
                 @if(event.isNoTicketEvent == false) {
