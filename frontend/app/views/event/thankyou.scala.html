@@ -2,6 +2,7 @@
 
 @import configuration.Config
 @import views.support.Dates._
+@import views.support.Prices._
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
@@ -40,7 +41,7 @@
                     <div>
                         @order.ticketCount ticket@if(order.ticketCount > 1){s}
                         @if(order.totalCost > 0) {
-                            £@order.totalCost
+                            @order.totalCost.pretty
                         } else {
                             free
                         }
