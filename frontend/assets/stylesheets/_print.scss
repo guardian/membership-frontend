@@ -1,0 +1,43 @@
+// scope all of this to print only
+@media print {
+
+    // don't waste precious printer inks!
+    * {
+        color: #000000 !important;
+        text-decoration: none !important;
+        background-image: none !important;
+        background-color: $white !important;
+    }
+
+    // no need for extra vertical space below
+    .page-container--with-padding {
+        padding-bottom: 0 !important;
+    }
+
+    // toggle stuff we don't need
+    .hidden-print,
+    .page-side-margins:before,
+    .page-side-margins:after {
+        display: none !important;
+    }
+
+    // don't try to show icons (they appear onscreen but not when printed)
+    .icon-sprite {
+        display: none !important;
+    }
+
+    // icons don't get printed so don't leave space for 'em
+    .event-item__detail {
+        padding-left: 0 !important;
+    }
+
+    // prevent image colliding with text
+    .event-item__media img {
+        width: 100%;
+    }
+
+    // don't take up precious vertical space!
+    h1.section-headline br {
+        display: none;
+    }
+}
