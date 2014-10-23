@@ -20,3 +20,16 @@
         color: $c-body;
     }
 }
+
+%mobile-expand-collapse {
+    @extend %icon-sprite;
+    @extend %icon-sprite-arrow-white-small;
+    @include border-radius(100%);
+    background-position: 4px 10px!important;
+    position: absolute;
+    top: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+    background-color: $border-bottom-color;
+    padding: rem(14px);
+    display: block;
+}
