@@ -97,6 +97,7 @@ object Eventbrite {
                       id: String,
                       start: DateTime,
                       end: DateTime,
+                      created: Instant,
                       venue: EBVenue,
                       capacity: Option[Int],
                       ticket_classes: Seq[EBTickets],
