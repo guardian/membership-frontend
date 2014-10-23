@@ -4,7 +4,7 @@
 
     <ul class="social u-unstyled u-cf">
         <li class="social__item">
-            <a class="social__action" href="mailto:?subject=@social.encodedEmailSubject&amp;body=@social.encodedEmailMessage">
+            <a class="social__action" target="_blank" href="mailto:?subject=@social.encodedEmailSubject&amp;body=@social.encodedEmailMessage">
                 <span class="u-h">Share via Email</span>
                 <span class="social-icon @if(colourSprites){social-icon--colour}">
                     <i class="icon-sprite icon-sprite-share-email@if(colourSprites){-colour}"></i>
@@ -12,7 +12,7 @@
             </a>
         </li>
         <li class="social__item">
-            <a class="social__action" href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl">
+            <a class="social__action" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl">
                 <span class="u-h">Share on Facebook</span>
                 <span class="social-icon @if(colourSprites){social-icon--colour}">
                     <i class="icon-sprite icon-sprite-share-facebook@if(colourSprites){-colour}"></i>
@@ -20,7 +20,7 @@
             </a>
         </li>
         <li class="social__item">
-            <a class="social__action" href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername">
+            <a class="social__action" target="_blank" href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername">
                 <span class="u-h">Share on Twitter</span>
                 <span class="social-icon @if(colourSprites){social-icon--colour}">
                     <i class="icon-sprite icon-sprite-share-twitter@if(colourSprites){-colour}"></i>

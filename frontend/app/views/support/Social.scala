@@ -24,6 +24,13 @@ object Social {
     s"${event.name.text} ${event.memUrl} $twitterHandle #GuardianLive"
   )
 
+  def eventThankyou(event: EBEvent) = Social(
+    s"I'm going to ${event.name.text}!",
+    s"I've just booked my ticket for ${event.name.text}. Come along too!\n\n${event.memUrl}",
+    event.memUrl,
+    s"I'm going to: ${event.name.text} ${event.memUrl} $twitterHandle #GuardianLive"
+  )
+
   val joinThankyou = Social(
     "I've just joined Guardian Membership",
     s"The Guardian is coming to life through live events and meet-ups. I've joined to take part in the conversations and experiences that matter.\n\nCheck it out:\n${Config.membershipUrl}",
