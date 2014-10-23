@@ -22,7 +22,13 @@ POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(ti
 GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
 GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
+# Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
+
+# Staff signin (note, done by OAuth, in addition to regular signin)
+GET            /staff/login                       controllers.OAuth.login
+GET            /staff/loginAction                 controllers.OAuth.loginAction
+GET            /oauth2callback                    controllers.OAuth.oauth2Callback
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
 POST           /choose-tier                       controllers.Joining.tierChooserRedirect()

@@ -69,6 +69,11 @@ trait Joiner extends Controller {
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
+  def joinStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
+    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+      makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
+  }
+
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) } )

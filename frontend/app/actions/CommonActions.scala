@@ -20,6 +20,8 @@ trait CommonActions {
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 
+  val AuthenticatedStaffNonMemberAction = AuthenticatedNonMemberAction andThen oauthActions.AuthAction
+
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()

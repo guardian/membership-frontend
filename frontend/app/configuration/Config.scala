@@ -1,7 +1,8 @@
 package configuration
 
+import com.github.nscala_time.time.Imports._
+import com.gu.googleauth.GoogleAuthConfig
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
-import com.gu.identity.testing.usernames.TestUsernames
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
@@ -120,5 +121,17 @@ object Config {
   val stage = config.getString("stage")
 
   val ophanJsUrl = config.getString("ophan.js.url")
+
+  val googleAuthConfig = {
+    val con = config.getConfig("google.oauth")
+    GoogleAuthConfig(
+      con.getString("client.id"),
+      con.getString("client.secret"),
+      con.getString("callback"),
+      Some("guardian.co.uk"),        // Google App domain to restrict login
+      Some(30.minutes),
+      true                           // Re-authenticate (without prompting) with google when session expires
+    )
+  }
 
 }
