@@ -2,18 +2,18 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
-import model.Eventbrite.EBTickets
+import model.Eventbrite.{EBEvent, EBTickets}
 import org.joda.time.Instant
 
 object TicketSaleDates {
-  def datesFor(eventStart: DateTime, tickets: EBTickets): Map[Tier.Value, Instant] = {
-    val saleStart = tickets.sales_start.get
+  def datesFor(event: EBEvent, tickets: EBTickets): Map[Tier.Value, Instant] = {
+    val effectiveSaleStart = tickets.sales_start.getOrElse(event.created)
 
-    if (saleStart > eventStart - 2.weeks) {
-      Map(Tier.Patron -> saleStart, Tier.Partner -> saleStart, Tier.Friend -> saleStart)
+    if (effectiveSaleStart > event.start - 2.weeks) {
+      Map(Tier.Patron -> effectiveSaleStart, Tier.Partner -> effectiveSaleStart, Tier.Friend -> effectiveSaleStart)
     } else {
-      val saleStartDateTime = saleStart.toDateTime(eventStart.getChronology)
-      Map(Tier.Patron -> saleStart, Tier.Partner -> (saleStartDateTime + 1.week).toInstant, Tier.Friend -> (saleStartDateTime + 2.weeks).toInstant)
+      val saleStartDateTime = effectiveSaleStart.toDateTime()
+      Map(Tier.Patron -> effectiveSaleStart, Tier.Partner -> (saleStartDateTime + 1.week).toInstant, Tier.Friend -> (saleStartDateTime + 2.weeks).toInstant)
     }
   }
 }
