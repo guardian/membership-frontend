@@ -20,6 +20,20 @@
     border-top: 0;
 }
 
+.section-headline--no-margin {
+    padding-top: rem(4px);
+    border-top: 0;
+    margin-bottom: 0;
+}
+
+.section-intro {
+    @include fs-bodyCopy(2);
+
+    @include mq(desktop) {
+        @include fs-bodyCopy(3);
+    }
+}
+
 .section-sub-headline {
     @extend %section-header;
     @include fs-headline(4);

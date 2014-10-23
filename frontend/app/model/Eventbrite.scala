@@ -159,7 +159,7 @@ object Eventbrite {
   //https://developer.eventbrite.com/docs/order-object/
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
     val ticketCount = attendees.length
-    val totalCost = costs.gross.value
+    val totalCost = costs.gross.value / 100f
   }
 
   case class EBCosts(gross: EBCost) extends EBObject

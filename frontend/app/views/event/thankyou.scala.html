@@ -2,6 +2,8 @@
 
 @import configuration.Config
 @import views.support.Dates._
+@import views.support.Prices._
+@import views.support.Social.eventThankyou
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
@@ -40,7 +42,7 @@
                     <div>
                         @order.ticketCount ticket@if(order.ticketCount > 1){s}
                         @if(order.totalCost > 0) {
-                            £@order.totalCost
+                            @order.totalCost.pretty
                         } else {
                             free
                         }
@@ -55,6 +57,11 @@
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Before the event</h2>
         <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Tell your friends</h2>
+        @fragments.social(eventThankyou(event), colourSprites=true)
     </section>
 
     <section class="content__container content__container--slim">
