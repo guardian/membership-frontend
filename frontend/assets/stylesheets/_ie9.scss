@@ -33,6 +33,8 @@
 
 /* Tier ie9 fix
    ========================================================================== */
+
+// About membership page - fix height of tier boxes
 .about-membership {
     .package {
         @include mq(desktop) {
@@ -42,6 +44,7 @@
     }
 }
 
+// Patron page - fix height of tier boxes
 .patron-page {
     .package__inner {
         @include mq(desktop) {
@@ -50,6 +53,7 @@
     }
 }
 
+// Join page - fix height of tier boxes
 .join {
     .package {
         @include mq(desktop) {
@@ -64,6 +68,15 @@
     }
 }
 
+// Homepage & Patron page - fix height of tier boxes
+.home-page,
+.patron-page {
+    .package {
+        height: auto;
+    }
+}
+
+// general page - fix height of tier boxes
 .package {
     @include mq(desktop) {
         height: rem(1400px);

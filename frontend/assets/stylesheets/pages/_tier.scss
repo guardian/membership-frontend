@@ -126,12 +126,11 @@ $current-indicator: rem(72px);
     text-align: center;
     padding: rem($gs-baseline);
     margin: 0 rem($gs-baseline / 2);
+    
     @include mq(desktop) {
         margin-top: rem(-49px);
     }
-    @include mq($until: desktop) {
-        margin: 0;
-    }
+
     // this prevents the text splitting onto 2 lines
     @include mq($from: desktop, $until: mem-full) {
         font-size: rem(14px);
