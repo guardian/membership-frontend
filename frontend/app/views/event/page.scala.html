@@ -43,7 +43,7 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
-        
+
         @for((tier, salesDate) <- ticketSaleDates) {
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
@@ -105,12 +105,12 @@
                 <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
             </div>
         </div>
-        
+
     </div>
 
-    
+
     <div class="event-content">
-        
+
         <div class="event-content__image">
             <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
@@ -134,15 +134,15 @@
                         <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
                     </div>
                     <div class="event-content__second">
-                        <span class="event-content__venue-name">@event.venue.name@if(event.addressOne){,</span><br />
-                        <span class="event-content__address">@event.eventAddressLine</span>
+                        <span class="event-content__venue-name">@event.venue.name</span>
+                        @if(event.addressOne) {
+                            <span class="event-content__address">@event.eventAddressLine</span>
+                        }
                     </div>
-                    }
-
                 </div>
 
                 @if(event.isNoTicketEvent == false) {
-                
+
                     @for(ticket <- event.ticketClassesHead) {
 
                         <div class="event-content__tickets event-content--line-divider u-cf">
@@ -188,5 +188,5 @@
             </div>
         </div>
     </div>
-  
+
 }
