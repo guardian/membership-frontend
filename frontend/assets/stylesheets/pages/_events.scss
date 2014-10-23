@@ -294,6 +294,22 @@
     }
 }
 
+.event__social {
+    width: rem(gs-span(2) + $gs-gutter);
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(tablet) {
+        float: left;
+    }
+}
+
+.event__social-header {
+    @include fs-textSans(1);
+    border-top: rem(1px) solid $c-neutral6;
+    padding-bottom: rem($gs-baseline / 2);
+    padding-top: rem(3px);
+}
+
 .event-content__info {
     background-color: $c-neutral7;
     margin-bottom: rem($gs-gutter);
@@ -761,6 +777,12 @@
     .event-item__detail {
         border-top: rem(1px) dotted $c-neutral3;
         padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
+
+        &:last-child,
+        p:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
     }
 
     .event-item__location {
@@ -780,7 +802,7 @@
     }
 
     .icon-sprite-eventbrite {
-        margin-top: rem(8px);
+        margin-top: rem(3px);
     }
 
     .icon-sprite-early_booking-grey {
