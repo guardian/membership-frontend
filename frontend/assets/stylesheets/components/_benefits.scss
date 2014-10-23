@@ -1,5 +1,6 @@
 //TODO start of splitting benefits work into one set of styles where it makes sense
 .benefits-item {
+
 	@include mq(tablet) {
 		width: rem(200px);
 	    float: left;
@@ -13,6 +14,8 @@
 	    &:first-child {
 	    	margin-left: 0;
 	    }
+
+// Removes left margin for every third benefit items. eg 3rd, 6th, 9th, 12th, etc. This only applies for mobiles 
 	    &:nth-child(3n+3) {
 	    	margin-left: rem($gs-gutter / 2);
 	    	margin-right: 0;

@@ -55,7 +55,7 @@ $current-indicator: rem(72px);
     @include flexbox;
     @include justify-content(space-between);
     @include flex-direction(column);
-    align-items: stretch;
+    @include align-items(stretch);
     margin-right: rem($gs-gutter);
 
     &:last-child {
@@ -126,7 +126,7 @@ $current-indicator: rem(72px);
     text-align: center;
     padding: rem($gs-baseline);
     margin: 0 rem($gs-baseline / 2);
-    
+
     @include mq(desktop) {
         margin-top: rem(-49px);
     }
@@ -215,7 +215,9 @@ $current-indicator: rem(72px);
     &--partner {
         background-color: $mem-brandLightblue;
         .package__title,
-        .price-info { color: $black; }
+        .price-info { 
+            color: $black; 
+        }
     }
 
     &--patron {
@@ -225,7 +227,7 @@ $current-indicator: rem(72px);
 
 .package__list-benefits {
     position: relative;
-    padding-top: 45px;
+    padding-top: rem(45px);
 
     &:before {
         @include fs-bodyHeading(2);
@@ -249,7 +251,6 @@ $current-indicator: rem(72px);
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
     }
 
     > .u-cf {
