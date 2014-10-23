@@ -156,9 +156,9 @@
                                     <ul class="sale-dates__list u-unstyled u-cf">
                                         <li class="sale-dates__item">
                                             <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
-                                            </time>
+                                            @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
+                                              <time datetime="@ticketSalesEnd">@ticketSalesEnd.pretty</time>
+                                            }
                                         </li>
                                     </ul>
                                 </div>
