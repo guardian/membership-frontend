@@ -84,6 +84,8 @@ trait EventbriteService {
       }
     } yield discount
   }
+
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
 object EventbriteService extends EventbriteService {

@@ -144,11 +144,27 @@ object Eventbrite {
 
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
-    // This currently extracts all none hidden tickets and gets the first one
-    def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
+    lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))
+
+    lazy val ticketSalesEndOpt = visibleTicketClasses.flatMap(_.sales_end).sorted.headOption
+
+    // This currently gets the first non-hidden ticket class
+    def ticketClassesHead = visibleTicketClasses.headOption
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
+
+  //https://developer.eventbrite.com/docs/order-object/
+  case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
+    val ticketCount = attendees.length
+    val totalCost = costs.gross.value
+  }
+
+  case class EBCosts(gross: EBCost) extends EBObject
+
+  case class EBCost(value: Int) extends EBObject
+
+  case class EBAttendee(quantity: Int) extends EBObject
 }
 
 object EventbriteDeserializer {
@@ -190,4 +206,9 @@ object EventbriteDeserializer {
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
   implicit val ebDiscountsReads = ebResponseReads[EBDiscount]("discounts")
+
+  implicit val ebCostReads = Json.reads[EBCost]
+  implicit val ebCostsReads = Json.reads[EBCosts]
+  implicit val ebAttendeeReads = Json.reads[EBAttendee]
+  implicit val ebOrderReads = Json.reads[EBOrder]
 }
