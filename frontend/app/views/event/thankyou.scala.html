@@ -36,16 +36,17 @@
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
                     <i class="icon-sprite icon-sprite-eventbrite"></i>
-                    <p>Order no. <strong>@order.id</strong></p>
-                    <p>
+                    <div>Order no. @order.id</div>
+                    <div>
                         @order.ticketCount ticket@if(order.ticketCount > 1){s}
                         @if(order.totalCost > 0) {
                             £@order.totalCost
                         } else {
                             free
                         }
-                    </p>
-                    <p>Your ticket has been sent to <strong>@order.email</strong></p>
+                    </div>
+                    <div>Sent to <strong>@order.email</strong></div>
+                    <div>The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
                 </div>
             </div>
         </div>
