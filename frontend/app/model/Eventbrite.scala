@@ -97,6 +97,7 @@ object Eventbrite {
                       id: String,
                       start: DateTime,
                       end: DateTime,
+                      created: Instant,
                       venue: EBVenue,
                       capacity: Option[Int],
                       ticket_classes: Seq[EBTickets],
@@ -141,12 +142,16 @@ object Eventbrite {
       }
     }
 
-    lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
-
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
 
-    // This currently extracts all none hidden tickets and gets the first one
-    def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
+    lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
+
+    lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))
+
+    lazy val ticketSalesEndOpt = visibleTicketClasses.flatMap(_.sales_end).sorted.headOption
+
+    // This currently gets the first non-hidden ticket class
+    def ticketClassesHead = visibleTicketClasses.headOption
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject

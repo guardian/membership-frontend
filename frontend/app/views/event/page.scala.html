@@ -30,7 +30,7 @@
 }
 
 @becomeMemberCta(ticket: EBTickets) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event.start, ticket)
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendSaleStartDate = ticketSaleDates.get(Tier.Friend).get
 
     if(friendSaleStartDate > Instant.now) {
@@ -43,8 +43,7 @@
 }
 
 @ticketBookingDates(ticket: EBTickets) = {
-    @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-
+    @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
         @for((tier, salesDate) <- ticketSaleDates) {
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
@@ -161,9 +160,9 @@
                                     <ul class="sale-dates__list u-unstyled u-cf">
                                         <li class="sale-dates__item">
                                             <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
-                                            </time>
+                                            @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
+                                              <time datetime="@ticketSalesEnd">@ticketSalesEnd.pretty</time>
+                                            }
                                         </li>
                                     </ul>
                                 </div>
