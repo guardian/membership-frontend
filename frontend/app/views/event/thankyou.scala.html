@@ -1,12 +1,14 @@
-@(firstName: String, event: model.Eventbrite.EBEvent)
+@(event: model.Eventbrite.EBEvent, order: model.Eventbrite.EBOrder)
 
 @import configuration.Config
 @import views.support.Dates._
+@import views.support.Prices._
+@import views.support.Social.eventThankyou
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
     <section class="content__container content__container--slim">
-        <h1 class="section-headline section-headline--no-border">Thanks @firstName.<br/> See you there!</h1>
+        <h1 class="section-headline section-headline--no-border">Thanks @order.first_name.<br/> See you there!</h1>
         <h2 class="content__headline">You're going to</h2>
 
         <div class="event-summary">
@@ -24,8 +26,8 @@
 
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-location event-item__icon"></i>
-                    @if(event.venue.name){
-                        <span class="event-item__location-name">@event.venue.name </span>
+                    @for(name <- event.venue.name) {
+                        <span class="event-item__location-name">@name</span>
                     }
                     @for(location <- event.venue.location) {
                         <span class="event-item__location-detail">@location.address_1 </span>
@@ -35,8 +37,18 @@
 
                 <div class="event-item__detail">
                     <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
-                    <span class="event-item__location-detail">An email confirmation of your ticket purchase has been sent and the order is saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite.</span>
-                    <i class="icon-sprite icon-sprite-evenbrite"></i>
+                    <i class="icon-sprite icon-sprite-eventbrite"></i>
+                    <div>Order no. @order.id</div>
+                    <div>
+                        @order.ticketCount ticket@if(order.ticketCount > 1){s}
+                        @if(order.totalCost > 0) {
+                            @order.totalCost.pretty
+                        } else {
+                            free
+                        }
+                    </div>
+                    <div>Sent to <strong>@order.email</strong></div>
+                    <div>The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
                 </div>
             </div>
         </div>
@@ -44,7 +56,12 @@
 
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Before the event</h2>
-        <p>Read related articles and what other members have to say at <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+        <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Tell your friends</h2>
+        @fragments.social(eventThankyou(event), colourSprites=true)
     </section>
 
     <section class="content__container content__container--slim hidden-print">

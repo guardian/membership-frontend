@@ -1,6 +1,7 @@
 @(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
+@import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
@@ -29,7 +30,7 @@
 }
 
 @becomeMemberCta(ticket: EBTickets) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event.start, ticket)
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendSaleStartDate = ticketSaleDates.get(Tier.Friend).get
 
     if(friendSaleStartDate > Instant.now) {
@@ -42,8 +43,7 @@
 }
 
 @ticketBookingDates(ticket: EBTickets) = {
-    @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-
+    @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
         @for((tier, salesDate) <- ticketSaleDates) {
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
@@ -119,6 +119,10 @@
 
             <div class="event-content__body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__social">
+                    <div class="event__social-header hidden-mobile">Share this</div>
+                    @fragments.social(eventDetail(event))
+                </div>
             </div>
 
             <div class="event-content__info">
@@ -134,11 +138,11 @@
                         <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
                     </div>
                     <div class="event-content__second">
-                        <span class="event-content__venue-name">@event.venue.name@if(event.addressOne){,</span><br />
-                        <span class="event-content__address">@event.eventAddressLine</span>
+                        <span class="event-content__venue-name">@event.venue.name</span>
+                        @if(event.addressOne) {
+                            <span class="event-content__address">@event.eventAddressLine</span>
+                        }
                     </div>
-                    }
-
                 </div>
 
                 @if(event.isNoTicketEvent == false) {
@@ -156,9 +160,9 @@
                                     <ul class="sale-dates__list u-unstyled u-cf">
                                         <li class="sale-dates__item">
                                             <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
-                                            </time>
+                                            @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
+                                              <time datetime="@ticketSalesEnd">@ticketSalesEnd.pretty</time>
+                                            }
                                         </li>
                                     </ul>
                                 </div>
