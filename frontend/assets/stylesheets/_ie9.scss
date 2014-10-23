@@ -30,6 +30,58 @@
     padding-bottom: rem(70px)!important;
 }
 
+/* Tier ie9 fix
+   ========================================================================== */
+.about-membership {
+    .package {
+        @include mq(desktop) {
+            height: rem(900px);
+            margin-bottom: rem($gs-gutter * 2);
+        }
+    }
+}
+
+.patron-page {
+    .package__inner {
+        @include mq(desktop) {
+            height: rem(125px);
+        }
+    }
+}
+
+.join {
+    .package {
+        @include mq(desktop) {
+            height: rem(1400px);
+            margin-bottom: rem($gs-gutter * 3);
+        }
+
+        @include mq(mem-full) {
+            height: rem(1350px);
+            margin-bottom: rem($gs-gutter * 3);
+        }
+    }
+}
+
+.package {
+    @include mq(desktop) {
+        height: rem(1400px);
+        margin-bottom: rem($gs-gutter * 3);
+    }
+
+    @include mq(mem-full) {
+        height: rem(1350px);
+        margin-bottom: rem($gs-gutter * 3);
+    }
+}
+
+.package--current {
+    padding-top: rem(23px);
+}
+
+.content__footer {
+    clear: both;
+}
 /* Footer ie9 fix
    ========================================================================== */
 
