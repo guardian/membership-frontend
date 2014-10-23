@@ -127,7 +127,7 @@ $current-indicator: rem(72px);
     padding: rem($gs-baseline);
     margin: 0 rem($gs-baseline / 2);
     @include mq(desktop) {
-        margin-top: -$current-indicator;
+        margin-top: rem(-49px);
     }
     @include mq($until: desktop) {
         margin: 0;
