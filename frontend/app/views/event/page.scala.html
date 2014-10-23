@@ -1,6 +1,7 @@
 @(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
 @import views.support.Dates._
+@import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
@@ -43,7 +44,6 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
-
         @for((tier, salesDate) <- ticketSaleDates) {
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
@@ -119,6 +119,10 @@
 
             <div class="event-content__body">
                 <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__social">
+                    <div class="event__social-header hidden-mobile">Share this</div>
+                    @fragments.social(eventDetail(event))
+                </div>
             </div>
 
             <div class="event-content__info">
