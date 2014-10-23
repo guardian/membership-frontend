@@ -142,6 +142,8 @@ object Eventbrite {
       }
     }
 
+    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
+
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))

@@ -1,5 +1,7 @@
 @(ebIFrameDetail: Option[(String, Int)], event: Option[model.Eventbrite.EBEvent])
 
+@import views.support.Social.joinThankyou
+
 @if(event) {
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Complete your ticket purchase</h2>
@@ -16,7 +18,7 @@
 } else {
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Tell your friends</h2>
-        @fragments.social()
+        @fragments.social(joinThankyou, colourSprites=true)
     </section>
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Find Guardian Live events</h2>
