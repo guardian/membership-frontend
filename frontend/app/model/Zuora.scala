@@ -35,7 +35,10 @@ object Zuora {
 
   case class FaultError(code: String, message: String) extends Error
   case class ResultError(code: String, message: String) extends Error {
-    override val fatal = code != "TRANSACTION_FAILED"
+    override val fatal = {
+      val cardDeclined = code == "TRANSACTION_FAILED"
+      !cardDeclined
+    }
   }
   case class InternalError(code: String, message: String) extends Error
 
