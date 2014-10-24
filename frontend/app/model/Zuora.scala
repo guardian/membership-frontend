@@ -28,11 +28,18 @@ object Zuora {
     val code: String
     val message: String
 
+    val fatal = true
+
     override def getMessage: String = s"$code: $message"
   }
 
   case class FaultError(code: String, message: String) extends Error
-  case class ResultError(code: String, message: String) extends Error
+  case class ResultError(code: String, message: String) extends Error {
+    override val fatal = {
+      val cardDeclined = code == "TRANSACTION_FAILED"
+      !cardDeclined
+    }
+  }
   case class InternalError(code: String, message: String) extends Error
 
   case class SubscriptionStatus(current: String, future: Option[String], amendType: Option[String]) {
@@ -68,13 +75,13 @@ object ZuoraReaders {
     def read(node: Node): Either[Error, T] = {
       val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
 
-      (body \ "Fault").headOption.map { fault =>
-        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
-      }.getOrElse {
+      (body \ "Fault").headOption.fold {
         val resultNode = if (multiResults) "results" else "result"
         val result = body \ responseTag \ resultNode
 
         extractEither(result.head)
+      } { fault =>
+        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
       }
     }
 
