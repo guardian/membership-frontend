@@ -31,7 +31,7 @@
 
 @becomeMemberCta(ticket: EBTickets) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
-    val friendSaleStartDate = ticketSaleDates.get(Tier.Friend).get
+    val friendSaleStartDate = ticketSaleDates.datesByTier(Tier.Friend)
 
     if(friendSaleStartDate > Instant.now) {
         Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
@@ -44,9 +44,9 @@
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
-        @for((tier, salesDate) <- ticketSaleDates) {
+        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
             <ul class="sale-dates__list u-unstyled u-cf">
-                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
+                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, ticketSaleDates.datesByTier(tier))</li>
             </ul>
         }
     }
