@@ -1,21 +1,47 @@
 .section-signin {
-    text-align: center;
+    background-color: $white;
+    margin: 0 auto;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter + $gs-baseline);
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(12) + $gs-gutter * 2);
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(14) + $gs-gutter * 2);
+    }
+
+    .steps {
+        width: rem(gs-span(2) + $gs-gutter * 2);
+        float: left;
+    }
 
     .signin__actions {
         display: inline-block;
-        text-align: center;
+        // border: rem(1px) solid $black;
+
+        @include mq(desktop) {
+            width: rem(gs-span(6) + $gs-gutter * 2);
+            padding: 0 rem($gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(8) + $gs-gutter * 2);
+            padding: 0 rem($gs-gutter);
+        }
+
         .signin__action-prompt {
             @include fs-bodyHeading(4);
-            font-weight: 100;
         }
 
         .signin__login,
         .signin__register {
-            padding: rem($gs-baseline * 2) 0;
-        }
-
-        .signin__login {
-            border-bottom: rem(1px) solid #000000;
+            padding: rem(3px) 0 rem($gs-baseline * 2);
+            border-top: rem(1px) solid $mem-brandLightblue;
         }
     }
 }
