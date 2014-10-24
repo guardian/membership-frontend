@@ -60,9 +60,12 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
       reader.read(result.xml) match {
         case Left(error) =>
-          ZuoraMetrics.recordError
-          Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
-          Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+          if (error.fatal) {
+            ZuoraMetrics.recordError
+            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
+            Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+          }
+
           throw error
 
         case Right(obj) => obj
