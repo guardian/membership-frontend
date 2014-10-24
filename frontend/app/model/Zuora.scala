@@ -68,13 +68,13 @@ object ZuoraReaders {
     def read(node: Node): Either[Error, T] = {
       val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
 
-      (body \ "Fault").headOption.map { fault =>
-        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
-      }.getOrElse {
+      (body \ "Fault").headOption.fold {
         val resultNode = if (multiResults) "results" else "result"
         val result = body \ responseTag \ resultNode
 
         extractEither(result.head)
+      } { fault =>
+        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
       }
     }
 
