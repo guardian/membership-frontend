@@ -15,9 +15,23 @@ class ZuoraDeserializerTest extends Specification {
       login.token mustEqual "yiZutsU55oKFQDR28lv210d7iWh8FVW9K45xFeFWMov7OSlRRI0soZ40DHmdLokscEjaUOo7Jt4sFxm_QZPyAhJdpR9yIxi_"
       login.url mustEqual "https://apisandbox.zuora.com/apps/services/a/58.0"
     }
+  }
 
-    "show an error on failure" in {
+  "any ZuoraResult" should {
+    "return a fatal FaultError" in {
       1 mustEqual 1
+    }
+
+    "return a fatal ResultError" in {
+      val error = subscribeResultReader.read(Resource.getXML("model/zuora/result-error-fatal.xml")).left.get
+      error mustEqual ResultError("API_DISABLED", "The API was disabled.")
+      error.fatal must beTrue
+    }
+
+    "return a TRANSACTION_FAILED error as a non-fatal ResultError" in {
+      val error = subscribeResultReader.read(Resource.getXML("model/zuora/result-error-non-fatal.xml")).left.get
+      error mustEqual ResultError("TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
+      error.fatal must beFalse
     }
   }
 
@@ -78,11 +92,6 @@ class ZuoraDeserializerTest extends Specification {
     "have an id on success" in {
       val subscribe = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-result.xml")).right.get
       subscribe.id mustEqual "8a80812a4733a5bb0147a1a4887f410a"
-    }
-
-    "return an error on failure" in {
-      val error = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-error.xml")).left.get
-      error mustEqual ResultError("TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
     }
   }
 

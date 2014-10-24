@@ -28,6 +28,8 @@ object Zuora {
     val code: String
     val message: String
 
+    val fatal = true
+
     override def getMessage: String = s"$code: $message"
   }
 
