@@ -18,8 +18,10 @@ class ZuoraDeserializerTest extends Specification {
   }
 
   "any ZuoraResult" should {
-    "return a fatal FaultError" in {
-      1 mustEqual 1
+    "return a FaultError" in {
+      val error = authenticationReader.read(Resource.getXML("model/zuora/fault-error.xml")).left.get
+      error mustEqual FaultError("fns:INVALID_VALUE", "Invalid login. User name and password do not match.")
+      error.fatal must beTrue
     }
 
     "return a fatal ResultError" in {
