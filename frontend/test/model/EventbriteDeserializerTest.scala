@@ -17,6 +17,13 @@ class EventbriteDeserializerTest extends PlaySpecification {
       ebResponse.data.head.name.text === "Chris' big time jamboree"
     }
 
+    "should deserialize event location" in {
+      val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
+      val ebResponse = event.as[EBResponse[EBEvent]]
+
+      ebResponse.data.head.venue.address.flatMap(_.address_2) mustEqual(Some("90 York Way"))
+    }
+
     "deserialize EBOrder" in {
       val order = Resource.getJson("model/eventbrite/order.json").as[EBOrder]
 
