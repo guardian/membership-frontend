@@ -25,3 +25,7 @@
    Webfonts pages
    ========================================================================== */
 @import 'webfonts';
+
+// finally import print-only styles
+// (currently only used for event thankyou pages)
+@import 'print';
