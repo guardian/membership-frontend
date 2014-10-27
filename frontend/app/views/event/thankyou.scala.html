@@ -29,7 +29,7 @@
                     @for(name <- event.venue.name) {
                         <span class="event-item__location-name">@name</span>
                     }
-                    @for(location <- event.venue.location) {
+                    @for(location <- event.venue.address) {
                         <span class="event-item__location-detail">@location.address_1 </span>
                         <span class="event-item__location-detail">@location.city @location.postal_code </span>
                     }
