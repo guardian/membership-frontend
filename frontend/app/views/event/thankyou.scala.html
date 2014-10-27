@@ -29,7 +29,7 @@
                     @for(name <- event.venue.name) {
                         <span class="event-item__location-name">@name</span>
                     }
-                    @for(location <- event.venue.location) {
+                    @for(location <- event.venue.address) {
                         <span class="event-item__location-detail">@location.address_1 </span>
                         <span class="event-item__location-detail">@location.city @location.postal_code </span>
                     }
@@ -64,7 +64,7 @@
         @fragments.social(eventThankyou(event), colourSprites=true)
     </section>
 
-    <section class="content__container content__container--slim">
+    <section class="content__container content__container--slim hidden-print">
         <h2 class="content__headline">Find more Guardian Live events</h2>
         <a class="action" href="/events">See all events</a>
     </section>

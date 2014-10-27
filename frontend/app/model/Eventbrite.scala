@@ -51,7 +51,7 @@ object Eventbrite {
     lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
-  case class EBLocation(address_1: Option[String],
+  case class EBAddress(address_1: Option[String],
                        address_2: Option[String],
                        city: Option[String],
                        region: Option[String],
@@ -61,7 +61,7 @@ object Eventbrite {
                        longitude: Option[String]) extends EBObject
 
   case class EBVenue(id: Option[String],
-                     location: Option[EBLocation],
+                     address: Option[EBAddress],
                      name: Option[String]) extends EBObject
 
   case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
@@ -105,17 +105,17 @@ object Eventbrite {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
-    lazy val city = venue.location.flatMap(_.city).getOrElse("")
+    lazy val city = venue.address.flatMap(_.city).getOrElse("")
 
-    lazy val addressOne = venue.location.flatMap(_.address_1).getOrElse("")
+    lazy val addressOne = venue.address.flatMap(_.address_1).getOrElse("")
 
-    lazy val addressTwo = venue.location.flatMap(_.address_2).getOrElse("")
+    lazy val addressTwo = venue.address.flatMap(_.address_2).getOrElse("")
 
-    lazy val region = venue.location.flatMap(_.region).getOrElse("")
+    lazy val region = venue.address.flatMap(_.region).getOrElse("")
 
-    lazy val country = venue.location.flatMap(_.country).getOrElse("")
+    lazy val country = venue.address.flatMap(_.country).getOrElse("")
 
-    lazy val postal_code = venue.location.flatMap(_.postal_code).getOrElse("")
+    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
 
     lazy val eventAddressLine = Seq(
       addressOne,
@@ -192,7 +192,7 @@ object EventbriteDeserializer {
     )(convertDateText _)
 
   implicit val ebError = Json.reads[EBError]
-  implicit val ebLocation = Json.reads[EBLocation]
+  implicit val ebLocation = Json.reads[EBAddress]
   implicit val ebVenue = Json.reads[EBVenue]
 
   implicit val ebRichText: Reads[EBRichText] = (
