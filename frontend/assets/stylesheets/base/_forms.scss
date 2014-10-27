@@ -61,7 +61,7 @@
     padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline * 2);
     margin: 0;
 
-    &:first-child {
+    > &:first-child {
         border-top: rem(2px) solid $mem-brandLightblue;
     }
 
@@ -410,3 +410,10 @@
     }
 }
 
+
+#payment-form {
+    .fieldset.address-fieldset,
+    .payment-options-fieldset {
+        border-top: rem(2px) solid $mem-brandLightblue!important;
+    }
+}
