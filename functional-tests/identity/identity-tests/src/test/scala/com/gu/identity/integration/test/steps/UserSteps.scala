@@ -105,8 +105,6 @@ case class UserSteps(implicit driver: WebDriver) extends TestLogging with Matche
   NewPasswordAndContainerWithSigninModule = {
     logger.step("Changing user password")
     val changePwdPage = pageWithSignInModule.signInModule().clickChangePassword
-//     = profileNavMenu.clickChangePassword()
-
     changePwdPage.enterOldPassword(userBeforeChange.pwd.get)
     val newPwd = generateRandomAlphaNumericString(10)
     changePwdPage.enterNewPassword(newPwd)

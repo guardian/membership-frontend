@@ -1,7 +1,7 @@
 package com.gu.identity.integration.test.steps
 
 import com.gu.automation.support.{Config, TestLogging}
-import com.gu.identity.integration.test.pages.{ContainerWithSigninModulePage, SignInPage}
+import com.gu.identity.integration.test.pages.{ContainerWithSigninModulePage, SignInPage, ProfileNavMenu, MembershipLandingPage}
 import com.gu.identity.integration.test.util.User
 import com.gu.integration.test.steps.BaseSteps
 import com.gu.integration.test.util.CookieUtil._
@@ -88,6 +88,11 @@ case class SignInSteps(implicit driver: WebDriver) extends TestLogging with Matc
   def signOut(pageWithSignInModule: ContainerWithSigninModulePage) = {
     logger.step("Signing out")
     pageWithSignInModule.signInModule().clickSignInLinkWhenLoggedIn().clickSignOut()
+  }
+
+  def membershipSignOut() = {
+    logger.step("Signing out from Membership")
+    new MembershipLandingPage().signOut
   }
 
   def checkUserIsNotLoggedIn(expectedLoginName: String) = {
