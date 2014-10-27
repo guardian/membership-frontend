@@ -4,7 +4,7 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
 @import helper._
 
     @main("Payment | " + tier) {
-        <section class="u-cf">
+        <section class="section-payment u-cf">
             @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepFour = "")
             @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
 

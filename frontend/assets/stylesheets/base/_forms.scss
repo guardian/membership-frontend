@@ -10,13 +10,35 @@
 
 .form {
     margin-bottom: rem($gs-baseline * 2);
+
+    > .form__note {
+        position: relative;
+
+        @include mq(desktop) {
+            float: right;
+            display: block;
+            border-top: rem(2px) solid $mem-brandLightblue;
+            width: rem(gs-span(2) + $gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(3));
+        }
+    }
 }
 
 .form__section-heading {
     @include fs-headline(5);
-    margin-left: 0;
     margin-right: 0;
     font-weight: bold;
+
+    @include mq(desktop) {
+        margin-left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }    
 }
 
 .form__heading {
@@ -34,30 +56,63 @@
 
 .fieldset {
     border: 0;
-    border-top: rem(1px) solid $c-neutral7;
+    border-top: rem(2px) solid $c-neutral5;
     display: table;
     padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline * 2);
     margin: 0;
+
+    &:first-child {
+        border-top: rem(2px) solid $mem-brandLightblue;
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(8));
+        margin-left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(9));
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }
 }
 
 .fieldset--no-top-border {
     border-top: 0;
 }
 
-@include mq(desktop) {
-    .fieldset__heading {
+
+.fieldset__heading {
+    vertical-align: top;
+
+    @include mq(tablet) {
         display: table-cell;
-        padding-right: rem($gs-gutter * 5);
-        width: rem(gs-span(4));
-        vertical-align: top;
+        padding-right: rem($gs-gutter * 2);
+        width: rem(gs-span(4) + 40);
     }
 
-    .fieldset__fields {
-        display: table-cell;
-        vertical-align: top;
-        width: rem(gs-span(6));
+    @include mq(desktop) {
+        width: rem(gs-span(3));
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(4));
     }
 }
+
+.fieldset__fields {
+    vertical-align: top;
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: rem(gs-span(5));
+    }
+
+    @include mq(mem-full) {
+        display: table-cell;
+        width: rem(gs-span(5) + $gs-gutter);
+    }
+}
+
 
 .form-fields-group .form-field {
     margin-bottom: 0;
@@ -238,7 +293,7 @@
 .submit-input {
     background: $c-newsDefault;
     border: 0 none;
-    color: #ffffff;
+    color: $white;
     cursor: pointer;
     display: inline-block;
     font-size: rem(14px);

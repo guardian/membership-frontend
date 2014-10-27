@@ -1,4 +1,5 @@
-.section-signin {
+.section-signin,
+.section-payment {
     background-color: $white;
     margin: 0 auto;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
@@ -41,7 +42,7 @@
         .signin__login,
         .signin__register {
             padding: rem(3px) 0 rem($gs-baseline * 2);
-            border-top: rem(1px) solid $mem-brandLightblue;
+            border-top: rem(2px) solid $mem-brandLightblue;
         }
     }
 }

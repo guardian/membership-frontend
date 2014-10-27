@@ -1,20 +1,22 @@
 @(currentTier: com.gu.membership.salesforce.Tier.Tier, targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 
-@main("Change Tier | " + targetTier + " from " + currentTier) {
+@main("Change Tier | " + targetTier + " from " + currentTier, containerPadding = false, isBrochure = true) {
 
-    <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
-        @CSRF.formField
-        @fragments.form.errorMessageDisplay()
-        @fragments.form.sectionHeading("Payment", true)
-        @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
-        userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
+    <section class="section-payment u-cf">
+        <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
+            @CSRF.formField
+            @fragments.form.errorMessageDisplay()
+            @fragments.form.sectionHeading("Payment", true)
+            @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
+            userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
 
-        @fragments.form.sectionHeading("Billing")
-        @fragments.form.paymentOptions(targetTier)
-        @fragments.form.billingAddress("Billing address")
-        @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)
-        @fragments.form.cardDetail(targetTier)
-        @fragments.form.submit("Pay", "now", Some(targetTier))
-    </form>
+            @fragments.form.sectionHeading("Billing")
+            @fragments.form.paymentOptions(targetTier)
+            @fragments.form.billingAddress("Billing address")
+            @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)
+            @fragments.form.cardDetail(targetTier)
+            @fragments.form.submit("Pay", "now", Some(targetTier))
+        </form>
+    </section>
 }
