@@ -82,19 +82,18 @@ object Eventbrite {
                        sales_start: Option[Instant] = None,
                        hidden: Option[Boolean] = None) extends EBObject
 
-  case class EBEvent(
-                      name: EBRichText,
-                      description: Option[EBRichText],
-                      logo_url: Option[String],
-                      url: String,
-                      id: String,
-                      start: DateTime,
-                      end: DateTime,
-                      created: Instant,
-                      venue: EBVenue,
-                      capacity: Option[Int],
-                      ticket_classes: Seq[EBTickets],
-                      status: String) extends EBObject {
+  case class EBEvent(name: EBRichText,
+                     description: Option[EBRichText],
+                     logo_url: Option[String],
+                     url: String,
+                     id: String,
+                     start: DateTime,
+                     end: DateTime,
+                     created: Instant,
+                     venue: EBVenue,
+                     capacity: Option[Int],
+                     ticket_classes: Seq[EBTickets],
+                     status: String) extends EBObject {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
