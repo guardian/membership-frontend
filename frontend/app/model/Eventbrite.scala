@@ -121,7 +121,13 @@ object Eventbrite {
     val memberTickets = ticket_classes.filter(_.name.startsWith("Guardian Member"))
   }
 
-  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
+  trait EBCode extends EBObject {
+    val code: String
+    val quantity_available: Int
+  }
+
+  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBCode
+  case class EBAccessCode(code: String, quantity_available: Int) extends EBCode
 
   //https://developer.eventbrite.com/docs/order-object/
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
@@ -171,10 +177,12 @@ object EventbriteDeserializer {
   implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
   implicit val ebDiscountReads = Json.reads[EBDiscount]
+  implicit val ebAccessCodeReads = Json.reads[EBAccessCode]
 
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
   implicit val ebDiscountsReads = ebResponseReads[EBDiscount]("discounts")
+  implicit val ebAccessCodesReads = ebResponseReads[EBAccessCode]("access_codes")
 
   implicit val ebCostReads = Json.reads[EBCost]
   implicit val ebCostsReads = Json.reads[EBCosts]
