@@ -1,15 +1,19 @@
 package controllers
 
+import actions.AnyMemberTierRequest
+import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
-import model.{EventPortfolio, PageInfo}
+import model.Eventbrite.EBEvent
+import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
 import monitoring.EventbriteMetrics
+import org.joda.time.Instant
 
 import scala.concurrent.Future
 
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-import actions.Functions.{authenticated, memberRefiner, metricRecord}
+import actions.Functions._
 import actions.Fallbacks.notYetAMemberOn
 import services.{MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
@@ -64,14 +68,25 @@ trait Event extends Controller {
   }
 
   def buy(id: String) = BuyAction.async { implicit request =>
-    eventService.getEvent(id).map {
-      event =>
-        Timing.record(EventbriteMetrics, "user-sent-to-eventbrite") {
-          for {
-            discountOpt <- memberService.createDiscountForMember(request.member, event)
-          } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
-        }
+    eventService.getEvent(id).map { event =>
+      if(memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
+      else Future.successful(Redirect(routes.TierController.change()))
     }.getOrElse(Future.successful(NotFound))
+  }
+
+  private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean = {
+    event.ticketClassesHead.exists { ticket =>
+      val ticketSaleDates = TicketSaleDates.datesFor(event, ticket)
+      ticketSaleDates.datesByTier(member.tier).isBefore(Instant.now())
+    }
+  }
+
+  private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: EBEvent): Future[Result] = {
+    Timing.record(EventbriteMetrics, "user-sent-to-eventbrite") {
+      for {
+        discountOpt <- memberService.createDiscountForMember(request.member, event)
+      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+    }
   }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
@@ -86,7 +101,7 @@ trait Event extends Controller {
       }
 
       resultOpt.getOrElse(Future.successful(NotFound))
-    }{ orderId =>
+    } { orderId =>
       Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
     }
   }
