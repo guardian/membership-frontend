@@ -73,7 +73,7 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(name: Option[String],
+  case class EBTickets(name: String,
                        free: Boolean,
                        quantity_total: Option[Int],
                        quantity_sold: Option[Int],
