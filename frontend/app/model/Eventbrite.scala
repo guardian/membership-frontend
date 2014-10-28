@@ -84,7 +84,6 @@ object Eventbrite {
 
   case class EBEvent(name: EBRichText,
                      description: Option[EBRichText],
-                     logo_url: Option[String],
                      url: String,
                      id: String,
                      start: DateTime,
@@ -94,8 +93,6 @@ object Eventbrite {
                      capacity: Option[Int],
                      ticket_classes: Seq[EBTickets],
                      status: String) extends EBObject {
-
-    lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
     lazy val eventAddressLine = venue.address.map { a =>
       Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
