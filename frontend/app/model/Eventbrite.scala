@@ -73,7 +73,8 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(name: String,
+  case class EBTickets(id: String,
+                       name: String,
                        free: Boolean,
                        quantity_total: Int,
                        quantity_sold: Int,
@@ -117,6 +118,8 @@ object Eventbrite {
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     val generalReleaseTicket = ticket_classes.find(_.hidden.forall(_ == false))
+
+    val memberTickets = ticket_classes.filter(_.name.startsWith("Guardian Member"))
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject

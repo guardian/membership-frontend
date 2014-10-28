@@ -34,7 +34,9 @@ class EventbriteDeserializerTest extends PlaySpecification {
       val event = Resource.getJson("model/eventbrite/event-ticket-classes.json").as[EBEvent]
       event.ticket_classes.length mustEqual 5
 
-      event.generalReleaseTicket.get.name mustEqual "General Admission"
+      event.generalReleaseTicket.get.id mustEqual "30292989"
+
+      event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
     }
   }
 
