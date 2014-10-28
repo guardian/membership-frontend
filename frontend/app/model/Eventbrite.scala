@@ -75,8 +75,8 @@ object Eventbrite {
    */
   case class EBTickets(name: String,
                        free: Boolean,
-                       quantity_total: Option[Int],
-                       quantity_sold: Option[Int],
+                       quantity_total: Int,
+                       quantity_sold: Int,
                        cost: Option[EBPricing],
                        sales_end: Option[Instant],
                        sales_start: Option[Instant],
@@ -98,7 +98,7 @@ object Eventbrite {
     }.getOrElse(Nil).mkString(", ")
 
     def getStatus: EBEventStatus = {
-      val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity
+      val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
       val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
 
 
