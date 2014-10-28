@@ -5,7 +5,7 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
 
     @main("Payment | " + tier) {
         <section class="section-payment u-cf">
-            @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepFour = "")
+            @fragments.joiner.joinStepCounter(3, 3)
             @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
 
             <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
