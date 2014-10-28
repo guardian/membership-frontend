@@ -38,15 +38,17 @@
     }
 }
 
-@dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
-    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">@salesDate.pretty</time>
+@ticketDateForTier(tier: Tier.Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
+    val ticketDate = if(needToDisplayTimes) salesDate.prettyWithTime
+                     else salesDate.pretty
+    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">{ticketDate}</time>
 }
 
 @ticketBookingDates(ticket: EBTickets) = {
     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
         @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
             <ul class="sale-dates__list u-unstyled u-cf">
-                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, ticketSaleDates.datesByTier(tier))</li>
+                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @ticketDateForTier(tier, ticketSaleDates.datesByTier(tier), ticketSaleDates.needToDistinguishTimes)</li>
             </ul>
         }
     }
