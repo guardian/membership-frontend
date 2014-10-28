@@ -10,6 +10,6 @@ object EventbriteTestObjects {
   def eventDescription(description: String = "Event Description") = new EBRichText(description, "")
   def eventLocation = new EBAddress(None, None, None, None, None, None)
   def eventVenue = new EBVenue(Option(eventLocation), None)
-  def eventWithName(name: String = "") = EBEvent(eventName(name), Option(eventDescription()), "", "", eventTime, eventTime, (eventTime - 1.month).toInstant, eventVenue, None, Seq.empty, "live")
+  def eventWithName(name: String = "") = EBEvent(eventName(name), Option(eventDescription()), "", "", eventTime, (eventTime - 1.month).toInstant, eventVenue, 0, Seq.empty, "live")
   def eventTickets = EBTickets(None, false, None, None, None, None, None, None)
 }

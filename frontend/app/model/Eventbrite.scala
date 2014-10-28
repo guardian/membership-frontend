@@ -87,10 +87,9 @@ object Eventbrite {
                      url: String,
                      id: String,
                      start: DateTime,
-                     end: DateTime,
                      created: Instant,
                      venue: EBVenue,
-                     capacity: Option[Int],
+                     capacity: Int,
                      ticket_classes: Seq[EBTickets],
                      status: String) extends EBObject {
 
@@ -99,7 +98,7 @@ object Eventbrite {
     }.getOrElse(Nil).mkString(", ")
 
     def getStatus: EBEventStatus = {
-      val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity.getOrElse(0)
+      val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity
       val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
 
 
