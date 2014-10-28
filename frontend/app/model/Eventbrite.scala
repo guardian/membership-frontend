@@ -97,25 +97,9 @@ object Eventbrite {
 
     lazy val logoUrl = logo_url.map(_.replace("http:", ""))
 
-    lazy val city = venue.address.flatMap(_.city).getOrElse("")
-
-    lazy val addressOne = venue.address.flatMap(_.address_1).getOrElse("")
-
-    lazy val addressTwo = venue.address.flatMap(_.address_2).getOrElse("")
-
-    lazy val region = venue.address.flatMap(_.region).getOrElse("")
-
-    lazy val country = venue.address.flatMap(_.country).getOrElse("")
-
-    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
-
-    lazy val eventAddressLine = Seq(
-      addressOne,
-      addressTwo,
-      city,
-      region,
-      postal_code
-    ).filter(_.nonEmpty).mkString(", ")
+    lazy val eventAddressLine = venue.address.map { a =>
+      Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
+    }.getOrElse(Nil).mkString(", ")
 
     lazy val isSoldOut = getStatus == SoldOut
 

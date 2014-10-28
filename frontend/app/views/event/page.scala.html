@@ -71,7 +71,7 @@
                 <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @if(event.addressOne) {
+                    @if(event.eventAddressLine.nonEmpty) {
                         <span class="event-details__location__address">
                             , @event.eventAddressLine
                         </span>
@@ -142,7 +142,7 @@
                     </div>
                     <div class="event-content__second">
                         <span class="event-content__venue-name">@event.venue.name</span>
-                        @if(event.addressOne) {
+                        @if(event.eventAddressLine.nonEmpty) {
                             <span class="event-content__address">@event.eventAddressLine</span>
                         }
                     </div>

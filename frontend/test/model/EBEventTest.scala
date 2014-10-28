@@ -60,6 +60,12 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
+  "eventAddressLine" should {
+    "be a pleasantly formatted concatenation of the venue address" in {
+      ebCompletedEvent.eventAddressLine mustEqual "Kings Place, 90 York Way, London, N1 9GU"
+    }
+  }
+
   "Event location" should {
     "be correct with all fields present" in {
       val location = ebCompletedEvent.venue.address.get
