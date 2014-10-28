@@ -33,8 +33,7 @@ object Eventbrite {
 
   case class EBResponse[T](pagination: EBPagination, data: Seq[T]) extends EBObject
 
-  case class EBPagination(page_number: Int,
-                          page_count: Int) extends EBObject {
+  case class EBPagination(page_number: Int, page_count: Int) extends EBObject {
     lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
   }
 
@@ -73,7 +72,7 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(id: String,
+  case class EBTicketClass(id: String,
                        name: String,
                        free: Boolean,
                        quantity_total: Int,
@@ -91,7 +90,7 @@ object Eventbrite {
                      created: Instant,
                      venue: EBVenue,
                      capacity: Int,
-                     ticket_classes: Seq[EBTickets],
+                     ticket_classes: Seq[EBTicketClass],
                      status: String) extends EBObject {
 
     lazy val eventAddressLine = venue.address.map { a =>
@@ -169,7 +168,7 @@ object EventbriteDeserializer {
     )(EBRichText.apply _)
 
   implicit val ebPricingReads = Json.reads[EBPricing]
-  implicit val ebTicketsReads = Json.reads[EBTickets]
+  implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
   implicit val ebDiscountReads = Json.reads[EBDiscount]
 

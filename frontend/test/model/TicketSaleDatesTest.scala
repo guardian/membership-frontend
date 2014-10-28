@@ -6,7 +6,7 @@ import org.specs2.time.NoTimeConversions
 import com.github.nscala_time.time.Imports.{richDateTime, _}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron}
 
-import model.Eventbrite.{EBEvent, EBResponse, EBTickets}
+import model.Eventbrite.{EBEvent, EBResponse, EBTicketClass}
 import model.EventbriteDeserializer._
 import utils.Resource
 import EventbriteTestObjects._
@@ -21,7 +21,7 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
     "give general availability immediately if there's very little time until the event " in {
       val saleStart = (testEvent.start - 2.hours).toInstant
 
-      val datesByTier = TicketSaleDates.datesFor(testEvent, eventTickets.copy(sales_start = Some(saleStart))).datesByTier
+      val datesByTier = TicketSaleDates.datesFor(testEvent, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
 
       datesByTier(Friend) must be(saleStart)
       datesByTier(Partner) must be(saleStart)
@@ -31,7 +31,7 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
     "give patrons and partners advance tickets if there's enough lead time" in {
       val saleStart = (testEvent.start - 7.weeks).toInstant
 
-      val datesByTier = TicketSaleDates.datesFor(testEvent, eventTickets.copy(sales_start = Some(saleStart))).datesByTier
+      val datesByTier = TicketSaleDates.datesFor(testEvent, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
 
       datesByTier(Patron) must be_==(saleStart)
       datesByTier(Patron) must be_<=(datesByTier(Partner))

@@ -32,7 +32,7 @@
     </div>
 }
 
-@becomeMemberCta(ticket: EBTickets) = @{
+@becomeMemberCta(ticket: EBTicketClass) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
 
@@ -45,7 +45,7 @@
     <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">@salesDate.pretty</time>
 }
 
-@ticketBookingDates(ticket: EBTickets) = {
+@ticketBookingDates(ticket: EBTicketClass) = {
     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
         @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
             <ul class="sale-dates__list u-unstyled u-cf">

@@ -2,7 +2,7 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
-import model.Eventbrite.{EBEvent, EBTickets}
+import model.Eventbrite.{EBEvent, EBTicketClass}
 import org.joda.time.Instant
 import com.gu.membership.salesforce.Tier.{Tier, Patron, Partner}
 
@@ -31,7 +31,7 @@ object TicketSaleDates {
     6.weeks.standardDuration -> Map(Patron -> 2.weeks, Partner -> 1.week)
   )
 
-  def datesFor(event: EBEvent, tickets: EBTickets): TicketSaleDates = {
+  def datesFor(event: EBEvent, tickets: EBTicketClass): TicketSaleDates = {
     val effectiveSaleStart = tickets.sales_start.getOrElse(event.created)
 
     val saleStartLeadTimeOnEvent = (effectiveSaleStart to event.start).duration
