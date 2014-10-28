@@ -63,7 +63,7 @@ $current-indicator: rem(72px);
     @include mq($until: desktop) {
         display: block;
         overflow: hidden;
-        margin: rem($gs-gutter 0 rem($gs-gutter / 2));
+        margin: 0 0 rem($gs-gutter / 2);
     }
 
     @include mq(desktop) {
