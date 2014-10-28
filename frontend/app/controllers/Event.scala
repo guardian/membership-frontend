@@ -76,8 +76,7 @@ trait Event extends Controller {
 
   private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean = {
     event.ticketClassesHead.exists { ticket =>
-      val ticketSaleDates = TicketSaleDates.datesFor(event, ticket)
-      ticketSaleDates.datesByTier(member.tier).isBefore(Instant.now())
+      TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
   }
 
