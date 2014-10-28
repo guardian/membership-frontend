@@ -79,7 +79,7 @@ trait EventbriteService {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
           "access_code.quantity_available" -> Seq("2"),
-          "access_code.ticket_ids" -> ticketClasses.map(_.id)
+          "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
         ))
       }(Future.successful)
     } yield discount
