@@ -73,14 +73,14 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(name: Option[String] = None,
-                       free: Boolean = false,
-                       quantity_total: Option[Int] = None,
-                       quantity_sold: Option[Int] = None,
-                       cost: Option[EBPricing] = None,
-                       sales_end: Option[Instant] = None,
-                       sales_start: Option[Instant] = None,
-                       hidden: Option[Boolean] = None) extends EBObject
+  case class EBTickets(name: Option[String],
+                       free: Boolean,
+                       quantity_total: Option[Int],
+                       quantity_sold: Option[Int],
+                       cost: Option[EBPricing],
+                       sales_end: Option[Instant],
+                       sales_start: Option[Instant],
+                       hidden: Option[Boolean]) extends EBObject
 
   case class EBEvent(name: EBRichText,
                      description: Option[EBRichText],

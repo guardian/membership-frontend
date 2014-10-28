@@ -11,4 +11,5 @@ object EventbriteTestObjects {
   def eventLocation = new EBAddress(None, None, None, None, None, None)
   def eventVenue = new EBVenue(Option(eventLocation), None)
   def eventWithName(name: String = "") = EBEvent(eventName(name), Option(eventDescription()), Option(""), "", "", eventTime, eventTime, (eventTime - 1.month).toInstant, eventVenue, None, Seq.empty, "live")
+  def eventTickets = EBTickets(None, false, None, None, None, None, None, None)
 }
