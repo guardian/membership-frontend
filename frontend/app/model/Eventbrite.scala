@@ -177,7 +177,7 @@ object EventbriteDeserializer {
   implicit val ebPricingReads = Json.reads[EBPricing]
   implicit val ebTicketsReads = Json.reads[EBTickets]
   implicit val ebEventReads = Json.reads[EBEvent]
-  implicit val ebDisountReads = Json.reads[EBDiscount]
+  implicit val ebDiscountReads = Json.reads[EBDiscount]
 
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
