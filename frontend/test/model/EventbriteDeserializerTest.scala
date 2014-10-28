@@ -29,6 +29,11 @@ class EventbriteDeserializerTest extends PlaySpecification {
 
       order.ticketCount mustEqual 3
     }
+
+    "deserialize a really complicated ticket class structure" in {
+      val event = Resource.getJson("model/eventbrite/event-ticket-classes.json").as[EBEvent]
+      event.ticket_classes.length mustEqual 5
+    }
   }
 
 }

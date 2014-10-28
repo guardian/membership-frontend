@@ -121,7 +121,7 @@ object Eventbrite {
     lazy val ticketSalesEndOpt = visibleTicketClasses.flatMap(_.sales_end).sorted.headOption
 
     // This currently gets the first non-hidden ticket class
-    def ticketClassesHead = visibleTicketClasses.headOption
+    val generalReleaseTicket = visibleTicketClasses.headOption
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject

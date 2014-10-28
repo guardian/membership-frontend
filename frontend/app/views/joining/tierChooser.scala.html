@@ -109,7 +109,7 @@
                         <div class="event-item__cta">
 
                             <div class="event-item__price">
-                            @for(ticket <- event.ticketClassesHead) {
+                            @for(ticket <- event.generalReleaseTicket) {
                                 @for(pricing <- ticket.cost) {
                                     <span class="event-item__price-amount">@pricing.formattedPrice</span>
                                     <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
