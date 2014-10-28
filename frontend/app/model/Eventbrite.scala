@@ -78,7 +78,7 @@ object Eventbrite {
                        quantity_total: Int,
                        quantity_sold: Int,
                        cost: Option[EBPricing],
-                       sales_end: Option[Instant],
+                       sales_end: Instant,
                        sales_start: Option[Instant],
                        hidden: Option[Boolean]) extends EBObject
 
@@ -117,8 +117,6 @@ object Eventbrite {
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))
-
-    lazy val ticketSalesEndOpt = visibleTicketClasses.flatMap(_.sales_end).sorted.headOption
 
     // This currently gets the first non-hidden ticket class
     val generalReleaseTicket = visibleTicketClasses.headOption

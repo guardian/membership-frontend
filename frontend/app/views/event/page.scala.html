@@ -163,9 +163,7 @@
                                     <ul class="sale-dates__list u-unstyled u-cf">
                                         <li class="sale-dates__item">
                                             <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
-                                              <time datetime="@ticketSalesEnd">@ticketSalesEnd.pretty</time>
-                                            }
+                                          <time datetime="@ticket.sales_end">@ticket.sales_end.pretty</time>
                                         </li>
                                     </ul>
                                 </div>
