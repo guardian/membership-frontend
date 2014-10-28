@@ -33,9 +33,7 @@ object Eventbrite {
 
   case class EBResponse[T](pagination: EBPagination, data: Seq[T]) extends EBObject
 
-  case class EBPagination(object_count: Int,
-                          page_number: Int,
-                          page_size: Int,
+  case class EBPagination(page_number: Int,
                           page_count: Int) extends EBObject {
     lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
   }
@@ -56,15 +54,11 @@ object Eventbrite {
                        city: Option[String],
                        region: Option[String],
                        postal_code: Option[String],
-                       country: Option[String],
-                       latitude: Option[String],
-                       longitude: Option[String]) extends EBObject
+                       country: Option[String]) extends EBObject
 
-  case class EBVenue(id: Option[String],
-                     address: Option[EBAddress],
-                     name: Option[String]) extends EBObject
+  case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject
 
-  case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
+  case class EBPricing(value: Int) extends EBObject {
     def priceFormat(priceInPence: Double) = {
       val priceInPounds = priceInPence.round / 100f
       if (priceInPounds.isWhole) f"£$priceInPounds%.0f" else f"£$priceInPounds%.2f"
@@ -79,8 +73,7 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(id: Option[String] = None,
-                       name: Option[String] = None,
+  case class EBTickets(name: Option[String] = None,
                        free: Boolean = false,
                        quantity_total: Option[Int] = None,
                        quantity_sold: Option[Int] = None,

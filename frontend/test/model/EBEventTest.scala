@@ -53,10 +53,10 @@ class EBEventTest extends PlaySpecification {
 
   "getPrice" should {
     "be pleasantly formatted with pence if the value is not whole pounds" in {
-      EBPricing("GBP", "\u00a31234.25", 123425).formattedPrice mustEqual("£1234.25")
+      EBPricing(123425).formattedPrice mustEqual("£1234.25")
     }
     "be pleasantly formatted as whole pounds if there are no pence" in {
-      EBPricing("GBP", "\u00a31234.00", 123400).formattedPrice mustEqual("£1234")
+      EBPricing(123400).formattedPrice mustEqual("£1234")
     }
   }
 
@@ -69,8 +69,6 @@ class EBEventTest extends PlaySpecification {
       location.region.getOrElse("") mustEqual("")
       location.postal_code.get mustEqual("N1 9GU")
       location.country.get mustEqual("GB")
-      location.latitude.get mustEqual("51.534966")
-      location.longitude.get mustEqual("-0.1221447000000353")
     }
   }
 }
