@@ -74,19 +74,17 @@ trait Event extends Controller {
     }.getOrElse(Future.successful(NotFound))
   }
 
-  private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean = {
+  private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean =
     event.ticketClassesHead.exists { ticket =>
       TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
-  }
 
-  private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: EBEvent): Future[Result] = {
+  private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: EBEvent): Future[Result] =
     Timing.record(EventbriteMetrics, "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
     }
-  }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
     orderIdOpt.fold {
