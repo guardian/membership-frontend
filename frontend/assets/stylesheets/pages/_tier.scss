@@ -129,7 +129,6 @@ $current-indicator: rem(72px);
     @include mq(desktop) {
         font-size: rem(14px);
         position: absolute;
-        position: absolute;
         display: block;
         z-index: 4;
         width: 100%;
