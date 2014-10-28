@@ -7,11 +7,11 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class JoinPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def becomeAFriendLink = driver.findElement(By.xpath("//div[1]/div/div/section/div/div[1]/div[2]/a"))
+  private def becomeAFriendLink = driver.findElement(By.cssSelector(".package:nth-of-type(1) .action"))
 
-  private def becomeAPartnerLink = driver.findElement(By.xpath("//div[1]/div/div/section/div/div[2]/div[2]/a"))
+  private def becomeAPartnerLink = driver.findElement(By.cssSelector(".package:nth-of-type(2) .action"))
 
-  private def becomeAPatronLink = driver.findElement(By.xpath("//div[1]/div/div/section/div/div[3]/div[2]/a"))
+  private def becomeAPatronLink = driver.findElement(By.cssSelector(".package:nth-of-type(3) .action"))
 
   def clickBecomeAFriend = {
     becomeAFriendLink.click
