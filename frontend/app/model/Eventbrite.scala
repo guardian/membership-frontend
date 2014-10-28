@@ -116,10 +116,7 @@ object Eventbrite {
 
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
-    lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))
-
-    // This currently gets the first non-hidden ticket class
-    val generalReleaseTicket = visibleTicketClasses.headOption
+    val generalReleaseTicket = ticket_classes.find(_.hidden.forall(_ == false))
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
