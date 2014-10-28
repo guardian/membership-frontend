@@ -6,7 +6,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Address details | Friend") {
 
-    @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepThree= "Location", StepFour = "")
+    @fragments.joiner.joinStepCounter(3, 3)
 
     @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
 
