@@ -101,8 +101,6 @@ object Eventbrite {
       Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
     }.getOrElse(Nil).mkString(", ")
 
-    lazy val isSoldOut = getStatus == SoldOut
-
     def getStatus: EBEventStatus = {
       val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity.getOrElse(0)
       val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
