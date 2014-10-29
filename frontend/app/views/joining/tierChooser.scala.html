@@ -83,7 +83,7 @@
 
                     *@<div class="event-item__meta">
                         <h2 class="event-item__title">
-                            @if(event.isSoldOut){
+                            @if(event.getStatus == SoldOut){
                                 <span class="event-status--sold-out">Sold Out</span>
                             }
                             @event.name.text

@@ -1,5 +1,7 @@
 @(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
 
+@import play.twirl.api.Html
+
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
@@ -20,6 +22,7 @@
                 case Cancelled => { Cancelled }
                 case SoldOut => { Sold Out }
                 case PreLive => { Coming Soon }
+                case _ => {}
             }
             </button>
         }
@@ -68,7 +71,7 @@
                 <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @if(event.addressOne) {
+                    @if(event.eventAddressLine.nonEmpty) {
                         <span class="event-details__location__address">
                             , @event.eventAddressLine
                         </span>
@@ -139,7 +142,7 @@
                     </div>
                     <div class="event-content__second">
                         <span class="event-content__venue-name">@event.venue.name</span>
-                        @if(event.addressOne) {
+                        @if(event.eventAddressLine.nonEmpty) {
                             <span class="event-content__address">@event.eventAddressLine</span>
                         }
                     </div>
