@@ -3,16 +3,22 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
 
 @import helper._
 
-    @main("Payment | " + tier) {
+    @main("Payment | " + tier, containerPadding = false, isBrochure = true) {
         <section class="section-payment u-cf">
-            @fragments.joiner.joinStepCounter(3, 3)
-            @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
 
+            
             <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
+
+            @fragments.form.sectionHeading("Address & billing", true)
+            <div class="form__signin">
+                @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
+            </div>
+            <div class="steps">
+                @fragments.joiner.joinStepCounter(3, 3)
+            </div>
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
                 @fragments.form.errorMessageDisplay()
-                @fragments.form.sectionHeading("Address", true)
                 @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                 @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
@@ -22,7 +28,6 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
                     @fragments.form.passwordDetail()
                 }
 
-                @fragments.form.sectionHeading("Billing")
                 @fragments.form.paymentOptions(tier)
                 @fragments.form.billingAddress("Billing address")
                 @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)

@@ -11,7 +11,6 @@
             @fragments.form.addressDetail("Delivery address", "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress", true,
             userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
 
-            @fragments.form.sectionHeading("Billing")
             @fragments.form.paymentOptions(targetTier)
             @fragments.form.billingAddress("Billing address")
             @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)

@@ -17,8 +17,17 @@
     }
 
     .steps {
-        width: rem(gs-span(2) + $gs-gutter * 2);
-        float: left;
+        display: block;
+
+        @include mq(desktop) {
+            border-top: rem(2px) solid $mem-brandLightblue;
+            width: rem(gs-span(1) + $gs-gutter * 3);
+            float: left;
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(2));
+        }
     }
 
     .signin__actions {
