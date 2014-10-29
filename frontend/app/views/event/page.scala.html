@@ -41,19 +41,6 @@
     }
 }
 
-@dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
-    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">@salesDate.pretty</time>
-}
-
-@ticketBookingDates(ticket: EBTickets) = {
-    @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
-        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
-            <ul class="sale-dates__list u-unstyled u-cf">
-                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, ticketSaleDates.datesByTier(tier))</li>
-            </ul>
-        }
-    }
-}
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event") {
     <div class="event-header">
@@ -153,23 +140,7 @@
                     @for(ticket <- event.ticketClassesHead) {
 
                         <div class="event-content__tickets event-content--line-divider u-cf">
-                            <div class="event-content__sale-dates u-cf">
-                                <div class="event-content__first">
-                                    <i class="icon-sprite icon-sprite-book_tickets icon-sprite--small"></i>
-                                </div>
-                                <div class="event-content__second">
-                                    <div class="sale-dates__header">Ticket sales</div>
-                                    @ticketBookingDates(ticket)
-                                    <ul class="sale-dates__list u-unstyled u-cf">
-                                        <li class="sale-dates__item">
-                                            <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
-                                              <time datetime="@ticketSalesEnd">@ticketSalesEnd.pretty</time>
-                                            }
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            @fragments.event.ticketSales(event, ticket)
 
                             @if(ticket.free) {
                                 <div class="event-content__price event-content--line-divider">

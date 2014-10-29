@@ -23,9 +23,8 @@ object TicketSaleDates {
   implicit val periodOrdering = Ordering.by[Period, Duration](_.toStandardDuration)
   
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier.Value, Period]](
-// TODO Enable these when the onscreen formatting of dates is enabled to distinguish times as well as dates
-//    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
-//    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
+    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
+    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
     7.days.standardDuration -> Map(Patron -> 2.days, Partner -> 1.day),
     2.weeks.standardDuration -> Map(Patron -> 5.days, Partner -> 3.days),
     6.weeks.standardDuration -> Map(Patron -> 2.weeks, Partner -> 1.week)
