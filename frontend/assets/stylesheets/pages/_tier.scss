@@ -15,7 +15,6 @@ $current-indicator: rem(72px);
 .package-container {
     border-top: rem(1px) solid transparent;
     border-bottom: rem(1px) solid transparent;
-    padding: rem($gs-gutter);
 }
 
 .package-container__header {
@@ -23,21 +22,20 @@ $current-indicator: rem(72px);
     border-bottom: rem(1px) dotted $c-neutral1;
 
     @include mq(tablet) {
-        margin-bottom: rem(40px);
+        margin-bottom: rem($gs-gutter * 4);
     }
 }
 
 // .package-list is a flexbox
 // so each .package inside is equal width
 .package-list {
-    padding-top: rem($gs-gutter * 2);
+    padding-top: 0;
 
     @include mq(desktop) {
         @include flexbox;
         @include align-items(stretch);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
-        padding-top: $current-indicator;
     }
 }
 
@@ -46,8 +44,6 @@ $current-indicator: rem(72px);
 }
 
 .package {
-    background-color: $c-neutral7;
-    position: relative;
 
     // .package is a flexbox too to
     // align CTA buttons to bottom
@@ -56,16 +52,26 @@ $current-indicator: rem(72px);
     @include justify-content(space-between);
     @include flex-direction(column);
     @include align-items(stretch);
+    background-color: $c-neutral7;
+    position: relative;
     margin-right: rem($gs-gutter);
 
     &:last-child {
         margin-right: 0;
     }
 
+    @include mq($until: desktop) {
+        display: block;
+        overflow: hidden;
+        margin: 0 0 rem($gs-gutter / 2);
+    }
+
     @include mq(desktop) {
         @include flex-grow(1);
         @include flex-basis(0); // this fixes a bug, dunno why
         // give them manual widths for no flexbox browsers
+        margin-bottom: rem($gs-gutter);
+
         .no-flexbox & {
             width: 31%;
             float: left;
@@ -73,13 +79,6 @@ $current-indicator: rem(72px);
                 width: 45%;
             }
         }
-    }
-
-    @include mq($until: desktop) {
-        margin-right: 0;
-        display: block;
-        overflow: hidden;
-        margin-bottom: rem($gs-gutter);
     }
 
     // override button widths for flexbox
@@ -101,7 +100,8 @@ $current-indicator: rem(72px);
     }
 
     .about-membership &,
-    .join & {
+    .join &,
+    .change-tier & {
         @include mq (desktop) {
             position: absolute;
             padding: 1rem;
@@ -122,18 +122,17 @@ $current-indicator: rem(72px);
 
 .package__current-indicator {
     color: $white;
-    background-color: #9c9c9c;
+    background-color: $c-neutral2;
     text-align: center;
     padding: rem($gs-baseline);
-    margin: 0 rem($gs-baseline / 2);
 
     @include mq(desktop) {
-        margin-top: rem(-49px);
-    }
-
-    // this prevents the text splitting onto 2 lines
-    @include mq($from: desktop, $until: mem-full) {
         font-size: rem(14px);
+        position: absolute;
+        display: block;
+        z-index: 4;
+        width: 100%;
+        margin: rem(-46px) auto;
     }
 }
 
@@ -150,7 +149,8 @@ $current-indicator: rem(72px);
     }
 
     .about-membership &,
-    .join & {
+    .join &,
+    .change-tier & {
         @include mq(desktop) {
             margin-bottom: rem($gs-gutter * 3);
         }
@@ -435,6 +435,14 @@ $current-indicator: rem(72px);
 
         @include mq(mem-full) {
             padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+        }
+
+        .package-list {
+            padding-top: rem($gs-gutter * 2);
+
+            @include mq(desktop) {
+                padding-top: $current-indicator;
+            }
         }
     }
 }
