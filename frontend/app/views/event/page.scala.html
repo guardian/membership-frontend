@@ -31,9 +31,9 @@
 
 @becomeMemberCta(ticket: EBTickets) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
-    val friendSaleStartDate = ticketSaleDates.datesByTier(Tier.Friend)
+    val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
 
-    if(friendSaleStartDate > Instant.now) {
+    if(!friendCanBuyTicket) {
         Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
     }
 }

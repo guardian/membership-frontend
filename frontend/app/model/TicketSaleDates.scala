@@ -4,7 +4,7 @@ import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
 import model.Eventbrite.{EBEvent, EBTickets}
 import org.joda.time.Instant
-import Tier.{Patron, Partner}
+import com.gu.membership.salesforce.Tier.{Tier, Patron, Partner}
 
 import scala.collection.immutable.SortedMap
 
@@ -14,6 +14,8 @@ case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSale
   val needToDistinguishTimes = smallestGapBetweenDates.map(_ < 24.hours).getOrElse(false)
 
   lazy val datesByTier = memberAdvanceTicketSales.getOrElse(Map.empty).withDefaultValue(generalAvailability)
+
+  def tierCanBuyTicket(tier: Tier) = datesByTier(tier).isBefore(Instant.now())
 }
 
 object TicketSaleDates {

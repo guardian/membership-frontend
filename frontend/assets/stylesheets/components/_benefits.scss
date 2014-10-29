@@ -46,7 +46,7 @@
 }
 
 .benefits-copy {
-    @include fs-bodyCopy(1);
+    @include fs-textSans(3);
     padding: 0 0 rem($gs-baseline) rem(45px);
     display: block;
     float: left;

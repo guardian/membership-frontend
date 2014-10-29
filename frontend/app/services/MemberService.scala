@@ -128,13 +128,15 @@ object MemberRepository extends MemberRepository with ScheduledTask[Authenticati
   def refresh() = salesforce.getAuthentication
 
   val salesforce = new Scalaforce {
-    val consumerKey = Config.salesforceConsumerKey
-    val consumerSecret = Config.salesforceConsumerSecret
+    val config = Config.touchpointBackendConfig.salesforce
 
-    val apiURL = Config.salesforceApiUrl
-    val apiUsername = Config.salesforceApiUsername
-    val apiPassword = Config.salesforceApiPassword
-    val apiToken = Config.salesforceApiToken
+    val consumerKey = config.consumerKey
+    val consumerSecret = config.consumerSecret
+
+    val apiURL = config.apiURL
+    val apiUsername = config.apiUsername
+    val apiPassword = config.apiPassword
+    val apiToken = config.apiToken
 
     val stage = Config.stage
     val application = "Frontend"
