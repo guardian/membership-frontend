@@ -75,16 +75,14 @@ trait MemberService {
     member.tier match {
       case Tier.Friend => Future.successful(None)
 
+      case _ if event.memberTickets.nonEmpty =>
+        // Add a "salt" to make access codes different to discount codes
+        val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+        EventbriteService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
+
       case _ =>
-        val code = DiscountCode.generate(member.identityId + "_" + event.id)
-
-        val discount =
-          if (event.memberTickets.nonEmpty)
-            EventbriteService.createOrGetAccessCode(event, "A" + code, event.memberTickets)
-          else
-            EventbriteService.createOrGetDiscount(event.id, code)
-
-        discount.map(Some(_))
+        val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
+        EventbriteService.createOrGetDiscount(event.id, code).map(Some(_))
     }
   }
 
