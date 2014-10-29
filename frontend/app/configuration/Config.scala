@@ -6,10 +6,13 @@ import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.{FriendTierPlan, PaidTierPlan, TierPlan}
-import services.StripeApiConfig
+import play.api.Logger
+import services.{TouchpointBackendConfig, SalesforceConfig, StripeApiConfig}
 import services.zuora.ZuoraApiConfig
 
 object Config {
+  val logger = Logger(this.getClass())
+
   val config = ConfigFactory.load()
 
   lazy val siteTitle = config.getString("site.title")
@@ -62,30 +65,42 @@ object Config {
 
   val facebookAppId = config.getString("facebook.app.id")
 
-  val stripeApiConfig = StripeApiConfig(
-    url = config.getString("stripe.api.url"),
-    secretKey = config.getString("stripe.api.key.secret"),
-    publicKey = config.getString("stripe.api.key.public")
-  )
+  val touchpointBackendConfig = {
+    val stripeApiConfig = StripeApiConfig(
+      url = config.getString("stripe.api.url"),
+      secretKey = config.getString("stripe.api.key.secret"),
+      publicKey = config.getString("stripe.api.key.public")
+    )
 
-  val salesforceConsumerKey = config.getString("salesforce.consumer.key")
-  val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")
-  val salesforceApiUrl = config.getString("salesforce.api.url")
-  val salesforceApiUsername = config.getString("salesforce.api.username")
-  val salesforceApiPassword = config.getString("salesforce.api.password")
-  val salesforceApiToken = config.getString("salesforce.api.token")
+    val salesforceConfig = SalesforceConfig(
+      consumerKey = config.getString("salesforce.consumer.key"),
+      consumerSecret = config.getString("salesforce.consumer.secret"),
+      apiURL = config.getString("salesforce.api.url"),
+      apiUsername = config.getString("salesforce.api.username"),
+      apiPassword = config.getString("salesforce.api.password"),
+      apiToken = config.getString("salesforce.api.token")
+    )
+
+    val zuoraApiConfig = ZuoraApiConfig(
+      url = config.getString("zuora.api.url"),
+      username = config.getString("zuora.api.username"),
+      password = config.getString("zuora.api.password")
+    )
+
+    val touchpointBackendConfig = TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
+
+    logger.info(s"touchpointBackendConfig.hashCode=${touchpointBackendConfig.hashCode}")
+    
+    touchpointBackendConfig
+  }
+
+
 
   val twitterUsername = config.getString("twitter.username")
   val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
   val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
   val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
   val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
-
-  val zuoraApiConfig = ZuoraApiConfig(
-    url = config.getString("zuora.api.url"),
-    username = config.getString("zuora.api.username"),
-    password = config.getString("zuora.api.password")
-  )
 
   def plansFor(paidTier: Tier) = {
     def paidTierPlan(annual: Boolean) = {
