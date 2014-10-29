@@ -80,7 +80,9 @@ object Eventbrite {
                        cost: Option[EBPricing],
                        sales_end: Instant,
                        sales_start: Option[Instant],
-                       hidden: Option[Boolean]) extends EBObject
+                       hidden: Option[Boolean]) extends EBObject {
+    val isHidden = hidden.exists(_ == true)
+  }
 
   case class EBEvent(name: EBRichText,
                      description: Option[EBRichText],
@@ -116,9 +118,9 @@ object Eventbrite {
 
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
-    val generalReleaseTicket = ticket_classes.find(_.hidden.forall(_ == false))
+    val generalReleaseTicket = ticket_classes.find(!_.isHidden)
 
-    val memberTickets = ticket_classes.filter(_.name.startsWith("Guardian Member"))
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
   }
 
   trait EBCode extends EBObject {

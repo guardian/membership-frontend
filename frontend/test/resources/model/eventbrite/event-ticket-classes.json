@@ -157,7 +157,7 @@
             "quantity_total": 4,
             "quantity_sold": 0,
             "sales_end": "2014-12-07T02:00:00Z",
-            "hidden": false
+            "hidden": true
         }
     ],
     "format": null,
