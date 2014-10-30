@@ -32,7 +32,7 @@
     </div>
 }
 
-@becomeMemberCta(ticket: EBTickets) = @{
+@becomeMemberCta(ticket: EBTicketClass) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
 
@@ -40,7 +40,6 @@
         Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
     }
 }
-
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event") {
     <div class="event-header">
@@ -66,7 +65,7 @@
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
-                @for(ticket <- event.ticketClassesHead) {
+                @for(ticket <- event.generalReleaseTicket) {
                     <div class="event-ticket u-cf">
                         <div class="event-ticket__details">
 
@@ -137,7 +136,7 @@
 
                 @if(event.isNoTicketEvent == false) {
 
-                    @for(ticket <- event.ticketClassesHead) {
+                    @for(ticket <- event.generalReleaseTicket) {
 
                         <div class="event-content__tickets event-content--line-divider u-cf">
                             @fragments.event.ticketSales(event, ticket)

@@ -13,7 +13,7 @@ import com.gu.membership.util.Timing
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Eventbrite.{EBCode, EBEvent}
 import model.Stripe.{Customer, Card}
 import model.{PaidTierPlan, FriendTierPlan, TierPlan}
 import monitoring.MemberMetrics
@@ -71,11 +71,20 @@ trait MemberService {
       }
     }
 
-  def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBDiscount]] = {
-    // code should be unique for each user/event combination
-    if (member.tier >= Tier.Partner) {
-      EventbriteService.createOrGetDiscount(event.id, DiscountCode.generate(s"${member.identityId}_${event.id}")).map(Some(_))
-    } else Future.successful(None)
+  def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBCode]] = {
+    member.tier match {
+      case Tier.Friend => Future.successful(None)
+
+      case _ =>
+        if (event.memberTickets.nonEmpty) {
+          // Add a "salt" to make access codes different to discount codes
+          val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+          EventbriteService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
+        } else {
+          val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
+          EventbriteService.createOrGetDiscount(event.id, code).map(Some(_))
+        }
+    }
   }
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {

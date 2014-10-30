@@ -75,7 +75,7 @@ trait Event extends Controller {
   }
 
   private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean =
-    event.ticketClassesHead.exists { ticket =>
+    event.generalReleaseTicket.exists { ticket =>
       TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
 

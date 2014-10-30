@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.EBEvent, ticket: model.Eventbrite.EBTickets)
+@(event: model.Eventbrite.EBEvent, ticket: model.Eventbrite.EBTicketClass)
 
 @import views.support.Dates._
 @import com.github.nscala_time.time.Imports._
@@ -42,9 +42,8 @@
             <ul class="sale-dates__list u-unstyled u-cf">
                 <li class="sale-dates__item">
                     <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                    @for(ticketSalesEnd <- event.ticketSalesEndOpt) {
-                        @ticketEndSaleDate(ticketSalesEnd, ticketSaleDates.needToDistinguishTimes)
-                    }
+
+                    @ticketEndSaleDate(ticket.sales_end, ticketSaleDates.needToDistinguishTimes)
                 </li>
             </ul>
         }

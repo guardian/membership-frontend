@@ -33,8 +33,7 @@ object Eventbrite {
 
   case class EBResponse[T](pagination: EBPagination, data: Seq[T]) extends EBObject
 
-  case class EBPagination(page_number: Int,
-                          page_count: Int) extends EBObject {
+  case class EBPagination(page_number: Int, page_count: Int) extends EBObject {
     lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
   }
 
@@ -73,14 +72,17 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(name: String,
+  case class EBTicketClass(id: String,
+                       name: String,
                        free: Boolean,
                        quantity_total: Int,
                        quantity_sold: Int,
                        cost: Option[EBPricing],
-                       sales_end: Option[Instant],
+                       sales_end: Instant,
                        sales_start: Option[Instant],
-                       hidden: Option[Boolean]) extends EBObject
+                       hidden: Option[Boolean]) extends EBObject {
+    val isHidden = hidden.exists(_ == true)
+  }
 
   case class EBEvent(name: EBRichText,
                      description: Option[EBRichText],
@@ -90,7 +92,7 @@ object Eventbrite {
                      created: Instant,
                      venue: EBVenue,
                      capacity: Int,
-                     ticket_classes: Seq[EBTickets],
+                     ticket_classes: Seq[EBTicketClass],
                      status: String) extends EBObject {
 
     lazy val eventAddressLine = venue.address.map { a =>
@@ -116,15 +118,18 @@ object Eventbrite {
 
     lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
-    lazy val visibleTicketClasses = ticket_classes.filterNot(_.hidden.getOrElse(false))
+    val generalReleaseTicket = ticket_classes.find(!_.isHidden)
 
-    lazy val ticketSalesEndOpt = visibleTicketClasses.flatMap(_.sales_end).sorted.headOption
-
-    // This currently gets the first non-hidden ticket class
-    def ticketClassesHead = visibleTicketClasses.headOption
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
   }
 
-  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
+  trait EBCode extends EBObject {
+    val code: String
+    val quantity_available: Int
+  }
+
+  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBCode
+  case class EBAccessCode(code: String, quantity_available: Int) extends EBCode
 
   //https://developer.eventbrite.com/docs/order-object/
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
@@ -171,13 +176,15 @@ object EventbriteDeserializer {
     )(EBRichText.apply _)
 
   implicit val ebPricingReads = Json.reads[EBPricing]
-  implicit val ebTicketsReads = Json.reads[EBTickets]
+  implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
   implicit val ebDiscountReads = Json.reads[EBDiscount]
+  implicit val ebAccessCodeReads = Json.reads[EBAccessCode]
 
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
   implicit val ebDiscountsReads = ebResponseReads[EBDiscount]("discounts")
+  implicit val ebAccessCodesReads = ebResponseReads[EBAccessCode]("access_codes")
 
   implicit val ebCostReads = Json.reads[EBCost]
   implicit val ebCostsReads = Json.reads[EBCosts]
