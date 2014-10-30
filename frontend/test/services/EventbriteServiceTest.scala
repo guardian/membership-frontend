@@ -31,12 +31,13 @@ class EventbriteServiceTest extends PlaySpecification {
   }
 
   class TestEventbriteService extends EventbriteService {
+    val apiToken = ""
     val apiURL = "http://localhost:9999/v1"
     val apiEventListUrl = "events"
 
     var lastRequest = RequestInfo.empty
 
-    def get[A <: EBObject](endpoint: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
+    override def get[A <: EBObject](endpoint: String, params: (String, String)*)(implicit reads: Reads[A], error: Reads[EBError]): Future[A] = {
       endpoint match {
         case "events/test/discounts" =>
           val resource = Resource.getJson(s"model/eventbrite/discounts.json")
@@ -47,7 +48,7 @@ class EventbriteServiceTest extends PlaySpecification {
       }
     }
 
-    def post[A <: EBObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] = {
+    override def post[A <: EBObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A], error: Reads[EBError]): Future[A] = {
       lastRequest = RequestInfo(s"$apiURL/$endpoint", data)
       Future.failed[A](EBError("internal", "Not implemented", 500)) // don't care
     }
