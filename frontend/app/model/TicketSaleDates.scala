@@ -2,7 +2,7 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
-import model.Eventbrite.{EBEvent, EBTickets}
+import model.Eventbrite.{EBEvent, EBTicketClass}
 import org.joda.time.Instant
 import com.gu.membership.salesforce.Tier.{Tier, Patron, Partner}
 
@@ -23,15 +23,14 @@ object TicketSaleDates {
   implicit val periodOrdering = Ordering.by[Period, Duration](_.toStandardDuration)
   
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier.Value, Period]](
-// TODO Enable these when the onscreen formatting of dates is enabled to distinguish times as well as dates
-//    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
-//    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
+    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
+    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
     7.days.standardDuration -> Map(Patron -> 2.days, Partner -> 1.day),
     2.weeks.standardDuration -> Map(Patron -> 5.days, Partner -> 3.days),
     6.weeks.standardDuration -> Map(Patron -> 2.weeks, Partner -> 1.week)
   )
 
-  def datesFor(event: EBEvent, tickets: EBTickets): TicketSaleDates = {
+  def datesFor(event: EBEvent, tickets: EBTicketClass): TicketSaleDates = {
     val effectiveSaleStart = tickets.sales_start.getOrElse(event.created)
 
     val saleStartLeadTimeOnEvent = (effectiveSaleStart to event.start).duration

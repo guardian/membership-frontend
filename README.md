@@ -86,23 +86,49 @@ idrun
 
 ## To run frontend tests
 
-    karma start
++ $ karma start
 
 # Grunt Tasks
 
 ## Watch and compile front-end files
-    grunt watch
++ $ grunt watch
 
 ## Compile front-end files
-    grunt compile
++ $ grunt compile
 
-## Test Users
+# Updating AMIs
+We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html. To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
+
+## Building
+
+To add your requirements to the new AMI, you should update `provisioning.json`. This will probably involve editing the `provisioners` section, but more information can be found in the [packer docs](http://www.packer.io/docs). Once you are ready, run the following:
+```
+packer build provisioning.json
+```
+This will take several minutes to build the new AMI. Once complete, you should see something like:
+```
+eu-west-1: ami-xxxxxxxx
+```
+
+## Deploying
+
+1. Turn off continuous deployment in RiffRaff
+1. Update the CloudFormation parameter `ImageId` <b>(make a note of the current value first)</b>
+1. Increase the autoscale group size by 1
+1. Test the new box
+1. If it doesn't work, revert the value of `ImageId`
+1. Run a full deploy in RiffRaff
+1. Decrease autoscale group size by 1
+1. Re-enable continous deployment
+
+
+# Test Users
 
 See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
 Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
 
-## Committing config credentials
+# Committing config credentials
 
 For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
 
@@ -120,4 +146,3 @@ For a reminder on why we do this, here's @tackley on the subject:
 >For AWS access keys, always prefer to use instance profiles instead.
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
-
