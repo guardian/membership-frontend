@@ -11,21 +11,10 @@
 @import configuration.Config
 
 @ticketCta = {
-    @event.getStatus match {
-        case Live => {
-            <a class='action action--event-buy js-ticket-cta' href='/event/@event.id/buy'>Buy tickets</a>
-        }
-        case nonLive => {
-            <button class='action action--disabled js-ticket-cta' disabled='disabled'>
-            @nonLive match {
-                case Completed => { Past Event }
-                case Cancelled => { Cancelled }
-                case SoldOut => { Sold Out }
-                case PreLive => { Coming Soon }
-                case _ => {}
-            }
-            </button>
-        }
+    @if(event.isSoldOut) {
+        <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
+    } else {
+        <a class="action action--event-buy js-ticket-cta" href="/event/@event.id/buy">Buy tickets</a>
     }
     <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
