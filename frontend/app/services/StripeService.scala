@@ -1,52 +1,21 @@
 package services
 
+import scala.concurrent.Future
+
+import play.api.libs.ws.WSRequestHolder
+
 import model.Stripe._
 import model.StripeDeserializer._
 import monitoring.StripeMetrics
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.json.Reads
-import play.api.libs.ws.{WS, WSRequestHolder, WSResponse}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 case class StripeApiConfig(url: String, secretKey: String, publicKey: String)
 
-class StripeService(apiConfig: StripeApiConfig) {
+class StripeService(apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
+  val wsUrl = apiConfig.url
+  val wsMetrics = StripeMetrics
 
-  val apiAuthHeader = ("Authorization", s"Bearer ${apiConfig.secretKey}")
-
-  def apiRequest(endpoint: String): WSRequestHolder =
-    WS.url(s"${apiConfig.url}/$endpoint").withHeaders(apiAuthHeader)
-
-  def get[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).get().map { response =>
-      recordAndLogResponse(response.status, "GET", endpoint)
-      extract[A](response)
-    }
-
-  def post[A <: StripeObject](endpoint: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).post(data).map { response =>
-      recordAndLogResponse(response.status, "POST", endpoint)
-      extract[A](response)
-    }
-
-  def delete[A <: StripeObject](endpoint: String)(implicit reads: Reads[A]): Future[A] =
-    apiRequest(endpoint).delete().map { response =>
-      recordAndLogResponse(response.status, "DELETE", endpoint)
-      extract[A](response)
-    }
-
-  private def extract[A <: StripeObject](response: WSResponse)(implicit reads: Reads[A]): A = {
-    response.json.asOpt[A].getOrElse {
-      throw (response.json \ "error").asOpt[Error].getOrElse(Error("internal", "Unable to extract object", None, None))
-    }
-  }
-
-  private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    StripeMetrics.putResponseCode(status, responseMethod)
-  }
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder =
+    req.withHeaders("Authorization" -> s"Bearer ${apiConfig.secretKey}")
 
   object Customer {
     def create(identityId: String, card: String): Future[Customer] =
