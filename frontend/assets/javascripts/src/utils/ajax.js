@@ -11,7 +11,6 @@ define([
     function ajax(params) {
         if (!params.url.match('^https?://')) {
             params.url = makeAbsolute(params.url);
-            params.crossOrigin = true;
         }
         return ajax.reqwest(params);
     }
