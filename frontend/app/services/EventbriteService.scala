@@ -25,8 +25,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  val apiEventListUrl: String
-
   def events: Seq[EBEvent]
 
   lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
@@ -44,7 +42,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
+  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events")
 
   private def getPriorityEventIds(): Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
@@ -101,7 +99,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
 object EventbriteService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
-  val apiEventListUrl = Config.eventbriteApiEventListUrl
 
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
