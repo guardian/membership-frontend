@@ -94,6 +94,10 @@
     border-top: 0;
 }
 
+.fieldset--no-bg {
+    background: transparent;
+}
+
 .fieldset__heading {
     vertical-align: top;
 
@@ -269,7 +273,7 @@
     -webkit-appearance: none;
 
     &:focus {
-        border: rem(2px) solid $mem-brandLightblue;
+        border-color: $mem-brandLightblue;
     }
 
     @include mq(tablet) {

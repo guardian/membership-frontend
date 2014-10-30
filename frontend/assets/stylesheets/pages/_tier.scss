@@ -389,9 +389,6 @@ $current-indicator: rem(72px);
 .upgrade__payment-label {
     display: block;
     position: relative;
-    border: rem(1px) solid #cccccc;
-    padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
-    @include border-radius(5px);
 
     span {
         display: block;
@@ -402,20 +399,64 @@ $current-indicator: rem(72px);
         }
     }
 
+    .payment-label__wrapper {
+        width: 100%;
+        display: block;
+
+        &:hover {
+            background: $white-trans;
+        }
+    }
+
     input[type=radio] {
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        top: rem(10px);
-        left: rem(6px);
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__wrapper {
+        display: inline-block;
+        border: rem(1px) solid $c-neutral4;
+        padding: rem($gs-gutter);
+    }
+
+    input[type=radio]:checked + .payment-label__wrapper {
+        border-color: $mem-brandLightblue;
+        background-color: $white;
+    }
+}
+
+/* Billing address
+======================================================================= */
+
+.address-fieldset__inner {
+
+    .payment-label__title {
+        width: 100%;
+        display: block;
+        &:hover {
+            background: $white-trans;
+        }
+    }
+
+    input[type=radio] {
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__title {
+        display: inline-block;
+        border: rem(1px) solid $c-neutral4;
+        padding: rem($gs-gutter);
     }
 
     input[type=radio]:checked + .payment-label__title {
-        font-weight: bold;
+        border-color: $mem-brandLightblue;
+        background-color: $white;
     }
 
-    &:hover {
-        background-color: #eeeeee;
+}
+
+.address-fieldset__country {
+    select {
+        width: 100%;
     }
 }
 

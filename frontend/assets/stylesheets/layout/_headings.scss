@@ -30,7 +30,7 @@
     border-top: 0;
     
     @include mq(tablet) {
-        padding-left: rem(gs-span(2) + $gs-gutter * 3);
+        padding-left: rem(gs-span(2) + $gs-gutter);
     }
 }
 
