@@ -108,5 +108,5 @@ trait Joiner extends Controller {
 
 object Joiner extends Joiner {
   val memberService = MemberService
-  val eventService = EventbriteService
+  val eventService = GuardianLiveEventService
 }

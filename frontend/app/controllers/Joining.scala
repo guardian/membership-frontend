@@ -1,16 +1,14 @@
 package controllers
 
-import model.PageInfo
-import com.gu.membership.salesforce.Tier
-import configuration.{Config, CopyConfig}
-
 import play.api.mvc.Controller
 import play.api.data.Form
 import play.api.data.Forms._
-import services.{PreMembershipJoiningEventFromSessionExtractor, EventbriteService}
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.Future
+import com.gu.membership.salesforce.Tier
+
+import model.PageInfo
+import configuration.CopyConfig
+import services.{GuardianLiveEventService, PreMembershipJoiningEventFromSessionExtractor}
 
 object Joining extends Controller {
 
@@ -19,7 +17,7 @@ object Joining extends Controller {
   */
   def tierChooser() = NoCacheAction { implicit request =>
 
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(GuardianLiveEventService.getEvent)
     val pageInfo = PageInfo(
       CopyConfig.copyTitleChooseTier,
       request.path,

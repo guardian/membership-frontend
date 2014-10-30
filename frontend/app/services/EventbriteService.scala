@@ -16,6 +16,7 @@ import play.api.libs.ws._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import utils.ScheduledTask
 
 trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -42,9 +43,9 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events?status=live")
+  protected def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events?status=live")
 
-  private def getPriorityEventIds(): Future[Seq[String]] =  for {
+  protected def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
   } yield (ordering.json \ "order").as[Seq[String]]
 
@@ -95,15 +96,13 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
-object EventbriteService extends EventbriteService {
+object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   def events: Seq[EBEvent] = allEvents.get()
-
-  import play.api.Play.current
 
   def start() {
     def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
@@ -115,4 +114,16 @@ object EventbriteService extends EventbriteService {
     scheduleAgentRefresh(allEvents, getAllEvents, refreshTimeAllEvents)
     scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, refreshTimePriorityEvents)
   }
+}
+
+object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[EBEvent]] {
+  val apiToken = Config.eventbriteMasterclassesApiToken
+
+  val initialValue = Nil
+  val interval = 60.seconds
+  val initialDelay = 0.seconds
+
+  def refresh(): Future[Seq[EBEvent]] = getAllEvents
+
+  def events: Seq[EBEvent] = agent.get()
 }
