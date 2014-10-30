@@ -23,7 +23,7 @@ define([
 
     Cta.prototype.classes = {
         MEMBER_CTA: 'js-member-cta',
-        EVENT_TICKETS_CONTAINER: 'event__tickets',
+        EVENT: 'js-event',
         SALE_START: 'js-ticket-sale-start',
         SALE_START_FRIEND: 'js-ticket-sale-start-friend',
         SALE_START_PARTNER: 'js-ticket-sale-start-partner',
@@ -72,7 +72,10 @@ define([
     };
 
     Cta.prototype.disableBuyTicketsCtaButton = function () {
-        $(this.getElem('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+        // todo: improve – this.getElem only returns first match
+        // and we have two CTAs on event pages
+        // so this should disable all of them
+        $('.' + this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
     };
 
     Cta.prototype.memberCta = function () {
@@ -137,9 +140,11 @@ define([
 
     Cta.prototype.init = function () {
         var self = this;
+        this.elem = this.elem || this.getElem('EVENT');
 
-        this.elem = this.elem || this.getElem('EVENT_TICKETS_CONTAINER');
-        if (this.elem) {
+        /* buttons are either both not here, both here, or only one is here */
+        if (this.getElem('MEMBER_CTA') || this.getElem('BUY_TICKET_CTA')) {
+
             this.userIsLoggedIn = user.isLoggedIn();
 
             user.getMemberDetail(function (memberDetail) {

@@ -31,6 +31,20 @@
     margin-bottom: rem($gs-gutter);
 }
 
+// TODO - likely all content containers will eventually use
+// this new slim format, in which case we can remove the modifier
+// and the below will become the de facto rules
+.content__container--slim {
+    margin: 0 auto rem($gs-gutter * 1.5);
+    max-width: rem(gs-span(8));
+
+    .content__headline {
+        border-top: rem(1px) solid $c-newsAccent;
+        margin-bottom: rem($gs-baseline);
+        padding-top: rem($gs-baseline / 2 - 1px);
+    }
+}
+
 .content__container--border {
     border-top: rem(1px) dotted $c-neutral5;
 }

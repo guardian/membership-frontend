@@ -32,19 +32,19 @@
                             We accept
                         </li>
                         <li class="credit-card-container-list__item inline-list__item">
-                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-visa"></i>
+                            <i class="sprite-card sprite-card--smaller sprite-card--visa"></i>
                         </li>
                         <li class="credit-card-container-list__item inline-list__item">
-                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-mastercard"></i>
+                            <i class="sprite-card sprite-card--smaller sprite-card--mastercard"></i>
                         </li>
                         <li class="credit-card-container-list__item inline-list__item">
-                            <i class="credit-card credit-card--form-field-note icon-sprite icon-sprite-card-american-express"></i>
+                            <i class="sprite-card sprite-card--smaller sprite-card--american-express"></i>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="credit-card-container">
-                <i class="js-credit-card-image credit-card credit-card--input-representation icon-sprite icon-sprite-card-unknown"></i>
+                <i class="js-credit-card-image credit-card--input-representation sprite-card sprite-card--unknown"></i>
                 <input type="tel"
                        size="20"
                        data-stripe="number"
@@ -69,25 +69,29 @@
                    maxlength="4"
                    autocomplete="off"
                    data-validation="creditCardCVC"/>
-            <a class="cvc-cta js-cvc-cta" href="#">Whats this?</a>
+            <a class="cvc-cta js-cvc-cta" href="#">What's this?</a>
             <div class="cvc u-h u-cf js-cvc-image-container">
-                <div class="cvc__primary">
-                    <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                <div class="u-cf">
+                    <div class="cvc__primary">
+                        <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                    </div>
+                    <div class="cvc__secondary">
+                        <h3 class="cvc__heading">Visa, Mastercard</h3>
+                        <p class="cvc__body">
+                        The last 3 digits printed on the back within the signature strip
+                        </p>
+                    </div>
                 </div>
-                <div class="cvc__secondary">
-                    <h3 class="cvc__heading">Visa, Mastercard</h3>
-                    <p class="cvc__body">
-                    The last 3 digits printed on the back within the signiture strip
-                    </p>
-                </div>
-                <div class="cvc__primary">
-                    <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
-                </div>
-                <div class="cvc__secondary">
-                    <h3 class="cvc__heading">American Express</h3>
-                    <p class="cvc__body">
-                    The 4 digits printed on the front above the card number
-                    </p>
+                <div class="u-cf">
+                    <div class="cvc__primary">
+                        <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
+                    </div>
+                    <div class="cvc__secondary">
+                        <h3 class="cvc__heading">American Express</h3>
+                        <p class="cvc__body">
+                        The 4 digits printed on the front above the card number
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

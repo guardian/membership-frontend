@@ -1,0 +1,73 @@
+@(event: model.Eventbrite.EBEvent, order: model.Eventbrite.EBOrder)
+
+@import configuration.Config
+@import views.support.Dates._
+@import views.support.Prices._
+@import views.support.Social.eventThankyou
+
+@main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
+
+    <section class="content__container content__container--slim">
+        <h1 class="section-headline section-headline--no-border">Thanks @order.first_name.<br/> See you there!</h1>
+        <h2 class="content__headline">You're going to</h2>
+
+        <div class="event-summary">
+            <div class="event-item__media">
+                <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
+            </div><div class="event-item__meta">
+                <h2 class="event-item__title">
+                    @event.name.text
+                </h2>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-early_booking-grey event-item__icon"></i>
+                    <time datetime="@event.start">@prettyDateWithTimeAndDayName(event.start)</time>
+                </div>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-location event-item__icon"></i>
+                    @for(name <- event.venue.name) {
+                        <span class="event-item__location-name">@name</span>
+                    }
+                    @for(location <- event.venue.address) {
+                        <span class="event-item__location-detail">@location.address_1 </span>
+                        <span class="event-item__location-detail">@location.city @location.postal_code </span>
+                    }
+                </div>
+
+                <div class="event-item__detail">
+                    <i class="icon-sprite icon-sprite-book_tickets event-item__icon"></i>
+                    <i class="icon-sprite icon-sprite-eventbrite"></i>
+                    <div>Order no. @order.id</div>
+                    <div>
+                        @order.ticketCount ticket@if(order.ticketCount > 1){s}
+                        @if(order.totalCost > 0) {
+                            @order.totalCost.pretty
+                        } else {
+                            free
+                        }
+                    </div>
+                    <div>Sent to <strong>@order.email</strong></div>
+                    <div>The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Before the event</h2>
+        <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Tell your friends</h2>
+        @fragments.social(eventThankyou(event), colourSprites=true)
+    </section>
+
+    <section class="content__container content__container--slim hidden-print">
+        <h2 class="content__headline">Find more Guardian Live events</h2>
+        <a class="action" href="/events">See all events</a>
+    </section>
+
+    @fragments.analytics.eventConversion(event)
+}

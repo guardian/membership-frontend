@@ -2,17 +2,16 @@
 
 @import 'head.common';
 /* ==========================================================================
-   Facia
+   Modules
    ========================================================================== */
-@import 'module/facia/_items';
-@import 'module/facia/_row-pattern';
+@import 'module/_social';
 /* ==========================================================================
-   Memebership components
+   Membership components
    ========================================================================== */
 @import 'components/action';
 @import 'components/benefits';
 /* ==========================================================================
-   Memebership pages
+   Membership pages
    ========================================================================== */
 @import 'pages/events';
 @import 'pages/joiner';
@@ -26,3 +25,7 @@
    Webfonts pages
    ========================================================================== */
 @import 'webfonts';
+
+// finally import print-only styles
+// (currently only used for event thankyou pages)
+@import 'print';

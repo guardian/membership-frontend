@@ -11,7 +11,7 @@
 
 <!DOCTYPE html>
 
-<html class="js-off @htmlClass">
+<html class="js-off id--signed-out @htmlClass">
     <head>
         <meta charset="utf-8">
         <meta name="viewport"                       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -30,18 +30,18 @@
         <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
 
         <meta property="og:type" content="website"/>
-        <meta property="fb:app_id" content="180444840287"/>
-        <meta name="twitter:site" content="@@guardian"/>
-        <meta name="twitter:app:name:iphone" content="The Guardian"/>
-        <meta name="twitter:app:id:iphone" content="409128287"/>
-        <meta name="twitter:app:name:googleplay" content="The Guardian"/>
-        <meta name="twitter:app:id:googleplay" content="com.guardian"/>
+        <meta property="fb:app_id" content="@Config.facebookAppId"/>
+        <meta name="twitter:site" content="@@@Config.twitterUsername"/>
+        <meta name="twitter:app:name:iphone" content="@Config.twitterIphoneAppName"/>
+        <meta name="twitter:app:id:iphone" content="@Config.twitterIphoneAppId"/>
+        <meta name="twitter:app:name:googleplay" content="@Config.twitterGoogleplayAppName"/>
+        <meta name="twitter:app:id:googleplay" content="@Config.twitterGoogleplayAppId"/>
         <meta name="twitter:card" content="summary"/>
 
         <title>@(Config.siteTitle + " - " + title)</title>
         @fragments.javaScriptFirstSteps()
 
-        <link rel="stylesheet" media="screen" href="@Asset.at("stylesheets/style.css")">
+        <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/style.css")">
 
         @*
             TODO: Stop IE9 getting the stylesheet twice.

@@ -9,7 +9,7 @@
 
 @benefit(tier: com.gu.membership.salesforce.Tier.Tier, defaultSelection: com.gu.membership.salesforce.Tier.Tier) = {
     <div class="tickets-select-form__section">
-        <div class="tickets-select-form__header u-cf">
+        <div class="tickets-select-form__header tickets-select-form__header--@tier.toString.toLowerCase u-cf">
             <label class="tickets-select-form__label" for="@tier.toString.toLowerCase">
                 <input class="tickets-select-form__input"
                        type="radio"
@@ -25,12 +25,10 @@
                 <div class="price-info-container price-info-container--last">
                     @fragments.benefits.priceInfo(Benefits.details(tier))
                 </div>
-                <a class="tickets-select-form__toggle mobile-only js-benefit-header" href="#">
-                    <i class="i icon-sprite-arrow-grey-large tickets-select-form__toggle-icon js-toggle-icon"></i>
-                </a>
+                <a class="tickets-select-form__toggle mobile-only js-benefit-header" href="#"></a>
             </div>
         </div>
-        <div class="tickets-select-form__detail hidden-mobile">
+        <div class="tickets-select-form__detail hidden-mobile u-cf js-select-tier">
             <p class="tickets-select-form__leadin">@Benefits.details(tier).leadin</p>
             <ul class="u-unstyled">
                 @for((header, body, icon) <- Benefits.details(tier).list) {
@@ -42,7 +40,7 @@
     </div>
 }
 
-@main("Join membership", pageInfo=pageInfo) {
+@main("Join Choose Tier", pageInfo=pageInfo) {
 
     <section class="section-two-thirds">
 
@@ -63,7 +61,7 @@
                     }
                 }
 
-                <input type="submit" class="action action--logged-in" value="Join today"/>
+                <input type="submit" class="action" value="Join today"/>
 
             </form>
         </section>@*
@@ -78,14 +76,14 @@
 
                 <div class="event-item events-list__item event-item--standalone">
                     <div class="event-item__media">
-                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image"></div>
+                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
                     </div>@*
 
                           // Inline-block whitespace
 
                     *@<div class="event-item__meta">
                         <h2 class="event-item__title">
-                            @if(event.isSoldOut){
+                            @if(event.getStatus == SoldOut){
                                 <span class="event-status--sold-out">Sold Out</span>
                             }
                             @event.name.text
@@ -97,9 +95,8 @@
                             @if(event.venue.name){
                                 <span class="event-item__location-name">@event.venue.name</span>
                             }
-                            @for(address <- event.venue.address) {
-                                @if(event.venue.name){, }
-                                <span class="event-item__location-address">@address.city, @address.postal_code</span>
+                            @for(location <- event.venue.address) {
+                                <span class="event-item__location-detail">@if(event.venue.name){, } @location.city, @location.postal_code</span>
                             }
                         </div>
 
@@ -112,7 +109,7 @@
                         <div class="event-item__cta">
 
                             <div class="event-item__price">
-                            @for(ticket <- event.ticketClassesHead) {
+                            @for(ticket <- event.generalReleaseTicket) {
                                 @for(pricing <- ticket.cost) {
                                     <span class="event-item__price-amount">@pricing.formattedPrice</span>
                                     <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>

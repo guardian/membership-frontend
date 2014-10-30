@@ -2,74 +2,284 @@
    An event on an event page
    ========================================================================== */
 
-div.event {
-    background-color: $white;
-    .event__content {
+.event-header {
+    background-color: $mem-live-red-trans;
+    color: $white;
+}
 
-        .event__price-amount {
-            @include fs-headline(2);
+.event-header--shade {
+    background-color: $mem-live-accent-trans;
+}
+
+.event-header__container {
+    margin: 0 auto;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
+    background-color: transparent;
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter + $gs-baseline);
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(12) + $gs-gutter * 2);
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(14) + $gs-gutter * 2);
+    }
+}
+
+.event-header__container--details {
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter);
+    position: relative;
+    min-height: rem(75px);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+        min-height: rem(120px);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 3);
+    }
+}
+
+.event-masthead {
+    position: relative;
+
+    .event-masthead__name {
+        @include fs-headline(5);
+        color: $white;
+        padding-top: rem($gs-baseline / 2);
+
+
+        @include mq(tablet) {
+            padding-top: rem($gs-baseline);
+            @include fs-headline(7);
         }
 
-        .event__sale-ends {
-            padding: rem($gs-baseline) 0 rem(20px);
+        @include mq(mem-full) {
+            float: left;
+            padding-top: 0;
+        }
+    }
+    .event-masthead__title {
+        @include fs-header(1);
+        color: $white;
+        border-bottom: rem(1px) dotted $border-bottom-color;
+        padding-bottom: rem(5px);
+
+        @include mq(tablet) {
+            @include fs-header(4);
+            padding: 0 rem($gs-gutter) 0 0;
         }
 
-        .event__content__masthead {
-            background-color: #f5f5f5;
-        }
-
-        .event__content-body {
-            max-width: rem(620px);
-            padding: rem($gs-gutter/2);
-
-            @include mq(tablet) {
-                padding: rem($gs-gutter);
-            }
-            margin: 0 auto;
-        }
-
-        .event__meta > div {
-            display: block;
-            margin: 0 0 rem($gs-gutter);
-        }
-
-        .event__time {
-            @include fs-data(5);
-            color: $black;
-        }
-
-        .event__location {
-            @include fs-data(4);
-            color: $c-neutral2;
-        }
-
-        .event__trail {
-            @include fs-textSans(4);
-            display: block;
-        }
-
-        .event__price-note,
-        .event__sale_ends_note,
-        .event__sale_ends_time {
-            @include fs-textSans(4);
-            display: inline-block;
+        @include mq(mem-full) {
+            @include fs-header(5);
+            width: rem(gs-span(2) + $gs-gutter * 2);
+            border-bottom: 0;
+            float: left;
         }
     }
 }
 
-.event__description {
-    h2 {
+.guardian-live-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2 + 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        right: rem($gs-gutter);
+    }
+}
+
+.event-details {
+
+    .event-details__time {
         @include fs-headline(2);
+
+        @include mq(tablet) {
+            @include fs-headline(4);
+        }
+    }
+
+    .event-details__location {
+        font-size: 0; /** space between inline block elements **/
+
+        .event-details__venue-name,
+        .event-details__address {
+            @include fs-data(4);
+        }
+    }
+}
+
+.event-ticket {
+    padding-top: rem($gs-gutter);
+
+    .event-ticket__details {
+        color: $white;
+
+        @include mq(tablet) {
+            float: left;
+            padding-right: rem($gs-gutter);
+        }
+
+        .event-ticket__price-amount {
+            @include fs-header(5);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .event-ticket__trail {
+            @include fs-textSans(1);
+        }
+    }
+
+    .action--event-buy,
+    .action--disabled {
+        @include mq(tablet) {
+            float: left;
+            margin: rem(6px $gs-gutter 0 0);
+        }
+    }
+
+    .action--event-buy {
+        background-color: $black;
+
+        &:hover {
+            background-color: $mem-event-button-hover;
+        }
+    }
+
+    .terms-info {
+        @include fs-textSans(1);
+        color: $white;
+        padding-top: rem(12px);
+
+        @include mq(tablet) {
+            width: rem(gs-span(3) + $gs-gutter * 2);
+            float: left;
+        }
+
+        a {
+            color: $white;
+            padding-bottom: rem(2px);
+            border-bottom: rem(1px) solid $mem-underline-white-trans;
+
+            &:hover {
+                text-decoration: none;
+                border-bottom: rem(1px) solid $white;
+            }
+        }
+    }
+}
+
+.event__picture-byline {
+    clear: both;
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(mem-full) {
+        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
+        margin-bottom: 0;
+    }
+}
+
+.event-content {
+    padding: 0;
+    background-color: $white;
+
+    @include mq(desktop) {
+        background-color: transparent;
+    }
+
+    .event-content__image {
+        margin: 0 auto;
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .event-content__container {
+        padding: rem($gs-gutter) rem($gs-gutter / 2);
+        background-color: $white;
+
+        @include mq(tablet) {
+            width: rem(gs-span(9) + $gs-gutter * 2);
+            padding: rem($gs-gutter * 3) 0;
+            margin: 0 auto;
+        }
+
+        @include mq(desktop) {
+            width: rem(gs-span(12) + $gs-gutter * 2);
+            margin-top: rem(-8px);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+
+        .event-content__body {
+            position: relative;
+
+            @include mq(tablet) {
+                float: left;
+                padding: 0 rem($gs-gutter) 0 0;
+                width: rem(gs-span(5) + $gs-gutter * 3);
+            }
+
+            @include mq(desktop) {
+                width: rem(gs-span(8) + $gs-gutter * 2);
+                padding: 0 rem($gs-gutter);
+            }
+
+            @include mq(mem-full) {
+                width: rem(gs-span(10) + $gs-gutter * 2);
+            }
+        }
+    }
+}
+
+.event__price-note,
+.event__sale_ends_note,
+.event__sale_ends_time {
+    @include fs-textSans(4);
+    display: inline-block;
+}
+
+.event__description {
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(mem-full) {
+        width: rem(gs-span(8) - $gs-gutter);
+        float: right;
+    }
+
+    h2 {
+        @include fs-headline(1);
         margin: rem(8px) 0 rem(16px);
     }
     p, li {
-        @include fs-bodyCopy(3);
+        @include fs-bodyCopy(2);
     }
     ol,
     ul {
         list-style-position: inside;
         padding: 0;
         margin: 0 0 rem(8px);
+    }
+    .no-style-list {
+        list-style: none;
+    }
+    .section-header {
+        @include fs-headline(3);
+        font-weight: 900;
+        margin: rem(27px) 0 rem(10px);
     }
 
     blockquote {
@@ -84,85 +294,123 @@ div.event {
     }
 }
 
+.event__social {
+    width: rem(gs-span(2) + $gs-gutter);
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(tablet) {
+        float: left;
+    }
+}
+
+.event__social-header {
+    @include fs-textSans(1);
+    border-top: rem(1px) solid $c-neutral6;
+    padding-bottom: rem($gs-baseline / 2);
+    padding-top: rem(3px);
+}
+
+.event-content__info {
+    background-color: $c-neutral7;
+    margin-bottom: rem($gs-gutter);
+    padding: rem($gs-gutter);
+
+    @include mq(tablet) {
+        float: left;
+        width: gs-span(4);
+    }
+
+    .event-content__name {
+        @include fs-header(2);
+        padding-bottom: rem($gs-gutter + 8px);
+    }
+
+    .event-content__time,
+    .event-content__location,
+    .event-content__tickets,
+    .event-content__price {
+        @include fs-textSans(3);
+    }
+
+    .event-content__price {
+        padding-bottom: 0;
+
+        .event-content__price-amount {
+            @include fs-header(5);
+        }
+    }
+
+    .event-content__sale-dates {
+
+        .sale-dates__header {
+            @include fs-textSans(3);
+            font-weight: bold;
+        }
+
+        .sale-dates__list {
+            &:last-child {
+                padding-bottom: rem(5px);
+            }
+        }
+
+        .sale-dates__item {
+            @include fs-textSans(3);
+            text-align: right;
+
+            .sale-dates__item--left {
+                float: left;
+            }
+        }
+    }
+
+    .event-content__sale-ends {
+        padding: 0 0 rem(5px) rem($gs-gutter * 2);
+    }
+
+    .event-content__trail {
+        @include fs-textSans(1);
+        display: block;
+    }
+
+    .event-content__first {
+        float: left;
+        width: rem($gs-gutter * 2);
+    }
+
+    .event-content__second {
+        float: left;
+        width: rem(220px);
+    }
+
+    .action {
+        margin-right: rem($gs-gutter);
+        margin-right: 0;
+        min-width: 100%;
+    }
+
+    .action--event-buy {
+        background-color: $mem-live-accent;
+
+        &:hover {
+            background-color: darken($mem-live-accent, 5%);
+        }
+    }
+
+    .terms-info {
+        @include fs-textSans(1);
+        padding-top: rem($gs-baseline/2);
+    }
+
+}
+
+.event-content--line-divider {
+    border-top: rem(1px) dotted $c-neutral3;
+    padding: rem(5px) 0;
+}
+
 /* ==========================================================================
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
-
-.old-price {
-    display: block;
-}
-
-.event__content__inner {
-    background-color: #f1f1f1;
-}
-
-.event__content__inner--sub {
-    background-color: #e1e1e1;
-    margin-bottom: rem(20px);
-}
-
-.event__masthead {
-    position: relative;
-    .event__name {
-        padding: rem(40px) rem(40px) rem(20px) 0;
-    }
-}
-
-.item__meta {
-    position: relative;
-    overflow: hidden;
-}
-
-.inner-container {
-    float: right;
-    width: 100%;
-}
-
-.event__location {
-    margin-bottom: .4em;
-}
-
-.container--people .facia-slice-wrapper--position-1 .item__title {
-    min-height: 0;
-}
-
-.item__meta .item__timestamp {
-    padding-left: 0;
-}
-
-.event {
-    background-color: $white;
-    width: 100%;
-    overflow: hidden;
-}
-
-.event__image {
-    background-color: $mem-brandBlue;
-    img {
-        width: 100%;
-    }
-}
-
-.ticket-info {
-    @include fs-textSans(1);
-    color: #878787;
-}
-
-.ticket-info__header {
-    @include fs-textSans(4);
-    color: #878787;
-}
-
-.ticket-info__item {
-    margin: rem(4px) 0;
-}
-
-.terms-info,
-.ticket-info {
-    @include fs-textSans(1);
-    color: #878787;
-    padding-top: rem($gs-baseline/2);
-}
 
 .events-list {
     &.u-unstyled {
@@ -245,6 +493,14 @@ div.event {
             }
         }
 
+        .events-list__hero-descendant {
+            .events-list__item {
+                @include mq(tablet) {
+                    height: rem(450px);
+                }
+            }
+        }
+
     }
 }
 
@@ -255,7 +511,6 @@ div.event {
 .event-item {
     position: relative;
     width: 100%;
-
     background-color: $c-neutral7;
 
     .event-item__media {
@@ -288,9 +543,15 @@ div.event {
             @include fs-data(4);
             color: $black;
         }
+
         .event-item__location {
-            @include fs-data(3);
+            font-size: 0; /** space between inline block elements **/
             color: $c-neutral2;
+        }
+
+        .event-item__location-name,
+        .event-item__location-address {
+            @include fs-data(3);
         }
 
         .event-item__description {
@@ -427,7 +688,7 @@ div.event {
 
     }
 
-    *:hover, &:hover {
+    &:hover {
         text-decoration: none;
         background-color: $c-neutral5;
         .event-item__title {
@@ -435,10 +696,24 @@ div.event {
         }
     }
 
+    *:hover {
+        text-decoration: none;
+    }
+
     &.event-item--standalone {
         .event-item__cta {
             position: static;
             padding: rem($gs-baseline * 2) 0 0;
+        }
+
+        .event-item__location-name,
+        .event-item__location-detail {
+            @include fs-data(3);
+            display: block;
+        }
+
+        .event-item__location-name {
+            float: left;
         }
 
         *:hover, &:hover {
@@ -457,5 +732,80 @@ div.event {
         *:hover, &:hover {
             background-color: $c-neutral7;
         }
+    }
+}
+
+.event-summary {
+    @include clearfix;
+    margin: rem($gs-baseline * 2) 0;
+
+    .event-item__media {
+        @include mq(tablet) {
+            float: left;
+            width: rem(gs-span(3));
+        }
+    }
+
+    .event-item__title {
+        @include f-header;
+        @include font-size(rem(18px), rem(22px));
+        margin-bottom: rem($gs-baseline * 2);
+    }
+
+    .event-status--sold-out {
+        display: inline-block;
+        color: $white;
+        background-color: $mem-live-accent;
+        @include fs-data(2);
+        position: relative;
+        top: rem(-3px);
+        padding: rem(1px) rem(3px);
+        margin-right: rem(4px);
+    }
+
+    .event-item__meta {
+        @include f-data;
+        @include font-size(rem(14px), rem(22px));
+
+        @include mq(tablet) {
+            border-top: rem(1px) dotted $c-neutral3;
+            margin-left: rem(gs-span(3) + $gs-gutter);
+            padding-top: rem($gs-baseline / 2);
+        }
+    }
+
+    .event-item__detail {
+        border-top: rem(1px) dotted $c-neutral3;
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
+
+        &:last-child,
+        p:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .event-item__location {
+        line-height: rem(18px);
+    }
+
+    .event-item__location-detail {
+        display: block;
+    }
+
+    .event-item__icon {
+        background-size: rem(25px);
+        float: left;
+        margin-left: rem(-$gs-gutter * 2);
+        height: rem(25px);
+        width: rem(25px);
+    }
+
+    .icon-sprite-eventbrite {
+        margin-top: rem(3px);
+    }
+
+    .icon-sprite-early_booking-grey {
+        margin-top: rem(-2px);
     }
 }

@@ -33,10 +33,7 @@ object Eventbrite {
 
   case class EBResponse[T](pagination: EBPagination, data: Seq[T]) extends EBObject
 
-  case class EBPagination(object_count: Int,
-                          page_number: Int,
-                          page_size: Int,
-                          page_count: Int) extends EBObject {
+  case class EBPagination(page_number: Int, page_count: Int) extends EBObject {
     lazy val nextPageOpt = Some(page_number + 1).filter(_ <= page_count)
   }
 
@@ -51,21 +48,16 @@ object Eventbrite {
     lazy val blurb = truncateToWordBoundary(text, 200)
   }
 
-  case class EBAddress(country_name: Option[String],
-                       city: Option[String],
-                       address_1: Option[String],
+  case class EBAddress(address_1: Option[String],
                        address_2: Option[String],
+                       city: Option[String],
                        region: Option[String],
-                       country: Option[String],
-                       postal_code: Option[String]) extends EBObject
+                       postal_code: Option[String],
+                       country: Option[String]) extends EBObject
 
-  case class EBVenue(id: Option[String],
-                     address: Option[EBAddress],
-                     latitude: Option[String],
-                     longitude: Option[String],
-                     name: Option[String]) extends EBObject
+  case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject
 
-  case class EBPricing(currency: String, display: String, value: Int) extends EBObject {
+  case class EBPricing(value: Int) extends EBObject {
     def priceFormat(priceInPence: Double) = {
       val priceInPounds = priceInPence.round / 100f
       if (priceInPounds.isWhole) f"£$priceInPounds%.0f" else f"£$priceInPounds%.2f"
@@ -80,58 +72,35 @@ object Eventbrite {
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
-  case class EBTickets(id: Option[String] = None,
-                       name: Option[String] = None,
-                       free: Boolean = false,
-                       quantity_total: Option[Int] = None,
-                       quantity_sold: Option[Int] = None,
-                       cost: Option[EBPricing] = None,
-                       sales_end: Option[Instant] = None,
-                       sales_start: Option[Instant] = None,
-                       hidden: Option[Boolean] = None) extends EBObject
+  case class EBTicketClass(id: String,
+                       name: String,
+                       free: Boolean,
+                       quantity_total: Int,
+                       quantity_sold: Int,
+                       cost: Option[EBPricing],
+                       sales_end: Instant,
+                       sales_start: Option[Instant],
+                       hidden: Option[Boolean]) extends EBObject {
+    val isHidden = hidden.exists(_ == true)
+  }
 
-  case class EBEvent(
-                      name: EBRichText,
-                      description: Option[EBRichText],
-                      logo_url: Option[String],
-                      url: String,
-                      id: String,
-                      start: DateTime,
-                      end: DateTime,
-                      venue: EBVenue,
-                      capacity: Option[Int],
-                      ticket_classes: Seq[EBTickets],
-                      status: String) extends EBObject {
+  case class EBEvent(name: EBRichText,
+                     description: Option[EBRichText],
+                     url: String,
+                     id: String,
+                     start: DateTime,
+                     created: Instant,
+                     venue: EBVenue,
+                     capacity: Int,
+                     ticket_classes: Seq[EBTicketClass],
+                     status: String) extends EBObject {
 
-    lazy val logoUrl = logo_url.map(_.replace("http:", ""))
-
-    lazy val countryName = venue.address.flatMap(_.country_name).getOrElse("")
-
-    lazy val city = venue.address.flatMap(_.city).getOrElse("")
-
-    lazy val addressOne = venue.address.flatMap(_.address_1).getOrElse("")
-
-    lazy val addressTwo = venue.address.flatMap(_.address_2).getOrElse("")
-
-    lazy val region = venue.address.flatMap(_.region).getOrElse("")
-
-    lazy val country = venue.address.flatMap(_.country).getOrElse("")
-
-    lazy val postal_code = venue.address.flatMap(_.postal_code).getOrElse("")
-
-    lazy val eventAddressLine = Seq(
-      addressOne,
-      addressTwo,
-      city,
-      region,
-      countryName,
-      postal_code
-    ).filter(_.nonEmpty).mkString(", ")
-
-    lazy val isSoldOut = getStatus == SoldOut
+    lazy val eventAddressLine = venue.address.map { a =>
+      Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
+    }.getOrElse(Nil).mkString(", ")
 
     def getStatus: EBEventStatus = {
-      val isSoldOut = ticket_classes.flatMap(_.quantity_sold).sum >= capacity.getOrElse(0)
+      val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
       val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
 
 
@@ -145,11 +114,34 @@ object Eventbrite {
       }
     }
 
-    // This currently extracts all none hidden tickets and gets the first one
-    def ticketClassesHead = ticket_classes.find(_.hidden.getOrElse(false) == false)
+    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
+
+    lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
+
+    val generalReleaseTicket = ticket_classes.find(!_.isHidden)
+
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
   }
 
-  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBObject
+  trait EBCode extends EBObject {
+    val code: String
+    val quantity_available: Int
+  }
+
+  case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBCode
+  case class EBAccessCode(code: String, quantity_available: Int) extends EBCode
+
+  //https://developer.eventbrite.com/docs/order-object/
+  case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
+    val ticketCount = attendees.length
+    val totalCost = costs.gross.value / 100f
+  }
+
+  case class EBCosts(gross: EBCost) extends EBObject
+
+  case class EBCost(value: Int) extends EBObject
+
+  case class EBAttendee(quantity: Int) extends EBObject
 }
 
 object EventbriteDeserializer {
@@ -175,7 +167,7 @@ object EventbriteDeserializer {
     )(convertDateText _)
 
   implicit val ebError = Json.reads[EBError]
-  implicit val ebAddress = Json.reads[EBAddress]
+  implicit val ebLocation = Json.reads[EBAddress]
   implicit val ebVenue = Json.reads[EBVenue]
 
   implicit val ebRichText: Reads[EBRichText] = (
@@ -184,11 +176,18 @@ object EventbriteDeserializer {
     )(EBRichText.apply _)
 
   implicit val ebPricingReads = Json.reads[EBPricing]
-  implicit val ebTicketsReads = Json.reads[EBTickets]
+  implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
-  implicit val ebDisountReads = Json.reads[EBDiscount]
+  implicit val ebDiscountReads = Json.reads[EBDiscount]
+  implicit val ebAccessCodeReads = Json.reads[EBAccessCode]
 
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
   implicit val ebDiscountsReads = ebResponseReads[EBDiscount]("discounts")
+  implicit val ebAccessCodesReads = ebResponseReads[EBAccessCode]("access_codes")
+
+  implicit val ebCostReads = Json.reads[EBCost]
+  implicit val ebCostsReads = Json.reads[EBCosts]
+  implicit val ebAttendeeReads = Json.reads[EBAttendee]
+  implicit val ebOrderReads = Json.reads[EBOrder]
 }

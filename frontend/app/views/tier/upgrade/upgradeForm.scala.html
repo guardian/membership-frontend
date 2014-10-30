@@ -1,9 +1,9 @@
-@(targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
+@(currentTier: com.gu.membership.salesforce.Tier.Tier, targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 
-@main("Upgrade Payment") {
+@main("Change Tier | " + targetTier + " from " + currentTier) {
 
-    <form action="" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
+    <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form" data-change-to-tier="@targetTier">
         @CSRF.formField
         @fragments.form.errorMessageDisplay()
         @fragments.form.sectionHeading("Payment", true)

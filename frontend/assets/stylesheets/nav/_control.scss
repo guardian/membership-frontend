@@ -9,14 +9,6 @@
     @extend %icon-holder-circle;
     font-family: $f-serif-text;
     font-size: rem(13px);
-
-    .is-signed-in & {
-        color: $c-brandBlue;
-        border-color: $c-brandBlue;
-    }
-    &.is-active {
-        border-color: $c-brandLightBlue;
-    }
 }
 
 /* Profile control info (text label next to it)
@@ -83,13 +75,6 @@
             display: block;
         }
 
-        .is-active & {
-            display: block;
-
-            &:first-child {
-                display: none;
-            }
-        }
     }
 }
 

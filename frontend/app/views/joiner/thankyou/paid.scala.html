@@ -1,71 +1,69 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier)
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier, firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent])
 
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Thankyou | " + subscriptionDetails.planName) {
+@main("Change Tier Summary | " + subscriptionDetails.planName + " from Friend", containerPadding = false) {
 
-    <section class="joiner-section joiner-section--left-aligned joiner-section--no-border">
-        @fragments.tickets.ticketsFunnel(4, StepOne = "", StepTwo = "", StepThree = "")
-        <h1 class="section-sub-headline">Hello! Welcome to Guardian Membership</h1>
-        @fragments.layout.welcomeUser()
+    <section class="content__container content__container--slim">
+        @fragments.layout.welcomeUser(firstName, userEmail)
     </section>
 
-    <section class="joiner-section joiner-section--no-border">
-        <table class="table table--responsive-font table--striped">
-            <tr class="table__headline" role="row">
-                <td class="summary-table__cell" role="scope">
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Your membership summary</h2>
+        <table class="table table--responsive-font table--striped" role="grid">
+            <tr role="row">
+                <th role="rowheader">
                     Tier
-                </td>
-                <td class="summary-table__cell" role="scope">
+                </th>
+                <td>
                     @subscriptionDetails.planName
                 </td>
             </tr>
-            <tr class="summary-table__row" role="row">
-                <td class="summary-table__cell">
-                    Start Date
-                </td>
-                <td class="summary-table__cell">
+            <tr role="row">
+                <th role="rowheader">
+                    Start date
+                </th>
+                <td>
                     @subscriptionDetails.startDate.pretty
                 </td>
             </tr>
-            <tr class="summary-table__row" role="row">
-                <td class="summary-table__cell">
-                    Amount Paid Today
-                </td>
-                <td class="summary-table__cell">
+            <tr role="row">
+                <th role="rowheader">
+                    Amount paid today
+                </th>
+                <td>
                     @subscriptionDetails.planAmount.pretty
                 </td>
             </tr>
-            <tr class="summary-table__row" role="row">
-                <td class="summary-table__cell">
-                    @if(subscriptionDetails.annual){ Annual } else { Monthly } Payment
-                </td>
-                <td class="summary-table__cell">
+            <tr role="row">
+                <th role="rowheader">
+                    @if(subscriptionDetails.annual){ Annual } else { Monthly } payment
+                </th>
+                <td>
                     @subscriptionDetails.planAmount.pretty
                 </td>
             </tr>
-            <tr class="summary-table__row" role="row">
-                <td class="summary-table__cell">
-                    Next Payment
-                </td>
-                <td class="summary-table__cell">
+            <tr role="row">
+                <th role="rowheader">
+                    Next payment
+                </th>
+                <td>
                    @subscriptionDetails.endDate.pretty
                 </td>
             </tr>
-            <tr class="summary-table__row" role="row">
-                <td class="summary-table__cell">
+            <tr role="row">
+                <th role="rowheader">
                     Card
-                </td>
-                <td class="summary-table__cell">
-                    <span class="credit-card credit-card--inline-block icon-sprite @("icon-sprite-card-" + card.`type`.toLowerCase().replace(' ', '-'))"></span>
+                </th>
+                <td>
                     <span>&bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; &bullet;&bullet;&bullet;&bullet; @card.last4</span>
                 </td>
             </tr>
         </table>
     </section>
 
-    @fragments.joiner.completePurchase(ebIFrameDetail)
+    @fragments.joiner.completePurchase(ebIFrameDetail, event)
 
-    @fragments.analytics.googleJoinerConversion(tier)
+    @fragments.analytics.joinerConversion(tier)
 }

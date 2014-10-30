@@ -12,10 +12,6 @@
     margin-bottom: rem($gs-baseline * 2);
 }
 
-.form--inline {
-    display: inline-block;
-}
-
 .form__section-heading {
     @include fs-headline(5);
     margin-left: 0;
@@ -270,20 +266,6 @@
     }
 }
 
-.check-label,
-.radio-label {
-    display: block;
-    font-family: $f-sans-serif-text;
-    font-size: rem(13px);
-    margin-bottom: rem($gs-baseline / 3);
-    padding-left: rem($gs-gutter);
-}
-
-.check-label--helper {
-    display: inline-block;
-    vertical-align: middle;
-}
-
 [type=checkbox],
 [type=radio] {
     float: left;
@@ -315,13 +297,6 @@
     padding: 0;
     .address-fieldset__inner {
         padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline*2);
-    }
-    &.address-fieldset--showable {
-        max-height: 0;
-        @include transition(all .75s ease-in-out);
-        &.address-fieldset--show {
-            max-height: rem(536px);
-        }
     }
 }
 

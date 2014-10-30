@@ -6,13 +6,10 @@
 <li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}">
             <div class="event-item__media">
                 <a href="/event/@event.id">
-                    <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text"></div>
+                    <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
                 </a>
-            </div>@*
-
-                // Inline-block whitespace
-
-             *@<div class="event-item__meta">
+            </div>
+            <div class="event-item__meta">
                 <a href="/event/@event.id">
                     <h2 class="event-item__title">
                         @if(event.getStatus == SoldOut){
@@ -25,10 +22,12 @@
 
                     <div class="event-item__location">
                         @if(event.venue.name){
-                            <span class="event-item__location-name">@event.venue.name, </span>
+                            <span class="event-item__location-name">@event.venue.name</span>
                         }
-                        @for(address <- event.venue.address) {
-                            <span class="event-item__location-address">@address.city, @address.postal_code</span>
+                        @for(location <- event.venue.address) {
+                            @if(location.city) {
+                                <span class="event-item__location-address">, @location.city, @location.postal_code</span>
+                            }
                         }
                     </div>
 
@@ -42,14 +41,16 @@
 
                     <div class="event-item__cta">
 
-                        <div class="event-item__price">
-                        @for(ticket <- event.ticketClassesHead) {
-                            @for(pricing <- ticket.cost) {
-                                <span class="event-item__price-amount">@pricing.formattedPrice</span>
-                                <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                        @if(event.isNoTicketEvent == false) {
+                            <div class="event-item__price">
+                            @for(ticket <- event.generalReleaseTicket) {
+                                @for(pricing <- ticket.cost) {
+                                    <span class="event-item__price-amount">@pricing.formattedPrice</span>
+                                    <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                }
                             }
+                            </div>
                         }
-                        </div>
 
                         <button class="event-item__action"></button>
 

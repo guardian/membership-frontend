@@ -6,10 +6,17 @@
     }
 
     .tickets-select-form__label {
-        position: relative;
+        position: absolute;
         display: inline-block;
         float: left;
-        padding: rem(36px) rem($gs-gutter * 1.5);
+        padding: rem($gs-gutter) rem($gs-gutter + 8px);
+        top: 0;
+        left: 0;
+        z-index: 5;
+
+        @include mq(tablet) {
+            padding: rem($gs-gutter) rem($gs-gutter * 1.5);
+        }
     }
 
     .tickets-select-form__input {
@@ -18,12 +25,51 @@
 
     .tickets-select-form__header {
         border-bottom: rem(1px) solid $c-neutral4;
+        position: relative;
+        color: $white;
+
+        &:before {
+            @extend %icon-sprite;
+            @extend %icon-sprite-g-white-28;
+            content: '';
+            display: block;
+            position: absolute;
+            left: rem(70px);
+            top: rem($gs-gutter/ 2);
+        }
+
+        &:after {
+            display: block;
+        }
+
+        &--friend {
+            background-color: $c-neutral1;
+        }
+
+        &--partner {
+            background-color: $mem-brandLightblue;
+            .package__title,
+            .price-info,
+            .tickets-select-form__tier-name,
+            .price-info__sub-detail { 
+                color: $black; 
+            }
+        }
+
+        &--patron {
+            background-color: $mem-brandDarkBlue;
+        }
+
     }
 
     .tickets-select-form-header__secondary {
         position: relative;
         padding: rem($gs-baseline) rem($gs-baseline) rem($gs-baseline) 0;
-        margin-left: rem(73px);
+        margin-left: rem($gs-baseline);
+
+        @include mq(tablet) {
+            margin-left: rem(73px);
+        }
     }
 
     .tickets-select-form__detail {
@@ -41,29 +87,17 @@
 
     .tickets-select-form__tier-name {
         padding-bottom: rem($gs-baseline);
+        padding-left: rem(95px);
+        color: $white;
 
         @include mq(tablet) {
-            float: left;
-            line-height: rem(64px);
+            padding-left: 0;
+            margin-left: rem(35px);
         }
     }
 
     .tickets-select-form__toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    .tickets-select-form__toggle-icon {
-        position: absolute;
-        right: rem(20px);
-        top: rem(40px);
-    }
-
-    .tickets-select-form__toggle-icon--open {
-        @include rotate(180deg);
+        @extend %mobile-expand-collapse;
     }
 
     input:checked + .tickets-select-form__tier-name {
@@ -82,36 +116,19 @@
 
 }
 
-.tickets__payment {
-    .payment__flyer {
-        float: left;
-        width: 63%;
-        padding: rem($gs-baseline) 0;
-        border-bottom: rem(1px) solid $c-neutral1;
-        margin-bottom: rem($gs-baseline);
-
-        .payment__flyer-image {
-            padding-right: rem($gs-gutter);
-            float: left;
-        }
-    }
-
-    .form-secondary-container {
-        border: 0;
-    }
-}
-
 .price-info-container {
     vertical-align: middle;
-    display: inline-block;
-    width: 28%;
+    display: block;
 
     &.price-info-container--last {
         display: block;
-        width: 70%;
+        width: rem(190px);
+        margin-left: rem($gs-gutter * 3);
 
         @include mq(tablet) {
-            display: inline-block;
+            clear: both;
+            width: 50%;
+            float: right;
         }
     }
 }
@@ -138,7 +155,7 @@
         display: inline-block;
         background-color: $c-neutral6;
         position: relative;
-        top: rem(-32px);
+        top: rem(-28px);
         height: rem(4px);
     }
 

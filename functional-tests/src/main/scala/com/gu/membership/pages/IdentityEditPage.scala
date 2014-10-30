@@ -15,7 +15,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-join-date"))
 
-  private def paymentCostSpan = driver.findElement(By.xpath("(//span[contains(@class,'js-membership-payment-cost')])[2]"))
+  private def paymentCostSpan = driver.findElement(By.cssSelector(".membership-payment-cost"))
 
   private def nextPaymentSpan = driver.findElement(By.cssSelector(".js-membership-payment-next"))
 
@@ -25,7 +25,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def successFlashMessage = driver.findElement(By.cssSelector(".form__success"))
 
-  private def changeTierButton = driver.findElement(By.xpath("id('tabs-account-profile-3')/div/ul[1]/li[1]/div[2]/div/a"))
+  private def changeTierButton = driver.findElement(By.cssSelector("[data-link-name=\"Change tier\"]"))
 
   private def cancelledMembershipH2 = driver.findElement(By.cssSelector(".subscription-change__title"))
 

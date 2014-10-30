@@ -15,7 +15,7 @@ import configuration.{Config, CopyConfig}
 import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
 import model._
 import model.StripeSerializer._
-import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Eventbrite.{EBCode, EBEvent}
 import services._
 
 trait Joiner extends Controller {
@@ -27,7 +27,7 @@ trait Joiner extends Controller {
     def getEbEventFromSession(request: Request[_]): Option[EBEvent] =
       PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
 
-    def detailsFor(event: EBEvent, discountOpt: Option[EBDiscount]): (String, Int) = {
+    def detailsFor(event: EBEvent, discountOpt: Option[EBCode]): (String, Int) = {
       val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
       (url, event.ticket_classes.length)
     }
@@ -85,8 +85,12 @@ trait Joiner extends Controller {
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
-    for (eventbriteFrameDetail <- getEbIFrameDetail(request)) yield {
-      Ok(views.html.joiner.thankyou.friend(eventbriteFrameDetail))
+    for {
+      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      eventbriteFrameDetail <- getEbIFrameDetail(request)
+    } yield {
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 
@@ -96,7 +100,8 @@ trait Joiner extends Controller {
       subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier))
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
 }

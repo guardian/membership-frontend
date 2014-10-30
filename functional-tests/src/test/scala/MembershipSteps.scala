@@ -398,12 +398,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICantBecomeAPatronAgain = {
-    new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAPatron
+    new EventsListPage(driver).clickPricing.clickPatronButton
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
   def ICantBecomeAPartnerAgain = {
-    new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAPartner
+    new EventsListPage(driver).clickPricing.clickPartnerButton
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
@@ -455,6 +455,6 @@ object CookieHandler {
     val password = scala.util.Random.alphanumeric.take(10).mkString
     val email = user + "@testme.com"
     new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
-      .enterPassword(password).enterUserName(user).clickSubmit.clickCompleteRegistration
+      .enterPassword(password).enterUserName(user).clickSubmit
   }
 }

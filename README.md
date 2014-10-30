@@ -120,3 +120,29 @@ eu-west-1: ami-xxxxxxxx
 1. Run a full deploy in RiffRaff
 1. Decrease autoscale group size by 1
 1. Re-enable continous deployment
+
+
+# Test Users
+
+See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
+Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
+
+
+# Committing config credentials
+
+For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
+
+You can download and update credentials like this 
+
+    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
+    aws s3 cp /etc/gu/membership-keys.conf s3://membership-private/DEV/
+    
+For a reminder on why we do this, here's @tackley on the subject:
+
+>NEVER commit access keys, passwords or other sensitive credentials to any source code repository*. 
+
+>That's especially true for public repos, but also applies to any private repos. (Why? 1. it's easy to make it public and 2. every person who ever worked on your project almost certainly has a copy of your repo somewhere. It's too easy for a subsequently-disaffected individual to take advantage of this.)
+
+>For AWS access keys, always prefer to use instance profiles instead.
+
+>For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.

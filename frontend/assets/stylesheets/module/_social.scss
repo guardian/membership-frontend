@@ -1,0 +1,23 @@
+.social {
+    height: rem(36px);
+    margin-left: rem(-10px);
+}
+
+.social__item {
+    float: left;
+    padding-left: rem(10px);
+    width: rem(36px + 10px);
+}
+
+.social__action {
+    display: block;
+}
+
+.social-icon {
+    @extend %icon-holder-circle;
+    border-color: $c-neutral2;
+}
+
+.social-icon--colour {
+    border: 0;
+}

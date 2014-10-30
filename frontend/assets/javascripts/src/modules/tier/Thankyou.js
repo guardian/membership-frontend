@@ -2,9 +2,8 @@ define([
     '$',
     'config/appCredentials',
     'src/utils/cookie',
-    'src/utils/component',
-    'src/utils/user'
-], function ($, appCredentials, cookie, component, user) {
+    'src/utils/component'
+], function ($, appCredentials, cookie, component) {
     'use strict';
 
     var self;
@@ -18,13 +17,6 @@ define([
         USER_EMAIL: 'js-user-email'
     };
 
-    Thankyou.prototype.populateUserDetails = function () {
-
-        if (this.user) {
-            $(this.getElem('USER_EMAIL')).text(this.user.primaryemailaddress);
-        }
-    };
-
     Thankyou.prototype.init = function (header) {
         var emailElem = this.getElem('USER_EMAIL');
         if (emailElem) {
@@ -32,9 +24,6 @@ define([
             // user has upgraded or joined so remove cookie then populate the user details in the header
             cookie.removeCookie(appCredentials.membership.userCookieKey);
             header.populateUserDetails();
-
-            this.user = user.getUserFromCookie();
-            this.populateUserDetails();
         }
     };
 

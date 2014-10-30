@@ -19,7 +19,6 @@ h2.about-block-title {
 
     .benefits-title {
         @include fs-bodyHeading(1);
-        border-top: rem(1px) solid $c-neutral5;
         padding: rem($gs-gutter / 2) 0;
 
         &:last-child {
@@ -130,8 +129,3 @@ h2.about-block-title {
         display: block;
     }
 }
-
-.about-slice--join-today {
-    background-color: $white;
-}
-

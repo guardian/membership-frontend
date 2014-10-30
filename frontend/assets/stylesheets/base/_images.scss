@@ -1,16 +1,8 @@
-.full-width {
-    width: 100%;
-    height: 100%;
-    display: block;
-
-    @include mq(desktop) {
-        width: auto;
-        height: auto;
-    }
-}
-
 img {
     background-color: transparent;
+}
+
+.responsive-img {
     height: auto;
     width: 100%;
 }

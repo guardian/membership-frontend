@@ -15,9 +15,23 @@
     margin-bottom: rem($gs-baseline * 4);
 }
 
-.section-headline--border-bottom {
-    border-bottom: rem(1px) solid $black;
-    padding-bottom: rem($gs-baseline * 4);
+.section-headline--no-border {
+    padding-top: rem(10px);
+    border-top: 0;
+}
+
+.section-headline--no-margin {
+    padding-top: rem(4px);
+    border-top: 0;
+    margin-bottom: 0;
+}
+
+.section-intro {
+    @include fs-bodyCopy(2);
+
+    @include mq(desktop) {
+        @include fs-bodyCopy(3);
+    }
 }
 
 .section-sub-headline {
@@ -29,18 +43,6 @@
 .section-body-headline {
     @extend %section-header;
     @include fs-headline(4);
-}
-
-.section-sub-body-headline {
-    @extend %section-header;
-    @include fs-bodyHeading(4);
-}
-
-.truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    @include fs-headline(2);
 }
 
 .header-bar {
@@ -64,7 +66,7 @@
         .header-bar__guardian-live-logo {
             position: absolute;
             right: rem($gs-gutter / 2);
-            top: rem(150px);
+            bottom: rem($gs-gutter / 2);
         }
 
         i {

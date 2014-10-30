@@ -13,7 +13,7 @@
         </div>
     </section>
 
-    <section class="container--row-pattern event-blocks">
+    <section class="event-blocks">
 
         <div class="event-block">
             <div class="events-title-container">
@@ -25,7 +25,7 @@
                         @fragments.event.item(heroEvent, true)
                     }
                 </ul>
-                <ul class="events-list events-list--items-3 u-unstyled">
+                <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
                     @for(event <- eventPortfolio.priority) {
                         @fragments.event.item(event)
                     }
