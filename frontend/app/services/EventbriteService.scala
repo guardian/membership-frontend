@@ -17,13 +17,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-trait EventbriteService extends utils.Http[EBObject, EBError] {
+trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
 
-  val apiUrl = Config.eventbriteApiUrl
-  val statusMetrics = EventbriteMetrics
+  val wsUrl = Config.eventbriteApiUrl
+  val wsMetrics = EventbriteMetrics
 
-  def authenticateRequest(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
   val apiEventListUrl: String
 

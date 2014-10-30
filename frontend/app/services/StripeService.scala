@@ -10,11 +10,11 @@ import monitoring.StripeMetrics
 
 case class StripeApiConfig(url: String, secretKey: String, publicKey: String)
 
-class StripeService(apiConfig: StripeApiConfig) extends utils.Http[StripeObject, Error] {
-  val apiUrl = apiConfig.url
-  val statusMetrics = StripeMetrics
+class StripeService(apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
+  val wsUrl = apiConfig.url
+  val wsMetrics = StripeMetrics
 
-  def authenticateRequest(req: WSRequestHolder): WSRequestHolder =
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder =
     req.withHeaders("Authorization" -> s"Bearer ${apiConfig.secretKey}")
 
   object Customer {
