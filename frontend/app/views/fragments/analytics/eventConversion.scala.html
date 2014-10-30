@@ -1,8 +1,10 @@
 @(event: model.Eventbrite.EBEvent)
 <script type="text/javascript">
-    require(['js!omniture'], function () {
-        s.products = 'event;@event.id;';
-        s.events = 'order';
-    });
+    if (!guardian.analyticsOff) {
+        require(['js!omniture'], function () {
+            s.products = 'event;@event.id;';
+            s.events = 'order';
+        });
+    }
 </script>
 @fragments.analytics.googleEventPurchaseConversion()
