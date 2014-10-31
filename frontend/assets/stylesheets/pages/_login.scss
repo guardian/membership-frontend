@@ -17,12 +17,15 @@
     }
 
     .steps {
+        @include fs-header(1);
+        font-weight: normal;
         display: block;
 
         @include mq(desktop) {
-            border-top: rem(2px) solid $mem-brandLightblue;
+            border-top: rem(1px) solid $c-neutral3;
             width: rem(gs-span(1) + $gs-gutter * 3);
             float: left;
+            padding-top: rem($gs-baseline / 2);
         }
 
         @include mq(mem-full) {
@@ -32,7 +35,6 @@
 
     .signin__actions {
         display: inline-block;
-        // border: rem(1px) solid $black;
 
         @include mq(desktop) {
             width: rem(gs-span(6) + $gs-gutter * 2);

@@ -18,7 +18,7 @@
         @include mq(desktop) {
             float: right;
             display: block;
-            border-top: rem(2px) solid $mem-brandLightblue;
+            border-top: rem(1px) solid $c-neutral3;
             width: rem(gs-span(2) + $gs-gutter);
         }
 
@@ -44,12 +44,12 @@
 }
 
 .form__section-heading {
-    @include fs-headline(7);
+    @include fs-headline(5);
     margin-right: 0;
-    font-weight: bold;
     padding-bottom: rem($gs-gutter * 4);
 
     @include mq(desktop) {
+        @include fs-headline(7);
         margin-left: rem(gs-span(2));
     }
 
@@ -59,21 +59,22 @@
 }
 
 .form__heading {
-    @include fs-bodyHeading(3);
+    @include fs-headline(3);
     margin-left: 0;
     margin-right: 0;
 }
 
 .form__note,
 .form-field__note {
-    font-family: $f-sans-serif-text;
-    font-size: rem(14px);
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    padding-top: rem($gs-baseline / 2);
     margin-bottom: rem(8px);
 }
 
 .fieldset {
     border: 0;
-    border-top: rem(2px) solid $mem-brandLightblue;
+    border-top: rem(1px) solid $c-neutral3;
     display: table;
     padding: rem(($gs-baseline / 3) * 4 - 1) rem($gs-gutter / 2);
     margin: 0;

@@ -28,13 +28,13 @@ $card-icon-offset: 2px;
 
 .joiner-navigation__btn {
     @include fs-bodyCopy(3);
-    background-color: #eaeaea;
+    background-color: $c-neutral6;
     height: gs-height(2);
     width: 100%;
     vertical-align: middle;
     display: table-cell;
     &:hover {
-        background-color: darken(#eaeaea, 15%);
+        background-color: darken($c-neutral6, 15%);
     }
 }
 
@@ -43,7 +43,7 @@ $card-icon-offset: 2px;
    ========================================================================== */
 
 .tier-list {
-    padding: $gs-gutter;
+    padding: rem($gs-gutter);
 }
 
 /* ==========================================================================
@@ -52,7 +52,7 @@ $card-icon-offset: 2px;
 
 .benefits-list {
     text-align: center;
-    padding: $gs-gutter;
+    padding: rem($gs-gutter);
     border-bottom: rem(1px) solid #dfdfdf;
 
     @include mq(tablet) {
@@ -86,21 +86,17 @@ $card-icon-offset: 2px;
 }
 
 .form-secondary-container {
-    border-top: rem(1px) solid #f1f1f1;
+    border-top: rem(1px) solid $c-neutral7;
     width: 100%;
-    padding-top: $gutter;
+    padding-top: rem($gutter);
 }
 
 .form__error {
-    margin-bottom: $gutter/2;
+    margin-bottom: rem($gutter / 2);
 }
 
 .form-detail__item {
-    margin-top: $gutter/2;
-}
-
-.fieldset {
-    border-width: rem(2px);
+    margin-top: rem($gutter / 2);
 }
 
 .form-padlock {
@@ -156,8 +152,8 @@ $card-icon-offset: 2px;
 @include mq(tablet) {
     .form-secondary-container {
         border-top: 0;
-        border-left: rem(1px) solid #f1f1f1;
-        padding: $gutter 0 0 $gutter*3;
+        border-left: rem(1px) solid $c-neutral7;
+        padding: rem($gutter) 0 0 rem($gutter * 3);
         float: left;
         width: 35%;
     }
