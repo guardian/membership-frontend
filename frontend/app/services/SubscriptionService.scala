@@ -117,7 +117,7 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
     for {
       account <- getAccount(sfAccountId)
       paymentMethod <- zuora.request(CreatePaymentMethod(account, customer))
-      result <- zuora.request(SetDefaultPaymentMethod(account, paymentMethod))
+      result <- zuora.request(EnablePayment(account, paymentMethod))
     } yield result
   }
 

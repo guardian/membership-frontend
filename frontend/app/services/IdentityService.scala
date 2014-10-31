@@ -87,16 +87,7 @@ trait IdentityService {
 
 object IdentityService extends IdentityService
 
-trait Http {
-  def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean]
-
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]]
-
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String)
-
-}
-
-object IdentityApi extends Http {
+object IdentityApi {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"

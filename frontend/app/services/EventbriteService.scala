@@ -17,24 +17,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-trait EventbriteService {
+trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
+  val apiToken: String
+
+  val wsUrl = Config.eventbriteApiUrl
+  val wsMetrics = EventbriteMetrics
+
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
   val apiEventListUrl: String
-
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
 
   def events: Seq[EBEvent]
 
   lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
   lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
-
-  private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
-    response.json.asOpt[A].getOrElse {
-      Logger.error(s"Eventbrite request - Response body : ${response.body}")
-      throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
-    }
-  }
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -104,30 +100,13 @@ trait EventbriteService {
 }
 
 object EventbriteService extends EventbriteService {
-  val apiUrl = Config.eventbriteApiUrl
   val apiToken = Config.eventbriteApiToken
   val apiEventListUrl = Config.eventbriteApiEventListUrl
+
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   def events: Seq[EBEvent] = allEvents.get()
-
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "GET")
-      extract[A](response)
-    }.recover { case e =>
-      Logger.error(s"Eventbrite request $url", e)
-      throw e
-    }
-  }
-
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "POST")
-      extract[A](response)
-    }
 
   import play.api.Play.current
 
