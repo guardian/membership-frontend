@@ -13,9 +13,10 @@
     position: relative;
 
     > .form__note {
-        position: relative;
+        position: absolute;
 
         @include mq(desktop) {
+            position: static;
             float: right;
             display: block;
             border-top: rem(1px) solid $c-neutral3;
@@ -25,6 +26,10 @@
         @include mq(mem-full) {
             width: rem(gs-span(3));
         }
+    }
+
+    .terms-info {
+        @include fs-textSans(3);
     }
 }
 
@@ -119,14 +124,15 @@
 
 .fieldset__fields {
     vertical-align: top;
+    padding-top: rem($gs-gutter);
 
     @include mq(tablet) {
         display: table-cell;
         width: rem(gs-span(5));
+        padding-top: rem($gs-gutter + 1);
     }
 
     @include mq(mem-full) {
-        display: table-cell;
         width: rem(gs-span(5) + $gs-gutter);
     }
 }
@@ -137,7 +143,7 @@
 
 .form-field {
     list-style: none;
-    margin: 0 0 rem($gs-baseline * 2);
+    margin: 0 0 rem($gs-gutter);
     padding: 0;
 }
 
@@ -192,6 +198,19 @@
     color: $newsRed;
     margin-top: rem(6px);
     padding: rem(7px) rem(($gs-baseline / 3) * 2);
+
+    @include mq(desktop) {
+        display: block;
+        position: absolute;
+        top: rem($gs-gutter * 2);
+        left: rem(gs-span(2));
+        width: rem(gs-span(8));
+    }
+
+    @include mq(mem-full) {
+        left: rem(gs-span(2) + $gs-gutter);
+        width: rem(gs-span(9));
+    }
 }
 
 .form__success {
@@ -245,11 +264,10 @@
 }
 
 .label {
+    @include fs-bodyCopy(2);
     color: $c-neutral1;
     cursor: pointer;
     display: block;
-    font-size: rem(16px);
-    line-height: rem(24px);
     margin-bottom: rem(6px);
 }
 
@@ -354,12 +372,22 @@
 }
 
 .required-marker {
+    // &:after {
+    //     vertical-align: middle;
+    //     content: '*';
+    //     color: $error;
+    //     font-family: $f-sans-serif-text;
+    //     font-size: rem(18px);
+    //     margin-left: rem(4px);
+    // }
+}
+
+.optional-marker {
     &:after {
         vertical-align: middle;
-        content: '*';
-        color: $error;
-        font-family: $f-sans-serif-text;
-        font-size: rem(18px);
+        content: '(optional)';
+        color: $c-neutral2;
+        @include fs-textSans(1);
         margin-left: rem(4px);
     }
 }

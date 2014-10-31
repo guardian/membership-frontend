@@ -390,22 +390,24 @@ $current-indicator: rem(72px);
     display: block;
     position: relative;
 
-    span {
-        display: block;
-        @include fs-textSans(4);
-        margin: 0 0 $gs-baseline;
-        &.payment-label__title {
-            @include fs-headline(2);
-        }
-    }
-
     .payment-label__wrapper {
+        @include fs-textSans(3);
         width: 100%;
         display: block;
 
         &:hover {
             background: $white-trans;
         }
+    }
+
+    .payment-label__title {
+        @include fs-bodyHeading(2);
+        display: block;
+    }
+
+    .payment-label__amount,
+    .payment-label__note {
+        display: block;
     }
 
     input[type=radio] {
@@ -430,6 +432,7 @@ $current-indicator: rem(72px);
 .address-fieldset__inner {
 
     .payment-label__title {
+        @include fs-bodyCopy(2);
         width: 100%;
         display: block;
         &:hover {
@@ -450,6 +453,7 @@ $current-indicator: rem(72px);
     input[type=radio]:checked + .payment-label__title {
         border-color: $mem-brandLightblue;
         background-color: $white;
+        font-weight: bold;
     }
 
 }

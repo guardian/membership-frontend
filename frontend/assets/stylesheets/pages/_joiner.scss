@@ -104,6 +104,10 @@ $card-icon-offset: 2px;
     height: rem(18px);
 }
 
+.form-padlock-text {
+    @include fs-textSans(1);
+}
+
 /* ==========================================================================
    Stripe credit card types
    ========================================================================== */
@@ -133,9 +137,11 @@ $card-icon-offset: 2px;
 }
 
 .credit-card-note {
-    color: $mem-darkGrey;
+    color: $c-neutral2;
     .credit-card-note__header {
-        color: $black;
+        @include fs-textSans(3);
+        color: $c-neutral1;
+        display: block;
     }
 }
 

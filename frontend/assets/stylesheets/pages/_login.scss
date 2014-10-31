@@ -17,11 +17,21 @@
     }
 
     .steps {
-        @include fs-header(1);
-        font-weight: normal;
+        @include fs-textSans(3);
         display: block;
+        position: absolute;
+        top: rem($gs-baseline);
+        right: 0;
+
+        @include mq(tablet) {
+            @include fs-header(1);
+            font-weight: normal;
+            top: rem($gs-baseline);
+            right: 0;
+        }
 
         @include mq(desktop) {
+            position: static;
             border-top: rem(1px) solid $c-neutral3;
             width: rem(gs-span(1) + $gs-gutter * 3);
             float: left;
