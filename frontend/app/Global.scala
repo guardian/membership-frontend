@@ -14,8 +14,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
     GuardianLiveEventService.start()
     MasterclassEventService.start()
 
-    MemberRepository.start()
-    SubscriptionService.zuora.start()
+    touchpointBackend.start()
     MasterclassDataService.start()
   }
 

@@ -86,7 +86,7 @@ trait Joiner extends Controller {
 
   def thankyouFriend() = MemberAction.async { implicit request =>
     for {
-      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      subscriptionDetails <- touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
@@ -96,8 +96,8 @@ trait Joiner extends Controller {
 
   def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
-      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      customer <- touchpointBackend.stripeService.Customer.read(request.member.stripeCustomerId)
+      subscriptionDetails <- touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)

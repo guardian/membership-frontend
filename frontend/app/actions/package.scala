@@ -3,7 +3,7 @@ import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
-import services.MemberRepository
+import services._
 import utils.TestUsers
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -15,7 +15,7 @@ package object actions {
     def forMemberOpt[A, T](f: Option[Member] => T)(implicit executor: ExecutionContext): Future[T] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
-          memberOpt <- MemberRepository.get(req.user.id).map(_.filter(_.tier > Tier.None))
+          memberOpt <- touchpointBackend.memberRepository.get(req.user.id).map(_.filter(_.tier > Tier.None))
         } yield f(memberOpt)
       }
     }
