@@ -11,6 +11,8 @@ trait TierPlan {
 
 object FriendTierPlan extends TierPlan {
   val tier = Tier.Friend
+
+  override val hashCode = 0 // This is here to give TouchpointBackendConfig a consistent hash over multiple JVM runs
 }
 
 case class PaidTierPlan(tier: Tier, annual: Boolean) extends TierPlan {
