@@ -25,8 +25,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  val apiEventListUrl: String
-
   def events: Seq[EBEvent]
 
   lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
@@ -44,7 +42,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
+  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events?status=live")
 
   private def getPriorityEventIds(): Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
@@ -52,17 +50,15 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityOrderedEventIds.get()
-    val (priorityEvents, normal) = getPortfolioEvents.partition(e => priorityIds.contains(e.id))
+    val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
-  def getPortfolioEvents: Seq[EBEvent] = events.filter(_.getStatus.isInstanceOf[DisplayableEvent])
-
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getPortfolioEvents.filter(_.name.text.toLowerCase.contains(tag))
+  def getEventsTagged(tag: String) = events.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
 
@@ -101,7 +97,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
 object EventbriteService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
-  val apiEventListUrl = Config.eventbriteApiEventListUrl
 
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)

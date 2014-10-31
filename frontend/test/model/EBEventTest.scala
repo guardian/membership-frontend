@@ -19,29 +19,6 @@ class EBEventTest extends PlaySpecification {
   val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
   val ticketedEvent = ebLiveEvent;
 
- "getStatus on event " should {
-    "that has a status='completed' should return Completed" in {
-      ebCompletedEvent.getStatus mustEqual(Completed)
-    }
-
-    "that has a status='cancelled' should return Cancelled" in {
-      ebCancelledEvent.getStatus mustEqual(Cancelled)
-    }
-
-//    "that has a status='live' with ticket quantity sold equalling quantity total should return SoldOut" in {
-//      ebSoldOutEvent.getStatus mustEqual(SoldOut)
-//    }
-    "that has a status='live' should return Live" in {
-      ebLiveEvent.getStatus mustEqual(Live)
-    }
-//   "that has a status='live' but tickets are not yet on sale should return PreLive" in {
-//     ebLiveEventTicketsNotOnSale.getStatus mustEqual(PreLive)
-//    }
-    "that has a status='draft' should return Draft" in {
-      ebDraftEvent.getStatus mustEqual(Draft)
-    }
-  }
-
   "isNoTicketEvent on event " should {
     "should return true when comment <!-- noTicketEvent --> is present in description" in {
       nonTicketedEvent.isNoTicketEvent mustEqual(true)
