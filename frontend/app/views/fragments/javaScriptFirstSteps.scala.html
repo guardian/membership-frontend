@@ -58,7 +58,7 @@
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
         },
-        analyticsOff: false, // see analytics setup module
+        analyticsEnabled: true,
         isDev: @(Config.stage == "DEV")
     };
 

@@ -1,6 +1,6 @@
 @(event: model.Eventbrite.EBEvent)
 <script type="text/javascript">
-    if (!guardian.analyticsOff) {
+    if (guardian.analyticsEnabled) {
         require(['js!omniture'], function () {
             s.products = 'event;@event.id;';
             s.events = 'order';

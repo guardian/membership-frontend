@@ -9,10 +9,10 @@ define([
 
     function init() {
         if (cookie.getCookie(ANALYTICS_OFF_KEY)) {
-            guardian.analyticsOff = true;
+            guardian.analyticsEnabled = false;
         }
 
-        if (!guardian.analyticsOff) {
+        if (guardian.analyticsEnabled) {
             require('ophan/ng', function () {});
             omnitureAnalytics.init();
             googleAnalytics.init();
