@@ -27,10 +27,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
   def events: Seq[RichEvent]
-
   def mkRichEvent(event: EBEvent): RichEvent
 
-  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
   lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
@@ -106,6 +104,8 @@ object GuardianLiveEventService extends EventbriteService {
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
+  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
+
   def events: Seq[RichEvent] = allEvents.get()
   def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
 
@@ -125,7 +125,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val apiToken = Config.eventbriteMasterclassesApiToken
 
   val initialValue = Nil
-  val interval = 60.seconds
+  val interval = 5.minutes
   val initialDelay = 0.seconds
 
   def refresh(): Future[Seq[RichEvent]] = getAllEvents
