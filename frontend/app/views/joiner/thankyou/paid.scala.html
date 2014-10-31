@@ -1,9 +1,17 @@
-@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier, firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent])
+@(card: model.Stripe.Card, subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], tier: com.gu.membership.salesforce.Tier.Tier, firstName: String, userEmail: String, event: Option[model.Eventbrite.EBEvent], upgrade: Boolean)
 
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Change Tier Summary | " + subscriptionDetails.planName + " from Friend", containerPadding = false) {
+@title = @{
+    if (upgrade) {
+        "Change Tier Summary | " + subscriptionDetails.planName + " from Friend"
+    } else {
+        "Thankyou | " + subscriptionDetails.planName
+    }
+}
+
+@main(title, containerPadding = false) {
 
     <section class="content__container content__container--slim">
         @fragments.layout.welcomeUser(firstName, userEmail)
