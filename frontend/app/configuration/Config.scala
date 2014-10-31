@@ -80,10 +80,20 @@ object Config {
       apiToken = config.getString("salesforce.api.token")
     )
 
+    def plansFor(paidTier: Tier) = {
+      def paidTierPlan(annual: Boolean) = {
+        val period = if (annual) "annual" else "monthly"
+        PaidTierPlan(paidTier, annual) -> config.getString(s"zuora.api.${paidTier.toString.toLowerCase}.$period")
+      }
+
+      Map(paidTierPlan(false), paidTierPlan(true))
+    }
+
     val zuoraApiConfig = ZuoraApiConfig(
       url = config.getString("zuora.api.url"),
       username = config.getString("zuora.api.username"),
-      password = config.getString("zuora.api.password")
+      password = config.getString("zuora.api.password"),
+      Map(FriendTierPlan -> config.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
     )
 
     val touchpointBackendConfig = TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
@@ -93,25 +103,11 @@ object Config {
     touchpointBackendConfig
   }
 
-
-
   val twitterUsername = config.getString("twitter.username")
   val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
   val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
   val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
   val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
-
-  def plansFor(paidTier: Tier) = {
-    def paidTierPlan(annual: Boolean) = {
-      val period = if (annual) "annual" else "monthly"
-      PaidTierPlan(paidTier, annual) -> config.getString(s"zuora.api.${paidTier.toString.toLowerCase}.$period")
-    }
-
-    Map (paidTierPlan(false), paidTierPlan(true))
-  }
-
-  val tierRatePlanIds: Map[TierPlan, String] =
-    Map(FriendTierPlan -> config.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
