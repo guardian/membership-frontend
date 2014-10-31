@@ -6,5 +6,5 @@ package object services {
 
   val ZuoraService = new ZuoraService(Config.touchpointBackendConfig.zuora)
 
-  val SubscriptionService = new SubscriptionService(Config.tierRatePlanIds, ZuoraService)
+  val SubscriptionService = new SubscriptionService(Config.touchpointBackendConfig.zuora.tierRatePlanIds, ZuoraService)
 }

@@ -15,18 +15,6 @@ object Eventbrite {
 
   trait EBObject
 
-  sealed trait EBEventStatus
-
-  sealed trait DisplayableEvent extends EBEventStatus
-
-  case object Completed extends EBEventStatus
-  case object Cancelled extends EBEventStatus
-  case object SoldOut extends DisplayableEvent
-  case object Live extends DisplayableEvent
-  case object PreLive extends DisplayableEvent
-  case object Draft extends EBEventStatus
-
-
   case class EBError(error: String, error_description: String, status_code: Int) extends Throwable with EBObject {
     override def getMessage: String = s"$status_code $error - $error_description"
   }
@@ -99,28 +87,13 @@ object Eventbrite {
       Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
     }.getOrElse(Nil).mkString(", ")
 
-    def getStatus: EBEventStatus = {
-      val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
-      val isTicketSalesStarted = ticket_classes.exists(_.sales_start.forall(_ <= Instant.now))
-
-
-      status match {
-        case "completed" | "started" | "ended" => Completed
-        case "canceled" => Cancelled // American spelling
-        case "live" if isSoldOut => SoldOut
-        case "live" if isTicketSalesStarted => Live
-        case "draft" => Draft
-        case _ => PreLive
-      }
-    }
-
-    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
-
-    lazy val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
+    val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
+    val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
-
     val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
+
+    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
   }
 
   trait EBCode extends EBObject {
