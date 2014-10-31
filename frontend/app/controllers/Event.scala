@@ -15,21 +15,22 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import actions.Functions._
 import actions.Fallbacks.notYetAMemberOn
-import services.{GuardianLiveEventService, MemberService, EventbriteService}
+import services.{MasterclassEventService, GuardianLiveEventService, MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
 
 import com.netaporter.uri.dsl._
 import views.support.Dates._
 
 trait Event extends Controller {
+  val guLiveEvents: EventbriteService
+  val masterclassEvents: EventbriteService
 
-  val eventService: EventbriteService
   val memberService: MemberService
 
   val BuyAction = NoCacheAction andThen metricRecord(EventbriteMetrics, "buy-action-invoked") andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction { implicit request =>
-    eventService.getEvent(id).map { event =>
+    guLiveEvents.getEvent(id).map { event =>
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
@@ -40,13 +41,22 @@ trait Event extends Controller {
     }.getOrElse(NotFound)
   }
 
+  def masterclasses = CachedAction { implicit request =>
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleEvents,
+      request.path,
+      Some(CopyConfig.copyDescriptionEvents)
+    )
+    Ok(views.html.event.list(masterclassEvents.getEventPortfolio, pageInfo))
+  }
+
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.list(eventService.getEventPortfolio, pageInfo))
+    Ok(views.html.event.list(guLiveEvents.getEventPortfolio, pageInfo))
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -56,11 +66,11 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.list(EventPortfolio(Seq.empty, eventService.getEventsTagged(tag)), pageInfo))
+    Ok(views.html.event.list(EventPortfolio(Seq.empty, guLiveEvents.getEventsTagged(tag)), pageInfo))
   }
 
   def buy(id: String) = BuyAction.async { implicit request =>
-    eventService.getEvent(id).map { event =>
+    guLiveEvents.getEvent(id).map { event =>
       if(memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
       else Future.successful(Redirect(routes.TierController.change()))
     }.getOrElse(Future.successful(NotFound))
@@ -82,9 +92,9 @@ trait Event extends Controller {
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- eventService.getEvent(id)
+        event <- guLiveEvents.getEvent(id)
       } yield {
-        eventService.getOrder(oid).map { order =>
+        guLiveEvents.getOrder(oid).map { order =>
           Ok(views.html.event.thankyou(event, order))
         }
       }
@@ -97,6 +107,7 @@ trait Event extends Controller {
 }
 
 object Event extends Event {
-  val eventService = GuardianLiveEventService
+  val guLiveEvents = GuardianLiveEventService
+  val masterclassEvents = MasterclassEventService
   val memberService = MemberService
 }
