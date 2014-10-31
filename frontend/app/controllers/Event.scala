@@ -29,8 +29,11 @@ trait Event extends Controller {
 
   val BuyAction = NoCacheAction andThen metricRecord(EventbriteMetrics, "buy-action-invoked") andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
+  private def getEvent(id: String) =
+    guLiveEvents.getEvent(id) orElse masterclassEvents.getEvent(id)
+
   def details(id: String) = CachedAction { implicit request =>
-    guLiveEvents.getEvent(id).map { event =>
+    getEvent(id).map { event =>
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
