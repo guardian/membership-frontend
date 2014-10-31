@@ -15,18 +15,6 @@ object Eventbrite {
 
   trait EBObject
 
-  sealed trait EBEventStatus
-
-  sealed trait DisplayableEvent extends EBEventStatus
-
-  case object Completed extends EBEventStatus
-  case object Cancelled extends EBEventStatus
-  case object SoldOut extends DisplayableEvent
-  case object Live extends DisplayableEvent
-  case object PreLive extends DisplayableEvent
-  case object Draft extends EBEventStatus
-
-
   case class EBError(error: String, error_description: String, status_code: Int) extends Throwable with EBObject {
     override def getMessage: String = s"$status_code $error - $error_description"
   }
