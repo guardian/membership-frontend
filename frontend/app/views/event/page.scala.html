@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
+@(event: model.Eventbrite.RichEvent, pageInfo: model.PageInfo)
 
 @import play.twirl.api.Html
 
@@ -90,8 +90,8 @@
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        <div class="event-content__image" itemprop="image" content="@Config.eventImageUrlPath(event.id)/940.jpg">
-            <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
+        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+            <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
 
         <div class="event-content__container u-cf">
