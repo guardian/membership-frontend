@@ -14,7 +14,7 @@
     @if(event.isSoldOut) {
         <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
     } else {
-        <a class="action js-ticket-cta" href="/event/@event.id/buy">Buy tickets</a>
+        <a class="action js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
     }
     <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
@@ -38,6 +38,7 @@
 }
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
+
     <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
@@ -94,16 +95,16 @@
     </div>
 
 
-    <div class="event-content">
+    <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        <div class="event-content__image">
+        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
             <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
 
         <div class="event-content__container u-cf">
 
             <div class="event-content__body">
-                <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__description" itemprop="description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
                 <div class="event__social">
                     <div class="event__social-header hidden-mobile">Share this</div>
                     @fragments.social(eventDetail(event))
@@ -111,21 +112,21 @@
             </div>
 
             <div class="event-content__info">
-                <div class="event-content__name">@event.name.text</div>
+                <div class="event-content__name" itemprop="name">@event.name.text</div>
                 <div class="event-content__time event-content--line-divider u-cf">
                     <div class="event-content__first">
                         <i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>
                     </div>
-                    <div class="event-content__second">@prettyDateWithTimeAndDayName(event.start)</div>
+                    <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                 </div>
-                <div class="event-content__location event-content--line-divider u-cf">
+                <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
                     <div class="event-content__first">
                         <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
                     </div>
                     <div class="event-content__second">
-                        <span class="event-content__venue-name">@event.venue.name</span>
+                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
                         @if(event.eventAddressLine.nonEmpty) {
-                            <span class="event-content__address">@event.eventAddressLine</span>
+                            <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
                         }
                     </div>
                 </div>
@@ -133,6 +134,11 @@
                 @if(event.isNoTicketEvent == false) {
 
                     @for(ticket <- event.generalReleaseTicket) {
+                        @if(event.isSoldOut) {
+                            <meta itemprop="availability" content="http://schema.org/SoldOut">
+                        } else {
+                            <meta itemprop="availability" content="http://schema.org/InStock">
+                        }
 
                         @fragments.event.ticketSales(event, ticket)
 
@@ -143,11 +149,11 @@
                         } else {
                             @for(pricing <- ticket.cost) {
                                 <div class="event-content__price event-content--line-divider">
-                                    <span class="event-content__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <span class="event-content__price-amount js-event-price" itemprop="highPrice">@pricing.formattedPrice</span>
                                 </div>
                                 <div class="event-content__trail">
                                     <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                    <span class="event-content__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                    <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
                                     <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
                                 </div>
                             }

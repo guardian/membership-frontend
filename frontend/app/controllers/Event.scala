@@ -37,7 +37,7 @@ trait Event extends Controller {
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
-        Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine + " - " + prettyDateWithTime(event.start)),
+        event.description.map(_.blurb),
         Some(event.socialImgUrl)
       )
       Ok(views.html.event.page(event, pageInfo))
