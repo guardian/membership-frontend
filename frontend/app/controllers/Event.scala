@@ -69,7 +69,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.list(EventPortfolio(Seq.empty, guLiveEvents.getEventsTagged(tag)), pageInfo))
+    Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getEventsTagged(tag)), pageInfo))
   }
 
   def buy(id: String) = BuyAction.async { implicit request =>

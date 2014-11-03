@@ -1,5 +1,8 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Events", containerPadding=false, htmlClass="events-bg theme--guardian-live", pageInfo=pageInfo) {
-    @views.html.event.list(eventPortfolio, pageInfo)
+    @views.html.event.list(eventPortfolio, pageInfo) {
+        Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian
+        Members
+    }
 }

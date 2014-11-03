@@ -1,18 +1,10 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(header: play.twirl.api.Html)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
 <section class="header-bar">
-    <h1 class="header-bar__title">
-        @if(eventPortfolio.heroOpt.exists(_.isInstanceOf[model.Eventbrite.MasterclassEvent])) {
-            A unique programme of learning embedded within one of the world's most forward-thinking media
-            organisations.
-        } else {
-            Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian
-            Members
-        }
-    </h1>
+    <h1 class="header-bar__title">@header</h1>
     <i class="header-bar__logo icon-sprite icon-sprite-guardian-live"></i>
 </section>
 
