@@ -13,7 +13,7 @@ import com.gu.membership.util.Timing
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.Eventbrite.{EBCode, EBEvent}
+import model.Eventbrite.{RichEvent, EBCode}
 import model.Stripe.{Customer, Card}
 import model.{PaidTierPlan, FriendTierPlan, TierPlan}
 import monitoring.MemberMetrics
@@ -71,7 +71,7 @@ trait MemberService {
       }
     }
 
-  def createDiscountForMember(member: Member, event: EBEvent): Future[Option[EBCode]] = {
+  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
     member.tier match {
       case Tier.Friend => Future.successful(None)
 
