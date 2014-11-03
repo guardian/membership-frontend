@@ -13,13 +13,26 @@ object Benefits {
     desc: String
   )
 
+  case class BenefitDescription(title: String, description: String, iconClass: String)  {
+    def list = (title, description, iconClass)
+  }
+
+
+
+  val benefits : Seq[BenefitDescription] = Seq(
+    BenefitDescription("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
+    BenefitDescription("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"))
+
+  val blah = Seq(benefits(0), benefits(1))
+
+
   case class Pricing(yearly: Int, monthly: Int) {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
   }
 
   val friendBenefits = Benefits("As a friend:", Seq(
-    ("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
+   benefits(0).list,
     ("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"),
     ("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights")
   ), None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events")
