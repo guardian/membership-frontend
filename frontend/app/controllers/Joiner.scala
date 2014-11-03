@@ -15,7 +15,7 @@ import configuration.{Config, CopyConfig}
 import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
 import model._
 import model.StripeSerializer._
-import model.Eventbrite.{EBCode, EBEvent}
+import model.Eventbrite.{RichEvent, EBCode, EBEvent}
 import services._
 
 trait Joiner extends Controller {
@@ -24,10 +24,10 @@ trait Joiner extends Controller {
   val eventService: EventbriteService
 
   def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
-    def getEbEventFromSession(request: Request[_]): Option[EBEvent] =
+    def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
       PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
 
-    def detailsFor(event: EBEvent, discountOpt: Option[EBCode]): (String, Int) = {
+    def detailsFor(event: RichEvent, discountOpt: Option[EBCode]): (String, Int) = {
       val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
       (url, event.ticket_classes.length)
     }
@@ -108,5 +108,5 @@ trait Joiner extends Controller {
 
 object Joiner extends Joiner {
   val memberService = MemberService
-  val eventService = EventbriteService
+  val eventService = GuardianLiveEventService
 }

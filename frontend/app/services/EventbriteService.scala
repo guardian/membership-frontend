@@ -16,6 +16,7 @@ import play.api.libs.ws._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import utils.ScheduledTask
 
 trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -25,9 +26,11 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  def events: Seq[EBEvent]
+  def events: Seq[RichEvent]
 
-  lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
+  def mkRichEvent(event: EBEvent): RichEvent
+
+  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
   lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
@@ -42,9 +45,11 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events?status=live")
+  protected def getAllEvents: Future[Seq[RichEvent]] = for {
+    events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
+  } yield events.map(mkRichEvent)
 
-  private def getPriorityEventIds(): Future[Seq[String]] =  for {
+  protected def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
   } yield (ordering.json \ "order").as[Seq[String]]
 
@@ -60,7 +65,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
    */
   def getEventsTagged(tag: String) = events.filter(_.name.text.toLowerCase.contains(tag))
 
-  def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
+  def getEvent(id: String): Option[RichEvent] = events.find(_.id == id)
 
   def createOrGetAccessCode(event: EBEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
     val uri = s"events/${event.id}/access_codes"
@@ -95,15 +100,14 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
-object EventbriteService extends EventbriteService {
+object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
-  def events: Seq[EBEvent] = allEvents.get()
-
-  import play.api.Play.current
+  def events: Seq[RichEvent] = allEvents.get()
+  def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
 
   def start() {
     def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
@@ -115,4 +119,17 @@ object EventbriteService extends EventbriteService {
     scheduleAgentRefresh(allEvents, getAllEvents, refreshTimeAllEvents)
     scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, refreshTimePriorityEvents)
   }
+}
+
+object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
+  val apiToken = Config.eventbriteMasterclassesApiToken
+
+  val initialValue = Nil
+  val interval = 60.seconds
+  val initialDelay = 0.seconds
+
+  def refresh(): Future[Seq[RichEvent]] = getAllEvents
+
+  def events: Seq[RichEvent] = agent.get()
+  def mkRichEvent(event: EBEvent): RichEvent = MasterclassEvent(event)
 }
