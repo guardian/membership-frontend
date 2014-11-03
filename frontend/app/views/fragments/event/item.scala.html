@@ -3,56 +3,64 @@
 @import configuration.Config
 @import model.Eventbrite._
 
-<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}">
+<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}" itemscope itemtype="http://schema.org/Event">
             <div class="event-item__media">
-                <a href="/event/@event.id">
+                <a href="/event/@event.id" itemprop="image" content="@Config.eventImageUrlPath(event.id)/940.jpg">
                     <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="@event.name.text" data-class="responsive-img"></div>
                 </a>
             </div>
             <div class="event-item__meta">
-                <a href="/event/@event.id">
+                <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
                     <h2 class="event-item__title">
                         @if(event.isSoldOut){
                             <span class="event-status--sold-out">Sold Out</span>
                         }
-                        @event.name.text
+                        <span itemprop="name">@event.name.text</span>
                     </h2>
 
-                    <div class="event-item__time">@event.start.pretty</div>
+                    <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
 
-                    <div class="event-item__location">
+                    <div class="event-item__location" itemprop="location" itemscope itemtype="http://schema.org/Place">
                         @if(event.venue.name){
-                            <span class="event-item__location-name">@event.venue.name</span>
+                            <span class="event-item__location-name" itemprop="name">@event.venue.name</span>
                         }
                         @for(location <- event.venue.address) {
                             @if(location.city) {
-                                <span class="event-item__location-address">, @location.city, @location.postal_code</span>
+                                <span class="event-item__location-address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">,
+                                    <span itemprop="addressLocality">@location.city</span>,
+                                    <span itemprop="postalCode">@location.postal_code</span>
+                                </span>
                             }
                         }
                     </div>
 
                     @if(isHero){
                         @for(desc <- event.description) {
-                            <div class="event-item__description">
+                            <div class="event-item__description" itemprop="description">
                                 @desc.blurb
                             </div>
                         }
                     }
 
-                    <div class="event-item__cta">
+                    <div class="event-item__cta" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+                        @if(event.isSoldOut) {
+                            <meta itemprop="availability" content="http://schema.org/SoldOut">
+                        } else {
+                            <meta itemprop="availability" content="http://schema.org/InStock">
+                        }
 
                         @if(event.isNoTicketEvent == false) {
                             <div class="event-item__price">
                             @for(ticket <- event.generalReleaseTicket) {
                                 @for(pricing <- ticket.cost) {
-                                    <span class="event-item__price-amount">@pricing.formattedPrice</span>
-                                    <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                    <span class="event-item__price-amount" itemprop="highPrice">@pricing.formattedPrice</span>
+                                    <span class="event-item__price-amout-discount" itemprop="lowPrice" content="@pricing.discountPrice">Partners/Patrons: @pricing.discountPrice</span>
                                 }
                             }
                             </div>
                         }
 
-                        <button class="event-item__action"></button>
+                        <button class="event-item__action" itemprop="url"></button>
 
                     </div>
                 </a>
