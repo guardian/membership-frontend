@@ -34,7 +34,7 @@ trait Event extends Controller {
         event.name.text,
         request.path,
         Some(event.venue.name.getOrElse("") + ", " + event.eventAddressLine + " - " + prettyDateWithTime(event.start)),
-        Some(event.imgUrl)
+        Some(event.socialImgUrl)
       )
       Ok(views.html.event.page(event, pageInfo))
     }.getOrElse(NotFound)
