@@ -46,34 +46,29 @@
 }
 
 .header-bar {
+    position: relative;
     padding-left: rem($gs-gutter / 2);
+    padding-right: rem($gs-gutter / 2);
 
     .header-bar__title {
+        color: $white;
         @include fs-headline(4);
         padding: rem($gs-gutter / 2) 0 rem(55px);
-        max-width: rem(gs-span(8));
+        max-width: rem(gs-span(9));
     }
 
-    &.header-bar--guardian-live {
-        position: relative;
-        background-color: transparentize($mem-live-accent, .1);
-        padding-right: rem($gs-gutter / 2);
+    .header-bar__logo {
+        position: absolute;
+        right: rem($gs-gutter / 2);
+        bottom: rem($gs-gutter / 2);
+    }
 
-        .header-bar__title {
-            color: $white;
-        }
+    .theme--masterclass & {
+        background-color: $mem-mc-accent;
+    }
 
-        .header-bar__guardian-live-logo {
-            position: absolute;
-            right: rem($gs-gutter / 2);
-            bottom: rem($gs-gutter / 2);
-        }
-
-        i {
-            background-size: 100%;
-            width: rem(31px);
-            height: rem(45px);
-        }
+    .theme--guardian-live & {
+        background-color: $mem-live-accent;
     }
 
     @include mq(tablet) {
@@ -114,4 +109,3 @@
         }
     }
 }
-

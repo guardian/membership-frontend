@@ -14,7 +14,7 @@
     @if(event.isSoldOut) {
         <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
     } else {
-        <a class="action action--event-buy js-ticket-cta" href="/event/@event.id/buy">Buy tickets</a>
+        <a class="action js-ticket-cta" href="/event/@event.id/buy">Buy tickets</a>
     }
     <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
@@ -30,7 +30,14 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event") {
+@theme = @{
+    event match {
+        case _: MasterclassEvent => "theme--masterclass"
+        case _: GuLiveEvent => "theme--guardian-live"
+    }
+}
+
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
     <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">

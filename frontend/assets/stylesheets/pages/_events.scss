@@ -3,12 +3,25 @@
    ========================================================================== */
 
 .event-header {
-    background-color: $mem-live-red-trans;
     color: $white;
+
+    .theme--masterclass & {
+        background-color: $mem-mc-top;
+    }
+
+    .theme--guardian-live & {
+        background-color: $mem-live-top;
+    }
 }
 
 .event-header--shade {
-    background-color: $mem-live-accent-trans;
+    .theme--masterclass & {
+        background-color: $mem-mc-accent;
+    }
+
+    .theme--guardian-live & {
+        background-color: $mem-live-accent;
+    }
 }
 
 .event-header__container {
@@ -134,7 +147,7 @@
         }
     }
 
-    .action--event-buy,
+    .action,
     .action--disabled {
         @include mq(tablet) {
             float: left;
@@ -142,7 +155,7 @@
         }
     }
 
-    .action--event-buy {
+    .action {
         background-color: $black;
 
         &:hover {
@@ -202,6 +215,10 @@
 
         img {
             width: 100%;
+        }
+
+        .theme--masterclass & {
+            display: none;
         }
     }
 
@@ -386,14 +403,15 @@
         margin-right: rem($gs-gutter);
         margin-right: 0;
         min-width: 100%;
-    }
 
-    .action--event-buy {
-        background-color: $mem-live-accent;
+        .theme--guardian-live & {
+            background-color: $mem-live-accent;
 
-        &:hover {
-            background-color: darken($mem-live-accent, 5%);
+            &:hover {
+                background-color: darken($mem-live-accent, 5%);
+            }
         }
+
     }
 
     .terms-info {

@@ -50,7 +50,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.list(masterclassEvents.getEventPortfolio, pageInfo))
+    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
   }
 
   def list = CachedAction { implicit request =>
@@ -59,7 +59,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.list(guLiveEvents.getEventPortfolio, pageInfo))
+    Ok(views.html.event.guardianLive(guLiveEvents.getEventPortfolio, pageInfo))
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
