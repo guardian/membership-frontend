@@ -7,7 +7,7 @@ import play.api.Application
 
 import controllers.Cached
 import filters.{CheckCacheHeadersFilter, Gzipper}
-import services.{SubscriptionService, MemberRepository, EventbriteService}
+import services.{MasterclassesDataService, SubscriptionService, MemberRepository, EventbriteService}
 import play.filters.csrf._
 import configuration.Config
 
@@ -16,6 +16,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
     EventbriteService.start()
     MemberRepository.start()
     SubscriptionService.zuora.start()
+    MasterclassesDataService.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

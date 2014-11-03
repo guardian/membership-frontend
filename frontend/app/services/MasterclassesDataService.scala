@@ -2,18 +2,16 @@ package services
 
 import akka.agent.Agent
 import com.gu.contentapi.client.GuardianContentClient
-import com.gu.contentapi.client.model.{ItemResponse, Asset, Content}
-import org.joda.time.DateTime
-import play.api.Logger
-import play.api.libs.concurrent.Akka
-import play.api.libs.iteratee.{Enumerator, Iteratee}
-
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.matching.Regex
+import com.gu.contentapi.client.model.{Asset, Content, ItemResponse}
 import configuration.Config
-import play.api.Play.current
+import org.joda.time.DateTime
+import play.api.libs.iteratee.{Enumerator, Iteratee}
+import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.matching.Regex
 
 case class MasterclassesData(eventId: String, webUrl: String, images: List[Asset])
 
@@ -79,16 +77,13 @@ object MasterclassDataExtractor {
   }
 }
 
-object MasterclassesDataService extends MasterclassesDataService {
+object MasterclassesDataService extends MasterclassesDataService with ScheduledTask[Seq[MasterclassesData]]{
 
-  def start() {
-    def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
-      Akka.system.scheduler.schedule(1.second, intervalPeriod) {
-        agent.sendOff(_ => Await.result(refresher, 15.seconds))
-      }
-    }
-    Logger.info("Starting EventbriteService background tasks")
-    scheduleAgentRefresh(content, getAllContent, 1.minute)
+  val initialValue = Nil
+  val interval = 2.minutes
+  val initialDelay = 10.seconds
 
-  }
+  def refresh(): Future[Seq[MasterclassesData]] = getAllContent
+
+  def masterclassesData: Seq[MasterclassesData] = agent.get()
 }
