@@ -17,24 +17,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-trait EventbriteService {
+trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
+  val apiToken: String
 
-  val apiEventListUrl: String
+  val wsUrl = Config.eventbriteApiUrl
+  val wsMetrics = EventbriteMetrics
 
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
   def events: Seq[EBEvent]
 
   lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
   lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
-
-  private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
-    response.json.asOpt[A].getOrElse {
-      Logger.error(s"Eventbrite request - Response body : ${response.body}")
-      throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
-    }
-  }
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -48,7 +42,7 @@ trait EventbriteService {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
+  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent]("users/me/owned_events?status=live")
 
   private def getPriorityEventIds(): Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
@@ -56,17 +50,15 @@ trait EventbriteService {
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityOrderedEventIds.get()
-    val (priorityEvents, normal) = getPortfolioEvents.partition(e => priorityIds.contains(e.id))
+    val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
-  def getPortfolioEvents: Seq[EBEvent] = events.filter(_.getStatus.isInstanceOf[DisplayableEvent])
-
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getPortfolioEvents.filter(_.name.text.toLowerCase.contains(tag))
+  def getEventsTagged(tag: String) = events.filter(_.name.text.toLowerCase.contains(tag))
 
   def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
 
@@ -104,30 +96,12 @@ trait EventbriteService {
 }
 
 object EventbriteService extends EventbriteService {
-  val apiUrl = Config.eventbriteApiUrl
   val apiToken = Config.eventbriteApiToken
-  val apiEventListUrl = Config.eventbriteApiEventListUrl
+
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   def events: Seq[EBEvent] = allEvents.get()
-
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "GET")
-      extract[A](response)
-    }.recover { case e =>
-      Logger.error(s"Eventbrite request $url", e)
-      throw e
-    }
-  }
-
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "POST")
-      extract[A](response)
-    }
 
   import play.api.Play.current
 

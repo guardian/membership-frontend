@@ -56,12 +56,13 @@ case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) exte
     </ns1:create>
 }
 
-case class SetDefaultPaymentMethod(account: Account, paymentMethod: CreateResult) extends ZuoraAction[UpdateResult] {
+case class EnablePayment(account: Account, paymentMethod: CreateResult) extends ZuoraAction[UpdateResult] {
   val body =
     <ns1:update>
       <ns1:zObjects xsi:type="ns2:Account">
         <ns2:Id>{account.id}</ns2:Id>
         <ns2:DefaultPaymentMethodId>{paymentMethod.id}</ns2:DefaultPaymentMethodId>
+        <ns2:AutoPay>true</ns2:AutoPay>
       </ns1:zObjects>
     </ns1:update>
 }

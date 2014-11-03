@@ -54,6 +54,11 @@
                 ratios: [@Config.eventImageRatios.mkString(",")]
             }
         },
+        googleAnalytics: {
+            trackingId: '@Config.googleAnalyticsTrackingId',
+            cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
+        },
+        analyticsEnabled: true,
         isDev: @(Config.stage == "DEV")
     };
 
