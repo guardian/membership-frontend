@@ -1,7 +1,7 @@
 package services
 
 import play.api.test.PlaySpecification
-import model.Eventbrite.{EBEvent, EBError, EBObject}
+import model.Eventbrite.{RichEvent, EBEvent, EBError, EBObject}
 import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
@@ -30,6 +30,12 @@ class EventbriteServiceTest extends PlaySpecification {
     }
   }
 
+  case class TestRichEvent(event: EBEvent) extends RichEvent {
+    val imgUrl = ""
+    val socialImgUrl = ""
+  }
+
+
   class TestEventbriteService extends EventbriteService {
     val apiToken = ""
     val apiURL = "http://localhost:9999/v1"
@@ -53,7 +59,9 @@ class EventbriteServiceTest extends PlaySpecification {
       Future.failed[A](EBError("internal", "Not implemented", 500)) // don't care
     }
 
-    def events: Seq[EBEvent] = Nil
+    def events: Seq[RichEvent] = Nil
+
+    def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
   }
 
   object TestEventbriteService {
