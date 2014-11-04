@@ -15,7 +15,8 @@
 	    	margin-left: 0;
 	    }
 
-// Removes left margin for every third benefit items. eg 3rd, 6th, 9th, 12th, etc. This only applies for mobiles 
+        // Removes left margin for every third benefit items. eg 3rd, 6th, 9th, 12th, etc.
+        // This only applies for mobiles
 	    &:nth-child(3n+3) {
 	    	margin-left: rem($gs-gutter / 2);
 	    	margin-right: 0;
@@ -36,6 +37,11 @@
 			margin: 0;
 		}
 	}
+}
+
+.benefits-item--highlighted {
+    background-color: $c-neutral6;
+    padding: 0px rem(7px);
 }
 
 .benefits-title {
