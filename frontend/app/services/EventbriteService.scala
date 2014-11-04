@@ -123,7 +123,7 @@ object GuardianLiveEventService extends EventbriteService {
 
 object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
 
-  val masterclassDataService = MasterclassesDataService
+  val masterclassDataService = MasterclassDataService
 
   val apiToken = Config.eventbriteMasterclassesApiToken
 

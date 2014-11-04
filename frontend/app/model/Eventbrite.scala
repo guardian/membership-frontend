@@ -9,7 +9,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
-import services.MasterclassesData
+import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
@@ -140,7 +140,7 @@ object Eventbrite {
     }
   }
 
-  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassesData]) extends RichEvent {
+  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
     val socialImgUrl = imgUrl
   }

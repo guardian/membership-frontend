@@ -13,7 +13,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.matching.Regex
 
-case class MasterclassesData(eventId: String, webUrl: String, images: List[Asset])
+case class MasterclassData(eventId: String, webUrl: String, images: List[Asset])
 
 case class MasterclassResponse[T](pagination: ContentAPIPagination, data: Seq[T])
 
@@ -21,12 +21,12 @@ case class ContentAPIPagination(currentPage: Int, pages: Int) {
   lazy val nextPageOpt = Some(currentPage + 1).filter(_ <= pages)
 }
 
-trait MasterclassesDataService {
+trait MasterclassDataService {
 
   val contentApi = new GuardianContentClient(Config.contentApiKey)
-  lazy val content = Agent[Seq[MasterclassesData]](Seq.empty)
+  lazy val content = Agent[Seq[MasterclassData]](Seq.empty)
 
-  private def getAllContent: Future[Seq[MasterclassesData]] = {
+  private def getAllContent: Future[Seq[MasterclassData]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
@@ -55,16 +55,16 @@ trait MasterclassesDataService {
   }
 }
 
-object MasterclassesDataService extends MasterclassesDataService with ScheduledTask[Seq[MasterclassesData]]{
-  def getData(eventId: String) = masterclassesData.find(mc => mc.eventId.equals(eventId))
+object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]]{
+  def getData(eventId: String) = masterclassData.find(mc => mc.eventId.equals(eventId))
 
   val initialValue = Nil
   val interval = 60.seconds
   val initialDelay = 2.seconds
 
-  def refresh(): Future[Seq[MasterclassesData]] = getAllContent
+  def refresh(): Future[Seq[MasterclassData]] = getAllContent
 
-  def masterclassesData: Seq[MasterclassesData] = agent.get()
+  def masterclassData: Seq[MasterclassData] = agent.get()
 }
 
 object MasterclassDataExtractor {
@@ -72,7 +72,7 @@ object MasterclassDataExtractor {
   val eventbriteUrl = "https?://www.eventbrite.co.uk/[^\"]+"
   val regex = new Regex(eventbriteUrl)
 
-  def extractEventbriteInformation(content: Content): List[MasterclassesData] = {
+  def extractEventbriteInformation(content: Content): List[MasterclassData] = {
 
     val element = content.elements.flatMap(elements => elements.find(_.relation == "main"))
     val assets = element.map(_.assets).getOrElse(List.empty)
@@ -83,7 +83,7 @@ object MasterclassDataExtractor {
       val eventUrls = regex.findAllIn(body).toList
       eventUrls.map { eventUrl =>
         val eventId = eventUrl.split("-").last
-        MasterclassesData(eventId, content.webUrl, assets)
+        MasterclassData(eventId, content.webUrl, assets)
       }
     }.getOrElse(Nil)
   }
