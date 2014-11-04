@@ -47,12 +47,12 @@
         display: inline-block;
 
         @include mq(desktop) {
-            width: rem(gs-span(6) + $gs-gutter * 2);
+            width: rem(gs-span(8));
             padding: 0 rem($gs-gutter);
         }
 
         @include mq(mem-full) {
-            width: rem(gs-span(8) + $gs-gutter * 2);
+            width: rem(gs-span(10));
             padding: 0 rem($gs-gutter);
         }
 
@@ -63,7 +63,7 @@
         .signin__login,
         .signin__register {
             padding: rem(3px) 0 rem($gs-baseline * 2);
-            border-top: rem(2px) solid $mem-brandLightblue;
+            border-top: rem(1px) solid $c-neutral3;
         }
     }  
 }

@@ -28,8 +28,12 @@
 
 .section-headline--padding-left {
     border-top: 0;
-    
-    @include mq(tablet) {
+
+    @include mq(desktop) {
+        padding-left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
         padding-left: rem(gs-span(2) + $gs-gutter);
     }
 }

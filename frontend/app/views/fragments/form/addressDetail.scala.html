@@ -49,7 +49,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label" for="address-line-one-@(formType)">Address line 1</label>
+                <label class="label @if(addressRequired == false){optional-marker}" for="address-line-one-@(formType)">Address line 1</label>
                 <input type="text"
                        name="@(formType).lineOne"
                        value="@address1"
@@ -69,7 +69,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label" for="town-@(formType)">Town</label>
+                <label class="label @if(addressRequired == false){optional-marker}" for="town-@(formType)">Town</label>
                 <input type="text"
                        name="@(formType).town"
                        value="@town"
