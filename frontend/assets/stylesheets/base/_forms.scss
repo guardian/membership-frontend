@@ -371,17 +371,6 @@
     margin-right: rem(6px);
 }
 
-.required-marker {
-    // &:after {
-    //     vertical-align: middle;
-    //     content: '*';
-    //     color: $error;
-    //     font-family: $f-sans-serif-text;
-    //     font-size: rem(18px);
-    //     margin-left: rem(4px);
-    // }
-}
-
 .optional-marker {
     &:after {
         vertical-align: middle;
