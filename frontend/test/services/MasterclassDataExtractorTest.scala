@@ -41,7 +41,7 @@ class MasterclassDataExtractorTest extends Specification {
     }
 
     "create multiple masterclass content for multiple eventbrite urls" in {
-      val eventbriteUrlsInBody = body + "some more text about the article <a href=\"https://www.eventbrite.co.uk/e/the-essentials-of-creativity-in-business-tickets-1234\"> more" +
+      val eventbriteUrlsInBody = body + "some more text about the article <a href=\"http://www.eventbrite.co.uk/e/the-essentials-of-creativity-in-business-tickets-1234\"> more" +
         "great things about the course"
       val newItem = item.copy(fields = Some(Map("body" -> eventbriteUrlsInBody)))
 

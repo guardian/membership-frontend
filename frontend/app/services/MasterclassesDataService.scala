@@ -44,7 +44,7 @@ trait MasterclassesDataService {
   }
 
   def getContent(page: Int): Future[ItemResponse] = {
-    val date = new DateTime(2014, 1, 1)
+    val date = new DateTime(2014, 1, 1, 0, 0)
     contentApi.item.itemId("guardian-masterclasses")
       .fromDate(date)
       .pageSize(100)
@@ -55,9 +55,21 @@ trait MasterclassesDataService {
   }
 }
 
+object MasterclassesDataService extends MasterclassesDataService with ScheduledTask[Seq[MasterclassesData]]{
+  def getData(eventId: String) = masterclassesData.find(mc => mc.eventId.equals(eventId))
+
+  val initialValue = Nil
+  val interval = 60.seconds
+  val initialDelay = 2.seconds
+
+  def refresh(): Future[Seq[MasterclassesData]] = getAllContent
+
+  def masterclassesData: Seq[MasterclassesData] = agent.get()
+}
+
 object MasterclassDataExtractor {
 
-  val eventbriteUrl = "https://www.eventbrite.co.uk/[^\"]+"
+  val eventbriteUrl = "https?://www.eventbrite.co.uk/[^\"]+"
   val regex = new Regex(eventbriteUrl)
 
   def extractEventbriteInformation(content: Content): List[MasterclassesData] = {
@@ -68,22 +80,11 @@ object MasterclassDataExtractor {
     val bodyOpt = content.fields.map(_("body"))
 
     bodyOpt.map { body =>
-      for (eventUrls <- regex.findAllIn(body).toList) yield {
-        val eventId = eventUrls.split("-").last
+      val eventUrls = regex.findAllIn(body).toList
+      eventUrls.map { eventUrl =>
+        val eventId = eventUrl.split("-").last
         MasterclassesData(eventId, content.webUrl, assets)
-
       }
     }.getOrElse(Nil)
   }
-}
-
-object MasterclassesDataService extends MasterclassesDataService with ScheduledTask[Seq[MasterclassesData]]{
-
-  val initialValue = Nil
-  val interval = 2.minutes
-  val initialDelay = 10.seconds
-
-  def refresh(): Future[Seq[MasterclassesData]] = getAllContent
-
-  def masterclassesData: Seq[MasterclassesData] = agent.get()
 }
