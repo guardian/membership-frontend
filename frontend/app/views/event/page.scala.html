@@ -42,7 +42,12 @@
     <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
-                <div class="event-masthead__title section-header page-header case--lower">Events</div>
+                <div class="event-masthead__title section-header page-header case--lower">
+                    @event match {
+                        case _: MasterclassEvent => { Masterclasses }
+                        case _: GuLiveEvent => { Events }
+                    }
+                </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>

@@ -61,6 +61,7 @@
     position: relative;
 
     .event-masthead__name {
+        max-width: rem(gs-span(8));
         @include fs-headline(5);
         color: $white;
         padding-top: rem($gs-baseline / 2);

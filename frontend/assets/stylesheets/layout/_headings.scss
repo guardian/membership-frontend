@@ -54,13 +54,13 @@
         color: $white;
         @include fs-headline(4);
         padding: rem($gs-gutter / 2) 0 rem(55px);
-        max-width: rem(gs-span(9));
+        max-width: rem(gs-span(8));
     }
 
     .header-bar__logo {
         position: absolute;
-        right: rem($gs-gutter / 2);
-        bottom: rem($gs-gutter / 2);
+        right: rem($gs-gutter);
+        bottom: rem($gs-gutter);
     }
 
     .theme--masterclass & {
