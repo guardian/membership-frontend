@@ -29,7 +29,6 @@
             </div>
         </div>
         <div class="tickets-select-form__detail hidden-mobile u-cf js-select-tier">
-            <p class="tickets-select-form__leadin">@Benefits.details(tier).leadin</p>
             <ul class="u-unstyled">
                 @for((header, body, icon) <- Benefits.details(tier).list) {
                 <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
