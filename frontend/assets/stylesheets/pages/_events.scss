@@ -170,13 +170,23 @@
         }
 
         a {
-            color: $white;
+            text-decoration: none;
+            color: inherit;
             padding-bottom: rem(2px);
-            border-bottom: rem(1px) solid $mem-underline-white-trans;
+            border-bottom: rem(1px) solid;
 
-            &:hover {
-                text-decoration: none;
-                border-bottom: rem(1px) solid $white;
+            .theme--guardian-live & {
+                border-bottom-color: transparentize($white, .5);
+                &:hover {
+                    border-bottom-color: $white;
+                }
+            }
+
+            .theme--masterclass & {
+                border-bottom-color: transparentize($c-neutral3, .5);
+                &:hover {
+                    border-bottom-color: $c-neutral1;
+                }
             }
         }
     }
@@ -408,6 +418,10 @@
             }
         }
 
+        .theme--masterclass & {
+            background-color: $mem-mc-top;
+        }
+
     }
 
     .terms-info {
@@ -440,6 +454,10 @@
         background-color: $white;
         border-top: rem(1px) solid $mem-live-accent;
         padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
+
+        .theme--masterclass & {
+            border-top-color: $mem-mc-accent;
+        }
 
         .events-title-container {
             display: block;
@@ -589,31 +607,38 @@
                 color: $c-neutral2;
             }
 
-            .event-item__action {
-                position: absolute;
-                bottom: rem($gs-gutter / 2);
-                right: rem($gs-gutter / 2);
-                width: rem(36px);
-                height: rem(36px);
-                padding: 0 rem(8px) 0 0;
+        }
 
-                @include mq(desktop) {
-                    bottom: rem($gs-gutter);
-                    right: rem($gs-gutter);
-                }
-                background-color: $mem-live-accent;
-                @include border-radius(50px);
-                border: 0;
-                &:focus {
-                    outline: 0;
-                }
+        .event-item__action {
+            position: absolute;
+            bottom: rem($gs-gutter / 2);
+            right: rem($gs-gutter / 2);
+            width: rem(36px);
+            height: rem(36px);
+            padding: 0 rem(8px) 0 0;
+            background-color: $mem-live-top;
 
-                &:after {
-                    @extend .icon-sprite-arrow-right-white;
-                    content: '';
-                    fill: $black;
-                    float: right;
-                }
+            @include mq(desktop) {
+                bottom: rem($gs-gutter);
+                right: rem($gs-gutter);
+            }
+
+            @include border-radius(50px);
+            border: 0;
+
+            .theme--masterclass & {
+                background-color: $mem-mc-top;
+            }
+
+            &:focus {
+                outline: 0;
+            }
+
+            &:after {
+                @extend .icon-sprite-arrow-right-white;
+                content: '';
+                fill: $black;
+                float: right;
             }
         }
 

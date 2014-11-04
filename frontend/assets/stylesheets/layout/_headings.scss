@@ -63,11 +63,12 @@
     }
 
     .theme--masterclass & {
-        background-color: $mem-mc-accent;
+        background-color: transparentize($mem-mc-top, .1);
     }
 
     .theme--guardian-live & {
-        background-color: $mem-live-accent;
+        background-color: transparentize($mem-live-top, .1);
+        color: $white;
     }
 
     @include mq(tablet) {
