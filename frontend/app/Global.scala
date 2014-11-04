@@ -16,7 +16,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
 
     MemberRepository.start()
     SubscriptionService.zuora.start()
-    MasterclassesDataService.start()
+    //MasterclassesDataService.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {
