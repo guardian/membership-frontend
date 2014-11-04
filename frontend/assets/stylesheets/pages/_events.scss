@@ -235,7 +235,6 @@
 
         @include mq(desktop) {
             width: rem(gs-span(12) + $gs-gutter * 2);
-            margin-top: rem(-8px);
         }
 
         @include mq(mem-full) {
