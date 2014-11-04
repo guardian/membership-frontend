@@ -35,6 +35,7 @@
 
 .form__signin {
     display: block;
+    @include fs-bodyCopy(2);
     
     @include mq(desktop) {
         position: absolute;
@@ -102,6 +103,7 @@
 
 .fieldset--no-bg {
     background: transparent;
+    padding-top: rem(5px);
 }
 
 .fieldset__heading {
@@ -135,6 +137,10 @@
     @include mq(mem-full) {
         width: rem(gs-span(5) + $gs-gutter);
     }
+}
+
+.fieldset__fields--no-padding {
+    padding-top: 0;
 }
 
 .form-fields-group .form-field {

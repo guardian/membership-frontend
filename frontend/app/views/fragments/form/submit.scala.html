@@ -8,7 +8,7 @@
 <fieldset class="fieldset fieldset--no-bg">
     @fragments.form.errorMessageDisplay()
     <div class="fieldset__heading"></div>
-    <div class="fieldset__fields">
+    <div class="fieldset__fields fieldset__fields--no-padding">
 
         @if(membershipTermsAndConditions){
             <p class="terms-info">By joining Guardian Membership, you are agreeing to our <a href="@Config.guardianMembershipTermsUrl" target="_blank">Terms and Conditions</a> and <a href="@Config.guardianPrivacyUrl" target="_blank">Privacy Policy</a>.</p>
