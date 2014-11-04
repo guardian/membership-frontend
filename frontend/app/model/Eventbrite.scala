@@ -141,7 +141,7 @@ object Eventbrite {
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassesData]) extends RichEvent {
-    val imgUrl = data.flatMap(d => d.images.headOption.flatMap(_.file)).getOrElse("")
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
     val socialImgUrl = imgUrl
   }
 }
