@@ -249,7 +249,7 @@ define([
 
             this.checkValidatorExistsException(validator.name);
 
-            $('.label', utilsHelper.getSpecifiedParent($(elem), 'form-field')).addClass('required-marker');
+            $('.label', utilsHelper.getSpecifiedParent($(elem), 'form-field')).removeClass('optional-marker');
 
             args = self.createArgsArray(validator.elem);
             self[validator.name].apply(self, args);
@@ -277,7 +277,8 @@ define([
             $element.removeAttr('data-validation');
             bean.off($element[0], 'blur');
             $formField.removeClass('form-field--error');
-            $('.label', $formField).removeClass('required-marker');
+            //revert input to optional requirement
+            $('.label', $formField).addClass('optional-marker');
             $('.form-field__error-message', $formField).remove();
         });
 
