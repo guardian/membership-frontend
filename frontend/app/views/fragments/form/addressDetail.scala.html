@@ -94,7 +94,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
+                <label class="label optional-marker js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
                 <input type="text"
                        name="@(formType).postCode"
                        value="@postcode"
