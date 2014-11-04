@@ -2,6 +2,7 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.data.validation.ValidationError
 
 import com.github.nscala_time.time.Imports._
 
@@ -158,6 +159,12 @@ object EventbriteDeserializer {
   private def convertDateText(utc: String, timezone: String): DateTime = {
     val timeZone = DateTimeZone.forID(timezone)
     ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).withZone(timeZone)
+  }
+
+  // Remove any leading/trailing spaces left by the events team
+  implicit val readsTrimString = Reads[String] {
+    case JsString(s) => JsSuccess(s.trim)
+    case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jsstring"))))
   }
 
   implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)
