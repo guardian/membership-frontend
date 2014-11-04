@@ -278,12 +278,13 @@
     }
 
     h2 {
-        @include fs-headline(1);
-        margin: rem(8px) 0 rem(16px);
+        @include fs-header(2);
+
+        @include mq(tablet) {
+            @include fs-header(3, true);
+        }
     }
-    p, li {
-        @include fs-bodyCopy(2);
-    }
+
     ol,
     ul {
         list-style-position: inside;
