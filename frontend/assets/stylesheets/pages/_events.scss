@@ -3,13 +3,12 @@
    ========================================================================== */
 
 .event-header {
-    color: $white;
-
     .theme--masterclass & {
         background-color: $mem-mc-top;
     }
 
     .theme--guardian-live & {
+        color: $white;
         background-color: $mem-live-top;
     }
 }
@@ -63,7 +62,6 @@
     .event-masthead__name {
         max-width: rem(gs-span(8));
         @include fs-headline(5);
-        color: $white;
         padding-top: rem($gs-baseline / 2);
 
 
@@ -79,7 +77,6 @@
     }
     .event-masthead__title {
         @include fs-header(1);
-        color: $white;
         border-bottom: rem(1px) dotted $border-bottom-color;
         padding-bottom: rem(5px);
 
@@ -131,7 +128,6 @@
     padding-top: rem($gs-gutter);
 
     .event-ticket__details {
-        color: $white;
 
         @include mq(tablet) {
             float: left;
@@ -166,7 +162,6 @@
 
     .terms-info {
         @include fs-textSans(1);
-        color: $white;
         padding-top: rem(12px);
 
         @include mq(tablet) {

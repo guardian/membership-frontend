@@ -51,7 +51,6 @@
     padding-right: rem($gs-gutter / 2);
 
     .header-bar__title {
-        color: $white;
         @include fs-headline(4);
         padding: rem($gs-gutter / 2) 0 rem(55px);
         max-width: rem(gs-span(8));
