@@ -26,7 +26,7 @@
             <p>@Benefits.details(tier).leadin</p>
 
             <ul class="package__list-benefits-element">
-            @for((header, body, icon) <- Benefits.details(tier).list) {
+            @for((header, body, icon) <- Benefits.details(tier).list.slice(0, Benefits.details(tier).leadBenefits)) {
                 <li class="benefits-title">@header</li>
                 <li class="benefits-copy">@body</li>
             }
