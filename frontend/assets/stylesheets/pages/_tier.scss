@@ -42,8 +42,11 @@ $current-indicator: rem(72px);
     float: right;
 }
 
-.package-list--flex-box {
+.package-list {
     padding-top: 0;
+}
+
+.package-list--flex-box {
 
     @include mq(desktop) {
         @include flexbox;
@@ -55,7 +58,6 @@ $current-indicator: rem(72px);
     .package {
         margin: 0 0 rem($gs-gutter / 2);
         background-color: $c-neutral7;
-        overflow: visible;
 
         &:last-child {
             margin-right: 0;
@@ -75,6 +77,7 @@ $current-indicator: rem(72px);
             margin-bottom: rem($gs-gutter);
             position: relative;
             margin-right: rem($gs-gutter);
+            overflow: visible;
 
             .no-flexbox & {
                 width: 31%;
@@ -254,6 +257,8 @@ $current-indicator: rem(72px);
     border-bottom: 1px solid $c-neutral3;
     padding: rem($gs-gutter / 2) 0;
     width: 100%;
+    position: relative;
+    top: 1px;
 }
 
 .package__list-benefits {
