@@ -2,6 +2,7 @@ package model
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.data.validation.ValidationError
 
 import com.github.nscala_time.time.Imports._
 
@@ -9,6 +10,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
+import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
@@ -77,6 +79,7 @@ object Eventbrite {
                      url: String,
                      id: String,
                      start: DateTime,
+                     end: DateTime,
                      created: Instant,
                      venue: EBVenue,
                      capacity: Int,
@@ -120,6 +123,8 @@ object Eventbrite {
     val event: EBEvent
     val imgUrl: String
     val socialImgUrl: String
+
+    val allowDiscounts: Boolean
   }
 
   object RichEvent {
@@ -137,11 +142,15 @@ object Eventbrite {
       val largestRatio = Config.eventImageRatios.toArray.last
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
+
+    val allowDiscounts = true
   }
 
-  case class MasterclassEvent(event: EBEvent) extends RichEvent {
-    val imgUrl = ""
+  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
     val socialImgUrl = imgUrl
+
+    val allowDiscounts = false
   }
 }
 
@@ -158,6 +167,12 @@ object EventbriteDeserializer {
   private def convertDateText(utc: String, timezone: String): DateTime = {
     val timeZone = DateTimeZone.forID(timezone)
     ISODateTimeFormat.dateTimeNoMillis.parseDateTime(utc).withZone(timeZone)
+  }
+
+  // Remove any leading/trailing spaces left by the events team
+  implicit val readsTrimString = Reads[String] {
+    case JsString(s) => JsSuccess(s.trim)
+    case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jsstring"))))
   }
 
   implicit val instant: Reads[Instant] = JsPath.read[String].map(convertInstantText)

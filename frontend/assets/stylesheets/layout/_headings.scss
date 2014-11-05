@@ -46,7 +46,9 @@
 }
 
 .header-bar {
+    position: relative;
     padding-left: rem($gs-gutter / 2);
+    padding-right: rem($gs-gutter / 2);
 
     .header-bar__title {
         @include fs-headline(4);
@@ -54,26 +56,13 @@
         max-width: rem(gs-span(8));
     }
 
-    &.header-bar--guardian-live {
-        position: relative;
-        background-color: transparentize($mem-live-accent, .1);
-        padding-right: rem($gs-gutter / 2);
+    .theme--masterclass & {
+        background-color: transparentize($mem-mc-top, .1);
+    }
 
-        .header-bar__title {
-            color: $white;
-        }
-
-        .header-bar__guardian-live-logo {
-            position: absolute;
-            right: rem($gs-gutter / 2);
-            bottom: rem($gs-gutter / 2);
-        }
-
-        i {
-            background-size: 100%;
-            width: rem(31px);
-            height: rem(45px);
-        }
+    .theme--guardian-live & {
+        background-color: transparentize($mem-live-top, .1);
+        color: $white;
     }
 
     @include mq(tablet) {
@@ -84,27 +73,6 @@
             @include fs-headline(6);
             padding: rem($gs-gutter) 0;
         }
-        &.header-bar--guardian-live {
-            .header-bar__guardian-live-logo {
-                right: rem($gs-gutter);
-                top: rem($gs-gutter * 2);
-            }
-            i {
-                width: rem(62px);
-                height: rem(90px);
-                background-size: 100%;
-            }
-        }
-    }
-
-    @include mq(desktop) {
-        &.header-bar--guardian-live {
-            padding-right: rem(102px);
-            .header-bar__guardian-live-logo {
-                right: rem($gs-gutter);
-                top: rem($gs-gutter * 2 + $gs-baseline);
-            }
-        }
     }
 
     @include mq(mem-full) {
@@ -114,4 +82,3 @@
         }
     }
 }
-

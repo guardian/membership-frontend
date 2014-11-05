@@ -27,15 +27,3 @@
 .icon-sprite--margin-right {
     margin-right: rem($gs-gutter / 2);
 }
-
-.icon-sprite--resize-live-logo.icon-sprite--resize-live-logo {
-    background-size: rem(30px) auto;
-    width: rem(30px);
-    height: rem(44px);
-
-    @include mq(tablet) {
-        background-size: 100% auto;
-        width: rem(62px);
-        height: rem(90px);
-    }
-}

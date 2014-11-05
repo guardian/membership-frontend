@@ -6,7 +6,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.10" % "2.0",
   "org.seleniumhq.selenium" % "selenium-java" % "2.42.2",
   "com.gu" %% "scala-automation" % "1.41" % "test",
-  "com.gu" %% "scala-automation-tstash-logger" % "1.4" % "test"
+  "com.gu" %% "scala-automation-tstash-logger" % "1.6" % "test"
 )
 
 resolvers ++= Seq(

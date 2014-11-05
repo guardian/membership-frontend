@@ -1,5 +1,6 @@
 package model
 
+import play.api.libs.json.JsString
 import play.api.test.PlaySpecification
 
 import EventbriteDeserializer._
@@ -37,6 +38,12 @@ class EventbriteDeserializerTest extends PlaySpecification {
       event.generalReleaseTicket.get.id mustEqual "30292989"
 
       event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
+    }
+
+    "remove leading/trailing space from strings" in {
+      JsString("    abc  ").as[String] mustEqual "abc"
+      JsString("abc  ").as[String] mustEqual "abc"
+      JsString("   abc").as[String] mustEqual "abc"
     }
   }
 

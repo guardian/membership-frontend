@@ -3,12 +3,24 @@
    ========================================================================== */
 
 .event-header {
-    background-color: $mem-live-red-trans;
-    color: $white;
+    .theme--masterclass & {
+        background-color: $mem-mc-top;
+    }
+
+    .theme--guardian-live & {
+        color: $white;
+        background-color: $mem-live-top;
+    }
 }
 
 .event-header--shade {
-    background-color: $mem-live-accent-trans;
+    .theme--masterclass & {
+        background-color: $mem-mc-accent;
+    }
+
+    .theme--guardian-live & {
+        background-color: $mem-live-accent;
+    }
 }
 
 .event-header__container {
@@ -48,8 +60,8 @@
     position: relative;
 
     .event-masthead__name {
+        max-width: rem(gs-span(8));
         @include fs-headline(5);
-        color: $white;
         padding-top: rem($gs-baseline / 2);
 
 
@@ -65,7 +77,6 @@
     }
     .event-masthead__title {
         @include fs-header(1);
-        color: $white;
         border-bottom: rem(1px) dotted $border-bottom-color;
         padding-bottom: rem(5px);
 
@@ -83,24 +94,19 @@
     }
 }
 
-.guardian-live-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2 + 2);
-    right: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        right: rem($gs-gutter);
-    }
-}
-
 .event-details {
 
     .event-details__time {
+        max-width: rem(gs-span(8));
         @include fs-headline(2);
 
         @include mq(tablet) {
             @include fs-headline(4);
         }
+    }
+
+    .event-details__time__part {
+        white-space: nowrap;
     }
 
     .event-details__location {
@@ -117,7 +123,6 @@
     padding-top: rem($gs-gutter);
 
     .event-ticket__details {
-        color: $white;
 
         @include mq(tablet) {
             float: left;
@@ -134,16 +139,14 @@
         }
     }
 
-    .action--event-buy,
-    .action--disabled {
+    .action {
+        background-color: $black;
+
         @include mq(tablet) {
             float: left;
             margin: rem(6px $gs-gutter 0 0);
+            min-width: 0;
         }
-    }
-
-    .action--event-buy {
-        background-color: $black;
 
         &:hover {
             background-color: $mem-event-button-hover;
@@ -152,7 +155,6 @@
 
     .terms-info {
         @include fs-textSans(1);
-        color: $white;
         padding-top: rem(12px);
 
         @include mq(tablet) {
@@ -161,13 +163,23 @@
         }
 
         a {
-            color: $white;
+            text-decoration: none;
+            color: inherit;
             padding-bottom: rem(2px);
-            border-bottom: rem(1px) solid $mem-underline-white-trans;
+            border-bottom: rem(1px) solid;
 
-            &:hover {
-                text-decoration: none;
-                border-bottom: rem(1px) solid $white;
+            .theme--guardian-live & {
+                border-bottom-color: transparentize($white, .5);
+                &:hover {
+                    border-bottom-color: $white;
+                }
+            }
+
+            .theme--masterclass & {
+                border-bottom-color: transparentize($c-neutral3, .5);
+                &:hover {
+                    border-bottom-color: $c-neutral1;
+                }
             }
         }
     }
@@ -203,6 +215,10 @@
         img {
             width: 100%;
         }
+
+        .theme--masterclass & {
+            display: none;
+        }
     }
 
     .event-content__container {
@@ -217,7 +233,6 @@
 
         @include mq(desktop) {
             width: rem(gs-span(12) + $gs-gutter * 2);
-            margin-top: rem(-8px);
         }
 
         @include mq(mem-full) {
@@ -261,12 +276,13 @@
     }
 
     h2 {
-        @include fs-headline(1);
-        margin: rem(8px) 0 rem(16px);
+        @include fs-header(2);
+
+        @include mq(tablet) {
+            @include fs-header(3, true);
+        }
     }
-    p, li {
-        @include fs-bodyCopy(2);
-    }
+
     ol,
     ul {
         list-style-position: inside;
@@ -310,34 +326,28 @@
     padding-top: rem(3px);
 }
 
-.event-content__info {
-    background-color: $c-neutral7;
+.event-content__sidebar {
     margin-bottom: rem($gs-gutter);
-    padding: rem($gs-gutter);
 
     @include mq(tablet) {
         float: left;
         width: gs-span(4);
     }
+}
+
+.event-content__info {
+    background-color: $c-neutral7;
+    padding: rem($gs-gutter);
+    @include fs-textSans(3);
 
     .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
     }
 
-    .event-content__time,
-    .event-content__location,
-    .event-content__tickets,
-    .event-content__price {
-        @include fs-textSans(3);
-    }
-
     .event-content__price {
         padding-bottom: 0;
-
-        .event-content__price-amount {
-            @include fs-header(5);
-        }
+        @include fs-header(5);
     }
 
     .event-content__sale-dates {
@@ -383,17 +393,23 @@
     }
 
     .action {
-        margin-right: rem($gs-gutter);
-        margin-right: 0;
         min-width: 100%;
-    }
 
-    .action--event-buy {
-        background-color: $mem-live-accent;
+        .theme--guardian-live & {
+            background-color: $mem-live-top;
 
-        &:hover {
-            background-color: darken($mem-live-accent, 5%);
+            &:hover {
+                background-color: darken($mem-live-top, 5%);
+            }
         }
+
+        .theme--masterclass & {
+            background-color: $mem-mc-top;
+            &:hover {
+                background-color: darken($mem-mc-top, 5%);
+            }
+        }
+
     }
 
     .terms-info {
@@ -424,8 +440,12 @@
     .event-block {
         position: relative;
         background-color: $white;
-        border-top: rem(1px) solid $mem-live-accent;
+        border-bottom: rem(1px) solid $mem-live-accent;
         padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
+
+        .theme--masterclass & {
+            padding-bottom: 0;
+        }
 
         .events-title-container {
             display: block;
@@ -479,8 +499,8 @@
             }
         }
 
-        &:first-child {
-            border-top: 0;
+        &:last-child {
+            border-bottom: 0;
         }
 
         .event-block-title {
@@ -575,30 +595,40 @@
                 color: $c-neutral2;
             }
 
-            .event-item__action {
-                position: absolute;
-                bottom: rem($gs-gutter / 2);
-                right: rem($gs-gutter / 2);
-                width: rem(36px);
-                height: rem(36px);
-                padding: 0 rem(8px) 0 0;
+        }
 
-                @include mq(desktop) {
-                    bottom: rem($gs-gutter);
-                    right: rem($gs-gutter);
-                }
-                background-color: $mem-live-accent;
-                @include border-radius(50px);
-                border: 0;
-                &:focus {
-                    outline: 0;
-                }
+        .event-item__action {
+            position: absolute;
+            bottom: rem($gs-gutter / 2);
+            right: rem($gs-gutter / 2);
+            width: rem(36px);
+            height: rem(36px);
+            padding: 0 rem(8px) 0 0;
+            background-color: $mem-live-top;
 
+            @include mq(desktop) {
+                bottom: rem($gs-gutter);
+                right: rem($gs-gutter);
+            }
+
+            @include border-radius(50px);
+            border: 0;
+
+            &:focus {
+                outline: 0;
+            }
+
+            &:after {
+                @extend .icon-sprite-arrow-right-white;
+                content: '';
+                fill: $black;
+                float: right;
+            }
+
+            .theme--masterclass & {
+                background-color: $mem-mc-top;
                 &:after {
-                    @extend .icon-sprite-arrow-right-white;
-                    content: '';
-                    fill: $black;
-                    float: right;
+                    @extend .icon-sprite-arrow-right-black;
                 }
             }
         }
@@ -807,5 +837,26 @@
 
     .icon-sprite-early_booking-grey {
         margin-top: rem(-2px);
+    }
+}
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+    .svg & {
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+
+        @include mq(tablet) {
+            height: rem(87px);
+        }
     }
 }
