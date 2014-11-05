@@ -141,6 +141,7 @@ body {
     margin: 0 auto;
     padding: 0 rem($gs-gutter / 2);
     @include fs-headline(2);
+    position: relative;
 
     @include mq(desktop) {
         @include fs-headline(5);
@@ -150,7 +151,7 @@ body {
         @include mq(tablet) {
             border-right: rem(1px) solid $c-neutral4;
             width: rem(gs-span(8));
-            padding-right: $gs-gutter;
+            padding: 0 $gs-gutter;
         }
     }
 

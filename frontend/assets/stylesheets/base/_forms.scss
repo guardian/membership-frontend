@@ -39,12 +39,11 @@
     
     @include mq(desktop) {
         position: absolute;
-        top: 9rem;
+        top: rem(9rem);
         left: rem(gs-span(2));
     }
 
     @include mq(mem-full) {
-        top: 9rem;
         left: rem(gs-span(2) + $gs-gutter);
     }
 }

@@ -40,19 +40,22 @@
     </div>
 }
 
-@main("Join Choose Tier", pageInfo=pageInfo) {
+@main("Join Choose Tier", pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
 
     <section class="section-two-thirds">
 
-        @fragments.joiner.joinStepCounter(1, 3)
+        @fragments.form.sectionHeading("Choose a membership tier")
 
         <div class="l-row">
 
+            <div class="steps">
+                @fragments.joiner.joinStepCounter(1, 3)
+            </div>
+
         <section class="two-thirds">
 
-            @fragments.form.sectionHeading("Choose a membership tier")
-
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
+
                 @CSRF.formField
 
                 @for(tier <- Tier.values.toSeq.sorted){
