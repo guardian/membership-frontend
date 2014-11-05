@@ -1,28 +1,34 @@
 @(
-    currentTier: com.gu.membership.salesforce.Tier.Tier, 
+    currentTier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
     showBenefitCopy: Boolean = true
 )
 @import model.Benefits
+@import model.Benefits.BenefitItem
 @import com.gu.membership.salesforce.Tier
+
+@benefitListing(benefits: Seq[BenefitItem], isLead: Boolean) = {
+    @for(benefit <- benefits) {
+        <div class="benefits-item u-cf @if(isLead){ benefits-item--highlighted}">
+            <li class="benefits-title">
+                <div class="benefits-title__first">
+                    <i class="icon-sprite icon-sprite-@benefit.identifier icon-sprite--small"></i>
+                </div>
+                <div class="benefits-title__second">@benefit.title</div>
+            </li>
+            @if(showBenefitCopy) {
+                <li class="benefits-copy">@benefit.description</li>
+            }
+        </div>
+    }
+}
 
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
     <div class="package__list-benefits">
         <ul class="package__list-benefits-element u-unstyled">
-            @for(((header, body, icon), index) <- Benefits.details(currentTier).list.zipWithIndex) {
-                <div class="benefits-item u-cf @if(Benefits.details(currentTier).leadBenefits >= index+1){ benefits-item--highlighted}">
-                    <li class="benefits-title">
-                        <div class="benefits-title__first">
-                            <i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>
-                        </div>
-                        <div class="benefits-title__second">@header</div>
-                    </li>
-                    @if(showBenefitCopy) {
-                        <li class="benefits-copy">@body</li>
-                    }
-                </div>
-            }
+            @benefitListing(Benefits.details(currentTier).leadBenefits, isLead=true)
+            @benefitListing(Benefits.details(currentTier).otherBenefits, isLead=false)
         </ul>
     </div>
 }
