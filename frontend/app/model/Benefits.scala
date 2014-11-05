@@ -18,7 +18,7 @@ object Benefits {
     def list = (title, description, identifier)
   }
 
-  val allBenefits: Seq[BenefitItem] = Seq(
+  val allBenefits = Seq(
     BenefitItem("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
     BenefitItem("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"),
     BenefitItem("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights"),
