@@ -234,10 +234,11 @@ $offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .5);
 $white-trans: rgba(255, 255, 255, .5);
 
-$mem-live-red: transparentize(#b51800, .15);
+$mem-live-top: #b51800;
 $mem-live-accent: #cc2b12;
-$mem-live-accent-trans: rgba(204, 43, 18, .95);
-$mem-live-red-trans: rgba(180, 24, 0, .95);
+$mem-mc-top: #ffbb00;
+$mem-mc-accent: #fcdd03;
+
 $mem-underline-white-trans: rgba(229, 208, 212, .5);
 $mem-event-button-hover: rgba(0, 0, 0, .65);
 

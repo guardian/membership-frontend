@@ -12,11 +12,11 @@ import scala.concurrent.Future
 object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper) {
   override def onStart(app: Application) {
     GuardianLiveEventService.start()
-    //MasterclassEventService.start()
+    MasterclassEventService.start()
 
     MemberRepository.start()
     SubscriptionService.zuora.start()
-    //MasterclassDataService.start()
+    MasterclassDataService.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

@@ -46,7 +46,9 @@
 }
 
 .header-bar {
+    position: relative;
     padding-left: rem($gs-gutter / 2);
+    padding-right: rem($gs-gutter / 2);
 
     .header-bar__title {
         @include fs-headline(4);
@@ -54,26 +56,19 @@
         max-width: rem(gs-span(8));
     }
 
-    &.header-bar--guardian-live {
-        position: relative;
-        background-color: transparentize($mem-live-accent, .1);
-        padding-right: rem($gs-gutter / 2);
+    .header-bar__logo {
+        position: absolute;
+        right: rem($gs-gutter);
+        bottom: rem($gs-gutter);
+    }
 
-        .header-bar__title {
-            color: $white;
-        }
+    .theme--masterclass & {
+        background-color: transparentize($mem-mc-top, .1);
+    }
 
-        .header-bar__guardian-live-logo {
-            position: absolute;
-            right: rem($gs-gutter / 2);
-            bottom: rem($gs-gutter / 2);
-        }
-
-        i {
-            background-size: 100%;
-            width: rem(31px);
-            height: rem(45px);
-        }
+    .theme--guardian-live & {
+        background-color: transparentize($mem-live-top, .1);
+        color: $white;
     }
 
     @include mq(tablet) {
@@ -114,4 +109,3 @@
         }
     }
 }
-
