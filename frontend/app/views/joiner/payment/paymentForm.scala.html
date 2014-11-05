@@ -13,9 +13,8 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
             <div class="form__signin">
                 @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
             </div>
-            <div class="steps">
+            
                 @fragments.joiner.joinStepCounter(3, 3)
-            </div>
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
                 @fragments.form.errorMessageDisplay()

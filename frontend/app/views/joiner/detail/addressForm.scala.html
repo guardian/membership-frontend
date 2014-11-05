@@ -17,10 +17,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
                 @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
             </div>
 
-            <div class="steps">
-                @fragments.joiner.joinStepCounter(3, 3)
-            </div>
-
+            @fragments.joiner.joinStepCounter(3, 3)
             @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
             @fragments.form.addressDetail("Address", "Tell us where you live and we'll keep you posted on events happening in your local community.", "deliveryAddress", false,
             userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
