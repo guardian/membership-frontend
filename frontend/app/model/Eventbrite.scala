@@ -123,6 +123,8 @@ object Eventbrite {
     val event: EBEvent
     val imgUrl: String
     val socialImgUrl: String
+
+    val allowDiscounts: Boolean
   }
 
   object RichEvent {
@@ -140,11 +142,15 @@ object Eventbrite {
       val largestRatio = Config.eventImageRatios.toArray.last
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
+
+    val allowDiscounts = true
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
     val socialImgUrl = imgUrl
+
+    val allowDiscounts = false
   }
 }
 
