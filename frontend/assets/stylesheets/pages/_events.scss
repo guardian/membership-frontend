@@ -450,11 +450,10 @@
     .event-block {
         position: relative;
         background-color: $white;
-        border-top: rem(1px) solid $mem-live-accent;
+        border-bottom: rem(1px) solid $mem-live-accent;
         padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
 
         .theme--masterclass & {
-            border-top: 0;
             padding-bottom: 0;
         }
 
@@ -510,8 +509,8 @@
             }
         }
 
-        &:first-child {
-            border-top: 0;
+        &:last-child {
+            border-bottom: 0;
         }
 
         .event-block-title {

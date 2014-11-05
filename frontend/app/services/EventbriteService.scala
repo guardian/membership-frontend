@@ -135,8 +135,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   def refresh(): Future[Seq[RichEvent]] = getAllEvents
 
   def events: Seq[RichEvent] = agent.get()
-
-  def priorityEventOrdering: Seq[String] = events.take(4).map(_.id)
+  def priorityEventOrdering: Seq[String] = Nil
   def mkRichEvent(event: EBEvent): RichEvent = {
     val masterclassData = masterclassDataService.getData(event.id)
     MasterclassEvent(event, masterclassData)
