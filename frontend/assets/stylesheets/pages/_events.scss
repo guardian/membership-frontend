@@ -94,16 +94,6 @@
     }
 }
 
-.guardian-live-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2 + 2);
-    right: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        right: rem($gs-gutter);
-    }
-}
-
 .event-details {
 
     .event-details__time {
