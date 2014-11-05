@@ -94,16 +94,6 @@
     }
 }
 
-.guardian-live-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2 + 2);
-    right: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        right: rem($gs-gutter);
-    }
-}
-
 .event-details {
 
     .event-details__time {
@@ -847,5 +837,26 @@
 
     .icon-sprite-early_booking-grey {
         margin-top: rem(-2px);
+    }
+}
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+    .svg & {
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+
+        @include mq(tablet) {
+            height: rem(87px);
+        }
     }
 }

@@ -56,12 +56,6 @@
         max-width: rem(gs-span(8));
     }
 
-    .header-bar__logo {
-        position: absolute;
-        right: rem($gs-gutter);
-        bottom: rem($gs-gutter);
-    }
-
     .theme--masterclass & {
         background-color: transparentize($mem-mc-top, .1);
     }
@@ -78,27 +72,6 @@
         .header-bar__title {
             @include fs-headline(6);
             padding: rem($gs-gutter) 0;
-        }
-        &.header-bar--guardian-live {
-            .header-bar__guardian-live-logo {
-                right: rem($gs-gutter);
-                top: rem($gs-gutter * 2);
-            }
-            i {
-                width: rem(62px);
-                height: rem(90px);
-                background-size: 100%;
-            }
-        }
-    }
-
-    @include mq(desktop) {
-        &.header-bar--guardian-live {
-            padding-right: rem(102px);
-            .header-bar__guardian-live-logo {
-                right: rem($gs-gutter);
-                top: rem($gs-gutter * 2 + $gs-baseline);
-            }
         }
     }
 
