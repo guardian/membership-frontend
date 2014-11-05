@@ -94,16 +94,6 @@
     }
 }
 
-.guardian-live-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2 + 2);
-    right: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        right: rem($gs-gutter);
-    }
-}
-
 .event-details {
 
     .event-details__time {
@@ -336,34 +326,28 @@
     padding-top: rem(3px);
 }
 
-.event-content__info {
-    background-color: $c-neutral7;
+.event-content__sidebar {
     margin-bottom: rem($gs-gutter);
-    padding: rem($gs-gutter);
 
     @include mq(tablet) {
         float: left;
         width: gs-span(4);
     }
+}
+
+.event-content__info {
+    background-color: $c-neutral7;
+    padding: rem($gs-gutter);
+    @include fs-textSans(3);
 
     .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
     }
 
-    .event-content__time,
-    .event-content__location,
-    .event-content__tickets,
-    .event-content__price {
-        @include fs-textSans(3);
-    }
-
     .event-content__price {
         padding-bottom: 0;
-
-        .event-content__price-amount {
-            @include fs-header(5);
-        }
+        @include fs-header(5);
     }
 
     .event-content__sale-dates {
@@ -456,11 +440,10 @@
     .event-block {
         position: relative;
         background-color: $white;
-        border-top: rem(1px) solid $mem-live-accent;
+        border-bottom: rem(1px) solid $mem-live-accent;
         padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
 
         .theme--masterclass & {
-            border-top: 0;
             padding-bottom: 0;
         }
 
@@ -516,8 +499,8 @@
             }
         }
 
-        &:first-child {
-            border-top: 0;
+        &:last-child {
+            border-bottom: 0;
         }
 
         .event-block-title {
@@ -854,5 +837,26 @@
 
     .icon-sprite-early_booking-grey {
         margin-top: rem(-2px);
+    }
+}
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+    .svg & {
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+
+        @include mq(tablet) {
+            height: rem(87px);
+        }
     }
 }

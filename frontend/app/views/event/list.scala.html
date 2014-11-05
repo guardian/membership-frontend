@@ -5,23 +5,25 @@
 
 <section class="event-blocks">
 
-    <div class="event-block">
-        <div class="events-title-container">
-            <h2 class="event-block-title">featured</h2>
-        </div>
-        <div class="events-list-container">
-            <ul class="u-unstyled">
+    @if(eventPortfolio.orderedEvents.nonEmpty) {
+        <div class="event-block">
+            <div class="events-title-container">
+                <h2 class="event-block-title">featured</h2>
+            </div>
+            <div class="events-list-container">
+                <ul class="u-unstyled">
                 @for(heroEvent <- eventPortfolio.heroOpt) {
                     @fragments.event.item(heroEvent, true)
                 }
-            </ul>
-            <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
+                </ul>
+                <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
                 @for(event <- eventPortfolio.priority) {
                     @fragments.event.item(event)
                 }
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
+    }
 
     <div class="event-block">
         <div class="events-title-container">
