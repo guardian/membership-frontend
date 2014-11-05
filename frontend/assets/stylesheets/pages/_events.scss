@@ -107,11 +107,16 @@
 .event-details {
 
     .event-details__time {
+        max-width: rem(gs-span(8));
         @include fs-headline(2);
 
         @include mq(tablet) {
             @include fs-headline(4);
         }
+    }
+
+    .event-details__time__part {
+        white-space: nowrap;
     }
 
     .event-details__location {

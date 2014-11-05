@@ -56,7 +56,13 @@
     <div class="event-header event-header--shade">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
-                <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
+                <div class="event-details__time">
+                    <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.start)</span>
+                    @event match {
+                        case _: MasterclassEvent => { - <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.end)</span> }
+                        case _ => {}
+                    }
+                </div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
                     @if(event.eventAddressLine.nonEmpty) {

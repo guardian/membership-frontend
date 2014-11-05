@@ -79,6 +79,7 @@ object Eventbrite {
                      url: String,
                      id: String,
                      start: DateTime,
+                     end: DateTime,
                      created: Instant,
                      venue: EBVenue,
                      capacity: Int,
