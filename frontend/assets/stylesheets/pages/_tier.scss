@@ -399,12 +399,6 @@ $current-indicator: rem(72px);
         &:hover {
             border: 1px solid $c-neutral2;
         }
-
-        &:active {
-            color: $white;
-            background-color: $mem-brandLightblue;
-            transition: background-color .2s ease;
-        }
     }
 
     .payment-label__title {
@@ -454,12 +448,6 @@ $current-indicator: rem(72px);
 
         &:hover {
             border: rem(1px) solid $c-neutral2;
-        }
-
-        &:active {
-            color: $white;
-            background-color: $mem-brandLightblue;
-            transition: background-color .2s ease;
         }
     }
 
