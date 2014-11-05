@@ -1,0 +1,13 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)
+
+@import model.Benefits
+
+<div class="package__list-benefits">
+    <p class="package__leadin">@Benefits.details(tier).leadin</p>
+    <ul class="u-unstyled">
+    @for((header, body, icon) <- Benefits.details(tier).list) {
+        <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
+        <li class="benefits-copy">@body</li>
+    }
+    </ul>
+</div>
