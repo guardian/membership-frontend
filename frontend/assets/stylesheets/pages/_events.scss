@@ -144,16 +144,14 @@
         }
     }
 
-    .action,
-    .action--disabled {
+    .action {
+        background-color: $black;
+
         @include mq(tablet) {
             float: left;
             margin: rem(6px $gs-gutter 0 0);
+            min-width: 0;
         }
-    }
-
-    .action {
-        background-color: $black;
 
         &:hover {
             background-color: $mem-event-button-hover;
@@ -406,20 +404,21 @@
     }
 
     .action {
-        margin-right: rem($gs-gutter);
-        margin-right: 0;
         min-width: 100%;
 
         .theme--guardian-live & {
-            background-color: $mem-live-accent;
+            background-color: $mem-live-top;
 
             &:hover {
-                background-color: darken($mem-live-accent, 5%);
+                background-color: darken($mem-live-top, 5%);
             }
         }
 
         .theme--masterclass & {
             background-color: $mem-mc-top;
+            &:hover {
+                background-color: darken($mem-mc-top, 5%);
+            }
         }
 
     }
@@ -456,7 +455,8 @@
         padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
 
         .theme--masterclass & {
-            border-top-color: $mem-mc-accent;
+            border-top: 0;
+            padding-bottom: 0;
         }
 
         .events-title-container {
@@ -626,10 +626,6 @@
             @include border-radius(50px);
             border: 0;
 
-            .theme--masterclass & {
-                background-color: $mem-mc-top;
-            }
-
             &:focus {
                 outline: 0;
             }
@@ -639,6 +635,13 @@
                 content: '';
                 fill: $black;
                 float: right;
+            }
+
+            .theme--masterclass & {
+                background-color: $mem-mc-top;
+                &:after {
+                    @extend .icon-sprite-arrow-right-black;
+                }
             }
         }
 
