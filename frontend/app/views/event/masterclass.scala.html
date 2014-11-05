@@ -1,7 +1,12 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @main("Events", containerPadding=false, htmlClass="events-bg theme--masterclass", pageInfo=pageInfo) {
-    @views.html.event.list(eventPortfolio, pageInfo) {
-        A unique programme of learning within one of the world's most forward-thinking media organisations
-    }
+    <section class="header-bar">
+        <h1 class="header-bar__title">
+            A unique programme of learning within one of the world's most forward-thinking media organisations
+        </h1>
+        <i class="header-bar__logo icon-sprite icon-sprite-masterclasses"></i>
+    </section>
+
+    @views.html.event.list(eventPortfolio, pageInfo)
 }

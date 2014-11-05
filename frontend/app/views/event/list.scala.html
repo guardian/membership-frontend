@@ -1,12 +1,7 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(header: play.twirl.api.Html)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
-
-<section class="header-bar">
-    <h1 class="header-bar__title">@header</h1>
-    <i class="header-bar__logo icon-sprite icon-sprite-guardian-live"></i>
-</section>
 
 <section class="event-blocks">
 
