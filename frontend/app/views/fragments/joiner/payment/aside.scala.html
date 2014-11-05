@@ -8,7 +8,7 @@
         <li class="form-detail__item">
             <h2 class="form__heading">What's included</h2>
             <ul>
-                @for((header, body, icon) <- Benefits.details(tier).list) {
+                @for((header, body, icon) <- Benefits.details(tier).list.slice(0, Benefits.details(tier).leadBenefits)) {
                     <li>@header</li>
                     <li>@body</li>
                 }

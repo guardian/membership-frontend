@@ -33,6 +33,7 @@
                 @for((header, body, icon) <- Benefits.details(tier).list) {
                 <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
                 <li class="benefits-copy">@body</li>
+                @for((header, body, icon) <- Benefits.details(tier).list.slice(0, Benefits.details(tier).leadBenefits)) {
                 }
             </ul>
         </div>
