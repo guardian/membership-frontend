@@ -23,6 +23,7 @@
         </div>
 
         @for(tier <- tierOpt) {
+            <p>@Benefits.details(tier).leadin</p>
 
             <ul class="package__list-benefits-element">
             @for((header, body, icon) <- Benefits.details(tier).list) {
