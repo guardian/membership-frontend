@@ -65,7 +65,7 @@
 }
 
 .form__heading {
-    @include fs-headline(3);
+    @include fs-header(3);
     margin-left: 0;
     margin-right: 0;
 }
@@ -82,7 +82,7 @@
     border: 0;
     border-top: rem(1px) solid $c-neutral3;
     display: table;
-    padding: rem(($gs-baseline / 3) * 4 - 1) rem($gs-gutter / 2);
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
     margin: 0;
     background-color: $c-neutral8; 
 
@@ -131,7 +131,7 @@
     @include mq(tablet) {
         display: table-cell;
         width: rem(gs-span(5));
-        padding-top: rem($gs-gutter + 1);
+        padding-top: rem($gs-gutter + 15px);
     }
 
     @include mq(mem-full) {
