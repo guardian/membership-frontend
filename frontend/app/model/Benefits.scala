@@ -6,17 +6,17 @@ object Benefits {
 
   case class Benefits(
     leadin: String,
-    list: Seq[(String, String, String)],
+    list: Seq[BenefitItem],
     pricing: Option[Pricing],
     cta: String,
     desc: String,
-    leadBenefits: Integer // number of items to highlight
-  )
+    leadBenefitsCount: Integer
+  ) {
+    val (leadBenefits, otherBenefits) = list.splitAt(leadBenefitsCount)
+  }
 
   // identifier is used for CSS classes as well as within this file
-  case class BenefitItem(title: String, description: String, identifier: String)  {
-    def list = (title, description, identifier)
-  }
+  case class BenefitItem(title: String, description: String, identifier: String)
 
   val allBenefits = Seq(
     BenefitItem("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
@@ -38,42 +38,29 @@ object Benefits {
     lazy val yearlySaving = yearlyMonthlyCost - yearly
   }
 
-  val friendsWithBenefits = Seq(
-    allBenefits.find(_.identifier.equals("book_tickets")),
-    allBenefits.find(_.identifier.equals("digital_digest")),
-    allBenefits.find(_.identifier.equals("video_highlights"))
-  ).flatten
+  def benefitsFilter(identifiers: String*) = identifiers.flatMap { id =>
+    allBenefits.find(_.identifier == id)
+  }
 
-  val partnerWithBenefits = Seq(
-    allBenefits.find(_.identifier.equals("discount")),
-    allBenefits.find(_.identifier.equals("plus_1_guest")),
-    allBenefits.find(_.identifier.equals("early_booking")),
-    allBenefits.find(_.identifier.equals("membership_card")),
-    allBenefits.find(_.identifier.equals("live_stream")),
-    allBenefits.find(_.identifier.equals("digital_digest")),
-    allBenefits.find(_.identifier.equals("video_highlights"))
-  ).flatten
+  val friendsWithBenefits = benefitsFilter("book_tickets", "digital_digest", "video_highlights")
 
-  val patronWithBenefits = Seq(
-    allBenefits.find(_.identifier.equals("discount_patron")),
-    allBenefits.find(_.identifier.equals("priority_booking")),
-    allBenefits.find(_.identifier.equals("complim_items")),
-    allBenefits.find(_.identifier.equals("unique_experiences")),
-    allBenefits.find(_.identifier.equals("plus_1_guest")),
-    allBenefits.find(_.identifier.equals("membership_card")),
-    allBenefits.find(_.identifier.equals("live_stream")),
-    allBenefits.find(_.identifier.equals("digital_digest")),
-    allBenefits.find(_.identifier.equals("video_highlights"))
-  ).flatten
+  val partnerWithBenefits = benefitsFilter("discount", "plus_1_guest", "early_booking",
+    "membership_card", "live_stream", "digital_digest", "video_highlights")
 
-  val friendBenefits = Benefits("As a friend:", friendsWithBenefits.map(_.list),
+  val patronWithBenefits = benefitsFilter("discount_patron", "priority_booking",
+    "complim_items", "unique_experiences", "plus_1_guest", "membership_card",
+    "live_stream", "digital_digest", "video_highlights")
+
+  val friendBenefits = Benefits("As a friend:", friendsWithBenefits,
     None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events", 3)
 
-  val partnerBenefits = Benefits("All the benefits of a Friend plus:", partnerWithBenefits.map(_.list),
-    Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with early booking and discounted tickets", 5);
+  val partnerBenefits = Benefits("All the benefits of a Friend plus:", partnerWithBenefits,
+    Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the " +
+      "Guardian brought to life, with early booking and discounted tickets", 5);
 
-  val patronBenefits = Benefits("All benefits of a partner plus:", patronWithBenefits.map(_.list),
-    Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the open exchange of ideas, with a backstage pass to the Guardian", 4)
+  val patronBenefits = Benefits("All benefits of a partner plus:", patronWithBenefits,
+    Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the " +
+      "open exchange of ideas, with a backstage pass to the Guardian", 4)
 
   val details = Map(
     Tier.Friend -> friendBenefits,
