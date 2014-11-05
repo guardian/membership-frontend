@@ -3,65 +3,54 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
-@main("Events", containerPadding = false, htmlClass = "events-bg", pageInfo=pageInfo) {
+<section class="event-blocks">
 
-    <section class="header-bar header-bar--guardian-live">
-        <h1 class="header-bar__title">Events, discussions, debates, interviews,
-            keynote speeches and festivals exclusively for Guardian Members</h1>
-        <div class="header-bar__guardian-live-logo">
-            <i class="icon-sprite icon-sprite-guardian-live"></i>
+    <div class="event-block">
+        <div class="events-title-container">
+            <h2 class="event-block-title">featured</h2>
         </div>
-    </section>
-
-    <section class="event-blocks">
-
-        <div class="event-block">
-            <div class="events-title-container">
-                <h2 class="event-block-title">featured</h2>
-            </div>
-            <div class="events-list-container">
-                <ul class="u-unstyled">
-                    @for(heroEvent <- eventPortfolio.heroOpt) {
-                        @fragments.event.item(heroEvent, true)
-                    }
-                </ul>
-                <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
-                    @for(event <- eventPortfolio.priority) {
-                        @fragments.event.item(event)
-                    }
-                </ul>
-            </div>
-        </div>
-
-        <div class="event-block">
-            <div class="events-title-container">
-                <h2 class="event-block-title">what's on</h2>
-            </div>
-            <div class="events-list-container">
-                @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
-                    <ul class="events-list events-list--items-3 u-unstyled">
-                        @for(event <- eventChunk) {
-                            @fragments.event.item(event, false)
-                        }
-                        @for(i <- Range(0, 3-eventChunk.length)) {
-                            <li class="event-item events-list__item event-item--blank"></li>
-                        }
-                    </ul>
+        <div class="events-list-container">
+            <ul class="u-unstyled">
+                @for(heroEvent <- eventPortfolio.heroOpt) {
+                    @fragments.event.item(heroEvent, true)
                 }
-            </div>
-        </div>
-    </section>
-
-    @* ===== Join Today ===== *@
-
-    <div class="home-slice home-slice--join-today">
-        <div class="home-slice__inner u-cf">
-            <h2 class="home-slice__headline">Join membership today</h2>
-            <div class="join-today__join-boxes package-list package-list--bordered">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            </div>
+            </ul>
+            <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
+                @for(event <- eventPortfolio.priority) {
+                    @fragments.event.item(event)
+                }
+            </ul>
         </div>
     </div>
-}
+
+    <div class="event-block">
+        <div class="events-title-container">
+            <h2 class="event-block-title">what's on</h2>
+        </div>
+        <div class="events-list-container">
+            @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
+                <ul class="events-list events-list--items-3 u-unstyled">
+                    @for(event <- eventChunk) {
+                        @fragments.event.item(event, false)
+                    }
+                    @for(i <- Range(0, 3-eventChunk.length)) {
+                        <li class="event-item events-list__item event-item--blank"></li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</section>
+
+@* ===== Join Today ===== *@
+
+<div class="home-slice home-slice--join-today">
+    <div class="home-slice__inner u-cf">
+        <h2 class="home-slice__headline">Join membership today</h2>
+        <div class="join-today__join-boxes package-list package-list--bordered">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        </div>
+    </div>
+</div>

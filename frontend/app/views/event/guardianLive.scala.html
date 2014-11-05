@@ -1,0 +1,12 @@
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+
+@main("Events", containerPadding=false, htmlClass="events-bg theme--guardian-live", pageInfo=pageInfo) {
+    <section class="header-bar">
+        <h1 class="header-bar__title">
+            Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members
+        </h1>
+        <i class="header-bar__logo icon-sprite icon-sprite-guardian-live"></i>
+    </section>
+
+    @views.html.event.list(eventPortfolio, pageInfo)
+}

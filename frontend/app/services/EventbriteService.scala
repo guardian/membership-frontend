@@ -27,11 +27,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
   def events: Seq[RichEvent]
-
+  def priorityEventOrdering: Seq[String]
   def mkRichEvent(event: EBEvent): RichEvent
-
-  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
-  lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -49,12 +46,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
   } yield events.map(mkRichEvent)
 
-  protected def getPriorityEventIds: Future[Seq[String]] =  for {
-    ordering <- WS.url(Config.eventOrderingJsonUrl).get()
-  } yield (ordering.json \ "order").as[Seq[String]]
-
   def getEventPortfolio: EventPortfolio = {
-    val priorityIds = priorityOrderedEventIds.get()
+    val priorityIds = priorityEventOrdering
     val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
@@ -106,7 +99,15 @@ object GuardianLiveEventService extends EventbriteService {
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
+  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
+  lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
+
+  private def getPriorityEventIds: Future[Seq[String]] =  for {
+    ordering <- WS.url(Config.eventOrderingJsonUrl).get()
+  } yield (ordering.json \ "order").as[Seq[String]]
+
   def events: Seq[RichEvent] = allEvents.get()
+  def priorityEventOrdering: Seq[String] = priorityOrderedEventIds.get()
   def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
 
   def start() {
@@ -122,14 +123,22 @@ object GuardianLiveEventService extends EventbriteService {
 }
 
 object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
+
+  val masterclassDataService = MasterclassDataService
+
   val apiToken = Config.eventbriteMasterclassesApiToken
 
   val initialValue = Nil
-  val interval = 60.seconds
+  val interval = 2.minutes
   val initialDelay = 0.seconds
 
   def refresh(): Future[Seq[RichEvent]] = getAllEvents
 
   def events: Seq[RichEvent] = agent.get()
-  def mkRichEvent(event: EBEvent): RichEvent = MasterclassEvent(event)
+
+  def priorityEventOrdering: Seq[String] = events.take(4).map(_.id)
+  def mkRichEvent(event: EBEvent): RichEvent = {
+    val masterclassData = masterclassDataService.getData(event.id)
+    MasterclassEvent(event, masterclassData)
+  }
 }
