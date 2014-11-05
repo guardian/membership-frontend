@@ -52,6 +52,11 @@
     @include fs-headline(5);
     margin-right: 0;
     padding-bottom: rem($gs-gutter * 4);
+    width: rem(220px);
+
+    @include mq(tablet) {
+        width: auto;
+    }
 
     @include mq(desktop) {
         @include fs-headline(7);
