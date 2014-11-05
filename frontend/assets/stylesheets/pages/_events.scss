@@ -850,3 +850,24 @@
         margin-top: rem(-2px);
     }
 }
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+    .svg & {
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+
+        @include mq(tablet) {
+            height: rem(87px);
+        }
+    }
+}
