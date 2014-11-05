@@ -1,5 +1,5 @@
 @(
-    currentTier: com.gu.membership.salesforce.Tier.Tier, 
+    currentTier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
     showBenefitCopy: Boolean = true
 )
@@ -8,6 +8,7 @@
 
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
+    <div class="package__header">What's included</div>
     <div class="package__list-benefits">
         @for((t, i) <- Tier.values.toSeq.sorted.zipWithIndex) {
             @if(t >= Tier.Friend & t <= currentTier){
