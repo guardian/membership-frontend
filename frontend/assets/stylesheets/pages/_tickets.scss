@@ -51,8 +51,8 @@
             .package__title,
             .price-info,
             .tickets-select-form__tier-name,
-            .price-info__sub-detail { 
-                color: $black; 
+            .price-info__sub-detail {
+                color: $black;
             }
         }
 
@@ -78,6 +78,13 @@
 
         @include mq(tablet) {
             padding: rem($gs-baseline) rem($gs-baseline) rem($gs-baseline) rem($gs-row-height * 2);
+        }
+
+        // this is a filthy hack: hide the 20% discount patron benefit item
+        // on this page as it's duplicated in the partner benefits
+        // (but reflecting this in the Benefits model is pointlessly complex)
+        .benefit-item--discount_patron {
+            display: none;
         }
     }
 
