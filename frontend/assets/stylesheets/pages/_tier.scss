@@ -26,9 +26,23 @@ $current-indicator: rem(72px);
     }
 }
 
-// .package-list is a flexbox
-// so each .package inside is equal width
-.package-list {
+.package {
+    display: block;
+    overflow: hidden;
+    margin: 0 0 rem($gs-gutter / 2);
+    background-color: $c-neutral7;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.price-info {
+    width: rem(230px);
+    float: right;
+}
+
+.package-list--flex-box {
     padding-top: 0;
 
     @include mq(desktop) {
@@ -37,60 +51,63 @@ $current-indicator: rem(72px);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
     }
+
+    .package {
+        margin: 0 0 rem($gs-gutter / 2);
+        background-color: $c-neutral7;
+        overflow: visible;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        @include mq(desktop) {
+            // .package is a flexbox too to
+            // align CTA buttons to bottom
+            // regardless of package length(!)
+            @include flexbox;
+            @include justify-content(space-between);
+            @include flex-direction(column);
+            @include align-items(stretch);
+            @include flex-grow(1);
+            @include flex-basis(0); // this fixes a bug, dunno why
+            // give them manual widths for no flexbox browsers
+            margin-bottom: rem($gs-gutter);
+            position: relative;
+            margin-right: rem($gs-gutter);
+
+            .no-flexbox & {
+                width: 31%;
+                float: left;
+                .patron-page & {
+                    width: 45%;
+                }
+            }
+            // override button widths for flexbox
+            .action {
+                width: auto;
+                min-width: 100%;
+            }
+        }
+    }
+
+    .price-info {
+        @include mq(desktop) {
+            height: rem($gs-gutter * 2.5);
+            width: 100%;
+            float: none;
+        }
+    }
 }
 
 .package-list--bordered .package {
     border: rem(1px) solid $c-neutral5;
 }
 
-.package {
-
-    // .package is a flexbox too to
-    // align CTA buttons to bottom
-    // regardless of package length(!)
-    @include flexbox;
-    @include justify-content(space-between);
-    @include flex-direction(column);
-    @include align-items(stretch);
-    background-color: $c-neutral7;
-    position: relative;
-    margin-right: rem($gs-gutter);
-
-    &:last-child {
-        margin-right: 0;
-    }
-
-    @include mq($until: desktop) {
-        display: block;
-        overflow: hidden;
-        margin: 0 0 rem($gs-gutter / 2);
-    }
-
-    @include mq(desktop) {
-        @include flex-grow(1);
-        @include flex-basis(0); // this fixes a bug, dunno why
-        // give them manual widths for no flexbox browsers
-        margin-bottom: rem($gs-gutter);
-
-        .no-flexbox & {
-            width: 31%;
-            float: left;
-            .patron-page & {
-                width: 45%;
-            }
-        }
-    }
-
-    // override button widths for flexbox
-    .action {
-        width: auto;
-        min-width: 100%;
-    }
-}
-
 .package__item-cta {
     padding: rem($gs-gutter / 2);
     height: auto;
+    text-align: right;
 
     @include mq($from: tablet, $until: desktop) {
         position: relative;
@@ -144,10 +161,6 @@ $current-indicator: rem(72px);
     padding: rem($gs-gutter / 2);
     min-height: rem($gs-gutter * 4);
 
-    @include mq($from: tablet, $until: desktop) {
-        padding: rem($gs-gutter * 2) rem($gs-gutter) 0;
-    }
-
     .about-membership &,
     .join &,
     .change-tier & {
@@ -159,6 +172,16 @@ $current-indicator: rem(72px);
 
 .package--current {
     border: rem(1px) solid #9c9c9c;
+}
+
+.package__select-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    cursor: pointer;
 }
 
 .package__title-container {
@@ -177,7 +200,7 @@ $current-indicator: rem(72px);
         padding-left: rem($gs-gutter + 16);
     }
 
-    .price-info { 
+    .price-info {
         padding-top: rem($gs-gutter + 10);
         height: rem($gs-gutter * 3 + 10);
         color: $white;
@@ -215,8 +238,8 @@ $current-indicator: rem(72px);
     &--partner {
         background-color: $mem-brandLightblue;
         .package__title,
-        .price-info { 
-            color: $black; 
+        .price-info {
+            color: $black;
         }
     }
 
@@ -225,21 +248,20 @@ $current-indicator: rem(72px);
     }
 }
 
+.package__header {
+    @include fs-bodyHeading(2);
+    border-top: 1px solid $c-neutral3;
+    border-bottom: 1px solid $c-neutral3;
+    padding: rem($gs-gutter / 2) 0;
+    width: 100%;
+}
+
 .package__list-benefits {
     position: relative;
-    padding-top: rem(45px);
+}
 
-    &:before {
-        @include fs-bodyHeading(2);
-        content: "What's included";
-        display: block;
-        border-top: 1px solid $c-neutral3;
-        border-bottom: 1px solid $c-neutral3;
-        position: absolute;
-        padding: rem($gs-gutter / 2) 0;
-        top: 0;
-        width: 100%;
-    }
+.package__leadin {
+    @include fs-bodyHeading(2);
 }
 
 .package__list-benefits-element {
@@ -288,26 +310,8 @@ $current-indicator: rem(72px);
 .price-info {
     height: rem($gs-gutter * 2);
 
-    @include mq(tablet) {
-        width: rem(280px);
-        float: right;
-    }
-
-    @include mq(desktop) {
-        height: rem($gs-gutter * 2.5);
-        width: 100%;
-        float: none;
-    }
-
     .price-info__detail {
-        @include fs-headline(3);
-        position: absolute;
-        bottom: 0;
-        left: 0;
-
-        @include mq(desktop) {
-            @include fs-headline(4);
-        }
+        @include fs-headline(4);
 
         @include mq(mem-full) {
             @include fs-headline(5);
@@ -349,11 +353,18 @@ $current-indicator: rem(72px);
         @include fs-textSans(1);
         color: $white;
         display: block;
+        margin-top: rem(-6px);
 
         .patron-page &,
         .package__title-container--partner & {
             color: $black;
         }
+    }
+}
+
+.price-info--partner {
+    .price-info__container-inner--last {
+        border-left: rem(1px) solid $black-trans;
     }
 }
 
@@ -422,27 +433,25 @@ $current-indicator: rem(72px);
 /* Join - Become a member
 ======================================================================= */
 
-.join {
-    section {
+.become-a-member {
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
 
-        @include mq(tablet) {
-            padding: rem($gs-gutter);
-        }
+    @include mq(desktop) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+    }
+
+    .package-list {
+        padding-top: rem($gs-gutter * 2);
 
         @include mq(desktop) {
-            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
-        }
-
-        @include mq(mem-full) {
-            padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
-        }
-
-        .package-list {
-            padding-top: rem($gs-gutter * 2);
-
-            @include mq(desktop) {
-                padding-top: $current-indicator;
-            }
+            padding-top: $current-indicator;
         }
     }
 }
+

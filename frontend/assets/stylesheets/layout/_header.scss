@@ -98,18 +98,6 @@ $header-margin: 36px;
     }
 }
 
-.menu-cta {
-    padding: rem(8px) rem(35px);
-    border: rem(1px) solid $white;
-    color: $white;
-    display: block;
-    &:hover {
-        color: $black;
-        color: $black-trans;
-        background-color: $white;
-    }
-}
-
 .identity__notice {
     @include fs-data(4);
 }
