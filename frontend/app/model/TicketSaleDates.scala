@@ -5,13 +5,11 @@ import com.gu.membership.salesforce.Tier
 import model.Eventbrite.{EBEvent, EBTicketClass}
 import org.joda.time.Instant
 import com.gu.membership.salesforce.Tier.{Tier, Patron, Partner}
+import org.joda.time.DateTimeZone.UTC
 
 import scala.collection.immutable.SortedMap
 
-case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSales: Option[Map[Tier.Tier, Instant]] = None) {
-  val allDistinctDates: Set[Instant] = Set(generalAvailability) ++ memberAdvanceTicketSales.map(_.values).toSeq.flatten
-  val smallestGapBetweenDates = allDistinctDates.toSeq.sorted.sliding(2).map(ds => (ds.head to ds.last).duration).toSeq.sorted.headOption
-  val needToDistinguishTimes = smallestGapBetweenDates.map(_ < 24.hours).getOrElse(false)
+case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSales: Option[Map[Tier.Tier, Instant]] = None, needToDistinguishTimes: Boolean = false) {
 
   lazy val datesByTier = memberAdvanceTicketSales.getOrElse(Map.empty).withDefaultValue(generalAvailability)
 
@@ -21,7 +19,15 @@ case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSale
 object TicketSaleDates {
 
   implicit val periodOrdering = Ordering.by[Period, Duration](_.toStandardDuration)
-  
+
+  /**
+   * Lead times each tier gets on ticket sales
+   * ticket start time in EB --------------- general release time (MEM) ----------------- Event start date
+   *  ------------(Patron lead time)-------------||---------------------------------------->
+   *                      ----(Partner lead time)||---------------------------------------->
+   *                                      Friend ||---------------------------------------->
+   */
+
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier.Value, Period]](
     4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
     48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
@@ -42,8 +48,33 @@ object TicketSaleDates {
         val generalRelease = effectiveSaleStart + gapBetweenSaleStartAndGeneralRelease.standardDuration
 
         val memberTicketAvailabilityTimes = memberLeadTimes.mapValues(generalRelease - _.standardDuration)
-        TicketSaleDates(generalRelease, Some(memberTicketAvailabilityTimes))
+
+        val needToDistinguishTicketTimes = needToDistinguishTimes(generalRelease, Some(memberTicketAvailabilityTimes))
+        if(!needToDistinguishTicketTimes) {
+
+          val memberAdvanceTicketSales = memberTicketAvailabilityTimes.mapValues(maxStartSaleTime(effectiveSaleStart, _))
+
+          TicketSaleDates(toStartOfDay(generalRelease), Some(memberAdvanceTicketSales), needToDistinguishTicketTimes)
+
+        }
+        else TicketSaleDates(generalRelease, Some(memberTicketAvailabilityTimes), needToDistinguishTicketTimes)
+
       case None => TicketSaleDates(effectiveSaleStart)
     }
+  }
+
+
+  private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) = {
+    if(effectiveSaleStart >= (tierSaleDate)) effectiveSaleStart
+    else toStartOfDay(tierSaleDate)
+  }
+
+  private def toStartOfDay(instant: Instant) = instant.toDateTime(UTC).withTimeAtStartOfDay().toInstant
+
+  private def needToDistinguishTimes(generalAvailability: Instant, memberAdvanceTicketSales: Option[Map[Tier.Tier, Instant]] = None) = {
+    val allDistinctDates: Set[Instant] = Set(generalAvailability) ++ memberAdvanceTicketSales.map(_.values).toSeq.flatten
+    val smallestGapBetweenDates = allDistinctDates.toSeq.sorted.sliding(2).map(ds => (ds.head to ds.last).duration).toSeq.sorted.headOption
+
+    smallestGapBetweenDates.map(_ < 24.hours).getOrElse(false)
   }
 }
