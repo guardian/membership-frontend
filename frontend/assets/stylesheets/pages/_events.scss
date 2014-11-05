@@ -336,34 +336,28 @@
     padding-top: rem(3px);
 }
 
-.event-content__info {
-    background-color: $c-neutral7;
+.event-content__sidebar {
     margin-bottom: rem($gs-gutter);
-    padding: rem($gs-gutter);
 
     @include mq(tablet) {
         float: left;
         width: gs-span(4);
     }
+}
+
+.event-content__info {
+    background-color: $c-neutral7;
+    padding: rem($gs-gutter);
+    @include fs-textSans(3);
 
     .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
     }
 
-    .event-content__time,
-    .event-content__location,
-    .event-content__tickets,
-    .event-content__price {
-        @include fs-textSans(3);
-    }
-
     .event-content__price {
         padding-bottom: 0;
-
-        .event-content__price-amount {
-            @include fs-header(5);
-        }
+        @include fs-header(5);
     }
 
     .event-content__sale-dates {
