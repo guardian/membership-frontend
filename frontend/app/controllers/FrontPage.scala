@@ -8,6 +8,10 @@ trait FrontPage extends Controller {
     Ok(views.html.index())
   }
 
+  def home = CachedAction { implicit request =>
+    Ok(views.html.home())
+  }
+
 }
 
 object FrontPage extends FrontPage
