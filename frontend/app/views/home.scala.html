@@ -1,0 +1,48 @@
+@()(implicit token: play.filters.csrf.CSRF.Token)
+
+@import views.support.Asset
+
+@main("Home Page a-b", containerPadding=false) {
+
+    <section class="home-hero u-cf">
+        <div class="slide-show">
+            <div class="slide-show__img slide-show__img--one"></div>
+            <div class="slide-show__img slide-show__img--two"></div>
+            <div class="slide-show__img slide-show__img--three"></div>
+            <div class="slide-show__img slide-show__img--four"></div>
+        </div>
+        <div class="home-hero__detail">
+            Question time Russell Brand event
+            <time>23 October 2014</time>
+        </div>
+        <div class="home-hero__blurb">
+            <p>Guardian Membership brings you closer to the stories of the day, connects you to the conversations that matter and introduces you to fellow members who share your interests</p>
+            <a class="action" href="/join">Join today</a>
+        </div>
+    </section>
+
+    <section class="home-promo-list">
+        <ul class="u-unstyled">
+            <li class="home-promo">
+                <div class="home-promo__img home-promo__img--one"></div>
+                <p class="home-promo__description">Events that bring the Guardian to life</p>
+                <a class="black-arrow-round-cta" href=""></a>
+            </li>
+            <li class="home-promo">
+                <div class="home-promo__img home-promo__img--two"></div>
+                <p class="home-promo__description">What's included in Guardian Membership?</p>
+                <a class="black-arrow-round-cta" href=""></a>
+            </li>
+            <li class="home-promo">
+                <div class="home-promo__img home-promo__img--three"></div>
+                <p class="home-promo__description">Become a Patron today</p>
+                <a class="black-arrow-round-cta" href=""></a>
+            </li>
+            <li class="home-promo">
+                <div class="home-promo__img home-promo__img--four"></div>
+                <p class="home-promo__description">Why are so many Guardian Live events in London?</p>
+                <a class="black-arrow-round-cta" href=""></a>
+            </li>
+        </ul>
+    </section>
+}
