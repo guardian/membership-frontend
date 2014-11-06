@@ -12,13 +12,8 @@
         @fragments.form.sectionHeading("Choose a membership tier")
 
         <div class="l-row">
-            <section class="two-thirds">
-
             @fragments.joiner.joinStepCounter(1, 3)
-
-                <header class="section__heading u-cf">
-                    <h1 class="section-headline section-headline--no-margin">Choose a membership tier</h1>
-                </header>
+            <section class="two-thirds">
                 <div class="package-list">
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
