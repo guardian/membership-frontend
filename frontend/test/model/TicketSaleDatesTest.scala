@@ -80,9 +80,13 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
         Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json").as[EBResponse[EBEvent]].data.filter(_.ticket_classes.nonEmpty)
 
       forall(eventsWithTickets) { event: EBEvent =>
-        val ticketSaleDates = TicketSaleDates.datesFor(event, event.ticket_classes.head)
+        val tickets = event.ticket_classes.head
+        val effectiveStartDate = tickets.sales_start.getOrElse(event.created)
+
+        val ticketSaleDates = TicketSaleDates.datesFor(event, tickets)
         val datesByTier = ticketSaleDates.datesByTier
 
+        datesByTier(Patron) must be_==(effectiveStartDate)
         datesByTier(Patron) must be_<=(datesByTier(Partner))
         datesByTier(Partner) must be_<=(datesByTier(Friend))
         datesByTier(Friend) must be_<=(event.start)
