@@ -64,9 +64,9 @@
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
-                    @defining(dateRange(event.start, event.end)) { dates =>
-                        <span class="event-details__time__part">@dates._1</span>
-                        - <span class="event-details__time__part">@dates._2</span>
+                    @defining(dateRange(event.start, event.end)) { range =>
+                        <span class="event-details__time__part">@range.start</span>
+                        - <span class="event-details__time__part">@range.end</span>
                     }
                 </div>
                 <div class="event-details__location">

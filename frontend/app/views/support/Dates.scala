@@ -42,23 +42,20 @@ object Dates {
     }
   }
 
-  def dateRange(dt1: DateTime, dt2: DateTime): (String, String) = {
-    def zipWithPadding(a: Seq[String], b: Seq[String]) = {
-      val maxLen = a.length max b.length
-      a.padTo(maxLen, "") zip b.padTo(maxLen, "")
-    }
+  case class Range(start: String, end: String)
 
-    if (dt1.withTimeAtStartOfDay() == dt2.withTimeAtStartOfDay()) {
-      (prettyDateWithTimeAndDayName(dt1), prettyTime(dt2))
+  def dateRange(start: DateTime, end: DateTime): Range = {
+    def dateToks(dt: DateTime) = dt.toString("EEEE d MMMMM YYYY").split(" ").reverse
+
+    if (start.withTimeAtStartOfDay() == end.withTimeAtStartOfDay()) {
+      Range(prettyDateWithTimeAndDayName(start), prettyTime(end))
     } else {
-      val dt1toks = dt1.toString("EEEE d MMMMM YYYY").split(" ").reverse
-      val dt2toks = dt2.toString("EEEE d MMMMM YYYY").split(" ").reverse
+      val startToks = dateToks(start)
+      val endToks = dateToks(end)
 
-      val start = zipWithPadding(dt1toks, dt2toks)
-        .dropWhile { case (a, b) => a == b }
-        .map { case (a, b) => a }
+      val newStartToks = (startToks zip endToks).dropWhile { case (a, b) => a == b }.map { case (a, b) => a }
 
-      (start.reverse.mkString(" "), dt2toks.reverse.mkString(" "))
+      Range(newStartToks.reverse.mkString(" "), endToks.reverse.mkString(" "))
     }
   }
 }
