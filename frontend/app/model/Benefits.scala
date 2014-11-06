@@ -18,7 +18,7 @@ object Benefits {
     lazy val yearlySaving = yearlyMonthlyCost - yearly
   }
 
-  val friendBenefits = Benefits("As a friend:", Seq(
+  val friendBenefits = Benefits("As a Friend:", Seq(
     ("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
     ("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"),
     ("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights")
@@ -32,7 +32,7 @@ object Benefits {
     ("Early booking", "Early ticket booking (before Friends)", "early_booking")
   ), Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the Guardian brought to life, with early booking and discounted tickets");
 
-  val patronBenefits = Benefits("All benefits of a partner plus:", Seq(
+  val patronBenefits = Benefits("All benefits of a Partner plus:", Seq(
     ("Priority booking", "Additional priority ticket booking (before Partners)", "priority_booking"),
     ("Unique experiences", "Get behind the scenes of our journalism", "unique_experiences"),
     ("Special thank-yous", "The occasional unique gift to thank you for your support", "complim_items")
