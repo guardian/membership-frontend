@@ -65,7 +65,7 @@ object TicketSaleDates {
 
 
   private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) = {
-    if(effectiveSaleStart >= (tierSaleDate)) effectiveSaleStart
+    if(effectiveSaleStart >= tierSaleDate) effectiveSaleStart
     else toStartOfDay(tierSaleDate)
   }
 
