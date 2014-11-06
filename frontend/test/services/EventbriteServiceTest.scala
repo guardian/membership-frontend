@@ -33,6 +33,7 @@ class EventbriteServiceTest extends PlaySpecification {
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgUrl = ""
     val socialImgUrl = ""
+    val allowDiscounts = false
   }
 
 
@@ -60,7 +61,7 @@ class EventbriteServiceTest extends PlaySpecification {
     }
 
     def events: Seq[RichEvent] = Nil
-
+    def priorityEventOrdering: Seq[String] = Nil
     def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
   }
 

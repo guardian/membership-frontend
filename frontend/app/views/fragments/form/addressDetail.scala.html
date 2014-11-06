@@ -49,7 +49,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label" for="address-line-one-@(formType)">Address line 1</label>
+                <label class="label @if(addressRequired == false){optional-marker}" for="address-line-one-@(formType)">Address line 1</label>
                 <input type="text"
                        name="@(formType).lineOne"
                        value="@address1"
@@ -60,7 +60,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label" for="address-line-two-@(formType)">Address line 2</label>
+                <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
                 <input type="text"
                        name="@(formType).lineTwo"
                        value="@address2"
@@ -69,7 +69,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label" for="town-@(formType)">Town</label>
+                <label class="label @if(addressRequired == false){optional-marker}" for="town-@(formType)">Town</label>
                 <input type="text"
                        name="@(formType).town"
                        value="@town"
@@ -84,7 +84,7 @@ county: Option[String], userCountry: Option[String])
 
             <div class="js-county-container-@(formType)">
                 <div class="form-field js-county-section">
-                    <label class="label" for="county-or-state-@(formType)">County</label>
+                    <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
                     <input type="text"
                     name="@(formType).countyOrState"
                     value="@county"
@@ -94,7 +94,7 @@ county: Option[String], userCountry: Option[String])
             </div>
 
             <div class="form-field">
-                <label class="label js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
+                <label class="label optional-marker js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
                 <input type="text"
                        name="@(formType).postCode"
                        value="@postcode"

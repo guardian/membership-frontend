@@ -14,7 +14,7 @@
     @if(event.isSoldOut) {
         <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
     } else {
-        <a class="action action--event-buy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+        <a class="action js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
     }
     <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
         <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
@@ -30,12 +30,31 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event") {
+@theme = @{
+    event match {
+        case _: MasterclassEvent => "theme--masterclass"
+        case _: GuLiveEvent => "theme--guardian-live"
+    }
+}
+
+@icon = @{
+    event match {
+        case _: MasterclassEvent => "icon-sprite-masterclasses"
+        case _: GuLiveEvent => "icon-sprite-guardian-live"
+    }
+}
+
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
 
     <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
-                <div class="event-masthead__title section-header page-header case--lower">Events</div>
+                <div class="event-masthead__title section-header page-header case--lower">
+                    @event match {
+                        case _: MasterclassEvent => { Masterclasses }
+                        case _: GuLiveEvent => { Events }
+                    }
+                </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>
@@ -44,7 +63,13 @@
     <div class="event-header event-header--shade">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
-                <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
+                <div class="event-details__time">
+                    <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.start)</span>
+                    @event match {
+                        case _: MasterclassEvent => { - <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.end)</span> }
+                        case _ => {}
+                    }
+                </div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
                     @if(event.eventAddressLine.nonEmpty) {
@@ -80,9 +105,7 @@
                     </div>
                 }
             }
-            <div class="guardian-live-logo">
-                <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
-            </div>
+            <i class="event-logo @icon"></i>
         </div>
 
     </div>
@@ -104,31 +127,34 @@
                 </div>
             </div>
 
-            <div class="event-content__info">
-                <div class="event-content__name" itemprop="name">@event.name.text</div>
-                <div class="event-content__time event-content--line-divider u-cf">
-                    <div class="event-content__first">
-                        <i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>
+            <div class="event-content__sidebar">
+                @event match {
+                    case _: MasterclassEvent => { <img class="responsive-img hidden-mobile" src="@event.imgUrl" /> }
+                    case _ => {}
+                }
+                <div class="event-content__info">
+                    <div class="event-content__name" itemprop="name">@event.name.text</div>
+                    <div class="event-content__time event-content--line-divider u-cf">
+                        <div class="event-content__first">
+                            <i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>
+                        </div>
+                        <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                     </div>
-                    <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
-                </div>
-                <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                    <div class="event-content__first">
-                        <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
+                    <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                        <div class="event-content__first">
+                            <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
+                        </div>
+                        <div class="event-content__second">
+                            <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                            @if(event.eventAddressLine.nonEmpty) {
+                                <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
+                            }
+                        </div>
                     </div>
-                    <div class="event-content__second">
-                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                        @if(event.eventAddressLine.nonEmpty) {
-                            <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
-                        }
-                    </div>
-                </div>
 
-                @if(event.isNoTicketEvent == false) {
+                    @if(event.isNoTicketEvent == false) {
 
-                    @for(ticket <- event.generalReleaseTicket) {
-
-                        <div class="event-content__tickets event-content--line-divider u-cf" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+                        @for(ticket <- event.generalReleaseTicket) {
                             @if(event.isSoldOut) {
                                 <meta itemprop="availability" content="http://schema.org/SoldOut">
                             } else {
@@ -143,8 +169,8 @@
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event-content__price event-content--line-divider">
-                                        <span class="event-content__price-amount js-event-price" itemprop="highPrice">@pricing.formattedPrice</span>
+                                    <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
+                                        @pricing.formattedPrice
                                     </div>
                                     <div class="event-content__trail">
                                         <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
@@ -155,9 +181,9 @@
                             }
                             @ticketCta
                             @becomeMemberCta(ticket)
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
     </div>

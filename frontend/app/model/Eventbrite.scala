@@ -10,6 +10,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
+import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
@@ -78,6 +79,7 @@ object Eventbrite {
                      url: String,
                      id: String,
                      start: DateTime,
+                     end: DateTime,
                      created: Instant,
                      venue: EBVenue,
                      capacity: Int,
@@ -121,6 +123,8 @@ object Eventbrite {
     val event: EBEvent
     val imgUrl: String
     val socialImgUrl: String
+
+    val allowDiscounts: Boolean
   }
 
   object RichEvent {
@@ -138,11 +142,15 @@ object Eventbrite {
       val largestRatio = Config.eventImageRatios.toArray.last
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
+
+    val allowDiscounts = true
   }
 
-  case class MasterclassEvent(event: EBEvent) extends RichEvent {
-    val imgUrl = ""
+  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
     val socialImgUrl = imgUrl
+
+    val allowDiscounts = false
   }
 }
 

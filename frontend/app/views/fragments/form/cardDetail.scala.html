@@ -9,7 +9,7 @@
     <div class="fieldset__heading">
         <h2 class="form__heading">Card details</h2>
         <div class="form__note js-card-details-note">
-            <p><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This site is secure</p>
+            <p class="form-padlock-text"><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This site is secure</p>
             <p class="credit-card-note"><span class="credit-card-note__header">First payment</span> will be taken today under the name Guardian News & Media.</p>
             <p class="credit-card-note"><span class="credit-card-note__header">Ongoing payments</span>
                 @Benefits.details(tier).pricing.fold{
@@ -25,7 +25,7 @@
     <div class="fieldset__fields">
         <div class="form-field">
             <div class="u-cf">
-                <label class="label form-field__note form-field__note--left" for="cc-num">Card Number</label>
+                <label class="label form-field__note form-field__note--left" for="cc-num">Card number</label>
                 <div class="form-field__note form-field__note--right">
                     <ul class="credit-card-container inline-list">
                         <li class="credit-card-container-list__item inline-list__item">

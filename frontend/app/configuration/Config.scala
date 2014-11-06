@@ -139,4 +139,6 @@ object Config {
 
   val ophanJsUrl = config.getString("ophan.js.url")
 
+  val contentApiKey = config.getString("content.api.key")
+
 }

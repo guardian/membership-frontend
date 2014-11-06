@@ -10,6 +10,11 @@
 
     .fieldset {
         border-top: rem(1px) solid $c-neutral2;
+        margin-left: 0;
+
+        @include mq(desktop) {
+            width: rem(630px);
+        }
 
         &:last-child {
             border: 0;
