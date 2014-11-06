@@ -54,7 +54,8 @@
 }
 
 // Join page - fix height of tier boxes
-.join {
+.join,
+.change-tier {
     .package {
         @include mq(desktop) {
             height: rem(1400px);
@@ -79,12 +80,10 @@
 // general page - fix height of tier boxes
 .package {
     @include mq(desktop) {
-        height: rem(1400px);
         margin-bottom: rem($gs-gutter * 3);
     }
 
     @include mq(mem-full) {
-        height: rem(1350px);
         margin-bottom: rem($gs-gutter * 3);
     }
 }
