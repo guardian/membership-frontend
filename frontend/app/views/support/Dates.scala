@@ -17,9 +17,9 @@ object Dates {
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
+  def prettyTime(dt: DateTime): String = dt.toString("h:mm") + dt.toString("a").toLowerCase
 
-  def prettyDateWithTime(dt: DateTime): String =
-    prettyDate(dt) + dt.toString(", h:mm") + dt.toString("a").toLowerCase
+  def prettyDateWithTime(dt: DateTime): String = prettyDate(dt) + ", " + prettyTime(dt)
 
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
@@ -39,6 +39,23 @@ object Dates {
       case 2 => "nd"
       case 3 => "rd"
       case _ => "th"
+    }
+  }
+
+  case class Range(start: String, end: String)
+
+  def dateRange(start: DateTime, end: DateTime): Range = {
+    def dateToks(dt: DateTime) = dt.toString("EEEE d MMMMM YYYY").split(" ").reverse
+
+    if (start.withTimeAtStartOfDay() == end.withTimeAtStartOfDay()) {
+      Range(prettyDateWithTimeAndDayName(start), prettyTime(end))
+    } else {
+      val startToks = dateToks(start)
+      val endToks = dateToks(end)
+
+      val newStartToks = (startToks zip endToks).dropWhile { case (a, b) => a == b }.map { case (a, b) => a }
+
+      Range(newStartToks.reverse.mkString(" "), endToks.reverse.mkString(" "))
     }
   }
 }
