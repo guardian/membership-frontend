@@ -17,9 +17,9 @@ object Dates {
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
+  def prettyTime(dt: DateTime): String = dt.toString("h:mm") + dt.toString("a").toLowerCase
 
-  def prettyDateWithTime(dt: DateTime): String =
-    prettyDate(dt) + dt.toString(", h:mm") + dt.toString("a").toLowerCase
+  def prettyDateWithTime(dt: DateTime): String = prettyDate(dt) + ", " + prettyTime(dt)
 
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
@@ -39,6 +39,26 @@ object Dates {
       case 2 => "nd"
       case 3 => "rd"
       case _ => "th"
+    }
+  }
+
+  def dateRange(dt1: DateTime, dt2: DateTime): (String, String) = {
+    def zipWithPadding(a: Seq[String], b: Seq[String]) = {
+      val maxLen = a.length max b.length
+      a.padTo(maxLen, "") zip b.padTo(maxLen, "")
+    }
+
+    if (dt1.withTimeAtStartOfDay() == dt2.withTimeAtStartOfDay()) {
+      (prettyDateWithTimeAndDayName(dt1), prettyTime(dt2))
+    } else {
+      val dt1toks = dt1.toString("EEEE d MMMMM YYYY").split(" ").reverse
+      val dt2toks = dt2.toString("EEEE d MMMMM YYYY").split(" ").reverse
+
+      val start = zipWithPadding(dt1toks, dt2toks)
+        .dropWhile { case (a, b) => a == b }
+        .map { case (a, b) => a }
+
+      (start.reverse.mkString(" "), dt2toks.reverse.mkString(" "))
     }
   }
 }
