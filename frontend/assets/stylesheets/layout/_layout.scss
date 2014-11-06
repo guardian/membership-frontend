@@ -149,9 +149,8 @@ body {
 
     .two-thirds {
         @include mq(tablet) {
-            border-right: rem(1px) solid $c-neutral4;
             width: rem(gs-span(8));
-            padding: 0 $gs-gutter;
+            padding-left: $gs-gutter;
         }
     }
 
@@ -161,6 +160,10 @@ body {
         @include mq(tablet) {
             width: rem(gs-span(4));
             padding-left: rem($gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(4) + $gs-gutter * 2);
         }
     }
 
