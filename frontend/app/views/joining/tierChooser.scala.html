@@ -40,19 +40,20 @@
     </div>
 }
 
-@main("Join Choose Tier", pageInfo=pageInfo) {
+@main("Join Choose Tier", pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
 
-    <section class="section-two-thirds">
+    <section class="section-two-thirds u-cf">
 
-        @fragments.tickets.ticketsFunnel(1, StepTwo = "", StepThree = "", StepFour = "")
+        @fragments.form.sectionHeading("Choose a membership tier")
 
         <div class="l-row">
 
+            @fragments.joiner.joinStepCounter(1, 3)
+
         <section class="two-thirds">
 
-            @fragments.form.sectionHeading("Choose a membership tier")
-
             <form action="" method="POST" id="payment-form" class="form tickets-select-form">
+
                 @CSRF.formField
 
                 @for(tier <- Tier.values.toSeq.sorted){

@@ -389,33 +389,95 @@ $current-indicator: rem(72px);
 .upgrade__payment-label {
     display: block;
     position: relative;
-    border: rem(1px) solid #cccccc;
-    padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
-    @include border-radius(5px);
 
-    span {
+    .payment-label__wrapper {
+        @include fs-textSans(3);
+        width: 100%;
         display: block;
-        @include fs-textSans(4);
-        margin: 0 0 $gs-baseline;
-        &.payment-label__title {
-            @include fs-headline(2);
+        border: 1px solid transparent;
+
+        &:hover {
+            border: 1px solid $c-neutral2;
+        }
+    }
+
+    .payment-label__title {
+        @include fs-bodyHeading(2);
+        display: block;
+        
+    }
+
+    .payment-label__amount,
+    .payment-label__note {
+        display: block;
+    }
+
+    input[type=radio] {
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__wrapper {
+        display: inline-block;
+        padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+        position: relative;
+
+        &:before {
+            @include radio-circle ($c-neutral5);
+        }
+    }
+
+    input[type=radio]:checked + .payment-label__wrapper {
+        border-color: $mem-brandLightblue;
+
+        &:before {
+            @include radio-circle ();
+        }
+    }
+}
+
+/* Billing address
+======================================================================= */
+
+.address-fieldset__inner {
+
+    .payment-label__title {
+        @include fs-bodyCopy(2);
+        width: 100%;
+        display: block;
+        border: rem(1px) solid transparent;
+
+        &:hover {
+            border: rem(1px) solid $c-neutral2;
         }
     }
 
     input[type=radio] {
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        top: rem(10px);
-        left: rem(6px);
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__title {
+        display: inline-block;
+        padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+        position: relative;
+
+        &:before {
+            @include radio-circle ($c-neutral5);
+        }
     }
 
     input[type=radio]:checked + .payment-label__title {
-        font-weight: bold;
+        border-color: $mem-brandLightblue;
+
+        &:before {
+            @include radio-circle ();
+        }
     }
 
-    &:hover {
-        background-color: #eeeeee;
+}
+
+.address-fieldset__country {
+    select {
+        width: 100%;
     }
 }
 

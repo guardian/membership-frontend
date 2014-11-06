@@ -4,26 +4,31 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 @import com.gu.membership.salesforce.Tier.Friend
 @import helper._
 
-@main("Address details | Friend") {
+@main("Address details | Friend", containerPadding = false, isBrochure = true) {
 
-    @fragments.tickets.ticketsFunnel(3, StepOne = "", StepTwo = "", StepThree= "Location", StepFour = "")
+    <section class="section-payment u-cf">
 
-    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
+        <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
+            @CSRF.formField
+            @fragments.form.errorMessageDisplay()
+            @fragments.form.sectionHeading("Location", true)
 
-    <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
-        @CSRF.formField
-        @fragments.form.errorMessageDisplay()
-        @fragments.form.sectionHeading("Location", true)
-        @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-        @fragments.form.addressDetail("Address", "Tell us where you live and we'll keep you posted on events happening in your local community.", "deliveryAddress", false,
-        userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
-        @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+            <div class="form__signin">
+                @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
+            </div>
 
-        @if(!passwordExists) {
-            @fragments.form.passwordDetail()
-        }
+            @fragments.joiner.joinStepCounter(3, 3)
+            @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+            @fragments.form.addressDetail("Address", "Tell us where you live and we'll keep you posted on events happening in your local community.", "deliveryAddress", false,
+            userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
+            @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
-        @fragments.form.submit("Join now")
-    </form>
+            @if(!passwordExists) {
+                @fragments.form.passwordDetail()
+            }
 
+            @fragments.form.submit("Join now")
+        </form>
+
+    </section>
 }

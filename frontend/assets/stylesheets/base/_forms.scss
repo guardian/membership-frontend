@@ -10,53 +10,141 @@
 
 .form {
     margin-bottom: rem($gs-baseline * 2);
+    position: relative;
+
+    > .form__note {
+        position: absolute;
+
+        @include mq(desktop) {
+            position: static;
+            float: right;
+            display: block;
+            border-top: rem(1px) solid $c-neutral3;
+            width: rem(gs-span(2) + $gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(3));
+        }
+    }
+
+    .terms-info {
+        @include fs-textSans(3);
+    }
+}
+
+.form__signin {
+    display: block;
+    @include fs-bodyCopy(2);
+    
+    @include mq(desktop) {
+        position: absolute;
+        top: rem(9rem);
+        left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
+        left: rem(gs-span(2) + $gs-gutter);
+    }
 }
 
 .form__section-heading {
     @include fs-headline(5);
-    margin-left: 0;
     margin-right: 0;
-    font-weight: bold;
+    padding-bottom: rem($gs-gutter * 4);
+    width: rem(220px);
+
+    @include mq(tablet) {
+        width: auto;
+    }
+
+    @include mq(desktop) {
+        @include fs-headline(7);
+        margin-left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }    
 }
 
 .form__heading {
-    @include fs-bodyHeading(3);
+    @include fs-header(3);
     margin-left: 0;
     margin-right: 0;
 }
 
 .form__note,
 .form-field__note {
-    font-family: $f-sans-serif-text;
-    font-size: rem(14px);
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    padding-top: rem($gs-baseline / 2);
     margin-bottom: rem(8px);
 }
 
 .fieldset {
     border: 0;
-    border-top: rem(1px) solid $c-neutral7;
+    border-top: rem(1px) solid $c-neutral3;
     display: table;
-    padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline * 2);
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
     margin: 0;
+    background-color: $c-neutral8; 
+
+    @include mq(desktop) {
+        width: rem(gs-span(8));
+        margin-left: rem(gs-span(2));
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(9));
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }
 }
 
 .fieldset--no-top-border {
     border-top: 0;
 }
 
-@include mq(desktop) {
-    .fieldset__heading {
+.fieldset--no-bg {
+    background: transparent;
+    padding-top: rem(5px);
+}
+
+.fieldset__heading {
+    vertical-align: top;
+
+    @include mq(tablet) {
         display: table-cell;
-        padding-right: rem($gs-gutter * 5);
-        width: rem(gs-span(4));
-        vertical-align: top;
+        padding-right: rem($gs-gutter * 2);
+        width: rem(gs-span(4) + 40);
     }
 
-    .fieldset__fields {
-        display: table-cell;
-        vertical-align: top;
-        width: rem(gs-span(6));
+    @include mq(desktop) {
+        width: rem(gs-span(3));
     }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(4));
+    }
+}
+
+.fieldset__fields {
+    vertical-align: top;
+    padding-top: rem($gs-gutter);
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: rem(gs-span(5));
+        padding-top: rem($gs-gutter + 15px);
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(5) + $gs-gutter);
+    }
+}
+
+.fieldset__fields--no-padding {
+    padding-top: 0;
 }
 
 .form-fields-group .form-field {
@@ -65,7 +153,7 @@
 
 .form-field {
     list-style: none;
-    margin: 0 0 rem($gs-baseline * 2);
+    margin: 0 0 rem($gs-gutter);
     padding: 0;
 }
 
@@ -120,6 +208,19 @@
     color: $newsRed;
     margin-top: rem(6px);
     padding: rem(7px) rem(($gs-baseline / 3) * 2);
+
+    @include mq(desktop) {
+        display: block;
+        position: absolute;
+        top: rem($gs-gutter * 2);
+        left: rem(gs-span(2));
+        width: rem(gs-span(8));
+    }
+
+    @include mq(mem-full) {
+        left: rem(gs-span(2) + $gs-gutter);
+        width: rem(gs-span(9));
+    }
 }
 
 .form__success {
@@ -173,11 +274,10 @@
 }
 
 .label {
+    @include fs-bodyCopy(2);
     color: $c-neutral1;
     cursor: pointer;
     display: block;
-    font-size: rem(16px);
-    line-height: rem(24px);
     margin-bottom: rem(6px);
 }
 
@@ -202,7 +302,7 @@
     -webkit-appearance: none;
 
     &:focus {
-        border-color: $c-neutral2;
+        border-color: $mem-brandLightblue;
     }
 
     @include mq(tablet) {
@@ -238,7 +338,7 @@
 .submit-input {
     background: $c-newsDefault;
     border: 0 none;
-    color: #ffffff;
+    color: $white;
     cursor: pointer;
     display: inline-block;
     font-size: rem(14px);
@@ -281,23 +381,18 @@
     margin-right: rem(6px);
 }
 
-.required-marker {
+.optional-marker {
     &:after {
         vertical-align: middle;
-        content: '*';
-        color: $error;
-        font-family: $f-sans-serif-text;
-        font-size: rem(18px);
+        content: '(optional)';
+        color: $c-neutral2;
+        @include fs-textSans(1);
         margin-left: rem(4px);
     }
 }
 
 .address-fieldset {
     overflow: hidden;
-    padding: 0;
-    .address-fieldset__inner {
-        padding: rem(($gs-baseline / 3) * 4 - 1) 0 rem($gs-baseline*2);
-    }
 }
 
 .password-strength-indicator {

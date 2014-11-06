@@ -86,6 +86,7 @@
     }
 
     .tickets-select-form__tier-name {
+        @include fs-headline(5);
         padding-bottom: rem($gs-baseline);
         padding-left: rem(95px);
         color: $white;

@@ -4,11 +4,15 @@
 @import configuration.Config
 @import model.Benefits
 
-@main("Sign in/Register") {
+@main("Sign in/Register", containerPadding = false, isBrochure = true) {
 
     <section class="section-signin">
 
-        @fragments.tickets.ticketsFunnel(2, StepOne = "", StepThree = "", StepFour = "")
+        <header class="section__heading u-cf">
+            <h1 class="section-headline section-headline--padding-left">Sign in / Register</h1>
+        </header>
+
+        @fragments.joiner.joinStepCounter(2, 3)
 
         <div class="signin__actions">
             <div class="signin__login">
