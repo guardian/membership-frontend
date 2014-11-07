@@ -23,7 +23,7 @@ trait User extends Controller {
     def futureCardDetails = request.member match {
       case paidMember: PaidMember =>
         for {
-          customer <- services.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+          customer <- request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
         } yield Json.obj("card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`))
 
       case member: FreeMember =>
@@ -32,8 +32,8 @@ trait User extends Controller {
 
     val futurePaymentDetails = for {
       cardDetails <- futureCardDetails
-      subscriptionStatus <- services.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
-      subscriptionDetails <- services.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+      subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
     } yield Json.obj(
       "optIn" -> !subscriptionStatus.cancelled,
       "subscription" -> (cardDetails ++ Json.obj(

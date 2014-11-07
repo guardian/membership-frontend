@@ -14,6 +14,7 @@ import forms.MemberForm._
 import model.StripeSerializer._
 import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
 import services._
+import actions._
 
 trait DowngradeTier {
   self: TierController =>
@@ -24,15 +25,16 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.downgradeSubscription(request.member, FriendTierPlan)
+      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, FriendTierPlan)
     } yield Redirect("/tier/change/friend/summary")
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
+    val subscriptionService = request.touchpointBackend.subscriptionService
     for {
-      subscriptionStatus <- touchpointBackend.subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
-      currentSubscription <- touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-      futureSubscription <- touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
+      subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+      futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
     } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
   }
 }
@@ -82,7 +84,7 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      _ <- MemberService.cancelSubscription(request.member)
+      _ <- request.touchpointBackend.cancelSubscription(request.member)
     } yield {
       Redirect("/tier/cancel/summary")
     }
@@ -91,12 +93,12 @@ trait CancelTier {
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
     def subscriptionDetailsFor(memberOpt: Option[Member]) = {
       memberOpt.collect { case paidMember: PaidMember =>
-        touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
       }
     }
 
     for {
-      memberOpt <- touchpointBackend.memberRepository.get(request.user.id)
+      memberOpt <- request.touchpointBackend.memberRepository.get(request.user.id)
       subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
     } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
   }

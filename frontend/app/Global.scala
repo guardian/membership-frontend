@@ -14,7 +14,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
     GuardianLiveEventService.start()
     MasterclassEventService.start()
 
-    touchpointBackend.start()
+    TouchpointBackend.All.foreach(_.start())
     MasterclassDataService.start()
   }
 

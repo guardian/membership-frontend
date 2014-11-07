@@ -1,23 +1,18 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import com.gu.identity.model.User
-
-import com.gu.membership.salesforce._
 import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
-
-import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.Eventbrite.{RichEvent, EBCode}
-import model.Stripe.{Customer, Card}
-import model.{PaidTierPlan, FriendTierPlan, TierPlan}
+import model.Eventbrite.{EBCode, RichEvent}
+import model.PaidTierPlan
+import model.Stripe.Customer
 import monitoring.MemberMetrics
-import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -49,8 +44,9 @@ trait MemberService {
 
   def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] =
     Timing.record(MemberMetrics, "createMember") {
+      val touchpointBackend = TouchpointBackend.forUser(user)
       def futureCustomerOpt = formData match {
-        case paid: PaidMemberJoinForm => services.touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
+        case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case friend: FriendJoinForm => Future.successful(None)
       }
 
@@ -58,11 +54,11 @@ trait MemberService {
 
       for {
         customerOpt <- futureCustomerOpt
-        memberId <- services.touchpointBackend.memberRepository.upsert(user.id, initialData(user, formData))
-        subscription <- services.touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
+        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(user, formData))
+        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
-        updatedMember <- services.touchpointBackend.memberRepository.upsert(user.id, memberData(formData.tierPlan.tier, customerOpt))
+        updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.tierPlan.tier, customerOpt))
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
@@ -89,38 +85,14 @@ trait MemberService {
     }
   }
 
-  def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
-    for {
-      customer <- services.touchpointBackend.stripeService.Customer.updateCard(member.stripeCustomerId, token)
-      memberId <- services.touchpointBackend.memberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
-    } yield customer.card
-  }
-
-  def cancelSubscription(member: Member): Future[String] = {
-    for {
-      subscription <- services.touchpointBackend.subscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
-    } yield {
-      MemberMetrics.putCancel(member.tier)
-      ""
-    }
-  }
-
-  def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
-    for {
-      _ <- services.touchpointBackend.subscriptionService.downgradeSubscription(member.salesforceAccountId, FriendTierPlan)
-    } yield {
-      MemberMetrics.putDowngrade(tierPlan.tier)
-      ""
-    }
-  }
-
   // TODO: this currently only handles free -> paid
   def upgradeSubscription(member: FreeMember, user: User, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
     for {
-      customer <- services.touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
-      paymentResult <- services.touchpointBackend.subscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
-      subscriptionResult <- services.touchpointBackend.subscriptionService.upgradeSubscription(member.salesforceAccountId, PaidTierPlan(newTier, form.payment.annual))
-      memberId <- services.touchpointBackend.memberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
+      customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
+      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member.salesforceAccountId, PaidTierPlan(newTier, form.payment.annual))
+      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
     } yield {
       IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       MemberMetrics.putUpgrade(newTier)

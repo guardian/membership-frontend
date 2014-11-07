@@ -10,7 +10,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{ScalaforceError, Tier}
 
-import actions.{AnyMemberTierRequest, AuthRequest}
+import actions._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
 import model._
@@ -86,7 +86,7 @@ trait Joiner extends Controller {
 
   def thankyouFriend() = MemberAction.async { implicit request =>
     for {
-      subscriptionDetails <- touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
@@ -96,8 +96,8 @@ trait Joiner extends Controller {
 
   def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>
     for {
-      customer <- touchpointBackend.stripeService.Customer.read(request.member.stripeCustomerId)
-      subscriptionDetails <- touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      customer <- request.touchpointBackend.stripeService.Customer.read(request.member.stripeCustomerId)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
