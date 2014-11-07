@@ -411,6 +411,10 @@
     .event-content__second {
         float: left;
         width: rem(220px);
+
+        .join-choose-tier & {
+            width: auto;
+        }
     }
 
     .action {
