@@ -4,7 +4,6 @@
 @import views.support.Dates._
 @import configuration.Config
 
-
 @main("Join Choose Tier", pageInfo=pageInfo, containerPadding = false, isBrochure = true) {
 
     <section class="section-two-thirds u-cf">
@@ -19,7 +18,6 @@
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
                 </div>
-
             </section>
             <section class="one-third">
 
@@ -56,12 +54,12 @@
 
                         <div class="event-item__cta">
                             <div class="event-item__price">
-                            @for(ticket <- event.generalReleaseTicket) {
-                                @for(pricing <- ticket.cost) {
-                                    <span class="event-item__price-amount">@pricing.formattedPrice</span>
-                                    <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                @for(ticket <- event.generalReleaseTicket) {
+                                    @for(pricing <- ticket.cost) {
+                                        <span class="event-item__price-amount">@pricing.formattedPrice</span>
+                                        <span class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</span>
+                                    }
                                 }
-                            }
                             </div>
                         </div>
                     </div>

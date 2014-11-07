@@ -147,7 +147,8 @@ object Eventbrite {
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
-    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
+      .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
     val socialImgUrl = imgUrl
 
     val allowDiscounts = false

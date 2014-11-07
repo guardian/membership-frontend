@@ -98,6 +98,7 @@ trait Event extends Controller {
         event <- guLiveEvents.getEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
+          EventbriteMetrics.putThankyou(id)
           Ok(views.html.event.thankyou(event, order))
         }
       }
