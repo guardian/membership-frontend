@@ -150,6 +150,9 @@ body {
     .two-thirds {
         @include mq(tablet) {
             width: rem(gs-span(8));
+        }
+
+        @include mq(desktop) {
             padding-left: $gs-gutter;
         }
     }
@@ -158,12 +161,12 @@ body {
         margin-bottom: rem($gs-gutter);
 
         @include mq(tablet) {
-            width: rem(gs-span(4));
+            width: rem(gs-span(3));
             padding-left: rem($gs-gutter);
         }
 
         @include mq(mem-full) {
-            width: rem(gs-span(4) + $gs-gutter * 2);
+            width: rem(gs-span(4) + $gs-gutter);
         }
     }
 

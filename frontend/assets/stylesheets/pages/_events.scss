@@ -394,15 +394,23 @@
     .event-content__first {
         float: left;
         width: rem($gs-gutter * 2);
+
+        @include mq(mobile) {
+            .join-choose-tier & {
+                display: none;
+            }
+        }
+
+        @include mq(mem-full) {
+            .join-choose-tier & {
+                display: block;
+            }
+        }
     }
 
     .event-content__second {
         float: left;
         width: rem(220px);
-
-        .join-choose-tier & {
-            width: auto;
-        }
     }
 
     .action {
