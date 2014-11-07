@@ -1,3 +1,5 @@
+$event-item-gutter: 20px;
+
 /* ==========================================================================
    An event on an event page
    ========================================================================== */
@@ -428,12 +430,11 @@
    Temp events hacky stuff (this needs a revisit once design has been confirmed)
    ========================================================================== */
 
+// todo: flexboxize
 .events-list {
-    &.u-unstyled {
-        &:first-child {
-            margin-top: rem(-10px);
-        }
-    }
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .event-blocks {
@@ -458,19 +459,25 @@
 
         @include mq(tablet) {
 
-            @include guss-row('.events-list');
+            // @include guss-row('.events-list');
 
             padding: rem($gs-baseline) 0 rem($gs-baseline * 2);
 
+            // todo: remize
             .events-list__item {
-                margin: rem(10px);
-                &:first-child {
-                    margin-left: 0;
-                }
-                &:last-child {
-                    margin-right: 0;
+                margin-bottom: 20px;
+                width: calc(33.33% - 14px);
+
+                &.event-item--pristine:nth-child(3n-1),
+                &.event-item--filtered {
+                    margin-left: 20px;
+                    margin-right: 20px;
                 }
             }
+        }
+
+        .events-list-container {
+            overflow: hidden;
         }
 
         @include mq(desktop) {
@@ -507,11 +514,7 @@
             @include fs-header(4);
         }
 
-        .events-list__item {
-            @include mq(tablet) {
-                height: rem(420px);
-            }
-        }
+
 
         .events-list__hero-descendant {
             .events-list__item {
@@ -531,7 +534,26 @@
 .event-item {
     position: relative;
     width: 100%;
-    background-color: $c-neutral7;
+
+    .event-item__container {
+        background-color: $c-neutral7;
+
+        @include mq(tablet) {
+            height: rem(420px);
+        }
+
+        &:hover {
+            text-decoration: none;
+            background-color: $c-neutral5;
+            .event-item__title {
+                text-decoration: underline;
+            }
+        }
+
+        *:hover {
+            text-decoration: none;
+        }
+    }
 
     .event-item__media {
         a, img {
@@ -718,17 +740,7 @@
 
     }
 
-    &:hover {
-        text-decoration: none;
-        background-color: $c-neutral5;
-        .event-item__title {
-            text-decoration: underline;
-        }
-    }
 
-    *:hover {
-        text-decoration: none;
-    }
 
     &.event-item--standalone {
         .event-item__cta {
