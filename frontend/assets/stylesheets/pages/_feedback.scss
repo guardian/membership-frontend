@@ -24,6 +24,18 @@
     .fieldset__heading {
         padding-right: rem($gs-gutter * 2);
     }
+
+    .form__error {
+        top: rem(-45px);
+        left: 0;
+        width: auto;
+
+        @include mq(desktop) {
+            top: rem(-45px);
+            left: 0;
+            width: rem(630px);
+        }
+    }
 }
 
 
