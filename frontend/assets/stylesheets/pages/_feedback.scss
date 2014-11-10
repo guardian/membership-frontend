@@ -3,39 +3,7 @@
    ========================================================================== */
 
 .feedback {
-
     .feedback-intro {
         padding-bottom: rem($gs-gutter * 2);
     }
-
-    .fieldset {
-        border-top: rem(1px) solid $c-neutral2;
-        margin-left: 0;
-
-        @include mq(desktop) {
-            width: rem(630px);
-        }
-
-        &:last-child {
-            border: 0;
-        }
-    }
-
-    .fieldset__heading {
-        padding-right: rem($gs-gutter * 2);
-    }
-
-    .form__error {
-        top: rem(-45px);
-        left: 0;
-        width: auto;
-
-        @include mq(desktop) {
-            top: rem(-45px);
-            left: 0;
-            width: rem(630px);
-        }
-    }
 }
-
-

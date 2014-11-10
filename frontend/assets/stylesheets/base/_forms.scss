@@ -36,7 +36,7 @@
 .form__signin {
     display: block;
     @include fs-bodyCopy(2);
-    
+
     @include mq(desktop) {
         position: absolute;
         top: rem(9rem);
@@ -65,7 +65,7 @@
 
     @include mq(mem-full) {
         margin-left: rem(gs-span(2) + $gs-gutter);
-    }    
+    }
 }
 
 .form__heading {
@@ -88,7 +88,7 @@
     display: table;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
     margin: 0;
-    background-color: $c-neutral8; 
+    background-color: $c-neutral8;
 
     @include mq(desktop) {
         width: rem(gs-span(8));
@@ -101,13 +101,24 @@
     }
 }
 
-.fieldset--no-top-border {
-    border-top: 0;
+.fieldset--slim {
+    margin-left: 0;
+
+    @include mq(desktop) {
+        width: rem(630px);
+    }
 }
 
 .fieldset--no-bg {
     background: transparent;
     padding-top: rem(5px);
+    padding-left: 0;
+    padding-right: 0;
+    border-top: 0;
+}
+
+.fieldset--top-border {
+    border-top: rem(1px) solid $c-neutral3;
 }
 
 .fieldset__heading {
@@ -208,19 +219,6 @@
     color: $newsRed;
     margin-top: rem(6px);
     padding: rem(7px) rem(($gs-baseline / 3) * 2);
-
-    @include mq(desktop) {
-        display: block;
-        position: absolute;
-        top: rem($gs-gutter * 2);
-        left: rem(gs-span(2));
-        width: rem(gs-span(8));
-    }
-
-    @include mq(mem-full) {
-        left: rem(gs-span(2) + $gs-gutter);
-        width: rem(gs-span(9));
-    }
 }
 
 .form__success {
