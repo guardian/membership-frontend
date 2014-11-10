@@ -6,14 +6,14 @@ marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: p
     @main("Payment | " + tier, containerPadding = false, isBrochure = true) {
         <section class="section-payment u-cf">
 
-            
+
             <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form form-primary-container js-stripe-form">
 
-            @fragments.form.sectionHeading("Address & billing", true)
+            @fragments.form.sectionHeading("Address & billing")
             <div class="form__signin">
                 @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
             </div>
-            
+
                 @fragments.joiner.joinStepCounter(3, 3)
                 @CSRF.formField
                 <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
