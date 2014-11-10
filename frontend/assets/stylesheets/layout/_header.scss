@@ -55,6 +55,19 @@ $header-margin: 36px;
     }
 }
 
+.identity__tier {
+
+    &:before {
+        vertical-align: top;
+        content: '(';
+    }
+
+    &:after {
+        vertical-align: top;
+        content: ')';
+    }
+}
+
 .menu-item {
     float: left;
     padding-top: 0;
@@ -68,7 +81,6 @@ $header-margin: 36px;
         color: $white;
     }
 }
-
 
 .menu-item--last {
     border: 0;
