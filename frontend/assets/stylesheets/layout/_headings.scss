@@ -50,6 +50,12 @@
     @extend %section-header;
     @include fs-headline(4);
     padding-top: rem($gs-baseline / 2);
+
+    &--top-border {
+        @include fs-headline(2);
+        border-top: 1px solid $c-neutral3;
+        padding: rem(5px) 0 rem($gs-gutter + 5);
+    }
 }
 
 .section-body-headline {

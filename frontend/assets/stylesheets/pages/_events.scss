@@ -340,9 +340,18 @@
     padding: rem($gs-gutter);
     @include fs-textSans(3);
 
+    &--no-padding {
+        padding: 0;
+        background-color: transparent;
+    }
+
     .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
+
+        .join-choose-tier & {
+            padding-top: rem(5px);
+        }
     }
 
     .event-content__price {
@@ -385,11 +394,27 @@
     .event-content__first {
         float: left;
         width: rem($gs-gutter * 2);
+
+        @include mq(mobile) {
+            .join-choose-tier & {
+                display: none;
+            }
+        }
+
+        @include mq(mem-full) {
+            .join-choose-tier & {
+                display: block;
+            }
+        }
     }
 
     .event-content__second {
         float: left;
         width: rem(220px);
+
+        .join-choose-tier & {
+            width: auto;
+        }
     }
 
     .action {
@@ -533,6 +558,10 @@
     width: 100%;
     background-color: $c-neutral7;
 
+    .join-choose-tier & {
+        background-color: transparent;
+    }
+
     .event-item__media {
         a, img {
             vertical-align: text-bottom; // remove descenders
@@ -542,6 +571,10 @@
 
     .event-item__meta {
         padding: rem($gs-gutter / 2);
+
+        .join-choose-tier & {
+            padding: 0;
+        }
 
         .event-item__title {
             @include fs-headline(2);
