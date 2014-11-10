@@ -10,7 +10,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
         <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
             @CSRF.formField
-            @fragments.form.sectionHeading("Location", true)
+            @fragments.form.sectionHeading("Location")
 
             <div class="form__signin">
                 @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
