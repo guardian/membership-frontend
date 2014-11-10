@@ -34,7 +34,7 @@
         margin: rem(2px) 0 0 rem(30px);
     }
 
-    @include mq(tablet){
+    @include mq(mobileLandscape){
         min-width: rem(220px);
     }
 }

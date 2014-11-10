@@ -1,68 +1,59 @@
 //TODO start of splitting benefits work into one set of styles where it makes sense
 .benefits-item {
-
-	@include mq(tablet) {
-		width: rem(200px);
-	    float: left;
-	    height: rem(150px);
-	    margin: 0 rem($gs-gutter / 2);
-
-	    .about-membership & {
-	    	height: rem(62px);
-	    }
-
-	    &:first-child {
-	    	margin-left: 0;
-	    }
-
+    @include mq(tablet) {
+        width: rem(200px);
+        float: left;
+        height: rem(150px);
+        margin: 0 rem($gs-gutter / 2);
+        .about-membership & {
+            height: rem(62px);
+        }
+        &:first-child {
+            margin-left: 0;
+        }
         // Removes left margin for every third benefit items. eg 3rd, 6th, 9th, 12th, etc.
         // This only applies for mobiles
-	    &:nth-child(3n+3) {
-	    	margin-left: rem($gs-gutter / 2);
-	    	margin-right: 0;
-	    }
-	}
-
-	@include mq(desktop) {
-		width: 100%;
-		float: none;
-		height: auto;
-		margin: 0;
-
-		.about-membership & {
-			height: auto;
-		}
-
-		&:nth-child(3n+3) {
-			margin: 0;
-		}
-	}
+        &:nth-child(3n+3) {
+            margin-left: rem($gs-gutter / 2);
+            margin-right: 0;
+        }
+    }
+    @include mq(desktop) {
+        width: 100%;
+        float: none;
+        height: auto;
+        margin: 0;
+        .about-membership & {
+            height: auto;
+        }
+        &:nth-child(3n+3) {
+            margin: 0;
+        }
+    }
 }
-
 .benefits-item--highlighted {
     background-color: $c-neutral6;
     padding: 0px rem(7px);
 }
-
 .benefits-title {
-	@include fs-bodyHeading(2);
+    @include fs-bodyHeading(2);
     border-top: rem(1px) dotted $c-neutral3;
     padding: rem(7px) 0 rem($gs-baseline / 6) 0;
     clear: both;
 }
-
 .benefits-copy {
     @include fs-textSans(3);
     padding: 0 0 rem($gs-baseline) rem(45px);
     display: block;
     float: left;
 }
-
+.benefits-title--first {
+    border-top: none;
+}
 .benefits-title__first {
     float: left;
     width: rem($gs-gutter * 2 + 5);
 }
-
 .benefits-title__second {
     width: auto;
 }

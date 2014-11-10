@@ -129,7 +129,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val apiToken = Config.eventbriteMasterclassesApiToken
 
   val initialValue = Nil
-  val interval = 2.minutes
+  val interval = 5.minutes
   val initialDelay = 0.seconds
 
   def refresh(): Future[Seq[RichEvent]] = getAllEvents
