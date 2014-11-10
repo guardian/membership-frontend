@@ -1,17 +1,23 @@
-@(benefits: model.Benefits.Benefits)
+@(tier: com.gu.membership.salesforce.Tier.Tier)
 
-<div class="price-info">
+@import model.Benefits
+
+@defining(Benefits.details(tier)) { benefits =>
+    <div class="price-info price-info--@tier.toString.toLowerCase">
     @benefits.pricing.fold {
         <div class="price-info__container-inner price-info__container-inner--full-width">
             <div class="price-info__detail price-info__detail--right">Free</div>
         </div>
     } { pricing =>
         <div class="price-info__container-inner">
+            <div class="price-info__detail"><strong>£@pricing.yearly</strong><span class="price-info__detail--sm-date">
+                /year</span></div>
             <div class="price-info__sub-detail">Save £@pricing.yearlySaving/year</div>
-            <div class="price-info__detail">£@pricing.yearly<span class="price-info__detail--sm-date">/year</span></div>
         </div>
         <div class="price-info__container-inner price-info__container-inner--last">
-            <div class="price-info__detail price-info__detail--right">£@pricing.monthly<span class="price-info__detail--sm-date">/month</span></div>
+            <div class="price-info__detail price-info__detail--right"><strong>
+                £@pricing.monthly</strong><span class="price-info__detail--sm-date">/month</span></div>
         </div>
     }
-</div>
+    </div>
+}

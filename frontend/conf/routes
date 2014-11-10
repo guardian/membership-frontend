@@ -25,7 +25,6 @@ GET            /join/:tier/thankyou               controllers.Joiner.thankyouPai
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
-POST           /choose-tier                       controllers.Joining.tierChooserRedirect()
 
 # Subscription
 POST           /subscription/update-card          controllers.Subscription.updateCard
