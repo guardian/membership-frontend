@@ -16,9 +16,9 @@
         <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
             @CSRF.formField
 
-            @fragments.form.errorMessageDisplay()
+            @fragments.form.errorMessageDisplay(isSlim = true)
             @fragments.form.feedback()
-            @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false)
+            @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false, isSlim = true)
         </form>
 
     </div>
