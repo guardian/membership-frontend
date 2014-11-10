@@ -1,10 +1,12 @@
 package services
 
 import akka.agent.Agent
-import com.gu.contentapi.client.GuardianContentClient
+import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.contentapi.client.model.{Asset, Content, ItemResponse}
 import configuration.Config
+import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import utils.ScheduledTask
 
@@ -51,7 +53,13 @@ trait MasterclassDataService {
       .page(page)
       .showFields("body")
       .showElements("image")
-      .response
+      .response.recover {
+        case GuardianContentApiError(status, message) => {
+          ContentApiMetrics.putResponseCode(status, "GET content")
+          Logger.error(s"Error response from Content API $status")
+          throw GuardianContentApiError(status, message)
+        }
+      }
   }
 }
 
