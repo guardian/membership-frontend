@@ -42,7 +42,6 @@
         </div>
 
         <div class="package__outer hidden-mobile-portrait js-select-tier">
-
             <div class="package__inner">
                 @if(showChooseDetails) {
                     @fragments.tier.chooseDetails(tier)
@@ -53,7 +52,7 @@
 
             <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
                 @if(mode == "promo") {
-                    <a class="action" href="/join/@tier.toString.toLowerCase/enter-details">Become a @tier</a>
+                    <a class="action js-opt-become-member" href="/join/@tier.toString.toLowerCase/enter-details">Become a @tier</a>
                     @if(showLearnMore) {
                         @if(tier == Tier.Patron) {
                             <a class="action action--secondary-button" href="/patrons">Learn more about @{tier}s</a>
