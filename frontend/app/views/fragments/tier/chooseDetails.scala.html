@@ -2,12 +2,16 @@
 
 @import model.Benefits
 
-<div class="package__list-benefits">
-    <p class="package__leadin">@Benefits.details(tier).leadin</p>
-    <ul class="u-unstyled">
-    @for((header, body, icon) <- Benefits.details(tier).list) {
-        <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
-        <li class="benefits-copy">@body</li>
-    }
-    </ul>
-</div>
+@defining(Benefits.details(tier)) { benefits =>
+    <div class="package__list-benefits">
+        <p class="package__leadin">@benefits.leadin</p>
+        <ul class="u-unstyled">
+        @for(benefit <- benefits.list) {
+            <li class="benefits-title">
+                <i class="icon-sprite icon-sprite-@benefit.identifier icon-sprite--small"></i> @benefit.title
+            </li>
+            <li class="benefits-copy">@benefit.description</li>
+        }
+        </ul>
+    </div>
+}
