@@ -66,7 +66,6 @@ module.exports = function (grunt) {
                         'qwery': 'lib/bower-components/qwery/qwery',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
                         'ajax': 'src/utils/ajax',
-                        'string_score': 'lib/bower-components/string_score/string_score',
                         'stripe': 'lib/stripe/stripe.min'
                     },
                     findNestedDependencies: false,
