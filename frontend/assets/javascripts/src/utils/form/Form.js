@@ -336,7 +336,7 @@ define([
      * @param element
      */
     Form.prototype.length = function (element) {
-        var args = element.getAttribute('data-arguments').split(',');
+        var args = JSON.parse(element.getAttribute('data-arguments'));
         args.unshift(element);
 
         bean.on(element, 'blur', function () {
