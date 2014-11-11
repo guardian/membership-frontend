@@ -55,15 +55,14 @@ trait MasterclassDataService {
       .showFields("body")
       .showElements("image")
       .response.andThen {
-        case Failure(GuardianContentApiError(status, message)) => {
-          ContentApiMetrics.putResponseCode(status, "GET content")
-          Logger.error(s"Error response from Content API $status")
-        }
-      }
+      case Failure(GuardianContentApiError(status, message)) =>
+        ContentApiMetrics.putResponseCode(status, "GET content")
+        Logger.error(s"Error response from Content API $status")
+    }
   }
 }
 
-object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]]{
+object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]] {
   def getData(eventId: String) = masterclassData.find(mc => mc.eventId.equals(eventId))
 
   val initialValue = Nil
