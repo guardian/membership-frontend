@@ -1,0 +1,425 @@
+/* ==========================================================================
+   An event on an event page
+   ========================================================================== */
+
+.event-header {
+    .theme--masterclass & {
+        background-color: $mem-mc-top;
+    }
+
+    .theme--guardian-live & {
+        color: $white;
+        background-color: $mem-live-top;
+    }
+}
+
+.event-header--shade {
+    .theme--masterclass & {
+        background-color: $mem-mc-accent;
+    }
+
+    .theme--guardian-live & {
+        background-color: $mem-live-accent;
+    }
+}
+
+.event-header__container {
+    margin: 0 auto;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
+    background-color: transparent;
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter + $gs-baseline);
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(12) + $gs-gutter * 2);
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(14) + $gs-gutter * 2);
+    }
+}
+
+.event-header__container--details {
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter);
+    position: relative;
+    min-height: rem(75px);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+        min-height: rem(120px);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 3);
+    }
+}
+
+.event-masthead {
+    position: relative;
+
+    .event-masthead__name {
+        max-width: rem(gs-span(8));
+        @include fs-headline(5);
+        padding-top: rem($gs-baseline / 2);
+
+
+        @include mq(tablet) {
+            padding-top: rem($gs-baseline);
+            @include fs-headline(7);
+        }
+
+        @include mq(mem-full) {
+            float: left;
+            padding-top: 0;
+        }
+    }
+    .event-masthead__title {
+        @include fs-header(1);
+        border-bottom: rem(1px) dotted $border-bottom-color;
+        padding-bottom: rem(5px);
+
+        @include mq(tablet) {
+            @include fs-header(4);
+            padding: 0 rem($gs-gutter) 0 0;
+        }
+
+        @include mq(mem-full) {
+            @include fs-header(5);
+            width: rem(gs-span(2) + $gs-gutter * 2);
+            border-bottom: 0;
+            float: left;
+        }
+    }
+}
+
+.event-details {
+
+    .event-details__time {
+        max-width: rem(gs-span(8));
+        @include fs-headline(2);
+
+        @include mq(tablet) {
+            @include fs-headline(4);
+        }
+    }
+
+    .event-details__time__part {
+        white-space: nowrap;
+    }
+
+    .event-details__location {
+        font-size: 0; /** space between inline block elements **/
+
+        .event-details__venue-name,
+        .event-details__address {
+            @include fs-data(4);
+        }
+    }
+}
+
+.event-ticket {
+    padding-top: rem($gs-gutter);
+
+    .event-ticket__details {
+
+        @include mq(tablet) {
+            float: left;
+            padding-right: rem($gs-gutter);
+        }
+
+        .event-ticket__price-amount {
+            @include fs-header(5);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .event-ticket__trail {
+            @include fs-textSans(1);
+        }
+    }
+
+    .action {
+        background-color: $black;
+
+        @include mq(tablet) {
+            float: left;
+            margin: rem(6px $gs-gutter 0 0);
+            min-width: 0;
+        }
+
+        &:hover {
+            background-color: $mem-event-button-hover;
+        }
+    }
+
+    .terms-info {
+        @include fs-textSans(1);
+        padding-top: rem(12px);
+
+        @include mq(tablet) {
+            width: rem(gs-span(3) + $gs-gutter * 2);
+            float: left;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            padding-bottom: rem(2px);
+            border-bottom: rem(1px) solid;
+
+            .theme--guardian-live & {
+                border-bottom-color: transparentize($white, .5);
+                &:hover {
+                    border-bottom-color: $white;
+                }
+            }
+
+            .theme--masterclass & {
+                border-bottom-color: transparentize($c-neutral3, .5);
+                &:hover {
+                    border-bottom-color: $c-neutral1;
+                }
+            }
+        }
+    }
+}
+
+.event__picture-byline {
+    clear: both;
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(mem-full) {
+        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
+        margin-bottom: 0;
+    }
+}
+
+.event-content {
+    padding: 0;
+    background-color: $white;
+
+    @include mq(desktop) {
+        background-color: transparent;
+    }
+
+    .event-content__image {
+        margin: 0 auto;
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+
+        img {
+            width: 100%;
+        }
+
+        .theme--masterclass & {
+            display: none;
+        }
+    }
+
+    .event-content__container {
+        padding: rem($gs-gutter) rem($gs-gutter / 2);
+        background-color: $white;
+
+        @include mq(tablet) {
+            width: rem(gs-span(9) + $gs-gutter * 2);
+            padding: rem($gs-gutter * 3) 0;
+            margin: 0 auto;
+        }
+
+        @include mq(desktop) {
+            width: rem(gs-span(12) + $gs-gutter * 2);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+
+        .event-content__body {
+            position: relative;
+
+            @include mq(tablet) {
+                float: left;
+                padding: 0 rem($gs-gutter) 0 0;
+                width: rem(gs-span(5) + $gs-gutter * 3);
+            }
+
+            @include mq(desktop) {
+                width: rem(gs-span(8) + $gs-gutter * 2);
+                padding: 0 rem($gs-gutter);
+            }
+
+            @include mq(mem-full) {
+                width: rem(gs-span(10) + $gs-gutter * 2);
+            }
+        }
+    }
+}
+
+.event__price-note,
+.event__sale_ends_note,
+.event__sale_ends_time {
+    @include fs-textSans(4);
+    display: inline-block;
+}
+
+.event__description {
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(mem-full) {
+        width: rem(gs-span(8) - $gs-gutter);
+        float: right;
+    }
+
+    h2 {
+        @include fs-header(2);
+
+        @include mq(tablet) {
+            @include fs-header(3, true);
+        }
+    }
+
+    ol,
+    ul {
+        list-style-position: inside;
+        padding: 0;
+        margin: 0 0 rem(8px);
+    }
+    .no-style-list {
+        list-style: none;
+    }
+    .section-header {
+        @include fs-headline(3);
+        font-weight: 900;
+        margin: rem(27px) 0 rem(10px);
+    }
+
+    blockquote {
+        padding-left: rem(14px);
+        border-left: rem(2px) solid #cfcfcd;
+        font-style: italic;
+        margin: 0 0 rem(16px);
+    }
+
+    blockquote p {
+        margin: 0;
+    }
+}
+
+.event__social {
+    width: rem(gs-span(2) + $gs-gutter);
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(tablet) {
+        float: left;
+    }
+}
+
+.event__social-header {
+    @include fs-textSans(1);
+    border-top: rem(1px) solid $c-neutral6;
+    padding-bottom: rem($gs-baseline / 2);
+    padding-top: rem(3px);
+}
+
+.event-content__sidebar {
+    margin-bottom: rem($gs-gutter);
+
+    @include mq(tablet) {
+        float: left;
+        width: gs-span(4);
+    }
+}
+
+.event-content__info {
+    background-color: $c-neutral7;
+    padding: rem($gs-gutter);
+    @include fs-textSans(3);
+
+    .event-content__name {
+        @include fs-header(2);
+        padding-bottom: rem($gs-gutter + 8px);
+    }
+
+    .event-content__price {
+        padding-bottom: 0;
+        @include fs-header(5);
+    }
+
+    .event-content__sale-dates {
+
+        .sale-dates__header {
+            @include fs-textSans(3);
+            font-weight: bold;
+        }
+
+        .sale-dates__list {
+            &:last-child {
+                padding-bottom: rem(5px);
+            }
+        }
+
+        .sale-dates__item {
+            @include fs-textSans(3);
+            text-align: right;
+
+            .sale-dates__item--left {
+                float: left;
+            }
+        }
+    }
+
+    .event-content__sale-ends {
+        padding: 0 0 rem(5px) rem($gs-gutter * 2);
+    }
+
+    .event-content__trail {
+        @include fs-textSans(1);
+        display: block;
+    }
+
+    .event-content__first {
+        float: left;
+        width: rem($gs-gutter * 2);
+    }
+
+    .event-content__second {
+        float: left;
+        width: rem(220px);
+    }
+
+    .action {
+        min-width: 100%;
+
+        .theme--guardian-live & {
+            background-color: $mem-live-top;
+
+            &:hover {
+                background-color: darken($mem-live-top, 5%);
+            }
+        }
+
+        .theme--masterclass & {
+            background-color: $mem-mc-top;
+            &:hover {
+                background-color: darken($mem-mc-top, 5%);
+            }
+        }
+
+    }
+
+    .terms-info {
+        @include fs-textSans(1);
+        padding-top: rem($gs-baseline/2);
+    }
+
+}
+
+.event-content--line-divider {
+    border-top: rem(1px) dotted $c-neutral3;
+    padding: rem(5px) 0;
+}

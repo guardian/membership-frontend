@@ -1,0 +1,74 @@
+.event-summary {
+    @include clearfix;
+    margin: rem($gs-baseline * 2) 0;
+
+    .event-item__media {
+        @include mq(tablet) {
+            float: left;
+            width: rem(gs-span(3));
+        }
+    }
+
+    .event-item__title {
+        @include f-header;
+        @include font-size(rem(18px), rem(22px));
+        margin-bottom: rem($gs-baseline * 2);
+    }
+
+    .event-status--sold-out {
+        display: inline-block;
+        color: $white;
+        background-color: $mem-live-accent;
+        @include fs-data(2);
+        position: relative;
+        top: rem(-3px);
+        padding: rem(1px) rem(3px);
+        margin-right: rem(4px);
+    }
+
+    .event-item__meta {
+        @include f-data;
+        @include font-size(rem(14px), rem(22px));
+
+        @include mq(tablet) {
+            border-top: rem(1px) dotted $c-neutral3;
+            margin-left: rem(gs-span(3) + $gs-gutter);
+            padding-top: rem($gs-baseline / 2);
+        }
+    }
+
+    .event-item__detail {
+        border-top: rem(1px) dotted $c-neutral3;
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
+
+        &:last-child,
+        p:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .event-item__location {
+        line-height: rem(18px);
+    }
+
+    .event-item__location-detail {
+        display: block;
+    }
+
+    .event-item__icon {
+        background-size: rem(25px);
+        float: left;
+        margin-left: rem(-$gs-gutter * 2);
+        height: rem(25px);
+        width: rem(25px);
+    }
+
+    .icon-sprite-eventbrite {
+        margin-top: rem(3px);
+    }
+
+    .icon-sprite-early_booking-grey {
+        margin-top: rem(-2px);
+    }
+}
