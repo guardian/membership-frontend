@@ -96,7 +96,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
-  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
+  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
@@ -129,7 +129,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val apiToken = Config.eventbriteMasterclassesApiToken
 
   val initialValue = Nil
-  val interval = 5.minutes
+  val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val initialDelay = 0.seconds
 
   def refresh(): Future[Seq[RichEvent]] = getAllEvents
