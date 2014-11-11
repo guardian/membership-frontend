@@ -105,6 +105,10 @@
     background-color: $c-neutral7;
     position: relative;
 
+    .join-choose-tier & {
+        background-color: transparent;
+    }
+
     &:hover {
         text-decoration: none;
         background-color: $c-neutral5;
@@ -123,6 +127,10 @@
 // the event item details (title, location etc)
 .event-item__meta {
     padding: rem($gs-gutter / 2);
+
+    .join-choose-tier & {
+        padding: 0;
+    }
 
     @include mq(tablet) {
         padding: rem($gs-baseline) rem($gs-gutter / 2);

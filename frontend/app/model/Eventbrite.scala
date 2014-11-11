@@ -35,7 +35,7 @@ object Eventbrite {
       clean
     }
 
-    lazy val blurb = truncateToWordBoundary(text, 200)
+    lazy val blurb = truncateToWordBoundary(text, 120)
   }
 
   case class EBAddress(address_1: Option[String],
@@ -147,7 +147,8 @@ object Eventbrite {
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
-    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
+      .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
     val socialImgUrl = imgUrl
 
     val allowDiscounts = false

@@ -16,7 +16,7 @@
         </p>
 
         <div class="package-container">
-            <div class="package-list">
+            <div class="package-list package-list--flex-box">
                 @fragments.tier.benefits(currentTier=Some(currentTier), tier=currentTier, mode="cancel")
                 @if(currentTier != Tier.Friend) {
                     @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="cancel")

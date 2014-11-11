@@ -9,9 +9,9 @@
         <li class="form-detail__item">
             <h2 class="form__heading">What's included</h2>
             <ul>
-                @for((header, body, icon) <- Benefits.details(tier).list) {
-                    <li>@header</li>
-                    <li>@body</li>
+                @for(benefit <- Benefits.details(tier).leadBenefits) {
+                    <li>@benefit.title</li>
+                    <li>@benefit.description</li>
                 }
             </ul>
         </li>

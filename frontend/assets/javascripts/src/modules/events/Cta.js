@@ -29,7 +29,8 @@ define([
         SALE_START_PARTNER: 'js-ticket-sale-start-partner',
         SALE_START_PATRON: 'js-ticket-sale-start-patron',
         BUY_TICKET_CTA: 'js-ticket-cta',
-        TOOLTIP: 'tooltip'
+        TOOLTIP: 'tooltip',
+        LEGAL: 'js-legal-terms'
     };
 
     Cta.prototype.buyTicketCta = function () {
@@ -75,7 +76,8 @@ define([
         // todo: improve – this.getElem only returns first match
         // and we have two CTAs on event pages
         // so this should disable all of them
-        $('.' + this.getClass('BUY_TICKET_CTA')).addClass('action--disabled').removeAttr('href');
+        $(this.getClass('BUY_TICKET_CTA')).remove();
+        $(this.getClass('LEGAL')).remove();
     };
 
     Cta.prototype.memberCta = function () {

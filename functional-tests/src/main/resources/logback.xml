@@ -4,7 +4,7 @@
         <Pattern>%d %level %logger - %m%n</Pattern>
     </layout>
 </appender>
-<appender name="TSTASH" class="com.gu.automation.api.TstashAppender">
+    <appender name="TSTASH" class="com.gu.support.tstash.TstashAppender">
 </appender>
 <root level="info">
     <appender-ref ref="CONSOLE"/>
