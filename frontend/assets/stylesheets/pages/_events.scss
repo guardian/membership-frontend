@@ -763,30 +763,6 @@
         text-decoration: none;
     }
 
-    &.event-item--standalone {
-        .event-item__cta {
-            position: static;
-            padding: rem($gs-baseline * 2) 0 0;
-        }
-
-        .event-item__location-name,
-        .event-item__location-detail {
-            @include fs-data(3);
-            display: block;
-        }
-
-        .event-item__location-name {
-            float: left;
-        }
-
-        *:hover, &:hover {
-            background-color: $c-neutral7;
-            .event-item__title {
-                text-decoration: none;
-            }
-        }
-    }
-
     &.event-item--blank {
         display: none;
         @include mq(tablet) {
