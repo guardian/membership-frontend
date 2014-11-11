@@ -8,7 +8,7 @@
     @if(eventPortfolio.orderedEvents.nonEmpty) {
         <div class="event-block">
             <div class="events-title-container">
-                <h2 class="event-block-title">featured</h2>
+                <h4 class="event-block-title case--lower">Featured</h4>
             </div>
             <div class="events-list-container">
                 <ul class="u-unstyled">
@@ -27,14 +27,14 @@
 
     <div class="event-block">
         <div class="events-title-container">
-            <h2 class="event-block-title case--lower">What's on</h2>
+            <h4 class="event-block-title case--lower">What's on</h4>
         </div>
         <div class="events-list-container">
-                <ul class="events-list u-unstyled">
-                    @for(event <- eventPortfolio.normal) {
-                        @fragments.event.item(event, false)
-                    }
-                </ul>
+            <ul class="events-list u-unstyled">
+                @for(event <- eventPortfolio.normal) {
+                    @fragments.event.item(event, false)
+                }
+            </ul>
         </div>
     </div>
 </section>
