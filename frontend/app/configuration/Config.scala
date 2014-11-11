@@ -3,8 +3,8 @@ package configuration
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
-import com.typesafe.config.{Config, ConfigFactory}
-import model.{FriendTierPlan, PaidTierPlan, TierPlan}
+import com.typesafe.config.ConfigFactory
+import model.{FriendTierPlan, PaidTierPlan}
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
 import services.{SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
@@ -64,19 +64,23 @@ object Config {
 
   val facebookAppId = config.getString("facebook.app.id")
 
-  val touchpointBackendConfig = {
+
+  val touchpointDefaultBackend = touchpointBackendConfigFor("default")
+  val touchpointTestBackend = touchpointBackendConfigFor("test")
+
+  def touchpointBackendConfigFor(typ: String) = {
     val touchpointConfig = config.getConfig("touchpoint.backend")
-    val defaultEnvironment = touchpointConfig.getString("default")
+    val backendEnvironmentName = touchpointConfig.getString(typ)
     val environments = touchpointConfig.getConfig("environments")
 
-    val defaultTouchpointBackendConfig = touchpointConfigFor(environments.getConfig(defaultEnvironment))
+    val defaultTouchpointBackendConfig = touchpointConfigFor(environments.getConfig(backendEnvironmentName))
 
-    logger.info(s"TouchPoint config - default-env=$defaultEnvironment config=${defaultTouchpointBackendConfig.hashCode}")
+    logger.info(s"TouchPoint config - default-env=$typ config=${defaultTouchpointBackendConfig.hashCode}")
 
     defaultTouchpointBackendConfig
   }
 
-  def touchpointConfigFor(backendConf: Config): TouchpointBackendConfig = {
+  def touchpointConfigFor(backendConf: com.typesafe.config.Config): TouchpointBackendConfig = {
     val stripeApiConfig = StripeApiConfig(
       url = config.getString("stripe.api.url"), // stripe url never changes
       secretKey = backendConf.getString("stripe.api.key.secret"),

@@ -52,8 +52,8 @@ object TouchpointBackend {
     TouchpointBackend(memberRepository, stripeService, zuoraService)
   }
 
-  val Normal = TouchpointBackend(Config.touchpointBackendConfig)
-  val TestUser = TouchpointBackend(Config.touchpointBackendConfig)
+  val Normal = TouchpointBackend(Config.touchpointDefaultBackend)
+  val TestUser = TouchpointBackend(Config.touchpointTestBackend)
 
   val All = Seq(Normal, TestUser)
 

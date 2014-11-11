@@ -30,7 +30,7 @@ package object actions {
     lazy val isTestUser: Boolean = {
       val isValidTestUser = TestUsers.validate(user)
       if (isValidTestUser) {
-        Logger.info(s"$user is valid test user")
+        Logger.info(s"${user.getPrimaryEmailAddress} is a valid test user")
       }
       isValidTestUser
     }
