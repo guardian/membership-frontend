@@ -10,7 +10,6 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
         <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
             @CSRF.formField
-            @fragments.form.errorMessageDisplay()
             @fragments.form.sectionHeading("Location")
 
             <div class="form__signin">
@@ -18,6 +17,7 @@ passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
             </div>
 
             @fragments.joiner.joinStepCounter(3, 3)
+            @fragments.form.errorMessageDisplay()
             @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
             @fragments.form.addressDetail("Address", "Tell us where you live and we'll keep you posted on events happening in your local community.", "deliveryAddress", false,
             userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)

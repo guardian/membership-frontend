@@ -1,1 +1,4 @@
-<ul class="u-unstyled js-payment-errors form__error is-hidden"></ul>
+@(showTopBorder: Boolean = false, isSlim: Boolean = false)
+<fieldset class="fieldset fieldset--no-bg@if(showTopBorder == true){ fieldset--top-border}@if(isSlim == true){ fieldset--slim}">
+    <ul class="u-unstyled js-payment-errors form__error is-hidden"></ul>
+</fieldset>
