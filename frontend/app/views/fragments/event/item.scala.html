@@ -55,6 +55,7 @@
                                 @for(pricing <- ticket.cost) {
                                     <span class="event-item__price-amount" itemprop="highPrice">@pricing.formattedPrice</span>
                                     <span class="event-item__price-amout-discount" itemprop="lowPrice" content="@pricing.discountPrice">Partners/Patrons: @pricing.discountPrice</span>
+                                    <span class="event-item__price-amout-discount">Save @pricing.savingPrice</span>
                                 }
                             }
                             </div>

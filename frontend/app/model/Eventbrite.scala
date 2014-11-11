@@ -35,7 +35,7 @@ object Eventbrite {
       clean
     }
 
-    lazy val blurb = truncateToWordBoundary(text, 200)
+    lazy val blurb = truncateToWordBoundary(text, 120)
   }
 
   case class EBAddress(address_1: Option[String],
