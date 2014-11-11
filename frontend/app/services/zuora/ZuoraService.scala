@@ -35,7 +35,7 @@ object ZuoraServiceHelpers {
 
 case class ZuoraApiConfig(url: String, username: String, password: String, tierRatePlanIds: Map[TierPlan, String])
 
-class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
+class ZuoraService(val apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
   import ZuoraServiceHelpers._
 
   val initialValue = Authentication("", "")
