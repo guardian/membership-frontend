@@ -9,11 +9,9 @@ import model.Stripe.Card
 import model.{FriendTierPlan, TierPlan}
 import monitoring.MemberMetrics
 import services.zuora.ZuoraService
-import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
 
 object TouchpointBackend {
 
@@ -22,32 +20,7 @@ object TouchpointBackend {
 
     val zuoraService = new ZuoraService(touchpointBackendConfig.zuora)
 
-    val memberRepository = new MemberRepository with ScheduledTask[Authentication] {
-      val initialValue = Authentication("", "")
-      val initialDelay = 0.seconds
-      val interval = 30.minutes
-
-      def refresh() = salesforce.getAuthentication
-
-      val salesforce = new Scalaforce {
-        val config = touchpointBackendConfig.salesforce
-
-        val consumerKey = config.consumerKey
-        val consumerSecret = config.consumerSecret
-
-        val apiURL = config.apiURL
-        val apiUsername = config.apiUsername
-        val apiPassword = config.apiPassword
-        val apiToken = config.apiToken
-
-        val stage = Config.stage
-        val application = "Frontend"
-
-        def authentication: Authentication = agent.get()
-      }
-    }
-
-    memberRepository.start()
+    val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 
     TouchpointBackend(memberRepository, stripeService, zuoraService)
   }
@@ -61,12 +34,12 @@ object TouchpointBackend {
 }
 
 case class TouchpointBackend(
-  memberRepository: MemberRepository,
+  memberRepository: FrontendMemberRepository,
   stripeService: StripeService,
   zuoraService : ZuoraService) {
 
   def start() = {
-    // TODO start the MemberRepository here too
+    memberRepository.start()
     zuoraService.start()
   }
 

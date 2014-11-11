@@ -4,18 +4,44 @@ import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
+import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{EBCode, RichEvent}
 import model.PaidTierPlan
 import model.Stripe.Customer
 import monitoring.MemberMetrics
+import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
+}
+
+class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository with ScheduledTask[Authentication] {
+  val initialValue = Authentication("", "")
+  val initialDelay = 0.seconds
+  val interval = 30.minutes
+
+  def refresh() = salesforce.getAuthentication
+
+  val salesforce = new Scalaforce {
+    val consumerKey = salesforceConfig.consumerKey
+    val consumerSecret = salesforceConfig.consumerSecret
+
+    val apiURL = salesforceConfig.apiURL
+    val apiUsername = salesforceConfig.apiUsername
+    val apiPassword = salesforceConfig.apiPassword
+    val apiToken = salesforceConfig.apiToken
+
+    val stage = Config.stage
+    val application = "Frontend"
+
+    def authentication: Authentication = agent.get()
+  }
 }
 
 trait MemberService {
