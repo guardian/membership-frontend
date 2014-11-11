@@ -1,8 +1,8 @@
 package services
 
 import akka.agent.Agent
-import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import com.gu.contentapi.client.model.{Asset, Content, ItemResponse}
+import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import configuration.Config
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
@@ -13,6 +13,7 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.Failure
 import scala.util.matching.Regex
 
 case class MasterclassData(eventId: String, webUrl: String, images: List[Asset])
@@ -53,11 +54,10 @@ trait MasterclassDataService {
       .page(page)
       .showFields("body")
       .showElements("image")
-      .response.recover {
-        case GuardianContentApiError(status, message) => {
+      .response.andThen {
+        case Failure(GuardianContentApiError(status, message)) => {
           ContentApiMetrics.putResponseCode(status, "GET content")
           Logger.error(s"Error response from Content API $status")
-          throw GuardianContentApiError(status, message)
         }
       }
   }
