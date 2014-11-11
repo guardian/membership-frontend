@@ -12,12 +12,12 @@
         </div>
         <div class="event-item__meta">
             <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
-                <h2 class="event-item__title">
+                <h4 class="event-item__title">
                     @if(event.isSoldOut){
                         <span class="event-status--sold-out" data-filter-key="status">Sold Out</span>
                     }
                     <span itemprop="name" data-filter-key="title">@event.name.text</span>
-                </h2>
+                </h4>
 
                 <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
 
