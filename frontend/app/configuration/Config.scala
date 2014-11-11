@@ -57,7 +57,7 @@ object Config {
   val eventbriteApiToken = config.getString("eventbrite.api.token")
   val eventbriteMasterclassesApiToken = config.getString("eventbrite.masterclasses.api.token")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
-  val eventbriteRefreshTimeForAllEvents = config.getInt("eventbrite.api.refresh-time-all-events-seconds")
+  val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
