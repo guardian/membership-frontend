@@ -12,7 +12,7 @@ import com.gu.membership.salesforce.Tier.Tier
 import actions.MemberRequest
 import forms.MemberForm._
 import model.StripeSerializer._
-import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
+import model._
 import services._
 import actions._
 
@@ -48,7 +48,10 @@ trait UpgradeTier {
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      } yield Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields))
+      } yield {
+        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.apiConfig.publicKey))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields, pageInfo))
+      }
     }
     else
       Future.successful(NotFound)
