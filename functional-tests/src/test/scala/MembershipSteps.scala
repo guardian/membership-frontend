@@ -153,7 +153,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAPartner = {
-    new ChooseTierPage(driver).clickPartner.clickChoose
+    new ChooseTierPage(driver).clickPartner
     theFlowSignIn
     pay
     this
