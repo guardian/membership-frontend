@@ -56,12 +56,9 @@ trait Joiner extends Controller {
       marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
       passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
     } yield {
-
       tier match {
         case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
-        case paidTier =>
-          val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.apiConfig.publicKey))
-          Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
+        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
       }
 
     }

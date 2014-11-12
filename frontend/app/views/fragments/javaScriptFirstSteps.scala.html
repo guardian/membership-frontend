@@ -1,4 +1,3 @@
-@(pageInfo: model.PageInfo)
 @import configuration.Config
 @import views.support.Asset
 
@@ -47,9 +46,7 @@
         css: {
             loaded: false
         },
-        @for(stripePublicKey <- pageInfo.stripePublicKey) {
-            stripePublicKey: '@stripePublicKey',
-        }
+        stripePublicKey: '@Config.touchpointDefaultBackend.stripe.publicKey',
         membership: {
             buildNumber: '@app.BuildInfo.buildNumber',
             eventImages: {

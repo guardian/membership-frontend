@@ -1,9 +1,9 @@
 @(tier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields,
-marketingChoices: model.StatusFields, passwordExists: Boolean, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._
 
-    @main("Payment | " + tier, containerPadding = false, isBrochure = true, pageInfo = pageInfo) {
+    @main("Payment | " + tier, containerPadding = false, isBrochure = true) {
         <section class="section-payment u-cf">
 
 
