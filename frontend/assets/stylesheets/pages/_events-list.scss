@@ -1,0 +1,359 @@
+/* ==========================================================================
+   Event blocks
+   ========================================================================== */
+
+// an event block consists of a title and a list
+// and can be a simple list or a "hero" layout
+.event-block {
+    position: relative;
+    background-color: $white;
+    border-bottom: rem(1px) solid $mem-live-accent;
+    padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline) 0 rem($gs-baseline * 2);
+    }
+
+    @include mq(desktop) {
+        padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline * 2);
+    }
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    .theme--masterclass & {
+        padding-bottom: 0;
+    }
+}
+
+// the title sits to the side of the list
+.events-title-container {
+    display: block;
+    padding: 0 0 rem($gs-baseline);
+
+    @include mq(mem-full) {
+        float: left;
+        width: rem(gs-span(2) + $gs-gutter);
+    }
+
+}
+
+.event-block-title {
+    @include fs-header(4);
+}
+
+// the list becomes full-width on mobile
+.events-list-container {
+    overflow: hidden;
+
+    @include mq(mem-full) {
+        width: rem(gs-span(12));
+    }
+}
+
+
+/* ==========================================================================
+   Event item - default
+   ========================================================================== */
+
+.events-list__item {
+    margin-bottom: rem($gs-baseline);
+}
+
+// each list item should be in columns of 3
+@include mq(tablet) {
+    .events-list__item {
+        width: 33.33%;
+        float: left;
+        margin-bottom: rem(20px);
+
+        // UGLY: the nested classes below need to be here
+        // because they depend on the parent list item
+        // being the 1st/2nd/3rd – sorry.
+
+        // to give us the gutter, each inner element
+        // is 14px narrower than the parent
+        // so the first column gets 14px on the right
+        .event-item__container {
+            width: calc(100% - 14px);
+            height: rem(420px);
+        }
+
+        // the middle column is centred (eg. 7px on either side)
+        &:nth-child(3n-1) .event-item__container {
+            margin: 0px auto;
+        }
+
+        // the third column is right-aligned (eg. 14px on the left)
+        &:nth-child(3n) .event-item__container {
+            float: right;
+        }
+    }
+}
+
+.event-item__media {
+    a, img {
+        vertical-align: text-bottom; // remove descenders
+        display: block;
+    }
+}
+
+// global styles for the inner item container
+// (styles above are specific for tablet and up)
+.event-item__container {
+    background-color: $c-neutral7;
+    position: relative;
+
+    .join-choose-tier & {
+        background-color: transparent;
+    }
+
+    &:hover {
+        text-decoration: none;
+        background-color: $c-neutral5;
+
+        .event-item__title {
+            text-decoration: underline;
+        }
+
+    }
+
+    *:hover {
+        text-decoration: none;
+    }
+}
+
+// the event item details (title, location etc)
+.event-item__meta {
+    padding: rem($gs-gutter / 2);
+
+    .join-choose-tier & {
+        padding: 0;
+    }
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline) rem($gs-gutter / 2);
+        height: auto;
+    }
+
+    @include mq(desktop) {
+        padding: rem($gs-gutter);
+    }
+}
+
+// heading of the event
+.event-item__title {
+    color: $black;
+    margin-bottom: rem($gs-baseline);
+    position: relative;
+
+    @include fs-headline(2);
+
+    @include mq(tablet) {
+        @include fs-headline(3);
+    }
+
+}
+
+// misc event details
+.event-status--sold-out {
+    display: inline-block;
+    color: $white;
+    background-color: $mem-live-accent;
+    @include fs-data(2);
+    position: relative;
+    top: rem(-3px);
+    padding: rem(1px) rem(3px);
+    margin-right: rem(4px);
+}
+
+.event-item__time {
+    @include fs-data(4);
+    color: $black;
+}
+
+.event-item__location {
+    font-size: 0; /** space between inline block elements **/
+    color: $c-neutral2;
+}
+
+.event-item__location-name,
+.event-item__location-address {
+    @include fs-data(3);
+}
+
+.event-item__description {
+    @include fs-bodyCopy(1);
+    padding: rem($gs-baseline) 0 0;
+    color: $black;
+
+    @include mq(desktop) {
+        @include fs-headline(2);
+        padding: rem($gs-baseline * 2) 0 0;
+    }
+}
+
+// the container for prices / buy button
+.event-item__cta {
+    width: 100%;
+    padding: $gs-baseline 0 0;
+
+    @include mq(tablet) {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
+    }
+
+    @include mq(desktop) {
+        padding: 0 rem($gs-gutter) rem($gs-gutter);
+    }
+}
+
+.event-item__price-amount {
+    display: block;
+    @include fs-header(4);
+    color: $black;
+}
+
+.event-item__price-amount-discount {
+    display: block;
+    @include fs-data(3);
+    color: $c-neutral2;
+}
+
+// the buy button
+.event-item__action {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+    width: rem(36px);
+    height: rem(36px);
+    padding: 0 rem(8px) 0 0;
+    background-color: $mem-live-top;
+    @include border-radius(50px);
+    border: 0;
+
+    @include mq(desktop) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:after {
+        @extend .icon-sprite-arrow-right-white;
+        content: '';
+        fill: $black;
+        float: right;
+    }
+
+    .theme--masterclass & {
+        background-color: $mem-mc-top;
+        &:after {
+            @extend .icon-sprite-arrow-right-black;
+        }
+    }
+}
+
+/* ==========================================================================
+   Event item – hero
+   ========================================================================== */
+
+// hero item – overrides much of the default item styling
+// flexbox magic
+@include guss-row('.event-item--hero .event-item__container');
+.event-item--hero {
+    margin-bottom: rem($gs-gutter / 2);
+    width: 100%;
+
+    @include mq(tablet) {
+        margin-bottom: rem($gs-gutter);
+        height: auto;
+        overflow: hidden;
+
+        .event-item__media {
+            display: inline-block;
+            vertical-align: top;
+            @include flex(1, 0, percentage(gs-span(8)/gs-span(12)));
+            .no-flexbox & {
+                width: 60%;
+                display: inline-block;
+            }
+        }
+
+        .event-item__meta {
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            @include flex();
+            .no-flexbox & {
+                width: 40%;
+                .event-item__cta {
+                    position: static;
+                }
+            }
+        }
+
+        .event-item__description {
+            display: none;
+        }
+    }
+
+    @include mq(desktop) {
+        .event-item__title {
+            @include fs-headline(5);
+        }
+
+        .event-item__time {
+            @include fs-headline(2);
+        }
+
+        .event-item__description {
+            display: block;
+        }
+    }
+}
+
+.events-list__hero-descendant {
+
+    .events-list__item {
+        margin-bottom: 0;
+    }
+
+    .event-item__container {
+        @include mq(tablet) {
+            height: rem(450px);
+        }
+    }
+}
+
+/* ==========================================================================
+   Custom logo
+   ========================================================================== */
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+    }
+
+    .svg & {
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+
+        @include mq(tablet) {
+            height: rem(87px);
+        }
+    }
+}
