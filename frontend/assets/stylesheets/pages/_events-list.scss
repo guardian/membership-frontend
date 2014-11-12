@@ -296,6 +296,7 @@
             @include flex(1, 0, percentage(gs-span(8)/gs-span(12)));
             .no-flexbox & {
                 width: 60%;
+                font-size: 0;
                 display: inline-block;
             }
         }
@@ -307,6 +308,7 @@
             @include flex();
             .no-flexbox & {
                 width: 40%;
+                font-size: 0;
                 .event-item__cta {
                     position: static;
                 }
@@ -329,6 +331,12 @@
 
         .event-item__description {
             display: block;
+        }
+    }
+
+    .event-item__container {
+        .no-flexbox & {
+            font-size: 0;
         }
     }
 }
