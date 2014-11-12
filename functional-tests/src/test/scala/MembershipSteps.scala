@@ -111,7 +111,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAFriend = {
-    new ChooseTierPage(driver).clickFriend.clickChoose
+    new ChooseTierPage(driver).clickFriend
     theFlowSignIn
     becomeFriend
     this
