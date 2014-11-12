@@ -69,6 +69,40 @@
     cursor: default;
 }
 
+.action--buy {
+  background-color: $black;
+
+  @include mq(tablet) {
+    float: left;
+    margin: rem(6px $gs-gutter 0 0);
+    min-width: 0;
+  }
+
+  &:hover {
+    background-color: $mem-event-button-hover;
+  }
+}
+
+.action--sold-out {
+  background-color: $black;
+  padding-right: rem(18px);
+
+  @include mq(tablet) {
+    float: left;
+    margin: rem(6px $gs-gutter 0 0);
+    min-width: 0;
+  }
+
+  &:hover {
+    background-color: $black;
+    cursor: default;
+  }
+
+  &:after {
+    display: none;
+  }
+}
+
 .action--join,
 .action--logged-in {
     text-align: left;

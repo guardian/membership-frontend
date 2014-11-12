@@ -139,20 +139,6 @@
         }
     }
 
-    .action {
-        background-color: $black;
-
-        @include mq(tablet) {
-            float: left;
-            margin: rem(6px $gs-gutter 0 0);
-            min-width: 0;
-        }
-
-        &:hover {
-            background-color: $mem-event-button-hover;
-        }
-    }
-
     .terms-info {
         @include fs-textSans(1);
         padding-top: rem(12px);
