@@ -40,7 +40,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
             var value = filterInput.value;
             var elmsToShow = [],
-            elmsToHide = [];
+                elmsToHide = [];
 
             if (value) {
                 trackSearch('Event filter', 'Typed search', value);
