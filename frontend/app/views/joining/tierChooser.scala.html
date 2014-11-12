@@ -47,24 +47,24 @@
                             <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
                         </div>
                         <div class="event-content__second">
-                        @if(event.venue.name){
-                            <span class="event-item__location-name">@event.venue.name</span>
-                        }
-                        @for(location <- event.venue.address) {
-                            <span class="event-item__location-detail">@if(event.venue.name){, } @location.city, @location.postal_code</span>
-                        }
+                            @if(event.venue.name){
+                                <span class="event-item__location-name">@event.venue.name</span>
+                            }
+                            @for(location <- event.venue.address) {
+                                <span class="event-item__location-detail">@if(event.venue.name){, } @location.city, @location.postal_code</span>
+                            }
                         </div>
                     </div>
 
                     <div class="event-item__price">
-                    @for(ticket <- event.generalReleaseTicket) {
-                        @for(pricing <- ticket.cost) {
-                            <div class="event-content__price event-content--line-divider">@pricing.formattedPrice</div>
-                            <div class="event-content__trail">
-                                <div class="event-item__price-amout-discount">Partners/Patrons: @pricing.discountPrice</div>
-                            </div>
+                        @for(ticket <- event.generalReleaseTicket) {
+                            @for(pricing <- ticket.cost) {
+                                <div class="event-content__price event-content--line-divider">@pricing.formattedPrice</div>
+                                <div class="event-content__trail">
+                                    <div class="event-item__price-amount-discount">Partners/Patrons: @pricing.discountPrice</div>
+                                </div>
+                            }
                         }
-                    }
                     </div>
                 </div>
             }

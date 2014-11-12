@@ -5,14 +5,16 @@
 @import 'head.ie9';
 
 /* ==========================================================================
-   Memebership components
+   Membership components
    ========================================================================== */
 @import 'components/action';
 @import 'components/benefits';
 /* ==========================================================================
    Memebership pages
    ========================================================================== */
-@import 'pages/events';
+@import 'pages/events-detail';
+@import 'pages/events-summary';
+@import 'pages/events-list';
 @import 'pages/joiner';
 @import 'pages/tier';
 @import 'pages/tickets';
