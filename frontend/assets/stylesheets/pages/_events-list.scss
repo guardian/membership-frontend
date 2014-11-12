@@ -59,7 +59,7 @@
 
 // only visible when no filter results are found
 .events-list--empty:before {
-    content: "No matching events – please try a different search.";
+    content: 'No matching events – please try a different search.';
     margin: 0 0 2rem;
     display: block;
 }
