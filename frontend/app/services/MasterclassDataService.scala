@@ -76,7 +76,7 @@ object MasterclassDataService extends MasterclassDataService with ScheduledTask[
 
 object MasterclassDataExtractor {
 
-  val eventbriteUrl = "https?://www.eventbrite.co.uk/[^\"]+"
+  val eventbriteUrl = "https?://www.eventbrite.co.uk/[^?\"]+"
   val regex = new Regex(eventbriteUrl)
 
   def extractEventbriteInformation(content: Content): List[MasterclassData] = {
