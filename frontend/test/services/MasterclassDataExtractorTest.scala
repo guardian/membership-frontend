@@ -6,7 +6,7 @@ import org.specs2.mutable.Specification
 class MasterclassDataExtractorTest extends Specification {
 
   val body = "employers and educators to connect, collaborate and grow together.</p><h2><a id=\"book\">Book now</a></h2>" +
-    "<p><br /><strong>If you're using a mobile device, <a href=\"https://www.eventbrite.co.uk/e/the-essentials-of-creativity-in-business-tickets-13906168725\">" +
+    "<p><br /><strong>If you're using a mobile device, <a href=\"https://www.eventbrite.co.uk/e/the-essentials-of-creativity-in-business-tickets-13906168725?ref=etck\">" +
     "click here to book</a></strong></p><h2>Details</h2><p><strong>Date:</strong> Tuesday 25 November 2014<br /><strong>Times:</strong> " +
     "6.30pm-9.30pm. Check-in begins 30 minutes before the start time.<br />"
   val fields = Map("body" -> body)
