@@ -30,7 +30,7 @@
             <h4 class="event-block-title case--lower">What's on</h4>
         </div>
         <div class="events-list-container">
-            <ul class="events-list u-unstyled">
+            <ul class="events-list u-unstyled" id="js-filter-container">
                 @for(event <- eventPortfolio.normal) {
                     @fragments.event.item(event, false)
                 }

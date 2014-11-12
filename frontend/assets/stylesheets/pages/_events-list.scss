@@ -57,6 +57,19 @@
    Event item - default
    ========================================================================== */
 
+// only visible when no filter results are found
+.events-list--empty:before {
+    content: "No matching events – please try a different search.";
+    margin: 0 0 2rem;
+    display: block;
+}
+
+.events-list__filter {
+    margin-bottom: rem(20px);
+    padding: rem(5px) rem(1px);
+    color: $c-neutral2;
+}
+
 .events-list__item {
     margin-bottom: rem($gs-baseline);
 }
@@ -357,3 +370,4 @@
         }
     }
 }
+
