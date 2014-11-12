@@ -10,7 +10,7 @@ import monitoring.StripeMetrics
 
 case class StripeApiConfig(url: String, secretKey: String, publicKey: String)
 
-class StripeService(apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
+class StripeService(val apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
   val wsUrl = apiConfig.url
   val wsMetrics = StripeMetrics
 

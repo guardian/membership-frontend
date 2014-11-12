@@ -6,7 +6,8 @@ case class PageInfo(
   title: String,
   url: String,
   description: Option[String],
-  image: Option[String] = Some(PageInfo.defaultImage)
+  image: Option[String] = Some(PageInfo.defaultImage),
+  stripePublicKey: Option[String] = None
 )
 
 object PageInfo {
