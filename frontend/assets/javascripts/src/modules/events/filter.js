@@ -43,7 +43,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
                 elmsToHide = [];
 
             if (value) {
-                trackSearch('Event filter', 'Typed search', value);
+                trackSearch('Event filter', 'Masterclasses', value);
             }
 
             index.forEach(function (item) {
