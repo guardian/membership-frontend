@@ -130,8 +130,7 @@ define([
                     window.location.assign(data.redirect);
                 },
                 error: function (error) {
-                    var errorObj,
-                        errorMessage;
+                    var errorObj;
 
                     try {
                         errorObj = JSON.parse(error.response);
@@ -139,14 +138,11 @@ define([
                         Raven.captureException(e);
                     }
 
-                    errorMessage = self.getErrorMessage(errorObj);
-                    if (errorMessage) {
-                        self.manageErrors({
-                            isValid: false,
-                            errorMessage: errorMessage,
-                            $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
-                        });
-                    }
+                    self.manageErrors({
+                        isValid: false,
+                        errorMessage: self.getErrorMessage(errorObj),
+                        $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
+                    });
 
                     self.stopLoader();
                     self.setThrobberMessage();
