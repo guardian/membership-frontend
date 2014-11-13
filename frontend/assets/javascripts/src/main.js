@@ -1,4 +1,5 @@
 require([
+    '$',
     'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/setup',
     'src/utils/cookieRefresh',
@@ -15,6 +16,7 @@ require([
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
+    $,
     Imager,
     analytics,
     cookieRefresh,
