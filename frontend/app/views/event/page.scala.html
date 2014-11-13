@@ -10,14 +10,21 @@
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
+@termsAndConditions = @{
+    event match {
+        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
+        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
+    }
+}
+
 @ticketCta = {
     @if(event.isSoldOut) {
         <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
     } else {
         <a class="action js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
     }
-    <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> Guardian Live events
-        <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
+    <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
+        <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
     </div>
 }
 
