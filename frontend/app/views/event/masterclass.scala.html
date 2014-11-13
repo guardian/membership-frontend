@@ -6,6 +6,13 @@
             Long and short courses taught by award-winning professionals with discounts for Guardian Members
         </h1>
         <i class="event-logo icon-sprite-masterclasses"></i>
+        <input type="text"
+               class="events-list__filter"
+               id="js-filter"
+               data-filter-field="title"
+               placeholder="Filter Masterclasses..."
+               autocomplete="off"
+        />
     </section>
 
     @views.html.event.list(eventPortfolio, pageInfo)
