@@ -1,48 +1,47 @@
 @()(implicit token: play.filters.csrf.CSRF.Token)
 
+@import org.joda.time.DateTime
+@import views.support.Dates
 @import views.support.Asset
 
-@main("Home Page a-b", containerPadding=false) {
+@slideShowElement(imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
+    <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
+        <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <figcaption class="slide-show__detail">@description <time>@Dates.prettyDate(time)</time></figcaption>
+    </figure>
+}
 
-    <section class="home-hero u-cf">
+@promoElement(imgSrc: String, description: String, anchorHref: String) = {
+    <li class="home-promo">
+        <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <p class="home-promo__description">@description</p>
+        <a class="black-arrow-round-cta" href="@anchorHref"></a>
+    </li>
+}
+
+@main("Home Page a-b", containerPadding=false) {
+    <section class="u-cf">
         <div class="slide-show">
-            <div class="slide-show__img slide-show__img--one"></div>
-            <div class="slide-show__img slide-show__img--two"></div>
-            <div class="slide-show__img slide-show__img--three"></div>
-            <div class="slide-show__img slide-show__img--four"></div>
+            @slideShowElement("viv_west_", "Blurb of text here image six...", new DateTime(2014, 1, 12, 0, 0), "six")
+            @slideShowElement("tin_temp_", "Blurb of text here image five...", new DateTime(2014, 1, 12, 0, 0), "five")
+            @slideShowElement("women_", "Blurb of text here image four...", new DateTime(2014, 1, 12, 0, 0), "four")
+            @slideShowElement("jim_page_", "Blurb of text here image three...", new DateTime(2014, 1, 12, 0, 0), "three")
+            @slideShowElement("nao_klein_", "Blurb of text here image two...", new DateTime(2014, 1, 12, 0, 0), "two")
+            @slideShowElement("man_aud_", "Blurb of text here image one...", new DateTime(2014, 1, 12, 0, 0), "one", true)
         </div>
-        <div class="home-hero__detail">
-            Question time Russell Brand event
-            <time>23 October 2014</time>
-        </div>
-        <div class="home-hero__blurb">
-            <p>Guardian Membership brings you closer to the stories of the day, connects you to the conversations that matter and introduces you to fellow members who share your interests</p>
+        <div class="home-hero-blurb u-cf">
+                <p>We believe real, face-to-face discussion has a unique power to broaden minds. </p>
+                <p><strong>We’re bringing the Guardian to life.</strong></p>
             <a class="action" href="/join">Join today</a>
         </div>
     </section>
 
-    <section class="home-promo-list">
-        <ul class="u-unstyled">
-            <li class="home-promo">
-                <div class="home-promo__img home-promo__img--one"></div>
-                <p class="home-promo__description">Events that bring the Guardian to life</p>
-                <a class="black-arrow-round-cta" href=""></a>
-            </li>
-            <li class="home-promo">
-                <div class="home-promo__img home-promo__img--two"></div>
-                <p class="home-promo__description">What's included in Guardian Membership?</p>
-                <a class="black-arrow-round-cta" href=""></a>
-            </li>
-            <li class="home-promo">
-                <div class="home-promo__img home-promo__img--three"></div>
-                <p class="home-promo__description">Become a Patron today</p>
-                <a class="black-arrow-round-cta" href=""></a>
-            </li>
-            <li class="home-promo">
-                <div class="home-promo__img home-promo__img--four"></div>
-                <p class="home-promo__description">Why are so many Guardian Live events in London?</p>
-                <a class="black-arrow-round-cta" href=""></a>
-            </li>
+    <section class="home-promo-list-container">
+        <ul class="home-promo-list u-unstyled">
+            @promoElement("promo-img-", "What's included in Guardian Membership?", "/about")
+            @promoElement("promo-img-", "Events that bring the Guardian to life", "/events")
+            @promoElement("promo-img-", "Become a Patron today", "/patrons")
+            @promoElement("promo-img-", "Why are so many Guardian Live events in London?", "")
         </ul>
     </section>
 }
