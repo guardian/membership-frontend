@@ -44,11 +44,27 @@ require([
 
     /* jshint ignore:start */
     // avoid "Do not use 'new' for side effects" error
-    // these values are defined in application.conf
-    new Imager({
-        availableWidths: guardian.membership.eventImages.widths,
-        availablePixelRatios: guardian.membership.eventImages.ratios
-    });
+    // event imagery
+    if ($('.delayed-image-load').length) {
+        new Imager('.delayed-image-load', {
+            availableWidths: guardian.membership.eventImages.widths,
+            availablePixelRatios: guardian.membership.eventImages.ratios
+        });
+    }
+    // home page hero (a-b) imagery
+    if ($('.delayed-home-image-load').length) {
+        new Imager('.delayed-home-image-load', {
+            availableWidths: guardian.membership.homeImages.widths,
+            availablePixelRatios: guardian.membership.homeImages.ratios
+        });
+    }
+    // home page promo (a-b) imagery
+    if ($('.delayed-home-promo-image-load').length) {
+        new Imager('.delayed-home-promo-image-load', {
+            availableWidths: guardian.membership.homeImages.promoWidths,
+            availablePixelRatios: guardian.membership.homeImages.ratios
+        });
+    }
     /* jshint ignore:end */
 
     // TODO: Remove this, see module
