@@ -3,7 +3,7 @@
 @import configuration.Config
 @import model.Eventbrite._
 
-<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero} js-filter-item event-item--pristine" itemscope itemtype="http://schema.org/Event">
+<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero} js-filter-item" itemscope itemtype="http://schema.org/Event">
     <div class="event-item__container">
         <div class="event-item__media">
             <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
