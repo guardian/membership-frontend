@@ -51,7 +51,7 @@
     background-color: $white;
 
     @include mq(tablet) {
-        padding-left: rem(20px)
+        padding-left: rem(20px);
     }
 }
 
