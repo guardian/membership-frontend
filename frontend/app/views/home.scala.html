@@ -13,9 +13,11 @@
 
 @promoElement(imgSrc: String, description: String, anchorHref: String) = {
     <li class="home-promo">
-        <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
-        <p class="home-promo__description">@description</p>
-        <a class="black-arrow-round-cta" href="@anchorHref"></a>
+        <a href="@anchorHref">
+            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+            <p class="home-promo__description">@description</p>
+            <i class="black-arrow-round-cta"></i>
+        </a>
     </li>
 }
 
