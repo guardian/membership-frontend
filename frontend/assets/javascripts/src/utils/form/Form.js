@@ -134,17 +134,18 @@ define([
                         errorMessage;
 
                     try {
-                        errorObj = error.response && JSON.parse(error.response);
-                        errorMessage = self.getErrorMessage(errorObj);
-                        if (errorMessage) {
-                            self.manageErrors({
-                                isValid: false,
-                                errorMessage: errorMessage,
-                                $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
-                            });
-                        }
+                        errorObj = JSON.parse(error.response);
                     } catch (e) {
                         Raven.captureException(e);
+                    }
+
+                    errorMessage = self.getErrorMessage(errorObj);
+                    if (errorMessage) {
+                        self.manageErrors({
+                            isValid: false,
+                            errorMessage: errorMessage,
+                            $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
+                        });
                     }
 
                     self.stopLoader();
