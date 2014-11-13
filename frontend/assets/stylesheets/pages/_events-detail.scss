@@ -407,19 +407,6 @@
         }
     }
 
-    .action {
-        min-width: 100%;
-
-        .theme--guardian-live & {
-            background-color: $mem-live-top;
-        }
-
-        .theme--masterclass & {
-            background-color: $mem-mc-top;
-        }
-
-    }
-
     .terms-info {
         @include fs-textSans(1);
         padding-top: rem($gs-baseline/2);

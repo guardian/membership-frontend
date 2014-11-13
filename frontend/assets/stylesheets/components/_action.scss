@@ -69,7 +69,7 @@
     cursor: default;
 }
 
-.action--buy {
+.action--buy-event-ticket-details {
   background-color: $black;
 
   @include mq(tablet) {
@@ -83,7 +83,7 @@
   }
 }
 
-.action--sold-out {
+.action--sold-out-event-ticket-details {
   background-color: $black;
   padding-right: rem(18px);
 
@@ -98,6 +98,44 @@
     cursor: default;
   }
 
+  &:after {
+    display: none;
+  }
+}
+
+.action--buy-event-content-sidebar {
+  min-width: 100%;
+
+  .theme--guardian-live & {
+    background-color: $mem-live-top;
+
+    &:hover {
+      background-color: darken($mem-live-top, 5%);
+    }
+  }
+
+  .theme--masterclass & {
+    background-color: $mem-mc-top;
+    &:hover {
+      background-color: darken($mem-mc-top, 5%);
+    }
+  }
+}
+
+.action--sold-out-event-content-sidebar {
+  min-width: 100%;
+
+  .theme--guardian-live & {
+    background-color: $mem-live-top;
+  }
+
+  .theme--masterclass & {
+    background-color: $mem-mc-top;
+  }
+
+  &:hover {
+    cursor: default;
+  }
   &:after {
     display: none;
   }
