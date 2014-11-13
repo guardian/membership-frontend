@@ -79,7 +79,7 @@
   }
 
   &:hover {
-    background-color: $mem-event-button-hover;
+    background-color: transparentize($black, 0.35);
   }
 }
 
