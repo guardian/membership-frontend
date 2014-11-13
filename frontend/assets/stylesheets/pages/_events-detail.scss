@@ -324,6 +324,7 @@
 .event-content__info {
     background-color: $c-neutral7;
     padding: rem($gs-gutter);
+    overflow: hidden;
     @include fs-textSans(3);
 
     &--no-padding {
@@ -411,17 +412,10 @@
 
         .theme--guardian-live & {
             background-color: $mem-live-top;
-
-            &:hover {
-                background-color: darken($mem-live-top, 5%);
-            }
         }
 
         .theme--masterclass & {
             background-color: $mem-mc-top;
-            &:hover {
-                background-color: darken($mem-mc-top, 5%);
-            }
         }
 
     }
