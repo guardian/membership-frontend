@@ -12,7 +12,7 @@
 
 @ticketCta = {
     @if(event.isSoldOut) {
-        <div class="action action--sold-out">Sold Out</div>
+        <span class="action action--sold-out">Sold out</span>
     } else {
         <a class="action action--buy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
         <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> Guardian Live events
