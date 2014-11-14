@@ -10,7 +10,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, RichEvent}
 import model.PaidTierPlan
 import model.Stripe.Customer
-import monitoring.MemberMetrics
+import monitoring.TouchpointBackendMetrics
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,6 +22,33 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository with ScheduledTask[Authentication] {
+  val metrics = new TouchpointBackendMetrics {
+
+    override val backendEnv = salesforceConfig.envName
+
+    val service = "Member"
+
+    def putSignUp(tier: Tier.Tier) {
+      put(s"sign-ups-${tier.toString}")
+    }
+
+    def putUpgrade(tier: Tier.Tier) {
+      put(s"upgrade-${tier.toString}")
+    }
+
+    def putDowngrade(tier:Tier.Tier) {
+      put(s"downgrade-${tier.toString}")
+    }
+
+    def putCancel(tier:Tier.Tier) {
+      put(s"cancel-${tier.toString}")
+    }
+
+    private def put(metricName: String) {
+      put(metricName, 1)
+    }
+  }
+
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
   val interval = 30.minutes
@@ -32,7 +59,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
     val consumerKey = salesforceConfig.consumerKey
     val consumerSecret = salesforceConfig.consumerSecret
 
-    val apiURL = salesforceConfig.apiURL
+    val apiURL = salesforceConfig.apiURL.toString
     val apiUsername = salesforceConfig.apiUsername
     val apiPassword = salesforceConfig.apiPassword
     val apiToken = salesforceConfig.apiToken
@@ -68,9 +95,10 @@ trait MemberService {
     )
   }.getOrElse(Map.empty)
 
-  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] =
-    Timing.record(MemberMetrics, "createMember") {
-      val touchpointBackend = TouchpointBackend.forUser(user)
+  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
+
+    Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
       def futureCustomerOpt = formData match {
         case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case friend: FriendJoinForm => Future.successful(None)
@@ -88,10 +116,11 @@ trait MemberService {
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
-        MemberMetrics.putSignUp(formData.tierPlan.tier)
+        touchpointBackend.memberRepository.metrics.putSignUp(formData.tierPlan.tier)
         memberId.account
       }
     }
+  }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
     member.tier match {
@@ -121,7 +150,7 @@ trait MemberService {
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
     } yield {
       IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
-      MemberMetrics.putUpgrade(newTier)
+      touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
       memberId.account
     }
   }

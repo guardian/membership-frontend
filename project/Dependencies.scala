@@ -10,7 +10,7 @@ object Dependencies {
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.4"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.38"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.39"
   val contentAPI = "com.gu" %% "content-api-client" % "3.5"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters

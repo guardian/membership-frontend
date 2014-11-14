@@ -1,20 +1,26 @@
 package services
 
+import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri
+import model.Stripe._
+import model.StripeDeserializer._
+import monitoring.TouchpointBackendMetrics
+import play.api.libs.ws.WSRequestHolder
+
 import scala.concurrent.Future
 
 case class StripeCredentials(secretKey: String, publicKey: String)
-import play.api.libs.ws.WSRequestHolder
 
-case class StripeApiConfig(url: Uri, credentials: StripeCredentials)
-import model.Stripe._
-import model.StripeDeserializer._
-import monitoring.StripeMetrics
+case class StripeApiConfig(envName: String, url: Uri, credentials: StripeCredentials)
 
+class StripeService(apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
+  val wsUrl = apiConfig.url.toString
+  val wsMetrics = new TouchpointBackendMetrics with StatusMetrics {
+    val backendEnv = apiConfig.envName
 
-class StripeService(val apiConfig: StripeApiConfig) extends utils.WebServiceHelper[StripeObject, Error] {
-  val wsUrl = apiConfig.url.toString()
-  val wsMetrics = StripeMetrics
+    val service = "Stripe"
+  }
+
   val publicKey = apiConfig.credentials.publicKey
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder =
