@@ -413,6 +413,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
+  def IGoToMasterclasses = {
+    driver.get(Config().getUserValue("masterclasses"))
+    this
+  }
+
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
     Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
