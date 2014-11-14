@@ -7,7 +7,6 @@ import com.gu.membership.salesforce._
 import configuration.Config
 import model.Stripe.Card
 import model.{FriendTierPlan, TierPlan}
-import monitoring.MemberMetrics
 import services.zuora.ZuoraService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -56,7 +55,7 @@ case class TouchpointBackend(
     for {
       subscription <- subscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
     } yield {
-      MemberMetrics.putCancel(member.tier)
+      memberRepository.metrics.putCancel(member.tier)
       ""
     }
   }
@@ -65,7 +64,7 @@ case class TouchpointBackend(
     for {
       _ <- subscriptionService.downgradeSubscription(member.salesforceAccountId, FriendTierPlan)
     } yield {
-      MemberMetrics.putDowngrade(tierPlan.tier)
+      memberRepository.metrics.putDowngrade(tierPlan.tier)
       ""
     }
   }

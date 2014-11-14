@@ -2,7 +2,7 @@ package monitoring
 
 import com.gu.membership.salesforce.Tier
 
-object MemberMetrics extends Metrics {
+class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
   val service = "Member"
 
