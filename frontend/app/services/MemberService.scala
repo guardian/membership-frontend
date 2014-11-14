@@ -4,6 +4,7 @@ import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -16,12 +17,15 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Success, Failure}
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
 class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository with ScheduledTask[Authentication] {
+  val metrics = new MemberMetrics(salesforceConfig.envName)
+
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
   val interval = 30.minutes
@@ -32,7 +36,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
     val consumerKey = salesforceConfig.consumerKey
     val consumerSecret = salesforceConfig.consumerSecret
 
-    val apiURL = salesforceConfig.apiURL
+    val apiURL = salesforceConfig.apiURL.toString
     val apiUsername = salesforceConfig.apiUsername
     val apiPassword = salesforceConfig.apiPassword
     val apiToken = salesforceConfig.apiToken
@@ -44,7 +48,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
   }
 }
 
-trait MemberService {
+trait MemberService extends LazyLogging {
   def initialData(user: User, formData: JoinForm) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
@@ -68,9 +72,10 @@ trait MemberService {
     )
   }.getOrElse(Map.empty)
 
-  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] =
-    Timing.record(MemberMetrics, "createMember") {
-      val touchpointBackend = TouchpointBackend.forUser(user)
+  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
+
+    Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
       def futureCustomerOpt = formData match {
         case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case friend: FriendJoinForm => Future.successful(None)
@@ -88,10 +93,14 @@ trait MemberService {
       } yield {
         IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
-        MemberMetrics.putSignUp(formData.tierPlan.tier)
+        touchpointBackend.memberRepository.metrics.putSignUp(formData.tierPlan.tier)
         memberId.account
       }
+    }.andThen {
+      case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
+      case Failure(error) => logger.warn(s"Error in createMember() user=${user.id}", error)
     }
+  }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
     member.tier match {
@@ -121,7 +130,7 @@ trait MemberService {
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newTier, Some(customer)))
     } yield {
       IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
-      MemberMetrics.putUpgrade(newTier)
+      touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
       memberId.account
     }
   }

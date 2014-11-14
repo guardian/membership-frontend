@@ -77,15 +77,19 @@ object Config {
     val backendEnvironmentName = touchpointConfig.getString(typ)
     val environments = touchpointConfig.getConfig("environments")
 
-    val defaultTouchpointBackendConfig = touchpointConfigFor(environments.getConfig(backendEnvironmentName))
+    val defaultTouchpointBackendConfig = touchpointConfigFor(environments, backendEnvironmentName)
 
     logger.info(s"TouchPoint config - default-env=$typ config=${defaultTouchpointBackendConfig.hashCode}")
 
     defaultTouchpointBackendConfig
   }
 
-  def touchpointConfigFor(backendConf: com.typesafe.config.Config): TouchpointBackendConfig = {
+  def touchpointConfigFor(environmentsConf: com.typesafe.config.Config, environmentName: String): TouchpointBackendConfig = {
+
+    val backendConf: com.typesafe.config.Config = environmentsConf.getConfig(environmentName)
+
     val stripeApiConfig = StripeApiConfig(
+      environmentName,
       config.getString("stripe.api.url"), // stripe url never changes
       StripeCredentials(
         secretKey = backendConf.getString("stripe.api.key.secret"),
@@ -94,6 +98,7 @@ object Config {
     )
 
     val salesforceConfig = SalesforceConfig(
+      environmentName,
       consumerKey = backendConf.getString("salesforce.consumer.key"),
       consumerSecret = backendConf.getString("salesforce.consumer.secret"),
       apiURL = backendConf.getString("salesforce.api.url"),
@@ -112,7 +117,8 @@ object Config {
     }
 
     val zuoraApiConfig = ZuoraApiConfig(
-      url = backendConf.getString("zuora.api.url"),
+      environmentName,
+      backendConf.getString("zuora.api.url"),
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
       Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
