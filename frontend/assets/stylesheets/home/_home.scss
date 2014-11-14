@@ -81,6 +81,7 @@
 
     @include mq(tablet) {
         padding-left: rem(20px);
+        padding-bottom: 0;
         display: table-cell;
         vertical-align: top;
     }
@@ -102,13 +103,13 @@
     background-size: cover;
 }
 
-.black-arrow-round-cta {
+.secondary-arrow-round-cta {
     width: rem(36px);
     height: rem(36px);
     padding: rem(7px);
     background-color: $white;
     @include border-radius(50px);
-    border: 1px solid $black;
+    border: 1px solid $c-neutral1;
     display: block;
 
     &:focus {
