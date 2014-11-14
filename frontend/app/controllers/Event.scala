@@ -41,7 +41,7 @@ trait Event extends Controller {
         Some(event.socialImgUrl)
       )
       Ok(views.html.event.page(event, pageInfo))
-    }.getOrElse(NotFound)
+    }.getOrElse(Redirect(Config.guardianMembershipUrl))
   }
 
   def masterclasses = CachedAction { implicit request =>
