@@ -10,7 +10,7 @@ import forms.MemberForm._
 import model.Eventbrite.{EBCode, RichEvent}
 import model.PaidTierPlan
 import model.Stripe.Customer
-import monitoring.TouchpointBackendMetrics
+import monitoring.MemberMetrics
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,32 +22,7 @@ case class MemberServiceError(s: String) extends Throwable {
 }
 
 class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository with ScheduledTask[Authentication] {
-  val metrics = new TouchpointBackendMetrics {
-
-    override val backendEnv = salesforceConfig.envName
-
-    val service = "Member"
-
-    def putSignUp(tier: Tier.Tier) {
-      put(s"sign-ups-${tier.toString}")
-    }
-
-    def putUpgrade(tier: Tier.Tier) {
-      put(s"upgrade-${tier.toString}")
-    }
-
-    def putDowngrade(tier:Tier.Tier) {
-      put(s"downgrade-${tier.toString}")
-    }
-
-    def putCancel(tier:Tier.Tier) {
-      put(s"cancel-${tier.toString}")
-    }
-
-    private def put(metricName: String) {
-      put(metricName, 1)
-    }
-  }
+  val metrics = new MemberMetrics(salesforceConfig.envName)
 
   val initialValue = Authentication("", "")
   val initialDelay = 0.seconds
