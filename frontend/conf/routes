@@ -31,7 +31,6 @@ GET            /staff/loginAction                 controllers.OAuth.loginAction
 GET            /oauth2callback                    controllers.OAuth.oauth2Callback
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
-POST           /choose-tier                       controllers.Joining.tierChooserRedirect()
 
 # Subscription
 POST           /subscription/update-card          controllers.Subscription.updateCard
@@ -40,9 +39,11 @@ OPTIONS        /subscription/update-card          controllers.Subscription.updat
 # Events
 GET            /events                            controllers.Event.list
 GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
+GET            /masterclasses                     controllers.Event.masterclasses
+
 GET            /event/:id                         controllers.Event.details(id)
 GET            /event/:id/buy                     controllers.Event.buy(id)
-GET            /event/:id/thankyou                controllers.Event.thankyou(id)
+GET            /event/:id/thankyou                controllers.Event.thankyou(id, oid: Option[String])
 
 # Tier
 GET            /tier/change                       controllers.TierController.change

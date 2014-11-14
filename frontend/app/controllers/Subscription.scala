@@ -17,7 +17,7 @@ trait Subscription extends Controller {
     updateForm.bindFromRequest
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
-          card <- MemberService.updateDefaultCard(request.member, stripeToken)
+          card <- request.touchpointBackend.updateDefaultCard(request.member, stripeToken)
         } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`))
       ).recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))

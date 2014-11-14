@@ -1,21 +1,21 @@
-import scala.concurrent.Future
-
-import play.api.mvc.{Result, RequestHeader, WithFilters}
-import play.api.mvc.Results.{NotFound, InternalServerError}
-import play.api.mvc.WithFilters
-import play.api.Application
-
+import configuration.Config
 import controllers.Cached
 import filters.{CheckCacheHeadersFilter, Gzipper}
-import services.{SubscriptionService, MemberRepository, EventbriteService}
+import play.api.Application
+import play.api.mvc.Results.{InternalServerError, NotFound}
+import play.api.mvc.{RequestHeader, Result, WithFilters}
 import play.filters.csrf._
-import configuration.Config
+import services.{SubscriptionService, _}
+
+import scala.concurrent.Future
 
 object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper) {
   override def onStart(app: Application) {
-    EventbriteService.start()
-    MemberRepository.start()
-    SubscriptionService.zuora.start()
+    GuardianLiveEventService.start()
+    MasterclassEventService.start()
+
+    TouchpointBackend.All.foreach(_.start())
+    MasterclassDataService.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

@@ -15,5 +15,6 @@
 
 .social-icon {
     @extend %icon-holder-circle;
+    border-color: $c-neutral2;
     border: 0;
 }

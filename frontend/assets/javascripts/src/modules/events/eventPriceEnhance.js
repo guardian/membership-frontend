@@ -14,7 +14,7 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
         for (var c in config.classes) {
             if (config.classes.hasOwnProperty(c)) {
                 config.DOM = config.DOM || {};
-                config.DOM[c] = $(document.querySelector('.' + config.classes[c])); // bonzo object
+                config.DOM[c] = $('.' + config.classes[c]);
             }
         }
 

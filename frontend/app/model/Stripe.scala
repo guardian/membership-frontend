@@ -7,7 +7,7 @@ object Stripe {
 
   trait StripeObject
 
-  case class Error(`type`: String, message: String, code: Option[String], decline_code: Option[String]) extends Throwable with StripeObject {
+  case class Error(`type`: String, message: String) extends Throwable with StripeObject {
     override def getMessage:String = `type` + s" $message "
   }
 
@@ -18,7 +18,7 @@ object Stripe {
   case class Customer(id: String, cards: StripeList[Card]) extends StripeObject {
     // customers should always have a card
     if (cards.total_count != 1) {
-      throw Error("internal", s"Customer $id has ${cards.total_count} cards, should have exactly one", None, None)
+      throw Error("internal", s"Customer $id has ${cards.total_count} cards, should have exactly one")
     }
 
     val card = cards.data(0)
@@ -28,7 +28,9 @@ object Stripe {
 object StripeDeserializer {
   import Stripe._
 
-  implicit val readsError = Json.reads[Error]
+  implicit val readsError =
+    ((JsPath \ "error" \ "type").read[String] and (JsPath \ "error" \ "message").read[String])(Error)
+
   implicit val readsCard = Json.reads[Card]
 
   implicit def readsList[T](implicit reads: Reads[Seq[T]]): Reads[StripeList[T]] =

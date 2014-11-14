@@ -7,9 +7,9 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class JoinFlowRegisterOrSignInPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def signInButton = driver.findElement(By.xpath("//div[2]/div/div/section/div[2]/div[1]/a"))
+  private def signInButton = driver.findElement(By.cssSelector(".signin__login a"))
 
-  private def registerButton = driver.findElement(By.xpath("//div[1]/div/div/section/div[2]/div[2]/a"))
+  private def registerButton = driver.findElement(By.cssSelector(".signin__register a"))
 
   def clickSignIn = {
     signInButton.click()

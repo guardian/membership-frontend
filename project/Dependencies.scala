@@ -10,11 +10,14 @@ object Dependencies {
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.4"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.1"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.36"
   val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.7"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.38"
+  val contentAPI = "com.gu" %% "content-api-client" % "3.5"
   val playWS = PlayImport.ws
   val playFilters = PlayImport.filters
 
   //projects
-  val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityModel, identityTestUsers, scalaUri, membershipCommon, playWS, playFilters)
+
+  val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityModel, identityTestUsers, scalaUri,
+    membershipCommon, contentAPI, playWS, playFilters)
 }

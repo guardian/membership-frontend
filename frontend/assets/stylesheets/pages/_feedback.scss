@@ -3,22 +3,7 @@
    ========================================================================== */
 
 .feedback {
-
     .feedback-intro {
         padding-bottom: rem($gs-gutter * 2);
     }
-
-    .fieldset {
-        border-top: rem(1px) solid $c-neutral2;
-
-        &:last-child {
-            border: 0;
-        }
-    }
-
-    .fieldset__heading {
-        padding-right: rem($gs-gutter * 2);
-    }
 }
-
-

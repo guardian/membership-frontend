@@ -10,12 +10,12 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{ScalaforceError, Tier}
 
-import actions.{AnyMemberTierRequest, AuthRequest}
+import actions._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
 import model._
 import model.StripeSerializer._
-import model.Eventbrite.{EBDiscount, EBEvent}
+import model.Eventbrite.{RichEvent, EBCode, EBEvent}
 import services._
 
 trait Joiner extends Controller {
@@ -24,10 +24,10 @@ trait Joiner extends Controller {
   val eventService: EventbriteService
 
   def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
-    def getEbEventFromSession(request: Request[_]): Option[EBEvent] =
+    def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
       PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
 
-    def detailsFor(event: EBEvent, discountOpt: Option[EBDiscount]): (String, Int) = {
+    def detailsFor(event: RichEvent, discountOpt: Option[EBCode]): (String, Int) = {
       val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
       (url, event.ticket_classes.length)
     }
@@ -56,9 +56,12 @@ trait Joiner extends Controller {
       marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
       passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
     } yield {
+
       tier match {
         case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
-        case paidTier => Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists))
+        case paidTier =>
+          val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
+          Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
       }
 
     }
@@ -91,7 +94,7 @@ trait Joiner extends Controller {
 
   def thankyouFriend() = MemberAction.async { implicit request =>
     for {
-      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
@@ -99,19 +102,19 @@ trait Joiner extends Controller {
     }
   }
 
-  def thankyouPaid(tier: Tier.Tier) = PaidMemberAction.async { implicit request =>
+  def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>
     for {
-      customer <- StripeService.Customer.read(request.member.stripeCustomerId)
-      subscriptionDetails <- SubscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      customer <- request.touchpointBackend.stripeService.Customer.read(request.member.stripeCustomerId)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
+      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event, upgrade))
     }
   }
 }
 
 object Joiner extends Joiner {
   val memberService = MemberService
-  val eventService = EventbriteService
+  val eventService = GuardianLiveEventService
 }

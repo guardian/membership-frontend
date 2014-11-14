@@ -4,8 +4,20 @@
     }
 }
 
+.hidden-mobile-portrait {
+    @include mq($until: mobileLandscape) {
+        display: none !important;
+    }
+}
+
 .mobile-only {
     @include mq(tablet) {
+        display: none !important;
+    }
+}
+
+.mobile-portrait-only {
+    @include mq(mobileLandscape) {
         display: none !important;
     }
 }
@@ -14,22 +26,13 @@
  * User state
  */
 
-.id--signed-out .sign-in-required {
-    display: none;
-}
-
-.id--signed-in .sign-in-hidden {
-    display: none !important;
-}
-
-.tier-required {
+.id--signed-out .sign-in-required,
+.id--signed-in .sign-in-hidden,
+.tier-required,
+.member--has-tier .tier-hidden {
     display: none !important;
 }
 
 .member--has-tier .tier-required {
     display: block !important;
-}
-
-.member--has-tier .tier-hidden {
-    display: none !important;
 }

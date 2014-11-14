@@ -1,6 +1,7 @@
 package services.zuora
 
 import com.gu.membership.util.Timing
+import model.TierPlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders._
@@ -32,9 +33,9 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-case class ZuoraApiConfig(url: String, username: String, password: String)
+case class ZuoraApiConfig(url: String, username: String, password: String, tierRatePlanIds: Map[TierPlan, String])
 
-class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
+class ZuoraService(val apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
   import ZuoraServiceHelpers._
 
   val initialValue = Authentication("", "")
@@ -60,9 +61,12 @@ class ZuoraService(apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenticati
 
       reader.read(result.xml) match {
         case Left(error) =>
-          ZuoraMetrics.recordError
-          Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
-          Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+          if (error.fatal) {
+            ZuoraMetrics.recordError
+            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
+            Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+          }
+
           throw error
 
         case Right(obj) => obj

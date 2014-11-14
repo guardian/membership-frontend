@@ -1,4 +1,4 @@
-$current-indicator: rem(47px);
+$current-indicator: rem(72px);
 
 .secondary-content {
     flex-basis: 16em;
@@ -15,26 +15,91 @@ $current-indicator: rem(47px);
 .package-container {
     border-top: rem(1px) solid transparent;
     border-bottom: rem(1px) solid transparent;
-    padding: rem($gs-gutter);
 }
 
 .package-container__header {
     padding-bottom: rem($gs-gutter);
+    border-bottom: rem(1px) dotted $c-neutral1;
+
     @include mq(tablet) {
-        margin-bottom: rem(40px);
+        margin-bottom: rem($gs-gutter * 4);
     }
-    border-bottom: rem(1px) dotted #333333;
 }
 
-// .package-list is a flexbox
-// so each .package inside is equal width
+.package {
+    display: block;
+    overflow: hidden;
+    margin: 0 0 rem($gs-gutter / 2);
+    background-color: $c-neutral7;
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.price-info {
+    width: rem(230px);
+    float: right;
+}
+
 .package-list {
+    padding-top: 0;
+}
+
+.package-list--flex-box {
+
     @include mq(desktop) {
         @include flexbox;
         @include align-items(stretch);
         margin: 0 auto;
         border-spacing: rem($gs-gutter);
-        padding-top: $current-indicator;
+    }
+
+    .package {
+        margin: 0 0 rem($gs-gutter / 2);
+        background-color: $c-neutral7;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        @include mq(desktop) {
+            // .package is a flexbox too to
+            // align CTA buttons to bottom
+            // regardless of package length(!)
+            @include flexbox;
+            @include justify-content(space-between);
+            @include flex-direction(column);
+            @include align-items(stretch);
+            @include flex-grow(1);
+            @include flex-basis(0); // this fixes a bug, dunno why
+            // give them manual widths for no flexbox browsers
+            margin-bottom: rem($gs-gutter);
+            position: relative;
+            margin-right: rem($gs-gutter);
+            overflow: visible;
+
+            .no-flexbox & {
+                width: 31%;
+                float: left;
+                .patron-page & {
+                    width: 45%;
+                }
+            }
+            // override button widths for flexbox
+            .action {
+                width: auto;
+                min-width: 100%;
+            }
+        }
+    }
+
+    .price-info {
+        @include mq(desktop) {
+            height: rem($gs-gutter * 2.5);
+            width: 100%;
+            float: none;
+        }
     }
 }
 
@@ -42,90 +107,69 @@ $current-indicator: rem(47px);
     border: rem(1px) solid $c-neutral5;
 }
 
-.package {
-    background-color: $c-neutral7;
-    position: relative;
+.package__item-cta {
+    padding: rem($gs-gutter / 2);
+    height: auto;
+    text-align: right;
 
-    // .package is a flexbox too to
-    // align CTA buttons to bottom
-    // regardless of package length(!)
-    @include flexbox;
-    @include justify-content(space-between);
-    @include flex-direction(column);
-
-    margin-right: rem($gs-gutter);
-
-    &:last-child {
-        margin-right: 0;
+    @include mq($from: tablet, $until: desktop) {
+        position: relative;
+        padding: rem($gs-gutter);
+        width: rem(290px);
+        float: right;
     }
 
-    @include mq(desktop) {
-        @include flex-grow(1);
-        @include flex-basis(0); // this fixes a bug, dunno why
-        // give them manual widths for no flexbox browsers
-        .no-flexbox & {
-            width: 31%;
-            float: left;
-            .patron-page & {
-                width: 45%;
-            }
+    .about-membership &,
+    .join &,
+    .change-tier & {
+        @include mq (desktop) {
+            position: absolute;
+            padding: 1rem;
+            width: 100%;
+            bottom: 0;
         }
     }
 
-    @include mq($until: desktop) {
-        margin-right: 0;
-        display: block;
-        overflow: hidden;
-        margin-bottom: rem($gs-gutter);
-    }
-
-    // override button widths for flexbox
     .action {
-        width: auto;
-        min-width: 100%;
-    }
-}
-
-.package__item-cta {
-    padding: $gs-gutter;
-    // this is annoying but removes an ~8px height gap
-    // between buttons in columns. if you can fix it, bravo!
-    height: rem(100px);
-    @include mq($from: tablet, $until: desktop) {
-        width: 55%;
-        float: right;
-        padding-left: 0;
+        margin: rem($gs-gutter) 0 0;
     }
 }
 
 .package__item--promo {
     // see above – we show 2 buttons here so need more space
-    height: rem(170px);
+    height: auto;
 }
 
 .package__current-indicator {
-    color: #ffffff;
-    background-color: #9c9c9c;
+    color: $white;
+    background-color: $c-neutral2;
     text-align: center;
     padding: rem($gs-baseline);
-    margin: 0 rem($gs-baseline / 2);
+
     @include mq(desktop) {
-        margin-top: -$current-indicator;
-    }
-    @include mq($until: desktop) {
-        margin: 0;
-    }
-    // this prevents the text splitting onto 2 lines
-    @include mq($from: desktop, $until: mem-full) {
         font-size: rem(14px);
+        position: absolute;
+        display: block;
+        z-index: 4;
+        width: 100%;
+        margin: rem(-46px) auto;
     }
 }
 
+.package__outer {
+    @include flex-grow(1);
+}
+
 .package__inner {
-    padding: rem($gs-gutter);
-    @include mq($from: tablet, $until: desktop) {
-        padding-top: rem($gs-gutter * 2);
-        padding-bottom: 0;
+    padding: rem($gs-gutter / 2);
+    min-height: rem($gs-gutter * 4);
+
+    .about-membership &,
+    .join &,
+    .change-tier & {
+        @include mq(desktop) {
+            margin-bottom: rem($gs-gutter * 3);
+        }
     }
 }
 
@@ -133,25 +177,61 @@ $current-indicator: rem(47px);
     border: rem(1px) solid #9c9c9c;
 }
 
+.package__select-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    cursor: pointer;
+}
+
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter - 5) rem($gs-gutter);
+    }
 
     .package__title {
-        @include fs-headline(4);
+        @include fs-headline(5);
         color: $white;
         word-wrap: break-word;
         position: relative;
+        padding-left: rem($gs-gutter + 16);
+    }
+
+    .price-info {
+        padding-top: rem($gs-gutter + 10);
+        height: rem($gs-gutter * 3 + 10);
+        color: $white;
+        position: relative;
+
+        @include mq(desktop) {
+            height: rem($gs-gutter * 4);
+        }
+
     }
 
     &:before {
         @extend %icon-sprite;
-        @extend %icon-sprite-g-white-36;
+        @extend %icon-sprite-g-white-28;
         content: '';
         display: block;
         position: absolute;
-        left: rem($gs-gutter);
-        top: rem(15px);
+        left: rem($gs-gutter / 2);
+        top: rem($gs-baseline);
+
+        @include mq(tablet) {
+            left: rem($gs-gutter);
+            top: rem($gs-gutter - 2);
+        }
+    }
+
+    &:after {
+        display: block;
     }
 
     &--friend {
@@ -160,7 +240,10 @@ $current-indicator: rem(47px);
 
     &--partner {
         background-color: $mem-brandLightblue;
-        .package__title { color: $black; }
+        .package__title,
+        .price-info {
+            color: $black;
+        }
     }
 
     &--patron {
@@ -168,38 +251,41 @@ $current-indicator: rem(47px);
     }
 }
 
-.package__list-benefits {
-    margin-left: 0;
-    @include mq(tablet) {
-        margin-left: 45%;
-    }
+.package__header {
+    @include fs-bodyHeading(2);
+    border-top: 1px solid $c-neutral3;
+    border-bottom: 1px solid $c-neutral3;
+    padding: rem($gs-gutter / 2) 0;
+    width: 100%;
+    position: relative;
+    top: 1px;
+}
 
-    @include mq(desktop) {
-        margin-left: 0;
-    }
+.package__list-benefits {
+    position: relative;
+}
+
+.package__leadin {
+    @include fs-bodyHeading(2);
 }
 
 .package__list-benefits-element {
     @include fs-bodyCopy(1);
-    padding-bottom: rem($gs-gutter);
     margin-bottom: 0;
-    list-style: none;
     > li {
 
         &:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
     }
-}
 
-.package__list-benefits .package__list-benefits-element:before {
-    content: 'Plus:';
-    display: block;
-    @include fs-bodyCopy(1);
-    color: $c-neutral1;
-    margin-bottom: rem($gs-baseline / 2);
+    > .u-cf {
+        &:before,
+        &:after {
+            display: block;
+        }
+    }
 }
 
 // bit fugly - hides the "Plus:" text for first list item
@@ -227,55 +313,68 @@ $current-indicator: rem(47px);
 }
 
 .price-info {
-
-    height: 100%;
+    height: rem($gs-gutter * 2);
 
     .price-info__detail {
-        @include fs-headline(3);
-
-        @include mq(desktop) {
-            @include fs-headline(3);
-        }
+        @include fs-headline(4);
 
         @include mq(mem-full) {
-            @include fs-headline(4);
-        }
-    }
-
-    @include mq(mobile) {
-        .price-info__container-inner {
-            margin-bottom: rem($gs-gutter);
-        }
-    }
-
-    @include mq(desktop) {
-        .price-info__container-inner {
-            width: 50%;
-            float: left;
+            @include fs-headline(5);
         }
 
-        .price-info__container-inner--last {
-            text-align: right;
-            height: 100%;
-            border-left: rem(1px) solid $c-neutral3;
-        }
-    }
-
-    @include mq($from: tablet, $until: desktop) {
-        .price-info__container-inner--last {
+        .price-info__container-inner--last & {
             margin-top: rem($gs-gutter);
-            padding-top: rem($gs-gutter);
-            border-top: rem(1px) solid $c-neutral5;
-            border-left: 0;
         }
+
+        &--right {
+            right: 0;
+            text-align: right;
+        }
+
+        &--sm-date {
+            @include fs-headline(2);
+        }
+    }
+
+    .price-info__container-inner {
+        width: 50%;
+        float: left;
+        position: relative;
+        display: block;
+        height: 100%;
+    }
+
+    .price-info__container-inner--last {
+        text-align: right;
+        height: 100%;
+        border-left: rem(1px) solid $white-trans;
+    }
+
+    .price-info__container-inner--full-width {
+        width: 100%;
     }
 
     .price-info__sub-detail {
-        @include fs-bodyCopy(1);
-        color: #666666;
+        @include fs-textSans(1);
+        color: $white;
         display: block;
-    }
+        margin-top: rem(-6px);
 
+        .patron-page &,
+        .package__title-container--partner & {
+            color: $black;
+        }
+    }
+}
+
+.price-info--partner {
+    .price-info__container-inner--last {
+        border-left: rem(1px) solid $black-trans;
+    }
+}
+
+.package__select-toggle {
+    @extend %mobile-expand-collapse;
 }
 
 .package__description {
@@ -283,15 +382,21 @@ $current-indicator: rem(47px);
 
     @include mq(desktop) {
         @include fs-bodyCopy(2);
-        padding-top: rem($gs-gutter / 2);
-        min-height: rem(120px);
+        height: rem(120px);
+
+        .patron-page & {
+            height: auto;
+        }
     }
 
     @include mq($from: tablet, $until: desktop) {
         display: inline-block;
-        width: 55%;
         vertical-align: top;
     }
+}
+
+.toggle--open {
+    @include rotate(180deg);
 }
 
 /* Upgrade
@@ -300,32 +405,120 @@ $current-indicator: rem(47px);
 .upgrade__payment-label {
     display: block;
     position: relative;
-    border: rem(1px) solid #cccccc;
-    padding: $gs-baseline/2 $gs-baseline $gs-baseline/2 $gs-baseline*2;
-    @include border-radius(5px);
 
-    span {
+    .payment-label__wrapper {
+        @include fs-textSans(3);
+        width: 100%;
         display: block;
-        @include fs-textSans(4);
-        margin: 0 0 $gs-baseline;
-        &.payment-label__title {
-            @include fs-headline(2);
+        border: 1px solid transparent;
+
+        &:hover {
+            border: 1px solid $c-neutral2;
+        }
+    }
+
+    .payment-label__title {
+        @include fs-bodyHeading(2);
+        display: block;
+        
+    }
+
+    .payment-label__amount,
+    .payment-label__note {
+        display: block;
+    }
+
+    input[type=radio] {
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__wrapper {
+        display: inline-block;
+        padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+        position: relative;
+
+        &:before {
+            @include radio-circle ($c-neutral5);
+        }
+    }
+
+    input[type=radio]:checked + .payment-label__wrapper {
+        border-color: $mem-brandLightblue;
+
+        &:before {
+            @include radio-circle ();
+        }
+    }
+}
+
+/* Billing address
+======================================================================= */
+
+.address-fieldset__inner {
+
+    .payment-label__title {
+        @include fs-bodyCopy(2);
+        width: 100%;
+        display: block;
+        border: rem(1px) solid transparent;
+
+        &:hover {
+            border: rem(1px) solid $c-neutral2;
         }
     }
 
     input[type=radio] {
-        margin: 0;
-        padding: 0;
-        position: absolute;
-        top: rem(10px);
-        left: rem(6px);
+        display: none;
+    }
+
+    input[type=radio] + .payment-label__title {
+        display: inline-block;
+        padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+        position: relative;
+
+        &:before {
+            @include radio-circle ($c-neutral5);
+        }
     }
 
     input[type=radio]:checked + .payment-label__title {
-        font-weight: bold;
+        border-color: $mem-brandLightblue;
+
+        &:before {
+            @include radio-circle ();
+        }
     }
 
-    &:hover {
-        background-color: #eeeeee;
+}
+
+.address-fieldset__country {
+    select {
+        width: 100%;
     }
 }
+
+/* Join - Become a member
+======================================================================= */
+
+.become-a-member {
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+
+    @include mq(desktop) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+    }
+
+    .package-list {
+        padding-top: rem($gs-gutter * 2);
+
+        @include mq(desktop) {
+            padding-top: $current-indicator;
+        }
+    }
+}
+

@@ -13,7 +13,9 @@
 /* ==========================================================================
    Membership pages
    ========================================================================== */
-@import 'pages/events';
+@import 'pages/events-detail';
+@import 'pages/events-summary';
+@import 'pages/events-list';
 @import 'pages/joiner';
 @import 'pages/tier';
 @import 'pages/tickets';
@@ -25,3 +27,7 @@
    Webfonts pages
    ========================================================================== */
 @import 'webfonts';
+
+// finally import print-only styles
+// (currently only used for event thankyou pages)
+@import 'print';

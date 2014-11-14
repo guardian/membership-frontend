@@ -152,3 +152,15 @@
         }
     }
 }
+
+@mixin radio-circle($colour: $mem-brandLightblue) {
+    @include border-radius (50%);
+    content: ' ';
+    background-color: $colour;
+    width: rem($gs-baseline + 4);
+    height: rem($gs-baseline + 4);
+    display: block;
+    position: absolute;
+    left: rem($gs-baseline);
+    top: rem($gs-gutter + 1);
+}

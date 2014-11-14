@@ -16,25 +16,19 @@ import play.api.libs.ws._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import utils.ScheduledTask
 
-trait EventbriteService {
+trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
+  val apiToken: String
 
-  val apiEventListUrl: String
+  val wsUrl = Config.eventbriteApiUrl
+  val wsMetrics = EventbriteMetrics
 
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A]
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A]
+  def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  def events: Seq[EBEvent]
-
-  lazy val allEvents = Agent[Seq[EBEvent]](Seq.empty)
-  lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
-
-  private def extract[A <: EBObject](response: WSResponse)(implicit reads: Reads[A]): A = {
-    response.json.asOpt[A].getOrElse {
-      Logger.error(s"Eventbrite request - Response body : ${response.body}")
-      throw response.json.asOpt[EBError].getOrElse(EBError("internal", "Unable to extract object", 500))
-    }
-  }
+  def events: Seq[RichEvent]
+  def priorityEventOrdering: Seq[String]
+  def mkRichEvent(event: EBEvent): RichEvent
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -48,30 +42,41 @@ trait EventbriteService {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def getAllEvents: Future[Seq[EBEvent]] = getPaginated[EBEvent](apiEventListUrl)
-
-  private def getPriorityEventIds(): Future[Seq[String]] =  for {
-    ordering <- WS.url(Config.eventOrderingJsonUrl).get()
-  } yield (ordering.json \ "order").as[Seq[String]]
+  protected def getAllEvents: Future[Seq[RichEvent]] = for {
+    events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
+  } yield events.map(mkRichEvent)
 
   def getEventPortfolio: EventPortfolio = {
-    val priorityIds = priorityOrderedEventIds.get()
-    val (priorityEvents, normal) = getPortfolioEvents.partition(e => priorityIds.contains(e.id))
+    val priorityIds = priorityEventOrdering
+    val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
 
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
-  def getPortfolioEvents: Seq[EBEvent] = events.filter(_.getStatus.isInstanceOf[DisplayableEvent])
-
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
-  def getEventsTagged(tag: String) = getPortfolioEvents.filter(_.name.text.toLowerCase.contains(tag))
+  def getEventsTagged(tag: String) = events.filter(_.name.text.toLowerCase.contains(tag))
 
-  def getEvent(id: String): Option[EBEvent] = allEvents.get().find(_.id == id)
+  def getEvent(id: String): Option[RichEvent] = events.find(_.id == id)
 
-  def createOrGetDiscount(eventId: String, code: String): Future[EBDiscount] = {
-    val uri = s"events/$eventId/discounts"
+  def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
+    val uri = s"events/${event.id}/access_codes"
+
+    for {
+      discounts <- getPaginated[EBAccessCode](uri)
+      discount <- discounts.find(_.code == code).fold {
+        post[EBAccessCode](uri, Map(
+          "access_code.code" -> Seq(code),
+          "access_code.quantity_available" -> Seq(event.maxDiscounts.toString),
+          "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
+        ))
+      }(Future.successful)
+    } yield discount
+  }
+
+  def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] = {
+    val uri = s"events/${event.id}/discounts"
 
     for {
       discounts <- getPaginated[EBDiscount](uri)
@@ -79,40 +84,31 @@ trait EventbriteService {
         post[EBDiscount](uri, Map(
           "discount.code" -> Seq(code),
           "discount.percent_off" -> Seq("20"),
-          "discount.quantity_available" -> Seq("2")
+          "discount.quantity_available" -> Seq(event.maxDiscounts.toString)
         ))
       }
     } yield discount
   }
+
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
-object EventbriteService extends EventbriteService {
-  val apiUrl = Config.eventbriteApiUrl
+object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
-  val apiEventListUrl = Config.eventbriteApiEventListUrl
-  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
+
+  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
-  def events: Seq[EBEvent] = allEvents.get()
+  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
+  lazy val priorityOrderedEventIds = Agent[Seq[String]](Seq.empty)
 
-  def get[A <: EBObject](url: String, params: (String, String)*)(implicit reads: Reads[A]): Future[A] = {
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).withQueryString(params: _*).get()
-      .map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "GET")
-      extract[A](response)
-    }.recover { case e =>
-      Logger.error(s"Eventbrite request $url", e)
-      throw e
-    }
-  }
+  private def getPriorityEventIds: Future[Seq[String]] =  for {
+    ordering <- WS.url(Config.eventOrderingJsonUrl).get()
+  } yield (ordering.json \ "order").as[Seq[String]]
 
-  def post[A <: EBObject](url: String, data: Map[String, Seq[String]])(implicit reads: Reads[A]): Future[A] =
-    WS.url(s"$apiUrl/$url").withQueryString("token" -> apiToken).post(data).map { response =>
-      EventbriteMetrics.putResponseCode(response.status, "POST")
-      extract[A](response)
-    }
-
-  import play.api.Play.current
+  def events: Seq[RichEvent] = allEvents.get()
+  def priorityEventOrdering: Seq[String] = priorityOrderedEventIds.get()
+  def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
 
   def start() {
     def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
@@ -123,5 +119,25 @@ object EventbriteService extends EventbriteService {
     Logger.info("Starting EventbriteService background tasks")
     scheduleAgentRefresh(allEvents, getAllEvents, refreshTimeAllEvents)
     scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, refreshTimePriorityEvents)
+  }
+}
+
+object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
+
+  val masterclassDataService = MasterclassDataService
+
+  val apiToken = Config.eventbriteMasterclassesApiToken
+
+  val initialValue = Nil
+  val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
+  val initialDelay = 0.seconds
+
+  def refresh(): Future[Seq[RichEvent]] = getAllEvents
+
+  def events: Seq[RichEvent] = agent.get()
+  def priorityEventOrdering: Seq[String] = Nil
+  def mkRichEvent(event: EBEvent): RichEvent = {
+    val masterclassData = masterclassDataService.getData(event.id)
+    MasterclassEvent(event, masterclassData)
   }
 }

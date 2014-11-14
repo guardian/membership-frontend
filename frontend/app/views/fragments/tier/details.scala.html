@@ -1,30 +1,35 @@
 @(
-    currentTier: com.gu.membership.salesforce.Tier.Tier, 
+    currentTier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
     showBenefitCopy: Boolean = true
 )
 @import model.Benefits
+@import model.Benefits.BenefitItem
 @import com.gu.membership.salesforce.Tier
 
-<div class="package__price">
-    @fragments.benefits.priceInfo(Benefits.details(currentTier))
-</div>
+@benefitListing(benefits: Seq[BenefitItem], isLead: Boolean) = {
+    @for(benefit <- benefits) {
+        <div class="benefits-item u-cf @if(isLead){ benefits-item--highlighted}">
+            <li class="benefits-title">
+                <div class="benefits-title__first">
+                    <i class="icon-sprite icon-sprite-@benefit.identifier icon-sprite--small"></i>
+                </div>
+                <div class="benefits-title__second">@benefit.title</div>
+            </li>
+            @if(showBenefitCopy) {
+                <li class="benefits-copy">@benefit.description</li>
+            }
+        </div>
+    }
+}
+
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
+    <div class="package__header">What's included</div>
     <div class="package__list-benefits">
-        @for((t, i) <- Tier.values.toSeq.sorted.zipWithIndex) {
-            @if(t >= Tier.Friend & t <= currentTier){
-                <ul class="package__list-benefits-element js-opt-benefit-level-@i">
-                    @for(((header, body, icon), index) <- Benefits.details(t).list.zipWithIndex) {
-                        <div class="js-opt-benefit-level-@i-item-@{index+1}">
-                            <li class="benefits-title"><i class="icon-sprite icon-sprite-@icon icon-sprite--small"></i>@header</li>
-                            @if(showBenefitCopy) {
-                                <li class="benefits-copy">@body</li>
-                            }
-                        </div>
-                    }
-                </ul>
-            }
-        }
+        <ul class="package__list-benefits-element u-unstyled">
+            @benefitListing(Benefits.details(currentTier).leadBenefits, isLead=true)
+            @benefitListing(Benefits.details(currentTier).otherBenefits, isLead=false)
+        </ul>
     </div>
 }

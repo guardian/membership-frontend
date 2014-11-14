@@ -55,6 +55,19 @@ $header-margin: 36px;
     }
 }
 
+.identity__tier {
+
+    &:before {
+        vertical-align: top;
+        content: '(';
+    }
+
+    &:after {
+        vertical-align: top;
+        content: ')';
+    }
+}
+
 .menu-item {
     float: left;
     padding-top: 0;
@@ -68,7 +81,6 @@ $header-margin: 36px;
         color: $white;
     }
 }
-
 
 .menu-item--last {
     border: 0;
@@ -95,18 +107,6 @@ $header-margin: 36px;
     border-color: $white;
     .icon-sprite-menu-white {
         @extend %icon-sprite-close-icon-white;
-    }
-}
-
-.menu-cta {
-    padding: rem(8px) rem(35px);
-    border: rem(1px) solid $white;
-    color: $white;
-    display: block;
-    &:hover {
-        color: $black;
-        color: $black-trans;
-        background-color: $white;
     }
 }
 

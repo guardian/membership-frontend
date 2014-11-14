@@ -1,12 +1,13 @@
 require([
     'lib/bower-components/imager.js/Imager',
-    'src/utils/analytics/omniture',
+    'src/utils/analytics/setup',
     'src/utils/cookieRefresh',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
     'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
+    'src/modules/events/filter',
     'src/modules/Header',
     'src/modules/UserDetails',
     'src/modules/tier/Choose',
@@ -16,13 +17,14 @@ require([
     'src/utils/modernizr'
 ], function(
     Imager,
-    omnitureAnalytics,
+    analytics,
     cookieRefresh,
     ajax,
     JoinFree,
     FeedbackForm,
     PaidForm,
     Cta,
+    Filter,
     Header,
     UserDetails,
     Choose,
@@ -49,15 +51,14 @@ require([
     });
     /* jshint ignore:end */
 
-    require('ophan/ng', function () {});
-
     // TODO: Remove this, see module
     cookieRefresh.init();
+
+    analytics.init();
 
     // Global
     var header = new Header();
     header.init();
-    omnitureAnalytics.init();
     (new UserDetails()).init();
 
     // Events

@@ -3,7 +3,7 @@ import java.util.Date
 
 import com.gu.automation.support.{Config, TestLogger}
 import com.gu.membership.pages._
-import org.openqa.selenium.{Cookie, WebDriver}
+import org.openqa.selenium.{JavascriptExecutor, Cookie, WebDriver}
 
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
@@ -18,6 +18,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IAmNotLoggedIn = {
     driver.get(Config().getTestBaseUrl())
+    CookieHandler.disableAnalytics(driver)
     this
   }
 
@@ -110,7 +111,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAFriend = {
-    new ChooseTierPage(driver).clickFriend.clickChoose
+    new ChooseTierPage(driver).clickFriend
     theFlowSignIn
     becomeFriend
     this
@@ -152,7 +153,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAPartner = {
-    new ChooseTierPage(driver).clickPartner.clickChoose
+    new ChooseTierPage(driver).clickPartner
     theFlowSignIn
     pay
     this
@@ -412,6 +413,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
+  def IGoToMasterclasses = {
+    driver.get(Config().getUserValue("masterclasses"))
+    this
+  }
+
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
     Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
@@ -445,6 +451,7 @@ object CookieHandler {
 
   def login(driver: WebDriver) {
     driver.get(Config().getUserValue("identityReturn"))
+    disableAnalytics(driver)
     new LoginPage(driver).clickRegister
     register(driver)
   }
@@ -456,5 +463,9 @@ object CookieHandler {
     val email = user + "@testme.com"
     new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
       .enterPassword(password).enterUserName(user).clickSubmit
+  }
+
+  def disableAnalytics(driver: WebDriver): Unit = {
+    driver.asInstanceOf[JavascriptExecutor].executeScript("document.cookie = \"ANALYTICS_OFF_KEY=1; domain=.thegulocal.com; path=/; secure\"")
   }
 }

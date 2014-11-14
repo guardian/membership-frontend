@@ -1,3 +1,4 @@
+@(pageInfo: model.PageInfo)
 @import configuration.Config
 @import views.support.Asset
 
@@ -46,7 +47,9 @@
         css: {
             loaded: false
         },
-        stripePublicKey: '@Config.stripeApiConfig.publicKey',
+        @for(stripePublicKey <- pageInfo.stripePublicKey) {
+            stripePublicKey: '@stripePublicKey',
+        }
         membership: {
             buildNumber: '@app.BuildInfo.buildNumber',
             eventImages: {
@@ -54,6 +57,11 @@
                 ratios: [@Config.eventImageRatios.mkString(",")]
             }
         },
+        googleAnalytics: {
+            trackingId: '@Config.googleAnalyticsTrackingId',
+            cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
+        },
+        analyticsEnabled: true,
         isDev: @(Config.stage == "DEV")
     };
 

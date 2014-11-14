@@ -141,16 +141,21 @@ body {
     margin: 0 auto;
     padding: 0 rem($gs-gutter / 2);
     @include fs-headline(2);
+    position: relative;
 
     @include mq(desktop) {
         @include fs-headline(5);
     }
 
     .two-thirds {
+
         @include mq(tablet) {
-            border-right: rem(1px) solid $c-neutral4;
+            padding-left: $gs-gutter;
             width: rem(gs-span(8));
-            padding-right: $gs-gutter;
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(8) + $gs-gutter);
         }
     }
 
@@ -158,8 +163,12 @@ body {
         margin-bottom: rem($gs-gutter);
 
         @include mq(tablet) {
-            width: rem(gs-span(4));
+            width: rem(gs-span(3));
             padding-left: rem($gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(4) + $gs-gutter);
         }
     }
 

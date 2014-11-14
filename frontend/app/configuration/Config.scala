@@ -6,11 +6,15 @@ import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
-import model.{FriendTierPlan, PaidTierPlan, TierPlan}
-import services.StripeApiConfig
+import model.{FriendTierPlan, PaidTierPlan}
+import play.api.Logger
 import services.zuora.ZuoraApiConfig
+import services.{StripeCredentials, SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import com.netaporter.uri.dsl._
 
 object Config {
+  val logger = Logger(this.getClass())
+
   val config = ConfigFactory.load()
 
   lazy val siteTitle = config.getString("site.title")
@@ -20,6 +24,7 @@ object Config {
 
   val guardianMembershipUrl = config.getString("guardian.membership.url")
   val guardianLiveEventsTermsUrl = config.getString("guardian.live.events.terms.url")
+  val guardianMasterclassesTermsUrl = config.getString("guardian.masterclasses.terms.url")
   val guardianMembershipTermsUrl = config.getString("guardian.membership.terms.url")
   val guardianPrivacyUrl = config.getString("guardian.privacy.url")
   var guardianMembershipBuildingBlogUrl = config.getString("guardian.membership.building.blog.url")
@@ -54,51 +59,73 @@ object Config {
 
   val eventbriteApiUrl = config.getString("eventbrite.api.url")
   val eventbriteApiToken = config.getString("eventbrite.api.token")
-  val eventbriteApiEventListUrl = config.getString("eventbrite.api.event-list-url")
+  val eventbriteMasterclassesApiToken = config.getString("eventbrite.masterclasses.api.token")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
-  val eventbriteRefreshTimeForAllEvents = config.getInt("eventbrite.api.refresh-time-all-events-seconds")
+  val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
   val facebookAppId = config.getString("facebook.app.id")
 
-  val stripeApiConfig = StripeApiConfig(
-    url = config.getString("stripe.api.url"),
-    secretKey = config.getString("stripe.api.key.secret"),
-    publicKey = config.getString("stripe.api.key.public")
-  )
 
-  val salesforceConsumerKey = config.getString("salesforce.consumer.key")
-  val salesforceConsumerSecret = config.getString("salesforce.consumer.secret")
-  val salesforceApiUrl = config.getString("salesforce.api.url")
-  val salesforceApiUsername = config.getString("salesforce.api.username")
-  val salesforceApiPassword = config.getString("salesforce.api.password")
-  val salesforceApiToken = config.getString("salesforce.api.token")
+  val touchpointDefaultBackend = touchpointBackendConfigFor("default")
+  val touchpointTestBackend = touchpointBackendConfigFor("test")
+
+  def touchpointBackendConfigFor(typ: String) = {
+    val touchpointConfig = config.getConfig("touchpoint.backend")
+    val backendEnvironmentName = touchpointConfig.getString(typ)
+    val environments = touchpointConfig.getConfig("environments")
+
+    val defaultTouchpointBackendConfig = touchpointConfigFor(environments.getConfig(backendEnvironmentName))
+
+    logger.info(s"TouchPoint config - default-env=$typ config=${defaultTouchpointBackendConfig.hashCode}")
+
+    defaultTouchpointBackendConfig
+  }
+
+  def touchpointConfigFor(backendConf: com.typesafe.config.Config): TouchpointBackendConfig = {
+    val stripeApiConfig = StripeApiConfig(
+      config.getString("stripe.api.url"), // stripe url never changes
+      StripeCredentials(
+        secretKey = backendConf.getString("stripe.api.key.secret"),
+        publicKey = backendConf.getString("stripe.api.key.public")
+      )
+    )
+
+    val salesforceConfig = SalesforceConfig(
+      consumerKey = backendConf.getString("salesforce.consumer.key"),
+      consumerSecret = backendConf.getString("salesforce.consumer.secret"),
+      apiURL = backendConf.getString("salesforce.api.url"),
+      apiUsername = backendConf.getString("salesforce.api.username"),
+      apiPassword = backendConf.getString("salesforce.api.password"),
+      apiToken = backendConf.getString("salesforce.api.token")
+    )
+
+    def plansFor(paidTier: Tier) = {
+      def paidTierPlan(annual: Boolean) = {
+        val period = if (annual) "annual" else "monthly"
+        PaidTierPlan(paidTier, annual) -> backendConf.getString(s"zuora.api.${paidTier.toString.toLowerCase}.$period")
+      }
+
+      Map(paidTierPlan(false), paidTierPlan(true))
+    }
+
+    val zuoraApiConfig = ZuoraApiConfig(
+      url = backendConf.getString("zuora.api.url"),
+      username = backendConf.getString("zuora.api.username"),
+      password = backendConf.getString("zuora.api.password"),
+      Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
+    )
+
+    TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
+  }
 
   val twitterUsername = config.getString("twitter.username")
   val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
   val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
   val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
   val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
-
-  val zuoraApiConfig = ZuoraApiConfig(
-    url = config.getString("zuora.api.url"),
-    username = config.getString("zuora.api.username"),
-    password = config.getString("zuora.api.password")
-  )
-
-  def plansFor(paidTier: Tier) = {
-    def paidTierPlan(annual: Boolean) = {
-      val period = if (annual) "annual" else "monthly"
-      PaidTierPlan(paidTier, annual) -> config.getString(s"zuora.api.${paidTier.toString.toLowerCase}.$period")
-    }
-
-    Map (paidTierPlan(false), paidTierPlan(true))
-  }
-
-  val tierRatePlanIds: Map[TierPlan, String] =
-    Map(FriendTierPlan -> config.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
@@ -133,5 +160,6 @@ object Config {
       true                           // Re-authenticate (without prompting) with google when session expires
     )
   }
+  val contentApiKey = config.getString("content.api.key")
 
 }

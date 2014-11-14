@@ -1,62 +1,67 @@
-@(event: model.Eventbrite.EBEvent, pageInfo: model.PageInfo)
+@(event: model.Eventbrite.RichEvent, pageInfo: model.PageInfo)
+
+@import play.twirl.api.Html
 
 @import views.support.Dates._
+@import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@ticketCta = {
-    @event.getStatus match {
-        case Live => {
-            <a class='action action--event-buy js-ticket-cta' href='/event/@event.id/buy'>Buy tickets</a>
-        }
-        case nonLive => {
-            <button class='action action--disabled js-ticket-cta' disabled='disabled'>
-            @nonLive match {
-                case Completed => { Past Event }
-                case Cancelled => { Cancelled }
-                case SoldOut => { Sold Out }
-                case PreLive => { Coming Soon }
-            }
-            </button>
-        }
+@termsAndConditions = @{
+    event match {
+        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
+        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
     }
-    <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
-        <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
-    </div>
 }
 
-@becomeMemberCta(ticket: EBTickets) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event.start, ticket)
-    val friendSaleStartDate = ticketSaleDates.get(Tier.Friend).get
+@ticketCta(actionClassSoldOut: String, actionClassBuy:String) = {
+    @if(event.isSoldOut) {
+        <span class="action @actionClassSoldOut">Sold out</span>
+    } else {
+        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+        <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
+            <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
+        </div>
+    }
+}
 
-    if(friendSaleStartDate > Instant.now) {
+@becomeMemberCta(ticket: EBTicketClass) = @{
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
+    val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
+
+    if(!friendCanBuyTicket) {
         Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
     }
 }
 
-@dateOrNow(tier: Tier.Tier, salesDate: Instant) = {
-    <time class="js-ticket-sale-start-@tier.toString.toLowerCase" datetime="@salesDate">@salesDate.pretty</time>
-}
-
-@ticketBookingDates(ticket: EBTickets) = {
-    @defining(model.TicketSaleDates.datesFor(event.start, ticket)) { ticketSaleDates =>
-        
-        @for((tier, salesDate) <- ticketSaleDates) {
-            <ul class="sale-dates__list u-unstyled u-cf">
-                <li class="sale-dates__item"><span class="sale-dates__item--left">@(tier + "s")</span> @dateOrNow(tier, salesDate)</li>
-            </ul>
-        }
+@theme = @{
+    event match {
+        case _: MasterclassEvent => "theme--masterclass"
+        case _: GuLiveEvent => "theme--guardian-live"
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event") {
+@icon = @{
+    event match {
+        case _: MasterclassEvent => "icon-sprite-masterclasses"
+        case _: GuLiveEvent => "icon-sprite-guardian-live"
+    }
+}
+
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
+
     <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
-                <div class="event-masthead__title section-header page-header">events</div>
+                <div class="event-masthead__title section-header page-header case--lower">
+                    @event match {
+                        case _: MasterclassEvent => { Masterclasses }
+                        case _: GuLiveEvent => { Events }
+                    }
+                </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>
@@ -65,10 +70,15 @@
     <div class="event-header event-header--shade">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
-                <div class="event-details__time">@prettyDateWithTimeAndDayName(event.start)</div>
+                <div class="event-details__time">
+                    @defining(dateRange(event.start, event.end)) { range =>
+                        <span class="event-details__time__part">@range.start</span>
+                        - <span class="event-details__time__part">@range.end</span>
+                    }
+                </div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @if(event.addressOne) {
+                    @if(event.eventAddressLine.nonEmpty) {
                         <span class="event-details__location__address">
                             , @event.eventAddressLine
                         </span>
@@ -76,7 +86,7 @@
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
-                @for(ticket <- event.ticketClassesHead) {
+                @for(ticket <- event.generalReleaseTicket) {
                     <div class="event-ticket u-cf">
                         <div class="event-ticket__details">
 
@@ -97,72 +107,67 @@
                                 }
                             }
                         </div>
-                        @ticketCta
+                        @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
                     </div>
                 }
             }
-            <div class="guardian-live-logo">
-                <i class="icon-sprite icon-sprite-guardian-live icon-sprite--resize-live-logo"></i>
-            </div>
+            <i class="event-logo @icon"></i>
         </div>
-        
+
     </div>
 
-    
-    <div class="event-content">
-        
-        <div class="event-content__image">
-            <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
+
+    <div class="event-content" itemscope itemtype="http://schema.org/Event">
+
+        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+            <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
         </div>
 
         <div class="event-content__container u-cf">
 
             <div class="event-content__body">
-                <div class="event__description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__description" itemprop="description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__social">
+                    <div class="event__social-header hidden-mobile">Share this</div>
+                    @fragments.social(eventDetail(event))
+                </div>
             </div>
 
-            <div class="event-content__info">
-                <div class="event-content__name">@event.name.text</div>
-                <div class="event-content__time event-content--line-divider u-cf">
-                    <div class="event-content__first">
-                        <i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>
+            <div class="event-content__sidebar">
+                @event match {
+                    case _: MasterclassEvent => { <img class="responsive-img hidden-mobile" src="@event.imgUrl" /> }
+                    case _ => {}
+                }
+                <div class="event-content__info">
+                    <div class="event-content__name" itemprop="name">@event.name.text</div>
+                    <div class="event-content__time event-content--line-divider u-cf">
+                        <div class="event-content__first">
+                            <i class="icon-sprite icon-sprite-large-early_booking icon-sprite--small"></i>
+                        </div>
+                        <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                     </div>
-                    <div class="event-content__second">@prettyDateWithTimeAndDayName(event.start)</div>
-                </div>
-                <div class="event-content__location event-content--line-divider u-cf">
-                    <div class="event-content__first">
-                        <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
+                    <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                        <div class="event-content__first">
+                            <i class="icon-sprite icon-sprite-location icon-sprite--small"></i>
+                        </div>
+                        <div class="event-content__second">
+                            <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                            @if(event.eventAddressLine.nonEmpty) {
+                                <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
+                            }
+                        </div>
                     </div>
-                    <div class="event-content__second">
-                        <span class="event-content__venue-name">@event.venue.name@if(event.addressOne){,</span><br />
-                        <span class="event-content__address">@event.eventAddressLine</span>
-                    </div>
-                    }
 
-                </div>
+                    @if(event.isNoTicketEvent == false) {
 
-                @if(event.isNoTicketEvent == false) {
-                
-                    @for(ticket <- event.ticketClassesHead) {
+                        @for(ticket <- event.generalReleaseTicket) {
+                            @if(event.isSoldOut) {
+                                <meta itemprop="availability" content="http://schema.org/SoldOut">
+                            } else {
+                                <meta itemprop="availability" content="http://schema.org/InStock">
+                            }
 
-                        <div class="event-content__tickets event-content--line-divider u-cf">
-                            <div class="event-content__sale-dates u-cf">
-                                <div class="event-content__first">
-                                    <i class="icon-sprite icon-sprite-book_tickets icon-sprite--small"></i>
-                                </div>
-                                <div class="event-content__second">
-                                    <div class="sale-dates__header">Ticket sales</div>
-                                    @ticketBookingDates(ticket)
-                                    <ul class="sale-dates__list u-unstyled u-cf">
-                                        <li class="sale-dates__item">
-                                            <span class="sale-dates__item--left">Sale @if(event.getStatus == Completed){ended}else{ends}</span>
-                                            <time datetime="@event.ticketClassesHead.head.sales_end.getOrElse("")">
-                                             @event.ticketClassesHead.flatMap(_.sales_end).fold("")(_.pretty)
-                                            </time>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            @fragments.event.ticketSales(event, ticket)
 
                             @if(ticket.free) {
                                 <div class="event-content__price event-content--line-divider">
@@ -170,23 +175,23 @@
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event-content__price event-content--line-divider">
-                                        <span class="event-content__price-amount js-event-price">@pricing.formattedPrice</span>
+                                    <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
+                                        @pricing.formattedPrice
                                     </div>
                                     <div class="event-content__trail">
                                         <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event-content__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
+                                        <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
                                         <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
                                     </div>
                                 }
                             }
-                            @ticketCta
+                            @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
                             @becomeMemberCta(ticket)
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
     </div>
-  
+
 }

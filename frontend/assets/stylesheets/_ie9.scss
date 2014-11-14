@@ -30,6 +30,69 @@
     padding-bottom: rem(70px)!important;
 }
 
+
+/* Tier ie9 fix
+   ========================================================================== */
+
+// About membership page - fix height of tier boxes
+.about-membership {
+    .package {
+        @include mq(desktop) {
+            height: rem(900px);
+            margin-bottom: rem($gs-gutter * 2);
+        }
+    }
+}
+
+// Patron page - fix height of tier boxes
+.patron-page {
+    .package__inner {
+        @include mq(desktop) {
+            height: rem(125px);
+        }
+    }
+}
+
+// Join page - fix height of tier boxes
+.join,
+.change-tier {
+    .package {
+        @include mq(desktop) {
+            height: rem(1400px);
+            margin-bottom: rem($gs-gutter * 3);
+        }
+
+        @include mq(mem-full) {
+            height: rem(1350px);
+            margin-bottom: rem($gs-gutter * 3);
+        }
+    }
+}
+
+// Homepage & Patron page - fix height of tier boxes
+.home-page,
+.patron-page {
+    .package {
+        height: auto;
+    }
+}
+
+// general page - fix height of tier boxes
+.package {
+    @include mq(desktop) {
+        margin-bottom: rem($gs-gutter * 3);
+    }
+
+    @include mq(mem-full) {
+        margin-bottom: rem($gs-gutter * 3);
+    }
+}
+
+.content__footer {
+    clear: both;
+}
+
+
 /* Footer ie9 fix
    ========================================================================== */
 
