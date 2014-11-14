@@ -4,6 +4,7 @@ import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -16,6 +17,7 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Success, Failure}
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -44,7 +46,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
   }
 }
 
-trait MemberService {
+trait MemberService extends LazyLogging {
   def initialData(user: User, formData: JoinForm) = Map(
     Keys.EMAIL -> user.getPrimaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
@@ -91,6 +93,9 @@ trait MemberService {
         MemberMetrics.putSignUp(formData.tierPlan.tier)
         memberId.account
       }
+    }.andThen {
+      case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
+      case Failure(error) => logger.warn(s"Error in createMember() user=${user.id}", error)
     }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
