@@ -7,7 +7,8 @@ import com.typesafe.config.ConfigFactory
 import model.{FriendTierPlan, PaidTierPlan}
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
-import services.{SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import services.{StripeCredentials, SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import com.netaporter.uri.dsl._
 
 object Config {
   val logger = Logger(this.getClass())
@@ -82,9 +83,11 @@ object Config {
 
   def touchpointConfigFor(backendConf: com.typesafe.config.Config): TouchpointBackendConfig = {
     val stripeApiConfig = StripeApiConfig(
-      url = config.getString("stripe.api.url"), // stripe url never changes
-      secretKey = backendConf.getString("stripe.api.key.secret"),
-      publicKey = backendConf.getString("stripe.api.key.public")
+      config.getString("stripe.api.url"), // stripe url never changes
+      StripeCredentials(
+        secretKey = backendConf.getString("stripe.api.key.secret"),
+        publicKey = backendConf.getString("stripe.api.key.public")
+      )
     )
 
     val salesforceConfig = SalesforceConfig(

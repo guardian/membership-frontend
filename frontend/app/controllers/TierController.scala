@@ -49,7 +49,7 @@ trait UpgradeTier {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.fold(PrivateFields())(_.privateFields)
       } yield {
-        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.apiConfig.publicKey))
+        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
         Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields, pageInfo))
       }
     }
