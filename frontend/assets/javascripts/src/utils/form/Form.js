@@ -101,7 +101,6 @@ define([
      * @param response
      */
     Form.prototype.stripeResponseHandler = function (status, response) {
-
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
             if (errorMessage) {
@@ -112,6 +111,7 @@ define([
                 });
                 self.stopLoader();
                 self.setThrobberMessage();
+                self.setSubmitButtonState();
             }
         } else {
 
@@ -146,6 +146,7 @@ define([
 
                     self.stopLoader();
                     self.setThrobberMessage();
+                    self.setSubmitButtonState();
                 }
             });
 
@@ -441,6 +442,7 @@ define([
 
                 self.startLoader();
                 self.setThrobberMessage(throbberMessage);
+                self.setSubmitButtonState(true);
 
                 if( self.isStripeForm ){
                     stripe.card.createToken({
@@ -715,6 +717,10 @@ define([
     Form.prototype.setThrobberMessage = function (message) {
         message = message || '';
         $(this.getElem('THROBBER_MESSAGE')).text(message);
+    };
+
+    Form.prototype.setSubmitButtonState = function (isDisabled) {
+        $(this.getElem('FORM_SUBMIT')).attr('disabled', !!isDisabled);
     };
 
     /**
