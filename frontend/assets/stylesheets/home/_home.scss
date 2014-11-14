@@ -1,4 +1,4 @@
-.home-hero-blurb {
+.home-hero-description {
     padding-top: rem(20px);
     z-index: 100;
     background-color: $white;
@@ -14,6 +14,10 @@
         position: relative;
         margin-top: rem(-108px);
     }
+}
+
+.home-hero-description-highlight {
+    font-weight: 900;
 }
 
 .slide-show {
@@ -45,8 +49,8 @@
     @include fs-textSans(1);
     padding-top: rem(15px);
     color: $c-neutral2;
-    position: relative;
-    bottom: 0;
+    position: absolute;
+    bottom: -31px;
     left: 0;
     background-color: $white;
 
