@@ -102,9 +102,9 @@ trait MemberService {
           // Add a "salt" to make access codes different to discount codes
           val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
           GuardianLiveEventService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-        } else if (event.allowDiscounts) {
+        } else if (event.allowDiscountCodes) {
           val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
-          GuardianLiveEventService.createOrGetDiscount(event.id, code).map(Some(_))
+          GuardianLiveEventService.createOrGetDiscount(event, code).map(Some(_))
         } else {
           Future.successful(None)
         }

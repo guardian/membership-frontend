@@ -124,7 +124,8 @@ object Eventbrite {
     val imgUrl: String
     val socialImgUrl: String
 
-    val allowDiscounts: Boolean
+    val maxDiscounts: Int
+    val allowDiscountCodes: Boolean
   }
 
   object RichEvent {
@@ -143,7 +144,8 @@ object Eventbrite {
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
 
-    val allowDiscounts = true
+    val maxDiscounts = 2
+    val allowDiscountCodes = true
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
@@ -152,7 +154,8 @@ object Eventbrite {
       .replace("http://static", "https://static-secure")
     val socialImgUrl = imgUrl
 
-    val allowDiscounts = false
+    val maxDiscounts = 1
+    val allowDiscountCodes = false
   }
 }
 
