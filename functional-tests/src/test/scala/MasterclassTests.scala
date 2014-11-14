@@ -7,7 +7,7 @@ class MasterclassTests extends BaseMembershipTest {
 
   feature("User sees a list of events") {
 
-    scenarioWeb("47. Visitor sees an event list") {
+    scenarioWeb("47. Visitor sees a Masterclass list") {
       implicit driver =>
         given {
           MembershipSteps().IGoToMasterclasses
@@ -19,8 +19,8 @@ class MasterclassTests extends BaseMembershipTest {
           _.ISeeAListOfEvents
         }
     }
-    
-    scenarioWeb("48. Member sees an event list") {
+
+    scenarioWeb("48. Member sees a Masterclass list") {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAPartner
@@ -30,6 +30,36 @@ class MasterclassTests extends BaseMembershipTest {
         }
         .then {
           _.ISeeAListOfEvents
+        }
+    }
+  }
+
+  feature("Masterclass event details") {
+
+    scenarioWeb("49. Visitor sees the details for a Masterclass") {
+      implicit driver =>
+        given {
+          MembershipSteps().IGoToMasterclasses
+        }
+        .when {
+          _.IClickOnAnEvent
+        }
+        .then {
+          _.ISeeTheEventDetails
+        }
+    }
+
+    scenarioWeb("50. Member sees the details for a Masterclass") {
+      implicit driver =>
+        given {
+          MembershipSteps().IAmLoggedInAsAPatron
+        }
+        .when {
+         _.IGoToMasterclasses
+         .IClickOnAnEvent
+        }
+        .then {
+          _.ISeeTheEventDetails
         }
     }
   }
