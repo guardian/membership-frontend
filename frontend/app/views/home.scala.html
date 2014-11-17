@@ -7,7 +7,10 @@
 @slideShowElement(imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
     <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
         <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
-        <figcaption class="slide-show__detail">@description <time class="slide-show__detail-time">@Dates.prettyDate(time)</time></figcaption>
+        <figcaption class="slide-show__detail-container">
+            <h2 class="slide-show__detail">@description</h2>
+            <time class="slide-show__detail-time">@Dates.prettyDateAndDayName(time)</time>
+        </figcaption>
     </figure>
 }
 
@@ -15,8 +18,7 @@
     <li class="home-promo">
         <a class="home-promo-cta" href="@anchorHref">
             <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
-            <p class="home-promo__description">@description</p>
-            <i class="secondary-arrow-round-cta"></i>
+            <h3 class="home-promo__description">@description</h3>
         </a>
     </li>
 }
