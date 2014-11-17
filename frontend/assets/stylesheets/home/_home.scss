@@ -52,11 +52,16 @@
     position: absolute;
     bottom: -31px;
     left: 0;
+    width: 100%;
     background-color: $white;
 
     @include mq(tablet) {
         padding-left: rem(20px);
     }
+}
+
+.slide-show__detail-time {
+    display: block;
 }
 
 .home-promo-list-container {
@@ -85,6 +90,10 @@
         display: table-cell;
         vertical-align: top;
     }
+}
+
+.home-promo-cta {
+    display: block;
 }
 
 .home-promo__description {
