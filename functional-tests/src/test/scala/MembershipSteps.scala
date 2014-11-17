@@ -111,7 +111,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAFriend = {
-    new ChooseTierPage(driver).clickFriend.clickChoose
+    new ChooseTierPage(driver).clickFriend
     theFlowSignIn
     becomeFriend
     this
@@ -153,7 +153,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanBecomeAPartner = {
-    new ChooseTierPage(driver).clickPartner.clickChoose
+    new ChooseTierPage(driver).clickPartner
     theFlowSignIn
     pay
     this
@@ -411,6 +411,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICantBecomeAFriendAgain = {
     new EventsListPage(driver).clickLogo.clickJoinButton.clickBecomeAFriend
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
+  }
+
+  def IGoToMasterclasses = {
+    driver.get(Config().getUserValue("masterclasses"))
+    this
   }
 
   private def verifyTier(yearlyPayment: String) = {

@@ -3,11 +3,12 @@ package configuration
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
-import com.typesafe.config.{Config, ConfigFactory}
-import model.{FriendTierPlan, PaidTierPlan, TierPlan}
+import com.typesafe.config.ConfigFactory
+import model.{FriendTierPlan, PaidTierPlan}
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
-import services.{SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import services.{StripeCredentials, SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import com.netaporter.uri.dsl._
 
 object Config {
   val logger = Logger(this.getClass())
@@ -21,6 +22,7 @@ object Config {
 
   val guardianMembershipUrl = config.getString("guardian.membership.url")
   val guardianLiveEventsTermsUrl = config.getString("guardian.live.events.terms.url")
+  val guardianMasterclassesTermsUrl = config.getString("guardian.masterclasses.terms.url")
   val guardianMembershipTermsUrl = config.getString("guardian.membership.terms.url")
   val guardianPrivacyUrl = config.getString("guardian.privacy.url")
   var guardianMembershipBuildingBlogUrl = config.getString("guardian.membership.building.blog.url")
@@ -60,33 +62,44 @@ object Config {
   val eventbriteApiToken = config.getString("eventbrite.api.token")
   val eventbriteMasterclassesApiToken = config.getString("eventbrite.masterclasses.api.token")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
-  val eventbriteRefreshTimeForAllEvents = config.getInt("eventbrite.api.refresh-time-all-events-seconds")
+  val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
   val facebookAppId = config.getString("facebook.app.id")
 
-  val touchpointBackendConfig = {
+
+  val touchpointDefaultBackend = touchpointBackendConfigFor("default")
+  val touchpointTestBackend = touchpointBackendConfigFor("test")
+
+  def touchpointBackendConfigFor(typ: String) = {
     val touchpointConfig = config.getConfig("touchpoint.backend")
-    val defaultEnvironment = touchpointConfig.getString("default")
+    val backendEnvironmentName = touchpointConfig.getString(typ)
     val environments = touchpointConfig.getConfig("environments")
 
-    val defaultTouchpointBackendConfig = touchpointConfigFor(environments.getConfig(defaultEnvironment))
+    val defaultTouchpointBackendConfig = touchpointConfigFor(environments, backendEnvironmentName)
 
-    logger.info(s"TouchPoint config - default-env=$defaultEnvironment config=${defaultTouchpointBackendConfig.hashCode}")
+    logger.info(s"TouchPoint config - default-env=$typ config=${defaultTouchpointBackendConfig.hashCode}")
 
     defaultTouchpointBackendConfig
   }
 
-  def touchpointConfigFor(backendConf: Config): TouchpointBackendConfig = {
+  def touchpointConfigFor(environmentsConf: com.typesafe.config.Config, environmentName: String): TouchpointBackendConfig = {
+
+    val backendConf: com.typesafe.config.Config = environmentsConf.getConfig(environmentName)
+
     val stripeApiConfig = StripeApiConfig(
-      url = config.getString("stripe.api.url"), // stripe url never changes
-      secretKey = backendConf.getString("stripe.api.key.secret"),
-      publicKey = backendConf.getString("stripe.api.key.public")
+      environmentName,
+      config.getString("stripe.api.url"), // stripe url never changes
+      StripeCredentials(
+        secretKey = backendConf.getString("stripe.api.key.secret"),
+        publicKey = backendConf.getString("stripe.api.key.public")
+      )
     )
 
     val salesforceConfig = SalesforceConfig(
+      environmentName,
       consumerKey = backendConf.getString("salesforce.consumer.key"),
       consumerSecret = backendConf.getString("salesforce.consumer.secret"),
       apiURL = backendConf.getString("salesforce.api.url"),
@@ -105,7 +118,8 @@ object Config {
     }
 
     val zuoraApiConfig = ZuoraApiConfig(
-      url = backendConf.getString("zuora.api.url"),
+      environmentName,
+      backendConf.getString("zuora.api.url"),
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
       Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)

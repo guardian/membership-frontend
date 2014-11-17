@@ -4,7 +4,8 @@
     showBenefitDetails: Boolean = true,
     mode: String = "",
     showBenefitCopy: Boolean = true,
-    showLearnMore: Boolean = false
+    showLearnMore: Boolean = false,
+    showChooseDetails: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
@@ -32,19 +33,26 @@
                 </div>
             }
             <div class="package__title-container package__title-container--@tier.toString.toLowerCase u-cf">
+                <div class="package__select-zone mobile-portrait-only js-benefit-header">
+                    <a class="package__select-toggle js-benefit-button" href="#"></a>
+                </div>
                 <h2 class="package__title">@tier</h2>
-                @fragments.benefits.priceInfo(Benefits.details(tier))
-                <a class="package__select-toggle mobile-only js-benefit-header" href="#"></a>
+                @fragments.benefits.priceInfo(tier)
             </div>
         </div>
-        
-        <div class="package__outer hidden-mobile js-select-tier">
+
+        <div class="package__outer hidden-mobile-portrait js-select-tier">
             <div class="package__inner">
-                @fragments.tier.details(currentTier=tier, showBenefitDetails=showBenefitDetails, showBenefitCopy=showBenefitCopy)
+                @if(showChooseDetails) {
+                    @fragments.tier.chooseDetails(tier)
+                } else {
+                    @fragments.tier.details(currentTier = tier, showBenefitDetails = showBenefitDetails, showBenefitCopy = showBenefitCopy)
+                }
             </div>
+
             <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
                 @if(mode == "promo") {
-                    <a class="action action-cta" href="/join/@tier.toString.toLowerCase/enter-details">Become a @tier</a>
+                    <a class="action js-opt-become-member" href="/join/@tier.toString.toLowerCase/enter-details" id="qa-@tier.toString.toLowerCase">Become a @tier</a>
                     @if(showLearnMore) {
                         @if(tier == Tier.Patron) {
                             <a class="action action--secondary-button" href="/patrons">Learn more about @{tier}s</a>

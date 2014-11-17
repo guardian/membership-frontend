@@ -101,7 +101,6 @@ define([
      * @param response
      */
     Form.prototype.stripeResponseHandler = function (status, response) {
-
         if (response.error) {
             var errorMessage = self.getErrorMessage(response.error);
             if (errorMessage) {
@@ -112,6 +111,7 @@ define([
                 });
                 self.stopLoader();
                 self.setThrobberMessage();
+                self.setSubmitButtonState();
             }
         } else {
 
@@ -130,25 +130,23 @@ define([
                     window.location.assign(data.redirect);
                 },
                 error: function (error) {
-                    var errorObj,
-                        errorMessage;
+                    var errorObj;
 
                     try {
-                        errorObj = error.response && JSON.parse(error.response);
-                        errorMessage = self.getErrorMessage(errorObj);
-                        if (errorMessage) {
-                            self.manageErrors({
-                                isValid: false,
-                                errorMessage: errorMessage,
-                                $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
-                            });
-                        }
+                        errorObj = JSON.parse(error.response);
                     } catch (e) {
                         Raven.captureException(e);
                     }
 
+                    self.manageErrors({
+                        isValid: false,
+                        errorMessage: self.getErrorMessage(errorObj),
+                        $element: $(self.getClass('CREDIT_CARD_NUMBER'), self.formElement)
+                    });
+
                     self.stopLoader();
                     self.setThrobberMessage();
+                    self.setSubmitButtonState();
                 }
             });
 
@@ -444,6 +442,7 @@ define([
 
                 self.startLoader();
                 self.setThrobberMessage(throbberMessage);
+                self.setSubmitButtonState(true);
 
                 if( self.isStripeForm ){
                     stripe.card.createToken({
@@ -718,6 +717,10 @@ define([
     Form.prototype.setThrobberMessage = function (message) {
         message = message || '';
         $(this.getElem('THROBBER_MESSAGE')).text(message);
+    };
+
+    Form.prototype.setSubmitButtonState = function (isDisabled) {
+        $(this.getElem('FORM_SUBMIT')).attr('disabled', !!isDisabled);
     };
 
     /**

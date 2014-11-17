@@ -12,8 +12,9 @@ import com.gu.membership.salesforce.Tier.Tier
 import actions.MemberRequest
 import forms.MemberForm._
 import model.StripeSerializer._
-import model.{FriendTierPlan, Zuora, Stripe, PrivateFields}
+import model._
 import services._
+import actions._
 
 trait DowngradeTier {
   self: TierController =>
@@ -24,15 +25,16 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- MemberService.downgradeSubscription(request.member, FriendTierPlan)
+      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, FriendTierPlan)
     } yield Redirect("/tier/change/friend/summary")
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
+    val subscriptionService = request.touchpointBackend.subscriptionService
     for {
-      subscriptionStatus <- SubscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
-      currentSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-      futureSubscription <- SubscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
+      subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+      futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
     } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
   }
 }
@@ -46,7 +48,10 @@ trait UpgradeTier {
       for {
         userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
         privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      } yield Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields))
+      } yield {
+        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields, pageInfo))
+      }
     }
     else
       Future.successful(NotFound)
@@ -82,7 +87,7 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      _ <- MemberService.cancelSubscription(request.member)
+      _ <- request.touchpointBackend.cancelSubscription(request.member)
     } yield {
       Redirect("/tier/cancel/summary")
     }
@@ -91,12 +96,12 @@ trait CancelTier {
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
     def subscriptionDetailsFor(memberOpt: Option[Member]) = {
       memberOpt.collect { case paidMember: PaidMember =>
-        SubscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
       }
     }
 
     for {
-      memberOpt <- MemberRepository.get(request.user.id)
+      memberOpt <- request.touchpointBackend.memberRepository.get(request.user.id)
       subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
     } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
   }

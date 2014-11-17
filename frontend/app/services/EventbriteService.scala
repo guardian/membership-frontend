@@ -60,7 +60,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def getEvent(id: String): Option[RichEvent] = events.find(_.id == id)
 
-  def createOrGetAccessCode(event: EBEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
+  def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
     val uri = s"events/${event.id}/access_codes"
 
     for {
@@ -68,15 +68,15 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
       discount <- discounts.find(_.code == code).fold {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
-          "access_code.quantity_available" -> Seq("2"),
+          "access_code.quantity_available" -> Seq(event.maxDiscounts.toString),
           "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
         ))
       }(Future.successful)
     } yield discount
   }
 
-  def createOrGetDiscount(eventId: String, code: String): Future[EBDiscount] = {
-    val uri = s"events/$eventId/discounts"
+  def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] = {
+    val uri = s"events/${event.id}/discounts"
 
     for {
       discounts <- getPaginated[EBDiscount](uri)
@@ -84,7 +84,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
         post[EBDiscount](uri, Map(
           "discount.code" -> Seq(code),
           "discount.percent_off" -> Seq("20"),
-          "discount.quantity_available" -> Seq("2")
+          "discount.quantity_available" -> Seq(event.maxDiscounts.toString)
         ))
       }
     } yield discount
@@ -96,7 +96,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
-  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTimeForAllEvents, SECONDS)
+  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
 
   lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
@@ -129,7 +129,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val apiToken = Config.eventbriteMasterclassesApiToken
 
   val initialValue = Nil
-  val interval = 2.minutes
+  val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val initialDelay = 0.seconds
 
   def refresh(): Future[Seq[RichEvent]] = getAllEvents

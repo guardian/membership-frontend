@@ -105,23 +105,6 @@ body {
         max-width: gs-span(14)+($gs-gutter*2);
     }
 
-    h2 {
-        @include fs-header(2);
-
-        @include mq(tablet) {
-            @include fs-header(3, true);
-        }
-    }
-
-    h3 {
-        margin: 0;
-        @include fs-bodyHeading(2);
-
-        @include mq(tablet) {
-            @include fs-bodyHeading(3, true);
-        }
-    }
-
     &.page-container--with-padding {
         background-color: $white;
         @include mq(tablet) {
@@ -148,10 +131,14 @@ body {
     }
 
     .two-thirds {
+
         @include mq(tablet) {
-            border-right: rem(1px) solid $c-neutral4;
+            padding-left: $gs-gutter;
             width: rem(gs-span(8));
-            padding: 0 $gs-gutter;
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(8) + $gs-gutter);
         }
     }
 
@@ -159,8 +146,12 @@ body {
         margin-bottom: rem($gs-gutter);
 
         @include mq(tablet) {
-            width: rem(gs-span(4));
+            width: rem(gs-span(3));
             padding-left: rem($gs-gutter);
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(4) + $gs-gutter);
         }
     }
 

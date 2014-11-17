@@ -1,5 +1,7 @@
 package utils
 
+import com.gu.membership.util.Timing
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -45,19 +47,21 @@ trait WebServiceHelper[T, Error <: Throwable] {
    * @return
    */
   private def request[A <: T](req: WSRequestHolder)(implicit reads: Reads[A], error: Reads[Error]): Future[A] = {
-    wsPreExecute(req).execute().map { response =>
-      wsMetrics.putResponseCode(response.status, req.method)
+    Timing.record(wsMetrics, s"${req.method} ${req.url}") {
+      wsPreExecute(req).execute().map { response =>
+        wsMetrics.putResponseCode(response.status, req.method)
 
-      response.json.asOpt[A].getOrElse {
-        Logger.error(s"${getClass.getSimpleName} request failed with status code ${response.status}")
-        Logger.error(req.body.toString)
-        Logger.error(response.body)
+        response.json.asOpt[A].getOrElse {
+          Logger.error(s"${getClass.getSimpleName} request failed with status code ${response.status}")
+          Logger.error(req.body.toString)
+          Logger.error(response.body)
 
-        throw response.json.asOpt[Error].getOrElse(WebServiceHelperError(this, response))
+          throw response.json.asOpt[Error].getOrElse(WebServiceHelperError(this, response))
+        }
+      }.recover { case e =>
+        Logger.error(s"${getClass.getSimpleName} request failed with exception ${e.getMessage}")
+        throw e
       }
-    }.recover { case e =>
-      Logger.error(s"${getClass.getSimpleName} request failed with exception ${e.getMessage}")
-      throw e
     }
   }
 

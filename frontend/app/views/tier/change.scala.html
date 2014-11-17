@@ -16,7 +16,7 @@
         <div class="package-container">
             <h2 class="package-container__header">Choose the tier you would like to switch to:</h2>
             <div class="content__container">
-                <section class="package-list">
+                <section class="package-list package-list--flex-box">
 
                     @for(tier <- Tier.values.toSeq.sorted){
                         @if(tier >= Tier.Friend){ @fragments.tier.benefits(Some(currentTier), tier) }

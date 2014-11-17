@@ -8,7 +8,7 @@
     @if(eventPortfolio.orderedEvents.nonEmpty) {
         <div class="event-block">
             <div class="events-title-container">
-                <h2 class="event-block-title">featured</h2>
+                <h4 class="event-block-title case--lower">Featured</h4>
             </div>
             <div class="events-list-container">
                 <ul class="u-unstyled">
@@ -17,9 +17,9 @@
                 }
                 </ul>
                 <ul class="events-list events-list--items-3 events-list__hero-descendant u-unstyled">
-                @for(event <- eventPortfolio.priority) {
-                    @fragments.event.item(event)
-                }
+                    @for(event <- eventPortfolio.priority) {
+                        @fragments.event.item(event)
+                    }
                 </ul>
             </div>
         </div>
@@ -27,29 +27,25 @@
 
     <div class="event-block">
         <div class="events-title-container">
-            <h2 class="event-block-title">what's on</h2>
+            <h4 class="event-block-title case--lower">What's on</h4>
         </div>
         <div class="events-list-container">
-            @for(eventChunk <- eventPortfolio.normal.grouped(3)) {
-                <ul class="events-list events-list--items-3 u-unstyled">
-                    @for(event <- eventChunk) {
-                        @fragments.event.item(event, false)
-                    }
-                    @for(i <- Range(0, 3-eventChunk.length)) {
-                        <li class="event-item events-list__item event-item--blank"></li>
-                    }
-                </ul>
-            }
+            <ul class="events-list u-unstyled" id="js-filter-container">
+                @for(event <- eventPortfolio.normal) {
+                    @fragments.event.item(event, false)
+                }
+            </ul>
         </div>
     </div>
 </section>
 
 @* ===== Join Today ===== *@
 
+
 <div class="home-slice home-slice--join-today">
     <div class="home-slice__inner u-cf">
         <h2 class="home-slice__headline">Join membership today</h2>
-        <div class="join-today__join-boxes package-list package-list--bordered">
+        <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
             @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)

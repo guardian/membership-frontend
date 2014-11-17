@@ -1,12 +1,12 @@
 @(ctaTextPrepend: String, ctaTextAppend: String = "", tier: Option[com.gu.membership.salesforce.Tier.Tier] = None,
-    membershipTermsAndConditions: Boolean = true)
+    membershipTermsAndConditions: Boolean = true, isSlim: Boolean = false)
 
 @import views.support.Asset
 @import model.Benefits
 @import configuration.Config
 
-<fieldset class="fieldset fieldset--no-bg">
-    @fragments.form.errorMessageDisplay()
+@fragments.form.errorMessageDisplay(true, isSlim)
+<fieldset class="fieldset fieldset--no-bg@if(isSlim == true){ fieldset--slim}">
     <div class="fieldset__heading"></div>
     <div class="fieldset__fields fieldset__fields--no-padding">
 

@@ -35,7 +35,7 @@ object Eventbrite {
       clean
     }
 
-    lazy val blurb = truncateToWordBoundary(text, 200)
+    lazy val blurb = truncateToWordBoundary(text, 120)
   }
 
   case class EBAddress(address_1: Option[String],
@@ -124,7 +124,8 @@ object Eventbrite {
     val imgUrl: String
     val socialImgUrl: String
 
-    val allowDiscounts: Boolean
+    val maxDiscounts: Int
+    val allowDiscountCodes: Boolean
   }
 
   object RichEvent {
@@ -143,14 +144,18 @@ object Eventbrite {
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
 
-    val allowDiscounts = true
+    val maxDiscounts = 2
+    val allowDiscountCodes = true
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
-    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file).getOrElse("")
+    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
+      .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
+      .replace("http://static", "https://static-secure")
     val socialImgUrl = imgUrl
 
-    val allowDiscounts = false
+    val maxDiscounts = 1
+    val allowDiscountCodes = false
   }
 }
 

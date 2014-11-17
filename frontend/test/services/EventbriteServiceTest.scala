@@ -1,5 +1,6 @@
 package services
 
+import model.EventbriteTestObjects
 import play.api.test.PlaySpecification
 import model.Eventbrite.{RichEvent, EBEvent, EBError, EBObject}
 import scala.concurrent.{Await, Future}
@@ -9,15 +10,17 @@ import scala.concurrent.duration._
 
 class EventbriteServiceTest extends PlaySpecification {
 
+  def testEvent = TestRichEvent(EventbriteTestObjects.eventWithName("test"))
+
   "EventbriteService" should {
 
     "reuses an existing discount code" in TestEventbriteService { service =>
-      Await.ready(service.createOrGetDiscount("test", "5ZCYERL5"), 5.seconds)
+      Await.ready(service.createOrGetDiscount(testEvent, "5ZCYERL5"), 5.seconds)
       service.lastRequest mustEqual RequestInfo.empty
     }
 
     "creates a new discount code" in TestEventbriteService { service =>
-      Await.ready(service.createOrGetDiscount("test", "NEW"), 5.seconds)
+      Await.ready(service.createOrGetDiscount(testEvent, "NEW"), 5.seconds)
 
       service.lastRequest mustEqual RequestInfo(
         url = s"http://localhost:9999/v1/events/test/discounts",
@@ -33,7 +36,8 @@ class EventbriteServiceTest extends PlaySpecification {
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgUrl = ""
     val socialImgUrl = ""
-    val allowDiscounts = false
+    val maxDiscounts = 2
+    val allowDiscountCodes = true
   }
 
 

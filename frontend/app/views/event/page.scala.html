@@ -10,15 +10,22 @@
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@ticketCta = {
-    @if(event.isSoldOut) {
-        <button class="action action--disabled js-ticket-cta" disabled="disabled">Sold Out</button>
-    } else {
-        <a class="action js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+@termsAndConditions = @{
+    event match {
+        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
+        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
     }
-    <div class="terms-info">By proceeding, you agree to the<br /> Guardian Live events
-        <a href="@Config.guardianLiveEventsTermsUrl" target="_blank">Terms and Conditions</a>
-    </div>
+}
+
+@ticketCta(actionClassSoldOut: String, actionClassBuy:String) = {
+    @if(event.isSoldOut) {
+        <span class="action @actionClassSoldOut">Sold out</span>
+    } else {
+        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+        <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
+            <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
+        </div>
+    }
 }
 
 @becomeMemberCta(ticket: EBTicketClass) = @{
@@ -64,10 +71,9 @@
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
-                    <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.start)</span>
-                    @event match {
-                        case _: MasterclassEvent => { - <span class="event-details__time__part">@prettyDateWithTimeAndDayName(event.end)</span> }
-                        case _ => {}
+                    @defining(dateRange(event.start, event.end)) { range =>
+                        <span class="event-details__time__part">@range.start</span>
+                        - <span class="event-details__time__part">@range.end</span>
                     }
                 </div>
                 <div class="event-details__location">
@@ -101,7 +107,7 @@
                                 }
                             }
                         </div>
-                        @ticketCta
+                        @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
                     </div>
                 }
             }
@@ -179,7 +185,7 @@
                                     </div>
                                 }
                             }
-                            @ticketCta
+                            @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
                             @becomeMemberCta(ticket)
                         }
                     }

@@ -3,67 +3,69 @@
 @import configuration.Config
 @import model.Eventbrite._
 
-<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero}" itemscope itemtype="http://schema.org/Event">
-            <div class="event-item__media">
-                <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
-                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="@event.name.text" data-class="responsive-img"></div>
-                </a>
-            </div>
-            <div class="event-item__meta">
-                <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
-                    <h2 class="event-item__title">
-                        @if(event.isSoldOut){
-                            <span class="event-status--sold-out">Sold Out</span>
-                        }
-                        <span itemprop="name">@event.name.text</span>
-                    </h2>
+<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero} js-filter-item" itemscope itemtype="http://schema.org/Event">
+    <div class="event-item__container">
+        <div class="event-item__media">
+            <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
+                <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="@event.name.text" data-class="responsive-img"></div>
+            </a>
+        </div>
+        <div class="event-item__meta">
+            <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
+                <h4 class="event-item__title">
+                    @if(event.isSoldOut){
+                        <span class="event-status--sold-out" data-filter-key="status">Sold Out</span>
+                    }
+                    <span itemprop="name" data-filter-key="title">@event.name.text</span>
+                </h4>
 
-                    <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
+                <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
 
-                    <div class="event-item__location" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                        @if(event.venue.name){
-                            <span class="event-item__location-name" itemprop="name">@event.venue.name</span>
-                        }
-                        @for(location <- event.venue.address) {
-                            @if(location.city) {
-                                <span class="event-item__location-address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">,
-                                    <span itemprop="addressLocality">@location.city</span>,
-                                    <span itemprop="postalCode">@location.postal_code</span>
-                                </span>
-                            }
-                        }
-                    </div>
-
-                    @if(isHero){
-                        @for(desc <- event.description) {
-                            <div class="event-item__description" itemprop="description">
-                                @desc.blurb
-                            </div>
+                <div class="event-item__location" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                    @if(event.venue.name) {
+                        <span class="event-item__location-name" itemprop="name">@event.venue.name</span>
+                    }
+                    @for(location <- event.venue.address) {
+                        @if(location.city) {
+                            <span class="event-item__location-address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">,
+                                <span itemprop="addressLocality">@location.city</span>,
+                                <span itemprop="postalCode">@location.postal_code</span>
+                            </span>
                         }
                     }
+                </div>
 
-                    <div class="event-item__cta" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
-                        @if(event.isSoldOut) {
-                            <meta itemprop="availability" content="http://schema.org/SoldOut">
-                        } else {
-                            <meta itemprop="availability" content="http://schema.org/InStock">
-                        }
+                @if(isHero) {
+                    @for(desc <- event.description) {
+                        <div class="event-item__description" itemprop="description">
+                            @desc.blurb
+                        </div>
+                    }
+                }
 
-                        @if(event.isNoTicketEvent == false) {
-                            <div class="event-item__price">
+                <div class="event-item__cta" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+                    @if(event.isSoldOut) {
+                        <meta itemprop="availability" content="http://schema.org/SoldOut">
+                    } else {
+                        <meta itemprop="availability" content="http://schema.org/InStock">
+                    }
+
+                    @if(event.isNoTicketEvent == false) {
+                        <div class="event-item__price">
                             @for(ticket <- event.generalReleaseTicket) {
                                 @for(pricing <- ticket.cost) {
                                     <span class="event-item__price-amount" itemprop="highPrice">@pricing.formattedPrice</span>
-                                    <span class="event-item__price-amout-discount" itemprop="lowPrice" content="@pricing.discountPrice">Partners/Patrons: @pricing.discountPrice</span>
+                                    <span class="event-item__price-amount-discount" itemprop="lowPrice" content="@pricing.discountPrice">Partners/Patrons: @pricing.discountPrice</span>
+                                    <span class="event-item__price-amount-discount">Save @pricing.savingPrice</span>
                                 }
                             }
-                            </div>
-                        }
+                        </div>
+                    }
 
-                        <button class="event-item__action" itemprop="url"></button>
+                    <button class="event-item__action" itemprop="url"></button>
 
-                    </div>
-                </a>
-            </div>
-
+                </div>
+            </a>
+        </div>
+    </div>
 </li>

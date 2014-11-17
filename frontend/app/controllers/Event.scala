@@ -41,7 +41,7 @@ trait Event extends Controller {
         Some(event.socialImgUrl)
       )
       Ok(views.html.event.page(event, pageInfo))
-    }.getOrElse(NotFound)
+    }.getOrElse(Redirect(Config.guardianMembershipUrl))
   }
 
   def masterclasses = CachedAction { implicit request =>
@@ -98,6 +98,7 @@ trait Event extends Controller {
         event <- guLiveEvents.getEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
+          EventbriteMetrics.putThankyou(id)
           Ok(views.html.event.thankyou(event, order))
         }
       }

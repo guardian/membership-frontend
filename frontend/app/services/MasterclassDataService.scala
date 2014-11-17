@@ -1,16 +1,19 @@
 package services
 
 import akka.agent.Agent
-import com.gu.contentapi.client.GuardianContentClient
 import com.gu.contentapi.client.model.{Asset, Content, ItemResponse}
+import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
 import configuration.Config
+import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.Failure
 import scala.util.matching.Regex
 
 case class MasterclassData(eventId: String, webUrl: String, images: List[Asset])
@@ -51,11 +54,15 @@ trait MasterclassDataService {
       .page(page)
       .showFields("body")
       .showElements("image")
-      .response
+      .response.andThen {
+      case Failure(GuardianContentApiError(status, message)) =>
+        ContentApiMetrics.putResponseCode(status, "GET content")
+        Logger.error(s"Error response from Content API $status")
+    }
   }
 }
 
-object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]]{
+object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]] {
   def getData(eventId: String) = masterclassData.find(mc => mc.eventId.equals(eventId))
 
   val initialValue = Nil
@@ -69,7 +76,7 @@ object MasterclassDataService extends MasterclassDataService with ScheduledTask[
 
 object MasterclassDataExtractor {
 
-  val eventbriteUrl = "https?://www.eventbrite.co.uk/[^\"]+"
+  val eventbriteUrl = "https?://www.eventbrite.co.uk/[^?\"]+"
   val regex = new Regex(eventbriteUrl)
 
   def extractEventbriteInformation(content: Content): List[MasterclassData] = {
