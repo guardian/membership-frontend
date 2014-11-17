@@ -49,25 +49,49 @@
     background-size: cover;
 }
 
-.slide-show__detail-container {
+.slide-show-detail {
     padding-top: rem(15px);
     width: 100%;
     background-color: $white;
 
     @include mq(tablet) {
         width: 50%;
-        padding-left: rem(20px);
+        padding-left: rem(10px);
     }
 }
 
-.slide-show__detail {
+.slide-show-detail__description {
     @include fs-textSans(1);
     color: $c-neutral2;
 }
 
-.slide-show__detail-time {
-    @extend .slide-show__detail;
+.slide-show-detail__time {
+    @extend .slide-show-detail__description;
     display: block;
+}
+
+.slide-show-detail__secondary {
+    vertical-align: top;
+    margin-left: rem(40px);
+    padding-bottom: rem(40px);
+}
+
+.progress-indicator {
+    font-size: 0;
+    float: left;
+}
+
+.progress-indicator__index {
+    color: $c-neutral3;
+    @include fs-textSans(1);
+    width: rem(2rem);
+    text-align: right;
+    display: inline-block;
+}
+.progress-indicator__separator,
+.progress-indicator__count {
+    color: $c-neutral2;
+    @include fs-textSans(1);
 }
 
 .home-promo-list-container {

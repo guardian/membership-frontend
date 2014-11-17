@@ -4,12 +4,19 @@
 @import views.support.Dates
 @import views.support.Asset
 
-@slideShowElement(imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
+@slideShowElement(position: Int, imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
     <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
         <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
-        <figcaption class="slide-show__detail-container">
-            <h2 class="slide-show__detail">@description</h2>
-            <time class="slide-show__detail-time">@Dates.prettyDateAndDayName(time)</time>
+        <figcaption class="slide-show-detail">
+            <div class="progress-indicator">
+                <span class="progress-indicator__index">@position</span>
+                <span class="progress-indicator__separator">/</span>
+                <span class="progress-indicator__count">6</span>
+            </div>
+            <div class="slide-show-detail__secondary">
+                <h2 class="slide-show-detail__description">@description</h2>
+                <time class="slide-show-detail__time">@Dates.prettyDateAndDayName(time)</time>
+            </div>
         </figcaption>
     </figure>
 }
@@ -26,12 +33,12 @@
 @main("Home Page a-b", containerPadding=false, noIndex=true) {
     <section class="u-cf">
         <div class="slide-show">
-            @slideShowElement("viv_west_", "Guardian Live event: Vivienne Westwood", new DateTime(2014, 10, 15, 0, 0), "six")
-            @slideShowElement("tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah", new DateTime(2014, 10, 12, 0, 0), "five")
-            @slideShowElement("women_", "Guardian Live event: David Mitchell", new DateTime(2014, 11, 12, 0, 0), "four")
-            @slideShowElement("jim_page_", "A life in music: Jimmy Page", new DateTime(2014, 10, 15, 0, 0), "three")
-            @slideShowElement("pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience", new DateTime(2014, 11, 17, 0, 0), "two")
-            @slideShowElement("man_aud_", "Guardian Live with Russell Brand", new DateTime(2014, 10, 23, 0, 0), "one", true)
+            @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood", new DateTime(2014, 10, 15, 0, 0), "six")
+            @slideShowElement(5, "tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah", new DateTime(2014, 10, 12, 0, 0), "five")
+            @slideShowElement(4, "women_", "Guardian Live event: David Mitchell", new DateTime(2014, 11, 12, 0, 0), "four")
+            @slideShowElement(3, "jim_page_", "A life in music: Jimmy Page", new DateTime(2014, 10, 15, 0, 0), "three")
+            @slideShowElement(2, "pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience", new DateTime(2014, 11, 17, 0, 0), "two")
+            @slideShowElement(1, "man_aud_", "Guardian Live with Russell Brand", new DateTime(2014, 10, 23, 0, 0), "one", true)
         </div>
         <div class="home-hero-description-container">
                 <h1 class="home-hero-description">We believe real, face-to-face discussions have a unique power to broaden minds. <span class="home-hero-description-highlight">We're bringing the Guardian to life.</span></h1>
