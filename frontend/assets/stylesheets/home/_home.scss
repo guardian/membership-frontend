@@ -1,10 +1,7 @@
-.home-hero-description {
+.home-hero-description-container {
     padding-top: rem(20px);
     z-index: 100;
     background-color: $white;
-    font-family: $f-serif-headline;
-    font-size: rem(28px);
-    line-height: rem(32px);
 
     @include mq(tablet) {
         padding-left: rem(20px);
@@ -12,12 +9,19 @@
         width: 50%;
         float: right;
         position: relative;
-        margin-top: rem(-108px);
+        margin-top: rem(-155px);
     }
 }
 
+.home-hero-description {
+    font-family: $f-serif-headline;
+    font-size: rem(28px);
+    line-height: rem(32px);
+    font-weight: normal;
+}
+
 .home-hero-description-highlight {
-    font-weight: 900;
+    color: $mem-buttonBlue;
 }
 
 .slide-show {
@@ -45,22 +49,24 @@
     background-size: cover;
 }
 
-.slide-show__detail {
-    @include fs-textSans(1);
+.slide-show__detail-container {
     padding-top: rem(15px);
-    color: $c-neutral2;
-    position: absolute;
-    bottom: -31px;
-    left: 0;
     width: 100%;
     background-color: $white;
 
     @include mq(tablet) {
+        width: 50%;
         padding-left: rem(20px);
     }
 }
 
+.slide-show__detail {
+    @include fs-textSans(1);
+    color: $c-neutral2;
+}
+
 .slide-show__detail-time {
+    @extend .slide-show__detail;
     display: block;
 }
 
@@ -77,7 +83,7 @@
     margin: rem(20px) 0;
 
     @include mq(tablet) {
-        margin: rem(40px) 0 rem(48px);
+        margin: rem(38px) 0 rem(64px);
     }
 }
 
@@ -100,8 +106,9 @@
     font-family: $f-serif-headline;
     font-size: rem(18px);
     line-height: rem(22px);
-    margin-top: rem(6px);
+    margin-top: rem(10px);
     color: $black;
+    font-weight: normal;
 }
 
 .home-promo__img {
@@ -112,25 +119,6 @@
     background-size: cover;
 }
 
-.secondary-arrow-round-cta {
-    width: rem(36px);
-    height: rem(36px);
-    padding: rem(7px);
-    background-color: $white;
-    @include border-radius(50px);
-    border: 1px solid $c-neutral1;
-    display: block;
-
-    &:focus {
-        outline: 0;
-    }
-
-    &:after {
-        @extend .icon-sprite-arrow-right-black;
-        content: '';
-        float: right;
-    }
-}
 
 /* 6 images displayed for 6 seconds each */
 .slide-show figure:nth-child(1) {
