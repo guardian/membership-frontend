@@ -26,26 +26,25 @@
 @main("Home Page a-b", containerPadding=false, noIndex=true) {
     <section class="u-cf">
         <div class="slide-show">
-            @slideShowElement("viv_west_", "Blurb of text here image six...", new DateTime(2014, 1, 12, 0, 0), "six")
-            @slideShowElement("tin_temp_", "Blurb of text here image five...", new DateTime(2014, 1, 12, 0, 0), "five")
-            @slideShowElement("women_", "Blurb of text here image four...", new DateTime(2014, 1, 12, 0, 0), "four")
-            @slideShowElement("jim_page_", "Blurb of text here image three...", new DateTime(2014, 1, 12, 0, 0), "three")
-            @slideShowElement("pussy_riot_", "Blurb of text here image two...", new DateTime(2014, 1, 12, 0, 0), "two")
-            @slideShowElement("man_aud_", "Blurb of text here image one...", new DateTime(2014, 1, 12, 0, 0), "one", true)
+            @slideShowElement("viv_west_", "Guardian Live event: Vivienne Westwood", new DateTime(2014, 10, 15, 0, 0), "six")
+            @slideShowElement("tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah", new DateTime(2014, 10, 12, 0, 0), "five")
+            @slideShowElement("women_", "Guardian Live event: David Mitchell", new DateTime(2014, 11, 12, 0, 0), "four")
+            @slideShowElement("jim_page_", "A life in music: Jimmy Page", new DateTime(2014, 10, 15, 0, 0), "three")
+            @slideShowElement("pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience", new DateTime(2014, 11, 17, 0, 0), "two")
+            @slideShowElement("man_aud_", "Guardian Live with Russell Brand", new DateTime(2014, 10, 23, 0, 0), "one", true)
         </div>
-        <div class="home-hero-description">
-                <p class="no-margin">We believe real, face-to-face discussion has a unique power to broaden minds.</p>
-                <p><strong class="home-hero-description-highlight">We're bringing the Guardian to life.</strong></p>
+        <div class="home-hero-description-container">
+                <h1 class="home-hero-description">We believe real, face-to-face discussions have a unique power to broaden minds. <span class="home-hero-description-highlight">We're bringing the Guardian to life.</span></h1>
             <a class="action action--no-bottom-margin" href="/join">Join today</a>
         </div>
     </section>
 
     <section class="home-promo-list-container">
         <ul class="home-promo-list u-unstyled">
-            @promoElement("whats_included_", "Discover what's included with Guardian membership?", "/about", "png")
+            @promoElement("whats_included_", "Discover what's included with Guardian Membership?", "/about", "png")
             @promoElement("events_", "Browse our events catalogue and book your tickets now", "/events")
-            @promoElement("promo-img-", "Compare the three tiers of Guardian membership", "")
-            @promoElement("become_patron_", "Become a Patron today", "/patrons")
+            @promoElement("compare_tiers_", "Compare the three tiers of Guardian Membership", "/join", "png")
+            @promoElement("become_patron_", "Join as a Patron today and support the Guardian's mission of promoting the open exchange of ideas", "/patrons")
         </ul>
     </section>
 }
