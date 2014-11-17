@@ -24,6 +24,9 @@ object Dates {
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
 
+  def prettyDateAndDayName(dt: DateTime): String =
+    dt.toString("EE ") + prettyDate(dt)
+
   def dayInMonthWithSuffix(date: DateTime = DateTime.now): Html = addSuffix(date.toString("dd").toInt)
 
   def dayInMonthWithSuffixAndMonth(date: DateTime = DateTime.now): Html = {
