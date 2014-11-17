@@ -7,14 +7,14 @@
 @slideShowElement(imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
     <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
         <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
-        <figcaption class="slide-show__detail">@description <time>@Dates.prettyDate(time)</time></figcaption>
+        <figcaption class="slide-show__detail">@description <time class="slide-show__detail-time">@Dates.prettyDate(time)</time></figcaption>
     </figure>
 }
 
-@promoElement(imgSrc: String, description: String, anchorHref: String) = {
+@promoElement(imgSrc: String, description: String, anchorHref: String, fileType: String = "jpg") = {
     <li class="home-promo">
-        <a href="@anchorHref">
-            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <a class="home-promo-cta" href="@anchorHref">
+            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
             <p class="home-promo__description">@description</p>
             <i class="secondary-arrow-round-cta"></i>
         </a>
@@ -28,22 +28,22 @@
             @slideShowElement("tin_temp_", "Blurb of text here image five...", new DateTime(2014, 1, 12, 0, 0), "five")
             @slideShowElement("women_", "Blurb of text here image four...", new DateTime(2014, 1, 12, 0, 0), "four")
             @slideShowElement("jim_page_", "Blurb of text here image three...", new DateTime(2014, 1, 12, 0, 0), "three")
-            @slideShowElement("nao_klein_", "Blurb of text here image two...", new DateTime(2014, 1, 12, 0, 0), "two")
+            @slideShowElement("pussy_riot_", "Blurb of text here image two...", new DateTime(2014, 1, 12, 0, 0), "two")
             @slideShowElement("man_aud_", "Blurb of text here image one...", new DateTime(2014, 1, 12, 0, 0), "one", true)
         </div>
         <div class="home-hero-description">
-                <p class="no-margin">We believe real, face-to-face discussion has a unique power to broaden minds. </p>
-                <p><strong class="home-hero-description-highlight">We’re bringing the Guardian to life.</strong></p>
+                <p class="no-margin">We believe real, face-to-face discussion has a unique power to broaden minds.</p>
+                <p><strong class="home-hero-description-highlight">We're bringing the Guardian to life.</strong></p>
             <a class="action action--no-bottom-margin" href="/join">Join today</a>
         </div>
     </section>
 
     <section class="home-promo-list-container">
         <ul class="home-promo-list u-unstyled">
-            @promoElement("promo-img-", "What's included in Guardian Membership?", "/about")
-            @promoElement("promo-img-", "Events that bring the Guardian to life", "/events")
-            @promoElement("promo-img-", "Become a Patron today", "/patrons")
-            @promoElement("promo-img-", "Why are so many Guardian Live events in London?", "")
+            @promoElement("whats_included_", "Discover what's included with Guardian membership?", "/about", "png")
+            @promoElement("events_", "Browse our events catalogue and book your tickets now", "/events")
+            @promoElement("promo-img-", "Compare the three tiers of Guardian membership", "")
+            @promoElement("become_patron_", "Become a Patron today", "/patrons")
         </ul>
     </section>
 }
