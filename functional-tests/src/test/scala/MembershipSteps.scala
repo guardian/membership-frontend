@@ -57,7 +57,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnAnEvent = {
-    new LandingPage(driver).clickEventsButton.clickLastEvent
+    new LandingPage(driver).clickEventsButton.clickFirstEvent
     this
   }
 
@@ -82,7 +82,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickThePurchaseButton = {
-    new LandingPage(driver).clickEventsButton.clickLastEvent.clickBuyButton
+    new LandingPage(driver).clickEventsButton.clickFirstEvent.clickBuyButton
     this
   }
 
@@ -249,10 +249,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def PriceIsHigherThanIfIAmAMember = {
-    val initialPrice = new EventPage(driver).getEventPrice
+    val initialPrice = new EventPage(driver).getEventPrice.replace("£", "").toInt
     IAmLoggedIn
     IClickOnAnEvent
-    val discountedPrice = new EventPage(driver).getDiscountedEvent
+    val discountedPrice = new EventPage(driver).getDiscountedEvent.replace("£", "").toInt
     Assert.assert(initialPrice > discountedPrice, true, "Member receives a discount")
     this
   }

@@ -30,7 +30,7 @@ class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
     new EventPage(driver)
   }
 
-  def clickLastEvent(): EventPage = {
-    clickEventByIndex(getEventsListSize - 2)
+  def clickFirstEvent(): EventPage = {
+    clickEventByIndex(0)
   }
 }
