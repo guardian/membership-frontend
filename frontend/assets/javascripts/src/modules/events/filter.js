@@ -4,9 +4,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     var filterInput  = document.getElementById('js-filter'),
         filterParent = document.getElementById('js-filter-container'),
         filterField  = filterInput.getAttribute('data-filter-field'),
-        minScore     = 0.3, // what score cutoff should searches use?
-        fuzziness    = 0.5, // how generous should the search match be?
-        throttle     = 200, // how many milliseconds should we wait for typing to pause?
+        throttle     = 300, // how many milliseconds should we wait for typing to pause?
         currentTimeout;
 
     // track what people filter on
@@ -29,7 +27,6 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     });
 
     // filter the list based on the index
-    // and re-order elements by score
     var filterList = function (e) {
         e.preventDefault();
 
@@ -47,11 +44,10 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
             }
 
             index.forEach(function (item) {
-                var score = item.filters[filterField].score(value, fuzziness);
-                if (!value || score > minScore) {
+                // use simple substring matching for now...
+                var isFound = item.filters[filterField].toLowerCase().search(value);
+                if (isFound !== -1) {
                     elmsToShow.push(item.elm);
-                    // track the score so we can sort on it later
-                    $(item.elm).data('score', score);
                 } else {
                     elmsToHide.push(item.elm);
                 }
@@ -60,14 +56,8 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
             // remove the non-matching elements from the DOM
             $(elmsToHide).detach();
 
-            // sort by score
-            elmsToShow.sort(function (a, b) {
-                var scoreA = parseFloat($(a).data('score')),
-                    scoreB = parseFloat($(b).data('score'));
-                return scoreA < scoreB;
-            });
-
-            // re-add the sorted elements to the DOM
+            // show matching elements
+            // (which may have been hidden in previous searches)
             $(elmsToShow).appendTo(filterParent);
 
             // if no results, we show a message
