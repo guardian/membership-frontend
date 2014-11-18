@@ -177,7 +177,8 @@ module.exports = function (grunt) {
                             '<%= dirs.publicDir.stylesheets %>/**/*.css',
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
                             '<%= dirs.publicDir.javascripts %>/**/*.map',
-                            '<%= dirs.publicDir.images %>/**/*.*'
+                            '<%= dirs.publicDir.images %>/**/*.*',
+                            '!<%= dirs.publicDir.images %>/home/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
                     }
