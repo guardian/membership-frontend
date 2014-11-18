@@ -5,34 +5,34 @@ class MasterclassTests extends BaseMembershipTest {
 
   info("Basic tests for Masterclasses")
 
-  feature("User sees a list of events") {
-
-    scenarioWeb("47. Visitor sees a Masterclass list") {
-      implicit driver =>
-        given {
-          MembershipSteps().IGoToMasterclasses
-        }
-        .when {
-          _.ILand
-        }
-        .then {
-          _.ISeeAListOfEvents
-        }
-    }
-
-    scenarioWeb("48. Member sees a Masterclass list") {
-      implicit driver =>
-        given {
-          MembershipSteps().IAmLoggedInAsAPartner
-        }
-        .when {
-          _.IGoToMasterclasses
-        }
-        .then {
-          _.ISeeAListOfEvents
-        }
-    }
-  }
+//  feature("User sees a list of events") {
+//
+//    scenarioWeb("47. Visitor sees a Masterclass list") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IGoToMasterclasses
+//        }
+//        .when {
+//          _.ILand
+//        }
+//        .then {
+//          _.ISeeAListOfEvents
+//        }
+//    }
+//
+//    scenarioWeb("48. Member sees a Masterclass list") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IAmLoggedInAsAPartner
+//        }
+//        .when {
+//          _.IGoToMasterclasses
+//        }
+//        .then {
+//          _.ISeeAListOfEvents
+//        }
+//    }
+//  }
 
   feature("Masterclass event details") {
 
@@ -42,25 +42,42 @@ class MasterclassTests extends BaseMembershipTest {
           MembershipSteps().IGoToMasterclasses
         }
         .when {
-          _.IClickOnAnEvent
+          _.IClickTheFirstEvent
         }
         .then {
           _.ISeeTheEventDetails
         }
     }
 
-    scenarioWeb("50. Member sees the details for a Masterclass") {
-      implicit driver =>
-        given {
-          MembershipSteps().IAmLoggedInAsAPatron
-        }
-        .when {
-         _.IGoToMasterclasses
-         .IClickOnAnEvent
-        }
-        .then {
-          _.ISeeTheEventDetails
-        }
-    }
+//    scenarioWeb("50. Member sees the details for a Masterclass") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IAmLoggedInAsAPatron
+//        }
+//        .when {
+//         _.IGoToMasterclasses
+//         .IClickTheFirstEvent
+//        }
+//        .then {
+//          _.ISeeTheEventDetails
+//        }
+//    }
   }
+
+//  feature("A user can search Masterclasses") {
+//
+//    scenarioWeb("51. A non-member can search Masterclasses") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IAmNotLoggedIn
+//        }
+//        .when {
+//          MembershipSteps().IGoToMasterclasses
+//          _.ISearchFor("food")
+//        }
+//        .then {
+//          _.SearchResultsMatch("food")
+//        }
+//    }
+//  }
 }
