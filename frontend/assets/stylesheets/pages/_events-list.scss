@@ -7,14 +7,10 @@
 .event-block {
     position: relative;
     background-color: $white;
-    padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: rem($gs-baseline) 0 rem($gs-baseline * 2);
-    }
-
-    @include mq(desktop) {
-        padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline * 2);
+        padding: rem($gs-gutter);
     }
 
     .theme--guardian-live & {
@@ -23,7 +19,6 @@
 
     .theme--masterclass & {
         border-bottom: rem(1px) solid $mem-mc-accent;
-        padding-bottom: 0;
     }
 
     &:last-child {
@@ -73,14 +68,16 @@
 // only visible when no filter results are found
 .events-list--empty:before {
     content: 'No matching events';
-    margin: 0 0 2rem;
     display: block;
 }
 
 .events-list__filter {
-    margin-bottom: rem(20px);
-    padding: rem(5px) rem(1px);
-    color: $c-neutral2;
+    padding: rem($gs-gutter / 2) rem($gs-gutter);
+    border: 1px solid $c-neutral3;
+    border-radius: 100rem;
+    outline: 0;
+
+    @include fs-textSans(2);
 }
 
 .events-list__item {
