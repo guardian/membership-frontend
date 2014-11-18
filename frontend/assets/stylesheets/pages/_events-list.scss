@@ -7,7 +7,6 @@
 .event-block {
     position: relative;
     background-color: $white;
-    border-bottom: rem(1px) solid $mem-live-accent;
     padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
 
     @include mq(tablet) {
@@ -18,12 +17,17 @@
         padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline * 2);
     }
 
-    &:last-child {
-        border-bottom: 0;
+    .theme--guardian-live & {
+        border-bottom: rem(1px) solid $mem-live-accent;
     }
 
     .theme--masterclass & {
+        border-bottom: rem(1px) solid $mem-mc-accent;
         padding-bottom: 0;
+    }
+
+    &:last-child {
+        border-bottom: 0;
     }
 }
 
