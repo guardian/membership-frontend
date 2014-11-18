@@ -76,6 +76,15 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def ISeeTheMasterclassDetails = {
+    val page = new MasterClassDetailPage(driver)
+    Assert.assertNotEmpty(page.getEventDescription)
+    Assert.assertNotEmpty(page.getEventLocation)
+    Assert.assertNotEmpty(page.getEventPrice)
+    Assert.assertNotEmpty(page.getEventTime)
+    this
+  }
+
   def TheDetailsAreTheSameAsOnTheEventProvider = {
     val page = new EventPage(driver)
     val eventName = page.getEventName
@@ -429,6 +438,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def SearchResultsMatch(keyword: String) = {
+    println("keyword: " + keyword + " string: " + new MasterclassListPage(driver).getEventTitleByIndex(0))
     val found = new MasterclassListPage(driver).getEventTitleByIndex(0).contains(keyword)
     Assert.assert(found, true, "First result should contain keyword")
   }
