@@ -51,12 +51,6 @@ object Functions {
       }
     }
 
-  val oauthActions = new googleauth.Actions {
-    override def authConfig = Config.googleAuthConfig
-
-    override def loginTarget: Call = routes.OAuth.login()
-  }
-
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       Timing.record(cloudWatch, metricName) {

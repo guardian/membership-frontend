@@ -48,6 +48,10 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
+  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
+    Ok(views.html.joiner.staff())
+  }
+
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
@@ -68,11 +72,6 @@ trait Joiner extends Controller {
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
-    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
-  }
-
-  def joinStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }

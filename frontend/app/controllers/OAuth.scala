@@ -1,5 +1,6 @@
 package controllers
 
+import actions.OAuthActions
 import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
 import com.gu.googleauth.{GoogleAuth, UserIdentity}
 import configuration.Config
@@ -11,10 +12,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-object OAuth extends Controller {
+object OAuth extends Controller with OAuthActions {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
 
-  def login = Action { request =>
+  //TODO we shouldn't need this? We could redirect errors to somewhere else
+  def login = NoCacheAction { request =>
     val error = request.flash.get("error")
     Ok(views.html.staff.oauth(error))
   }
@@ -22,7 +24,7 @@ object OAuth extends Controller {
   /*
    * Redirect to Google with anti forgery token (that we keep in session storage - note that flashing is NOT secure)
    */
-  def loginAction = NoCacheAction.async { implicit request =>
+  def loginAction = Action.async { implicit request =>
     val antiForgeryToken = GoogleAuth.generateAntiForgeryToken()
     GoogleAuth.redirectToGoogle(Config.googleAuthConfig, antiForgeryToken).map {
       _.withSession { request.session + (ANTI_FORGERY_KEY -> antiForgeryToken) }
@@ -35,7 +37,7 @@ object OAuth extends Controller {
   will return a Future[UserIdentity] if the authentication is successful. If unsuccessful then the Future will fail.
 
    */
-  def oauth2Callback = NoCacheAction.async { implicit request =>
+  def oauth2Callback = Action.async { implicit request =>
     val session = request.session
     session.get(ANTI_FORGERY_KEY) match {
       case None =>
