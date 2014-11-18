@@ -1,0 +1,14 @@
+@(errorOpt: Option[String] = None)
+
+@main("Staff login") {
+
+@for(error <- errorOpt) {
+<p>Error: @error</p>
+}
+
+<p>Click the button below to login as Guardian staff.</p>
+<form action="@routes.OAuth.loginAction()" method="get">
+    <input value="Log In" type="submit">
+</form>
+
+}
