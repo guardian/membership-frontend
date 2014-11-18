@@ -123,6 +123,7 @@ object Eventbrite {
     val event: EBEvent
     val imgUrl: String
     val socialImgUrl: String
+    val tags: Seq[String]
 
     val maxDiscounts: Int
     val allowDiscountCodes: Boolean
@@ -144,6 +145,8 @@ object Eventbrite {
       Config.eventImageUrlPath(event.id) + "/" + largestWidth + "-" + largestRatio + "x.jpg"
     }
 
+    val tags = Nil
+
     val maxDiscounts = 2
     val allowDiscountCodes = true
   }
@@ -154,15 +157,20 @@ object Eventbrite {
       .replace("http://static", "https://static-secure")
     val socialImgUrl = imgUrl
 
+    val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
+
     val maxDiscounts = 1
     val allowDiscountCodes = false
-
-    val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
   }
 
   object MasterclassEvent {
+    val topLevelTags = Seq("Writing", "Publishing", "Journalism", "Business", "Digital", "Culture", "Food and drink", "Media")
+
+    def encodeTag(tag: String) = tag.toLowerCase.replace(" ", "-")
+    def decodeTag(tag: String) = tag.replace("-", " ")
+
     def extractTags(s: String): Option[Seq[String]] =
-      "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim))
+      "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
   }
 }
 

@@ -38,6 +38,7 @@ class EventbriteServiceTest extends PlaySpecification {
     val socialImgUrl = ""
     val maxDiscounts = 2
     val allowDiscountCodes = true
+    val tags = Nil
   }
 
 
