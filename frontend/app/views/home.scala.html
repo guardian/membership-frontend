@@ -1,0 +1,56 @@
+@()(implicit token: play.filters.csrf.CSRF.Token)
+
+@import org.joda.time.DateTime
+@import views.support.Dates
+@import views.support.Asset
+
+@slideShowElement(position: Int, imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
+    <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
+        <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <figcaption class="slide-show-detail">
+            <div class="progress-indicator">
+                <span class="progress-indicator__index">@position</span>
+                <span class="progress-indicator__separator">/</span>
+                <span class="progress-indicator__count">6</span>
+            </div>
+            <div class="slide-show-detail__secondary">
+                <h2 class="slide-show-detail__description">@description <time>@Dates.prettyDateAndDayName(time)</time></h2>
+            </div>
+        </figcaption>
+    </figure>
+}
+
+@promoElement(imgSrc: String, description: String, anchorHref: String, fileType: String = "jpg") = {
+    <li class="home-promo">
+        <a class="home-promo-cta" href="@anchorHref">
+            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
+            <h3 class="home-promo__description">@description</h3>
+        </a>
+    </li>
+}
+
+@main("Home Page a-b", containerPadding=false, noIndex=true) {
+    <section class="u-cf">
+        <div class="slide-show">
+            @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood", new DateTime(2014, 10, 15, 0, 0), "six")
+            @slideShowElement(5, "tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah", new DateTime(2014, 10, 12, 0, 0), "five")
+            @slideShowElement(4, "women_", "Guardian Live event: David Mitchell", new DateTime(2014, 11, 12, 0, 0), "four")
+            @slideShowElement(3, "jim_page_", "A life in music: Jimmy Page", new DateTime(2014, 10, 15, 0, 0), "three")
+            @slideShowElement(2, "pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience", new DateTime(2014, 11, 17, 0, 0), "two")
+            @slideShowElement(1, "man_aud_", "Guardian Live with Russell Brand", new DateTime(2014, 10, 23, 0, 0), "one", true)
+        </div>
+        <div class="home-hero-description-container">
+                <h1 class="home-hero-description">We believe real, face-to-face discussions have a unique power to broaden minds. <span class="home-hero-description-highlight">We're bringing the Guardian to life.</span></h1>
+            <a class="action action--no-bottom-margin" href="/join">Join today</a>
+        </div>
+    </section>
+
+    <section class="home-promo-list-container">
+        <ul class="home-promo-list u-unstyled">
+            @promoElement("whats_included_", "Discover what's included with Guardian Membership", "/about", "png")
+            @promoElement("events_", "Browse our events catalogue and book your tickets now", "/events")
+            @promoElement("compare_tiers_", "Compare the three tiers of Guardian Membership", "/join", "png")
+            @promoElement("become_patron_", "Join as a Patron today and support the Guardian's mission of promoting the open exchange of ideas", "/patrons")
+        </ul>
+    </section>
+}

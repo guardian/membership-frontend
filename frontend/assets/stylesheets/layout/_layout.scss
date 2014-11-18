@@ -105,23 +105,6 @@ body {
         max-width: gs-span(14)+($gs-gutter*2);
     }
 
-    h2 {
-        @include fs-header(2);
-
-        @include mq(tablet) {
-            @include fs-header(3, true);
-        }
-    }
-
-    h3 {
-        margin: 0;
-        @include fs-bodyHeading(2);
-
-        @include mq(tablet) {
-            @include fs-bodyHeading(3, true);
-        }
-    }
-
     &.page-container--with-padding {
         background-color: $white;
         @include mq(tablet) {

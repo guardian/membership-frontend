@@ -334,19 +334,22 @@ define([
      * @param element
      */
     Form.prototype.length = function (element) {
-        var args = JSON.parse(element.getAttribute('data-arguments'));
-        args.unshift(element);
+        try {
+            var args = JSON.parse(element.getAttribute('data-arguments'));
+            //add element into arguments array
+            args.unshift(element);
 
-        bean.on(element, 'blur', function () {
-            var validationResult = self.lengthValidator.apply(this, args);
-            self.manageErrors(validationResult);
-        });
+            bean.on(element, 'blur', function () {
+                var validationResult = self.lengthValidator.apply(this, args);
+                self.manageErrors(validationResult);
+            });
 
-        self.validationProfiles.push({
-            elem: element,
-            args: element.getAttribute('data-arguments'),
-            validator: 'lengthValidator'
-        });
+            self.validationProfiles.push({
+                elem: element,
+                args: element.getAttribute('data-arguments'),
+                validator: 'lengthValidator'
+            });
+        } catch (e){}
     };
 
     /**
