@@ -1,15 +1,14 @@
 .home-hero-description-container {
-    padding-top: rem(20px);
+    padding-top: rem(40px);
     z-index: 100;
     background-color: $white;
 
     @include mq(tablet) {
-        padding-left: rem(20px);
-        padding-right: rem(20px);
-        width: 50%;
+        padding: rem(20px) rem(20px) 0;
+        width: 51%;
         float: right;
         position: relative;
-        margin-top: rem(-155px);
+        margin-top: rem(-108px);
     }
 }
 
@@ -50,6 +49,7 @@
 }
 
 .slide-show-detail {
+    position: absolute;
     padding-top: rem(15px);
     width: 100%;
     background-color: $white;
@@ -63,17 +63,12 @@
 .slide-show-detail__description {
     @include fs-textSans(1);
     color: $c-neutral2;
-}
-
-.slide-show-detail__time {
-    @extend .slide-show-detail__description;
-    display: block;
+    font-weight: normal;
 }
 
 .slide-show-detail__secondary {
     vertical-align: top;
     margin-left: rem(40px);
-    padding-bottom: rem(40px);
 }
 
 .progress-indicator {
@@ -81,16 +76,20 @@
     float: left;
 }
 
+.progress-indicator__separator,
 .progress-indicator__index {
-    color: $c-neutral3;
+    color: $c-neutral2;
     @include fs-textSans(1);
+}
+
+.progress-indicator__index {
     width: rem(2rem);
     text-align: right;
     display: inline-block;
 }
-.progress-indicator__separator,
+
 .progress-indicator__count {
-    color: $c-neutral2;
+    color: $c-neutral3;
     @include fs-textSans(1);
 }
 
@@ -107,7 +106,7 @@
     margin: rem(20px) 0;
 
     @include mq(tablet) {
-        margin: rem(38px) 0 rem(64px);
+        margin: rem(40px) 0 rem(64px);
     }
 }
 
