@@ -15,7 +15,6 @@ import scala.concurrent.Future
 object OAuth extends Controller with OAuthActions {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
 
-  //TODO we shouldn't need this? We could redirect errors to somewhere else
   def login = NoCacheAction { request =>
     val error = request.flash.get("error")
     Ok(views.html.staff.oauth(error))
