@@ -17,13 +17,20 @@ GET            /healthcheck                       controllers.Healthcheck.health
 
 # Join
 GET            /join                              controllers.Joiner.tierList
+GET            /join/staff                        controllers.Joiner.staff
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST           /join/friend/enter-details         controllers.Joiner.joinFriend
 POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(tier: Tier.Value)
 GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
 GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
+# Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
+
+# Staff signin (note, done by OAuth, in addition to regular signin)
+GET            /staff/login                       controllers.OAuth.login
+GET            /staff/loginAction                 controllers.OAuth.loginAction
+GET            /oauth2callback                    controllers.OAuth.oauth2Callback
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
 

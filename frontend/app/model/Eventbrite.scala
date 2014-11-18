@@ -156,6 +156,13 @@ object Eventbrite {
 
     val maxDiscounts = 1
     val allowDiscountCodes = false
+
+    val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
+  }
+
+  object MasterclassEvent {
+    def extractTags(s: String): Option[Seq[String]] =
+      "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim))
   }
 }
 

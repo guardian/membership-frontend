@@ -1,8 +1,9 @@
 package actions
 
 import actions.Functions._
+import com.gu.googleauth
 import configuration.Config
-import controllers.{Cached, NoCache}
+import controllers.{routes, Cached, NoCache}
 import play.api.http.HeaderNames._
 import play.api.mvc.ActionBuilder
 import play.api.mvc.Results._
@@ -20,6 +21,8 @@ trait CommonActions {
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 
+  val AuthenticatedStaffNonMemberAction = NoCacheAction andThen OAuthActions.AuthAction
+
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
@@ -32,3 +35,12 @@ trait CommonActions {
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
 }
+
+
+trait OAuthActions extends googleauth.Actions {
+  val authConfig = Config.googleAuthConfig
+
+  val loginTarget = routes.OAuth.loginAction()
+}
+
+object OAuthActions extends OAuthActions

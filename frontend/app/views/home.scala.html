@@ -6,7 +6,7 @@
 
 @slideShowElement(position: Int, imgSrc: String, description: String, time: DateTime, imageClass: String, hasDocumentFlow: Boolean = false) = {
     <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
-        <div class="delayed-home-image-load" data-src="@Asset.at("images/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <div class="delayed-home-image-load" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
         <figcaption class="slide-show-detail">
             <div class="progress-indicator">
                 <span class="progress-indicator__index">@position</span>
@@ -23,7 +23,7 @@
 @promoElement(imgSrc: String, description: String, anchorHref: String, fileType: String = "jpg") = {
     <li class="home-promo">
         <a class="home-promo-cta" href="@anchorHref">
-            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
+            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/noAssetHash/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
             <h3 class="home-promo__description">@description</h3>
         </a>
     </li>

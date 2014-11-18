@@ -48,6 +48,10 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
+  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
+    Ok(views.html.joiner.staff())
+  }
+
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
