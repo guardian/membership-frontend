@@ -3,7 +3,8 @@
     isBrochure: Boolean = false,
     containerPadding: Boolean = true,
     htmlClass: String = "",
-    pageInfo: model.PageInfo = model.PageInfo.default
+    pageInfo: model.PageInfo = model.PageInfo.default,
+    noIndex: Boolean = false
 )(content: Html)
 
 @import configuration.Config
@@ -23,6 +24,11 @@
         <meta http-equiv="imagetoolbar"             content="no"/>
         <meta name="Rating"                         content="general"/>
         <meta name="Distribution"                   content="Global"/>
+
+        @* TODO remove this when/if the a-b homepage is added or removed *@
+    @if(noIndex == true){
+        <meta name="robots" content="noindex">
+    }
 
         <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
         <meta property="og:description" content="@pageInfo.description"/>
