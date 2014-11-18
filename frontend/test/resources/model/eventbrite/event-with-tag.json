@@ -1,0 +1,216 @@
+{
+    "resource_uri": "https://www.eventbriteapi.com/v3/events/11914826567/",
+    "category_id": "117",
+    "organizer_id": "684756979",
+    "online_event": false,
+    "invite_only": false,
+    "shareable": true,
+    "venue": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/venues/4226851/",
+        "id": "4226851",
+        "latitude": "51.5349086",
+        "address": {
+            "latitude": "51.5349086",
+            "address_2": "90 York Way",
+            "address_1": "Kings Place",
+            "postal_code": "N1 9GU",
+            "longitude": "-0.1216933",
+            "region": null,
+            "country": "GB",
+            "city": "London"
+        },
+        "longitude": "-0.1216933",
+        "name": "The Guardian"
+    },
+    "changed": "2014-11-17T13:38:49Z",
+    "url": "http://www.eventbrite.co.uk/e/how-to-write-for-children-tickets-11914826567",
+    "created": "2014-06-10T10:47:32Z",
+    "name": {
+        "html": "How to write for children",
+        "text": "How to write for children"
+    },
+    "format_id": "9",
+    "capacity": 16,
+    "ticket_classes": [
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/11914826567/ticket_classes/26366427/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 7,
+            "name": "How to write for children",
+            "include_fee": true,
+            "actual_fee": {
+                "value": 1288,
+                "display": "£12.88",
+                "currency": "GBP"
+            },
+            "event_id": "11914826567",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "26366427",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 21900,
+                "display": "£219.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 16,
+            "hidden": true,
+            "actual_cost": {
+                "value": 20612,
+                "display": "£206.12",
+                "currency": "GBP"
+            },
+            "sales_start": "2014-06-10T11:00:00Z",
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-22T09:30:00Z",
+            "variants": []
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/11914826567/ticket_classes/28880277/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 8,
+            "name": "How to write for children",
+            "actual_fee": {
+                "value": 1455,
+                "display": "£14.55",
+                "currency": "GBP"
+            },
+            "event_id": "11914826567",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28880277",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 24900,
+                "display": "£249.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 8,
+            "hidden": false,
+            "actual_cost": {
+                "value": 23445,
+                "display": "£234.45",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-22T09:00:00Z",
+            "variants": [],
+            "include_fee": true
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/11914826567/ticket_classes/31124439/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 0,
+            "name": "Guardian Members How to write for children",
+            "actual_fee": {
+                "value": 1177,
+                "display": "£11.77",
+                "currency": "GBP"
+            },
+            "event_id": "11914826567",
+            "fee": {
+                "value": 1177,
+                "display": "£11.77",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "31124439",
+            "maximum_quantity": null,
+            "cost": {
+                "value": 19920,
+                "display": "£199.20",
+                "currency": "GBP"
+            },
+            "quantity_total": 2,
+            "hidden": true,
+            "actual_cost": {
+                "value": 19920,
+                "display": "£199.20",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-22T09:00:00Z",
+            "variants": [],
+            "include_fee": false
+        }
+    ],
+    "venue_id": "4226851",
+    "category": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/categories/117/",
+        "id": "117",
+        "name_localized": "Home & Lifestyle",
+        "short_name": "Home & Lifestyle",
+        "name": "Home & Lifestyle",
+        "short_name_localized": "Home & Lifestyle"
+    },
+    "id": "11914826567",
+    "organizer": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/organizers/684756979/",
+        "id": "684756979",
+        "logo": {
+            "id": "8916563",
+            "url": "http://cdn.evbuc.com/images/8916563/7266571413/2/logo.png"
+        },
+        "num_past_events": 685,
+        "num_future_events": 117,
+        "description": {
+            "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.</P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.</P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.</P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.</P>\r\n</DIV>",
+            "text": "\r\nWelcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n"
+        },
+        "url": "http://www.eventbrite.com/o/guardian-masterclasses-684756979",
+        "name": "Guardian Masterclasses"
+    },
+    "logo": {
+        "id": "8917071",
+        "url": "http://cdn.evbuc.com/images/8917071/7266571413/1/logo.png"
+    },
+    "currency": "GBP",
+    "subcategory_id": null,
+    "subcategory": null,
+    "end": {
+        "timezone": "Europe/London",
+        "local": "2014-11-22T17:00:00",
+        "utc": "2014-11-22T17:00:00Z"
+    },
+    "start": {
+        "timezone": "Europe/London",
+        "local": "2014-11-22T10:00:00",
+        "utc": "2014-11-22T10:00:00Z"
+    },
+    "listed": true,
+    "logo_url": "http://cdn.evbuc.com/images/8917071/7266571413/1/logo.png",
+    "status": "live",
+    "description": {
+        "html": "<P><STRONG><SPAN STYLE=\"line-height: 1.6em;\">How to write stories to fascinate and entertain the toughest audience in literature</SPAN></STRONG></P>\r\n<P><SPAN STYLE=\"line-height: 1.6em;\">Have you ever dreamed of writing books for children? From planning an entertaining plot to creating a credible child voice, this one-day workshop will teach you the skills essential to keeping a young audience enthralled by your storytelling. Bestselling children's author Lucy Coats will reveal the archetypes of children's fiction and how to turn them into engaging tales relevant to modern young people. The workshop will also include practical writing sessions and work shopping of participants' compositions.</SPAN></P>\r\n<P>The aim of the masterclass is for all participants to go away equipped with a wider knowledge of what writing children's (aged 7-12) books is all about, some practical new writing skills (as well as new work and ideas of their own) and a sense of achievement, purpose and determination to succeed in this excitingly vibrant writing field.</P>\r\n<H2>Tutor profiles</H2>\r\n<P><STRONG>Lucy Coats</STRONG> worked as a children's editor and bookseller before turning to full-time writing, and is the author of many titles for all ages, including the bestselling Atticus the Storyteller's 100 Greek Myths which was shortlisted for the Blue Peter Book Award. Her latest picture book, Bear's Best Friend, has just been published by Bloomsbury, and she has forthcoming 2014 titles from Nosy Crow and Grosset and Dunlap USA. Lucy lives with her husband, grown-up children and 10,000 books in Northamptonshire. She is also a regular blogger, writes for Mslexia and Publishing Talk, tweets as @lucycoats.</P>\r\n<P> </P>\r\n<P><STRONG>Candy Gourlay</STRONG> grew up in the Philippines where she worked as a freelance journalist writing for many news publications all over the world. Her first novel TALL STORY was shortlisted for thirteen prizes including the Waterstones Prize, the Branford Boase and the Blue Peter Book Award. It was nominated for the Carnegie Medal and won the Crystal Kite Prize for Europe and the National Children's Book Award in the Philippines. Candy's second novel, SHINE, was described as \"A precious and important novel\" by the Guardian, and was long-listed for the Guardian children's fiction prize. She resides in the Guardian-reading side of London. Find out more about Candy on her <A HREF=\"http://candygourlay.com\" REL=\"nofollow\">website</A>, and follow her on Twitter <A HREF=\"https://twitter.com/candygourlay\" REL=\"nofollow\">here</A>. <STRONG><EM>Please note that Candy will be a speaker on Saturday 22 November only.</EM></STRONG></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial, helvetica, sans-serif;\"><SPAN STYLE=\"color: #262626;\" LANG=\"EN-US\"><BR></SPAN></SPAN></P>\r\n<P><A HREF=\"http://www.theguardian.com/guardian-masterclasses/how-to-write-for-children-lucy-coats-writing-course\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A></P>\r\n<!-- tags:Writing,Creative writing,Genre writing -->",
+        "text": "How to write stories to fascinate and entertain the toughest audience in literature \nHave you ever dreamed of writing books for children? From planning an entertaining plot to creating a credible child voice, this one-day workshop will teach you the skills essential to keeping a young audience enthralled by your storytelling. Bestselling children's author Lucy Coats will reveal the archetypes of children's fiction and how to turn them into engaging tales relevant to modern young people. The workshop will also include practical writing sessions and work shopping of participants' compositions. \nThe aim of the masterclass is for all participants to go away equipped with a wider knowledge of what writing children's (aged 7-12) books is all about, some practical new writing skills (as well as new work and ideas of their own) and a sense of achievement, purpose and determination to succeed in this excitingly vibrant writing field. \nTutor profiles \nLucy Coats worked as a children's editor and bookseller before turning to full-time writing, and is the author of many titles for all ages, including the bestselling Atticus the Storyteller's 100 Greek Myths which was shortlisted for the Blue Peter Book Award. Her latest picture book, Bear's Best Friend, has just been published by Bloomsbury, and she has forthcoming 2014 titles from Nosy Crow and Grosset and Dunlap USA. Lucy lives with her husband, grown-up children and 10,000 books in Northamptonshire. She is also a regular blogger, writes for Mslexia and Publishing Talk, tweets as @lucycoats. \n  \nCandy Gourlay grew up in the Philippines where she worked as a freelance journalist writing for many news publications all over the world. Her first novel TALL STORY was shortlisted for thirteen prizes including the Waterstones Prize, the Branford Boase and the Blue Peter Book Award. It was nominated for the Carnegie Medal and won the Crystal Kite Prize for Europe and the National Children's Book Award in the Philippines. Candy's second novel, SHINE, was described as \"A precious and important novel\" by the Guardian, and was long-listed for the Guardian children's fiction prize. She resides in the Guardian-reading side of London. Find out more about Candy on her website, and follow her on Twitter here. Please note that Candy will be a speaker on Saturday 22 November only. \n  \nFull course and returns information on the Masterclasses website"
+    },
+    "format": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/formats/9/",
+        "id": "9",
+        "name_localized": "Class, Training, or Workshop",
+        "short_name": "Class",
+        "name": "Class, Training, or Workshop",
+        "short_name_localized": "Class"
+    },
+    "show_remaining": false
+}
