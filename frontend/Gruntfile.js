@@ -118,9 +118,9 @@ module.exports = function (grunt) {
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true
             },
-            imagesNoCache: {
+            imagesNoAssetHash: {
                 cwd: '<%= dirs.assets.images %>',
-                src: ['**/noCache/**'],
+                src: ['**/noAssetHash/**'],
                 dest: '<%= dirs.publicDir.root %>/dist/images/',
                 expand: true
             }
@@ -184,7 +184,7 @@ module.exports = function (grunt) {
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
                             '<%= dirs.publicDir.javascripts %>/**/*.map',
                             '<%= dirs.publicDir.images %>/**/*.*',
-                            '!<%= dirs.publicDir.images %>/noCache/**/*.*'
+                            '!<%= dirs.publicDir.images %>/noAssetHash/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
                     }
@@ -310,11 +310,12 @@ module.exports = function (grunt) {
         ]);
         // only version files for prod builds
         // and wipe out unused non-versioned assets for good measure
+        // Copy noAssetHash folder to dist
         if (!isDev) {
             grunt.task.run([
                 'asset_hash',
                 'clean:public:prod',
-                'copy:imagesNoCache'
+                'copy:imagesNoAssetHash'
             ]);
         }
     });
