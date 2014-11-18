@@ -1,12 +1,9 @@
 package actions
 
 import actions.Fallbacks._
-import com.gu.googleauth
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
-import configuration.Config
-import controllers.routes
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
