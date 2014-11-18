@@ -1,0 +1,296 @@
+{
+    "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/",
+    "category_id": "102",
+    "organizer_id": "684756979",
+    "online_event": false,
+    "invite_only": false,
+    "shareable": true,
+    "venue": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/venues/4226851/",
+        "id": "4226851",
+        "latitude": "51.5349086",
+        "address": {
+            "latitude": "51.5349086",
+            "address_2": "90 York Way",
+            "address_1": "Kings Place",
+            "postal_code": "N1 9GU",
+            "longitude": "-0.1216933",
+            "region": null,
+            "country": "GB",
+            "city": "London"
+        },
+        "longitude": "-0.1216933",
+        "name": "The Guardian"
+    },
+    "changed": "2014-11-13T08:18:00Z",
+    "url": "http://www.eventbrite.co.uk/e/the-essentials-of-excel-tickets-13153667975",
+    "created": "2014-09-16T14:01:59Z",
+    "name": {
+        "html": "The essentials of Excel",
+        "text": "The essentials of Excel"
+    },
+    "format_id": "9",
+    "capacity": 64,
+    "ticket_classes": [
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/ticket_classes/28791417/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 10,
+            "name": "The essentials of Excel DISCOUNT PRICE: 4 sessions",
+            "include_fee": true,
+            "actual_fee": {
+                "value": 1872,
+                "display": "£18.72",
+                "currency": "GBP"
+            },
+            "event_id": "13153667975",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28791417",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 34900,
+                "display": "£349.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 10,
+            "hidden": false,
+            "actual_cost": {
+                "value": 33028,
+                "display": "£330.28",
+                "currency": "GBP"
+            },
+            "sales_start": "2014-09-16T08:00:00Z",
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-03T17:30:00Z",
+            "variants": []
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/ticket_classes/28794327/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 4,
+            "name": "The essentials of Excel: Session 1",
+            "actual_fee": {
+                "value": 618,
+                "display": "£6.18",
+                "currency": "GBP"
+            },
+            "event_id": "13153667975",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28794327",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 9900,
+                "display": "£99.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 6,
+            "hidden": false,
+            "actual_cost": {
+                "value": 9282,
+                "display": "£92.82",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-03T17:30:00Z",
+            "variants": [],
+            "include_fee": true
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/ticket_classes/28794329/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 4,
+            "name": "The essentials of Excel: Session 2",
+            "actual_fee": {
+                "value": 618,
+                "display": "£6.18",
+                "currency": "GBP"
+            },
+            "event_id": "13153667975",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28794329",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 9900,
+                "display": "£99.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 6,
+            "hidden": false,
+            "actual_cost": {
+                "value": 9282,
+                "display": "£92.82",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-10T17:30:00Z",
+            "variants": [],
+            "include_fee": true
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/ticket_classes/28794331/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 3,
+            "name": "The essentials of Excel: Session 3",
+            "actual_fee": {
+                "value": 618,
+                "display": "£6.18",
+                "currency": "GBP"
+            },
+            "event_id": "13153667975",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28794331",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 9900,
+                "display": "£99.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 6,
+            "hidden": false,
+            "actual_cost": {
+                "value": 9282,
+                "display": "£92.82",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-17T17:30:00Z",
+            "variants": [],
+            "include_fee": true
+        },
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13153667975/ticket_classes/28794333/",
+            "hide_description": true,
+            "minimum_quantity": 1,
+            "auto_hide": false,
+            "quantity_sold": 1,
+            "name": "The essentials of Excel: Session 4",
+            "actual_fee": {
+                "value": 618,
+                "display": "£6.18",
+                "currency": "GBP"
+            },
+            "event_id": "13153667975",
+            "fee": {
+                "value": 0,
+                "display": "£0.00",
+                "currency": "GBP"
+            },
+            "split_fee": false,
+            "id": "28794333",
+            "maximum_quantity": 3,
+            "cost": {
+                "value": 9900,
+                "display": "£99.00",
+                "currency": "GBP"
+            },
+            "quantity_total": 6,
+            "hidden": false,
+            "actual_cost": {
+                "value": 9282,
+                "display": "£92.82",
+                "currency": "GBP"
+            },
+            "description": null,
+            "free": false,
+            "donation": false,
+            "sales_end": "2014-11-24T17:30:00Z",
+            "variants": [],
+            "include_fee": true
+        }
+    ],
+    "venue_id": "4226851",
+    "category": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/categories/102/",
+        "id": "102",
+        "name_localized": "Science & Technology",
+        "short_name": "Science & Tech",
+        "name": "Science & Technology",
+        "short_name_localized": "Science & Tech"
+    },
+    "id": "13153667975",
+    "organizer": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/organizers/684756979/",
+        "id": "684756979",
+        "logo": {
+            "id": "8916563",
+            "url": "http://cdn.evbuc.com/images/8916563/7266571413/2/logo.png"
+        },
+        "num_past_events": 685,
+        "num_future_events": 117,
+        "description": {
+            "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.</P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.</P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.</P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.</P>\r\n</DIV>",
+            "text": "\r\nWelcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n"
+        },
+        "url": "http://www.eventbrite.com/o/guardian-masterclasses-684756979",
+        "name": "Guardian Masterclasses"
+    },
+    "logo": {
+        "id": "8916609",
+        "url": "http://cdn.evbuc.com/images/8916609/7266571413/1/logo.png"
+    },
+    "currency": "GBP",
+    "subcategory_id": null,
+    "subcategory": null,
+    "end": {
+        "timezone": "Europe/London",
+        "local": "2014-11-24T21:30:00",
+        "utc": "2014-11-24T21:30:00Z"
+    },
+    "start": {
+        "timezone": "Europe/London",
+        "local": "2014-11-03T18:30:00",
+        "utc": "2014-11-03T18:30:00Z"
+    },
+    "listed": true,
+    "logo_url": "http://cdn.evbuc.com/images/8916609/7266571413/1/logo.png",
+    "status": "started",
+    "description": {
+        "html": "<P><STRONG><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Get more out of Excel than you ever thought possible </SPAN></STRONG></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Excel isn't just for arranging data – it gives skilled users the tools to interrogate it as well, to find valuable new insights. So it's little surprise that Excel power users can earn more money, and qualify for more jobs than those with a lesser command of the application. But advanced Excel skills don't just look good on a CV – as this course demonstrates, they empower users with real-world skills for work, home and study. For this transformative series of evening seminars, expert Excel tutor <STRONG>Abbott Katz</STRONG> has designed four capsule masterclasses, each of which unlocks a new element of the software's most powerful, and least known, functions.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Session one, on how to use pivot tables, enables users to access myriad ways to analyse figures to spot and quantify trends. Knowledge of Excel's formulas and functions opens up new ways to organise and interpret data during session two. During session three, you'll learn how Excel's exceptional visual enhancements are not just for appearance's sake. Finally, session four, on grabbing and grooming the numbers, unlocks a suite of technical abilities, allowing you to easily import and format data from other applications, and ensure your spreadsheets are as elegant as they are foolproof.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Each course is bookable as an individual session, or you can book onto all four session for the discount price of £349<BR></STRONG></SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This course is for you if...</SPAN></H2>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You currently use Excel for work or study and want to improve your performance, or find elegant solutions to current problems</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You work with data and want to make better use of it</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You want to learn valuable new skills to improve your CV</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">PLEASE NOTE: Attendees should be comfortable with Excel's basic functions</SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Course description</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">These four lively seminars explain Excel's advanced functions in easy-to-follow language. Each session is conceived as a standalone primer in a single area of expertise, but combine to give a comprehensive overview of Excel's most useful tools. See below for further details of each session.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Session 1. Pivot tables (Monday 3 November)</STRONG></SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">What they do, and why you'll want to use them</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Constructing the table: the three got-to-knows</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Resetting the table: moving fields around, introducing new ones, dumping unwanted ones</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Grouping the numbers</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Filtering data with the Slicer</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Session 2. Formula and function writing (Monday 10 November)</STRONG></SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Beyond SUM: IF, VLOOKUP and INDEX</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Character building: formulas and text data</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Mixing and matching: nesting functions in formulas</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">An introduction to array formulas</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Session3: Visual enhancements (Monday 17 November) </STRONG></SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Charting 101</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Conditional formats: adding visual value to the values</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Sparklines: mini-charts that give you the big picture</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">The camera tool: screenshots of data – that change when the data do.</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Session 4: Grabbing and grooming the numbers (Monday 24 November)</STRONG></SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">The text to columns feature: moving from the alphas to the numerics</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Removing duplicates: paring redundant pairs of data</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Data validation: pre-emptive strikes against data entry errors</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Spreadsheet forensics: faulty data design – and what to do about it</SPAN></LI>\r\n</UL>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Tutor profile</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Abbott Katz</STRONG> has introduced Excel to thousands of learners, both in the classroom and via his two books on the application – Beginning Microsoft Excel and ExcelMade Simple – and blog, <A HREF=\"http://spreadsheetjournalism.com/\" REL=\"nofollow\">Spreadsheet Journalism</A>. He has previously taught Excel at City Lit, the London College for Media and Journalism and the National Council for the Training of Journalists, among others.</SPAN></P>\r\n<P><A HREF=\"http://www.theguardian.com/guardian-masterclasses/the-essentials-of-excel-abbott-katz-digital-course\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A></P>",
+        "text": "Get more out of Excel than you ever thought possible  \nExcel isn't just for arranging data – it gives skilled users the tools to interrogate it as well, to find valuable new insights. So it's little surprise that Excel power users can earn more money, and qualify for more jobs than those with a lesser command of the application. But advanced Excel skills don't just look good on a CV – as this course demonstrates, they empower users with real-world skills for work, home and study. For this transformative series of evening seminars, expert Excel tutor Abbott Katz has designed four capsule masterclasses, each of which unlocks a new element of the software's most powerful, and least known, functions. \nSession one, on how to use pivot tables, enables users to access myriad ways to analyse figures to spot and quantify trends. Knowledge of Excel's formulas and functions opens up new ways to organise and interpret data during session two. During session three, you'll learn how Excel's exceptional visual enhancements are not just for appearance's sake. Finally, session four, on grabbing and grooming the numbers, unlocks a suite of technical abilities, allowing you to easily import and format data from other applications, and ensure your spreadsheets are as elegant as they are foolproof. \nEach course is bookable as an individual session, or you can book onto all four session for the discount price of £349  \nThis course is for you if... \n\nYou currently use Excel for work or study and want to improve your performance, or find elegant solutions to current problems\nYou work with data and want to make better use of it\nYou want to learn valuable new skills to improve your CV\n\nPLEASE NOTE: Attendees should be comfortable with Excel's basic functions \nCourse description \nThese four lively seminars explain Excel's advanced functions in easy-to-follow language. Each session is conceived as a standalone primer in a single area of expertise, but combine to give a comprehensive overview of Excel's most useful tools. See below for further details of each session. \nSession 1. Pivot tables (Monday 3 November) \n\nWhat they do, and why you'll want to use them\nConstructing the table: the three got-to-knows\nResetting the table: moving fields around, introducing new ones, dumping unwanted ones\nGrouping the numbers\nFiltering data with the Slicer\n\nSession 2. Formula and function writing (Monday 10 November) \n\nBeyond SUM: IF, VLOOKUP and INDEX\nCharacter building: formulas and text data\nMixing and matching: nesting functions in formulas\nAn introduction to array formulas\n\nSession3: Visual enhancements (Monday 17 November)  \n\nCharting 101\nConditional formats: adding visual value to the values\nSparklines: mini-charts that give you the big picture\nThe camera tool: screenshots of data – that change when the data do.\n\nSession 4: Grabbing and grooming the numbers (Monday 24 November) \n\nThe text to columns feature: moving from the alphas to the numerics\nRemoving duplicates: paring redundant pairs of data\nData validation: pre-emptive strikes against data entry errors\nSpreadsheet forensics: faulty data design – and what to do about it\n\nTutor profile \nAbbott Katz has introduced Excel to thousands of learners, both in the classroom and via his two books on the application – Beginning Microsoft Excel and ExcelMade Simple – and blog, Spreadsheet Journalism. He has previously taught Excel at City Lit, the London College for Media and Journalism and the National Council for the Training of Journalists, among others. \nFull course and returns information on the Masterclasses website"
+    },
+    "format": {
+        "resource_uri": "https://www.eventbriteapi.com/v3/formats/9/",
+        "id": "9",
+        "name_localized": "Class, Training, or Workshop",
+        "short_name": "Class",
+        "name": "Class, Training, or Workshop",
+        "short_name_localized": "Class"
+    },
+    "show_remaining": false
+}
