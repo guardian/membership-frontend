@@ -29,7 +29,7 @@ class MasterclassEventTest extends Specification {
       MasterclassEvent.extractTags("<!--tags: a,b  ,c  ,d-->") mustEqual Some(Seq("a", "b", "c", "d"))
     }
     "match tags with white space" in {
-      MasterclassEvent.extractTags("<!-- tags: Copy writing, Data visualisation, Food -->") mustEqual Some(Seq("Copy writing", "Data visualisation", "Food"))
+      MasterclassEvent.extractTags("<!-- tags: Copy writing, Data visualisation, Food -->") mustEqual Some(Seq("copy writing", "data visualisation", "food"))
     }
   }
 
@@ -38,7 +38,7 @@ class MasterclassEventTest extends Specification {
       val event = Resource.getJson("model/eventbrite/event-with-tag.json").as[EBEvent]
       val mcEvent = MasterclassEvent(event, None)
 
-      mcEvent.tags mustEqual Seq("Writing", "Creative writing", "Genre writing")
+      mcEvent.tags mustEqual Seq("writing", "creative writing", "genre writing")
     }
 
     "return an empty list when tags are not present" in {

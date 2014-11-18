@@ -56,7 +56,6 @@
         &:focus,
         &:active {
             text-decoration: underline;
-            color: $white;
         }
 
         @include mq(desktop) {
@@ -69,7 +68,6 @@
             &:focus,
             &:hover {
                 text-decoration: underline;
-                color: $white;
             }
         }
     }
@@ -80,7 +78,6 @@
 
     .navigation__scroll {
         width: rem(580px);
-        margin: 0 rem($gs-gutter / 2);
 
         @include mq(tablet) {
             width: 100%;
@@ -92,13 +89,11 @@
    Nav Modifiers
    ========================================================================== */
 
-.nav--global--header {
+.nav--global--header,
+.nav--global--masterclasses {
     overflow: hidden;
     overflow-x: scroll;
-    background-color: darken($mem-blue, 10%);
     height: $header-margin;
-    @include side-margins-calc('padding-left');
-    @include side-margins-calc('padding-right');
     padding-top: rem(3px);
     padding-bottom: 0;
     -webkit-overflow-scrolling: touch;
@@ -109,6 +104,25 @@
 
     @include mq(tablet) {
         overflow-x: hidden;
+    }
+}
+
+.nav--global--header {
+    background-color: darken($mem-blue, 10%);
+    @include side-margins-calc('padding-left');
+    @include side-margins-calc('padding-right');
+}
+
+.nav--global--masterclasses {
+    background-color: $mem-mc-accent;
+    padding-left: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding-left: rem(gs-span(2) + $gs-gutter * 2);
     }
 }
 
