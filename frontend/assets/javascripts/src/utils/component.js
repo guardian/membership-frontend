@@ -11,16 +11,20 @@ define(['bean','qwery'], function(bean, qwery) {
     Component.prototype.classes = null;
 
     /**
-     * TODO: this should support NodeLists
      * @param {string} elemName this corresponds to this.classes
      */
     Component.prototype.getElem = function(elemName) {
         if (this.elems[elemName]) { return this.elems[elemName]; }
 
-        var elem = qwery(this.getClass(elemName), this.elem)[0];
-        this.elems[elemName] = elem;
+        var elem = qwery(this.getClass(elemName), this.elem);
+        var element;
 
-        return elem;
+        if (elem.length) {
+            element = (elem.length === 1) ? elem[0] : elem;
+            this.elems[elemName] = element;
+        }
+
+        return element;
     };
 
     /**
