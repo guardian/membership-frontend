@@ -93,6 +93,11 @@ $filter-icon-size: 18px;
     outline: 0;
 
     @include fs-textSans(2);
+
+    width: 100%;
+    @include mq(tablet) {
+        width: rem(300px);
+    }
 }
 
 .events-list__filter__icon {
