@@ -40,8 +40,17 @@
     @include fs-header(4);
 }
 
-.event-block__header__subtitle {
+.event-block__header__count {
     @include fs-headline(2);
+
+    .theme--masterclass &:after {
+        content: ' courses';
+    }
+
+    // We don't have enough events to show this at the moment!
+    .theme--guardian-live & {
+        display: none;
+    }
 }
 
 .event-block__events {
