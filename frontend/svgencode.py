@@ -1,11 +1,13 @@
 import sys, os, base64
 import xml.etree.ElementTree as ET
 
+prefix = sys.argv[1]
+
 for fn in sys.stdin:
     fn = fn.strip() # strip trailing line break
 
     name, _ = os.path.splitext(os.path.basename(fn))
-    rule_name = 'icon-sprite-%s' % name
+    rule_name = '%s-%s' % (prefix, name)
 
     etree = ET.parse(fn).getroot()
     width = etree.attrib['width']
