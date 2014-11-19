@@ -62,6 +62,12 @@
     }
 }
 
+.event-block__events--no-header {
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+
 
 /* ==========================================================================
    Event item - default
