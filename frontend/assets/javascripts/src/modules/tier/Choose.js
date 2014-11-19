@@ -10,16 +10,17 @@ define([
     component.define(Choose);
 
     Choose.prototype.classes = {
-        TICKETS_SELECT_FORM: 'js-select-tier',
+        BENEFIT_CONTAINER: 'js-benefit-container',
         BENEFIT_HEADER: 'js-benefit-header',
         BENEFIT_BUTTON: 'js-benefit-button',
         TOGGLE_ICON: 'js-toggle-icon'
     };
 
     Choose.prototype.init = function () {
-        this.elem = this.getElem('TICKETS_SELECT_FORM');
+        this.elem = this.getElem('BENEFIT_CONTAINER');
+
         if (this.elem) {
-            $(this.getClass('BENEFIT_HEADER')).each(function (benefitHeader) {
+            $(this.getElem('BENEFIT_HEADER')).each(function (benefitHeader) {
                 this.addClickEvent(benefitHeader);
             }, this);
         }
