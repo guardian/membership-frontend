@@ -58,7 +58,20 @@ class EBEventTest extends PlaySpecification {
   "description" should {
     "not contain a link back to masterclasses if it exists" in {
       val event = Resource.getJson("model/eventbrite/event-with-link.json").as[EBEvent]
-      event.description.get.cleanHtml must not contain "Full course and returns information on the Masterclasses website"
+      val link = "<A HREF=\"http://www.theguardian.com/guardian-masterclasses/data-visualisation\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A>"
+
+      event.description.get.html must contain(link)
+      event.description.get.cleanHtml must not contain link
+    }
+
+    "not strip other URLs" in {
+      val desc = EBRichText("", "This is some text, go <a href=\"link\">here</a>")
+      desc.html mustEqual desc.cleanHtml
+    }
+
+    "not remove the link if it is incorrectly formatted" in {
+      val desc = EBRichText("", "<a href=\"blah\">Full course and returns information on</a>")
+      desc.cleanHtml must contain("<a href=\"blah\">Full course and returns information on</a>")
     }
   }
 }
