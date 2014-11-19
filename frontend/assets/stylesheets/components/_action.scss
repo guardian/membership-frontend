@@ -25,9 +25,9 @@
     }
 
     &:after {
-        @extend .icon-sprite-arrow-right-white;
+        @extend .icon-arrow-right-white;
         &.action--secondary-button {
-            @extend .icon-sprite-arrow-right-black;
+            @extend .icon-arrow-right-black;
         }
         content: '';
         float: right;
@@ -43,9 +43,9 @@
 // and hides the one on the right
 .action.action--arrow-left {
     &:before {
-        @extend .icon-sprite-arrow-left-white;
+        @extend .icon-arrow-left-white;
         &.action--secondary-button {
-            @extend .icon-sprite-arrow-left-black;
+            @extend .icon-arrow-left-black;
         }
         content: '';
         float: left;

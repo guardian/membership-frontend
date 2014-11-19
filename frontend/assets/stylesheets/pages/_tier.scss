@@ -216,7 +216,7 @@ $current-indicator: rem(72px);
     }
 
     &:before {
-        @extend %icon-sprite-g-white-28;
+        @extend %icon-g-white-28;
         content: '';
         display: block;
         position: absolute;

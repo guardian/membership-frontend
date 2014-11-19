@@ -298,7 +298,7 @@ $filter-icon-size: 18px;
     }
 
     &:after {
-        @extend .icon-sprite-arrow-right-white;
+        @extend .icon-arrow-right-white;
         content: '';
         fill: $black;
         float: right;
@@ -307,7 +307,7 @@ $filter-icon-size: 18px;
     .theme--masterclass & {
         background-color: $mem-mc-top;
         &:after {
-            @extend .icon-sprite-arrow-right-black;
+            @extend .icon-arrow-right-black;
         }
     }
 }

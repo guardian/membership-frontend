@@ -20,12 +20,12 @@
                 </h2>
 
                 <div class="event-item__detail">
-                    <i class="icon-sprite-early_booking-grey event-item__icon"></i>
+                    <i class="icon-early_booking-grey event-item__icon"></i>
                     <time datetime="@event.start">@prettyDateWithTimeAndDayName(event.start)</time>
                 </div>
 
                 <div class="event-item__detail">
-                    <i class="icon-sprite-location event-item__icon"></i>
+                    <i class="icon-location event-item__icon"></i>
                     @for(name <- event.venue.name) {
                         <span class="event-item__location-name">@name</span>
                     }
@@ -36,8 +36,8 @@
                 </div>
 
                 <div class="event-item__detail">
-                    <i class="icon-sprite-book_tickets event-item__icon"></i>
-                    <i class="icon-sprite-eventbrite"></i>
+                    <i class="icon-book_tickets event-item__icon"></i>
+                    <i class="icon-eventbrite"></i>
                     <div>Order no. @order.id</div>
                     <div>
                         @order.ticketCount ticket@if(order.ticketCount > 1){s}

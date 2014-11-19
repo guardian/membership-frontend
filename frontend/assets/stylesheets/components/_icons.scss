@@ -11,7 +11,7 @@
 }
 
 // Putting in the class twice renders as the class important is SASS
-.icon-sprite--small.icon-sprite--small {
+.icon--small.icon--small {
     background-size: rem($gs-gutter + 5) rem($gs-gutter + 5);
     width: rem($gs-gutter + 5);
     height: rem($gs-gutter + 5);
@@ -24,6 +24,6 @@
     }
 }
 
-.icon-sprite--margin-right {
+.icon--margin-right {
     margin-right: rem($gs-gutter / 2);
 }

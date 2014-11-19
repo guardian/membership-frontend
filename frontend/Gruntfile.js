@@ -252,7 +252,7 @@ module.exports = function (grunt) {
 
         shell: {
             svgencode: {
-                command: 'find <%= dirs.assets.images %> -name \\*.svg | python svgencode.py icon-sprite > <%= dirs.assets.stylesheets %>/icons/icons.scss'
+                command: 'find <%= dirs.assets.images %>/svgs -name \\*.svg | python svgencode.py icon > <%= dirs.assets.stylesheets %>/icons/icons.scss'
             },
             /**
              * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
