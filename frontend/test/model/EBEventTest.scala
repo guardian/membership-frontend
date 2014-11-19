@@ -54,4 +54,11 @@ class EBEventTest extends PlaySpecification {
       location.country.get mustEqual("GB")
     }
   }
+
+  "description" should {
+    "not contain a link back to masterclasses if it exists" in {
+      val event = Resource.getJson("model/eventbrite/event-with-link.json").as[EBEvent]
+      event.description.get.cleanHtml must not contain "Full course and returns information on the Masterclasses website"
+    }
+  }
 }
