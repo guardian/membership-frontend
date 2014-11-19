@@ -115,9 +115,13 @@
   }
 
   .theme--masterclass & {
+    color: black;
     background-color: $mem-mc-top;
     &:hover {
       background-color: darken($mem-mc-top, 5%);
+    }
+    &:after {
+      @extend .icon-arrow-right-black;
     }
   }
 }
