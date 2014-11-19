@@ -3,6 +3,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
     var filterInput  = document.getElementById('js-filter'),
         filterParent = document.getElementById('js-filter-container'),
+        filterCount  = $('.js-filter-count'),
         filterField  = filterInput.getAttribute('data-filter-field'),
         throttle     = 300, // how many milliseconds should we wait for typing to pause?
         currentTimeout;
@@ -65,6 +66,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
                 $(filterParent).addClass('events-list--empty');
             } else {
                 $(filterParent).removeClass('events-list--empty');
+                filterCount.text(elmsToShow.length);
             }
 
         }, throttle);

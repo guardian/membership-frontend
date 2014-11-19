@@ -8,13 +8,6 @@
             Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons
         </h1>
         <i class="event-logo icon-sprite-masterclasses"></i>
-        <input type="text"
-               class="events-list__filter"
-               id="js-filter"
-               data-filter-field="title"
-               placeholder="Filter Masterclasses..."
-               autocomplete="off"
-        />
     </section>
     <nav role="navigation" class="nav nav--global nav--global--masterclasses">
         <div class="navigation__scroll">
@@ -28,6 +21,16 @@
             </ul>
         </div>
     </nav>
+    <div class="event-block">
+        <div class="event-block__events event-block__events--no-header">
+            <input type="text"
+                   class="events-list__filter"
+                   id="js-filter"
+                   data-filter-field="title"
+                   placeholder="Browse by title"
+                   autocomplete="off" />
+        </div>
+    </div>
 
     @views.html.event.list(eventPortfolio, pageInfo, title)
 }
