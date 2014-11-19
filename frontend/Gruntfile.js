@@ -121,7 +121,7 @@ module.exports = function (grunt) {
             imagesNoAssetHash: {
                 cwd: '<%= dirs.assets.images %>',
                 src: ['**/noAssetHash/**'],
-                dest: '<%= dirs.publicDir.root %>/dist/images/',
+                dest: '<%= dirs.publicDir.root %>/images/',
                 expand: true
             }
         },

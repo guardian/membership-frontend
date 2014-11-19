@@ -1,9 +1,11 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
+@import model.Eventbrite.MasterclassEvent
+
 @main("Masterclasses", containerPadding=false, htmlClass="events-bg theme--masterclass", pageInfo=pageInfo) {
     <section class="header-bar">
         <h1 class="header-bar__title">
-            Long and short courses taught by award-winning professionals with discounts for Guardian Members
+            Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons
         </h1>
         <i class="event-logo icon-sprite-masterclasses"></i>
         <input type="text"
@@ -14,6 +16,18 @@
                autocomplete="off"
         />
     </section>
+    <nav role="navigation" class="nav nav--global nav--global--masterclasses">
+        <div class="navigation__scroll">
+            <ul class="inline-list">
+                <li class="inline-list__item nav__item"><a class="nav__link case--lower" href="/masterclasses">All</a></li>
+                @for(tag <- MasterclassEvent.topLevelTags) {
+                    <li class="inline-list__item nav__item">
+                        <a class="nav__link case--lower" href="/masterclasses/@MasterclassEvent.encodeTag(tag)">@tag</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
 
     @views.html.event.list(eventPortfolio, pageInfo)
 }

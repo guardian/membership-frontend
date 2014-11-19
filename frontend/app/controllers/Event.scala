@@ -3,7 +3,7 @@ package controllers
 import actions.AnyMemberTierRequest
 import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
-import model.Eventbrite.{RichEvent, EBEvent}
+import model.Eventbrite.{RichEvent, EBEvent, MasterclassEvent}
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
 import monitoring.EventbriteMetrics
 import org.joda.time.Instant
@@ -51,6 +51,16 @@ trait Event extends Controller {
       Some(CopyConfig.copyDescriptionEvents)
     )
     Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
+  }
+
+  def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>
+    val tag = MasterclassEvent.decodeTag(rawTag)
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleEvents,
+      request.path,
+      Some(CopyConfig.copyDescriptionEvents)
+    )
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events.filter(_.tags.contains(tag))), pageInfo))
   }
 
   def list = CachedAction { implicit request =>
