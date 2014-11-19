@@ -1,4 +1,4 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo, title: String)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
@@ -7,10 +7,8 @@
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
         <div class="event-block">
-            <div class="events-title-container">
-                <h4 class="event-block-title case--lower">Featured</h4>
-            </div>
-            <div class="events-list-container">
+            <h4 class="event-block__header event-block__header__title case--lower">Featured</h4>
+            <div class="event-block__events">
                 <ul class="u-unstyled">
                 @for(heroEvent <- eventPortfolio.heroOpt) {
                     @fragments.event.item(heroEvent, true)
@@ -26,10 +24,11 @@
     }
 
     <div class="event-block">
-        <div class="events-title-container">
-            <h4 class="event-block-title case--lower">What's on</h4>
+        <div class="event-block__header">
+            <h4 class="event-block__header__title case--lower">@title</h4>
+            <span class="event-block__header__count">@eventPortfolio.normal.length</span>
         </div>
-        <div class="events-list-container">
+        <div class="event-block__events">
             <ul class="events-list u-unstyled" id="js-filter-container">
                 @for(event <- eventPortfolio.normal) {
                     @fragments.event.item(event, false)

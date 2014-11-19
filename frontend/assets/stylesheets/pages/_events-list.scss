@@ -27,24 +27,33 @@
     }
 }
 
-// the title sits to the side of the list
-.events-title-container {
-    display: block;
+.event-block__header {
     padding: 0 0 rem($gs-baseline);
-
     @include mq(mem-full) {
         float: left;
-        width: rem(gs-span(2) + $gs-gutter);
+        width: rem(gs-span(2));
+        margin-right: $gs-gutter;
     }
-
 }
 
-.event-block-title {
+.event-block__header__title {
     @include fs-header(4);
 }
 
-// the list becomes full-width on mobile
-.events-list-container {
+.event-block__header__count {
+    @include fs-headline(2);
+
+    .theme--masterclass &:after {
+        content: ' courses';
+    }
+
+    // We don't have enough events to show this at the moment!
+    .theme--guardian-live & {
+        display: none;
+    }
+}
+
+.event-block__events {
     overflow: hidden;
 
     @include mq(mem-full) {

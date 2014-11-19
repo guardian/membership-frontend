@@ -50,7 +50,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
+    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo, "What's on"))
   }
 
   def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>
@@ -60,7 +60,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events.filter(_.tags.contains(tag))), pageInfo))
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events.filter(_.tags.contains(tag))), pageInfo, tag))
   }
 
   def list = CachedAction { implicit request =>
