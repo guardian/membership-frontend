@@ -1,5 +1,8 @@
 package controllers
 
+import actions.Functions._
+import com.gu.identity.model.User
+
 import scala.concurrent.Future
 
 import com.netaporter.uri.dsl._
@@ -22,6 +25,10 @@ trait Joiner extends Controller {
 
   val memberService: MemberService
   val eventService: EventbriteService
+
+  val AuthenticatedJoinStaffAction = NoCacheAction andThen OAuthActions.AuthAction
+  
+  val AuthenticatedStaffEnterDetailsAction = NoCacheAction andThen OAuthActions.AuthAction andThen authenticated()
 
   def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
     def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
@@ -48,17 +55,14 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
+  def staff = AuthenticatedJoinStaffAction { implicit request =>
     Ok(views.html.joiner.staff())
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
-      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, identityRequest)
     } yield {
 
       tier match {
@@ -69,6 +73,24 @@ trait Joiner extends Controller {
       }
 
     }
+  }
+
+  def enterStaffDetails = AuthenticatedStaffEnterDetailsAction.async { implicit request =>
+    val identityRequest = IdentityRequest(request)
+    for {
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, identityRequest)
+    } yield {
+      Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+    }
+  }
+
+  private def identityDetails(user: com.gu.identity.model.User, identityRequest: IdentityRequest) = {
+    for {
+      userOpt <- IdentityService.getFullUserDetails(user, identityRequest)
+      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
+      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
+      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+    } yield (privateFields, marketingChoices, passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
