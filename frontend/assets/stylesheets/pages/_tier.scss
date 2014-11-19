@@ -216,7 +216,6 @@ $current-indicator: rem(72px);
     }
 
     &:before {
-        @extend %icon-sprite;
         @extend %icon-sprite-g-white-28;
         content: '';
         display: block;
@@ -420,7 +419,7 @@ $current-indicator: rem(72px);
     .payment-label__title {
         @include fs-bodyHeading(2);
         display: block;
-        
+
     }
 
     .payment-label__amount,

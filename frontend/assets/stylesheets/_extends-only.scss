@@ -22,7 +22,6 @@
 }
 
 %mobile-expand-collapse {
-    @extend %icon-sprite;
     @extend %icon-sprite-arrow-white-small;
     @include border-radius(100%);
     background-position: 4px 10px!important;

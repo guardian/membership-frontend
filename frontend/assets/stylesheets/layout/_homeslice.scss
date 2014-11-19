@@ -544,7 +544,6 @@
     padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(65px);
 
     &:before {
-        @extend %icon-sprite;
         @extend %icon-sprite-g-white-36;
         content: '';
         display: block;
