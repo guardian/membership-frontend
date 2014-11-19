@@ -1,4 +1,4 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo, title: String)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Eventbrite.MasterclassEvent
 
@@ -29,5 +29,5 @@
         </div>
     </nav>
 
-    @views.html.event.list(eventPortfolio, pageInfo)
+    @views.html.event.list(eventPortfolio, pageInfo, title)
 }
