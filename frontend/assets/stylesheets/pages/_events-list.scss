@@ -80,12 +80,27 @@
 }
 
 .events-list__filter {
-    padding: rem($gs-gutter / 2) rem($gs-gutter);
+    position: relative;
+    display: block;
+}
+
+$filter-icon-size: 18px;
+
+.events-list__filter__text {
+    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
     border: 1px solid $c-neutral3;
     border-radius: 100rem;
     outline: 0;
 
     @include fs-textSans(2);
+}
+
+.events-list__filter__icon {
+    position: absolute;
+    top: 50%;
+    left: rem($gs-gutter / 2);
+    margin-top: rem(-$filter-icon-size / 2);
+
 }
 
 .events-list__item {
