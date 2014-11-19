@@ -42,10 +42,10 @@ class MasterclassTests extends BaseMembershipTest {
           MembershipSteps().IGoToMasterclasses
         }
         .when {
-          _.IClickOnAnEvent
+          _.IClickTheFirstEvent
         }
         .then {
-          _.ISeeTheEventDetails
+          _.ISeeTheMasterclassDetails
         }
     }
 
@@ -56,11 +56,29 @@ class MasterclassTests extends BaseMembershipTest {
         }
         .when {
          _.IGoToMasterclasses
-         .IClickOnAnEvent
+         .IClickTheFirstEvent
         }
         .then {
-          _.ISeeTheEventDetails
+          _.ISeeTheMasterclassDetails
         }
     }
   }
+
+  // TODO this is disabled as the feature is not yet complete
+//  feature("A user can search Masterclasses") {
+//
+//    scenarioWeb("51. A non-member can search Masterclasses") {
+//      implicit driver =>
+//        given {
+//          MembershipSteps().IAmNotLoggedIn
+//        }
+//        .when {
+//          MembershipSteps().IGoToMasterclasses
+//          _.ISearchFor("food")
+//        }
+//        .then {
+//          _.SearchResultsMatch("food")
+//        }
+//    }
+//  }
 }

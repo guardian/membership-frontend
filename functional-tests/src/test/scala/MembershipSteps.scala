@@ -61,12 +61,26 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
+  def IClickTheFirstEvent = {
+    new MasterclassListPage(driver).clickFirstEvent()
+    this
+  }
+
   def ISeeTheEventDetails = {
     val page = new EventPage(driver)
     Assert.assertNotEmpty(page.getEventDescription)
     Assert.assertNotEmpty(page.getEventLocation)
     Assert.assertNotEmpty(page.getEventPrice)
     Assert.assertNotEmpty(page.getEventSalesEndTime)
+    Assert.assertNotEmpty(page.getEventTime)
+    this
+  }
+
+  def ISeeTheMasterclassDetails = {
+    val page = new MasterClassDetailPage(driver)
+    Assert.assertNotEmpty(page.getEventDescription)
+    Assert.assertNotEmpty(page.getEventLocation)
+    Assert.assertNotEmpty(page.getEventPrice)
     Assert.assertNotEmpty(page.getEventTime)
     this
   }
@@ -416,6 +430,17 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def IGoToMasterclasses = {
     driver.get(Config().getUserValue("masterclasses"))
     this
+  }
+
+  def ISearchFor(keyword: String) = {
+    new MasterclassListPage(driver).search(keyword)
+    this
+  }
+
+  def SearchResultsMatch(keyword: String) = {
+    println("keyword: " + keyword + " string: " + new MasterclassListPage(driver).getEventTitleByIndex(0))
+    val found = new MasterclassListPage(driver).getEventTitleByIndex(0).contains(keyword)
+    Assert.assert(found, true, "First result should contain keyword")
   }
 
   private def verifyTier(yearlyPayment: String) = {
