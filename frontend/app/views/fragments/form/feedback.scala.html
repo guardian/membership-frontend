@@ -9,8 +9,11 @@
         <div class="form-field">
             <label class="label" for="category">I have feedback about</label>
             <div class="input">
-                <select name="category" id="category" data-validation="required" data-error-message="Please select a
-                feedback category">
+                <select name="category"
+                        id="category"
+                        data-validation="required"
+                        data-error-message="Please select a feedback category"
+                        aria-required="true">
                     <option value="">Select feedback category</option>
                     <option>Suggest an improvement</option>
                     <option>Give general feedback</option>
@@ -27,9 +30,12 @@
 
         <div class="form-field">
             <label class="label" for="feedback">Comments</label>
-            <textarea name="feedback" id="feedback" class="textarea--long textarea"
+            <textarea name="feedback"
+                      id="feedback"
+                      class="textarea--long textarea"
                       data-error-message="Please enter your comment"
-                      data-validation="required"></textarea>
+                      data-validation="required"
+                      aria-required="true"></textarea>
         </div>
 
     </div>
@@ -46,15 +52,24 @@
 
         <div class="form-field">
             <label class="label" for="name">Name</label>
-            <input name="name" id="name" class="text-input text-input-block" type="text" data-validation="required"
-                   data-error-message="Please enter your name"/>
+            <input name="name"
+                   id="name"
+                   class="text-input text-input-block"
+                   type="text"
+                   data-validation="required"
+                   data-error-message="Please enter your name"
+                   aria-required="true"/>
         </div>
 
         <div class="form-field">
             <label class="label" for="email">Email address</label>
-            <input name="email" id="email" class="text-input text-input-block" type="email"
+            <input name="email"
+                   id="email"
+                   class="text-input text-input-block"
+                   type="email"
                    data-validation="required"
-                   data-error-message="Please enter your email address"/>
+                   data-error-message="Please enter your email address"
+                   aria-required="true"/>
         </div>
 
     </div>

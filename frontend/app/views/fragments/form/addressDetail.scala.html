@@ -12,7 +12,8 @@ county: Option[String], userCountry: Option[String])
                     id="@countyOrStateLabel-@(formType)"
                     class="js-@countyOrStateLabel-@(formType)"
                     data-error-message="Please enter your @countyOrStateLabel.capitalize"
-                    data-validation="required">
+                    data-validation="required"
+                    aria-required="true">
             @for(countyOrState <- countyOrStateList) {
                 <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
             }
@@ -39,7 +40,8 @@ county: Option[String], userCountry: Option[String])
                         id="country-@(formType)"
                         class="js-country-@(formType)"
                         data-error-message="Please enter your Country"
-                        data-validation="required">
+                        data-validation="required"
+                        aria-required="true">
 
                         @for(country <- Countries.allSorted) {
                             <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
@@ -56,7 +58,7 @@ county: Option[String], userCountry: Option[String])
                        id="address-line-one-@(formType)"
                        class="text-input text-input--block js-address-line-one"
                        data-error-message="Please enter your @heading.toLowerCase() first line"
-                       @if(addressRequired == true){data-validation="required"} />
+                       @if(addressRequired == true){data-validation="required" aria-required="true"} />
             </div>
 
             <div class="form-field">
@@ -76,7 +78,7 @@ county: Option[String], userCountry: Option[String])
                        id="town-@(formType)"
                        class="text-input text-input--block js-town"
                        data-error-message="Please enter your @heading.toLowerCase() town"
-                       @if(addressRequired == true){data-validation="required"} />
+                       @if(addressRequired == true){data-validation="required" aria-required="true"} />
             </div>
 
             @countyOrStateSelect(Countries.US.states.toList, "state")
@@ -102,7 +104,8 @@ county: Option[String], userCountry: Option[String])
                        maxlength="20"
                        class="text-input text-input--block js-post-code"
                        data-error-message="Please enter your @heading.toLowerCase() post code"
-                       data-validation="required"/>
+                       data-validation="required"
+                       aria-required="true"/>
             </div>
         </div>
     </div>
