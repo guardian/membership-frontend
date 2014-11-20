@@ -258,7 +258,7 @@ define([
 
     Form.prototype.addValidation = function ($elements) {
         $elements.forEach(function ($element) {
-            $element.attr('data-validation', 'required');
+            $element.attr('data-validation', 'required').attr('aria-required', 'true');
         });
 
         this.setupFormValidation();
@@ -272,7 +272,7 @@ define([
 
             errorMessages.push($element.attr('data-error-message'));
             //tidy up potential error messages, error classes and remove element events
-            $element.removeAttr('data-validation');
+            $element.removeAttr('data-validation').removeAttr('aria-required');
             bean.off($element[0], 'blur');
             $formField.removeClass('form-field--error');
 
