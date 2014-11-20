@@ -92,6 +92,12 @@
     clear: both;
 }
 
+/* Hide progress indicator for home a-b test slide show as css animation does not work here
+   ========================================================================== */
+
+.progress-indicator {
+    display: none;
+}
 
 /* Footer ie9 fix
    ========================================================================== */
