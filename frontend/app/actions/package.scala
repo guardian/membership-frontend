@@ -1,3 +1,4 @@
+import com.gu.googleauth
 import com.gu.identity
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
@@ -14,6 +15,8 @@ package object actions {
   val logger = Logger(this.getClass())
 
   type AuthRequest[A] = AuthenticatedRequest[A, identity.model.User]
+
+  type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
