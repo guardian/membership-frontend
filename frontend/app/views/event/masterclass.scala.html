@@ -9,20 +9,17 @@
         </h1>
         <i class="event-logo icon-sprite-masterclasses"></i>
     </section>
-    <nav role="navigation" class="nav nav--global nav--global--masterclasses">
-        <div class="navigation__scroll">
-            <ul class="inline-list">
-                <li class="inline-list__item nav__item"><a class="nav__link case--lower" href="/masterclasses">All</a></li>
-                @for(tag <- MasterclassEvent.topLevelTags) {
-                    <li class="inline-list__item nav__item">
-                        <a class="nav__link case--lower" href="/masterclasses/@MasterclassEvent.encodeTag(tag)">@tag</a>
-                    </li>
-                }
-            </ul>
-        </div>
-    </nav>
     <div class="event-block">
         <div class="event-block__events event-block__events--no-header">
+            <label class="events-list__category">
+                Show:
+                <select class="events-list__category__select js-filter-category">
+                    <option value="all">All categories</option>
+                    @for(tag <- MasterclassEvent.topLevelTags) {
+                        <option value="@MasterclassEvent.encodeTag(tag)" @if(tag == title){ selected}>@tag</option>
+                    }
+                </select>
+            </label>
             <label class="events-list__filter">
                 <input type="text"
                        class="events-list__filter__text"

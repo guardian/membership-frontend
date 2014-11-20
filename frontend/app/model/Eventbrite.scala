@@ -171,7 +171,7 @@ object Eventbrite {
     val topLevelTags = Seq("Writing", "Publishing", "Journalism", "Business", "Digital", "Culture", "Food and drink", "Media")
 
     def encodeTag(tag: String) = tag.toLowerCase.replace(" ", "-")
-    def decodeTag(tag: String) = tag.replace("-", " ")
+    def decodeTag(tag: String) = tag.capitalize.replace("-", " ")
 
     def extractTags(s: String): Option[Seq[String]] =
       "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
