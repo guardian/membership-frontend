@@ -4,10 +4,7 @@ footer {
     left: 0;
     width: 100%;
     background-color: $c-neutral8;
-
-    @include mq(tablet) {
-        bottom: 0;
-    }
+    bottom: rem(-$gs-baseline * 3);
 
     .copy {
         @include fs-data(6);
