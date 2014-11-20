@@ -7,48 +7,64 @@
 .event-block {
     position: relative;
     background-color: $white;
-    border-bottom: rem(1px) solid $mem-live-accent;
-    padding: rem($gs-gutter / 2) 0 rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
+    overflow: hidden;
 
     @include mq(tablet) {
-        padding: rem($gs-baseline) 0 rem($gs-baseline * 2);
+        padding: rem($gs-gutter);
     }
 
-    @include mq(desktop) {
-        padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline * 2);
+    .theme--guardian-live & {
+        border-bottom: rem(1px) solid $mem-live-accent;
+    }
+
+    .theme--masterclass & {
+        border-bottom: rem(1px) solid $mem-mc-accent;
     }
 
     &:last-child {
         border-bottom: 0;
     }
+}
 
-    .theme--masterclass & {
+.event-block__header {
+    padding-bottom: rem($gs-baseline);
+    @include mq(mem-full) {
+        float: left;
+        width: rem(gs-span(2));
+        margin-right: $gs-gutter;
         padding-bottom: 0;
     }
 }
 
-// the title sits to the side of the list
-.events-title-container {
-    display: block;
-    padding: 0 0 rem($gs-baseline);
-
-    @include mq(mem-full) {
-        float: left;
-        width: rem(gs-span(2) + $gs-gutter);
-    }
-
-}
-
-.event-block-title {
+.event-block__header__title {
     @include fs-header(4);
 }
 
-// the list becomes full-width on mobile
-.events-list-container {
+.event-block__header__count {
+    @include fs-headline(2);
+
+    .theme--masterclass &:after {
+        content: ' courses';
+    }
+
+    // We don't have enough events to show this at the moment!
+    .theme--guardian-live & {
+        display: none;
+    }
+}
+
+.event-block__events {
     overflow: hidden;
 
     @include mq(mem-full) {
         width: rem(gs-span(12));
+    }
+}
+
+.event-block__events--no-header {
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
     }
 }
 
@@ -59,15 +75,37 @@
 
 // only visible when no filter results are found
 .events-list--empty:before {
-    content: 'No matching events – please try a different search.';
-    margin: 0 0 2rem;
+    content: 'No matching courses';
     display: block;
 }
 
 .events-list__filter {
-    margin-bottom: rem(20px);
-    padding: rem(5px) rem(1px);
-    color: $c-neutral2;
+    position: relative;
+    display: block;
+}
+
+$filter-icon-size: 18px;
+
+.events-list__filter__text {
+    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
+    border: 1px solid $c-neutral3;
+    border-radius: 100rem;
+    outline: 0;
+
+    @include fs-textSans(2);
+
+    width: 100%;
+    @include mq(tablet) {
+        width: rem(300px);
+    }
+}
+
+.events-list__filter__icon {
+    position: absolute;
+    top: 50%;
+    left: rem($gs-gutter / 2);
+    margin-top: rem(-$filter-icon-size / 2);
+
 }
 
 .events-list__item {
