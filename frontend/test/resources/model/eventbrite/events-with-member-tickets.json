@@ -1,0 +1,498 @@
+{
+    "events": [
+        {
+            "ticket_classes": [
+                {
+                    "event_id": "13675207915",
+                    "variants": [],
+                    "auto_hide": false,
+                    "hide_description": true,
+                    "split_fee": false,
+                    "include_fee": true,
+                    "hidden": false,
+                    "actual_fee": {
+                        "value": 2222,
+                        "display": "£22.22",
+                        "currency": "GBP"
+                    },
+                    "actual_cost": {
+                        "value": 42678,
+                        "display": "£426.78",
+                        "currency": "GBP"
+                    },
+                    "fee": {
+                        "value": 0,
+                        "display": "£0.00",
+                        "currency": "GBP"
+                    },
+                    "cost": {
+                        "value": 44900,
+                        "display": "£449.00",
+                        "currency": "GBP"
+                    },
+                    "description": null,
+                    "name": "Free your creativity and get started on your book",
+                    "id": "29757289",
+                    "resource_uri": "https://www.eventbriteapi.com/v3/events/13675207915/ticket_classes/29757289/",
+                    "donation": false,
+                    "free": false,
+                    "minimum_quantity": 1,
+                    "maximum_quantity": 3,
+                    "quantity_total": 17,
+                    "quantity_sold": 2,
+                    "sales_start": "2014-10-13T08:00:00Z",
+                    "sales_end": "2015-02-28T09:00:00Z"
+                },
+                {
+                    "event_id": "13675207915",
+                    "variants": [],
+                    "auto_hide": false,
+                    "hide_description": true,
+                    "split_fee": false,
+                    "include_fee": false,
+                    "actual_fee": {
+                        "value": 1907,
+                        "display": "£19.07",
+                        "currency": "GBP"
+                    },
+                    "actual_cost": {
+                        "value": 35920,
+                        "display": "£359.20",
+                        "currency": "GBP"
+                    },
+                    "fee": {
+                        "value": 1907,
+                        "display": "£19.07",
+                        "currency": "GBP"
+                    },
+                    "cost": {
+                        "value": 35920,
+                        "display": "£359.20",
+                        "currency": "GBP"
+                    },
+                    "description": null,
+                    "name": "guardian members - Free your creativity and get started on your book",
+                    "id": "31250189",
+                    "resource_uri": "https://www.eventbriteapi.com/v3/events/13675207915/ticket_classes/31250189/",
+                    "donation": false,
+                    "free": false,
+                    "minimum_quantity": 1,
+                    "maximum_quantity": null,
+                    "quantity_total": 3,
+                    "quantity_sold": 0,
+                    "sales_end": "2015-02-28T09:00:00Z",
+                    "hidden": true
+                }
+            ],
+            "format": {
+                "short_name_localized": "Class",
+                "short_name": "Class",
+                "name_localized": "Class, Training, or Workshop",
+                "name": "Class, Training, or Workshop",
+                "id": "9",
+                "resource_uri": "https://www.eventbriteapi.com/v3/formats/9/"
+            },
+            "category": {
+                "short_name_localized": "Film & Media",
+                "short_name": "Film & Media",
+                "name_localized": "Film, Media & Entertainment",
+                "name": "Film, Media & Entertainment",
+                "id": "104",
+                "resource_uri": "https://www.eventbriteapi.com/v3/categories/104/"
+            },
+            "venue": {
+                "longitude": "-0.1216933",
+                "latitude": "51.5349086",
+                "name": "The Guardian",
+                "id": "4226851",
+                "resource_uri": "https://www.eventbriteapi.com/v3/venues/4226851/",
+                "address": {
+                    "longitude": "-0.1216933",
+                    "latitude": "51.5349086",
+                    "country": "GB",
+                    "postal_code": "N1 9GU",
+                    "region": null,
+                    "city": "London",
+                    "address_2": "90 York Way",
+                    "address_1": "Kings Place"
+                }
+            },
+            "organizer": {
+                "num_future_events": 116,
+                "num_past_events": 690,
+                "url": "http://www.eventbrite.com/o/guardian-masterclasses-684756979",
+                "name": "Guardian Masterclasses",
+                "id": "684756979",
+                "resource_uri": "https://www.eventbriteapi.com/v3/organizers/684756979/",
+                "logo": {
+                    "url": "http://cdn.evbuc.com/images/8916563/7266571413/2/logo.png",
+                    "id": "8916563"
+                },
+                "description": {
+                    "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.</P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.</P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.</P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.</P>\r\n</DIV>",
+                    "text": "\r\nWelcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n"
+                }
+            },
+            "subcategory": null,
+            "format_id": "9",
+            "subcategory_id": null,
+            "category_id": "104",
+            "venue_id": "4226851",
+            "organizer_id": "684756979",
+            "show_remaining": false,
+            "online_event": false,
+            "invite_only": false,
+            "start": {
+                "utc": "2015-02-28T10:00:00Z",
+                "local": "2015-02-28T10:00:00",
+                "timezone": "Europe/London"
+            },
+            "logo_url": "http://cdn.evbuc.com/images/8935677/7266571413/1/logo.png",
+            "url": "http://www.eventbrite.co.uk/e/free-your-creativity-and-get-started-on-your-book-tickets-13675207915",
+            "id": "13675207915",
+            "logo": {
+                "url": "http://cdn.evbuc.com/images/8935677/7266571413/1/logo.png",
+                "id": "8935677"
+            },
+            "description": {
+                "html": "<P><STRONG><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Learn how to overcome writer's block, find your voice and enjoy the writing process</SPAN></STRONG></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Whether you are an experienced writer or just setting out, marshalling your muse can be tough. If you are unsure how to get started or get into the writing flow, this is a nurturing environment in which to find your voice, capture your ideas or overcome writer's block. Book editor and writing coach <STRONG>Philippa Pride</STRONG>, who has worked with authors including Stephen King, can teach you a variety of techniques to help you tap into your creativity even when inspiration is running dry.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This weekend masterclass is designed for a variety of skill levels and offers a choice of exercises tailored to your individual ability and preferred outcome. With workshops on planning, structuring and pitching a book, it offers practical advice as well as a fantastic opportunity to get valuable professional and creative feedback in a supportive group.</SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This course is for you if...</SPAN></H2>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You're new to novel or short story writing and have a creative instinct, but don't know how to herd the cats of your imagination</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You want to learn techniques to establish a more disciplined or productive writing process</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You want to know more about the organisational aspects of writing a novel, including planning, plotting, structuring and scheduling</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You want to spend less time procrastinating and more time writing</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>If you are looking for a more advanced level class with Philippa you may be interested in her <STRONG><A HREF=\"http://www.theguardian.com/guardian-masterclasses/develop-your-book-and-get-it-published-philippa-pride-writing-course\" REL=\"nofollow\">Develop your book and get it published</A></STRONG> course.</STRONG></SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Course description</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This is a lively, interactive two-day workshop designed to help you get started on a novel or short story, and learn workable techniques to make you a more creative and disciplined writer. Subjects covered over the weekend include:</SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Exercises for creativity – accessing your ideas and enjoying the writing process</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Getting started, keeping going, taking stock</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">How to overcome obstacles and switch off your inner critic</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Painting and dancing with words</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Visualisations – the magic of imagery and metaphor</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Finding your unique voice</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Becoming the hero of your writer's journey</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Tips for writing – build and develop a toolbox</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">What makes good story – how to shape your book</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Creating narrative drive and keep those pages turning</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Setting goals and a writing schedule to suit your life</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Structuring your book – the benefits of a chapter breakdown</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Moving from concept to final draft</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Plot, empathetic characters, dialogue, description</SPAN></LI>\r\n</UL>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Tutor profile</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Philippa Pride</STRONG> has been running creative writing courses since 2006, combining her skills as a certified NLP master practitioner and coach with her inside knowledge of the publishing profession. A commissioning editor for one of the major publishing houses before setting up her own business, The Book Doctor, Philippa is described by Hodder &amp; Stoughton's CEO as having \"a reputation as a talented spotter of new fiction, a creative editor with flair and vision, a nurturer of writers' careers and a terrific champion of her authors.\" Philippa continues her connection with Hodder as British editor for bestselling author Stephen King.</SPAN></P>\r\n<P><A HREF=\"http://www.theguardian.com/guardian-masterclasses/free-your-creativity-get-started-on-your-book\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A></P>\r\n<!-- tags:Writing,Creative Writing -->",
+                "text": "Learn how to overcome writer's block, find your voice and enjoy the writing process \nWhether you are an experienced writer or just setting out, marshalling your muse can be tough. If you are unsure how to get started or get into the writing flow, this is a nurturing environment in which to find your voice, capture your ideas or overcome writer's block. Book editor and writing coach Philippa Pride, who has worked with authors including Stephen King, can teach you a variety of techniques to help you tap into your creativity even when inspiration is running dry. \nThis weekend masterclass is designed for a variety of skill levels and offers a choice of exercises tailored to your individual ability and preferred outcome. With workshops on planning, structuring and pitching a book, it offers practical advice as well as a fantastic opportunity to get valuable professional and creative feedback in a supportive group. \nThis course is for you if... \n\nYou're new to novel or short story writing and have a creative instinct, but don't know how to herd the cats of your imagination\nYou want to learn techniques to establish a more disciplined or productive writing process\nYou want to know more about the organisational aspects of writing a novel, including planning, plotting, structuring and scheduling\nYou want to spend less time procrastinating and more time writing\n\nIf you are looking for a more advanced level class with Philippa you may be interested in her Develop your book and get it published course. \nCourse description \nThis is a lively, interactive two-day workshop designed to help you get started on a novel or short story, and learn workable techniques to make you a more creative and disciplined writer. Subjects covered over the weekend include: \n\nExercises for creativity – accessing your ideas and enjoying the writing process\nGetting started, keeping going, taking stock\nHow to overcome obstacles and switch off your inner critic\nPainting and dancing with words\nVisualisations – the magic of imagery and metaphor\nFinding your unique voice\nBecoming the hero of your writer's journey\nTips for writing – build and develop a toolbox\nWhat makes good story – how to shape your book\nCreating narrative drive and keep those pages turning\nSetting goals and a writing schedule to suit your life\nStructuring your book – the benefits of a chapter breakdown\nMoving from concept to final draft\nPlot, empathetic characters, dialogue, description\n\nTutor profile \nPhilippa Pride has been running creative writing courses since 2006, combining her skills as a certified NLP master practitioner and coach with her inside knowledge of the publishing profession. A commissioning editor for one of the major publishing houses before setting up her own business, The Book Doctor, Philippa is described by Hodder & Stoughton's CEO as having \"a reputation as a talented spotter of new fiction, a creative editor with flair and vision, a nurturer of writers' careers and a terrific champion of her authors.\" Philippa continues her connection with Hodder as British editor for bestselling author Stephen King. \nFull course and returns information on the Masterclasses website"
+            },
+            "name": {
+                "html": "Free your creativity and get started on your book",
+                "text": "Free your creativity and get started on your book"
+            },
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13675207915/",
+            "end": {
+                "utc": "2015-03-01T16:30:00Z",
+                "local": "2015-03-01T16:30:00",
+                "timezone": "Europe/London"
+            },
+            "created": "2014-10-13T14:16:36Z",
+            "changed": "2014-11-19T19:35:03Z",
+            "capacity": 17,
+            "status": "live",
+            "currency": "GBP",
+            "listed": true,
+            "shareable": true
+        },
+        {
+            "ticket_classes": [
+                {
+                    "event_id": "13902598045",
+                    "variants": [],
+                    "auto_hide": false,
+                    "hide_description": true,
+                    "split_fee": false,
+                    "include_fee": true,
+                    "hidden": false,
+                    "actual_fee": {
+                        "value": 1697,
+                        "display": "£16.97",
+                        "currency": "GBP"
+                    },
+                    "actual_cost": {
+                        "value": 28203,
+                        "display": "£282.03",
+                        "currency": "GBP"
+                    },
+                    "fee": {
+                        "value": 0,
+                        "display": "£0.00",
+                        "currency": "GBP"
+                    },
+                    "cost": {
+                        "value": 29900,
+                        "display": "£299.00",
+                        "currency": "GBP"
+                    },
+                    "description": null,
+                    "name": "Data visualisation: A one-day workshop",
+                    "id": "30183197",
+                    "resource_uri": "https://www.eventbriteapi.com/v3/events/13902598045/ticket_classes/30183197/",
+                    "donation": false,
+                    "free": false,
+                    "minimum_quantity": 1,
+                    "maximum_quantity": 3,
+                    "quantity_total": 32,
+                    "quantity_sold": 3,
+                    "sales_start": "2014-10-23T08:00:00Z",
+                    "sales_end": "2015-02-28T09:00:00Z"
+                },
+                {
+                    "event_id": "13902598045",
+                    "variants": [],
+                    "auto_hide": false,
+                    "hide_description": true,
+                    "split_fee": false,
+                    "include_fee": false,
+                    "actual_fee": {
+                        "value": 1401,
+                        "display": "£14.01",
+                        "currency": "GBP"
+                    },
+                    "actual_cost": {
+                        "value": 23920,
+                        "display": "£239.20",
+                        "currency": "GBP"
+                    },
+                    "fee": {
+                        "value": 1401,
+                        "display": "£14.01",
+                        "currency": "GBP"
+                    },
+                    "cost": {
+                        "value": 23920,
+                        "display": "£239.20",
+                        "currency": "GBP"
+                    },
+                    "description": null,
+                    "name": "guardian members - Data visualisation: A one-day workshop",
+                    "id": "31250231",
+                    "resource_uri": "https://www.eventbriteapi.com/v3/events/13902598045/ticket_classes/31250231/",
+                    "donation": false,
+                    "free": false,
+                    "minimum_quantity": 1,
+                    "maximum_quantity": null,
+                    "quantity_total": 6,
+                    "quantity_sold": 6,
+                    "sales_end": "2015-02-28T09:00:00Z",
+                    "hidden": true
+                }
+            ],
+            "format": {
+                "short_name_localized": "Class",
+                "short_name": "Class",
+                "name_localized": "Class, Training, or Workshop",
+                "name": "Class, Training, or Workshop",
+                "id": "9",
+                "resource_uri": "https://www.eventbriteapi.com/v3/formats/9/"
+            },
+            "category": {
+                "short_name_localized": "Film & Media",
+                "short_name": "Film & Media",
+                "name_localized": "Film, Media & Entertainment",
+                "name": "Film, Media & Entertainment",
+                "id": "104",
+                "resource_uri": "https://www.eventbriteapi.com/v3/categories/104/"
+            },
+            "venue": {
+                "longitude": "-0.1216933",
+                "latitude": "51.5349086",
+                "name": "The Guardian",
+                "id": "4226851",
+                "resource_uri": "https://www.eventbriteapi.com/v3/venues/4226851/",
+                "address": {
+                    "longitude": "-0.1216933",
+                    "latitude": "51.5349086",
+                    "country": "GB",
+                    "postal_code": "N1 9GU",
+                    "region": null,
+                    "city": "London",
+                    "address_2": "90 York Way",
+                    "address_1": "Kings Place"
+                }
+            },
+            "organizer": {
+                "num_future_events": 116,
+                "num_past_events": 690,
+                "url": "http://www.eventbrite.com/o/guardian-masterclasses-684756979",
+                "name": "Guardian Masterclasses",
+                "id": "684756979",
+                "resource_uri": "https://www.eventbriteapi.com/v3/organizers/684756979/",
+                "logo": {
+                    "url": "http://cdn.evbuc.com/images/8916563/7266571413/2/logo.png",
+                    "id": "8916563"
+                },
+                "description": {
+                    "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.</P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.</P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.</P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.</P>\r\n</DIV>",
+                    "text": "\r\nWelcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n"
+                }
+            },
+            "subcategory": null,
+            "format_id": "9",
+            "subcategory_id": null,
+            "category_id": "104",
+            "venue_id": "4226851",
+            "organizer_id": "684756979",
+            "show_remaining": false,
+            "online_event": false,
+            "invite_only": false,
+            "start": {
+                "utc": "2015-02-28T10:00:00Z",
+                "local": "2015-02-28T10:00:00",
+                "timezone": "Europe/London"
+            },
+            "logo_url": "http://cdn.evbuc.com/images/8935703/7266571413/1/logo.png",
+            "url": "http://www.eventbrite.co.uk/e/data-visualisation-a-one-day-workshop-tickets-13902598045",
+            "id": "13902598045",
+            "logo": {
+                "url": "http://cdn.evbuc.com/images/8935703/7266571413/1/logo.png",
+                "id": "8935703"
+            },
+            "description": {
+                "html": "<P><STRONG><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Learn to use infographics to present complex information simply, elegantly and beautifully </SPAN></STRONG></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Whether you're working on a presentation, a website or teaching materials, nothing tells a complex story faster than an infographic. This intensive one-day course gives you everything you need to create memorable static and interactive infographics – from how to find data and tailor it to your audience, to how to create maximum impact with your design.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Led by<STRONG> Tobias Sturt</STRONG> and <STRONG>Adam Frost</STRONG>, formerly of the Guardian's Digital Agency, now the directors of Graphic, a specialist data visualisation agency, the course delivers a series of lectures and workshops which give you the opportunity to get expert feedback on your work. Detailed hand-outs ensure this course offers a long-term benefit to your communications.</SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This course is for you if...</SPAN></H2>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You have to present for a living, using Powerpoint, Prezi or similar software</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You work with data and wish to learn more about turning data into something visually compelling</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You're a designer who wishes to learn more about information graphics</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You're a developer who is interested in creating more usable and elegant front-end solutions</SPAN></LI>\r\n</UL>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><EM>We also offer further bespoke corporate Data Visualisation training for businesses – <A HREF=\"http://www.theguardian.com/guardian-masterclasses/data-visualisation-training-for-businesses\" REL=\"nofollow\">click here</A> for more information.</EM></SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Course description</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This masterclass will look at how raw data can be turned into striking visual stories, including both flat graphic design (infographics) and interactives. There will be two workshops in this masterclass in which participants will be asked to collaborate on creating their own visualisations before presenting back to the group. Topics covered on the day include:</SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">The importance of good visual storytelling</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Designing and presenting graphs and charts to maximise their impact and memorability</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">How to find and analyse data, and match it to the needs of your audience</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">The evolution of data visualisation, and examples of best practice</SPAN><BR><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Please note: Although we do discuss the different visualisation software options available, this is not a software training course</SPAN></LI>\r\n</UL>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Tutor profiles</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Adam Frost</STRONG> was formerly head of Data visualisation at the Guardian's Digital Agency. He is now content director at Graphic. His work has appeared on the Guardian, the New Statesman, Buzzfeed and elsewhere. He has produced infographics and interactives for a range of public and private-sector clients including the Department for Education, HMRC, Google, P&G, Nestle and Unilever.</SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Tobias Sturt</STRONG> was head of Creative at the Guardian's Digital Agency and is now creative director of Graphic, an agency specialising in data visualisation. He has been working in digital storytelling for almost two decades, in all kinds of media, from web to TV to games to infographics. He has also worked on more conventional digital development projects, from website design to branding, from mobile app interfaces to print projects.</SPAN></P>\r\n<P><A HREF=\"http://www.theguardian.com/guardian-masterclasses/data-visualisation\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A></P>\r\n<!-- tags:Digital,Data visualisation -->",
+                "text": "Learn to use infographics to present complex information simply, elegantly and beautifully  \nWhether you're working on a presentation, a website or teaching materials, nothing tells a complex story faster than an infographic. This intensive one-day course gives you everything you need to create memorable static and interactive infographics – from how to find data and tailor it to your audience, to how to create maximum impact with your design. \nLed by Tobias Sturt and Adam Frost, formerly of the Guardian's Digital Agency, now the directors of Graphic, a specialist data visualisation agency, the course delivers a series of lectures and workshops which give you the opportunity to get expert feedback on your work. Detailed hand-outs ensure this course offers a long-term benefit to your communications. \nThis course is for you if... \n\nYou have to present for a living, using Powerpoint, Prezi or similar software\nYou work with data and wish to learn more about turning data into something visually compelling\nYou're a designer who wishes to learn more about information graphics\nYou're a developer who is interested in creating more usable and elegant front-end solutions\n\nWe also offer further bespoke corporate Data Visualisation training for businesses – click here for more information. \nCourse description \nThis masterclass will look at how raw data can be turned into striking visual stories, including both flat graphic design (infographics) and interactives. There will be two workshops in this masterclass in which participants will be asked to collaborate on creating their own visualisations before presenting back to the group. Topics covered on the day include: \n\nThe importance of good visual storytelling\nDesigning and presenting graphs and charts to maximise their impact and memorability\nHow to find and analyse data, and match it to the needs of your audience\nThe evolution of data visualisation, and examples of best practice Please note: Although we do discuss the different visualisation software options available, this is not a software training course\n\nTutor profiles \nAdam Frost was formerly head of Data visualisation at the Guardian's Digital Agency. He is now content director at Graphic. His work has appeared on the Guardian, the New Statesman, Buzzfeed and elsewhere. He has produced infographics and interactives for a range of public and private-sector clients including the Department for Education, HMRC, Google, P&G, Nestle and Unilever. \nTobias Sturt was head of Creative at the Guardian's Digital Agency and is now creative director of Graphic, an agency specialising in data visualisation. He has been working in digital storytelling for almost two decades, in all kinds of media, from web to TV to games to infographics. He has also worked on more conventional digital development projects, from website design to branding, from mobile app interfaces to print projects. \nFull course and returns information on the Masterclasses website"
+            },
+            "name": {
+                "html": "Data visualisation: A one-day workshop",
+                "text": "Data visualisation: A one-day workshop"
+            },
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/13902598045/",
+            "end": {
+                "utc": "2015-02-28T16:00:00Z",
+                "local": "2015-02-28T16:00:00",
+                "timezone": "Europe/London"
+            },
+            "created": "2014-10-23T15:27:17Z",
+            "changed": "2014-11-20T15:45:12Z",
+            "capacity": 32,
+            "status": "live",
+            "currency": "GBP",
+            "listed": true,
+            "shareable": true
+        },
+        {
+            "ticket_classes": [
+                {
+                    "event_id": "14017654181",
+                    "variants": [],
+                    "auto_hide": false,
+                    "hide_description": true,
+                    "split_fee": false,
+                    "include_fee": true,
+                    "hidden": false,
+                    "actual_fee": {
+                        "value": 2222,
+                        "display": "£22.22",
+                        "currency": "GBP"
+                    },
+                    "actual_cost": {
+                        "value": 42678,
+                        "display": "£426.78",
+                        "currency": "GBP"
+                    },
+                    "fee": {
+                        "value": 0,
+                        "display": "£0.00",
+                        "currency": "GBP"
+                    },
+                    "cost": {
+                        "value": 44900,
+                        "display": "£449.00",
+                        "currency": "GBP"
+                    },
+                    "description": null,
+                    "name": "Advanced writing: Manuscript surgery",
+                    "id": "30392751",
+                    "resource_uri": "https://www.eventbriteapi.com/v3/events/14017654181/ticket_classes/30392751/",
+                    "donation": false,
+                    "free": false,
+                    "minimum_quantity": 1,
+                    "maximum_quantity": 3,
+                    "quantity_total": 16,
+                    "quantity_sold": 2,
+                    "sales_start": "2014-10-29T09:00:00Z",
+                    "sales_end": "2015-02-28T09:00:00Z"
+                }
+            ],
+            "format": {
+                "short_name_localized": "Class",
+                "short_name": "Class",
+                "name_localized": "Class, Training, or Workshop",
+                "name": "Class, Training, or Workshop",
+                "id": "9",
+                "resource_uri": "https://www.eventbriteapi.com/v3/formats/9/"
+            },
+            "category": {
+                "short_name_localized": "Film & Media",
+                "short_name": "Film & Media",
+                "name_localized": "Film, Media & Entertainment",
+                "name": "Film, Media & Entertainment",
+                "id": "104",
+                "resource_uri": "https://www.eventbriteapi.com/v3/categories/104/"
+            },
+            "venue": {
+                "longitude": "-0.1216933",
+                "latitude": "51.5349086",
+                "name": "The Guardian",
+                "id": "4226851",
+                "resource_uri": "https://www.eventbriteapi.com/v3/venues/4226851/",
+                "address": {
+                    "longitude": "-0.1216933",
+                    "latitude": "51.5349086",
+                    "country": "GB",
+                    "postal_code": "N1 9GU",
+                    "region": null,
+                    "city": "London",
+                    "address_2": "90 York Way",
+                    "address_1": "Kings Place"
+                }
+            },
+            "organizer": {
+                "num_future_events": 116,
+                "num_past_events": 690,
+                "url": "http://www.eventbrite.com/o/guardian-masterclasses-684756979",
+                "name": "Guardian Masterclasses",
+                "id": "684756979",
+                "resource_uri": "https://www.eventbriteapi.com/v3/organizers/684756979/",
+                "logo": {
+                    "url": "http://cdn.evbuc.com/images/8916563/7266571413/2/logo.png",
+                    "id": "8916563"
+                },
+                "description": {
+                    "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.</P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.</P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.</P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.</P>\r\n</DIV>",
+                    "text": "\r\nWelcome to Guardian masterclasses – a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n"
+                }
+            },
+            "subcategory": null,
+            "format_id": "9",
+            "subcategory_id": null,
+            "category_id": "104",
+            "venue_id": "4226851",
+            "organizer_id": "684756979",
+            "show_remaining": false,
+            "online_event": false,
+            "invite_only": false,
+            "start": {
+                "utc": "2015-02-28T10:00:00Z",
+                "local": "2015-02-28T10:00:00",
+                "timezone": "Europe/London"
+            },
+            "logo_url": "http://cdn.evbuc.com/images/8935727/7266571413/1/logo.png",
+            "url": "http://www.eventbrite.co.uk/e/advanced-writing-manuscript-surgery-tickets-14017654181",
+            "id": "14017654181",
+            "logo": {
+                "url": "http://cdn.evbuc.com/images/8935727/7266571413/1/logo.png",
+                "id": "8935727"
+            },
+            "description": {
+                "html": "<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Award-winning novelist Tim Lott provides an invaluable manuscript clinic for new writers  </STRONG></SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">As you approach completion of a first draft, it's the perfect time to take stock of what you've achieved so far, and change everything that is holding your novel back. But most authors will agree that it's hard to find a qualified, objective voice to show you where you're going wrong, and back up where you're going right. This course offers an exciting opportunity for new writers to get personal coaching from a renowned talent. </SPAN></P>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Join Whitbread-winning novelist <STRONG> Tim Lott</STRONG> for a comprehensive writing clinic where you'll receive in-depth, tailored advice that deals directly with the problems you're facing with your manuscript, as well as receiving an education in more general good practice. By the close of the weekend, you'll be ready to complete your final draft with confidence, as Tim identifies your work's problem areas, gives you the tools to improve them, and teaches you psychological techniques to overcome doubt and writer's block. </SPAN></P>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This course is for you if…</SPAN></H2>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You're an author who has recently completed, or is close to completing, the first draft of a novel</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">You're an alumnus of a previous beginner-level Guardian Masterclass for writers looking for more in-depth advice on your writing</SPAN></LI>\r\n</UL>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Course description</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">This interactive weekend course will provide tailored advice for a small group of novelists. Attendees will be asked to submit a document outlining specific difficulties or concerns they're facing with their work, and the content of the course will then be tailored around the needs of the group. Topics covered include:</SPAN></P>\r\n<UL>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">How to purge cliches from your writing</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Character check – do your main characters have convincing arcs? What are their secrets, and the illusions that sustain them?</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Psychological MOT – how to deal with blocks, and how to keep going when you are feeling discouraged</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">What makes for a satisfying ending?</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">The art of synopses and of the pitch – how to sell your manuscript to the industry</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Crafting a powerful title</SPAN></LI>\r\n<LI><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Plot, time and structure – getting the architecture of your story right</SPAN></LI>\r\n</UL>\r\n<H2><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\">Tutor profile</SPAN></H2>\r\n<P><SPAN STYLE=\"font-size: small; font-family: arial,helvetica,sans-serif;\"><STRONG>Tim Lott</STRONG> is an award-winning novelist, journalist, critic and creative writing tutor. His first book, memoir The Scent of Dried Roses, was published in 1996. His first novel White City Blue, published in 1999, won the Whitbread First Novel Award, and other works include Rumours of a Hurricane (2002), The Love Secrets of Don Juan (2003), the Seymour Tapes (2005) and young adult novel Fearless (2007). His latest novel is Under the Same Stars.</SPAN></P>\r\n<P><A HREF=\"http://www.theguardian.com/guardian-masterclasses/advanced-writing-manuscript-surgery-tim-lott-writing-course\" REL=\"nofollow\">Full course and returns information on the Masterclasses website</A></P>\r\n<!-- tags:Writing,Creative Writing -->",
+                "text": "Award-winning novelist Tim Lott provides an invaluable manuscript clinic for new writers   \nAs you approach completion of a first draft, it's the perfect time to take stock of what you've achieved so far, and change everything that is holding your novel back. But most authors will agree that it's hard to find a qualified, objective voice to show you where you're going wrong, and back up where you're going right. This course offers an exciting opportunity for new writers to get personal coaching from a renowned talent.  \nJoin Whitbread-winning novelist  Tim Lott for a comprehensive writing clinic where you'll receive in-depth, tailored advice that deals directly with the problems you're facing with your manuscript, as well as receiving an education in more general good practice. By the close of the weekend, you'll be ready to complete your final draft with confidence, as Tim identifies your work's problem areas, gives you the tools to improve them, and teaches you psychological techniques to overcome doubt and writer's block.  \nThis course is for you if… \n\nYou're an author who has recently completed, or is close to completing, the first draft of a novel\nYou're an alumnus of a previous beginner-level Guardian Masterclass for writers looking for more in-depth advice on your writing\n\nCourse description \nThis interactive weekend course will provide tailored advice for a small group of novelists. Attendees will be asked to submit a document outlining specific difficulties or concerns they're facing with their work, and the content of the course will then be tailored around the needs of the group. Topics covered include: \n\nHow to purge cliches from your writing\nCharacter check – do your main characters have convincing arcs? What are their secrets, and the illusions that sustain them?\nPsychological MOT – how to deal with blocks, and how to keep going when you are feeling discouraged\nWhat makes for a satisfying ending?\nThe art of synopses and of the pitch – how to sell your manuscript to the industry\nCrafting a powerful title\nPlot, time and structure – getting the architecture of your story right\n\nTutor profile \nTim Lott is an award-winning novelist, journalist, critic and creative writing tutor. His first book, memoir The Scent of Dried Roses, was published in 1996. His first novel White City Blue, published in 1999, won the Whitbread First Novel Award, and other works include Rumours of a Hurricane (2002), The Love Secrets of Don Juan (2003), the Seymour Tapes (2005) and young adult novel Fearless (2007). His latest novel is Under the Same Stars. \nFull course and returns information on the Masterclasses website"
+            },
+            "name": {
+                "html": "Advanced writing: Manuscript surgery",
+                "text": "Advanced writing: Manuscript surgery"
+            },
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/14017654181/",
+            "end": {
+                "utc": "2015-03-01T16:00:00Z",
+                "local": "2015-03-01T16:00:00",
+                "timezone": "Europe/London"
+            },
+            "created": "2014-10-29T15:19:54Z",
+            "changed": "2014-11-19T19:36:49Z",
+            "capacity": 16,
+            "status": "live",
+            "currency": "GBP",
+            "listed": true,
+            "shareable": true
+        }
+    ],
+    "pagination": {
+        "page_count": 3,
+        "page_size": 50,
+        "page_number": 3,
+        "object_count": 117
+    }
+}
