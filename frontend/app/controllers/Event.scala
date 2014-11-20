@@ -50,7 +50,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo, "All categories"))
+    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
   }
 
   def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>

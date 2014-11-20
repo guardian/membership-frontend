@@ -1,4 +1,4 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo, title: String)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo, selectedTag: String = "")(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Eventbrite.MasterclassEvent
 
@@ -16,7 +16,7 @@
                 <select class="events-list__category__select js-filter-category">
                     <option value="all">All categories</option>
                     @for(tag <- MasterclassEvent.topLevelTags) {
-                        <option value="@MasterclassEvent.encodeTag(tag)" @if(tag == title){ selected}>@tag</option>
+                        <option value="@MasterclassEvent.encodeTag(tag)" @if(tag == selectedTag){ selected}>@tag</option>
                     }
                 </select>
             </label>
@@ -33,5 +33,5 @@
         </div>
     </div>
 
-    @views.html.event.list(eventPortfolio, pageInfo, title)
+    @views.html.event.list(eventPortfolio, pageInfo)
 }
