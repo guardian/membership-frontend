@@ -1,0 +1,20 @@
+@(userString: String)
+
+@main("Test Users") {
+
+    @fragments.layout.sectionHeader("Test Users")
+
+
+    <div class="info-container">
+
+        <h2 class="section-body-headline">New Test User</h2>
+        <p><strong>@userString</strong> will be valid for the next half hour.
+            Use these details when joining:</p>
+        <ul>
+            <li>First Name &amp; Username: <strong>@userString</strong></li>
+            <li>Email: <strong>@userString@@gu.com</strong></li>
+        </ul>
+
+
+    </div>
+}
