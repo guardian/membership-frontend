@@ -26,10 +26,10 @@
     <div class="event-block">
         <div class="event-block__header">
             <h4 class="event-block__header__title case--lower">@title</h4>
-            <span class="event-block__header__count">@eventPortfolio.normal.length</span>
+            <span class="event-block__header__count js-filter-count">@eventPortfolio.normal.length</span>
         </div>
         <div class="event-block__events">
-            <ul class="events-list u-unstyled" id="js-filter-container">
+            <ul class="events-list u-unstyled@if(eventPortfolio.normal.length == 0){ events-list--empty}" id="js-filter-container">
                 @for(event <- eventPortfolio.normal) {
                     @fragments.event.item(event, false)
                 }

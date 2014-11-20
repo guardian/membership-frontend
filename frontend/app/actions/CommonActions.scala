@@ -1,12 +1,14 @@
 package actions
 
 import actions.Functions._
-import com.gu.googleauth
+import com.gu.googleauth.UserIdentity
+import com.gu.{identity, googleauth}
 import configuration.Config
 import controllers.{routes, Cached, NoCache}
 import play.api.http.HeaderNames._
 import play.api.mvc.ActionBuilder
 import play.api.mvc.Results._
+import play.api.mvc.Security.AuthenticatedRequest
 
 trait CommonActions {
   val NoCacheAction = resultModifier(NoCache(_))
@@ -21,7 +23,9 @@ trait CommonActions {
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 
-  val AuthenticatedStaffNonMemberAction = NoCacheAction andThen OAuthActions.AuthAction
+  val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
+
+  val AuthenticatedStaffNonMemberAction = NoCacheAction andThen GoogleAuthAction
 
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 
