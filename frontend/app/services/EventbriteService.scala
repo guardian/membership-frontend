@@ -132,7 +132,8 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val initialDelay = 0.seconds
 
-  def refresh(): Future[Seq[RichEvent]] = getAllEvents
+  def refresh(): Future[Seq[RichEvent]] =
+    getAllEvents.map(_.filter(_.memberTickets.exists { t => t.quantity_sold < t.quantity_total }))
 
   def events: Seq[RichEvent] = agent.get()
   def priorityEventOrdering: Seq[String] = Nil
