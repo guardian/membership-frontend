@@ -60,7 +60,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events.filter(_.tags.contains(tag))), pageInfo, tag))
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.getEventsTagged(tag)), pageInfo, tag))
   }
 
   def list = CachedAction { implicit request =>
