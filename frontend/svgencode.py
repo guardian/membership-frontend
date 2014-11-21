@@ -15,4 +15,4 @@ for fn in sys.stdin:
 
     data = 'data:image/svg+xml;base64,' + base64.b64encode(open(fn).read())
 
-    print '%%%s, .%s { display: inline-block; width: %spx; height: %spx; background-image: url(%s); }' % (rule_name, rule_name, width, height, data)
+    print '%%%s, .%s { display: inline-block; background-repeat: no-repeat; width: %spx; height: %spx; background-image: url(%s); }' % (rule_name, rule_name, width, height, data)
