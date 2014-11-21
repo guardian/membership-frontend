@@ -112,16 +112,6 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
-            zeroclipboard: {
-                src: [
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.js',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.map',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.swf'
-                ],
-                dest: '<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/',
-                expand: true,
-                flatten: true
-            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: ['**', '!**/svgs/**'],
@@ -372,8 +362,7 @@ module.exports = function (grunt) {
             'copy:html5shiv',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture',
-            'copy:zeroclipboard'
+            'copy:omniture'
         ]);
     });
 
