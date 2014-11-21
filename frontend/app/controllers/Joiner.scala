@@ -51,9 +51,8 @@ trait Joiner extends Controller {
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
-    val identityRequest = IdentityRequest(request)
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, identityRequest)
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
 
       tier match {
@@ -67,15 +66,16 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
-    val identityRequest = IdentityRequest(request)
+
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, identityRequest)
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
       Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
     }
   }
 
-  private def identityDetails(user: com.gu.identity.model.User, identityRequest: IdentityRequest) = {
+  private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
+    val identityRequest = IdentityRequest(request)
     for {
       userOpt <- IdentityService.getFullUserDetails(user, identityRequest)
       privateFields = userOpt.fold(PrivateFields())(_.privateFields)
