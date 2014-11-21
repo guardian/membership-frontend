@@ -3,7 +3,7 @@ package controllers
 import play.api.mvc.Controller
 import model.PageInfo
 import configuration.CopyConfig
-import services.{GuardianLiveEventService, PreMembershipJoiningEventFromSessionExtractor}
+import services.{EventbriteService, PreMembershipJoiningEventFromSessionExtractor}
 
 object Joining extends Controller {
 
@@ -12,7 +12,7 @@ object Joining extends Controller {
   */
   def tierChooser() = NoCacheAction { implicit request =>
 
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(GuardianLiveEventService.getEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
     val pageInfo = PageInfo(
       CopyConfig.copyTitleChooseTier,
       request.path,

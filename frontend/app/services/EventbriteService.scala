@@ -149,3 +149,8 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
 
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
 }
+
+object EventbriteService {
+  def getEvent(id: String): Option[RichEvent] =
+    GuardianLiveEventService.getEvent(id) orElse MasterclassEventService.getEvent(id)
+}
