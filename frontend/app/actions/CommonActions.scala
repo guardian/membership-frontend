@@ -28,7 +28,7 @@ trait CommonActions {
   val GoogleAndIdentityAuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
                                                           identityApiUserEmailRefresher() andThen
                                                           googleAuthenticationRefiner() andThen
-                                                          onlyGuardianEmailFilter()
+                                                          matchingGuardianEmail()
 
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 

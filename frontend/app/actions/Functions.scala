@@ -71,7 +71,7 @@ object Functions {
     }
   }
 
-  def onlyGuardianEmailFilter(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
+  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = Future.successful {
       if(GuardianDomains.emailsMatch(request.googleUser.email, request.identityUser.getPrimaryEmailAddress)) None
       else Some(onNonGuEmail(request))
