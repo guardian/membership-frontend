@@ -6,6 +6,7 @@ object Dependencies {
   val identity = "3.42"
 
   //libraries
+  val sentryRavenLogback = "net.kencochrane.raven" % "raven-logback" % "5.0"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % identity
   val identityModel = "com.gu.identity" %% "identity-model" % identity
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.4"
@@ -19,5 +20,6 @@ object Dependencies {
   //projects
 
   val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityModel, identityTestUsers, scalaUri,
-    membershipCommon, contentAPI, playWS, playFilters)
+    membershipCommon, contentAPI, playWS, playFilters,sentryRavenLogback)
+
 }
