@@ -364,7 +364,7 @@
         &.home-slice--epic-home-page {
             @include mq(tablet) {
                 .home-slice__inner {
-                    height: rem(834px);
+                    height: rem(754px);
                 }
             }
 
@@ -372,7 +372,7 @@
                 @include mq(tablet) {
                     position: absolute;
                     top: auto;
-                    bottom: rem(478px);
+                    bottom: rem(398px);
                 }
             }
             .home-slice__copy-block {
