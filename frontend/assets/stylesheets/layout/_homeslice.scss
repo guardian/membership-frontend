@@ -135,7 +135,7 @@
             @include mq(mem-full) {
                 position: static;
                 width: rem(480px);
-                padding: rem($gs-gutter) rem($gs-gutter * 8) rem($gs-gutter) rem($gs-gutter);
+                padding: rem($gs-gutter);
             }
         }
 
