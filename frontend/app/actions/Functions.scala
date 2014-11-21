@@ -74,11 +74,7 @@ object Functions {
 
   def onlyGuardianEmailFilter(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = Future.successful {
-
-      val identityEmail = request.identityUser.getPrimaryEmailAddress
-      val googleEmail = request.googleUser.email
-
-      if(identityEmail.split("@").head == googleEmail.split("@").head) None
+      if(GuardianDomains.emailsMatch(request.googleUser.email, request.identityUser.getPrimaryEmailAddress)) None
       else Some(onNonGuEmail(request))
     }
   }
