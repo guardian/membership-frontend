@@ -23,10 +23,12 @@ trait CommonActions {
 
   val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
 
-  val AuthenticatedStaffNonMemberAction = NoCacheAction andThen GoogleAuthAction
+  val GoogleAuthenticatedStaffNonMemberAction = NoCacheAction andThen GoogleAuthAction
 
-  val GoogleAndIdentityAuthenticatedStaffAction = AuthenticatedAction andThen identityApiUserEmailRefresher() andThen
-                                                  googleAuthenticationRefiner() andThen onlyGuardianEmailFilter()
+  val GoogleAndIdentityAuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
+                                                          identityApiUserEmailRefresher() andThen
+                                                          googleAuthenticationRefiner() andThen
+                                                          onlyGuardianEmailFilter()
 
   val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
 

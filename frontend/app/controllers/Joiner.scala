@@ -46,7 +46,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
+  def staff = GoogleAuthenticatedStaffNonMemberAction { implicit request =>
     val error = request.flash.get("error")
     Ok(views.html.joiner.staff(error))
   }
@@ -67,7 +67,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffAction.async { implicit request =>
+  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, identityRequest)
