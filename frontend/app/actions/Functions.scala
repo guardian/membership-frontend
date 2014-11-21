@@ -1,13 +1,15 @@
 package actions
 
 import actions.Fallbacks._
+import com.gu.googleauth.UserIdentity
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
-import services.AuthenticationService
+import services.{AuthenticationService, IdentityService}
 
 import scala.concurrent.Future
 
@@ -47,6 +49,39 @@ object Functions {
         }
       }
     }
+
+  def identityApiUserEmailRefresher(onOutdatedCookie: RequestHeader => Result = chooseSigninOrRegister(_)) =
+    new ActionRefiner[AuthRequest, AuthRequest] {
+      override def refine[A](request: AuthRequest[A]) = {
+        for (userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request)))
+        yield {
+          userOpt.map(refreshedUser => new AuthRequest(request.user.copy(primaryEmailAddress = refreshedUser.primaryEmailAddress), request)).toRight(onOutdatedCookie(request))
+        }
+      }
+    }
+  
+  def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
+    new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
+      override def refine[A](request: AuthRequest[A]) = Future.successful {
+        //We need to build an Auth request based on Google user and Identity user
+        //The line below is a copy of the private helper method in play-googleauth to ensure the user is Google auth'd
+        //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
+        val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
+        userIdentityOpt.toRight(onNonAuthentication(request))
+      }
+    }
+  }
+
+  def onlyGuardianEmailFilter(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) = Future.successful {
+
+      val identityEmail = request.identityUser.getPrimaryEmailAddress
+      val googleEmail = request.googleUser.email
+
+      if(identityEmail.split("@").head == googleEmail.split("@").head) None
+      else Some(onNonGuEmail(request))
+    }
+  }
 
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =

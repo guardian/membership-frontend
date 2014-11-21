@@ -1,7 +1,6 @@
-import com.gu.googleauth
-import com.gu.identity
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
+import com.gu.{googleauth, identity}
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
@@ -10,6 +9,8 @@ import utils.TestUsers
 
 import scala.concurrent.{ExecutionContext, Future}
 
+//case class IdentityWithGoogleUser(identityUser: identity.model.User, googleUser: googleauth.UserIdentity)
+
 package object actions {
 
   val logger = Logger(this.getClass())
@@ -17,6 +18,9 @@ package object actions {
   type AuthRequest[A] = AuthenticatedRequest[A, identity.model.User]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
+
+//  type IdentityGoogleAuthRequest[A] = AuthenticatedRequest[A, IdentityWithGoogleUser]
+ // type IdentityGoogleAuthRequest[A] = IdentityGoogleRequest[A]
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
@@ -38,6 +42,14 @@ package object actions {
       isValidTestUser
     }
   }
+
+  //TODO Google and Identity Auth needed
+
+  case class IdentityGoogleAuthRequest[A](val googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+    val identityUser = request.user
+  }
+
+
 
   case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user

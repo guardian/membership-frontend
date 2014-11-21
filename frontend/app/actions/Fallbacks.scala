@@ -14,5 +14,8 @@ object Fallbacks {
   def chooseSigninOrRegister(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Login.chooseSigninOrRegister(request.uri, None))
 
+  def joinStaffMembership(implicit request: RequestHeader) =
+    redirectTo(controllers.routes.Joiner.staff())
+
   def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL(secure = true))
 }

@@ -1,34 +1,25 @@
 package controllers
 
 import actions.Functions._
-import com.gu.identity.model.User
+import actions._
+import com.gu.membership.salesforce.{ScalaforceError, Tier}
+import com.netaporter.uri.dsl._
+import configuration.{Config, CopyConfig}
+import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm}
+import model.Eventbrite.{EBCode, RichEvent}
+import model.StripeSerializer._
+import model._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
+import play.api.mvc.{Controller, Request, Result}
+import services._
 
 import scala.concurrent.Future
-
-import com.netaporter.uri.dsl._
-
-import play.api.mvc.{Result, Request, Controller}
-import play.api.libs.json.Json
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.gu.membership.salesforce.{ScalaforceError, Tier}
-
-import actions._
-import configuration.{Config, CopyConfig}
-import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
-import model._
-import model.StripeSerializer._
-import model.Eventbrite.{RichEvent, EBCode, EBEvent}
-import services._
 
 trait Joiner extends Controller {
 
   val memberService: MemberService
   val eventService: EventbriteService
-
-  val AuthenticatedJoinStaffAction = NoCacheAction andThen OAuthActions.AuthAction
-  
-  val AuthenticatedStaffEnterDetailsAction = NoCacheAction andThen OAuthActions.AuthAction andThen authenticated()
 
   def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
     def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
@@ -55,8 +46,9 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = AuthenticatedJoinStaffAction { implicit request =>
-    Ok(views.html.joiner.staff())
+  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
+    val error = request.flash.get("error")
+    Ok(views.html.joiner.staff(error))
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
@@ -75,10 +67,10 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterStaffDetails = AuthenticatedStaffEnterDetailsAction.async { implicit request =>
+  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, identityRequest)
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, identityRequest)
     } yield {
       Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
     }
