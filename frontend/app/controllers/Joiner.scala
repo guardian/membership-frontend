@@ -1,6 +1,5 @@
 package controllers
 
-import actions.Functions._
 import actions._
 import com.gu.membership.salesforce.{ScalaforceError, Tier}
 import com.netaporter.uri.dsl._

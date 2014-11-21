@@ -63,8 +63,7 @@ object Functions {
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
-        //We need to build an Auth request based on Google user and Identity user
-        //The line below is a copy of the private helper method in play-googleauth to ensure the user is Google auth'd
+        //Copy the private helper method in play-googleauth to ensure the user is Google auth'd
         //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
         val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
         userIdentityOpt.toRight(onNonAuthentication(request))

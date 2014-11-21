@@ -9,8 +9,6 @@ import utils.TestUsers
 
 import scala.concurrent.{ExecutionContext, Future}
 
-//case class IdentityWithGoogleUser(identityUser: identity.model.User, googleUser: googleauth.UserIdentity)
-
 package object actions {
 
   val logger = Logger(this.getClass())
@@ -18,9 +16,6 @@ package object actions {
   type AuthRequest[A] = AuthenticatedRequest[A, identity.model.User]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
-
-//  type IdentityGoogleAuthRequest[A] = AuthenticatedRequest[A, IdentityWithGoogleUser]
- // type IdentityGoogleAuthRequest[A] = IdentityGoogleRequest[A]
 
   implicit class RichAuthRequest[A](req: AuthRequest[A]) {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
@@ -43,14 +38,6 @@ package object actions {
     }
   }
 
-  //TODO Google and Identity Auth needed
-
-  case class IdentityGoogleAuthRequest[A](val googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
-    val identityUser = request.user
-  }
-
-
-
   case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user
 
@@ -60,4 +47,8 @@ package object actions {
   type AnyMemberTierRequest[A] = MemberRequest[A, Member]
 
   type PaidMemberRequest[A] = MemberRequest[A, PaidMember]
+
+  case class IdentityGoogleAuthRequest[A](val googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+    val identityUser = request.user
+  }
 }
