@@ -98,7 +98,7 @@ object Eventbrite {
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
-    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member") }
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
   }

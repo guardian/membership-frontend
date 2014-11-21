@@ -122,7 +122,13 @@ object GuardianLiveEventService extends EventbriteService {
   }
 }
 
+object MasterclassEventServiceHelpers {
+  def availableEvents(events: Seq[RichEvent]): Seq[RichEvent] =
+    events.filter(_.memberTickets.exists { t => t.quantity_sold < t.quantity_total } )
+}
+
 object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
+  import MasterclassEventServiceHelpers._
 
   val masterclassDataService = MasterclassDataService
 
@@ -132,7 +138,7 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
   val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   val initialDelay = 0.seconds
 
-  def refresh(): Future[Seq[RichEvent]] = getAllEvents
+  def refresh(): Future[Seq[RichEvent]] = getAllEvents.map(availableEvents)
 
   def events: Seq[RichEvent] = agent.get()
   def priorityEventOrdering: Seq[String] = Nil
