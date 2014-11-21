@@ -98,7 +98,7 @@ object Eventbrite {
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
-    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.startsWith("Guardian Member") }
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member") }
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
   }
@@ -171,7 +171,7 @@ object Eventbrite {
     val topLevelTags = Seq("Writing", "Publishing", "Journalism", "Business", "Digital", "Culture", "Food and drink", "Media")
 
     def encodeTag(tag: String) = tag.toLowerCase.replace(" ", "-")
-    def decodeTag(tag: String) = tag.replace("-", " ")
+    def decodeTag(tag: String) = tag.capitalize.replace("-", " ")
 
     def extractTags(s: String): Option[Seq[String]] =
       "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
