@@ -1,4 +1,4 @@
-@(eventOpt: Option[model.Eventbrite.EBEvent], pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventOpt: Option[model.Eventbrite.RichEvent], pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import views.support.Dates._
@@ -26,7 +26,7 @@
 
                 <div class="event-content__info event-content__info--no-padding">
                     <div class="event-item__media">
-                        <div class="delayed-image-load" data-src="@Config.eventImageUrlPath(event.id)/{width}{pixel_ratio}.jpg" data-alt="Please upload an event image" data-class="responsive-img"></div>
+                        <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
                     </div>
                     <h2 class="event-content__name">
                         @if(event.isSoldOut){
