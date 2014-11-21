@@ -44,8 +44,6 @@ require([
 
     ajax.init({page: {ajaxUrl: ''}});
 
-    /* jshint ignore:start */
-    // avoid "Do not use 'new' for side effects" error
     // event imagery
     if ($('.delayed-image-load').length) {
         new Imager('.delayed-image-load', {
@@ -67,7 +65,6 @@ require([
             availablePixelRatios: guardian.membership.homeImages.ratios
         });
     }
-    /* jshint ignore:end */
 
     // TODO: Remove this, see module
     cookieRefresh.init();
