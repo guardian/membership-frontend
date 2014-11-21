@@ -70,11 +70,11 @@
 .events-list__category {
     display: inline-block;
     padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) 0;
-    margin-right: rem($gs-gutter);
 
     @include fs-textSans(2);
 
     @include mq(tablet) {
+        margin-right: rem($gs-gutter);
         border-right: 1px solid $c-neutral4;
     }
 }
@@ -91,10 +91,6 @@
     margin-top: rem($gs-gutter / 2);
     @include fs-textSans(2);
     color: $c-neutral2;
-
-    &:after {
-        content: ' masterclasses';
-    }
 
     @include mq(tablet) {
         float: none;

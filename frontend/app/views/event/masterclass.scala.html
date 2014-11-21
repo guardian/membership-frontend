@@ -20,7 +20,12 @@
                     }
                 </select>
             </label>
-            <span class="events-list__count js-filter-count">@eventPortfolio.normal.length</span>
+            <span class="events-list__count">
+                <span class="js-filter-count">@eventPortfolio.normal.length</span> masterclasses
+                @if(selectedTag.isEmpty) {
+                    <span class="hidden-mobile">in @MasterclassEvent.topLevelTags.length categories</span>
+                }
+            </span>
             <label class="events-list__filter">
                 <input type="text"
                        class="events-list__filter__text"
