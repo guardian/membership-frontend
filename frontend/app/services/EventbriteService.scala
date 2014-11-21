@@ -140,4 +140,6 @@ object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[
     val masterclassData = masterclassDataService.getData(event.id)
     MasterclassEvent(event, masterclassData)
   }
+
+  override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
 }

@@ -76,4 +76,10 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     // bind to typing in the search box
     bean.on(filterInput, 'keyup', filterList);
 
+    var filterCategory = document.querySelector('.js-filter-category');
+    bean.on(filterCategory, 'change', function () {
+        var category = filterCategory.options[filterCategory.selectedIndex].value;
+        window.location.href = '/masterclasses/' + category;
+    });
+
 });

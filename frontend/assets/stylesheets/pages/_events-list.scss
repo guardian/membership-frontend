@@ -41,19 +41,6 @@
     @include fs-header(4);
 }
 
-.event-block__header__count {
-    @include fs-headline(2);
-
-    .theme--masterclass &:after {
-        content: ' courses';
-    }
-
-    // We don't have enough events to show this at the moment!
-    .theme--guardian-live & {
-        display: none;
-    }
-}
-
 .event-block__events {
     overflow: hidden;
 
@@ -75,13 +62,47 @@
 
 // only visible when no filter results are found
 .events-list--empty:before {
-    content: 'No matching courses';
+    content: 'Sorry, no matching masterclasses.';
+
     display: block;
+}
+
+.events-list__category {
+    display: inline-block;
+    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) 0;
+
+    @include fs-textSans(2);
+
+    @include mq(tablet) {
+        margin-right: rem($gs-gutter);
+        border-right: 1px solid $c-neutral4;
+    }
+}
+
+.events-list__category__select {
+    border: 0;
+    outline: 0;
+    background-color: $white;
+    font-weight: bold;
+}
+
+.events-list__count {
+    float: right;
+    margin-top: rem($gs-gutter / 2);
+    @include fs-textSans(2);
+    color: $c-neutral2;
+
+    @include mq(tablet) {
+        float: none;
+    }
 }
 
 .events-list__filter {
     position: relative;
-    display: block;
+
+    @include mq(tablet) {
+        float: right;
+    }
 }
 
 $filter-icon-size: 18px;
@@ -96,7 +117,7 @@ $filter-icon-size: 18px;
 
     width: 100%;
     @include mq(tablet) {
-        width: rem(300px);
+        width: auto;
     }
 }
 
