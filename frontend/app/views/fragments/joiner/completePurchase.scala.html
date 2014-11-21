@@ -1,13 +1,13 @@
-@(ebIFrameDetail: Option[(String, Int)], event: Option[model.Eventbrite.EBEvent])
+@(ebIFrameDetail: Option[(String, Int)], eventOpt: Option[model.Eventbrite.RichEvent])
 
 @import views.support.Social.joinThankyou
 
-@if(event) {
+@if(eventOpt.nonEmpty) {
     <section class="content__container content__container--slim">
         <h2 class="content__headline">Complete your ticket purchase</h2>
         <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again.</p>
 
-        @for(event <- event) {
+        @for(event <- eventOpt) {
             @fragments.event.itemSummary(event)
         }
 
