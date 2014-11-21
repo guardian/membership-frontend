@@ -10,92 +10,92 @@ window.Modernizr = (function( window, document, undefined ) {
 
     var version = '2.8.3',
 
-    Modernizr = {},
+        Modernizr = {},
 
-    enableClasses = true,
+        enableClasses = true,
 
-    docElement = document.documentElement,
+        docElement = document.documentElement,
 
-    mod = 'modernizr',
-    modElem = document.createElement(mod),
-    mStyle = modElem.style,
+        mod = 'modernizr',
+        modElem = document.createElement(mod),
+        mStyle = modElem.style,
 
-    inputElem  ,
-
-
-    toString = {}.toString,    omPrefixes = 'Webkit Moz O ms',
-
-    cssomPrefixes = omPrefixes.split(' '),
-
-    domPrefixes = omPrefixes.toLowerCase().split(' '),
+        inputElem  ,
 
 
-    tests = {},
-    inputs = {},
-    attrs = {},
+        toString = {}.toString,    omPrefixes = 'Webkit Moz O ms',
 
-    classes = [],
+        cssomPrefixes = omPrefixes.split(' '),
 
-    slice = classes.slice,
-
-    featureName,
+        domPrefixes = omPrefixes.toLowerCase().split(' '),
 
 
+        tests = {},
+        inputs = {},
+        attrs = {},
 
-    _hasOwnProperty = ({}).hasOwnProperty, hasOwnProp;
+        classes = [],
+
+        slice = classes.slice,
+
+        featureName,
+
+
+
+        _hasOwnProperty = ({}).hasOwnProperty, hasOwnProp;
 
     if ( !is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined') ) {
-      hasOwnProp = function (object, property) {
-        return _hasOwnProperty.call(object, property);
-      };
+        hasOwnProp = function (object, property) {
+            return _hasOwnProperty.call(object, property);
+        };
     }
     else {
-      hasOwnProp = function (object, property) {
-        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
-      };
+        hasOwnProp = function (object, property) {
+            return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
+        };
     }
 
 
     if (!Function.prototype.bind) {
-      Function.prototype.bind = function bind(that) {
+        Function.prototype.bind = function bind(that) {
 
-        var target = this;
+            var target = this;
 
-        if (typeof target != "function") {
-            throw new TypeError();
-        }
-
-        var args = slice.call(arguments, 1),
-            bound = function () {
-
-            if (this instanceof bound) {
-
-              var F = function(){};
-              F.prototype = target.prototype;
-              var self = new F();
-
-              var result = target.apply(
-                  self,
-                  args.concat(slice.call(arguments))
-              );
-              if (Object(result) === result) {
-                  return result;
-              }
-              return self;
-
-            } else {
-
-              return target.apply(
-                  that,
-                  args.concat(slice.call(arguments))
-              );
-
+            if (typeof target != "function") {
+                throw new TypeError();
             }
 
-        };
+            var args = slice.call(arguments, 1),
+                bound = function () {
 
-        return bound;
-      };
+                    if (this instanceof bound) {
+
+                        var F = function(){};
+                        F.prototype = target.prototype;
+                        var self = new F();
+
+                        var result = target.apply(
+                            self,
+                            args.concat(slice.call(arguments))
+                        );
+                        if (Object(result) === result) {
+                            return result;
+                        }
+                        return self;
+
+                    } else {
+
+                        return target.apply(
+                            that,
+                            args.concat(slice.call(arguments))
+                        );
+
+                    }
+
+                };
+
+            return bound;
+        };
     }
 
     function setCss( str ) {
@@ -129,13 +129,13 @@ window.Modernizr = (function( window, document, undefined ) {
             var item = obj[props[i]];
             if ( item !== undefined) {
 
-                            if (elem === false) return props[i];
+                if (elem === false) return props[i];
 
-                            if (is(item, 'function')){
-                                return item.bind(elem || obj);
+                if (is(item, 'function')){
+                    return item.bind(elem || obj);
                 }
 
-                            return item;
+                return item;
             }
         }
         return false;
@@ -146,15 +146,15 @@ window.Modernizr = (function( window, document, undefined ) {
         var ucProp  = prop.charAt(0).toUpperCase() + prop.slice(1),
             props   = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
 
-            if(is(prefixed, "string") || is(prefixed, "undefined")) {
-          return testProps(props, prefixed);
+        if(is(prefixed, "string") || is(prefixed, "undefined")) {
+            return testProps(props, prefixed);
 
-            } else {
-          props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
-          return testDOMProps(props, prefixed, elem);
+        } else {
+            props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
+            return testDOMProps(props, prefixed, elem);
         }
     }    tests['flexbox'] = function() {
-      return testPropsAll('flexWrap');
+        return testPropsAll('flexWrap');
     };
 
 
@@ -166,7 +166,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     for ( var feature in tests ) {
         if ( hasOwnProp(tests, feature) ) {
-                                    featureName  = feature.toLowerCase();
+            featureName  = feature.toLowerCase();
             Modernizr[featureName] = tests[feature]();
 
             classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
@@ -175,32 +175,32 @@ window.Modernizr = (function( window, document, undefined ) {
 
 
 
-     Modernizr.addTest = function ( feature, test ) {
-       if ( typeof feature == 'object' ) {
-         for ( var key in feature ) {
-           if ( hasOwnProp( feature, key ) ) {
-             Modernizr.addTest( key, feature[ key ] );
-           }
-         }
-       } else {
+    Modernizr.addTest = function ( feature, test ) {
+        if ( typeof feature == 'object' ) {
+            for ( var key in feature ) {
+                if ( hasOwnProp( feature, key ) ) {
+                    Modernizr.addTest( key, feature[ key ] );
+                }
+            }
+        } else {
 
-         feature = feature.toLowerCase();
+            feature = feature.toLowerCase();
 
-         if ( Modernizr[feature] !== undefined ) {
-                                              return Modernizr;
-         }
+            if ( Modernizr[feature] !== undefined ) {
+                return Modernizr;
+            }
 
-         test = typeof test == 'function' ? test() : test;
+            test = typeof test == 'function' ? test() : test;
 
-         if (typeof enableClasses !== "undefined" && enableClasses) {
-           docElement.className += ' ' + (test ? '' : 'no-') + feature;
-         }
-         Modernizr[feature] = test;
+            if (typeof enableClasses !== "undefined" && enableClasses) {
+                docElement.className += ' ' + (test ? '' : 'no-') + feature;
+            }
+            Modernizr[feature] = test;
 
-       }
+        }
 
-       return Modernizr;
-     };
+        return Modernizr;
+    };
 
 
     setCss('');
@@ -222,7 +222,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') +
 
-                                                    (enableClasses ? ' js ' + classes.join(' ') : '');
+        (enableClasses ? ' js ' + classes.join(' ') : '');
 
     return Modernizr;
 
