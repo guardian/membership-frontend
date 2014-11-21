@@ -110,7 +110,13 @@ This will take several minutes to build the new AMI. Once complete, you should s
 eu-west-1: ami-xxxxxxxx
 ```
 
-# Image Asset Hashing
+# Images
+
+## SVGs
+
+Running the grunt task `shell:svgencode` will automatically base64 encode files in `assets/svgs` and create a class and mixin for each one in a generated SCSS file. The classes/mixins are named `icon-<filename without extension>`.
+
+## Asset hashing
 
 By default all of the images within ```assets/images/``` will have an asset hash applied to them when the Grunt compile task is ran in production mode. If you wish to have assets without an asset hash please place them within ```assets/images/noAssetHash```. These images will have a cache lifetime set by the server and you will have to manually bust the cache by changing the filename.
 
