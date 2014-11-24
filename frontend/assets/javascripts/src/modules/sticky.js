@@ -16,7 +16,7 @@ define(['$'], function ($) {
         }
     }
 
-    if (sticky) {
+    if (sticky.length) {
         window.addEventListener('scroll', scrollHandler);
         scrollHandler();
     }
