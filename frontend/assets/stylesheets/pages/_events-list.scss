@@ -108,7 +108,7 @@
 $filter-icon-size: 18px;
 
 .events-list__filter__text {
-    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
+    padding: rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
     border: 1px solid $c-neutral3;
     border-radius: 100rem;
     outline: 0;
@@ -121,12 +121,21 @@ $filter-icon-size: 18px;
     }
 }
 
-.events-list__filter__icon {
+.events-list__filter__icon,
+.events-list__filter__cross {
     position: absolute;
     top: 50%;
-    left: rem($gs-gutter / 2);
     margin-top: rem(-$filter-icon-size / 2);
+    border: 0;
+    background-color: transparent;
+}
 
+.events-list__filter__icon {
+    left: rem($gs-gutter / 2);
+}
+
+.events-list__filter__cross {
+    right: rem($gs-gutter / 2);
 }
 
 .events-list__item {

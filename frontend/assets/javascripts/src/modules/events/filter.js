@@ -31,9 +31,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     });
 
     // filter the list based on the index
-    var filterList = function (e) {
-        e.preventDefault();
-
+    var filterList = function () {
         if (currentTimeout) { window.clearTimeout(currentTimeout); }
 
         // start search when the user pauses typing
@@ -83,6 +81,14 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     bean.on(filterCategory, 'change', function () {
         var category = filterCategory.options[filterCategory.selectedIndex].value;
         window.location.href = '/masterclasses/' + category;
+    });
+
+    bean.on(document.querySelector('.js-filter-clear'), 'click', function (e) {
+        e.preventDefault();
+
+        filterInput.value = '';
+        filterInput.focus();
+        filterList();
     });
 
 });
