@@ -91,8 +91,8 @@ $header-margin: 36px;
     // for text underlines
     color: $white;
 
-    .icon-sprite-user-black {
-        @extend %icon-sprite-user-white;
+    .icon-user-black {
+        @extend %icon-user-white;
         color: $white !important;
     }
     .control {
@@ -105,8 +105,8 @@ $header-margin: 36px;
 
 .close-icon-white--active {
     border-color: $white;
-    .icon-sprite-menu-white {
-        @extend %icon-sprite-close-icon-white;
+    .icon-menu-white {
+        @extend %icon-close-icon-white;
     }
 }
 

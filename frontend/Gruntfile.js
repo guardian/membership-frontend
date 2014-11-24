@@ -112,6 +112,27 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
+            zeroclipboard: {
+                src: [
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.js',
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.map',
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.swf'
+                ],
+                dest: '<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/',
+                expand: true,
+                flatten: true
+            },
+            //TODO-ben zeroclipboardDist is a stop gap until we have the ability to hash folders and their contents
+            zeroclipboardDist: {
+                src: [
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.js',
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.map',
+                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.swf'
+                ],
+                dest: '<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/',
+                expand: true,
+                flatten: true
+            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: ['**', '!**/svgs/**'],
@@ -176,6 +197,7 @@ module.exports = function (grunt) {
                     '<%= dirs.publicDir.root %>/dist/stylesheets/**/*.css'
                 ]
             },
+            //TODO-ben ignoring noAssetHash and zeroclipboard is a stop gap until we have the ability to hash folders and their contents
             staticfiles: {
                 files: [
                     {
@@ -184,7 +206,8 @@ module.exports = function (grunt) {
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
                             '<%= dirs.publicDir.javascripts %>/**/*.map',
                             '<%= dirs.publicDir.images %>/**/*.*',
-                            '!<%= dirs.publicDir.images %>/noAssetHash/**/*.*'
+                            '!<%= dirs.publicDir.images %>/noAssetHash/**/*.*',
+                            '!<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
                     }
@@ -251,17 +274,8 @@ module.exports = function (grunt) {
         // misc
 
         shell: {
-            //  shamelessly stolen from NGW's gruntfile
-            spriteGeneration: {
-                command: [
-                    'cd ../tools/sprites/',
-                    'find . -name \'*.json\' -exec node spricon.js {} \\;'
-                ].join('&&'),
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    failOnError: true
-                }
+            svgencode: {
+                command: 'find <%= dirs.assets.images %>/svgs -name \\*.svg | python svgencode.py icon > <%= dirs.assets.stylesheets %>/icons/icons.scss'
             },
             /**
              * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
@@ -315,7 +329,8 @@ module.exports = function (grunt) {
             grunt.task.run([
                 'asset_hash',
                 'clean:public:prod',
-                'copy:imagesNoAssetHash'
+                'copy:imagesNoAssetHash',
+                 'copy:zeroclipboardDist'
             ]);
         }
     });
@@ -346,7 +361,7 @@ module.exports = function (grunt) {
             'clean:css',
             'clean:images',
             'copy:images',
-            'shell:spriteGeneration',
+            'shell:svgencode',
             'sass:compile',
             'imagemin'
         ]);
@@ -362,7 +377,8 @@ module.exports = function (grunt) {
             'copy:html5shiv',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture'
+            'copy:omniture',
+            'copy:zeroclipboard'
         ]);
     });
 

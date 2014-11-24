@@ -15,6 +15,7 @@ require([
     'src/modules/tier/Choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
+    'src/utils/addToClipboard',
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
@@ -33,7 +34,8 @@ require([
     UserDetails,
     Choose,
     eventPriceEnhance,
-    Thankyou
+    Thankyou,
+    addToClipboard
 ) {
     'use strict';
 
@@ -90,4 +92,6 @@ require([
 
     // Feedback
     (new FeedbackForm()).init();
+
+    addToClipboard.init();
 });

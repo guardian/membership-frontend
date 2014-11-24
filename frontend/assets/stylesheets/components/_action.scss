@@ -8,6 +8,7 @@
     text-align: left;
     text-decoration: none;
     position: relative;
+    font-weight: bold;
     @include fs-textSans(4);
     min-width: 100%;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
@@ -25,9 +26,9 @@
     }
 
     &:after {
-        @extend .icon-sprite-arrow-right-white;
+        @extend .icon-arrow-right-white;
         &.action--secondary-button {
-            @extend .icon-sprite-arrow-right-black;
+            @extend .icon-arrow-right-black;
         }
         content: '';
         float: right;
@@ -43,9 +44,9 @@
 // and hides the one on the right
 .action.action--arrow-left {
     &:before {
-        @extend .icon-sprite-arrow-left-white;
+        @extend .icon-arrow-left-white;
         &.action--secondary-button {
-            @extend .icon-sprite-arrow-left-black;
+            @extend .icon-arrow-left-black;
         }
         content: '';
         float: left;
@@ -115,9 +116,13 @@
   }
 
   .theme--masterclass & {
+    color: $c-neutral1;
     background-color: $mem-mc-top;
     &:hover {
       background-color: darken($mem-mc-top, 5%);
+    }
+    &:after {
+      @extend .icon-arrow-right-black;
     }
   }
 }

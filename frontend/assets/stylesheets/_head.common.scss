@@ -22,6 +22,7 @@
 @import 'utility/flexbox';
 @import 'utility/hidden';
 @import 'utility/js-warning';
+@import 'utility/clipboard';
 @import 'pages/browser-warning';
 
 /* Layout
@@ -44,8 +45,7 @@
 /* Icons
    ========================================================================== */
 @import 'components/icons';
-@import 'icons/icons-sprite';
-@import 'icons/icons-svg';
+@import 'icons/icons';
 @import 'icons/icons-cards';
 
 /* Nav

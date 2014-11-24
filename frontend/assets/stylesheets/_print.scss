@@ -21,11 +21,6 @@
         display: none !important;
     }
 
-    // don't try to show icons (they appear onscreen but not when printed)
-    .icon-sprite {
-        display: none !important;
-    }
-
     // icons don't get printed so don't leave space for 'em
     .event-item__detail {
         padding-left: 0 !important;

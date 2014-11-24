@@ -61,8 +61,7 @@ blockquote {
     margin-bottom: rem(10px);
 
     &:before {
-        @extend %icon-sprite;
-        @extend %icon-sprite-quote-blue;
+        @extend %icon-quote-blue;
         content: '';
         display: block;
         float: left;
