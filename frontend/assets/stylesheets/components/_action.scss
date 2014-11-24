@@ -8,6 +8,7 @@
     text-align: left;
     text-decoration: none;
     position: relative;
+    font-weight: bold;
     @include fs-textSans(4);
     min-width: 100%;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
