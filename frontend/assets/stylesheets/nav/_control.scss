@@ -37,8 +37,8 @@
     .control__info {
         color: $white;
     }
-    .icon-sprite-user-black {
-        @extend %icon-sprite-user-white;
+    .icon-user-black {
+        @extend %icon-user-white;
     }
     .control {
         border-color: $white;
@@ -50,8 +50,8 @@
     .control__info {
         color: $white;
     }
-    .icon-sprite-g-black {
-        @extend %icon-sprite-g-white;
+    .icon-g-black {
+        @extend %icon-g-white;
     }
     .control {
         border-color: $white;
