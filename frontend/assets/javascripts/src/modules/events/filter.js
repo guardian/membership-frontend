@@ -10,7 +10,10 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
     // track what people filter on
     var trackSearch = function (category, action, label) {
-        ga('send', 'event', category, action, label);
+        // analytics can be removed for test user mode
+        if (window.ga) {
+            ga('send', 'event', category, action, label);
+        }
     };
 
     // create an index mapping any filter "key"
@@ -75,5 +78,11 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
     // bind to typing in the search box
     bean.on(filterInput, 'keyup', filterList);
+
+    var filterCategory = document.querySelector('.js-filter-category');
+    bean.on(filterCategory, 'change', function () {
+        var category = filterCategory.options[filterCategory.selectedIndex].value;
+        window.location.href = '/masterclasses/' + category;
+    });
 
 });

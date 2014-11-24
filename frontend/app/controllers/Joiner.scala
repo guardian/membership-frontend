@@ -18,11 +18,10 @@ import scala.concurrent.Future
 trait Joiner extends Controller {
 
   val memberService: MemberService
-  val eventService: EventbriteService
 
   def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
     def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
-      PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
 
     def detailsFor(event: RichEvent, discountOpt: Option[EBCode]): (String, Int) = {
       val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
@@ -109,7 +108,7 @@ trait Joiner extends Controller {
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
       Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
   }
@@ -120,7 +119,7 @@ trait Joiner extends Controller {
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
-      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(eventService.getEvent)
+      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
       Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event, upgrade))
     }
   }
@@ -128,5 +127,4 @@ trait Joiner extends Controller {
 
 object Joiner extends Joiner {
   val memberService = MemberService
-  val eventService = GuardianLiveEventService
 }

@@ -1,6 +1,7 @@
 import configuration.Config
 import controllers.Cached
 import filters.{CheckCacheHeadersFilter, Gzipper}
+import monitoring.SentryLogging
 import play.api.Application
 import play.api.mvc.Results.{InternalServerError, NotFound}
 import play.api.mvc.{RequestHeader, Result, WithFilters}
@@ -11,6 +12,8 @@ import scala.concurrent.Future
 
 object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper) {
   override def onStart(app: Application) {
+    SentryLogging.init()
+
     GuardianLiveEventService.start()
     MasterclassEventService.start()
 

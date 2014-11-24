@@ -29,11 +29,8 @@ trait Event extends Controller {
 
   val BuyAction = NoCacheAction andThen metricRecord(EventbriteMetrics, "buy-action-invoked") andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
-  private def getEvent(id: String) =
-    guLiveEvents.getEvent(id) orElse masterclassEvents.getEvent(id)
-
   def details(id: String) = CachedAction { implicit request =>
-    getEvent(id).map { event =>
+    EventbriteService.getEvent(id).map { event =>
       val pageInfo = PageInfo(
         event.name.text,
         request.path,
@@ -50,7 +47,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo, "What's on"))
+    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
   }
 
   def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>
@@ -60,7 +57,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events.filter(_.tags.contains(tag))), pageInfo, tag))
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.getEventsTagged(tag)), pageInfo, tag))
   }
 
   def list = CachedAction { implicit request =>
@@ -83,7 +80,7 @@ trait Event extends Controller {
   }
 
   def buy(id: String) = BuyAction.async { implicit request =>
-    getEvent(id).map { event =>
+    EventbriteService.getEvent(id).map { event =>
       if(memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
       else Future.successful(Redirect(routes.TierController.change()))
     }.getOrElse(Future.successful(NotFound))

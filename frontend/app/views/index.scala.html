@@ -11,16 +11,13 @@
     <div class="home-slice home-slice--epic home-slice--epic-home-page tier-hidden u-cf">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
-                <h1 class="home-slice__headline">We believe that the open exchange of information,
-                    ideas and opinions<br /><span class="headline-highlight">has the power to change the world for the better</span></h1>
+                <h1 class="home-slice__headline">Guardian Membership brings the Guardian to life</h1>
             </div>
             <div class="home-slice__copy-block">
-                <p class="home-slice__copy">Guardian Membership is the community for those who share this belief.</p>
-                <a class="action home-slice__action action--secondary-button" href="/about">Learn more</a>
-                <p class="home-slice__copy">Guardian Membership brings you closer to the stories of the day,
-                    connects you to the conversations that matter and introduces you to fellow members who share
-                    your interests.</p>
+                <p class="home-slice__copy">We believe real, face-to-face discussions have the power to broaden minds.</p>
+                <p class="home-slice__copy">Guardian Membership transforms everything you enjoy in the Guardian into live events and meet-ups. Join and be part of the conversations that matter.</p>
                 <a class="action home-slice__action" href="/join">Join today</a>
+                <a class="action home-slice__action action--secondary-button" href="/about">Learn more</a>
             </div>
         </div>
     </div>
@@ -46,7 +43,7 @@
     <div class="home-slice u-cf home-slice--red home-slice--home-two">
         <div class="home-slice__inner u-cf">
             <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Events that bring the Guardian to life</h2>
+                <h2 class="home-slice__headline">Browse our events and book your tickets now</h2>
             </div>
             <div class="home-slice__copy-block">
                 <p class="home-slice__copy">Guardian Live is a programme of discussions, debates, interviews,
@@ -69,12 +66,12 @@
                     <img src="@Asset.at("images/homeslice/740-Home-patrons.jpg")" alt="" class="responsive-img" />
                 </div>
                 <div class="home-slice__headline-block">
-                    <h2 class="home-slice__headline">Membership fuels our journalism</h2>
+                    <h2 class="home-slice__headline">Become a Patron and support the Guardian's future</h2>
                 </div>
                 <div class="home-slice__offset-copy">
                     <blockquote class="home-slice__copy--quote">The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.</blockquote>
                     <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-                    <a class="action" href="/patrons">Start your journey as Patron</a>
+                    <a class="action" href="/patrons">Become a Patron</a>
                 </div>
             </div>
         </div>
@@ -130,7 +127,7 @@
     <div class="home-slice home-slice--join-today tier-hidden">
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join membership today</h2>
-            <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
+            <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered js-benefit-container">
                 @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
                 @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
                 @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)

@@ -45,6 +45,7 @@ OPTIONS        /subscription/update-card          controllers.Subscription.updat
 GET            /events                            controllers.Event.list
 GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
 GET            /masterclasses                     controllers.Event.masterclasses
+GET            /masterclasses/all                 controllers.Event.masterclasses
 GET            /masterclasses/:tag                controllers.Event.masterclassesByTag(tag)
 
 GET            /event/:id                         controllers.Event.details(id)

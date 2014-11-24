@@ -7,10 +7,12 @@ import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.{FriendTierPlan, PaidTierPlan}
+import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
 import services.{StripeCredentials, SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
 import com.netaporter.uri.dsl._
+import scala.util.Try
 
 object Config {
   val logger = Logger(this.getClass())
@@ -18,6 +20,8 @@ object Config {
   val config = ConfigFactory.load()
 
   lazy val siteTitle = config.getString("site.title")
+
+  lazy val sentryDsn = Try(new Dsn(config.getString("sentry.dsn")))
 
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")

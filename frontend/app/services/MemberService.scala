@@ -8,7 +8,7 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.Eventbrite.{EBCode, RichEvent}
+import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
 import model.PaidTierPlan
 import model.Stripe.Customer
 import monitoring.MemberMetrics
@@ -103,6 +103,11 @@ trait MemberService extends LazyLogging {
   }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
+    val eventService = event match {
+      case _: GuLiveEvent => GuardianLiveEventService
+      case _: MasterclassEvent => MasterclassEventService
+    }
+
     member.tier match {
       case Tier.Friend => Future.successful(None)
 
@@ -110,10 +115,10 @@ trait MemberService extends LazyLogging {
         if (event.memberTickets.nonEmpty) {
           // Add a "salt" to make access codes different to discount codes
           val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-          GuardianLiveEventService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
+          eventService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
         } else if (event.allowDiscountCodes) {
           val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
-          GuardianLiveEventService.createOrGetDiscount(event, code).map(Some(_))
+          eventService.createOrGetDiscount(event, code).map(Some(_))
         } else {
           Future.successful(None)
         }
