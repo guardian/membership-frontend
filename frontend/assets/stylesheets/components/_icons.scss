@@ -1,27 +1,18 @@
-.i {
-    background-repeat: no-repeat;
-    display: inline-block;
-    text-indent: rem(-9999px);
-    width: rem(18px);
-    height: rem(18px);
-}
-
 .icon-wrapper {
     display: block;
 }
 
-// Putting in the class twice renders as the class important is SASS
-.icon--small.icon--small {
+.icon--benefits {
     background-size: rem($gs-gutter + 5) rem($gs-gutter + 5);
     width: rem($gs-gutter + 5);
     height: rem($gs-gutter + 5);
     margin: 0 rem($gs-gutter) rem(-7px) 0;
+}
 
-    .event-content__info & {
-        background-size: rem($gs-gutter) auto!important;
-        width: rem($gs-gutter);
-        height: rem($gs-gutter);
-    }
+.icon--info {
+    background-size: rem($gs-gutter) auto;
+    width: rem($gs-gutter);
+    height: rem($gs-gutter);
 }
 
 .icon--margin-right {
