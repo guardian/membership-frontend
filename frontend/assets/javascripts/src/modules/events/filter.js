@@ -39,7 +39,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
         // start search when the user pauses typing
         currentTimeout = window.setTimeout(function () {
 
-            var value = filterInput.value;
+            var value = filterInput.value.toLowerCase();
             var elmsToShow = [],
                 elmsToHide = [];
 
