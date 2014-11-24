@@ -103,6 +103,10 @@ idrun
 
 Running the grunt task `shell:svgencode` will automatically base64 encode files in `assets/svgs` and create a class and mixin for each one in a generated SCSS file. The classes/mixins are named `icon-<filename without extension>`.
 
+### Adding new SVGs
+
+When adding new SVGs to the `assets/svgs` directory run the file through [SVGO](https://github.com/svg/svgo) first to optimise it. For Mac users there is an app for doing this: [SVGO GUI](https://github.com/svg/svgo-gui)
+
 ## Asset hashing
 
 By default all of the images within ```assets/images/``` will have an asset hash applied to them when the Grunt compile task is ran in production mode. If you wish to have assets without an asset hash please place them within ```assets/images/noAssetHash```. These images will have a cache lifetime set by the server and you will have to manually bust the cache by changing the filename.
