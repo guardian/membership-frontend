@@ -67,8 +67,9 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
                 $(filterParent).addClass('events-list--empty');
             } else {
                 $(filterParent).removeClass('events-list--empty');
-                filterCount.text(elmsToShow.length);
             }
+
+            filterCount.text(elmsToShow.length);
 
         }, throttle);
 
