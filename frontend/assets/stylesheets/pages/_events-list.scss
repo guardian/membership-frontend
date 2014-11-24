@@ -328,7 +328,7 @@ $filter-icon-size: 18px;
     }
 
     &:after {
-        @extend .icon-sprite-arrow-right-white;
+        @extend .icon-arrow-right-white;
         content: '';
         fill: $black;
         float: right;
@@ -337,7 +337,7 @@ $filter-icon-size: 18px;
     .theme--masterclass & {
         background-color: $mem-mc-top;
         &:after {
-            @extend .icon-sprite-arrow-right-black;
+            @extend .icon-arrow-right-black;
         }
     }
 }
@@ -431,19 +431,15 @@ $filter-icon-size: 18px;
     bottom: rem($gs-gutter / 2);
     right: rem($gs-gutter / 2);
 
+    height: rem(44px);
+    background-position: right;
+    background-size: contain;
+    background-repeat: no-repeat;
+
     @include mq(tablet) {
         bottom: rem($gs-gutter);
         right: rem($gs-gutter);
-    }
-
-    .svg & {
-        height: rem(44px);
-        background-position: right;
-        background-size: contain;
-
-        @include mq(tablet) {
-            height: rem(87px);
-        }
+        height: rem(87px);
     }
 }
 
