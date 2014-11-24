@@ -162,7 +162,7 @@
 }
 
 .slide-show figure:nth-child(6) {
-    @include animation(crossFade 36s 0 infinite);
+    @include animation(crossFade 36s 0s infinite);
 }
 
 /* 100/6 = 16.6666667 */
