@@ -1,7 +1,6 @@
-import com.gu.googleauth
-import com.gu.identity
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
+import com.gu.{googleauth, identity}
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
@@ -48,4 +47,8 @@ package object actions {
   type AnyMemberTierRequest[A] = MemberRequest[A, Member]
 
   type PaidMemberRequest[A] = MemberRequest[A, PaidMember]
+
+  case class IdentityGoogleAuthRequest[A](val googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+    val identityUser = request.user
+  }
 }

@@ -1,22 +1,19 @@
 package controllers
 
-import scala.concurrent.Future
-
-import com.netaporter.uri.dsl._
-
-import play.api.mvc.{Result, Request, Controller}
-import play.api.libs.json.Json
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.gu.membership.salesforce.{ScalaforceError, Tier}
-
 import actions._
+import com.gu.membership.salesforce.{ScalaforceError, Tier}
+import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
-import forms.MemberForm.{friendJoinForm, paidMemberJoinForm, JoinForm}
-import model._
+import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm}
+import model.Eventbrite.{EBCode, RichEvent}
 import model.StripeSerializer._
-import model.Eventbrite.{RichEvent, EBCode, EBEvent}
+import model._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
+import play.api.mvc.{Controller, Request, Result}
 import services._
+
+import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
@@ -47,17 +44,14 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = AuthenticatedStaffNonMemberAction { implicit request =>
-    Ok(views.html.joiner.staff())
+  def staff = GoogleAuthenticatedStaffNonMemberAction { implicit request =>
+    val error = request.flash.get("error")
+    Ok(views.html.joiner.staff(error))
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
-    val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
-      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
 
       tier match {
@@ -68,6 +62,25 @@ trait Joiner extends Controller {
       }
 
     }
+  }
+
+  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
+
+    for {
+      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
+    } yield {
+      Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+    }
+  }
+
+  private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
+    val identityRequest = IdentityRequest(request)
+    for {
+      userOpt <- IdentityService.getFullUserDetails(user, identityRequest)
+      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
+      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
+      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+    } yield (privateFields, marketingChoices, passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>

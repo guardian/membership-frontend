@@ -1,9 +1,11 @@
 package model
 
+import com.gu.{googleauth, identity}
 import play.api.libs.json.Json
 
 
 case class IdentityUser(id: String,
+                        primaryEmailAddress: String,
                         privateFields: PrivateFields,
                         statusFields: StatusFields)
 

@@ -22,6 +22,7 @@ GET            /analytics-off                     controllers.Testing.analyticsO
 # Join
 GET            /join                              controllers.Joiner.tierList
 GET            /join/staff                        controllers.Joiner.staff
+GET            /join/staff/enter-details          controllers.Joiner.enterStaffDetails
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST           /join/friend/enter-details         controllers.Joiner.joinFriend
 POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(tier: Tier.Value)
