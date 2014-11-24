@@ -115,7 +115,7 @@
   }
 
   .theme--masterclass & {
-    color: black;
+    color: $c-neutral1;
     background-color: $mem-mc-top;
     &:hover {
       background-color: darken($mem-mc-top, 5%);
