@@ -28,7 +28,7 @@ require([
     PaidForm,
     Cta,
     Filter,
-    Sticky,
+    sticky,
     Header,
     UserDetails,
     Choose,
