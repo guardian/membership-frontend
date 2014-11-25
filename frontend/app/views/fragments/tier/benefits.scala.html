@@ -5,7 +5,8 @@
     mode: String = "",
     showBenefitCopy: Boolean = true,
     showLearnMore: Boolean = false,
-    showChooseDetails: Boolean = false
+    showChooseDetails: Boolean = false,
+    isSmallBenefit: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
@@ -46,7 +47,7 @@
                 @if(showChooseDetails) {
                     @fragments.tier.chooseDetails(tier)
                 } else {
-                    @fragments.tier.details(currentTier = tier, showBenefitDetails = showBenefitDetails, showBenefitCopy = showBenefitCopy)
+                    @fragments.tier.details(currentTier = tier, showBenefitDetails = showBenefitDetails, showBenefitCopy = showBenefitCopy, isSmallBenefit = isSmallBenefit)
                 }
             </div>
 

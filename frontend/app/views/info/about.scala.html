@@ -71,9 +71,9 @@
         <div class="home-slice__inner u-cf">
             <h2 class="home-slice__headline">Join Guardian Membership today</h2>
             <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
             </div>
         </div>
     </div>
