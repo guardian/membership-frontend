@@ -50,21 +50,27 @@ require([
     if ($('.delayed-image-load').length) {
         new Imager('.delayed-image-load', {
             availableWidths: guardian.membership.eventImages.widths,
-            availablePixelRatios: guardian.membership.eventImages.ratios
+            availablePixelRatios: guardian.membership.eventImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
     // home page hero (a-b) imagery
     if ($('.delayed-home-image-load').length) {
         new Imager('.delayed-home-image-load', {
             availableWidths: guardian.membership.homeImages.widths,
-            availablePixelRatios: guardian.membership.homeImages.ratios
+            availablePixelRatios: guardian.membership.homeImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
     // home page promo (a-b) imagery
     if ($('.delayed-home-promo-image-load').length) {
         new Imager('.delayed-home-promo-image-load', {
             availableWidths: guardian.membership.homeImages.promoWidths,
-            availablePixelRatios: guardian.membership.homeImages.ratios
+            availablePixelRatios: guardian.membership.homeImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
 

@@ -39,6 +39,9 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
         // start search when the user pauses typing
         currentTimeout = window.setTimeout(function () {
 
+            // fake a scroll event so lazy-load images appear
+            bean.fire(document.body, 'scroll');
+
             var value = filterInput.value.toLowerCase();
             var elmsToShow = [],
                 elmsToHide = [];
