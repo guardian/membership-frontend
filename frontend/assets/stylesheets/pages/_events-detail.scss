@@ -210,15 +210,17 @@
 
 .event-content__container {
     background-color: $white;
+    padding: rem($gs-gutter) rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter * 3) 0;
+    }
 }
 
 .event-content__container,
 .event-content__sticky.is-sticky {
-    padding: rem($gs-gutter) rem($gs-gutter / 2);
-
     @include mq(tablet) {
         width: rem(gs-span(9) + $gs-gutter * 2);
-        padding: rem($gs-gutter * 3) 0;
         margin: 0 auto;
     }
 
@@ -229,7 +231,6 @@
     @include mq(mem-full) {
         width: rem(gs-span(14) + $gs-gutter * 2);
     }
-
 }
 
 @mixin event-content__body-width($property) {
@@ -247,8 +248,6 @@
 }
 
 .event-content__sticky.is-sticky {
-    padding: 0;
-
     @include mq(tablet) {
         position: fixed;
         top: 0;
