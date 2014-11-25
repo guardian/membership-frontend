@@ -11,7 +11,7 @@ require([
     'src/modules/events/filter',
     'src/modules/Header',
     'src/modules/UserDetails',
-    'src/modules/tier/Choose',
+    'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
     'src/utils/addToClipboard',
@@ -30,7 +30,7 @@ require([
     Filter,
     Header,
     UserDetails,
-    Choose,
+    choose,
     eventPriceEnhance,
     Thankyou,
     addToClipboard
@@ -83,7 +83,7 @@ require([
     eventPriceEnhance.init();
 
     // Join
-    (new Choose()).init();
+    choose.init();
     (new JoinFree()).init();
     (new PaidForm()).init();
     (new Thankyou()).init(header);
