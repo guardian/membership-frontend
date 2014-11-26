@@ -64,7 +64,6 @@ trait Joiner extends Controller {
     }
   }
 
-  //TODO check action for existing paid partner route
   def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
