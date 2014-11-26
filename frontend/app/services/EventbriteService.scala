@@ -44,7 +44,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   protected def getAllEvents: Future[Seq[RichEvent]] = for {
     events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
-  } yield events.map(mkRichEvent)
+  } yield events.filter(_.status == "live").map(mkRichEvent)
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityEventOrdering
