@@ -5,7 +5,7 @@ define([
 
     function UserDetails() {}
 
-    UserDetails.prototype.availableDetails = ['displayname', 'primaryemailaddress', 'firstName', 'tier'];
+    UserDetails.prototype.availableDetails = ['displayname', 'firstName', 'tier'];
 
     UserDetails.prototype.classes = {
         signedOut: 'id--signed-out',
