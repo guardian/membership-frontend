@@ -12,9 +12,9 @@ class BaseMembershipPage(driver: WebDriver) extends BasePage(driver) {
 
   private def editProfileLink = driver.findElement(By.xpath("//a[contains(text(), 'Edit profile')]"))
 
-  private def pricingLink = driver.findElement(By.xpath("//header/div[2]/nav/div/ul/li[5]/a"))
+  private def pricingLink = driver.findElement(By.xpath("//header/div[2]/nav/div/ul/li[6]/a"))
 
-  private def logoLink = driver.findElement(By.cssSelector(".icon-sprite-logo-beta"))
+  private def logoLink = driver.findElement(By.cssSelector(".icon-logo-beta"))
 
   def clickLogo = {
     logoLink.click

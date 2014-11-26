@@ -253,11 +253,8 @@ $current-indicator: rem(72px);
 .package__header {
     @include fs-bodyHeading(2);
     border-top: 1px solid $c-neutral3;
-    border-bottom: 1px solid $c-neutral3;
     padding: rem($gs-gutter / 2) 0;
     width: 100%;
-    position: relative;
-    top: 1px;
 }
 
 .package__list-benefits {

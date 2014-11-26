@@ -138,57 +138,60 @@
                     case _: MasterclassEvent => { <img class="responsive-img hidden-mobile" src="@event.imgUrl" /> }
                     case _ => {}
                 }
-                <div class="event-content__info">
-                    <div class="event-content__name" itemprop="name">@event.name.text</div>
-                    <div class="event-content__time event-content--line-divider u-cf">
-                        <div class="event-content__first">
-                            <i class="icon-large-early_booking icon--info"></i>
+
+                <div class="event-content__sticky js-sticky">
+                    <div class="event-content__info">
+                        <div class="event-content__name" itemprop="name">@event.name.text</div>
+                        <div class="event-content__time event-content--line-divider u-cf">
+                            <div class="event-content__first">
+                                <i class="icon-large-early_booking icon--info"></i>
+                            </div>
+                            <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                         </div>
-                        <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
-                    </div>
-                    <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                        <div class="event-content__first">
-                            <i class="icon-location icon--info"></i>
-                        </div>
-                        <div class="event-content__second">
-                            <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                            @if(event.eventAddressLine.nonEmpty) {
-                                <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
-                            }
-                        </div>
-                    </div>
-
-                    @if(event.isNoTicketEvent == false) {
-
-                        @for(ticket <- event.generalReleaseTicket) {
-                            @if(event.isSoldOut) {
-                                <meta itemprop="availability" content="http://schema.org/SoldOut">
-                            } else {
-                                <meta itemprop="availability" content="http://schema.org/InStock">
-                            }
-
-                            @fragments.event.ticketSales(event, ticket)
-
-                            @if(ticket.free) {
-                                <div class="event-content__price event-content--line-divider">
-                                    <span class="event-content__price-amount js-event-price">Free</span>
-                                </div>
-                            } else {
-                                @for(pricing <- ticket.cost) {
-                                    <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
-                                        @pricing.formattedPrice
-                                    </div>
-                                    <div class="event-content__trail">
-                                        <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
-                                        <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
-                                    </div>
+                        <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                            <div class="event-content__first">
+                                <i class="icon-location icon--info"></i>
+                            </div>
+                            <div class="event-content__second">
+                                <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                                @if(event.eventAddressLine.nonEmpty) {
+                                    <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
                                 }
+                            </div>
+                        </div>
+
+                        @if(event.isNoTicketEvent == false) {
+
+                            @for(ticket <- event.generalReleaseTicket) {
+                                @if(event.isSoldOut) {
+                                    <meta itemprop="availability" content="http://schema.org/SoldOut">
+                                } else {
+                                    <meta itemprop="availability" content="http://schema.org/InStock">
+                                }
+
+                                @fragments.event.ticketSales(event, ticket)
+
+                                @if(ticket.free) {
+                                    <div class="event-content__price event-content--line-divider">
+                                        <span class="event-content__price-amount js-event-price">Free</span>
+                                    </div>
+                                } else {
+                                    @for(pricing <- ticket.cost) {
+                                        <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
+                                            @pricing.formattedPrice
+                                        </div>
+                                        <div class="event-content__trail">
+                                            <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
+                                            <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
+                                            <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                        </div>
+                                    }
+                                }
+                                @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
+                                @becomeMemberCta(ticket)
                             }
-                            @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
-                            @becomeMemberCta(ticket)
                         }
-                    }
+                    </div>
                 </div>
             </div>
         </div>

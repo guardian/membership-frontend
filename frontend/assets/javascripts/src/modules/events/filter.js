@@ -3,6 +3,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
     var filterInput  = document.getElementById('js-filter'),
         filterParent = document.getElementById('js-filter-container'),
+        filterClear = $('.js-filter-clear'),
         filterCount  = $('.js-filter-count'),
         filterField  = filterInput.getAttribute('data-filter-field'),
         throttle     = 300, // how many milliseconds should we wait for typing to pause?
@@ -31,15 +32,19 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     });
 
     // filter the list based on the index
-    var filterList = function (e) {
-        e.preventDefault();
-
+    var filterList = function () {
         if (currentTimeout) { window.clearTimeout(currentTimeout); }
+
+        if (filterInput.value) {
+            filterClear.removeClass('is-hidden');
+        } else {
+            filterClear.addClass('is-hidden');
+        }
 
         // start search when the user pauses typing
         currentTimeout = window.setTimeout(function () {
 
-            var value = filterInput.value;
+            var value = filterInput.value.toLowerCase();
             var elmsToShow = [],
                 elmsToHide = [];
 
@@ -69,8 +74,9 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
                 $(filterParent).addClass('events-list--empty');
             } else {
                 $(filterParent).removeClass('events-list--empty');
-                filterCount.text(elmsToShow.length);
             }
+
+            filterCount.text(elmsToShow.length);
 
         }, throttle);
 
@@ -83,6 +89,14 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     bean.on(filterCategory, 'change', function () {
         var category = filterCategory.options[filterCategory.selectedIndex].value;
         window.location.href = '/masterclasses/' + category;
+    });
+
+    bean.on(filterClear[0], 'click', function (e) {
+        e.preventDefault();
+
+        filterInput.value = '';
+        filterInput.focus();
+        filterList();
     });
 
 });
