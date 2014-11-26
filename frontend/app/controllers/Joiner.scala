@@ -10,7 +10,7 @@ import model.StripeSerializer._
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, Request, Result}
+import play.api.mvc.{AnyContent, Controller, Request, Result}
 import services._
 
 import scala.concurrent.Future
@@ -64,8 +64,8 @@ trait Joiner extends Controller {
     }
   }
 
+  //TODO check action for existing paid partner route
   def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
-
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
@@ -88,7 +88,7 @@ trait Joiner extends Controller {
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
-  //TODO needs GoogleAuth
+  //TODO actions needs updating
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
@@ -110,19 +110,21 @@ trait Joiner extends Controller {
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
+    thankYouNonPaidMember(request)
+  }
+
+  def thankyouStaff() = StaffMemberAction.async { implicit request =>
+    thankYouNonPaidMember(request)
+  }
+
+  private def thankYouNonPaidMember(request: AnyMemberTierRequest[AnyContent]) = {
     for {
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
+      Ok(views.html.joiner.thankyou.nonPaid(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
-  }
-
-  //TODO needs Google Auth - this should work similar to thankyouFriend but we need to do some work in
-  //Membership common first
-  def thankyouStaff() = NoCacheAction { implicit request =>
-    Ok(views.html.joiner.thankyou.staff())
   }
 
   def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>

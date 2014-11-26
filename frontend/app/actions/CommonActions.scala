@@ -1,5 +1,6 @@
 package actions
 
+import actions.Fallbacks._
 import actions.Functions._
 import com.gu.googleauth
 import configuration.Config
@@ -30,7 +31,9 @@ trait CommonActions {
                                                           googleAuthenticationRefiner() andThen
                                                           matchingGuardianEmail()
 
-  val MemberAction = NoCacheAction andThen authenticated() andThen memberRefiner()
+  val MemberAction = AuthenticatedAction andThen memberRefiner()
+
+  val StaffMemberAction = AuthenticatedAction andThen memberRefiner(onNonMember = joinStaffMembership(_))
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
