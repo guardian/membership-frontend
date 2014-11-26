@@ -3,6 +3,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 
     var filterInput  = document.getElementById('js-filter'),
         filterParent = document.getElementById('js-filter-container'),
+        filterClear = $('.js-filter-clear'),
         filterCount  = $('.js-filter-count'),
         filterField  = filterInput.getAttribute('data-filter-field'),
         throttle     = 300, // how many milliseconds should we wait for typing to pause?
@@ -33,6 +34,12 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
     // filter the list based on the index
     var filterList = function () {
         if (currentTimeout) { window.clearTimeout(currentTimeout); }
+
+        if (filterInput.value) {
+            filterClear.removeClass('is-hidden');
+        } else {
+            filterClear.addClass('is-hidden');
+        }
 
         // start search when the user pauses typing
         currentTimeout = window.setTimeout(function () {
@@ -84,7 +91,7 @@ define(['string_score', 'bean', '$'], function (string_score, bean, $) {
         window.location.href = '/masterclasses/' + category;
     });
 
-    bean.on(document.querySelector('.js-filter-clear'), 'click', function (e) {
+    bean.on(filterClear[0], 'click', function (e) {
         e.preventDefault();
 
         filterInput.value = '';
