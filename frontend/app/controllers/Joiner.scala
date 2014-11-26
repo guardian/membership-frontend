@@ -4,7 +4,7 @@ import actions._
 import com.gu.membership.salesforce.{ScalaforceError, Tier}
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
-import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm}
+import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.Eventbrite.{EBCode, RichEvent}
 import model.StripeSerializer._
 import model._
@@ -88,6 +88,12 @@ trait Joiner extends Controller {
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
+  //TODO needs GoogleAuth
+  def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
+    staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+        makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
+    }
+
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) } )
@@ -111,6 +117,12 @@ trait Joiner extends Controller {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
       Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
     }
+  }
+
+  //TODO needs Google Auth - this should work similar to thankyouFriend but we need to do some work in
+  //Membership common first
+  def thankyouStaff() = NoCacheAction { implicit request =>
+    Ok(views.html.joiner.thankyou.staff())
   }
 
   def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>
