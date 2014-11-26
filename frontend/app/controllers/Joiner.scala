@@ -87,7 +87,6 @@ trait Joiner extends Controller {
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
-  //TODO actions needs updating
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
@@ -122,7 +121,8 @@ trait Joiner extends Controller {
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-      Ok(views.html.joiner.thankyou.nonPaid(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
+      Ok(views.html.joiner.thankyou.nonPaid(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""),
+        request.user.primaryEmailAddress, event, request.member.tier))
     }
   }
 
