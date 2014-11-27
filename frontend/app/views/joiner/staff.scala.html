@@ -1,7 +1,9 @@
-@(error: Option[String])
+@(identityEmail: Option[String], googleAuthEmail: String, error: Option[String])
 
 @main("Staff Membership") {
 
 Staff Membership - coming soon
 <p> @error
+<p> Identity email: @identityEmail
+<p> Google auth email: @googleAuthEmail
 }
