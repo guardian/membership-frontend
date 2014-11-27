@@ -73,7 +73,7 @@ trait UpgradeTier {
       }
   }
 
-  def upgradeThankyou(tier: Tier) = Joiner.thankyou(tier) // TODO
+  def upgradeThankyou(tier: Tier) = Joiner.thankyou(tier, upgrade=true)
 }
 
 trait CancelTier {

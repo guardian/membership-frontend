@@ -88,7 +88,7 @@ trait Joiner extends Controller {
       }
   }
 
-  def thankyou(tier: Tier.Tier) = MemberAction.async { implicit request =>
+  def thankyou(tier: Tier.Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
@@ -112,7 +112,7 @@ trait Joiner extends Controller {
       subscription <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt))
+    } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade))
   }
 }
 
