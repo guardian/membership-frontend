@@ -9,7 +9,7 @@ define([
 
     describe('Early bird tickets', function() {
 
-        var BUY_TICKETS = 'Buy Tickets';
+        var BUY_TICKETS = 'Book Tickets';
         var COMING_SOON = 'Coming Soon';
         var BECOME_A_MEMBER = 'Become a member';
         var UPGRADE_MEMBERSHIP = 'Upgrade membership';
