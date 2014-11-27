@@ -10,8 +10,7 @@ import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.{MemberId, Tier}
 
 import forms.MemberForm.JoinForm
-import model.Stripe
-import model.TierPlan
+import model.{ProductRatePlan, Stripe, TierPlan}
 import model.Zuora._
 import model.ZuoraDeserializer._
 
@@ -73,7 +72,7 @@ trait AmendSubscription {
   }
 }
 
-class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora: ZuoraService) extends AmendSubscription {
+class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription {
   import SubscriptionServiceHelpers._
 
   private def getAccount(sfAccountId: String): Future[Account] =
@@ -122,7 +121,7 @@ class SubscriptionService(val tierPlanRateIds: Map[TierPlan, String], val zuora:
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.tierPlan),
+    zuora.request(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.plan),
       joinData.name, joinData.deliveryAddress))
   }
 }

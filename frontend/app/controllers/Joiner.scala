@@ -4,13 +4,13 @@ import actions._
 import com.gu.membership.salesforce.{ScalaforceError, Tier}
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
-import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm}
+import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.Eventbrite.{EBCode, RichEvent}
 import model.StripeSerializer._
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, Request, Result}
+import play.api.mvc.{AnyContent, Controller, Request, Result}
 import services._
 
 import scala.concurrent.Future
@@ -75,7 +75,6 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
-
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
@@ -98,6 +97,11 @@ trait Joiner extends Controller {
       makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
   }
 
+  def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
+    staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+        makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
+    }
+
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) } )
@@ -114,12 +118,21 @@ trait Joiner extends Controller {
   }
 
   def thankyouFriend() = MemberAction.async { implicit request =>
+    thankYouNonPaidMember(request)
+  }
+
+  def thankyouStaff() = StaffMemberAction.async { implicit request =>
+    thankYouNonPaidMember(request)
+  }
+
+  private def thankYouNonPaidMember(request: AnyMemberTierRequest[AnyContent]) = {
     for {
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
       eventbriteFrameDetail <- getEbIFrameDetail(request)
     } yield {
       val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-      Ok(views.html.joiner.thankyou.friend(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event))
+      Ok(views.html.joiner.thankyou.nonPaid(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""),
+        request.user.primaryEmailAddress, event, request.member.tier))
     }
   }
 

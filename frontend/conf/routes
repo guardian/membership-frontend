@@ -25,8 +25,10 @@ GET            /join/staff                        controllers.Joiner.staff
 GET            /join/staff/enter-details          controllers.Joiner.enterStaffDetails
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier.Value)
 POST           /join/friend/enter-details         controllers.Joiner.joinFriend
+POST           /join/staff/enter-details          controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(tier: Tier.Value)
 GET            /join/friend/thankyou              controllers.Joiner.thankyouFriend
+GET            /join/staff/thankyou               controllers.Joiner.thankyouStaff
 GET            /join/:tier/thankyou               controllers.Joiner.thankyouPaid(tier: Tier.Value)
 
 # Normal user signin:

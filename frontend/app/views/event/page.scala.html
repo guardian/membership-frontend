@@ -21,7 +21,7 @@
     @if(event.isSoldOut) {
         <span class="action @actionClassSoldOut">Sold out</span>
     } else {
-        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
         <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
             <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
         </div>
@@ -183,7 +183,7 @@
                                         <div class="event-content__trail">
                                             <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
                                             <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
-                                            <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                            <span class="event-content__trail-saving"> (<span class="js-event-price-saving">save</span> @pricing.savingPrice)</span>
                                         </div>
                                     }
                                 }
