@@ -1,14 +1,21 @@
 package model
 
 import com.gu.{googleauth, identity}
+import play.Logger
 import play.api.libs.json.Json
+import utils.TestUsers
 
+case class BasicUser(id: String, displayName: Option[String]) {
+  lazy val isTestUser: Boolean = {
+    val isValidTestUser = TestUsers.validate(this)
+    if (isValidTestUser) {
+      Logger.info(s"$id is a valid test user")
+    }
+    isValidTestUser
+  }
+}
 
-case class IdentityUser(id: String,
-                        primaryEmailAddress: String,
-                        privateFields: PrivateFields,
-                        statusFields: StatusFields)
-
+case class FullUser(id: String, primaryEmailAddress: String, privateFields: PrivateFields, statusFields: StatusFields)
 
 //this can't be a Map[String,String] as PrivateFields in Identity has other object types
 case class PrivateFields(firstName: Option[String] = None,
@@ -32,5 +39,5 @@ case class StatusFields(receiveGnmMarketing: Option[Boolean] = None,
 object UserDeserializer {
   implicit val readsStatusFields = Json.reads[StatusFields]
   implicit val readsPrivateFields = Json.reads[PrivateFields]
-  implicit val readsUser = Json.reads[model.IdentityUser]
+  implicit val readsUser = Json.reads[model.FullUser]
 }

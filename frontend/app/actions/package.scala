@@ -1,6 +1,7 @@
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
 import com.gu.{googleauth, identity}
+import model.BasicUser
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
@@ -13,7 +14,7 @@ package object actions {
 
   val logger = Logger(this.getClass())
 
-  type AuthRequest[A] = AuthenticatedRequest[A, identity.model.User]
+  type AuthRequest[A] = AuthenticatedRequest[A, BasicUser]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
@@ -27,16 +28,6 @@ package object actions {
         } yield f(memberOpt)
       }
     }
-
-  implicit class RichUser(user: identity.model.User) {
-    lazy val isTestUser: Boolean = {
-      val isValidTestUser = TestUsers.validate(user)
-      if (isValidTestUser) {
-        Logger.info(s"${user.getId} is a valid test user")
-      }
-      isValidTestUser
-    }
-  }
 
   case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user

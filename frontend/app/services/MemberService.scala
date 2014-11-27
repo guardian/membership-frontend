@@ -1,6 +1,5 @@
 package services
 
-import com.gu.identity.model.User
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
@@ -9,7 +8,7 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
-import model.{IdentityUser, PaidTierPlan}
+import model.{BasicUser, FullUser, PaidTierPlan}
 import model.Stripe.Customer
 import monitoring.MemberMetrics
 import utils.ScheduledTask
@@ -49,7 +48,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging {
-  def initialData(user: IdentityUser, formData: JoinForm) = Map(
+  def initialData(user: FullUser, formData: JoinForm) = Map(
     Keys.EMAIL -> user.primaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
@@ -72,7 +71,7 @@ trait MemberService extends LazyLogging {
     )
   }.getOrElse(Map.empty)
 
-  def createMember(user: User, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
+  def createMember(user: BasicUser, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
 
     Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
@@ -127,7 +126,7 @@ trait MemberService extends LazyLogging {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: User, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: BasicUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     for {
       customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)

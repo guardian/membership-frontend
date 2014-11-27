@@ -60,7 +60,7 @@ trait Joiner extends Controller {
     }
   }
 
-  private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
+  private def identityDetails(user: BasicUser, request: Request[_]) = {
     val identityRequest = IdentityRequest(request)
     for {
       user <- IdentityService.getFullUserDetails(user, identityRequest)
