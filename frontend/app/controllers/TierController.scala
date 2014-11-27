@@ -44,13 +44,11 @@ trait UpgradeTier {
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
     if (request.member.tier < tier) {
-      val identityRequest = IdentityRequest(request)
       for {
-        userOpt <- IdentityService.getFullUserDetails(request.user, identityRequest)
-        privateFields = userOpt.fold(PrivateFields())(_.privateFields)
+        user <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, privateFields, pageInfo))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo))
       }
     }
     else

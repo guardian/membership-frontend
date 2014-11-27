@@ -64,9 +64,9 @@ object Functions {
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) =
       for {
-        userOpt <- IdentityService.getFullUserDetails(request.identityUser, IdentityRequest(request))
+        user <- IdentityService.getFullUserDetails(request.identityUser, IdentityRequest(request))
       } yield {
-        if(GuardianDomains.emailsMatch(request.googleUser.email, userOpt.get.primaryEmailAddress)) None
+        if(GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
         else Some(onNonGuEmail(request))
       }
     }

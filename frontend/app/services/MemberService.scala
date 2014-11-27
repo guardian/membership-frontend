@@ -84,9 +84,7 @@ trait MemberService extends LazyLogging {
       formData.password.map(IdentityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
-        fullUserOpt <- IdentityService.getFullUserDetails(user, identityRequest)
-        fullUser = fullUserOpt.get
-
+        fullUser <- IdentityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
         memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)

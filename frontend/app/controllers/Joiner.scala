@@ -63,11 +63,9 @@ trait Joiner extends Controller {
   private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
     val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
+      user <- IdentityService.getFullUserDetails(user, identityRequest)
       passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
-    } yield (privateFields, marketingChoices, passwordExists)
+    } yield (user.privateFields, user.statusFields, passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
