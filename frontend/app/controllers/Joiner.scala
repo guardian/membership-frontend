@@ -53,9 +53,9 @@ trait Joiner extends Controller {
         fullUserOpt <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
         primaryEmailAddress = fullUserOpt.map(_.primaryEmailAddress)
       } yield {
-        Ok(views.html.joiner.staff(primaryEmailAddress, request.user.email, error))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, primaryEmailAddress), error))
       }
-      case _ => Future.successful(Ok(views.html.joiner.staff(None, request.user.email, error)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), error)))
     }
   }
 
