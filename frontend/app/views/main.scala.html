@@ -44,7 +44,7 @@
         <meta name="twitter:app:id:googleplay" content="@Config.twitterGoogleplayAppId"/>
         <meta name="twitter:card" content="summary"/>
 
-        <title>@(Config.siteTitle + " - " + title)</title>
+        <title>@(title + " | " + Config.siteTitle )</title>
         @fragments.javaScriptFirstSteps(pageInfo)
 
         <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/style.css")">
