@@ -9,7 +9,7 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
-import model.PaidTierPlan
+import model.{IdentityUser, PaidTierPlan}
 import model.Stripe.Customer
 import monitoring.MemberMetrics
 import utils.ScheduledTask
@@ -49,8 +49,8 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging {
-  def initialData(user: User, formData: JoinForm) = Map(
-    Keys.EMAIL -> user.getPrimaryEmailAddress,
+  def initialData(user: IdentityUser, formData: JoinForm) = Map(
+    Keys.EMAIL -> user.primaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
     Keys.MAILING_STREET -> formData.deliveryAddress.line,
@@ -84,8 +84,11 @@ trait MemberService extends LazyLogging {
       formData.password.map(IdentityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
+        fullUserOpt <- IdentityService.getFullUserDetails(user, identityRequest)
+        fullUser = fullUserOpt.get
+
         customerOpt <- futureCustomerOpt
-        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(user, formData))
+        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
