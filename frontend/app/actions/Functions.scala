@@ -50,16 +50,6 @@ object Functions {
       }
     }
 
-  def identityApiUserEmailRefresher(onOutdatedCookie: RequestHeader => Result = chooseSigninOrRegister(_)) =
-    new ActionRefiner[AuthRequest, AuthRequest] {
-      override def refine[A](request: AuthRequest[A]) = {
-        for (userOpt <- IdentityService.getFullUserDetails(request.user, IdentityRequest(request)))
-        yield {
-          userOpt.map(refreshedUser => new AuthRequest(request.user.copy(primaryEmailAddress = refreshedUser.primaryEmailAddress), request)).toRight(onOutdatedCookie(request))
-        }
-      }
-    }
-  
   def googleAuthenticationRefiner(onNonAuthentication: RequestHeader => Result = OAuthActions.sendForAuth) = {
     new ActionRefiner[AuthRequest, IdentityGoogleAuthRequest] {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
@@ -72,11 +62,14 @@ object Functions {
   }
 
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
-    override def filter[A](request: IdentityGoogleAuthRequest[A]) = Future.successful {
-      if(GuardianDomains.emailsMatch(request.googleUser.email, request.identityUser.getPrimaryEmailAddress)) None
-      else Some(onNonGuEmail(request))
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
+      for {
+        userOpt <- IdentityService.getFullUserDetails(request.identityUser, IdentityRequest(request))
+      } yield {
+        if(GuardianDomains.emailsMatch(request.googleUser.email, userOpt.get.primaryEmailAddress)) None
+        else Some(onNonGuEmail(request))
+      }
     }
-  }
 
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
