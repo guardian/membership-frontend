@@ -47,9 +47,16 @@ object Eventbrite {
                        city: Option[String],
                        region: Option[String],
                        postal_code: Option[String],
-                       country: Option[String]) extends EBObject
+                       country: Option[String]) extends EBObject {
 
-  case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject
+    lazy val toSeq: Seq[String] = Seq(address_1, address_2, city, region, postal_code).flatten
+
+    lazy val asLine: Option[String] = if (toSeq.isEmpty) None else Some(toSeq.mkString(", "))
+  }
+
+  case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject {
+    lazy val addressLine = address.flatMap(_.asLine)
+  }
 
   case class EBPricing(value: Int) extends EBObject {
     def priceFormat(priceInPence: Double) = {
@@ -89,10 +96,6 @@ object Eventbrite {
                      capacity: Int,
                      ticket_classes: Seq[EBTicketClass],
                      status: String) extends EBObject {
-
-    lazy val eventAddressLine = venue.address.map { a =>
-      Seq(a.address_1, a.address_2, a.city, a.region, a.postal_code).flatten.filter(_.nonEmpty)
-    }.getOrElse(Nil).mkString(", ")
 
     val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))

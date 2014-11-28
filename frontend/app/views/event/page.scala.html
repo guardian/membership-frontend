@@ -78,9 +78,9 @@
                 </div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @if(event.eventAddressLine.nonEmpty) {
+                    @for(addressLine <- event.venue.addressLine) {
                         <span class="event-details__location__address">
-                            , @event.eventAddressLine
+                            , @addressLine
                         </span>
                     }
                 </div>
@@ -154,8 +154,8 @@
                             </div>
                             <div class="event-content__second">
                                 <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                @if(event.eventAddressLine.nonEmpty) {
-                                    <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
+                                @for(addressLine <- event.venue.addressLine) {
+                                    <span class="event-content__address" itemprop="address">@addressLine</span>
                                 }
                             </div>
                         </div>
