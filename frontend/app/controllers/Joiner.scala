@@ -53,10 +53,11 @@ trait Joiner extends Controller {
         fullUserOpt <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
         primaryEmailAddress = fullUserOpt.map(_.primaryEmailAddress)
         displayName = fullUserOpt.flatMap(_.publicFields.displayName)
+        avatarUrl = fullUserOpt.flatMap(_.privateFields.socialAvatarUrl)
       } yield {
-        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, primaryEmailAddress), displayName, error))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, primaryEmailAddress), displayName, avatarUrl, error))
       }
-      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, error)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, error)))
     }
   }
 

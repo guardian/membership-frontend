@@ -1,5 +1,5 @@
 @import model.StaffEmails
-@(staffEmail: model.StaffEmails, displayName: Option[String], error: Option[String])
+@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])
 
 @main("Staff Membership") {
 
@@ -9,4 +9,5 @@ Staff Membership - coming soon
 <p> Google auth email: @staffEmail.googleEmail </p>
 <p> Emails match: @staffEmail.emailsMatch</p>
 <p> @displayName </p>
+<p> @avatarUrl </p>
 }

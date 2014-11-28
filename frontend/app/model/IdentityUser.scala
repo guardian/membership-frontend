@@ -24,7 +24,8 @@ case class PrivateFields(firstName: Option[String] = None,
                          billingAddress3: Option[String] = None,
                          billingAddress4: Option[String] = None,
                          billingPostcode: Option[String] = None,
-                         billingCountry: Option[String] = None)
+                         billingCountry: Option[String] = None,
+                         socialAvatarUrl: Option[String] = None)
 
 case class PublicFields(displayName: Option[String])
 
