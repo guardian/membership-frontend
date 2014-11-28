@@ -37,9 +37,9 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "eventAddressLine" should {
+  "Venue addressLine" should {
     "be a pleasantly formatted concatenation of the venue address" in {
-      ebCompletedEvent.eventAddressLine mustEqual "Kings Place, 90 York Way, London, N1 9GU"
+      ebCompletedEvent.venue.addressLine mustEqual Some("Kings Place, 90 York Way, London, N1 9GU")
     }
   }
 
