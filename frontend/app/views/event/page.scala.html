@@ -150,7 +150,8 @@
                         </div>
                         <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
                             <div class="event-content__first">
-                                <i class="icon-location icon--info"></i>
+                                <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
+                                ><i class="icon-location icon--info"></i></a>
                             </div>
                             <div class="event-content__second">
                                 <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
