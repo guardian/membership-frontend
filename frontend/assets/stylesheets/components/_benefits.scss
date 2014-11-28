@@ -66,3 +66,69 @@
 .benefits-title__second {
     width: auto;
 }
+
+/* ==========================================================================
+   Staff Benefit styles (a fresh look at benefit styles)
+   //TODO potentially use these styles once design is aligned across site
+   //TODO I have separated this out in an aim to start cleaning this benefit work up
+   ========================================================================== */
+
+.tier-benefits {
+    overflow: hidden;
+    @include fs-bodyCopy(1);
+    margin-bottom: 0;
+
+    .flexbox & {
+        @include mq(mobileLandscape) {
+            @include flexbox;
+            @include flex-flow(row wrap);
+        }
+    }
+
+    @include mq(mobileLandscape) {
+        width: 103%; // 100% + gutter width from .benefit
+        margin-left: -3%; // - gutter width from .benefit
+    }
+}
+
+.benefit {
+    border-top: 1px dotted $c-neutral3;
+
+    @include mq(mobileLandscape) {
+        width: 47%; // 50% - margin-left
+        margin-left: 3%; // gutter width, matches offset on .tier-benefits__list
+        float: left;
+
+        .flexbox & {
+            float: none;
+        }
+    }
+
+    @include mq(tablet) {
+        width: 30.3%; // 33.3% - margin-left
+        min-height: rem($gs-gutter * 5);
+    }
+
+    @include mq(desktop) {
+        margin-top: -1px;
+    }
+}
+
+.benefit-title {
+    @include fs-bodyHeading(2);
+    padding: rem(7px) 0 rem($gs-baseline / 6) 0;
+}
+
+.benefit-title__primary{
+    float: left;
+    width: rem($gs-gutter * 2);
+}
+
+.benefit-title__secondary {
+    width: auto;
+}
+
+.benefit-copy {
+    @include fs-textSans(3);
+    padding: 0 0 rem($gs-baseline) rem($gs-gutter * 2);
+}
