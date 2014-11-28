@@ -1,11 +1,12 @@
 @import model.StaffEmails
-@(staffEmail: model.StaffEmails, error: Option[String])
+@(staffEmail: model.StaffEmails, displayName: Option[String], error: Option[String])
 
 @main("Staff Membership") {
 
 Staff Membership - coming soon
 <p> @error
-<p> Identity email: @staffEmail.identityEmail
-<p> Google auth email: @staffEmail.googleEmail
+<p> Identity email: @staffEmail.identityEmail </p>
+<p> Google auth email: @staffEmail.googleEmail </p>
 <p> Emails match: @staffEmail.emailsMatch</p>
+<p> @displayName </p>
 }
