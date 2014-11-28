@@ -3,8 +3,8 @@
 @import model.Benefits
 
 @defining(Benefits.details(tier)) { benefits =>
-    <div class="package__list-benefits">
-        <p class="package__leadin">@benefits.leadin</p>
+    <div class="package-benefits">
+        <p class="package-benefits__leadin">@benefits.leadin</p>
         <ul class="u-unstyled">
         @for(benefit <- benefits.list) {
             <li class="benefits-title">
