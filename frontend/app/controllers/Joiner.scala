@@ -1,5 +1,7 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api.mvc.{Controller, Request, Result}
 import play.api.libs.json.Json
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -10,13 +12,11 @@ import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 
 import actions._
 import configuration.{Config, CopyConfig}
-import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm}
+import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.Eventbrite.{EBCode, RichEvent}
 import model._
 import model.StripeSerializer._
 import services._
-
-import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
@@ -52,7 +52,6 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
-
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
@@ -72,6 +71,11 @@ trait Joiner extends Controller {
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember { Redirect(routes.Joiner.thankyou(Tier.Friend)) } )
   }
+
+  def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
+    staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+        makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
+    }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
@@ -114,6 +118,8 @@ trait Joiner extends Controller {
       eventDetailsOpt <- futureEventDetailsOpt
     } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade))
   }
+
+  def thankyouStaff = thankyou(Tier.Friend)
 }
 
 object Joiner extends Joiner {

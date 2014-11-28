@@ -43,9 +43,9 @@ trait Event extends Controller {
 
   def masterclasses = CachedAction { implicit request =>
     val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
+      CopyConfig.copyTitleMasterclasses,
       request.path,
-      Some(CopyConfig.copyDescriptionEvents)
+      Some(CopyConfig.copyDescriptionMasterclasses)
     )
     Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
   }
@@ -53,9 +53,9 @@ trait Event extends Controller {
   def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>
     val tag = MasterclassEvent.decodeTag(rawTag)
     val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
+      CopyConfig.copyTitleMasterclasses,
       request.path,
-      Some(CopyConfig.copyDescriptionEvents)
+      Some(CopyConfig.copyDescriptionMasterclasses)
     )
     Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.getEventsTagged(tag)), pageInfo, tag))
   }

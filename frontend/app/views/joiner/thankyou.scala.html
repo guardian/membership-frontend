@@ -19,7 +19,7 @@
     }
 }
 
-@main("Thankyou | " + subscription.planName, containerPadding = false) {
+@main(title, containerPadding = false) {
 
     <section class="content__container content__container--slim">
         <h1 class="section-headline">Hello @member.firstName.<br/> Welcome to Guardian Membership!</h1>
@@ -32,7 +32,7 @@
         <table class="table table--responsive-font table--striped" role="grid">
             <tr role="row">
                 <th role="rowheader">Tier</th>
-                <td>@subscription.planName</td>
+                <td>@member.tier</td>
             </tr>
             <tr role="row">
                 <th role="rowheader">Start date</th>
