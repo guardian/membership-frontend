@@ -87,7 +87,7 @@
                     <p>Currently your account is set up with <strong>@identityEmail</strong>. To join Guardian Staff Membership you must have a Guardian Identity account set up using your work email address ending @@theguardian.com (@@guardian.co.uk will work too).</p>
 
                     @signpost(
-                        "Change email and join", Config.idWebAppSigninUrl(routes.Joiner.staff.url),
+                        "Change email and join", Config.idWebAppAccountEditUrl(routes.Joiner.staff.url),
                         "Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)) {
                             Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account
                         }{
