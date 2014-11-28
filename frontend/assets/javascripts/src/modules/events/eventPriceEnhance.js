@@ -1,45 +1,45 @@
 define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
 
-    var config = {
-        classes: {
-            EVENT_PRICE: 'js-event-price',
-            EVENT_PRICE_DISCOUNT: 'js-event-price-discount',
-            EVENT_SAVING: 'js-event-price-saving',
-            EVENT_TRAIL_TAG: 'js-event-price-tag'
-        },
-        DOM: {}
+    var selectors = {
+        EVENT_CONTAINER: '.js-event-price',
+        EVENT_PRICE: '.js-event-price-value',
+        EVENT_PRICE_DISCOUNT: '.js-event-price-discount',
+        EVENT_SAVING: '.js-event-price-saving'
     };
 
-    var init = function () {
-        for (var c in config.classes) {
-            if (config.classes.hasOwnProperty(c)) {
-                config.DOM = config.DOM || {};
-                config.DOM[c] = $('.' + config.classes[c]);
-            }
-        }
+    var events = $(selectors.EVENT_CONTAINER);
 
-        if (config.DOM.EVENT_PRICE && config.DOM.EVENT_PRICE_DISCOUNT) {
+    var init = function () {
+        if (events.length) {
             userUtil.getMemberDetail(enhanceWithTier);
         }
     };
 
     var enhanceWithTier = function (memberDetail) {
         var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
-
         if (tier && (tier === 'partner' || tier === 'patron')) {
-            var priceText = config.DOM.EVENT_PRICE.text(),
-                priceDiscount = config.DOM.EVENT_PRICE_DISCOUNT.text();
-
-            if (priceText !== 'Free') {
-                config.DOM.EVENT_PRICE.text(priceDiscount);
-                config.DOM.EVENT_PRICE_DISCOUNT.text(priceText);
-                config.DOM.EVENT_TRAIL_TAG.text('Full price ');
-                config.DOM.EVENT_SAVING.text('You save');
-            }
+            events.each(function(el) {
+                updateEventPricing(el);
+            });
         }
+    };
+
+    var updateEventPricing = function(el) {
+
+        var elPrice = $(el.querySelector(selectors.EVENT_PRICE));
+        var elPriceDiscount = $(el.querySelector(selectors.EVENT_PRICE_DISCOUNT));
+        var elPriceSaving = $(el.querySelector(selectors.EVENT_SAVING));
+
+        if (elPrice.length && elPriceDiscount.length && elPriceSaving.length) {
+            elPrice.text(elPrice.attr('data-discount-text'));
+            elPriceDiscount.text(elPriceDiscount.attr('data-discount-text'));
+            elPriceSaving.text(elPriceSaving.attr('data-discount-text'));
+        }
+
     };
 
     return {
         init: init
     };
+
 });
