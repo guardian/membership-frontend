@@ -1,5 +1,6 @@
-@(error: Option[String])(implicit token: play.filters.csrf.CSRF.Token)
+@(staffEmail: model.StaffEmails, error: Option[String])
 
+@import model.StaffEmails
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
