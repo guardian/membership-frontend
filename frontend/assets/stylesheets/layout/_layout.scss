@@ -218,6 +218,10 @@ body {
     @include clearfix;
     display: table;
     width: 100%;
+
+    @include mq(desktop) {
+        width: auto;
+    }
 }
 
 .page-section__row {
@@ -228,7 +232,6 @@ body {
 .page-section__primary {
 
     @include mq(desktop) {
-        float: left;
         width: rem(gs-span(3));
         display: table-cell;
         vertical-align: top;
