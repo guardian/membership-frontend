@@ -47,9 +47,10 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
   } yield events.map(mkRichEvent)
 
+  // only load 1 page of past events (masterclasses have 800+ of them)
   protected def getArchivedEvents: Future[Seq[RichEvent]] = for {
-    eventsArchive <- getPaginated[EBEvent]("users/me/owned_events?status=ended")
-  } yield eventsArchive.map(mkRichEvent)
+    eventsArchive <- get[EBResponse[EBEvent]]("users/me/owned_events?status=ended&order_by=start_desc")
+  } yield eventsArchive.data.map(mkRichEvent)
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityEventOrdering
