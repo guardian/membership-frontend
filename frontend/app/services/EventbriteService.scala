@@ -127,7 +127,7 @@ object GuardianLiveEventService extends EventbriteService {
         agent.sendOff(_ => Await.result(refresher, 15.seconds))
       }
     }
-    Logger.info("Starting EventbriteService background tasks")
+    Logger.info("Starting EventbriteService GuardianLive background tasks")
     scheduleAgentRefresh(allEvents, getLiveEvents, refreshTimeAllEvents)
     scheduleAgentRefresh(priorityOrderedEventIds, getPriorityEventIds, refreshTimePriorityEvents)
     scheduleAgentRefresh(archivedEvents, getArchivedEvents, refreshTimeArchivedEvents)
@@ -139,28 +139,40 @@ object MasterclassEventServiceHelpers {
     events.filter(_.memberTickets.exists { t => t.quantity_sold < t.quantity_total } )
 }
 
-object MasterclassEventService extends EventbriteService with ScheduledTask[Seq[RichEvent]] {
+object MasterclassEventService extends EventbriteService {
   import MasterclassEventServiceHelpers._
 
   val masterclassDataService = MasterclassDataService
 
   val apiToken = Config.eventbriteMasterclassesApiToken
 
-  val initialValue = Nil
-  val interval = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
-  val initialDelay = 0.seconds
+  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
+  val refreshTimeArchivedEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
 
-  def refresh(): Future[Seq[RichEvent]] = getLiveEvents.map(availableEvents)
+  lazy val allEvents = Agent[Seq[RichEvent]](Seq.empty)
+  lazy val archivedEvents = Agent[Seq[RichEvent]](Seq.empty)
 
-  def events: Seq[RichEvent] = agent.get()
-  def eventsArchive: Seq[RichEvent] = Nil
+  def events: Seq[RichEvent] = allEvents.map(availableEvents).get()
+  def eventsArchive: Seq[RichEvent] = archivedEvents.get()
   def priorityEventOrdering: Seq[String] = Nil
+
   def mkRichEvent(event: EBEvent): RichEvent = {
     val masterclassData = masterclassDataService.getData(event.id)
     MasterclassEvent(event, masterclassData)
   }
 
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
+
+  def start() {
+    def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
+      Akka.system.scheduler.schedule(1.second, intervalPeriod) {
+        agent.sendOff(_ => Await.result(refresher, 15.seconds))
+      }
+    }
+    Logger.info("Starting EventbriteService Masterclasses background tasks")
+    scheduleAgentRefresh(allEvents, getLiveEvents, refreshTimeAllEvents)
+    scheduleAgentRefresh(archivedEvents, getArchivedEvents, refreshTimeArchivedEvents)
+  }
 }
 
 object EventbriteService {
