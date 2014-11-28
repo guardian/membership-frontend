@@ -9,7 +9,8 @@
     text-decoration: none;
     font-weight: bold;
     @include fs-textSans(4);
-    min-width: 100%;
+    width: 100%;
+    max-width: rem($gs-gutter * 15);
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
     @include border-radius(50%);
 
@@ -35,7 +36,9 @@
     }
 
     @include mq(mobileLandscape){
+        width: auto;
         min-width: rem(220px);
+        max-width: none;
     }
 }
 
