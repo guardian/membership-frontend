@@ -9,9 +9,10 @@ require([
     'src/modules/tier/PaidForm',
     'src/modules/events/Cta',
     'src/modules/events/filter',
+    'src/modules/sticky',
     'src/modules/Header',
     'src/modules/UserDetails',
-    'src/modules/tier/Choose',
+    'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
     'src/utils/addToClipboard',
@@ -28,9 +29,10 @@ require([
     PaidForm,
     Cta,
     Filter,
+    sticky,
     Header,
     UserDetails,
-    Choose,
+    choose,
     eventPriceEnhance,
     Thankyou,
     addToClipboard
@@ -50,21 +52,27 @@ require([
     if ($('.delayed-image-load').length) {
         new Imager('.delayed-image-load', {
             availableWidths: guardian.membership.eventImages.widths,
-            availablePixelRatios: guardian.membership.eventImages.ratios
+            availablePixelRatios: guardian.membership.eventImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
     // home page hero (a-b) imagery
     if ($('.delayed-home-image-load').length) {
         new Imager('.delayed-home-image-load', {
             availableWidths: guardian.membership.homeImages.widths,
-            availablePixelRatios: guardian.membership.homeImages.ratios
+            availablePixelRatios: guardian.membership.homeImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
     // home page promo (a-b) imagery
     if ($('.delayed-home-promo-image-load').length) {
         new Imager('.delayed-home-promo-image-load', {
             availableWidths: guardian.membership.homeImages.promoWidths,
-            availablePixelRatios: guardian.membership.homeImages.ratios
+            availablePixelRatios: guardian.membership.homeImages.ratios,
+            lazyload: true,
+            lazyloadOffset: 100
         });
     }
 
@@ -83,7 +91,7 @@ require([
     eventPriceEnhance.init();
 
     // Join
-    (new Choose()).init();
+    choose.init();
     (new JoinFree()).init();
     (new PaidForm()).init();
     (new Thankyou()).init(header);

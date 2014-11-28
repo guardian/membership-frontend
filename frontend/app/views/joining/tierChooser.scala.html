@@ -12,7 +12,7 @@
 
         <div class="l-row">
             @fragments.joiner.joinStepCounter(1, 3)
-            <section class="two-thirds js-benefit-container">
+            <section class="two-thirds">
                 <div class="package-list">
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
                     @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
@@ -37,14 +37,14 @@
 
                     <div class="event-item__time event-content--line-divider u-cf">
                         <div class="event-content__first">
-                            <i class="icon-large-early_booking icon--small"></i>
+                            <i class="icon-large-early_booking icon--benefits"></i>
                         </div>
                         <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                     </div>
 
                     <div class="event-item__location event-content--line-divider u-cf">
                         <div class="event-content__first">
-                            <i class="icon-location icon--small"></i>
+                            <i class="icon-location icon--benefits"></i>
                         </div>
                         <div class="event-content__second">
                             @if(event.venue.name){

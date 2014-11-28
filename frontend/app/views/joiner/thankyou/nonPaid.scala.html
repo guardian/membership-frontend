@@ -1,4 +1,5 @@
-@(subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], firstName: String, userEmail: String, event: Option[model.Eventbrite.RichEvent])
+@(subscriptionDetails: model.Zuora.SubscriptionDetails, ebIFrameDetail: Option[(String, Int)], firstName: String,
+userEmail: String, event: Option[model.Eventbrite.RichEvent], tier: com.gu.membership.salesforce.Tier.Tier)
 
 @import views.support.Dates._
 
@@ -16,7 +17,7 @@
                     Tier
                 </th>
                 <td>
-                    @subscriptionDetails.planName
+                    @tier
                 </td>
             </tr>
             <tr role="row">
