@@ -107,7 +107,9 @@
                                 }
                             }
                         </div>
-                        @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
+                        @if(event.isBookable) {
+                            @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
+                        }
                     </div>
                 }
             }

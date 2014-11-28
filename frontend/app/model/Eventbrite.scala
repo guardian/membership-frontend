@@ -131,6 +131,7 @@ object Eventbrite {
     val imgUrl: String
     val socialImgUrl: String
     val tags: Seq[String]
+    val isBookable: Boolean = event.status == "live"
 
     val maxDiscounts: Int
     val allowDiscountCodes: Boolean
