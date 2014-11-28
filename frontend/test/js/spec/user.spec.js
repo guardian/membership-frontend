@@ -35,7 +35,6 @@ define([
             var user = userUtil.getUserFromCookie();
 
             expect(user.displayname).toEqual('fmpdev32');
-            expect(user.primaryemailaddress).toEqual('devgu32@feedmypixel.com');
             expect(user.id).toEqual('10000027');
             expect(user.accountCreatedDate).toEqual(1408608372000);
         });

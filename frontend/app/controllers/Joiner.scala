@@ -1,39 +1,26 @@
 package controllers
 
-import actions._
-import com.gu.membership.salesforce.{ScalaforceError, Tier}
+import scala.concurrent.Future
+
+import play.api.mvc.{Controller, Request, Result}
+import play.api.libs.json.Json
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import com.netaporter.uri.dsl._
+
+import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
+
+import actions._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.Eventbrite.{EBCode, RichEvent}
-import model.StripeSerializer._
 import model._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, Controller, Request, Result}
+import model.StripeSerializer._
 import services._
-
-import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
   val memberService: MemberService
-
-  def getEbIFrameDetail(request: AnyMemberTierRequest[_]): Future[Option[(String, Int)]] = {
-    def getEbEventFromSession(request: Request[_]): Option[RichEvent] =
-      PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-
-    def detailsFor(event: RichEvent, discountOpt: Option[EBCode]): (String, Int) = {
-      val url = (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString
-      (url, event.ticket_classes.length)
-    }
-
-    Future.sequence {
-      (for (event <- getEbEventFromSession(request)) yield {
-        for (discountOpt <- memberService.createDiscountForMember(request.member, event)) yield detailsFor(event, discountOpt)
-      }).toSeq
-    }.map(_.headOption)
-  }
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -75,16 +62,14 @@ trait Joiner extends Controller {
   private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
     val identityRequest = IdentityRequest(request)
     for {
-      userOpt <- IdentityService.getFullUserDetails(user, identityRequest)
-      privateFields = userOpt.fold(PrivateFields())(_.privateFields)
-      marketingChoices = userOpt.fold(StatusFields())(_.statusFields)
+      user <- IdentityService.getFullUserDetails(user, identityRequest)
       passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
-    } yield (privateFields, marketingChoices, passwordExists)
+    } yield (user.privateFields, user.statusFields, passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember { Redirect(routes.Joiner.thankyouFriend()) } )
+      makeMember { Redirect(routes.Joiner.thankyou(Tier.Friend)) } )
   }
 
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
@@ -94,7 +79,7 @@ trait Joiner extends Controller {
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyouPaid(tier).url)) } )
+      makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url)) } )
   }
 
   private def makeMember(result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
@@ -107,35 +92,34 @@ trait Joiner extends Controller {
       }
   }
 
-  def thankyouFriend() = MemberAction.async { implicit request =>
-    thankYouNonPaidMember(request)
-  }
-
-  def thankyouStaff() = StaffMemberAction.async { implicit request =>
-    thankYouNonPaidMember(request)
-  }
-
-  private def thankYouNonPaidMember(request: AnyMemberTierRequest[AnyContent]) = {
-    for {
-      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
-      eventbriteFrameDetail <- getEbIFrameDetail(request)
-    } yield {
-      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-      Ok(views.html.joiner.thankyou.nonPaid(subscriptionDetails, eventbriteFrameDetail, request.member.firstName.getOrElse(""),
-        request.user.primaryEmailAddress, event, request.member.tier))
+  def thankyou(tier: Tier.Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
+    def futureCustomerOpt = request.member match {
+      case paidMember: PaidMember =>
+        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+      case _ => Future.successful(None)
     }
+
+    def futureEventDetailsOpt = {
+      val optFuture = for {
+        eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+        event <- EventbriteService.getEvent(eventId)
+      } yield {
+        MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
+          (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
+        }
+      }
+
+      Future.sequence(optFuture.toSeq).map(_.headOption)
+    }
+
+    for {
+      subscription <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
+      customerOpt <- futureCustomerOpt
+      eventDetailsOpt <- futureEventDetailsOpt
+    } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade))
   }
 
-  def thankyouPaid(tier: Tier.Tier, upgrade: Boolean = false) = PaidMemberAction.async { implicit request =>
-    for {
-      customer <- request.touchpointBackend.stripeService.Customer.read(request.member.stripeCustomerId)
-      subscriptionDetails <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member.salesforceAccountId)
-      eventbriteFrameDetail <- getEbIFrameDetail(request)
-    } yield {
-      val event = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
-      Ok(views.html.joiner.thankyou.paid(customer.card, subscriptionDetails, eventbriteFrameDetail, tier, request.member.firstName.getOrElse(""), request.user.primaryEmailAddress, event, upgrade))
-    }
-  }
+  def thankyouStaff = thankyou(Tier.Friend)
 }
 
 object Joiner extends Joiner {

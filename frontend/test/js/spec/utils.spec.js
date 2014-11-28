@@ -39,7 +39,6 @@ define([
             var user = userUtil.getUserFromCookie();
 
             expect(user.displayname).toEqual('chrisfinchdevlocal');
-            expect(user.primaryemailaddress).toEqual('chris.finch@guardian.co.uk');
             expect(user.id).toEqual('10000001');
             expect(user.accountCreatedDate).toEqual(1388764152000);
         });
