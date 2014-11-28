@@ -43,6 +43,7 @@
                     }
                 }
 
+
                 <div class="event-item__cta" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
                     @if(event.isSoldOut) {
                         <meta itemprop="availability" content="http://schema.org/SoldOut">
@@ -53,10 +54,24 @@
                     @if(event.isNoTicketEvent == false) {
                         <div class="event-item__price">
                             @for(ticket <- event.generalReleaseTicket) {
-                                @for(pricing <- ticket.cost) {
-                                    <span class="event-item__price-amount js-event-price" itemprop="highPrice">@pricing.formattedPrice</span>
-                                    <span class="event-item__price-amount-discount" itemprop="lowPrice" content="@pricing.discountPrice"><span class="js-event-price-tag">Partners/Patrons:</span> <span class="js-event-price-discount">@pricing.discountPrice</span></span>
-                                    <span class="event-item__price-amount-discount"><span class="js-event-price-saving">Save</span> @pricing.savingPrice</span>
+                                @if(ticket.free) {
+                                    <span class="event-item__price-amount">
+                                        Free
+                                    </span>
+                                } else {
+                                    @for(pricing <- ticket.cost) {
+                                        <div class="js-event-price">
+                                            <span class="event-item__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                                                @pricing.formattedPrice
+                                            </span>
+                                            <span class="event-item__price-amount-discount js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice" content="@pricing.discountPrice">
+                                               Partners/Patrons: @pricing.discountPrice
+                                            </span>
+                                            <span class="event-item__price-amount-discount js-event-price-saving" data-discount-text="You save @pricing.savingPrice">
+                                                Save @pricing.savingPrice
+                                            </span>
+                                        </div>
+                                    }
                                 }
                             }
                         </div>
