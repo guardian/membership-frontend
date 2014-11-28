@@ -18,7 +18,7 @@ trait Subscription extends Controller {
       .fold(_ => Future.successful(BadRequest), stripeToken =>
         for {
           card <- request.touchpointBackend.updateDefaultCard(request.member, stripeToken)
-        } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`))
+        } yield Ok(Json.obj("last4" -> card.last4, "cardType" -> card.`type`, "type" -> card.`type`))
       ).recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
       }
