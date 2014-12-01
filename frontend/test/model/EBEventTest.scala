@@ -43,6 +43,12 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
+  "Venue google link" should {
+    "include the uri encoded venue name and address as the query parameter" in {
+      ebCompletedEvent.venue.googleMapsLink mustEqual Some("https://maps.google.com/?q=The%20Guardian%2C%20Kings%20Place%2C%2090%20York%20Way%2C%20London%2C%20N1%209GU")
+    }
+  }
+
   "Event location" should {
     "be correct with all fields present" in {
       val location = ebCompletedEvent.venue.address.get

@@ -92,17 +92,22 @@
 
                             @if(ticket.free) {
                                 <div class="event-ticket__price">
-                                    <span class="event-ticket__price-amount js-event-price">Free</span>
+                                    <span class="event-ticket__price-amount">Free</span>
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event-ticket__price">
-                                        <span class="event-ticket__price-amount js-event-price">@pricing.formattedPrice</span>
-                                    </div>
-                                    <div class="event-ticket__trail">
-                                        <span class="event-ticket__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event-ticket__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
-                                        <span class="event-ticket__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                    <div class="js-event-price">
+                                        <div class="event-ticket__price">
+                                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
+                                        </div>
+                                        <div class="event-ticket__trail">
+                                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
+                                                Partners/Patrons @pricing.discountPrice
+                                            </span>
+                                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                                (save @pricing.savingPrice)
+                                            </span>
+                                        </div>
                                     </div>
                                 }
                             }
@@ -152,7 +157,8 @@
                         </div>
                         <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
                             <div class="event-content__first">
-                                <i class="icon-location icon--info"></i>
+                                <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
+                                ><i class="icon-location icon--info"></i></a>
                             </div>
                             <div class="event-content__second">
                                 <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
@@ -175,17 +181,22 @@
 
                                 @if(ticket.free) {
                                     <div class="event-content__price event-content--line-divider">
-                                        <span class="event-content__price-amount js-event-price">Free</span>
+                                        <span class="event-content__price-amount">Free</span>
                                     </div>
                                 } else {
                                     @for(pricing <- ticket.cost) {
-                                        <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
-                                            @pricing.formattedPrice
-                                        </div>
-                                        <div class="event-content__trail">
-                                            <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                            <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
-                                            <span class="event-content__trail-saving"> (<span class="js-event-price-saving">save</span> @pricing.savingPrice)</span>
+                                        <div class="js-event-price">
+                                            <div class="event-content__price event-content--line-divider js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                                                @pricing.formattedPrice
+                                            </div>
+                                            <div class="event-content__trail">
+                                                <span class="event-content__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
+                                                    Partners/Patrons @pricing.discountPrice
+                                                </span>
+                                                <span class="event-content__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                                    (save @pricing.savingPrice)
+                                                </span>
+                                            </div>
                                         </div>
                                     }
                                 }

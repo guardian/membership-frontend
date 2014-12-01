@@ -1,5 +1,6 @@
 package model
 
+import com.netaporter.uri.Uri
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.data.validation.ValidationError
@@ -12,8 +13,11 @@ import org.joda.time.Instant
 import configuration.Config
 import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
+import com.netaporter.uri.dsl._
 
 object Eventbrite {
+
+  val googleMapsUri = Uri.parse("https://maps.google.com/")
 
   trait EBObject
 
@@ -56,6 +60,9 @@ object Eventbrite {
 
   case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject {
     lazy val addressLine = address.flatMap(_.asLine)
+
+    lazy val googleMapsLink: Option[String] =
+      addressLine.map(al => googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al)))
   }
 
   case class EBPricing(value: Int) extends EBObject {
