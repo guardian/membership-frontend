@@ -31,9 +31,21 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = GoogleAuthenticatedStaffNonMemberAction { implicit request =>
+  def staff = GoogleAuthenticatedStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
-    Ok(views.html.joiner.staff(error))
+    val userSignedIn = AuthenticationService.authenticatedUserFor(request)
+
+    userSignedIn match {
+      case Some(user) => for {
+        fullUser <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
+        primaryEmailAddress = fullUser.primaryEmailAddress
+        displayName = fullUser.publicFields.displayName
+        avatarUrl = fullUser.privateFields.socialAvatarUrl
+      } yield {
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, error))
+      }
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, error)))
+    }
   }
 
   def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
