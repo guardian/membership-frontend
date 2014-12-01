@@ -172,7 +172,7 @@
                     case _ => {}
                 }
 
-                <div class="event-content__sticky js-sticky">
+                <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                     <div class="event-content__info @if(!event.isBookable || event.isSoldOut) {event-content__info--unavailable}">
 
                         @if(!event.isBookable || event.isSoldOut) {

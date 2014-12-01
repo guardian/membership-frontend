@@ -82,6 +82,7 @@ require([
     analytics.init();
 
     // Global
+    sticky.init();
     var header = new Header();
     header.init();
     (new UserDetails()).init();

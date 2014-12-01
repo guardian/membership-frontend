@@ -1,11 +1,11 @@
 package model
 
-import com.gu.{googleauth, identity}
 import play.api.libs.json.Json
 
 
 case class IdentityUser(id: String,
                         primaryEmailAddress: String,
+                        publicFields: PublicFields,
                         privateFields: PrivateFields,
                         statusFields: StatusFields)
 
@@ -24,7 +24,10 @@ case class PrivateFields(firstName: Option[String] = None,
                          billingAddress3: Option[String] = None,
                          billingAddress4: Option[String] = None,
                          billingPostcode: Option[String] = None,
-                         billingCountry: Option[String] = None)
+                         billingCountry: Option[String] = None,
+                         socialAvatarUrl: Option[String] = None)
+
+case class PublicFields(displayName: Option[String])
 
 case class StatusFields(receiveGnmMarketing: Option[Boolean] = None,
                         receive3rdPartyMarketing: Option[Boolean] = None)
@@ -32,5 +35,6 @@ case class StatusFields(receiveGnmMarketing: Option[Boolean] = None,
 object UserDeserializer {
   implicit val readsStatusFields = Json.reads[StatusFields]
   implicit val readsPrivateFields = Json.reads[PrivateFields]
+  implicit val readsPublicFields = Json.reads[PublicFields]
   implicit val readsUser = Json.reads[model.IdentityUser]
 }
