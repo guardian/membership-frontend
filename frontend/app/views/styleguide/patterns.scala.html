@@ -1,0 +1,95 @@
+@()(implicit token: play.filters.csrf.CSRF.Token)
+@import helper._
+@import model.Benefits
+@import com.gu.membership.salesforce.Tier
+
+@pattern(title: String, description: String)(content: Html) = {
+    <div class="pattern">
+        <h2 class="pattern__title">@title</h2>
+        @if(description) {
+            <p class="pattern__description">@description</p>
+        }
+        <div class="pattern__body">
+            @content
+        </div>
+    </div>
+}
+
+@main("Pattern Library") {
+
+    <header class="section__heading u-cf">
+        <h1 class="section-headline section-headline--no-margin">Pattern Library</h1>
+    </header>
+    <div class="section-intro">
+        Documents common patterns used across the Membership site.
+    </div>
+
+    @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+    }
+
+    @pattern("Benefits - Small", "Small variant of the benefits details fragment (showBenefitCopy=false)") {
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+    }
+
+    @pattern("Benefits - No details", "Collapsed variant of the benefits details fragment, no details shown (showBenefitDetails=false)") {
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+    }
+
+    @pattern("Benefits - Feature", "Featured variant of the benefits details. Not a fragment yet)") {
+        <div class="benefits-container u-cf">
+            <div class="benefits-inner">
+                <h2 class="about-block-title">What's included</h2>
+                <ul class="benefits__list u-unstyled u-cf">
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-book_tickets"></i>
+                        <span class="benefits__list--header">Book tickets</span>
+                        <p>Book tickets to Guardian Live events</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-digital_digest"></i>
+                        <span class="benefits__list--header">Membership email updates</span>
+                        <p>Receive regular updates on the upcoming programme</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-video_highlights"></i>
+                        <span class="benefits__list--header">Video highlights</span>
+                        <p>Watch highlights of selected Guardian Live events</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-discount"></i>
+                        <span class="benefits__list--header">20% Discount</span>
+                        <p>20% discount on Guardian Live tickets for Partners and Patrons</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-plus_1_guest"></i>
+                        <span class="benefits__list--header">+1 Guest</span>
+                        <p>Bring a guest to Guardian Live with the same discount and priority booking advantages for Partners and Patrons</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-live_stream"></i>
+                        <span class="benefits__list--header">Live stream events</span>
+                        <p>Watch live streams of Flagship events for Partners and Patrons</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-membership_card"></i>
+                        <span class="benefits__list--header">Membership card</span>
+                        <p>For Partners and Patrons</p>
+                    </li>
+                    <li class="benefits__list--items">
+                        <i class="icon__left icon-large-early_booking"></i>
+                        <span class="benefits__list--header">Early booking</span>
+                        <p>Early booking for Partners and Patrons</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+
+}
