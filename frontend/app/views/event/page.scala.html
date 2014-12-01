@@ -17,7 +17,7 @@
     }
 }
 
-@ticketCta(actionClassSoldOut: String, actionClassBuy:String) = {
+@ticketCta(actionClassSoldOut: String, actionClassBuy: String) = {
     @if(event.isSoldOut) {
         <span class="action @actionClassSoldOut">Sold out</span>
     } else {
