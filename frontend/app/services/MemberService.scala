@@ -1,23 +1,25 @@
 package services
 
-import com.gu.identity.model.User
-import com.gu.membership.salesforce.Member.Keys
-import com.gu.membership.salesforce._
-import com.gu.membership.util.Timing
-import com.typesafe.scalalogging.slf4j.LazyLogging
-import configuration.Config
-import controllers.IdentityRequest
-import forms.MemberForm._
-import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
-import model.{ProductRatePlan, PaidTierPlan}
-import model.Stripe.Customer
-import monitoring.MemberMetrics
-import utils.ScheduledTask
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.{Success, Failure}
+
+import com.typesafe.scalalogging.slf4j.LazyLogging
+
+import com.gu.identity.model.User
+import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce._
+import com.gu.membership.util.Timing
+
+import configuration.Config
+import controllers.IdentityRequest
+import forms.MemberForm._
+import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
+import model.{IdentityUser, ProductRatePlan, PaidTierPlan}
+import model.Stripe.Customer
+import monitoring.MemberMetrics
+import utils.ScheduledTask
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -49,8 +51,8 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging {
-  def initialData(user: User, formData: JoinForm) = Map(
-    Keys.EMAIL -> user.getPrimaryEmailAddress,
+  def initialData(user: IdentityUser, formData: JoinForm) = Map(
+    Keys.EMAIL -> user.primaryEmailAddress,
     Keys.FIRST_NAME -> formData.name.first,
     Keys.LAST_NAME -> formData.name.last,
     Keys.MAILING_STREET -> formData.deliveryAddress.line,
@@ -84,8 +86,9 @@ trait MemberService extends LazyLogging {
       formData.password.map(IdentityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
+        fullUser <- IdentityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
-        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(user, formData))
+        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful

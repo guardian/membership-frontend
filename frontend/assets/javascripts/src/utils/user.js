@@ -35,7 +35,6 @@ define([
             if (userData) {
                 userFromCookieCache = {
                     id: userData[0],
-                    primaryemailaddress: userData[1], // this and displayname are non camelcase to match with formstack
                     displayname: userData[2],
                     accountCreatedDate: userData[6],
                     emailVerified: userData[7],

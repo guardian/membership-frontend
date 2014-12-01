@@ -1,0 +1,93 @@
+@(member: com.gu.membership.salesforce.Member, subscription: model.Zuora.SubscriptionDetails,
+    cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.Eventbrite.RichEvent, String)], upgrade: Boolean)
+
+@import views.support.Dates._
+@import views.support.Prices._
+@import views.support.Social.joinThankyou
+
+@iframeHeight(event: model.Eventbrite.RichEvent) = @{
+    val ticketHeight = 60
+    val iframeChrome = 560
+    event.ticket_classes.length * ticketHeight + iframeChrome
+}
+
+@title = @{
+    if (upgrade) {
+        "Change Tier Summary | " + subscription.planName + " from Friend"
+    } else {
+        "Thank you | " + subscription.planName
+    }
+}
+
+@main(title, containerPadding = false) {
+
+    <section class="content__container content__container--slim">
+        <h1 class="section-headline">Hello @member.firstName.<br/> Welcome to Guardian Membership!</h1>
+        <p>You're the newest member of the Guardian Membership community and we're thrilled to have you on board.</p>
+        <p>We've sent confirmation of your membership to @member.email</p>
+    </section>
+
+    <section class="content__container content__container--slim">
+        <h2 class="content__headline">Your membership summary</h2>
+        <table class="table table--responsive-font table--striped" role="grid">
+            <tr role="row">
+                <th role="rowheader">Tier</th>
+                <td>@member.tier</td>
+            </tr>
+            <tr role="row">
+                <th role="rowheader">Start date</th>
+                <td>@subscription.startDate.pretty</td>
+            </tr>
+            @for(card <- cardOpt) {
+                <tr role="row">
+                    <th role="rowheader">Amount paid today</th>
+                    <td>@subscription.planAmount.pretty</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">
+                        @if(subscription.annual) { Annual } else { Monthly } payment
+                    </th>
+                    <td>@subscription.planAmount.pretty</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">Next payment</th>
+                    <td>@subscription.endDate.pretty</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">Card</th>
+                    <td>•••• •••• •••• •••• @card.last4</td>
+                </tr>
+            }
+        </table>
+    </section>
+
+    @eventDetailsOpt match {
+        case Some((event, iframeUrl)) => {
+            <section class="content__container content__container--slim">
+                <h2 class="content__headline">Complete your ticket purchase</h2>
+                <p>
+                    We're currently improving our ticket purchasing system, in the meantime you will have to enter
+                    some details again.
+                </p>
+
+                <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0" hspace="0"
+                        marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+            </section>
+        }
+
+        case None => {
+            <section class="content__container content__container--slim">
+                <h2 class="content__headline">Tell your friends</h2>
+                @fragments.social(joinThankyou)
+            </section>
+            <section class="content__container content__container--slim">
+                <h2 class="content__headline">Find Guardian Live events</h2>
+                <a class="action" href="/events">Get started</a>
+            </section>
+        }
+    }
+
+    @fragments.analytics.googleJoinerConversion(member.tier)
+    @fragments.analytics.facebookJoinerConversion(member.tier)
+    @fragments.analytics.membershipJoinerConversion()
+}

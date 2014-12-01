@@ -153,6 +153,8 @@ object Config {
     Patron -> config.getString("facebook.joiner.conversion.patron")
   )
 
+  val facebookEventTicketSaleTrackingId = config.getString("facebook.ticket.purchase")
+
   val googleAdwordsJoinerConversionLabel = Map(
     Friend -> config.getString("google.adwords.joiner.conversion.friend"),
     Partner -> config.getString("google.adwords.joiner.conversion.partner"),

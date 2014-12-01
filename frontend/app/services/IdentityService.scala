@@ -20,10 +20,15 @@ import model.IdentityUser
 import model.UserDeserializer._
 import monitoring.IdentityApiMetrics
 
+case class IdentityServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
+}
+
 trait IdentityService {
 
-  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[Option[IdentityUser]] =
+  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[IdentityUser] =
     IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+      .map(_.getOrElse(throw IdentityServiceError(s"Couldn't find user with ID ${user.id}")))
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
