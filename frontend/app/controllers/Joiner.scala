@@ -37,12 +37,12 @@ trait Joiner extends Controller {
 
     userSignedIn match {
       case Some(user) => for {
-        fullUserOpt <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
-        primaryEmailAddress = fullUserOpt.map(_.primaryEmailAddress)
-        displayName = fullUserOpt.flatMap(_.publicFields.displayName)
-        avatarUrl = fullUserOpt.flatMap(_.privateFields.socialAvatarUrl)
+        fullUser <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
+        primaryEmailAddress = fullUser.primaryEmailAddress
+        displayName = fullUser.publicFields.displayName
+        avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield {
-        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, primaryEmailAddress), displayName, avatarUrl, error))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, error))
       }
       case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, error)))
     }
