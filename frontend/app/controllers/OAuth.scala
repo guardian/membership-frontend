@@ -1,12 +1,11 @@
 package controllers
 
 import actions.OAuthActions
-import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
 import com.gu.googleauth.{GoogleAuth, UserIdentity, GoogleGroupChecker}
 import configuration.Config
 import play.api.Play.current
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Session, Action, Controller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,10 +42,8 @@ object OAuth extends Controller with OAuthActions {
         Future.successful(Redirect(routes.OAuth.login()).flashing("error" -> "Anti forgery token missing in session"))
       case Some(token) =>
         GoogleAuth.validatedUserIdentity(Config.googleAuthConfig, token).map { identity =>
-          if(!GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, identity.email, "permanent.staff@guardian.co.uk")) {
-            Redirect(routes.OAuth.login())
-              .withSession(session - ANTI_FORGERY_KEY)
-              .flashing("error" -> "Sorry this feature is only available to Permanent staff")
+          if(GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, identity.email, "permanent.staff@guardian.co.uk")) {
+            redirectWithError(session, "Sorry this feature is only available to Permanent staff")
           }
           else {
             // We store the URL a user was trying to get to in the LOGIN_ORIGIN_KEY in AuthAction
@@ -63,10 +60,14 @@ object OAuth extends Controller with OAuthActions {
         } recover {
           case t =>
             // you might want to record login failures here - we just redirect to the login page
-            Redirect(routes.OAuth.login())
-              .withSession(session - ANTI_FORGERY_KEY)
-              .flashing("error" -> s"Login failure: ${t.toString}")
+            redirectWithError(session, s"Login failure: ${t.toString}")
         }
     }
   }
+
+  private def redirectWithError(session: Session, errorMessage: String) =
+    Redirect(routes.OAuth.login())
+    .withSession(session - ANTI_FORGERY_KEY)
+    .flashing("error" -> errorMessage)
+
 }
