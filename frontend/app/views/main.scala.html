@@ -47,11 +47,9 @@
         <title>@(Config.siteTitle + " - " + title)</title>
         @fragments.javaScriptFirstSteps(pageInfo)
 
+        <!--[if (gt IE 9) | (IEMobile)]><!-->
         <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/style.css")">
-
-        @*
-            TODO: Stop IE9 getting the stylesheet twice.
-        *@
+        <!--<![endif]-->
 
         <!--[if (IE 9)&(!IEMobile)]>
         <link rel="stylesheet" type="text/css" href="@Asset.at("stylesheets/ie9.css")" />

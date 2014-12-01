@@ -83,7 +83,6 @@ define([
         var fixtureId = 'userDetails',
             fixture = '<ul>' +
                         '<li class="js-user-displayname"></li>' +
-                        '<li class="js-user-primaryemailaddress"></li>' +
                         '<li class="js-user-firstName"></li>' +
                         '<li class="js-user-tier"></li>' +
                       '</ul>';
@@ -108,7 +107,6 @@ define([
         it('Should not attempt to inject user details for anonymous users', function () {
             (new UserDetails()).init();
             expect($('.js-user-displayname').text()).toEqual('');
-            expect($('.js-user-primaryemailaddress').text()).toEqual('');
             expect($('.js-user-firstName').text()).toEqual('');
             expect($('.js-user-tier').text()).toEqual('');
         });
@@ -117,7 +115,6 @@ define([
             addCookies(false);
             (new UserDetails()).init();
             expect($('.js-user-displayname').text()).toEqual('marchibbins');
-            expect($('.js-user-primaryemailaddress').text()).toEqual('marc.hibbins@guardian.co.uk');
             expect($('.js-user-firstName').text()).toEqual('');
             expect($('.js-user-tier').text()).toEqual('');
         });
@@ -126,7 +123,6 @@ define([
             addCookies(true);
             (new UserDetails()).init();
             expect($('.js-user-displayname').text()).toEqual('marchibbins');
-            expect($('.js-user-primaryemailaddress').text()).toEqual('marc.hibbins@guardian.co.uk');
             expect($('.js-user-firstName').text()).toEqual(memberDetails.firstName);
             expect($('.js-user-tier').text()).toEqual(memberDetails.tier);
         });
