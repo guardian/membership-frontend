@@ -1,12 +1,14 @@
 @(inlineMode: Boolean = false)
 
+@import configuration.Config
+
 @navItemClass() = @{
     if (inlineMode) "inline-list__item nav__item" else "nav__item"
 }
 
 @if(inlineMode) {
     <li class="@navItemClass()">
-        <a href="/" class="nav__link"><i class="icon-home"></i></a>
+        <a href="/" class="nav__link"><i class="icon-home"></i> <span class="u-h">Home</span></a>
     </li>
 }
 <li class="@navItemClass()">
@@ -28,5 +30,8 @@
     <a href="/help" class="nav__link case--lower">Help</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/feedback" class="nav__link nav__link--last case--lower">Feedback</a>
+    <a href="/feedback" class="nav__link nav__link case--lower">Feedback</a>
+</li>
+<li class="@navItemClass() nav__item--right">
+    <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last case--lower js-members-area">Members Area</a>
 </li>
