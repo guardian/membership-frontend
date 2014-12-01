@@ -1,13 +1,14 @@
 package monitoring
 
 import com.gu.membership.salesforce.Tier
+import model.ProductRatePlan
 
 class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
 
   val service = "Member"
 
-  def putSignUp(tier: Tier.Tier) {
-    put(s"sign-ups-${tier.toString}")
+  def putSignUp(plan: ProductRatePlan) {
+    put(s"sign-ups-${plan.salesforceTier}")
   }
 
   def putUpgrade(tier: Tier.Tier) {

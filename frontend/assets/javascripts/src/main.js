@@ -12,7 +12,7 @@ require([
     'src/modules/sticky',
     'src/modules/Header',
     'src/modules/UserDetails',
-    'src/modules/tier/Choose',
+    'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
     'src/utils/addToClipboard',
@@ -32,7 +32,7 @@ require([
     sticky,
     Header,
     UserDetails,
-    Choose,
+    choose,
     eventPriceEnhance,
     Thankyou,
     addToClipboard
@@ -82,6 +82,7 @@ require([
     analytics.init();
 
     // Global
+    sticky.init();
     var header = new Header();
     header.init();
     (new UserDetails()).init();
@@ -91,7 +92,7 @@ require([
     eventPriceEnhance.init();
 
     // Join
-    (new Choose()).init();
+    choose.init();
     (new JoinFree()).init();
     (new PaidForm()).init();
     (new Thankyou()).init(header);

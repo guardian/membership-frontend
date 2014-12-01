@@ -20,6 +20,9 @@ object CopyConfig {
   val copyTitleEvents = config.getString("copy.events.title")
   val copyDescriptionEvents = config.getString("copy.events.description")
 
+  val copyTitleMasterclasses = config.getString("copy.masterclasses.title")
+  val copyDescriptionMasterclasses = config.getString("copy.masterclasses.description")
+
   val copyTitleAbout = config.getString("copy.about.title")
   val copyDescriptionAbout = config.getString("copy.about.description")
 

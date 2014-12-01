@@ -3,7 +3,7 @@ package services.zuora
 import com.gu.membership.util.Timing
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.netaporter.uri.Uri
-import model.TierPlan
+import model.ProductRatePlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders._
@@ -35,7 +35,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-case class ZuoraApiConfig(envName: String, url: Uri, username: String, password: String, tierRatePlanIds: Map[TierPlan, String])
+case class ZuoraApiConfig(envName: String, url: Uri, username: String, password: String, productRatePlans: Map[ProductRatePlan, String])
 
 class ZuoraService(val apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
   import services.zuora.ZuoraServiceHelpers._

@@ -4,9 +4,8 @@ import com.github.nscala_time.time.Imports._
 import com.gu.googleauth.GoogleAuthConfig
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
-import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
-import model.{FriendTierPlan, PaidTierPlan}
+import model.{StaffPlan, FriendTierPlan, PaidTierPlan}
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
@@ -128,8 +127,10 @@ object Config {
       backendConf.getString("zuora.api.url"),
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
-      Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend")) ++ plansFor(Partner) ++ plansFor(Patron)
-    )
+        Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
+          StaffPlan -> backendConf.getString(s"zuora.api.staff")) ++
+          plansFor(Partner) ++ plansFor(Patron)
+      )
 
     TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
   }
@@ -147,6 +148,8 @@ object Config {
     Partner -> config.getString("facebook.joiner.conversion.partner"),
     Patron -> config.getString("facebook.joiner.conversion.patron")
   )
+
+  val facebookEventTicketSaleTrackingId = config.getString("facebook.ticket.purchase")
 
   val googleAdwordsJoinerConversionLabel = Map(
     Friend -> config.getString("google.adwords.joiner.conversion.friend"),

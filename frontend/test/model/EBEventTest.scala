@@ -37,9 +37,15 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "eventAddressLine" should {
+  "Venue addressLine" should {
     "be a pleasantly formatted concatenation of the venue address" in {
-      ebCompletedEvent.eventAddressLine mustEqual "Kings Place, 90 York Way, London, N1 9GU"
+      ebCompletedEvent.venue.addressLine mustEqual Some("Kings Place, 90 York Way, London, N1 9GU")
+    }
+  }
+
+  "Venue google link" should {
+    "include the uri encoded venue name and address as the query parameter" in {
+      ebCompletedEvent.venue.googleMapsLink mustEqual Some("https://maps.google.com/?q=The%20Guardian%2C%20Kings%20Place%2C%2090%20York%20Way%2C%20London%2C%20N1%209GU")
     }
   }
 

@@ -19,7 +19,7 @@ class ThankYouPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def getStartedButton = driver.findElement(By.cssSelector(".action"))
 
-  private def cardNumberCell = driver.findElement(By.xpath("//tbody/tr[6]/td/span"))
+  private def cardNumberCell = driver.findElement(By.xpath("//tbody/tr[6]/td"))
 
   def getPackage: String = packageCell.getText
 

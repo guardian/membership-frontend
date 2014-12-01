@@ -21,7 +21,7 @@
     @if(event.isSoldOut) {
         <span class="action @actionClassSoldOut">Sold out</span>
     } else {
-        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Buy tickets</a>
+        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
         <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
             <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
         </div>
@@ -78,9 +78,9 @@
                 </div>
                 <div class="event-details__location">
                     <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @if(event.eventAddressLine.nonEmpty) {
+                    @for(addressLine <- event.venue.addressLine) {
                         <span class="event-details__location__address">
-                            , @event.eventAddressLine
+                            , @addressLine
                         </span>
                     }
                 </div>
@@ -92,17 +92,22 @@
 
                             @if(ticket.free) {
                                 <div class="event-ticket__price">
-                                    <span class="event-ticket__price-amount js-event-price">Free</span>
+                                    <span class="event-ticket__price-amount">Free</span>
                                 </div>
                             } else {
                                 @for(pricing <- ticket.cost) {
-                                    <div class="event-ticket__price">
-                                        <span class="event-ticket__price-amount js-event-price">@pricing.formattedPrice</span>
-                                    </div>
-                                    <div class="event-ticket__trail">
-                                        <span class="event-ticket__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                        <span class="event-ticket__trail-upsell js-event-price-discount">@pricing.discountPrice</span>
-                                        <span class="event-ticket__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                    <div class="js-event-price">
+                                        <div class="event-ticket__price">
+                                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
+                                        </div>
+                                        <div class="event-ticket__trail">
+                                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
+                                                Partners/Patrons @pricing.discountPrice
+                                            </span>
+                                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                                (save @pricing.savingPrice)
+                                            </span>
+                                        </div>
                                     </div>
                                 }
                             }
@@ -139,7 +144,7 @@
                     case _ => {}
                 }
 
-                <div class="event-content__sticky js-sticky">
+                <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                     <div class="event-content__info">
                         <div class="event-content__name" itemprop="name">@event.name.text</div>
                         <div class="event-content__time event-content--line-divider u-cf">
@@ -150,12 +155,13 @@
                         </div>
                         <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
                             <div class="event-content__first">
-                                <i class="icon-location icon--info"></i>
+                                <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
+                                ><i class="icon-location icon--info"></i></a>
                             </div>
                             <div class="event-content__second">
                                 <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                @if(event.eventAddressLine.nonEmpty) {
-                                    <span class="event-content__address" itemprop="address">@event.eventAddressLine</span>
+                                @for(addressLine <- event.venue.addressLine) {
+                                    <span class="event-content__address" itemprop="address">@addressLine</span>
                                 }
                             </div>
                         </div>
@@ -173,17 +179,22 @@
 
                                 @if(ticket.free) {
                                     <div class="event-content__price event-content--line-divider">
-                                        <span class="event-content__price-amount js-event-price">Free</span>
+                                        <span class="event-content__price-amount">Free</span>
                                     </div>
                                 } else {
                                     @for(pricing <- ticket.cost) {
-                                        <div class="event-content__price event-content--line-divider js-event-price" itemprop="highPrice">
-                                            @pricing.formattedPrice
-                                        </div>
-                                        <div class="event-content__trail">
-                                            <span class="event-content__trail-tag js-event-price-tag">Partners/Patrons </span>
-                                            <span class="event-content__trail-upsell js-event-price-discount" itemprop="lowPrice">@pricing.discountPrice</span>
-                                            <span class="event-content__trail-saving js-event-price-saving"> (save @pricing.savingPrice)</span>
+                                        <div class="js-event-price">
+                                            <div class="event-content__price event-content--line-divider js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                                                @pricing.formattedPrice
+                                            </div>
+                                            <div class="event-content__trail">
+                                                <span class="event-content__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
+                                                    Partners/Patrons @pricing.discountPrice
+                                                </span>
+                                                <span class="event-content__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                                    (save @pricing.savingPrice)
+                                                </span>
+                                            </div>
                                         </div>
                                     }
                                 }

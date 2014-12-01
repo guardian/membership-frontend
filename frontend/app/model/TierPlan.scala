@@ -5,8 +5,13 @@ import com.gu.membership.salesforce.Tier.Tier
 
 case class PaidPlan(monthly: String, annual: String)
 
-trait TierPlan {
+trait ProductRatePlan {
+  def salesforceTier: String
+}
+
+trait TierPlan extends ProductRatePlan {
   val tier: Tier
+  def salesforceTier = tier.toString
 }
 
 object FriendTierPlan extends TierPlan {
@@ -17,4 +22,8 @@ object FriendTierPlan extends TierPlan {
 
 case class PaidTierPlan(tier: Tier, annual: Boolean) extends TierPlan {
   assert(tier >= Tier.Partner)
+}
+
+object StaffPlan extends ProductRatePlan {
+  def salesforceTier = "Staff"
 }

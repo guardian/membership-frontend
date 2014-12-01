@@ -7,7 +7,7 @@ import play.api.data.Form
 import MemberForm._
 
 class MemberFormTest extends Specification {
-  val friendAddressForm = Form { friendAddressMapping }
+  val friendAddressForm = Form { nonPaidAddressMapping }
   val paidAddressForm = Form { paidAddressMapping }
 
   def address(lineOne: String, lineTwo: String, town: String, countyOrState: String, postCode: String,

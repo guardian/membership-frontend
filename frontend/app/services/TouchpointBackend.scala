@@ -41,7 +41,7 @@ case class TouchpointBackend(
     zuoraService.start()
   }
 
-  val subscriptionService = new SubscriptionService(zuoraService.apiConfig.tierRatePlanIds, zuoraService)
+  val subscriptionService = new SubscriptionService(zuoraService.apiConfig.productRatePlans, zuoraService)
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
