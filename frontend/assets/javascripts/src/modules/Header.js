@@ -19,7 +19,8 @@ define([
             IDENTITY_ICON: '.js-identity-icon',
             IDENTITY_POP_UP_NAV: '.js-profile-nav-popup',
             COMMENT_ACTIVITY_LINK: '.js-comment-activity',
-            EDIT_PROFILE_LINK: '.js-edit-profile'
+            EDIT_PROFILE_LINK: '.js-edit-profile',
+            MEMBERS_AREA: '.js-members-area'
         },
         text: {
             SIGNED_IN_PREFIX: 'You are signed in as'
@@ -30,10 +31,10 @@ define([
     function Header() {}
 
     Header.prototype.init = function() {
-
         this.cacheDomElements();
         this.appendLocationDetailToIdentityReturnUrl();
         this.populateUserDetails();
+        this.showMembersArea();
         this.addListeners();
     };
 
@@ -131,6 +132,13 @@ define([
 
     Header.prototype.appendLocationDetailToIdentityReturnUrl = function () {
         config.DOM.IDENTITY_ICON.attr('href', config.DOM.IDENTITY_ICON.attr('href') + utilsHelper.getLocationDetail());
+    };
+
+    Header.prototype.showMembersArea = function () {
+        var user = this.user;
+        if ( ! user ) {
+            config.DOM.MEMBERS_AREA.addClass('is-hidden');
+        }
     };
 
     return Header;
