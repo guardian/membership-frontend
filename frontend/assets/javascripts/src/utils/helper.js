@@ -29,8 +29,22 @@ define(function () {
         return windowLocation.pathname + windowLocation.search;
     };
 
+    /**
+     * Get outer height including margin
+     * @param  {DOMElement} el
+     * @return {String}     outer height including margin
+     */
+    var getOuterHeight = function(el) {
+        var height = el.offsetHeight;
+        var style = getComputedStyle(el);
+
+        height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+        return height;
+    };
+
     return {
         getLocationDetail: getLocationDetail,
-        getSpecifiedParent: getSpecifiedParent
+        getSpecifiedParent: getSpecifiedParent,
+        getOuterHeight: getOuterHeight
     };
 });
