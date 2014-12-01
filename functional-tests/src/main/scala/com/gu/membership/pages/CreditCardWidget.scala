@@ -34,7 +34,7 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def updateCCButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-submit"))
 
-  private def errorMessage = driver.findElement(By.cssSelector(".form__error"))
+  private def errorMessage = driver.findElement(By.cssSelector(".qa-form-error"))
 
   def enterCardNumber(number: String) = {
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(cardNumberTextbox))
