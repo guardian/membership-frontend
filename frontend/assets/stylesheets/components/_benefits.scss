@@ -86,8 +86,8 @@
     }
 
     @include mq(mobileLandscape) {
-        width: 103%; // 100% + gutter width from .benefit
-        margin-left: -3%; // - gutter width from .benefit
+        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
+        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
     }
 }
 
@@ -95,8 +95,8 @@
     border-top: 1px dotted $c-neutral3;
 
     @include mq(mobileLandscape) {
-        width: 47%; // 50% - margin-left
-        margin-left: 3%; // gutter width, matches offset on .tier-benefits__list
+        width: 50% - $gutter-width-fluid; // 50% - gutter width from .benefit
+        margin-left: $gutter-width-fluid; // gutter width, matches offset on .tier-benefits__list
         float: left;
 
         .flexbox & {
@@ -105,7 +105,7 @@
     }
 
     @include mq(tablet) {
-        width: 30.3%; // 33.3% - margin-left
+        width: 33.3% - $gutter-width-fluid; // 33.3% - gutter width from .benefit
         min-height: rem($gs-gutter * 5);
     }
 
