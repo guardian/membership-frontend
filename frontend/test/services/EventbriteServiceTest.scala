@@ -66,6 +66,7 @@ class EventbriteServiceTest extends PlaySpecification {
     }
 
     def events: Seq[RichEvent] = Nil
+    def eventsArchive: Seq[RichEvent] = Nil
     def priorityEventOrdering: Seq[String] = Nil
     def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
   }
