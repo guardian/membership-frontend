@@ -1,7 +1,7 @@
 define(['$', 'src/utils/helper'], function ($, utilsHelper) {
 
     var sticky = $('.js-sticky'),
-        stickyLink = $( sticky.attr('data-sticky-sibling') ),
+        stickyLink = $(sticky.attr('data-sticky-sibling')),
         stickyTop;
 
     var breakpoint = window.getComputedStyle(document.body, ':after').getPropertyValue('content');
@@ -33,9 +33,11 @@ define(['$', 'src/utils/helper'], function ($, utilsHelper) {
     }
 
     function init() {
-        if ( checkSiblingHeight() && breakpoint !== 'mobile' && sticky.length ) {
-            window.addEventListener('scroll', scrollHandler);
-            scrollHandler();
+        if (breakpoint !== 'mobile' && sticky.length) {
+            if (checkSiblingHeight()) {
+                window.addEventListener('scroll', scrollHandler);
+                scrollHandler();
+            }
         }
     }
 
