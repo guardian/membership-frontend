@@ -53,6 +53,7 @@
 @main("Staff Membership", containerPadding=false) {
 
     <main class="page-container__inner">
+        @fragments.notifications.flashMessage(error)
         <section class="page-section">
             <div class="page-section__row">
                 <div class="page-section__primary"></div>
