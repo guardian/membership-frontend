@@ -62,13 +62,9 @@
 
 // only visible when no filter results are found
 .events-list--empty:before {
+    content: 'Sorry, no matching masterclasses.';
+
     display: block;
-    .theme--guardian-live & {
-        content: 'Sorry, no matching events were found.';
-    }
-    .theme--masterclass & {
-        content: 'Sorry, no matching Masterclasses were found.';
-    }
 }
 
 .events-list__category {
@@ -146,34 +142,16 @@ $filter-icon-size: 18px;
     margin-bottom: rem($gs-baseline);
 }
 
-// used to generate the magic for grids
-// which can be arbitrarily re-ordered
-@mixin n-column-event-grid($columns) {
-    .events-list--items-#{$columns} & {
-
-        width: 100%/$columns;
+// each list item should be in columns of 3
+@include mq(tablet) {
+    .events-list__item {
+        width: 33.33%;
+        float: left;
+        margin-bottom: rem(20px);
 
         // UGLY: the nested classes below need to be here
         // because they depend on the parent list item
         // being the 1st/2nd/3rd – sorry.
-
-        // the middle column is centred (eg. 7px on either side)
-        &:nth-child(#{$columns}n-1) .event-item__container {
-            margin: 0px auto;
-        }
-
-        // the third column is right-aligned (eg. 14px on the left)
-        &:nth-child(#{$columns}n) .event-item__container {
-            float: right;
-        }
-    }
-}
-
-// each list item should be in columns of 3
-@include mq(tablet) {
-    .events-list__item {
-        float: left;
-        margin-bottom: rem(20px);
 
         // to give us the gutter, each inner element
         // is 14px narrower than the parent
@@ -183,11 +161,15 @@ $filter-icon-size: 18px;
             height: rem(420px);
         }
 
-        // enable different column configuations
-        @include n-column-event-grid(2);
-        @include n-column-event-grid(3);
-        @include n-column-event-grid(4);
+        // the middle column is centred (eg. 7px on either side)
+        &:nth-child(3n-1) .event-item__container {
+            margin: 0px auto;
+        }
 
+        // the third column is right-aligned (eg. 14px on the left)
+        &:nth-child(3n) .event-item__container {
+            float: right;
+        }
     }
 }
 
@@ -424,13 +406,6 @@ $filter-icon-size: 18px;
         .no-flexbox & {
             font-size: 0;
         }
-    }
-}
-
-// use a shorter box for minimal theme
-.event-item--minimal {
-    .event-item__container {
-        height: rem(280px);
     }
 }
 
