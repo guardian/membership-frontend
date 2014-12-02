@@ -42,7 +42,7 @@ object OAuth extends Controller with OAuthActions {
         Future.successful(Redirect(routes.OAuth.login()).flashing("error" -> "Anti forgery token missing in session"))
       case Some(token) =>
         GoogleAuth.validatedUserIdentity(Config.googleAuthConfig, token).map { identity =>
-          if(GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, identity.email, "permanent.staff@guardian.co.uk")) {
+          if(!GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, identity.email, "permanent.staff@guardian.co.uk")) {
             redirectWithError(session, "Sorry this feature is only available to Permanent staff")
           }
           else {
