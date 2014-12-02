@@ -1,19 +1,19 @@
 /* ==========================================================================
    Help page
    ========================================================================== */
-.help {
-
-    .help-intro {
-        padding-bottom: rem($gs-gutter * 2);
-    }
-
-    .help-list li {
-        padding: 0 0 rem(5px);
-    }
-
-    .help-faqs {
-        padding: rem($gs-gutter) 0;
-    }
-
+.help-intro {
+    padding-bottom: rem($gs-gutter * 2);
 }
 
+.help-list li {
+    padding: 0 0 rem(5px);
+}
+
+.help-faqs {
+    padding-top: rem($gs-gutter);
+}
+
+.help-faqs__headline {
+    @include fs-headline(3);
+    font-weight: bold;
+}

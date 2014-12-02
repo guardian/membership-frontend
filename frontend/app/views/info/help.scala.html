@@ -1,6 +1,6 @@
 @import configuration.Config
 
-@main("Help", htmlClass = "help") {
+@main("Help") {
 
     @fragments.layout.sectionHeader("Help")
 
@@ -10,7 +10,7 @@
         <div class="help-intro">
             <p>Common questions about Guardian Membership.</p>
             <p>If you have any questions about Guardian Membership you may find an answer in the FAQs below.</p>
-            <p>If your question is not answered here then please <a href="mailto:membershipsupport@@theguardian.com" class="u-underline">get in touch</a>.</p>
+            <p>If your question is not answered here then please <a href="mailto:@Config.membershipSupport" class="u-underline">get in touch</a>.</p>
         </div>
 
         <ul class="help-list u-unstyled">
@@ -147,7 +147,7 @@
 
         <section class="help-faqs" id="have-a-question">
             <h2 class="section-body-headline">I've got a question</h2>
-            <p>Please email <a href="mailto:membershipsupport@@theguardian.com" class="u-underline">membershipsupport@@theguardian.com</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends.</p>
+            <p>Please email <a href="mailto:@Config.membershipSupport" class="u-underline">@Config.membershipSupport</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends.</p>
         </section>
 
         <section class="help-faqs" id="what-are-guardian-masterclasses">
