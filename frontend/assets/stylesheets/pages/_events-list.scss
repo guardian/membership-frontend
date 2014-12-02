@@ -184,12 +184,66 @@ $filter-icon-size: 18px;
         }
 
         // enable different column configuations
-        @include n-column-event-grid(2);
+        // @include n-column-event-grid(2);
         @include n-column-event-grid(3);
-        @include n-column-event-grid(4);
+        // @include n-column-event-grid(4);
 
     }
 }
+
+@include mq(tablet) {
+    .hygrid {
+        @include flexbox;
+
+        &.hygrid--wrapped {
+            @include flex-wrap(wrap);
+        }
+
+        li {
+            margin-right: rem($gs-gutter);
+        }
+
+        &.hygrid--4 li {
+            @include flex-grow(1);
+            width: 0;
+
+            &:last-child {
+                margin-right: 0px;
+            }
+        }
+
+        &.hygrid--2 li {
+            @include flex-grow(1);
+            @include flex-basis(40%); // i have no idea why this works
+            &:nth-child(2n) {
+                margin-right: 0px;
+            }
+        }
+
+        .event-item__container {
+            width: auto;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .event-item__media {
     a, img {
@@ -428,9 +482,24 @@ $filter-icon-size: 18px;
 }
 
 // use a shorter box for minimal theme
-.event-item--minimal {
-    .event-item__container {
-        height: rem(280px);
+@include mq(tablet) {
+    .event-item--minimal {
+        .event-item__container {
+            height: rem(280px);
+        }
+    }
+
+    .event-item--card {
+        .event-item__container {
+            height: auto;
+            overflow: hidden;
+        }
+
+        .event-item__media {
+            width: 50%;
+            float: left;
+            margin-right: 1rem;
+        }
     }
 }
 
@@ -467,4 +536,3 @@ $filter-icon-size: 18px;
         height: rem(87px);
     }
 }
-

@@ -1,9 +1,9 @@
-@(event: model.Eventbrite.RichEvent, isHero: Boolean = false, isMinimal: Boolean = false)
+@(event: model.Eventbrite.RichEvent, isHero: Boolean = false, isMinimal: Boolean = false, isCard: Boolean = false)
 @import views.support.Dates._
 @import configuration.Config
 @import model.Eventbrite._
 
-<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero} @if(isMinimal){event-item--minimal} js-filter-item" itemscope itemtype="http://schema.org/Event">
+<li class="event-item @if(!isHero){events-list__item} @if(isHero){event-item--hero} @if(isMinimal){event-item--minimal} @if(isCard){event-item--card} js-filter-item" itemscope itemtype="http://schema.org/Event">
     <div class="event-item__container">
         <div class="event-item__media">
             <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">

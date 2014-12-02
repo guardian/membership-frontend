@@ -11,17 +11,20 @@
                 <h4 class="event-block__header__title case--lower">Past events</h4>
             </div>
             <div class="event-block__events">
-                <ul class="events-list events-list--items-4 u-unstyled">
+                <ul class="events-list hygrid hygrid--4 u-unstyled">
                     @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
                         @fragments.event.item(event, false, isMinimal=true)
                     }
                 </ul>
 
-                <ul class="events-list events-list--items-2 u-unstyled">
+
+                <ul class="events-list hygrid hygrid--wrapped hygrid--2 u-unstyled js-toggle-elm" id="js-toggle-past-events">
                     @for(event <- eventPortfolio.pastEvents.get.slice(4, 10)) {
-                        @fragments.event.item(event, false, isMinimal=true)
+                        @fragments.event.item(event, false, isMinimal=true, isCard=true)
                     }
                 </ul>
+
+                <button class="js-toggle action action--plus-left" data-toggle="js-toggle-past-events">More past events</button>
 
             </div>
         </div>
