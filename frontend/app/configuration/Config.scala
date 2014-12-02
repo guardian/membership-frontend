@@ -35,6 +35,7 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
+  val membershipSupport = config.getString("membership.support")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
