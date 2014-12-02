@@ -23,7 +23,7 @@ define(function() {
         ].join('');
     }
 
-    function renderPaternNav(selector, select) {
+    function renderPatternNav(selector, select) {
         document.querySelector(selector).innerHTML = select;
     }
 
@@ -46,7 +46,7 @@ define(function() {
 
         if (patterns.length) {
             select = buildSelect(patterns);
-            renderPaternNav('.js-pattern-nav', select);
+            renderPatternNav('.js-pattern-nav', select);
             bindNavEvents('.js-pattern-selector');
         }
 
