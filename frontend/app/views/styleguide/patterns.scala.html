@@ -4,7 +4,7 @@
 @import com.gu.membership.salesforce.Tier
 
 @pattern(title: String, description: String)(content: Html) = {
-    <div class="pattern">
+    <div class="pattern js-pattern-item" data-pattern-label="@title">
         <h2 class="pattern__title">@title</h2>
         @if(description) {
             <p class="pattern__description">@description</p>
@@ -16,6 +16,8 @@
 }
 
 @main("Pattern Library") {
+
+    <div class="pattern-nav js-pattern-nav"></div>
 
     <header class="section__heading u-cf">
         <h1 class="section-headline section-headline--no-margin">Pattern Library</h1>
