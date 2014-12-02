@@ -27,21 +27,27 @@
     </div>
 
     @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+            <div class="package-list package-list--flex-box">
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+            </div>
     }
 
     @pattern("Benefits - Small", "Small variant of the benefits details fragment (showBenefitCopy=false)") {
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+        <div class="package-list package-list--flex-box package-list--bordered">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+        </div>
     }
 
     @pattern("Benefits - No details", "Collapsed variant of the benefits details fragment, no details shown (showBenefitDetails=false)") {
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-        @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        <div class="package-list--flex-box package-list--bordered">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        </div>
     }
 
     @pattern("Benefits - Feature", "Featured variant of the benefits details. Not a fragment yet)") {
