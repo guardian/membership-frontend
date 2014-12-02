@@ -55,7 +55,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityEventOrdering
     val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
-    EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal, Some(eventsArchive))
+
+    EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal)
   }
 
   /**
