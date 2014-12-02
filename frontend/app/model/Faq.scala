@@ -12,7 +12,7 @@ object Faq {
       Html(s"When you <a href='${Config.idWebAppRegisterUrl(controllers.routes.Joiner.staff().url)}'>register on theguardian.com</a> you are creating a Guardian Identity account")
     ),
     Faq("I already have a Guardian Identity account, can I use that?",
-      Html("Yes, but only if it's set up with your work email address ending @@theguardian.com (@@guardian.co.uk will work too) Check my Guardian identity set up")
+      Html("Yes, but only if it's set up with your work email address ending @theguardian.com (@guardian.co.uk will work too) Check my Guardian identity set up")
     ),
     Faq("Can I use social sign in/registration?",
       Html("No, you must have a Guardian account using your work email address.")
