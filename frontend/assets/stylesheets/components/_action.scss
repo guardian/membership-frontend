@@ -59,6 +59,31 @@
     }
 }
 
+
+.action--plus-left {
+    &:before {
+        @extend .icon-plus;
+        content: '';
+        float: left;
+        margin: rem(2px) rem(18px) 0 0;
+    }
+    &:after {
+        display: none;
+    }
+}
+
+.action--minus-left {
+    &:before {
+        @extend .icon-minus;
+        content: '';
+        float: left;
+        margin: rem(2px) rem(18px) 0 0;
+    }
+    &:after {
+        display: none;
+    }
+}
+
 .action--disabled {
     &,
     &:visited,
