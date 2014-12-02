@@ -1,18 +1,25 @@
 .signpost {
     margin-top: rem($gs-baseline * 1.5);
     position: relative;
+    display: table;
 }
 
 .signpost-item {
-    vertical-align: top;
     @include mq(tablet) {
-        display: inline-block;
+        display: table-cell;
+        padding-top: rem($gs-baseline / 2);
+    }
+}
+
+.signpost-item__description {
+    @include mq(tablet) {
+        min-height: rem($gs-gutter * 4);
     }
 }
 
 .signpost-item--sign {
+    vertical-align: bottom;
     border-top: 1px dotted $c-neutral3;
-    padding-top: rem(7px);
 
     @include mq(tablet) {
         width: 41%;
@@ -20,18 +27,12 @@
 }
 
 .signpost-item--divider {
-    width: rem(100px);
-    margin: rem(8px) 0;
+    vertical-align: top;
+    width: rem($gs-gutter * 5);
+    margin: rem($gs-baseline / 2) 0;
     font-weight: bold;
 
     @include mq(tablet) {
         text-align: center;
-    }
-}
-
-.signpost__cta {
-    @include mq(tablet) {
-        position: absolute;
-        bottom: 0;
     }
 }
