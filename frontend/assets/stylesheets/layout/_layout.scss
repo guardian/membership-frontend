@@ -195,6 +195,15 @@ body {
    //TODO potentially rename these
    ========================================================================== */
 
+.page-header {
+    padding: rem($gutter / 2) 0 rem($gs-baseline * 3);
+
+    @include mq(desktop) {
+        padding-left: rem(gs-span(3));
+        width: rem(gs-span(11));
+    }
+}
+
 .page-headline {
     @include fs-headline(5);
 
