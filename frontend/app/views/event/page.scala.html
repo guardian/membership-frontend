@@ -119,7 +119,7 @@
                                 }
                             }
                         </div>
-                        @if(event.isBookable && !event.isSoldOut) {
+                        @if(event.isBookable) {
                             @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
                         }
                     </div>
@@ -130,7 +130,7 @@
 
     </div>
 
-    @if(!event.isBookable || event.isSoldOut) {
+    @if(!event.isBookable) {
         <div class="event-header event-header--unavailable">
             <div class="event-header__container event-header__container--details event-header__container--unavailable">
                 <div class="event-ticket__details">
@@ -173,9 +173,9 @@
                 }
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
-                    <div class="event-content__info @if(!event.isBookable || event.isSoldOut) {event-content__info--unavailable}">
+                    <div class="event-content__info @if(!event.isBookable) {event-content__info--unavailable}">
 
-                        @if(!event.isBookable || event.isSoldOut) {
+                        @if(!event.isBookable) {
                             <div class="event-content__info__header">
                                 <span class="block-level event-content__info__header__status">
                                     @if(event.isSoldOut) { Sold out } else { Past event }
@@ -214,7 +214,7 @@
                                         <meta itemprop="availability" content="http://schema.org/InStock">
                                     }
 
-                                    @if(event.isBookable && !event.isSoldOut) {
+                                    @if(event.isBookable) {
                                         @fragments.event.ticketSales(event, ticket)
                                     }
 
@@ -239,7 +239,7 @@
                                             </div>
                                         }
                                     }
-                                    @if(event.isBookable && !event.isSoldOut) {
+                                    @if(event.isBookable) {
                                         @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
                                         @becomeMemberCta(ticket)
                                     }
@@ -248,7 +248,7 @@
                         </div>
                     </div>
 
-                    @if(!event.isBookable || event.isSoldOut) {
+                    @if(!event.isBookable) {
                         <a class="action action--fullwidth action--search" href="@searchButton._2">Find other @searchButton._1</a>
                     }
                 </div>

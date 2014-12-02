@@ -106,6 +106,7 @@ object Eventbrite {
 
     val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
+    val isBookable: Boolean = status == "live" && !isSoldOut
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
     val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member") }
@@ -138,7 +139,6 @@ object Eventbrite {
     val imgUrl: String
     val socialImgUrl: String
     val tags: Seq[String]
-    val isBookable: Boolean = event.status == "live"
 
     val maxDiscounts: Int
     val allowDiscountCodes: Boolean
