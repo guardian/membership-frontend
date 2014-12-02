@@ -1,0 +1,7 @@
+@(error: Option[String])
+
+@for(err <- error) {
+    <div class="flash-message flash-message--error">
+        @err
+    </div>
+}
