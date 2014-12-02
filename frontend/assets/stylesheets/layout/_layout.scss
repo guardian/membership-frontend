@@ -113,6 +113,12 @@ body {
     }
 }
 
+.page-container__inner {
+    @include mq(desktop) {
+        margin: 0 rem($gs-gutter);
+    }
+}
+
 .l-row__item {
     padding-bottom: rem($gs-gutter * 2);
 }
@@ -179,4 +185,71 @@ body {
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
+}
+
+
+/* ==========================================================================
+   Page layout
+   //TODO potentially use these styles once design is aligned across site
+   //TODO I have separated this out in an aim to start cleaning this benefit work up
+   //TODO potentially rename these
+   ========================================================================== */
+
+.page-headline {
+    @include fs-headline(5);
+
+    @include mq(desktop) {
+        @include fs-headline(7);
+    }
+}
+
+.page-intro {
+    color: $c-neutral2;
+    @include fs-headline(2);
+
+    @include mq(tablet) {
+        @include font-size(18px, 22px);
+    }
+}
+
+.page-section {
+    padding: rem($gutter / 2) 0 rem($gs-baseline * 3);
+    border-bottom: 1px solid $mem-blue;
+    @include clearfix;
+    display: table;
+    width: 100%;
+
+    @include mq(desktop) {
+        width: auto;
+    }
+}
+
+.page-section__row {
+    display: table-row;
+    vertical-align: top;
+}
+
+.page-section__primary {
+
+    @include mq(desktop) {
+        width: rem(gs-span(3));
+        display: table-cell;
+        vertical-align: top;
+        margin-right: $gs-gutter;
+    }
+}
+
+.page-section__secondary {
+
+    @include mq(desktop) {
+        width: rem(gs-span(9));
+        display: table-cell;
+        vertical-align: top;
+        padding-right: $gs-gutter * 4;
+    }
+}
+
+.page-section-headline {
+    @include fs-header(3);
+    padding-bottom: rem($gs-gutter * 1.6);
 }

@@ -20,8 +20,8 @@ object Benefits {
 
   val allBenefits = Seq(
     BenefitItem("Book tickets", "Book tickets to Guardian Live events and selected masterclasses", "book_tickets"),
-    BenefitItem("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"),
-    BenefitItem("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights"),
+    BenefitItem("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest_cyan"),
+    BenefitItem("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights_cyan"),
     BenefitItem("Early booking", "Early ticket booking on Guardian Live Events (before Friends)", "early_booking"),
     BenefitItem("20% discount", "20% discount on Guardian Live tickets and selected masterclasses", "discount"),
     BenefitItem("Membership card", "", "membership_card"),
@@ -45,7 +45,7 @@ object Benefits {
   val friendsWithBenefits = benefitsFilter("book_tickets", "digital_digest", "video_highlights")
 
   val partnerWithBenefits = benefitsFilter("discount", "plus_1_guest", "early_booking",
-    "membership_card", "live_stream", "digital_digest", "video_highlights")
+    "membership_card", "live_stream", "digital_digest_cyan", "video_highlights_cyan")
 
   val patronWithBenefits = benefitsFilter("discount_patron", "priority_booking",
     "complim_items", "unique_experiences", "plus_1_guest", "membership_card",

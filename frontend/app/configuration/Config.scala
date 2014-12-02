@@ -35,6 +35,7 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
+  val membershipSupport = config.getString("membership.support")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
@@ -43,6 +44,9 @@ object Config {
 
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
+
+  def idWebAppAccountEditUrl(uri: String): String =
+    (idWebAppUrl / "account/edit") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")

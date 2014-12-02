@@ -1,0 +1,26 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)
+
+@import model.Benefits
+@import model.Benefits.BenefitItem
+
+@tierBenefits(benefits: Seq[BenefitItem]) = {
+    @for(benefit <- benefits) {
+        <li class="benefit">
+            <div class="benefit-title">
+                <div class="benefit-title__primary">
+                    <i class="icon-@benefit.identifier icon--benefits"></i>
+                </div>
+                <div class="benefit-title__secondary">@benefit.title</div>
+            </div>
+            <div class="benefit-copy">@benefit.description</div>
+        </li>
+    }
+}
+
+<section>
+    <ul class="tier-benefits u-unstyled">
+        @tierBenefits(Benefits.details(tier).leadBenefits)
+        @tierBenefits(Benefits.details(tier).otherBenefits)
+    </ul>
+</section>
+
