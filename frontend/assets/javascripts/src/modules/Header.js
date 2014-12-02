@@ -135,8 +135,7 @@ define([
     };
 
     Header.prototype.showMembersArea = function () {
-        var user = this.user;
-        if ( ! user ) {
+        if (!this.user) {
             config.DOM.MEMBERS_AREA.addClass('is-hidden');
         }
     };
