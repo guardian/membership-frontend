@@ -9,7 +9,7 @@ object Faq {
 
   val help = List(
     Faq("What's a Guardian Identity account?",
-      Html(s"When you <a href='${Config.idWebAppRegisterUrl(controllers.routes.Joiner.staff.url)}'>register on theguardian.com</a> you are creating a Guardian Identity account")
+      Html(s"When you <a href='${Config.idWebAppRegisterUrl(controllers.routes.Joiner.staff().url)}'>register on theguardian.com</a> you are creating a Guardian Identity account")
     ),
     Faq("I already have a Guardian Identity account, can I use that?",
       Html("Yes, but only if it's set up with your work email address ending @@theguardian.com (@@guardian.co.uk will work too) Check my Guardian identity set up")
