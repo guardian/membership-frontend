@@ -3,51 +3,24 @@
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 @import helper._
+@import play.twirl.api.Html
+@import model.Faq
+
+ @signPostItem(btnText: String, btnSrc: String)(description: Html) = {
+     <li class="signpost-item signpost-item--sign">
+         <p class="signpost-item__description">@description</p>
+         <div class="signpost__cta">
+             <a class="action action--no-bottom-margin" href="@btnSrc">@btnText</a>
+         </div>
+     </li>
+ }
 
 @signpost(opt1ButtonText: String, opt1ButtonSrc: String, opt2ButtonText: String, opt2ButtonSrc: String)(textOptionOne: Html)(textOptionTwo: Html) = {
     <ul class="signpost u-unstyled">
-        <li class="signpost-item signpost-item--sign">
-            <p>@textOptionOne</p>
-            <a class="action action--no-bottom-margin" href="@opt1ButtonSrc">@opt1ButtonText</a>
-        </li>
+        @signPostItem(opt1ButtonText: String, opt1ButtonSrc: String)(textOptionOne: Html)
         <li class="signpost-item signpost-item--divider">or</li>
-        <li class="signpost-item signpost-item--sign">
-            <p>@textOptionTwo</p>
-            <div class="signpost__cta">
-                <a class="action action--no-bottom-margin" href="@opt2ButtonSrc">@opt2ButtonText</a>
-            </div>
-        </li>
+        @signPostItem(opt2ButtonText: String, opt2ButtonSrc: String)(textOptionTwo: Html)
     </ul>
-}
-
-@userWelcome = {
-    <div class="u-cf">
-        @for(srcUrl <- avatarUrl){
-            <img class="user-img" src="@srcUrl" alt="User Image"/>
-        }
-        @for(name <- displayName){
-            <p>Hello <strong>@displayName</strong>.
-        } Glad to see you've decided to join Guardian Staff Membership.</p>
-    </div>
-}
-
-@joinNowSection(content: Html) = {
-    <section class="page-section">
-        <div class="page-section__row">
-            <div class="page-section__primary"><h2 class="page-section-headline">
-                Join Guardian Staff Membership now</h2></div>
-            <div class="page-section__secondary">
-                @content
-            </div>
-        </div>
-    </section>
-}
-
-@helpSection(title: String)(content: Html) = {
-    <div class="help-faqs">
-        <h2 class="help-faqs__headline">@title</h2>
-        <p>@content</p>
-    </div>
 }
 
 @main("Staff Membership", containerPadding=false) {
@@ -64,39 +37,48 @@
             </div>
         </section>
 
+        <section class="page-section">
+            <div class="page-section__row">
+                <div class="page-section__primary"><h2 class="page-section-headline">
+                    Join Guardian Staff Membership now</h2></div>
+                <div class="page-section__secondary">
+
         @staffEmail.identityEmail.fold {
-            @joinNowSection {
-                <p>To join Guardian Staff Membership you must have a Guardian Identity account set up using your work email address ending @@theguardian.com (@@guardian.co.uk will work too).</p>
+            <p>To join Guardian Staff Membership you must have a Guardian Identity account set up using your work email address ending @@theguardian.com (@@guardian.co.uk will work too).</p>
+            @signpost(
+                "Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url),
+                "Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)) {
+                    Set up a <strong>new</strong> Guardian Identity account
+                }{
+                    Use an <strong>existing</strong> Guardian Identity account
+                }
+        } { identityEmail =>
+            <div class="u-cf">
+                @for(srcUrl <- avatarUrl){
+                    <img class="user-img" src="@srcUrl" alt="User Image"/>
+                }
+                @for(name <- displayName){
+                    <p>Hello <strong>@displayName</strong>.
+                    } Glad to see you've decided to join Guardian Staff Membership.</p>
+            </div>
+            @if(staffEmail.emailsMatch) {
+                <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
+            } else {
+                <p>Currently your account is set up with <strong>@identityEmail</strong>. To join Guardian Staff Membership you must have a Guardian Identity account set up using your work email address ending @@theguardian.com (@@guardian.co.uk will work too).</p>
+
                 @signpost(
-                    "Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url),
-                    "Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)) {
-                        Set up a <strong>new</strong> Guardian Identity account
+                    "Change email and join", Config.idWebAppAccountEditUrl(routes.Joiner.staff.url),
+                    "Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)) {
+                        Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account
                     }{
-                        Use an <strong>existing</strong> Guardian Identity account
+                        Set up a <strong>new</strong> Guardian Identity account
                     }
             }
-        } { identityEmail =>
-
-            @if(staffEmail.emailsMatch) {
-                @joinNowSection {
-                    @userWelcome
-                    <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
-                }
-            } else {
-                @joinNowSection {
-                    @userWelcome
-                    <p>Currently your account is set up with <strong>@identityEmail</strong>. To join Guardian Staff Membership you must have a Guardian Identity account set up using your work email address ending @@theguardian.com (@@guardian.co.uk will work too).</p>
-
-                    @signpost(
-                        "Change email and join", Config.idWebAppAccountEditUrl(routes.Joiner.staff.url),
-                        "Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)) {
-                            Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account
-                        }{
-                            Set up a <strong>new</strong> Guardian Identity account
-                        }
-                }
-            }
         }
+
+                </div>
+            </div>
+        </section>
 
         <section class="page-section">
             <div class="page-section__row">
@@ -111,47 +93,12 @@
             <div class="page-section__row">
                 <div class="page-section__primary"><h2 class="page-section-headline">Questions</h2></div>
                 <div class="page-section__secondary">
-
-
-                    @helpSection("What's a Guardian Identity account?") {
-                        When you <a href="@Config.idWebAppRegisterUrl(routes.Joiner.staff.url)">register on theguardian.com</a> you are creating a Guardian Identity account
+                    @for(faq <- Faq.help){
+                        <div class="help-faqs">
+                            <h2 class="help-faqs__headline">@faq.question</h2>
+                            <p>@faq.answer</p>
+                        </div>
                     }
-
-                    @helpSection("I already have a Guardian Identity account, can I use that?") {
-                        Yes, but only if it's set up with your work email address ending @@theguardian.com (@@guardian.co.uk will work too) Check my Guardian identity set up
-                    }
-
-                    @helpSection("Can I use social sign in/registration?") {
-                        No, you must have a Guardian account using your work email address.
-                    }
-
-                    @helpSection("I've already joined Guardian Membership as a friend, can I upgrade?") {
-                        No, sorry you can't upgrade, you need to cancel your friend membership first.
-                    }
-
-                    @helpSection("How do I cancel my friend membership?") {
-                        <ol>
-                            <li>Go to <a href="@{Config.guardianMembershipUrl + "/tier/cancel"}">@{Config.guardianMembershipUrl + "/tier/cancel"}</a></li>
-                            <li>Scroll to the bottom and click 'Cancel membership'.</li>
-                        </ol>
-                    }
-
-                    @helpSection("How do I change my Guardian Identity email address?") {
-                        <ol>
-                            <li>Go to <a href="@{Config.idWebAppUrl + "/account/edit"}">@{Config.idWebAppUrl + "/account/edit"}</a></li>
-                            <li>Change the email address to your work email address</li>
-                            <li>Scroll to the bottom and click 'Save Changes'</li>
-                        </ol>
-                    }
-
-                    @helpSection("How long will staff membership last?") {
-                        Your Guardian Staff Membership will last for a long as you are a permanent member of staff
-                    }
-
-                    @helpSection("I've got an additional question that's not listed here") {
-                        Please email <a href="mailto:@Config.membershipSupport">@Config.membershipSupport</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.
-                    }
-
                 </div>
             </div>
         </section>
