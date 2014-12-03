@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Page Components
+   ========================================================================== */
+   // Structural page layout components
+
+.page-header {
+    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+
+    @include mq(desktop) {
+        width: rem(gs-span(11));
+        padding-right: rem($gs-gutter);
+        padding-left: rem(gs-span(3));
+    }
+}
+
+.page-headline {
+    @include fs-headline(5);
+
+    @include mq(desktop) {
+        @include fs-headline(7);
+    }
+}
+
+.page-intro {
+    color: $c-neutral2;
+    @include fs-headline(2);
+
+    @include mq(tablet) {
+        @include font-size(18px, 22px);
+    }
+}
+
+
+.page-section {
+    @include clearfix;
+    position: relative;
+    padding-bottom: rem($gs-baseline * 3);
+
+    @include mq(desktop) {
+        width: auto;
+    }
+}
+
+.page-section__lead-in {
+    @include mq(desktop) {
+        width: rem(gs-span(3));
+        position: absolute;
+        left: 0;
+    }
+}
+
+.page-section__content {
+    @include mq(desktop) {
+        float: left;
+        width: rem(gs-span(11)) + rem($gs-gutter);
+        padding-left: rem(gs-span(3));
+        padding-right: rem(gs-span(1));
+    }
+}
+
+.page-section--bordered {
+
+    .page-section__lead-in,
+    .page-section__content,
+    .page-section__supplementary {
+        padding-top: rem($gs-gutter/2);
+    }
+
+    .page-section__lead-in {
+        border-top: 1px solid $mem-blue;
+    }
+
+    @include mq(desktop) {
+        .page-section__lead-in {
+            border-top: none;
+        }
+        .page-section__content {
+            border-top: 1px solid $mem-blue;
+        }
+    }
+}
+
+.page-section__supplementary {
+    clear: both;
+    @include mq(wide) {
+        clear: none;
+        float: right;
+        width: rem(gs-span(3));
+        padding-left: rem($gs-gutter);
+    }
+}
+
+.page-section__headline {
+    @include fs-header(3);
+    padding-bottom: rem($gs-gutter * 1.6);
+}

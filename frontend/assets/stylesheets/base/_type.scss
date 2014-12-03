@@ -30,6 +30,12 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
+h3 {
+    font-weight: normal;
+    margin-bottom: rem(7px);
+    @include fs-bodyCopy(3);
+}
+
 /* Default type elements
    ========================================================================== */
 
@@ -40,16 +46,6 @@ blockquote {
 p {
     margin-top: 0;
     margin-bottom: rem(($gs-baseline / 3) * 2);
-}
-
-.no-margin {
-    margin: 0;
-}
-
-h3 {
-    font-weight: normal;
-    margin-bottom: rem(7px);
-    @include fs-bodyCopy(3);
 }
 
 /* Membership specific type elements
@@ -66,5 +62,26 @@ blockquote {
         display: block;
         float: left;
         margin-right: rem(5px);
+    }
+}
+
+/* Opt-in typographic styles
+   ========================================================================== */
+   // Add more readable defaults for blocks of body copy
+   // Particularly useful when copy come from a third-party (e.g., eventbrite/evently)
+   // See:
+   //   http://css-tricks.com/opt-in-typography/
+   //   http://dbushell.com/2012/04/18/scoping-typography-css/
+   //   http://anthonyshort.me/global-typographic-styles-suck/
+
+.copy {
+    a {
+        text-decoration: none;
+        border-bottom: 1px solid $c-neutral3;
+
+        &:hover,
+        &:focus {
+            border-color: $c-neutral2;
+        }
     }
 }

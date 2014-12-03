@@ -8,15 +8,13 @@ import play.api.Play.current
 import play.api.libs.json._
 import play.api.libs.ws.{WS, WSResponse}
 
-import com.gu.identity.model.User
-
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.Address
 
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.IdentityUser
+import model.{IdMinimalUser, IdUser}
 import model.UserDeserializer._
 import monitoring.IdentityApiMetrics
 
@@ -26,14 +24,14 @@ case class IdentityServiceError(s: String) extends Throwable {
 
 trait IdentityService {
 
-  def getFullUserDetails(user: User, identityRequest: IdentityRequest): Future[IdentityUser] =
+  def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
     IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       .map(_.getOrElse(throw IdentityServiceError(s"Couldn't find user with ID ${user.id}")))
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
-  def updateUserFieldsBasedOnJoining(user: User, formData: JoinForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnJoining(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest) {
 
     val billingDetails = formData match {
       case billingForm: PaidMemberJoinForm =>
@@ -56,19 +54,19 @@ trait IdentityService {
     IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
-  def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     val json = Json.obj("privateFields" -> fields)
     postFields(fields, user, identityRequest)
   }
 
-  def updateEmail(user: User, email: String, identitiyRequest: IdentityRequest) {
+  def updateEmail(user: IdMinimalUser, email: String, identityRequest: IdentityRequest) = {
     val json = Json.obj("primaryEmailAddress" -> email)
-    postFields(json, user, identitiyRequest)
+    postFields(json, user, identityRequest)
   }
 
-  private def postFields(json: JsObject, user: User, identityRequest: IdentityRequest) {
+  private def postFields(json: JsObject, user: IdMinimalUser, identityRequest: IdentityRequest) = {
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
@@ -111,21 +109,22 @@ object IdentityApi {
     }
   }
 
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdentityUser]] = {
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
         recordAndLogResponse(response.status, "GET user", endpoint)
-        (response.json \ "user").asOpt[IdentityUser]
+        (response.json \ "user").asOpt[IdUser]
       }.recover {
         case _ => None
       }
     }
   }
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String) {
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
     Timing.record(IdentityApiMetrics, metricName) {
       val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
+      response.map(_.status)
     }
   }
 

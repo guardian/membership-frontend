@@ -31,7 +31,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = GoogleAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
 
@@ -71,7 +71,7 @@ trait Joiner extends Controller {
     }
   }
 
-  private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
+  private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
     val identityRequest = IdentityRequest(request)
     for {
       user <- IdentityService.getFullUserDetails(user, identityRequest)
@@ -89,11 +89,19 @@ trait Joiner extends Controller {
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
   }
 
-  def updateEmailStaff() = AuthenticatedStaffNonMemberAction { implicit request =>
-    IdentityService.updateEmail(request.identityUser, request.googleUser.email, IdentityRequest(request))
-
-    Redirect("/join/staff")
-
+  def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
+    val googleEmail = request.googleUser.email
+    for {
+      responseCode <- IdentityService.updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
+    }
+    yield {
+      responseCode match {
+        case 200 => Redirect(routes.Joiner.enterStaffDetails())
+        case _ => Redirect(routes.Joiner.staff())
+                  .flashing("error" ->
+          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}, Please sign in with that email.")
+      }
+    }
   }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
@@ -121,7 +129,7 @@ trait Joiner extends Controller {
     def futureEventDetailsOpt = {
       val optFuture = for {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-        event <- EventbriteService.getEvent(eventId)
+        event <- EventbriteService.getBookableEvent(eventId)
       } yield {
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)

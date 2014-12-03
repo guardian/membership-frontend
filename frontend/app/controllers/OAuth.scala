@@ -1,12 +1,11 @@
 package controllers
 
 import actions.OAuthActions
-import com.gu.googleauth.GoogleAuthFilters.LOGIN_ORIGIN_KEY
-import com.gu.googleauth.{GoogleAuth, UserIdentity}
+import com.gu.googleauth.{GoogleAuth, UserIdentity, GoogleGroupChecker}
 import configuration.Config
 import play.api.Play.current
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Session, Action, Controller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -53,13 +52,18 @@ object OAuth extends Controller with OAuthActions {
           redirect.withSession {
             session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
           }
+
         } recover {
           case t =>
             // you might want to record login failures here - we just redirect to the login page
-            Redirect(routes.OAuth.login())
-              .withSession(session - ANTI_FORGERY_KEY)
-              .flashing("error" -> s"Login failure: ${t.toString}")
+            redirectWithError(session, s"Login failure: ${t.toString}")
         }
     }
   }
+
+  private def redirectWithError(session: Session, errorMessage: String) =
+    Redirect(routes.OAuth.login())
+    .withSession(session - ANTI_FORGERY_KEY)
+    .flashing("error" -> errorMessage)
+
 }
