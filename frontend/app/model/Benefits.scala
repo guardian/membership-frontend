@@ -42,14 +42,14 @@ object Benefits {
     allBenefits.find(_.identifier == id)
   }
 
-  val friendsWithBenefits = benefitsFilter("book_tickets", "digital_digest", "video_highlights")
+  val friendsWithBenefits = benefitsFilter("book_tickets", "digital_digest_cyan", "video_highlights_cyan")
 
   val partnerWithBenefits = benefitsFilter("discount", "plus_1_guest", "early_booking",
     "membership_card", "live_stream", "digital_digest_cyan", "video_highlights_cyan")
 
   val patronWithBenefits = benefitsFilter("discount_patron", "priority_booking",
     "complim_items", "unique_experiences", "plus_1_guest", "membership_card",
-    "live_stream", "digital_digest", "video_highlights")
+    "live_stream", "digital_digest_cyan", "video_highlights_cyan")
 
   val friendBenefits = Benefits("As a Friend:", friendsWithBenefits,
     None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events", 3)

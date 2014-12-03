@@ -31,7 +31,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = GoogleAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
 
@@ -71,7 +71,7 @@ trait Joiner extends Controller {
     }
   }
 
-  private def identityDetails(user: com.gu.identity.model.User, request: Request[_]) = {
+  private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
     val identityRequest = IdentityRequest(request)
     for {
       user <- IdentityService.getFullUserDetails(user, identityRequest)
@@ -114,7 +114,7 @@ trait Joiner extends Controller {
     def futureEventDetailsOpt = {
       val optFuture = for {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-        event <- EventbriteService.getEvent(eventId)
+        event <- EventbriteService.getBookableEvent(eventId)
       } yield {
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)

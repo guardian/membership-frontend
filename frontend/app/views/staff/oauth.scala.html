@@ -2,13 +2,17 @@
 
 @main("Staff login") {
 
-@for(error <- errorOpt) {
-<p>Error: @error</p>
-}
-
-<p>Click the button below to login as Guardian staff.</p>
-<form action="@routes.OAuth.loginAction()" method="get">
-    <input value="Log In" type="submit">
-</form>
-
+<section class="page-section">
+    <div class="page-section__row">
+        <div class="page-section__primary"></div>
+        <div class="page-section__secondary">
+            <h1 class="page-headline">Guardian Staff Membership</h1>
+            <p class="page-intro">
+                @for(error <- errorOpt) {
+                    @error
+                }
+            </p>
+        </div>
+    </div>
+</section>
 }
