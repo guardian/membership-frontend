@@ -1,5 +1,10 @@
 /*global ga */
 define(['string_score', 'bean', '$'], function (string_score, bean, $) {
+define([
+    'bean',
+    '$',
+    'src/utils/analytics/ga'
+], function (bean, $, googleAnalytics) {
 
     var filterInput  = document.getElementById('js-filter'),
         filterParent = document.getElementById('js-filter-container'),
