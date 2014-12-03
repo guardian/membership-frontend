@@ -1,0 +1,21 @@
+@(staffEmail: String, errorOpt: Option[String] = None)
+
+@main("Unauthorised Staff") {
+
+    <section class="page-section">
+        <div class="page-section__row">
+            <div class="page-section__primary"></div>
+            <div class="page-section__secondary">
+                <h1 class="page-headline">Unfortunately, you do not have permission</h1>
+                <p class="page-intro">
+                    You're signed in as <strong>@staffEmail</strong>.
+                </p>
+                <p>
+                    @for(error <- errorOpt) {
+                        @error
+                    }
+                </p>
+            </div>
+        </div>
+    </section>
+}

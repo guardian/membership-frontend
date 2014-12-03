@@ -88,6 +88,54 @@
   }
 }
 
+.action--fullwidth {
+    width: 100%;
+}
+
+.action--external {
+    background-color: $black;
+    border: 1px solid transparentize($white, 0.5);
+    width: 100%;
+
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: $white;
+    }
+
+    @include mq($to: tablet) {
+        margin-top: rem($gs-baseline);
+        margin-bottom: 0;
+    }
+
+    @include mq(tablet) {
+        width: auto;
+    }
+}
+
+.action--search {
+    .theme--guardian-live & {
+        background-color: $mem-live-top;
+        color: $white;
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $mem-live-accent;
+        }
+    }
+
+    .theme--masterclass & {
+        background-color: $mem-mc-top;
+        color: $c-neutral1;
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $mem-mc-accent;
+        }
+    }
+
+}
+
 .action--sold-out-event-ticket-details {
   background-color: $black;
   padding-right: rem(18px);

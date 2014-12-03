@@ -1,7 +1,7 @@
 package configuration
 
 import com.github.nscala_time.time.Imports._
-import com.gu.googleauth.GoogleAuthConfig
+import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.typesafe.config.ConfigFactory
@@ -177,6 +177,17 @@ object Config {
       true                           // Re-authenticate (without prompting) with google when session expires
     )
   }
+
+  val googleGroupCheckerAuthConfig = {
+    val con = config.getConfig("google.groups")
+    GoogleGroupConfig(
+      con.getString("client.username"),
+      con.getString("client.password"),
+      "guardian.co.uk",
+      ""
+    )
+  }
+
   val contentApiKey = config.getString("content.api.key")
 
 }

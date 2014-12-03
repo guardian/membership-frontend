@@ -18,6 +18,7 @@ GET            /healthcheck                       controllers.Healthcheck.health
 GET            /test-users                        controllers.Testing.testUser
 GET            /analytics-off                     controllers.Testing.analyticsOff
 
+GET            /staff/unauthorised                controllers.StaffAuth.unauthorised
 
 # Join
 GET            /join                              controllers.Joiner.tierList
@@ -86,6 +87,9 @@ GET            /assets/*assetFile                 controllers.CachedAssets.at(pa
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
 
-#Vanity URLS
+# Vanity URLS
 
 GET            /founder                           controllers.VanityUrl.redirect
+
+# Styleguide
+GET            /styleguide                        controllers.Styleguide.patterns

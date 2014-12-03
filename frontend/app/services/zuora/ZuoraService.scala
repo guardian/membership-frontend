@@ -37,7 +37,7 @@ object ZuoraServiceHelpers {
 
 case class ZuoraApiConfig(envName: String, url: Uri, username: String, password: String, productRatePlans: Map[ProductRatePlan, String])
 
-class ZuoraService(val apiConfig: ZuoraApiConfig) extends ScheduledTask[Authentication] {
+class ZuoraService(val apiConfig: ZuoraApiConfig) {
   import services.zuora.ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -50,13 +50,17 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends ScheduledTask[Authenti
     }
   }
 
-  val initialValue = Authentication("", "")
-  val initialDelay = 0.seconds
-  val interval = 30.minutes
+  val authTask = ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes) { () => request(Login(apiConfig)) }
+  val pingTask = ScheduledTask(s"Zuora ${apiConfig.envName} ping", DateTime.now, 30.seconds, 30.seconds) { () =>
+    request(Query("SELECT Id FROM Product")).map { _ => new DateTime }
+  }
 
-  def refresh() = request(Login(apiConfig))
+  def start() {
+    authTask.start()
+    pingTask.start()
+  }
 
-  implicit def authentication: Authentication = agent.get()
+  implicit def authentication: Authentication = authTask.get()
 
   def request[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
     val url = if (action.authRequired) authentication.url else apiConfig.url
