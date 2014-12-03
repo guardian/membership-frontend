@@ -115,7 +115,6 @@ object IdentityApi {
     Timing.record(IdentityApiMetrics, "get-user") {
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
         recordAndLogResponse(response.status, "GET user", endpoint)
-        println(response.json)
         (response.json \ "user").asOpt[IdentityUser]
       }.recover {
         case _ => None
@@ -124,13 +123,8 @@ object IdentityApi {
   }
 
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
-    println(data)
     Timing.record(IdentityApiMetrics, metricName) {
-      val request = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000)
-      println("******")
-      println(request.toString)
-      println("******")
-      val response = request.post(data)
+      val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
       response.map(_.status)
     }.recover {
