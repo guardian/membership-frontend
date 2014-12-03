@@ -114,7 +114,7 @@ trait Joiner extends Controller {
     def futureEventDetailsOpt = {
       val optFuture = for {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-        event <- EventbriteService.getEvent(eventId)
+        event <- EventbriteService.getBookableEvent(eventId)
       } yield {
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
