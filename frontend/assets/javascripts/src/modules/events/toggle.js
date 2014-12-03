@@ -1,10 +1,9 @@
-// ### generic toggle button ###
+// *** generic toggle button component ***
 //
 // usage:
 // <button class="js-toggle" data-toggle="foo">Show more foo</button>
 // <div id="foo" class="js-toggle-elm">all the foo (initially hidden)</div>
 
-define(['$', 'bean'], function ($, bean) {
 define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
 
     var TOGGLE_ELM_SELECTOR = '.js-toggle-elm';
@@ -14,7 +13,6 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
     var ICON_OFF_CLASS      = 'action--minus-left';
     var BUTTON_OFF_TEXT     = 'Less';
 
-    // shut up, crockford
     var toggleElm = function (elm, textOriginal) {
         return function () {
             var toggleElmId = elm.data(TOGGLE_DATA_ATTR);
@@ -38,7 +36,7 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
 
         for (var i=0, l=toggles.length; i<l; i++) {
             var elm = toggles[i];
-            // store a ref to the button text on pageload
+            // store a ref to the original button text on pageload
             var textOriginal = $(elm).text();
             bean.on(elm, 'click', toggleElm($(elm), textOriginal));
         }
