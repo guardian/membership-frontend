@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Asides
+   ========================================================================== */
+
+.aside {
+    border-top: 1px solid $mem-blue;
+    padding-top: rem($gs-gutter/2);
+    margin-bottom: rem($gs-gutter);
+}
+
+.aside--pull {
+    @include mq(wide) {
+        margin-top: -(rem($gs-gutter/2));
+    }
+}
