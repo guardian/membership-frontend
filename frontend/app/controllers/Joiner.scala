@@ -31,7 +31,7 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
-  def staff = GoogleAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
 

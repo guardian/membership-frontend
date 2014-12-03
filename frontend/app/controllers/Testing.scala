@@ -8,7 +8,7 @@ object Testing extends Controller with LazyLogging {
 
   val analyticsOffCookie = Cookie("ANALYTICS_OFF_KEY", "true", httpOnly = false)
 
-  val AuthorisedTester = GoogleAuthenticatedStaffNonMemberAction
+  val AuthorisedTester = GoogleAuthenticatedStaffAction
   
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()

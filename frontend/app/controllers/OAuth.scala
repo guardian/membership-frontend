@@ -42,21 +42,17 @@ object OAuth extends Controller with OAuthActions {
         Future.successful(Redirect(routes.OAuth.login()).flashing("error" -> "Anti forgery token missing in session"))
       case Some(token) =>
         GoogleAuth.validatedUserIdentity(Config.googleAuthConfig, token).map { identity =>
-          if(!GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, identity.email, "permanent.ftc.staff@guardian.co.uk")) {
-            redirectWithError(session, "Sorry this feature is only available to Permanent staff")
+          // We store the URL a user was trying to get to in the LOGIN_ORIGIN_KEY in AuthAction
+          // Redirect a user back there now if it exists
+          val redirect = session.get(LOGIN_ORIGIN_KEY) match {
+            case Some(url) => Redirect(url)
+            case None => Redirect(routes.FrontPage.index())
           }
-          else {
-            // We store the URL a user was trying to get to in the LOGIN_ORIGIN_KEY in AuthAction
-            // Redirect a user back there now if it exists
-            val redirect = session.get(LOGIN_ORIGIN_KEY) match {
-              case Some(url) => Redirect(url)
-              case None => Redirect(routes.FrontPage.index())
-            }
-            // Store the JSON representation of the identity in the session - this is checked by AuthAction later
-            redirect.withSession {
-              session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
-            }
+          // Store the JSON representation of the identity in the session - this is checked by AuthAction later
+          redirect.withSession {
+            session + (UserIdentity.KEY -> Json.toJson(identity).toString) - ANTI_FORGERY_KEY - LOGIN_ORIGIN_KEY
           }
+
         } recover {
           case t =>
             // you might want to record login failures here - we just redirect to the login page
