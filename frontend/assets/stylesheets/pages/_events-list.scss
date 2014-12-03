@@ -307,6 +307,10 @@ $filter-icon-size: 18px;
         @include fs-headline(3);
     }
 
+    .event-item--card & {
+        @include fs-headline(2);
+    }
+
 }
 
 // misc event details
@@ -496,9 +500,13 @@ $filter-icon-size: 18px;
         }
 
         .event-item__media {
-            width: 50%;
+            width: $trailblockImgWidthLarge;
             float: left;
             margin-right: 1rem;
+        }
+
+        .event-item__meta {
+            padding-bottom: 0;
         }
     }
 }
