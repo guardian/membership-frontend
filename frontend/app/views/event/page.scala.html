@@ -135,7 +135,7 @@
             <div class="event-header__container event-header__container--details event-header__container--unavailable">
                 <div class="event-ticket__details">
                     <span class="block-level event-ticket__details__status">
-                        @if(event.isSoldOut) { Sold out } else { Past event }
+                        @if(event.isSoldOut && event.status == "live") { Sold out } else { Past event }
                     </span>
                     <span class="block-level event-ticket__details__blurb">Tickets are no longer available</span>
                 </div>
@@ -178,7 +178,7 @@
                         @if(!event.isBookable) {
                             <div class="event-content__info__header">
                                 <span class="block-level event-content__info__header__status">
-                                    @if(event.isSoldOut) { Sold out } else { Past event }
+                                    @if(event.isSoldOut && event.status == "live") { Sold out } else { Past event }
                                 </span>
                                 <span class="block-level event-content__info__header__blurb">Tickets are no longer available</span>
                             </div>
