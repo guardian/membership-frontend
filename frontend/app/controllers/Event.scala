@@ -102,7 +102,7 @@ trait Event extends Controller {
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- guLiveEvents.getBookableEvent(id)
+        event <- guLiveEvents.getEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
           EventbriteMetrics.putThankyou(id)

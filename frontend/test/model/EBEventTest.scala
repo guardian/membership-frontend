@@ -17,30 +17,9 @@ class EBEventTest extends PlaySpecification {
   // val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
   val ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get
   val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
-  val soldOutEvent = ebResponse.data.find(_.id == "12238163677").get
-  val startedEvent = ebResponse.data.find(_.id == "12972720757").get
-
   val ticketedEvent = ebLiveEvent;
 
-  "event" should {
-    "be sold out" in {
-      soldOutEvent.isSoldOut mustEqual(true)
-    }
-    "not be sold out" in {
-      ebLiveEvent.isSoldOut mustEqual(false)
-    }
-    "be bookable" in {
-      ebLiveEvent.isBookable mustEqual(true)
-    }
-    "not be bookable when sold out" in {
-      soldOutEvent.isBookable mustEqual(false)
-    }
-    "not be bookable when it has started" in {
-      startedEvent.isBookable mustEqual(false)
-    }
-  }
-
-  "isNoTicketEvent on event" should {
+  "isNoTicketEvent on event " should {
     "should return true when comment <!-- noTicketEvent --> is present in description" in {
       nonTicketedEvent.isNoTicketEvent mustEqual(true)
     }

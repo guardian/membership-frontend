@@ -65,9 +65,8 @@ class EventbriteServiceTest extends PlaySpecification {
       Future.failed[A](EBError("internal", "Not implemented", 500)) // don't care
     }
 
-    override def events: Seq[RichEvent] = Nil
-    override def eventsArchive: Seq[RichEvent] = Nil
-    override def priorityEventOrdering: Seq[String] = Nil
+    def events: Seq[RichEvent] = Nil
+    def priorityEventOrdering: Seq[String] = Nil
     def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
   }
 
