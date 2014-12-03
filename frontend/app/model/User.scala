@@ -5,7 +5,7 @@ import play.api.libs.json.Json
 
 import utils.TestUsers
 
-case class BasicUser(id: String, displayName: Option[String]) {
+case class IdMinimalUser(id: String, displayName: Option[String]) {
   lazy val isTestUser: Boolean = {
     val isValidTestUser = TestUsers.validate(this)
     if (isValidTestUser) {
@@ -15,7 +15,7 @@ case class BasicUser(id: String, displayName: Option[String]) {
   }
 }
 
-case class FullUser(id: String,
+case class IdUser(id: String,
                     primaryEmailAddress: String,
                     publicFields: PublicFields,
                     privateFields: PrivateFields,
@@ -47,5 +47,5 @@ object UserDeserializer {
   implicit val readsStatusFields = Json.reads[StatusFields]
   implicit val readsPrivateFields = Json.reads[PrivateFields]
   implicit val readsPublicFields = Json.reads[PublicFields]
-  implicit val readsUser = Json.reads[model.FullUser]
+  implicit val readsUser = Json.reads[model.IdUser]
 }

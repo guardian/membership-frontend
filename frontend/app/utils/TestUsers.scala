@@ -3,7 +3,7 @@ package utils
 import com.gu.identity.testing.usernames.TestUsernames
 
 import configuration.Config
-import model.BasicUser
+import model.IdMinimalUser
 
 object TestUsers {
 
@@ -12,6 +12,6 @@ object TestUsers {
   def isTestUser(userPrivateFields: model.PrivateFields): Boolean =
     userPrivateFields.firstName.exists(testUsers.isValid)
 
-  def validate(user: BasicUser): Boolean =
+  def validate(user: IdMinimalUser): Boolean =
     user.displayName.exists(dn => TestUsers.testUsers.validate(dn.split(' ')(0)).isDefined)
 }

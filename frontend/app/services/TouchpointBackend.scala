@@ -5,7 +5,7 @@ import com.gu.membership.salesforce._
 
 import configuration.Config
 import model.Stripe.Card
-import model.{BasicUser, FriendTierPlan, TierPlan}
+import model.{IdMinimalUser, FriendTierPlan, TierPlan}
 import services.zuora.ZuoraService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -28,7 +28,7 @@ object TouchpointBackend {
 
   val All = Seq(Normal, TestUser)
 
-  def forUser(user: BasicUser) = if (user.isTestUser) TestUser else Normal
+  def forUser(user: IdMinimalUser) = if (user.isTestUser) TestUser else Normal
 }
 
 case class TouchpointBackend(

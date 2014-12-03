@@ -14,7 +14,7 @@ import com.gu.membership.zuora.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.{BasicUser, FullUser}
+import model.{IdMinimalUser, IdUser}
 import model.UserDeserializer._
 import monitoring.IdentityApiMetrics
 
@@ -24,14 +24,14 @@ case class IdentityServiceError(s: String) extends Throwable {
 
 trait IdentityService {
 
-  def getFullUserDetails(user: BasicUser, identityRequest: IdentityRequest): Future[FullUser] =
+  def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
     IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       .map(_.getOrElse(throw IdentityServiceError(s"Couldn't find user with ID ${user.id}")))
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
     IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
-  def updateUserFieldsBasedOnJoining(user: BasicUser, formData: JoinForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnJoining(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest) {
 
     val billingDetails = formData match {
       case billingForm: PaidMemberJoinForm =>
@@ -53,13 +53,13 @@ trait IdentityService {
     IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
-  def updateUserFieldsBasedOnUpgrade(user: BasicUser, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     postFields(fields, user, identityRequest)
   }
 
-  private def postFields(fields: JsObject, user: BasicUser, identityRequest: IdentityRequest) {
+  private def postFields(fields: JsObject, user: IdMinimalUser, identityRequest: IdentityRequest) {
     val json = Json.obj("privateFields" -> fields)
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
@@ -103,11 +103,11 @@ object IdentityApi {
     }
   }
 
-  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[FullUser]] = {
+  def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
         recordAndLogResponse(response.status, "GET user", endpoint)
-        (response.json \ "user").asOpt[FullUser]
+        (response.json \ "user").asOpt[IdUser]
       }.recover {
         case _ => None
       }

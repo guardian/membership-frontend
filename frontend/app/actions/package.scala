@@ -1,7 +1,7 @@
 import com.gu.membership.salesforce.{Member, PaidMember, Tier}
 import com.gu.membership.util.Timing
 import com.gu.{googleauth, identity}
-import model.BasicUser
+import model.IdMinimalUser
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
@@ -14,7 +14,7 @@ package object actions {
 
   val logger = Logger(this.getClass())
 
-  type AuthRequest[A] = AuthenticatedRequest[A, BasicUser]
+  type AuthRequest[A] = AuthenticatedRequest[A, IdMinimalUser]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 
