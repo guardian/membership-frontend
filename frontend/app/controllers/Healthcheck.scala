@@ -20,7 +20,7 @@ object Healthcheck extends Controller {
     Cached(1) {
       val serviceOk = tests.forall { test =>
         val result = test.result()
-        if (!result) Logger.error(s"${test.name} test failed, health check will fail")
+        if (!result) Logger.warn(s"${test.name} test failed, health check will fail")
         result
       }
 
