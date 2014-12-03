@@ -50,7 +50,7 @@
 
 
                 <ul class="events-list hygrid hygrid--wrapped hygrid--2 u-unstyled js-toggle-elm" id="js-toggle-past-events">
-                    @for(event <- eventPortfolio.pastEvents.get.slice(4, 10)) {
+                    @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
                         @fragments.event.item(event, false, isMinimal=true, isCard=true)
                     }
                 </ul>
