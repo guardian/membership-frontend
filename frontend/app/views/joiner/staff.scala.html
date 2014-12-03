@@ -1,4 +1,4 @@
-@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])
+@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
@@ -70,7 +70,12 @@
                         @if(staffEmail.emailsMatch) {
                             <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
                         } else {
-                            <p>
+                                <form action="@routes.Joiner.updateEmailStaff" method="POST" id="staff-email-form">
+                                    @CSRF.formField
+                                    @fragments.form.submit("Change email and Join now FORM")
+                                </form>
+
+                                <p>
                                 Currently your account is set up with <strong>@identityEmail</strong>. To join Guardian
                                 Staff Membership you must have a Guardian Identity account set up using your work email
                                 address ending @@theguardian.com (@@guardian.co.uk will work too).

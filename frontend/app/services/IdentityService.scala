@@ -47,7 +47,8 @@ trait IdentityService {
       "firstName" -> formData.name.first
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
-    postFields(fields, user, identityRequest)
+    val json = Json.obj("privateFields" -> fields)
+    postFields(json, user, identityRequest)
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
@@ -58,11 +59,16 @@ trait IdentityService {
   def updateUserFieldsBasedOnUpgrade(user: User, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
+    val json = Json.obj("privateFields" -> fields)
     postFields(fields, user, identityRequest)
   }
 
-  private def postFields(fields: JsObject, user: User, identityRequest: IdentityRequest) {
-    val json = Json.obj("privateFields" -> fields)
+  def updateEmail(user: User, email: String, identitiyRequest: IdentityRequest) {
+    val json = Json.obj("primaryEmailAddress" -> email)
+    postFields(json, user, identitiyRequest)
+  }
+
+  private def postFields(json: JsObject, user: User, identityRequest: IdentityRequest) {
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }

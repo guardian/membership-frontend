@@ -63,7 +63,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def enterStaffDetails = EmailVerifiedAuthenticatedStaffNonMemberAction.async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
@@ -87,7 +87,14 @@ trait Joiner extends Controller {
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
-    }
+  }
+
+  def updateEmailStaff() = AuthenticatedStaffNonMemberAction { implicit request =>
+    IdentityService.updateEmail(request.identityUser, request.googleUser.email, IdentityRequest(request))
+
+    Redirect("/join/staff")
+
+  }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
