@@ -63,12 +63,12 @@ trait IdentityService {
     postFields(fields, user, identityRequest)
   }
 
-  def updateEmail(user: User, email: String, identitiyRequest: IdentityRequest) {
+  def updateEmail(user: User, email: String, identitiyRequest: IdentityRequest) = {
     val json = Json.obj("primaryEmailAddress" -> email)
     postFields(json, user, identitiyRequest)
   }
 
-  private def postFields(json: JsObject, user: User, identityRequest: IdentityRequest) {
+  private def postFields(json: JsObject, user: User, identityRequest: IdentityRequest) = {
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
     IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
@@ -115,6 +115,7 @@ object IdentityApi {
     Timing.record(IdentityApiMetrics, "get-user") {
       WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
         recordAndLogResponse(response.status, "GET user", endpoint)
+        println(response.json)
         (response.json \ "user").asOpt[IdentityUser]
       }.recover {
         case _ => None
@@ -122,10 +123,14 @@ object IdentityApi {
     }
   }
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String) {
+  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
+    println(data)
     Timing.record(IdentityApiMetrics, metricName) {
       val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
+      response.map(_.status)
+    }.recover {
+      case _ => 503
     }
   }
 

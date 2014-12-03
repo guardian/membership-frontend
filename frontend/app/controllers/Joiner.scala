@@ -89,11 +89,17 @@ trait Joiner extends Controller {
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
   }
 
-  def updateEmailStaff() = AuthenticatedStaffNonMemberAction { implicit request =>
-    IdentityService.updateEmail(request.identityUser, request.googleUser.email, IdentityRequest(request))
-
-    Redirect("/join/staff")
-
+  def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
+    for {
+      responseCode <- IdentityService.updateEmail(request.identityUser, request.googleUser.email, IdentityRequest(request))
+    }
+    yield {
+      responseCode match {
+        case 200 => Redirect(routes.Joiner.enterStaffDetails())
+        case _ => Redirect(routes.Joiner.staff())
+                  .flashing("error" -> "There has been an error in updating your email.")
+      }
+    }
   }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
