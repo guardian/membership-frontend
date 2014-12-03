@@ -17,5 +17,8 @@ object Fallbacks {
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())
 
+  def unauthorisedStaff(error: String)(implicit request: RequestHeader) =
+    redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing("error" -> error)
+
   def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL(secure = true))
 }

@@ -204,31 +204,11 @@
 .form-field__half {
     display: inline-block;
     width: 50%;
-    padding-right: rem(12px);
+    padding-right: rem($gs-gutter);
     &:last-of-type {
         padding-right: 0;
-        padding-left: rem(12px);
+        padding-left: rem($gs-gutter);
     }
-}
-
-.form__error {
-    @include fs-data(4);
-    background-color: #fdf4f3;
-    border-bottom: rem(1px) solid lighten($newsRed, 35%);
-    border-top: rem(1px) solid lighten($newsRed, 35%);
-    color: $newsRed;
-    margin-top: rem(6px);
-    padding: rem(7px) rem(($gs-baseline / 3) * 2);
-}
-
-.form__success {
-    @include fs-data(4);
-    background-color: lighten($environmentGreen, 70%);
-    border-bottom: rem(1px) solid lighten($environmentGreen, 35%);
-    border-top: rem(1px) solid lighten($environmentGreen, 35%);
-    color: $environmentGreen;
-    margin-top: rem($gs-baseline / 2);
-    padding: rem(7px) rem(($gs-baseline / 3) * 2);
 }
 
 .form-field__error {

@@ -1,7 +1,7 @@
 package configuration
 
 import com.github.nscala_time.time.Imports._
-import com.gu.googleauth.GoogleAuthConfig
+import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.typesafe.config.ConfigFactory
@@ -35,6 +35,7 @@ object Config {
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
+  val membershipSupport = config.getString("membership.support")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
@@ -43,6 +44,9 @@ object Config {
 
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
+
+  def idWebAppAccountEditUrl(uri: String): String =
+    (idWebAppUrl / "account/edit") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
@@ -176,6 +180,17 @@ object Config {
       true                           // Re-authenticate (without prompting) with google when session expires
     )
   }
+
+  val googleGroupCheckerAuthConfig = {
+    val con = config.getConfig("google.groups")
+    GoogleGroupConfig(
+      con.getString("client.username"),
+      con.getString("client.password"),
+      "guardian.co.uk",
+      ""
+    )
+  }
+
   val contentApiKey = config.getString("content.api.key")
 
 }

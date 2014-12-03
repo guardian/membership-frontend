@@ -257,36 +257,17 @@ $current-indicator: rem(72px);
     width: 100%;
 }
 
-.package__list-benefits {
+.package-benefits {
     position: relative;
 }
 
-.package__leadin {
+.package-benefits__leadin {
     @include fs-bodyHeading(2);
 }
 
-.package__list-benefits-element {
+.package-benefits__list {
     @include fs-bodyCopy(1);
     margin-bottom: 0;
-    > li {
-
-        &:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-    }
-
-    > .u-cf {
-        &:before,
-        &:after {
-            display: block;
-        }
-    }
-}
-
-// bit fugly - hides the "Plus:" text for first list item
-.package__list-benefits .package__list-benefits-element:first-of-type:before {
-    display: none;
 }
 
 .package__price {

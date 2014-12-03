@@ -169,7 +169,7 @@
 
 .terms-info {
     @include fs-textSans(1);
-    padding-top: rem(12px);
+    padding-top: rem($gs-gutter);
 
     @include mq(tablet) {
         width: rem(gs-span(3) + $gs-gutter * 2);
@@ -180,7 +180,7 @@
         text-decoration: none;
         color: inherit;
         padding-bottom: rem(2px);
-        border-bottom: rem(1px) solid;
+        border-bottom: 1px solid;
 
         .theme--guardian-live & {
             border-bottom-color: transparentize($white, .5);

@@ -1,17 +1,18 @@
 package actions
 
 import actions.Fallbacks._
-import com.gu.googleauth.UserIdentity
+import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import configuration.Config
 import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import services.{AuthenticationService, IdentityService}
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, _}
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -38,6 +39,13 @@ object Functions {
 
   def onlyNonMemberFilter(onPaidMember: RequestHeader => Result = changeTier(_)) = new ActionFilter[AuthRequest] {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
+  }
+
+  def isInAuthorisedGroup(acceptableGroup: String,
+                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
+    override def filter[A](request: GoogleAuthRequest[A]) = for (
+      accepted <- Future { blocking { GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, request.user.email, acceptableGroup) } }
+    ) yield if (accepted) None else Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
   }
 
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =

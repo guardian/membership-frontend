@@ -10,7 +10,7 @@
 
 @benefitListing(benefits: Seq[BenefitItem], isLead: Boolean) = {
     @for(benefit <- benefits) {
-        <div class="benefits-item u-cf">
+        <div class="benefits-item">
             <div class="benefits-item__inner@if(isLead){ benefits-item__inner--highlighted} @if(isSmallBenefit){ benefits-item__inner--small}">
                 <li class="benefits-title">
                     <div class="benefits-title__first">
@@ -29,8 +29,8 @@
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
     <div class="package__header">What's included</div>
-    <div class="package__list-benefits">
-        <ul class="package__list-benefits-element u-unstyled">
+    <div class="package-benefits">
+        <ul class="package-benefits__list u-unstyled">
             @benefitListing(Benefits.details(currentTier).leadBenefits, isLead=true)
             @benefitListing(Benefits.details(currentTier).otherBenefits, isLead=false)
         </ul>

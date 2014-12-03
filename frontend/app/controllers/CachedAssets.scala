@@ -14,7 +14,7 @@ object CachedAssets extends Controller {
         Cached(NotFound)
       }
     }.map { result =>
-      if (result.header.headers.contains(CACHE_CONTROL)) result else Cached(result)
+      if (result.header.headers.contains(CACHE_CONTROL)) result else Cached(2)(result)
     }
   }
 }
