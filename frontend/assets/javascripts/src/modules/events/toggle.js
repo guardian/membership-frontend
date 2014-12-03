@@ -5,6 +5,7 @@
 // <div id="foo" class="js-toggle-elm">all the foo (initially hidden)</div>
 
 define(['$', 'bean'], function ($, bean) {
+define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
 
     var TOGGLE_ELM_SELECTOR = '.js-toggle-elm';
     var TOGGLE_BTN_SELECTOR = '.js-toggle';
@@ -20,6 +21,7 @@ define(['$', 'bean'], function ($, bean) {
             $(document.getElementById(toggleElmId)).toggle();
             elm.toggleClass([ICON_ON_CLASS, ICON_OFF_CLASS].join(' '));
             var hasChangedText = (elm.text() === textOriginal);
+            googleAnalytics.trackEvent('Toggle element', toggleElmId, (hasChangedText ? 'Show' : 'Hide'));
             elm.text( hasChangedText ? BUTTON_OFF_TEXT : textOriginal);
         };
     };

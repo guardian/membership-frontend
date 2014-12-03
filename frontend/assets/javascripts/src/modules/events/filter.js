@@ -1,5 +1,3 @@
-/*global ga */
-define(['string_score', 'bean', '$'], function (string_score, bean, $) {
 define([
     'bean',
     '$',
@@ -13,14 +11,6 @@ define([
         filterField  = filterInput.getAttribute('data-filter-field'),
         throttle     = 300, // how many milliseconds should we wait for typing to pause?
         currentTimeout;
-
-    // track what people filter on
-    var trackSearch = function (category, action, label) {
-        // analytics can be removed for test user mode
-        if (window.ga) {
-            ga('send', 'event', category, action, label);
-        }
-    };
 
     // create an index mapping any filter "key"
     // (eg. title, price) to DOM elements
@@ -57,7 +47,7 @@ define([
                 elmsToHide = [];
 
             if (value) {
-                trackSearch('Event filter', 'Masterclasses', value);
+                googleAnalytics.trackEvent('Event filter', 'Masterclasses', value);
             }
 
             index.forEach(function (item) {
