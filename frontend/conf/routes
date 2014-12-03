@@ -18,6 +18,7 @@ GET            /healthcheck                       controllers.Healthcheck.health
 GET            /test-users                        controllers.Testing.testUser
 GET            /analytics-off                     controllers.Testing.analyticsOff
 
+GET            /staff/unauthorised                controllers.StaffAuth.unauthorised
 
 # Join
 GET            /join                              controllers.Joiner.tierList
