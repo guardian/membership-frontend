@@ -1,30 +1,9 @@
 @charset 'UTF-8';
 
-@import 'head.common';
+$browser-supports-flexbox: false;
 
-@import 'head.ie9';
+@import 'style';
 
-/* ==========================================================================
-   Membership components
-   ========================================================================== */
-@import 'components/action';
-@import 'components/benefits';
-/* ==========================================================================
-   Memebership pages
-   ========================================================================== */
-@import 'pages/events-detail';
-@import 'pages/events-summary';
-@import 'pages/events-list';
-@import 'pages/joiner';
-@import 'pages/tier';
-@import 'pages/tickets';
-@import 'pages/login';
-@import 'pages/about';
-@import 'pages/help';
-@import 'pages/feedback';
-/* ==========================================================================
-   Webfonts pages
-   ========================================================================== */
-@import 'webfonts';
-
-@import 'ie9';
+// Import IE9 overrides
+// TODO: Move overrides into component files (overrides should be collected with the component they effect)
+@import '_ie9';
