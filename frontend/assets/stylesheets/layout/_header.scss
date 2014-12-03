@@ -27,7 +27,8 @@ $header-margin: 36px;
     }
     .header__primary {
         float: left;
-        margin-left: rem($header-padding / 2);
+        padding-left: rem($header-padding / 2);
+        padding-right: rem($header-padding / 2);
     }
 
     .header__secondary {
