@@ -63,9 +63,9 @@ trait IdentityService {
     postFields(fields, user, identityRequest)
   }
 
-  def updateEmail(user: User, email: String, identitiyRequest: IdentityRequest) = {
+  def updateEmail(user: User, email: String, identityRequest: IdentityRequest) = {
     val json = Json.obj("primaryEmailAddress" -> email)
-    postFields(json, user, identitiyRequest)
+    postFields(json, user, identityRequest)
   }
 
   private def postFields(json: JsObject, user: User, identityRequest: IdentityRequest) = {
@@ -126,7 +126,11 @@ object IdentityApi {
   def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
     println(data)
     Timing.record(IdentityApiMetrics, metricName) {
-      val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000).post(data)
+      val request = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(2000)
+      println("******")
+      println(request.toString)
+      println("******")
+      val response = request.post(data)
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
       response.map(_.status)
     }.recover {

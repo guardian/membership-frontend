@@ -90,14 +90,16 @@ trait Joiner extends Controller {
   }
 
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
+    val googleEmail = request.googleUser.email
     for {
-      responseCode <- IdentityService.updateEmail(request.identityUser, request.googleUser.email, IdentityRequest(request))
+      responseCode <- IdentityService.updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
     }
     yield {
       responseCode match {
         case 200 => Redirect(routes.Joiner.enterStaffDetails())
         case _ => Redirect(routes.Joiner.staff())
-                  .flashing("error" -> "There has been an error in updating your email.")
+                  .flashing("error" ->
+          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}, Please sign in with that email.")
       }
     }
   }
