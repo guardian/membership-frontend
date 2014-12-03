@@ -204,10 +204,10 @@
 .form-field__half {
     display: inline-block;
     width: 50%;
-    padding-right: rem(12px);
+    padding-right: rem($gs-gutter);
     &:last-of-type {
         padding-right: 0;
-        padding-left: rem(12px);
+        padding-left: rem($gs-gutter);
     }
 }
 

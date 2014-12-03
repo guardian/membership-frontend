@@ -169,7 +169,7 @@
 
 .terms-info {
     @include fs-textSans(1);
-    padding-top: rem(12px);
+    padding-top: rem($gs-gutter);
 
     @include mq(tablet) {
         width: rem(gs-span(3) + $gs-gutter * 2);
