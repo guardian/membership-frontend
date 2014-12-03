@@ -10,13 +10,6 @@
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@searchButton = @{
-    event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses", "/masterclasses")
-        case _: GuLiveEvent => ("Guardian Live events", "/events")
-    }
-}
-
 @termsAndConditions = @{
     event match {
         case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
@@ -24,7 +17,7 @@
     }
 }
 
-@ticketCta(actionClassSoldOut: String, actionClassBuy: String) = {
+@ticketCta(actionClassSoldOut: String, actionClassBuy:String) = {
     @if(event.isSoldOut) {
         <span class="action @actionClassSoldOut">Sold out</span>
     } else {
@@ -119,9 +112,7 @@
                                 }
                             }
                         </div>
-                        @if(event.isBookable) {
-                            @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
-                        }
+                        @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
                     </div>
                 }
             }
@@ -130,25 +121,6 @@
 
     </div>
 
-    @if(!event.isBookable) {
-        <div class="event-header event-header--unavailable">
-            <div class="event-header__container event-header__container--details event-header__container--unavailable">
-                <div class="event-ticket__details">
-                    <span class="block-level event-ticket__details__status">
-                        @if(event.isSoldOut) { Sold out } else { Past event }
-                    </span>
-                    <span class="block-level event-ticket__details__blurb">Tickets are no longer available</span>
-                </div>
-                @event match {
-                    case _: GuLiveEvent => {
-                        <a class="action action--external action--buy-event-ticket-details" href="@Config.guardianMembershipUrl">Watch highlights of past events</a>
-                    }
-                    case _ => {}
-                }
-
-            </div>
-        </div>
-    }
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
@@ -173,84 +145,64 @@
                 }
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
-                    <div class="event-content__info @if(!event.isBookable) {event-content__info--unavailable}">
-
-                        @if(!event.isBookable) {
-                            <div class="event-content__info__header">
-                                <span class="block-level event-content__info__header__status">
-                                    @if(event.isSoldOut) { Sold out } else { Past event }
-                                </span>
-                                <span class="block-level event-content__info__header__blurb">Tickets are no longer available</span>
+                    <div class="event-content__info">
+                        <div class="event-content__name" itemprop="name">@event.name.text</div>
+                        <div class="event-content__time event-content--line-divider u-cf">
+                            <div class="event-content__first">
+                                <i class="icon-large-early_booking icon--info"></i>
                             </div>
-                        }
-
-                        <div class="event-content__info__inner">
-                            <div class="event-content__item event-content__name" itemprop="name">@event.name.text</div>
-                            <div class="event-content__item event-content__time event-content--line-divider u-cf">
-                                <div class="event-content__first">
-                                    <i class="icon-large-early_booking icon--info"></i>
-                                </div>
-                                <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
+                            <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
+                        </div>
+                        <div class="event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                            <div class="event-content__first">
+                                <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
+                                ><i class="icon-location icon--info"></i></a>
                             </div>
-                            <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <div class="event-content__first">
-                                    <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
-                                    ><i class="icon-location icon--info"></i></a>
-                                </div>
-                                <div class="event-content__second">
-                                    <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                    @for(addressLine <- event.venue.addressLine) {
-                                        <span class="event-content__address" itemprop="address">@addressLine</span>
-                                    }
-                                </div>
+                            <div class="event-content__second">
+                                <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                                @for(addressLine <- event.venue.addressLine) {
+                                    <span class="event-content__address" itemprop="address">@addressLine</span>
+                                }
                             </div>
+                        </div>
 
-                            @if(event.isNoTicketEvent == false) {
+                        @if(event.isNoTicketEvent == false) {
 
-                                @for(ticket <- event.generalReleaseTicket) {
-                                    @if(event.isSoldOut) {
-                                        <meta itemprop="availability" content="http://schema.org/SoldOut">
-                                    } else {
-                                        <meta itemprop="availability" content="http://schema.org/InStock">
-                                    }
+                            @for(ticket <- event.generalReleaseTicket) {
+                                @if(event.isSoldOut) {
+                                    <meta itemprop="availability" content="http://schema.org/SoldOut">
+                                } else {
+                                    <meta itemprop="availability" content="http://schema.org/InStock">
+                                }
 
-                                    @if(event.isBookable) {
-                                        @fragments.event.ticketSales(event, ticket)
-                                    }
+                                @fragments.event.ticketSales(event, ticket)
 
-                                    @if(ticket.free) {
-                                        <div class="event-content__price event-content--line-divider">
-                                            <span class="event-content__price-amount">Free</span>
-                                        </div>
-                                    } else {
-                                        @for(pricing <- ticket.cost) {
-                                            <div class="js-event-price event-content__item">
-                                                <div class="event-content__price event-content--line-divider js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
-                                                    @pricing.formattedPrice
-                                                </div>
-                                                <div class="event-content__trail">
-                                                    <span class="event-content__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
-                                                        Partners/Patrons @pricing.discountPrice
-                                                    </span>
-                                                    <span class="event-content__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                                        (save @pricing.savingPrice)
-                                                    </span>
-                                                </div>
+                                @if(ticket.free) {
+                                    <div class="event-content__price event-content--line-divider">
+                                        <span class="event-content__price-amount">Free</span>
+                                    </div>
+                                } else {
+                                    @for(pricing <- ticket.cost) {
+                                        <div class="js-event-price">
+                                            <div class="event-content__price event-content--line-divider js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                                                @pricing.formattedPrice
                                             </div>
-                                        }
-                                    }
-                                    @if(event.isBookable) {
-                                        @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
-                                        @becomeMemberCta(ticket)
+                                            <div class="event-content__trail">
+                                                <span class="event-content__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
+                                                    Partners/Patrons @pricing.discountPrice
+                                                </span>
+                                                <span class="event-content__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                                    (save @pricing.savingPrice)
+                                                </span>
+                                            </div>
+                                        </div>
                                     }
                                 }
+                                @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
+                                @becomeMemberCta(ticket)
                             }
-                        </div>
+                        }
                     </div>
-
-                    @if(!event.isBookable) {
-                        <a class="action action--fullwidth action--search" href="@searchButton._2">Find other @searchButton._1</a>
-                    }
                 </div>
             </div>
         </div>

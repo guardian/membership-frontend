@@ -12,7 +12,7 @@ object Joining extends Controller {
   */
   def tierChooser() = NoCacheAction { implicit request =>
 
-    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getEvent)
     val pageInfo = PageInfo(
       CopyConfig.copyTitleChooseTier,
       request.path,
