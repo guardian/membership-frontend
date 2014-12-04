@@ -1,9 +1,24 @@
-/* ==========================================================================
-   Navigation controls
+/* Control icon
    ========================================================================== */
+.control-container {
 
-/* Control
-   ========================================================================== */
+    &:hover {
+        color: $white;
+
+        .control {
+            border-color: $white;
+        }
+        .control__info {
+            color: $white;
+        }
+        .icon-user-black {
+            @extend %icon-user-white;
+        }
+        .icon-g-black {
+            @extend %icon-g-white;
+        }
+    }
+}
 
 .control {
     @extend %icon-holder-circle;
@@ -11,8 +26,28 @@
     font-size: rem(13px);
 }
 
-/* Profile control info (text label next to it)
-   ========================================================================== */
+.control--faq {
+    //TODO once we have the icon from design remove the transform
+    @include rotate(180deg);
+    width: rem($gs-gutter + ($gs-baseline / 2));
+    height: rem($gs-gutter + ($gs-baseline / 2));
+    position: absolute;
+
+    .control__icon {
+        padding-top: rem(3px);
+    }
+}
+
+.control--no-border {
+    border: 0;
+}
+
+.control--active {
+    border-color: $white;
+    .control__info {
+        color: $white;
+    }
+}
 
 .control__info {
     vertical-align: top;
@@ -21,63 +56,18 @@
     text-overflow: ellipsis;
     text-align: left;
     font-family: $f-serif-text;
-    line-height: rem(35px);
-    max-width: rem(200px);
-    padding-left: rem($gs-gutter / 4);
-    height: rem(35px);
     font-size: rem(13px);
-    color: #000000;
     font-weight: bold;
+    line-height: rem($gs-gutter * 1.75);
+    max-width: rem($gs-gutter * 10);
+    padding-left: rem($gs-gutter / 4);
+    height: rem($gs-gutter * 1.75);
+    color: $black;
 }
-
-// workaround for text-decoration magic
-// (lots of elements inside <a>, not all of them underlined)
-.control__user-account:hover {
-    color: $white;
-    .control__info {
-        color: $white;
-    }
-    .icon-user-black {
-        @extend %icon-user-white;
-    }
-    .control {
-        border-color: $white;
-    }
-}
-// todo: refactor this plz
-.control__join-us:hover {
-    color: $white;
-    .control__info {
-        color: $white;
-    }
-    .icon-g-black {
-        @extend %icon-g-white;
-    }
-    .control {
-        border-color: $white;
-    }
-}
-
-/* Active control icon
-   ========================================================================== */
 
 .control__icon {
     display: block;
     text-align: center;
-    height: rem(24px);
-    padding-top: rem(5px);
-
-    .i {
-        display: none;
-        margin: 0 auto;
-
-        &:first-child {
-            display: block;
-        }
-
-    }
-}
-
-.control--no-border {
-    border: 0;
+    height: rem($gs-baseline * 2);
+    padding-top: rem($gs-baseline / 2);
 }
