@@ -1,45 +1,46 @@
 // *** generic toggle button component ***
 //
 // usage:
-// <button class="js-toggle" data-toggle="foo">Show more foo</button>
-// <div id="foo" class="js-toggle-elm">all the foo (initially hidden)</div>
+// <button class="js-toggle action action--toggle" data-toggle="foo">Show more foo</button>
+// <div id="foo" class="js-toggle-elm" data-toggle-label="Less foo">all the foo (initially hidden)</div>
+// (data-toggle-label is optional)
 
 define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
 
-    var TOGGLE_ELM_SELECTOR = '.js-toggle-elm';
-    var TOGGLE_BTN_SELECTOR = '.js-toggle';
-    var TOGGLE_DATA_ATTR    = 'toggle';
-    var ICON_ON_CLASS       = 'action--plus-left';
-    var ICON_OFF_CLASS      = 'action--minus-left';
-    var BUTTON_OFF_TEXT     = 'Less';
+    var TOGGLE_ELM_SELECTOR = '.js-toggle-elm',
+        TOGGLE_BTN_SELECTOR = '.js-toggle',
+        TOGGLE_DATA_ELM     = 'toggle',
+        TOGGLE_DATA_LABEL   = 'toggle-label',
+        TOGGLE_CLASS        = 'is-toggled';
 
-    var toggleElm = function (elm, textOriginal) {
+    var toggleElm = function ($elem) {
+        // store a ref to the original button text on bind
+        var originalText = $elem.text();
         return function () {
-            var toggleElmId = elm.data(TOGGLE_DATA_ATTR);
+            var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
             $(document.getElementById(toggleElmId)).toggle();
-            elm.toggleClass([ICON_ON_CLASS, ICON_OFF_CLASS].join(' '));
-            var hasChangedText = (elm.text() === textOriginal);
+            $elem.toggleClass(TOGGLE_CLASS);
+
+            var hasChangedText = ($elem.text() === originalText);
             googleAnalytics.trackEvent('Toggle element', toggleElmId, (hasChangedText ? 'Show' : 'Hide'));
-            elm.text( hasChangedText ? BUTTON_OFF_TEXT : textOriginal);
+            var toggleText = $elem.data(TOGGLE_DATA_LABEL);
+            if (toggleText) {
+                $elem.text( hasChangedText ? toggleText : originalText);
+            }
         };
     };
 
     var hideToggleElements = function () {
-        var e = document.querySelectorAll(TOGGLE_ELM_SELECTOR);
-        for (var i=0, l=e.length; i<l; i++) {
-            $(e[i]).hide();
-        }
+        var toggleContainers = document.querySelectorAll(TOGGLE_ELM_SELECTOR);
+        $(toggleContainers).hide();
     };
 
     var bindToggles = function () {
-        var toggles = document.querySelectorAll(TOGGLE_BTN_SELECTOR);
+        var $toggles = $(TOGGLE_BTN_SELECTOR);
+        $toggles.each(function (elem) {
+            bean.on(elem, 'click', toggleElm($(elem)));
+        });
 
-        for (var i=0, l=toggles.length; i<l; i++) {
-            var elm = toggles[i];
-            // store a ref to the original button text on pageload
-            var textOriginal = $(elm).text();
-            bean.on(elm, 'click', toggleElm($(elm), textOriginal));
-        }
     };
 
     function init() {
