@@ -6,18 +6,8 @@
 <section class="benefits-tier">
     <ul class="benefits-tier__list u-unstyled grid grid--3up">
         @for(benefit <- Benefits.details(tier).list) {
-            <li class="benefit benefit--inline benefits-tier__item grid__item">
-                <div class="benefit__icon">
-                    <i class="icon-@benefit.identifier icon--benefits"></i>
-                </div>
-                <div class="benefit__details">
-                    <div class="benefit__title">
-                        @benefit.title
-                    </div>
-                    <div class="benefit__copy">
-                        @benefit.description
-                    </div>
-                </div>
+            <li class="benefits-tier__item grid__item">
+                @fragments.benefits.item(benefit=benefit)
             </li>
         }
     </ul>
