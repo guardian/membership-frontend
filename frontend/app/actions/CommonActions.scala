@@ -32,8 +32,8 @@ trait CommonActions {
 
 
   val AuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
-                  onlyNonMemberFilter() andThen
-                  googleAuthenticationRefiner()
+                                          onlyNonMemberFilter() andThen
+                                          googleAuthenticationRefiner()
 
   val EmailVerifiedAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen
                                                        matchingGuardianEmail()
