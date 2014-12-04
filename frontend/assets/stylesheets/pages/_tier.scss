@@ -1,5 +1,10 @@
+/* ==========================================================================
+   Tier
+   ========================================================================== */
+
 $current-indicator: rem(72px);
 
+// TODO: Too broad. What is this affecting?
 .secondary-content {
     flex-basis: 16em;
     order: 2;
@@ -7,6 +12,10 @@ $current-indicator: rem(72px);
         float: left;
     }
 }
+
+/* ==========================================================================
+   Packages
+   ========================================================================== */
 
 .package-container {
     border-top: rem(1px) solid transparent;
@@ -21,6 +30,9 @@ $current-indicator: rem(72px);
         margin-bottom: rem($gs-gutter * 4);
     }
 }
+
+/* Package
+   ========================================================================== */
 
 .package {
     display: block;
@@ -372,8 +384,39 @@ $current-indicator: rem(72px);
     @include rotate(180deg);
 }
 
-/* Upgrade
-======================================================================= */
+/* Package Features
+   ========================================================================== */
+
+.package-feature {
+    @include clearfix;
+    padding-bottom: rem($gs-gutter);
+}
+.package-feature__intro {
+    position: relative;
+    padding: rem($gs-gutter / 2) 0;
+    border-top: 1px solid $mem-blue-border;
+}
+.package-feature__header {
+    float: left;
+}
+.package-feature__pricing {
+    float: right;
+}
+.package-feature__title {
+    @include fs-headline(5);
+    margin-bottom: 0;
+}
+.package-feature__subtitle {
+    color: $c-neutral2;
+    @include fs-headline(2);
+    @include mq(tablet) {
+        @include font-size(18px, 22px);
+    }
+}
+
+/* ==========================================================================
+   Upgrade
+   ========================================================================== */
 
 .upgrade__payment-label {
     display: block;
