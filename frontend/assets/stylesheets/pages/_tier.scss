@@ -337,7 +337,7 @@ $current-indicator: rem(72px);
 }
 .package-feature__intro {
     position: relative;
-    padding: rem($gs-gutter/2) 0 $gs-gutter;
+    padding: rem($gs-gutter/2) 0 rem($gs-gutter);
     border-top: 1px solid $mem-blue-border;
 }
 .package-feature__header {
@@ -348,15 +348,13 @@ $current-indicator: rem(72px);
 }
 .package-feature__title {
     @include fs-headline(4);
-    line-height: 1;
     margin-bottom: 0;
 }
 .package-feature__subtitle {
     color: $c-neutral2;
     @include fs-headline(1);
-    line-height: 1;
     position: relative;
-    top: rem(-6px);
+    top: -(rem($gs-baseline/2));
 }
 .package-feature__action {
     @include mq(tablet) {

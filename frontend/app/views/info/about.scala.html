@@ -23,17 +23,17 @@
         <div class="page-slice__inner">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice-content page-slice-content--padded">
-                @fragments.tier.feature(tier=Tier.Friend, subtitle="Benefits") {
+                @fragments.tier.feature(Tier.Friend, "Benefits") {
                     <a class="action js-opt-become-member" href="/join/friend/enter-details">
                         Become a Friend
                     </a>
                 }
-                @fragments.tier.feature(tier=Tier.Partner, subtitle="Friend benefits+") {
+                @fragments.tier.feature(Tier.Partner, "Friend benefits+") {
                     <a class="action js-opt-become-member" href="/join/partner/enter-details">
                         Become a Partner
                     </a>
                 }
-                @fragments.tier.feature(tier=Tier.Patron, subtitle="Partner benefits+") {
+                @fragments.tier.feature(Tier.Patron, "Partner benefits+") {
                     <a class="action js-opt-become-member" href="/join/patron/enter-details">
                         Become a Patron
                     </a>

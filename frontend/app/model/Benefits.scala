@@ -40,8 +40,8 @@ object Benefits {
   )
 
   var benefitsPartner = Seq(
-    BenefitItem("20% of live events", "20% discount on Guardian Live tickets", "discount"),
-    BenefitItem("20% of masterclasses", "20% discount on Guardian Masterclasses", "discount_masterclasses"),
+    BenefitItem("20% off live events", "20% discount on Guardian Live tickets", "discount"),
+    BenefitItem("20% off masterclasses", "20% discount on Guardian Masterclasses", "discount_masterclasses"),
     BenefitItem("Early booking", "Early ticket booking on Guardian Live Events (before Friends)", "early_booking"),
     BenefitItem("+1 guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "plus_1_guest"),
     BenefitItem("Live stream events", "Watch live streams of Flagship events", "live_stream"),
