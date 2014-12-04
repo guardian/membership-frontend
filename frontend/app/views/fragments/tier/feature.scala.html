@@ -1,7 +1,7 @@
 @(
     tier: com.gu.membership.salesforce.Tier.Tier,
     subtitle: String = ""
-)(action: HTML)(implicit token: play.filters.csrf.CSRF.Token)
+)(action: Html)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 @import helper._
@@ -21,9 +21,7 @@
     <div class="package-feature__content">
         @fragments.benefits.featured(tier)
     </div>
-    @if(action){
-        <div class="package-feature__action">
-            @action
-        </div>
-    }
+    <div class="package-feature__action">
+        @action
+    </div>
 </div>

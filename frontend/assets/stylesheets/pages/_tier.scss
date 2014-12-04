@@ -362,6 +362,11 @@ $current-indicator: rem(72px);
     position: relative;
     top: rem(-6px);
 }
+.package-feature__action {
+    @include mq(tablet) {
+        float: right;
+    }
+}
 
 /* ==========================================================================
    Upgrade
