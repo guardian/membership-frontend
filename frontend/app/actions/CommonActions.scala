@@ -35,9 +35,6 @@ trait CommonActions {
                                           onlyNonMemberFilter() andThen
                                           googleAuthenticationRefiner()
 
-  val EmailVerifiedAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen
-                                                       matchingGuardianEmail()
-
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 
   val StaffMemberAction = AuthenticatedAction andThen memberRefiner(onNonMember = joinStaffMembership(_))

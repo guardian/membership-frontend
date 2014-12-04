@@ -1,5 +1,7 @@
 package controllers
 
+import actions.Functions._
+
 import scala.concurrent.Future
 
 import play.api.mvc.{Controller, Request, Result}
@@ -21,6 +23,8 @@ import services._
 trait Joiner extends Controller {
 
   val memberService: MemberService
+
+  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -63,7 +67,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterStaffDetails = EmailVerifiedAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
