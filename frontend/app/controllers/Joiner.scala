@@ -131,7 +131,7 @@ trait Joiner extends Controller {
     } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade))
   }
 
-  def thankyouStaff = thankyou(Tier.Friend)
+  def thankyouStaff = thankyou(Tier.Partner)
 }
 
 object Joiner extends Joiner {
