@@ -33,9 +33,6 @@
    ========================================================================== */
 
 .benefit--featured {
-    .benefit__icon {
-        width: rem($gs-gutter * 4);
-    }
     @include mq(tablet) {
         text-align: center;
         .benefit__icon,

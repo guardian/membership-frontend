@@ -14,17 +14,28 @@
     height: 100%;
 }
 .price-info__item--split {
-    padding-right: 1.5rem;
+    padding-right: rem(10px);
     border-right: 1px solid $black-trans;
+
+    @include mq(mobileLandscape) {
+        padding-right: 1.5rem;
+    }
 }
 .price-info__item--last {
     padding-right: 0;
-    padding-left: 1.5rem;
+    padding-left: rem(10px);
     border-right: 0 none;
+
+    @include mq(tablet) {
+        padding-left: 1.5rem;
+    }
 }
 .price-info__detail {
-    @include fs-headline(4);
+    @include fs-headline(2);
 
+    @include mq(mobileLandscape) {
+        @include fs-headline(4);
+    }
     @include mq(mem-full) {
         @include fs-headline(5);
     }
@@ -36,7 +47,10 @@
     @include fs-textSans(1);
     display: block;
     text-align: left;
-    margin-top: rem(-6px);
+
+    @include mq(tablet) {
+        margin-top: rem(-6px);
+    }
 }
 
 /* Price Info - Reversed (Modifier)

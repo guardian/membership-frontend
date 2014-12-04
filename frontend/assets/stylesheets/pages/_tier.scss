@@ -341,14 +341,10 @@ $current-indicator: rem(72px);
     border-top: 1px solid $mem-blue-border;
 }
 .package-feature__header {
-    @include mq(mobileLandscape) {
-        float: left;
-    }
+    float: left;
 }
 .package-feature__pricing {
-    @include mq(mobileLandscape) {
-        float: right;
-    }
+    float: right;
 }
 .package-feature__title {
     @include fs-headline(4);

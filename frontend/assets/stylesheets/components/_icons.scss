@@ -20,9 +20,13 @@
     height: rem($gs-gutter);
 }
 
-.icon--large {
-    width: 60px; height: 60px;
-    background-size: 60px;
+.icon--featured {
+    width: 25px; height: 25px;
+    background-size: 25px;
+    @include mq(tablet) {
+        width: 48px; height: 48px;
+        background-size: 48px;
+    }
 }
 
 .icon--margin-right {

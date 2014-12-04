@@ -27,10 +27,10 @@
     }
     .page-slice__headline {
         @include fs-headline(5);
-        padding: rem($gs-baseline) rem($gs-gutter) 0;
+        padding: rem($gs-gutter/2);
         @include mq(tablet) {
             @include fs-headline(7);
-            padding-bottom: rem($gs-gutter * 3);
+            padding: rem($gs-baseline) rem($gs-gutter) rem($gs-gutter * 3);
         }
     }
 
@@ -48,7 +48,8 @@
    - Inner content for a page slice (pushed to right)
    ========================================================================== */
 
-.page-slice-content {
+.page-slice-content,
+.page-slice-content--padded {
 
     padding: rem($gs-gutter / 2);
 
@@ -58,6 +59,12 @@
 
     @include mq(mem-full) {
         padding-left: rem($gs-gutter * 9);
+    }
+}
+
+.page-slice-content--padded {
+    @include mq(mem-full) {
+        padding-right: rem($gs-gutter * 6);
     }
 }
 
