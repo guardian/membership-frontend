@@ -1,8 +1,1 @@
-<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
- <g>
-  <title>Layer 1</title>
-  <g fill-rule="evenodd" fill="none" id="Page-1">
-   <rect height="2.727273" width="20.000001" y="9" x="0" fill="#ffffff" id="Rectangle-1"/>
-  </g>
- </g>
-</svg>
+<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><title>Layer 1</title><g fill-rule="evenodd" fill="none"><path fill="#fff" d="M0 9h20v2.727H0z"/></g></svg>
