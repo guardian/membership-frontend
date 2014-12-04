@@ -1,8 +1,77 @@
 /* ==========================================================================
-   Page Components
+   Page
    ========================================================================== */
-   // Structural page layout components
 
+/* ==========================================================================
+   Brochure Page Layout Components
+   ========================================================================== */
+
+/* Page Slice
+   - Used on brochure style pages, full-width page segments
+   ========================================================================== */
+
+.page-slice {
+    @include clearfix;
+}
+    .page-slice__inner {
+        width: 100%;
+
+        @include mq(desktop) {
+            width: rem(gs-span(12) + $gs-gutter * 2);
+            margin: 0 auto;
+        }
+
+        @include mq(mem-full) {
+            width: rem(gs-span(14) + $gs-gutter * 2);
+        }
+    }
+    .page-slice__headline {
+        @include fs-headline(5);
+        padding: rem($gs-baseline) rem($gs-gutter) 0;
+        @include mq(tablet) {
+            @include fs-headline(7);
+            padding-bottom: rem($gs-gutter * 3);
+        }
+    }
+
+/* Page Slice - Tint (Modifier)
+   ========================================================================== */
+
+.page-slice--tint {
+    background-color: $white;
+    .page-slice__inner {
+        background-color: $c-neutral6;
+    }
+}
+
+/* Page Slice Content
+   - Inner content for a page slice (pushed to right)
+   ========================================================================== */
+
+.page-slice-content {
+
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding-left: rem($gs-gutter * 9);
+    }
+}
+
+/* ==========================================================================
+   Functional Page Layout Components
+   ========================================================================== */
+
+/* Page Header
+   ========================================================================== */
+
+/**
+ * Page header is the container,
+ * typically combined with page-headline and page-intro
+ */
 .page-header {
     padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
 
@@ -13,6 +82,9 @@
     }
 }
 
+/**
+ * Main page headline for functional pages
+ */
 .page-headline {
     @include fs-headline(5);
 
@@ -21,6 +93,9 @@
     }
 }
 
+/**
+ * Optional page intro for functional pages
+ */
 .page-intro {
     color: $c-neutral2;
     @include fs-headline(2);
@@ -30,7 +105,21 @@
     }
 }
 
+/* Page Section
+   ========================================================================== */
 
+/**
+ * Example usage:
+ * <div class="page-section page-section--bordered">
+ *     <div class="page-section__leadin">
+ *         <h2 class="page-section__headline">Headline</h2>
+ *     </div>
+ *     <div class="page-section__content">[...]</div>
+ *     <div class="page-section__supplementary">(Optional)</div>
+ * </div>
+ *
+ * Only .page-section and .page-section__content are required
+ */
 .page-section {
     @include clearfix;
     position: relative;
@@ -40,7 +129,6 @@
         width: auto;
     }
 }
-
 .page-section__lead-in {
     @include mq(desktop) {
         width: rem(gs-span(3));
@@ -48,7 +136,10 @@
         left: 0;
     }
 }
-
+.page-section__headline {
+    @include fs-header(3);
+    padding-bottom: rem($gs-gutter * 1.6);
+}
 .page-section__content {
     @include mq(desktop) {
         float: left;
@@ -57,7 +148,28 @@
         padding-right: rem(gs-span(1));
     }
 }
+.page-section__supplementary {
+    clear: both;
 
+    @include mq(mem-full) {
+        clear: none;
+        float: right;
+        width: rem(gs-span(3));
+        padding-left: rem($gs-gutter);
+    }
+}
+
+
+
+/* Page Section - Bordered (Modifier)
+   ========================================================================== */
+
+/**
+ * Example usage:
+ * <div class="page-section page-section--bordered">
+ *     <div class="page-section__content">[...]</div>
+ * </div>
+ */
 .page-section--bordered {
 
     .page-section__lead-in,
@@ -78,19 +190,4 @@
             border-top: 1px solid $mem-blue;
         }
     }
-}
-
-.page-section__supplementary {
-    clear: both;
-    @include mq(mem-full) {
-        clear: none;
-        float: right;
-        width: rem(gs-span(3));
-        padding-left: rem($gs-gutter);
-    }
-}
-
-.page-section__headline {
-    @include fs-header(3);
-    padding-bottom: rem($gs-gutter * 1.6);
 }

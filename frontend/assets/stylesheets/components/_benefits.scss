@@ -2,6 +2,86 @@
    Benefits
    ========================================================================== */
 
+/* ==========================================================================
+   Benefit
+   - Base benefit component. Single benefit.
+   ========================================================================== */
+
+.benefit {
+    @include clearfix;
+    display: table;
+    width: 100%;
+}
+.benefit__icon,
+.benefit__details {
+    display: table-cell;
+    vertical-align: top;
+}
+.benefit__icon {
+    width: rem($gs-gutter * 2);
+}
+.benefit__details {}
+.benefit__title {
+    @include fs-bodyHeading(2);
+    padding: 0 0 rem($gs-baseline / 6) 0;
+}
+.benefit__copy {
+    @include fs-textSans(3);
+}
+
+/* Benefit - Featured (Modifier)
+   ========================================================================== */
+
+.benefit--featured {
+    .benefit__icon {
+        width: rem($gs-gutter * 4);
+    }
+    @include mq(tablet) {
+        text-align: center;
+        .benefit__icon,
+        .benefit__details {
+            display: block;
+        }
+        .benefit__icon {
+            width: 100%;
+        }
+    }
+}
+
+/* ==========================================================================
+   Benefits Tier Listing
+   ========================================================================== */
+
+.benefits-tier {
+    overflow: hidden;
+    @include fs-bodyCopy(1);
+    margin-bottom: 0;
+}
+.benefits-tier__list {
+    @include mq(tablet) {
+        margin-top: -($gs-gutter/2);
+    }
+}
+.benefits-tier__item {
+    border-top: 1px dotted $c-neutral3;
+    padding-top: rem($gs-gutter/2);
+    @include mq(tablet) {
+        min-height: rem($gs-gutter * 6);
+    }
+
+}
+
+/* ==========================================================================
+   Benefits Featured Listing
+   ========================================================================== */
+
+.benefits-featured { }
+
+/* ==========================================================================
+   Old Benefits Styles
+   TODO: Remove once full benefits refactoring work happens
+   ========================================================================== */
+
 .benefits-item {
     @include mq(tablet) {
         width: 33.3%;
@@ -69,147 +149,4 @@
 
 .benefits-title__second {
     width: auto;
-}
-
-/* ==========================================================================
-   Staff Benefit styles (a fresh look at benefit styles)
-   //TODO potentially use these styles once design is aligned across site
-   //TODO I have separated this out in an aim to start cleaning this benefit work up
-   ========================================================================== */
-
-.tier-benefits {
-    overflow: hidden;
-    @include fs-bodyCopy(1);
-    margin-bottom: 0;
-
-    .flexbox & {
-        @include mq(mobileLandscape) {
-            @include flexbox;
-            @include flex-flow(row wrap);
-        }
-    }
-
-    @include mq(mobileLandscape) {
-        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
-        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
-    }
-}
-
-.benefit {
-    border-top: 1px dotted $c-neutral3;
-
-    @include mq(mobileLandscape) {
-        width: 50% - $gutter-width-fluid; // 50% - gutter width from .benefit
-        margin-left: $gutter-width-fluid; // gutter width, matches offset on .tier-benefits
-        float: left;
-
-        .flexbox & {
-            float: none;
-        }
-    }
-
-    @include mq(tablet) {
-        width: 33.3% - $gutter-width-fluid; // 33.3% - gutter width from .benefit
-        min-height: rem($gs-gutter * 5);
-    }
-
-    @include mq(desktop) {
-        margin-top: -1px;
-    }
-}
-
-.benefit-title {
-    @include fs-bodyHeading(2);
-    padding: rem(7px) 0 rem($gs-baseline / 6) 0;
-}
-
-.benefit-title__primary{
-    float: left;
-    width: rem($gs-gutter * 2);
-}
-
-.benefit-title__secondary {
-    width: auto;
-}
-
-.benefit-copy {
-    @include fs-textSans(3);
-    padding: 0 0 rem($gs-baseline) rem($gs-gutter * 2);
-}
-
-/* ==========================================================================
-   Benefits - Benefits Features
-   ========================================================================== */
-
-.feature-benefitslist {
-    @include clearfix;
-}
-    .feature-benefits__item {
-
-    }
-
-.benefit--feature {
-    @include fs-bodyHeading(3);
-    display: block;
-}
-
-
-.benefits-container {
-
-    .benefits__list {
-        margin: rem($gs-gutter);
-
-        @include mq(tablet) {
-            width: rem(gs-span(9));
-            margin: rem(80px) rem($gs-gutter) 0 rem(gs-span(1));
-            padding-bottom: rem($gs-gutter + 10);
-        }
-
-        @include mq(desktop) {
-            width: rem(gs-span(11));
-            margin: rem(80px) rem($gs-gutter) 0;
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(12));
-            margin: rem(80px) rem($gs-gutter) 0 rem(gs-span(2) + $gs-gutter * 2);
-        }
-    }
-
-    .benefits__list--items {
-        float: left;
-        @include fs-bodyCopy(1);
-        width: rem(gs-span(4));
-        height: rem(130px);
-
-        &:nth-child(4),
-        &:nth-child(8) {
-            border-right: 0;
-        }
-
-        @include mq(tablet) {
-            @include fs-bodyCopy(2);
-            width: rem(gs-span(3));
-            padding: 0 rem($gs-gutter / 2);
-            height: rem(220px);
-        }
-
-        @include mq(desktop) {
-            border-right: rem(1px) solid $c-neutral3;
-            width: rem(gs-span(3) - 10);
-            height: rem(220px);
-            margin-bottom: rem(50px);
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(3));
-            height: rem(190px);
-        }
-    }
-
-    .benefits__list--header {
-        @include fs-bodyHeading(3);
-        display: block;
-    }
-
 }
