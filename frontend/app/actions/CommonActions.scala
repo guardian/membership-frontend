@@ -25,16 +25,21 @@ trait CommonActions {
   val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
 
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
-                                               
-  val PermanentStaffNonMemberAction = GoogleAuthenticatedStaffAction andThen
-                                      isInAuthorisedGroup("permanent.ftc.staff@guardian.co.uk",
-    "If you are having problems signing up for your free Partner membership please email staff.membership@theguardian.com.")
+  
+  val permanentStaffEmail = "permanent.ftc.staff@guardian.co.uk"
+  val permanentStaffEmailErrorMessage = "If you are having problems signing up for your free Partner membership please email staff.membership@theguardian.com."
+
+  val PermanentStaffNonMemberAction =
+    GoogleAuthenticatedStaffAction andThen
+    isInAuthorisedGroupGoogleAuthReq(permanentStaffEmail, permanentStaffEmailErrorMessage)
 
 
-  val GoogleAndIdentityAuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
-                                                           onlyNonMemberFilter() andThen
-                                                           googleAuthenticationRefiner() andThen
-                                                           matchingGuardianEmail()
+  val GoogleAndIdentityAuthenticatedStaffNonMemberAction =
+    AuthenticatedAction andThen
+    onlyNonMemberFilter() andThen
+    googleAuthenticationRefiner() andThen
+    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffEmail, permanentStaffEmailErrorMessage) andThen
+    matchingGuardianEmail()
 
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 

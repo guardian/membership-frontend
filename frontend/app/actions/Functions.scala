@@ -41,10 +41,21 @@ object Functions {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
   }
 
-  def isInAuthorisedGroup(acceptableGroup: String,
+  def isInAuthorisedGroupGoogleAuthReq(acceptableGroup: String,
                           errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
-    override def filter[A](request: GoogleAuthRequest[A]) = for (
-      accepted <- Future { blocking { GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, request.user.email, acceptableGroup) } }
+    override def filter[A](request: GoogleAuthRequest[A]) =
+      isInAuthorisedGroup(acceptableGroup, errorWhenNotInAcceptedGroups, request.user.email, request)
+  }
+
+  def isInAuthorisedGroupIdentityGoogleAuthReq(acceptableGroup: String,
+                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[IdentityGoogleAuthRequest] {
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
+      isInAuthorisedGroup(acceptableGroup, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
+  }
+
+  def isInAuthorisedGroup(acceptableGroup: String, errorWhenNotInAcceptedGroups: String, email: String, request: Request[_]) = {
+    for (
+      accepted <- Future { blocking { GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, email, acceptableGroup) } }
     ) yield if (accepted) None else Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
   }
 
