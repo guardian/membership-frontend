@@ -45,11 +45,6 @@ $current-indicator: rem(72px);
     }
 }
 
-.price-info {
-    width: rem(230px);
-    float: right;
-}
-
 .package-list {
     padding-top: 0;
 }
@@ -211,6 +206,14 @@ $current-indicator: rem(72px);
         padding-left: rem($gs-gutter + 16);
     }
 
+    .package__pricing {
+        float: right;
+        @include mq(desktop) {
+            float: none;
+            width: 100%;
+        }
+    }
+
     .price-info {
         padding-top: rem($gs-gutter + 10);
         height: rem($gs-gutter * 3 + 10);
@@ -297,67 +300,6 @@ $current-indicator: rem(72px);
     }
 }
 
-.price-info {
-    height: rem($gs-gutter * 2);
-
-    .price-info__detail {
-        @include fs-headline(4);
-
-        @include mq(mem-full) {
-            @include fs-headline(5);
-        }
-
-        .price-info__container-inner--last & {
-            margin-top: rem($gs-gutter);
-        }
-
-        &--right {
-            right: 0;
-            text-align: right;
-        }
-
-        &--sm-date {
-            @include fs-headline(2);
-        }
-    }
-
-    .price-info__container-inner {
-        width: 50%;
-        float: left;
-        position: relative;
-        display: block;
-        height: 100%;
-    }
-
-    .price-info__container-inner--last {
-        text-align: right;
-        height: 100%;
-        border-left: rem(1px) solid $white-trans;
-    }
-
-    .price-info__container-inner--full-width {
-        width: 100%;
-    }
-
-    .price-info__sub-detail {
-        @include fs-textSans(1);
-        color: $white;
-        display: block;
-        margin-top: rem(-6px);
-
-        .patron-page &,
-        .package__title-container--partner & {
-            color: $black;
-        }
-    }
-}
-
-.price-info--partner {
-    .price-info__container-inner--last {
-        border-left: rem(1px) solid $black-trans;
-    }
-}
-
 .package__select-toggle {
     @extend %mobile-expand-collapse;
 }
@@ -384,34 +326,41 @@ $current-indicator: rem(72px);
     @include rotate(180deg);
 }
 
-/* Package Features
+/* ==========================================================================
+   Tier - Package Feauture
+   - Package features grid on about page
    ========================================================================== */
 
 .package-feature {
     @include clearfix;
-    padding-bottom: rem($gs-gutter);
+    position: relative;
 }
 .package-feature__intro {
     position: relative;
-    padding: rem($gs-gutter / 2) 0;
+    padding: rem($gs-gutter/2) 0 $gs-gutter;
     border-top: 1px solid $mem-blue-border;
 }
 .package-feature__header {
-    float: left;
+    @include mq(mobileLandscape) {
+        float: left;
+    }
 }
 .package-feature__pricing {
-    float: right;
+    @include mq(mobileLandscape) {
+        float: right;
+    }
 }
 .package-feature__title {
-    @include fs-headline(5);
+    @include fs-headline(4);
+    line-height: 1;
     margin-bottom: 0;
 }
 .package-feature__subtitle {
     color: $c-neutral2;
-    @include fs-headline(2);
-    @include mq(tablet) {
-        @include font-size(18px, 22px);
-    }
+    @include fs-headline(1);
+    line-height: 1;
+    position: relative;
+    top: rem(-6px);
 }
 
 /* ==========================================================================
