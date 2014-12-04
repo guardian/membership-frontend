@@ -20,6 +20,11 @@
     height: rem($gs-gutter);
 }
 
+.icon--large {
+    width: 60px; height: 60px;
+    background-size: 60px;
+}
+
 .icon--margin-right {
     margin-right: rem($gs-gutter / 2);
 }
