@@ -159,7 +159,7 @@ $filter-icon-size: 18px;
 
         // the middle column is centred (eg. 7px on either side)
         &:nth-child(#{$columns}n-1) .event-item__container {
-            margin: 0px auto;
+            margin: 0 auto;
         }
 
         // the third column is right-aligned (eg. 14px on the left)
@@ -208,7 +208,7 @@ $filter-icon-size: 18px;
             width: 0;
 
             &:last-child {
-                margin-right: 0px;
+                margin-right: 0;
             }
         }
 
@@ -216,7 +216,7 @@ $filter-icon-size: 18px;
             @include flex-grow(1);
             @include flex-basis(40%); // i have no idea why this works
             &:nth-child(2n) {
-                margin-right: 0px;
+                margin-right: 0;
             }
         }
 
@@ -483,7 +483,7 @@ $filter-icon-size: 18px;
         .event-item__media {
             width: $trailblockImgWidthLarge;
             float: left;
-            margin-right: 1rem;
+            margin-right: rem($gs-baseline);
         }
 
         .event-item__meta {
