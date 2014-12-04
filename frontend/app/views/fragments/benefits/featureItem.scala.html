@@ -1,0 +1,21 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)
+
+@import model.Benefits
+@import model.Benefits.BenefitItem
+
+<section>
+    <div class="feature-benefits u-cf">
+        <ul class="feature-benefits__list u-unstyled u-cf">
+        @for(benefit <- Benefits.detailsLimited(tier)) {
+            <li class="benefits__list--items">
+                <i class="icon icon--large icon-@benefit.identifier"></i>
+                <div class="benefit-title">@benefit.title</div>
+                <div class="benefit-copy">
+                    @benefit.description
+                </div>
+            </li>
+        }
+        </ul>
+    </div>
+</section>
+

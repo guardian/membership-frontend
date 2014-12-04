@@ -1,0 +1,24 @@
+@(
+    tier: com.gu.membership.salesforce.Tier.Tier,
+    subtitle: String = ""
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import model.Benefits
+@import helper._
+
+<div class="package-feature">
+    <div class="package-feature__intro package-feature__header--@tier.toString.toLowerCase u-cf">
+        <div class="package-feature__header">
+            <h3 class="package-feature__title">@tier</h3>
+            <span class="package-feature__subtitle">@subtitle</span>
+        </div>
+        <div class="package-feature__pricing">
+            @fragments.benefits.priceInfo(tier)
+        </div>
+    </div>
+    <div class="package-feature__content">
+        <div class="benefits-feature">
+            @fragments.benefits.featureItem(tier)
+        </div>
+    </div>
+</div>
