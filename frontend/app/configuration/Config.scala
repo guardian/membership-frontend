@@ -191,6 +191,9 @@ object Config {
     )
   }
 
+  val staffAuthorisedEmails = config.getString("staff.authorised.emails")
+  val staffUnauthorisedError = config.getString("staff.unauthorised.error")
+
   val contentApiKey = config.getString("content.api.key")
 
 }

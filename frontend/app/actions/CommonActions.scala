@@ -26,8 +26,8 @@ trait CommonActions {
 
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
   
-  val permanentStaffEmail = "permanent.ftc.staff@guardian.co.uk"
-  val permanentStaffEmailErrorMessage = "If you are having problems signing up for your free Partner membership please email staff.membership@theguardian.com."
+  val permanentStaffEmail = Config.staffAuthorisedEmails
+  val permanentStaffEmailErrorMessage = Config.staffUnauthorisedError
 
   val PermanentStaffNonMemberAction =
     GoogleAuthenticatedStaffAction andThen
