@@ -33,6 +33,27 @@ object Benefits {
     BenefitItem("Unique experiences", "Get behind the scenes of our journalism", "unique_experiences")
   )
 
+  val benefitsFriend = Seq(
+    BenefitItem("Book tickets", "Book tickets to Guardian Live events", "book_tickets"),
+    BenefitItem("Membership email updates", "Receive regular updates on the upcoming programme", "digital_digest"),
+    BenefitItem("Video highlights", "Watch highlights of selected Guardian Live events", "video_highlights")
+  )
+
+  var benefitsPartner = Seq(
+    BenefitItem("20% of live events", "20% discount on Guardian Live tickets", "discount"),
+    BenefitItem("20% of masterclasses", "20% discount on Guardian Masterclasses", "discount_masterclasses"),
+    BenefitItem("Early booking", "Early ticket booking on Guardian Live Events (before Friends)", "early_booking"),
+    BenefitItem("+1 guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "plus_1_guest"),
+    BenefitItem("Live stream events", "Watch live streams of Flagship events", "live_stream"),
+    BenefitItem("Membership card", "", "membership_card")
+  )
+
+  var benefitsPatron = Seq(
+    BenefitItem("Priority booking", "Additional priority ticket booking on Guardian Live Events (before Partners)", "priority_booking"),
+    BenefitItem("Special thank-yous", "The occasional unique gift to thank you for your support", "complim_items"),
+    BenefitItem("Unique experiences", "Get behind the scenes of our journalism", "unique_experiences")
+  )
+
   case class Pricing(yearly: Int, monthly: Int) {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
@@ -67,4 +88,11 @@ object Benefits {
     Tier.Partner -> partnerBenefits,
     Tier.Patron -> patronBenefits
   )
+
+  val detailsLimited = Map(
+    Tier.Friend -> benefitsFriend,
+    Tier.Partner -> benefitsPartner,
+    Tier.Patron -> benefitsPatron
+  )
+
 }
