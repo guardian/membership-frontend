@@ -5,6 +5,7 @@ import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -12,7 +13,7 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import services.{AuthenticationService, IdentityService}
 
-import scala.concurrent.{Future, _}
+import scala.concurrent.Future
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -20,7 +21,9 @@ import scala.concurrent.{Future, _}
  *
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
-object Functions {
+object Functions extends LazyLogging {
+
+  val googleGroupChecker = new GoogleGroupChecker(Config.googleGroupCheckerAuthConfig)
 
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
@@ -41,24 +44,26 @@ object Functions {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
   }
 
-  def isInAuthorisedGroupGoogleAuthReq(acceptableGroup: String,
+  def isInAuthorisedGroupGoogleAuthReq(includedGroups: Set[String],
                           errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
     override def filter[A](request: GoogleAuthRequest[A]) =
-      isInAuthorisedGroup(acceptableGroup, errorWhenNotInAcceptedGroups, request.user.email, request)
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.user.email, request)
   }
 
-  def isInAuthorisedGroupIdentityGoogleAuthReq(acceptableGroup: String,
+  def isInAuthorisedGroupIdentityGoogleAuthReq(includedGroups: Set[String],
                           errorWhenNotInAcceptedGroups: String) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) =
-      isInAuthorisedGroup(acceptableGroup, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
   }
 
-  def isInAuthorisedGroup(acceptableGroup: String, errorWhenNotInAcceptedGroups: String, email: String, request: Request[_]) = {
-    for (
-      accepted <- Future { blocking { GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, email, acceptableGroup) } }
-    ) yield if (accepted) None else Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
+  def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: String, email: String, request: Request[_]) = {
+    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
+      if (includedGroups.intersect(usersGroups).nonEmpty) None else {
+        logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
+        Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
+      }
+    }
   }
-
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {

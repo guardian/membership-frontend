@@ -25,9 +25,10 @@ trait CommonActions {
   val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
 
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
-  
-  val permanentStaffGroup = Config.staffAuthorisedEmailGroups
+
+  val permanentStaffGroup = Set(Config.staffAuthorisedEmailGroups)
   val permanentStaffEmailErrorMessage = Config.staffUnauthorisedError
+
 
   val PermanentStaffNonMemberAction =
     GoogleAuthenticatedStaffAction andThen

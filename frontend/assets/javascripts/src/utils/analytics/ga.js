@@ -1,3 +1,4 @@
+/*global ga */
 define([], function () {
 
     function init() {
@@ -20,7 +21,16 @@ define([], function () {
         /* jshint ignore:end */
     }
 
+    // wrapper for tracking events via google analytics
+    // (because analytics can be removed for test user mode)
+    var trackEvent = function (category, action, label) {
+        if (window.ga) {
+            ga('send', 'event', category, action, label);
+        }
+    };
+
     return {
-        init: init
+        init: init,
+        trackEvent: trackEvent
     };
 });
