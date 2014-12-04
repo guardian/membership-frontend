@@ -27,10 +27,9 @@
 }
 
 .control--faq {
-    //TODO once we have the icon from design remove the transform
-    @include rotate(180deg);
     width: rem($gs-gutter + ($gs-baseline / 2));
     height: rem($gs-gutter + ($gs-baseline / 2));
+    border-color: $mem-blue;
     position: absolute;
 
     .control__icon {
