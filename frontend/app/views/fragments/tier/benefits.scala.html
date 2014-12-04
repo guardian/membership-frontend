@@ -38,7 +38,9 @@
                     <button class="package__select-toggle js-benefit-button"></button>
                 </div>
                 <h2 class="package__title">@tier</h2>
-                @fragments.benefits.priceInfo(tier)
+                <div class="package__pricing">
+                    @fragments.benefits.priceInfo(tier = tier, isReversed = tier != Tier.Partner)
+                </div>
             </div>
         </div>
 

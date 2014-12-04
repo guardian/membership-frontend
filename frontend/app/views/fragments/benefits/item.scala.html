@@ -1,0 +1,15 @@
+@(benefit: model.Benefits.BenefitItem, isFeatured: Boolean = false)
+
+<div class="benefit @if(isFeatured == true){benefit--featured}">
+    <div class="benefit__icon">
+        <i class="icon icon--large icon-@benefit.identifier"></i>
+    </div>
+    <div class="benefit__details">
+        <div class="benefit__title">
+            @benefit.title
+        </div>
+        <div class="benefit__copy">
+            @benefit.description
+        </div>
+    </div>
+</div>

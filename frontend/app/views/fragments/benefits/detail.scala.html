@@ -3,24 +3,23 @@
 @import model.Benefits
 @import model.Benefits.BenefitItem
 
-@tierBenefits(benefits: Seq[BenefitItem]) = {
-    @for(benefit <- benefits) {
-        <li class="benefit">
-            <div class="benefit-title">
-                <div class="benefit-title__primary">
+<section class="benefits-tier">
+    <ul class="benefits-tier__list u-unstyled grid grid--3up">
+        @for(benefit <- Benefits.details(tier).list) {
+            <li class="benefit benefit--inline benefits-tier__item grid__item">
+                <div class="benefit__icon">
                     <i class="icon-@benefit.identifier icon--benefits"></i>
                 </div>
-                <div class="benefit-title__secondary">@benefit.title</div>
-            </div>
-            <div class="benefit-copy">@benefit.description</div>
-        </li>
-    }
-}
-
-<section>
-    <ul class="tier-benefits u-unstyled">
-        @tierBenefits(Benefits.details(tier).leadBenefits)
-        @tierBenefits(Benefits.details(tier).otherBenefits)
+                <div class="benefit__details">
+                    <div class="benefit__title">
+                        @benefit.title
+                    </div>
+                    <div class="benefit__copy">
+                        @benefit.description
+                    </div>
+                </div>
+            </li>
+        }
     </ul>
 </section>
 

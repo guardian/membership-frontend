@@ -1,0 +1,14 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)
+
+@import model.Benefits
+@import model.Benefits.BenefitItem
+
+<div class="benefits-featured">
+    <ul class="benefits-featured__list u-unstyled grid grid--3up">
+    @for(benefit <- Benefits.detailsLimited(tier)) {
+        <li class="benefits__list--items grid__item">
+            @fragments.benefits.item(benefit=benefit, isFeatured=true)
+        </li>
+    }
+    </ul>
+</div>
