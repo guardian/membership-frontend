@@ -1,189 +1,24 @@
 @import configuration.Config
+@import model.Faq
 
-@main("Help") {
+@main("Help", containerPadding=false) {
 
-    @fragments.layout.sectionHeader("Help")
-
-    <div class="info-container">
-
-        <h2 class="section-body-headline">Guardian Membership FAQ</h2>
-        <div class="help-intro">
-            <p>Common questions about Guardian Membership.</p>
-            <p>If you have any questions about Guardian Membership you may find an answer in the FAQs below.</p>
-            <p>If your question is not answered here then please <a href="mailto:@Config.membershipSupport" class="u-underline">get in touch</a>.</p>
-        </div>
-
-        <ul class="help-list u-unstyled">
-            <li><a class="u-underline" href="#what-is-membership">What is Guardian Membership?</a></li>
-            <li><a class="u-underline" href="#why-join">Why should I join?</a></li>
-            <li><a class="u-underline" href="#how-much-does-it-cost">How much does membership cost?</a></li>
-            <li><a class="u-underline" href="#difference-between-tiers">What is the difference between a Friend, a Partner and a Patron?</a></li>
-            <li><a class="u-underline" href="#why-sign-in-to-become-a-member">Why do I have to sign in to the Guardian to become a member?</a></li>
-            <li><a class="u-underline" href="#what-is-guardian-live">What is Guardian Live?</a></li>
-            <li><a class="u-underline" href="#can-I-buy-without-becoming-member">Can I buy a ticket to a Guardian Live event without becoming a member?</a></li>
-            <li><a class="u-underline" href="#can-I-buy-without-signing-in">Can I buy a ticket to an event without signing in?</a></li>
-            <li><a class="u-underline" href="#how-many-tickets-can-i-buy">How many Guardian Live tickets can I buy for each event?</a></li>
-            <li><a class="u-underline" href="#what-events-are-upcoming">How will I know what Guardian Live events are coming up?</a></li>
-            <li><a class="u-underline" href="#I-do-not-want-weekly-email">What happens if I don't want to receive the weekly email?</a></li>
-            <li><a class="u-underline" href="#under-18">I am under 18 - can I still be a member?</a></li>
-            <li><a class="u-underline" href="#do-not-live-in-london">I don’t live in London - can I still be a member?</a></li>
-            <li><a class="u-underline" href="#do-not-live-in-uk">I don’t live in the UK - can I still be a member?</a></li>
-            <li><a class="u-underline" href="#change-membership-tier">What happens if I want to change my membership tier?</a></li>
-            <li><a class="u-underline" href="#cancel-membership">What happens if I want to cancel my membership?</a></li>
-            <li><a class="u-underline" href="#feedback-about-membership">I've got feedback about membership</a></li>
-            <li><a class="u-underline" href="#personal-data-protection">How do I know you are protecting my personal information?</a></li>
-            <li><a class="u-underline" href="#terms-conditions-of-membership">What are the terms and conditions of membership?</a></li>
-            <li><a class="u-underline" href="#wheelchair-access-for-venue">How can I find out about disabled/wheelchair access for the venue?</a></li>
-            <li><a class="u-underline" href="#have-a-question">I've got a question</a></li>
-
-            <li><a class="u-underline" href="#what-are-guardian-masterclasses">What are Guardian Masterclasses?</a></li>
-            <li><a class="u-underline" href="#can-I-book-without-becoming-member">Can I book a Guardian Masterclass course without becoming a member?</a></li>
-            <li><a class="u-underline" href="#how-many-places-per-course">How many Guardian Masterclasses places can I book for each course?</a></li>
-            <li><a class="u-underline" href="#what-events-are-coming-up">How will I know what Guardian Masterclasses events are coming up?</a></li>
-            <li><a class="u-underline" href="#masterclasses-location">Where do Guardian Masterclasses take place?</a></li>
-            <li><a class="u-underline" href="#masterclasses-refund-policy">What is the Guardian Masterclasses refund policy?</a></li>
-            <li><a class="u-underline" href="#masterclasses-information">Where can I get more information on Guardian Masterclasses?</a></li>
-        </ul>
-
-        <section class="help-faqs" id="what-is-membership">
-            <h2 class="section-body-headline">What is Guardian Membership?</h2>
-            <p>Guardian Membership is for you if you share our belief that the open exchange of information, ideas and opinions can change the world for the better. By signing up and paying your subscription (at Partner and Patron level), you are helping bring these words to life by supporting open and independent journalism. In return, you get access to events and experiences that are only available to members.</p>
+    <main class="page-container__inner">
+        <section class="page-header">
+            <h1 class="page-headline">FAQ</h1>
+            <p class="page-intro">Common questions about Guardian Membership</p>
         </section>
 
-        <section class="help-faqs" id="why-join">
-            <h2 class="section-body-headline">Why should I join?</h2>
-            <p>Membership has a lot to offer, and by joining in this beta phase, you can help build and shape Guardian Membership into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Membership and paying your subscription is a great way to do it.</p>
+        <section class="page-section">
+            <div class="page-section__content">
+                @fragments.faq.questions(Faq.help)
+                @fragments.faq.answers(Faq.help)
+            </div>
+            <div class="page-section__supplementary">
+                <aside class="aside aside--pull" role="complementary">
+                    <p>If your question is not answered here then please <a href="mailto:@Config.membershipSupport" class="u-underline">get in touch</a>.</p>
+                </aside>
+            </div>
         </section>
-
-        <section class="help-faqs" id="how-much-does-it-cost">
-            <h2 class="section-body-headline">How much does membership cost?</h2>
-            <p>The Friend tier of Guardian Membership is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free.</p>
-        </section>
-
-        <section class="help-faqs" id="difference-between-tiers">
-            <h2 class="section-body-headline">What is the difference between a Friend, a Partner and a Patron?</h2>
-            <p>You can read a full description of each membership tier <a href="/join" class="u-underline">here</a>.</p>
-        </section>
-
-        <section class="help-faqs" id="why-sign-in-to-become-a-member">
-            <h2 class="section-body-headline">Why do I have to sign in to the Guardian to become a member?</h2>
-            <p>We ask you to sign in so we know who you are and ensure that we apply the correct discounts and privileges when you buy tickets to an event - Partners and Patrons get early booking and 20% discount on tickets to all Guardian Live events.</p>
-        </section>
-
-        <section class="help-faqs" id="what-is-guardian-live">
-            <h2 class="section-body-headline">What is Guardian Live?</h2>
-            <p>Guardian Live is a rolling events programme of discussions, debates, interviews and festivals that transform our journalism in print and online into live experiences. Tickets can only be booked by Guardian members.</p>
-        </section>
-
-        <section class="help-faqs" id="can-I-buy-without-becoming-member">
-            <h2 class="section-body-headline">Can I buy a ticket to a Guardian Live event without becoming a member?</h2>
-            <p>You can only buy a ticket to a Guardian Live event if you are a member. Access to these events is one of the benefits we offer members in return for their support. Our basic tier of membership is free.</p>
-        </section>
-
-        <section class="help-faqs" id="can-I-buy-without-signing-in">
-            <h2 class="section-body-headline">Can I buy a ticket to an event without signing in?</h2>
-            <p>You are required to sign in before buying tickets for Guardian Live events.</p>
-        </section>
-
-        <section class="help-faqs" id="how-many-tickets-can-i-buy">
-            <h2 class="section-body-headline">How many Guardian Live tickets can I buy for each event?</h2>
-            <p>You can buy as many tickets as you want. Partners and Patrons are entitled to two tickets at a discount. After you’ve bought your discounted tickets you can come back and buy as many as you want at full price. We are working to improve this so you can buy all your tickets in one go.</p>
-        </section>
-
-        <section class="help-faqs" id="what-events-are-upcoming">
-            <h2 class="section-body-headline">How will I know what Guardian Live events are coming up?</h2>
-            <p>Our <a href="/events" class="u-underline">events listing page</a> is updated regularly and when you join membership you will receive a weekly email newsletter containing information about upcoming events.</p>
-        </section>
-
-        <section class="help-faqs" id="I-do-not-want-weekly-email">
-            <h2 class="section-body-headline">What happens if I don't want to receive the weekly email?</h2>
-            <p>If you no longer want to receive the weekly email newsletter, click the unsubscribe link at the bottom of the email.</p>
-        </section>
-
-        <section class="help-faqs" id="under-18">
-            <h2 class="section-body-headline">I am under 18 - can I still be a member?</h2>
-            <p>You have to be 18 or over to join.</p>
-        </section>
-
-        <section class="help-faqs" id="do-not-live-in-london">
-            <h2 class="section-body-headline">I don’t live in London - can I still be a member?</h2>
-            <p>Yes, Guardian Membership is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK.</p>
-        </section>
-
-        <section class="help-faqs" id="do-not-live-in-uk">
-            <h2 class="section-body-headline">I don’t live in the UK - can I still be a member?</h2>
-            <p>Yes, Guardian Membership is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia.</p>
-        </section>
-
-        <section class="help-faqs" id="change-membership-tier">
-            <h2 class="section-body-headline">What happens if I want to change my membership tier?</h2>
-            <p>You can change your membership tier online. Just go to your <a href="@Config.idWebAppUrl/membership/edit" class="u-underline">Profile</a> page on the membership site and follow the instructions.</p>
-        </section>
-
-        <section class="help-faqs" id="cancel-membership">
-            <h2 class="section-body-headline">What happens if I want to cancel my membership?</h2>
-            <p>You can cancel your membership by following the instructions on this <a href="/tier/cancel" class="u-underline">page</a>. Your membership will run until the end of your current payment term.</p>
-        </section>
-
-        <section class="help-faqs" id="feedback-about-membership">
-            <h2 class="section-body-headline">I've got feedback about membership</h2>
-            <p>Please fill in the feedback form on the site <a href="/feedback" class="u-underline">here</a>.</p>
-        </section>
-
-        <section class="help-faqs" id="personal-data-protection">
-            <h2 class="section-body-headline">How do I know you are protecting my personal information?</h2>
-            <p>We will never use your information for any purpose without your permission. You can read more about our approach to data security in our privacy policy <a href="http://www.theguardian.com/help/privacy-policy" class="u-underline">here</a>.</p>
-        </section>
-
-        <section class="help-faqs" id="terms-conditions-of-membership">
-            <h2 class="section-body-headline">What are the terms and conditions of membership?</h2>
-            <p>You can read the full set of terms and conditions <a href="http://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions" class="u-underline">here</a>.</p>
-        </section>
-
-        <section class="help-faqs" id="wheelchair-access-for-venue">
-            <h2 class="section-body-headline">How can I find out about disabled/wheelchair access for the venue?</h2>
-            <p>We only run events at venues that are accessible by wheelchair. You can tell us that you require accessibility information on the ticket booking form and we will contact you to go over the access route before the event.</p>
-        </section>
-
-        <section class="help-faqs" id="have-a-question">
-            <h2 class="section-body-headline">I've got a question</h2>
-            <p>Please email <a href="mailto:@Config.membershipSupport" class="u-underline">@Config.membershipSupport</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends.</p>
-        </section>
-
-        <section class="help-faqs" id="what-are-guardian-masterclasses">
-            <h2 class="section-body-headline">What are Guardian Masterclasses?</h2>
-            <p>Guardian Masterclasses match our readers’ interests with a wide range of courses and workshops, harnessing the expertise and specialisms of award-winning Guardian professionals and leading figures from the creative and digital industries.</p>
-        </section>
-
-        <section class="help-faqs" id="can-I-book-without-becoming-member">
-            <h2 class="section-body-headline">Can I book a Guardian Masterclass course without becoming a member?</h2>
-            <p>Yes, Guardian Masterclasses are available to everyone from the <a href="http://www.theguardian.com/guardian-masterclasses" class="u-underline">masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href="https://membership.theguardian.com/masterclasses">Membership Masterclasses listings page</a>.</p>
-        </section>
-
-        <section class="help-faqs" id="how-many-places-per-course">
-            <h2 class="section-body-headline">How many Guardian Masterclass places can I book for each course?</h2>
-            <p>You can buy as many places as you want. Partners and Patrons are entitled to one place at a discount. After you’ve bought your discounted place you can come back and buy as many as you want at full price.</p>
-        </section>
-
-        <section class="help-faqs" id="what-events-are-coming-up">
-            <h2 class="section-body-headline">How will I know what Guardian Masterclasses are coming up?</h2>
-            <p>Our <a href="https://membership.theguardian.com/masterclasses">Masterclasses listings page</a> is updated regularly and when you join membership you will receive a weekly email newsletter containing information about upcoming courses.</p>
-        </section>
-
-        <section class="help-faqs" id="masterclasses-location">
-            <h2 class="section-body-headline">Where do Guardian Masterclasses take place?</h2>
-            <p>Our Masterclasses are held in the meeting rooms and conference spaces of the Guardian's head quarters in King's Cross, London. <a href="http://www.theguardian.com/guardian-masterclasses/how-to-find-us?guni=Article:in%20body%20link">Click here</a> for maps to help you find your way to the Guardian offices, and find your way around inside. We also host Masterclasses in other venues in London and beyond.</p>
-        </section>
-
-        <section class="help-faqs" id="masterclasses-refund-policy">
-            <h2 class="section-body-headline">What is the Guardian Masterclasses refund policy?</h2>
-            <p>You may cancel a Guardian Masterclass if your notification is received by the Masterclasses team a minimum of 14 days prior to the start of the Guardian Masterclass. Provided the Masterclasses team has received your notice of cancellation within this time frame (and acknowledged your notice), Masterclasses will refund any fees received from you less the deposit where applicable. Please ensure the Masterclasses team has acknowledged your notice of cancellation. We will not be able to refund you where we did not receive your notice 14 days before the start of the Guardian Masterclass (regardless of when you sent it). Our tickets are not transferable to other courses or dates. The masterclass team contact details are available <a href="http://www.theguardian.com/guardian-masterclasses/about-masterclasses">here</a></p>
-        </section>
-
-        <section class="help-faqs" id="masterclasses-information">
-            <h2 class="section-body-headline">Where can I get more information about Guardian Masterclasses?</h2>
-            <p>More frequently asked questions are available <a href="http://www.theguardian.com/guardian-masterclasses/faqs">here</a>.</p>
-        </section>
-
-    </div>
+    </main>
 }
