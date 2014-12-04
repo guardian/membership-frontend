@@ -3,13 +3,16 @@ package controllers
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import play.api.mvc.{Controller, Cookie}
 import utils.TestUsers.testUsers
+import actions.Functions._
 
 object Testing extends Controller with LazyLogging {
 
   val analyticsOffCookie = Cookie("ANALYTICS_OFF_KEY", "true", httpOnly = false)
 
-  val AuthorisedTester = GoogleAuthenticatedStaffAction
-  
+  val AuthorisedTester = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroup(
+    Set("membership.dev@guardian.co.uk", "touchpoint@guardian.co.uk"),
+    "You need to be added to the right Google Group to create test users - contact membership.dev@theguardian.com if you definitely need access.")
+
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
     logger.info(s"Generated test user string $testUserString for ${request.user.email}")

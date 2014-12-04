@@ -5,6 +5,7 @@ import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -12,7 +13,7 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import services.{AuthenticationService, IdentityService}
 
-import scala.concurrent.{Future, _}
+import scala.concurrent.Future
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -20,7 +21,9 @@ import scala.concurrent.{Future, _}
  *
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
-object Functions {
+object Functions extends LazyLogging {
+
+  val googleGroupChecker = new GoogleGroupChecker(Config.googleGroupCheckerAuthConfig)
 
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
@@ -41,11 +44,17 @@ object Functions {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
   }
 
-  def isInAuthorisedGroup(acceptableGroup: String,
+  def isInAuthorisedGroup(includedGroups: Set[String],
                           errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
-    override def filter[A](request: GoogleAuthRequest[A]) = for (
-      accepted <- Future { blocking { GoogleGroupChecker.userIsInGroup(Config.googleGroupCheckerAuthConfig, request.user.email, acceptableGroup) } }
-    ) yield if (accepted) None else Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
+    override def filter[A](request: GoogleAuthRequest[A]) = {
+      val userEmail = request.user.email
+      for (usersGroups <- googleGroupChecker.retrieveGroupsFor(userEmail)) yield {
+        if (includedGroups.intersect(usersGroups).nonEmpty) None else {
+          logger.info(s"Excluding $userEmail from '${request.path}' - not in accepted groups: $includedGroups")
+          Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
+        }
+      }
+    }
   }
 
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
