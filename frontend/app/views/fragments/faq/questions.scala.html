@@ -1,0 +1,16 @@
+@(faqs: List[model.Faq.Item])
+
+<ul class="help-list u-unstyled">
+@for(faq <- faqs){
+    <li class="help-item">
+        <a class="help-question" href="#@faq.id">
+            <span class="control control--faq">
+                <span class="control__icon">
+                    <i class="i icon-arrow-up-black icon--faq"></i>
+                </span>
+            </span>
+            <span class="help-question__text">@faq.question</span>
+        </a>
+    </li>
+}
+</ul>
