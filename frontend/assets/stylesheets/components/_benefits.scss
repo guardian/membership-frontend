@@ -36,16 +36,16 @@
     .benefit__icon {
         width: rem($gs-gutter * 4);
     }
-    @include mq(tablet) {
-        text-align: center;
-        .benefit__icon,
-        .benefit__details {
-            display: block;
-        }
-        .benefit__icon {
-            width: 100%;
-        }
-    }
+    // @include mq(tablet) {
+    //     text-align: center;
+    //     .benefit__icon,
+    //     .benefit__details {
+    //         display: block;
+    //     }
+    //     .benefit__icon {
+    //         width: 100%;
+    //     }
+    // }
 }
 
 /* ==========================================================================
