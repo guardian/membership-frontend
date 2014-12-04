@@ -61,6 +61,27 @@
     }
 }
 
+
+.action--toggle {
+    &:before {
+        @extend .icon-plus;
+        content: '';
+        float: left;
+        margin: rem(2px) rem(18px) 0 0;
+    }
+
+    &:after {
+        display: none;
+    }
+
+    &.is-toggled,
+    .action--toggle--toggled {
+        &:before {
+            @extend .icon-minus;
+        }
+    }
+}
+
 .action--disabled {
     &,
     &:visited,
