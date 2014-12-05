@@ -5,6 +5,7 @@
     .pattern {
         margin-top: rem($gs-gutter * 2);
         border-top: 1px solid $c-neutral6;
+        overflow: hidden;
     }
         .pattern__description {
             color: $c-neutral2;
