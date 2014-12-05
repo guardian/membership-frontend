@@ -1,8 +1,8 @@
 // *** generic toggle button component ***
 //
 // usage:
-// <button class="js-toggle action action--toggle" data-toggle="foo">Show more foo</button>
-// <div id="foo" class="js-toggle-elm" data-toggle-label="Less foo">all the foo (initially hidden)</div>
+// <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Less foo">Show more foo</button>
+// <div id="foo" class="js-toggle-elm">all the foo (initially hidden)</div>
 // (data-toggle-label is optional)
 
 define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
@@ -14,20 +14,29 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         TOGGLE_CLASS        = 'is-toggled';
 
     var toggleElm = function ($elem) {
-        // store a ref to the original button text on bind
-        var originalText = $elem.text();
         return function () {
             var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
+
             $(document.getElementById(toggleElmId)).toggle();
             $elem.toggleClass(TOGGLE_CLASS);
 
-            var hasChangedText = ($elem.text() === originalText);
-            googleAnalytics.trackEvent('Toggle element', toggleElmId, (hasChangedText ? 'Show' : 'Hide'));
-            var toggleText = $elem.data(TOGGLE_DATA_LABEL);
-            if (toggleText) {
-                $elem.text( hasChangedText ? toggleText : originalText);
-            }
+            toggleLabel($elem);
+
+            trackUsage($elem, toggleElmId);
         };
+    };
+
+    var toggleLabel = function($elem) {
+        var toggleText = $elem.data(TOGGLE_DATA_LABEL);
+        if (toggleText) {
+            $elem.data(TOGGLE_DATA_LABEL, $elem.text());
+            $elem.text(toggleText);
+        }
+    };
+
+    var trackUsage = function($elem, id) {
+        var hasToggled = ($elem.hasClass(TOGGLE_CLASS));
+        googleAnalytics.trackEvent('Toggle element', id, (hasToggled ? 'Show' : 'Hide'));
     };
 
     var hideToggleElements = function () {
@@ -48,6 +57,8 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         bindToggles();
     }
 
-    init();
+    return {
+        init: init
+    };
 
 });
