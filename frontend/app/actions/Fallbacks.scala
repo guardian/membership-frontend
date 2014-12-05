@@ -2,6 +2,7 @@ package actions
 
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
+import play.twirl.api.Html
 
 
 object Fallbacks {
@@ -17,8 +18,10 @@ object Fallbacks {
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())
 
-  def unauthorisedStaff(error: String)(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing("error" -> error)
+  def unauthorisedStaff(errorTemplate: Html)(implicit request: RequestHeader) =
+    redirectTo(controllers.routes.StaffAuth.unauthorised()).flashing(
+      "errorTemplate" -> errorTemplate.toString
+    )
 
   def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL(secure = true))
 }

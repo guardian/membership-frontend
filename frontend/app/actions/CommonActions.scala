@@ -28,8 +28,7 @@ trait CommonActions {
 
   val PermanentStaffNonMemberAction = GoogleAuthenticatedStaffAction andThen
                                       isInAuthorisedGroup(Set("permanent.ftc.staff@guardian.co.uk"),
-    "If you are having problems signing up for your free Partner membership please email staff.membership@theguardian.com.")
-
+                                        views.html.fragments.oauth.nonPerm())
 
   val AuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
                                           onlyNonMemberFilter() andThen

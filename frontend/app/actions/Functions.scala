@@ -11,6 +11,7 @@ import controllers.IdentityRequest
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
+import play.twirl.api.Html
 import services.{AuthenticationService, IdentityService}
 
 import scala.concurrent.Future
@@ -45,13 +46,13 @@ object Functions extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String],
-                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
+                          errorWhenNotInAcceptedGroupsTemplate: Html) = new ActionFilter[GoogleAuthRequest] {
     override def filter[A](request: GoogleAuthRequest[A]) = {
       val userEmail = request.user.email
       for (usersGroups <- googleGroupChecker.retrieveGroupsFor(userEmail)) yield {
         if (includedGroups.intersect(usersGroups).nonEmpty) None else {
           logger.info(s"Excluding $userEmail from '${request.path}' - not in accepted groups: $includedGroups")
-          Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
+          Some(unauthorisedStaff(errorWhenNotInAcceptedGroupsTemplate)(request))
         }
       }
     }
