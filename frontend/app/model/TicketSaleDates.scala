@@ -14,6 +14,7 @@ case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSale
   lazy val datesByTier = memberAdvanceTicketSales.getOrElse(Map.empty).withDefaultValue(generalAvailability)
 
   def tierCanBuyTicket(tier: Tier) = datesByTier(tier).isBefore(Instant.now())
+  def anyoneCanBuyTicket = generalAvailability.isBefore(Instant.now())
 }
 
 object TicketSaleDates {
