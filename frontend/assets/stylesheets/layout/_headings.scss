@@ -57,6 +57,10 @@
     @include fs-headline(4);
 }
 
+/* ==========================================================================
+   Header Bar
+   ========================================================================== */
+
 .header-bar {
     position: relative;
     padding-left: rem($gs-gutter / 2);
@@ -66,15 +70,6 @@
         @include fs-headline(4);
         padding: rem($gs-gutter / 2) 0 rem(55px);
         max-width: rem(gs-span(8));
-    }
-
-    .theme--masterclass & {
-        background-color: transparentize($mem-mc-top, .1);
-    }
-
-    .theme--guardian-live & {
-        background-color: transparentize($mem-live-top, .1);
-        color: $white;
     }
 
     @include mq(tablet) {
