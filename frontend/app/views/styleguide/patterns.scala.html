@@ -3,19 +3,23 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@pattern(title: String, description: String)(content: Html) = {
+@pattern(title: String, description: String = "")(content: Html) = {
     <div class="pattern js-pattern-item" data-pattern-label="@title">
-        <h2 class="pattern__title">@title</h2>
-        @if(description) {
-            <p class="pattern__description">@description</p>
-        }
+        <div class="pattern__header">
+            <h2 class="pattern__title">@title</h2>
+            @if(description) {
+                <p class="pattern__description">@description</p>
+            }
+        </div>
         <div class="pattern__body">
             @content
         </div>
     </div>
 }
 
-@main("Pattern Library") {
+@main("Pattern Library", containerPadding=false) {
+
+    <main class="page-container__inner">
 
     <div class="pattern-nav js-pattern-nav"></div>
 
@@ -25,6 +29,62 @@
     <div class="section-intro">
         Documents common patterns used across the Membership site.
     </div>
+
+    @pattern("Page Header") {
+        @fragments.page.pageHeader("This a page headline", Some("This is a page header with a headline and intro text"))
+    }
+
+    @pattern("Page Section - All", "Page section with all options") {
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">This is a section headline</h2>
+            </div>
+            <div class="page-section__content">
+                <p>This is a page section with a lead in, main content, and supplementary content</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div class="page-section__supplementary">
+                <div class="aside aside--pull">
+                    <p>This is some supplementary content</p>
+                </div>
+            </div>
+        </section>
+    }
+
+    @pattern("Page Section - All with no borders", "Page section with no borders") {
+        <section class="page-section">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">This is a section headline</h2>
+            </div>
+            <div class="page-section__content">
+                <p>This is a page section with a lead in, main content, and supplementary content</p>
+            </div>
+            <div class="page-section__supplementary">
+                <div class="aside">
+                    <p>This is some supplementary content</p>
+                </div>
+            </div>
+        </section>
+    }
+
+    @pattern("Page Section - Content only", "Page section with content only") {
+        <section class="page-section page-section--bordered">
+            <div class="page-section__content">
+                <p>This is a page section with content only</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </section>
+    }
 
     @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
             <div class="package-list package-list--flex-box">
@@ -107,4 +167,6 @@
     @pattern("FAQ", "answers") {
         @fragments.faq.answers(model.Faq.help.take(4))
     }
+
+    </main>
 }
