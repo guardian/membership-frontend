@@ -1,14 +1,15 @@
 // *** generic toggle button component ***
 //
 // usage:
-// <button class="js-toggle action action--toggle" data-toggle="foo">Show more foo</button>
-// <div id="foo" class="js-toggle-elm" data-toggle-label="Less foo">all the foo (initially hidden)</div>
-// (data-toggle-label is optional)
+//     <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Less foo">Show more foo</button>
+//     <div id="foo" class="js-toggle-elm" style="display: none;">all the foo (initially hidden)</div>
+// notes:
+//     * data-toggle-label is optional.
+//     * js-toggle-elm should be hidden initially (to allow inversion)
 
 define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
 
-    var TOGGLE_ELM_SELECTOR = '.js-toggle-elm',
-        TOGGLE_BTN_SELECTOR = '.js-toggle',
+    var TOGGLE_BTN_SELECTOR = '.js-toggle',
         TOGGLE_DATA_ELM     = 'toggle',
         TOGGLE_DATA_LABEL   = 'toggle-label',
         TOGGLE_CLASS        = 'is-toggled';
@@ -30,11 +31,6 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         };
     };
 
-    var hideToggleElements = function () {
-        var toggleContainers = document.querySelectorAll(TOGGLE_ELM_SELECTOR);
-        $(toggleContainers).hide();
-    };
-
     var bindToggles = function () {
         var $toggles = $(TOGGLE_BTN_SELECTOR);
         $toggles.each(function (elem) {
@@ -43,11 +39,6 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
 
     };
 
-    function init() {
-        hideToggleElements();
-        bindToggles();
-    }
-
-    init();
+    bindToggles();
 
 });

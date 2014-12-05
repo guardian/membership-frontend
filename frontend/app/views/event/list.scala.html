@@ -49,7 +49,9 @@
                 </ul>
 
 
-                <ul class="events-list hygrid hygrid--wrapped hygrid--2 u-unstyled js-toggle-elm" id="js-toggle-past-events">
+                <ul class="events-list hygrid hygrid--wrapped hygrid--2 u-unstyled js-toggle-elm"
+                    id="js-toggle-past-events"
+                    style="display: none;">
                     @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
                         @fragments.event.item(event, false, isMinimal=true, isCard=true)
                     }
