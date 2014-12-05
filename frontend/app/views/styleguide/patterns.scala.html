@@ -36,7 +36,19 @@
         <div id="bar" class="js-toggle-elm">This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
+    @pattern("Header Bar - Guardian Live", "Header bar with guardian live tone applied") {
+        @fragments.event.headerBar(
+            "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+            "guardian-live"
+        )
+    }
 
+    @pattern("Header Bar - Masterclasses", "Header bar with masterclasses tone applied") {
+        @fragments.event.headerBar(
+            "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
+            "masterclasses"
+        )
+    }
 
     @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
             <div class="package-list package-list--flex-box">
