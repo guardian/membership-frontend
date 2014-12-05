@@ -122,7 +122,7 @@
         border-color: $white;
     }
 
-    @include mq($to: tablet) {
+    @include mq($until: tablet) {
         margin-top: rem($gs-baseline);
         margin-bottom: 0;
     }
