@@ -75,6 +75,10 @@ class CacheSensitiveCSRFAction(next: EssentialAction,
                 filterLogger.trace("[CSRF] Check failed because text/plain request")
                 checkFailed(request, "No CSRF token found for text/plain body")
               }
+              case _ => {
+                filterLogger.trace("[CSRF] Check failed because the content type in the request can be identified")
+                checkFailed(request, "No CSRF token found for unknown content type")
+              }
             }
 
           }
