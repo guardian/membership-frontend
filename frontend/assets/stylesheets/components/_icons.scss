@@ -2,6 +2,11 @@
     display: block;
 }
 
+.icon--faq {
+    background-size: 18px;
+    width: 18px; height: 18px;
+}
+
 .icon--benefits {
     background-size: rem($gs-gutter + 5) rem($gs-gutter + 5);
     width: rem($gs-gutter + 5);

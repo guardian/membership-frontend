@@ -100,4 +100,11 @@
         </div>
     }
 
+    @pattern("FAQ", "questions") {
+        @fragments.faq.questions(model.Faq.help.take(4))
+    }
+
+    @pattern("FAQ", "answers") {
+        @fragments.faq.answers(model.Faq.help.take(4))
+    }
 }
