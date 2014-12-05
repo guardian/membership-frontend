@@ -35,12 +35,11 @@ trait CommonActions {
     isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
 
 
-  val GoogleAndIdentityAuthenticatedStaffNonMemberAction =
+  val AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen
     onlyNonMemberFilter() andThen
     googleAuthenticationRefiner() andThen
-    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage) andThen
-    matchingGuardianEmail()
+    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
 
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 

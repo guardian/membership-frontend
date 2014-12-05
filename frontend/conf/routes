@@ -30,6 +30,7 @@ POST           /join/staff/enter-details          controllers.Joiner.joinStaff
 POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(tier: Tier.Value)
 GET            /join/staff/thankyou               controllers.Joiner.thankyouStaff
 GET            /join/:tier/thankyou               controllers.Joiner.thankyou(tier: Tier.Value)
+POST           /join/staff/update-email           controllers.Joiner.updateEmailStaff
 
 # Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String, tier: Option[String] ?= None)
