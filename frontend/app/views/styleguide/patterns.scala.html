@@ -26,6 +26,18 @@
         Documents common patterns used across the Membership site.
     </div>
 
+    @pattern("Toggle Component - Button", "JS toggle component") {
+        <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <div id="foo" class="js-toggle-elm">This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
+    @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
+        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
+        <div id="bar" class="js-toggle-elm">This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
+
+
     @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
             <div class="package-list package-list--flex-box">
                 @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
