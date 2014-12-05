@@ -86,6 +86,7 @@ require([
     analytics.init();
 
     // Global
+    toggle.init();
     sticky.init();
     var header = new Header();
     header.init();
