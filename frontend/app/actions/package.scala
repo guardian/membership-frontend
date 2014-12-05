@@ -6,7 +6,6 @@ import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest
 import services._
-import utils.TestUsers
 
 import scala.concurrent.{ExecutionContext, Future}
 
