@@ -31,10 +31,9 @@ trait CommonActions {
     "If you are having problems signing up for your free Partner membership please email staff.membership@theguardian.com.")
 
 
-  val GoogleAndIdentityAuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
-                                                           onlyNonMemberFilter() andThen
-                                                           googleAuthenticationRefiner() andThen
-                                                           matchingGuardianEmail()
+  val AuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
+                                          onlyNonMemberFilter() andThen
+                                          googleAuthenticationRefiner()
 
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 

@@ -1,4 +1,4 @@
-@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])
+@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
@@ -6,7 +6,7 @@
 @import play.twirl.api.Html
 @import model.Faq
 
-@signPostItem(btnText: String, btnSrc: String, description: Html) = {
+@signPostItem(btnText: String, btnSrc: String)(description: Html) = {
     <li class="signpost-item signpost-item--sign">
         <p class="signpost-item__description">@description</p>
         <div class="signpost__cta">
@@ -15,19 +15,10 @@
     </li>
 }
 
-@signpost(opt1ButtonText: String, opt1ButtonSrc: String)(opt1Text: Html)(opt2ButtonText: String, opt2ButtonSrc: String)(opt2Text: Html) = {
-    <ul class="signpost u-unstyled">
-        @signPostItem(opt1ButtonText, opt1ButtonSrc, opt1Text)
-        <li class="signpost-item signpost-item--divider">or</li>
-        @signPostItem(opt2ButtonText, opt2ButtonSrc, opt2Text)
-    </ul>
-}
-
 @main("Staff Membership", containerPadding=false) {
 
     <main class="page-container__inner">
         @fragments.notifications.flashMessage(error)
-
         <section class="page-header">
             <h1 class="page-headline">Guardian Staff Membership</h1>
             <p class="page-intro">All permanent Guardian staff can sign up to the Partner tier of Guardian membership for free (equivalent to £15/month)</p>
@@ -44,11 +35,15 @@
                         your work email address ending @@theguardian.com (@@guardian.co.uk will work too).
                     </p>
 
-                    @signpost("Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)) {
-                        Set up a <strong>new</strong> Guardian Identity account
-                    }("Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)) {
-                        Use an <strong>existing</strong> Guardian Identity account
-                    }
+                    <ul class="signpost u-unstyled">
+                        @signPostItem("Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
+                            Set up a <strong>new</strong> Guardian Identity account
+                        }
+                        <li class="signpost-item signpost-item--divider">or</li>
+                        @signPostItem("Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)){
+                            Use an <strong>existing</strong> Guardian Identity account
+                        }
+                    </ul>
                 } { identityEmail =>
                     <div class="u-cf">
                         @for(srcUrl <- avatarUrl){
@@ -71,11 +66,21 @@
                             address ending @@theguardian.com (@@guardian.co.uk will work too).
                         </p>
 
-                        @signpost("Change email and join", Config.idWebAppAccountEditUrl(routes.Joiner.staff.url)) {
-                            Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account
-                        }("Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)) {
-                            Set up a <strong>new</strong> Guardian Identity account
-                        }
+                        <ul class="signpost u-unstyled">
+                            <li class="signpost-item signpost-item--sign">
+                                <p class="signpost-item__description">Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account</p>
+                                <div class="signpost__cta">
+                                    <form action="@routes.Joiner.updateEmailStaff" method="POST">
+                                        @CSRF.formField
+                                        <button class="action action--no-bottom-margin" type="submit">Change email and Join now</button>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="signpost-item signpost-item--divider">or</li>
+                            @signPostItem("Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
+                                Set up a <strong>new</strong> Guardian Identity account
+                            }
+                        </ul>
                     }
                 }
             </div>
