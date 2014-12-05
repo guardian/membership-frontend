@@ -5,7 +5,7 @@ define([
     'src/utils/helper'
 ], function ($, bean, userUtil, utilsHelper) {
 
-    //TODO-ben once we bring in components.js from the front end this needs refactoring to work with a scala html fragment
+    //TODO-ben refactor this file
 
     var config = {
         classes: {
@@ -20,7 +20,9 @@ define([
             IDENTITY_POP_UP_NAV: '.js-profile-nav-popup',
             COMMENT_ACTIVITY_LINK: '.js-comment-activity',
             EDIT_PROFILE_LINK: '.js-edit-profile',
-            MEMBERS_AREA: '.js-members-area'
+            MEMBERS_AREA: '.js-members-area',
+            USER_ICON: '.js-user-icon',
+            USER_DETAIL: '.js-user-detail'
         },
         text: {
             SIGNED_IN_PREFIX: 'You are signed in as'
@@ -73,6 +75,8 @@ define([
                 config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
                 config.DOM.IDENTITY_POP_UP_NAV.toggleClass('is-hidden');
                 config.DOM.IDENTITY_ICON.toggleClass('menu-item--active');
+                config.DOM.USER_ICON.toggleClass('control--active');
+                config.DOM.USER_DETAIL.toggleClass('control--active');
 
                 self.setMenuListener.call(self, config.DOM.IDENTITY_POP_UP_NAV);
             }

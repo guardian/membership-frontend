@@ -82,7 +82,7 @@
 
 .page-section__supplementary {
     clear: both;
-    @include mq(wide) {
+    @include mq(mem-full) {
         clear: none;
         float: right;
         width: rem(gs-span(3));

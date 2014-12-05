@@ -40,17 +40,6 @@ footer {
             max-width: rem(gs-span(14) + $gs-gutter * 2);
         }
     }
-
-    .control {
-        float: left;
-        height: rem(34px);
-        width: rem(34px);
-    }
-
-    .control__info {
-        display: inline-block;
-        padding-left: rem($gs-gutter / 2);
-    }
 }
 
 .l-footer__primary {
