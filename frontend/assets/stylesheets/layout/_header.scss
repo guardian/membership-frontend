@@ -96,12 +96,6 @@ $header-margin: 36px;
         @extend %icon-user-white;
         color: $white !important;
     }
-    .control {
-        border: rem(1px) solid $white !important;
-    }
-    .control__info {
-        color: $white !important;
-    }
 }
 
 .close-icon-white--active {

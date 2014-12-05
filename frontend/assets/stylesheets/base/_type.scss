@@ -81,6 +81,7 @@ blockquote {
 
         &:hover,
         &:focus {
+            text-decoration: none;
             border-color: $c-neutral2;
         }
     }

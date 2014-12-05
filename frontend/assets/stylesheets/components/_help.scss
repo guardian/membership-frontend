@@ -5,8 +5,25 @@
     padding-bottom: rem($gs-gutter * 2);
 }
 
-.help-list li {
-    padding: 0 0 rem(5px);
+.help-list {
+    border-top: 1px solid $mem-blue;
+    margin-bottom: rem($gs-baseline);
+}
+
+.help-item {
+    background-color: $c-neutral8;
+    padding: rem($gs-baseline);
+    border-bottom: 1px dotted $c-neutral3;
+}
+
+.help-question {
+    display: block;
+}
+
+.help-question__text {
+    padding-left: rem($gs-gutter + $gs-baseline);
+    display: inline-block;
+    color: $c-body;
 }
 
 .help-faqs {
