@@ -23,6 +23,10 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
     put(s"cancel-${tier.toString}")
   }
 
+  def putFailSignUp(plan: ProductRatePlan) {
+    put(s"failed-sign-up-${plan.salesforceTier}")
+  }
+
   private def put(metricName: String) {
     put(metricName, 1)
   }
