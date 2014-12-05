@@ -101,8 +101,8 @@ trait MemberService extends LazyLogging {
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
       case Failure(error) => {
-        touchpointBackend.memberRepository.metrics.putFailSignUp(formData.plan)
         logger.error(s"Error in createMember() user=${user.id}", error)
+        touchpointBackend.memberRepository.metrics.putFailSignUp(formData.plan)
       }
     }
   }
