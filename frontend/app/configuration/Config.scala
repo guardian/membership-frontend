@@ -189,6 +189,9 @@ object Config {
     )
   }
 
+  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
+  val staffUnauthorisedError = config.getString("staff.unauthorised.error")
+
   val contentApiKey = config.getString("content.api.key")
 
 }

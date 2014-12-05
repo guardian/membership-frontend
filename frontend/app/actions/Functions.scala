@@ -45,19 +45,26 @@ object Functions extends LazyLogging {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
   }
 
-  def isInAuthorisedGroup(includedGroups: Set[String],
-                          errorWhenNotInAcceptedGroupsTemplate: Html) = new ActionFilter[GoogleAuthRequest] {
-    override def filter[A](request: GoogleAuthRequest[A]) = {
-      val userEmail = request.user.email
-      for (usersGroups <- googleGroupChecker.retrieveGroupsFor(userEmail)) yield {
-        if (includedGroups.intersect(usersGroups).nonEmpty) None else {
-          logger.info(s"Excluding $userEmail from '${request.path}' - not in accepted groups: $includedGroups")
-          Some(unauthorisedStaff(errorWhenNotInAcceptedGroupsTemplate)(request))
-        }
+  def isInAuthorisedGroupGoogleAuthReq(includedGroups: Set[String],
+                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
+    override def filter[A](request: GoogleAuthRequest[A]) =
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.user.email, request)
+  }
+
+  def isInAuthorisedGroupIdentityGoogleAuthReq(includedGroups: Set[String],
+                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[IdentityGoogleAuthRequest] {
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
+  }
+
+  def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: String, email: String, request: Request[_]) = {
+    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
+      if (includedGroups.intersect(usersGroups).nonEmpty) None else {
+        logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
+        Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
       }
     }
   }
-
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {

@@ -26,13 +26,19 @@ trait CommonActions {
 
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
 
-  val PermanentStaffNonMemberAction = GoogleAuthenticatedStaffAction andThen
-                                      isInAuthorisedGroup(Set("permanent.ftc.staff@guardian.co.uk"),
-                                        views.html.fragments.oauth.nonPerm())
+  val permanentStaffGroups = Config.staffAuthorisedEmailGroups
+  val permanentStaffEmailErrorMessage = Config.staffUnauthorisedError
 
-  val AuthenticatedStaffNonMemberAction = AuthenticatedAction andThen
-                                          onlyNonMemberFilter() andThen
-                                          googleAuthenticationRefiner()
+  val PermanentStaffNonMemberAction =
+    GoogleAuthenticatedStaffAction andThen
+    isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
+
+
+  val AuthenticatedStaffNonMemberAction =
+    AuthenticatedAction andThen
+    onlyNonMemberFilter() andThen
+    googleAuthenticationRefiner() andThen
+    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
 
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 
