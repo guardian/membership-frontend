@@ -194,13 +194,15 @@
                             </div>
                             <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
                                 <div class="event-content__first">
-                                    <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
-                                    ><i class="icon-location icon--info"></i></a>
+                                    <i class="icon-location icon--info"></i>
                                 </div>
-                                <div class="event-content__second">
+                                <div class="event-content__second copy">
                                     <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
                                     @for(addressLine <- event.venue.addressLine) {
                                         <span class="event-content__address" itemprop="address">@addressLine</span>
+                                    }
+                                    @for(googleMapsLink <- event.venue.googleMapsLink) {
+                                        <a href="@googleMapsLink">Google Map</a>
                                     }
                                 </div>
                             </div>

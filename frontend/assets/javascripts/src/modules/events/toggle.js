@@ -15,20 +15,28 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         TOGGLE_CLASS        = 'is-toggled';
 
     var toggleElm = function ($elem) {
-        // store a ref to the original button text on bind
-        var originalText = $elem.text();
         return function () {
             var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
+
             $(document.getElementById(toggleElmId)).toggle();
             $elem.toggleClass(TOGGLE_CLASS);
 
-            var hasChangedText = ($elem.text() === originalText);
-            googleAnalytics.trackEvent('Toggle element', toggleElmId, (hasChangedText ? 'Show' : 'Hide'));
-            var toggleText = $elem.data(TOGGLE_DATA_LABEL);
-            if (toggleText) {
-                $elem.text( hasChangedText ? toggleText : originalText);
-            }
+            toggleLabel($elem);
+            trackUsage($elem, toggleElmId);
         };
+    };
+
+    var toggleLabel = function($elem) {
+        var toggleText = $elem.data(TOGGLE_DATA_LABEL);
+        if (toggleText) {
+            $elem.data(TOGGLE_DATA_LABEL, $elem.text());
+            $elem.text(toggleText);
+        }
+    };
+
+    var trackUsage = function($elem, id) {
+        var hasToggled = ($elem.hasClass(TOGGLE_CLASS));
+        googleAnalytics.trackEvent('Toggle element', id, (hasToggled ? 'Show' : 'Hide'));
     };
 
     var bindToggles = function () {
@@ -36,9 +44,14 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         $toggles.each(function (elem) {
             bean.on(elem, 'click', toggleElm($(elem)));
         });
-
     };
 
-    bindToggles();
+    function init() {
+        bindToggles();
+    }
+
+    return {
+        init: init
+    };
 
 });
