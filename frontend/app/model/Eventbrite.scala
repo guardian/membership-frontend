@@ -36,7 +36,6 @@ object Eventbrite {
       val stylePattern = "(?i)style=(\".*?\"|'.*?'|[^\"'][^\\s]*)".r
       val cleanStyle = stylePattern replaceAllIn(html, "")
       val clean = "(?i)<br>".r.replaceAllIn(cleanStyle, "")
-      clean
 
       // Remove Masterclass return URL
       val mcPattern = "(?i)<a[^>]+>Full course and returns information on the Masterclasses website</a>".r
