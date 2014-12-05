@@ -201,8 +201,9 @@
                                     @for(addressLine <- event.venue.addressLine) {
                                         <span class="event-content__address" itemprop="address">@addressLine</span>
                                     }
-                                    <a @for(googleMapsLink <- event.venue.googleMapsLink) { href="@googleMapsLink" }
-                                    >Google Map</a>
+                                    @for(googleMapsLink <- event.venue.googleMapsLink) {
+                                        <a href="@googleMapsLink">Google Map</a>
+                                    }
                                 </div>
                             </div>
 
