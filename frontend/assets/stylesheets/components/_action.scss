@@ -12,6 +12,8 @@
     width: 100%;
     max-width: rem($gs-gutter * 15);
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
+    -moz-osx-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
     @include border-radius(50%);
 
     &:visited,
