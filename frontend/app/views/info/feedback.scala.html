@@ -2,24 +2,33 @@
 
 @import helper.CSRF
 
-@main("Feedback", htmlClass = "feedback") {
-    @fragments.layout.sectionHeader("Feedback")
+@main("Feedback", containerPadding=false, htmlClass = "feedback") {
 
-    <div class="info-container">
+    <main class="page-container__inner">
+        <section class="page-header">
+            <h1 class="page-headline">Feedback</h1>
+            <p class="page-intro">Help us improve your membership experience</p>
+        </section>
 
-        <div class="feedback-intro">
-            <p>Help us improve your membership experience.  Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
-            <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
-            <p>If you’re having any problems please visit our <a href="/help" class="u-underline">help section</a>.</p>
-        </div>
+        <section class="page-section">
+            <div class="page-section__content copy">
+                <p>Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
+                <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
+                <p>If you’re having any problems please visit our <a href="/help">help section</a>.</p>
+            </div>
+        </section>
 
-        <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
-            @CSRF.formField
+        <section class="page-section">
+            <div class="page-section__content">
+                <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
+                    @CSRF.formField
+                    @fragments.form.errorMessageDisplay(isSlim = true)
+                    @fragments.form.feedback()
+                    @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false, isSlim = true)
+                </form>
+            </div>
+        </section>
 
-            @fragments.form.errorMessageDisplay(isSlim = true)
-            @fragments.form.feedback()
-            @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false, isSlim = true)
-        </form>
+    </main>
 
-    </div>
 }
