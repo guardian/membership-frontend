@@ -1,21 +1,28 @@
-@(staffEmail: String, errorOpt: Option[String] = None)
+@(staffEmail: String, errorOpt: Option[String] = None, errorTemplateOpt: Option[String])
 
-@main("Unauthorised Staff") {
+@import configuration.Config
 
-    <section class="page-section">
-        <div class="page-section__row">
-            <div class="page-section__primary"></div>
-            <div class="page-section__secondary">
-                <h1 class="page-headline">Unfortunately, you do not have permission</h1>
-                <p class="page-intro">
-                    You're signed in as <strong>@staffEmail</strong>.
-                </p>
+@main("Unauthorised Staff", containerPadding=false) {
+
+    <main class="page-container__inner">
+        <section class="page-header">
+            <h1 class="page-headline">No Access</h1>
+        </section>
+
+        <section class="page-section">
+            <div class="page-section__content">
                 <p>
                     @for(error <- errorOpt) {
                         @error
                     }
                 </p>
+
+                @for(errorTemplate <- errorTemplateOpt) {
+                    @Html(errorTemplate)
+                }
+
+                <p>You are currently signed in as <strong>@staffEmail</strong>.</p>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 }

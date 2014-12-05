@@ -1,18 +1,20 @@
 @(errorOpt: Option[String] = None)
 
-@main("Staff login") {
+@main("Staff login", containerPadding=false) {
 
-<section class="page-section">
-    <div class="page-section__row">
-        <div class="page-section__primary"></div>
-        <div class="page-section__secondary">
+    <main class="page-container__inner">
+        <section class="page-header">
             <h1 class="page-headline">Guardian Staff Membership</h1>
-            <p class="page-intro">
+        </section>
+
+        <section class="page-section">
+            <div class="page-section__content">
+                <p>
                 @for(error <- errorOpt) {
                     @error
                 }
-            </p>
-        </div>
-    </div>
-</section>
+                </p>
+            </div>
+        </section>
+    </main>
 }
