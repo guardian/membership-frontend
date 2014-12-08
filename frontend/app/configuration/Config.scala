@@ -36,6 +36,8 @@ object Config {
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
   val membershipSupport = config.getString("membership.support")
+  val membershipSupportStaffEmail = config.getString("membership.staff.email")
+  val membershipDevEmail = config.getString("membership.dev.email")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
@@ -189,7 +191,6 @@ object Config {
   }
 
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
-  val staffUnauthorisedError = config.getString("staff.unauthorised.error")
 
   val contentApiKey = config.getString("content.api.key")
 
