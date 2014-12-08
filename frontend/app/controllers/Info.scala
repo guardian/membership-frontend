@@ -1,11 +1,10 @@
 package controllers
 
-import actions.AuthRequest
+import configuration.CopyConfig
 import forms.MemberForm._
 import model.PageInfo
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.Controller
 import services.EmailService
-import configuration.{Config, CopyConfig}
 
 import scala.concurrent.Future
 

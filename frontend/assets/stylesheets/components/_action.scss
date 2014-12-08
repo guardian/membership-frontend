@@ -15,6 +15,8 @@
     -moz-osx-font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
     @include border-radius(50%);
+    -webkit-font-smoothing: antialiased;
+    vertical-align: bottom;
 
     &:visited,
     &:hover,
@@ -114,7 +116,7 @@
 }
 
 .action--external {
-    background-color: $black;
+    background-color: transparent;
     border: 1px solid transparentize($white, 0.5);
     width: 100%;
 

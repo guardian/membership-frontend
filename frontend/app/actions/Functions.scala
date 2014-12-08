@@ -44,19 +44,26 @@ object Functions extends LazyLogging {
     override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
   }
 
-  def isInAuthorisedGroup(includedGroups: Set[String],
+  def isInAuthorisedGroupGoogleAuthReq(includedGroups: Set[String],
                           errorWhenNotInAcceptedGroups: String) = new ActionFilter[GoogleAuthRequest] {
-    override def filter[A](request: GoogleAuthRequest[A]) = {
-      val userEmail = request.user.email
-      for (usersGroups <- googleGroupChecker.retrieveGroupsFor(userEmail)) yield {
-        if (includedGroups.intersect(usersGroups).nonEmpty) None else {
-          logger.info(s"Excluding $userEmail from '${request.path}' - not in accepted groups: $includedGroups")
-          Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
-        }
+    override def filter[A](request: GoogleAuthRequest[A]) =
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.user.email, request)
+  }
+
+  def isInAuthorisedGroupIdentityGoogleAuthReq(includedGroups: Set[String],
+                          errorWhenNotInAcceptedGroups: String) = new ActionFilter[IdentityGoogleAuthRequest] {
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
+      isInAuthorisedGroup(includedGroups, errorWhenNotInAcceptedGroups, request.googleUser.email, request)
+  }
+
+  def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: String, email: String, request: Request[_]) = {
+    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
+      if (includedGroups.intersect(usersGroups).nonEmpty) None else {
+        logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
+        Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
       }
     }
   }
-
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {
@@ -72,7 +79,7 @@ object Functions extends LazyLogging {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
         //Copy the private helper method in play-googleauth to ensure the user is Google auth'd
         //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
-        val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
+        val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
         userIdentityOpt.toRight(onNonAuthentication(request))
       }
     }

@@ -45,9 +45,6 @@ object Config {
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
 
-  def idWebAppAccountEditUrl(uri: String): String =
-    (idWebAppUrl / "account/edit") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
-
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
 
@@ -190,6 +187,9 @@ object Config {
       ""
     )
   }
+
+  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
+  val staffUnauthorisedError = config.getString("staff.unauthorised.error")
 
   val contentApiKey = config.getString("content.api.key")
 

@@ -1,5 +1,7 @@
 package controllers
 
+import actions.Functions._
+
 import scala.concurrent.Future
 
 import play.api.mvc.{Controller, Request, Result}
@@ -21,6 +23,8 @@ import services._
 trait Joiner extends Controller {
 
   val memberService: MemberService
+
+  val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -63,7 +67,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterStaffDetails = GoogleAndIdentityAuthenticatedStaffNonMemberAction.async { implicit request =>
+  def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
@@ -87,7 +91,22 @@ trait Joiner extends Controller {
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
         makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
+  }
+
+  def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
+    val googleEmail = request.googleUser.email
+    for {
+      responseCode <- IdentityService.updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
     }
+    yield {
+      responseCode match {
+        case 200 => Redirect(routes.Joiner.enterStaffDetails())
+        case _ => Redirect(routes.Joiner.staff())
+                  .flashing("error" ->
+          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}, Please sign in with that email.")
+      }
+    }
+  }
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
