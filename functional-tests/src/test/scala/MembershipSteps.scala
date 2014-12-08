@@ -266,7 +266,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val initialPrice = new EventPage(driver).getEventPrice.replace("£", "").toInt
     IAmLoggedIn
     IClickOnAnEvent
-    val discountedPrice = new EventPage(driver).getDiscountedEvent.replace("£", "").toInt
+    val discountedPrice = new EventPage(driver).getDiscountedEvent.replace("Partners/Patrons £", "").toInt
     Assert.assert(initialPrice > discountedPrice, true, "Member receives a discount")
     this
   }
