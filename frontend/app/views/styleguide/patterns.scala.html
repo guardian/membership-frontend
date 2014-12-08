@@ -184,12 +184,16 @@
         </div>
     }
 
-    @pattern("FAQ", "questions") {
+    @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
         @fragments.faq.questions(model.Faq.help.take(4))
     }
 
-    @pattern("FAQ", "answers") {
+    @pattern("FAQ - Answers", "Fragment for FAQ answers with matching internal link id") {
         @fragments.faq.answers(model.Faq.help.take(4))
+    }
+
+    @pattern("FAQ - Questions without internal link", "Fragment for FAQ answers without link. This is used where the length of questions does not warrant the use of internal links") {
+        @fragments.faq.answers(model.Faq.staff.take(4))
     }
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
