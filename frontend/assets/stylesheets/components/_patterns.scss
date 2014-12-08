@@ -2,21 +2,22 @@
    Patterns
    ========================================================================== */
 
-    .pattern {
-        margin-top: rem($gs-gutter * 2);
-        border-top: 1px solid $c-neutral6;
-    }
-        .pattern__description {
-            color: $c-neutral2;
-            margin-bottom: rem($gs-gutter);
-        }
-
-    .pattern-nav {
-        position: fixed;
-        bottom: 0; right: 0;
-        width: 100%;
-        z-index: 10000;
-        padding: .5em 1em;
-        background: $mem-trans-white;
-        text-align: center;
-    }
+.pattern {
+    margin-top: rem($gs-gutter * 2);
+    border-top: 1px solid $c-neutral6;
+}
+.pattern__header {
+    margin-bottom: rem($gs-gutter);
+}
+.pattern__description {
+    color: $c-neutral2;
+}
+.pattern-nav {
+    position: fixed;
+    bottom: 0; right: 0;
+    width: 100%;
+    z-index: 10000;
+    padding: .5em 1em;
+    background: $mem-trans-white;
+    text-align: center;
+}
