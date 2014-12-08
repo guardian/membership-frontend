@@ -202,7 +202,7 @@
                                         <span class="event-content__address" itemprop="address">@addressLine</span>
                                     }
                                     @for(googleMapsLink <- event.venue.googleMapsLink) {
-                                        <a href="@googleMapsLink">Google Map</a>
+                                        <a href="@googleMapsLink" class="js-track-click" data-tracking-name="Event Google Map">Google Map</a>
                                     }
                                 </div>
                             </div>
