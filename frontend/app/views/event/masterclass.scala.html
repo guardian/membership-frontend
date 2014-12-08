@@ -3,12 +3,12 @@
 @import model.Eventbrite.MasterclassEvent
 
 @main("Masterclasses", containerPadding=false, htmlClass="events-bg theme--masterclass", pageInfo=pageInfo) {
-    <section class="header-bar">
-        <h1 class="header-bar__title">
-            Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons
-        </h1>
-        <i class="event-logo icon-masterclasses"></i>
-    </section>
+
+    @fragments.event.headerBar(
+        "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
+        "masterclasses"
+    )
+
     <div class="event-block">
         <div class="event-block__events event-block__events--no-header">
             <label class="events-list__category">
