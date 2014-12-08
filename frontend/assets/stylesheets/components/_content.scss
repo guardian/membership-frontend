@@ -1,3 +1,4 @@
+//TODO - once the functional pattern has been implemented across all pages this entire file looks like it can go
 .content__headline {
     @include fs-headline(4);
     padding-bottom: rem($gs-baseline);
@@ -31,9 +32,6 @@
     margin-bottom: rem($gs-gutter);
 }
 
-// TODO - likely all content containers will eventually use
-// this new slim format, in which case we can remove the modifier
-// and the below will become the de facto rules
 .content__container--slim {
     margin: 0 auto rem($gs-gutter * 1.5);
     max-width: rem(gs-span(8));
