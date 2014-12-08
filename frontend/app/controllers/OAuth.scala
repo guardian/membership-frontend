@@ -16,7 +16,7 @@ object OAuth extends Controller with OAuthActions {
 
   def login = NoCacheAction { request =>
     val error = request.flash.get("error")
-    Ok(views.html.staff.oauth(error))
+    Ok(views.html.staff.unauthorised(error))
   }
 
   /*

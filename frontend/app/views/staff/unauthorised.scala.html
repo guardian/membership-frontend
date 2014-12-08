@@ -1,4 +1,4 @@
-@(staffEmail: String, errorOpt: Option[String] = None, errorTemplateOpt: Option[String] = None)
+@(errorOpt: Option[String] = None, errorTemplateOpt: Option[String] = None, staffEmail: String = "")
 
 @import configuration.Config
 
@@ -11,17 +11,17 @@
 
         <section class="page-section">
             <div class="page-section__content">
-                <p>
-                    @for(error <- errorOpt) {
-                        @error
-                    }
-                </p>
+                @for(error <- errorOpt) {
+                    <p>@error</p>
+                }
 
                 @for(errorTemplate <- errorTemplateOpt) {
                     @Html(errorTemplate)
                 }
 
-                <p>You are currently signed in as <strong>@staffEmail</strong>.</p>
+                @if(staffEmail) {
+                    <p>You are currently signed in as <strong>@staffEmail</strong>.</p>
+                }
             </div>
         </section>
     </main>
