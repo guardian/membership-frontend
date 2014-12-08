@@ -1,4 +1,26 @@
-.user-img {
-    float: left;
-    padding: 0 rem($gs-gutter) rem($gs-gutter) 0;
+/* ==========================================================================
+   User
+   ========================================================================== */
+
+.user-welcome {
+    @include clearfix;
+    display: table;
+    margin-bottom: rem($gs-gutter);
+}
+.user-welcome__image,
+.user-welcome__content {
+    display: table-cell;
+    vertical-align: middle;
+}
+.user-welcome__image {
+    @include border-radius(100%);
+    width: 75px;
+    height: 75px;
+    margin-right: rem($gs-gutter/2);
+}
+.user-welcome__title {
+    margin-bottom: 0;
+}
+.user-welcome__content p {
+    margin-bottom: 0;
 }

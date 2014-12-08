@@ -11,6 +11,9 @@
     }
 }
 
+.signpost-item__title {
+    margin: 0;
+}
 .signpost-item__description {
     @include mq(tablet) {
         min-height: rem($gs-gutter * 4);
@@ -18,7 +21,7 @@
 }
 
 .signpost-item--sign {
-    vertical-align: bottom;
+    vertical-align: top;
     border-top: 1px dotted $c-neutral3;
 
     @include mq(tablet) {
