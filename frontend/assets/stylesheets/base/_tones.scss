@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Tones
+   ========================================================================== */
+
+.tone-masterclasses {
+    background-color: transparentize($mem-mc-top, .1);
+}
+.tone-guardian-live {
+    color: $white;
+    background-color: transparentize($mem-live-top, .1);
+}
