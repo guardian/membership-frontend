@@ -36,9 +36,18 @@ define([], function () {
             elems = document.querySelectorAll('[' + TRACKING_NAME + ']');
         if (elems.length) {
             [].forEach.call(elems, function( el ) {
-                el.addEventListener('click', function() {
-                    var targetElement = event.target || event.srcElement;
-                    trackEvent('Click element', targetElement.getAttribute(TRACKING_NAME));
+                el.addEventListener('click', function(event) {
+                    var targetElement = event.target || event.srcElement,
+                        action = targetElement.getAttribute(TRACKING_NAME),
+                        url = targetElement.getAttribute('href');
+                    if (window.ga) {
+                        event.preventDefault();
+                        ga('send', 'event', 'outbound', action, url, {
+                            'hitCallback': function () {
+                                document.location = url;
+                            }
+                        });
+                    }
                 });
             });
         }
