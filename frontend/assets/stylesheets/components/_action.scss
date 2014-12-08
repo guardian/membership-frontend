@@ -155,7 +155,7 @@
         }
     }
 
-    .theme--masterclass & {
+    .theme--masterclasses & {
         background-color: $mem-mc-top;
         color: $c-neutral1;
         &:hover,
@@ -198,7 +198,7 @@
     }
   }
 
-  .theme--masterclass & {
+  .theme--masterclasses & {
     color: $c-neutral1;
     background-color: $mem-mc-top;
     &:hover {
@@ -217,7 +217,7 @@
     background-color: $mem-live-top;
   }
 
-  .theme--masterclass & {
+  .theme--masterclasses & {
     background-color: $mem-mc-top;
   }
 

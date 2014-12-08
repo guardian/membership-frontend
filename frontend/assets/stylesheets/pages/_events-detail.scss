@@ -3,32 +3,12 @@
    ========================================================================== */
 
 .event-header {
-    .theme--masterclass & {
-        background-color: $mem-mc-top;
-    }
-
-    .theme--guardian-live & {
-        color: $white;
-        background-color: $mem-live-top;
-    }
-}
-
-.event-header--shade {
-    .theme--masterclass & {
-        background-color: $mem-mc-accent;
-    }
-
-    .theme--guardian-live & {
-        background-color: $mem-live-accent;
-    }
+    @include clearfix;
 }
 
 .event-header--unavailable {
-    .theme--masterclass &,
-    .theme--guardian-live & {
-        background-color: $c-neutral1;
-        color: $white;
-    }
+    color: $white;
+    background-color: $c-neutral1;
 }
 
 .event-header__container {
@@ -181,20 +161,7 @@
         color: inherit;
         padding-bottom: rem(2px);
         border-bottom: 1px solid;
-
-        .theme--guardian-live & {
-            border-bottom-color: transparentize($white, .5);
-            &:hover {
-                border-bottom-color: $white;
-            }
-        }
-
-        .theme--masterclass & {
-            border-bottom-color: transparentize($c-neutral3, .5);
-            &:hover {
-                border-bottom-color: $c-neutral1;
-            }
-        }
+        border-color: inherit;
     }
 }
 
@@ -228,10 +195,6 @@
 
     img {
         width: 100%;
-    }
-
-    .theme--masterclass & {
-        display: none;
     }
 }
 

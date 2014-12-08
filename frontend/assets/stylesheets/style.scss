@@ -21,7 +21,6 @@
 @import 'base/forms';
 @import 'base/tables';
 @import 'base/images';
-@import 'base/tones';
 
 /* ==========================================================================
    Utility
@@ -99,6 +98,12 @@
 @import 'pages/about';
 @import 'pages/feedback';
 @import 'pages/home'; // Home A-B test styles
+
+/* ==========================================================================
+   Overrides
+   ========================================================================== */
+
+@import 'base/tones';
 
 /* ==========================================================================
    Webfonts

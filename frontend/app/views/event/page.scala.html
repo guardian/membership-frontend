@@ -44,23 +44,16 @@
     }
 }
 
-@theme = @{
+@eventType = @{
     event match {
-        case _: MasterclassEvent => "theme--masterclass"
-        case _: GuLiveEvent => "theme--guardian-live"
+        case _: MasterclassEvent => "masterclasses"
+        case _: GuLiveEvent => "guardian-live"
     }
 }
 
-@icon = @{
-    event match {
-        case _: MasterclassEvent => "icon-masterclasses"
-        case _: GuLiveEvent => "icon-guardian-live"
-    }
-}
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
-
-    <div class="event-header">
+    <div class="event-header@if(eventType){ tone-@eventType}">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header page-header case--lower">
@@ -74,7 +67,7 @@
         </div>
     </div>
 
-    <div class="event-header event-header--shade">
+    <div class="event-header event-header--pricing @if(eventType){ tone-@eventType tone-@eventType--accent }">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -125,7 +118,7 @@
                     </div>
                 }
             }
-            <i class="event-logo @icon"></i>
+            <i class="event-logo@if(eventType){ icon-@eventType}"></i>
         </div>
 
     </div>
@@ -152,9 +145,14 @@
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-            <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-        </div>
+        @event match {
+            case _: MasterclassEvent => {}
+            case _ => {
+                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+                </div>
+            }
+        }
 
         <div class="event-content__container u-cf">
 
