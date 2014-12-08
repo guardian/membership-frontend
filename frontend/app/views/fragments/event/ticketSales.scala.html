@@ -39,9 +39,8 @@
                             </button>
                         }
 
-                        <ul class="sale-dates__list u-unstyled u-cf js-toggle-elm"
-                            id="js-event-ticket-dates-@event.id"
-                            @if(ticketSaleDates.anyoneCanBuyTicket == true) { style="display: none;"}>
+                        <ul class="sale-dates__list u-unstyled u-cf"
+                            id="js-event-ticket-dates-@event.id"@if(ticketSaleDates.anyoneCanBuyTicket == true) { data-toggle-hidden}>
                             @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
                                 <li class="sale-dates__item" itemscope itemtype="http://schema.org/Offer">
                                     <meta itemprop="eligibleCustomerType" content="@tier">
