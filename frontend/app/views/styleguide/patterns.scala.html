@@ -1,4 +1,4 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
@@ -190,6 +190,38 @@
 
     @pattern("FAQ", "answers") {
         @fragments.faq.answers(model.Faq.help.take(4))
+    }
+
+    @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
+        <ul class="events-list events-list--items-3 u-unstyled">
+            @for(event <- eventPortfolio.normal.slice(0, 1)) {
+                @fragments.event.item(event, isHero=true)
+            }
+        </ul>
+    }
+
+    @pattern("Event – Full", "A standard event, used in a number of places") {
+        <ul class="events-list events-list--items-3 u-unstyled">
+            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+                @fragments.event.item(event)
+            }
+        </ul>
+    }
+
+    @pattern("Event – Minimal", "Used currently to list recent past events, where pricing/dates info is redundant") {
+        <ul class="events-list events-list--items-3 u-unstyled">
+            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+                @fragments.event.item(event, false, isMinimal=true)
+            }
+        </ul>
+    }
+
+    @pattern("Event – Minimal & Card", "An even more minimal theme which splits the photo and event title") {
+        <ul class="events-list events-list--items-3 u-unstyled">
+            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+                @fragments.event.item(event, false, isMinimal=true, isCard=true)
+            }
+        </ul>
     }
 
     </main>
