@@ -19,6 +19,8 @@ define([], function () {
 
         ga('send', 'pageview');
         /* jshint ignore:end */
+
+        trackOutboundLinks();
     }
 
     // wrapper for tracking events via google analytics
@@ -26,6 +28,19 @@ define([], function () {
     var trackEvent = function (category, action, label) {
         if (window.ga) {
             ga('send', 'event', category, action, label);
+        }
+    };
+
+    var trackOutboundLinks = function() {
+        var TRACKING_NAME = 'data-link-name',
+            elems = document.querySelectorAll('[' + TRACKING_NAME + ']');
+        if (elems.length) {
+            [].forEach.call(elems, function( el ) {
+                el.addEventListener('click', function() {
+                    var targetElement = event.target || event.srcElement;
+                    trackEvent('Click element', targetElement.getAttribute(TRACKING_NAME));
+                });
+            });
         }
     };
 

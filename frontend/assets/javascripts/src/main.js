@@ -16,7 +16,6 @@ require([
     'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
-    'src/modules/tracking',
     'src/modules/patterns',
     'src/utils/addToClipboard',
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
@@ -39,7 +38,6 @@ require([
     choose,
     eventPriceEnhance,
     Thankyou,
-    tracking,
     patterns,
     addToClipboard
 ) {
@@ -106,9 +104,6 @@ require([
 
     // Feedback
     (new FeedbackForm()).init();
-
-    // Tracking
-    tracking.init();
 
     // Pattern library
     patterns.init();
