@@ -339,6 +339,7 @@ $current-indicator: rem(72px);
     @include mq(mobileLandscape) {
         display: table;
         width: 100%;
+        height: rem($gs-gutter * 4);
     }
 }
 .tier-header--friend {
