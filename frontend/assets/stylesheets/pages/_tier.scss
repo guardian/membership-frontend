@@ -334,12 +334,13 @@ $current-indicator: rem(72px);
 .tier-header {
     color: $white;
     position: relative;
-    padding: rem($gs-gutter / 2) rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
     margin-bottom: rem($gs-gutter / 2);
     @include mq(mobileLandscape) {
         display: table;
         width: 100%;
         height: rem($gs-gutter * 4);
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
     }
 }
 .tier-header--friend {
@@ -366,7 +367,9 @@ $current-indicator: rem(72px);
     vertical-align: top;
     word-wrap: break-word;
     position: relative;
-    padding: rem(5px) 0;
+    @include mq(mobileLandscape) {
+        padding: rem(5px) 0;
+    }
 }
 .tier-header__pricing {
     text-align: right;

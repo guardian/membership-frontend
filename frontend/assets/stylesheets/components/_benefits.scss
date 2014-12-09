@@ -37,11 +37,10 @@
     margin-bottom: 0;
 }
 .benefits-featured__item {
-    @include mq(desktop) {
-        .benefit {
-            border-top: 1px dotted $c-neutral3;
-            padding-top: rem($gs-gutter/2);
-        }
+    margin-bottom: rem($gs-gutter/2);
+    .benefit {
+        border-top: 1px dotted $c-neutral3;
+        padding-top: rem($gs-gutter/2);
     }
 }
 
