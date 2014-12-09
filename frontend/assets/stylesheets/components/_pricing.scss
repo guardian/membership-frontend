@@ -10,25 +10,21 @@
 }
 .price-info__item {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
     height: 100%;
 }
 .price-info__item--split {
-    padding-right: rem($gs-gutter/2);
+    padding-right: $gutter-width-fluid;
     border-right: 1px solid $black-trans;
 }
 .price-info__item--last {
     padding-right: 0;
-    padding-left: rem($gs-gutter/2);
+    padding-left: $gutter-width-fluid;
     border-right: 0 none;
 }
 .price-info__detail {
-    @include fs-headline(2);
-
+    @include fs-headline(3);
     @include mq(mobileLandscape) {
-        @include fs-headline(4);
-    }
-    @include mq(mem-full) {
         @include fs-headline(5);
     }
 }

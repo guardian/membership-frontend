@@ -1,8 +1,8 @@
-@(benefit: model.Benefits.BenefitItem, isFeatured: Boolean = false)
+@(benefit: model.Benefits.BenefitItem)
 
-<div class="benefit@if(isFeatured){ benefit--featured}">
+<div class="benefit">
     <div class="benefit__icon">
-        <i class="icon@if(isFeatured){ icon--featured }icon-@benefit.identifier"></i>
+        <i class="icon icon-@benefit.identifier"></i>
     </div>
     <div class="benefit__details">
         <div class="benefit__title">

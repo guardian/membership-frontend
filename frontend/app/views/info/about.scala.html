@@ -19,36 +19,25 @@
         </div>
     </div>
 
-    <div class="page-slice page-slice--tint">
+    <div class="page-slice">
         <div class="page-slice__inner">
             <h2 class="page-slice__headline">What's included</h2>
-            <div class="page-slice-content page-slice-content--padded">
+            <div class="page-slice-content">
                 @fragments.tier.feature(Tier.Friend, "Benefits") {
-                    <a class="action js-opt-become-member" href="/join/friend/enter-details">
+                    <a class="action action--no-margin js-opt-become-member" href="/join/friend/enter-details">
                         Become a Friend
                     </a>
                 }
-                @fragments.tier.feature(Tier.Partner, "Friend benefits+") {
-                    <a class="action js-opt-become-member" href="/join/partner/enter-details">
+                @fragments.tier.feature(Tier.Partner, "All Friend benefits, plus") {
+                    <a class="action action--no-margin js-opt-become-member" href="/join/partner/enter-details">
                         Become a Partner
                     </a>
                 }
-                @fragments.tier.feature(Tier.Patron, "Partner benefits+") {
-                    <a class="action js-opt-become-member" href="/join/patron/enter-details">
+                @fragments.tier.feature(Tier.Patron, "All Partner benefits, plus") {
+                    <a class="action action--no-margin js-opt-become-member" href="/join/patron/enter-details">
                         Become a Patron
                     </a>
                 }
-            </div>
-        </div>
-    </div>
-
-    <div class="page-slice home-slice home-slice--join-today">
-        <div class="page-slice__inner home-slice__inner u-cf">
-            <h2 class="page-slice__headline">Join Guardian Membership today</h2>
-            <div class="page-slice-content join-today__join-boxes package-list package-list--flex-box package-list--bordered">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
             </div>
         </div>
     </div>

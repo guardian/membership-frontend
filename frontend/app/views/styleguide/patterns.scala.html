@@ -167,10 +167,6 @@
         @fragments.benefits.item(benefit=Benefits.benefitsFilter("book_tickets").head)
     }
 
-    @pattern("Benefit Item - Featured", "Benefit item with featured modifier (isFeatured=true)") {
-        @fragments.benefits.item(benefit=Benefits.benefitsFilter("book_tickets").head, isFeatured=true)
-    }
-
     @pattern("Benefits - Tier Grid", "Grid of individual benefit items for a tier") {
         @fragments.benefits.detail(Tier.Partner)
     }

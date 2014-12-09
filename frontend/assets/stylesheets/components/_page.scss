@@ -12,35 +12,28 @@
 
 .page-slice {
     @include clearfix;
-}
-    .page-slice__inner {
-        width: 100%;
-
-        @include mq(desktop) {
-            width: rem(gs-span(12) + $gs-gutter * 2);
-            margin: 0 auto;
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(14) + $gs-gutter * 2);
-        }
-    }
-    .page-slice__headline {
-        @include fs-headline(5);
-        padding: rem($gs-gutter/2);
-        @include mq(tablet) {
-            @include fs-headline(7);
-            padding: rem($gs-baseline) rem($gs-gutter) rem($gs-gutter * 3);
-        }
-    }
-
-/* Page Slice - Tint (Modifier)
-   ========================================================================== */
-
-.page-slice--tint {
     background-color: $white;
-    .page-slice__inner {
-        background-color: $c-neutral6;
+    padding-bottom: rem($gs-gutter * 3);
+}
+.page-slice__inner {
+    width: 100%;
+
+    @include mq(desktop) {
+        width: rem(gs-span(12) + $gs-gutter * 2);
+        margin: 0 auto;
+    }
+
+    @include mq(mem-full) {
+        width: rem(gs-span(14) + $gs-gutter * 2);
+    }
+}
+.page-slice__headline {
+    @include fs-headline(6);
+    padding: rem($gs-gutter/2);
+    border-top: 2px solid $c-neutral6;
+    @include mq(tablet) {
+        @include fs-headline(7);
+        padding: rem($gs-baseline) rem($gs-gutter);
     }
 }
 
@@ -48,25 +41,18 @@
    - Inner content for a page slice (pushed to right)
    ========================================================================== */
 
-.page-slice-content,
-.page-slice-content--padded {
+.page-slice-content {
 
     padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
         padding: rem($gs-gutter);
     }
-
     @include mq(mem-full) {
         padding-left: rem($gs-gutter * 9);
     }
 }
 
-.page-slice-content--padded {
-    @include mq(mem-full) {
-        padding-right: rem($gs-gutter * 6);
-    }
-}
 
 /* ==========================================================================
    Functional Page Layout Components

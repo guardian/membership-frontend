@@ -29,24 +29,24 @@
     @include fs-textSans(3);
 }
 
-/* Benefit - Featured (Modifier)
+/* ==========================================================================
+   Benefits - Feature Listing
    ========================================================================== */
 
-.benefit--featured {
-    @include mq(tablet) {
-        text-align: center;
-        .benefit__icon,
-        .benefit__details {
-            display: block;
-        }
-        .benefit__icon {
-            width: 100%;
+.benefits-featured {
+    margin-bottom: 0;
+}
+.benefits-featured__item {
+    @include mq(desktop) {
+        .benefit {
+            border-top: 1px dotted $c-neutral3;
+            padding-top: rem($gs-gutter/2);
         }
     }
 }
 
 /* ==========================================================================
-   Benefits Tier Listing
+   Benefits - Tier Listing
    ========================================================================== */
 
 .benefits-tier {

@@ -190,6 +190,7 @@ $current-indicator: rem(72px);
     cursor: pointer;
 }
 
+//TODO: Replace with tier-header
 .package__title-container {
     position: relative;
     padding: rem($gs-gutter / 2);
@@ -327,6 +328,50 @@ $current-indicator: rem(72px);
 }
 
 /* ==========================================================================
+   Tier Header
+   ========================================================================== */
+
+.tier-header {
+    color: $white;
+    position: relative;
+    padding: rem($gs-gutter / 2) rem($gs-gutter);
+    margin-bottom: rem($gs-gutter / 2);
+    @include mq(mobileLandscape) {
+        display: table;
+        width: 100%;
+    }
+}
+.tier-header--friend {
+    background-color: $c-neutral1;
+}
+.tier-header--partner {
+    color: $black;
+    background-color: $mem-brandLightblue;
+}
+.tier-header--patron {
+    background-color: $mem-brandDarkBlue;
+}
+.tier-header__title,
+.tier-header__pricing {
+    @include mq(mobileLandscape) {
+        display: table-cell;
+        vertical-align: top;
+    }
+}
+.tier-header__title {
+    @include fs-headline(5);
+    line-height: 1;
+    color: inherit;
+    vertical-align: top;
+    word-wrap: break-word;
+    position: relative;
+    padding: rem(5px) 0;
+}
+.tier-header__pricing {
+    text-align: right;
+}
+
+/* ==========================================================================
    Tier - Package Feauture
    - Package features grid on about page
    ========================================================================== */
@@ -334,31 +379,40 @@ $current-indicator: rem(72px);
 .package-feature {
     @include clearfix;
     position: relative;
+    margin-bottom: rem($gs-gutter);
+    @include mq(tablet) {
+        margin-bottom: 0;
+    }
 }
 .package-feature__intro {
     position: relative;
     padding: rem($gs-gutter/2) 0 rem($gs-gutter);
     border-top: 1px solid $mem-blue-border;
 }
-.package-feature__header {
-    float: left;
+.package-feature__caption {
+    font-weight: bold;
+    margin-bottom: rem($gs-gutter/2);
 }
-.package-feature__pricing {
-    float: right;
+.package-feature__content {
+    @include mq(tablet) {
+        display: table;
+    }
 }
-.package-feature__title {
-    @include fs-headline(4);
-    margin-bottom: 0;
+.package-feature__benefits,
+.package-feature__action {
+    @include mq(tablet) {
+        display: table-cell;
+    }
 }
-.package-feature__subtitle {
-    color: $c-neutral2;
-    @include fs-headline(1);
-    position: relative;
-    top: -(rem($gs-baseline/2));
+.package-feature__benefits {
+    @include mq(tablet) {
+        width: 75%;
+    }
 }
 .package-feature__action {
     @include mq(tablet) {
-        float: right;
+        vertical-align: top;
+        text-align: right;
     }
 }
 
