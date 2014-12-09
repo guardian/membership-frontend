@@ -83,10 +83,11 @@ define([
     // bind to typing in the search box
     bean.on(filterInput, 'keyup', filterList);
 
-    var filterCategory = document.querySelector('.js-filter-category');
-    bean.on(filterCategory, 'change', function () {
-        var category = filterCategory.options[filterCategory.selectedIndex].value;
-        window.location.href = '/masterclasses/' + category;
+    $('.js-filter-category').each(function (elem) {
+        bean.on(elem, 'change', function () {
+            var category = elem.options[elem.selectedIndex].value;
+            window.location.href = '/masterclasses/' + category;
+        });
     });
 
     bean.on(filterClear[0], 'click', function (e) {

@@ -73,13 +73,21 @@
 
 .events-list__category {
     display: inline-block;
-    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) 0;
+    padding: rem($gs-gutter / 2) rem($gs-gutter * 1.5) rem($gs-gutter / 2) 0;
 
     @include fs-textSans(2);
 
     @include mq(tablet) {
         margin-right: rem($gs-gutter);
         border-right: 1px solid $c-neutral4;
+    }
+}
+
+@include mq($to: tablet) {
+    .events-list__category__label {
+        display: inline-block;
+        width: rem(100px);
+
     }
 }
 
@@ -103,6 +111,9 @@
 
 .events-list__filter {
     position: relative;
+    display: block;
+    overflow: hidden;
+    clear: right;
 
     @include mq(tablet) {
         float: right;

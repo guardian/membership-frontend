@@ -50,14 +50,19 @@ trait Event extends Controller {
     Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
   }
 
-  def masterclassesByTag(rawTag: String) = CachedAction { implicit request =>
-    val tag = MasterclassEvent.decodeTag(rawTag)
+  def masterclassesByTag(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
+    val tag = MasterclassEvent.decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
     val pageInfo = PageInfo(
       CopyConfig.copyTitleMasterclasses,
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.getEventsTagged(tag), None), pageInfo, tag))
+    Ok(views.html.event.masterclass(
+      EventPortfolio(Nil, masterclassEvents.getEventsTagged(tag), None),
+      pageInfo,
+      MasterclassEvent.decodeTag(rawTag),
+      MasterclassEvent.decodeTag(rawSubTag)
+    ))
   }
 
   def list = CachedAction { implicit request =>
