@@ -23,7 +23,6 @@ marketingChoices: model.StatusFields, passwordExists: Boolean, pageInfo: model.P
                 userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
                 @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
-                @*
                 @if(!passwordExists) {
                     @fragments.form.passwordDetail()
                 }
@@ -32,7 +31,6 @@ marketingChoices: model.StatusFields, passwordExists: Boolean, pageInfo: model.P
                 @fragments.form.billingAddress("Billing address")
                 @fragments.form.addressDetail("", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2, userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4, userFields.billingCountry)
                 @fragments.form.cardDetail(tier)
-                *@
                 @fragments.form.submit("Pay", "now", Some(tier))
             </form>
 
