@@ -58,10 +58,10 @@ trait Joiner extends Controller {
     } yield {
 
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+        case Tier.Friend => Ok(views.html.joiner.form.address(privateFields, marketingChoices, passwordExists))
         case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
+          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
       }
 
     }
@@ -71,7 +71,7 @@ trait Joiner extends Controller {
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists))
     }
   }
 
