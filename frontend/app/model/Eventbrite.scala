@@ -177,11 +177,25 @@ object Eventbrite {
     val allowDiscountCodes = false
   }
 
-  object MasterclassEvent {
-    val topLevelTags = Seq("Writing", "Publishing", "Journalism", "Business", "Digital", "Culture", "Food and drink", "Media")
 
-    def encodeTag(tag: String) = tag.toLowerCase.replace(" ", "-")
-    def decodeTag(tag: String) = tag.capitalize.replace("-", " ")
+  object MasterclassEvent {
+    case class tagItem(categoryName: String, subCategories: Seq[String])
+
+    val tags = Seq(
+      tagItem("Writing", Seq("Copywriting", "Creative writing", "Research")),
+      tagItem("Publishing", Seq()),
+      tagItem("Journalism", Seq()),
+      tagItem("Business", Seq()),
+      tagItem("Digital", Seq()),
+      tagItem("Culture", Seq()),
+      tagItem("Food and drink", Seq()),
+      tagItem("Media", Seq())
+    )
+
+    // if a tag is hyphenated (Non-fiction) then weirdness/duplication happens here
+    // so we replace it with an underscore in URLs (ugly, but limited alternatives)
+    def encodeTag(tag: String) = tag.toLowerCase.replace("-", "_").replace(" ", "-")
+    def decodeTag(tag: String) = tag.capitalize.replace("-", " ").replace("_", "-")
 
     def extractTags(s: String): Option[Seq[String]] =
       "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
