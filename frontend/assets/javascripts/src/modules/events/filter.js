@@ -83,9 +83,7 @@ define([
     // bind to typing in the search box
     bean.on(filterInput, 'keyup', filterList);
 
-    var filterCategories = $('.js-filter-category');
-
-    filterCategories.each(function (elem) {
+    $('.js-filter-category').each(function (elem) {
         bean.on(elem, 'change', function () {
             var category = elem.options[elem.selectedIndex].value;
             window.location.href = '/masterclasses/' + category;
