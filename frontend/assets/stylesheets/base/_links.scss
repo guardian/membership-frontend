@@ -1,4 +1,5 @@
-a {
+a,
+.fake-link {
     overflow: hidden;
     color: $c-newsDefault;
     cursor: pointer;
@@ -12,6 +13,14 @@ a {
         color: $c-newsAccent;
         text-decoration: none;
     }
+}
+
+// transforms buttons into link-like elements
+.fake-link {
+    display: inline;
+    padding: 0;
+    background: none;
+    border: 0;
 }
 
 .no-underline {
