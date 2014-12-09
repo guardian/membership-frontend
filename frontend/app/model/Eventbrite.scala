@@ -179,17 +179,17 @@ object Eventbrite {
 
 
   object MasterclassEvent {
-    case class tagItem(categoryName: String, subCategories: Seq[String])
+    case class tagItem(categoryName: String, subCategories: Seq[String] = Seq())
 
     val tags = Seq(
       tagItem("Writing", Seq("Copywriting", "Creative writing", "Research")),
-      tagItem("Publishing", Seq()),
-      tagItem("Journalism", Seq()),
-      tagItem("Business", Seq()),
-      tagItem("Digital", Seq()),
-      tagItem("Culture", Seq()),
-      tagItem("Food and drink", Seq()),
-      tagItem("Media", Seq())
+      tagItem("Publishing"),
+      tagItem("Journalism"),
+      tagItem("Business"),
+      tagItem("Digital"),
+      tagItem("Culture"),
+      tagItem("Food and drink"),
+      tagItem("Media")
     )
 
     // if a tag is hyphenated (Non-fiction) then weirdness/duplication happens here
