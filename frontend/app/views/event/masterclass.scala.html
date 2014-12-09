@@ -17,7 +17,7 @@
     <div class="event-block">
         <div class="event-block__events event-block__events--no-header">
             <label class="events-list__category">
-                Show:
+                <span class="events-list__category__label">Show:</span>
                 <select class="events-list__category__select js-filter-category">
                     <option value="all">All categories</option>
                     @for(category <- MasterclassEvent.tags) {
@@ -29,7 +29,7 @@
             @MasterclassEvent.tags.filter(_.categoryName == selectedTag).map { category =>
                 @if(category.subCategories) {
                     <label class="events-list__category">
-                        Subcategory:
+                        <span class="events-list__category__label">Subcategory:</span>
                         <select class="events-list__category__select js-filter-category">
                             <option value="@MasterclassEvent.encodeTag(category.categoryName)">All</option>
                             @for(subCategory <- category.subCategories) {
