@@ -73,7 +73,7 @@
 
 .events-list__category {
     display: inline-block;
-    padding: rem($gs-gutter / 2) rem($gs-gutter) rem($gs-gutter / 2) 0;
+    padding: rem($gs-gutter / 2) rem($gs-gutter * 1.5) rem($gs-gutter / 2) 0;
 
     @include fs-textSans(2);
 
