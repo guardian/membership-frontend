@@ -123,6 +123,12 @@ define([
         var $usaStateSelectParent = helper.getSpecifiedParent($stateSelect, formFieldClass).detach();
         var $canadaProvinceSelectParent = helper.getSpecifiedParent($provinceSelect, formFieldClass).detach();
         var $selectElements = [$countySelectParent, $usaStateSelectParent, $canadaProvinceSelectParent];
+
+        // do we need to toggle the address line one and town validation if it is there by default we don't
+        var toggleAddressValidation = !self.form.validationProfiles.some(function (profile) {
+            return profile.elem.className.indexOf(self.getClass('ADDRESS_LINE_ONE', true)) > 0;
+        });
+
         /**
          * Hide show and change label names dependant on country selection
          * @param selectedItemName
@@ -150,25 +156,27 @@ define([
         var togglePostCodeValidation = function (selectedItemName, onLoad) {
 
             if (selectedItemName === IRELAND_STRING) {
+
                 self.form.removeValidation([
                     $(self.getClass('POST_CODE'), addressFormContext)
                 ]);
 
-                // if we are on a stripe for validation is there by default so don't add it
-                if (!self.form.isStripeForm) {
+                // if we are on a form that has address validation by default don't add it
+                if (toggleAddressValidation) {
                     self.form.addValidation([
                         $(self.getClass('ADDRESS_LINE_ONE'), addressFormContext),
                         $(self.getClass('TOWN'), addressFormContext)
                     ]);
                 }
             } else if (selectedItemName !== IRELAND_STRING && !onLoad) {
-                // if we are on a stripe for validation is there on load so don't remove it
-                if (!self.form.isStripeForm) {
+                // if we are on a form that had address validation by default don't remove it
+                if (toggleAddressValidation) {
                     self.form.removeValidation([
                         $(self.getClass('ADDRESS_LINE_ONE'), addressFormContext),
                         $(self.getClass('TOWN'), addressFormContext)
                     ]);
                 }
+
                 self.form.addValidation([
                     $(self.getClass('POST_CODE'), addressFormContext)
                 ]);
