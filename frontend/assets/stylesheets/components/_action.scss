@@ -85,6 +85,7 @@
 
 
 .action--toggle {
+    margin-bottom: $gutter-width-fluid;
     &:before {
         @extend .icon-plus;
         content: '';
