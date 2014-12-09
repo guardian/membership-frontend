@@ -7,6 +7,7 @@ require([
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
     'src/modules/tier/PaidForm',
+    'src/modules/tier/StaffForm',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
@@ -29,6 +30,7 @@ require([
     JoinFree,
     FeedbackForm,
     PaidForm,
+    StaffForm,
     Cta,
     Filter,
     toggle,
@@ -100,6 +102,7 @@ require([
     choose.init();
     (new JoinFree()).init();
     (new PaidForm()).init();
+    (new StaffForm()).init();
     (new Thankyou()).init(header);
 
     // Feedback
