@@ -72,9 +72,9 @@ $header-margin: 36px;
 .menu-item {
     float: left;
     padding-top: 0;
-    margin-right: rem(15px);
 
     @include mq(tablet) {
+        margin-right: rem(15px);
         padding-top: rem(8px);
     }
 
