@@ -1,0 +1,34 @@
+@(
+    tier: com.gu.membership.salesforce.Tier.Tier,
+    caption: String = ""
+)(action: Html)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import model.Benefits
+@import com.gu.membership.salesforce.Tier
+
+<div class="package-feature">
+    <div class="package-feature__header">
+        <div class="tier-header tier-header--@tier.toString.toLowerCase">
+            <h3 class="tier-header__title">
+                <i class="icon icon-g-white-28"></i>
+                @tier
+            </h3>
+            <div class="tier-header__pricing">
+                @fragments.benefits.priceInfo(tier = tier, isReversed = tier != Tier.Partner)
+            </div>
+        </div>
+    </div>
+    @if(caption){
+        <div class="package-feature__caption">
+            @caption
+        </div>
+    }
+    <div class="package-feature__content">
+        <div class="package-feature__benefits">
+            @fragments.benefits.featured(tier)
+        </div>
+        <div class="package-feature__action">
+            @action
+        </div>
+    </div>
+</div>

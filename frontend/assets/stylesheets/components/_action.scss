@@ -264,6 +264,12 @@
     display: none;
 }
 
+.action--no-margin {
+    margin: 0;
+}
+.action--no-top-margin {
+    margin-top: 0;
+}
 .action--no-bottom-margin {
     margin-bottom: 0;
 }

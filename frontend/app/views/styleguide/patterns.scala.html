@@ -30,6 +30,18 @@
         Documents common patterns used across the Membership site.
     </div>
 
+    @pattern("Action - Primary") {
+        <a class="action" href="#">Action</a>
+    }
+
+    @pattern("Action - Secondary") {
+        <a class="action action--secondary-button" href="#">Action</a>
+    }
+
+    @pattern("Action - Full Width", "Full width button modifier") {
+        <a class="action action--fullwidth" href="#">Action</a>
+    }
+
     @pattern("Toggle Component - Button", "JS toggle component") {
         <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
         <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
@@ -115,92 +127,6 @@
         )
     }
 
-    @pattern("Benefits - Expanded", "Expanded variant of the benefits details fragment") {
-            <div class="package-list package-list--flex-box">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-            </div>
-    }
-
-    @pattern("Benefits - Small", "Small variant of the benefits details fragment (showBenefitCopy=false)") {
-        <div class="package-list package-list--flex-box package-list--bordered">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-        </div>
-    }
-
-    @pattern("Benefits - No details", "Collapsed variant of the benefits details fragment, no details shown (showBenefitDetails=false)") {
-        <div class="package-list--flex-box package-list--bordered">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
-        </div>
-    }
-
-    @pattern("Benefits - Feature", "Featured variant of the benefits details. Not a fragment yet)") {
-        <div class="benefits-container u-cf">
-            <div class="benefits-inner">
-                <h2 class="about-block-title">What's included</h2>
-                <ul class="benefits__list u-unstyled u-cf">
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-book_tickets"></i>
-                        <span class="benefits__list--header">Book tickets</span>
-                        <p>Book tickets to Guardian Live events</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-digital_digest"></i>
-                        <span class="benefits__list--header">Membership email updates</span>
-                        <p>Receive regular updates on the upcoming programme</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-video_highlights"></i>
-                        <span class="benefits__list--header">Video highlights</span>
-                        <p>Watch highlights of selected Guardian Live events</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-discount"></i>
-                        <span class="benefits__list--header">20% Discount</span>
-                        <p>20% discount on Guardian Live tickets for Partners and Patrons</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-plus_1_guest"></i>
-                        <span class="benefits__list--header">+1 Guest</span>
-                        <p>Bring a guest to Guardian Live with the same discount and priority booking advantages for Partners and Patrons</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-live_stream"></i>
-                        <span class="benefits__list--header">Live stream events</span>
-                        <p>Watch live streams of Flagship events for Partners and Patrons</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-membership_card"></i>
-                        <span class="benefits__list--header">Membership card</span>
-                        <p>For Partners and Patrons</p>
-                    </li>
-                    <li class="benefits__list--items">
-                        <i class="icon__left icon-large-early_booking"></i>
-                        <span class="benefits__list--header">Early booking</span>
-                        <p>Early booking for Partners and Patrons</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    }
-
-    @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
-        @fragments.faq.questions(model.Faq.help.take(4))
-    }
-
-    @pattern("FAQ - Answers", "Fragment for FAQ answers with matching internal link id") {
-        @fragments.faq.answers(model.Faq.help.take(4))
-    }
-
-    @pattern("FAQ - Questions without internal link", "Fragment for FAQ answers without link. This is used where the length of questions does not warrant the use of internal links") {
-        @fragments.faq.answers(model.Faq.staff.take(4))
-    }
-
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         <ul class="events-list events-list--items-3 u-unstyled">
             @for(event <- eventPortfolio.normal.slice(0, 1)) {
@@ -233,5 +159,58 @@
         </ul>
     }
 
+    @pattern("Pricing Info", "Single pricing info item") {
+        @fragments.benefits.priceInfo(Tier.Partner)
+    }
+
+    @pattern("Benefit Item", "Single benefit item") {
+        @fragments.benefits.item(benefit=Benefits.benefitsFilter("book_tickets").head)
+    }
+
+    @pattern("Benefits - Tier Grid", "Grid of individual benefit items for a tier") {
+        @fragments.benefits.detail(Tier.Partner)
+    }
+
+    @pattern("Benefits - Featured Grid", "Featured grid of individual benefit items for a tier") {
+        @fragments.benefits.featured(Tier.Partner)
+    }
+
+    @pattern("Tier - Expanded", "Expanded variant of the benefits details fragment") {
+        <div class="package-list package-list--flex-box">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+        </div>
+    }
+
+    @pattern("Tier - Small", "Small variant of the benefits details fragment (showBenefitCopy=false)") {
+        <div class="package-list package-list--flex-box package-list--bordered">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
+        </div>
+    }
+
+    @pattern("Tier - No details", "Collapsed variant of the benefits details fragment, no details shown (showBenefitDetails=false)") {
+        <div class="package-list--flex-box package-list--bordered">
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        </div>
+    }
+
+    @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
+        @fragments.faq.questions(model.Faq.help.take(4))
+    }
+
+    @pattern("FAQ - Answers", "Fragment for FAQ answers with matching internal link id") {
+        @fragments.faq.answers(model.Faq.help.take(4))
+    }
+
+    @pattern("FAQ - Answers without internal link", "Fragment for FAQ answers without link. This is used where the length of questions does not warrant the use of internal links") {
+        @fragments.faq.answers(model.Faq.staff.take(4))
+    }
+
     </main>
+
 }

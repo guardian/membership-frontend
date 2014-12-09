@@ -15,6 +15,14 @@
     @include clearfix;
 }
 
+.u-align-left {
+    float: right;
+}
+
+.u-align-right {
+    float: right;
+}
+
 .case--lower {
     text-transform: lowercase;
 }

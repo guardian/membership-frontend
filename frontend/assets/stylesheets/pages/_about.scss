@@ -3,14 +3,6 @@
    ========================================================================== */
 
 
-h2.about-block-title {
-    @include fs-headline(5);
-    padding: rem($gs-baseline) rem($gs-gutter) 0;
-    @include mq(tablet) {
-        @include fs-headline(7);
-    }
-}
-
 .about-membership {
 
     .home-slice--join-today {
@@ -43,89 +35,5 @@ h2.about-block-title {
             content: '';
             display: none;
         }
-    }
-}
-
-.benefits-container {
-    background-color: $white;
-
-    .benefits-inner {
-        background-color: $c-neutral6;
-        width: 100%;
-
-        @include mq(desktop) {
-            width: rem(gs-span(12) + $gs-gutter * 2);
-            margin: 0 auto;
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(14) + $gs-gutter * 2);
-        }
-    }
-
-    .benefits__list {
-        margin: rem($gs-gutter);
-
-        @include mq(tablet) {
-            width: rem(gs-span(9));
-            margin: rem(80px) rem($gs-gutter) 0 rem(gs-span(1));
-            padding-bottom: rem($gs-gutter + 10);
-        }
-
-        @include mq(desktop) {
-            width: rem(gs-span(11));
-            margin: rem(80px) rem($gs-gutter) 0;
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(12));
-            margin: rem(80px) rem($gs-gutter) 0 rem(gs-span(2) + $gs-gutter * 2);
-        }
-    }
-
-    .benefits__list--items {
-        float: left;
-        @include fs-bodyCopy(1);
-        width: rem(gs-span(4));
-        height: rem(130px);
-
-        &:nth-child(4),
-        &:nth-child(8) {
-            border-right: 0;
-        }
-
-        @include mq(tablet) {
-            @include fs-bodyCopy(2);
-            width: rem(gs-span(3));
-            padding: 0 rem($gs-gutter / 2);
-            height: rem(220px);
-        }
-
-        @include mq(desktop) {
-            border-right: rem(1px) solid $c-neutral3;
-            width: rem(gs-span(3) - 10);
-            height: rem(220px);
-            margin-bottom: rem(50px);
-        }
-
-        @include mq(mem-full) {
-            width: rem(gs-span(3));
-            height: rem(190px);
-        }
-
-        .icon__left {
-            float: left;
-            margin: 0 rem($gs-gutter) rem($gs-gutter * 2) 0;
-
-            @include mq(tablet) {
-                float: none;
-                margin: 0 rem($gs-gutter) 0 0;
-            }
-        }
-    }
-
-    .benefits__list--header {
-        @include fs-bodyHeading(3);
-        display: block;
     }
 }
