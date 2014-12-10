@@ -99,7 +99,6 @@ $current-indicator: rem(72px);
 
     .price-info {
         @include mq(desktop) {
-            height: rem($gs-gutter * 2.5);
             width: 100%;
             float: none;
         }
@@ -193,11 +192,7 @@ $current-indicator: rem(72px);
 //TODO: Replace with tier-header
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: rem($gs-gutter - 5) rem($gs-gutter);
-    }
+    padding: rem($gs-gutter - 5);
 
     .package__title {
         @include fs-headline(5);
@@ -205,10 +200,14 @@ $current-indicator: rem(72px);
         word-wrap: break-word;
         position: relative;
         padding-left: rem($gs-gutter + 16);
+        float: left;
+        @include mq(desktop) {
+            float: none;
+        }
     }
 
     .package__pricing {
-        float: right;
+        text-align: right;
         @include mq(desktop) {
             float: none;
             width: 100%;
@@ -217,14 +216,7 @@ $current-indicator: rem(72px);
 
     .price-info {
         padding-top: rem($gs-gutter + 10);
-        height: rem($gs-gutter * 3 + 10);
         color: $white;
-        position: relative;
-
-        @include mq(desktop) {
-            height: rem($gs-gutter * 4);
-        }
-
     }
 
     &:before {

@@ -25,7 +25,7 @@
 .price-info__detail {
     @include fs-headline(3);
     @include mq(mobileLandscape) {
-        @include fs-headline(5);
+        @include fs-headline(4);
     }
 }
 .price-info__date {
