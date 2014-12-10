@@ -58,7 +58,7 @@ case class IdentityService(identityApi: IdentityApi) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     val json = Json.obj("privateFields" -> fields)
-    postFields(fields, user, identityRequest)
+    postFields(json, user, identityRequest)
   }
 
   def updateEmail(user: IdMinimalUser, email: String, identityRequest: IdentityRequest) = {

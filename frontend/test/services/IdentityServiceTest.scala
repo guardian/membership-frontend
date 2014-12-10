@@ -10,8 +10,7 @@ import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}
 import utils.Resource
 
-class IdentityServiceTest extends Specification with Mockito{
-
+class IdentityServiceTest extends Specification with Mockito {
 
   val user = new IdMinimalUser("4444", Some("Joe Bloggs"))
   val headers = List("headers" -> "a header")
@@ -69,4 +68,19 @@ class IdentityServiceTest extends Specification with Mockito{
     }
   }
 
+  "post json for updating details on upgrade" in {
+    val identityAPI = mock[IdentityApi]
+
+    val identityService = new IdentityService(identityAPI)
+    val paidMemberChangeForm = PaidMemberChangeForm(
+      PaymentForm(true, "token"),
+      Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
+      Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK))
+    )
+    val expectedJson = Resource.getJson(s"model/identity/update-upgrade.json").as[JsObject]
+
+    identityService.updateUserFieldsBasedOnUpgrade(user, paidMemberChangeForm, identityRequest)
+    there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
+
+  }
 }
