@@ -1,15 +1,16 @@
 package services
 
+import com.gu.membership.zuora.{Address, Countries}
 import controllers.IdentityRequest
+import forms.MemberForm.{FriendJoinForm, MarketingChoicesForm, NameForm}
 import model.IdMinimalUser
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
+import utils.Resource
 
 class IdentityServiceTest extends Specification with Mockito{
 
-  val identityAPI = mock[IdentityApi]
-  val identityService = new IdentityService(identityAPI)
 
   val user = new IdMinimalUser("4444", Some("Joe Bloggs"))
   val headers = List("headers" -> "a header")
@@ -18,9 +19,31 @@ class IdentityServiceTest extends Specification with Mockito{
 
   "IdentityService" should {
     "post json for updating an users email" in {
+      val identityAPI = mock[IdentityApi]
+      val identityService = new IdentityService(identityAPI)
 
-      identityService.updateEmail(user, "joe.bloggs@awesome-emaill.com", identityRequest)
-      there was one(identityAPI).post("user/4444", Json.obj("primaryEmailAddress" -> "joe.bloggs@awesome-emaill.com"), headers, trackingParameters, "update-user")
+      val json = Json.parse("{\"primaryEmailAddress\": \"joe.bloggs@awesome-email.com\"}").as[JsObject]
+
+      identityService.updateEmail(user, "joe.bloggs@awesome-email.com", identityRequest)
+      there was one(identityAPI).post("user/4444", json , headers, trackingParameters, "update-user")
+    }
+
+    "post json for updating users details on joining friend" in {
+      val identityAPI = mock[IdentityApi]
+
+      val identityService = new IdentityService(identityAPI)
+
+      val friendForm = FriendJoinForm(
+        NameForm("Joe", "Bloggs"),
+        Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
+        MarketingChoicesForm(Some(false), Some(false)),
+        None
+      )
+
+      val expectedJson = Resource.getJson(s"model/identity/update-friend.json").as[JsObject]
+
+      identityService.updateUserFieldsBasedOnJoining(user, friendForm, identityRequest)
+      there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
     }
   }
 
