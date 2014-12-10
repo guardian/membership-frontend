@@ -103,7 +103,7 @@ trait Joiner extends Controller {
         case 200 => Redirect(routes.Joiner.enterStaffDetails())
         case _ => Redirect(routes.Joiner.staff())
                   .flashing("error" ->
-          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}, Please sign in with that email.")
+          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}. Please try signing in with that email.")
       }
     }
   }
