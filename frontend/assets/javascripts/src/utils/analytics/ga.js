@@ -19,15 +19,40 @@ define([], function () {
 
         ga('send', 'pageview');
         /* jshint ignore:end */
+
+        if (window.ga) {
+            trackOutboundLinks();
+        }
     }
 
     // wrapper for tracking events via google analytics
     // (because analytics can be removed for test user mode)
-    var trackEvent = function (category, action, label) {
+    function trackEvent(category, action, label, data) {
+        data = data || {};
         if (window.ga) {
-            ga('send', 'event', category, action, label);
+            ga('send', 'event', category, action, label, data);
         }
-    };
+    }
+
+    function trackOutboundLinks() {
+        var TRACKING_NAME = 'data-link-name',
+            elems = document.querySelectorAll('[' + TRACKING_NAME + ']');
+        if (elems.length) {
+            [].forEach.call(elems, function( el ) {
+                el.addEventListener('click', function(event) {
+                    var targetElement = event.target || event.srcElement,
+                        action = targetElement.getAttribute(TRACKING_NAME),
+                        url = targetElement.getAttribute('href');
+                    event.preventDefault();
+                    trackEvent('outbound', action, url, {
+                        'hitCallback': function () {
+                            document.location = url;
+                        }
+                    });
+                });
+            });
+        }
+    }
 
     return {
         init: init,
