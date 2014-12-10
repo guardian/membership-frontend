@@ -182,7 +182,7 @@ object Eventbrite {
     case class tagItem(categoryName: String, subCategories: Seq[String] = Seq())
 
     val tags = Seq(
-      tagItem("Writing", Seq("Copywriting", "Creative writing", "Research")),
+      tagItem("Writing", Seq("Copywriting", "Creative writing", "Research", "Fiction", "Non-fiction")),
       tagItem("Publishing"),
       tagItem("Journalism"),
       tagItem("Business"),
