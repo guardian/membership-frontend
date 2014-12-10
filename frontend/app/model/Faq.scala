@@ -30,7 +30,7 @@ object Faq {
       Html("Your Guardian Staff Membership will last for a long as you are a permanent member of staff")
     ),
     Item("I've got an additional question that's not listed here",
-      Html(s"Please email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
+      Html(s"Please email <a href='mailto:${Config.membershipSupportStaffEmail}'>${Config.membershipSupportStaffEmail}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
     )
   )
 
