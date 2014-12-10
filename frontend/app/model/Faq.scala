@@ -21,7 +21,7 @@ object Faq {
       Html("No, sorry you can't upgrade, you need to cancel your friend membership first.")
     ),
     Item("How do I cancel my friend membership?",
-      Html(s"<ol><li>Go to <a href='${Config.guardianMembershipUrl + "/tier/cancel"}'>${Config.guardianMembershipUrl + "/tier/cancel"}</a></li><li>Scroll to the bottom and click 'Cancel membership'.</li></ol>")
+      Html(s"<ol><li>Go to <a href='${Config.membershipUrl + "/tier/cancel"}'>${Config.membershipUrl + "/tier/cancel"}</a></li><li>Scroll to the bottom and click 'Cancel membership'.</li></ol>")
     ),
     Item("How do I change my Guardian Identity email address?",
       Html(s"<ol><li>Go to <a href='${Config.idWebAppUrl + "/account/edit"}'>${Config.idWebAppUrl + "/account/edit"}</a></li><li>Change the email address to your work email address</li><li>Scroll to the bottom and click 'Save Changes'</li></ol>")
