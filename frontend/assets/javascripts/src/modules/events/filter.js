@@ -86,7 +86,7 @@ define([
     $('.js-filter-category').each(function (elem) {
         bean.on(elem, 'change', function () {
             var category = elem.options[elem.selectedIndex].value;
-            window.location.href = '/masterclasses/' + category;
+            window.location.href = '/masterclasses' + category;
         });
     });
 
