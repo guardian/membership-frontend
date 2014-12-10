@@ -9,17 +9,10 @@
     background-color: $white;
     padding: rem($gs-gutter / 2);
     overflow: hidden;
+    border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter);
-    }
-
-    .theme--guardian-live & {
-        border-bottom: rem(1px) solid $mem-live-accent;
-    }
-
-    .theme--masterclasses & {
-        border-bottom: rem(1px) solid $mem-mc-accent;
     }
 
     &:last-child {

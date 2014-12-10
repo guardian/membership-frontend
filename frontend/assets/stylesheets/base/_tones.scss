@@ -32,6 +32,13 @@
     background-color: $mem-live-accent;
 }
 
+.tone-masterclasses--border {
+    border-color: $mem-mc-top;
+}
+.tone-guardian-live--border {
+    border-color: $mem-live-top;
+}
+
 .tone-masterclasses--trans {
     background-color: transparentize($mem-mc-top, .1);
 }
