@@ -75,6 +75,7 @@ trait MemberService extends LazyLogging {
 
   def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
+    val identityService = IdentityService(IdentityApi)
 
     Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
       def futureCustomerOpt = formData match {
@@ -82,10 +83,10 @@ trait MemberService extends LazyLogging {
         case _ => Future.successful(None)
       }
 
-      formData.password.map(IdentityService.updateUserPassword(_, identityRequest, user.id))
+      formData.password.map(identityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
-        fullUser <- IdentityService.getFullUserDetails(user, identityRequest)
+        fullUser <- identityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
         memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
@@ -93,7 +94,7 @@ trait MemberService extends LazyLogging {
         // Set some fields once subscription has been successful
         updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))
       } yield {
-        IdentityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
+        identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
         memberId.account
@@ -140,7 +141,7 @@ trait MemberService extends LazyLogging {
       subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member.salesforceAccountId, newPaidPlan)
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, Some(customer)))
     } yield {
-      IdentityService.updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
+      IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
       memberId.account
     }

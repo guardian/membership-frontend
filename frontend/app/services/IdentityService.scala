@@ -22,14 +22,14 @@ case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-trait IdentityService {
+case class IdentityService(identityApi: IdentityApi) {
 
   def getFullUserDetails(user: IdMinimalUser, identityRequest: IdentityRequest): Future[IdUser] =
-    IdentityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
+    identityApi.get(s"user/${user.id}", identityRequest.headers, identityRequest.trackingParameters)
       .map(_.getOrElse(throw IdentityServiceError(s"Couldn't find user with ID ${user.id}")))
 
   def doesUserPasswordExist(identityRequest: IdentityRequest): Future[Boolean] =
-    IdentityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
+    identityApi.getUserPasswordExists(identityRequest.headers, identityRequest.trackingParameters)
 
   def updateUserFieldsBasedOnJoining(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest) {
 
@@ -51,7 +51,7 @@ trait IdentityService {
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
     val json = Json.obj("newPassword" -> password)
-    IdentityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
+    identityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
   def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
@@ -68,7 +68,7 @@ trait IdentityService {
 
   private def postFields(json: JsObject, user: IdMinimalUser, identityRequest: IdentityRequest) = {
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
-    IdentityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
+    identityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
 
   private def deliveryAddress(addressForm: Address): JsObject = {
@@ -94,9 +94,7 @@ trait IdentityService {
   }
 }
 
-object IdentityService extends IdentityService
-
-object IdentityApi {
+trait IdentityApi {
 
   def getUserPasswordExists(headers:List[(String, String)], parameters: List[(String, String)]) : Future[Boolean] = {
     val endpoint = "user/password-exists"
@@ -133,6 +131,8 @@ object IdentityApi {
     IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }
+
+object IdentityApi extends IdentityApi
 
 case class IdentityApiError(s: String) extends Throwable {
   override def getMessage: String = s

@@ -38,10 +38,9 @@ trait Joiner extends Controller {
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
+        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.socialAvatarUrl
@@ -76,10 +75,11 @@ trait Joiner extends Controller {
   }
 
   private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
+    val identityService = IdentityService(IdentityApi)
     val identityRequest = IdentityRequest(request)
     for {
-      user <- IdentityService.getFullUserDetails(user, identityRequest)
-      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+      user <- identityService.getFullUserDetails(user, identityRequest)
+      passwordExists <- identityService.doesUserPasswordExist(identityRequest)
     } yield (user.privateFields, user.statusFields, passwordExists)
   }
 
@@ -96,7 +96,7 @@ trait Joiner extends Controller {
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
-      responseCode <- IdentityService.updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
+      responseCode <- IdentityService(IdentityApi).updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
     }
     yield {
       responseCode match {
