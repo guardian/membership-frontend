@@ -17,7 +17,7 @@ trait User extends Controller {
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
-    Ok(json).withCookies(Cookie("test", Json.prettyPrint(json), secure = true, httpOnly = false))
+    Ok(json).withCookies(Cookie("GU_MEM", Json.stringify(json), secure = true, httpOnly = false))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
