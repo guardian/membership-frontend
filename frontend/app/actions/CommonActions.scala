@@ -6,7 +6,7 @@ import com.gu.googleauth
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
-import play.api.mvc.ActionBuilder
+import play.api.mvc.{DiscardingCookie, ActionBuilder}
 import play.api.mvc.Results._
 
 trait CommonActions {
@@ -49,7 +49,7 @@ trait CommonActions {
 
   val AjaxAuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter(onPaidMember = _ => Forbidden)
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => Forbidden)
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => Forbidden.discardingCookies(DiscardingCookie("GU_MEM")))
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
 }
