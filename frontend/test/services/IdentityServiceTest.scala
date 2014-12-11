@@ -22,10 +22,10 @@ class IdentityServiceTest extends Specification with Mockito {
       val identityAPI = mock[IdentityApi]
       val identityService = new IdentityService(identityAPI)
 
-      val json = Json.parse("{\"primaryEmailAddress\": \"joe.bloggs@awesome-email.com\"}").as[JsObject]
-
       identityService.updateEmail(user, "joe.bloggs@awesome-email.com", identityRequest)
-      there was one(identityAPI).post("user/4444", json , headers, trackingParameters, "update-user")
+
+      val expectedJson = Json.parse("{\"primaryEmailAddress\": \"joe.bloggs@awesome-email.com\"}").as[JsObject]
+      there was one(identityAPI).post("user/4444", expectedJson , headers, trackingParameters, "update-user")
     }
 
     "post json for updating users details on joining friend" in {
@@ -40,9 +40,9 @@ class IdentityServiceTest extends Specification with Mockito {
         None
       )
 
-      val expectedJson = Resource.getJson(s"model/identity/update-friend.json").as[JsObject]
-
       identityService.updateUserFieldsBasedOnJoining(user, friendForm, identityRequest)
+
+      val expectedJson = Resource.getJson(s"model/identity/update-friend.json").as[JsObject]
       there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
     }
 
@@ -61,9 +61,9 @@ class IdentityServiceTest extends Specification with Mockito {
         None
       )
 
-      val expectedJson = Resource.getJson(s"model/identity/update-paid.json").as[JsObject]
-
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)
+
+      val expectedJson = Resource.getJson(s"model/identity/update-paid.json").as[JsObject]
       there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
     }
   }
@@ -77,9 +77,10 @@ class IdentityServiceTest extends Specification with Mockito {
       Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
       Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK))
     )
-    val expectedJson = Resource.getJson(s"model/identity/update-upgrade.json").as[JsObject]
 
     identityService.updateUserFieldsBasedOnUpgrade(user, paidMemberChangeForm, identityRequest)
+
+    val expectedJson = Resource.getJson(s"model/identity/update-upgrade.json").as[JsObject]
     there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
 
   }
