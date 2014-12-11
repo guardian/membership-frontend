@@ -1,0 +1,19 @@
+@(event: model.Eventbrite.RichEvent)BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:@{new DateTime().toString("YYYYMMDD'T'HHmmss'Z'")}-@event.id@@@Config.membershipDomain
+DTSTART:@event.start.toString("YYYYMMDD'T'HHmmss'Z'")
+DTEND:@event.end.toString("YYYYMMDD'T'HHmmss'Z'")
+SUMMARY:@eventType: @event.name.text
+LOCATION:@event.venue.name\, @event.venue.addressLine.map(_.replace(",", "\\,"))
+DESCRIPTION:@Config.membershipUrl/event/@event.id
+END:VEVENT
+END:VCALENDAR
+@import model.Eventbrite._, configuration.Config, org.joda.time.DateTime
+@eventType = @{
+    event match {
+        case _: MasterclassEvent => "Guardian Masterclass"
+        case _: GuLiveEvent => "Guardian Live event"
+    }
+}
