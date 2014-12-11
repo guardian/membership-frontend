@@ -12,7 +12,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
-import services.{AuthenticationService, IdentityService}
+import services.{IdentityApi, AuthenticationService, IdentityService}
 
 import scala.concurrent.Future
 
@@ -87,14 +87,15 @@ object Functions extends LazyLogging {
   }
 
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
-    override def filter[A](request: IdentityGoogleAuthRequest[A]) =
+    override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
-        user <- IdentityService.getFullUserDetails(request.identityUser, IdentityRequest(request))
+        user <- IdentityService(IdentityApi).getFullUserDetails(request.identityUser, IdentityRequest(request))
       } yield {
-        if(GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
+        if (GuardianDomains.emailsMatch(request.googleUser.email, user.primaryEmailAddress)) None
         else Some(onNonGuEmail(request))
       }
     }
+  }
 
   def metricRecord(cloudWatch: CloudWatch, metricName: String) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
