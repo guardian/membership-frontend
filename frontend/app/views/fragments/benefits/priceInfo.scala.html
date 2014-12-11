@@ -5,9 +5,9 @@
 @defining(Benefits.details(tier)) { benefits =>
     <div class="price-info @if(isReversed){price-info--reversed}">
     @benefits.pricing.fold {
-        <div class="price-info__item">
+        <div class="price-info__item price-info__item--last">
             <div class="price-info__detail">
-                <span class="price-info__value">Free</span>
+                <span class="price-info__value price-info__value--free">Free</span>
             </div>
         </div>
     } { pricing =>

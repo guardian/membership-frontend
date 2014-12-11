@@ -189,56 +189,6 @@ $current-indicator: rem(72px);
     cursor: pointer;
 }
 
-//TODO: Replace with tier-header
-.package__title-container {
-    position: relative;
-    padding: rem($gs-gutter - 5);
-    @include mq(desktop) {
-        min-height: rem(130px);
-    }
-
-    .package__title {
-        @include fs-headline(5);
-        color: $white;
-        word-wrap: break-word;
-        position: relative;
-        float: left;
-        @include mq(desktop) {
-            float: none;
-        }
-    }
-    .package__title .icon {
-        vertical-align: middle;
-        position: relative;
-        top: -2px;
-    }
-    .package__pricing {
-        text-align: right;
-        @include mq(desktop) {
-            float: none;
-            width: 100%;
-        }
-    }
-    .price-info {
-        padding-top: rem($gs-gutter + 10);
-        color: $white;
-    }
-
-}
-.package__title-container--friend {
-    background-color: $c-neutral1;
-}
-.package__title-container--partner {
-    background-color: $mem-brandLightblue;
-    .package__title,
-    .price-info {
-        color: $black;
-    }
-}
-.package__title-container--patron {
-    background-color: $mem-brandDarkBlue;
-}
-
 .package__header {
     @include fs-bodyHeading(2);
     border-top: 1px solid $c-neutral3;
@@ -310,16 +260,49 @@ $current-indicator: rem(72px);
 
 .tier-header {
     color: $white;
+    overflow: auto;
     position: relative;
     padding: rem($gs-gutter / 2);
     margin-bottom: rem($gs-gutter / 2);
+    border-spacing: 0;
     @include mq(mobileLandscape) {
         display: table;
         width: 100%;
         height: rem($gs-gutter * 4);
-        padding: rem($gs-gutter / 2) rem($gs-gutter);
+        padding: rem($gs-gutter - 5) rem($gs-gutter);
     }
 }
+.tier-header__title,
+.tier-header__pricing {
+    @include mq(mobileLandscape) {
+        display: table-cell;
+        vertical-align: top;
+    }
+}
+.tier-header__pricing {
+    float: right;
+    width: 100%;
+    max-width: rem(gs-span(4) - $gs-gutter * 2);
+
+    @include mq(mobileLandscape) {
+        max-width: rem(gs-span(4) - $gs-gutter);
+    }
+}
+.tier-header__title {
+    @include fs-headline(5);
+    line-height: 1;
+    color: inherit;
+    vertical-align: top;
+    word-wrap: break-word;
+    position: relative;
+}
+.tier-header__pricing {
+    text-align: right;
+}
+
+/**
+ * Tier header colour modifiers
+ */
 .tier-header--friend {
     background-color: $c-neutral1;
 }
@@ -330,26 +313,92 @@ $current-indicator: rem(72px);
 .tier-header--patron {
     background-color: $mem-brandDarkBlue;
 }
-.tier-header__title,
-.tier-header__pricing {
-    @include mq(mobileLandscape) {
-        display: table-cell;
-        vertical-align: top;
+
+/**
+ * Tier header stacked
+ */
+.tier-header--stacked {
+
+    @include mq(desktop) {
+        min-height: rem(gs-span(2));
+    }
+
+    .tier-header__title {
+        display: block;
+        float: left;
+        @include mq(desktop) {
+            float: none;
+        }
+    }
+    .tier-header__pricing {
+        padding-top: rem($gs-gutter + 10);
     }
 }
-.tier-header__title {
-    @include fs-headline(5);
-    line-height: 1;
-    color: inherit;
-    vertical-align: top;
-    word-wrap: break-word;
+
+
+/* ==========================================================================
+   Tier Header - Old
+   ========================================================================== */
+// TODO: Refactor to use shared tier-header styles
+
+//TODO: Replace with tier-header
+.package__title-container {
+
+    overflow: auto;
     position: relative;
-    @include mq(mobileLandscape) {
-        padding: rem(5px) 0;
+    padding: rem($gs-gutter/2);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter - 5) rem($gs-gutter);
+    }
+
+    @include mq(desktop) {
+        min-height: rem(gs-span(2));
+    }
+
+    .package__title {
+        display: block;
+        float: left;
+        @include fs-headline(5);
+        color: $white;
+        word-wrap: break-word;
+        position: relative;
+        @include mq(desktop) {
+            float: none;
+        }
+    }
+    .package__title .icon {
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+    }
+    .package__pricing {
+        float: right;
+        width: 100%;
+        max-width: rem(gs-span(4) - $gs-gutter * 2);
+
+        @include mq(mobileLandscape) {
+            max-width: rem(gs-span(4) - $gs-gutter);
+        }
+    }
+    .price-info {
+        padding-top: rem($gs-gutter + 10);
+        color: $white;
+    }
+
+}
+.package__title-container--friend {
+    background-color: $c-neutral1;
+}
+.package__title-container--partner {
+    background-color: $mem-brandLightblue;
+    .package__title,
+    .price-info {
+        color: $black;
     }
 }
-.tier-header__pricing {
-    text-align: right;
+.package__title-container--patron {
+    background-color: $mem-brandDarkBlue;
 }
 
 /* ==========================================================================

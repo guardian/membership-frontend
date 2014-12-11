@@ -33,15 +33,15 @@
                     }
                 </div>
             }
-            <div class="package__title-container package__title-container--@tier.toString.toLowerCase">
+            <div class="tier-header tier-header--stacked tier-header--@tier.toString.toLowerCase">
                 <div class="package__select-zone mobile-portrait-only js-benefit-header">
                     <button class="package__select-toggle js-benefit-button"></button>
                 </div>
-                <h2 class="package__title">
+                <h2 class="tier-header__title">
                     <i class="icon icon-g-white-28"></i>
                     @tier
                 </h2>
-                <div class="package__pricing">
+                <div class="tier-header__pricing">
                     @fragments.benefits.priceInfo(tier = tier, isReversed = tier != Tier.Partner)
                 </div>
             </div>

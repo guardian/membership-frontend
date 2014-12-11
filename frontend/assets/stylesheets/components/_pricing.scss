@@ -7,26 +7,43 @@
 
 .price-info {
     position: relative;
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+    max-width: rem(gs-span(4) - $gs-gutter * 2);
+
+    @include mq(mobileLandscape) {
+        max-width: rem(gs-span(4) - $gs-gutter);
+    }
 }
 .price-info__item {
-    display: inline-block;
+    text-align: left;
+    display: table-cell;
     vertical-align: top;
+    width: 50%;
     height: 100%;
-}
-.price-info__item--split {
     padding-right: $gutter-width-fluid;
     border-right: 1px solid $black-trans;
 }
 .price-info__item--last {
+    text-align: right;
     padding-right: 0;
     padding-left: $gutter-width-fluid;
     border-right: 0 none;
 }
 .price-info__detail {
-    @include fs-headline(3);
-    @include mq(mobileLandscape) {
-        @include fs-headline(4);
-    }
+    // Remove spacing between inline-block elements
+    font-size: 0;
+}
+.price-info__value,
+.price-info__date {
+    display: inline-block;
+}
+.price-info__value {
+    @include fs-header(6);
+}
+.price-info__value--free {
+    font-weight: normal;
 }
 .price-info__date {
     @include fs-headline(2);
@@ -37,7 +54,7 @@
     text-align: left;
 
     @include mq(tablet) {
-        margin-top: -(rem($gs-baseline/2));
+        margin-top: -3px;
     }
 }
 
