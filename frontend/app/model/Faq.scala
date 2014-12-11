@@ -8,11 +8,8 @@ object Faq {
   case class Item(question: String, answer: Html, id: String = "")
 
   val staff = List(
-    Item("What's a Guardian Identity account?",
-      Html(s"When you <a href='${Config.idWebAppRegisterUrl(controllers.routes.Joiner.staff().url)}'>register on theguardian.com</a> you are creating a Guardian Identity account")
-    ),
-    Item("I already have a Guardian Identity account, can I use that?",
-      Html("Yes, but only if it's set up with your work email address ending @theguardian.com (@guardian.co.uk will work too) Check my Guardian identity set up")
+    Item("I already have a profile set up on theguardian.com, can I use that?",
+       Html(s"Yes, but only if it's set up with your work email address ending @theguardian.com (@guardian.co.uk will work too). <a href='${Config.idWebAppUrl + "/account/edit"}'>Check my profile on the guardian.com</a>")
     ),
     Item("Can I use social sign in/registration?",
       Html("No, you must have a Guardian account using your work email address.")
@@ -23,7 +20,7 @@ object Faq {
     Item("How do I cancel my friend membership?",
       Html(s"<ol><li>Go to <a href='${Config.membershipUrl + "/tier/cancel"}'>${Config.membershipUrl + "/tier/cancel"}</a></li><li>Scroll to the bottom and click 'Cancel membership'.</li></ol>")
     ),
-    Item("How do I change my Guardian Identity email address?",
+    Item("How do I change the email address saved in my profile on theguardian.com?",
       Html(s"<ol><li>Go to <a href='${Config.idWebAppUrl + "/account/edit"}'>${Config.idWebAppUrl + "/account/edit"}</a></li><li>Change the email address to your work email address</li><li>Scroll to the bottom and click 'Save Changes'</li></ol>")
     ),
     Item("How long will staff membership last?",
