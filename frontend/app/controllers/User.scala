@@ -5,7 +5,7 @@ import org.joda.time.Instant
 
 import scala.concurrent.Future
 
-import play.api.mvc.Controller
+import play.api.mvc.{Cookie, Controller}
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -16,7 +16,8 @@ trait User extends Controller {
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
   def me = AjaxMemberAction { implicit request =>
-    Ok(basicDetails(request.member))
+    val json = basicDetails(request.member)
+    Ok(json).withCookies(Cookie("GU_MEM", Json.stringify(json), secure = true, httpOnly = false))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>

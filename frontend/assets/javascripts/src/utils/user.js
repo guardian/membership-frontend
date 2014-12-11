@@ -81,12 +81,10 @@ define([
                     callbacks.push(callback);
 
                     if (!pendingXHR) {
-                        cookie.removeCookie(MEM_USER_COOKIE_KEY);
                         pendingXHR = ajax({
                             url: '/user/me',
                             method: 'get',
                             success: function (resp) {
-                                cookie.setCookie(MEM_USER_COOKIE_KEY, resp);
                                 invokeCallbacks([resp]);
                                 pendingXHR = null;
                             },

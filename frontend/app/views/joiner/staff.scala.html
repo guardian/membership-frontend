@@ -25,7 +25,7 @@
         @fragments.notifications.flashMessage(error)
 
         @fragments.page.pageHeader("Guardian Staff Membership",
-            Some("All permanent Guardian staff can sign up to the Partner tier of Guardian membership for free (equivalent to £15/month)"))
+            Some("All permanent Guardian staff can sign up to the Partner tier of Guardian Membership for free (equivalent to £15/month)"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -33,14 +33,14 @@
             </div>
             <div class="page-section__content">
                 @staffEmail.identityEmail.fold {
-                    <p>Before joining you must have a  Guardian Identity account set up with your work email address.</p>
+                    <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up with your work email address.</p>
 
                     <ul class="signpost u-unstyled">
                         @signPostItem("Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
-                            Create a Guardian Identity account with your work email address
+                            Create a profile on <strong>theguardian.com</strong> with your work email address
                         }
                         @signPostItem("Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)){
-                            Sign in to Guardian Identity with your work email address
+                            Sign in to <strong>theguardian.com</strong> with your work email address
                         }
                     </ul>
 
@@ -65,15 +65,13 @@
                         <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
                         <a class="action action--secondary-button action--no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
                     } else {
-                        <p>Before joining you must have a Guardian Identity account set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
+                        <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 
-                        <p>You're signed in as <strong>@identityEmail</strong>, unfortunately this isn't a valid email address for Guardian Staff Membership.</p>
+                        <p>You're signed in to <strong>theguardian.com</strong> as <strong>@identityEmail</strong>, unfortunately this isn't a valid email address for Guardian Staff Membership.</p>
                         <p>You have two options to join:</p>
 
                         <div class="modal-container u-cf">
-
                             @fragments.modal.staffChangeEmail(identityEmail, staffEmail.googleEmail)
-
                             <ul class="signpost u-unstyled">
                                 <li class="signpost-item">
                                     <h4 class="signpost-item__title">Option 1</h4>
@@ -88,7 +86,7 @@
                                     </div>
                                 </li>
                                 @signPostItem("Register Now", Config.idWebAppRegisterUrl(routes.Joiner.staff.url), "Option 2"){
-                                    Register for a new Guardian Identity account using your work email address <strong>@staffEmail.googleEmail</strong>
+                                    Register for a new profile on <strong>theguardian.com</strong> with your work email address <strong>@staffEmail.googleEmail</strong>
                                 }
                             </ul>
                         </div>

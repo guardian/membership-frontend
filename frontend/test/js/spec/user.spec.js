@@ -53,20 +53,12 @@ define([
                     ajaxParams.success(friendUserDetails);
                 });
 
-                spyOn(cookie, 'setCookie');
-
                 userUtil.getMemberDetail(function (membershipUser, err) {
                     expect(membershipUser.userId).toEqual(friendUserDetails.userId);
                     expect(membershipUser.tier).toEqual(friendUserDetails.tier);
                     expect(membershipUser.joinDate).toEqual(friendUserDetails.joinDate);
                     expect(membershipUser.optIn).toEqual(friendUserDetails.optIn);
                     expect(err).toBeUndefined();
-
-                    expect(cookie.setCookie).toHaveBeenCalled();
-                    expect(cookie.setCookie.calls.any()).toEqual(true);
-                    expect(cookie.setCookie.calls.count()).toEqual(1);
-                    expect(cookie.setCookie.calls.argsFor(0)).toEqual([MEM_USER_COOKIE_KEY, friendUserDetails]);
-
                     done();
                 }, []);
             });
@@ -107,20 +99,12 @@ define([
                     ajaxParams.success(friendUserDetails);
                 });
 
-                spyOn(cookie, 'setCookie');
-
                 userUtil.getMemberDetail(function (membershipUser, err) {
                     expect(membershipUser.userId).toEqual(friendUserDetails.userId);
                     expect(membershipUser.tier).toEqual(friendUserDetails.tier);
                     expect(membershipUser.joinDate).toEqual(friendUserDetails.joinDate);
                     expect(membershipUser.optIn).toEqual(friendUserDetails.optIn);
                     expect(err).toBeUndefined();
-
-                    expect(cookie.setCookie).toHaveBeenCalled();
-                    expect(cookie.setCookie.calls.any()).toEqual(true);
-                    expect(cookie.setCookie.calls.count()).toEqual(1);
-                    expect(cookie.setCookie.calls.argsFor(0)).toEqual([MEM_USER_COOKIE_KEY, friendUserDetails]);
-
                     done();
                 });
             });

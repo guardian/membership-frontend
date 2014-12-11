@@ -174,9 +174,7 @@ object Config {
       con.getString("client.id"),
       con.getString("client.secret"),
       con.getString("callback"),
-      Some("guardian.co.uk"),        // Google App domain to restrict login
-      Some(30.minutes),
-      true                           // Re-authenticate (without prompting) with google when session expires
+      Some("guardian.co.uk")        // Google App domain to restrict login
     )
   }
 
