@@ -17,6 +17,7 @@
     @include border-radius(50%);
     -webkit-font-smoothing: antialiased;
     vertical-align: bottom;
+    outline: none;
 
     &:visited,
     &:hover,
@@ -25,6 +26,9 @@
         text-decoration: none;
         color: #ffffff;
     }
+
+    &:focus,
+    &:active,
     &:hover {
         background-color: darken($mem-buttonBlue, 10%);
     }
