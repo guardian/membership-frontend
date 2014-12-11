@@ -1,3 +1,20 @@
+/**
+ * Usage
+ *
+ * Modal toggle button:
+ *      <form action="">
+ *          <button class="js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+ *      </form>
+ *
+ * Modal element:
+ *      <div class="modal is-hidden js-modal js-change-email-modal">
+ *          <button class="js-modal-confirm">Yes</button>
+ *          <button class="js-modal-cancel">No</button>
+ *      </div>
+ *
+ * To use the modal you need a button with the js-modal-cta class, and a modal class specified in the data-modal
+ * attribute. The confirm within the modal will perform the buttons forms action, the cancel will remove the modal.
+ */
 define([
     '$',
     'bean'
