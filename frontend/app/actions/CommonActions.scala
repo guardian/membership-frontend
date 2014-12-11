@@ -45,11 +45,13 @@ trait CommonActions {
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
-  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => Forbidden)
+  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => forbidAndDropGuMemCookie)
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => Forbidden.discardingCookies(DiscardingCookie("GU_MEM")))
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => forbidAndDropGuMemCookie)
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
+  
+  def forbidAndDropGuMemCookie = Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))
 }
 
 
