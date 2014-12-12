@@ -110,17 +110,47 @@
     }
 }
 
+/* ==========================================================================
+   Event Ticket
+   ========================================================================== */
+
 .event-ticket {
     padding-top: rem($gs-gutter);
-}
-
-.event-ticket__details {
-
     @include mq(tablet) {
-        float: left;
-        padding-right: rem($gs-gutter);
+        display: table;
     }
 }
+.event-ticket__details,
+.event-ticket__action {
+    @include mq(tablet) {
+        display: table-cell;
+        vertical-align: bottom;
+    }
+}
+.event-ticket__details {
+    @include mq(tablet) {
+        padding-right: rem($gs-gutter);
+        // Tweak for optical alignment (over actual alignment)
+        padding-bottom: rem(3px);
+    }
+}
+
+// Free event modifier
+.event-ticket--free {
+    @include mq(tablet) {
+        .event-ticket__details,
+        .event-ticket__action {
+            vertical-align: middle;
+        }
+        .event-ticket__details {
+            padding-bottom: 0;
+        }
+    }
+}
+
+/* Status extras
+   ========================================================================== */
+// TODO: Document and refactor
 
 .event-ticket__details__status {
     @include fs-textSans(1);
@@ -145,13 +175,13 @@
     @include fs-textSans(1);
 }
 
+// TODO: This has too much layout / colour code in for a root component
 .terms-info {
     @include fs-textSans(1);
-    padding-top: rem($gs-gutter);
 
     @include mq(tablet) {
-        width: rem(gs-span(3) + $gs-gutter * 2);
-        float: left;
+        max-width: rem(gs-span(3) + $gs-gutter * 2);
+        display: inline-block;
     }
 
     a {
@@ -162,6 +192,7 @@
         border-color: inherit;
     }
 }
+
 
 .event__picture-byline {
     clear: both;

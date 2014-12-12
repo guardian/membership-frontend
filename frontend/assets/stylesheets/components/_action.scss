@@ -106,17 +106,15 @@
 }
 
 .action--buy-event-ticket-details {
-  background-color: $black;
+    background-color: $black;
+    &:hover {
+        background-color: transparentize($black, 0.35);
+    }
 
-  @include mq(tablet) {
-    float: left;
-    margin: rem(6px $gs-gutter 0 0);
-    min-width: 0;
-  }
-
-  &:hover {
-    background-color: transparentize($black, 0.35);
-  }
+    @include mq(tablet) {
+        margin: 0 rem($gs-gutter) 0 0;
+        min-width: 0;
+    }
 }
 
 .action--fullwidth {
