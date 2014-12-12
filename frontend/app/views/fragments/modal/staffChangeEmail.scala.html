@@ -1,7 +1,7 @@
 @(identityEmail: String, staffGoogleEmail: String)
 
-<div class="modal is-hidden js-modal js-change-email-modal">
-    <div class="modal-content">
+<div class="modal is-hidden js-modal js-change-email-modal" role="alertdialog" aria-describedby="dialog-description">
+    <div id="dialog-description" class="modal-content">
         <h2 class="modal-content__header">Allow Guardian Membership to change the email address on your profile</h2>
         <p>You will no longer be able to sign in to <strong>theguardian.com</strong> using <strong>@identityEmail</strong>.</p>
         <p>You must use <strong>@staffGoogleEmail</strong> to sign in from now.</p>
