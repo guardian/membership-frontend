@@ -12,7 +12,7 @@
         content: '';
         position: absolute;
         z-index: 1;
-        background: rgba(51, 51, 51, .05);
+        background: $c-background-transparent;
 
         // magic number: we shift these margins up to skip the header gap
         // and the (fixed) height of the nav bar

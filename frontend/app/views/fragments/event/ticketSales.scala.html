@@ -27,20 +27,29 @@
                     <i class="icon-book_tickets icon--info"></i>
                 </div>
                 <div class="event-content__second">
-                    <div class="sale-dates__header">Ticket sales</div>
+                    <div class="sale-dates__header">Ticket release dates</div>
 
                     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
 
-                        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
-                            <ul class="sale-dates__list u-unstyled u-cf">
+                        @if(ticketSaleDates.anyoneCanBuyTicket) {
+                            <button class="js-toggle fake-link right-align sales-dates__toggle"
+                                    data-toggle-label="Hide"
+                                    data-toggle="js-event-ticket-dates-@event.id">
+                                Show
+                            </button>
+                        }
+
+                        <ul class="sale-dates__list u-unstyled u-cf"
+                            id="js-event-ticket-dates-@event.id"@if(ticketSaleDates.anyoneCanBuyTicket == true) { data-toggle-hidden}>
+                            @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
                                 <li class="sale-dates__item" itemscope itemtype="http://schema.org/Offer">
                                     <meta itemprop="eligibleCustomerType" content="@tier">
                                     <meta itemprop="availabilityEnds" content="@ticketSaleDates.datesByTier(tier)">
                                     <span class="sale-dates__item--left">@(tier + "s")</span>
                                     @ticketDateForTier(tier, ticketSaleDates.datesByTier(tier), ticketSaleDates.needToDistinguishTimes)
                                 </li>
-                            </ul>
-                        }
+                            }
+                        </ul>
 
                         <ul class="sale-dates__list u-unstyled u-cf">
                             <li class="sale-dates__item">

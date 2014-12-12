@@ -7,6 +7,7 @@ require([
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
     'src/modules/tier/PaidForm',
+    'src/modules/tier/StaffForm',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
@@ -18,6 +19,7 @@ require([
     'src/modules/tier/Thankyou',
     'src/modules/patterns',
     'src/utils/addToClipboard',
+    'src/utils/modal',
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
@@ -29,6 +31,7 @@ require([
     JoinFree,
     FeedbackForm,
     PaidForm,
+    StaffForm,
     Cta,
     Filter,
     toggle,
@@ -39,7 +42,8 @@ require([
     eventPriceEnhance,
     Thankyou,
     patterns,
-    addToClipboard
+    addToClipboard,
+    modal
 ) {
     'use strict';
 
@@ -100,6 +104,7 @@ require([
     choose.init();
     (new JoinFree()).init();
     (new PaidForm()).init();
+    (new StaffForm()).init();
     (new Thankyou()).init(header);
 
     // Feedback
@@ -108,5 +113,9 @@ require([
     // Pattern library
     patterns.init();
 
+    // Test Users
     addToClipboard.init();
+
+    // Modal
+    modal.init();
 });

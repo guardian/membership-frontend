@@ -6,8 +6,11 @@
 @import play.twirl.api.Html
 @import model.Faq
 
-@signPostItem(btnText: String, btnSrc: String)(description: Html) = {
-    <li class="signpost-item signpost-item--sign">
+@signPostItem(btnText: String, btnSrc: String, title: String = "")(description: Html) = {
+    <li class="signpost-item">
+        @if(title){
+            <h4 class="signpost-item__title">@title</h4>
+        }
         <p class="signpost-item__description">@description</p>
         <div class="signpost__cta">
             <a class="action action--no-bottom-margin" href="@btnSrc">@btnText</a>
@@ -18,69 +21,75 @@
 @main("Staff Membership", containerPadding=false) {
 
     <main class="page-container__inner" role="main">
+
         @fragments.notifications.flashMessage(error)
-        <section class="page-header">
-            <h1 class="page-headline">Guardian Staff Membership</h1>
-            <p class="page-intro">All permanent Guardian staff can sign up to the Partner tier of Guardian membership for free (equivalent to £15/month)</p>
-        </section>
+
+        @fragments.page.pageHeader("Guardian Staff Membership",
+            Some("All permanent Guardian staff can sign up to the Partner tier of Guardian Membership for free (equivalent to £15/month)"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
-                <h2 class="page-section__headline">Join Guardian Staff Membership now</h2>
+                <h2 class="page-section__headline">Join</h2>
             </div>
             <div class="page-section__content">
                 @staffEmail.identityEmail.fold {
-                    <p>
-                        To join Guardian Staff Membership you must have a Guardian Identity account set up using
-                        your work email address ending @@theguardian.com (@@guardian.co.uk will work too).
-                    </p>
+                    <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up with your work email address.</p>
 
                     <ul class="signpost u-unstyled">
                         @signPostItem("Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
-                            Set up a <strong>new</strong> Guardian Identity account
+                            Create a profile on <strong>theguardian.com</strong> with your work email address
                         }
-                        <li class="signpost-item signpost-item--divider">or</li>
                         @signPostItem("Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)){
-                            Use an <strong>existing</strong> Guardian Identity account
+                            Sign in to <strong>theguardian.com</strong> with your work email address
                         }
                     </ul>
+
                 } { identityEmail =>
-                    <div class="u-cf">
+
+                    <div class="user-welcome u-cf copy">
                         @for(srcUrl <- avatarUrl){
-                            <img class="user-img" src="@srcUrl" alt="User Image"/>
+                            <img class="user-welcome__image user-img" src="@srcUrl" alt="User Image"/>
                         }
-                        <p>
+                        <div class="user-welcome__content">
                             @for(name <- displayName){
-                                Hello <strong>@displayName</strong>.
+                                <h3 class="user-welcome__title u-body-copy">Hello <strong>@displayName</strong>. Not you? <a href="@Config.idWebAppUrl/signout">Sign out</a></h3>
                             }
-                            Glad to see you've decided to join Guardian Staff Membership.
-                        </p>
+                            <div class="user-welcome__info">
+                                <p>Glad to see you've decided to join Guardian Staff Membership.</p>
+                            </div>
+                        </div>
                     </div>
 
                     @if(staffEmail.emailsMatch) {
+                        <p>Join Guardian Staff Membership as <strong>@identityEmail</strong></p>
                         <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
+                        <a class="action action--secondary-button action--no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
                     } else {
-                        <p>
-                            Currently your account is set up with <strong>@identityEmail</strong>. To join Guardian
-                            Staff Membership you must have a Guardian Identity account set up using your work email
-                            address ending @@theguardian.com (@@guardian.co.uk will work too).
-                        </p>
+                        <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 
-                        <ul class="signpost u-unstyled">
-                            <li class="signpost-item signpost-item--sign">
-                                <p class="signpost-item__description">Change email address to <strong> @staffEmail.googleEmail </strong> Guardian Identity account</p>
-                                <div class="signpost__cta">
-                                    <form action="@routes.Joiner.updateEmailStaff" method="POST">
-                                        @CSRF.formField
-                                        <button class="action action--no-bottom-margin" type="submit">Change email and Join now</button>
-                                    </form>
-                                </div>
-                            </li>
-                            <li class="signpost-item signpost-item--divider">or</li>
-                            @signPostItem("Create new account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
-                                Set up a <strong>new</strong> Guardian Identity account
-                            }
-                        </ul>
+                        <p>You're signed in to <strong>theguardian.com</strong> as <strong>@identityEmail</strong>, unfortunately this isn't a valid email address for Guardian Staff Membership.</p>
+                        <p>You have two options to join:</p>
+
+                        <div class="modal-container u-cf">
+                            @fragments.modal.staffChangeEmail(identityEmail, staffEmail.googleEmail)
+                            <ul class="signpost u-unstyled">
+                                <li class="signpost-item">
+                                    <h4 class="signpost-item__title">Option 1</h4>
+                                    <p class="signpost-item__description">
+                                        Allow Guardian membership to change your Guardian Identity email address from <strong>@identityEmail</strong> to <strong>@staffEmail.googleEmail</strong
+                                    </p>
+                                    <div class="signpost__cta">
+                                        <form action="@routes.Joiner.updateEmailStaff" method="POST">
+                                            @CSRF.formField
+                                            <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+                                        </form>
+                                    </div>
+                                </li>
+                                @signPostItem("Register Now", Config.idWebAppRegisterUrl(routes.Joiner.staff.url), "Option 2"){
+                                    Register for a new profile on <strong>theguardian.com</strong> with your work email address <strong>@staffEmail.googleEmail</strong>
+                                }
+                            </ul>
+                        </div>
                     }
                 }
             </div>
@@ -88,7 +97,7 @@
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
-                <h2 class="page-section__headline">Partner benefits</h2>
+                <h2 class="page-section__headline">Benefits</h2>
             </div>
             <div class="page-section__content">
                 @fragments.benefits.detail(Tier.Partner)

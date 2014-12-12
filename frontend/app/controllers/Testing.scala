@@ -2,6 +2,7 @@ package controllers
 
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import play.api.mvc.{Controller, Cookie}
+import play.twirl.api.Html
 import utils.TestUsers.testUsers
 import actions.Functions._
 
@@ -11,7 +12,7 @@ object Testing extends Controller with LazyLogging {
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
     Set("membership.dev@guardian.co.uk", "touchpoint@guardian.co.uk"),
-    "You need to be added to the right Google Group to create test users - contact membership.dev@theguardian.com if you definitely need access.")
+      views.html.fragments.oauth.testUsersWrongGroup())
 
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()

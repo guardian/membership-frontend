@@ -6,7 +6,7 @@ import com.gu.googleauth
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
-import play.api.mvc.ActionBuilder
+import play.api.mvc.{DiscardingCookie, ActionBuilder}
 import play.api.mvc.Results._
 
 trait CommonActions {
@@ -27,19 +27,17 @@ trait CommonActions {
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction
 
   val permanentStaffGroups = Config.staffAuthorisedEmailGroups
-  val permanentStaffEmailErrorMessage = Config.staffUnauthorisedError
-
 
   val PermanentStaffNonMemberAction =
     GoogleAuthenticatedStaffAction andThen
-    isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
+    isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffUnauthorisedError())
 
 
   val AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen
     onlyNonMemberFilter() andThen
     googleAuthenticationRefiner() andThen
-    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, permanentStaffEmailErrorMessage)
+    isInAuthorisedGroupIdentityGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffUnauthorisedError())
 
   val MemberAction = AuthenticatedAction andThen memberRefiner()
 
@@ -47,13 +45,13 @@ trait CommonActions {
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
-  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => Forbidden)
+  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => forbidAndDropGuMemCookie)
 
-  val AjaxAuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter(onPaidMember = _ => Forbidden)
-
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => Forbidden)
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => forbidAndDropGuMemCookie)
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
+  
+  def forbidAndDropGuMemCookie = Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))
 }
 
 

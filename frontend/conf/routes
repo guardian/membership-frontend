@@ -51,7 +51,8 @@ GET            /events                            controllers.Event.list
 GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
 GET            /masterclasses                     controllers.Event.masterclasses
 GET            /masterclasses/all                 controllers.Event.masterclasses
-GET            /masterclasses/:tag                controllers.Event.masterclassesByTag(tag)
+GET            /masterclasses/:tag                controllers.Event.masterclassesByTag(tag, subTag = "")
+GET            /masterclasses/:tag/:subTag        controllers.Event.masterclassesByTag(tag, subTag)
 
 GET            /event/:id                         controllers.Event.details(id)
 GET            /event/:id/buy                     controllers.Event.buy(id)

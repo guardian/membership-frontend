@@ -1,5 +1,10 @@
+/* ==========================================================================
+   Tier
+   ========================================================================== */
+
 $current-indicator: rem(72px);
 
+// TODO: Too broad. What is this affecting?
 .secondary-content {
     flex-basis: 16em;
     order: 2;
@@ -8,9 +13,9 @@ $current-indicator: rem(72px);
     }
 }
 
-.right-align {
-    float: right;
-}
+/* ==========================================================================
+   Packages
+   ========================================================================== */
 
 .package-container {
     border-top: rem(1px) solid transparent;
@@ -26,6 +31,9 @@ $current-indicator: rem(72px);
     }
 }
 
+/* Package
+   ========================================================================== */
+
 .package {
     display: block;
     overflow: hidden;
@@ -35,11 +43,6 @@ $current-indicator: rem(72px);
     &:last-child {
         margin-right: 0;
     }
-}
-
-.price-info {
-    width: rem(230px);
-    float: right;
 }
 
 .package-list {
@@ -96,7 +99,6 @@ $current-indicator: rem(72px);
 
     .price-info {
         @include mq(desktop) {
-            height: rem($gs-gutter * 2.5);
             width: 100%;
             float: none;
         }
@@ -187,12 +189,12 @@ $current-indicator: rem(72px);
     cursor: pointer;
 }
 
+//TODO: Replace with tier-header
 .package__title-container {
     position: relative;
-    padding: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: rem($gs-gutter - 5) rem($gs-gutter);
+    padding: rem($gs-gutter - 5);
+    @include mq(desktop) {
+        min-height: rem(130px);
     }
 
     .package__title {
@@ -200,54 +202,41 @@ $current-indicator: rem(72px);
         color: $white;
         word-wrap: break-word;
         position: relative;
-        padding-left: rem($gs-gutter + 16);
+        float: left;
+        @include mq(desktop) {
+            float: none;
+        }
     }
-
+    .package__title .icon {
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+    }
+    .package__pricing {
+        text-align: right;
+        @include mq(desktop) {
+            float: none;
+            width: 100%;
+        }
+    }
     .price-info {
         padding-top: rem($gs-gutter + 10);
-        height: rem($gs-gutter * 3 + 10);
         color: $white;
-        position: relative;
-
-        @include mq(desktop) {
-            height: rem($gs-gutter * 4);
-        }
-
     }
 
-    &:before {
-        @extend %icon-g-white-28;
-        content: '';
-        display: block;
-        position: absolute;
-        left: rem($gs-gutter / 2);
-        top: rem($gs-baseline);
-
-        @include mq(tablet) {
-            left: rem($gs-gutter);
-            top: rem($gs-gutter - 2);
-        }
+}
+.package__title-container--friend {
+    background-color: $c-neutral1;
+}
+.package__title-container--partner {
+    background-color: $mem-brandLightblue;
+    .package__title,
+    .price-info {
+        color: $black;
     }
-
-    &:after {
-        display: block;
-    }
-
-    &--friend {
-        background-color: $c-neutral1;
-    }
-
-    &--partner {
-        background-color: $mem-brandLightblue;
-        .package__title,
-        .price-info {
-            color: $black;
-        }
-    }
-
-    &--patron {
-        background-color: $mem-brandDarkBlue;
-    }
+}
+.package__title-container--patron {
+    background-color: $mem-brandDarkBlue;
 }
 
 .package__header {
@@ -289,67 +278,6 @@ $current-indicator: rem(72px);
     }
 }
 
-.price-info {
-    height: rem($gs-gutter * 2);
-
-    .price-info__detail {
-        @include fs-headline(4);
-
-        @include mq(mem-full) {
-            @include fs-headline(5);
-        }
-
-        .price-info__container-inner--last & {
-            margin-top: rem($gs-gutter);
-        }
-
-        &--right {
-            right: 0;
-            text-align: right;
-        }
-
-        &--sm-date {
-            @include fs-headline(2);
-        }
-    }
-
-    .price-info__container-inner {
-        width: 50%;
-        float: left;
-        position: relative;
-        display: block;
-        height: 100%;
-    }
-
-    .price-info__container-inner--last {
-        text-align: right;
-        height: 100%;
-        border-left: rem(1px) solid $white-trans;
-    }
-
-    .price-info__container-inner--full-width {
-        width: 100%;
-    }
-
-    .price-info__sub-detail {
-        @include fs-textSans(1);
-        color: $white;
-        display: block;
-        margin-top: rem(-6px);
-
-        .patron-page &,
-        .package__title-container--partner & {
-            color: $black;
-        }
-    }
-}
-
-.price-info--partner {
-    .price-info__container-inner--last {
-        border-left: rem(1px) solid $black-trans;
-    }
-}
-
 .package__select-toggle {
     @extend %mobile-expand-collapse;
 }
@@ -376,8 +304,102 @@ $current-indicator: rem(72px);
     @include rotate(180deg);
 }
 
-/* Upgrade
-======================================================================= */
+/* ==========================================================================
+   Tier Header
+   ========================================================================== */
+
+.tier-header {
+    color: $white;
+    position: relative;
+    padding: rem($gs-gutter / 2);
+    margin-bottom: rem($gs-gutter / 2);
+    @include mq(mobileLandscape) {
+        display: table;
+        width: 100%;
+        height: rem($gs-gutter * 4);
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
+    }
+}
+.tier-header--friend {
+    background-color: $c-neutral1;
+}
+.tier-header--partner {
+    color: $black;
+    background-color: $mem-brandLightblue;
+}
+.tier-header--patron {
+    background-color: $mem-brandDarkBlue;
+}
+.tier-header__title,
+.tier-header__pricing {
+    @include mq(mobileLandscape) {
+        display: table-cell;
+        vertical-align: top;
+    }
+}
+.tier-header__title {
+    @include fs-headline(5);
+    line-height: 1;
+    color: inherit;
+    vertical-align: top;
+    word-wrap: break-word;
+    position: relative;
+    @include mq(mobileLandscape) {
+        padding: rem(5px) 0;
+    }
+}
+.tier-header__pricing {
+    text-align: right;
+}
+
+/* ==========================================================================
+   Tier - Package Feauture
+   - Package features grid on about page
+   ========================================================================== */
+
+.package-feature {
+    @include clearfix;
+    position: relative;
+    margin-bottom: rem($gs-gutter);
+    @include mq(tablet) {
+        margin-bottom: 0;
+    }
+}
+.package-feature__intro {
+    position: relative;
+    padding: rem($gs-gutter/2) 0 rem($gs-gutter);
+    border-top: 1px solid $mem-blue-border;
+}
+.package-feature__caption {
+    font-weight: bold;
+    margin-bottom: rem($gs-gutter/2);
+}
+.package-feature__content {
+    @include mq(tablet) {
+        display: table;
+    }
+}
+.package-feature__benefits,
+.package-feature__action {
+    @include mq(tablet) {
+        display: table-cell;
+    }
+}
+.package-feature__benefits {
+    @include mq(tablet) {
+        width: 75%;
+    }
+}
+.package-feature__action {
+    @include mq(tablet) {
+        vertical-align: top;
+        text-align: right;
+    }
+}
+
+/* ==========================================================================
+   Upgrade
+   ========================================================================== */
 
 .upgrade__payment-label {
     display: block;

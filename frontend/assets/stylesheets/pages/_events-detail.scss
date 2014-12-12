@@ -434,6 +434,7 @@
         .sale-dates__header {
             @include fs-textSans(3);
             font-weight: bold;
+            display: inline;
         }
 
         .sale-dates__list {
@@ -479,6 +480,7 @@
     .event-content__second {
         float: left;
         width: rem(220px);
+        position: relative;
 
         .join-choose-tier & {
             width: auto;
@@ -506,4 +508,12 @@
 .event-content--line-divider {
     border-top: rem(1px) dotted $c-neutral3;
     padding: rem(5px) 0;
+}
+
+.sales-dates__toggle {
+    padding: rem($gs-baseline/2) rem($gs-baseline);
+    margin-top: -#{rem($gs-baseline/2)};
+    margin-right: -#{rem($gs-baseline)};
+    right: 0;
+    position: absolute;
 }

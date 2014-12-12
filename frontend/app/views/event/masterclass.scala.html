@@ -1,4 +1,9 @@
-@(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo, selectedTag: String = "")(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    eventPortfolio: model.EventPortfolio,
+    pageInfo: model.PageInfo,
+    selectedTag: String = "",
+    selectedSubTag: String = ""
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Eventbrite.MasterclassEvent
 
@@ -12,18 +17,33 @@
     <div class="event-block">
         <div class="event-block__events event-block__events--no-header">
             <label class="events-list__category">
-                Show:
+                <span class="events-list__category__label">Show:</span>
                 <select class="events-list__category__select js-filter-category">
-                    <option value="all">All categories</option>
-                    @for(tag <- MasterclassEvent.topLevelTags) {
-                        <option value="@MasterclassEvent.encodeTag(tag)" @if(tag == selectedTag){ selected}>@tag</option>
+                    <option value="">All categories</option>
+                    @for(category <- MasterclassEvent.tags) {
+                        <option value="/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
                     }
                 </select>
             </label>
+
+            @MasterclassEvent.tags.filter(_.categoryName == selectedTag).map { category =>
+                @if(category.subCategories) {
+                    <label class="events-list__category">
+                        <span class="events-list__category__label">Subcategory:</span>
+                        <select class="events-list__category__select js-filter-category">
+                            <option value="/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
+                            @for(subCategory <- category.subCategories) {
+                                <option value="/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
+                            }
+                        </select>
+                    </label>
+                }
+            }
+
             <span class="events-list__count">
                 <span class="js-filter-count">@eventPortfolio.normal.length</span> masterclasses
                 @if(selectedTag.isEmpty) {
-                    <span class="hidden-mobile">in @MasterclassEvent.topLevelTags.length categories</span>
+                    <span class="hidden-mobile">in @MasterclassEvent.tags.length categories</span>
                 }
             </span>
             <label class="events-list__filter">
@@ -34,7 +54,7 @@
                        placeholder="Filter by title"
                        autocomplete="off" />
                 <i class="events-list__filter__icon icon-search"></i>
-                <button class="events-list__filter__cross icon-cross is-hidden js-filter-clear"></button>
+                <button class="events-list__filter__cross icon-cross_in_circle is-hidden js-filter-clear"></button>
             </label>
         </div>
     </div>

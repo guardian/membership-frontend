@@ -15,8 +15,9 @@ define([
     /**
      * This class has grown somewhat, I am happy with the majority of it but parts of it need a bit of a
      * rethink as a few things have been attached for the moment I am leaving it because although verbose it works.
-     * TODO-ben: simplify class
-     * TODO-ben: move errors to above inputs (confirm with UX and Design)
+     // TODO The use of these files has changed considerably these files Staff, Free and Paid, Address, Form and Password need a refactor
+     // TODO Take out component JS - update to current style of JS and to abstract out common functionality in this class
+     // TODO to use on different forms in the init style we use in main and to use data-attributes where applicable.
      */
     var MAKING_PAYMENT_MESSAGE = 'Making Payment...';
     var PROCESSING_MESSAGE = 'Processing';

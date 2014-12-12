@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Pricing
+   ========================================================================== */
+
+/* Price Info
+   ========================================================================== */
+
+.price-info {
+    position: relative;
+}
+.price-info__item {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+}
+.price-info__item--split {
+    padding-right: $gutter-width-fluid;
+    border-right: 1px solid $black-trans;
+}
+.price-info__item--last {
+    padding-right: 0;
+    padding-left: $gutter-width-fluid;
+    border-right: 0 none;
+}
+.price-info__detail {
+    @include fs-headline(3);
+    @include mq(mobileLandscape) {
+        @include fs-headline(4);
+    }
+}
+.price-info__date {
+    @include fs-headline(2);
+}
+.price-info__saving {
+    @include fs-textSans(1);
+    display: block;
+    text-align: left;
+
+    @include mq(tablet) {
+        margin-top: -(rem($gs-baseline/2));
+    }
+}
+
+/* Price Info - Reversed (Modifier)
+   ========================================================================== */
+
+.price-info--reversed {
+    color: $white;
+    .price-info__item--split {
+        border-color: $white-trans;
+    }
+}

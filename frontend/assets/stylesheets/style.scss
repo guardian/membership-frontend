@@ -15,7 +15,6 @@
 @import 'base/normalize';
 @import 'base/base';
 @import 'base/type';
-
 @import 'base/links';
 @import 'base/helpers';
 @import 'base/lists';
@@ -71,6 +70,7 @@
    Membership components
    ========================================================================== */
 
+@import 'components/grid';
 @import 'components/content';
 @import 'components/action';
 @import 'components/page';
@@ -78,10 +78,12 @@
 @import 'components/benefits';
 @import 'components/user';
 @import 'components/social';
+@import 'components/pricing';
 @import 'components/patterns';
 @import 'components/signpost';
 @import 'components/flash-message';
 @import 'components/help';
+@import 'components/modal';
 
 /* ==========================================================================
    Membership pages

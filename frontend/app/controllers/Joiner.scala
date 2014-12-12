@@ -38,10 +38,9 @@ trait Joiner extends Controller {
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val error = request.flash.get("error")
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-
     userSignedIn match {
       case Some(user) => for {
-        fullUser <- IdentityService.getFullUserDetails(user, IdentityRequest(request))
+        fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.socialAvatarUrl
@@ -58,10 +57,10 @@ trait Joiner extends Controller {
     } yield {
 
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+        case Tier.Friend => Ok(views.html.joiner.form.address(privateFields, marketingChoices, passwordExists))
         case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.payment.paymentForm(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
+          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
       }
 
     }
@@ -71,15 +70,16 @@ trait Joiner extends Controller {
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.detail.addressForm(privateFields, marketingChoices, passwordExists))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists))
     }
   }
 
   private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
+    val identityService = IdentityService(IdentityApi)
     val identityRequest = IdentityRequest(request)
     for {
-      user <- IdentityService.getFullUserDetails(user, identityRequest)
-      passwordExists <- IdentityService.doesUserPasswordExist(identityRequest)
+      user <- identityService.getFullUserDetails(user, identityRequest)
+      passwordExists <- identityService.doesUserPasswordExist(identityRequest)
     } yield (user.privateFields, user.statusFields, passwordExists)
   }
 
@@ -96,14 +96,14 @@ trait Joiner extends Controller {
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
-      responseCode <- IdentityService.updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
+      responseCode <- IdentityService(IdentityApi).updateEmail(request.identityUser, googleEmail, IdentityRequest(request))
     }
     yield {
       responseCode match {
         case 200 => Redirect(routes.Joiner.enterStaffDetails())
         case _ => Redirect(routes.Joiner.staff())
                   .flashing("error" ->
-          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}, Please sign in with that email.")
+          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}. Please try signing in with that email.")
       }
     }
   }

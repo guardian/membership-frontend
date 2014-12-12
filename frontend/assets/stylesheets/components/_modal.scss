@@ -1,0 +1,51 @@
+.modal-container {
+    position: relative;
+}
+
+.modal {
+    @include box-shadow(0 rem(1px 1px) 9999999px rgba(0, 0, 0, .45));
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    background-color: $white;
+    display: table;
+
+    @include mq(tablet) {
+        max-width: gs-span(8);
+        left: 50%;
+        margin-left: -(gs-span(4));
+    }
+ }
+
+.modal-content {
+    padding: rem($gs-gutter / 2);
+    display: table-cell;
+
+    @include mq(mobileLandscape) {
+        padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter * 1.5) rem($gs-gutter);
+    }
+}
+
+.modal-content__header {
+    @include fs-headline(3);
+    font-weight: bold;
+    padding-bottom: rem($gs-gutter);
+}
+
+.modal-content__text {
+    padding-left: rem($gs-gutter * 1.5);
+}
+
+.modal__supplementary {
+    padding: rem($gs-baseline - 2) rem($gs-baseline - 2) 0 rem($gs-baseline - 2);
+    display: table-cell;
+
+    @include mq(mobileLandscape) {
+        padding: rem($gs-baseline - 2) rem($gs-baseline - 2) rem($gs-baseline - 2) 0;
+    }
+}
+
+.modal-cta-container {
+    font-size: 0;
+}

@@ -1,0 +1,29 @@
+@(userFields: model.PrivateFields, marketingChoices: model.StatusFields, passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import helper._
+
+@main("Enter Details | Staff", containerPadding = false, isBrochure = true) {
+    <section class="section-payment u-cf">
+
+        <form action="" method="POST" id="payment-form" class="form form-primary-container js-staff-form">
+
+            @fragments.form.sectionHeading("Address")
+            @CSRF.formField
+
+            @fragments.form.errorMessageDisplay()
+            @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+            @fragments.form.addressDetail("Delivery address",
+                "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress",
+                true, userFields.address1, userFields.address2, userFields.address3, userFields.postcode,
+                userFields.address4, userFields.country)
+            @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing,
+                marketingChoices.receive3rdPartyMarketing)
+
+            @if(!passwordExists) {
+                @fragments.form.passwordDetail()
+            }
+
+            @fragments.form.submit("Join")
+        </form>
+    </section>
+}
