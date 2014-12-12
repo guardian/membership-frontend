@@ -1,6 +1,6 @@
-@(event: model.Eventbrite.RichEvent, isReverse: Boolean = false)
+@(event: model.Eventbrite.RichEvent)
 
-<div class="event-location@if(isReverse){ event-location--reversed}">
+<div class="event-location">
     @if(event.venue.name) {
         <span class="event-location__detail event-location__name" itemprop="name">@event.venue.name</span>
     }

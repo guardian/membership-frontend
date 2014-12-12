@@ -124,6 +124,9 @@
 
     .event-details__location {
         @include fs-data(4);
+        .event-location {
+            color: inherit;
+        }
     }
 }
 
