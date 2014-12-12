@@ -23,6 +23,11 @@ body {
     line-height: 1.4;
 }
 
+.u-body-copy {
+    font-weight: normal;
+    @include fs-bodyCopy(2);
+}
+
 /* Base headings
    ========================================================================== */
 
