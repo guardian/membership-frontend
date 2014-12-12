@@ -28,6 +28,6 @@
 .signpost-item__description {
     word-wrap: break-word;
     @include mq(tablet) {
-        min-height: rem($gs-gutter * 4);
+        min-height: rem($gs-gutter * 5);
     }
 }

@@ -1,10 +1,8 @@
-.action {
-    background-color: $mem-buttonBlue;
+%action {
     margin: $gs-baseline 0;
     display: inline-block;
     cursor: pointer;
     border: 0;
-    color: #ffffff;
     text-align: left;
     text-decoration: none;
     font-weight: bold;
@@ -14,10 +12,22 @@
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
     -moz-osx-font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
-    @include border-radius(50%);
     -webkit-font-smoothing: antialiased;
+    @include border-radius(50%);
     vertical-align: bottom;
     outline: none;
+
+    @include mq(mobileLandscape){
+        width: auto;
+        min-width: rem(80px);
+        max-width: none;
+    }
+}
+
+.action {
+    background-color: $mem-buttonBlue;
+    color: $white;
+    @extend %action;
 
     &:visited,
     &:hover,
@@ -41,12 +51,6 @@
         content: '';
         float: right;
         margin: rem(2px) 0 0 rem(30px);
-    }
-
-    @include mq(mobileLandscape){
-        width: auto;
-        min-width: rem(220px);
-        max-width: none;
     }
 }
 
@@ -264,12 +268,30 @@
     }
 }
 
+.action-secondary-small {
+    color: $mem-buttonBlue;
+    border: 1px solid rgba(24, 104, 153, .25);
+    background-color: $white;
+    @extend %action;
+
+    &:hover {
+        border: 1px solid $mem-buttonBlue;
+    }
+}
+
+.action-secondary-small--modal {
+    @include mq(mobileLandscape) {
+        margin-left: rem($gs-gutter / 2);
+    }
+}
+
 .i-wait {
     display: none;
 }
 
+.action-secondary-small--no-margin,
 .action--no-margin {
-    margin: 0;
+    margin-bottom: 0;
 }
 .action--no-top-margin {
     margin-top: 0;

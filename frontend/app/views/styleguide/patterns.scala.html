@@ -3,8 +3,8 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@pattern(title: String, description: String = "")(content: Html) = {
-    <div class="pattern js-pattern-item" data-pattern-label="@title">
+@pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
+    <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
         <div class="pattern__header">
             <h2 class="pattern__title">@title</h2>
             @if(description) {
@@ -196,6 +196,16 @@
             @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        </div>
+    }
+
+    @pattern("MODAL - a modal window to provide fiction to actions",
+             "Fragment to confirm the staff member wishes to change their email address", true) {
+        <div class="modal-container u-cf">
+            @fragments.modal.staffChangeEmail("exampleMail@mailprovider.com", "staffEmail@guardian.co.uk")
+            <form action="@routes.Styleguide.patterns">
+                <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+            </form>
         </div>
     }
 
