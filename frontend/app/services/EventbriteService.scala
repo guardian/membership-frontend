@@ -24,7 +24,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val metrics: EventbriteMetrics
 
   val wsUrl = Config.eventbriteApiUrl
-  val wsMetrics = metrics
+  def wsMetrics = metrics
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 

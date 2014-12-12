@@ -26,7 +26,7 @@ case class WebServiceHelperError(http: WebServiceHelper[_, _ <: Throwable], resp
  */
 trait WebServiceHelper[T, Error <: Throwable] {
   val wsUrl: String
-  val wsMetrics: StatusMetrics
+  def wsMetrics: StatusMetrics
 
   /**
    * Manipulate the request before it is executed. Generally used to add any authentication settings
