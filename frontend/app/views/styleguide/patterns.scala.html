@@ -160,7 +160,7 @@
     }
 
     @pattern("Ticket Details") {
-        @fragments.event.ticketDetails(eventPortfolio.normal.slice(0, 1))
+        @fragments.event.ticketDetails(eventPortfolio.normal.head)
     }
 
     @pattern("Pricing Info", "Single pricing info item") {
