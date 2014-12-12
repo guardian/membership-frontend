@@ -246,6 +246,11 @@ $mem-event-button-hover: rgba(0, 0, 0, .65);
 $side-margins-top-magic-number: 114px;
 $border-bottom-color: rgba(255, 255, 255, .29);
 
-$flash-message-error: #fdf4f3;
-
 $gutter-width-fluid: 3%;
+
+$flash-error-color: #d61d00;
+$flash-error-border: #ff998a;
+$flash-error-background: #fdf4f3;
+$flash-success-color: #1c6326;
+$flash-success-border: #33a22b;
+$flash-success-background: #faffe5;
