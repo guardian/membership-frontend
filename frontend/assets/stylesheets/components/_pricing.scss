@@ -10,10 +10,10 @@
     display: table;
     width: 100%;
     border-spacing: 0;
-    max-width: rem(gs-span(4) - $gs-gutter * 2);
+    max-width: rem(gs-span(4) - $gs-gutter);
 
     @include mq(mobileLandscape) {
-        max-width: rem(gs-span(4) - $gs-gutter);
+        max-width: rem(gs-span(4) - $gs-gutter * 2);
     }
 }
 .price-info__item {

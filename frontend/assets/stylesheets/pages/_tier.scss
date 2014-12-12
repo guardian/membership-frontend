@@ -263,7 +263,6 @@ $current-indicator: rem(72px);
     overflow: auto;
     position: relative;
     padding: rem($gs-gutter / 2);
-    margin-bottom: rem($gs-gutter / 2);
     border-spacing: 0;
     @include mq(mobileLandscape) {
         display: table;
@@ -282,10 +281,10 @@ $current-indicator: rem(72px);
 .tier-header__pricing {
     float: right;
     width: 100%;
-    max-width: rem(gs-span(4) - $gs-gutter * 2);
+    max-width: rem(gs-span(4) - $gs-gutter);
 
     @include mq(mobileLandscape) {
-        max-width: rem(gs-span(4) - $gs-gutter);
+        max-width: rem(gs-span(4) - $gs-gutter * 2);
     }
 }
 .tier-header__title {
@@ -363,7 +362,7 @@ $current-indicator: rem(72px);
 }
 .package-feature__caption {
     font-weight: bold;
-    margin-bottom: rem($gs-gutter/2);
+    margin: rem($gs-gutter/2) 0;
 }
 .package-feature__content {
     @include mq(tablet) {
