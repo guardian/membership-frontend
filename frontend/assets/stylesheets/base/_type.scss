@@ -35,11 +35,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-h3 {
-    font-weight: normal;
-    margin-bottom: rem(7px);
-    @include fs-bodyCopy(3);
-}
 
 /* Default type elements
    ========================================================================== */
