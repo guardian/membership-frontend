@@ -11,7 +11,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
-import services.MasterclassData
+import services.{EventbriteService, MasterclassData}
 import utils.StringUtils.truncateToWordBoundary
 import com.netaporter.uri.dsl._
 
@@ -141,6 +141,7 @@ object Eventbrite {
 
     val maxDiscounts: Int
     val allowDiscountCodes: Boolean
+    val service: EventbriteService
   }
 
   object RichEvent {
@@ -148,7 +149,7 @@ object Eventbrite {
     implicit def eventOptToEBEventOpt(eventOpt: Option[RichEvent]) = eventOpt.map(_.event)
   }
 
-  case class GuLiveEvent(event: EBEvent) extends RichEvent {
+  case class GuLiveEvent(event: EBEvent, service: EventbriteService) extends RichEvent {
     val imgUrl = Config.eventImageUrlPath(event.id) + "/{width}{pixel_ratio}.jpg"
     val socialImgUrl = {
       // get the largest available image (for social media etc)
@@ -165,7 +166,7 @@ object Eventbrite {
     val allowDiscountCodes = true
   }
 
-  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
+  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData], service: EventbriteService) extends RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
       .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
       .replace("http://static", "https://static-secure")

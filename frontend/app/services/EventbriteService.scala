@@ -16,12 +16,15 @@ import play.api.libs.ws._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import com.gu.monitoring.StatusMetrics
 
 trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
 
+  val metrics: EventbriteMetrics
+
   val wsUrl = Config.eventbriteApiUrl
-  val wsMetrics = EventbriteMetrics
+  val wsMetrics = metrics
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
@@ -117,11 +120,13 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
+  val metrics = new EventbriteMetrics("Guardian Live")
+
   private def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
   } yield (ordering.json \ "order").as[Seq[String]]
 
-  def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
+  def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event, this)
 
   def start() {
     Logger.info("Starting EventbriteService GuardianLive background tasks")
@@ -138,11 +143,13 @@ object MasterclassEventService extends EventbriteService {
 
   val apiToken = Config.eventbriteMasterclassesApiToken
 
+  val metrics = new EventbriteMetrics("Masterclasses")
+
   override def events: Seq[RichEvent] = allEvents.map(availableEvents).get()
 
   def mkRichEvent(event: EBEvent): RichEvent = {
     val masterclassData = masterclassDataService.getData(event.id)
-    MasterclassEvent(event, masterclassData)
+    MasterclassEvent(event, masterclassData, this)
   }
 
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
