@@ -83,7 +83,7 @@
     }
 }
 
-@include mq($to: tablet) {
+@include mq($until: tablet) {
     .events-list__category__label {
         display: inline-block;
         width: rem(100px);
