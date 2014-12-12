@@ -28,16 +28,26 @@ define([
     var MODAL_CANCEL_SELECTOR = '.js-modal-cancel';
     var MODAL_DATA_ATTRIBUTE = 'data-modal';
     var IS_HIDDEN = 'is-hidden';
+    var ESC_KEY_CODE = 27;
 
     var addListeners = function () {
 
         function removeHtmlListener() {
             bean.off(document.documentElement, 'click');
+            bean.off(document, 'keydown');
         }
 
         function addHtmlListener() {
             bean.on(document.documentElement, 'click', function () {
                 $(MODAL_SELECTOR).addClass(IS_HIDDEN);
+                removeHtmlListener();
+            });
+
+            bean.on(document, 'keydown', function(e) {
+                var $modals = $(MODAL_SELECTOR);
+                if (!$modals.hasClass(IS_HIDDEN) && e.keyCode === ESC_KEY_CODE) {
+                    $modals.addClass(IS_HIDDEN);
+                }
                 removeHtmlListener();
             });
         }
@@ -56,6 +66,7 @@ define([
                 form = e.target.form;
             });
 
+            // stop propagation when clicking modal element
             bean.on($modalElem[0], 'click', function (e) {
                 e.stop();
             });
