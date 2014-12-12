@@ -1,4 +1,4 @@
-@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])(implicit token: play.filters.csrf.CSRF.Token)
+@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], flash: model.Flash.Message)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config

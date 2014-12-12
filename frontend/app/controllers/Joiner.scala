@@ -18,6 +18,7 @@ import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoin
 import model.Eventbrite.{EBCode, RichEvent}
 import model._
 import model.StripeSerializer._
+import model.Flash._
 import services._
 
 trait Joiner extends Controller {
@@ -36,7 +37,7 @@ trait Joiner extends Controller {
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
-    val error = request.flash.get("error")
+    val error = ErrorMessage(request.flash.get("error"));
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     userSignedIn match {
       case Some(user) => for {
@@ -67,10 +68,11 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
+    val success = SuccessMessage(request.flash.get("success"))
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists, success))
     }
   }
 

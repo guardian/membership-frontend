@@ -3,6 +3,7 @@ package controllers
 import actions.OAuthActions
 import com.gu.googleauth.{GoogleAuth, UserIdentity, GoogleGroupChecker}
 import configuration.Config
+import model.Flash._
 import play.api.Play.current
 import play.api.libs.json.Json
 import play.api.mvc.{Session, Action, Controller}
@@ -15,7 +16,7 @@ object OAuth extends Controller with OAuthActions {
   val ANTI_FORGERY_KEY = "antiForgeryToken"
 
   def login = NoCacheAction { request =>
-    val error = request.flash.get("error")
+    val error = ErrorMessage(request.flash.get("error"))
     Ok(views.html.staff.unauthorised(error))
   }
 
