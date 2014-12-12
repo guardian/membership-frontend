@@ -58,10 +58,11 @@
     }
 }
 
-/* Price Info - Reversed (Modifier)
+/* Price Info - Reversed colour modifiers
    ========================================================================== */
 
-.price-info--reversed {
+.price-info--friend,
+.price-info--patron {
     color: $white;
     .price-info__item--split {
         border-color: $white-trans;
