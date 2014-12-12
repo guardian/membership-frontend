@@ -1,0 +1,15 @@
+@(event: model.Eventbrite.RichEvent, isReverse: Boolean = false)
+
+<div class="event-location@if(isReverse){ event-location--reversed}">
+    @if(event.venue.name) {
+        <span class="event-location__detail event-location__name" itemprop="name">@event.venue.name</span>
+    }
+    @for(location <- event.venue.address) {
+        @if(location.city) {
+            <span class="event-location__detail event-location__address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">,
+                <span itemprop="addressLocality">@location.city</span>,
+                <span itemprop="postalCode">@location.postal_code</span>
+            </span>
+        }
+    }
+</div>

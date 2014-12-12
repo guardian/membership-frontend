@@ -322,16 +322,6 @@ $filter-icon-size: 18px;
     color: $black;
 }
 
-.event-item__location {
-    font-size: 0; /** space between inline block elements **/
-    color: $c-neutral2;
-}
-
-.event-item__location-name,
-.event-item__location-address {
-    @include fs-data(3);
-}
-
 .event-item__description {
     @include fs-bodyCopy(1);
     padding: rem($gs-baseline) 0 0;
@@ -408,6 +398,22 @@ $filter-icon-size: 18px;
             @extend .icon-arrow-right-black;
         }
     }
+}
+
+/* Event Location Summary
+   ========================================================================== */
+
+.event-location {
+    // Remove space between inline block elements
+    font-size: 0;
+    line-height: 1;
+    color: $c-neutral2;
+}
+.event-location--reversed {
+    color: $white;
+}
+.event-location__detail {
+    @include fs-data(4);
 }
 
 /* ==========================================================================

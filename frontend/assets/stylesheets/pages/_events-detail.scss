@@ -123,12 +123,7 @@
     }
 
     .event-details__location {
-        font-size: 0; /** space between inline block elements **/
-
-        .event-details__venue-name,
-        .event-details__address {
-            @include fs-data(4);
-        }
+        @include fs-data(4);
     }
 }
 

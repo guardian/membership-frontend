@@ -84,12 +84,7 @@
                     }
                 </div>
                 <div class="event-details__location">
-                    <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @for(addressLine <- event.venue.addressLine) {
-                        <span class="event-details__location__address">
-                            , @addressLine
-                        </span>
-                    }
+                    @fragments.event.addressSummary(event, isReverse=true)
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
