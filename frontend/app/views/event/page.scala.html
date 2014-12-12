@@ -192,20 +192,23 @@
                                 </div>
                                 <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                             </div>
-                            <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <div class="event-content__first">
-                                    <i class="icon-location icon--info"></i>
+
+                            @if(event.venue.addressLine) {
+                                <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                                    <div class="event-content__first">
+                                        <i class="icon-location icon--info"></i>
+                                    </div>
+                                    <div class="event-content__second copy">
+                                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                                        @for(addressLine <- event.venue.addressLine) {
+                                            <span class="event-content__address" itemprop="address">@addressLine</span>
+                                        }
+                                        @for(googleMapsLink <- event.venue.googleMapsLink) {
+                                            <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
+                                        }
+                                    </div>
                                 </div>
-                                <div class="event-content__second copy">
-                                    <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                    @for(addressLine <- event.venue.addressLine) {
-                                        <span class="event-content__address" itemprop="address">@addressLine</span>
-                                    }
-                                    @for(googleMapsLink <- event.venue.googleMapsLink) {
-                                        <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
-                                    }
-                                </div>
-                            </div>
+                            }
 
                             @if(event.isNoTicketEvent == false) {
 
