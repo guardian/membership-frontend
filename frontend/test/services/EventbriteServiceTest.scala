@@ -7,19 +7,20 @@ import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
 import scala.concurrent.duration._
+import monitoring.EventbriteMetrics
 
 class EventbriteServiceTest extends PlaySpecification {
-
-  def testEvent = TestRichEvent(EventbriteTestObjects.eventWithName("test"))
 
   "EventbriteService" should {
 
     "reuses an existing discount code" in TestEventbriteService { service =>
+      val testEvent = TestRichEvent(EventbriteTestObjects.eventWithName("test"), service)
       Await.ready(service.createOrGetDiscount(testEvent, "5ZCYERL5"), 5.seconds)
       service.lastRequest mustEqual RequestInfo.empty
     }
 
     "creates a new discount code" in TestEventbriteService { service =>
+      val testEvent = TestRichEvent(EventbriteTestObjects.eventWithName("test"), service)
       Await.ready(service.createOrGetDiscount(testEvent, "NEW"), 5.seconds)
 
       service.lastRequest mustEqual RequestInfo(
@@ -33,7 +34,7 @@ class EventbriteServiceTest extends PlaySpecification {
     }
   }
 
-  case class TestRichEvent(event: EBEvent) extends RichEvent {
+  case class TestRichEvent(event: EBEvent, service: EventbriteService) extends RichEvent {
     val imgUrl = ""
     val socialImgUrl = ""
     val maxDiscounts = 2
@@ -48,6 +49,8 @@ class EventbriteServiceTest extends PlaySpecification {
     val apiEventListUrl = "events"
 
     var lastRequest = RequestInfo.empty
+
+    val metrics = new EventbriteMetrics("test")
 
     override def get[A <: EBObject](endpoint: String, params: (String, String)*)(implicit reads: Reads[A], error: Reads[EBError]): Future[A] = {
       endpoint match {
@@ -68,7 +71,7 @@ class EventbriteServiceTest extends PlaySpecification {
     override def events: Seq[RichEvent] = Nil
     override def eventsArchive: Seq[RichEvent] = Nil
     override def priorityEventOrdering: Seq[String] = Nil
-    def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
+    def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event, this)
   }
 
   object TestEventbriteService {
