@@ -9,17 +9,10 @@
     background-color: $white;
     padding: rem($gs-gutter / 2);
     overflow: hidden;
+    border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter);
-    }
-
-    .theme--guardian-live & {
-        border-bottom: rem(1px) solid $mem-live-accent;
-    }
-
-    .theme--masterclass & {
-        border-bottom: rem(1px) solid $mem-mc-accent;
     }
 
     &:last-child {
@@ -66,7 +59,7 @@
     .theme--guardian-live & {
         content: 'Sorry, no matching events were found.';
     }
-    .theme--masterclass & {
+    .theme--masterclasses & {
         content: 'Sorry, no matching Masterclasses were found.';
     }
 }
@@ -402,7 +395,7 @@ $filter-icon-size: 18px;
         float: right;
     }
 
-    .theme--masterclass & {
+    .theme--masterclasses & {
         background-color: $mem-mc-top;
         &:after {
             @extend .icon-arrow-right-black;
