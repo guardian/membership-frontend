@@ -21,7 +21,6 @@ define([
 ], function ($, bean) {
     'use strict';
 
-    var DOT = '.';
     var MODAL_SELECTOR = '.js-modal';
     var MODAL_CTA_SELECTOR = '.js-modal-cta';
     var MODAL_CONFIRM_SELECTOR = '.js-modal-confirm';
@@ -33,17 +32,17 @@ define([
     var addListeners = function () {
 
         function removeHtmlListener() {
-            bean.off(document.documentElement, 'click');
-            bean.off(document, 'keydown');
+            bean.off(document.documentElement, 'click.modal');
+            bean.off(document, 'keydown.modal');
         }
 
         function addHtmlListener() {
-            bean.on(document.documentElement, 'click', function () {
+            bean.on(document.documentElement, 'click.modal', function () {
                 $(MODAL_SELECTOR).addClass(IS_HIDDEN);
                 removeHtmlListener();
             });
 
-            bean.on(document, 'keydown', function(e) {
+            bean.on(document, 'keydown.modal', function(e) {
                 var $modals = $(MODAL_SELECTOR);
                 if (!$modals.hasClass(IS_HIDDEN) && e.keyCode === ESC_KEY_CODE) {
                     $modals.addClass(IS_HIDDEN);
@@ -52,33 +51,37 @@ define([
             });
         }
 
+        function toggleClass(elem, className) {
+            $(elem).toggleClass(className);
+        }
+
         $(MODAL_CTA_SELECTOR).map(function (button) {
 
-            var $modalElem = $(DOT + button.getAttribute(MODAL_DATA_ATTRIBUTE));
-            var modalConfirmElem = $modalElem[0].querySelector(MODAL_CONFIRM_SELECTOR);
+            var modalElem = document.querySelector('.' + button.getAttribute(MODAL_DATA_ATTRIBUTE));
+            var modalConfirmElem = modalElem.querySelector(MODAL_CONFIRM_SELECTOR);
             var form;
 
             bean.on(button, 'click', function (e) {
                 e.stop();
-                $modalElem.toggleClass(IS_HIDDEN);
+                toggleClass(modalElem, IS_HIDDEN);
                 addHtmlListener();
 
                 form = e.target.form;
             });
 
             // stop propagation when clicking modal element
-            bean.on($modalElem[0], 'click', function (e) {
+            bean.on(modalElem, 'click.modal', function (e) {
                 e.stop();
             });
 
-            bean.on(modalConfirmElem, 'click', function (e) {
+            bean.on(modalConfirmElem, 'click.modal', function (e) {
                 e.stop();
                 form.submit();
             });
 
-            bean.on($modalElem[0], 'click', MODAL_CANCEL_SELECTOR, function (e) {
+            bean.on(modalElem, 'click.modal', MODAL_CANCEL_SELECTOR, function (e) {
                 e.stop();
-                $modalElem.toggleClass(IS_HIDDEN);
+                toggleClass(modalElem, IS_HIDDEN);
                 removeHtmlListener();
             });
         });
