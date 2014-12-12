@@ -53,18 +53,15 @@
 .control--cancel {
     border: 1px solid $c-neutral3;
 
-    .icon-cross {
-        opacity: .2;
-    }
-
     .control__icon {
         padding-top: rem(4px);
+        opacity: .2;
     }
 
     &:hover {
         border: 1px solid $c-neutral1;
 
-        .icon-cross {
+        .control__icon {
             opacity: 1;
         }
     }
