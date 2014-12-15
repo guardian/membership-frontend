@@ -9,17 +9,10 @@
     background-color: $white;
     padding: rem($gs-gutter / 2);
     overflow: hidden;
+    border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter);
-    }
-
-    .theme--guardian-live & {
-        border-bottom: rem(1px) solid $mem-live-accent;
-    }
-
-    .theme--masterclass & {
-        border-bottom: rem(1px) solid $mem-mc-accent;
     }
 
     &:last-child {
@@ -66,7 +59,7 @@
     .theme--guardian-live & {
         content: 'Sorry, no matching events were found.';
     }
-    .theme--masterclass & {
+    .theme--masterclasses & {
         content: 'Sorry, no matching Masterclasses were found.';
     }
 }
@@ -322,16 +315,6 @@ $filter-icon-size: 18px;
     color: $black;
 }
 
-.event-item__location {
-    font-size: 0; /** space between inline block elements **/
-    color: $c-neutral2;
-}
-
-.event-item__location-name,
-.event-item__location-address {
-    @include fs-data(3);
-}
-
 .event-item__description {
     @include fs-bodyCopy(1);
     padding: rem($gs-baseline) 0 0;
@@ -402,12 +385,28 @@ $filter-icon-size: 18px;
         float: right;
     }
 
-    .theme--masterclass & {
+    .theme--masterclasses & {
         background-color: $mem-mc-top;
         &:after {
             @extend .icon-arrow-right-black;
         }
     }
+}
+
+/* Event Location Summary
+   ========================================================================== */
+
+.event-location {
+    // Remove space between inline block elements
+    font-size: 0;
+    line-height: 1;
+    color: $c-neutral2;
+}
+.event-location--reversed {
+    color: $white;
+}
+.event-location__detail {
+    @include fs-data(4);
 }
 
 /* ==========================================================================

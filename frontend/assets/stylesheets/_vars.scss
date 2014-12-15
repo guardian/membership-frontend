@@ -69,6 +69,7 @@ $font-scale: (
         3: (font-size: 20, line-height: 24),
         4: (font-size: 22, line-height: 28),
         5: (font-size: 24, line-height: 28),
+        6: (font-size: 26, line-height: 28),
     ),
     headline: (
         1: (font-size: 14, line-height: 18),
@@ -233,7 +234,7 @@ $offWhite: #d6d6d6;
 $black: #000000;
 $offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .25);
-$white-trans: rgba(255, 255, 255, .5);
+$white-trans: rgba(255, 255, 255, .25);
 
 $mem-live-top: #b51800;
 $mem-live-accent: #cc2b12;

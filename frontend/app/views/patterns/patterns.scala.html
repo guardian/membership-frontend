@@ -3,8 +3,8 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@pattern(title: String, description: String = "")(content: Html) = {
-    <div class="pattern js-pattern-item" data-pattern-label="@title">
+@pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
+    <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
         <div class="pattern__header">
             <h2 class="pattern__title">@title</h2>
             @if(description) {
@@ -40,6 +40,94 @@
 
     @pattern("Action - Full Width", "Full width button modifier") {
         <a class="action action--fullwidth" href="#">Action</a>
+    }
+
+    @pattern("Base - Inline Text Elements") {
+        <div class="copy">
+            <p><a href="#">This is a text link</a></p>
+            <p><strong>Strong is used to indicate strong importance</strong></p>
+            <p><em>This text has added emphasis</em></p>
+            <p><del>This text is deleted</del> and <ins>This text is inserted</ins></p>
+            <p><s>This text has a strikethrough</s></p>
+            <p>Superscript<sup>®</sup></p>
+            <p>Subscript for things like H<sub>2</sub>O</p>
+            <p><small>This small text is small for for fine print, etc.</small></p>
+            <p>Abbreviation: <abbr title="HyperText Markup Language">HTML</abbr></p>
+            <p>Keybord input: <kbd>Cmd</kbd></p>
+            <p><q cite="https://developer.mozilla.org/en-US/docs/HTML/Element/q">This text is a short inline quotation</q></p>
+            <p><cite>This is a citation</cite>
+            </p><p>The <dfn>dfn element</dfn> indicates a definition.</p>
+            <p>The <mark>mark element</mark> indicates a highlight</p>
+        </div>
+    }
+
+    @pattern("Base - Example Body Copy") {
+        <div class="copy">
+            <h2>This is a second level heading</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, delectus. Optio sequi, aperiam obcaecati sunt minima dicta, quidem molestias adipisci deserunt consequuntur ad nostrum. Nihil voluptates aut, dolorem quidem minus!</p>
+            <ol>
+                <li>This is an ordered list.</li>
+                <li>
+                    This is the second item, which contains a sub list
+                    <ol>
+                        <li>This is the sub list, which is also ordered.</li>
+                        <li>It has two items.</li>
+                    </ol>
+                </li>
+                <li>This is the final item on this list.</li>
+            </ol>
+            <h3>This is a third level heading</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
+            <p><em>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam repellat modi architecto iure unde possimus aliquam soluta provident commodi, eos, dicta magnam ad vero cum, labore amet odit tenetur consequatur.</em></p>
+            <h4>This is a fourth level heading</h4>
+            <ul>
+                <li>
+                    United Kingdom of Great Britain and Northern Ireland:
+                    <ul>
+                        <li>England</li>
+                        <li>Scotland</li>
+                        <li>Wales</li>
+                        <li>Northern Ireland</li>
+                    </ul>
+                </li>
+                <li>Republic of Ireland</li>
+                <li>Isle of Man</li>
+                <li>
+                    Channel Islands:
+                    <ul>
+                        <li>Bailiwick of Guernsey</li>
+                        <li>Bailiwick of Jersey</li>
+                    </ul>
+                </li>
+            </ul>
+            <h5>This is a fifth level heading</h5>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
+            <h6>This is a sixth level heading</h6>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
+        </div>
+    }
+
+    @pattern("Base - Tables") {
+        <table class="table table--responsive-font table--striped" role="grid">
+            <tbody>
+                <tr role="row">
+                    <th role="rowheader">Tier</th>
+                    <td>Partner</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">End Date</th>
+                    <td>10 December 2015</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">Annual Payment</th>
+                    <td>£135.00</td>
+                </tr>
+                <tr role="row">
+                    <th role="rowheader">Last Payment</th>
+                    <td>10 December 2014</td>
+                </tr>
+            </tbody>
+        </table>
     }
 
     @pattern("Toggle Component - Button", "JS toggle component") {
@@ -129,7 +217,7 @@
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         <ul class="events-list events-list--items-3 u-unstyled">
-            @for(event <- eventPortfolio.normal.slice(0, 1)) {
+            @for(event <- eventPortfolio.orderedEvents.slice(0, 1)) {
                 @fragments.event.item(event, isHero=true)
             }
         </ul>
@@ -159,6 +247,10 @@
         </ul>
     }
 
+    @pattern("Ticket Details") {
+        @fragments.event.ticketDetails(eventPortfolio.normal.head)
+    }
+
     @pattern("Pricing Info", "Single pricing info item") {
         @fragments.benefits.priceInfo(Tier.Partner)
     }
@@ -173,6 +265,12 @@
 
     @pattern("Benefits - Featured Grid", "Featured grid of individual benefit items for a tier") {
         @fragments.benefits.featured(Tier.Partner)
+    }
+
+    @pattern("Tier - Tier Header") {
+        @fragments.tier.tierHeader(Tier.Friend)
+        @fragments.tier.tierHeader(Tier.Partner)
+        @fragments.tier.tierHeader(Tier.Patron)
     }
 
     @pattern("Tier - Expanded", "Expanded variant of the benefits details fragment") {
@@ -196,6 +294,16 @@
             @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
             @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
+        </div>
+    }
+
+    @pattern("MODAL - a modal window to provide fiction to actions",
+             "Fragment to confirm the staff member wishes to change their email address", true) {
+        <div class="modal-container u-cf">
+            @fragments.modal.staffChangeEmail("exampleMail@mailprovider.com", "staffEmail@guardian.co.uk")
+            <form action="@routes.PatternLibrary.patterns">
+                <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+            </form>
         </div>
     }
 

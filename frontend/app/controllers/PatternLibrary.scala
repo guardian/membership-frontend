@@ -3,15 +3,15 @@ package controllers
 import play.api.mvc.Controller
 import services.{GuardianLiveEventService, EventbriteService}
 
-trait Styleguide extends Controller {
+trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteService
 
   def patterns = NoCacheAction { implicit request =>
-    Ok(views.html.styleguide.patterns(guLiveEvents.getEventPortfolio))
+    Ok(views.html.patterns.patterns(guLiveEvents.getEventPortfolio))
   }
 
 }
 
-object Styleguide extends Styleguide {
+object PatternLibrary extends PatternLibrary {
   val guLiveEvents = GuardianLiveEventService
 }
