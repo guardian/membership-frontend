@@ -20,6 +20,7 @@ $current-indicator: rem(72px);
 .package-container {
     border-top: rem(1px) solid transparent;
     border-bottom: rem(1px) solid transparent;
+    padding-top: rem($gs-gutter * 3);
 }
 
 .package-container__header {
