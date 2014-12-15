@@ -147,7 +147,6 @@ object Eventbrite {
 
   object RichEvent {
     implicit def eventToEBEvent(event: RichEvent) = event.event
-    implicit def eventOptToEBEventOpt(eventOpt: Option[RichEvent]) = eventOpt.map(_.event)
   }
 
   case class GuLiveEvent(event: EBEvent) extends RichEvent {
