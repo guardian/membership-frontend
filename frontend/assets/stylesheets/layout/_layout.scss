@@ -162,27 +162,3 @@ body {
     }
 
 }
-
-// Info - help and feedback containers
-// TODO: Remove once all functional pages have been moved to new layout
-.info-container {
-
-    @include mq(desktop) {
-        margin: 0 rem(gs-span(1)) 0 rem(gs-span(2));
-    }
-
-    @include mq(mem-full) {
-        margin: 0 rem(gs-span(1)) 0 rem(gs-span(3));
-    }
-
-}
-
-// Flexbox
-
-%flexbox-container-justify {
-    -webkit-box-pack: justify;
-    -moz-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-}
