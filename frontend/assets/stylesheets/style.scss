@@ -5,7 +5,9 @@
    ========================================================================== */
 
 @import 'vars';
-@import 'mixins';
+@import 'mixins/common';
+@import 'mixins/flexbox';
+@import 'mixins/grids';
 @import 'extends-only';
 
 /* ==========================================================================
@@ -16,21 +18,11 @@
 @import 'base/base';
 @import 'base/type';
 @import 'base/links';
-@import 'base/helpers';
 @import 'base/lists';
 @import 'base/forms';
 @import 'base/tables';
 @import 'base/images';
-
-/* ==========================================================================
-   Utility
-   ========================================================================== */
-
-@import 'utility/flexbox';
-@import 'utility/hidden';
-@import 'utility/js-warning';
-@import 'utility/clipboard';
-@import 'pages/browser-warning';
+@import 'base/helpers';
 
 /* ==========================================================================
    Layout
@@ -99,11 +91,17 @@
 @import 'pages/feedback';
 @import 'pages/home'; // Home A-B test styles
 
-/* ==========================================================================
-   Overrides
+/* Overrides / Trumps
    ========================================================================== */
 
 @import 'base/tones';
+
+/* ==========================================================================
+   State
+   ========================================================================== */
+
+@import 'state/user';
+@import 'state/responsive';
 
 /* ==========================================================================
    Webfonts

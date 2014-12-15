@@ -105,6 +105,7 @@ body {
         max-width: gs-span(14)+($gs-gutter*2);
     }
 
+    //TODO: Remove. This is almost always false.
     &.page-container--with-padding {
         background-color: $white;
         @include mq(tablet) {
@@ -124,7 +125,6 @@ body {
 }
 
 // Two thirds section
-
 .section-two-thirds {
     width: 100%;
     margin: 0 auto;
