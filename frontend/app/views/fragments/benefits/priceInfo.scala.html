@@ -1,9 +1,9 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, isReversable: Boolean = false)
+@(tier: com.gu.membership.salesforce.Tier.Tier, isReversible: Boolean = false)
 
 @import model.Benefits
 
 @defining(Benefits.details(tier)) { benefits =>
-    <div class="price-info@if(isReversable){ price-info--@tier.toString.toLowerCase}">
+    <div class="price-info@if(isReversible){ price-info--@tier.toString.toLowerCase}">
     @benefits.pricing.fold {
         <div class="price-info__item price-info__item--last">
             <div class="price-info__detail">
