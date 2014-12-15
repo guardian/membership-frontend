@@ -159,6 +159,10 @@
         </ul>
     }
 
+    @pattern("Ticket Details") {
+        @fragments.event.ticketDetails(eventPortfolio.normal.head)
+    }
+
     @pattern("Pricing Info", "Single pricing info item") {
         @fragments.benefits.priceInfo(Tier.Partner)
     }
