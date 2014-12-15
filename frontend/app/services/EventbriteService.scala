@@ -19,6 +19,7 @@ import scala.concurrent.{Await, Future}
 
 trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
+  val maxDiscountQuantityAvailable: Int
 
   val wsUrl = Config.eventbriteApiUrl
 
@@ -88,7 +89,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
       discount <- discounts.find(_.code == code).fold {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
-          "access_code.quantity_available" -> Seq(event.maxDiscounts.toString),
+          "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
           "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
         ))
       }(Future.successful)
@@ -104,7 +105,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
         post[EBDiscount](uri, Map(
           "discount.code" -> Seq(code),
           "discount.percent_off" -> Seq("20"),
-          "discount.quantity_available" -> Seq(event.maxDiscounts.toString)
+          "discount.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString)
         ))
       }
     } yield discount
@@ -115,6 +116,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
 object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
+  val maxDiscountQuantityAvailable = 2
 
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
@@ -138,6 +140,7 @@ object MasterclassEventService extends EventbriteService {
   val masterclassDataService = MasterclassDataService
 
   val apiToken = Config.eventbriteMasterclassesApiToken
+  val maxDiscountQuantityAvailable = 1
 
   val wsMetrics = new EventbriteMetrics("Masterclasses")
 
