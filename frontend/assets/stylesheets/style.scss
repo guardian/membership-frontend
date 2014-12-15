@@ -5,7 +5,9 @@
    ========================================================================== */
 
 @import 'vars';
-@import 'mixins';
+@import 'mixins/common';
+@import 'mixins/flexbox';
+@import 'mixins/grids';
 @import 'extends-only';
 
 /* ==========================================================================
@@ -16,21 +18,11 @@
 @import 'base/base';
 @import 'base/type';
 @import 'base/links';
-@import 'base/helpers';
 @import 'base/lists';
 @import 'base/forms';
 @import 'base/tables';
 @import 'base/images';
-
-/* ==========================================================================
-   Utility
-   ========================================================================== */
-
-@import 'utility/flexbox';
-@import 'utility/hidden';
-@import 'utility/js-warning';
-@import 'utility/clipboard';
-@import 'pages/browser-warning';
+@import 'base/helpers';
 
 /* ==========================================================================
    Layout
@@ -39,24 +31,26 @@
 @include grid-system;
 @include guss-row-utility;
 @include guss-columns-utility;
+
 @import 'layout/layout';
 @import 'layout/footer';
 @import 'layout/header';
 @import 'layout/headings';
 @import 'layout/side-margins';
 @import 'layout/homeslice';
-@import 'components/signpost';
 
 /* ==========================================================================
-   Icons
+   Module
+   ========================================================================== */
+
+/* Icons
    ========================================================================== */
 
 @import 'icons/icons';
 @import 'icons/icons-cards';
 @import 'components/icons';
 
-/* ==========================================================================
-   Nav
+/* Nav
    ========================================================================== */
 
 @import 'nav/nav';
@@ -64,9 +58,7 @@
 @import 'nav/control';
 @import 'nav/brand-bar';
 
-
-/* ==========================================================================
-   Membership components
+/* Membership Components
    ========================================================================== */
 
 @import 'components/grid';
@@ -80,13 +72,14 @@
 @import 'components/pricing';
 @import 'components/patterns';
 @import 'components/signpost';
-@import 'components/flash-message';
 @import 'components/help';
 @import 'components/modal';
+@import 'components/messages';
+@import 'components/warnings';
 
-/* ==========================================================================
-   Membership pages
+/* Membership Pages
    ========================================================================== */
+// TODO: These are conceptually no different to components (modules), merge them.
 
 @import 'pages/events-detail';
 @import 'pages/events-summary';
@@ -99,11 +92,17 @@
 @import 'pages/feedback';
 @import 'pages/home'; // Home A-B test styles
 
-/* ==========================================================================
-   Overrides
+/* Overrides / Trumps
    ========================================================================== */
 
 @import 'base/tones';
+
+/* ==========================================================================
+   State
+   ========================================================================== */
+
+@import 'state/user';
+@import 'state/responsive';
 
 /* ==========================================================================
    Webfonts
