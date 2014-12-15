@@ -179,6 +179,12 @@
         @fragments.benefits.featured(Tier.Partner)
     }
 
+    @pattern("Tier - Tier Header") {
+        @fragments.tier.tierHeader(Tier.Friend)
+        @fragments.tier.tierHeader(Tier.Partner)
+        @fragments.tier.tierHeader(Tier.Patron)
+    }
+
     @pattern("Tier - Expanded", "Expanded variant of the benefits details fragment") {
         <div class="package-list package-list--flex-box">
             @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
