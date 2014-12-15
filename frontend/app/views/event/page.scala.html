@@ -17,24 +17,6 @@
     }
 }
 
-@termsAndConditions = @{
-    event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
-        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
-    }
-}
-
-@ticketCta(actionClassSoldOut: String, actionClassBuy: String) = {
-    @if(event.isSoldOut) {
-        <span class="action @actionClassSoldOut">Sold out</span>
-    } else {
-        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
-        <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
-            <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
-        </div>
-    }
-}
-
 @becomeMemberCta(ticket: EBTicketClass) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
@@ -81,37 +63,7 @@
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
-                @for(ticket <- event.generalReleaseTicket) {
-                    <div class="event-ticket u-cf">
-                        <div class="event-ticket__details">
-
-                            @if(ticket.free) {
-                                <div class="event-ticket__price">
-                                    <span class="event-ticket__price-amount">Free</span>
-                                </div>
-                            } else {
-                                @for(pricing <- ticket.cost) {
-                                    <div class="js-event-price">
-                                        <div class="event-ticket__price">
-                                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
-                                        </div>
-                                        <div class="event-ticket__trail">
-                                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
-                                                Partners/Patrons @pricing.discountPrice
-                                            </span>
-                                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                                (save @pricing.savingPrice)
-                                            </span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                        @if(event.isBookable) {
-                            @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
-                        }
-                    </div>
-                }
+                @fragments.event.ticketDetails(event)
             }
             <i class="event-logo@if(eventType){ icon-@eventType}"></i>
         </div>
@@ -238,7 +190,7 @@
                                         }
                                     }
                                     @if(event.isBookable) {
-                                        @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
+                                        @fragments.event.ticketCta(event, "action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
                                         @becomeMemberCta(ticket)
                                     }
                                 }
