@@ -11,8 +11,8 @@
 
         <section class="page-section">
             <div class="page-section__content">
-                @for(text <- flash.textOpt) {
-                    <p>@text</p>
+                @for(flashMessage <- flashMessageOpt) {
+                    <p>@flashMessage.message</p>
                 }
 
                 @for(errorTemplate <- errorTemplateOpt) {

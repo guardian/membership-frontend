@@ -1,20 +1,10 @@
-@(flashMessage: model.Flash.Message)
-
-@import model.Flash._
-
-@flashMessageType = @{
-    flashMessage match {
-        case _: ErrorMessage => "error"
-        case _: SuccessMessage => "success"
-    }
-}
+@(flashMessage: model.FlashMessage)
 
 <section class="page-section page-section--no-padding">
     <div class="page-section__content">
-    @for(text <- flashMessage.textOpt) {
-        <div class="flash-message flash-message--@flashMessageType">
-            @text
+        <div class="flash-message flash-message--@flashMessage.level">
+            @flashMessage.message
         </div>
-    }
     </div>
 </section>
+
