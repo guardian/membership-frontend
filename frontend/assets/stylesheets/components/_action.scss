@@ -54,6 +54,14 @@
     }
 }
 
+.action[disabled] {
+    &,
+    &:hover,
+    &:focus {
+        background-color: $c-neutral5;
+    }
+}
+
 // this variant moves the arrow to the other side
 // and hides the one on the right
 .action.action--arrow-left {
