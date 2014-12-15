@@ -268,7 +268,7 @@ $current-indicator: rem(72px);
         display: table;
         width: 100%;
         height: rem($gs-gutter * 4);
-        padding: rem($gs-gutter - 5) rem($gs-gutter);
+        padding: rem($gs-gutter - 5px) rem($gs-gutter);
     }
 }
 .tier-header__title,
@@ -337,7 +337,7 @@ $current-indicator: rem(72px);
         }
     }
     .tier-header__pricing {
-        padding-top: rem($gs-gutter + 20);
+        padding-top: rem($gs-gutter * 2);
     }
 }
 
