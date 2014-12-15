@@ -18,7 +18,6 @@ import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoin
 import model.Eventbrite.{EBCode, RichEvent}
 import model._
 import model.StripeSerializer._
-import model.Flash._
 import services._
 
 trait Joiner extends Controller {
@@ -37,7 +36,7 @@ trait Joiner extends Controller {
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
-    val error = ErrorMessage(request.flash.get("error"));
+    val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     userSignedIn match {
       case Some(user) => for {
@@ -46,9 +45,9 @@ trait Joiner extends Controller {
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield {
-        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, error))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
       }
-      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, error)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
@@ -68,11 +67,11 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
-    val success = SuccessMessage(request.flash.get("success"))
+    val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists, success))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists, flashMsgOpt))
     }
   }
 

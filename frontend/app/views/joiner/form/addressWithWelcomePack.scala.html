@@ -1,10 +1,18 @@
-@(userFields: model.PrivateFields, marketingChoices: model.StatusFields, passwordExists: Boolean, flash: model.Flash.Message)(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    userFields: model.PrivateFields,
+    marketingChoices: model.StatusFields,
+    passwordExists: Boolean,
+    flashMessage: Option[model.FlashMessage]
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._
 
 @main("Enter Details | Staff", containerPadding = false, isBrochure = true) {
     <section class="section-payment u-cf">
-        @fragments.notifications.flashMessage(flash)
+
+        @for(flashMsg <- flashMessage) {
+            @fragments.notifications.flashMessage(flashMsg)
+        }
 
         <form action="" method="POST" id="payment-form" class="form form-primary-container js-staff-form">
             @fragments.form.sectionHeading("Address")

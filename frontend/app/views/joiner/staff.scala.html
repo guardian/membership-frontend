@@ -1,4 +1,9 @@
-@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], flash: model.Flash.Message)(implicit token: play.filters.csrf.CSRF.Token)
+@(
+  staffEmail: model.StaffEmails,
+  displayName: Option[String],
+  avatarUrl: Option[String],
+  flashMessage: Option[model.FlashMessage]
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
@@ -22,7 +27,9 @@
 
     <main class="page-container__inner" role="main">
 
-        @fragments.notifications.flashMessage(flash)
+        @for(flashMsg <- flashMessage) {
+            @fragments.notifications.flashMessage(flashMsg)
+        }
 
         @fragments.page.pageHeader("Guardian Staff Membership",
             Some("All permanent Guardian staff can sign up to the Partner tier of Guardian Membership for free (equivalent to £15/month)"))
