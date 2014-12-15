@@ -1,0 +1,5 @@
+.throbber-message {
+    @include fs-bodyCopy(1);
+    vertical-align: top;
+    color: $c-neutral2;
+}
