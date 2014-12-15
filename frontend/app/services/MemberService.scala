@@ -119,11 +119,9 @@ trait MemberService extends LazyLogging {
           // Add a "salt" to make access codes different to discount codes
           val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
           eventService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-        } else if (event.allowDiscountCodes) {
+        } else {
           val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
           eventService.createOrGetDiscount(event, code).map(Some(_))
-        } else {
-          Future.successful(None)
         }
     }
   }

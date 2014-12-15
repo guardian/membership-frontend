@@ -140,8 +140,6 @@ object Eventbrite {
     val imgUrl: String
     val socialImgUrl: String
     val tags: Seq[String]
-
-    val allowDiscountCodes: Boolean
   }
 
   object RichEvent {
@@ -160,8 +158,6 @@ object Eventbrite {
     }
 
     val tags = Nil
-
-    val allowDiscountCodes = true
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
@@ -171,8 +167,6 @@ object Eventbrite {
     val socialImgUrl = imgUrl
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
-
-    val allowDiscountCodes = false
   }
 
 

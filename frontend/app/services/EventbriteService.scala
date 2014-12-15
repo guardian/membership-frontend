@@ -134,6 +134,10 @@ object GuardianLiveEventService extends EventbriteService {
   }
 }
 
+case class MasterclassEventServiceError(s: String) extends Throwable {
+  override def getMessage: String = s
+}
+
 object MasterclassEventService extends EventbriteService {
   import MasterclassEventServiceHelpers._
 
@@ -152,6 +156,10 @@ object MasterclassEventService extends EventbriteService {
   }
 
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
+
+  // This should never happen as we only display masterclasses with access codes enabled
+  override def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] =
+    Future.failed(MasterclassEventServiceError(s"Attempted to create a discount code for Masterclass ${event.id}"))
 
   def start() {
     Logger.info("Starting EventbriteService Masterclasses background tasks")
