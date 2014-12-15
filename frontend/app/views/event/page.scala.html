@@ -44,23 +44,16 @@
     }
 }
 
-@theme = @{
+@eventType = @{
     event match {
-        case _: MasterclassEvent => "theme--masterclass"
-        case _: GuLiveEvent => "theme--guardian-live"
+        case _: MasterclassEvent => "masterclasses"
+        case _: GuLiveEvent => "guardian-live"
     }
 }
 
-@icon = @{
-    event match {
-        case _: MasterclassEvent => "icon-masterclasses"
-        case _: GuLiveEvent => "icon-guardian-live"
-    }
-}
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
-
-    <div class="event-header">
+    <div class="event-header@if(eventType){ tone-@eventType}">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header page-header case--lower">
@@ -74,7 +67,7 @@
         </div>
     </div>
 
-    <div class="event-header event-header--shade">
+    <div class="event-header event-header--pricing@if(eventType){ tone-@eventType tone-@eventType--accent}">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -84,12 +77,7 @@
                     }
                 </div>
                 <div class="event-details__location">
-                    <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @for(addressLine <- event.venue.addressLine) {
-                        <span class="event-details__location__address">
-                            , @addressLine
-                        </span>
-                    }
+                    @fragments.event.addressSummary(event)
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
@@ -125,7 +113,7 @@
                     </div>
                 }
             }
-            <i class="event-logo @icon"></i>
+            <i class="event-logo@if(eventType){ icon-@eventType}"></i>
         </div>
 
     </div>
@@ -152,9 +140,14 @@
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-            <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-        </div>
+        @event match {
+            case _: MasterclassEvent => {}
+            case _ => {
+                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+                </div>
+            }
+        }
 
         <div class="event-content__container u-cf">
 
@@ -192,20 +185,23 @@
                                 </div>
                                 <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                             </div>
-                            <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <div class="event-content__first">
-                                    <i class="icon-location icon--info"></i>
+
+                            @if(event.venue.addressLine) {
+                                <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                                    <div class="event-content__first">
+                                        <i class="icon-location icon--info"></i>
+                                    </div>
+                                    <div class="event-content__second copy">
+                                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                                        @for(addressLine <- event.venue.addressLine) {
+                                            <span class="event-content__address" itemprop="address">@addressLine</span>
+                                        }
+                                        @for(googleMapsLink <- event.venue.googleMapsLink) {
+                                            <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
+                                        }
+                                    </div>
                                 </div>
-                                <div class="event-content__second copy">
-                                    <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                    @for(addressLine <- event.venue.addressLine) {
-                                        <span class="event-content__address" itemprop="address">@addressLine</span>
-                                    }
-                                    @for(googleMapsLink <- event.venue.googleMapsLink) {
-                                        <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
-                                    }
-                                </div>
-                            </div>
+                            }
 
                             @if(event.isNoTicketEvent == false) {
 
