@@ -11,6 +11,7 @@ require([
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
+    'src/modules/slideshow',
     'src/modules/sticky',
     'src/modules/Header',
     'src/modules/UserDetails',
@@ -36,6 +37,7 @@ require([
     Cta,
     Filter,
     toggle,
+    slideshow,
     sticky,
     Header,
     UserDetails,
@@ -93,6 +95,7 @@ require([
 
     // Global
     toggle.init();
+    slideshow.init();
     sticky.init();
     var header = new Header();
     header.init();

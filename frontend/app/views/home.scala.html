@@ -2,18 +2,17 @@
 
 @import views.support.Asset
 
-@slideShowElement(position: Int, imgSrc: String, description: String, imageClass: String, hasDocumentFlow: Boolean = false) = {
-    <figure class="slide-show__element@if(hasDocumentFlow == true){ slide-show__element--with-document-flow}">
-        <figcaption class="slide-show-detail">
+@slideShowElement(position: Int, imgSrcPrefix: String, description: String, isCurrent: Boolean = false) = {
+    <figure class="slideshow__element@if(isCurrent == true){ is-current} js-slideshow-item">
+        <figcaption class="slideshow__detail">
             <div class="progress-indicator">
                 <span class="progress-indicator__index">@position</span>
                 <span class="progress-indicator__separator">/ </span>
                 <span class="progress-indicator__count">6</span>
             </div>
-            <h2 class="slide-show-detail__description">@description</h2>
+            <h2 class="slideshow__description">@description</h2>
         </figcaption>
-        <div class="gradient-text-highlighter"></div>
-        <div class="delayed-home-image-load" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrc + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
+        <div class="delayed-home-image-load" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrcPrefix + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img"></div>
     </figure>
 }
 
@@ -27,14 +26,16 @@
 }
 
 @main("Home Page a-b", noIndex=true) {
-    <div class="slide-show">
-        @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood", "six")
-        @slideShowElement(5, "tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah", "five")
-        @slideShowElement(4, "women_", "Guardian Live event: Russell Brand", "four")
-        @slideShowElement(3, "jim_page_", "A life in music: Jimmy Page", "three")
-        @slideShowElement(2, "pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience", "two")
-        @slideShowElement(1, "man_aud_", "Guardian Live with Russell Brand", "one", true)
-    </div>
+
+    <section class="slideshow js-slideshow" data-slideshow-duration="5000">
+        @slideShowElement(1, "man_aud_", "Guardian Live with Russell Brand", true)
+        @slideShowElement(2, "pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience")
+        @slideShowElement(3, "jim_page_", "A life in music: Jimmy Page")
+        @slideShowElement(4, "women_", "Guardian Live event: Russell Brand")
+        @slideShowElement(5, "tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah")
+        @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood")
+    </section>
+
     <section class="page-content u-cf">
         <div class="home-hero-description-container">
                 <h1 class="home-hero-description">We're bringing the Guardian to life through live events and meet-ups. <a class="home-hero-description-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
