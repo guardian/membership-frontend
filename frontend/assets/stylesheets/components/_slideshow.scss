@@ -4,6 +4,7 @@
 
 .slideshow {
     position: relative;
+    overflow: hidden;
 }
 .slideshow__element {
     width: 100%;
@@ -15,9 +16,19 @@
     transition: opacity .5s ease-in;
     opacity: 0;
 
+    @include mq(tablet) {
+        max-height: rem(460px);
+    }
+
     &.is-current {
         opacity: 1;
         position: relative;
+    }
+}
+.slideshow__image {
+    position: relative;
+    @include mq(desktop) {
+        top: rem(-$gs-gutter * 4);
     }
 }
 .slideshow__detail {
@@ -28,14 +39,14 @@
     @include simple-gradient(transparent, rgba(0, 0, 0, .8));
     color: $white;
     z-index: 2;
-
-    @include mq(tablet) {
-        width: 50%;
-    }
 }
 .slideshow__description {
     @include fs-textSans(1);
     font-weight: normal;
+
+    @include mq(tablet) {
+        max-width: 50%;
+    }
 }
 
 .progress-indicator {
