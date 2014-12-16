@@ -29,14 +29,14 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  def metrics(event: RichEvent) = {
+  private def metrics(event: RichEvent) = {
     event match {
       case _: GuLiveEvent => guLiveEvents.wsMetrics
       case _: MasterclassEvent => masterclassEvents.wsMetrics
     }
   }
 
-  def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
+  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
         Timing.record(metrics(event), "buy-action-invoked") {
@@ -46,7 +46,8 @@ trait Event extends Controller {
     }
   }
 
-  def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
+  private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
+    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
