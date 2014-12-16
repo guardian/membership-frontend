@@ -87,11 +87,9 @@ module.exports = function (grunt) {
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
             },
-            html5shiv: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/html5shiv/dist/html5shiv.min.js',
-                dest: '<%= dirs.publicDir.javascripts %>/lib/html5shiv/',
-                expand: true,
-                flatten: true
+            pollyfils: {
+                src: '<%= dirs.assets.javascripts %>/lib/polyfills.min.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/polyfills.min.js'
             },
             curl: {
                 src: '<%= dirs.assets.javascripts %>/lib/bower-components/curl/dist/curl-with-js-and-domReady/curl.js',
@@ -373,7 +371,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:js',
             'requirejs:compile',
-            'copy:html5shiv',
+            'copy:pollyfils',
             'copy:curl',
             'copy:zxcvbn',
             'copy:omniture',
