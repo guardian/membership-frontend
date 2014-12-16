@@ -87,7 +87,7 @@ module.exports = function (grunt) {
                     dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
             },
-            pollyfils: {
+            polyfills: {
                 src: '<%= dirs.assets.javascripts %>/lib/polyfills.min.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/polyfills.min.js'
             },
@@ -371,7 +371,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:js',
             'requirejs:compile',
-            'copy:pollyfils',
+            'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
             'copy:omniture',
