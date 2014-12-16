@@ -42,7 +42,12 @@ define(function () {
         return height;
     };
 
+    var toArray = function (nodeList) {
+        return Array.prototype.slice.call(nodeList);
+    };
+
     return {
+        toArray: toArray,
         getLocationDetail: getLocationDetail,
         getSpecifiedParent: getSpecifiedParent,
         getOuterHeight: getOuterHeight

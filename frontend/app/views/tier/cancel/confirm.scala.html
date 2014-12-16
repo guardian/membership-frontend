@@ -1,8 +1,8 @@
 @(currentTier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import model.Benefits
 @import helper._
+@import views.support.Asset
 
 @main("Cancel Tier") {
 
@@ -22,9 +22,15 @@
             </div>
         </div>
 
-        <form method="POST" action="/tier/cancel/confirm">
+        <form method="POST" action="/tier/cancel/confirm" class="js-form">
             @CSRF.formField
-            <button id="qa-confirm-cancel" class="action action-cta action-cta--confirm action-cta--full-width-mobile">Cancel membership</button>
+            <div class="u-align-right">
+                <button id="qa-confirm-cancel" class="action js-form-submit" type="submit">Cancel membership</button>
+                <div class="is-hidden js-loader-container">
+                    <img src="@Asset.at("images/wait.gif")" alt="Loading..."/>
+                    <span class="loader-message">Processing...</span>
+                </div>
+            </div>
         </form>
 
     </section>
