@@ -112,18 +112,26 @@ trait Event extends Controller {
     Timing.record(event.service.metrics, "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
-      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code))).withCookies(
+          // record that the order began on membership
+          Cookie(s"mem-${event.id}", System.currentTimeMillis().toString)
+        )
     }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
     orderIdOpt.fold {
+      val cookieName = s"mem-$id"
       val resultOpt = for {
         oid <- request.flash.get("oid")
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          event.service.metrics.putThankyou(id)
-          Ok(views.html.event.thankyou(event, order))
+          // only track purchases if the order started on membership
+          val cookie = request.cookies.get(cookieName)
+          cookie.map { c =>
+            event.service.metrics.putThankyou(id)
+          }
+          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(cookieName))
         }
       }
 
