@@ -20,7 +20,7 @@ require([
     'src/modules/patterns',
     'src/utils/addToClipboard',
     'src/utils/modal',
-    'src/utils/form/submitButtonProcessing',
+    'src/utils/form/processSubmit',
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
@@ -45,7 +45,7 @@ require([
     patterns,
     addToClipboard,
     modal,
-    submitButtonProcessing
+    processSubmit
 ) {
     'use strict';
 
@@ -108,7 +108,7 @@ require([
     (new PaidForm()).init();
     (new StaffForm()).init();
     (new Thankyou()).init(header);
-    submitButtonProcessing();
+    processSubmit.init();
 
     // Feedback
     (new FeedbackForm()).init();
