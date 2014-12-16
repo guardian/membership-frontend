@@ -36,7 +36,7 @@ trait Joiner extends Controller {
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
-    val error = request.flash.get("error")
+    val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     userSignedIn match {
       case Some(user) => for {
@@ -45,9 +45,9 @@ trait Joiner extends Controller {
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield {
-        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, error))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
       }
-      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, error)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
@@ -67,10 +67,11 @@ trait Joiner extends Controller {
   }
 
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
+    val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists, flashMsgOpt))
     }
   }
 
@@ -101,6 +102,8 @@ trait Joiner extends Controller {
     yield {
       responseCode match {
         case 200 => Redirect(routes.Joiner.enterStaffDetails())
+                  .flashing("success" ->
+          s"Your email address has been changed to ${googleEmail}")
         case _ => Redirect(routes.Joiner.staff())
                   .flashing("error" ->
           s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}. Please try signing in with that email.")

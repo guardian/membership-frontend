@@ -1,4 +1,4 @@
-@(errorOpt: Option[String] = None, errorTemplateOpt: Option[String] = None, staffEmail: String = "")
+@(flashMessageOpt: Option[model.FlashMessage], errorTemplateOpt: Option[String] = None, staffEmail: String = "")
 
 @import configuration.Config
 
@@ -11,8 +11,8 @@
 
         <section class="page-section">
             <div class="page-section__content">
-                @for(error <- errorOpt) {
-                    <p>@error</p>
+                @for(flashMessage <- flashMessageOpt) {
+                    <p>@flashMessage.message</p>
                 }
 
                 @for(errorTemplate <- errorTemplateOpt) {

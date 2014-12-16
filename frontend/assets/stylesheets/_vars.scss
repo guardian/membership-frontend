@@ -69,6 +69,7 @@ $font-scale: (
         3: (font-size: 20, line-height: 24),
         4: (font-size: 22, line-height: 28),
         5: (font-size: 24, line-height: 28),
+        6: (font-size: 26, line-height: 28),
     ),
     headline: (
         1: (font-size: 14, line-height: 18),
@@ -233,7 +234,7 @@ $offWhite: #d6d6d6;
 $black: #000000;
 $offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .25);
-$white-trans: rgba(255, 255, 255, .5);
+$white-trans: rgba(255, 255, 255, .25);
 
 $mem-live-top: #b51800;
 $mem-live-accent: #cc2b12;
@@ -246,6 +247,11 @@ $mem-event-button-hover: rgba(0, 0, 0, .65);
 $side-margins-top-magic-number: 114px;
 $border-bottom-color: rgba(255, 255, 255, .29);
 
-$flash-message-error: #fdf4f3;
-
 $gutter-width-fluid: 3%;
+
+$flash-error-color: #d61d00;
+$flash-error-border: #ff998a;
+$flash-error-background: #fdf4f3;
+$flash-success-color: #1c6326;
+$flash-success-border: #33a22b;
+$flash-success-background: #faffe5;

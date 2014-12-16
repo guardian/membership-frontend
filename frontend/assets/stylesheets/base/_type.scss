@@ -30,11 +30,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-h3 {
-    font-weight: normal;
-    margin-bottom: rem(7px);
-    @include fs-bodyCopy(3);
-}
 
 /* Default type elements
    ========================================================================== */
@@ -85,4 +80,31 @@ blockquote {
             border-color: $c-neutral2;
         }
     }
+}
+
+/* Text Utilties
+   ========================================================================== */
+
+.u-body-copy {
+    font-weight: normal;
+    @include fs-bodyCopy(2);
+}
+
+.text-intro {
+    margin: rem($gs-baseline * 2) 0 rem($gs-baseline * 3);
+}
+
+.text-info {
+    @include fs-data(2);
+    color: $c-neutral3;
+    margin: rem($gs-baseline) 0;
+    display: block;
+}
+
+.case--lower {
+    text-transform: lowercase;
+}
+
+.case--capitalize {
+    text-transform: capitalize;
 }

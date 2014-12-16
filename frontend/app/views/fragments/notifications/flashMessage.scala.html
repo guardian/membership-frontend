@@ -1,7 +1,10 @@
-@(errorOpt: Option[String])
+@(flashMessage: model.FlashMessage)
 
-@for(error <- errorOpt) {
-    <div class="flash-message flash-message--error">
-        @error
+<section class="page-section page-section--no-padding">
+    <div class="page-section__content">
+        <div class="flash-message flash-message--@flashMessage.level">
+            @flashMessage.message
+        </div>
     </div>
-}
+</section>
+

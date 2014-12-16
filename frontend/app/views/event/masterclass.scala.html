@@ -7,14 +7,14 @@
 
 @import model.Eventbrite.MasterclassEvent
 
-@main("Masterclasses", containerPadding=false, htmlClass="events-bg theme--masterclass", pageInfo=pageInfo) {
+@main("Masterclasses", containerPadding=false, htmlClass="events-bg theme--masterclasses", pageInfo=pageInfo) {
 
     @fragments.event.headerBar(
         "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
         "masterclasses"
     )
 
-    <div class="event-block">
+    <div class="event-block tone-masterclasses--border">
         <div class="event-block__events event-block__events--no-header">
             <label class="events-list__category">
                 <span class="events-list__category__label">Show:</span>
@@ -54,7 +54,7 @@
                        placeholder="Filter by title"
                        autocomplete="off" />
                 <i class="events-list__filter__icon icon-search"></i>
-                <button class="events-list__filter__cross icon-cross is-hidden js-filter-clear"></button>
+                <button class="events-list__filter__cross icon-cross_in_circle is-hidden js-filter-clear"></button>
             </label>
         </div>
     </div>
