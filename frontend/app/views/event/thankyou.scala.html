@@ -7,6 +7,8 @@
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
+    <main role="main" class="page-content">
+
     <section class="content__container content__container--slim">
         <h1 class="section-headline">Thanks @order.first_name.<br/> See you there!</h1>
         <h2 class="content__headline">You're going to</h2>
@@ -70,4 +72,6 @@
     </section>
 
     @fragments.analytics.eventConversion(event)
+
+    </main>
 }

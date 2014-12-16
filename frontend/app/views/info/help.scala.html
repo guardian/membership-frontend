@@ -1,14 +1,9 @@
 @import configuration.Config
 @import model.Faq
 
-@main("Help", containerPadding=false) {
-
-    <main class="page-container__inner" role="main">
-        <section class="page-header">
-            <h1 class="page-headline">FAQ</h1>
-            <p class="page-intro">Common questions about Guardian Membership</p>
-        </section>
-
+@main("Help") {
+    <main role="main" class="page-content page-container__inner">
+        @fragments.page.pageHeader("FAQ", Some("Common questions about Guardian Membership"))
         <section class="page-section">
             <div class="page-section__content">
                 @fragments.faq.questions(Faq.help)

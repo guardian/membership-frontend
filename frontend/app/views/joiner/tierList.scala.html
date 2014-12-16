@@ -3,7 +3,9 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@main("Join", pageInfo=pageInfo, containerPadding = false, htmlClass = "join") {
+@main("Join", pageInfo=pageInfo, htmlClass = "join") {
+
+    <main role="main" class="page-content">
 
     <section class="become-a-member">
 
@@ -21,4 +23,6 @@
     </section>
 
     @fragments.analytics.membershipTracking()
+
+    </main>
 }
