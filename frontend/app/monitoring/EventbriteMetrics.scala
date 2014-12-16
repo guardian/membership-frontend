@@ -8,8 +8,4 @@ class EventbriteMetrics(eventSource: String) extends Metrics with StatusMetrics 
 
   override def mandatoryDimensions =
     super.mandatoryDimensions :+ new Dimension().withName("Event Source").withValue(eventSource)
-
-  def putThankyou(eventId: String) {
-    put("user-returned-to-thankyou-page", 1)
-  }
 }

@@ -3,9 +3,9 @@ package controllers
 import actions.AnyMemberTierRequest
 import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
-import model.Eventbrite.{RichEvent, EBEvent, MasterclassEvent}
+import model.Eventbrite.{GuLiveEvent, RichEvent, EBEvent, MasterclassEvent}
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
-import monitoring.EventbriteMetrics
+import monitoring.{Metrics, EventbriteMetrics}
 import org.joda.time.Instant
 
 import scala.concurrent.Future
@@ -29,10 +29,17 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
+  def metrics(event: RichEvent) = {
+    event match {
+      case _: GuLiveEvent => guLiveEvents.wsMetrics
+      case _: MasterclassEvent => masterclassEvents.wsMetrics
+    }
+  }
+
   def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
-        Timing.record(event.service.metrics, "buy-action-invoked") {
+        Timing.record(metrics(event), "buy-action-invoked") {
           block(request)
         }
       }.getOrElse(Future.successful(NotFound))
@@ -109,7 +116,7 @@ trait Event extends Controller {
     }
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(event.service.metrics, "user-sent-to-eventbrite") {
+    Timing.record(metrics(event), "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
@@ -122,7 +129,7 @@ trait Event extends Controller {
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          event.service.metrics.putThankyou(id)
+          metrics(event).put("user-returned-to-thankyou-page", 1)
           Ok(views.html.event.thankyou(event, order))
         }
       }
