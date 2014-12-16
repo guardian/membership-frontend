@@ -1,23 +1,28 @@
 /**
- * add throbber, processing message and disable submit once pressed
+ * add loader, processing message and disable submit once pressed
+ * Note this is used for submit buttons that are not using Form.js
  */
-define(['$', 'bean'], function ($, bean) {
+define(['src/utils/helper'], function (utilsHelper) {
 
     var FORM_ELEMENT_SELECTOR = '.js-form';
     var FORM_SUBMIT_ELEMENT_SELECTOR = '.js-form-submit';
-    var THROBBER_CONTAINER_SELECTOR = '.js-throbber-container';
+    var LOADER_CONTAINER_SELECTOR = '.js-loader-container';
     var IS_HIDDEN_CLASS = 'is-hidden';
 
-    return function () {
-        var $formElements = $(FORM_ELEMENT_SELECTOR);
+    var init = function () {
+        var formElements = utilsHelper.toArray(document.querySelectorAll(FORM_ELEMENT_SELECTOR));
 
-        if($formElements.length) {
-            $formElements.map(function (formElem) {
-                bean.on(formElem, 'submit.throbber', function () {
-                    $(formElem.querySelector(THROBBER_CONTAINER_SELECTOR)).removeClass(IS_HIDDEN_CLASS);
-                    $(formElem.querySelector(FORM_SUBMIT_ELEMENT_SELECTOR)).attr('disabled', true);
-                });
+        if(formElements) {
+            formElements.map(function (formElem) {
+                formElem.addEventListener('submit', function () {
+                    formElem.querySelector(LOADER_CONTAINER_SELECTOR).classList.remove(IS_HIDDEN_CLASS);
+                    formElem.querySelector(FORM_SUBMIT_ELEMENT_SELECTOR).setAttribute('disabled', 'disabled');
+                }, false);
             });
         }
+    };
+
+    return  {
+        init: init
     };
 });
