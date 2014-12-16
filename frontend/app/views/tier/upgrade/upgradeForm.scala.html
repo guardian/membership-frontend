@@ -1,7 +1,7 @@
 @(currentTier: com.gu.membership.salesforce.Tier.Tier, targetTier: com.gu.membership.salesforce.Tier.Tier, userFields: model.PrivateFields, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 @import helper._
 
-@main("Change Tier | " + targetTier + " from " + currentTier, containerPadding = false, isBrochure = true, pageInfo = pageInfo) {
+@main("Change Tier | " + targetTier + " from " + currentTier, isBrochure = true, pageInfo = pageInfo) {
 
     <section class="section-payment u-cf">
         @fragments.form.errorMessageDisplay()

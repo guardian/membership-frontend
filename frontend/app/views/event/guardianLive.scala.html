@@ -1,6 +1,6 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Events", containerPadding=false, htmlClass="events-bg theme--guardian-live", pageInfo=pageInfo) {
+@main("Events", htmlClass="events-bg theme--guardian-live", pageInfo=pageInfo) {
 
     @fragments.event.headerBar(
         "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",

@@ -1,7 +1,6 @@
 @(
     title: String,
     isBrochure: Boolean = false,
-    containerPadding: Boolean = true,
     htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default,
     noIndex: Boolean = false
@@ -77,7 +76,7 @@
             @fragments.header()
             <div class="page-side-margins" id="container">
             @if(isBrochure != true) {
-                <div class="page-container @if(containerPadding){page-container--with-padding}">
+                <div class="page-container">
             }
 
                 @content

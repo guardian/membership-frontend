@@ -2,6 +2,7 @@ $header-padding: 20px;
 $header-margin: 36px;
 
 .header {
+    position: relative;
     margin-bottom: rem($header-margin);
     .header__inner--popup {
         padding: 0;
