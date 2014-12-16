@@ -1,36 +1,20 @@
-
-footer {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    background-color: $c-neutral8;
-    bottom: rem(-$gs-baseline * 3);
-
-    .copy {
-        @include fs-data(6);
-        text-align: center;
-        margin: rem(48px) 0 0;
-    }
-
-}
-
-/* Elements modifiers specific to the footer
-   ========================================================================== */
-
-.guardian-logo-footer {
-    margin-top: rem($gs-baseline * .75);
-    float: right;
-    line-height: 0;
-}
-
-/* Footer
+/* ==========================================================================
+   Global Footer
    ========================================================================== */
 
 .l-footer {
-    padding: rem(0 0 ($gs-baseline / 3) * 4);
-    background: $c-neutral6;
-    z-index: 1; // Above side margins
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 1;
+    margin: rem($pageOffset/2) 0 0;
+    background-color: $c-neutral8;
 
+    @include mq(mobileLandscape) {
+        margin-top: rem($pageOffset);
+    }
+
+    // TODO: Review layout container styles. Can these be abstracted
     .gs-container {
         @include mq(desktop) {
             max-width: rem(gs-span(12) + $gs-gutter * 2);
@@ -41,43 +25,41 @@ footer {
         }
     }
 }
-
-.l-footer__primary {
-    background: $white;
-}
-
 .l-footer__banner {
     border-top: rem(2px) solid $c-brandBlue;
     margin-bottom: rem(($gs-baseline / 3) * 2);
 }
-
-@include mq(tablet) {
-    .js-on .l-footer__navigation-wrapper {
-        display: none;
-    }
-}
-
 .l-footer__primary {
     position: relative;
     overflow: hidden;
     background-color: darken($mem-blue, 12%);
 }
-
 .l-footer__secondary {
     @include box-sizing(border-box);
     @include font($f-sans-serif-text, normal, 13, 19);
     padding-right: rem($gs-gutter / 2);
     padding-left: rem($gs-gutter / 2);
+    color: $c-neutral1;
 
     @include mq(tablet) {
         padding-right: rem($gs-gutter);
         padding-left: rem($gs-gutter);
     }
 
-    &,
     a {
         color: $c-neutral1;
     }
+}
+.l-footer__misc {
+    padding-top: rem($gs-baseline / 2);
+    padding-bottom: rem($gs-baseline * 1.5);
+    border-top: rem(1px) solid $c-neutral4;
+}
+
+.guardian-logo-footer {
+    margin-top: rem($gs-baseline * .75);
+    float: right;
+    line-height: 0;
 }
 
 .colophon {
@@ -102,15 +84,8 @@ footer {
         padding-bottom: rem($gs-baseline / 2);
     }
 }
-
 .colophon__item {
     @include box-sizing(border-box);
-}
-
-.l-footer__misc {
-    padding-top: rem($gs-baseline / 2);
-    padding-bottom: rem($gs-baseline * 1.5);
-    border-top: rem(1px) solid $c-neutral4;
 }
 
 .really-serious-copyright {

@@ -16,15 +16,6 @@
     </figure>
 }
 
-@promoElement(imgSrc: String, description: String, anchorHref: String, fileType: String = "jpg") = {
-    <li class="home-promo">
-        <a class="home-promo-cta" href="@anchorHref">
-            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/noAssetHash/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
-            <h3 class="home-promo__description">@description</h3>
-        </a>
-    </li>
-}
-
 @main("Home Page a-b", noIndex=true) {
 
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
@@ -36,17 +27,26 @@
         @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood")
     </section>
 
-    <section class="page-content u-cf">
-        <div class="home-hero-description-container">
-                <h1 class="home-hero-description">We're bringing the Guardian to life through live events and meet-ups. <a class="home-hero-description-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
-            <a class="action action--no-bottom-margin" href="/join">Join today</a>
-        </div>
-        <div class="home-promo-list-container">
-            <ul class="home-promo-list u-unstyled">
-                @promoElement("whats-included-", "Discover what's included with Guardian Membership", "/about", "png")
-                @promoElement("events-", "Browse our events and book your tickets now", "/events")
-                @promoElement("compare-tiers-", "Compare the three tiers of Guardian Membership", "/join")
-                @promoElement("become_patron_", "Become a Patron and support the Guardian's future", "/patrons")
+    <section class="block-description block-description--right block-description--pull">
+        <h1 class="text-feature">We're bringing the Guardian to life through live events and meet-ups. <a class="text-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
+        <a class="action action--no-bottom-margin" href="/join">Join today</a>
+    </section>
+
+    <section class="page-content">
+        <div class="section-features">
+            <ul class="grid grid--4up">
+                <li class="grid__item">
+                    @fragments.page.featurePanel("whats-included-", "Discover what's included with Guardian Membership", "/about", "png")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("events-", "Browse our events and book your tickets now", "/events")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("compare-tiers-", "Compare the three tiers of Guardian Membership", "/join")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("become_patron_", "Become a Patron and support the Guardian's future", "/patrons")
+                </li>
             </ul>
         </div>
     </section>

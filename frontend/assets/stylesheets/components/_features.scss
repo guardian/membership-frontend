@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Feature Panels
+   ========================================================================== */
+
+.section-features {
+    clear: both;
+    padding: rem($gs-gutter/2);
+    @include mq(mobileLandscape) {
+        padding: 0;
+    }
+}
+
+.feature-panel {
+    display: table;
+    @include mq(mobileLandscape) {
+        display: block;
+    }
+}
+
+.feature-panel__media,
+.feature-panel__description {
+    display: table-cell;
+    vertical-align: middle;
+    @include mq(mobileLandscape) {
+        display: block;
+    }
+}
+.feature-panel__media  {
+    width: rem($gs-gutter * 4);
+    padding-right: rem($gs-gutter/2);
+    float: left;
+    @include mq(mobileLandscape) {
+        width: auto;
+        float: none;
+        padding-right: 0;
+    }
+}
+.feature-panel__description {
+    color: $black;
+    @include fs-headline(2);
+    margin-top: rem($gs-gutter / 2);
+
+    @include mq(mobileLandscape) {
+        @include fs-headline(3);
+    }
+}
+.feature-panel__cta {
+    display: block;
+}

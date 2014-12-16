@@ -1,0 +1,12 @@
+@(imgSrc: String, description: String, anchorHref: String, fileType: String = "jpg")
+
+@import views.support.Asset
+
+<div class="feature-panel">
+    <a class="feature-panel__cta" href="@anchorHref">
+        <div class="feature-panel__media">
+            <div class="delayed-home-promo-image-load" data-src="@Asset.at("images/noAssetHash/home/promo/" + imgSrc + "{width}{pixel_ratio}." + fileType)" data-alt="@description" data-class="responsive-img"></div>
+        </div>
+        <h3 class="feature-panel__description">@description</h3>
+    </a>
+</div>
