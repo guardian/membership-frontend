@@ -21,7 +21,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String
 
   val wsUrl = Config.eventbriteApiUrl
-  val wsMetrics = EventbriteMetrics
 
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
@@ -117,6 +116,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
+  val wsMetrics = new EventbriteMetrics("Guardian Live")
+
   private def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
   } yield (ordering.json \ "order").as[Seq[String]]
@@ -137,6 +138,8 @@ object MasterclassEventService extends EventbriteService {
   val masterclassDataService = MasterclassDataService
 
   val apiToken = Config.eventbriteMasterclassesApiToken
+
+  val wsMetrics = new EventbriteMetrics("Masterclasses")
 
   override def events: Seq[RichEvent] = allEvents.map(availableEvents).get()
 
