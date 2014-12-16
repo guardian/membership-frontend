@@ -159,7 +159,7 @@ object MasterclassEventService extends EventbriteService {
 
   // This should never happen as we only display masterclasses with access codes enabled
   override def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] =
-    Future.failed(MasterclassEventServiceError(s"Attempted to create a discount code for Masterclass ${event.id}"))
+    Future.failed(MasterclassEventServiceError(s"Masterclasses aren't allowed discount codes, attempted on event ${event.id}"))
 
   def start() {
     Logger.info("Starting EventbriteService Masterclasses background tasks")
