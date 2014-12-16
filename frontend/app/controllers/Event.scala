@@ -3,9 +3,9 @@ package controllers
 import actions.AnyMemberTierRequest
 import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
-import model.Eventbrite.{RichEvent, EBEvent, MasterclassEvent}
+import model.Eventbrite.{GuLiveEvent, RichEvent, EBEvent, MasterclassEvent}
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
-import monitoring.EventbriteMetrics
+import monitoring.{Metrics, EventbriteMetrics}
 import org.joda.time.Instant
 
 import scala.concurrent.Future
@@ -29,17 +29,25 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
+  private def metrics(event: RichEvent) = {
+    event match {
+      case _: GuLiveEvent => guLiveEvents.wsMetrics
+      case _: MasterclassEvent => masterclassEvents.wsMetrics
+    }
+  }
+
+  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
-        Timing.record(event.service.metrics, "buy-action-invoked") {
+        Timing.record(metrics(event), "buy-action-invoked") {
           block(request)
         }
       }.getOrElse(Future.successful(NotFound))
     }
   }
 
-  def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
+  private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
+    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
@@ -109,7 +117,7 @@ trait Event extends Controller {
     }
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(event.service.metrics, "user-sent-to-eventbrite") {
+    Timing.record(metrics(event), "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code))).withCookies(
@@ -129,7 +137,7 @@ trait Event extends Controller {
           // only track purchases if the order started on membership
           val cookie = request.cookies.get(cookieName)
           cookie.map { c =>
-            event.service.metrics.putThankyou(id)
+            metrics(event).put("user-returned-to-thankyou-page", 1)
           }
           Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(cookieName))
         }

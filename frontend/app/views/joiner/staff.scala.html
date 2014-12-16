@@ -23,9 +23,9 @@
     </li>
 }
 
-@main("Staff Membership", containerPadding=false) {
+@main("Staff Membership") {
 
-    <main class="page-container__inner" role="main">
+    <main class="page-content" role="main">
 
         @for(flashMsg <- flashMessage) {
             @fragments.notifications.flashMessage(flashMsg)

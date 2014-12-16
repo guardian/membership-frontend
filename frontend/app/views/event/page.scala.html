@@ -33,7 +33,7 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
 
     <div class="event-header@if(eventType){ tone-@eventType}">
         <div class="event-header__container">

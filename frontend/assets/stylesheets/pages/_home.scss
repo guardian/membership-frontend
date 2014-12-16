@@ -4,11 +4,12 @@
     background-color: $white;
 
     @include mq(tablet) {
-        padding: rem($gs-gutter) rem($gs-gutter * 1.5) 0 rem($gs-gutter);
+        padding: rem($gs-gutter) rem($gs-gutter * 1.5) rem($gs-gutter * 1.5) rem($gs-gutter);
         width: 51%;
         float: right;
         position: relative;
         margin-top: rem(-108px);
+        margin-right: rem(-$gs-gutter);
     }
 }
 
@@ -90,7 +91,7 @@
     z-index: 1;
 
     @include mq(tablet) {
-        width: 49%;
+        width: 51%;
     }
 }
 

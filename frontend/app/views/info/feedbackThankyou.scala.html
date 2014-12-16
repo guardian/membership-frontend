@@ -1,7 +1,14 @@
 @()
 
 @main("Feedback Thankyou") {
-    @fragments.layout.sectionHeader("Thank you for contacting us")
 
-    <p>We really appreciate your feedback.</p>
+    <main role="main" class="page-content">
+        @fragments.page.pageHeader("Thank you for contacting us")
+        <div class="page-section">
+            <div class="page-section__content">
+                <p>We really appreciate your feedback.</p>
+            </div>
+        </div>
+    </main>
+
 }
