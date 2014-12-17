@@ -12,7 +12,7 @@
             </div>
             <h2 class="slideshow__description">@description</h2>
         </figcaption>
-        <div class="delayed-home-image-load" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrcPrefix + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img slideshow__image"></div>
+        <div class="js-image-slideshow" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrcPrefix + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img slideshow__image"></div>
     </figure>
 }
 
@@ -34,18 +34,22 @@
 
     <section class="page-content">
         <div class="section-features">
-            <ul class="grid grid--4up grid--4up-bordered">
+            <ul class="grid grid--bordered grid--4up">
                 <li class="grid__item">
-                    @fragments.page.featurePanel("whats-included-", "Discover what's included with Guardian Membership", "/about", "png")
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/whats-included-{width}{pixel_ratio}.png",
+                        "Discover what's included with Guardian Membership", "/about")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("events-", "Browse our events and book your tickets now", "/events")
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/events-{width}{pixel_ratio}.jpg",
+                        "Browse our events and book your tickets now", "/events")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("compare-tiers-", "Compare the three tiers of Guardian Membership", "/join")
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/compare-tiers-{width}{pixel_ratio}.jpg",
+                        "Compare the three tiers of Guardian Membership", "/join")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("become_patron_", "Become a Patron and support the Guardian's future", "/patrons")
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/become_patron_{width}{pixel_ratio}.jpg",
+                        "Become a Patron and support the Guardian's future", "/patrons")
                 </li>
             </ul>
         </div>
