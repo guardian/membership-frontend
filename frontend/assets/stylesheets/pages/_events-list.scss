@@ -86,12 +86,16 @@
 }
 
 .event-block__header {
-    padding-bottom: rem($gs-baseline);
+    padding: 0 rem($gs-gutter/2) rem($gs-baseline);
+
+    @include mq(desktop) {
+        padding-left: 0;
+    }
     @include mq(mem-full) {
         float: left;
         width: rem(gs-span(2));
         margin-right: $gs-gutter;
-        padding-bottom: 0;
+        padding: 0;
     }
 }
 .event-block__header__title {
