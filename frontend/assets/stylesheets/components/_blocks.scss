@@ -4,16 +4,21 @@
 
 .block-description {
     background-color: $c-background;
-    padding: rem($gs-gutter) rem($gs-gutter/2);
-    @include mq(tablet) {
+    padding: rem($gs-gutter / 2) rem($gs-gutter / 2) rem($gs-gutter * 2);
+
+    @include mq(mobileLandscape) {
         padding: rem($gs-gutter);
     }
 }
 
 .block-description--right {
     @include mq(tablet) {
-        width: 50%;
+        width: rem(gs-span(5));
         float: right;
+    }
+    @include mq(desktop) {
+        width: 50%;
+        min-width: rem(gs-span(5));
     }
 }
 

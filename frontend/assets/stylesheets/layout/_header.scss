@@ -5,7 +5,7 @@
 .header {
     position: relative;
     margin-bottom: rem($pageOffset/2);
-    @include mq(mobileLandscape) {
+    @include mq(tablet) {
         margin-bottom: rem($pageOffset);
     }
 

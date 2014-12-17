@@ -4,10 +4,6 @@
 
 .section-features {
     clear: both;
-    padding: rem($gs-gutter/2);
-    @include mq(mobileLandscape) {
-        padding: 0;
-    }
 }
 
 .feature-panel {
@@ -16,7 +12,6 @@
         display: block;
     }
 }
-
 .feature-panel__media,
 .feature-panel__description {
     display: table-cell;
@@ -26,7 +21,7 @@
     }
 }
 .feature-panel__media  {
-    width: rem($gs-gutter * 4);
+    width: rem(gs-span(2));
     padding-right: rem($gs-gutter/2);
     float: left;
     @include mq(mobileLandscape) {
@@ -38,10 +33,14 @@
 .feature-panel__description {
     color: $black;
     @include fs-headline(2);
+    font-weight: 500;
     margin-top: rem($gs-gutter / 2);
+    border-top: 1px solid $c-neutral5;
+    padding-top: rem($gs-gutter / 4);
 
     @include mq(mobileLandscape) {
-        @include fs-headline(3);
+        border-top: none;
+        padding-top: 0;
     }
 }
 .feature-panel__cta {

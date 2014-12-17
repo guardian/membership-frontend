@@ -97,6 +97,9 @@ blockquote {
 .text-feature {
     @include fs-headline(3);
     @include mq(tablet) {
+        @include fs-headline(4);
+    }
+    @include mq(desktop) {
         @include fs-headline(5);
     }
 }
