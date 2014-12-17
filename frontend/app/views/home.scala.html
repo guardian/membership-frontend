@@ -1,30 +1,20 @@
 @()(implicit token: play.filters.csrf.CSRF.Token)
 
-@import views.support.Asset
-
-@slideShowElement(position: Int, imgSrcPrefix: String, description: String, isCurrent: Boolean = false) = {
-    <figure class="slideshow__element@if(isCurrent == true){ is-current} js-slideshow-item">
-        <figcaption class="slideshow__detail">
-            <div class="progress-indicator">
-                <span class="progress-indicator__index">@position</span>
-                <span class="progress-indicator__separator">/ </span>
-                <span class="progress-indicator__count">6</span>
-            </div>
-            <h2 class="slideshow__description">@description</h2>
-        </figcaption>
-        <div class="js-image-slideshow" data-src="@Asset.at("images/noAssetHash/home/hero/" + imgSrcPrefix + "{width}{pixel_ratio}.jpg")" data-alt="@description" data-class="responsive-img slideshow__image"></div>
-    </figure>
-}
-
 @main("Home Page a-b", noIndex=true) {
 
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
-        @slideShowElement(1, "man_aud_", "Guardian Live with Russell Brand", true)
-        @slideShowElement(2, "pussy_riot_", "Guardian Live event: Pussy Riot - art, sex and disobedience")
-        @slideShowElement(3, "jim_page_", "A life in music: Jimmy Page")
-        @slideShowElement(4, "women_", "Guardian Live event: Russell Brand")
-        @slideShowElement(5, "tin_temp_", "Observer Ideas - Stories that inspire: Tinie Tempah")
-        @slideShowElement(6, "viv_west_", "Guardian Live event: Vivienne Westwood")
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/man_aud_{width}{pixel_ratio}.jpg",
+            "Guardian Live with Russell Brand", true)
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/pussy_riot_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Pussy Riot - art, sex and disobedience")
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/jim_page_{width}{pixel_ratio}.jpg",
+            "A life in music: Jimmy Page")
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/women_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Russell Brand")
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/tin_temp_{width}{pixel_ratio}.jpg",
+            "Observer Ideas - Stories that inspire: Tinie Tempah")
+        @fragments.media.slideshowItem("images/noAssetHash/home/hero/viv_west_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Vivienne Westwood")
     </section>
 
     <section class="block-description block-description--right block-description--pull">
