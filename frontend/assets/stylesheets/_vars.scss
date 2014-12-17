@@ -125,7 +125,8 @@ $c-brandLightBlue: #94b1ca;
 $c-error: #d61d00;
 
 $c-body: #333333; // Changed from #545454
-$c-background-transparent: rgba(51, 51, 51, .05);
+$c-body-transparent: rgba(51, 51, 51, .05);
+$c-background: #ffffff;
 
 $c-neutral1: #333333;
 $c-neutral2: #767676;
@@ -247,6 +248,11 @@ $mem-event-button-hover: rgba(0, 0, 0, .65);
 $side-margins-top-magic-number: 114px;
 $border-bottom-color: rgba(255, 255, 255, .29);
 
-$flash-message-error: #fdf4f3;
-
 $gutter-width-fluid: 3%;
+
+$flash-error-color: #d61d00;
+$flash-error-border: #ff998a;
+$flash-error-background: #fdf4f3;
+$flash-success-color: #1c6326;
+$flash-success-border: #33a22b;
+$flash-success-background: #faffe5;

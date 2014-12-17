@@ -7,6 +7,7 @@ import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
 import scala.concurrent.duration._
+import monitoring.EventbriteMetrics
 
 class EventbriteServiceTest extends PlaySpecification {
 
@@ -48,6 +49,8 @@ class EventbriteServiceTest extends PlaySpecification {
     val apiEventListUrl = "events"
 
     var lastRequest = RequestInfo.empty
+
+    val wsMetrics = new EventbriteMetrics("test")
 
     override def get[A <: EBObject](endpoint: String, params: (String, String)*)(implicit reads: Reads[A], error: Reads[EBError]): Future[A] = {
       endpoint match {

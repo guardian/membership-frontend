@@ -122,6 +122,9 @@
         width: auto;
     }
 }
+.page-section--no-padding {
+    padding-bottom: 0;
+}
 .page-section__lead-in {
     @include mq(desktop) {
         width: rem(gs-span(3));

@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
 a,
 .fake-link {
     overflow: hidden;
@@ -40,4 +44,21 @@ a,
         text-decoration: underline;
     }
 
+}
+
+// Skip to main content link
+// Needs to override .u-h
+// hence the !important declarations
+.skip:focus, .skip:active {
+    display: block;
+    color: $black;
+    background-color: $c-neutral8;
+    @include fs-data(3);
+    text-decoration: none;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: rem($gs-gutter/2) 0 !important;
+    text-align: center;
+    outline: none;
 }
