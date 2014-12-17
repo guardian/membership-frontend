@@ -1,6 +1,6 @@
 package services
 
-import com.gu.contentapi.client.model.{Asset, Element, Content}
+import com.gu.contentapi.client.model.{Reference, Asset, Element, Content}
 import org.specs2.mutable.Specification
 
 class MasterclassDataExtractorTest extends Specification {
@@ -27,6 +27,7 @@ class MasterclassDataExtractorTest extends Specification {
     Some(List(mainElement, thumbnailElement)),
     Nil, None)
 
+  val itemWithoutBody = item.copy(fields = Some(Map("body" -> "no eventrbite url")))
 
   "MasterclassDataExtractor" should {
 
@@ -53,9 +54,18 @@ class MasterclassDataExtractorTest extends Specification {
 
     }
 
-    "not create a masterclass content if body does not contain eventbrite url" in {
-      val itemWithoutBody = item.copy(fields = Some(Map("body" -> "no eventrbite url")))
+    "create masterclass content if there is an eventbrite external reference" in {
+      val itemWithExternalRef: Content = itemWithoutBody.copy(references = List(
+        Reference("eventbrite","eventbrite/111"),
+        Reference("sausages","eventbrite/222"),
+        Reference("eventbrite","eventbrite/333")
+      ))
 
+      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(itemWithExternalRef)
+      masterclassesContent.map(_.eventId) must contain(exactly("111", "333"))
+    }
+
+    "not create a masterclass content if there is no eventbrite external ref and body does not contain eventbrite url" in {
       val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(itemWithoutBody)
       masterclassesContent.size mustEqual(0)
     }
