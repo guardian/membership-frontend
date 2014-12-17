@@ -2,6 +2,9 @@
    Grid
    ========================================================================== */
 
+/* Grid Shared
+   ========================================================================== */
+
 .grid {
     @include clearfix;
     list-style: none;
@@ -9,6 +12,13 @@
 }
 .grid__item {
     margin-bottom: rem($gs-gutter);
+    border-color: transparent;
+}
+
+.grid--bordered {
+    .grid__item {
+        border-color: $c-neutral5;
+    }
 }
 
 .grid--2up,
@@ -21,23 +31,34 @@
     .grid__item {
         @include mq(mobileLandscape) {
             float: left;
-            margin-left: $gutter-width-fluid;
+            margin-left: $gutter-width-fluid / 2;
+            padding-left: $gutter-width-fluid / 2;
             margin-bottom: $gutter-width-fluid;
-            width: 50% - $gutter-width-fluid;
+            width: 50% - ($gutter-width-fluid / 2);
             &:nth-of-type(2n+1) { clear: left; }
+        }
+        @include mq(tablet) {
+            border-style: solid;
+            border-width: 0 0 0 1px;
         }
     }
 }
 
+/* Grid 3up
+   ========================================================================== */
+
 .grid--3up {
     .grid__item {
         @include mq(tablet) {
-            width: 33.3% - $gutter-width-fluid;
+            width: 33.3% - ($gutter-width-fluid / 2);
             &:nth-of-type(2n+1) { clear: none; }
-            &:nth-of-type(3n+1) { clear: left; }
+            &:nth-of-type(3n+1) { clear: left; border-left: none; }
         }
     }
 }
+
+/* 3up Stacked (3 > 1)
+   ========================================================================== */
 
 .grid--3up-stacked {
     @include mq(desktop) {
@@ -47,24 +68,26 @@
     .grid__item {
         @include mq(desktop) {
             float: left;
-            margin-left: $gutter-width-fluid;
+            border-style: solid;
+            border-width: 0 0 0 1px;
+            margin-left: $gutter-width-fluid / 2;
+            padding-left: $gutter-width-fluid / 2;
             margin-bottom: $gutter-width-fluid;
-            width: 33.3% - $gutter-width-fluid;
-            &:nth-of-type(3n+1) { clear: left; }
+            width: 33.3% - ($gutter-width-fluid / 2);
+            &:nth-of-type(3n+1) { clear: left; border-left: none; }
         }
     }
 }
 
+/* Grid 4up
+   ========================================================================== */
+
 .grid--4up {
-    @include mq(mobileLandscape) {
-        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
-        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
-    }
     .grid__item {
         @include mq(tablet) {
-            width: 25% - $gutter-width-fluid;
+            width: 25% - ($gutter-width-fluid / 2);
             &:nth-of-type(2n+1) { clear: none; }
-            &:nth-of-type(4n+1) { clear: left; }
+            &:nth-of-type(4n+1) { clear: left; border-left: none; }
         }
     }
 }
