@@ -116,33 +116,21 @@ trait Event extends Controller {
       TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
 
+  private def eventCookie(event: RichEvent) = s"mem-${event.id}"
+
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(metrics(event), "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
-      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code))).withCookies(
-          // record that the order began on membership
-          setEventPurchaseCookie(event.id)
-        )
+      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+        .withCookies(Cookie(eventCookie(event), ""))
     }
 
-  private def setEventPurchaseCookie(id: String, isSet: Boolean = true) = {
-    Cookie(
-      name   = s"mem-$id",
-      value  = isSet.toString,
-      domain = Some(Config.membershipCookieDomain)
-    )
-  }
-
-  // log a conversion IF the user came from a membership event page
+  // log a conversion if the user came from a membership event page
   private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
-    val cookieName = s"mem-${event.id}"
-    val cookie = request.cookies.get(cookieName)
-    // only track purchases if the order started on membership
-    cookie.map { c =>
-      if (c.value == "true") {
-        metrics(event).put("user-returned-to-thankyou-page", 1)
-      }
+    request.cookies.get(eventCookie(event)).foreach { _ =>
+      metrics(event).put("user-returned-to-thankyou-page", 1)
+      println("tracked event")
     }
   }
 
@@ -154,7 +142,7 @@ trait Event extends Controller {
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
           trackConversionToThankyou(request, event)
-          Ok(views.html.event.thankyou(event, order))
+          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
         }
       }
       resultOpt.getOrElse(Future.successful(NotFound))
@@ -166,11 +154,7 @@ trait Event extends Controller {
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
       trackConversionToThankyou(request, event)
-      // invalidate the cookie (can't delete it due to subdomain)
-      NoContent
-        .withHeaders(CACHE_CONTROL -> "no-cache, no-store")
-        .withCookies(setEventPurchaseCookie(event.id, false)
-      )
+      NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }
 }
