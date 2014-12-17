@@ -122,31 +122,56 @@ trait Event extends Controller {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code))).withCookies(
           // record that the order began on membership
-          Cookie(s"mem-${event.id}", System.currentTimeMillis().toString)
+          setEventPurchaseCookie(event.id)
         )
     }
 
+  private def setEventPurchaseCookie(id: String, isSet: Boolean = true) = {
+    Cookie(
+      name   = s"mem-$id",
+      value  = isSet.toString,
+      domain = Some(Config.membershipCookieDomain)
+    )
+  }
+
+  // log a conversion IF the user came from a membership event page
+  private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
+    val cookieName = s"mem-${event.id}"
+    val cookie = request.cookies.get(cookieName)
+    // only track purchases if the order started on membership
+    cookie.map { c =>
+      if (c.value == "true") {
+        metrics(event).put("user-returned-to-thankyou-page", 1)
+      }
+    }
+  }
+
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
     orderIdOpt.fold {
-      val cookieName = s"mem-$id"
       val resultOpt = for {
         oid <- request.flash.get("oid")
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          // only track purchases if the order started on membership
-          val cookie = request.cookies.get(cookieName)
-          cookie.map { c =>
-            metrics(event).put("user-returned-to-thankyou-page", 1)
-          }
-          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(cookieName))
+          trackConversionToThankyou(request, event)
+          Ok(views.html.event.thankyou(event, order))
         }
       }
-
       resultOpt.getOrElse(Future.successful(NotFound))
     } { orderId =>
       Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
     }
+  }
+
+  def thankyouPixel(id: String) = NoCacheAction { implicit request =>
+    EventbriteService.getEvent(id).map { event =>
+      trackConversionToThankyou(request, event)
+      // invalidate the cookie (can't delete it due to subdomain)
+      NoContent
+        .withHeaders(CACHE_CONTROL -> "no-cache, no-store")
+        .withCookies(setEventPurchaseCookie(event.id, false)
+      )
+    }.getOrElse(NotFound)
   }
 }
 
