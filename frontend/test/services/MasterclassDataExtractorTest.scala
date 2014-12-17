@@ -2,6 +2,7 @@ package services
 
 import com.gu.contentapi.client.model.{Reference, Asset, Element, Content}
 import org.specs2.mutable.Specification
+import services.MasterclassDataExtractor.extractEventbriteInformation
 
 class MasterclassDataExtractorTest extends Specification {
 
@@ -32,7 +33,7 @@ class MasterclassDataExtractorTest extends Specification {
   "MasterclassDataExtractor" should {
 
     "create a masterclass content with eventId, apiUrl, image locations of just the main element" in {
-      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(item)
+      val masterclassesContent = extractEventbriteInformation(item)
       masterclassesContent.size mustEqual(1)
       val masterclassContent = masterclassesContent(0)
       masterclassContent.eventId mustEqual("13906168725")
@@ -46,7 +47,7 @@ class MasterclassDataExtractorTest extends Specification {
         "great things about the course"
       val newItem = item.copy(fields = Some(Map("body" -> eventbriteUrlsInBody)))
 
-      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(newItem)
+      val masterclassesContent = extractEventbriteInformation(newItem)
       masterclassesContent.size mustEqual(2)
       masterclassesContent.map(_.eventId) must contain(exactly("13906168725", "1234"))
       masterclassesContent.map(_.webUrl) must contain(exactly("writing-gu-url", "writing-gu-url"))
@@ -55,24 +56,24 @@ class MasterclassDataExtractorTest extends Specification {
     }
 
     "create masterclass content if there is an eventbrite external reference" in {
-      val itemWithExternalRef: Content = itemWithoutBody.copy(references = List(
+      val itemWithExternalRef = itemWithoutBody.copy(references = List(
         Reference("eventbrite","eventbrite/111"),
         Reference("sausages","eventbrite/222"),
         Reference("eventbrite","eventbrite/333")
       ))
 
-      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(itemWithExternalRef)
+      val masterclassesContent = extractEventbriteInformation(itemWithExternalRef)
       masterclassesContent.map(_.eventId) must contain(exactly("111", "333"))
     }
 
     "not create a masterclass content if there is no eventbrite external ref and body does not contain eventbrite url" in {
-      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(itemWithoutBody)
+      val masterclassesContent = extractEventbriteInformation(itemWithoutBody)
       masterclassesContent.size mustEqual(0)
     }
 
     "create a masterclass with empty asset list if no main element is found" in {
       val itemWithNoMainElement = item.copy(elements = Some(List(thumbnailElement)))
-      val masterclassesContent = MasterclassDataExtractor.extractEventbriteInformation(itemWithNoMainElement)
+      val masterclassesContent = extractEventbriteInformation(itemWithNoMainElement)
 
       masterclassesContent(0).images must be(List())
     }
