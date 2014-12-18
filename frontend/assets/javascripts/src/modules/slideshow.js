@@ -32,9 +32,9 @@ define(function() {
     }
 
     function init() {
-        var slideshow = document.querySelectorAll(SLIDESHOW_CONTAINER);
-        if (slideshow.length) {
-            [].forEach.call(slideshow, function(el) {
+        var slideshows = document.querySelectorAll(SLIDESHOW_CONTAINER);
+        if (slideshows.length) {
+            [].forEach.call(slideshows, function(el) {
                 var items = el.querySelectorAll(SLIDESHOW_CHILDREN);
                 setCurrentItem(items, 0);
                 cycleItems(items, el.getAttribute('data-slideshow-duration') || 5000);
