@@ -72,7 +72,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assertNotEmpty(page.getEventDescription)
     Assert.assertNotEmpty(page.getEventLocation)
     Assert.assertNotEmpty(page.getEventPrice)
-    Assert.assertNotEmpty(page.getEventSalesEndTime)
+//    Assert.assertNotEmpty(page.getEventSalesEndTime)
     Assert.assertNotEmpty(page.getEventTime)
     this
   }
