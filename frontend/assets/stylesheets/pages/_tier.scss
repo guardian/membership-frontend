@@ -368,6 +368,7 @@ $current-indicator: rem(72px);
 .package-feature__content {
     @include mq(tablet) {
         display: table;
+        width: 100%;
     }
 }
 .package-feature__benefits,
@@ -378,6 +379,9 @@ $current-indicator: rem(72px);
 }
 .package-feature__benefits {
     @include mq(tablet) {
+        width: 60%;
+    }
+    @include mq(desktop) {
         width: 75%;
     }
 }
@@ -511,4 +515,3 @@ $current-indicator: rem(72px);
         }
     }
 }
-

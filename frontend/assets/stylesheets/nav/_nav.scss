@@ -96,7 +96,7 @@
 .nav--global--header {
     overflow: hidden;
     overflow-x: scroll;
-    height: $header-margin;
+    height: $pageOffset;
     padding-top: rem(3px);
     padding-bottom: 0;
     -webkit-overflow-scrolling: touch;

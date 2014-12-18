@@ -1,6 +1,4 @@
 require([
-    '$',
-    'lib/bower-components/imager.js/Imager',
     'src/utils/analytics/setup',
     'src/utils/cookieRefresh',
     'ajax',
@@ -11,6 +9,8 @@ require([
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
+    'src/modules/slideshow',
+    'src/modules/images',
     'src/modules/sticky',
     'src/modules/Header',
     'src/modules/UserDetails',
@@ -24,8 +24,6 @@ require([
     'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
     'src/utils/modernizr'
 ], function(
-    $,
-    Imager,
     analytics,
     cookieRefresh,
     ajax,
@@ -36,6 +34,8 @@ require([
     Cta,
     Filter,
     toggle,
+    slideshow,
+    images,
     sticky,
     Header,
     UserDetails,
@@ -58,34 +58,6 @@ require([
 
     ajax.init({page: {ajaxUrl: ''}});
 
-    // event imagery
-    if ($('.delayed-image-load').length) {
-        new Imager('.delayed-image-load', {
-            availableWidths: guardian.membership.eventImages.widths,
-            availablePixelRatios: guardian.membership.eventImages.ratios,
-            lazyload: true,
-            lazyloadOffset: 100
-        });
-    }
-    // home page hero (a-b) imagery
-    if ($('.delayed-home-image-load').length) {
-        new Imager('.delayed-home-image-load', {
-            availableWidths: guardian.membership.homeImages.widths,
-            availablePixelRatios: guardian.membership.homeImages.ratios,
-            lazyload: true,
-            lazyloadOffset: 100
-        });
-    }
-    // home page promo (a-b) imagery
-    if ($('.delayed-home-promo-image-load').length) {
-        new Imager('.delayed-home-promo-image-load', {
-            availableWidths: guardian.membership.homeImages.promoWidths,
-            availablePixelRatios: guardian.membership.homeImages.ratios,
-            lazyload: true,
-            lazyloadOffset: 100
-        });
-    }
-
     // TODO: Remove this, see module
     cookieRefresh.init();
 
@@ -93,6 +65,8 @@ require([
 
     // Global
     toggle.init();
+    images.init();
+    slideshow.init();
     sticky.init();
     var header = new Header();
     header.init();

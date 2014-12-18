@@ -1,0 +1,15 @@
+@(imgSrc: String, description: String, isCurrent: Boolean = false)
+
+@import views.support.Asset
+
+<figure class="slideshow__element@if(isCurrent == true){ is-current} js-slideshow-item">
+    <figcaption class="slideshow__detail">
+        <div class="progress-indicator">
+            <span class="progress-indicator__index js-slideshow-position"></span>
+            <span class="progress-indicator__separator">/ </span>
+            <span class="progress-indicator__count js-slideshow-total"></span>
+        </div>
+        <h2 class="slideshow__description">@description</h2>
+    </figcaption>
+    <div class="js-image-slideshow" data-src="@Asset.at(imgSrc)" data-alt="@description" data-class="responsive-img slideshow__image"></div>
+</figure>

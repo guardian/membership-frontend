@@ -7,69 +7,56 @@ html {
     min-height: 100%;
     background-color: $c-background;
 
-    @include mq(tablet) {
-        background: url(/assets/images/mem-bg-events.jpg) repeat-y center center fixed;
-        background-size: cover;
-    }
+    background-attachment: fixed;
+    background-repeat: repeat-y;
+    background-position: center;
+    background-image: url(/assets/images/bg-texture.jpg);
+    background-size: cover;
 
-    &.events-bg,
-    &.about-membership {
-        background-attachment: fixed;
-        background-repeat: repeat-y;
-        background-position: center;
-
-        @include mq(tablet) {
-            background-image: url(/assets/images/mem-bg-events.jpg);
-        }
-    }
-
-    //TODO: Remove when short homepage goes live.
+    // TODO: Remove when short homepage goes live.
     &.home-page {
-
         background: url(/assets/images/backgrounds/400-Home-hero.jpg) no-repeat top center fixed;
-
         @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             background: url(/assets/images/backgrounds/400-Home-hero-2x.jpg) no-repeat top center fixed;
             background-size: rem(400px) rem(444px);
         }
-
         @include mq(400px) {
             background: url(/assets/images/backgrounds/740-Home-hero.jpg) no-repeat top center fixed;
             background-size: auto auto;
         }
-
         @include mq(tablet) {
             background: url(/assets/images/backgrounds/1920-Home-hero.jpg) no-repeat top center fixed;
             background-size: auto auto;
         }
     }
 
-    &.about-membership {
-        background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
-        @include mq(tablet) {
-            background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
-        }
-    }
+}
 
-    &.patron-page {
-        background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
-        @include mq(tablet) {
-            background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
-        }
+html.about-membership {
+    background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
+    @include mq(tablet) {
+        background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
     }
+}
 
+html.patron-page {
+    background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
+    @include mq(tablet) {
+        background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
+    }
 }
 
 // TODO: Can magic numbers be removed?
 // Magic numbers refer to footer height
 body {
     min-height: 100%;
-    margin-bottom: rem(252px);
+    margin-bottom: rem(280px);
+
+    @include mq(mobileLandscape) {
+        margin-bottom: rem(260px);
+    }
 
     @include mq(tablet) {
-        margin-bottom: rem(218px);
-    }
-    @include mq(wide) {
         margin-bottom: rem(220px);
     }
 }
@@ -101,7 +88,10 @@ body {
 .page-content {
     @include clearfix;
     background-color: $c-background;
-    padding: 0 $gs-gutter;
+    padding: 0 rem($gs-gutter / 2);
+    @include mq(mobileLandscape) {
+        padding: 0 rem($gs-gutter);
+    }
 }
 .page-content--padded {
     @include mq(tablet) {
