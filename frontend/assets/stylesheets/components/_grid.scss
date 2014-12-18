@@ -2,9 +2,6 @@
    Grid
    ========================================================================== */
 
-/* Grid base
-   ========================================================================== */
-
 .grid {
     @include clearfix;
 }
@@ -12,13 +9,12 @@
     margin-bottom: rem($gs-gutter);
 }
 
-/* Grid 2up
-   ========================================================================== */
-
-.grid--2up {
+.grid--2up,
+.grid--3up,
+.grid--4up {
     @include mq(mobileLandscape) {
-        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
-        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid;
     }
     .grid__item {
         @include mq(mobileLandscape) {
@@ -31,22 +27,8 @@
     }
 }
 
-/* Grid 3up (3 > 2 > 1)
-   ========================================================================== */
-
 .grid--3up {
-    @include mq(mobileLandscape) {
-        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
-        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
-    }
     .grid__item {
-        @include mq(mobileLandscape) {
-            float: left;
-            margin-left: $gutter-width-fluid;
-            margin-bottom: $gutter-width-fluid;
-            width: 50% - $gutter-width-fluid;
-            &:nth-of-type(2n+1) { clear: left; }
-        }
         @include mq(tablet) {
             width: 33.3% - $gutter-width-fluid;
             &:nth-of-type(2n+1) { clear: none; }
@@ -55,13 +37,10 @@
     }
 }
 
-/* Grid 3up stacked (3 > 1)
-   ========================================================================== */
-
 .grid--3up-stacked {
     @include mq(desktop) {
-        width: 100% + $gutter-width-fluid; // 100% + gutter width from .benefit
-        margin-left: -$gutter-width-fluid; // - gutter width from .benefit
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid;
     }
     .grid__item {
         @include mq(desktop) {
@@ -74,18 +53,8 @@
     }
 }
 
-/* Grid 4up (4 > 2 > 1)
-   ========================================================================== */
-
 .grid--4up {
     .grid__item {
-        @include mq(mobileLandscape) {
-            float: left;
-            margin-left: $gutter-width-fluid;
-            margin-bottom: $gutter-width-fluid;
-            width: 50% - $gutter-width-fluid;
-            &:nth-of-type(2n+1) { clear: left; }
-        }
         @include mq(tablet) {
             width: 25% - $gutter-width-fluid;
             &:nth-of-type(2n+1) { clear: none; }
