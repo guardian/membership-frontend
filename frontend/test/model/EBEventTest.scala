@@ -100,5 +100,12 @@ class EBEventTest extends PlaySpecification {
       val desc = EBRichText("", "<a href=\"blah\">Full course and returns information on</a>")
       desc.cleanHtml must contain("<a href=\"blah\">Full course and returns information on</a>")
     }
+
+    "should return media service url if present" in {
+      val desc = EBRichText("", "\"<P>A chance to say goodbye to Alan!<\\/P>\\r\\n<P>:-(<\\/P>\\r\\n" +
+        "<!-- main-image: https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288 -->\"\n    }, ")
+
+      desc.mainImage mustEqual Some("https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
+    }
   }
 }
