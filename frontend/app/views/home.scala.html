@@ -2,6 +2,7 @@
 
 @main("Home Page a-b", noIndex=true) {
 
+    @* ===== Slideshow ===== *@
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
         @fragments.media.slideshowItem("images/noAssetHash/home/hero/man_aud_{width}{pixel_ratio}.jpg",
             "Guardian Live with Russell Brand", true)
@@ -17,16 +18,18 @@
             "Guardian Live event: Vivienne Westwood")
     </section>
 
+    @* ===== Introduction ===== *@
     <section class="block-description block-description--right block-description--pull">
         <h1 class="text-feature">We're bringing the Guardian to life through live events and meet-ups. <a class="text-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
         <a class="action action--no-bottom-margin" href="/join">Join today</a>
     </section>
 
+    @* ===== Feature panels ===== *@
     <section class="page-content">
         <div class="section-features">
             <ul class="grid grid--bordered grid--4up">
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/home/promo/whats-included-{width}{pixel_ratio}.png",
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/whats-included-{width}{pixel_ratio}.jpg",
                         "Discover what's included with Guardian Membership", "/about")
                 </li>
                 <li class="grid__item">
@@ -38,7 +41,7 @@
                         "Compare the three tiers of Guardian Membership", "/join")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/home/promo/become_patron_{width}{pixel_ratio}.jpg",
+                    @fragments.page.featurePanel("images/noAssetHash/home/promo/become-patron-{width}{pixel_ratio}.jpg",
                         "Become a Patron and support the Guardian's future", "/patrons")
                 </li>
             </ul>
