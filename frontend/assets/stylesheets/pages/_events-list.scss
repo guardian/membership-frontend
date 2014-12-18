@@ -1,39 +1,106 @@
 /* ==========================================================================
-   Event blocks
+   Event Listings
    ========================================================================== */
 
-// an event block consists of a title and a list
-// and can be a simple list or a "hero" layout
+/* ==========================================================================
+   Event Listings - Header Bar
+   ========================================================================== */
+
+.header-bar {
+    position: relative;
+    padding-left: rem($gs-gutter / 2);
+    padding-right: rem($gs-gutter / 2);
+
+    .header-bar__title {
+        @include fs-headline(4);
+        padding: rem($gs-gutter / 2) 0 rem(55px);
+        max-width: rem(gs-span(8));
+    }
+
+    @include mq(tablet) {
+        min-height: rem(132px);
+        padding-left: rem($gs-gutter);
+
+        .header-bar__title {
+            @include fs-headline(6);
+            padding: rem($gs-gutter) 0;
+        }
+    }
+
+    @include mq(mem-full) {
+        padding-left: rem(gs-span(2) + $gs-gutter * 2); // 180
+        .header-bar__title {
+            @include fs-headline(7);
+        }
+    }
+}
+
+/* ==========================================================================
+   Event Listings - Event Logo
+   ========================================================================== */
+// TODO: Document usage of event-logo
+
+.event-logo {
+    position: absolute;
+    bottom: rem($gs-gutter / 2);
+    right: rem($gs-gutter / 2);
+
+    height: rem(44px);
+    background-position: right;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    @include mq(tablet) {
+        bottom: rem($gs-gutter);
+        right: rem($gs-gutter);
+        height: rem(87px);
+    }
+}
+
+/* ==========================================================================
+   Event Listings - Event blocks (sections)
+   ========================================================================== */
+
 .event-block {
     position: relative;
     background-color: $white;
-    padding: rem($gs-gutter / 2);
+    padding: rem($gs-gutter / 2) 0;
     overflow: hidden;
     border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
-        padding: rem($gs-gutter);
+        padding: rem($gs-gutter) 0;
+    }
+    @include mq(desktop) {
+        padding: rem($gs-gutter) rem($gs-gutter) 0;
     }
 
     &:last-child {
         border-bottom: 0;
     }
 }
+.event-block--padded {
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+}
 
 .event-block__header {
-    padding-bottom: rem($gs-baseline);
+    padding: 0 rem($gs-gutter/2) rem($gs-baseline);
+
+    @include mq(desktop) {
+        padding-left: 0;
+    }
     @include mq(mem-full) {
         float: left;
         width: rem(gs-span(2));
         margin-right: $gs-gutter;
-        padding-bottom: 0;
+        padding: 0;
     }
 }
-
 .event-block__header__title {
     @include fs-header(4);
 }
-
 .event-block__events {
     overflow: hidden;
 
@@ -41,21 +108,20 @@
         width: rem(gs-span(12));
     }
 }
-
 .event-block__events--no-header {
     @include mq(mem-full) {
         margin-left: rem(gs-span(2) + $gs-gutter);
     }
 }
 
-
 /* ==========================================================================
-   Event item - default
+   Event Listings - Empty state
    ========================================================================== */
 
 // only visible when no filter results are found
 .events-list--empty:before {
     display: block;
+    margin-left: $gutter-width-fluid;
     .theme--guardian-live & {
         content: 'Sorry, no matching events were found.';
     }
@@ -63,6 +129,11 @@
         content: 'Sorry, no matching Masterclasses were found.';
     }
 }
+
+/* ==========================================================================
+   Event Listings - Event Filters
+   ========================================================================== */
+// TODO: Refactor to be separate component from event block / list
 
 .events-list__category {
     display: inline-block;
@@ -146,120 +217,40 @@ $filter-icon-size: 18px;
     right: rem($gs-gutter / 2);
 }
 
-.events-list__item {
-    margin-bottom: rem($gs-baseline);
-}
+/* ==========================================================================
+   Event Listings - Event Item
+   ========================================================================== */
 
-// used to generate the magic for grids
-// which can be arbitrarily re-ordered
-@mixin n-column-event-grid($columns) {
-    .events-list--items-#{$columns} & {
-
-        width: 100%/$columns;
-
-        // UGLY: the nested classes below need to be here
-        // because they depend on the parent list item
-        // being the 1st/2nd/3rd – sorry.
-
-        // the middle column is centred (eg. 7px on either side)
-        &:nth-child(#{$columns}n-1) .event-item__container {
-            margin: 0 auto;
-        }
-
-        // the third column is right-aligned (eg. 14px on the left)
-        &:nth-child(#{$columns}n) .event-item__container {
-            float: right;
-        }
-    }
-}
-
-// each list item should be in columns of 3
-@include mq(tablet) {
-    .events-list__item {
-        float: left;
-        margin-bottom: rem(20px);
-
-        // to give us the gutter, each inner element
-        // is 14px narrower than the parent
-        // so the first column gets 14px on the right
-        .event-item__container {
-            width: calc(100% - 14px);
-            height: rem(420px);
-        }
-
-        // enable different column configuations
-        // @include n-column-event-grid(2);
-        @include n-column-event-grid(3);
-        // @include n-column-event-grid(4);
-
-    }
-}
-
-@include mq(tablet) {
-    .hygrid {
-        @include flexbox;
-
-        &.hygrid--wrapped {
-            @include flex-wrap(wrap);
-        }
-
-        li {
-            margin-right: rem($gs-gutter);
-        }
-
-        &.hygrid--4 li {
-            @include flex-grow(1);
-            width: 0;
-
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-
-        &.hygrid--2 li {
-            @include flex-grow(1);
-            @include flex-basis(40%); // i have no idea why this works
-            &:nth-child(2n) {
-                margin-right: 0;
-            }
-        }
-
-        .event-item__container {
-            width: auto;
-        }
-    }
-}
-
-.event-item__media {
-    a, img {
-        vertical-align: text-bottom; // remove descenders
-        display: block;
-    }
+.even-item {
+    @include clearfix;
 }
 
 // global styles for the inner item container
-// (styles above are specific for tablet and up)
 .event-item__container {
-    background-color: $c-neutral7;
     position: relative;
+    background-color: $c-neutral7;
 
-    .join-choose-tier & {
-        background-color: transparent;
+    @include mq(mobileLandscape) {
+        height: rem(450px);
     }
 
-    &:hover {
+    &:hover, *:hover {
         text-decoration: none;
+    }
+    &:hover {
         background-color: $c-neutral5;
-
         .event-item__title {
             text-decoration: underline;
         }
-
     }
 
-    *:hover {
-        text-decoration: none;
-    }
+}
+
+.event-item__media a,
+.event-item__media img {
+    // remove descenders
+    vertical-align: text-bottom;
+    display: block;
 }
 
 // the event item details (title, location etc)
@@ -280,7 +271,6 @@ $filter-icon-size: 18px;
     }
 }
 
-// heading of the event
 .event-item__title {
     color: $black;
     margin-bottom: rem($gs-baseline);
@@ -297,24 +287,10 @@ $filter-icon-size: 18px;
     }
 
 }
-
-// misc event details
-.event-status--sold-out {
-    display: inline-block;
-    color: $white;
-    background-color: $mem-live-accent;
-    @include fs-data(2);
-    position: relative;
-    top: rem(-3px);
-    padding: rem(1px) rem(3px);
-    margin-right: rem(4px);
-}
-
 .event-item__time {
     @include fs-data(4);
     color: $black;
 }
-
 .event-item__description {
     @include fs-bodyCopy(1);
     padding: rem($gs-baseline) 0 0;
@@ -325,7 +301,6 @@ $filter-icon-size: 18px;
         padding: rem($gs-baseline * 2) 0 0;
     }
 }
-
 // the container for prices / buy button
 .event-item__cta {
     width: 100%;
@@ -343,20 +318,18 @@ $filter-icon-size: 18px;
         padding: 0 rem($gs-gutter) rem($gs-gutter);
     }
 }
-
 .event-item__price-amount {
     display: block;
     @include fs-header(4);
     color: $black;
 }
-
 .event-item__price-amount-discount {
     display: block;
     @include fs-data(3);
     color: $c-neutral2;
 }
-
 // the buy button
+// TODO: Refactor out into an action
 .event-item__action {
     position: absolute;
     bottom: rem($gs-gutter / 2);
@@ -372,7 +345,6 @@ $filter-icon-size: 18px;
         bottom: rem($gs-gutter);
         right: rem($gs-gutter);
     }
-
 
     &:focus {
         outline: 0;
@@ -409,47 +381,60 @@ $filter-icon-size: 18px;
     @include fs-data(4);
 }
 
+// Sold-out flag
+// TODO: Refactor out into generic `flag` component
+.event-status--sold-out {
+    display: inline-block;
+    color: $white;
+    background-color: $mem-live-accent;
+    @include fs-data(2);
+    position: relative;
+    top: rem(-3px);
+    padding: rem(1px) rem(3px);
+    margin-right: rem(4px);
+}
+
 /* ==========================================================================
-   Event item – hero
+   Event Listings - Event item (Hero modifier)
    ========================================================================== */
 
-// hero item – overrides much of the default item styling
-// flexbox magic
-@include guss-row('.event-item--hero .event-item__container');
 .event-item--hero {
-    margin-bottom: rem($gs-gutter / 2);
+    margin-bottom: $gutter-width-fluid;
     width: 100%;
+    height: auto;
+
+    .event-item__container {
+        @include clearfix;
+        height: auto;
+    }
+
+    .event-item__cta {
+        position: static;
+        padding: rem($gs-gutter) 0 0;
+    }
 
     @include mq(tablet) {
-        margin-bottom: rem($gs-gutter);
-        height: auto;
-        overflow: hidden;
+        display: table;
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid;
 
-        .event-item__media {
-            display: inline-block;
-            vertical-align: top;
-            @include flex(1, 0, percentage(gs-span(8)/gs-span(12)));
-            .no-flexbox & {
-                width: 60%;
-                font-size: 0;
-                display: inline-block;
-            }
-        }
-
+        .event-item__media,
         .event-item__meta {
-            display: inline-block;
+            width: auto;
+            display: table-cell;
             vertical-align: top;
-            position: relative;
-            @include flex();
-            .no-flexbox & {
-                width: 40%;
-                font-size: 0;
-                .event-item__cta {
-                    position: static;
-                }
-            }
         }
-
+        .event-item__media {
+            padding-left: $gutter-width-fluid;
+        }
+        .event-item__meta {
+            position: relative;
+            width: 33.3%;
+        }
+        .event-item__cta {
+            position: absolute;
+            padding: rem($gs-gutter);
+        }
         .event-item__description {
             display: none;
         }
@@ -459,32 +444,35 @@ $filter-icon-size: 18px;
         .event-item__title {
             @include fs-headline(5);
         }
-
         .event-item__time {
             @include fs-headline(2);
         }
-
         .event-item__description {
             display: block;
         }
     }
 
-    .event-item__container {
-        .no-flexbox & {
-            font-size: 0;
-        }
-    }
 }
 
+/* ==========================================================================
+   Event Listings - Event Item (Minimal modifier)
+   ========================================================================== */
+
 // use a shorter box for minimal theme
-@include mq(tablet) {
-    .event-item--minimal {
+.event-item--minimal {
+    @include mq(mobileLandscape) {
         .event-item__container {
             height: rem(280px);
         }
     }
+}
 
-    .event-item--card {
+/* ==========================================================================
+   Event Listings - Event Item (Card modifier)
+   ========================================================================== */
+
+.event-item--card {
+    @include mq(tablet) {
         .event-item__container {
             height: auto;
             overflow: hidden;
@@ -499,39 +487,5 @@ $filter-icon-size: 18px;
         .event-item__meta {
             padding-bottom: 0;
         }
-    }
-}
-
-.events-list__hero-descendant {
-
-    .events-list__item {
-        margin-bottom: 0;
-    }
-
-    .event-item__container {
-        @include mq(tablet) {
-            height: rem(450px);
-        }
-    }
-}
-
-/* ==========================================================================
-   Custom logo
-   ========================================================================== */
-
-.event-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2);
-    right: rem($gs-gutter / 2);
-
-    height: rem(44px);
-    background-position: right;
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    @include mq(tablet) {
-        bottom: rem($gs-gutter);
-        right: rem($gs-gutter);
-        height: rem(87px);
     }
 }
