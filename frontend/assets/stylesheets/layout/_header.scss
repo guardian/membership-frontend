@@ -1,9 +1,14 @@
-$header-padding: 20px;
-$header-margin: 36px;
+/* ==========================================================================
+   Global Header
+   ========================================================================== */
 
 .header {
     position: relative;
-    margin-bottom: rem($header-margin);
+    margin-bottom: rem($pageOffset/2);
+    @include mq(tablet) {
+        margin-bottom: rem($pageOffset);
+    }
+
     .header__inner--popup {
         padding: 0;
         position: relative;
@@ -12,7 +17,7 @@ $header-margin: 36px;
         // move the logo area above side margins
         z-index: 2;
         position: relative;
-        background-color: transparentize($mem-blue, .2);
+        background-color: transparentize($mem-blue, .1);
         padding-top: rem(5px);
         padding-bottom: rem(5px);
         height: rem(48px);
@@ -28,17 +33,17 @@ $header-margin: 36px;
     }
     .header__primary {
         float: left;
-        padding-left: rem($header-padding / 2);
-        padding-right: rem($header-padding / 2);
+        padding-left: rem($gs-gutter / 2);
+        padding-right: rem($gs-gutter / 2);
     }
 
     .header__secondary {
         float: right;
         width: auto;
-        margin-right: rem($header-padding / 2);
+        margin-right: rem($gs-gutter / 2);
 
         @include mq(mobile) {
-            margin-right: rem($header-padding / 2);
+            margin-right: rem($gs-gutter / 2);
         }
     }
 
@@ -46,7 +51,7 @@ $header-margin: 36px;
         clear: right;
         width: rem(243px);
         float: right;
-        margin-right: rem($header-padding / 2);
+        margin-right: rem($gs-gutter / 2);
         height: rem(25px);
 
         @include mq(tablet) {

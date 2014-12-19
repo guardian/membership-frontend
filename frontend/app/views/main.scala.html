@@ -2,8 +2,7 @@
     title: String,
     isBrochure: Boolean = false,
     htmlClass: String = "",
-    pageInfo: model.PageInfo = model.PageInfo.default,
-    noIndex: Boolean = false
+    pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
 
 @import configuration.Config
@@ -23,11 +22,6 @@
         <meta http-equiv="imagetoolbar"             content="no"/>
         <meta name="Rating"                         content="general"/>
         <meta name="Distribution"                   content="Global"/>
-
-        @* TODO remove this when/if the a-b homepage is added or removed *@
-    @if(noIndex == true){
-        <meta name="robots" content="noindex">
-    }
 
         <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
         <meta property="og:description" content="@pageInfo.description"/>
@@ -68,7 +62,7 @@
 
         <script src="//cdn.optimizely.com/js/2012460034.js"></script>
     </head>
-    <body>
+    <body id="top">
         <a class="u-h skip" href="#container">Skip to main content</a>
 
         @* ===== Anything in here will be hidden for old browsers ===== *@

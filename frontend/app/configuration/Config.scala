@@ -56,8 +56,9 @@ object Config {
   val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
   val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
   val homeImageWidths = config.getList("membership.home.images.widths").unwrapped
-  val homeImagePromoWidths = config.getList("membership.home.images.promo.widths").unwrapped
   val homeImageRatios = config.getList("membership.home.images.ratios").unwrapped
+  val featureImageWidths = config.getList("membership.features.images.widths").unwrapped
+  val featureImageRatios = config.getList("membership.features.images.ratios").unwrapped
 
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
