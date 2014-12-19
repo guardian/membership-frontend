@@ -8,7 +8,6 @@ GET            /favicon.ico                       controllers.CacheBustedAssets.
 
 # Home page
 GET            /                                  controllers.FrontPage.index
-GET            /home                              controllers.FrontPage.home
 
 GET            /gifting                           controllers.Info.giftingPlaceholder
 

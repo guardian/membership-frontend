@@ -1,137 +1,51 @@
 @()(implicit token: play.filters.csrf.CSRF.Token)
 
-@import configuration.Config
-@import com.gu.membership.salesforce.Tier
-@import views.support.Asset
+@main("Home Page") {
 
-@main("Home Page", isBrochure = true, htmlClass = "home-page") {
+    @* ===== Slideshow ===== *@
+    <section class="slideshow js-slideshow" data-slideshow-duration="5000">
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/man_aud_{width}{pixel_ratio}.jpg",
+            "Guardian Live with Russell Brand", true)
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/pussy_riot_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Pussy Riot - art, sex and disobedience")
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/jim_page_{width}{pixel_ratio}.jpg",
+            "A life in music: Jimmy Page")
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/women_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Russell Brand")
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/tin_temp_{width}{pixel_ratio}.jpg",
+            "Observer Ideas - Stories that inspire: Tinie Tempah")
+        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/viv_west_{width}{pixel_ratio}.jpg",
+            "Guardian Live event: Vivienne Westwood")
+    </section>
 
-    @* ===== Homepage hero ===== *@
+    @* ===== Introduction ===== *@
+    <section class="block-description block-description--right block-description--pull">
+        <h1 class="text-feature">We're bringing the Guardian to life through live events and meet-ups. <a class="text-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
+        <a class="action action--no-bottom-margin" href="/join">Join today</a>
+    </section>
 
-    <div class="home-slice home-slice--epic home-slice--epic-home-page tier-hidden u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h1 class="home-slice__headline">Guardian Membership brings the Guardian to life</h1>
-            </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">We believe real, face-to-face discussions have the power to broaden minds.</p>
-                <p class="home-slice__copy">Guardian Membership transforms everything you enjoy in the Guardian into live events and meet-ups. Join and be part of the conversations that matter.</p>
-                <a class="action home-slice__action" href="/join">Join today</a>
-                <a class="action home-slice__action action--secondary-button" href="/about">Learn more</a>
-            </div>
+    @* ===== Feature panels ===== *@
+    <section class="page-content">
+        <div class="section-features">
+            <ul class="grid grid--bordered grid--4up">
+                <li class="grid__item">
+                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/whats-included-{width}{pixel_ratio}.jpg",
+                        "Discover what's included with Guardian Membership", "/about")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/events-{width}{pixel_ratio}.jpg",
+                        "Browse our events and book your tickets now", "/events")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/compare-tiers-{width}{pixel_ratio}.jpg",
+                        "Compare the three tiers of Guardian Membership", "/join")
+                </li>
+                <li class="grid__item">
+                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/become-patron-{width}{pixel_ratio}.jpg",
+                        "Become a Patron and support the Guardian's future", "/patrons")
+                </li>
+            </ul>
         </div>
-    </div>
+    </section>
 
-    @* ===== Member homepage hero ===== *@
-
-    <div class="home-slice home-slice--epic tier-required u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h1 class="home-slice__headline">Hello <span class="js-user-firstName"></span>. Welcome back to Guardian Membership.</h1>
-            </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">Stay up-to-date with the latest news and developments from the membership community and watch highlights of Guardian Live events by visiting <a href="@(Config.guardianMembershipUrl)">theguardian.com/membership</a>.</p>
-                <p class="home-slice__copy">Book your tickets and discover the Winter lineup for Guardian Live on our <a href="/events">listings page</a>.</p>
-                <a class="action home-slice__action" href="@(Config.guardianMembershipUrl)">Membership on the Guardian</a>
-                <a class="action home-slice__action action--secondary-button" href="/events">See all events</a>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Bring the Guardian to life ===== *@
-
-    <div class="home-slice u-cf home-slice--red home-slice--home-two">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Browse our events and book your tickets now</h2>
-            </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">Guardian Live is a programme of discussions, debates, interviews,
-                    keynote speeches and festivals.
-                </p>
-                <p class="home-slice__copy">Members can attend events that take the power of open journalism
-                    from print and digital into live experiences.
-                </p>
-                <a class="action" href="/events">See our live events</a>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Fuels our journalism ===== *@
-
-    <div class="home-slice home-slice--content u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__copy-block">
-                <div class="home-slice__media">
-                    <img src="@Asset.at("images/homeslice/740-Home-patrons.jpg")" alt="" class="responsive-img" />
-                </div>
-                <div class="home-slice__headline-block">
-                    <h2 class="home-slice__headline">Become a Patron and support the Guardian's future</h2>
-                </div>
-                <div class="home-slice__offset-copy">
-                    <blockquote class="home-slice__copy--quote">The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.</blockquote>
-                    <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-                    <a class="action" href="/patrons">Become a Patron</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Big ideas ===== *@
-
-    <div class="home-slice u-cf home-slice--green home-slice--home-four">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">A home for <br />big ideas</h2>
-            </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">
-                    In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross to create a new kind of civic space.
-                </p>
-                <p class="home-slice__copy">
-                    The building will be a hub for big ideas and stimulating conversations. It will host events,
-                    activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.
-                </p>
-                <a class="action" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
-                <a class="action action--secondary-button" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Founding Members ===== *@
-
-    <div class="home-slice home-slice--content tier-hidden u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__copy-block">
-                <div class="home-slice__media">
-                    <img src="@Asset.at("images/homeslice/740-crowd.jpg")" alt="" class="responsive-img" />
-                </div>
-                <div class="home-slice__headline-block">
-                    <h2 class="home-slice__headline">Founding members: join us at the start</h2>
-                </div>
-                <div class="home-slice__offset-copy">
-                    <p class="home-slice__copy">
-                        Guardian Membership is launching in beta. We have ambitious plans, and new features will be added regularly. Guardian membership will grow into a vibrant, self-organising community of free-thinkers.
-                    </p>
-                    <p class="home-slice__copy">
-                        Help to build and shape this community by joining as a Founding Partner or Patron,
-                        with the guarantee that the price you pay today will not rise.</p>
-                    <a class="action" href="/join" id="qa-join">Join today</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @* ===== Join Today ===== *@
-
-    <div class="home-slice home-slice--join-today tier-hidden">
-        <div class="home-slice__inner u-cf">
-            <h2 class="home-slice__headline">Join membership today</h2>
-            <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            </div>
-        </div>
-    </div>
 }
