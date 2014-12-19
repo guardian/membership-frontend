@@ -32,6 +32,7 @@ object Config {
   val guardianPrivacyUrl = config.getString("guardian.privacy.url")
   var guardianMembershipBuildingBlogUrl = config.getString("guardian.membership.building.blog.url")
   var guardianMembershipBuildingSpaceUrl = config.getString("guardian.membership.building.space.url")
+  val guardianContactUsUrl = config.getString("guardian.membership.contact.us.url")
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
