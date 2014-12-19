@@ -13,7 +13,7 @@ define([
         var COMING_SOON = 'Coming Soon';
         var BECOME_A_MEMBER = 'Become a member';
         var UPGRADE_MEMBERSHIP = 'Upgrade membership';
-        var UPGRADE_COMING_COON = 'Upgrade coming soon';
+        var TICKETS_AVAILABLE_SOON = 'Tickets available soon';
         var cta;
 
         // PhantomJS doesn't support bind yet
@@ -204,7 +204,7 @@ define([
                 done();
             });
 
-            it('loggedIn Partner - "' + BUY_TICKETS + '" button disabled and "' + UPGRADE_COMING_COON + '" button displayed', function (done) {
+            it('loggedIn Partner - "' + BUY_TICKETS + '" button disabled and "' + TICKETS_AVAILABLE_SOON + '" button displayed', function (done) {
                 ctaClassSetup(saleStartedYesterday, 'Partner', true);
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
                 expect(cta.upgradeComingSoonMemberCtaButton).toHaveBeenCalled();

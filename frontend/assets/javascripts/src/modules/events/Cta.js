@@ -11,7 +11,7 @@ define([
     var PATRON = 'Patron';
     var TIER_CHANGE_URL = '/tier/change';
     var UPGRADE = 'Upgrade membership';
-    var UPGRADE_COMING_SOON = 'Upgrade coming soon';
+    var TICKETS_AVAILABLE_SOON = 'Tickets available soon';
 
     var Cta = function (containerElem) {
         this.elem = containerElem;
@@ -117,7 +117,7 @@ define([
     };
 
     Cta.prototype.upgradeComingSoonMemberCtaButton = function () {
-        $(this.getElem('MEMBER_CTA')).text(UPGRADE_COMING_SOON).addClass('action--disabled').removeAttr('href');
+        $(this.getElem('MEMBER_CTA')).text(TICKETS_AVAILABLE_SOON).addClass('action--disabled').removeAttr('href');
     };
 
     Cta.prototype.upgradeMemberCtaButton = function () {
