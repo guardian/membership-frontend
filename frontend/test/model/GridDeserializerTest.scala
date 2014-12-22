@@ -1,8 +1,9 @@
 package model
 
+import model.Grid.GridResult
 import play.api.test.PlaySpecification
 import utils.Resource
-import GridDeserializer._
+import model.GridDeserializer._
 
 class GridDeserializerTest extends PlaySpecification {
 
@@ -10,7 +11,7 @@ class GridDeserializerTest extends PlaySpecification {
 
     "deserializer grid json" in {
       val grid = Resource.getJson("model/grid/api-image.json")
-      val gridResponse = grid.as[Grid]
+      val gridResponse = grid.as[GridResult]
 
       gridResponse.uri mustEqual("https://api.media.test.dev-gutools.co.uk/images/dff117cdb2100899107c96d7933ef175c35765ca")
       gridResponse.data.metadata.byline mustEqual("David Goldman")

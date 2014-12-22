@@ -18,13 +18,13 @@ class GridServiceTest extends Specification {
       service.isUrlCorrectFormat(invalidGridUrl) mustEqual (false)
     }
 
-    "must substitute a Grid url with it's API equivalent" in {
-      service.getApiUrl(validGridUrl) mustEqual("https://api.media.test.dev-gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288")
+    "must get endpoint for a Grid url" in {
+      service.getEndpoint(validGridUrl) mustEqual(Some("aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"))
     }
   }
 
-  "must not substitute a Grid url with it's API equivalent" in {
-      service.getApiUrl(invalidGridUrl) mustEqual(invalidGridUrl)
+  "must not get an endpoint for invalid Grid url" in {
+      service.getEndpoint(invalidGridUrl) mustEqual(None)
   }
 
   "must return the crop parameters from Grid url" in {
