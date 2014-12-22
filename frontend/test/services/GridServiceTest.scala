@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 
 
 class GridServiceTest extends Specification {
-  val service = new GridService
+  val service = GridService
 
   val validGridUrl = "https://media.test.dev-gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"
   val invalidGridUrl = "https://incorrect-format.media.test.dev-gutools.co.uk/images/aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"
@@ -19,12 +19,12 @@ class GridServiceTest extends Specification {
     }
 
     "must get endpoint for a Grid url" in {
-      service.getEndpoint(validGridUrl) mustEqual(Some("aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288"))
+      service.getEndpoint(validGridUrl) mustEqual("aef2fb1db22f7cd20683548719a2849b3c9962ec?crop=0_19_480_288")
     }
   }
 
   "must not get an endpoint for invalid Grid url" in {
-      service.getEndpoint(invalidGridUrl) mustEqual(None)
+      service.getEndpoint(invalidGridUrl) mustEqual(invalidGridUrl)
   }
 
   "must return the crop parameters from Grid url" in {

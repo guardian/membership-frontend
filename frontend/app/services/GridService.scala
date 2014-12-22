@@ -12,13 +12,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 case class GridConfig(url: String, apiUrl: String, key: String)
 
-class GridService extends utils.WebServiceHelper[GridObject, Error] {
+object GridService extends utils.WebServiceHelper[GridObject, Error] {
 
+  //todo remove?
   def isUrlCorrectFormat(url: String) = url.startsWith(Config.gridConfig.url)
 
-  def getEndpoint(url: String): Option[String] =
-    if(isUrlCorrectFormat(url)) Some(url.replace(Config.gridConfig.url, ""))
-    else None
+  def getEndpoint(url: String) = url.replace(Config.gridConfig.url, "")
 
 
   //TODO might not need this - after speaking to Seb we just want to get the crop that is supplied.
@@ -27,8 +26,8 @@ class GridService extends utils.WebServiceHelper[GridObject, Error] {
     uri.query.param("crop")
   }
 
-  def getAllCrops(endpoint: String) = {
-    for { media <- get[GridResult](endpoint)
+  def getAllCrops(url: String) = {
+    for { media <- get[GridResult](getEndpoint(url))
     } yield media
   }
 
