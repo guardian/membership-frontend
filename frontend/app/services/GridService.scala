@@ -8,7 +8,7 @@ class GridService {
 
   def isUrlCorrectFormat(url: String) = url.startsWith(Config.gridConfig.url)
 
-  //get the equivalent api url
+  def getApiUrl(url: String) = url.replace(Config.gridConfig.url, Config.gridConfig.apiUrl)
 
   //store the crop requested
 
