@@ -8,10 +8,6 @@
     display: inline;
 }
 
-.events-list .events-list__item {
-    margin: 0 0 $gs-gutter 0 !important;
-}
-
 .section-two-thirds {
     .two-thirds {
         @include mq(desktop) {
@@ -92,13 +88,6 @@
     clear: both;
 }
 
-/* Hide progress indicator for home a-b test slide show as css animation does not work here
-   ========================================================================== */
-
-.progress-indicator {
-    display: none;
-}
-
 /* Footer ie9 fix
    ========================================================================== */
 
@@ -114,11 +103,11 @@
         width: rem(gs-span(10));
     }
 
-    li { 
+    li {
         width: 50%;
 
         @include mq(tablet) {
-            width: 33.333%; 
+            width: 33.333%;
         }
     }
 

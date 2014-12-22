@@ -8,6 +8,7 @@ class GuardianDomainsTest extends Specification {
     "be a valid Guardian email" in {
       GuardianDomains.emailsMatch("joe.bloggs@guardian.co.uk", "joe.bloggs@theguardian.com") mustEqual(true)
       GuardianDomains.emailsMatch("joe.bloggs@theguardian.com", "joe.bloggs@theguardian.com") mustEqual(true)
+      GuardianDomains.emailsMatch("Joe.Bloggs@theguardian.co.uk", "joe.bloggs@guardian.co.uk") mustEqual(true)
 
       GuardianDomains.emailsMatch("joe.bloggs@guardian.co.uk", "joe.bloggs@gmail.com") mustEqual(false)
       GuardianDomains.emailsMatch("joe.bloggssssss@theguardian.com", "joe.bloggs@theguardian.com") mustEqual(false)

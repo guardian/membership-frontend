@@ -1,4 +1,9 @@
-@(staffEmail: model.StaffEmails, displayName: Option[String], avatarUrl: Option[String], error: Option[String])(implicit token: play.filters.csrf.CSRF.Token)
+@(
+  staffEmail: model.StaffEmails,
+  displayName: Option[String],
+  avatarUrl: Option[String],
+  flashMessage: Option[model.FlashMessage]
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
@@ -18,14 +23,16 @@
     </li>
 }
 
-@main("Staff Membership", containerPadding=false) {
+@main("Staff Membership") {
 
-    <main class="page-container__inner" role="main">
+    <main class="page-content" role="main">
 
-        @fragments.notifications.flashMessage(error)
+        @for(flashMsg <- flashMessage) {
+            @fragments.notifications.flashMessage(flashMsg)
+        }
 
         @fragments.page.pageHeader("Guardian Staff Membership",
-            Some("All permanent Guardian staff can sign up to the Partner tier of Guardian membership for free (equivalent to £15/month)"))
+            Some("All permanent Guardian staff can sign up to the Partner tier of Guardian Membership for free (equivalent to £15/month)"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -33,14 +40,14 @@
             </div>
             <div class="page-section__content">
                 @staffEmail.identityEmail.fold {
-                    <p>Before joining you must have a  Guardian Identity account set up with your work email address.</p>
+                    <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up with your work email address.</p>
 
                     <ul class="signpost u-unstyled">
                         @signPostItem("Create account", Config.idWebAppRegisterUrl(routes.Joiner.staff.url)){
-                            Create a Guardian Identity account with your work email address
+                            Create a profile on <strong>theguardian.com</strong> with your work email address
                         }
                         @signPostItem("Sign in", Config.idWebAppSigninUrl(routes.Joiner.staff.url)){
-                            Sign in to Guardian Identity with your work email address
+                            Sign in to <strong>theguardian.com</strong> with your work email address
                         }
                     </ul>
 
@@ -52,7 +59,7 @@
                         }
                         <div class="user-welcome__content">
                             @for(name <- displayName){
-                                <h3 class="user-welcome__title">Hello <strong>@displayName</strong>. Not you? <a href="@Config.idWebAppUrl/signout">Sign out</a></h3>
+                                <h3 class="user-welcome__title u-body-copy">Hello <strong>@displayName</strong>. Not you? <a href="@Config.idWebAppUrl/signout">Sign out</a></h3>
                             }
                             <div class="user-welcome__info">
                                 <p>Glad to see you've decided to join Guardian Staff Membership.</p>
@@ -65,27 +72,31 @@
                         <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
                         <a class="action action--secondary-button action--no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
                     } else {
-                        <p>Before joining you must have a Guardian Identity account set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
+                        <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 
-                        <p>You're signed in as <strong>@identityEmail</strong>, unfortunately this isn't a valid email address for Guardian Staff Membership.</p>
+                        <p>You're signed in to <strong>theguardian.com</strong> as <strong>@identityEmail</strong>, unfortunately this isn't a valid email address for Guardian Staff Membership.</p>
                         <p>You have two options to join:</p>
-                        <ul class="signpost u-unstyled">
-                            <li class="signpost-item">
-                                <h4 class="signpost-item__title">Option 1</h4>
-                                <p class="signpost-item__description">
-                                    Allow Guardian membership to change your Guardian Identity email address from <strong>@identityEmail</strong> to <strong>@staffEmail.googleEmail</strong
-                                </p>
-                                <div class="signpost__cta">
-                                    <form action="@routes.Joiner.updateEmailStaff" method="POST">
-                                        @CSRF.formField
-                                        <button class="action action--no-bottom-margin" type="submit">Change email for me</button>
-                                    </form>
-                                </div>
-                            </li>
-                            @signPostItem("Register Now", Config.idWebAppRegisterUrl(routes.Joiner.staff.url), "Option 2"){
-                                Register for a new Guardian Identity account using your work email address <strong>@staffEmail.googleEmail</strong>
-                            }
-                        </ul>
+
+                        <div class="modal-container u-cf">
+                            @fragments.modal.staffChangeEmail(identityEmail, staffEmail.googleEmail)
+                            <ul class="signpost u-unstyled">
+                                <li class="signpost-item">
+                                    <h4 class="signpost-item__title">Option 1</h4>
+                                    <p class="signpost-item__description">
+                                        Allow Guardian membership to change your Guardian Identity email address from <strong>@identityEmail</strong> to <strong>@staffEmail.googleEmail</strong
+                                    </p>
+                                    <div class="signpost__cta">
+                                        <form action="@routes.Joiner.updateEmailStaff" method="POST">
+                                            @CSRF.formField
+                                            <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+                                        </form>
+                                    </div>
+                                </li>
+                                @signPostItem("Register Now", Config.idWebAppRegisterUrl(routes.Joiner.staff.url), "Option 2"){
+                                    Register for a new profile on <strong>theguardian.com</strong> with your work email address <strong>@staffEmail.googleEmail</strong>
+                                }
+                            </ul>
+                        </div>
                     }
                 }
             </div>

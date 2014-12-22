@@ -1,10 +1,12 @@
-.action {
-    background-color: $mem-buttonBlue;
+/* ==========================================================================
+   Actions
+   ========================================================================== */
+
+%action {
     margin: $gs-baseline 0;
     display: inline-block;
     cursor: pointer;
     border: 0;
-    color: #ffffff;
     text-align: left;
     text-decoration: none;
     font-weight: bold;
@@ -14,9 +16,22 @@
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
     -moz-osx-font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
-    @include border-radius(50%);
     -webkit-font-smoothing: antialiased;
+    @include border-radius(50%);
     vertical-align: bottom;
+    outline: none;
+
+    @include mq(mobileLandscape){
+        width: auto;
+        min-width: rem(80px);
+        max-width: none;
+    }
+}
+
+.action {
+    background-color: $mem-buttonBlue;
+    color: $white;
+    @extend %action;
 
     &:visited,
     &:hover,
@@ -25,6 +40,9 @@
         text-decoration: none;
         color: #ffffff;
     }
+
+    &:focus,
+    &:active,
     &:hover {
         background-color: darken($mem-buttonBlue, 10%);
     }
@@ -38,11 +56,13 @@
         float: right;
         margin: rem(2px) 0 0 rem(30px);
     }
+}
 
-    @include mq(mobileLandscape){
-        width: auto;
-        min-width: rem(220px);
-        max-width: none;
+.action[disabled] {
+    &,
+    &:hover,
+    &:focus {
+        background-color: $c-neutral5;
     }
 }
 
@@ -65,6 +85,7 @@
 
 
 .action--toggle {
+    margin-bottom: $gutter-width-fluid;
     &:before {
         @extend .icon-plus;
         content: '';
@@ -98,17 +119,15 @@
 }
 
 .action--buy-event-ticket-details {
-  background-color: $black;
+    background-color: $black;
+    &:hover {
+        background-color: transparentize($black, 0.35);
+    }
 
-  @include mq(tablet) {
-    float: left;
-    margin: rem(6px $gs-gutter 0 0);
-    min-width: 0;
-  }
-
-  &:hover {
-    background-color: transparentize($black, 0.35);
-  }
+    @include mq(tablet) {
+        margin: 0 rem($gs-gutter) 0 0;
+        min-width: 0;
+    }
 }
 
 .action--fullwidth {
@@ -147,7 +166,7 @@
         }
     }
 
-    .theme--masterclass & {
+    .theme--masterclasses & {
         background-color: $mem-mc-top;
         color: $c-neutral1;
         &:hover,
@@ -190,7 +209,7 @@
     }
   }
 
-  .theme--masterclass & {
+  .theme--masterclasses & {
     color: $c-neutral1;
     background-color: $mem-mc-top;
     &:hover {
@@ -209,7 +228,7 @@
     background-color: $mem-live-top;
   }
 
-  .theme--masterclass & {
+  .theme--masterclasses & {
     background-color: $mem-mc-top;
   }
 
@@ -260,12 +279,31 @@
     }
 }
 
+.action-secondary-small {
+    color: $mem-buttonBlue;
+    border: 1px solid rgba(24, 104, 153, .25);
+    background-color: $white;
+    @extend %action;
+
+    &:hover {
+        border: 1px solid $mem-buttonBlue;
+    }
+}
+
+.action-secondary-small--modal {
+    @include mq(mobileLandscape) {
+        margin-left: rem($gs-gutter / 2);
+    }
+}
+
 .i-wait {
     display: none;
 }
 
+.action-secondary-small--no-margin,
 .action--no-margin {
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 .action--no-top-margin {
     margin-top: 0;
@@ -325,5 +363,19 @@
     @include mq(tablet) {
         width: auto;
         float: right;
+    }
+}
+
+.clipboard-button {
+    text-align: center;
+    border-radius: rem(4px);
+    border: 0;
+    background-color: $white;
+    vertical-align: top;
+    &.zeroclipboard-is-hover {
+        background-color: $white;
+    }
+    &.zeroclipboard-is-active {
+        background-color: $white;
     }
 }

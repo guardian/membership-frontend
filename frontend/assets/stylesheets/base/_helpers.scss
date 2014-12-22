@@ -1,4 +1,5 @@
-/* Accessible hidden content.
+/* ==========================================================================
+   Helpers
    ========================================================================== */
 
 %u-h,
@@ -16,25 +17,13 @@
 }
 
 .u-align-left {
-    float: right;
+    float: left;
 }
 
 .u-align-right {
     float: right;
 }
 
-.case--lower {
-    text-transform: lowercase;
-}
-
-.case--capitalize {
-    text-transform: capitalize;
-}
-
 .block-level {
     display: block;
-}
-
-.right-align {
-    float: right;
 }

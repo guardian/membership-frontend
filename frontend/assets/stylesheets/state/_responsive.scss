@@ -1,0 +1,27 @@
+/* ==========================================================================
+   State - Responsive Utilities
+   ========================================================================== */
+
+.hidden-mobile {
+    @include mq($until: tablet) {
+        display: none !important;
+    }
+}
+
+.hidden-mobile-portrait {
+    @include mq($until: mobileLandscape) {
+        display: none !important;
+    }
+}
+
+.mobile-only {
+    @include mq(tablet) {
+        display: none !important;
+    }
+}
+
+.mobile-portrait-only {
+    @include mq(mobileLandscape) {
+        display: none !important;
+    }
+}

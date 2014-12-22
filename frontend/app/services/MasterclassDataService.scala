@@ -52,6 +52,7 @@ trait MasterclassDataService {
       .fromDate(date)
       .pageSize(100)
       .page(page)
+      .showReferences("eventbrite")
       .showFields("body")
       .showElements("image")
       .response.andThen {
@@ -79,19 +80,21 @@ object MasterclassDataExtractor {
   val eventbriteUrl = "https?://www.eventbrite.co.uk/[^?\"]+"
   val regex = new Regex(eventbriteUrl)
 
-  def extractEventbriteInformation(content: Content): List[MasterclassData] = {
+  def extractEventbriteInformation(content: Content): Seq[MasterclassData] = {
+    val elementOpt = content.elements.flatMap(_.find(_.relation == "main"))
+    val assets = elementOpt.map(_.assets).getOrElse(List.empty)
 
-    val element = content.elements.flatMap(elements => elements.find(_.relation == "main"))
-    val assets = element.map(_.assets).getOrElse(List.empty)
+    val eventbriteIdsFromRefs =
+      content.references.filter(_.`type` == "eventbrite").map(_.id.stripPrefix("eventbrite/"))
 
-    val bodyOpt = content.fields.map(_("body"))
+    val eventbriteIds =
+      if (eventbriteIdsFromRefs.nonEmpty) eventbriteIdsFromRefs else scrapeEventbriteIdsFrom(content)
 
-    bodyOpt.map { body =>
-      val eventUrls = regex.findAllIn(body).toList
-      eventUrls.map { eventUrl =>
-        val eventId = eventUrl.split("-").last
-        MasterclassData(eventId, content.webUrl, assets)
-      }
-    }.getOrElse(Nil)
+    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, assets))
   }
+
+  def scrapeEventbriteIdsFrom(content: Content): Seq[String] = for {
+    body <- content.fields.map(_("body")).toSeq
+    eventId <- regex.findAllIn(body).map(_.split("-").last)
+  } yield eventId
 }

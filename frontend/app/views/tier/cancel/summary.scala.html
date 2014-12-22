@@ -5,29 +5,33 @@
 
 @main("Cancel Tier summary") {
 
-    <section>
+    <main role="main" class="page-content">
 
-        @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
+        <section class="content__container content__container--slim">
 
-        @for(subscriptionDetails <- subscriptionDetailsOpt) {
-            <p>You will continue to receive all the great Membership benefits until @subscriptionDetails.endDate.pretty</p>
+            @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
 
-            <h2 class="section-sub-headline">Current Membership Summary</h2>
+            @for(subscriptionDetails <- subscriptionDetailsOpt) {
+                <p>You will continue to receive all the great Membership benefits until @subscriptionDetails.endDate.pretty</p>
 
-            <section>
-                @fragments.tier.summary(subscriptionDetails)
-            </section>
-        }
+                <h2 class="section-sub-headline">Current Membership Summary</h2>
 
-        @if(subscriptionDetailsOpt.isEmpty) {
-            <p>We are processing your cancellation and will send a confirmation email shortly.</p>
-        }
+                <section>
+                    @fragments.tier.summary(subscriptionDetails)
+                </section>
+            }
 
-        <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community</p>
+            @if(subscriptionDetailsOpt.isEmpty) {
+                <p>We are processing your cancellation and will send a confirmation email shortly.</p>
+            }
 
-        <div class="content__container u-align-right">
-            <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta action-cta--confirm">My Profile</a>
-        </div>
+            <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community</p>
 
-    </section>
+            <div class="content__container u-align-right">
+                <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta action-cta--confirm">My Profile</a>
+            </div>
+
+        </section>
+
+    </main>
 }

@@ -32,6 +32,7 @@ object Config {
   val guardianPrivacyUrl = config.getString("guardian.privacy.url")
   var guardianMembershipBuildingBlogUrl = config.getString("guardian.membership.building.blog.url")
   var guardianMembershipBuildingSpaceUrl = config.getString("guardian.membership.building.space.url")
+  val guardianContactUsUrl = config.getString("guardian.membership.contact.us.url")
 
   val membershipUrl = config.getString("membership.url")
   val membershipFeedback = config.getString("membership.feedback")
@@ -57,8 +58,9 @@ object Config {
   val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
   val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
   val homeImageWidths = config.getList("membership.home.images.widths").unwrapped
-  val homeImagePromoWidths = config.getList("membership.home.images.promo.widths").unwrapped
   val homeImageRatios = config.getList("membership.home.images.ratios").unwrapped
+  val featureImageWidths = config.getList("membership.features.images.widths").unwrapped
+  val featureImageRatios = config.getList("membership.features.images.ratios").unwrapped
 
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
@@ -175,9 +177,7 @@ object Config {
       con.getString("client.id"),
       con.getString("client.secret"),
       con.getString("callback"),
-      Some("guardian.co.uk"),        // Google App domain to restrict login
-      Some(30.minutes),
-      true                           // Re-authenticate (without prompting) with google when session expires
+      Some("guardian.co.uk")        // Google App domain to restrict login
     )
   }
 

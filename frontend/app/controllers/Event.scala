@@ -3,9 +3,9 @@ package controllers
 import actions.AnyMemberTierRequest
 import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
-import model.Eventbrite.{RichEvent, EBEvent, MasterclassEvent}
+import model.Eventbrite.{GuLiveEvent, RichEvent, EBEvent, MasterclassEvent}
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
-import monitoring.EventbriteMetrics
+import monitoring.{Metrics, EventbriteMetrics}
 import org.joda.time.Instant
 
 import scala.concurrent.Future
@@ -14,12 +14,14 @@ import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import actions.Functions._
-import actions.Fallbacks.notYetAMemberOn
+import actions.Fallbacks._
 import services.{MasterclassEventService, GuardianLiveEventService, MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
 
 import com.netaporter.uri.dsl._
 import views.support.Dates._
+import model.EventPortfolio
+import play.api.mvc.Result
 
 trait Event extends Controller {
   val guLiveEvents: EventbriteService
@@ -27,7 +29,25 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  val BuyAction = NoCacheAction andThen metricRecord(EventbriteMetrics, "buy-action-invoked") andThen authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
+  private def metrics(event: RichEvent) = {
+    event match {
+      case _: GuLiveEvent => guLiveEvents.wsMetrics
+      case _: MasterclassEvent => masterclassEvents.wsMetrics
+    }
+  }
+
+  private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
+    override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
+      EventbriteService.getEvent(eventId).map { event =>
+        Timing.record(metrics(event), "buy-action-invoked") {
+          block(request)
+        }
+      }.getOrElse(Future.successful(NotFound))
+    }
+  }
+
+  private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
+    authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
   def details(id: String) = CachedAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
@@ -93,9 +113,9 @@ trait Event extends Controller {
     Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getEventsTagged(tag), None), pageInfo))
   }
 
-  def buy(id: String) = BuyAction.async { implicit request =>
+  def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      if(memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
+      if (memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
       else Future.successful(Redirect(routes.TierController.change()))
     }.getOrElse(Future.successful(NotFound))
   }
@@ -106,7 +126,7 @@ trait Event extends Controller {
     }
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(EventbriteMetrics, "user-sent-to-eventbrite") {
+    Timing.record(metrics(event), "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
@@ -119,7 +139,7 @@ trait Event extends Controller {
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          EventbriteMetrics.putThankyou(id)
+          metrics(event).put("user-returned-to-thankyou-page", 1)
           Ok(views.html.event.thankyou(event, order))
         }
       }

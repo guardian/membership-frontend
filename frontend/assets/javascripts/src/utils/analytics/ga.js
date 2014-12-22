@@ -43,10 +43,12 @@ define([], function () {
                     var targetElement = event.target || event.srcElement,
                         action = targetElement.getAttribute(TRACKING_NAME),
                         url = targetElement.getAttribute('href');
-                    event.preventDefault();
+
                     trackEvent('outbound', action, url, {
                         'hitCallback': function () {
-                            document.location = url;
+                            if (url) {
+                                document.location = url;
+                            }
                         }
                     });
                 });

@@ -8,7 +8,6 @@ GET            /favicon.ico                       controllers.CacheBustedAssets.
 
 # Home page
 GET            /                                  controllers.FrontPage.index
-GET            /home                              controllers.FrontPage.home
 
 GET            /gifting                           controllers.Info.giftingPlaceholder
 
@@ -94,4 +93,4 @@ GET            /user/me/details                   controllers.User.meDetails
 GET            /founder                           controllers.VanityUrl.redirect
 
 # Styleguide
-GET            /styleguide                        controllers.Styleguide.patterns
+GET            /patterns                        controllers.PatternLibrary.patterns

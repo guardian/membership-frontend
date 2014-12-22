@@ -1,130 +1,111 @@
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
 html {
     position: relative;
     min-height: 100%;
-    background-color: #ffffff;
+    background-color: $c-background;
 
-    @include mq(tablet) {
-        background: url(/assets/images/mem-bg-events.jpg) repeat-y center center fixed;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-    }
+    background-attachment: fixed;
+    background-repeat: repeat-y;
+    background-position: center;
+    background-image: url(/assets/images/bg-texture.jpg);
+    background-size: cover;
 
-    &.events-bg,
-    &.about-membership {
-        background-attachment: fixed;
-        background-repeat: repeat-y;
-        background-position-x: left;
-        background-position-y: center;
-
-        @include mq(tablet) {
-            background-image: url(/assets/images/mem-bg-events.jpg);
-            background-position-x: center; // this image has white at the top center so on mobile it looks as though no image has loaded - left aligning on mobile as a temp fix.
-        }
-    }
-
+    // TODO: Remove when short homepage goes live.
     &.home-page {
-
         background: url(/assets/images/backgrounds/400-Home-hero.jpg) no-repeat top center fixed;
-
-        @media
-        (-webkit-min-device-pixel-ratio: 2),
-        (min-resolution: 192dpi) {
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             background: url(/assets/images/backgrounds/400-Home-hero-2x.jpg) no-repeat top center fixed;
             background-size: rem(400px) rem(444px);
         }
-
         @include mq(400px) {
             background: url(/assets/images/backgrounds/740-Home-hero.jpg) no-repeat top center fixed;
             background-size: auto auto;
         }
-
         @include mq(tablet) {
             background: url(/assets/images/backgrounds/1920-Home-hero.jpg) no-repeat top center fixed;
             background-size: auto auto;
         }
     }
 
-    &.about-membership {
-        background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
-        @include mq(tablet) {
-            background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
-        }
-    }
-
-    &.patron-page {
-        background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
-        @include mq(tablet) {
-            background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
-        }
-    }
-
 }
 
+html.about-membership {
+    background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
+    @include mq(tablet) {
+        background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
+    }
+}
+
+html.patron-page {
+    background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
+    @include mq(tablet) {
+        background: url(/assets/images/backgrounds/1920-Patrons-hero.jpg) no-repeat top center fixed;
+    }
+}
+
+// TODO: Can magic numbers be removed?
+// Magic numbers refer to footer height
 body {
     min-height: 100%;
-    margin-bottom: rem(252px); // Magic numbers refer to footer height
+    margin-bottom: rem(280px);
 
-    @include mq(tablet) {
-        margin-bottom: rem(218px);
+    @include mq(mobileLandscape) {
+        margin-bottom: rem(260px);
     }
 
-    @include mq(wide) {
+    @include mq(tablet) {
         margin-bottom: rem(220px);
     }
 }
 
-.header {
-    position: relative;
-}
-
+// TODO: Extract max-widths out into variables
+//       Extract constraining layout styles into l-constrained helper
+//
 // note: the max-widths set here
 // are duplicated in mixins.scss
 // for the side-margins function
 // please duplicate your changes
 // this alignment is too perfect
 .page-container {
-    background-color: $white;
-    padding: 0 rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: 0 $gs-gutter;
-        max-width: gs-span(12)+($gs-gutter*2);
-    }
 
     @include clearfix;
     position: relative;
+
     margin: 0 auto;
 
-    @include mq(desktop) {
-        padding: 0;
+    @include mq(tablet) {
+        max-width: gs-span(12)+($gs-gutter*2);
     }
 
     @include mq(mem-full) {
         max-width: gs-span(14)+($gs-gutter*2);
     }
+}
 
-    &.page-container--with-padding {
-        background-color: $white;
-        @include mq(tablet) {
-            padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
-        }
+.page-content {
+    @include clearfix;
+    background-color: $c-background;
+    padding: 0 rem($gs-gutter / 2);
+    @include mq(mobileLandscape) {
+        padding: 0 rem($gs-gutter);
+    }
+}
+.page-content--padded {
+    @include mq(tablet) {
+        padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
     }
 }
 
-.page-container__inner {
-    @include mq(desktop) {
-        margin: 0 rem($gs-gutter);
-    }
-}
-
+// TODO: Refactor to remove code below here
+// ========================================
 .l-row__item {
     padding-bottom: rem($gs-gutter * 2);
 }
 
 // Two thirds section
-
 .section-two-thirds {
     width: 100%;
     margin: 0 auto;
@@ -137,12 +118,10 @@ body {
     }
 
     .two-thirds {
-
         @include mq(tablet) {
             padding-left: $gs-gutter;
             width: rem(gs-span(8));
         }
-
         @include mq(mem-full) {
             width: rem(gs-span(8) + $gs-gutter);
         }
@@ -155,34 +134,8 @@ body {
             width: rem(gs-span(3));
             padding-left: rem($gs-gutter);
         }
-
         @include mq(mem-full) {
             width: rem(gs-span(4) + $gs-gutter);
         }
     }
-
-}
-
-// Info - help and feedback containers
-// TODO: Remove once all functional pages have been moved to new layout
-.info-container {
-
-    @include mq(desktop) {
-        margin: 0 rem(gs-span(1)) 0 rem(gs-span(2));
-    }
-
-    @include mq(mem-full) {
-        margin: 0 rem(gs-span(1)) 0 rem(gs-span(3));
-    }
-
-}
-
-// Flexbox
-
-%flexbox-container-justify {
-    -webkit-box-pack: justify;
-    -moz-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
 }

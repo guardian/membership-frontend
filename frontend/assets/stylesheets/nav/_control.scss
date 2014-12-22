@@ -24,6 +24,8 @@
     @extend %icon-holder-circle;
     font-family: $f-serif-text;
     font-size: rem(13px);
+    cursor: pointer;
+    outline: none;
 }
 
 .control--faq {
@@ -45,6 +47,23 @@
     border-color: $white;
     .control__info {
         color: $white;
+    }
+}
+
+.control--cancel {
+    border: 1px solid $c-neutral3;
+
+    .control__icon {
+        padding-top: rem(4px);
+        opacity: .2;
+    }
+
+    &:hover {
+        border: 1px solid $c-neutral1;
+
+        .control__icon {
+            opacity: 1;
+        }
     }
 }
 

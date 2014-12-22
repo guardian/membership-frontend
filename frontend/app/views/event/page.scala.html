@@ -17,24 +17,6 @@
     }
 }
 
-@termsAndConditions = @{
-    event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
-        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
-    }
-}
-
-@ticketCta(actionClassSoldOut: String, actionClassBuy: String) = {
-    @if(event.isSoldOut) {
-        <span class="action @actionClassSoldOut">Sold out</span>
-    } else {
-        <a class="action @actionClassBuy js-ticket-cta" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
-        <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
-            <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
-        </div>
-    }
-}
-
 @becomeMemberCta(ticket: EBTicketClass) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
     val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
@@ -44,23 +26,16 @@
     }
 }
 
-@theme = @{
+@eventType = @{
     event match {
-        case _: MasterclassEvent => "theme--masterclass"
-        case _: GuLiveEvent => "theme--guardian-live"
+        case _: MasterclassEvent => "masterclasses"
+        case _: GuLiveEvent => "guardian-live"
     }
 }
 
-@icon = @{
-    event match {
-        case _: MasterclassEvent => "icon-masterclasses"
-        case _: GuLiveEvent => "icon-guardian-live"
-    }
-}
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, containerPadding = false, isBrochure = true, htmlClass = "js-event " + theme) {
-
-    <div class="event-header">
+    <div class="event-header@if(eventType){ tone-@eventType}">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header page-header case--lower">
@@ -74,7 +49,7 @@
         </div>
     </div>
 
-    <div class="event-header event-header--shade">
+    <div class="event-header event-header--pricing@if(eventType){ tone-@eventType tone-@eventType--accent}">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -84,48 +59,13 @@
                     }
                 </div>
                 <div class="event-details__location">
-                    <span class="event-details__location__venue-name">@event.venue.name</span>
-                    @for(addressLine <- event.venue.addressLine) {
-                        <span class="event-details__location__address">
-                            , @addressLine
-                        </span>
-                    }
+                    @fragments.event.addressSummary(event)
                 </div>
             </div>
             @if(event.isNoTicketEvent == false) {
-                @for(ticket <- event.generalReleaseTicket) {
-                    <div class="event-ticket u-cf">
-                        <div class="event-ticket__details">
-
-                            @if(ticket.free) {
-                                <div class="event-ticket__price">
-                                    <span class="event-ticket__price-amount">Free</span>
-                                </div>
-                            } else {
-                                @for(pricing <- ticket.cost) {
-                                    <div class="js-event-price">
-                                        <div class="event-ticket__price">
-                                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
-                                        </div>
-                                        <div class="event-ticket__trail">
-                                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
-                                                Partners/Patrons @pricing.discountPrice
-                                            </span>
-                                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                                (save @pricing.savingPrice)
-                                            </span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                        @if(event.isBookable) {
-                            @ticketCta("action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
-                        }
-                    </div>
-                }
+                @fragments.event.ticketDetails(event)
             }
-            <i class="event-logo @icon"></i>
+            <i class="event-logo@if(eventType){ icon-@eventType}"></i>
         </div>
 
     </div>
@@ -152,14 +92,19 @@
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-            <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-        </div>
+        @event match {
+            case _: MasterclassEvent => {}
+            case _ => {
+                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+                </div>
+            }
+        }
 
         <div class="event-content__container u-cf">
 
             <div class="event-content__body">
-                <div class="event__description" itemprop="description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                <div class="event__description copy" itemprop="description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
                 <div class="event__social">
                     <div class="event__social-header hidden-mobile">Share this</div>
                     @fragments.social(eventDetail(event))
@@ -192,20 +137,23 @@
                                 </div>
                                 <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
                             </div>
-                            <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <div class="event-content__first">
-                                    <i class="icon-location icon--info"></i>
+
+                            @if(event.venue.addressLine) {
+                                <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                                    <div class="event-content__first">
+                                        <i class="icon-location icon--info"></i>
+                                    </div>
+                                    <div class="event-content__second copy">
+                                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
+                                        @for(addressLine <- event.venue.addressLine) {
+                                            <span class="event-content__address" itemprop="address">@addressLine</span>
+                                        }
+                                        @for(googleMapsLink <- event.venue.googleMapsLink) {
+                                            <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
+                                        }
+                                    </div>
                                 </div>
-                                <div class="event-content__second copy">
-                                    <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                    @for(addressLine <- event.venue.addressLine) {
-                                        <span class="event-content__address" itemprop="address">@addressLine</span>
-                                    }
-                                    @for(googleMapsLink <- event.venue.googleMapsLink) {
-                                        <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
-                                    }
-                                </div>
-                            </div>
+                            }
 
                             @if(event.isNoTicketEvent == false) {
 
@@ -242,7 +190,7 @@
                                         }
                                     }
                                     @if(event.isBookable) {
-                                        @ticketCta("action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
+                                        @fragments.event.ticketCta(event, "action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
                                         @becomeMemberCta(ticket)
                                     }
                                 }

@@ -1,9 +1,16 @@
 @(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
-@import helper._
-@import model.Benefits
+
+@import configuration.Config
+@import views.support.Asset
 @import com.gu.membership.salesforce.Tier
 
-@main("About", isBrochure = true, containerPadding = false, htmlClass = "about-membership", pageInfo=pageInfo) {
+@*
+//TODO the patron page and the about page have new designs coming to align the layout of these pages with the
+//TODO homepage. When the designs are ready then would be a good time to refactor this work. Currently this
+//TODO has just been lifted from the old long homepage
+*@
+
+@main("About", isBrochure = true, htmlClass = "about-membership", pageInfo=pageInfo) {
 
     <div class="home-slice home-slice--epic u-cf">
         <div class="home-slice__inner u-cf">
@@ -15,12 +22,97 @@
                 <p class="home-slice__copy">We introduce you to some of the world's most influential thinkers. Not only our speakers, but the community of members around you.</p>
                 <p class="home-slice__copy">Join now as Founding Partner or Patron and the price you pay will not rise.</p>
                 <a class="action" href="/join">Join today</a>
+                <a class="action action--secondary-button js-scroll-to" href="#whats-included">What's included</a>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Bring the Guardian to life ===== *@
+
+    <div class="home-slice u-cf home-slice--red home-slice--home-two">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h2 class="home-slice__headline">Browse our events and book your tickets now</h2>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">Guardian Live is a programme of discussions, debates, interviews,
+                    keynote speeches and festivals.
+                </p>
+                <p class="home-slice__copy">Members can attend events that take the power of open journalism
+                    from print and digital into live experiences.
+                </p>
+                <a class="action" href="/events">See our live events</a>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Fuels our journalism ===== *@
+
+    <div class="home-slice home-slice--content u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__copy-block">
+                <div class="home-slice__media">
+                    <img src="@Asset.at("images/homeslice/740-Home-patrons.jpg")" alt="Become a Patron" class="responsive-img" />
+                </div>
+                <div class="home-slice__headline-block">
+                    <h2 class="home-slice__headline">Become a Patron and support the Guardian's future</h2>
+                </div>
+                <div class="home-slice__offset-copy">
+                    <blockquote class="home-slice__copy--quote">The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.</blockquote>
+                    <cite class="home-slice__copy--cite">Alan Rusbridger, editor-in-chief of the Guardian</cite>
+                    <a class="action" href="/patrons">Become a Patron</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Big ideas ===== *@
+
+    <div class="home-slice u-cf home-slice--green home-slice--home-four">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__headline-block">
+                <h2 class="home-slice__headline">A home for <br />big ideas</h2>
+            </div>
+            <div class="home-slice__copy-block">
+                <p class="home-slice__copy">
+                    In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross to create a new kind of civic space.
+                </p>
+                <p class="home-slice__copy">
+                    The building will be a hub for big ideas and stimulating conversations. It will host events,
+                    activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.
+                </p>
+                <a class="action" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
+                <a class="action action--secondary-button" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
+            </div>
+        </div>
+    </div>
+
+    @* ===== Founding Members ===== *@
+
+    <div class="home-slice home-slice--content tier-hidden u-cf">
+        <div class="home-slice__inner u-cf">
+            <div class="home-slice__copy-block">
+                <div class="home-slice__media">
+                    <img src="@Asset.at("images/homeslice/740-crowd.jpg")" alt="" class="responsive-img" />
+                </div>
+                <div class="home-slice__headline-block">
+                    <h2 class="home-slice__headline">Founding members: join us at the start</h2>
+                </div>
+                <div class="home-slice__offset-copy">
+                    <p class="home-slice__copy">
+                        Guardian Membership is launching in beta. We have ambitious plans, and new features will be added regularly. Guardian membership will grow into a vibrant, self-organising community of free-thinkers.
+                    </p>
+                    <p class="home-slice__copy">
+                        Help to build and shape this community by joining as a Founding Partner or Patron,
+                        with the guarantee that the price you pay today will not rise.</p>
+                    <a class="action" href="/join" id="qa-join">Join today</a>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="page-slice">
-        <div class="page-slice__inner">
+        <div id="whats-included" class="page-slice__inner">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice-content">
                 @fragments.tier.feature(Tier.Friend, "Benefits") {

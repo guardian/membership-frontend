@@ -1,0 +1,34 @@
+@(event: model.Eventbrite.RichEvent)
+
+@for(ticket <- event.generalReleaseTicket) {
+    <div class="event-ticket@if(ticket.free) { event-ticket--free }u-cf">
+        <div class="event-ticket__details">
+            @if(ticket.free) {
+                <div class="event-ticket__price">
+                    <span class="event-ticket__price-amount">Free</span>
+                </div>
+            } else {
+                @for(pricing <- ticket.cost) {
+                    <div class="js-event-price">
+                        <div class="event-ticket__price">
+                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
+                        </div>
+                        <div class="event-ticket__trail">
+                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
+                                Partners/Patrons @pricing.discountPrice
+                            </span>
+                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                (save @pricing.savingPrice)
+                            </span>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if(event.isBookable) {
+            <div class="event-ticket__action">
+                @fragments.event.ticketCta(event, "action--sold-out-event-ticket-details", "action--buy-event-ticket-details")
+            </div>
+        }
+    </div>
+}
