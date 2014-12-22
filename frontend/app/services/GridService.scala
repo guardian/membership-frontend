@@ -6,16 +6,7 @@ case class GridConfig(url: String, apiUrl: String, key: String)
 
 class GridService {
 
-  //confirm url starts with media service
-
-  def isUrlCorrectFormat(url: String) = {
-    println("----")
-    println(url)
-    println(Config.gridConfig)
-    println("----")
-    url.startsWith(Config.gridConfig.url)
-
-  }
+  def isUrlCorrectFormat(url: String) = url.startsWith(Config.gridConfig.url)
 
   //get the equivalent api url
 
