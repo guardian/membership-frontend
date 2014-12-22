@@ -42,7 +42,7 @@ object Eventbrite {
       mcPattern.replaceAllIn(clean, "")
     }
 
-    def mainImage: Option[String] = "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(html).map(_.group(1))
+    def mainImage = "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(html).map(_.group(1))
 
     lazy val blurb = truncateToWordBoundary(text, 120)
   }
