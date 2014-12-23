@@ -116,7 +116,7 @@ trait Event extends Controller {
       TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
 
-  private def eventCookie(event: RichEvent) = s"mem-${event.id}"
+  private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(metrics(event), "user-sent-to-eventbrite") {
