@@ -122,12 +122,22 @@ trait Event extends Controller {
       TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
     }
 
+  private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
+
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(metrics(event), "user-sent-to-eventbrite") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+        .withCookies(Cookie(eventCookie(event), ""))
     }
+
+  // log a conversion if the user came from a membership event page
+  private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
+    request.cookies.get(eventCookie(event)).foreach { _ =>
+      metrics(event).put("user-returned-to-thankyou-page", 1)
+    }
+  }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
     orderIdOpt.fold {
@@ -136,15 +146,21 @@ trait Event extends Controller {
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          metrics(event).put("user-returned-to-thankyou-page", 1)
-          Ok(views.html.event.thankyou(event, order))
+          trackConversionToThankyou(request, event)
+          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
         }
       }
-
       resultOpt.getOrElse(Future.successful(NotFound))
     } { orderId =>
       Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
     }
+  }
+
+  def thankyouPixel(id: String) = NoCacheAction { implicit request =>
+    EventbriteService.getEvent(id).map { event =>
+      trackConversionToThankyou(request, event)
+      NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
+    }.getOrElse(NotFound)
   }
 }
 
