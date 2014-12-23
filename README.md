@@ -10,7 +10,7 @@
                                                                            \/_/
 ```
 
-# Membership App
+# Membership Frontend
 
 ## Ubuntu
 
