@@ -106,8 +106,14 @@ trait Event extends Controller {
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      if (memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
-      else Future.successful(Redirect(routes.TierController.change()))
+      event match {
+        case _: GuLiveEvent =>
+          if (memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
+          else Future.successful(Redirect(routes.TierController.change()))
+
+        case _: MasterclassEvent =>
+          redirectToEventbrite(request, event)
+      }
     }.getOrElse(Future.successful(NotFound))
   }
 
