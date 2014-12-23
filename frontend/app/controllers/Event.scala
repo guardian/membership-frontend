@@ -130,7 +130,6 @@ trait Event extends Controller {
   private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
     request.cookies.get(eventCookie(event)).foreach { _ =>
       metrics(event).put("user-returned-to-thankyou-page", 1)
-      println("tracked event")
     }
   }
 
