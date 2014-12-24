@@ -91,7 +91,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
           if (error.fatal) {
             metrics.recordError
             Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
-            Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+            Logger.error(result.body)
           }
 
           throw error
