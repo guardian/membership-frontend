@@ -18,6 +18,7 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 import scala.xml.PrettyPrinter
 
 case class ZuoraServiceError(s: String) extends Throwable {
@@ -75,7 +76,17 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
     }.map { result =>
       metrics.putResponseCode(result.status, "POST")
 
-      reader.read(result.xml) match {
+      val xmlEither = Try(result.xml) match {
+        case Success(xml) => Right(xml)
+        case Failure(ex) => Left(InternalError("XML_PARSE_ERROR", ex.getMessage))
+      }
+
+      val resultEither = for {
+        xml <- xmlEither.right
+        obj <- reader.read(xml).right
+      } yield obj
+
+      resultEither match {
         case Left(error) =>
           if (error.fatal) {
             metrics.recordError
