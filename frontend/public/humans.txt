@@ -5,12 +5,6 @@ Twitter: @rtyley
 From: Blyth, England
 Location: London, England
 
-Senior Developer: Chris Finch
-Twitter: @chrisfinchy
-Linkedin: chrisfinch
-From: Brighton, England
-Location: London, England
-
 Client-side Engineer: Ben Chidgey
 Twitter: @feedmypixel
 Linkedin: benchidgey
@@ -25,5 +19,14 @@ Location: London, England
 Client-side Engineer: David Rapson
 Twitter: @davidrapson
 From: Birmingham, England
+Location: London, England
+
+
+/* ALUMNI */
+
+Senior Developer: Chris Finch
+Twitter: @chrisfinchy
+Linkedin: chrisfinch
+From: Brighton, England
 Location: London, England
 
