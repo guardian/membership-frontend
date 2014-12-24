@@ -6,7 +6,7 @@ import model.ZuoraDeserializer._
 
 class SubscriptionServiceHelpersTest extends Specification {
 
-  def query(resource: String) = queryResultReader.read(Resource.getXML(resource)).right.get.results
+  def query(resource: String) = queryResultReader.read(Resource.get(resource)).right.get.results
 
   "SubscriptionServiceHelpers" should {
     "sort amendments by subscription version" in {

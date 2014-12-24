@@ -1,5 +1,6 @@
 package model
 
+import scala.util.{Success, Failure, Try}
 import scala.xml.Node
 import org.joda.time.DateTime
 
@@ -72,16 +73,21 @@ object ZuoraReaders {
     val responseTag: String
     val multiResults = false
 
-    def read(node: Node): Either[Error, T] = {
-      val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
+    def read(body: String): Either[Error, T] = {
+      Try(scala.xml.XML.loadString(body)) match {
+        case Failure(ex) => Left(InternalError("XML_PARSE_ERROR", ex.getMessage))
 
-      (body \ "Fault").headOption.fold {
-        val resultNode = if (multiResults) "results" else "result"
-        val result = body \ responseTag \ resultNode
+        case Success(node) =>
+          val body = scala.xml.Utility.trim((scala.xml.Utility.trim(node) \ "Body").head)
 
-        extractEither(result.head)
-      } { fault =>
-        Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
+          (body \ "Fault").headOption.fold {
+            val resultNode = if (multiResults) "results" else "result"
+            val result = body \ responseTag \ resultNode
+
+            extractEither(result.head)
+          } { fault =>
+            Left(FaultError((fault \ "faultcode").text, (fault \ "faultstring").text))
+          }
       }
     }
 
