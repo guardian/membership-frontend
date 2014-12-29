@@ -80,11 +80,6 @@
         border-bottom: 0;
     }
 }
-.event-block--padded {
-    @include mq(tablet) {
-        padding: rem($gs-gutter);
-    }
-}
 
 .event-block__header,
 .event-block__footer {
@@ -113,11 +108,6 @@
         width: rem(gs-span(12));
     }
 }
-.event-block__events--no-header {
-    @include mq(mem-full) {
-        margin-left: rem(gs-span(2) + $gs-gutter);
-    }
-}
 
 /* ==========================================================================
    Event Listings - Empty state
@@ -136,89 +126,96 @@
 }
 
 /* ==========================================================================
-   Event Listings - Event Filters
+   Event Filters
    ========================================================================== */
-// TODO: Refactor to be separate component from event block / list
 
-.events-list__category {
-    display: inline-block;
-    padding: rem($gs-gutter / 2) rem($gs-gutter * 1.5) rem($gs-gutter / 2) 0;
-
-    @include fs-textSans(2);
+.event-filters {
+    background-color: $white;
+    padding: rem($gs-gutter / 2);
+    border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+}
+.event-filters__container {
+    @include clearfix;
+    @include mq(mem-full) {
+        width: 100%;
+        padding-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+.event-filters__categories {
+    @include mq(desktop) {
+        float: left;
+    }
+}
+.event-filters__category,
+.event-filters__count {
+    @include fs-textSans(2);
+    display: inline-block;
+    padding: rem($gs-gutter / 4) 0;
+    @include mq(mobileLandscape) {
+        padding: rem($gs-gutter / 2) 0;
+    }
+}
+.event-filters__category {
+    padding-right: rem($gs-gutter);
+    @include mq(desktop) {
         margin-right: rem($gs-gutter);
         border-right: 1px solid $c-neutral4;
     }
 }
-
-@include mq($until: tablet) {
-    .events-list__category__label {
-        display: inline-block;
-        width: rem(100px);
-
-    }
-}
-
-.events-list__category__select {
-    border: 0;
-    outline: 0;
-    background-color: $white;
-    font-weight: bold;
-}
-
-.events-list__count {
-    float: right;
-    margin-top: rem($gs-gutter / 2);
-    @include fs-textSans(2);
+.event-filters__count {
     color: $c-neutral2;
-
-    @include mq(tablet) {
-        float: none;
-    }
+    white-space: nowrap;
+    float: right;
 }
-
-.events-list__filter {
+.event-filters__search {
     position: relative;
-    display: block;
     overflow: hidden;
     clear: right;
 
-    @include mq(tablet) {
+    @include mq(desktop) {
+        width: auto;
+        display: block;
         float: right;
+        clear: none;
     }
 }
+
+/* Filter Search
+   ========================================================================== */
 
 $filter-icon-size: 18px;
 
-.events-list__filter__text {
+.filter-search {
+    display: block;
+}
+.filter-search__input {
+    @include fs-textSans(2);
     padding: rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
     border: 1px solid $c-neutral3;
     border-radius: 100rem;
+    width: 100%;
     outline: 0;
 
-    @include fs-textSans(2);
-
-    width: 100%;
-    @include mq(tablet) {
+    @include mq(desktop) {
         width: auto;
     }
 }
-
-.events-list__filter__icon,
-.events-list__filter__cross {
+.filter-search__icon,
+.filter-search__cross {
     position: absolute;
     top: 50%;
     margin-top: rem(-$filter-icon-size / 2);
     border: 0;
     background-color: transparent;
 }
-
-.events-list__filter__icon {
+.filter-search__icon {
     left: rem($gs-gutter / 2);
 }
-
-.events-list__filter__cross {
+.filter-search__cross {
     right: rem($gs-gutter / 2);
 }
 
