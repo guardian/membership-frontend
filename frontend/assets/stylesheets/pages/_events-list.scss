@@ -378,17 +378,24 @@ $filter-icon-size: 18px;
     @include fs-data(4);
 }
 
-// Sold-out flag
-// TODO: Refactor out into generic `flag` component
-.event-status--sold-out {
+/* Event Status
+   ========================================================================== */
+
+.event-status {
     display: inline-block;
-    color: $white;
-    background-color: $mem-live-accent;
-    @include fs-data(2);
-    position: relative;
-    top: -2px;
-    padding: 1px 3px;
-    margin-right: 4px;
+    &:after {
+        content: '/';
+        color: fade-out($c-neutral1, .8);
+        display: inline-block;
+        font-weight: normal;
+        margin-left: .2em;
+    }
+    &:hover:after {
+        text-decoration: none;
+    }
+}
+.event-status--sold-out {
+    color: $mem-sold-out;
 }
 
 /* ==========================================================================

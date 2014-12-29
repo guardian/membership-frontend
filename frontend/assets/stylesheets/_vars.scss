@@ -213,6 +213,13 @@ $action-icon-rightspace: 7px;
 // Membership
 // =============================================================================
 
+$white: #ffffff;
+$offWhite: #d6d6d6;
+$black: #000000;
+$offBlack: #666666;
+$black-trans: rgba(0, 0, 0, .25);
+$white-trans: rgba(255, 255, 255, .25);
+
 $mem-brandOrange: #ce6f14;
 $mem-brandBlue: #82c2d6;
 $mem-brandGrey: #dcddda;
@@ -230,13 +237,7 @@ $mem-button-confirm: #1a4683;
 $mem-button-cancel: #b8b8b8;
 $mem-blue-border: #6dcfe3;
 $mem-header: rgba(0, 0, 0, .7);
-
-$white: #ffffff;
-$offWhite: #d6d6d6;
-$black: #000000;
-$offBlack: #666666;
-$black-trans: rgba(0, 0, 0, .25);
-$white-trans: rgba(255, 255, 255, .25);
+$mem-sold-out: #cc2b12;
 
 $mem-live-top: #b51800;
 $mem-live-accent: #cc2b12;
