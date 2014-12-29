@@ -34,7 +34,10 @@
     .header__primary {
         float: left;
         padding-left: rem($gs-gutter / 2);
-        padding-right: rem($gs-gutter / 2);
+        padding-right: 0;
+        @include mq(mobileLandscape) {
+            padding-right: rem($gs-gutter / 2);
+        }
     }
 
     .header__secondary {

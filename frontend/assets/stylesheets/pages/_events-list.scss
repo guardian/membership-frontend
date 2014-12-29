@@ -62,6 +62,7 @@
    ========================================================================== */
 
 .event-block {
+    clear: both;
     position: relative;
     background-color: $white;
     padding: rem($gs-gutter / 2) 0;
@@ -85,12 +86,16 @@
     }
 }
 
-.event-block__header {
+.event-block__header,
+.event-block__footer {
     padding: 0 rem($gs-gutter/2) rem($gs-baseline);
 
     @include mq(desktop) {
         padding-left: 0;
     }
+}
+
+.event-block__header {
     @include mq(mem-full) {
         float: left;
         width: rem(gs-span(2));
