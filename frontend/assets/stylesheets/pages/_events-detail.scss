@@ -1,11 +1,10 @@
 /* ==========================================================================
-   An event on an event page
+   Event Detail
    ========================================================================== */
 
 .event-header {
     @include clearfix;
 }
-
 .event-header--unavailable {
     color: $white;
     background-color: $c-neutral1;
@@ -30,17 +29,18 @@
 }
 
 .event-header__container--details {
-    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter / 1.3);
+    padding: rem($gs-gutter / 2);
     position: relative;
     min-height: rem(75px);
 
     @include mq(tablet) {
-        padding: rem($gs-gutter);
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
         min-height: rem(120px);
     }
 
     @include mq(mem-full) {
-        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter * 3);
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
+        padding-left: rem(gs-span(2) + $gs-gutter * 3);
     }
 }
 
