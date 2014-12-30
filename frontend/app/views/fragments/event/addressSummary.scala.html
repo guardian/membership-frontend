@@ -6,7 +6,8 @@
     }
     @for(location <- event.venue.address) {
         @if(location.city) {
-            <span class="event-location__detail event-location__address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">,
+            <span class="event-location__detail event-location__address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                @if(event.venue.name) {,}
                 <span itemprop="addressLocality">@location.city</span>,
                 <span itemprop="postalCode">@location.postal_code</span>
             </span>

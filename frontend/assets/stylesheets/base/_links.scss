@@ -29,6 +29,10 @@ a,
     -webkit-font-smoothing: antialiased;
 }
 
+.minimal-link {
+    color: inherit;
+}
+
 .no-underline {
     cursor: pointer;
     text-decoration: none;
@@ -43,7 +47,6 @@ a,
     &:hover .no-underline--override {
         text-decoration: underline;
     }
-
 }
 
 // Skip to main content link

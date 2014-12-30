@@ -10,10 +10,31 @@
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@searchButton = @{
+@eventType = @{
     event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses", "/masterclasses")
-        case _: GuLiveEvent => ("Guardian Live events", "/events")
+        case _: MasterclassEvent => "masterclasses"
+        case _: GuLiveEvent => "guardian-live"
+    }
+}
+
+@eventTypeLabel = @{
+    event match {
+        case _: MasterclassEvent => { "Masterclasses" }
+        case _: GuLiveEvent => { "Events" }
+    }
+}
+
+@eventTypeLabelFull = @{
+    event match {
+        case _: MasterclassEvent => ("Guardian Masterclasses")
+        case _: GuLiveEvent => ("Guardian Live events")
+    }
+}
+
+@eventListingLink = @{
+    event match {
+        case _: MasterclassEvent => ("/masterclasses")
+        case _: GuLiveEvent => ("/events")
     }
 }
 
@@ -26,23 +47,13 @@
     }
 }
 
-@eventType = @{
-    event match {
-        case _: MasterclassEvent => "masterclasses"
-        case _: GuLiveEvent => "guardian-live"
-    }
-}
-
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
 
     <div class="event-header@if(eventType){ tone-@eventType}">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header page-header case--lower">
-                    @event match {
-                        case _: MasterclassEvent => { Masterclasses }
-                        case _: GuLiveEvent => { Events }
-                    }
+                    <a href="@eventListingLink" class="minimal-link">@eventTypeLabel</a>
                 </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
@@ -199,7 +210,7 @@
                     </div>
 
                     @if(!event.isBookable) {
-                        <a class="action action--fullwidth action--search" href="@searchButton._2">Find other @searchButton._1</a>
+                        <a class="action action--fullwidth action--search" href="@eventListingLink">Find other @eventTypeLabelFull</a>
                     }
                 </div>
             </div>
