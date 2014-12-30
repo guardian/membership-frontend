@@ -223,20 +223,13 @@ $filter-icon-size: 18px;
    Event Listings - Event Item
    ========================================================================== */
 
-.even-item {
+.event-item {
     @include clearfix;
-}
-
-// global styles for the inner item container
-.event-item__container {
-    position: relative;
     background-color: $c-neutral7;
+    transition: background-color $transition-duration-medium ease;
 
-    @include mq(mobileLandscape) {
-        height: rem(450px);
-    }
-
-    &:hover, *:hover {
+    &:hover,
+    *:hover {
         text-decoration: none;
     }
     &:hover {
@@ -244,18 +237,32 @@ $filter-icon-size: 18px;
         .event-item__title {
             text-decoration: underline;
         }
+        .event-item__media a {
+            background-color: $black;
+        }
+        .event-item__media img {
+            opacity: .8;
+        }
     }
-
 }
-
-.event-item__media a,
-.event-item__media img {
-    // remove descenders
-    vertical-align: text-bottom;
-    display: block;
+.event-item__container {
+    position: relative;
+    @include mq(mobileLandscape) {
+        height: rem(450px);
+    }
 }
-
-// the event item details (title, location etc)
+.event-item__media {
+    a, img {
+        // Remove descenders
+        vertical-align: text-bottom;
+        display: block;
+        transition: opacity $transition-duration-medium ease, background-color $transition-duration-medium ease;
+    }
+    img {
+        // Prevent flicker on hover in WebKit
+        -webkit-backface-visibility: hidden;
+    }
+}
 .event-item__meta {
     padding: rem($gs-gutter / 2);
 
@@ -272,22 +279,13 @@ $filter-icon-size: 18px;
         padding: rem($gs-gutter);
     }
 }
-
 .event-item__title {
     color: $black;
     margin-bottom: rem($gs-baseline);
     position: relative;
 
-    @include fs-headline(2);
-
-    @include mq(tablet) {
-        @include fs-headline(3);
-    }
-
-    .event-item--card & {
-        @include fs-headline(2);
-    }
-
+    @include fs-headline(3);
+    font-weight: 500;
 }
 .event-item__time {
     @include fs-data(4);
@@ -303,7 +301,6 @@ $filter-icon-size: 18px;
         padding: rem($gs-baseline * 2) 0 0;
     }
 }
-// the container for prices / buy button
 .event-item__cta {
     width: 100%;
     padding: $gs-baseline 0 0;
@@ -383,17 +380,24 @@ $filter-icon-size: 18px;
     @include fs-data(4);
 }
 
-// Sold-out flag
-// TODO: Refactor out into generic `flag` component
-.event-status--sold-out {
+/* Event Status
+   ========================================================================== */
+
+.event-status {
     display: inline-block;
-    color: $white;
-    background-color: $mem-live-accent;
-    @include fs-data(2);
-    position: relative;
-    top: rem(-3px);
-    padding: rem(1px) rem(3px);
-    margin-right: rem(4px);
+    &:after {
+        content: '/';
+        color: fade-out($c-neutral1, .8);
+        display: inline-block;
+        font-weight: normal;
+        margin-left: .2em;
+    }
+    &:hover:after {
+        text-decoration: none;
+    }
+}
+.event-status--sold-out {
+    color: $mem-sold-out;
 }
 
 /* ==========================================================================
@@ -444,7 +448,8 @@ $filter-icon-size: 18px;
 
     @include mq(desktop) {
         .event-item__title {
-            @include fs-headline(5);
+            @include fs-headline(4);
+            font-weight: 500;
         }
         .event-item__time {
             @include fs-headline(2);
@@ -462,9 +467,13 @@ $filter-icon-size: 18px;
 
 // use a shorter box for minimal theme
 .event-item--minimal {
+    .event-item__title {
+        @include fs-headline(2);
+        font-weight: 500;
+    }
     @include mq(mobileLandscape) {
         .event-item__container {
-            height: rem(280px);
+            height: rem(240px);
         }
     }
 }
@@ -474,6 +483,10 @@ $filter-icon-size: 18px;
    ========================================================================== */
 
 .event-item--card {
+    .event-item__title {
+        @include fs-headline(2);
+        font-weight: 500;
+    }
     @include mq(tablet) {
         .event-item__container {
             height: auto;

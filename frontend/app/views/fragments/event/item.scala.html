@@ -14,7 +14,7 @@
             <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
                 <h4 class="event-item__title">
                     @if(event.isSoldOut){
-                        <span class="event-status--sold-out" data-filter-key="status">Sold Out</span>
+                        <span class="event-status event-status--sold-out" data-filter-key="status">Sold out</span>
                     }
                     <span itemprop="name" data-filter-key="title">@event.name.text</span>
                 </h4>
