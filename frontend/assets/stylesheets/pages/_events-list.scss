@@ -101,6 +101,7 @@
 .event-block__header__title {
     @include fs-header(4);
 }
+
 .event-block__events {
     overflow: hidden;
 
@@ -119,7 +120,8 @@
         display: block;
     }
 }
-.event-block__events--no-header {
+
+.event-block__footer {
     @include mq(mem-full) {
         margin-left: rem(gs-span(2) + $gs-gutter);
     }
@@ -473,7 +475,7 @@ $filter-icon-size: 18px;
     }
     @include mq(mobileLandscape) {
         .event-item__container {
-            height: rem(240px);
+            height: rem(280px);
         }
     }
 }
