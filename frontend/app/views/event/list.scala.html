@@ -18,7 +18,7 @@
                     @fragments.event.item(heroEvent, true)
                 }
                 </ul>
-                <ul class="events-list grid grid--3up u-unstyled">
+                <ul class="grid grid--3up">
                     @for(event <- eventPortfolio.priority) {
                         <li class="grid__item">
                             @fragments.event.item(event)
@@ -40,7 +40,7 @@
                 <div class="event-block__no-results js-filter-empty">@noResultsMessage</div>
             }
             <div class="event-block__events">
-                <ul class="grid grid--3up u-unstyled"@if(isFilterable){ id="js-filter-container"}>
+                <ul class="grid grid--3up"@if(isFilterable){ id="js-filter-container"}>
                     @for(event <- eventPortfolio.normal) {
                         <li class="grid__item@if(isFilterable){ js-filter-item}">
                             @fragments.event.item(event, false)
@@ -57,14 +57,14 @@
                 <h4 class="event-block__header__title case--lower">Past events</h4>
             </div>
             <div class="event-block__events">
-                <ul class="events-list grid grid--4up u-unstyled">
+                <ul class="grid grid--4up">
                     @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
                         <li class="grid__item">
                             @fragments.event.item(event, false, isMinimal=true)
                         </li>
                     }
                 </ul>
-                <ul class="events-list grid grid--2up u-unstyled" id="js-toggle-past-events" data-toggle-hidden>
+                <ul class="grid grid--2up" id="js-toggle-past-events" data-toggle-hidden>
                     @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
                         <li class="grid__item">
                             @fragments.event.item(event, false, isMinimal=true, isCard=true)
