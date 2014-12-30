@@ -1,20 +1,25 @@
 define([
-    'bean',
     '$',
     'src/utils/analytics/ga'
-], function (bean, $, googleAnalytics) {
+], function ($, googleAnalytics) {
 
-    var filterInput  = document.getElementById('js-filter'),
-        filterParent = document.getElementById('js-filter-container'),
-        filterClear = $('.js-filter-clear'),
-        filterCount  = $('.js-filter-count'),
-        filterField  = filterInput.getAttribute('data-filter-field'),
-        throttle     = 300, // how many milliseconds should we wait for typing to pause?
-        currentTimeout;
+    var FILTER_INPUT    = document.getElementById('js-filter');
+    var FILTER_PARENT   = document.getElementById('js-filter-container');
+    var FILTER_CATEGORY = $('.js-filter-category');
+    var FILTER_ITEMS    = $('.js-filter-item');
+    var FILTER_CLEAR    = $('.js-filter-clear');
+    var FILTER_COUNT    = $('.js-filter-count');
+    var FILTER_EMPTY    = $('.js-filter-empty');
+    var FILTER_FIELD    = FILTER_INPUT.getAttribute('data-filter-field');
+    var THROTTLE        = 300;
+    var HIDDEN_CLASS    = 'is-hidden';
+    var SHOWN_CLASS     = 'is-shown';
 
-    // create an index mapping any filter "key"
+    var currentTimeout;
+
+    // Create an index mapping any filter "key"
     // (eg. title, price) to DOM elements
-    var index = $('.js-filter-item').map(function (item) {
+    var index = FILTER_ITEMS.map(function (item) {
         var filters = {};
         $('[data-filter-key]', item).each(function (f) {
             var elm = $(f);
@@ -26,76 +31,109 @@ define([
         };
     });
 
-    // filter the list based on the index
-    var filterList = function () {
+    function filterList() {
+
         if (currentTimeout) { window.clearTimeout(currentTimeout); }
 
-        if (filterInput.value) {
-            filterClear.removeClass('is-hidden');
-        } else {
-            filterClear.addClass('is-hidden');
-        }
+        // Toggle clear filter button
+        toggleClear(FILTER_INPUT.value);
 
-        // start search when the user pauses typing
+        // Start search when the user pauses typing
         currentTimeout = window.setTimeout(function () {
 
-            // fake a scroll event so lazy-load images appear
-            bean.fire(document.body, 'scroll');
+            var value = FILTER_INPUT.value.toLowerCase();
 
-            var value = filterInput.value.toLowerCase();
-            var elmsToShow = [],
-                elmsToHide = [];
+            // Track that we have filtered
+            trackFilter(value);
 
-            if (value) {
-                googleAnalytics.trackEvent('Event filter', 'Masterclasses', value);
-            }
+            // Build results object
+            var results = buildResults(value);
 
-            index.forEach(function (item) {
-                // use simple substring matching for now...
-                var isFound = item.filters[filterField].toLowerCase().search(value);
-                if (isFound !== -1) {
-                    elmsToShow.push(item.elm);
-                } else {
-                    elmsToHide.push(item.elm);
-                }
-            });
+            // Remove the non-matching elements from the DOM
+            $(results.hide).detach();
 
-            // remove the non-matching elements from the DOM
-            $(elmsToHide).detach();
+            // Append matching elements to the DOM
+            $(results.show).appendTo(FILTER_PARENT);
 
-            // show matching elements
-            // (which may have been hidden in previous searches)
-            $(elmsToShow).appendTo(filterParent);
+            // Fake a scroll event so lazy-load images appear
+            triggerScroll();
 
-            // if no results, we show a message
-            if (!elmsToShow.length) {
-                $(filterParent).addClass('events-list--empty');
+            // Handle no results case
+            handleNoResults(results.show.length);
+
+            // Update result count
+            FILTER_COUNT.text(results.show.length);
+
+        }, THROTTLE);
+
+    }
+
+    function triggerScroll() {
+        // Trigger native scroll event
+        var event = document.createEvent('HTMLEvents');
+        event.initEvent('scroll', true, true);
+        window.dispatchEvent(event);
+    }
+
+    function buildResults(value) {
+        var results = {
+            show: [],
+            hide: []
+        };
+        index.forEach(function (item) {
+            // use simple substring matching for now...
+            var isFound = item.filters[FILTER_FIELD].toLowerCase().search(value);
+            if (isFound !== -1) {
+                results.show.push(item.elm);
             } else {
-                $(filterParent).removeClass('events-list--empty');
+                results.hide.push(item.elm);
             }
-
-            filterCount.text(elmsToShow.length);
-
-        }, throttle);
-
-    };
-
-    // bind to typing in the search box
-    bean.on(filterInput, 'keyup', filterList);
-
-    $('.js-filter-category').each(function (elem) {
-        bean.on(elem, 'change', function () {
-            var category = elem.options[elem.selectedIndex].value;
-            window.location.href = '/masterclasses' + category;
         });
-    });
+        return results;
+    }
 
-    bean.on(filterClear[0], 'click', function (e) {
-        e.preventDefault();
+    function toggleClear(val) {
+        if (val) {
+            FILTER_CLEAR.removeClass(HIDDEN_CLASS);
+        } else {
+            FILTER_CLEAR.addClass(HIDDEN_CLASS);
+        }
+    }
 
-        filterInput.value = '';
-        filterInput.focus();
-        filterList();
-    });
+    function handleNoResults(elemCount) {
+        if (!elemCount) {
+            FILTER_EMPTY.addClass(SHOWN_CLASS);
+        } else {
+            FILTER_EMPTY.removeClass(SHOWN_CLASS);
+        }
+    }
+
+    function trackFilter(value) {
+        if (value) {
+            googleAnalytics.trackEvent('Event filter', 'Masterclasses', value);
+        }
+    }
+
+    function init() {
+        if(typeof FILTER_INPUT !== 'undefined') {
+            FILTER_INPUT.addEventListener('keyup', filterList);
+            FILTER_CATEGORY.each(function (elem) {
+                elem.addEventListener('change', function() {
+                    var url = elem.options[elem.selectedIndex].value;
+                    window.location.href = url;
+                });
+            });
+            FILTER_CLEAR[0].addEventListener('click', function(event) {
+                event.preventDefault();
+                FILTER_INPUT.value = '';
+                FILTER_INPUT.focus();
+                filterList();
+            });
+        }
+    }
+
+    return {
+        init: init
+    };
 
 });

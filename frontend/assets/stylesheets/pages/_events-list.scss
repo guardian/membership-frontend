@@ -109,19 +109,19 @@
     }
 }
 
-/* ==========================================================================
-   Event Listings - Empty state
-   ========================================================================== */
-
-// only visible when no filter results are found
-.events-list--empty:before {
-    display: block;
-    margin-left: $gutter-width-fluid;
-    .theme--guardian-live & {
-        content: 'Sorry, no matching events were found.';
+.event-block__empty,
+.event-block__no-results {
+    margin-bottom: rem($gs-gutter * 2);
+}
+.event-block__no-results {
+    display: none;
+    &.is-shown {
+        display: block;
     }
-    .theme--masterclasses & {
-        content: 'Sorry, no matching Masterclasses were found.';
+}
+.event-block__events--no-header {
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
     }
 }
 
