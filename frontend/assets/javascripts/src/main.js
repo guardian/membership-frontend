@@ -32,7 +32,7 @@ require([
     PaidForm,
     StaffForm,
     Cta,
-    Filter,
+    filter,
     toggle,
     slideshow,
     images,
@@ -74,6 +74,7 @@ require([
 
     // Events
     (new Cta()).init();
+    filter.init();
     eventPriceEnhance.init();
 
     // Join
