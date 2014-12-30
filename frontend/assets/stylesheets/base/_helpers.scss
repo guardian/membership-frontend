@@ -24,6 +24,24 @@
     float: right;
 }
 
+.u-no-margin {
+    margin: 0 !important;
+}
+.u-no-horizontal-margin {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.u-no-vertical-margin {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.u-no-top-margin {
+    margin-top: 0 !important;
+}
+.u-no-bottom-margin {
+    margin-bottom: 0 !important;
+}
+
 .block-level {
     display: block;
 }
