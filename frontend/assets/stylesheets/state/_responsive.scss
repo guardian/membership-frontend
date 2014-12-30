@@ -14,6 +14,12 @@
     }
 }
 
+.hidden-tablet {
+    @include mq($until: tablet) {
+        display: none !important;
+    }
+}
+
 .mobile-only {
     @include mq(tablet) {
         display: none !important;
