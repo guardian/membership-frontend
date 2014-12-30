@@ -10,7 +10,6 @@ define([
     var FILTER_CLEAR    = $('.js-filter-clear');
     var FILTER_COUNT    = $('.js-filter-count');
     var FILTER_EMPTY    = $('.js-filter-empty');
-    var FILTER_FIELD    = FILTER_INPUT.getAttribute('data-filter-field');
     var THROTTLE        = 300;
     var HIDDEN_CLASS    = 'is-hidden';
     var SHOWN_CLASS     = 'is-shown';
@@ -82,7 +81,7 @@ define([
         };
         index.forEach(function (item) {
             // use simple substring matching for now...
-            var isFound = item.filters[FILTER_FIELD].toLowerCase().search(value);
+            var isFound = item.filters[FILTER_INPUT.getAttribute('data-filter-field')].toLowerCase().search(value);
             if (isFound !== -1) {
                 results.show.push(item.elm);
             } else {
@@ -115,7 +114,7 @@ define([
     }
 
     function init() {
-        if(typeof FILTER_INPUT !== 'undefined') {
+        if(FILTER_INPUT) {
             FILTER_INPUT.addEventListener('keyup', filterList);
             FILTER_CATEGORY.each(function (elem) {
                 elem.addEventListener('change', function() {
