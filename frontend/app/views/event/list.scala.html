@@ -1,6 +1,7 @@
 @(
     eventPortfolio: model.EventPortfolio,
     noResultsMessage: String,
+    isFilterable: Boolean = false,
     showPastEvents: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
@@ -32,19 +33,22 @@
         <div class="event-block__header">
             <h4 class="event-block__header__title case--lower">What's on</h4>
         </div>
-        <div class="event-block__events">
-            @if(eventPortfolio.normal.isEmpty) {
-                <div class="event-block__empty">@noResultsMessage</div>
-            } else {
-                <ul class="grid grid--3up u-unstyled" id="js-filter-container">
+        @if(eventPortfolio.normal.isEmpty) {
+            <div class="event-block__empty">@noResultsMessage</div>
+        } else {
+            @if(isFilterable) {
+                <div class="event-block__no-results js-filter-empty">@noResultsMessage</div>
+            }
+            <div class="event-block__events">
+                <ul class="grid grid--3up u-unstyled"@if(isFilterable){ id="js-filter-container"}>
                     @for(event <- eventPortfolio.normal) {
-                        <li class="grid__item js-filter-item">
+                        <li class="grid__item@if(isFilterable){ js-filter-item}">
                             @fragments.event.item(event, false)
                         </li>
                     }
                 </ul>
-            }
-        </div>
+            </div>
+        }
     </div>
 
     @if(showPastEvents && eventPortfolio.pastEvents) {

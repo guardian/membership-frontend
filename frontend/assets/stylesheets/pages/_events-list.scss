@@ -109,6 +109,22 @@
     }
 }
 
+.event-block__empty,
+.event-block__no-results {
+    margin-bottom: rem($gs-gutter * 2);
+}
+.event-block__no-results {
+    display: none;
+    &.is-shown {
+        display: block;
+    }
+}
+.event-block__events--no-header {
+    @include mq(mem-full) {
+        margin-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+
 /* ==========================================================================
    Event Filters
    ========================================================================== */

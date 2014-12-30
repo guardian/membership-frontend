@@ -21,9 +21,9 @@
                 <label class="event-filters__category">
                     <span class="event-filters__category-label">Show:</span>
                     <select class="event-filters__category__select select-minimal js-filter-category">
-                        <option value="">All categories</option>
+                        <option value="/masterclasses">All categories</option>
                         @for(category <- MasterclassEvent.tags) {
-                            <option value="/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
+                            <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
                         }
                     </select>
                 </label>
@@ -35,7 +35,7 @@
                             <select class="event-filters__category__select select-minimal js-filter-category">
                                 <option value="/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
                                 @for(subCategory <- category.subCategories) {
-                                    <option value="/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
+                                    <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
                                 }
                             </select>
                         </label>
@@ -64,5 +64,6 @@
         </div>
     </div>
 
-    @views.html.event.list(eventPortfolio, "Sorry, no matching Masterclasses were found.")
+    @views.html.event.list(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
+
 }
