@@ -284,7 +284,11 @@
     }
 
     @pattern("Pricing Info", "Single pricing info item") {
-        @fragments.benefits.priceInfo(Tier.Partner)
+        @fragments.pricing.priceInfo(Tier.Partner)
+    }
+
+    @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
+        @fragments.pricing.priceInfoEvent(eventPortfolio.normal.head)
     }
 
     @pattern("Benefit Item", "Single benefit item") {
