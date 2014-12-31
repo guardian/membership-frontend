@@ -58,9 +58,10 @@
 @import 'nav/control';
 @import 'nav/brand-bar';
 
-/* Membership Components
+/* Components
    ========================================================================== */
 
+@import 'components/from-content-api';
 @import 'components/grid';
 @import 'components/content';
 @import 'components/action';

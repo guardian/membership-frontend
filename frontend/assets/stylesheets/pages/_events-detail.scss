@@ -315,38 +315,10 @@
         float: right;
     }
 
-    h2 {
-        @include fs-header(2);
-
-        @include mq(tablet) {
-            @include fs-header(3, true);
-        }
-    }
-
-    ol,
-    ul {
-        list-style-position: inside;
-        padding: 0;
-        margin: 0 0 rem(8px);
-    }
-    .no-style-list {
-        list-style: none;
-    }
     .section-header {
         @include fs-headline(3);
         font-weight: 900;
         margin: rem(27px) 0 rem(10px);
-    }
-
-    blockquote {
-        padding-left: rem(14px);
-        border-left: rem(2px) solid #cfcfcd;
-        font-style: italic;
-        margin: 0 0 rem(16px);
-    }
-
-    blockquote p {
-        margin: 0;
     }
 
     img {
