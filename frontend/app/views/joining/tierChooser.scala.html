@@ -4,71 +4,61 @@
 @import views.support.Dates._
 @import configuration.Config
 
-@main("Join Choose Tier", pageInfo=pageInfo, isBrochure = true, htmlClass = "join-choose-tier") {
+@main("Join Choose Tier", pageInfo=pageInfo) {
 
-    <section class="section-two-thirds u-cf">
+    <main role="main" class="page-content">
+        @fragments.page.pageHeader("Guardian Live events are exclusively for Guardian members")
 
-        @fragments.form.sectionHeading("Choose a membership tier")
-
-        <div class="l-row">
-            @fragments.joiner.joinStepCounter(1, 3)
-            <section class="two-thirds">
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                @fragments.joiner.joinStepCounter(1, 3)
+            </div>
+            <div class="page-section__content page-section__content--full">
+                <p class="text-lead">Choose a membership tier to continue with your booking</p>
                 <div class="package-list">
-                    @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-                    @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-                    @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
+                    <ul class="grid grid--bordered grid--3up">
+                        <li class="grid__item">
+                            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
+                        </li>
+                        <li class="grid__item">
+                            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
+                        </li>
+                        <li class="grid__item">
+                            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo")
+                        </li>
+                    </ul>
                 </div>
-            </section>
-            <section class="one-third">
+            </div>
+            <div class="page-section__supplementary">
+                <div class="aside aside--pull">
+                    @for(event <- eventOpt) {
+                        <p>You're buying tickets for:</p>
 
-            @for(event <- eventOpt) {
-                <h2 class="section-sub-headline section-sub-headline--top-border">You're buying tickets for:</h2>
+                        <div class="event-content__info event-content__info--no-padding">
 
-                <div class="event-content__info event-content__info--no-padding">
-                    <div class="event-item__media">
-                        <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-                    </div>
-                    <h2 class="event-content__name">
-                        @if(event.isSoldOut){
-                            <span class="event-status event-status--sold-out">Sold out</span>
-                        }
-                        @event.name.text
-                    </h2>
 
-                    <div class="event-item__time event-content--line-divider u-cf">
-                        <div class="event-content__first">
-                            <i class="icon-early_booking icon--benefits"></i>
-                        </div>
-                        <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
-                    </div>
-
-                    <div class="event-item__location event-content--line-divider u-cf">
-                        <div class="event-content__first">
-                            <i class="icon-location icon--benefits"></i>
-                        </div>
-                        <div class="event-content__second">
-                            @if(event.venue.name){
-                                <span class="event-item__location-name">@event.venue.name</span>
-                            }
-                            @for(location <- event.venue.address) {
-                                <span class="event-item__location-detail">@if(event.venue.name){, } @location.city, @location.postal_code</span>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="event-item__price">
-                        @for(ticket <- event.generalReleaseTicket) {
-                            @for(pricing <- ticket.cost) {
-                                <div class="event-content__price event-content--line-divider">@pricing.formattedPrice</div>
-                                <div class="event-content__trail">
-                                    <div class="event-item__price-amount-discount">Partners/Patrons: @pricing.discountPrice</div>
+                            <div class="event-snapshot">
+                                <div class="event-snapshot__media">
+                                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
                                 </div>
-                            }
-                        }
-                    </div>
+
+                                <h2 class="event-snapshot__title">
+                                    @if(event.isSoldOut){
+                                        <span class="event-status event-status--sold-out">Sold out</span>
+                                    }
+                                    @event.name.text
+                                </h2>
+                            </div>
+
+                            @fragments.event.stats(event)
+
+                            @fragments.pricing.priceInfoEvent(event)
+
+                        </div>
+                    }
                 </div>
-            }
-            </section>
-        </div>
-    </section>
+            </div>
+        </section>
+
+    </main>
 }

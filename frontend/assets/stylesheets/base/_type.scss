@@ -66,6 +66,11 @@ blockquote {
     }
 }
 
+.text-lead {
+    @include fs-bodyCopy(3);
+    font-weight: bold;
+}
+
 .text-info {
     @include fs-data(2);
     color: $c-neutral3;
