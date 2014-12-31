@@ -268,15 +268,10 @@ $filter-icon-size: 18px;
 .event-item__meta {
     padding: rem($gs-gutter / 2);
 
-    .join-choose-tier & {
-        padding: 0;
-    }
-
     @include mq(tablet) {
         padding: rem($gs-baseline) rem($gs-gutter / 2);
         height: auto;
     }
-
     @include mq(desktop) {
         padding: rem($gs-gutter);
     }
