@@ -11,6 +11,7 @@ define([
         require(['js!omniture'], function () {
 
             var pageTitle = document.getElementsByTagName('title')[0].textContent;
+            /*global s_gi: true */
             var s = s_gi('guardiangu-network');
             var s_code;
             var identityUser = user.getUserFromCookie();
@@ -40,6 +41,7 @@ define([
                 s_code = s.t();
 
                 if (s_code) {
+                    /*jslint evil: true */
                     document.write(s_code);
                 }
             });
