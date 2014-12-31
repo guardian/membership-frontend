@@ -1,3 +1,4 @@
+/* jscs: disable */
 /* jshint ignore:start */
 /* Modernizr 2.8.3 (Custom Build) | MIT & BSD
  * Build: http://modernizr.com/download/#-flexbox-flexboxlegacy-cssclasses-testprop-testallprops-domprefixes
@@ -229,3 +230,4 @@ window.Modernizr = (function( window, document, undefined ) {
 })(this, this.document);
 ;
 /* jshint ignore:end */
+/* jscs enable */

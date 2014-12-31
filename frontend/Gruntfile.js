@@ -272,6 +272,22 @@ module.exports = function (grunt) {
             }
         },
 
+        jscs: {
+            options: {
+                config: '../.jscsrc'
+            },
+            common: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.assets.javascripts %>/',
+                    src: [
+                        'config/**/*.js',
+                        'src/**/*.js'
+                    ]
+                }]
+            }
+        },
+
         // Lint Sass sources
         scsslint: {
             allFiles: [
