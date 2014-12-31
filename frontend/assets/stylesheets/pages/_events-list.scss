@@ -421,8 +421,6 @@ $filter-icon-size: 18px;
 
     @include mq(tablet) {
         display: table;
-        width: 100% + $gutter-width-fluid;
-        margin-left: -$gutter-width-fluid;
 
         .event-item__media,
         .event-item__meta {
@@ -431,7 +429,7 @@ $filter-icon-size: 18px;
             vertical-align: top;
         }
         .event-item__media {
-            padding-left: $gutter-width-fluid;
+            padding-right: $gutter-width-fluid / 2;
         }
         .event-item__meta {
             position: relative;
@@ -473,7 +471,7 @@ $filter-icon-size: 18px;
     }
     @include mq(mobileLandscape) {
         .event-item__container {
-            height: rem(240px);
+            height: rem(280px);
         }
     }
 }
