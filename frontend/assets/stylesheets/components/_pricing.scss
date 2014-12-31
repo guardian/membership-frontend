@@ -58,13 +58,27 @@
     }
 }
 
-/* Price Info - Reversed colour modifiers
-   ========================================================================== */
-
+// Reversed colour modifiers
 .price-info--friend,
 .price-info--patron {
     color: $white;
     .price-info__item--split {
         border-color: $white-trans;
     }
+}
+
+/* Price Info - Inline
+   ========================================================================== */
+// Miminal inline version of price info component
+
+.price-info-inline {
+    padding-bottom: rem($gs-baseline);
+}
+.price-info-inline__value {
+    padding-bottom: 0;
+    @include fs-header(5);
+}
+.price-info-inline__trail {
+    @include fs-data(3);
+    color: $c-neutral2;
 }

@@ -1,0 +1,21 @@
+/* ==========================================================================
+   Stats
+   ========================================================================== */
+
+.stats-listing {
+    border-top: 1px dotted $c-neutral3;
+    padding-top: rem($gs-baseline / 2);
+}
+.stat-item {
+    @include clearfix;
+    border-bottom: 1px dotted $c-neutral3;
+    padding-bottom: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline / 2);
+}
+.stat-item__first {
+    float: left;
+    width: rem($gs-gutter * 2);
+}
+.stat-item__second {
+    position: relative;
+}

@@ -504,3 +504,19 @@ $filter-icon-size: 18px;
         }
     }
 }
+
+/* ==========================================================================
+   Event Items - Event Snapshot
+   ========================================================================== */
+// Most basic event item: Image and title only.
+
+.event-snapshot {
+    margin-bottom: rem($gs-baseline);
+}
+.event-snapshot__media,
+.event-snapshot__title {
+    margin-bottom: rem($gs-baseline / 2);
+}
+.event-snapshot__title {
+    @include fs-header(1);
+}
