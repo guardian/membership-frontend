@@ -51,6 +51,12 @@ $mq-breakpoints: (
     mobileLandscape: gs-span(6) + $gs-gutter, // 480px
 );
 
+$max-widths: (
+    max-tablet: gs-span(12),
+    max-desktop: gs-span(14),
+    max-wide: gs-span(16),
+);
+
 // Fonts
 // =============================================================================
 

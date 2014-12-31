@@ -1,7 +1,57 @@
 /* ==========================================================================
-   Headings
+   Text Helpers
    ========================================================================== */
-// TODO: Merge with text helpers in _type.scss?
+
+/* Text Helpers - Copy
+   ========================================================================== */
+
+.text-body {
+    @include fs-bodyCopy(2);
+    font-weight: normal;
+}
+
+.text-intro {
+    margin: rem($gs-baseline * 2) 0 rem($gs-baseline * 3);
+}
+
+.text-feature {
+    @include fs-headline(3);
+    @include mq(tablet) {
+        @include fs-headline(4);
+    }
+    @include mq(desktop) {
+        @include fs-headline(5);
+    }
+}
+
+.text-lead {
+    @include fs-header(3);
+}
+
+.text-info {
+    @include fs-data(2);
+    color: $c-neutral3;
+    margin: rem($gs-baseline) 0;
+    display: block;
+}
+
+.text-highlight {
+    color: $mem-buttonBlue;
+}
+
+/* Text Helpers - Case
+   ========================================================================== */
+
+.case--lower {
+    text-transform: lowercase;
+}
+
+.case--capitalize {
+    text-transform: capitalize;
+}
+
+/* Text Helpers - Headings
+   ========================================================================== */
 
 %section-header {
     background-color: $white;
