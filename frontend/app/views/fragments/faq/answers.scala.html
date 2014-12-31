@@ -1,10 +1,10 @@
 @(faqs: List[model.Faq.Item])
 
-<div class="copy">
 @for(faq <- faqs){
     <section class="help-faqs" id="@faq.id">
         <h3 class="help-faqs__headline">@faq.question</h3>
-        <p>@faq.answer</p>
+        <div class="help-faqs__answer copy">
+            <p>@faq.answer</p>
+        </div>
     </section>
 }
-</div>

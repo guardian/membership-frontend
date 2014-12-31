@@ -1,0 +1,1 @@
+Do not add any new styles to pages/. All new styles should be built as stand-alone components, not tied to page specific usage.

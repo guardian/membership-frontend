@@ -1,7 +1,22 @@
 @charset 'UTF-8';
+/**
+ * CONTENTS
+ *
+ * SETTINGS & TOOLS
+ * Vars.................Variables and settings
+ * Mixins...............Useful mixins
+ * Extends..............Placeholder classes used only for @extend
+ *
+ * BASE.................Global / element level rules
+ * LAYOUT...............Layout rules. Layout helpers, global header / footer etc.
+ * MODULE...............Individual components. One file per component,
+ *                      The majority of all styles should be modules.
+ * THEME................Theme style overrides / Tone colours.
+ * STATE................Styles which augment & overrides all other styles
+ */
 
 /* ==========================================================================
-   Variables and mixins
+   Settings & Tools
    ========================================================================== */
 
 @import 'vars';
@@ -25,6 +40,13 @@
 @import 'base/helpers';
 
 /* ==========================================================================
+   Icon Sprites
+   ========================================================================== */
+
+// Data-uri'd icon sprites and extends
+@import 'icons/icons';
+
+/* ==========================================================================
    Layout
    ========================================================================== */
 
@@ -42,64 +64,53 @@
 /* ==========================================================================
    Module
    ========================================================================== */
+// TODO: Move all `components` to `modules` and
+// keep `components` for `bower-components` only.
 
-/* Icons
-   ========================================================================== */
-
-@import 'icons/icons';
-@import 'icons/icons-cards';
+@import 'components/nav/nav';
+@import 'components/nav/pop-up';
+@import 'components/nav/control';
+@import 'components/nav/brand-bar';
 @import 'components/icons';
-
-/* Nav
-   ========================================================================== */
-
-@import 'nav/nav';
-@import 'nav/pop-up';
-@import 'nav/control';
-@import 'nav/brand-bar';
-
-/* Components
-   ========================================================================== */
-
-@import 'components/from-content-api';
 @import 'components/grid';
 @import 'components/content';
+@import 'components/from-content-api';
 @import 'components/action';
 @import 'components/page';
 @import 'components/blocks';
 @import 'components/asides';
 @import 'components/benefits';
+@import 'components/payment';
+@import 'components/pricing';
+@import 'components/tier';
 @import 'components/user';
 @import 'components/help';
 @import 'components/modal';
 @import 'components/loader';
 @import 'components/social';
-@import 'components/pricing';
 @import 'components/signpost';
 @import 'components/slideshow';
 @import 'components/features';
 @import 'components/messages';
 @import 'components/warnings';
+
+// Dev modules:
+// - Pattern library
 @import 'components/patterns';
 
-/* Membership Pages
+/* Pages
    ========================================================================== */
-// TODO: These are conceptually no different to components (modules), merge them.
+// TODO: These are conceptually no different to components (modules),
+// gradually merge them into modules as you work on related styles.
 
 @import 'pages/events-detail';
 @import 'pages/events-summary';
 @import 'pages/events-list';
 @import 'pages/joiner';
-@import 'pages/tier';
 @import 'pages/tickets';
 @import 'pages/login';
 @import 'pages/about';
 @import 'pages/feedback';
-
-/* Overrides / Trumps
-   ========================================================================== */
-
-@import 'base/tones';
 
 /* ==========================================================================
    State
@@ -107,6 +118,12 @@
 
 @import 'state/user';
 @import 'state/responsive';
+
+/* ==========================================================================
+   Theme
+   ========================================================================== */
+
+@import 'theme/tones';
 
 /* ==========================================================================
    Webfonts
@@ -118,6 +135,4 @@
    Print
    ========================================================================== */
 
-// finally import print-only styles
-// (currently only used for event thankyou pages)
 @import 'print';
