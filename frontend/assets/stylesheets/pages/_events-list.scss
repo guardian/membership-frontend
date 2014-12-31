@@ -101,6 +101,7 @@
 .event-block__header__title {
     @include fs-header(4);
 }
+
 .event-block__events {
     overflow: hidden;
 
@@ -119,7 +120,8 @@
         display: block;
     }
 }
-.event-block__events--no-header {
+
+.event-block__footer {
     @include mq(mem-full) {
         margin-left: rem(gs-span(2) + $gs-gutter);
     }
