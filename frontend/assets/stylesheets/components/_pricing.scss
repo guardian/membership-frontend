@@ -40,7 +40,7 @@
     display: inline-block;
 }
 .price-info__value {
-    @include fs-header(6);
+    @include fs-header(4);
 }
 .price-info__value--free {
     font-weight: normal;
@@ -76,7 +76,7 @@
 }
 .price-info-inline__value {
     padding-bottom: 0;
-    @include fs-header(5);
+    @include fs-header(4);
 }
 .price-info-inline__trail {
     @include fs-data(3);

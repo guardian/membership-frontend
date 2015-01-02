@@ -4,9 +4,13 @@
 
 .aside {
     border-top: 1px solid $mem-blue;
-    padding-top: rem($gs-gutter/2);
+    padding-top: rem($gs-baseline/2);
     margin-bottom: rem($gs-gutter);
 }
+    .aside__intro {
+        @include fs-bodyCopy(1);
+        margin-bottom: rem($gs-baseline * 2);
+    }
 
 .aside-panel {
     background-color: $c-neutral6;

@@ -503,15 +503,32 @@ $filter-icon-size: 18px;
 /* ==========================================================================
    Event Items - Event Snapshot
    ========================================================================== */
-// Most basic event item: Image and title only.
 
 .event-snapshot {
+    width: 100%;
+    display: table;
     margin-bottom: rem($gs-baseline);
+    @include mq(desktop) {
+        display: block;
+    }
 }
 .event-snapshot__media,
 .event-snapshot__title {
     margin-bottom: rem($gs-baseline / 2);
 }
-.event-snapshot__title {
-    @include fs-header(1);
+.event-snapshot__media,
+.event-snapshot__content {
+    display: table-cell;
+    vertical-align: top;
+    @include mq(desktop) {
+        display: block;
+    }
+}
+.event-snapshot__media {
+    width: 30%;
+    padding-right: $gutter-width-fluid;
+    @include mq(desktop) {
+        width: auto;
+        padding-right: 0;
+    }
 }

@@ -141,7 +141,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 .page-section__content {
     @include mq(desktop) {
         float: left;
-        width: rem(gs-span(8));
+        width: rem(gs-span(9));
     }
     @include mq(mem-full) {
         width: rem(gs-span(11));
@@ -153,9 +153,6 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     @include mq(desktop) {
         clear: none;
         float: right;
-        width: rem(gs-span(4));
-    }
-    @include mq(mem-full) {
         width: rem(gs-span(3));
     }
 }

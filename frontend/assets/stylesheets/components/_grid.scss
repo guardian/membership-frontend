@@ -21,6 +21,14 @@
     }
 }
 
+.grid--slim {
+    @include mq(desktop) {
+        .grid__item {
+            margin-bottom: 0;
+        }
+    }
+}
+
 .grid--2up,
 .grid--3up,
 .grid--4up {

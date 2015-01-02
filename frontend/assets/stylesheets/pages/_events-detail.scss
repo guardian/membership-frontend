@@ -70,7 +70,7 @@
     }
     .event-masthead__title {
         @include fs-header(1);
-        border-bottom: rem(1px) dotted $border-bottom-color;
+        border-bottom: 1px dotted rgba(255, 255, 255, .29);
         padding-bottom: rem(5px);
 
         @include mq(tablet) {

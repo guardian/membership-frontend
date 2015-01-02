@@ -19,6 +19,11 @@
         display: none !important;
     }
 }
+.hidden-desktop {
+    @include mq($until: desktop) {
+        display: none !important;
+    }
+}
 
 .mobile-only {
     @include mq(tablet) {

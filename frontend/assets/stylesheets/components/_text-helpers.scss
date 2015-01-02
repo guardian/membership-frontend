@@ -28,7 +28,7 @@
     @include fs-header(3);
 }
 
-.text-info {
+.text-note {
     @include fs-data(2);
     color: $c-neutral3;
     margin: rem($gs-baseline) 0;
@@ -53,9 +53,40 @@
 /* Text Helpers - Headings
    ========================================================================== */
 
-%section-header {
-    background-color: $white;
+
+.h-section {
+    @include fs-header(2);
+    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
+    border: solid $c-border-brand;
+    border-width: 1px 0 0 0;
+
+    @include mq(tablet) {
+        font-size: get-font-size(header, 3);
+    }
 }
+
+.h-section--lead {
+    padding-top: 0;
+    border-width: 0;
+    @include mq(mem-full) {
+        padding-top: rem($gs-baseline / 2);
+        border-width: 1px 0 0 0;
+    }
+}
+
+.h-subsection {
+    @include fs-bodyHeading(2);
+    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
+    border-top: 1px solid $c-border-brand;
+}
+
+.h-info {
+    @include fs-header(1)
+}
+
+/* Text Helpers - Headings
+   ========================================================================== */
+
 
 .section-headline {
     @include fs-headline(5);
@@ -96,12 +127,12 @@
 }
 
 .section-sub-headline {
-    @extend %section-header;
     @include fs-headline(4);
+    background-color: $white;
     padding-top: rem($gs-baseline / 2);
 }
 
 .section-body-headline {
-    @extend %section-header;
     @include fs-headline(4);
+    background-color: $white;
 }

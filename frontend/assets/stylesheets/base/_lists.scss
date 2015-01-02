@@ -44,3 +44,17 @@ nav ol {
         content: '';
     }
 }
+
+.list-stack {
+    margin: 0;
+    list-style: none;
+    li {
+        border-bottom: 1px dotted $c-border-brand;
+        padding-bottom: rem($gs-baseline / 2);
+        margin-bottom: rem($gs-baseline / 2);
+    }
+    li:last-child {
+        border-bottom: 0 none;
+        margin-bottom: 0;
+    }
+}

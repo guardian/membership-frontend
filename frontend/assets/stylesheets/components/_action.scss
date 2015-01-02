@@ -92,6 +92,29 @@
     cursor: default;
 }
 
+.action--snap {
+    min-width: 0;
+    width: rem(40px);
+    height: rem(40px);
+    margin: 0;
+    &:after {
+        margin-top: rem(3px);
+    }
+    .action__label {
+        display: none;
+    }
+    @include mq(desktop) {
+        width: 100%;
+        height: auto;
+        &:after {
+            margin-top: rem(2px);
+        }
+        .action__label {
+            display: inline-block;
+        }
+    }
+}
+
 /* Actions - Secondary Modifiers
    ========================================================================== */
 
