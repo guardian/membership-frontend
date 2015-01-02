@@ -15,7 +15,7 @@
         <div class="stat-item__first">
             <i class="icon icon-location"></i>
         </div>
-        <div class="stat-item__second">
+        <div class="stat-item__second" itemprop="location" itemscope itemtype="http://schema.org/Place">
             @if(event.venue.name) {@event.venue.name}@if(event.venue.address){, }
             @for(location <- event.venue.address) {
                 @location.city, @location.postal_code
