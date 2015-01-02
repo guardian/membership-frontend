@@ -2,8 +2,26 @@
    Icons
    ========================================================================== */
 
-.icon-wrapper {
-    display: block;
+.icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+}
+.icon--inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.icon--small {
+    background-size: 16px;
+    width: 16px; height: 16px;
+}
+.icon--medium {
+    background-size: 24px;
+    width: 24px; height: 24px;
+}
+.icon--large {
+    background-size: 32px;
+    width: 32px; height: 32px;
 }
 
 .icon--faq {
@@ -35,6 +53,7 @@
     }
 }
 
-.icon--margin-right {
-    margin-right: rem($gs-gutter / 2);
+// TODO: Only used in global header, can this be made more explicit? Or documented
+.icon-wrapper {
+    display: block;
 }
