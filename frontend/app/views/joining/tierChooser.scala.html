@@ -16,15 +16,15 @@
             <div class="page-section__content page-section__content--full">
                 <p class="text-lead">Choose a membership tier to continue with your booking</p>
                 <div class="package-list">
-                    <ul class="grid grid--bordered grid--3up">
+                    <ul class="grid grid--bordered grid--3up-stacked">
                         <li class="grid__item">
-                            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo")
+                            @fragments.tier.benefitsPromo(Tier.Friend)
                         </li>
                         <li class="grid__item">
-                            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo")
+                            @fragments.tier.benefitsPromo(Tier.Partner)
                         </li>
                         <li class="grid__item">
-                            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo")
+                            @fragments.tier.benefitsPromo(Tier.Patron)
                         </li>
                     </ul>
                 </div>
@@ -33,28 +33,20 @@
                 <div class="aside aside--pull">
                     @for(event <- eventOpt) {
                         <p>You're buying tickets for:</p>
-
-                        <div class="event-content__info event-content__info--no-padding">
-
-
-                            <div class="event-snapshot">
-                                <div class="event-snapshot__media">
-                                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-                                </div>
-
-                                <h2 class="event-snapshot__title">
-                                    @if(event.isSoldOut){
-                                        <span class="event-status event-status--sold-out">Sold out</span>
-                                    }
-                                    @event.name.text
-                                </h2>
+                        <div class="event-snapshot">
+                            <div class="event-snapshot__media">
+                                <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
                             </div>
 
-                            @fragments.event.stats(event)
-
-                            @fragments.pricing.priceInfoEvent(event)
-
+                            <h2 class="event-snapshot__title">
+                                @if(event.isSoldOut){
+                                    <span class="event-status event-status--sold-out">Sold out</span>
+                                }
+                                @event.name.text
+                            </h2>
                         </div>
+                        @fragments.event.stats(event)
+                        @fragments.pricing.priceInfoEvent(event)
                     }
                 </div>
             </div>

@@ -1,0 +1,11 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier, isStacked: Boolean = false)
+
+<div class="tier-header-promo tone-@tier.toString.toLowerCase--border">
+    <h3 class="tier-header-promo__title">
+        <i class="icon icon--inline icon--medium icon-g-black"></i>
+        @tier
+    </h3>
+    <div class="tier-header-promo__pricing">
+        @fragments.pricing.priceInfo(tier=tier)
+    </div>
+</div>

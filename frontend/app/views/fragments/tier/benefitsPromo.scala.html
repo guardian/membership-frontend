@@ -1,0 +1,19 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import model.Benefits
+
+<div class="package">
+    <div class="package__item">
+        @fragments.tier.tierHeaderPromo(tier, isStacked=true)
+    </div>
+    <div class="package__outer">
+        <div class="package__inner">
+            <div class="package__description copy">
+                @Benefits.details(tier).desc
+            </div>
+            <div class="package__actions">
+                <a class="action action--fullwidth u-no-bottom-margin" href="/join/@tier.toString.toLowerCase/enter-details" data-link-name="Become a @tier">Become a @tier</a>
+            </div>
+        </div>
+    </div>
+</div>
