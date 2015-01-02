@@ -2,11 +2,15 @@
 
 <div class="price-info-inline">
     @for(ticket <- event.generalReleaseTicket) {
-        @for(pricing <- ticket.cost) {
-            <div class="price-info-inline__value">@pricing.formattedPrice</div>
-            <div class="price-info-inline__trail">
-                Partners/Patrons: @pricing.discountPrice
-            </div>
+        @if(ticket.free) {
+            <div class="price-info-inline__value">Free</div>
+        } else {
+            @for(pricing <- ticket.cost) {
+                <div class="price-info-inline__value">@pricing.formattedPrice</div>
+                <div class="price-info-inline__trail">
+                    Partners/Patrons: @pricing.discountPrice
+                </div>
+            }
         }
     }
 </div>
