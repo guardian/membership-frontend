@@ -159,6 +159,22 @@
         </table>
     }
 
+    @pattern("Lists - Inline List") {
+        <ul class="inline-list">
+            <li class="inline-list__item"><a href="#">Item 1</a></li>
+            <li class="inline-list__item"><a href="#">Item 2</a></li>
+            <li class="inline-list__item"><a href="#">Item 3</a></li>
+        </ul>
+    }
+
+    @pattern("Lists - Inline List w/Dividers", "Inline list with divider modifier") {
+        <ul class="inline-list inline-list--divided">
+            <li class="inline-list__item"><a href="#">Item 1</a></li>
+            <li class="inline-list__item"><a href="#">Item 2</a></li>
+            <li class="inline-list__item"><a href="#">Item 3</a></li>
+        </ul>
+    }
+
     @pattern("Page Header") {
         @fragments.page.pageHeader("This a page headline", Some("This is a page header with a headline and intro text"))
     }
