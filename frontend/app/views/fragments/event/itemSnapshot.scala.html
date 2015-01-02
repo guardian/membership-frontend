@@ -1,0 +1,17 @@
+@(event: model.Eventbrite.RichEvent)
+
+<div class="event-snapshot" itemscope itemtype="http://schema.org/Event">
+    <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
+        <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+    </div>
+    <div class="event-snapshot__content">
+        <h2 class="event-snapshot__title h-info">
+            @if(event.isSoldOut){
+                <span class="event-status event-status--sold-out">Sold out</span>
+            }
+            <span itemprop="name">@event.name.text</span>
+        </h2>
+        @fragments.event.stats(event)
+        @fragments.pricing.priceInfoEvent(event)
+    </div>
+</div>

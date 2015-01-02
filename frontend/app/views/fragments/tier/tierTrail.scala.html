@@ -1,0 +1,18 @@
+@(
+    tier: com.gu.membership.salesforce.Tier.Tier,
+    caption: String = ""
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+
+<div class="tier-trail">
+    <h3 class="tier-trail__name">
+        <i class="icon icon--inline icon--medium icon-g-black"></i>
+        @tier
+    </h3>
+    @if(caption){
+        <div class="tier-trail__caption">
+            @caption
+        </div>
+    }
+</div>

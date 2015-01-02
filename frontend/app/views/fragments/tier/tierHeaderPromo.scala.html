@@ -1,11 +1,12 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, isStacked: Boolean = false)
+@(tier: com.gu.membership.salesforce.Tier.Tier, isStacked: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
 
-<div class="tier-header-promo tone-@tier.toString.toLowerCase--border">
-    <h3 class="tier-header-promo__title">
-        <i class="icon icon--inline icon--medium icon-g-black"></i>
-        @tier
-    </h3>
+<div class="tier-header-promo">
+    <div class="tier-header-promo__title">
+        <div class="tier-trail">
+            @fragments.tier.tierTrail(tier)
+        </div>
+    </div>
     <div class="tier-header-promo__pricing">
-        @fragments.pricing.priceInfo(tier=tier)
+        @fragments.pricing.priceInfo(tier)
     </div>
 </div>
