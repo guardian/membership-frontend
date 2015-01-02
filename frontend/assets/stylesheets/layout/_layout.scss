@@ -129,3 +129,13 @@ body {
         padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
     }
 }
+
+// TODO: Too broad. What is this affecting?
+// Only on downgrade page??
+.secondary-content {
+    flex-basis: 16em;
+    order: 2;
+    @if $old-ie {
+        float: left;
+    }
+}

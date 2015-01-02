@@ -1,6 +1,9 @@
+/* ==========================================================================
+   Login
+   ========================================================================== */
+
 .section-signin,
-.section-payment,
-.section-two-thirds {
+.section-payment {
     background-color: $white;
     margin: 0 auto;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
