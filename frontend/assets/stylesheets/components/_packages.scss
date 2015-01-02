@@ -255,7 +255,8 @@
         padding: 0;
     }
     .package__description {
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: rem($gs-gutter);
+        p { margin-bottom: 0; }
     }
     .package__actions {
         position: absolute;

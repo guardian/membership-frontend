@@ -1,4 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier, descriptionAnchor: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 
@@ -10,7 +10,10 @@
     </div>
     <div class="package__content">
         <div class="package__description copy hidden-tablet">
-            @Benefits.details(tier).desc
+            <p>@Benefits.details(tier).desc</p>
+            @if(descriptionAnchor) {
+                <p><a href="@descriptionAnchor">What's included</a></p>
+            }
         </div>
         <div class="package__actions">
             <a

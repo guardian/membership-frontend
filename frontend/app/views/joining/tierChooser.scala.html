@@ -17,13 +17,13 @@
                 <h2 class="h-section h-section--lead">Choose a membership tier to continue with your booking</h2>
                 <ul class="grid grid--slim grid--bordered grid--3up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Friend)
+                        @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner)
+                        @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Patron)
+                        @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
                     </li>
                 </ul>
             </div>
@@ -40,9 +40,15 @@
         <section class="page-section">
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
-                @fragments.tier.packageStack(Tier.Friend, "Benefits")
-                @fragments.tier.packageStack(Tier.Partner, "All Friend benefits, plus")
-                @fragments.tier.packageStack(Tier.Patron, "All Partner benefits, plus")
+                <div id="package-benefits-friend">
+                    @fragments.tier.packageStack(Tier.Friend, "Benefits")
+                </div>
+                <div id="package-benefits-partner">
+                    @fragments.tier.packageStack(Tier.Partner, "All Friend benefits, plus")
+                </div>
+                <div id="package-benefits-patron">
+                    @fragments.tier.packageStack(Tier.Patron, "All Partner benefits, plus")
+                </div>
             </div>
         </section>
 
