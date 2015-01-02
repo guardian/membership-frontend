@@ -1,6 +1,6 @@
-@(title: String, introOpt: Option[String] = None)
+@(title: String, introOpt: Option[String] = None, isInline: Boolean = false)
 
-<section class="page-header">
+<section class="page-header@if(!isInline){ page-header--aligned}">
     <h1 class="page-headline">@title</h1>
     @for(intro <- introOpt) {
         <p class="page-intro">@intro</p>
