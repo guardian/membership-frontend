@@ -7,56 +7,57 @@
 
 .price-info {
     position: relative;
-    display: table;
-    width: 100%;
-    border-spacing: 0;
     max-width: rem(gs-span(4) - $gs-gutter);
 
     @include mq(mobileLandscape) {
         max-width: rem(gs-span(4) - $gs-gutter * 2);
     }
-}
-.price-info__item {
-    text-align: left;
-    display: table-cell;
-    vertical-align: top;
-    width: 50%;
-    height: 100%;
-    padding-right: $gutter-width-fluid;
-    border-right: 1px solid $black-trans;
-}
-.price-info__item--last {
-    text-align: right;
-    padding-right: 0;
-    padding-left: $gutter-width-fluid;
-    border-right: 0 none;
-}
-.price-info__detail {
-    // Remove spacing between inline-block elements
-    font-size: 0;
-}
-.price-info__value,
-.price-info__date {
-    display: inline-block;
-}
-.price-info__value {
-    @include fs-header(4);
-}
-.price-info__value--free {
-    font-weight: normal;
-}
-.price-info__date {
-    @include fs-headline(2);
-}
-.price-info__saving {
-    @include fs-textSans(1);
-    display: block;
-    text-align: left;
 
     @include mq(tablet) {
-        margin-top: -3px;
+        display: table;
+        width: 100%;
+        border-spacing: 0;
     }
 }
+    .price-info__item {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .price-info__item--split {
+        border-right: 1px solid $black-trans;
+        padding-right: rem($gs-gutter / 2);
+    }
+    .price-info__item--last {
+        padding-right: 0;
+        padding-left: rem($gs-gutter / 2);
+        border-right: 0 none;
+    }
+    .price-info__detail {
+        /* Remove spacing between inline-block elements */
+        font-size: 0;
+    }
+    .price-info__value,
+    .price-info__date {
+        display: inline-block;
+    }
+    .price-info__value {
+        @include fs-header(4);
+    }
+    .price-info__value--free {
+        font-weight: normal;
+    }
+    .price-info__date {
+        @include fs-headline(2);
+    }
+    .price-info__saving {
+        @include fs-textSans(1);
+        display: block;
+        text-align: left;
+
+        @include mq(tablet) {
+            margin-top: -3px;
+        }
+    }
 
 // Reversed colour modifiers
 .price-info--friend,
@@ -67,9 +68,51 @@
     }
 }
 
+/**
+ * Price info Layout
+ *
+ * Default pricing info components stretch to fill the available width on desktop only
+ * if canFlex / price-info--flex is added, fill width at all times.
+ *
+ * Mixin to share repeated styles.
+ */
+@mixin pricing-flex() {
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+
+    .price-info__item {
+        display: table-cell;
+        vertical-align: top;
+        text-align: left;
+        width: 50%;
+        height: 100%;
+        padding-right: $gutter-width-fluid;
+
+    }
+    .price-info__item--single,
+    .price-info__item--last {
+        text-align: right;
+    }
+    .price-info__item--last {
+        padding-right: 0;
+        padding-left: $gutter-width-fluid;
+    }
+}
+
+.price-info {
+    @include mq(desktop) {
+        @include pricing-flex();
+    }
+}
+
+.price-info--flex {
+    @include pricing-flex();
+}
+
 /* Price Info - Inline
    ========================================================================== */
-// Miminal inline version of price info component
+/* Miminal inline version of price info component */
 
 .price-info-inline {
     padding-bottom: rem($gs-baseline);
