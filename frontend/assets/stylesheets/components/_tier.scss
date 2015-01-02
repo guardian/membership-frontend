@@ -108,14 +108,33 @@
 .tier-header-promo {
     @include clearfix;
 }
-@include mq(desktop) {
-    .tier-header-promo__title {
-        margin-bottom: rem($gs-gutter * 2);
-    }
     .tier-header-promo__pricing {
-        padding: rem($gs-baseline / 2) 0;
         border: solid $mem-blue-border;
-        border-width: 1px 0;
-        min-height: rem($gs-gutter * 3);
+        border-width: 0;
     }
-}
+    @include mq(tablet) {
+        .tier-header-promo__title,
+        .tier-header-promo__pricing {
+            width: 50%;
+            float: left;
+        }
+        .tier-header-promo__pricing {
+            border-width: 0 0 1px 0;
+            padding: rem($gs-baseline / 2) 0;
+            min-height: rem($gs-gutter * 2);
+        }
+    }
+    @include mq(desktop) {
+        .tier-header-promo__title,
+        .tier-header-promo__pricing {
+            float: none;
+            width: auto;
+        }
+        .tier-header-promo__title {
+            margin-bottom: rem($gs-gutter * 2);
+        }
+        .tier-header-promo__pricing {
+            border-width: 1px 0;
+            min-height: rem($gs-gutter * 3);
+        }
+    }

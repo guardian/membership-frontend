@@ -8,7 +8,7 @@
 }
 .stat-item {
     @include clearfix;
-    @include fs-data(3);
+    @include fs-data(4);
     border-bottom: 1px dotted $c-neutral3;
     padding-bottom: rem($gs-baseline / 2);
     margin-bottom: rem($gs-baseline / 2);

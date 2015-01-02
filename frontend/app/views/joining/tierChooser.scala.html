@@ -28,10 +28,12 @@
                 </ul>
             </div>
             <div class="page-section__supplementary">
-                @for(event <- eventOpt) {
-                    <h4 class="h-subsection">You're buying tickets for:</h4>
-                    @fragments.event.itemSnapshot(event)
-                }
+                <div class="aside aside--section">
+                    @for(event <- eventOpt) {
+                        <h4 class="aside__intro">You're buying tickets for:</h4>
+                        @fragments.event.itemSnapshot(event)
+                    }
+                </div>
             </div>
         </section>
 

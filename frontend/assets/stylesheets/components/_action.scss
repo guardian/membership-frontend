@@ -98,16 +98,17 @@
     height: rem(40px);
     margin: 0;
     &:after {
-        margin-top: rem(3px);
+        margin-top: 3px;
     }
     .action__label {
         display: none;
     }
-    @include mq(desktop) {
-        width: 100%;
+    @include mq(tablet) {
         height: auto;
+        width: 100%;
+        max-width: rem(gs-span(3));
         &:after {
-            margin-top: rem(2px);
+            margin-top: 2px;
         }
         .action__label {
             display: inline-block;

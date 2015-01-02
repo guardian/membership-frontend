@@ -140,8 +140,13 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: rem($gs-gutter * 1.6);
 }
 .page-section__content {
-    @include mq(desktop) {
+    @include mq(tablet) {
         float: left;
+        width: 75% - $gutter-width-fluid;
+        margin-right: $gutter-width-fluid;
+    }
+    @include mq(desktop) {
+        margin-right: 0;
         width: rem(gs-span(9));
     }
     @include mq(mem-full) {
@@ -151,9 +156,12 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 }
 .page-section__supplementary {
     clear: both;
-    @include mq(desktop) {
+    @include mq(tablet) {
         clear: none;
         float: right;
+        width: 25%;
+    }
+    @include mq(desktop) {
         width: rem(gs-span(3));
     }
 }

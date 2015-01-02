@@ -254,18 +254,29 @@
     .package__content {
         padding: 0;
     }
+    .package__description {
+        margin-bottom: rem($gs-baseline);
+    }
     .package__actions {
         position: absolute;
         bottom: rem($gs-gutter / 2);
         right: rem($gs-gutter / 2);
     }
-    @include mq(desktop) {
+    @include mq(tablet) {
         .package__content {
-            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
+            margin-left: 50%;
+            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2) 0;
         }
         .package__actions {
             position: static;
         }
+    }
+    @include mq(desktop) {
+        .package__content {
+            margin-left: 0;
+            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
+        }
+
     }
 }
 

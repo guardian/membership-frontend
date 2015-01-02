@@ -1,17 +1,21 @@
-@(event: model.Eventbrite.RichEvent)
+@(event: model.Eventbrite.RichEvent, showStats: Boolean = true, showPricing: Boolean = true)
 
 <div class="event-snapshot" itemscope itemtype="http://schema.org/Event">
     <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
         <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
     </div>
     <div class="event-snapshot__content">
-        <h2 class="event-snapshot__title h-info">
+        <h2 class="event-snapshot__title">
             @if(event.isSoldOut){
                 <span class="event-status event-status--sold-out">Sold out</span>
             }
             <span itemprop="name">@event.name.text</span>
         </h2>
-        @fragments.event.stats(event)
-        @fragments.pricing.priceInfoEvent(event)
+        @if(showStats) {
+            @fragments.event.stats(event)
+        }
+        @if(showPricing) {
+            @fragments.pricing.priceInfoEvent(event)
+        }
     </div>
 </div>

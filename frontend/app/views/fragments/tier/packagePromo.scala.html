@@ -4,10 +4,12 @@
 
 <div class="package package--promo tone-@tier.toString.toLowerCase--border">
     <div class="package__header">
-        @fragments.tier.tierHeaderPromo(tier, isStacked=true)
+        <a href="/join/@tier.toString.toLowerCase/enter-details" class="no-underline minimal-link">
+            @fragments.tier.tierHeaderPromo(tier)
+        </a>
     </div>
     <div class="package__content">
-        <div class="package__description copy hidden-desktop">
+        <div class="package__description copy hidden-tablet">
             @Benefits.details(tier).desc
         </div>
         <div class="package__actions">

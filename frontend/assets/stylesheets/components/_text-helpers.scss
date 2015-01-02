@@ -74,16 +74,6 @@
     }
 }
 
-.h-subsection {
-    @include fs-bodyHeading(2);
-    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
-    border-top: 1px solid $c-border-brand;
-}
-
-.h-info {
-    @include fs-header(1)
-}
-
 /* Text Helpers - Headings
    ========================================================================== */
 
