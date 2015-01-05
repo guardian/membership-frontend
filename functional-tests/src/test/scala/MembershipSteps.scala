@@ -257,7 +257,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ISeeAnErrorMessageWhenMyExpiryDateIsInThePast = {
     val errorMessage = new PaymentPage(driver).cardWidget.enterCardNumber(validCardNumber)
       .enterCardSecurityCode("666").enterCardExpirationMonth("1")
-      .enterCardExpirationYear("2014").focusOnCvc.isErrorMessageDisplayed
+      .enterCardExpirationYear("2015").focusOnCvc.isErrorMessageDisplayed
     Assert.assert(errorMessage, true, "We should display an error message when the card is expired")
     this
   }
@@ -266,7 +266,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val initialPrice = new EventPage(driver).getEventPrice.replace("£", "").toInt
     IAmLoggedIn
     IClickOnAnEvent
-    val discountedPrice = new EventPage(driver).getDiscountedEvent.replace("£", "").toInt
+    val discountedPrice = new EventPage(driver).getDiscountedEvent.replace("Partners/Patrons £", "").toInt
     Assert.assert(initialPrice > discountedPrice, true, "Member receives a discount")
     this
   }
