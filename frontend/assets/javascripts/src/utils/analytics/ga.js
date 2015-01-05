@@ -25,6 +25,11 @@ define([], function () {
         }
     }
 
+    function isExternalLink(url) {
+        var external = url.replace('http://','').replace('https://','').split('/')[0];
+        return (external.length) ? true : false;
+    }
+
     // wrapper for tracking events via google analytics
     // (because analytics can be removed for test user mode)
     function trackEvent(category, action, label, data) {
@@ -40,15 +45,23 @@ define([], function () {
         if (elems.length) {
             [].forEach.call(elems, function( el ) {
                 el.addEventListener('click', function(event) {
+
                     var targetElement = event.target || event.srcElement,
                         action = targetElement.getAttribute(TRACKING_NAME),
                         url = targetElement.getAttribute('href');
-                    event.preventDefault();
+
+                    if (url && isExternalLink(url)) {
+                        event.preventDefault();
+                    }
+
                     trackEvent('outbound', action, url, {
                         'hitCallback': function () {
-                            document.location = url;
+                            if (url) {
+                                document.location = url;
+                            }
                         }
                     });
+
                 });
             });
         }
@@ -56,6 +69,8 @@ define([], function () {
 
     return {
         init: init,
-        trackEvent: trackEvent
+        isExternalLink: isExternalLink,
+        trackEvent: trackEvent,
+        trackOutboundLinks: trackOutboundLinks
     };
 });

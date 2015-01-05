@@ -313,6 +313,13 @@
     min-height: rem(($gs-baseline / 3) * 40);
 }
 
+.select-minimal {
+    border: 0;
+    outline: 0;
+    background-color: $white;
+    font-weight: bold;
+}
+
 [type=checkbox],
 [type=radio] {
     float: left;

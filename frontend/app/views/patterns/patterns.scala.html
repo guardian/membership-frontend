@@ -42,6 +42,21 @@
         <a class="action action--fullwidth" href="#">Action</a>
     }
 
+    @pattern("Toggle Component - Button", "JS toggle component") {
+        <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
+    @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
+        <button class="js-toggle action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
+        <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
+    }
+
+    @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
+        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
+        <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
     @pattern("Base - Inline Text Elements") {
         <div class="copy">
             <p><a href="#">This is a text link</a></p>
@@ -67,8 +82,7 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, delectus. Optio sequi, aperiam obcaecati sunt minima dicta, quidem molestias adipisci deserunt consequuntur ad nostrum. Nihil voluptates aut, dolorem quidem minus!</p>
             <ol>
                 <li>This is an ordered list.</li>
-                <li>
-                    This is the second item, which contains a sub list
+                <li>This is the second item, which contains a sub list
                     <ol>
                         <li>This is the sub list, which is also ordered.</li>
                         <li>It has two items.</li>
@@ -76,11 +90,26 @@
                 </li>
                 <li>This is the final item on this list.</li>
             </ol>
-            <h3>This is a third level heading</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
+            <blockquote>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
+            </blockquote>
+            <p><em>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam repellat modi architecto iure unde possimus aliquam soluta provident commodi, eos, dicta magnam ad vero cum, labore amet odit tenetur consequatur.</em></p>
+            <h2>This is an inline second level heading</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</p>
             <p><em>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam repellat modi architecto iure unde possimus aliquam soluta provident commodi, eos, dicta magnam ad vero cum, labore amet odit tenetur consequatur.</em></p>
-            <h4>This is a fourth level heading</h4>
+            <h3>This is a third level heading</h3>
+            <p>Single level list:</p>
             <ul>
+                <li>England</li>
+                <li>Scotland</li>
+                <li>Wales</li>
+                <li>Northern Ireland</li>
+            </ul>
+            <h4>This is a fourth level heading</h4>
+            <p>Multi-level list:</p>
+            <ul>
+                <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a href="#">Inline link</a>. Tempore iusto quam incidunt, ullam exercitationem provident beatae consectetur enim odio cum sint, praesentium nemo? Suscipit quidem explicabo quaerat, possimus eaque ipsa.</li>
                 <li>
                     United Kingdom of Great Britain and Northern Ireland:
                     <ul>
@@ -128,21 +157,6 @@
                 </tr>
             </tbody>
         </table>
-    }
-
-    @pattern("Toggle Component - Button", "JS toggle component") {
-        <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
-        <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
-    }
-
-    @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
-        <button class="js-toggle action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
-        <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
-    }
-
-    @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
-        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
-        <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
     @pattern("Page Header") {
@@ -216,33 +230,35 @@
     }
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
-        <ul class="events-list events-list--items-3 u-unstyled">
-            @for(event <- eventPortfolio.orderedEvents.slice(0, 1)) {
-                @fragments.event.item(event, isHero=true)
-            }
-        </ul>
+        @fragments.event.item(eventPortfolio.orderedEvents.head, isHero=true)
     }
 
     @pattern("Event – Full", "A standard event, used in a number of places") {
-        <ul class="events-list events-list--items-3 u-unstyled">
+        <ul class="grid grid--3up">
             @for(event <- eventPortfolio.normal.slice(0, 3)) {
-                @fragments.event.item(event)
+                <li class="grid__item">
+                    @fragments.event.item(event)
+                </li>
             }
         </ul>
     }
 
     @pattern("Event – Minimal", "Used currently to list recent past events, where pricing/dates info is redundant") {
-        <ul class="events-list events-list--items-3 u-unstyled">
+        <ul class="grid grid--3up">
             @for(event <- eventPortfolio.normal.slice(0, 3)) {
-                @fragments.event.item(event, false, isMinimal=true)
+                <li class="grid__item">
+                    @fragments.event.item(event, false, isMinimal=true)
+                </li>
             }
         </ul>
     }
 
     @pattern("Event – Minimal & Card", "An even more minimal theme which splits the photo and event title") {
-        <ul class="events-list events-list--items-3 u-unstyled">
+        <ul class="grid grid--2up">
             @for(event <- eventPortfolio.normal.slice(0, 3)) {
-                @fragments.event.item(event, false, isMinimal=true, isCard=true)
+                <li class="grid__item">
+                    @fragments.event.item(event, false, isMinimal=true, isCard=true)
+                </li>
             }
         </ul>
     }

@@ -46,18 +46,6 @@
     overflow: hidden;
 }
 
-@mixin faux-bullet-point($color: $c-neutral3, $right-space: 2px) {
-    &:before {
-        display: inline-block;
-        content: '';
-        @include border-radius(6px);
-        height: rem(12px);
-        width: rem(12px);
-        margin-right: rem($right-space);
-        background-color: $color;
-    }
-}
-
 // Hide content visually, still readable by screen readers
 @mixin u-h {
     border: 0 !important;

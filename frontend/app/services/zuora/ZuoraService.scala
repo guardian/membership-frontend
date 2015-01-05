@@ -18,7 +18,6 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.xml.PrettyPrinter
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -75,12 +74,12 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
     }.map { result =>
       metrics.putResponseCode(result.status, "POST")
 
-      reader.read(result.xml) match {
+      reader.read(result.body) match {
         case Left(error) =>
           if (error.fatal) {
             metrics.recordError
             Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
-            Logger.error(new PrettyPrinter(70, 2).format(result.xml))
+            Logger.error(result.body)
           }
 
           throw error

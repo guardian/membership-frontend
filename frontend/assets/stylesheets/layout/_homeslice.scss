@@ -391,9 +391,10 @@
         background-color: $c-neutral6;
 
         .home-slice__headline {
-            padding: rem($gs-gutter);
+            padding: rem($gs-gutter / 2);
 
             @include mq(tablet) {
+                padding: rem($gs-gutter);
                 padding-bottom: rem($gs-gutter * 4);
             }
         }

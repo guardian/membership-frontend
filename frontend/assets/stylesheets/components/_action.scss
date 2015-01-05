@@ -3,25 +3,24 @@
    ========================================================================== */
 
 %action {
+    @include fs-textSans(4);
+    font-weight: bold;
+    text-decoration: none;
+    -moz-osx-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
     margin: $gs-baseline 0;
     display: inline-block;
     cursor: pointer;
     border: 0;
     text-align: left;
-    text-decoration: none;
-    font-weight: bold;
-    @include fs-textSans(4);
     width: 100%;
     max-width: rem($gs-gutter * 15);
-    padding: rem(8px) rem(8px) rem(8px) rem(18px);
-    -moz-osx-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
+    padding: rem(8px) rem($gs-gutter);
     @include border-radius(50%);
     vertical-align: bottom;
     outline: none;
 
-    @include mq(mobileLandscape){
+    @include mq(mobileLandscape) {
         width: auto;
         min-width: rem(80px);
         max-width: none;
@@ -29,16 +28,17 @@
 }
 
 .action {
-    background-color: $mem-buttonBlue;
-    color: $white;
+
     @extend %action;
 
+    &,
     &:visited,
     &:hover,
     &:focus,
     &:active {
+        color: $white;
+        background-color: $mem-buttonBlue;
         text-decoration: none;
-        color: #ffffff;
     }
 
     &:focus,
@@ -54,18 +54,17 @@
         }
         content: '';
         float: right;
-        margin: rem(2px) 0 0 rem(30px);
+        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem(30px);
     }
-}
 
-.action[disabled] {
-    &,
-    &:hover,
-    &:focus {
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus {
         background-color: $c-neutral5;
     }
 }
 
+// TODO: Specificy issues
 // this variant moves the arrow to the other side
 // and hides the one on the right
 .action.action--arrow-left {
@@ -83,28 +82,8 @@
     }
 }
 
-
-.action--toggle {
-    margin-bottom: $gutter-width-fluid;
-    &:before {
-        @extend .icon-plus;
-        content: '';
-        float: left;
-        margin: rem(2px) rem(18px) 0 0;
-    }
-
-    &:after {
-        display: none;
-    }
-
-    &.is-toggled,
-    .action--toggle--toggled {
-        &:before {
-            @extend .icon-minus;
-        }
-    }
-}
-
+// TODO: Only used in cta.js.
+// Refactor to add disabled attribute
 .action--disabled {
     &,
     &:visited,
@@ -118,6 +97,44 @@
     cursor: default;
 }
 
+/* Actions - Secondary Modifiers
+   ========================================================================== */
+
+.action--secondary-button {
+    &,
+    &:visited,
+    &:active,
+    &:focus {
+        color: $black;
+        background-color: $offWhite;
+    }
+    &:hover {
+        color: $black;
+        background-color: darken($offWhite, 15%);
+    }
+}
+
+// TODO: These classes are only used inside the staff email change modal.
+// Should be made more generic, or into clearer modfiers.
+.action-secondary-small {
+    color: $mem-buttonBlue;
+    border: 1px solid rgba(24, 104, 153, .25);
+    background-color: $white;
+    @extend %action;
+
+    &:hover {
+        border: 1px solid $mem-buttonBlue;
+    }
+}
+.action-secondary-small--modal {
+    @include mq(mobileLandscape) {
+        margin-left: rem($gs-gutter / 2);
+    }
+}
+
+/* Actions - Booking Modifiers
+   ========================================================================== */
+
 .action--buy-event-ticket-details {
     background-color: $black;
     &:hover {
@@ -130,114 +147,62 @@
     }
 }
 
-.action--fullwidth {
-    width: 100%;
-}
+.action--sold-out-event-ticket-details {
+    background-color: $black;
+    padding-right: rem(18px);
 
-.action--external {
-    background-color: transparent;
-    border: 1px solid transparentize($white, 0.5);
-    width: 100%;
-
-    &:hover,
-    &:focus,
-    &:active {
-        border-color: $white;
+    &:hover {
+        background-color: $black;
+        cursor: default;
     }
-
-    @include mq($until: tablet) {
-        margin-top: rem($gs-baseline);
-        margin-bottom: 0;
+    &:after {
+        display: none;
     }
 
     @include mq(tablet) {
-        width: auto;
+        float: left;
+        margin: rem(6px $gs-gutter 0 0);
+        min-width: 0;
     }
-}
-
-.action--search {
-    .theme--guardian-live & {
-        background-color: $mem-live-top;
-        color: $white;
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: $mem-live-accent;
-        }
-    }
-
-    .theme--masterclasses & {
-        background-color: $mem-mc-top;
-        color: $c-neutral1;
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: $mem-mc-accent;
-        }
-    }
-
-}
-
-.action--sold-out-event-ticket-details {
-  background-color: $black;
-  padding-right: rem(18px);
-
-  @include mq(tablet) {
-    float: left;
-    margin: rem(6px $gs-gutter 0 0);
-    min-width: 0;
-  }
-
-  &:hover {
-    background-color: $black;
-    cursor: default;
-  }
-
-  &:after {
-    display: none;
-  }
 }
 
 .action--buy-event-content-sidebar {
-  min-width: 100%;
+    min-width: 100%;
 
-  .theme--guardian-live & {
-    background-color: $mem-live-top;
+    .theme--guardian-live & {
+        background-color: $mem-live-top;
 
-    &:hover {
-      background-color: darken($mem-live-top, 5%);
+        &:hover {
+            background-color: darken($mem-live-top, 5%);
+        }
     }
-  }
-
-  .theme--masterclasses & {
-    color: $c-neutral1;
-    background-color: $mem-mc-top;
-    &:hover {
-      background-color: darken($mem-mc-top, 5%);
+    .theme--masterclasses & {
+        color: $c-neutral1;
+        background-color: $mem-mc-top;
+        &:hover {
+            background-color: darken($mem-mc-top, 5%);
+        }
+        &:after {
+            @extend .icon-arrow-right-black;
+        }
     }
-    &:after {
-      @extend .icon-arrow-right-black;
-    }
-  }
 }
 
 .action--sold-out-event-content-sidebar {
-  min-width: 100%;
+    min-width: 100%;
 
-  .theme--guardian-live & {
-    background-color: $mem-live-top;
-  }
-
-  .theme--masterclasses & {
-    background-color: $mem-mc-top;
-  }
-
-  &:hover {
-    cursor: default;
-  }
-  &:after {
-    display: none;
-  }
+    .theme--guardian-live & {
+        background-color: $mem-live-top;
+    }
+    .theme--masterclasses & {
+        background-color: $mem-mc-top;
+    }
+    &:hover {
+        cursor: default;
+    }
+    &:after {
+        display: none;
+    }
 }
 
 .action--join,
@@ -262,79 +227,11 @@
     }
 }
 
-.action--secondary-button {
-    background-color: $offWhite;
-    color: $black;
-    padding: rem(8px) rem(8px) rem(8px) rem(18px);
-
-    &:visited,
-    &:active,
-    &:focus {
-        background-color: $offWhite;
-        color: $black;
-    }
-    &:hover {
-        background-color: darken($offWhite, 15%);
-        color: $black;
-    }
-}
-
-.action-secondary-small {
-    color: $mem-buttonBlue;
-    border: 1px solid rgba(24, 104, 153, .25);
-    background-color: $white;
-    @extend %action;
-
-    &:hover {
-        border: 1px solid $mem-buttonBlue;
-    }
-}
-
-.action-secondary-small--modal {
-    @include mq(mobileLandscape) {
-        margin-left: rem($gs-gutter / 2);
-    }
-}
-
-.i-wait {
-    display: none;
-}
-
-.action-secondary-small--no-margin,
-.action--no-margin {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-.action--no-top-margin {
-    margin-top: 0;
-}
-.action--no-bottom-margin {
-    margin-bottom: 0;
-}
-
-.actions.js-waiting {
-
-    .i-wait {
-        display: inline-block;
-        vertical-align: middle;
-
-        .i-wait__throbber {
-            vertical-align: middle;
-            width: rem(21px);
-            height: rem(21px);
-        }
-
-        .i-wait__message {
-            vertical-align: middle;
-            @include fs-bodyCopy(1);
-            color: $c-neutral2;
-            margin-left: rem(2px);
-        }
-    }
-}
+/* Actions - CTA
+   ========================================================================== */
 
 .action-cta {
-    color: #ffffff;
+    color: $white;
     border: 0;
     display: inline-block;
     cursor: pointer;
@@ -366,6 +263,73 @@
     }
 }
 
+/* Actions - Utility Modifiers
+   ========================================================================== */
+
+.action--toggle {
+   margin-bottom: $gutter-width-fluid;
+   &:before {
+       @extend .icon-plus;
+       content: '';
+       float: left;
+       margin: rem(2px) rem(18px) 0 0;
+   }
+   &:after {
+       display: none;
+   }
+
+   &.is-toggled,
+   .action--toggle--toggled {
+       &:before {
+           @extend .icon-minus;
+       }
+   }
+}
+
+.action--external {
+    background-color: transparent;
+    border: 1px solid transparentize($white, 0.5);
+    width: 100%;
+
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: $white;
+    }
+
+    @include mq($until: tablet) {
+        margin-top: rem($gs-baseline);
+        margin-bottom: 0;
+    }
+
+    @include mq(tablet) {
+        width: auto;
+    }
+}
+
+// TODO: Refactor to not need theme classes
+// Currently not styled when used outside of a theme
+.action--search {
+    .theme--guardian-live & {
+        background-color: $mem-live-top;
+        color: $white;
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $mem-live-accent;
+        }
+    }
+    .theme--masterclasses & {
+        background-color: $mem-mc-top;
+        color: $c-neutral1;
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $mem-mc-accent;
+        }
+    }
+}
+
 .clipboard-button {
     text-align: center;
     border-radius: rem(4px);
@@ -377,5 +341,51 @@
     }
     &.zeroclipboard-is-active {
         background-color: $white;
+    }
+}
+
+/* Actions - Display Modifiers
+   ========================================================================== */
+
+.action--fullwidth {
+    width: 100%;
+}
+
+// DEPRECATED: Prefer margin utility classes in _helpers.scss
+.action--no-margin {
+   margin-top: 0;
+   margin-bottom: 0;
+}
+.action--no-top-margin {
+    margin-top: 0;
+}
+.action--no-bottom-margin {
+   margin-bottom: 0;
+}
+
+/* Wait
+   ========================================================================== */
+// TODO: Document how this is used. i- suggests an icon prefix?
+
+.i-wait {
+    display: none;
+}
+.actions.js-waiting {
+    .i-wait {
+        display: inline-block;
+        vertical-align: middle;
+
+        .i-wait__throbber {
+            vertical-align: middle;
+            width: rem(21px);
+            height: rem(21px);
+        }
+
+        .i-wait__message {
+            vertical-align: middle;
+            @include fs-bodyCopy(1);
+            color: $c-neutral2;
+            margin-left: rem(2px);
+        }
     }
 }

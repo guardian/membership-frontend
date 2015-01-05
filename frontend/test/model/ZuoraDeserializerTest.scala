@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 class ZuoraDeserializerTest extends Specification {
   "Authentication" should {
     "have the correct token and url on success" in {
-      val login = authenticationReader.read(Resource.getXML("model/zuora/authentication-success.xml")).right.get
+      val login = authenticationReader.read(Resource.get("model/zuora/authentication-success.xml")).right.get
 
       login.token mustEqual "yiZutsU55oKFQDR28lv210d7iWh8FVW9K45xFeFWMov7OSlRRI0soZ40DHmdLokscEjaUOo7Jt4sFxm_QZPyAhJdpR9yIxi_"
       login.url mustEqual "https://apisandbox.zuora.com/apps/services/a/58.0"
@@ -19,27 +19,34 @@ class ZuoraDeserializerTest extends Specification {
 
   "any ZuoraResult" should {
     "return a FaultError" in {
-      val error = authenticationReader.read(Resource.getXML("model/zuora/fault-error.xml")).left.get
+      val error = authenticationReader.read(Resource.get("model/zuora/fault-error.xml")).left.get
       error mustEqual FaultError("fns:INVALID_VALUE", "Invalid login. User name and password do not match.")
       error.fatal must beTrue
     }
 
     "return a fatal ResultError" in {
-      val error = subscribeResultReader.read(Resource.getXML("model/zuora/result-error-fatal.xml")).left.get
+      val error = subscribeResultReader.read(Resource.get("model/zuora/result-error-fatal.xml")).left.get
       error mustEqual ResultError("API_DISABLED", "The API was disabled.")
       error.fatal must beTrue
     }
 
     "return a TRANSACTION_FAILED error as a non-fatal ResultError" in {
-      val error = subscribeResultReader.read(Resource.getXML("model/zuora/result-error-non-fatal.xml")).left.get
+      val error = subscribeResultReader.read(Resource.get("model/zuora/result-error-non-fatal.xml")).left.get
       error mustEqual ResultError("TRANSACTION_FAILED", "Transaction declined.generic_decline - Your card was declined.")
       error.fatal must beFalse
+    }
+
+    "return a XML_PARSE_ERROR InternalError if the XML is invalid" in {
+      subscribeResultReader.read(Resource.get("model/zuora/invalid.xml")).left.get match {
+        case error: InternalError => error.code mustEqual "XML_PARSE_ERROR"
+        case _ => ko("error is not of type InternalError")
+      }
     }
   }
 
   "AmendResult" should {
     "have multiple ids" in {
-      val amend = amendResultReader.read(Resource.getXML("model/zuora/amend-result.xml")).right.get
+      val amend = amendResultReader.read(Resource.get("model/zuora/amend-result.xml")).right.get
 
       amend.ids.length mustEqual 2
       amend.ids(0) mustEqual "2c92c0f847f1dcf00147fe0a50520707"
@@ -49,19 +56,19 @@ class ZuoraDeserializerTest extends Specification {
 
   "CreateResult" should {
     "have an id" in {
-      val create = createResultReader.read(Resource.getXML("model/zuora/create-result.xml")).right.get
+      val create = createResultReader.read(Resource.get("model/zuora/create-result.xml")).right.get
       create.id mustEqual "2c92c0f847ae39ba0147c580319a7208"
     }
   }
 
   "QueryResult" should {
     "have no results" in {
-      val query = queryResultReader.read(Resource.getXML("model/zuora/query-empty.xml")).right.get
+      val query = queryResultReader.read(Resource.get("model/zuora/query-empty.xml")).right.get
       query.results.size mustEqual 0
     }
 
     "have one result" in {
-      val query = queryResultReader.read(Resource.getXML("model/zuora/query-single.xml")).right.get
+      val query = queryResultReader.read(Resource.get("model/zuora/query-single.xml")).right.get
 
       query.results.size mustEqual 1
 
@@ -70,7 +77,7 @@ class ZuoraDeserializerTest extends Specification {
     }
 
     "have multiple results" in {
-      val query = queryResultReader.read(Resource.getXML("model/zuora/subscriptions.xml")).right.get
+      val query = queryResultReader.read(Resource.get("model/zuora/subscriptions.xml")).right.get
 
       query.results.size mustEqual 3
 
@@ -85,27 +92,27 @@ class ZuoraDeserializerTest extends Specification {
     }
 
     "not allow iterable queries" in {
-      val error = queryResultReader.read(Resource.getXML("model/zuora/query-not-done.xml")).left.get
+      val error = queryResultReader.read(Resource.get("model/zuora/query-not-done.xml")).left.get
       error.code mustEqual "QUERY_ERROR"
     }
   }
 
   "SubscribeResult" should {
     "have an id on success" in {
-      val subscribe = subscribeResultReader.read(Resource.getXML("model/zuora/subscribe-result.xml")).right.get
+      val subscribe = subscribeResultReader.read(Resource.get("model/zuora/subscribe-result.xml")).right.get
       subscribe.id mustEqual "8a80812a4733a5bb0147a1a4887f410a"
     }
   }
 
   "UpdateResult" should {
     "have an id" in {
-      val update = updateResultReader.read(Resource.getXML("model/zuora/update-result.xml")).right.get
+      val update = updateResultReader.read(Resource.get("model/zuora/update-result.xml")).right.get
       update.id mustEqual "2c92c0f847ae39b80147c584947b7ea3"
     }
   }
 
   "ZuoraQueryReader" should {
-    def query(resource: String) = queryResultReader.read(Resource.getXML(resource)).right.get.results
+    def query(resource: String) = queryResultReader.read(Resource.get(resource)).right.get.results
 
     "extract an Account" in {
       val accounts = accountReader.read(query("model/zuora/accounts.xml"))

@@ -34,7 +34,10 @@
     .header__primary {
         float: left;
         padding-left: rem($gs-gutter / 2);
-        padding-right: rem($gs-gutter / 2);
+        padding-right: 0;
+        @include mq(mobileLandscape) {
+            padding-right: rem($gs-gutter / 2);
+        }
     }
 
     .header__secondary {
@@ -81,7 +84,7 @@
 
     @include mq(tablet) {
         margin-right: rem(15px);
-        padding-top: rem(8px);
+        padding-top: rem(3px);
     }
 
     &:hover {
