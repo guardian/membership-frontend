@@ -1,18 +1,19 @@
 @(
     tier: com.gu.membership.salesforce.Tier.Tier,
-    caption: String = ""
+    showCaption: Boolean = true
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
+@import model.Benefits
 
 <div class="tier-trail">
     <h3 class="tier-trail__name">
         <i class="icon icon--inline icon--medium icon-g-@tier.toString.toLowerCase"></i>
         @tier
     </h3>
-    @if(caption){
+    @if(showCaption) {
         <div class="tier-trail__caption">
-            @caption
+            @Benefits.details(tier).leadin
         </div>
     }
 </div>

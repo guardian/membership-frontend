@@ -299,10 +299,6 @@
         @fragments.pricing.priceInfoEvent(eventPortfolio.orderedEvents.head)
     }
 
-    @pattern("Ticket Details") {
-        @fragments.event.ticketDetails(eventPortfolio.normal.head)
-    }
-
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
         @fragments.pricing.priceInfo(Tier.Partner)
     }
@@ -319,8 +315,12 @@
         @fragments.benefits.item(benefit=Benefits.benefitsFilter("book_tickets").head)
     }
 
-    @pattern("Tier Trail", "Tier name an optional caption") {
-        @fragments.tier.tierTrail(Tier.Partner, "All Friend benefits, plus")
+    @pattern("Tier Trail - Caption", "Tier name with caption") {
+        @fragments.tier.tierTrail(Tier.Partner)
+    }
+
+    @pattern("Tier Trail - No Caption", "Tier name with no caption") {
+        @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
     @pattern("Tier Header - Friend") {
@@ -356,7 +356,7 @@
     }
 
     @pattern("Package - Stack") {
-        @fragments.tier.packageStack(Tier.Partner, "All Friend benefits, plus")
+        @fragments.tier.packageStack(Tier.Partner)
     }
 
     @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
