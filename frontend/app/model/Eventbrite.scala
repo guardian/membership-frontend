@@ -1,6 +1,7 @@
 package model
 
 import com.netaporter.uri.Uri
+import model.Grid.Asset
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.data.validation.ValidationError
@@ -11,7 +12,7 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
 import configuration.Config
-import services.{GridService, MasterclassData}
+import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
 import com.netaporter.uri.dsl._
 
@@ -150,17 +151,9 @@ object Eventbrite {
     implicit def eventOptToEBEventOpt(eventOpt: Option[RichEvent]) = eventOpt.map(_.event)
   }
 
-  case class GuLiveEvent(event: EBEvent) extends RichEvent {
-    val gridService = GridService
+  case class GuLiveEvent(event: EBEvent, asset: Option[Asset]) extends RichEvent {
 
-    val imgUrl = {
-      val imageOpt = event.description.flatMap(_.mainImageUrl)
-
-      imageOpt match {
-        case Some(_) => "" //gridService.getAllCrops(_) //todo this is a future
-        case None => Config.eventImageUrlPath(event.id) + "/{width}{pixel_ratio}.jpg"
-      }
-    }
+    val imgUrl = asset.fold(Config.eventImageUrlPath(event.id) + "/{width}{pixel_ratio}.jpg")(_.file)
 
     val socialImgUrl = {
       // get the largest available image (for social media etc)

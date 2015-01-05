@@ -9,28 +9,25 @@ import monitoring.GridApiMetrics
 import play.api.libs.ws.WSRequestHolder
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 case class GridConfig(url: String, apiUrl: String, key: String)
 
 object GridService extends utils.WebServiceHelper[GridObject, Error] {
 
-  //todo remove?
   def isUrlCorrectFormat(url: String) = url.startsWith(Config.gridConfig.url)
 
   def getEndpoint(url: String) = url.replace(Config.gridConfig.url, "")
 
-
-  //TODO might not need this - after speaking to Seb we just want to get the crop that is supplied.
   def getCropRequested(urlString: String) = {
     val uri = parse(urlString)
     uri.query.param("crop")
   }
 
   def getAllCrops(url: String) = {
-    for { media <- get[GridResult](getEndpoint(url))
-    } yield media
+    if(isUrlCorrectFormat(url)) get[GridResult](getEndpoint(url)).map(Some(_))
+    else Future.successful(None)
   }
-
 
   override val wsUrl: String = Config.gridConfig.apiUrl
 

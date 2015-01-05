@@ -11,7 +11,7 @@ object Grid {
 
   case class Data(id: String, metadata: Metadata, exports: List[Export])
 
-  case class Metadata(description: String, credit: String, byline: String, source: String)
+  case class Metadata(description: Option[String], credit: Option[String], byline: Option[String], source: Option[String])
 
   case class Export(id: String, assets: List[Asset])
 
