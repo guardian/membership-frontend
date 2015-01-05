@@ -1,10 +1,8 @@
-@(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
-
+@(returnUrl: String)
 
 @import configuration.Config
-@import model.Benefits
 
-@main("Sign in/Register", isBrochure = true) {
+@main("Sign in/Register", isBrochure=true) {
 
     <section class="section-signin">
 
@@ -25,19 +23,6 @@
                 <a class="action" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now</a>
             </div>
         </div>
-
-        @for(tier <- tierOpt) {
-            <p>@Benefits.details(tier).leadin</p>
-
-            <ul class="package__list-benefits-element">
-            @for(benefit <- Benefits.details(tier).leadBenefits) {
-                <li class="benefits-title">@benefit.title</li>
-                <li class="benefits-copy">@benefit.description</li>
-            }
-            </ul>
-
-            <br/>
-        }
 
     </section>
 
