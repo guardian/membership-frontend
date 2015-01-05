@@ -1,0 +1,137 @@
+{
+    "uri": "https://api.media.test.dev-gutools.co.uk/images/dff117cdb2100899107c96d7933ef175c35765ca",
+    "data": {
+        "id": "dff117cdb2100899107c96d7933ef175c35765ca",
+        "uploadTime": "2014-12-16T16:23:15Z",
+        "uploadedBy": "joe.bloggs@guardian.co.uk",
+        "identifiers": {
+
+        },
+        "source": {
+            "file": "http://media-service-test-imagebucket-1qt2lbcwnpgl0.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca",
+            "size": 2935404,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 5184,
+                "height": 3456
+            },
+            "secureUrl": "https://media-service-test-imagebucket-1qt2lbcwnpgl0.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca?AWSAccessKeyId=***REMOVED***&Expires=1419262800&Signature=UkwZAbHeinyJOOjxxATDNvJt%2Bmc%3D"
+        },
+        "thumbnail": {
+            "file": "http://media-service-test-thumbbucket-1sm53rniszbqf.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca",
+            "size": 21014,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 256,
+                "height": 171
+            },
+            "secureUrl": "https://media-service-test-thumbbucket-1sm53rniszbqf.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca?AWSAccessKeyId=***REMOVED***&Expires=1419262800&Signature=WRpHfnQBaTkCFbFtZGhPe11wBNc%3D"
+        },
+        "metadata": {
+            "description": "A soldier with the Missouri National Guard stands watch at the scene where a convenience store was looted following Monday's grand jury announcement, Wednesday, Nov. 26, 2014, in Ferguson, Mo. Missouri's governor ordered hundreds more state militia into Ferguson on Tuesday, after a night of protests and rioting over a grand jury's decision not to indict police officer Darren Wilson in the fatal shooting of Michael Brown, a case that has inflamed racial tensions in the U.S. (AP Photo/David Goldman)",
+            "credit": "AP",
+            "byline": "David Goldman",
+            "suppliersReference": "MODG113",
+            "source": "AP",
+            "keywords": [
+
+            ],
+            "city": "Ferguson",
+            "country": "United States"
+        },
+        "originalMetadata": {
+            "description": "A soldier with the Missouri National Guard stands watch at the scene where a convenience store was looted following Monday's grand jury announcement, Wednesday, Nov. 26, 2014, in Ferguson, Mo. Missouri's governor ordered hundreds more state militia into Ferguson on Tuesday, after a night of protests and rioting over a grand jury's decision not to indict police officer Darren Wilson in the fatal shooting of Michael Brown, a case that has inflamed racial tensions in the U.S. (AP Photo/David Goldman)",
+            "credit": "AP",
+            "byline": "David Goldman",
+            "suppliersReference": "MODG113",
+            "source": "AP",
+            "keywords": [
+
+            ],
+            "city": "Ferguson",
+            "country": "United States"
+        },
+        "exports": [
+            {
+                "id": "679_255_4505_2704",
+                "specification": {
+                    "bounds": {
+                        "height": 2704,
+                        "y": 255,
+                        "x": 679,
+                        "width": 4505
+                    },
+                    "aspectRatio": "5:3",
+                    "uri": "https://api.media.test.dev-gutools.co.uk/images/dff117cdb2100899107c96d7933ef175c35765ca"
+                },
+                "assets": [
+                    {
+                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/2000.jpg",
+                        "dimensions": {
+                            "height": 1200,
+                            "width": 2000
+                        }
+                    },
+                    {
+                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/1000.jpg",
+                        "dimensions": {
+                            "height": 600,
+                            "width": 1000
+                        }
+                    },
+                    {
+                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/500.jpg",
+                        "dimensions": {
+                            "height": 300,
+                            "width": 500
+                        }
+                    },
+                    {
+                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/140.jpg",
+                        "dimensions": {
+                            "height": 84,
+                            "width": 140
+                        }
+                    }
+                ],
+                "type": "crop"
+            }
+        ],
+        "userMetadata": {
+            "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca",
+            "data": {
+                "archived": {
+                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/archived",
+                    "data": false
+                },
+                "labels": {
+                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/labels",
+                    "data": [
+                        {
+                            "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/labels/label testing",
+                            "data": "label testing"
+                        }
+                    ]
+                },
+                "metadata": {
+                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/metadata",
+                    "data": {
+
+                    }
+                }
+            }
+        },
+        "valid": true,
+        "cost": "free"
+    },
+    "links": [
+        {
+            "rel": "crops",
+            "href": "https://cropper.media.test.dev-gutools.co.uk/crops/dff117cdb2100899107c96d7933ef175c35765ca"
+        },
+        {
+            "rel": "metadata",
+            "href": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca"
+        }
+    ]
+}
