@@ -29,7 +29,18 @@ nav ol {
 .inline-list {
     @extend %u-unstyled;
 }
-
 .inline-list__item {
     display: inline-block; // Prevent linebreak within an item
+}
+
+.inline-list--divided {
+    .inline-list__item:after {
+        display: inline-block;
+        content: ' \2022 ';
+        margin: 0 rem($gs-baseline / 2);
+    }
+    .inline-list__item:last-child:after {
+        display: none;
+        content: '';
+    }
 }
