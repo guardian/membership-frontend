@@ -1,7 +1,4 @@
-@(
-    tier: com.gu.membership.salesforce.Tier.Tier,
-    caption: String = ""
-)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier, caption: String = "")(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier

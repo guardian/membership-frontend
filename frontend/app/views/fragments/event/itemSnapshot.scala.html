@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.RichEvent, showStats: Boolean = true, showPricing: Boolean = true)
+@(event: model.Eventbrite.RichEvent)
 
 <div class="event-snapshot" itemscope itemtype="http://schema.org/Event">
     <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
@@ -11,11 +11,7 @@
             }
             <span itemprop="name">@event.name.text</span>
         </h2>
-        @if(showStats) {
-            @fragments.event.stats(event)
-        }
-        @if(showPricing) {
-            @fragments.pricing.priceInfoEvent(event)
-        }
+        @fragments.event.stats(event)
+        @fragments.pricing.priceInfoEvent(event)
     </div>
 </div>
