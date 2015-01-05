@@ -8,6 +8,7 @@
 .price-info {
     position: relative;
     max-width: rem(gs-span(4) - $gs-gutter);
+    min-height: rem($gs-gutter * 3);
 
     @include mq(mobileLandscape) {
         max-width: rem(gs-span(4) - $gs-gutter * 2);
@@ -22,9 +23,10 @@
     .price-info__item {
         display: inline-block;
         vertical-align: top;
+        padding: rem($gs-baseline / 2) 0;
     }
     .price-info__item--split {
-        border-right: 1px solid $black-trans;
+        border-right: 1px solid lighten($c-border-neutral, 10%);
         padding-right: rem($gs-gutter / 2);
     }
     .price-info__item--last {
@@ -44,7 +46,7 @@
         @include fs-header(4);
     }
     .price-info__value--free {
-        font-weight: normal;
+        font-weight: 500;
     }
     .price-info__date {
         @include fs-headline(2);
@@ -58,15 +60,6 @@
             margin-top: -3px;
         }
     }
-
-// Reversed colour modifiers
-.price-info--friend,
-.price-info--patron {
-    color: $white;
-    .price-info__item--split {
-        border-color: $white-trans;
-    }
-}
 
 /**
  * Price info Layout
@@ -101,14 +94,34 @@
 }
 
 .price-info {
-    @include mq(desktop) {
+     @include mq(desktop) {
         @include pricing-flex();
     }
 }
 
 .price-info--flex {
+    min-height: 0;
+    .price-info__item {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .price-info__item--split {
+        border-color: $black-trans;
+    }
+
     @include pricing-flex();
+
 }
+
+// Reversed colour modifiers
+.price-info--friend,
+.price-info--patron {
+    color: $white;
+    .price-info__item--split {
+        border-color: $white-trans;
+    }
+}
+
 
 /* Price Info - Inline
    ========================================================================== */

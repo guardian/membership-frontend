@@ -9,8 +9,12 @@
     margin-bottom: rem($gs-gutter);
 }
     .aside__intro {
-        @include fs-bodyHeading(2);
+        @include fs-header(2);
         padding-bottom: rem($gs-gutter);
+
+        @include mq(tablet) {
+            @include fs-headline(2);
+        }
     }
 
 .aside--pull {
@@ -24,12 +28,12 @@
     padding-top: rem($gs-baseline/2);
 
     @include mq(tablet) {
-        padding-top: 0;
-        border-width: 0;
+        margin-top: rem(45px);
+        padding-top: rem($gs-baseline/2);
+        border-width: 1px 0 0 0;
     }
     @include mq(mem-full) {
-        border-width: 1px 0 0 0;
-        padding-top: rem($gs-baseline/2);
+        margin-top: 0;
     }
 }
 

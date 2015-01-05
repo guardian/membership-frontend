@@ -10,8 +10,8 @@
     margin-bottom: rem($gs-baseline / 2);
 }
     .tier-trail__name {
-        @include fs-bodyHeading(4);
-        font-weight: bold;
+        @include fs-header(4);
+        font-weight: 500;
     }
     .tier-trail__caption {
         @include fs-data(4);
@@ -109,7 +109,7 @@
     @include clearfix;
 }
     .tier-header-promo__pricing {
-        border: solid $mem-blue-border;
+        border: solid $c-border-neutral;
         border-width: 0;
     }
     @include mq(tablet) {
@@ -120,8 +120,6 @@
         }
         .tier-header-promo__pricing {
             border-width: 0 0 1px 0;
-            padding: rem($gs-baseline / 2) 0;
-            min-height: rem($gs-gutter * 2);
         }
     }
     @include mq(desktop) {

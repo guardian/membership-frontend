@@ -12,12 +12,21 @@
     border-bottom: 1px dotted $c-neutral3;
     padding-bottom: rem($gs-baseline / 2);
     margin-bottom: rem($gs-baseline / 2);
+    @include mq(desktop) {
+        display: table;
+    }
+}
+.stat-item__first,
+.stat-item__second {
+    @include mq(desktop) {
+        display: table-cell;
+        vertical-align: top;
+    }
 }
 .stat-item__first {
     display: none;
     @include mq(desktop) {
-        display: block;
-        float: left;
+        display: table-cell;
         width: rem($gs-gutter * 2);
     }
 }

@@ -3,8 +3,8 @@
 // =============================================================================
 
 // Be careful of Sass variable scope
-// Note: Sass 3.3.0 adds Local and local vars
-// http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#variables
+// Note: Sass 3.3.0 adds global and local vars
+// http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variables_
 
 // Support
 // =============================================================================
@@ -236,8 +236,9 @@ $mem-trans-red: rgba(180, 24, 0, .95);
 $mem-trans-green: rgba(170, 216, 1, .95);
 $mem-black: #333333;
 $mem-blue: #4bc6df;
+$mem-blue-dark: #197caa;
 $mem-green: #aad802;
-$mem-buttonBlue: #197caa;
+$mem-buttonBlue: $mem-blue-dark;
 $mem-darkGrey: #999999;
 $mem-button-confirm: #1a4683;
 $mem-button-cancel: #b8b8b8;
