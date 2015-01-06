@@ -93,4 +93,4 @@ GET            /user/me/details                   controllers.User.meDetails
 GET            /founder                           controllers.VanityUrl.redirect
 
 # Styleguide
-GET            /patterns                        controllers.PatternLibrary.patterns
+GET            /patterns                          controllers.PatternLibrary.patterns
