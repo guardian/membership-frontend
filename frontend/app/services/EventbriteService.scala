@@ -168,4 +168,10 @@ object EventbriteService {
 
   def getEvent(id: String): Option[RichEvent] =
     GuardianLiveEventService.getAllEvents(id) orElse MasterclassEventService.getAllEvents(id)
+
+  def getService(event: RichEvent): EventbriteService =
+    event match {
+      case _: GuLiveEvent => GuardianLiveEventService
+      case _: MasterclassEvent => MasterclassEventService
+    }
 }

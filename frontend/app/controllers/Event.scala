@@ -29,12 +29,7 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  private def metrics(event: RichEvent) = {
-    event match {
-      case _: GuLiveEvent => guLiveEvents.wsMetrics
-      case _: MasterclassEvent => masterclassEvents.wsMetrics
-    }
-  }
+  private def metrics(event: RichEvent) = EventbriteService.getService(event).wsMetrics
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
