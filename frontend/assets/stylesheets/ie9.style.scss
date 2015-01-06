@@ -2,8 +2,8 @@
 
 $browser-supports-flexbox: false;
 
+// Import global styles
 @import 'style';
 
 // Import IE9 overrides
-// TODO: Move overrides into component files (overrides should be collected with the component they effect)
 @import '_ie9';

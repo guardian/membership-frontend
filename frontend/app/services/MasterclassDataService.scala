@@ -67,7 +67,7 @@ object MasterclassDataService extends MasterclassDataService with ScheduledTask[
   def getData(eventId: String) = masterclassData.find(mc => mc.eventId.equals(eventId))
 
   val initialValue = Nil
-  val interval = 60.seconds
+  val interval = 2.minutes
   val initialDelay = 2.seconds
 
   def refresh(): Future[Seq[MasterclassData]] = getAllContent
