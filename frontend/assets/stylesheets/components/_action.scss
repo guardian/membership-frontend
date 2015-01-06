@@ -31,19 +31,14 @@
 
     @extend %action;
 
-    &,
-    &:visited,
-    &:hover,
-    &:focus,
-    &:active {
-        color: $white;
-        background-color: $mem-buttonBlue;
-        text-decoration: none;
-    }
+    color: $white;
+    background-color: $mem-buttonBlue;
+    text-decoration: none;
 
     &:focus,
     &:active,
     &:hover {
+        text-decoration: none;
         background-color: darken($mem-buttonBlue, 10%);
     }
 
