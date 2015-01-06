@@ -1,228 +1,5 @@
 /* ==========================================================================
-   Event Listings
-   ========================================================================== */
-
-/* ==========================================================================
-   Event Listings - Header Bar
-   ========================================================================== */
-
-.header-bar {
-    position: relative;
-    padding-left: rem($gs-gutter / 2);
-    padding-right: rem($gs-gutter / 2);
-
-    .header-bar__title {
-        @include fs-headline(4);
-        padding: rem($gs-gutter / 2) 0 rem(55px);
-        max-width: rem(gs-span(8));
-    }
-
-    @include mq(tablet) {
-        min-height: rem(132px);
-        padding-left: rem($gs-gutter);
-
-        .header-bar__title {
-            @include fs-headline(6);
-            padding: rem($gs-gutter) 0;
-        }
-    }
-
-    @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + $gs-gutter * 2); // 180
-        .header-bar__title {
-            @include fs-headline(7);
-        }
-    }
-}
-
-/* ==========================================================================
-   Event Listings - Event Logo
-   ========================================================================== */
-// TODO: Document usage of event-logo
-
-.event-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2);
-    right: rem($gs-gutter / 2);
-
-    height: rem(44px);
-    background-position: right;
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    @include mq(tablet) {
-        bottom: rem($gs-gutter);
-        right: rem($gs-gutter);
-        height: rem(87px);
-    }
-}
-
-/* ==========================================================================
-   Event Listings - Event blocks (sections)
-   ========================================================================== */
-
-.event-block {
-    clear: both;
-    position: relative;
-    background-color: $white;
-    padding: rem($gs-gutter / 2) 0;
-    overflow: hidden;
-    border-bottom: 1px solid $mem-live-accent;
-
-    @include mq(tablet) {
-        padding: rem($gs-gutter) 0;
-    }
-    @include mq(desktop) {
-        padding: rem($gs-gutter) rem($gs-gutter) 0;
-    }
-
-    &:last-child {
-        border-bottom: 0;
-    }
-}
-
-.event-block__header,
-.event-block__footer {
-    padding: 0 rem($gs-gutter/2) rem($gs-baseline);
-
-    @include mq(desktop) {
-        padding-left: 0;
-    }
-}
-
-.event-block__header {
-    @include mq(mem-full) {
-        float: left;
-        width: rem(gs-span(2));
-        margin-right: $gs-gutter;
-        padding: 0;
-    }
-}
-.event-block__header__title {
-    @include fs-header(4);
-}
-
-.event-block__events {
-    overflow: hidden;
-
-    @include mq(mem-full) {
-        width: rem(gs-span(12));
-    }
-}
-
-.event-block__empty,
-.event-block__no-results {
-    margin-bottom: rem($gs-gutter * 2);
-}
-.event-block__no-results {
-    display: none;
-    &.is-shown {
-        display: block;
-    }
-}
-
-.event-block__footer {
-    @include mq(mem-full) {
-        margin-left: rem(gs-span(2) + $gs-gutter);
-    }
-}
-
-/* ==========================================================================
-   Event Filters
-   ========================================================================== */
-
-.event-filters {
-    background-color: $white;
-    padding: rem($gs-gutter / 2);
-    border-bottom: 1px solid $mem-live-accent;
-
-    @include mq(tablet) {
-        padding: rem($gs-gutter);
-    }
-}
-.event-filters__container {
-    @include clearfix;
-    @include mq(mem-full) {
-        width: 100%;
-        padding-left: rem(gs-span(2) + $gs-gutter);
-    }
-}
-.event-filters__categories {
-    @include mq(desktop) {
-        float: left;
-    }
-}
-.event-filters__category,
-.event-filters__count {
-    @include fs-textSans(2);
-    display: inline-block;
-    padding: rem($gs-gutter / 4) 0;
-    @include mq(mobileLandscape) {
-        padding: rem($gs-gutter / 2) 0;
-    }
-}
-.event-filters__category {
-    padding-right: rem($gs-gutter);
-    @include mq(desktop) {
-        margin-right: rem($gs-gutter);
-        border-right: 1px solid $c-neutral4;
-    }
-}
-.event-filters__count {
-    color: $c-neutral2;
-    white-space: nowrap;
-    float: right;
-}
-.event-filters__search {
-    position: relative;
-    overflow: hidden;
-    clear: right;
-
-    @include mq(desktop) {
-        width: auto;
-        display: block;
-        float: right;
-        clear: none;
-    }
-}
-
-/* Filter Search
-   ========================================================================== */
-
-$filter-icon-size: 18px;
-
-.filter-search {
-    display: block;
-}
-.filter-search__input {
-    @include fs-textSans(2);
-    padding: rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
-    border: 1px solid $c-neutral3;
-    border-radius: 100rem;
-    width: 100%;
-    outline: 0;
-
-    @include mq(desktop) {
-        width: auto;
-    }
-}
-.filter-search__icon,
-.filter-search__cross {
-    position: absolute;
-    top: 50%;
-    margin-top: rem(-$filter-icon-size / 2);
-    border: 0;
-    background-color: transparent;
-}
-.filter-search__icon {
-    left: rem($gs-gutter / 2);
-}
-.filter-search__cross {
-    right: rem($gs-gutter / 2);
-}
-
-/* ==========================================================================
-   Event Listings - Event Item
+   Event Items
    ========================================================================== */
 
 .event-item {
@@ -382,6 +159,7 @@ $filter-icon-size: 18px;
 
 .event-status {
     display: inline-block;
+
     &:after {
         content: '/';
         color: fade-out($c-neutral1, .8);
@@ -398,7 +176,7 @@ $filter-icon-size: 18px;
 }
 
 /* ==========================================================================
-   Event Listings - Event item (Hero modifier)
+   Event item (Hero modifier)
    ========================================================================== */
 
 .event-item--hero {
@@ -457,7 +235,7 @@ $filter-icon-size: 18px;
 }
 
 /* ==========================================================================
-   Event Listings - Event Item (Minimal modifier)
+   Event Item (Minimal modifier)
    ========================================================================== */
 
 // use a shorter box for minimal theme
@@ -475,7 +253,7 @@ $filter-icon-size: 18px;
 }
 
 /* ==========================================================================
-   Event Listings - Event Item (Card modifier)
+   Event Item (Card modifier)
    ========================================================================== */
 
 .event-item--card {
@@ -501,8 +279,9 @@ $filter-icon-size: 18px;
 }
 
 /* ==========================================================================
-   Event Items - Event Snapshot
+   Event Snapshot
    ========================================================================== */
+// Event summary w/location and timing details (e.g. /choose-tier)
 
 .event-snapshot {
     width: 100%;
@@ -550,5 +329,86 @@ $filter-icon-size: 18px;
     @include mq(tablet) {
         width: auto;
         padding-right: 0;
+    }
+}
+
+/* ==========================================================================
+   Event Summary
+   ========================================================================== */
+// TODO: Can this be removed? event/itemSummary fragment not used,
+// only used on thank-you page. Replace with event-snapshot?
+
+.event-summary {
+    @include clearfix;
+    margin: rem($gs-baseline * 2) 0;
+
+    .event-item__media {
+        @include mq(tablet) {
+            float: left;
+            width: rem(gs-span(3));
+        }
+    }
+
+    .event-item__title {
+        @include f-header;
+        @include font-size(rem(18px), rem(22px));
+        margin-bottom: rem($gs-baseline * 2);
+    }
+
+    .event-status--sold-out {
+        display: inline-block;
+        color: $white;
+        background-color: $mem-live-accent;
+        @include fs-data(2);
+        position: relative;
+        top: rem(-3px);
+        padding: rem(1px) rem(3px);
+        margin-right: rem(4px);
+    }
+
+    .event-item__meta {
+        @include f-data;
+        @include font-size(rem(14px), rem(22px));
+
+        @include mq(tablet) {
+            border-top: rem(1px) dotted $c-neutral3;
+            margin-left: rem(gs-span(3) + $gs-gutter);
+            padding-top: rem($gs-baseline / 2);
+        }
+    }
+
+    .event-item__detail {
+        border-top: rem(1px) dotted $c-neutral3;
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
+
+        &:last-child,
+        p:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .event-item__location {
+        line-height: rem(18px);
+    }
+
+    .event-item__location-detail {
+        display: block;
+    }
+
+    .event-item__icon {
+        background-size: rem(25px);
+        float: left;
+        margin-left: rem(-$gs-gutter * 2);
+        height: rem(25px);
+        width: rem(25px);
+    }
+
+    .icon-eventbrite {
+        margin-top: rem(3px);
+    }
+
+    .icon-early_booking-grey {
+        margin-top: rem(-2px);
     }
 }
