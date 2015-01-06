@@ -70,7 +70,7 @@
     }
     .event-masthead__title {
         @include fs-header(1);
-        border-bottom: rem(1px) dotted $border-bottom-color;
+        border-bottom: 1px dotted rgba(255, 255, 255, .29);
         padding-bottom: rem(5px);
 
         @include mq(tablet) {
@@ -382,10 +382,6 @@
     .event-content__name {
         @include fs-header(2);
         padding-bottom: rem($gs-gutter + 8px);
-
-        .join-choose-tier & {
-            padding-top: rem(5px);
-        }
     }
 
     .event-content__price {
@@ -429,27 +425,12 @@
     .event-content__first {
         float: left;
         width: rem($gs-gutter * 2);
-
-        .join-choose-tier & {
-            @include mq(mobile) {
-                display: none;
-            }
-
-            @include mq(mem-full) {
-                display: block;
-            }
-        }
     }
 
     .event-content__second {
         float: left;
         width: rem(220px);
         position: relative;
-
-        .join-choose-tier & {
-            width: auto;
-        }
-
         .event-item__location-name {
             @include fs-textSans(3);
             color: $c-neutral1;
@@ -470,7 +451,7 @@
 }
 
 .event-content--line-divider {
-    border-top: rem(1px) dotted $c-neutral3;
+    border-top: 1px dotted $c-neutral3;
     padding: rem(5px) 0;
 }
 

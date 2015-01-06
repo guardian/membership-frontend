@@ -2,21 +2,6 @@
 // Mixins
 // =============================================================================
 
-@import '../components/bower-components/sass-mq/mq';
-// Guss - https://github.com/guardian/guss
-// =============================================================================
-@import '../components/bower-components/guss-rem/rem';
-@import '../components/bower-components/guss-typography/typography';
-@import '../components/bower-components/guss-css3/css3';
-@import '../components/bower-components/guss-layout/columns';
-@import '../components/bower-components/guss-layout/row';
-
-// The grid system is already imported in the _vars.scss file where it's needed
-// @import 'components/guss-grid-system/_grid-system';
-
-// CSS helpers
-// =============================================================================
-
 // Vertical linear gradient with a plain fallback for older browsers
 @mixin simple-gradient($from, $until) {
     // Fix for browsers not understanding transparent
@@ -104,44 +89,6 @@
     }
     @if $old-ie {
         zoom: 1;
-    }
-}
-
-// a dynamic mixin so we can reuse these measurements
-// for other properties – the media queries and widths
-// need to match the ones in layout.scss
-@mixin side-margins-calc($property) {
-    @include mq(tablet) {
-        $width: gs-span(12);
-        #{$property}: -webkit-calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
-        #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
-    }
-    @include mq(mem-full) {
-        $width: gs-span(14);
-        #{$property}: -webkit-calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
-        #{$property}: calc((100% - #{rem($width + $gs-gutter * 2)}) / 2);
-    }
-}
-
-@mixin columns($cols: 1, $gap: 0) {
-    @if $browser-supports-columns {
-        -webkit-column-count: $cols;
-        -moz-column-count: $cols;
-        column-count: $cols;
-
-        -webkit-column-gap: rem($gap);
-        -moz-column-gap: rem($gap);
-        column-gap: rem($gap);
-    } @else {
-        margin-left: 0 - rem($gap / 2);
-        margin-right: 0 - rem($gap / 2);
-        & > * {
-            @include box-sizing(border-box);
-            width: (100% / $cols);
-            float: left;
-            padding-left: rem($gap / 2);
-            padding-right: rem($gap / 2);
-        }
     }
 }
 

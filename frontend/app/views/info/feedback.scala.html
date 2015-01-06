@@ -5,10 +5,8 @@
 @main("Feedback", htmlClass = "feedback") {
 
     <main role="main" class="page-content">
-        <section class="page-header">
-            <h1 class="page-headline">Feedback</h1>
-            <p class="page-intro">Help us improve your membership experience</p>
-        </section>
+
+        @fragments.page.pageHeader("Feedback", Some("Help us improve your membership experience"))
 
         <section class="page-section">
             <div class="page-section__content copy">

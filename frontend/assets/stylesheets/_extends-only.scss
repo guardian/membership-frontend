@@ -28,7 +28,7 @@
     position: absolute;
     top: rem($gs-gutter / 2);
     right: rem($gs-gutter / 2);
-    background-color: $border-bottom-color;
+    background-color: rgba(255, 255, 255, .29);
     padding: rem(14px);
     border: 0 none;
     display: block;

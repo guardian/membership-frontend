@@ -28,7 +28,7 @@
 
 <p class="package__description">@Benefits.details(currentTier).desc</p>
 @if(showBenefitDetails) {
-    <div class="package__header">What's included</div>
+    <div class="package__title">What's included</div>
     <div class="package-benefits">
         <ul class="package-benefits__list u-unstyled">
             @benefitListing(Benefits.details(currentTier).leadBenefits, isLead=true)

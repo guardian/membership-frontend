@@ -1,0 +1,26 @@
+@(tier: com.gu.membership.salesforce.Tier.Tier, descriptionAnchor: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import model.Benefits
+
+<div class="package package--promo tone-@tier.toString.toLowerCase--border">
+    <div class="package__header">
+        <a href="/join/@tier.toString.toLowerCase/enter-details" class="no-underline minimal-link">
+            @fragments.tier.tierHeaderPromo(tier)
+        </a>
+    </div>
+    <div class="package__content">
+        <div class="package__description copy hidden-tablet">
+            <p>@Benefits.details(tier).desc</p>
+            @if(descriptionAnchor) {
+                <p class="text-caption tablet-only"><a href="@descriptionAnchor">What's included</a></p>
+            }
+        </div>
+        <div class="package__actions">
+            <a class="action action--snap u-no-bottom-margin" href="/join/@tier.toString.toLowerCase/enter-details" data-link-name="Become a @tier">
+                <span class="action__label">
+                    Become a @tier
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
