@@ -113,12 +113,13 @@
         border-width: 0;
     }
     @include mq(tablet) {
-        .tier-header-promo__title,
-        .tier-header-promo__pricing {
-            width: 50%;
+        .tier-header-promo__title {
             float: left;
+            width: 35%;
         }
         .tier-header-promo__pricing {
+            float: left;
+            width: 65%;
             border-width: 0 0 1px 0;
         }
     }
