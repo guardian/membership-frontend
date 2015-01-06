@@ -1,96 +1,116 @@
 {
-    "uri": "https://api.media.test.dev-gutools.co.uk/images/dff117cdb2100899107c96d7933ef175c35765ca",
+    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
     "data": {
-        "id": "dff117cdb2100899107c96d7933ef175c35765ca",
-        "uploadTime": "2014-12-16T16:23:15Z",
-        "uploadedBy": "joe.bloggs@guardian.co.uk",
+        "id": "aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+        "uploadTime": "2015-01-05T15:09:44Z",
+        "uploadedBy": "joe.bloggs.sivapalan@guardian.co.uk",
         "identifiers": {
 
         },
         "source": {
-            "file": "http://media-service-test-imagebucket-1qt2lbcwnpgl0.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca",
-            "size": 2935404,
+            "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+            "size": 431272,
             "mimeType": "image/jpeg",
             "dimensions": {
-                "width": 5184,
-                "height": 3456
+                "width": 1920,
+                "height": 1152
             },
-            "secureUrl": "https://media-service-test-imagebucket-1qt2lbcwnpgl0.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca?AWSAccessKeyId=***REMOVED***&Expires=1419262800&Signature=UkwZAbHeinyJOOjxxATDNvJt%2Bmc%3D"
+            "secureUrl": "https://some-media-thing/secure-url"
         },
         "thumbnail": {
-            "file": "http://media-service-test-thumbbucket-1sm53rniszbqf.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca",
-            "size": 21014,
+            "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+            "size": 10701,
             "mimeType": "image/jpeg",
             "dimensions": {
                 "width": 256,
-                "height": 171
+                "height": 154
             },
-            "secureUrl": "https://media-service-test-thumbbucket-1sm53rniszbqf.s3.amazonaws.com/dff117cdb2100899107c96d7933ef175c35765ca?AWSAccessKeyId=***REMOVED***&Expires=1419262800&Signature=WRpHfnQBaTkCFbFtZGhPe11wBNc%3D"
+            "secureUrl": "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675?some-paraeters=sdfsdf"
         },
         "metadata": {
-            "description": "A soldier with the Missouri National Guard stands watch at the scene where a convenience store was looted following Monday's grand jury announcement, Wednesday, Nov. 26, 2014, in Ferguson, Mo. Missouri's governor ordered hundreds more state militia into Ferguson on Tuesday, after a night of protests and rioting over a grand jury's decision not to indict police officer Darren Wilson in the fatal shooting of Michael Brown, a case that has inflamed racial tensions in the U.S. (AP Photo/David Goldman)",
-            "credit": "AP",
-            "byline": "David Goldman",
-            "suppliersReference": "MODG113",
-            "source": "AP",
             "keywords": [
 
             ],
-            "city": "Ferguson",
-            "country": "United States"
+            "credit": "Gu membership",
+            "description": "It's Chris!",
+            "byline": "Gu membership"
         },
         "originalMetadata": {
-            "description": "A soldier with the Missouri National Guard stands watch at the scene where a convenience store was looted following Monday's grand jury announcement, Wednesday, Nov. 26, 2014, in Ferguson, Mo. Missouri's governor ordered hundreds more state militia into Ferguson on Tuesday, after a night of protests and rioting over a grand jury's decision not to indict police officer Darren Wilson in the fatal shooting of Michael Brown, a case that has inflamed racial tensions in the U.S. (AP Photo/David Goldman)",
-            "credit": "AP",
-            "byline": "David Goldman",
-            "suppliersReference": "MODG113",
-            "source": "AP",
             "keywords": [
 
-            ],
-            "city": "Ferguson",
-            "country": "United States"
+            ]
         },
         "exports": [
             {
-                "id": "679_255_4505_2704",
+                "id": "294_26_1584_950",
                 "specification": {
                     "bounds": {
-                        "height": 2704,
-                        "y": 255,
-                        "x": 679,
-                        "width": 4505
+                        "y": 26,
+                        "x": 294,
+                        "width": 1584,
+                        "height": 950
                     },
-                    "aspectRatio": "5:3",
-                    "uri": "https://api.media.test.dev-gutools.co.uk/images/dff117cdb2100899107c96d7933ef175c35765ca"
+                    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+                    "aspectRatio": "5:3"
                 },
                 "assets": [
                     {
-                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/2000.jpg",
+                        "secureFile": "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg",
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg",
                         "dimensions": {
-                            "height": 1200,
-                            "width": 2000
+                            "width": 1000,
+                            "height": 600
                         }
                     },
                     {
-                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/1000.jpg",
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/500.jpg",
                         "dimensions": {
-                            "height": 600,
-                            "width": 1000
+                            "width": 500,
+                            "height": 300
                         }
                     },
                     {
-                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/500.jpg",
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/140.jpg",
                         "dimensions": {
-                            "height": 300,
-                            "width": 500
+                            "width": 140,
+                            "height": 84
+                        }
+                    }
+                ],
+                "type": "crop"
+            },
+            {
+                "id": "0_130_1703_1022",
+                "specification": {
+                    "bounds": {
+                        "y": 130,
+                        "x": 0,
+                        "width": 1703,
+                        "height": 1022
+                    },
+                    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+                    "aspectRatio": "5:3"
+                },
+                "assets": [
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/1000.jpg",
+                        "dimensions": {
+                            "width": 1000,
+                            "height": 600
                         }
                     },
                     {
-                        "file": "http://media-origin.test.dev-guim.co.uk/dff117cdb2100899107c96d7933ef175c35765ca/679_255_4505_2704/140.jpg",
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/500.jpg",
                         "dimensions": {
-                            "height": 84,
-                            "width": 140
+                            "width": 500,
+                            "height": 300
+                        }
+                    },
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/140.jpg",
+                        "dimensions": {
+                            "width": 140,
+                            "height": 84
                         }
                     }
                 ],
@@ -98,40 +118,39 @@
             }
         ],
         "userMetadata": {
-            "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca",
+            "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
             "data": {
                 "archived": {
-                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/archived",
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/archived",
                     "data": false
                 },
                 "labels": {
-                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/labels",
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/labels",
                     "data": [
-                        {
-                            "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/labels/label testing",
-                            "data": "label testing"
-                        }
+
                     ]
                 },
                 "metadata": {
-                    "uri": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca/metadata",
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/metadata",
                     "data": {
-
+                        "credit": "Gu membership",
+                        "description": "It's Chris!",
+                        "byline": "Gu membership"
                     }
                 }
             }
         },
         "valid": true,
-        "cost": "free"
+        "cost": "pay"
     },
     "links": [
         {
             "rel": "crops",
-            "href": "https://cropper.media.test.dev-gutools.co.uk/crops/dff117cdb2100899107c96d7933ef175c35765ca"
+            "href": "https://cropper.some-media-thing.co.uk/crops/aede0da05506d0d8cb993558b7eb9ad1d2d3e675"
         },
         {
             "rel": "metadata",
-            "href": "https://media-metadata.test.dev-gutools.co.uk/metadata/dff117cdb2100899107c96d7933ef175c35765ca"
+            "href": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675"
         }
     ]
 }

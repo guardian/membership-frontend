@@ -19,7 +19,7 @@ object GridService extends utils.WebServiceHelper[GridObject, Error] {
 
   def getEndpoint(url: String) = url.replace(Config.gridConfig.url, "")
 
-  def getCropRequested(urlString: String) = {
+  def cropParam(urlString: String) = {
     val uri = parse(urlString)
     uri.query.param("crop")
   }

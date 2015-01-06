@@ -130,12 +130,12 @@ object GuardianLiveEventService extends EventbriteService {
     val imageOpt = event.description.flatMap(_.mainImageUrl)
 
     imageOpt.fold(Future.successful(GuLiveEvent(event, None))) { url =>
-      val cropRequested = gridService.getCropRequested(url)
+      val cropParam = gridService.cropParam(url)
 
       gridService.getAllCrops(url).map { gridOpt => //todo put this in unit tested method
         val assetOpt = for {
           grid <- gridOpt
-          export <- cropRequested.flatMap(cr => grid.data.exports.find(_.id == cr)).orElse(grid.data.exports.headOption)
+          export <- cropParam.flatMap(cr => grid.data.exports.find(_.id == cr)).orElse(grid.data.exports.headOption)
           asset <- export.assets.headOption
         } yield asset
 

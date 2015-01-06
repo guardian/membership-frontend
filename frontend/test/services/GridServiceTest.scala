@@ -28,10 +28,10 @@ class GridServiceTest extends Specification {
   }
 
   "must return the crop parameters from Grid url" in {
-    service.getCropRequested(validGridUrl) mustEqual(Some("0_19_480_288"))
+    service.cropParam(validGridUrl) mustEqual(Some("0_19_480_288"))
   }
 
   "must return None if no parameter is passed into url" in {
-    service.getCropRequested("https://media.test.dev-gutools.co.uk/images/fsifjsifjsi") mustEqual(None)
+    service.cropParam("https://media.test.dev-gutools.co.uk/images/fsifjsifjsi") mustEqual(None)
   }
 }
