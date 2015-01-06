@@ -20,9 +20,9 @@
    ========================================================================== */
 
 @import 'vars';
-@import 'mixins/common';
-@import 'mixins/flexbox';
-@import 'mixins/grids';
+@import 'mixins/mixins-utils';
+@import 'mixins/mixins-layout';
+@import 'mixins/mixins-flexbox';
 @import 'extends-only';
 
 /* ==========================================================================
@@ -31,7 +31,6 @@
 
 @import 'base/normalize';
 @import 'base/base';
-@import 'base/type';
 @import 'base/links';
 @import 'base/lists';
 @import 'base/forms';
@@ -57,8 +56,7 @@
 @import 'layout/layout';
 @import 'layout/footer';
 @import 'layout/header';
-@import 'layout/headings';
-@import 'layout/side-margins';
+// TODO: Remove when refactoring brochure pages
 @import 'layout/homeslice';
 
 /* ==========================================================================
@@ -67,21 +65,24 @@
 // TODO: Move all `components` to `modules` and
 // keep `components` for `bower-components` only.
 
+@import 'components/icons';
+@import 'components/text-helpers';
+@import 'components/grid';
+@import 'components/content';
+@import 'components/from-content-api';
 @import 'components/nav/nav';
 @import 'components/nav/pop-up';
 @import 'components/nav/control';
 @import 'components/nav/brand-bar';
-@import 'components/icons';
-@import 'components/grid';
-@import 'components/content';
-@import 'components/from-content-api';
 @import 'components/action';
 @import 'components/page';
 @import 'components/blocks';
 @import 'components/asides';
 @import 'components/benefits';
 @import 'components/payment';
+@import 'components/packages';
 @import 'components/pricing';
+@import 'components/stats';
 @import 'components/tier';
 @import 'components/user';
 @import 'components/help';
@@ -107,10 +108,7 @@
 @import 'pages/events-summary';
 @import 'pages/events-list';
 @import 'pages/joiner';
-@import 'pages/tickets';
 @import 'pages/login';
-@import 'pages/about';
-@import 'pages/feedback';
 
 /* ==========================================================================
    State

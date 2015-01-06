@@ -46,3 +46,24 @@
     color: $white;
     background-color: transparentize($mem-live-top, .1);
 }
+
+.tone-friend {
+    color: $white;
+    background-color: $c-neutral1;
+}
+.tone-partner {
+    background-color: $mem-brandLightblue;
+}
+.tone-patron {
+    background-color: $mem-brandDarkBlue;
+}
+
+.tone-friend--border {
+    border-color: $c-neutral1;
+}
+.tone-partner--border {
+    border-color: $mem-brandLightblue;
+}
+.tone-patron--border {
+    border-color: $mem-brandDarkBlue;
+}

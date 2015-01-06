@@ -44,15 +44,17 @@ body {
 /* Layout Helpers
    ========================================================================== */
 
+// Constrained layout helper
+// Breakpoints are mirrored in mixins/_mixins-layout.scss
 .l-constrained {
+    $offset: ($gs-gutter * 2);
     margin: 0 auto;
 
     @include mq(tablet) {
-        max-width: gs-span(12)+($gs-gutter*2);
+        max-width: map-get($max-widths, max-tablet) + $offset;
     }
-
     @include mq(mem-full) {
-        max-width: gs-span(14)+($gs-gutter*2);
+        max-width: map-get($max-widths, max-desktop) + $offset;
     }
 }
 
@@ -74,18 +76,40 @@ body {
     padding-bottom: rem($gs-gutter * 2);
 }
 
+/* Side Margins
+   ========================================================================== */
+
+.l-side-margins,
+.page-side-margins {
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        background: $c-body-transparent;
+
+        /**
+         * Magic number: we shift these margins up to skip the header gap
+         * and the (fixed) height of the nav bar
+         */
+        top: rem($side-margins-top-magic-number);
+        height: 100%;
+        height: calc(100% - #{$side-margins-top-magic-number});
+        width: 0;
+
+        @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
 /* Containers
    ========================================================================== */
 
-
-// TODO: Extract max-widths out into variables
-//       Extract side margins out into l-side-margins
-//
-// note: the max-widths set here
-// are duplicated in mixins.scss
-// for the side-margins function
-// please duplicate your changes
-// this alignment is too perfect
 .page-container {
     @extend .l-constrained;
     @include clearfix;
@@ -106,40 +130,12 @@ body {
     }
 }
 
-// TODO: Refactor to remove code below here
-// ========================================
-
-// Two thirds section
-.section-two-thirds {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 rem($gs-gutter / 2);
-    @include fs-headline(2);
-    position: relative;
-
-    @include mq(desktop) {
-        @include fs-headline(5);
-    }
-
-    .two-thirds {
-        @include mq(tablet) {
-            padding-left: $gs-gutter;
-            width: rem(gs-span(8));
-        }
-        @include mq(mem-full) {
-            width: rem(gs-span(8) + $gs-gutter);
-        }
-    }
-
-    .one-third {
-        margin-bottom: rem($gs-gutter);
-
-        @include mq(tablet) {
-            width: rem(gs-span(3));
-            padding-left: rem($gs-gutter);
-        }
-        @include mq(mem-full) {
-            width: rem(gs-span(4) + $gs-gutter);
-        }
+// TODO: Too broad. What is this affecting?
+// Only on downgrade page??
+.secondary-content {
+    flex-basis: 16em;
+    order: 2;
+    @if $old-ie {
+        float: left;
     }
 }

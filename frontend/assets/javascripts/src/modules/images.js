@@ -1,8 +1,7 @@
 define(['lib/bower-components/imager.js/Imager'], function(Imager) {
 
-    var IMAGES_EVENTS = '.delayed-image-load',
-        IMAGES_SLIDESHOW = '.js-image-slideshow',
-        IMAGES_FEATURE = '.js-image-feature';
+    var IMAGES_EVENTS = '.delayed-image-load';
+    var IMAGES_SLIDESHOW = '.js-image-slideshow';
 
     function init() {
 
@@ -19,15 +18,6 @@ define(['lib/bower-components/imager.js/Imager'], function(Imager) {
             new Imager(IMAGES_SLIDESHOW, {
                 availableWidths: guardian.membership.homeImages.widths,
                 availablePixelRatios: guardian.membership.homeImages.ratios,
-                lazyload: true,
-                lazyloadOffset: 100
-            });
-        }
-
-        if (document.querySelectorAll(IMAGES_FEATURE).length) {
-            new Imager(IMAGES_FEATURE, {
-                availableWidths: guardian.membership.featureImages.widths,
-                availablePixelRatios: guardian.membership.featureImages.ratios,
                 lazyload: true,
                 lazyloadOffset: 100
             });

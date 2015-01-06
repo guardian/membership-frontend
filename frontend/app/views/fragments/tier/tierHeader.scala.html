@@ -1,11 +1,11 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier)
+@(tier: com.gu.membership.salesforce.Tier.Tier, isStacked: Boolean = false)
 
-<div class="tier-header tier-header--@tier.toString.toLowerCase">
+<div class="tier-header@if(isStacked) { tier-header--stacked} tier-header--@tier.toString.toLowerCase">
     <h3 class="tier-header__title">
         <i class="icon icon-g-white-28"></i>
         @tier
     </h3>
     <div class="tier-header__pricing">
-        @fragments.benefits.priceInfo(tier=tier, isReversible=true)
+        @fragments.pricing.priceInfo(tier=tier, isReversible=true)
     </div>
 </div>

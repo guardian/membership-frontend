@@ -1,13 +1,13 @@
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
 *,
 *:before,
 *:after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-}
-
-html {
-    overflow-y: scroll;
 }
 
 body:after {
@@ -25,7 +25,43 @@ body:after {
     }
 }
 
-ol,
-ul {
-    list-style-position: inside;
+html {
+    overflow-y: scroll;
+    font-family: $f-serif-text;
+
+    // Set baseline font size to 10px
+    // This is used as a baseline for rem (root ems) values
+    // Calc needed for IE11 to do the math properly
+    // See http://bit.ly/1g4X0bX — thanks @7studio and @dawitti
+    font-size: calc(1em * .625);
+}
+
+body {
+    color: $c-body;
+    font-size: 1.6em; // Bump font-size back up to 16px
+    line-height: 1.4;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: rem($gs-baseline * 1.3333);
+}
+
+blockquote {
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: rem(10px);
+    margin: 0;
+
+    &:before {
+        @extend %icon-quote-blue;
+        content: '';
+        display: block;
+        float: left;
+        margin-right: rem(5px);
+    }
 }

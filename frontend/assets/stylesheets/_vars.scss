@@ -3,8 +3,8 @@
 // =============================================================================
 
 // Be careful of Sass variable scope
-// Note: Sass 3.3.0 adds Local and local vars
-// http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#variables
+// Note: Sass 3.3.0 adds global and local vars
+// http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variables_
 
 // Support
 // =============================================================================
@@ -51,6 +51,12 @@ $mq-breakpoints: (
     mobileLandscape: gs-span(6) + $gs-gutter, // 480px
 );
 
+$max-widths: (
+    max-tablet: gs-span(12),
+    max-desktop: gs-span(14),
+    max-wide: gs-span(16),
+);
+
 // Fonts
 // =============================================================================
 
@@ -66,9 +72,9 @@ $f-sans-serif-headline: 'Guardian Sans Web', 'Helvetica Neue', Helvetica, Arial,
 $font-scale: (
     header: (
         1: (font-size: 16, line-height: 20),
-        2: (font-size: 18, line-height: 24),
+        2: (font-size: 18, line-height: 22),
         3: (font-size: 20, line-height: 24),
-        4: (font-size: 22, line-height: 28),
+        4: (font-size: 22, line-height: 26),
         5: (font-size: 24, line-height: 28),
         6: (font-size: 26, line-height: 28),
     ),
@@ -77,7 +83,7 @@ $font-scale: (
         2: (font-size: 16, line-height: 20),
         3: (font-size: 20, line-height: 24),
         4: (font-size: 24, line-height: 28),
-        5: (font-size: 28, line-height: 34),
+        5: (font-size: 28, line-height: 32),
         6: (font-size: 32, line-height: 36),
         7: (font-size: 36, line-height: 40),
         8: (font-size: 40, line-height: 44),
@@ -230,8 +236,9 @@ $mem-trans-red: rgba(180, 24, 0, .95);
 $mem-trans-green: rgba(170, 216, 1, .95);
 $mem-black: #333333;
 $mem-blue: #4bc6df;
+$mem-blue-dark: #197caa;
 $mem-green: #aad802;
-$mem-buttonBlue: #197caa;
+$mem-buttonBlue: $mem-blue-dark;
 $mem-darkGrey: #999999;
 $mem-button-confirm: #1a4683;
 $mem-button-cancel: #b8b8b8;
@@ -248,7 +255,9 @@ $mem-underline-white-trans: rgba(229, 208, 212, .5);
 $mem-event-button-hover: rgba(0, 0, 0, .65);
 
 $side-margins-top-magic-number: 114px;
-$border-bottom-color: rgba(255, 255, 255, .29);
+
+$c-border-brand: $mem-blue;
+$c-border-neutral: $c-neutral3;
 
 $flash-error-color: #d61d00;
 $flash-error-border: #ff998a;

@@ -1,6 +1,9 @@
+/* ==========================================================================
+   Login
+   ========================================================================== */
+
 .section-signin,
-.section-payment,
-.section-two-thirds {
+.section-payment {
     background-color: $white;
     margin: 0 auto;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
@@ -17,26 +20,23 @@
         width: rem(gs-span(14) + $gs-gutter * 2);
     }
 
+    // TODO: Refactor out when signin and payment use functional page layout
+    // Only contains reamaining status styles
     .steps {
-        @include fs-textSans(3);
         display: block;
         position: absolute;
         top: rem($gs-baseline);
         right: 0;
 
         @include mq(tablet) {
-            @include fs-header(1);
-            font-weight: normal;
             top: rem($gs-baseline);
             right: 0;
         }
 
         @include mq(desktop) {
             position: static;
-            border-top: rem(1px) solid $c-neutral3;
             width: rem(gs-span(1) + $gs-gutter * 3);
             float: left;
-            padding-top: rem($gs-baseline / 2);
         }
 
         @include mq(mem-full) {
@@ -66,5 +66,5 @@
             padding: rem(3px) 0 rem($gs-baseline * 2);
             border-top: rem(1px) solid $c-neutral3;
         }
-    }  
+    }
 }

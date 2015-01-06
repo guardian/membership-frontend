@@ -38,7 +38,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
-                    src: ['*.scss', '!_*'],
+                    src: ['style.scss', 'ie9.style.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
                 }],
@@ -135,12 +135,6 @@ module.exports = function (grunt) {
                 src: ['**', '!**/svgs/**'],
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true
-            },
-            imagesNoAssetHash: {
-                cwd: '<%= dirs.assets.images %>',
-                src: ['**/noAssetHash/**'],
-                dest: '<%= dirs.publicDir.root %>/images/',
-                expand: true
             }
         },
 
@@ -194,7 +188,6 @@ module.exports = function (grunt) {
                     '<%= dirs.publicDir.root %>/dist/stylesheets/**/*.css'
                 ]
             },
-            //TODO-ben ignoring noAssetHash and zeroclipboard is a stop gap until we have the ability to hash folders and their contents
             staticfiles: {
                 files: [
                     {
@@ -203,7 +196,6 @@ module.exports = function (grunt) {
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
                             '<%= dirs.publicDir.javascripts %>/**/*.map',
                             '<%= dirs.publicDir.images %>/**/*.*',
-                            '!<%= dirs.publicDir.images %>/noAssetHash/**/*.*',
                             '!<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
@@ -321,12 +313,10 @@ module.exports = function (grunt) {
         ]);
         // only version files for prod builds
         // and wipe out unused non-versioned assets for good measure
-        // Copy noAssetHash folder to dist
         if (!isDev) {
             grunt.task.run([
                 'asset_hash',
                 'clean:public:prod',
-                'copy:imagesNoAssetHash',
                  'copy:zeroclipboardDist'
             ]);
         }

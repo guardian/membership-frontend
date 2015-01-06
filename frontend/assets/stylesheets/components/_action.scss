@@ -31,19 +31,14 @@
 
     @extend %action;
 
-    &,
-    &:visited,
-    &:hover,
-    &:focus,
-    &:active {
-        color: $white;
-        background-color: $mem-buttonBlue;
-        text-decoration: none;
-    }
+    color: $white;
+    background-color: $mem-buttonBlue;
+    text-decoration: none;
 
     &:focus,
     &:active,
     &:hover {
+        text-decoration: none;
         background-color: darken($mem-buttonBlue, 10%);
     }
 
@@ -95,6 +90,30 @@
     }
     border: 0;
     cursor: default;
+}
+
+.action--snap {
+    min-width: 0;
+    width: rem(40px);
+    height: rem(40px);
+    margin: 0;
+    &:after {
+        margin-top: 3px;
+    }
+    .action__label {
+        display: none;
+    }
+    @include mq(tablet) {
+        height: auto;
+        width: 100%;
+        max-width: rem(gs-span(3));
+        &:after {
+            margin-top: 2px;
+        }
+        .action__label {
+            display: inline-block;
+        }
+    }
 }
 
 /* Actions - Secondary Modifiers

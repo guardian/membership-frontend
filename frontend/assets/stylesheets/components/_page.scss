@@ -68,12 +68,16 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  * typically combined with page-headline and page-intro
  */
 .page-header {
-    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+    max-width: rem(gs-span(8));
+    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 3);
+    }
 
     @include mq(mem-full) {
-        width: rem(gs-span(11));
-        padding-right: rem($gs-gutter);
-        padding-left: $_page-offset;
+        margin-right: rem($gs-gutter);
+        margin-left: $_page-offset;
     }
 }
 
@@ -139,9 +143,14 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: rem($gs-gutter * 1.6);
 }
 .page-section__content {
-    @include mq(desktop) {
+    @include mq(tablet) {
         float: left;
-        width: rem(gs-span(8));
+        width: 75% - $gutter-width-fluid;
+        margin-right: $gutter-width-fluid;
+    }
+    @include mq(desktop) {
+        margin-right: 0;
+        width: rem(gs-span(9));
     }
     @include mq(mem-full) {
         width: rem(gs-span(11));
@@ -150,12 +159,12 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 }
 .page-section__supplementary {
     clear: both;
-    @include mq(desktop) {
+    @include mq(tablet) {
         clear: none;
         float: right;
-        width: rem(gs-span(4));
+        width: 25%;
     }
-    @include mq(mem-full) {
+    @include mq(desktop) {
         width: rem(gs-span(3));
     }
 }
