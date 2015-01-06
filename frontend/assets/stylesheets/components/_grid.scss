@@ -11,8 +11,12 @@
     margin: 0;
 }
 .grid__item {
-    margin-bottom: rem($gs-gutter);
     border-color: transparent;
+    margin-bottom: rem($gs-gutter / 2);
+
+    @include mq(mobileLandscape) {
+        margin-bottom: rem($gs-baseline);
+    }
 }
 
 .grid--bordered {
@@ -26,7 +30,7 @@
 .grid--single-row {
     @include mq(desktop) {
         .grid__item {
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
         }
     }
 }

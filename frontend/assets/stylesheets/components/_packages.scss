@@ -25,7 +25,6 @@
 .package {
     display: block;
     overflow: hidden;
-    // margin: 0 0 rem($gs-gutter / 2);
     background-color: $c-neutral7;
 
     &:last-child {
@@ -227,7 +226,7 @@
 }
 
 .package__description {
-    @include fs-bodyCopy(1);
+    @include fs-headline(2);
     @include mq($from: tablet, $until: desktop) {
         display: inline-block;
         vertical-align: top;
@@ -237,7 +236,7 @@
     }
 }
 
-// TODO: Why is this in here?
+// TODO: Can be removed when choose.js / mobile toggle pattern is deprecatedpackage--promo
 .toggle--open {
     @include rotate(180deg);
 }
@@ -247,7 +246,8 @@
 
 .package--promo {
     position: relative;
-    border-top: 2px solid;
+    border-top: 5px solid;
+
     .package__header {
         padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
     }
@@ -263,6 +263,7 @@
         bottom: rem($gs-gutter / 2);
         right: rem($gs-gutter / 2);
     }
+
     @include mq(tablet) {
         .package__content {
             margin-left: 35%;
@@ -272,12 +273,12 @@
             position: static;
         }
     }
+
     @include mq(desktop) {
         .package__content {
             margin-left: 0;
             padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
         }
-
     }
 }
 
@@ -342,7 +343,7 @@
     margin-bottom: rem($gs-gutter);
 }
     .package-stack__header {
-        border-bottom: 1px dotted $c-border-brand;
+        border-bottom: 1px dotted $c-border-neutral;
         padding-bottom: rem($gs-baseline / 2);
         margin-bottom: rem($gs-baseline / 2);
 
@@ -353,9 +354,8 @@
         }
     }
     .package-stack__content {
-        @include mq(mobileLandscape) {
-            margin-left: rem(gs-span(1));
-        }
+        margin-left: rem($gs-gutter * 2);
+
         @include mq(tablet) {
             width: 65%;
             float: left;

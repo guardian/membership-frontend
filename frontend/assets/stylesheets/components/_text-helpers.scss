@@ -10,6 +10,10 @@
     font-weight: normal;
 }
 
+.text-caption {
+    @include fs-textSans(2);
+}
+
 .text-intro {
     margin: rem($gs-baseline * 2) 0 rem($gs-baseline * 3);
 }

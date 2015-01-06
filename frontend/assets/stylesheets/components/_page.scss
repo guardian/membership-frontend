@@ -68,11 +68,16 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  * typically combined with page-headline and page-intro
  */
 .page-header {
-    max-width: rem(gs-span(11));
-    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+    max-width: rem(gs-span(8));
+    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 3);
+    }
+
     @include mq(mem-full) {
-        padding-right: rem($gs-gutter);
-        padding-left: $_page-offset;
+        margin-right: rem($gs-gutter);
+        margin-left: $_page-offset;
     }
 }
 

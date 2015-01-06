@@ -8,10 +8,15 @@
 }
 .stat-item {
     @include clearfix;
-    @include fs-data(4);
+    @include fs-data(2);
     border-bottom: 1px dotted $c-neutral3;
     padding-bottom: rem($gs-baseline / 2);
     margin-bottom: rem($gs-baseline / 2);
+
+    @include mq(mobileLandscape) {
+        @include fs-data(4);
+    }
+
     @include mq(desktop) {
         display: table;
     }

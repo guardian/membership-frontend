@@ -466,6 +466,7 @@ $filter-icon-size: 18px;
         @include fs-headline(2);
         font-weight: 500;
     }
+
     @include mq(mobileLandscape) {
         .event-item__container {
             height: rem(280px);
@@ -482,18 +483,17 @@ $filter-icon-size: 18px;
         @include fs-headline(2);
         font-weight: 500;
     }
+
     @include mq(tablet) {
         .event-item__container {
             height: auto;
             overflow: hidden;
         }
-
         .event-item__media {
             width: $trailblockImgWidthLarge;
             float: left;
             margin-right: rem($gs-baseline);
         }
-
         .event-item__meta {
             padding-bottom: 0;
         }
@@ -508,6 +508,7 @@ $filter-icon-size: 18px;
     width: 100%;
     display: table;
     margin-bottom: rem($gs-baseline);
+
     @include mq(tablet) {
         display: block;
     }
@@ -517,19 +518,35 @@ $filter-icon-size: 18px;
     margin-bottom: rem($gs-baseline / 2);
 }
 .event-snapshot__title {
-    @include fs-header(1);
+    @include fs-textSans(3);
+    font-weight: bold;
+
+    @include mq(mobileLandscape) {
+        @include fs-header(1);
+    }
 }
 .event-snapshot__media,
 .event-snapshot__content {
     display: table-cell;
     vertical-align: top;
+
     @include mq(tablet) {
         display: block;
+    }
+}
+.event-snapshot__content {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        border: 0 none;
+        padding-top: 0;
     }
 }
 .event-snapshot__media {
     width: 30%;
     padding-right: $gutter-width-fluid;
+
     @include mq(tablet) {
         width: auto;
         padding-right: 0;

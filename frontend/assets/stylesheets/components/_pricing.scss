@@ -8,7 +8,6 @@
 .price-info {
     position: relative;
     max-width: rem(gs-span(4) - $gs-gutter);
-    min-height: rem($gs-gutter * 3);
 
     @include mq(mobileLandscape) {
         max-width: rem(gs-span(4) - $gs-gutter * 2);
@@ -19,6 +18,11 @@
         width: 100%;
         border-spacing: 0;
     }
+
+    @include mq(desktop) {
+        min-height: rem($gs-gutter * 3);
+    }
+
 }
     .price-info__item {
         display: inline-block;
@@ -53,12 +57,10 @@
     }
     .price-info__saving {
         @include fs-textSans(1);
+        color: $c-neutral2;
         display: block;
         text-align: left;
-
-        @include mq(tablet) {
-            margin-top: -3px;
-        }
+        margin-top: -3px;
     }
 
 /**
@@ -87,6 +89,9 @@
     .price-info__item--last {
         text-align: right;
     }
+    .price-info__item--single {
+        padding-right: 0;
+    }
     .price-info__item--last {
         padding-right: 0;
         padding-left: $gutter-width-fluid;
@@ -108,6 +113,9 @@
     .price-info__item--split {
         border-color: $black-trans;
     }
+    .price-info__saving {
+        color: $c-body;
+    }
 
     @include pricing-flex();
 
@@ -117,6 +125,9 @@
 .price-info--friend,
 .price-info--patron {
     color: $white;
+    .price-info__saving {
+        color: $white;
+    }
     .price-info__item--split {
         border-color: $white-trans;
     }
@@ -128,13 +139,22 @@
 /* Miminal inline version of price info component */
 
 .price-info-inline {
-    padding-bottom: rem($gs-baseline);
+    @include clearfix;
 }
 .price-info-inline__value {
     padding-bottom: 0;
-    @include fs-header(4);
+    @include fs-textSans(3);
+    font-weight: bold;
+
+    @include mq(mobileLandscape) {
+        @include fs-header(4);
+    }
 }
 .price-info-inline__trail {
-    @include fs-data(3);
     color: $c-neutral2;
+    @include fs-data(2);
+
+    @include mq(mobileLandscape) {
+        @include fs-data(3);
+    }
 }
