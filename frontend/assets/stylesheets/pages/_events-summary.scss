@@ -22,7 +22,7 @@
         @include fs-data(2);
         position: relative;
         top: rem(-3px);
-        padding: rem(1px) rem(3px);
+        padding: 1px rem(3px);
         margin-right: rem(4px);
     }
 
@@ -31,14 +31,14 @@
         @include font-size(rem(14px), rem(22px));
 
         @include mq(tablet) {
-            border-top: rem(1px) dotted $c-neutral3;
+            border-top: 1px dotted $c-neutral3;
             margin-left: rem(gs-span(3) + $gs-gutter);
             padding-top: rem($gs-baseline / 2);
         }
     }
 
     .event-item__detail {
-        border-top: rem(1px) dotted $c-neutral3;
+        border-top: 1px dotted $c-neutral3;
         padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
 
         &:last-child,

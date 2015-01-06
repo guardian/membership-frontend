@@ -3,14 +3,14 @@
    ========================================================================== */
 
 .package-container {
-    border-top: rem(1px) solid transparent;
-    border-bottom: rem(1px) solid transparent;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
     padding-top: rem($gs-gutter * 3);
 }
 
 .package-container__header {
     padding-bottom: rem($gs-gutter);
-    border-bottom: rem(1px) dotted $c-neutral1;
+    border-bottom: 1px dotted $c-neutral1;
 
     @include mq(tablet) {
         margin-bottom: rem($gs-gutter * 4);
@@ -93,7 +93,7 @@
 }
 
 .package-list--bordered .package {
-    border: rem(1px) solid $c-neutral5;
+    border: 1px solid $c-neutral5;
 }
 
 .package__item-cta {
@@ -169,7 +169,7 @@
 }
 
 .package--current {
-    border: rem(1px) solid #9c9c9c;
+    border: 1px solid #9c9c9c;
 }
 
 .package__select-zone {

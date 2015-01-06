@@ -36,11 +36,11 @@ td {
     }
 
     td {
-        border-top: rem(1px) solid darken($c-neutral8, 4%);
+        border-top: 1px solid darken($c-neutral8, 4%);
     }
 
     abbr {
-        border-bottom: rem(1px) dotted $c-neutral8;
+        border-bottom: 1px dotted $c-neutral8;
     }
 
 }
@@ -82,12 +82,12 @@ td {
 }
 
 .table-row--divider td {
-    border-top: rem(1px) dashed $c-neutral1;
+    border-top: 1px dashed $c-neutral1;
 }
 
 .table__headline {
     @include fs-bodyHeading(2);
-    border-top: rem(1px) dotted $c-neutral5;
+    border-top: 1px dotted $c-neutral5;
     padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
 }
 
