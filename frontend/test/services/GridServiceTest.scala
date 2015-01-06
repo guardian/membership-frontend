@@ -1,6 +1,8 @@
 package services
 
+import model.Grid.GridResult
 import org.specs2.mutable.Specification
+import utils.Resource
 
 
 class GridServiceTest extends Specification {
@@ -33,5 +35,25 @@ class GridServiceTest extends Specification {
 
   "must return None if no parameter is passed into url" in {
     service.cropParam("https://media.test.dev-gutools.co.uk/images/fsifjsifjsi") mustEqual(None)
+  }
+
+  "must return requested crop with dimensions" in {
+    val grid = Resource.getJson("model/grid/api-image.json")
+    val gridResponse = Some(grid.as[GridResult])
+    val requestedCrop = Some("0_130_1703_1022")
+    val assets = service.findAssets(gridResponse, requestedCrop)
+
+    assets.size mustEqual(3)
+    assets.map(_.dimensions.width) mustEqual(List(1000, 500, 140))
+  }
+
+  "must return first crop when requested crop is not defined" in {
+    val grid = Resource.getJson("model/grid/api-image.json")
+    val gridResponse = Some(grid.as[GridResult])
+    val assets = service.findAssets(gridResponse, None)
+
+    assets.size mustEqual(2)
+    assets.map(_.dimensions.width) mustEqual(List(1000, 500))
+
   }
 }
