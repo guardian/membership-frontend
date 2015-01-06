@@ -115,21 +115,9 @@
         <div id="whats-included" class="page-slice__inner">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice-content">
-                @fragments.tier.packageFeature(Tier.Friend, "Benefits") {
-                    <a class="action action--no-margin js-opt-become-member" data-link-name="Become a Friend" href="/join/friend/enter-details">
-                        Become a Friend
-                    </a>
-                }
-                @fragments.tier.packageFeature(Tier.Partner, "All Friend benefits, plus") {
-                    <a class="action action--no-margin js-opt-become-member" data-link-name="Become a Partner" href="/join/partner/enter-details">
-                        Become a Partner
-                    </a>
-                }
-                @fragments.tier.packageFeature(Tier.Patron, "All Partner benefits, plus") {
-                    <a class="action action--no-margin js-opt-become-member" data-link-name="Become a Patron" href="/join/patron/enter-details">
-                        Become a Patron
-                    </a>
-                }
+                @fragments.tier.packageFeature(Tier.Friend)
+                @fragments.tier.packageFeature(Tier.Partner)
+                @fragments.tier.packageFeature(Tier.Patron)
             </div>
         </div>
     </div>
