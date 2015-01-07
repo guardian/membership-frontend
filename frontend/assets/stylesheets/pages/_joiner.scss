@@ -11,7 +11,7 @@ $card-icon-offset: 2px;
 }
 
 .form-secondary-container {
-    border-top: rem(1px) solid $c-neutral7;
+    border-top: 1px solid $c-neutral7;
     width: 100%;
     padding-top: rem($gutter);
 }
@@ -83,7 +83,7 @@ $card-icon-offset: 2px;
 @include mq(tablet) {
     .form-secondary-container {
         border-top: 0;
-        border-left: rem(1px) solid $c-neutral7;
+        border-left: 1px solid $c-neutral7;
         padding: rem($gutter) 0 0 rem($gutter * 3);
         float: left;
         width: 35%;

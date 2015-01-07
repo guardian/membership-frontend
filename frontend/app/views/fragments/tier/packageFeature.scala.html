@@ -1,7 +1,4 @@
-@(
-    tier: com.gu.membership.salesforce.Tier.Tier,
-    caption: String = ""
-)(action: Html)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier)
 
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
@@ -10,17 +7,17 @@
     <div class="package-feature__header">
         @fragments.tier.tierHeader(tier)
     </div>
-    @if(caption){
-        <div class="package-feature__caption">
-            @caption
-        </div>
-    }
+    <div class="package-feature__caption">
+        @Benefits.details(tier).leadin
+    </div>
     <div class="package-feature__content">
         <div class="package-feature__benefits">
             @fragments.benefits.featured(tier)
         </div>
         <div class="package-feature__action">
-            @action
+            <a class="action action--no-margin js-opt-become-member" data-link-name="@Benefits.details(tier).cta" href="/join/@tier.toString.toLowerCase/enter-details">
+                @Benefits.details(tier).cta
+            </a>
         </div>
     </div>
 </div>

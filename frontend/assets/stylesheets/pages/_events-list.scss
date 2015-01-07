@@ -67,7 +67,7 @@
     background-color: $white;
     padding: rem($gs-gutter / 2) 0;
     overflow: hidden;
-    border-bottom: rem(1px) solid $mem-live-accent;
+    border-bottom: 1px solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter) 0;
@@ -134,7 +134,7 @@
 .event-filters {
     background-color: $white;
     padding: rem($gs-gutter / 2);
-    border-bottom: rem(1px) solid $mem-live-accent;
+    border-bottom: 1px solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter);
