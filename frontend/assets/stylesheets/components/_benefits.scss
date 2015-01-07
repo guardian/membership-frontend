@@ -116,7 +116,7 @@
 
 .benefits-title {
     @include fs-bodyHeading(2);
-    border-top: rem(1px) dotted $c-neutral3;
+    border-top: 1px dotted $c-neutral3;
     padding: rem(7px) 0 rem($gs-baseline / 6) 0;
     clear: both;
 }

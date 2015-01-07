@@ -79,10 +79,10 @@
        @include fs-bodyCopy(2);
        width: 100%;
        display: block;
-       border: rem(1px) solid transparent;
+       border: 1px solid transparent;
 
        &:hover {
-           border: rem(1px) solid $c-neutral2;
+           border: 1px solid $c-neutral2;
        }
    }
 
