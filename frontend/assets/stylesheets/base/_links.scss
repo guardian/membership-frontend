@@ -5,7 +5,7 @@
 a,
 .fake-link {
     overflow: hidden;
-    color: $c-newsDefault;
+    color: $c-link;
     cursor: pointer;
     text-decoration: none;
 
@@ -14,7 +14,7 @@ a,
         text-decoration: underline;
     }
     &:active {
-        color: $c-newsAccent;
+        color: $c-link;
         text-decoration: none;
     }
 }

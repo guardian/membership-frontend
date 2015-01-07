@@ -86,7 +86,7 @@ body {
         content: '';
         position: absolute;
         z-index: 1;
-        background: $c-body-transparent;
+        background: $c-background-transparent;
 
         /**
          * Magic number: we shift these margins up to skip the header gap
