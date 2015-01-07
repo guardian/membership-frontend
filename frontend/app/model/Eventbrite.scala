@@ -1,20 +1,17 @@
 package model
 
-import com.netaporter.uri.Uri
-import model.Grid.Asset
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import play.api.data.validation.ValidationError
-
 import com.github.nscala_time.time.Imports._
-
-import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.Instant
-
+import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 import configuration.Config
+import model.Grid.{Asset, Metadata}
+import org.joda.time.Instant
+import org.joda.time.format.ISODateTimeFormat
+import play.api.data.validation.ValidationError
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 import services.MasterclassData
 import utils.StringUtils.truncateToWordBoundary
-import com.netaporter.uri.dsl._
 
 object Eventbrite {
 
@@ -151,11 +148,17 @@ object Eventbrite {
     implicit def eventOptToEBEventOpt(eventOpt: Option[RichEvent]) = eventOpt.map(_.event)
   }
 
-  case class GuLiveEvent(event: EBEvent, assets: List[Asset]) extends RichEvent {
+  case class EventImage(assets:List[Asset], metadata: Metadata)
 
-    val imgUrl = assets.headOption.fold(Config.gridConfig.fallbackImageUrl)(asset => asset.secureFile.getOrElse(asset.file))
 
-    val availableWidths = assets.map(_.dimensions.width)
+  case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
+
+    //todo unit test this
+    val imgUrl = image.fold(Config.gridConfig.fallbackImageUrl)(_.assets.headOption.fold(Config.gridConfig.fallbackImageUrl)(asset =>asset.secureFile.getOrElse(asset.file)))
+
+    val availableWidths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+
+    val imageMetadata = image.map(_.metadata)
 
     //todo change
     val socialImgUrl = {

@@ -3,8 +3,9 @@ package services
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri.parse
 import configuration.Config
+import model.Eventbrite.EventImage
 import model.Grid
-import model.Grid.{Asset, Error, GridObject, GridResult}
+import model.Grid._
 import model.GridDeserializer._
 import monitoring.GridApiMetrics
 import play.api.libs.ws.WSRequestHolder
@@ -22,19 +23,20 @@ object GridService extends utils.WebServiceHelper[GridObject, Error] {
 
   def cropParam(urlString: String) = parse(urlString).query.param("crop")
 
-  def getRequestedCrop(url: String) = getAllCrops(url).map(findAssets(_, cropParam(url)))
+  def getRequestedCrop(url: String) : Future[Option[EventImage]] = {
+    for (gridOpt <- getGrid(url))
+    yield gridOpt.map(grid => EventImage(findAssets(grid, cropParam(url)), grid.data.metadata))
+  }
 
-  def getAllCrops(url: String) = {
+  def getGrid(url: String) = {
     if (isUrlCorrectFormat(url)) get[GridResult](getEndpoint(url)).map(Some(_))
     else Future.successful(None)
   }
 
-  def findAssets(gridOpt: Option[GridResult], cropParameter: Option[String]) = {
-    val exportOpt = gridOpt.flatMap { grid =>
-      val exports = grid.data.exports
-      cropParameter.flatMap(cr => exports.find(_.id == cr)).orElse(exports.headOption)
-    }
-    exportOpt.map(_.assets).getOrElse(Nil)
+  def findAssets(grid: GridResult, cropParameter: Option[String]) = {
+    val exports = grid.data.exports
+    val requestedExport = cropParameter.flatMap(cr => exports.find(_.id == cr)).orElse(exports.headOption)
+    requestedExport.map(_.assets).getOrElse(Nil)
   }
 
   override val wsUrl: String = Config.gridConfig.apiUrl

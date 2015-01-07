@@ -3,7 +3,7 @@ package services
 import model.Grid.GridResult
 import org.specs2.mutable.Specification
 import utils.Resource
-
+import model.GridDeserializer._
 
 class GridServiceTest extends Specification {
   val service = GridService
@@ -39,7 +39,7 @@ class GridServiceTest extends Specification {
 
   "must return requested crop with dimensions" in {
     val grid = Resource.getJson("model/grid/api-image.json")
-    val gridResponse = Some(grid.as[GridResult])
+    val gridResponse = grid.as[GridResult]
     val requestedCrop = Some("0_130_1703_1022")
     val assets = service.findAssets(gridResponse, requestedCrop)
 
@@ -49,7 +49,7 @@ class GridServiceTest extends Specification {
 
   "must return first crop when requested crop is not defined" in {
     val grid = Resource.getJson("model/grid/api-image.json")
-    val gridResponse = Some(grid.as[GridResult])
+    val gridResponse = grid.as[GridResult]
     val assets = service.findAssets(gridResponse, None)
 
     assets.size mustEqual(2)
