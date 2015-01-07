@@ -185,18 +185,18 @@
 
 .form-field--error {
     .label {
-        color: $newsRed;
+        color: $c-error;
     }
 
     .text-input,
     .text-input:focus {
-        border-color: $newsRed;
+        border-color: $c-error;
     }
 }
 
 .form-field__error-message {
     @include fs-data(3);
-    color: $newsRed;
+    color: $c-error;
     margin-top: rem(2px);
 }
 
@@ -212,7 +212,7 @@
 }
 
 .form-field__error {
-    color: $newsRed;
+    color: $c-error;
     margin-top: rem($gs-baseline / 2);
 }
 

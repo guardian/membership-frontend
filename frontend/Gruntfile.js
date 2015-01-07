@@ -2,28 +2,38 @@
 module.exports = function (grunt) {
     'use strict';
 
+    /**
+     * Setup
+     */
     var isDev = (grunt.option('dev') !== undefined) ? Boolean(grunt.option('dev')) : process.env.GRUNT_ISDEV === '1';
     var pkg = grunt.file.readJSON('package.json');
     var singleRun = grunt.option('single-run') !== false;
+
+    /**
+     * Load all grunt-* tasks
+     */
+    require('load-grunt-tasks')(grunt);
 
     if (isDev) {
         grunt.log.subhead('Running Grunt in DEV mode');
     }
 
-    // Project configuration..
+    /**
+     * Project configuration
+     */
     grunt.initConfig({
 
         pkg: pkg,
 
         dirs: {
             publicDir: {
-                root: 'public',
+                root:        'public',
                 stylesheets: '<%= dirs.publicDir.root %>/stylesheets',
                 javascripts: '<%= dirs.publicDir.root %>/javascripts',
                 images:      '<%= dirs.publicDir.root %>/images'
             },
             assets: {
-                root: 'assets',
+                root:        'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
                 javascripts: '<%= dirs.assets.root %>/javascripts',
                 images:      '<%= dirs.assets.root %>/images'
@@ -33,6 +43,7 @@ module.exports = function (grunt) {
         /***********************************************************************
          * Compile
          ***********************************************************************/
+
         sass: {
             compile: {
                 files: [{
@@ -77,6 +88,10 @@ module.exports = function (grunt) {
                 }
             }
         },
+
+        /***********************************************************************
+         * Copy & Clean
+         ***********************************************************************/
 
         copy: {
             css: {
@@ -138,8 +153,6 @@ module.exports = function (grunt) {
             }
         },
 
-
-        // Clean stuff up
         clean: {
             js : ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
@@ -154,7 +167,10 @@ module.exports = function (grunt) {
             dist: ['<%= dirs.publicDir.root %>/dist/']
         },
 
-        // Recompile on change
+        /***********************************************************************
+         * Watch
+         ***********************************************************************/
+
         watch: {
             css: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
@@ -173,6 +189,10 @@ module.exports = function (grunt) {
                 }
             }
         },
+
+        /***********************************************************************
+         * Assets
+         ***********************************************************************/
 
         // generate a mapping file of hashed assets
         // and move/rename built files to /dist/
@@ -204,8 +224,19 @@ module.exports = function (grunt) {
             }
         },
 
+        imagemin: {
+            dynamic: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.publicDir.images %>',
+                    src: ['**/*.{png,jpg}', '!**/svgs/**'],
+                    dest: '<%= dirs.publicDir.images %>'
+                }]
+            }
+        },
+
         /***********************************************************************
-         * Test
+         * Test & Validate
          ***********************************************************************/
 
         karma: {
@@ -220,14 +251,11 @@ module.exports = function (grunt) {
             }
         },
 
-        /***********************************************************************
-         * Validate
-         ***********************************************************************/
-
         // Lint Javascript sources
         jshint: {
             options: {
-                jshintrc: '../jshint_conf.json'
+                jshintrc: '../.jshintrc',
+                reporter: require('jshint-stylish')
             },
             self: [
                 'Gruntfile.js'
@@ -237,11 +265,24 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',
                     src: [
-                        '**/*.js',
-                        '!**/lib/**/*.js',
-                        '!**/atob.js',
-                        '!**/user.js',
-                        '!**/utils/analytics/omniture.js'
+                        'config/**/*.js',
+                        'src/**/*.js'
+                    ]
+                }]
+            }
+        },
+
+        jscs: {
+            options: {
+                config: '../.jscsrc'
+            },
+            common: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.assets.javascripts %>/',
+                    src: [
+                        'config/**/*.js',
+                        'src/**/*.js'
                     ]
                 }]
             }
@@ -260,7 +301,9 @@ module.exports = function (grunt) {
             }
         },
 
-        // misc
+        /***********************************************************************
+         * Shell
+         ***********************************************************************/
 
         shell: {
             svgencode: {
@@ -277,33 +320,16 @@ module.exports = function (grunt) {
                     failOnError: true
                 }
             }
-        },
-
-        imagemin: {
-            dynamic: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= dirs.publicDir.images %>',
-                    src: ['**/*.{png,jpg}', '!**/svgs/**'],
-                    dest: '<%= dirs.publicDir.images %>'
-                }]
-            }
         }
 
     });
 
-    // Load the plugins
-    grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-scss-lint');
-    grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-asset-hash');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
+    /**
+     * Register tasks
+     */
+    /***********************************************************************
+     * Compile
+     ***********************************************************************/
 
     grunt.registerTask('compile', function(){
         grunt.task.run([
@@ -311,8 +337,10 @@ module.exports = function (grunt) {
             'compile:css',
             'compile:js'
         ]);
-        // only version files for prod builds
-        // and wipe out unused non-versioned assets for good measure
+        /**
+         * Only version files for prod builds
+         * Wipe out unused non-versioned assets for good measure
+         */
         if (!isDev) {
             grunt.task.run([
                 'asset_hash',
@@ -321,25 +349,6 @@ module.exports = function (grunt) {
             ]);
         }
     });
-
-    grunt.registerTask('validate', ['jshint', 'scsslint']);
-
-    // Test tasks
-    grunt.registerTask('test:unit', function() {
-        grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
-        grunt.task.run(['karma:unit']);
-    });
-
-    grunt.registerTask('test', function(){
-        if (!isDev) {
-            grunt.task.run(['validate']);
-        }
-        grunt.task.run(['test:unit']);
-    });
-
-    grunt.registerTask('clean:public', ['clean:js', 'clean:css', 'clean:images', 'clean:assetMap', 'clean:dist']);
-    grunt.registerTask('clean:public:prod', ['clean:js', 'clean:css', 'clean:images']);
-
     grunt.registerTask('compile:css', function() {
         if (!isDev) {
             grunt.task.run(['scsslint']);
@@ -353,7 +362,6 @@ module.exports = function (grunt) {
             'imagemin'
         ]);
     });
-
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
             grunt.task.run(['jshint']);
@@ -369,5 +377,39 @@ module.exports = function (grunt) {
         ]);
     });
 
+    /***********************************************************************
+     * Test
+     ***********************************************************************/
+
+    grunt.registerTask('validate', ['jshint', 'scsslint']);
+
+    grunt.registerTask('test', function(){
+        if (!isDev) {
+            grunt.task.run(['validate']);
+        }
+        grunt.task.run(['test:unit']);
+    });
+    grunt.registerTask('test:unit', function() {
+        grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
+        grunt.task.run(['karma:unit']);
+    });
+
+    /***********************************************************************
+     * Clean
+     ***********************************************************************/
+
+    grunt.registerTask('clean:public', [
+        'clean:js',
+        'clean:css',
+        'clean:images',
+        'clean:assetMap',
+        'clean:dist'
+    ]);
+    grunt.registerTask('clean:public:prod', [
+        'clean:js',
+        'clean:css',
+        'clean:images'
+    ]);
     grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
+
 };

@@ -58,7 +58,9 @@
    ========================================================================== */
 
 
-.h-section {
+.h-section,
+.h-section--inline,
+.h-section--lead {
     @include fs-header(2);
     padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
     border: solid $c-border-brand;
@@ -68,7 +70,9 @@
         font-size: get-font-size(header, 3);
     }
 }
-
+.h-section--inline {
+    padding-bottom: 0;
+}
 .h-section--lead {
     padding-top: 0;
     border-width: 0;

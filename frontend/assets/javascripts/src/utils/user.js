@@ -26,6 +26,8 @@ define([
         }
 
         function decodeBase64(str){
+            /*global escape: true */
+            /* See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/escape */
             return decodeURIComponent(escape(new AtoB()(str.replace(/-/g, '+').replace(/_/g, '/').replace(/,/g, '='))));
         }
 
@@ -65,7 +67,7 @@ define([
                 var callback = callbacks.splice(i, 1)[0];
                 callback.apply(this, args);
             }
-        }
+        };
 
         return function (callback, overRideCallbacks) {
             // for testing purposes to mimic a reload of the javascript and hence a clearing of the callbacks array
