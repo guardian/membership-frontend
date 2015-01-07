@@ -11,7 +11,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def membershipTab = driver.findElement(By.cssSelector("#tabs-account-profile-3-tab>a"))
 
-  private def tierSpan = driver.findElement(By.cssSelector(".js-membership-tier"))
+  private def tierSpan = driver.findElement(By.id("qa-membership-tier"))
 
   private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-join-date"))
 
