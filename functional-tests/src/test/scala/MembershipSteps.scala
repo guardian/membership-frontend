@@ -453,7 +453,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
-    "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2031")
+    "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2021")
 
   private def becomeFriend = new PaymentPage(driver).cardWidget.enterFirstName("test")
     .enterLastName("Automation").enterPostCode("N1 9GU").clickSubmitPayment
