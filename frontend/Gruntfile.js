@@ -72,10 +72,12 @@ module.exports = function (grunt) {
                     baseUrl: '<%= dirs.assets.javascripts %>',
                     paths: {
                         '$': 'src/utils/$',
+                        'modernizr': 'lib/modernizr',
                         'bean': 'lib/bower-components/bean/bean',
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
                         'qwery': 'lib/bower-components/qwery/qwery',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
+                        'raven': 'lib/bower-components/raven-js/dist/raven',
                         'ajax': 'src/utils/ajax',
                         'stripe': 'lib/stripe/stripe.min'
                     },
