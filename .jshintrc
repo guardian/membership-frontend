@@ -26,7 +26,6 @@
         "require"  : false,
         "define"   : false,
         "s"        : false,
-        "Swipe"    : false,
         "guardian" : false
     }
 }
