@@ -153,7 +153,6 @@ object Eventbrite {
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
 
-    //todo unit test this
     val imgUrl = image.fold(Config.gridConfig.fallbackImageUrl)(_.assets.headOption.fold(Config.gridConfig.fallbackImageUrl)(asset =>asset.secureFile.getOrElse(asset.file)))
 
     val availableWidths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
