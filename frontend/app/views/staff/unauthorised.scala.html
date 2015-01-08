@@ -6,20 +6,18 @@
 
     <main class="page-content">
 
-        @fragments.page.pageHeader("No Access")
+        @fragments.page.pageHeader("Sorry, we are having problems authenticating your email address")
 
         <section class="page-section">
-            <div class="page-section__content">
+            <div class="page-section__content copy">
                 @for(flashMessage <- flashMessageOpt) {
                     <p>@flashMessage.message</p>
                 }
-
+                @if(staffEmail) {
+                    <p>You are currently signed in as <strong>@staffEmail</strong></p>
+                }
                 @for(errorTemplate <- errorTemplateOpt) {
                     @Html(errorTemplate)
-                }
-
-                @if(staffEmail) {
-                    <p>You are currently signed in as <strong>@staffEmail</strong>.</p>
                 }
             </div>
         </section>
