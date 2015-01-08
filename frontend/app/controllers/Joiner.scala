@@ -81,7 +81,7 @@ trait Joiner extends Controller {
     for {
       user <- identityService.getFullUserDetails(user, identityRequest)
       passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields, user.statusFields, passwordExists)
+    } yield (user.privateFields, user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
