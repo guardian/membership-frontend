@@ -180,9 +180,9 @@
    ========================================================================== */
 
 .event-item--hero {
-    margin-bottom: $gutter-width-fluid;
     width: 100%;
     height: auto;
+    margin-bottom: rem($gs-baseline);
 
     .event-item__container {
         @include clearfix;
