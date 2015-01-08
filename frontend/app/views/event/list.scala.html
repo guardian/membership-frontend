@@ -11,13 +11,13 @@
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
-        <section class="page-listing page-listing--lead page-listing--padded">
-            <div class="page-listing__lead-in">
-                <h3 class="page-listing__title h-intro">Featured</h3>
+        <section class="listing listing--lead listing--padded">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">Featured</h3>
             </div>
-            <div class="page-listing__content">
+            <div class="listing__content">
                 @for(heroEvent <- eventPortfolio.heroOpt) {
-                    @fragments.event.item(heroEvent, true)
+                    @fragments.event.itemHero(heroEvent)
                 }
                 </ul>
                 <ul class="grid grid--3up grid--bordered grid--single-row">
@@ -31,21 +31,21 @@
         </section>
     }
 
-    <section class="page-listing page-listing--padded">
-        <div class="page-listing__lead-in">
-            <h3 class="page-listing__title h-intro">What's on</h3>
+    <section class="listing listing--padded">
+        <div class="listing__lead-in">
+            <h3 class="listing__title h-intro">What's on</h3>
         </div>
-        <div class="page-listing__content">
+        <div class="listing__content">
             @if(eventPortfolio.normal.isEmpty) {
-                <div class="page-listing__empty">@noResultsMessage</div>
+                <div class="listing__empty">@noResultsMessage</div>
             } else {
                 @if(isFilterable) {
-                    <div class="page-listing__no-results js-filter-empty">@noResultsMessage</div>
+                    <div class="listing__no-results js-filter-empty">@noResultsMessage</div>
                 }
                 <ul class="grid grid--bordered grid--3up"@if(isFilterable){ id="js-filter-container"}>
                     @for(event <- eventPortfolio.normal) {
                         <li class="grid__item@if(isFilterable){ js-filter-item}">
-                            @fragments.event.item(event, false)
+                            @fragments.event.item(event)
                         </li>
                     }
                 </ul>
@@ -54,31 +54,29 @@
     </section>
 
     @if(showPastEvents && eventPortfolio.pastEvents) {
-        <section class="page-listing">
-            <div class="page-listing__lead-in">
-                <h3 class="page-listing__title h-intro">Past events</h3>
+        <section class="listing">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">Past events</h3>
             </div>
-            <div class="page-listing__content">
+            <div class="listing__content">
                 @if(eventPortfolio.normal.isEmpty) {
-                    <div class="page-listing__empty">@noResultsMessage</div>
+                    <div class="listing__empty">@noResultsMessage</div>
                 } else {
                     <ul class="grid grid--bordered grid--4up">
                         @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
                             <li class="grid__item">
-                                @fragments.event.item(event, false, isMinimal=true)
+                                @fragments.event.itemMinimal(event)
                             </li>
                         }
                     </ul>
                     <ul class="grid grid--bordered grid--2up" id="js-toggle-past-events" data-toggle-hidden>
                         @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
                             <li class="grid__item">
-                                @fragments.event.item(event, false, isMinimal=true, isCard=true)
+                                @fragments.event.itemMinimal(event, isCard=true)
                             </li>
                         }
                     </ul>
                 }
-            </div>
-            <div class="page-listing__footer">
                 <button class="js-toggle action action--toggle u-no-margin" data-toggle="js-toggle-past-events" data-toggle-label="Less">More past events</button>
             </div>
         </section>
@@ -87,11 +85,11 @@
 </div>
 
 @* ===== Join Today ===== *@
-<section class="page-listing page-listing--offset">
-    <div class="page-listing__lead-in">
+<section class="listing tone-tint">
+    <div class="listing__lead-in">
         <h3 class="h-intro">Join membership today</h3>
     </div>
-    <div class="page-listing__content">
+    <div class="listing__content">
         <ul class="grid grid--single-row grid--bordered grid--3up-stacked">
             <li class="grid__item">
                 @fragments.tier.packagePromo(Tier.Friend, isReversed=true)

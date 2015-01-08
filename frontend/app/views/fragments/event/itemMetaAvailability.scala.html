@@ -1,0 +1,37 @@
+@(event: model.Eventbrite.RichEvent)
+
+@import model.Eventbrite._
+
+<div class="event-item__tickets" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+    @if(event.isSoldOut) {
+        <meta itemprop="availability" content="http://schema.org/SoldOut">
+    } else {
+        <meta itemprop="availability" content="http://schema.org/InStock">
+    }
+
+    @if(event.isNoTicketEvent == false) {
+        <div class="event-item__price">
+            @for(ticket <- event.generalReleaseTicket) {
+                @if(ticket.free) {
+                    <span class="event-item__price-amount">
+                        Free
+                    </span>
+                } else {
+                    @for(pricing <- ticket.cost) {
+                        <div class="js-event-price">
+                            <span class="event-item__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                                @pricing.formattedPrice
+                            </span>
+                            <span class="event-item__price-amount-discount js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice" content="@pricing.discountPrice">
+                               Partners/Patrons: @pricing.discountPrice
+                            </span>
+                            <span class="event-item__price-amount-discount js-event-price-saving" data-discount-text="You save @pricing.savingPrice">
+                                Save @pricing.savingPrice
+                            </span>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    }
+</div>
