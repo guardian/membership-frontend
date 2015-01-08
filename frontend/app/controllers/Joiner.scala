@@ -138,10 +138,12 @@ trait Joiner extends Controller {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
         event <- EventbriteService.getBookableEvent(eventId)
       } yield {
-        EventbriteService.getService(event).wsMetrics.put("user-sent-to-eventbrite", 1)
+        EventbriteService.getService(event).wsMetrics.put(s"user-sent-to-eventbrite-iframe-$tier", 1)
+
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
         }
+
       }
 
       Future.sequence(optFuture.toSeq).map(_.headOption)

@@ -120,7 +120,7 @@ trait Event extends Controller {
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(metrics(event), "user-sent-to-eventbrite") {
+    Timing.record(metrics(event), s"user-sent-to-eventbrite-${request.member.tier}") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
