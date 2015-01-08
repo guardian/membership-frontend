@@ -153,7 +153,6 @@ object Eventbrite {
 
   case class EventImage(assets: List[Asset], metadata: Metadata)
 
-
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
 
     val imgUrl = image.flatMap(_.assets.headOption).fold(Config.gridConfig.fallbackImageUrl) { asset =>
@@ -187,10 +186,9 @@ object Eventbrite {
       .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
       .replace("http://static", "https://static-secure")
 
-    val availableWidths = "" //todo
+    val availableWidths = ""
 
     val socialImgUrl = imgUrl
-
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
@@ -198,9 +196,7 @@ object Eventbrite {
     val allowDiscountCodes = false
   }
 
-
   object MasterclassEvent {
-
     case class tagItem(categoryName: String, subCategories: Seq[String] = Seq())
 
     val tags = Seq(
@@ -217,17 +213,14 @@ object Eventbrite {
     // if a tag is hyphenated (Non-fiction) then weirdness/duplication happens here
     // so we replace it with an underscore in URLs (ugly, but limited alternatives)
     def encodeTag(tag: String) = tag.toLowerCase.replace("-", "_").replace(" ", "-")
-
     def decodeTag(tag: String) = tag.capitalize.replace("-", " ").replace("_", "-")
 
     def extractTags(s: String): Option[Seq[String]] =
       "<!--\\s*tags:(.*?)-->".r.findFirstMatchIn(s).map(_.group(1).split(",").toSeq.map(_.trim.toLowerCase))
   }
-
 }
 
 object EventbriteDeserializer {
-
   import Eventbrite._
 
   private def ebResponseReads[T](namespace: String)(implicit reads: Reads[Seq[T]]): Reads[EBResponse[T]] =
