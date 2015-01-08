@@ -1,0 +1,8 @@
+{
+    "validateIndentation": null,
+    "requireCurlyBraces": [
+        "if",
+        "else",
+        "for"
+    ]
+}

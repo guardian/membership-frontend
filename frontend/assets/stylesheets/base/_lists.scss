@@ -29,7 +29,32 @@ nav ol {
 .inline-list {
     @extend %u-unstyled;
 }
-
 .inline-list__item {
     display: inline-block; // Prevent linebreak within an item
+}
+
+.inline-list--divided {
+    .inline-list__item:after {
+        display: inline-block;
+        content: ' \2022 ';
+        margin: 0 rem($gs-baseline / 2);
+    }
+    .inline-list__item:last-child:after {
+        display: none;
+        content: '';
+    }
+}
+
+.list-stack {
+    margin: 0;
+    list-style: none;
+    li {
+        border-bottom: 1px dotted $c-border-neutral;
+        padding-bottom: rem($gs-baseline / 2);
+        margin-bottom: rem($gs-baseline / 2);
+    }
+    li:last-child {
+        border-bottom: 0 none;
+        margin-bottom: 0;
+    }
 }

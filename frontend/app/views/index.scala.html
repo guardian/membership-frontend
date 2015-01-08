@@ -4,24 +4,18 @@
 
     @* ===== Slideshow ===== *@
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/man_aud_{width}{pixel_ratio}.jpg",
-            "Guardian Live with Russell Brand", true)
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/pussy_riot_{width}{pixel_ratio}.jpg",
-            "Guardian Live event: Pussy Riot - art, sex and disobedience")
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/jim_page_{width}{pixel_ratio}.jpg",
-            "A life in music: Jimmy Page")
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/women_{width}{pixel_ratio}.jpg",
-            "Guardian Live event: Russell Brand")
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/tin_temp_{width}{pixel_ratio}.jpg",
-            "Observer Ideas - Stories that inspire: Tinie Tempah")
-        @fragments.media.slideshowItem("images/noAssetHash/slideshow/hero/viv_west_{width}{pixel_ratio}.jpg",
-            "Guardian Live event: Vivienne Westwood")
+        @fragments.media.slideshowItem("https://media.guim.co.uk/eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368/{width}.jpg", "Guardian Live event: Pussy Riot - art, sex and disobedience")
+        @fragments.media.slideshowItem("https://media.guim.co.uk/da867c363957d748bd04cfd9d4890033203a58c6/0_0_2279_1368/{width}.jpg", "Guardian Live with Russell Brand", true)
+        @fragments.media.slideshowItem("https://media.guim.co.uk/733834b0b9f84e4367cf676919008bfd88007f25/0_0_2279_1368/{width}.jpg", "A life in music: Jimmy Page")
+        @fragments.media.slideshowItem("https://media.guim.co.uk/e736acb945406974844bea77ca49b2c1e450013e/0_0_2279_1368/{width}.jpg", "Guardian Live event: Russell Brand")
+        @fragments.media.slideshowItem("https://media.guim.co.uk/1e687530a52ef14cd9c1eacb1e8757600c382f86/0_0_2279_1368/{width}.jpg", "Observer Ideas - Stories that inspire: Tinie Tempah")
+        @fragments.media.slideshowItem("https://media.guim.co.uk/85d46476d07fb744327c60a4c5117a7ddc2796d0/0_0_2279_1368/{width}.jpg", "Guardian Live event: Vivienne Westwood")
     </section>
 
     @* ===== Introduction ===== *@
     <section class="block-description block-description--right block-description--pull">
         <h1 class="text-feature">We're bringing the Guardian to life through live events and meet-ups. <a class="text-highlight" href="/join">Join and be part of the conversations that matter.</a></h1>
-        <a class="action action--no-bottom-margin" href="/join">Join today</a>
+        <a class="action action--no-bottom-margin" href="/join" id="qa-join">Join today</a>
     </section>
 
     @* ===== Feature panels ===== *@
@@ -29,20 +23,16 @@
         <div class="section-features">
             <ul class="grid grid--bordered grid--4up">
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/whats-included-{width}{pixel_ratio}.jpg",
-                        "Discover what's included with Guardian Membership", "/about")
+                    @fragments.page.featurePanel("images/promo/promo-benefits.jpg", "Discover what's included with Guardian Membership", "/about")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/events-{width}{pixel_ratio}.jpg",
-                        "Browse our events and book your tickets now", "/events")
+                    @fragments.page.featurePanel("images/promo/promo-events.jpg", "Browse our events and book your tickets now", "/events")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/compare-tiers-{width}{pixel_ratio}.jpg",
-                        "Compare the three tiers of Guardian Membership", "/join")
+                    @fragments.page.featurePanel("images/promo/promo-compare.jpg", "Compare the three tiers of Guardian Membership", "/join")
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/noAssetHash/slideshow/promo/become-patron-{width}{pixel_ratio}.jpg",
-                        "Become a Patron and support the Guardian's future", "/patrons")
+                    @fragments.page.featurePanel("images/promo/promo-patron.jpg", "Become a Patron and support the Guardian's future", "/patrons")
                 </li>
             </ul>
         </div>

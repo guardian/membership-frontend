@@ -19,9 +19,23 @@
         display: none !important;
     }
 }
+.hidden-desktop {
+    @include mq($until: desktop) {
+        display: none !important;
+    }
+}
 
 .mobile-only {
     @include mq(tablet) {
+        display: none !important;
+    }
+}
+
+.tablet-only {
+    @include mq($until: tablet) {
+        display: none !important;
+    }
+    @include mq($from: desktop) {
         display: none !important;
     }
 }

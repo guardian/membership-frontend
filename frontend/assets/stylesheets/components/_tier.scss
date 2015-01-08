@@ -1,0 +1,140 @@
+/* ==========================================================================
+   Tiers
+   ========================================================================== */
+
+/* ==========================================================================
+   Tiers - Tier Trail
+   ========================================================================== */
+
+.tier-trail {
+    margin-bottom: rem($gs-baseline / 2);
+}
+    .tier-trail__name {
+        @include fs-header(4);
+        font-weight: 500;
+    }
+    .tier-trail__caption {
+        @include fs-data(4);
+    }
+
+/* ==========================================================================
+   Tiers - Tier Headers
+   ========================================================================== */
+
+.tier-header {
+    color: $white;
+    overflow: auto;
+    position: relative;
+    padding: rem($gs-gutter / 2);
+    border-spacing: 0;
+    @include mq(mobileLandscape) {
+        display: table;
+        width: 100%;
+        height: rem($gs-gutter * 4);
+        padding: rem($gs-gutter - 5px) rem($gs-gutter);
+    }
+}
+    .tier-header__title,
+    .tier-header__pricing {
+        @include mq(mobileLandscape) {
+            display: table-cell;
+            vertical-align: top;
+        }
+    }
+    .tier-header__pricing {
+        float: right;
+        width: 100%;
+        max-width: rem(gs-span(4) - $gs-gutter);
+
+        @include mq(mobileLandscape) {
+            max-width: rem(gs-span(4) - $gs-gutter * 2);
+        }
+    }
+    .tier-header__title {
+        @include fs-headline(5);
+        line-height: 1;
+        color: inherit;
+        vertical-align: top;
+        word-wrap: break-word;
+        position: relative;
+    }
+    .tier-header__pricing {
+        text-align: right;
+    }
+
+// Tier header colour modifiers
+.tier-header--friend {
+    background-color: $c-neutral1;
+}
+.tier-header--partner {
+    color: $black;
+    background-color: $mem-brandLightblue;
+}
+.tier-header--patron {
+    background-color: $mem-brandDarkBlue;
+}
+
+/* Tier Header - Stacked modifier
+   ========================================================================== */
+
+.tier-header--stacked {
+
+    $stack-height: 144px;
+
+    min-height: rem($stack-height);
+
+    @include mq(mobile) {
+        min-height: 0;
+    }
+    @include mq(desktop) {
+        min-height: rem($stack-height);
+    }
+
+    .tier-header__title {
+        display: block;
+        float: left;
+        @include mq(desktop) {
+            float: none;
+        }
+    }
+    .tier-header__pricing {
+        padding-top: rem($gs-gutter * 2);
+    }
+}
+
+/* Tier Header - Promo
+   ========================================================================== */
+
+.tier-header-promo {
+    @include clearfix;
+}
+    .tier-header-promo__pricing {
+        border: solid $c-border-neutral;
+        border-width: 0;
+        margin-top: -(rem($gs-baseline / 2));
+    }
+    @include mq(tablet) {
+        .tier-header-promo__title {
+            float: left;
+            width: 35%;
+        }
+        .tier-header-promo__pricing {
+            float: left;
+            width: 65%;
+            border-width: 0 0 1px 0;
+        }
+    }
+    @include mq(desktop) {
+        .tier-header-promo__title,
+        .tier-header-promo__pricing {
+            float: none;
+            width: auto;
+        }
+        .tier-header-promo__title {
+            margin-bottom: rem($gs-gutter * 2);
+        }
+        .tier-header-promo__pricing {
+            border-width: 1px 0;
+            min-height: rem($gs-gutter * 3);
+        }
+    }

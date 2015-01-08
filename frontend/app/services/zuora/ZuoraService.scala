@@ -78,7 +78,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
         case Left(error) =>
           if (error.fatal) {
             metrics.recordError
-            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.xml}")
+            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.sanitized}")
             Logger.error(result.body)
           }
 

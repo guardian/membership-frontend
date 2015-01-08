@@ -19,7 +19,7 @@
             position: static;
             float: right;
             display: block;
-            border-top: rem(1px) solid $c-neutral3;
+            border-top: 1px solid $c-neutral3;
             width: rem(gs-span(2) + $gs-gutter);
         }
 
@@ -84,7 +84,7 @@
 
 .fieldset {
     border: 0;
-    border-top: rem(1px) solid $c-neutral3;
+    border-top: 1px solid $c-neutral3;
     display: table;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
     margin: 0;
@@ -118,7 +118,7 @@
 }
 
 .fieldset--top-border {
-    border-top: rem(1px) solid $c-neutral3;
+    border-top: 1px solid $c-neutral3;
 }
 
 .fieldset__heading {
@@ -185,18 +185,18 @@
 
 .form-field--error {
     .label {
-        color: $newsRed;
+        color: $c-error;
     }
 
     .text-input,
     .text-input:focus {
-        border-color: $newsRed;
+        border-color: $c-error;
     }
 }
 
 .form-field__error-message {
     @include fs-data(3);
-    color: $newsRed;
+    color: $c-error;
     margin-top: rem(2px);
 }
 
@@ -212,7 +212,7 @@
 }
 
 .form-field__error {
-    color: $newsRed;
+    color: $c-error;
     margin-top: rem($gs-baseline / 2);
 }
 
@@ -265,7 +265,7 @@
 
 .text-input,
 .textarea {
-    border: rem(1px) solid $c-neutral4;
+    border: 1px solid $c-neutral4;
     @include box-shadow(none);
     @include box-sizing(border-box);
     color: $c-body;

@@ -1,44 +1,31 @@
-@(returnUrl: String, tierOpt: Option[com.gu.membership.salesforce.Tier.Value])
-
+@(returnUrl: String)
 
 @import configuration.Config
-@import model.Benefits
 
-@main("Sign in/Register", isBrochure = true) {
+@main("Sign in/Register") {
 
-    <section class="section-signin">
+    <main role="main" class="page-content">
 
-        <header class="section__heading u-cf">
-            <h1 class="section-headline section-headline--padding-left">Sign in / Register</h1>
-        </header>
+        @fragments.page.pageHeader("Sign in / Register")
 
-        @fragments.joiner.joinStepCounter(2, 3)
-
-        <div class="signin__actions">
-            <div class="signin__login">
-                <h3 class="signin__action-prompt">Sign in to your Guardian account</h3>
+        <section class="page-section">
+            <div class="page-section__lead-in">
+                @fragments.joiner.joinStepCounter(2, 3)
+            </div>
+            <div class="page-section__content">
+                <h3 class="h-section h-section--inline h-section--lead">Sign in to your Guardian account</h3>
                 <a class="action" href="@Config.idWebAppSigninUrl(returnUrl)">Sign in</a>
             </div>
-            <div class="signin__register">
-                <h3 class="signin__action-prompt">New to the Guardian?</h3>
-                <h4>Please take a few short moments to register</h4>
+        </section>
+
+        <section class="page-section">
+            <div class="page-section__content">
+                <h3 class="h-section h-section--inline">New to the Guardian?</h3>
+                <p>Please take a few short moments to register</p>
                 <a class="action" href="@Config.idWebAppRegisterUrl(returnUrl)">Register Now</a>
             </div>
-        </div>
+        </section>
 
-        @for(tier <- tierOpt) {
-            <p>@Benefits.details(tier).leadin</p>
-
-            <ul class="package__list-benefits-element">
-            @for(benefit <- Benefits.details(tier).leadBenefits) {
-                <li class="benefits-title">@benefit.title</li>
-                <li class="benefits-copy">@benefit.description</li>
-            }
-            </ul>
-
-            <br/>
-        }
-
-    </section>
+    </main>
 
 }

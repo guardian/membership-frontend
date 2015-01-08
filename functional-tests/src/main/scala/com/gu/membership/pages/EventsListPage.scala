@@ -8,7 +8,7 @@ class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventsImageList: util.List[WebElement] = driver.findElements(By.cssSelector(".image-replace"))
 
-  private def eventsTitleList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__title"))
+  private def eventsTitleList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__title>span"))
 
   private def eventsLocationList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__location"))
 
@@ -31,6 +31,6 @@ class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   }
 
   def clickFirstEvent(): EventPage = {
-    clickEventByIndex(0)
+    clickEventByIndex(5)
   }
 }

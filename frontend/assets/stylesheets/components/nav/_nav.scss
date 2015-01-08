@@ -1,0 +1,235 @@
+/* ==========================================================================
+   Nav object
+   ========================================================================== */
+
+/**
+ *
+ * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
+ *
+ * The root component nav and >li>a selectors should not be modified directly,
+ * instead use modifier classes such as "nav--columns"
+ */
+
+.nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100; //To ensure it sits above anything else
+
+    > li,
+    > li > a {
+        display: inline-block;
+        zoom: 1;
+    }
+
+}
+
+/* ==========================================================================
+   Nav - Global Navigation
+   ========================================================================== */
+
+// Semi magic-number. Height of toggle link.
+$_global-nav-height: 36px;
+.nav--global {
+
+    clear: both;
+    display: block;
+    height: auto;
+    padding: 0;
+
+    overflow: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    @include fs-headline(2);
+    font-weight: normal;
+    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -webkit-font-feature-settings: "kern" 1;
+
+    background-color: darken($mem-blue, 10%);
+    @include side-margins-calc('padding-left');
+    @include side-margins-calc('padding-right');
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav__scroll {
+        display: table;
+        white-space: nowrap;
+        width: 100%;
+        vertical-align: middle;
+        height: rem($_global-nav-height);
+        padding: 0 rem($_global-nav-height * 2) 0 rem($gs-gutter / 2);
+
+        @include mq(tablet) {
+            padding: 0 rem($gs-gutter);
+        }
+    }
+    .nav__list {
+        display: table-row;
+
+        @include mq(desktop) {
+            display: block;
+        }
+    }
+    .nav__item {
+        display: table-cell;
+        vertical-align: middle;
+
+        @include mq(desktop) {
+            display: inline-block;
+        }
+    }
+    .nav__item--right {
+        @include mq(desktop) {
+            float: right;
+        }
+    }
+    .nav__link {
+        color: $black;
+        position: relative;
+        display: block;
+        margin: 0 rem($gs-gutter) 0 0;
+        padding: 0;
+
+        &:focus,
+        &:active {
+            text-decoration: underline;
+        }
+
+        @include mq(desktop) {
+            padding: rem(8px) 0 rem(6px);
+            &, &:active {
+                text-decoration: none;
+                color: $black;
+            }
+            &:focus,
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    .nav__link--last {
+        margin-right: 0;
+    }
+    .icon-home {
+        vertical-align: top;
+    }
+}
+
+/* ==========================================================================
+   Nav - Brand Navigation
+   ========================================================================== */
+
+.nav--brand {
+    @include fs-bodyHeading(1);
+    padding-top: rem($gs-gutter / 2);
+    text-align: right;
+
+    .nav__link {
+        color: $black;
+        position: relative;
+        display: block;
+        margin-left: rem($gs-gutter);
+        padding: 0;
+
+        &:focus,
+        &:active {
+            text-decoration: underline;
+        }
+
+        @include mq(desktop) {
+            &:link, &:active {
+                text-decoration: none;
+                color: $black;
+            }
+            &:focus,
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+   Nav - Columns
+   ========================================================================== */
+
+.nav--columns {
+
+    > .nav__item {
+        @include box-sizing(border-box);
+        width: 100%;
+        display: block;
+
+        @include mq(desktop) {
+            border-right: 0;
+        }
+    }
+    .nav__link {
+        @include fs-bodyHeading(1);
+        border-top: 1px solid $mem-blue-border;
+        display: block;
+        background-color: transparent;
+        -webkit-font-smoothing: subpixel-antialiased;
+        text-decoration: none;
+        padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
+
+        &,
+        &:active,
+        &:focus {
+            color: $black;
+            text-decoration: none;
+        }
+        &:hover {
+            text-decoration: underline;
+        }
+
+        @include mq(desktop) {
+            border-top: 0;
+        }
+    }
+}
+
+/* Mobile Menu (Toggle link)
+   ========================================================================== */
+
+.mobile-menu {
+    position: absolute;
+    right: 0;
+    background-color: lighten($black, 20%);
+    z-index: 3;
+    top: rem(43px);
+
+    a.mobile-menu__button {
+        color: $white;
+        display: block;
+        text-decoration: none;
+        padding: rem(3px) rem(9px) rem(9px);
+        box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
+    }
+    .mobile-menu__button i {
+        border-top: rem(2px) solid rgba(255, 255, 255, .9);
+        display: block;
+        width: rem(20px);
+        margin-top: rem(3px);
+        @include transform-origin(60%);
+        -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
+        transition: opacity .1s, transform .1s ease-in;
+    }
+    .close-icon-white--active i {
+        @include transform-origin(43%);
+
+        &:nth-child(1) {
+            @include transform(translateY(rem(4px)) rotate(45deg));
+        }
+        &:nth-child(2) {
+            opacity: 0;
+        }
+        &:nth-child(3) {
+            @include transform(translateY(rem(-4px)) rotate(-45deg));
+        }
+    }
+}

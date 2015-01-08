@@ -1,12 +1,13 @@
-import configuration.Config
-import controllers.Cached
-import filters.{CheckCacheHeadersFilter, Gzipper}
-import monitoring.SentryLogging
 import play.api.Application
 import play.api.mvc.Results.{InternalServerError, NotFound}
 import play.api.mvc.{RequestHeader, Result, WithFilters}
 import play.filters.csrf._
-import services.{SubscriptionService, _}
+
+import configuration.Config
+import controllers.Cached
+import filters.{CheckCacheHeadersFilter, Gzipper}
+import monitoring.SentryLogging
+import services._
 
 import scala.concurrent.Future
 

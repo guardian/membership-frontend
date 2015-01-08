@@ -36,6 +36,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
   }
 
   feature("Membership tab") {
+
     scenarioWeb("28. Membership tab appears if you are a Partner") {
       implicit driver =>
       given {

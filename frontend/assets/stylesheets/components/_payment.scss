@@ -1,0 +1,190 @@
+/* ==========================================================================
+   Payment
+   ========================================================================== */
+
+/* ==========================================================================
+   Steps
+   ========================================================================== */
+
+.steps {
+    @include fs-header(2);
+    color: $mem-blue-dark;
+    border-top: 1px solid $c-border-brand;
+    padding-top: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        @include fs-header(3);
+    }
+}
+
+/* ==========================================================================
+  Upgrade
+  ========================================================================== */
+
+.upgrade__payment-label {
+   display: block;
+   position: relative;
+
+   .payment-label__wrapper {
+       @include fs-textSans(3);
+       width: 100%;
+       display: block;
+       border: 1px solid transparent;
+
+       &:hover {
+           border: 1px solid $c-neutral2;
+       }
+   }
+
+   .payment-label__title {
+       @include fs-bodyHeading(2);
+       display: block;
+
+   }
+
+   .payment-label__amount,
+   .payment-label__note {
+       display: block;
+   }
+
+   input[type=radio] {
+       display: none;
+   }
+
+   input[type=radio] + .payment-label__wrapper {
+       display: inline-block;
+       padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+       position: relative;
+
+       &:before {
+           @include radio-circle ($c-neutral5);
+       }
+   }
+
+   input[type=radio]:checked + .payment-label__wrapper {
+       border-color: $mem-brandLightblue;
+
+       &:before {
+           @include radio-circle ();
+       }
+   }
+}
+
+/* Billing address
+======================================================================= */
+
+.address-fieldset__inner {
+
+   .payment-label__title {
+       @include fs-bodyCopy(2);
+       width: 100%;
+       display: block;
+       border: 1px solid transparent;
+
+       &:hover {
+           border: 1px solid $c-neutral2;
+       }
+   }
+
+   input[type=radio] {
+       display: none;
+   }
+
+   input[type=radio] + .payment-label__title {
+       display: inline-block;
+       padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+       position: relative;
+
+       &:before {
+           @include radio-circle ($c-neutral5);
+       }
+   }
+
+   input[type=radio]:checked + .payment-label__title {
+       border-color: $mem-brandLightblue;
+
+       &:before {
+           @include radio-circle ();
+       }
+   }
+
+}
+
+.address-fieldset__country {
+   select {
+       width: 100%;
+   }
+}
+
+/* Join - Become a member
+======================================================================= */
+
+$current-indicator: rem(72px);
+.become-a-member {
+   @include mq(tablet) {
+       padding: rem($gs-gutter);
+   }
+
+   @include mq(desktop) {
+       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+   }
+
+   @include mq(mem-full) {
+       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+   }
+
+   .package-list {
+       padding-top: rem($gs-gutter * 2);
+
+       @include mq(desktop) {
+           padding-top: $current-indicator;
+       }
+   }
+}
+
+/* Payment Cards Sprite
+   ========================================================================== */
+
+$sprite-card-width: 108px; // target = 35 aka n/3
+$sprite-card-height: 70px;
+$sprite-card-offset-american-express:        0;
+$sprite-card-offset-diners-club:         -71px;
+$sprite-card-offset-discover:           -142px;
+$sprite-card-offset-jcb:                -213px;
+$sprite-card-offset-mastercard:         -284px;
+$sprite-card-offset-visa:               -355px;
+
+// by default we scale the 2x image down by half
+// for retina displays
+.sprite-card {
+    background: url(/assets/images/card-sprite.png) no-repeat top left;
+    display: inline-block;
+    background-size: $sprite-card-width/2 auto; // scales 2x image down
+    width: $sprite-card-width/2;
+    height: $sprite-card-height/2;
+}
+
+.sprite-card--american-express { background-position: 0 $sprite-card-offset-american-express/2; }
+.sprite-card--diners-club { background-position: 0 $sprite-card-offset-diners-club/2; }
+.sprite-card--discover { background-position: 0 $sprite-card-offset-discover/2; }
+.sprite-card--jcb { background-position: 0 $sprite-card-offset-jcb/2; }
+.sprite-card--mastercard { background-position: 0 $sprite-card-offset-mastercard/2; }
+.sprite-card--visa { background-position: 0 $sprite-card-offset-visa/2; }
+
+// variant for 1/3rd size
+.sprite-card--smaller {
+    background-size: $sprite-card-width/3 auto;
+    width: $sprite-card-width/3;
+    height: $sprite-card-height/3;
+    &.sprite-card--american-express { background-position: 0 $sprite-card-offset-american-express/3; }
+    &.sprite-card--diners-club { background-position: 0 $sprite-card-offset-diners-club/3; }
+    &.sprite-card--discover { background-position: 0 $sprite-card-offset-discover/3; }
+    &.sprite-card--jcb { background-position: 0 $sprite-card-offset-jcb/3; }
+    &.sprite-card--mastercard { background-position: 0 $sprite-card-offset-mastercard/3; }
+    &.sprite-card--visa { background-position: 0 $sprite-card-offset-visa/3; }
+}
+
+// used to toggle unknown types
+.sprite-card--unknown {
+    visibility: hidden;
+}

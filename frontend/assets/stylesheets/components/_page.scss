@@ -2,6 +2,8 @@
    Page
    ========================================================================== */
 
+$_page-offset: rem(gs-span(2) + $gs-gutter);
+
 /* ==========================================================================
    Brochure Page Layout Components
    ========================================================================== */
@@ -66,12 +68,16 @@
  * typically combined with page-headline and page-intro
  */
 .page-header {
-    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+    max-width: rem(gs-span(8));
+    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 2);
 
-    @include mq(desktop) {
-        width: rem(gs-span(11));
-        padding-right: rem($gs-gutter);
-        padding-left: rem(gs-span(3));
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 3);
+    }
+
+    @include mq(mem-full) {
+        margin-right: rem($gs-gutter);
+        margin-left: $_page-offset;
     }
 }
 
@@ -94,7 +100,7 @@
     @include fs-headline(2);
 
     @include mq(tablet) {
-        @include font-size(18px, 22px);
+        @include fs-headline(3);
     }
 }
 
@@ -116,7 +122,7 @@
 .page-section {
     @include clearfix;
     position: relative;
-    padding-bottom: rem($gs-baseline * 3);
+    padding-bottom: rem($gs-baseline * 2);
 
     @include mq(desktop) {
         width: auto;
@@ -126,8 +132,8 @@
     padding-bottom: 0;
 }
 .page-section__lead-in {
-    @include mq(desktop) {
-        width: rem(gs-span(3));
+    @include mq(mem-full) {
+        width: rem(gs-span(2));
         position: absolute;
         left: 0;
     }
@@ -137,25 +143,31 @@
     padding-bottom: rem($gs-gutter * 1.6);
 }
 .page-section__content {
-    @include mq(desktop) {
+    @include mq(tablet) {
         float: left;
-        width: rem(gs-span(11)) + rem($gs-gutter);
-        padding-left: rem(gs-span(3));
-        padding-right: rem(gs-span(1));
+        width: 75% - $gutter-width-fluid;
+        margin-right: $gutter-width-fluid;
+    }
+    @include mq(desktop) {
+        margin-right: 0;
+        width: rem(gs-span(9));
+    }
+    @include mq(mem-full) {
+        width: rem(gs-span(11));
+        padding-left: $_page-offset;
     }
 }
 .page-section__supplementary {
     clear: both;
-
-    @include mq(mem-full) {
+    @include mq(tablet) {
         clear: none;
         float: right;
+        width: 25%;
+    }
+    @include mq(desktop) {
         width: rem(gs-span(3));
-        padding-left: rem($gs-gutter);
     }
 }
-
-
 
 /* Page Section - Bordered (Modifier)
    ========================================================================== */

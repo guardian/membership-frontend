@@ -13,7 +13,7 @@ object Fallbacks {
     redirectTo(controllers.routes.Joining.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
 
   def chooseSigninOrRegister(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.Login.chooseSigninOrRegister(request.uri, None))
+    redirectTo(controllers.routes.Login.chooseSigninOrRegister(request.uri))
 
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())

@@ -5,40 +5,20 @@
 html {
     position: relative;
     min-height: 100%;
-    background-color: $c-background;
-
+    background: $c-background url(/assets/images/bg-texture.jpg) repeat-y center;
     background-attachment: fixed;
-    background-repeat: repeat-y;
-    background-position: center;
-    background-image: url(/assets/images/bg-texture.jpg);
     background-size: cover;
-
-    // TODO: Remove when short homepage goes live.
-    &.home-page {
-        background: url(/assets/images/backgrounds/400-Home-hero.jpg) no-repeat top center fixed;
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            background: url(/assets/images/backgrounds/400-Home-hero-2x.jpg) no-repeat top center fixed;
-            background-size: rem(400px) rem(444px);
-        }
-        @include mq(400px) {
-            background: url(/assets/images/backgrounds/740-Home-hero.jpg) no-repeat top center fixed;
-            background-size: auto auto;
-        }
-        @include mq(tablet) {
-            background: url(/assets/images/backgrounds/1920-Home-hero.jpg) no-repeat top center fixed;
-            background-size: auto auto;
-        }
-    }
-
 }
 
+// TODO: Remove these when brochure pages are refactored
+// This should be a component (banner image component?),
+// rather than being manually added at thr root level.
 html.about-membership {
     background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
     @include mq(tablet) {
         background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
     }
 }
-
 html.patron-page {
     background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
     @include mq(tablet) {
@@ -61,28 +41,79 @@ body {
     }
 }
 
-// TODO: Extract max-widths out into variables
-//       Extract constraining layout styles into l-constrained helper
-//
-// note: the max-widths set here
-// are duplicated in mixins.scss
-// for the side-margins function
-// please duplicate your changes
-// this alignment is too perfect
-.page-container {
+/* Layout Helpers
+   ========================================================================== */
 
-    @include clearfix;
-    position: relative;
-
+// Constrained layout helper
+// Breakpoints are mirrored in mixins/_mixins-layout.scss
+.l-constrained {
+    $offset: ($gs-gutter * 2);
     margin: 0 auto;
 
     @include mq(tablet) {
-        max-width: gs-span(12)+($gs-gutter*2);
+        max-width: map-get($max-widths, max-tablet) + $offset;
     }
-
     @include mq(mem-full) {
-        max-width: gs-span(14)+($gs-gutter*2);
+        max-width: map-get($max-widths, max-desktop) + $offset;
     }
+}
+
+.l-pad-left {
+    @include mq(tablet) {
+        padding-left: rem(gs-span(1) + $gs-gutter);
+    }
+}
+
+.l-pad-right {
+    @include mq(tablet) {
+        padding-right: rem(gs-span(1) + $gs-gutter);
+    }
+}
+
+// TOOD: Code smell. This is related to generated classes from guss-layout,
+// do we really need this? If so, document usage clearly.
+.l-row__item {
+    padding-bottom: rem($gs-gutter * 2);
+}
+
+/* Side Margins
+   ========================================================================== */
+
+.l-side-margins,
+.page-side-margins {
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        background: $c-background-transparent;
+
+        /**
+         * Magic number: we shift these margins up to skip the header gap
+         * and the (fixed) height of the nav bar
+         */
+        top: rem($side-margins-top-magic-number);
+        height: 100%;
+        height: calc(100% - #{$side-margins-top-magic-number});
+        width: 0;
+
+        @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
+/* Containers
+   ========================================================================== */
+
+.page-container {
+    @extend .l-constrained;
+    @include clearfix;
+    position: relative;
 }
 
 .page-content {
@@ -99,43 +130,12 @@ body {
     }
 }
 
-// TODO: Refactor to remove code below here
-// ========================================
-.l-row__item {
-    padding-bottom: rem($gs-gutter * 2);
-}
-
-// Two thirds section
-.section-two-thirds {
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 rem($gs-gutter / 2);
-    @include fs-headline(2);
-    position: relative;
-
-    @include mq(desktop) {
-        @include fs-headline(5);
-    }
-
-    .two-thirds {
-        @include mq(tablet) {
-            padding-left: $gs-gutter;
-            width: rem(gs-span(8));
-        }
-        @include mq(mem-full) {
-            width: rem(gs-span(8) + $gs-gutter);
-        }
-    }
-
-    .one-third {
-        margin-bottom: rem($gs-gutter);
-
-        @include mq(tablet) {
-            width: rem(gs-span(3));
-            padding-left: rem($gs-gutter);
-        }
-        @include mq(mem-full) {
-            width: rem(gs-span(4) + $gs-gutter);
-        }
+// TODO: Too broad. What is this affecting?
+// Only on downgrade page??
+.secondary-content {
+    flex-basis: 16em;
+    order: 2;
+    @if $old-ie {
+        float: left;
     }
 }
