@@ -109,7 +109,6 @@ trait IdentityApi {
     Timing.record(IdentityApiMetrics, "get-user") {
       val url = s"${Config.idApiUrl}/$endpoint"
       WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
-        println("AX"+response.body)
         recordAndLogResponse(response.status, "GET user", endpoint)
         val jsResult = (response.json \ "user").validate[IdUser]
         if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
