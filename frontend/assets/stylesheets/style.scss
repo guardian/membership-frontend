@@ -78,6 +78,10 @@
 @import 'components/page';
 @import 'components/blocks';
 @import 'components/asides';
+@import 'components/event-items';
+@import 'components/event-listings';
+@import 'components/event-filters';
+@import 'components/event-detail';
 @import 'components/benefits';
 @import 'components/payment';
 @import 'components/packages';
@@ -102,11 +106,8 @@
 /* Pages
    ========================================================================== */
 // TODO: These are conceptually no different to components (modules),
-// gradually merge them into modules as you work on related styles.
+// gradually (only two left...) merge them into modules as you work on related styles.
 
-@import 'pages/events-detail';
-@import 'pages/events-summary';
-@import 'pages/events-list';
 @import 'pages/joiner';
 @import 'pages/login';
 

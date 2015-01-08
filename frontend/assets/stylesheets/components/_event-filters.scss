@@ -1,0 +1,93 @@
+/* ==========================================================================
+   Event Filters
+   ========================================================================== */
+
+.event-filters {
+    background-color: $white;
+    padding: rem($gs-gutter / 2);
+    border-bottom: rem(1px) solid $mem-live-accent;
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+}
+.event-filters__container {
+    @include clearfix;
+    @include mq(mem-full) {
+        width: 100%;
+        padding-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+.event-filters__categories {
+    @include mq(desktop) {
+        float: left;
+    }
+}
+.event-filters__category,
+.event-filters__count {
+    @include fs-textSans(2);
+    display: inline-block;
+    padding: rem($gs-gutter / 4) 0;
+    @include mq(mobileLandscape) {
+        padding: rem($gs-gutter / 2) 0;
+    }
+}
+.event-filters__category {
+    padding-right: rem($gs-gutter);
+    @include mq(desktop) {
+        margin-right: rem($gs-gutter);
+        border-right: 1px solid $c-neutral4;
+    }
+}
+.event-filters__count {
+    color: $c-neutral2;
+    white-space: nowrap;
+    float: right;
+}
+.event-filters__search {
+    position: relative;
+    overflow: hidden;
+    clear: right;
+
+    @include mq(desktop) {
+        width: auto;
+        display: block;
+        float: right;
+        clear: none;
+    }
+}
+
+/* Filter Search
+   ========================================================================== */
+
+$filter-icon-size: 18px;
+
+.filter-search {
+    display: block;
+}
+.filter-search__input {
+    @include fs-textSans(2);
+    padding: rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
+    border: 1px solid $c-neutral3;
+    border-radius: 100rem;
+    width: 100%;
+    outline: 0;
+
+    @include mq(desktop) {
+        width: auto;
+    }
+}
+.filter-search__icon,
+.filter-search__cross {
+    position: absolute;
+    top: 50%;
+    margin-top: rem(-$filter-icon-size / 2);
+    border: 0;
+    background-color: transparent;
+}
+.filter-search__icon {
+    left: rem($gs-gutter / 2);
+}
+.filter-search__cross {
+    right: rem($gs-gutter / 2);
+}
