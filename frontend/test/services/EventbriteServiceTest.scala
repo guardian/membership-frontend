@@ -36,6 +36,7 @@ class EventbriteServiceTest extends PlaySpecification {
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgUrl = ""
+    val availableWidths = ""
     val socialImgUrl = ""
     val maxDiscounts = 2
     val allowDiscountCodes = true
