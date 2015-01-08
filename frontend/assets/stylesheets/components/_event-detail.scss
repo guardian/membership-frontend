@@ -129,6 +129,45 @@
 
 
 /* ==========================================================================
+   Event Location Summary
+   ========================================================================== */
+.event-location {
+    // Remove space between inline block elements
+    font-size: 0;
+    line-height: 1;
+    color: $c-neutral2;
+}
+.event-location--reversed {
+    color: $white;
+}
+.event-location__detail {
+    @include fs-data(4);
+}
+
+/* ==========================================================================
+   Event Status
+   ========================================================================== */
+
+.event-status {
+    display: inline-block;
+
+    &:after {
+        content: '/';
+        color: fade-out($c-neutral1, .8);
+        display: inline-block;
+        font-weight: normal;
+        margin-left: .2em;
+    }
+    &:hover:after {
+        text-decoration: none;
+    }
+}
+.event-status--sold-out {
+    color: $mem-sold-out;
+}
+
+
+/* ==========================================================================
    Event Ticket
    ========================================================================== */
 

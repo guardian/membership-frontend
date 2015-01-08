@@ -9,10 +9,6 @@
     position: relative;
     max-width: rem(gs-span(4) - $gs-gutter);
 
-    @include mq(mobileLandscape) {
-        max-width: rem(gs-span(4) - $gs-gutter * 2);
-    }
-
     @include mq(tablet) {
         display: table;
         width: 100%;

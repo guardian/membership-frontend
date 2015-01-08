@@ -117,6 +117,32 @@
     }
 }
 
+.action-proceed {
+    width: rem(36px);
+    height: rem(36px);
+    padding: 0 rem(8px) 0 0;
+    background-color: transparent;
+
+    @include border-radius(50px);
+    border: 1px solid $c-border-neutral;
+
+    @include mq(desktop) {
+        bottom: rem($gs-gutter / 2);
+        right: rem($gs-gutter / 2);
+    }
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:after {
+        @extend .icon-arrow-right-black;
+        content: '';
+        fill: $black;
+        float: right;
+    }
+}
+
 /* Actions - Secondary Modifiers
    ========================================================================== */
 
