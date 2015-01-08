@@ -62,6 +62,7 @@
 // TODO: Specificy issues
 // this variant moves the arrow to the other side
 // and hides the one on the right
+// Onlt used on change tier  / downgrade
 .action.action--arrow-left {
     &:before {
         @extend .icon-arrow-left-white;
@@ -119,6 +120,44 @@
 /* Actions - Secondary Modifiers
    ========================================================================== */
 
+.action--secondary,
+.action--toggle {
+    color: $c-body;
+    background-color: transparent;
+    border: 1px solid $c-border-neutral;
+
+    &:focus,
+    &:active,
+    &:hover {
+        color: $c-body;
+        background-color: transparent;
+        border-color: $mem-brandOrange;
+    }
+
+}
+
+.action--toggle {
+   margin-bottom: $gutter-width-fluid;
+   &:before {
+       @extend .icon-plus;
+       content: '';
+       float: left;
+       margin: 0 rem($gs-baseline) 0 0;
+   }
+   &:after {
+       display: none;
+   }
+
+   &.is-toggled,
+   .action--toggle--toggled {
+       &:before {
+           @extend .icon-minus;
+       }
+   }
+}
+
+
+// TODO: Deprecated
 .action--secondary-button {
     &,
     &:visited,
@@ -284,26 +323,6 @@
 
 /* Actions - Utility Modifiers
    ========================================================================== */
-
-.action--toggle {
-   margin-bottom: $gutter-width-fluid;
-   &:before {
-       @extend .icon-plus;
-       content: '';
-       float: left;
-       margin: rem(2px) rem(18px) 0 0;
-   }
-   &:after {
-       display: none;
-   }
-
-   &.is-toggled,
-   .action--toggle--toggled {
-       &:before {
-           @extend .icon-minus;
-       }
-   }
-}
 
 .action--external {
     background-color: transparent;
