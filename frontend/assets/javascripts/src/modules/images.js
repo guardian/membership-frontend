@@ -1,21 +1,11 @@
 define(['lib/bower-components/imager.js/Imager', 'src/utils/helper'], function(Imager, utilsHelper) {
 
-    var IMAGES_EVENTS = '.delayed-image-load';
     var IMAGE_LOADED_IMAGE = '.imager-loaded-image';
     var IMAGES_SLIDESHOW = '.js-image-slideshow';
 
     function init() {
 
         var imagerImages = utilsHelper.toArray(document.querySelectorAll(IMAGE_LOADED_IMAGE));
-
-        if (document.querySelectorAll(IMAGES_EVENTS).length) {
-            new Imager(IMAGES_EVENTS, {
-                availableWidths: guardian.membership.eventImages.widths,
-                availablePixelRatios: guardian.membership.eventImages.ratios,
-                lazyload: true,
-                lazyloadOffset: 100
-            });
-        }
 
         if (imagerImages.length) {
             imagerImages.map(function(image) {

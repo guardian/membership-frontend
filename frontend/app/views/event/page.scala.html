@@ -107,7 +107,7 @@
             case _: MasterclassEvent => {}
             case _ => {
                 <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+                    @fragments.event.image(event)
                 </div>
             }
         }
