@@ -137,6 +137,7 @@ object Eventbrite {
   trait RichEvent {
     val event: EBEvent
     val imgUrl: String
+    val availableWidths: String
     val socialImgUrl: String
     val tags: Seq[String]
 
@@ -161,7 +162,7 @@ object Eventbrite {
       regex.replaceFirstIn(file, "{width}.jpg")
     }
 
-    val availableWidths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+    val availableWidths = image.fold("")(_.assets.map(_.dimensions.width).mkString(","))
 
     val imageMetadata = image.map(_.metadata)
 
@@ -185,7 +186,11 @@ object Eventbrite {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
       .getOrElse(views.support.Asset.at("images/event-placeholder.gif"))
       .replace("http://static", "https://static-secure")
+
+    val availableWidths = "" //todo
+
     val socialImgUrl = imgUrl
+
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
