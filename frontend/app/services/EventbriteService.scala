@@ -26,7 +26,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   def scheduleAgentRefresh[T](agent: Agent[T], refresher: => Future[T], intervalPeriod: FiniteDuration) = {
     Akka.system.scheduler.schedule(1.second, intervalPeriod) {
-      agent.sendOff(_ => Await.result(refresher, 15.seconds))
+      agent.sendOff(_ => Await.result(refresher, 25.seconds))
     }
   }
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
