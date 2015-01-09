@@ -77,6 +77,7 @@
 @import 'components/from-content-api';
 @import 'components/action';
 @import 'components/page';
+@import 'components/page-form';
 @import 'components/blocks';
 @import 'components/asides';
 @import 'components/benefits';
@@ -93,6 +94,7 @@
 @import 'components/features';
 @import 'components/messages';
 @import 'components/warnings';
+@import 'components/step';
 
 // Dev modules:
 // - Pattern library
@@ -106,9 +108,7 @@
 @import 'pages/events-detail';
 @import 'pages/events-summary';
 @import 'pages/events-list';
-@import 'pages/joiner';
 @import 'pages/tickets';
-@import 'pages/login';
 @import 'pages/about';
 @import 'pages/feedback';
 

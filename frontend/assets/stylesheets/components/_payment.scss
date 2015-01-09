@@ -32,7 +32,7 @@ $sprite-card-offset-visa:               -355px;
 .sprite-card--visa { background-position: 0 $sprite-card-offset-visa/2; }
 
 // variant for 1/3rd size
-.sprite-card--smaller {
+.sprite-card--small {
     background-size: $sprite-card-width/3 auto;
     width: $sprite-card-width/3;
     height: $sprite-card-height/3;

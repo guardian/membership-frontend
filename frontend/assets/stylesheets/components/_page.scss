@@ -70,6 +70,10 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 .page-header {
     padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
 
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 4);
+    }
+
     @include mq(mem-full) {
         width: rem(gs-span(11));
         padding-right: rem($gs-gutter);
