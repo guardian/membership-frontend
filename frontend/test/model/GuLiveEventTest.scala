@@ -40,22 +40,22 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
     "use fallback image when no image is found from the Grid" in {
       val guEvent = GuLiveEvent(event, None)
 
-      guEvent.imgUrl mustEqual Config.gridConfig.fallbackImageUrl
+      guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None
       guEvent.imageMetadata.flatMap(_.source) mustEqual None
       guEvent.availableWidths mustEqual ""
-      guEvent.socialImgUrl mustEqual Config.gridConfig.fallbackImageUrl
+      guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
 
     "use fallback image when assets in export is an empty list from the Grid" in {
       val image = EventImage(Nil, Metadata(None, None, None, None))
       val guEvent = GuLiveEvent(event, Some(image))
 
-      guEvent.imgUrl mustEqual Config.gridConfig.fallbackImageUrl
+      guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None
       guEvent.imageMetadata.flatMap(_.source) mustEqual None
       guEvent.availableWidths mustEqual ""
-      guEvent.socialImgUrl mustEqual Config.gridConfig.fallbackImageUrl
+      guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
   }
 }

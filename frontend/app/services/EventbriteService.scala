@@ -119,7 +119,7 @@ object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
   val wsMetrics = new EventbriteMetrics("Guardian Live")
-  val gridService = GridService
+  val gridService = GridService(Config.gridConfig.url)
 
   private def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()

@@ -15,11 +15,11 @@ import scala.concurrent.Future
 
 case class GridConfig(url: String, apiUrl: String, key: String, fallbackImageUrl: String)
 
-object GridService extends utils.WebServiceHelper[GridObject, Error] {
+case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObject, Error] {
 
-  def isUrlCorrectFormat(url: String) = url.startsWith(Config.gridConfig.url)
+  def isUrlCorrectFormat(url: String) = url.startsWith(gridUrl)
 
-  def getEndpoint(url: String) = url.replace(Config.gridConfig.url, "")
+  def getEndpoint(url: String) = url.replace(gridUrl, "")
 
   def cropParam(urlString: String) = parse(urlString).query.param("crop")
 
