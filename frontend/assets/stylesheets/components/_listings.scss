@@ -8,7 +8,7 @@
     position: relative;
     background-color: $white;
     border-top: 1px solid $c-border-brand;
-    padding-bottom: rem($gs-baseline);
+    padding-bottom: rem($gs-baseline * 2);
 }
     .listing__lead-in {
         padding: rem($gs-gutter / 2);
@@ -44,19 +44,6 @@
             display: block;
         }
     }
-
-/**
- * Page listing - Padded
- */
-.listing--padded {
-    .listing__content {
-        padding-bottom: rem($gs-gutter * 2);
-
-        @include mq(tablet) {
-            padding-bottom: rem($gs-gutter * 3);
-        }
-    }
-}
 
 /**
  * Page listing - Lead

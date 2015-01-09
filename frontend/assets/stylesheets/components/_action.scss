@@ -117,9 +117,7 @@
     }
 }
 
-.action-proceed,
-.action-proceed--live,
-.action-proceed--masterclass {
+.action-proceed {
 
     @include image-replacement();
 
@@ -127,24 +125,16 @@
     height: rem(36px);
     padding: 0 rem(8px) 0 0;
     background-color: transparent;
-    @extend .icon-arrow-right-black;
+    @extend .icon-arrow-right-blue;
     background-position: center center;
 
     @include border-radius(50px);
-    border: 1px solid $c-border-neutral;
+    border: 1px solid $mem-buttonBlue;
 
     &:focus {
         outline: 0;
     }
 
-}
-.action-proceed--live {
-    border-color: $mem-live-top;
-    @extend .icon-arrow-right-live;
-}
-.action-proceed--masterclass {
-    border-color: $mem-mc-top;
-    @extend .icon-arrow-right-masterclass;
 }
 
 /* Actions - Secondary Modifiers
@@ -152,16 +142,18 @@
 
 .action--secondary,
 .action--toggle {
-    color: $c-body;
+    color: $mem-buttonBlue;
     background-color: transparent;
-    border: 1px solid $c-border-neutral;
+    border: 1px solid transparentize($mem-buttonBlue, 0.5);
 
     &:focus,
     &:active,
     &:hover {
-        color: $c-body;
         background-color: transparent;
-        border-color: $mem-brandOrange;
+    }
+
+    &:hover {
+        border-color: $mem-buttonBlue;
     }
 
 }

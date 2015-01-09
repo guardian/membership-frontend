@@ -4,13 +4,6 @@
 @import configuration.Config
 @import model.Eventbrite._
 
-@eventType = @{
-    event match {
-        case _: MasterclassEvent => "masterclass"
-        case _: GuLiveEvent => "live"
-    }
-}
-
 <div class="event-item" itemscope itemtype="http://schema.org/Event">
     <div class="event-item__container">
         <div class="event-item__media">
@@ -28,7 +21,7 @@
                     </div>
                     <div class="event-item__footer">
                         @fragments.event.itemMetaAvailability(event)
-                        <button class="action-proceed@if(eventType){ action-proceed--@eventType} event-item__action" itemprop="url"></button>
+                        <button class="action-proceed event-item__action" itemprop="url"></button>
                     </div>
                 </a>
             </div>
