@@ -197,8 +197,7 @@ object Config {
     GridConfig(
       con.getString("media.url"),
       con.getString("api.url"),
-      con.getString("api.key"),
-      con.getString("fallback.image.url")
+      con.getString("api.key")
     )
   }
 

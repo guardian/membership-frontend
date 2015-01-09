@@ -13,7 +13,7 @@ import play.api.libs.ws.WSRequestHolder
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class GridConfig(url: String, apiUrl: String, key: String, fallbackImageUrl: String)
+case class GridConfig(url: String, apiUrl: String, key: String)
 
 case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObject, Error] {
 
