@@ -1,9 +1,0 @@
-.step-counter {
-    @include fs-textSans(3);
-    margin-bottom: rem($gs-gutter);
-
-    @include mq(desktop) {
-        border-top: 1px solid $mem-blue;
-        margin-right: rem($gs-baseline);
-    }
-}
