@@ -5,6 +5,12 @@
 /* Form Header
    ========================================================================== */
 
+/** Example usage:
+*   <section class="form-header">
+*       <h1 class="form-headline"></h1>
+*       <p class="form-intro"></p>
+*   </section>
+*/
 /**
  * Form header is the container,
  * typically combined with form-headline and form-intro
@@ -53,7 +59,7 @@
 
 /**
  * Example usage:
- *  <div class="form-section form-section--bordered">
+ *  <div class="form-section">
  *      <div class="form-section__leadin">
  *          <h2 class="form-section__headline">Headline</h2>
  *      </div>
@@ -117,4 +123,9 @@
         float: left;
         padding-left: rem(gs-span(2) + $gs-gutter);
     }
+}
+
+.form-detail {
+    border-top: 1px solid $mem-blue;
+    padding-top: rem($gs-baseline / 2);
 }
