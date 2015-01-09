@@ -5,30 +5,40 @@
 @main("Feedback", htmlClass = "feedback") {
 
     <main role="main" class="page-content">
-        <section class="page-header">
-            <h1 class="page-headline">Feedback</h1>
-            <p class="page-intro">Help us improve your membership experience</p>
+
+        <section class="form-header">
+            <h1 class="form-headline">Feedback</h1>
+            <p class="form-intro">Help us improve your membership experience</p>
         </section>
 
-        <section class="page-section">
-            <div class="page-section__content copy">
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content copy">
                 <p>Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
                 <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
                 <p>If you’re having any problems please visit our <a href="/help">help section</a>.</p>
             </div>
         </section>
 
-        <section class="page-section">
-            <div class="page-section__content">
-                <form action="" method="POST" id="feedback-form" class="form form-primary-container js-feedback-form">
-                    @CSRF.formField
-                    @fragments.form.errorMessageDisplay(isSlim = true)
-                    @fragments.form.feedback()
-                    @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false, isSlim = true)
-                </form>
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content">
+            @fragments.form.errorMessageDisplay()
             </div>
         </section>
 
-    </main>
+        <section class="form-section">
 
+            <div class="form-section__content">
+
+                <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="form js-feedback-form">
+                    @CSRF.formField
+                    @fragments.form.feedback()
+                    @fragments.form.errorMessageDisplay()
+                    @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false)
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
 }

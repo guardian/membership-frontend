@@ -2,44 +2,57 @@
 
 @import model.Benefits
 
-<fieldset class="fieldset payment-options-fieldset">
-    <div class="fieldset__heading">
-        <h2 class="form__heading">Select payment option</h2>
-        <div class="form__note">Price includes VAT</div>
+@pseudoRadio(title: String, detail: String, note: String) = {
+    <div class="psuedo-radio">
+        <div class="payment-title">@title</div>
+        <div>@detail</div>
+        <div>@note</div>
     </div>
+}
+
+<fieldset class="fieldset">
+
+    <div class="fieldset__heading">
+        <h2 class="fieldset__headline">Select payment option</h2>
+        <div class="fieldset__note">Price includes VAT</div>
+    </div>
+
     <div class="fieldset__fields">
+
         <div class="form-field js-payment-options-container">
 
-            <label class="label upgrade__payment-label" for="annual">
+            <label class="label" for="annual">
                 @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
                     <input type="radio"
+                           class="is-hidden"
                            name="payment.type"
                            id="annual"
                            value="annual"
                            checked="checked"
                            data-pricing-option-amount="@pricing.yearly"/>
-                    <span class="payment-label__wrapper">
-                      <span class="payment-label__title">Pay £@pricing.yearly/year</span>
-                      <span class="payment-label__amount">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving a year)</span>
-                      <span class="payment-label__note">1 year membership, 3 months free</span>
-                    </span>
+                    @pseudoRadio(
+                        s"Pay £${pricing.yearly}/year",
+                        s"£${pricing.yearly} one off annual payment (save £${pricing.yearlySaving} a year)",
+                        "1 year membership, 3 months free"
+                    )
                 }
             </label>
 
-            <label class="label upgrade__payment-label" for="monthly">
+            <label class="label" for="monthly">
                 @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
                     <input type="radio"
+                           class="is-hidden"
                            name="payment.type"
                            id="monthly"
                            value="month"
                            data-pricing-option-amount="@pricing.monthly"/>
-                    <span class="payment-label__wrapper">
-                    <span class="payment-label__title">Pay £@pricing.monthly/month</span>
-                    <span class="payment-label__amount">£@pricing.monthly per month (£@pricing.yearlyMonthlyCost per year)</span>
-                    <span class="payment-label__note">1 year membership, pay in instalments over a year</span>
-                    </span>
+                    @pseudoRadio(
+                        s"Pay £${pricing.monthly}/month",
+                        s"£${pricing.monthly} per month (£${pricing.yearlyMonthlyCost} per year)",
+                        "1 year membership, pay in instalments over a year"
+                    )
                 }
             </label>
         </div>
