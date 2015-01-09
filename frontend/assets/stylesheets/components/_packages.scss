@@ -249,7 +249,7 @@
     border-top: 5px solid;
 
     .package__header {
-        padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
+        padding: rem($gs-gutter / 4);
     }
     .package__content {
         padding: 0;
@@ -260,14 +260,14 @@
     }
     .package__actions {
         position: absolute;
-        bottom: rem($gs-gutter / 2);
-        right: rem($gs-gutter / 2);
+        bottom: rem($gs-baseline / 2);
+        right: rem($gs-baseline / 2);
     }
 
     @include mq(tablet) {
         .package__content {
             margin-left: 35%;
-            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2) 0;
+            padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
         }
         .package__actions {
             position: static;
@@ -277,7 +277,8 @@
     @include mq(desktop) {
         .package__content {
             margin-left: 0;
-            padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
+            padding-left: rem($gs-gutter / 4);
+            padding-top: 0;
         }
     }
 }
