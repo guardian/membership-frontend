@@ -18,7 +18,7 @@ import services.{IdentityApi, AuthenticationService, IdentityService}
 import scala.concurrent.Future
 
 case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
-  extends Exception(s"Error for user ${user.id} - ${ex.getMessage}", ex, true, false)
+  extends Exception(s"Error for user ${user.id} - ${ex.getMessage}", ex)
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
