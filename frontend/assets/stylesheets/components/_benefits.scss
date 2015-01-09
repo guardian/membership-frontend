@@ -20,9 +20,8 @@
 .benefit__icon {
     width: rem($gs-gutter * 2);
 }
-.benefit__details {}
 .benefit__title {
-    @include fs-bodyHeading(2);
+    @include fs-header(1);
     padding: 0 0 rem($gs-baseline / 6) 0;
 }
 .benefit__copy {
@@ -117,7 +116,7 @@
 
 .benefits-title {
     @include fs-bodyHeading(2);
-    border-top: rem(1px) dotted $c-neutral3;
+    border-top: 1px dotted $c-neutral3;
     padding: rem(7px) 0 rem($gs-baseline / 6) 0;
     clear: both;
 }

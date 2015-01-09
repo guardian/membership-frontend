@@ -8,20 +8,6 @@
     display: inline;
 }
 
-.section-two-thirds {
-    .two-thirds {
-        @include mq(desktop) {
-            float: left;
-        }
-    }
-
-    .one-third {
-        @include mq(desktop) {
-            float: right;
-        }
-    }
-}
-
 .event-content {
     padding-bottom: rem(70px)!important;
 }
@@ -29,16 +15,6 @@
 
 /* Tier ie9 fix
    ========================================================================== */
-
-// About membership page - fix height of tier boxes
-.about-membership {
-    .package {
-        @include mq(desktop) {
-            height: rem(900px);
-            margin-bottom: rem($gs-gutter * 2);
-        }
-    }
-}
 
 // Patron page - fix height of tier boxes
 .patron-page {

@@ -23,39 +23,7 @@
 
     <div class="pattern-nav js-pattern-nav"></div>
 
-    <header class="section__heading u-cf">
-        <h1 class="section-headline section-headline--no-margin">Pattern Library</h1>
-    </header>
-    <div class="section-intro">
-        Documents common patterns used across the Membership site.
-    </div>
-
-    @pattern("Action - Primary") {
-        <a class="action" href="#">Action</a>
-    }
-
-    @pattern("Action - Secondary") {
-        <a class="action action--secondary-button" href="#">Action</a>
-    }
-
-    @pattern("Action - Full Width", "Full width button modifier") {
-        <a class="action action--fullwidth" href="#">Action</a>
-    }
-
-    @pattern("Toggle Component - Button", "JS toggle component") {
-        <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
-        <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
-    }
-
-    @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
-        <button class="js-toggle action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
-        <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
-    }
-
-    @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
-        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
-        <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
-    }
+    <h1>Pattern Library</h1>
 
     @pattern("Base - Inline Text Elements") {
         <div class="copy">
@@ -175,6 +143,46 @@
         </ul>
     }
 
+    @pattern("Headings - Section", "h-section") {
+        <h3 class="h-section">Section Heading</h3>
+    }
+
+    @pattern("Action - Primary") {
+        <a class="action" href="#">Action</a>
+    }
+
+    @pattern("Action - Secondary") {
+        <a class="action action--secondary-button" href="#">Action</a>
+    }
+
+    @pattern("Action - Full Width", "Full width button modifier") {
+        <a class="action action--fullwidth" href="#">Action</a>
+    }
+
+    @pattern("Toggle Component - Button", "JS toggle component") {
+        <button class="js-toggle action action--toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
+    @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
+        <button class="js-toggle action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
+        <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
+    }
+
+    @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
+        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
+        <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
+    }
+
+    @pattern("Modal Component", "A modal window to provide friction to actions", true) {
+        <div class="modal-container u-cf">
+            @fragments.modal.staffChangeEmail("exampleMail@mailprovider.com", "staffEmail@guardian.co.uk")
+            <form action="@routes.PatternLibrary.patterns">
+                <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+            </form>
+        </div>
+    }
+
     @pattern("Page Header") {
         @fragments.page.pageHeader("This a page headline", Some("This is a page header with a headline and intro text"))
     }
@@ -279,64 +287,74 @@
         </ul>
     }
 
-    @pattern("Ticket Details") {
-        @fragments.event.ticketDetails(eventPortfolio.normal.head)
+    @pattern("Event – Snapshot", "Simple snapshot of event information") {
+        @fragments.event.itemSnapshot(eventPortfolio.orderedEvents.head)
     }
 
-    @pattern("Pricing Info", "Single pricing info item") {
-        @fragments.benefits.priceInfo(Tier.Partner)
+    @pattern("Event – Stats", "Key stats for an event (location and time), used in Event Snapshot.") {
+        @fragments.event.stats(eventPortfolio.orderedEvents.head)
+    }
+
+    @pattern("Event – Price Info", "Price for an event, used in Event Snapshot.") {
+        @fragments.pricing.priceInfoEvent(eventPortfolio.orderedEvents.head)
+    }
+
+    @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
+        @fragments.pricing.priceInfo(Tier.Partner)
+    }
+
+    @pattern("Pricing Info - Fixed", "Fixed version which only expands to fill width on large screens (canFlex=false)") {
+        @fragments.pricing.priceInfo(Tier.Partner, canFlex=false)
+    }
+
+    @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
+        @fragments.pricing.priceInfoEvent(eventPortfolio.normal.head)
     }
 
     @pattern("Benefit Item", "Single benefit item") {
         @fragments.benefits.item(benefit=Benefits.benefitsFilter("book_tickets").head)
     }
 
-    @pattern("Benefits - Tier Grid", "Grid of individual benefit items for a tier") {
-        @fragments.benefits.detail(Tier.Partner)
+    @pattern("Tier Trail - Caption", "Tier name with caption") {
+        @fragments.tier.tierTrail(Tier.Partner)
     }
 
-    @pattern("Benefits - Featured Grid", "Featured grid of individual benefit items for a tier") {
-        @fragments.benefits.featured(Tier.Partner)
+    @pattern("Tier Trail - No Caption", "Tier name with no caption") {
+        @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
-    @pattern("Tier - Tier Header") {
+    @pattern("Tier Header - Friend") {
         @fragments.tier.tierHeader(Tier.Friend)
+    }
+
+    @pattern("Tier Header - Partner") {
         @fragments.tier.tierHeader(Tier.Partner)
+    }
+
+    @pattern("Tier Header - Patron") {
         @fragments.tier.tierHeader(Tier.Patron)
     }
 
-    @pattern("Tier - Expanded", "Expanded variant of the benefits details fragment") {
-        <div class="package-list package-list--flex-box">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showChooseDetails=true)
-        </div>
+    @pattern("Package - Promo") {
+        <ul class="grid grid--3up-stacked">
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Friend)
+            </li>
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Partner)
+            </li>
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Patron)
+            </li>
+        </ul>
     }
 
-    @pattern("Tier - Small", "Small variant of the benefits details fragment (showBenefitCopy=false)") {
-        <div class="package-list package-list--flex-box package-list--bordered">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo", showBenefitCopy=false, isSmallBenefit = true)
-        </div>
+    @pattern("Package - Feature") {
+        @fragments.tier.packageFeature(Tier.Patron)
     }
 
-    @pattern("Tier - No details", "Collapsed variant of the benefits details fragment, no details shown (showBenefitDetails=false)") {
-        <div class="package-list--flex-box package-list--bordered">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
-        </div>
-    }
-
-    @pattern("MODAL - a modal window to provide fiction to actions",
-             "Fragment to confirm the staff member wishes to change their email address", true) {
-        <div class="modal-container u-cf">
-            @fragments.modal.staffChangeEmail("exampleMail@mailprovider.com", "staffEmail@guardian.co.uk")
-            <form action="@routes.PatternLibrary.patterns">
-                <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
-            </form>
-        </div>
+    @pattern("Package - Stack") {
+        @fragments.tier.packageStack(Tier.Partner)
     }
 
     @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {

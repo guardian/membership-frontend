@@ -60,14 +60,14 @@ object Benefits {
 
   var patronWithBenefitsLimited = benefitsFilter("priority_booking", "complim_items", "unique_experiences")
 
-  val friendBenefits = Benefits("As a Friend:", friendsWithBenefits,
+  val friendBenefits = Benefits("Benefits", friendsWithBenefits,
     None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events", 3)
 
-  val partnerBenefits = Benefits("All the benefits of a Friend plus:", partnerWithBenefits,
+  val partnerBenefits = Benefits("Friend benefits, plus…", partnerWithBenefits,
     Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the " +
       "Guardian brought to life, with early booking and discounted tickets", 5);
 
-  val patronBenefits = Benefits("All the benefits of a Partner plus:", patronWithBenefits,
+  val patronBenefits = Benefits("Partner benefits, plus…", patronWithBenefits,
     Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the " +
       "open exchange of ideas, with a backstage pass to the Guardian", 4)
 

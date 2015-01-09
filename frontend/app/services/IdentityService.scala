@@ -1,22 +1,20 @@
 package services
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.json._
-import play.api.libs.ws.{WS, WSResponse}
-
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.Address
-
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.{IdMinimalUser, IdUser}
 import model.UserDeserializer._
+import model.{IdMinimalUser, IdUser}
 import monitoring.IdentityApiMetrics
+import play.api.Logger
+import play.api.Play.current
+import play.api.libs.json._
+import play.api.libs.ws.WS
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 case class IdentityServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -109,9 +107,12 @@ trait IdentityApi {
 
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
-      WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
+      val url = s"${Config.idApiUrl}/$endpoint"
+      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
         recordAndLogResponse(response.status, "GET user", endpoint)
-        (response.json \ "user").asOpt[IdUser]
+        val jsResult = (response.json \ "user").validate[IdUser]
+        if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
+        jsResult.asOpt
       }.recover {
         case _ => None
       }

@@ -1,5 +1,6 @@
 package services.zuora
 
+import com.netaporter.uri.dsl._
 import model.Zuora.{Authentication, ZuoraResult}
 import org.specs2.mutable.Specification
 
@@ -44,6 +45,11 @@ class ZuoraActionTest extends Specification {
       val xml = XML.loadString(action.xml)
       (xml \ "Header" \ "SessionHeader").length mustEqual 0
       (xml \ "Header" \ "CallOptions" \ "useSingleTransaction").text mustEqual "true"
+    }
+
+    "not reveal login details in sanitized output" in {
+      val action = Login(ZuoraApiConfig("TEST", "http://example.com" / "test", "secret", "secret", Map.empty))
+      action.sanitized must not contain "secret"
     }
   }
 

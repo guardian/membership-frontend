@@ -12,7 +12,7 @@ import model.Zuora._
 import services.zuora.ZuoraServiceHelpers._
 
 trait ZuoraAction[T <: ZuoraResult] {
-  val body: Elem
+  protected val body: Elem
 
   val authRequired = true
   val singleTransaction = false
@@ -42,6 +42,8 @@ trait ZuoraAction[T <: ZuoraResult] {
       <soapenv:Body>{body}</soapenv:Body>
     </soapenv:Envelope>.toString()
   }
+
+  def sanitized = body.toString()
 }
 
 case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
@@ -75,6 +77,8 @@ case class Login(apiConfig: ZuoraApiConfig) extends ZuoraAction[Authentication] 
       <api:username>{apiConfig.username}</api:username>
       <api:password>{apiConfig.password}</api:password>
     </api:login>
+
+  override def sanitized = "<api:login>...</api:login>"
 }
 
 case class Query(query: String) extends ZuoraAction[QueryResult] {

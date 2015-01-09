@@ -81,7 +81,7 @@ trait Joiner extends Controller {
     for {
       user <- identityService.getFullUserDetails(user, identityRequest)
       passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields, user.statusFields, passwordExists)
+    } yield (user.privateFields, user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
@@ -138,9 +138,12 @@ trait Joiner extends Controller {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
         event <- EventbriteService.getBookableEvent(eventId)
       } yield {
+        EventbriteService.getService(event).wsMetrics.put(s"user-sent-to-eventbrite-iframe-$tier", 1)
+
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
         }
+
       }
 
       Future.sequence(optFuture.toSeq).map(_.headOption)

@@ -8,6 +8,7 @@ import com.gu.monitoring.CloudWatch
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
+import model.IdMinimalUser
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
@@ -15,6 +16,9 @@ import play.twirl.api.Html
 import services.{IdentityApi, AuthenticationService, IdentityService}
 
 import scala.concurrent.Future
+
+case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
+  extends Exception(s"Error for user ${user.id} - ${ex.getMessage}", ex, true, false)
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -30,8 +34,14 @@ object Functions extends LazyLogging {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
 
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor(_), onUnauthenticated)
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] = {
+    val authenticatedExceptionHandler = new ActionFunction[AuthRequest, AuthRequest] {
+      override def invokeBlock[A](request: AuthRequest[A], block: (AuthRequest[A]) => Future[Result]): Future[Result] =
+        block(request).transform(identity, ex => AuthenticatedException(request.user, ex))
+    }
+
+    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor, onUnauthenticated) andThen authenticatedExceptionHandler
+  }
 
 
   def memberRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =

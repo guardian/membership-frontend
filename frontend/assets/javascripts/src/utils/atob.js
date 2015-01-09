@@ -1,3 +1,4 @@
+/* jshint ignore: start */
 define(function () {
     return function AtoB(){
         return window.atob ? function(str){
@@ -16,7 +17,9 @@ define(function () {
 
             return function(input){
                 input = input.replace(/[=]+$/, '');
-                if (input.length % 4 === 1) throw INVALID_CHARACTER_ERR;
+                if (input.length % 4 === 1) {
+                    throw INVALID_CHARACTER_ERR;
+                }
                 for (
                     var bc = 0, bs, buffer, idx = 0, output = '';
                     buffer = input.charAt(idx++);

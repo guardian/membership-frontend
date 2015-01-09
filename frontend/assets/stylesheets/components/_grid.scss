@@ -11,13 +11,27 @@
     margin: 0;
 }
 .grid__item {
-    margin-bottom: rem($gs-gutter);
     border-color: transparent;
+    margin-bottom: rem($gs-gutter / 2);
+
+    @include mq(mobileLandscape) {
+        margin-bottom: rem($gs-baseline);
+    }
 }
 
 .grid--bordered {
     .grid__item {
         border-color: $c-neutral5;
+    }
+}
+
+// Drop bottom margins if we know we only
+// have a single row of grid items.
+.grid--single-row {
+    @include mq(desktop) {
+        .grid__item {
+            margin-bottom: 0 !important;
+        }
     }
 }
 

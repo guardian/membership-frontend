@@ -29,12 +29,7 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  private def metrics(event: RichEvent) = {
-    event match {
-      case _: GuLiveEvent => guLiveEvents.wsMetrics
-      case _: MasterclassEvent => masterclassEvents.wsMetrics
-    }
-  }
+  private def metrics(event: RichEvent) = EventbriteService.getService(event).wsMetrics
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
@@ -125,7 +120,7 @@ trait Event extends Controller {
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(metrics(event), "user-sent-to-eventbrite") {
+    Timing.record(metrics(event), s"user-sent-to-eventbrite-${request.member.tier}") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))

@@ -2,6 +2,146 @@
    Payment
    ========================================================================== */
 
+/* ==========================================================================
+   Steps
+   ========================================================================== */
+
+.steps {
+    @include fs-header(2);
+    color: $mem-blue-dark;
+    border-top: 1px solid $c-border-brand;
+    padding-top: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        @include fs-header(3);
+    }
+}
+
+/* ==========================================================================
+  Upgrade
+  ========================================================================== */
+
+.upgrade__payment-label {
+   display: block;
+   position: relative;
+
+   .payment-label__wrapper {
+       @include fs-textSans(3);
+       width: 100%;
+       display: block;
+       border: 1px solid transparent;
+
+       &:hover {
+           border: 1px solid $c-neutral2;
+       }
+   }
+
+   .payment-label__title {
+       @include fs-bodyHeading(2);
+       display: block;
+
+   }
+
+   .payment-label__amount,
+   .payment-label__note {
+       display: block;
+   }
+
+   input[type=radio] {
+       display: none;
+   }
+
+   input[type=radio] + .payment-label__wrapper {
+       display: inline-block;
+       padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+       position: relative;
+
+       &:before {
+           @include radio-circle ($c-neutral5);
+       }
+   }
+
+   input[type=radio]:checked + .payment-label__wrapper {
+       border-color: $mem-brandLightblue;
+
+       &:before {
+           @include radio-circle ();
+       }
+   }
+}
+
+/* Billing address
+======================================================================= */
+
+.address-fieldset__inner {
+
+   .payment-label__title {
+       @include fs-bodyCopy(2);
+       width: 100%;
+       display: block;
+       border: 1px solid transparent;
+
+       &:hover {
+           border: 1px solid $c-neutral2;
+       }
+   }
+
+   input[type=radio] {
+       display: none;
+   }
+
+   input[type=radio] + .payment-label__title {
+       display: inline-block;
+       padding: rem($gs-gutter - 2) rem($gs-gutter) rem($gs-gutter) rem(36px);
+       position: relative;
+
+       &:before {
+           @include radio-circle ($c-neutral5);
+       }
+   }
+
+   input[type=radio]:checked + .payment-label__title {
+       border-color: $mem-brandLightblue;
+
+       &:before {
+           @include radio-circle ();
+       }
+   }
+
+}
+
+.address-fieldset__country {
+   select {
+       width: 100%;
+   }
+}
+
+/* Join - Become a member
+======================================================================= */
+
+$current-indicator: rem(72px);
+.become-a-member {
+   @include mq(tablet) {
+       padding: rem($gs-gutter);
+   }
+
+   @include mq(desktop) {
+       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+   }
+
+   @include mq(mem-full) {
+       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+   }
+
+   .package-list {
+       padding-top: rem($gs-gutter * 2);
+
+       @include mq(desktop) {
+           padding-top: $current-indicator;
+       }
+   }
+}
+
 /* Payment Cards Sprite
    ========================================================================== */
 

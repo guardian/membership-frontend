@@ -1,7 +1,6 @@
 /* Base form styles
    ========================================================================== */
 
-
 /* ==========================================================================
    Form
    ========================================================================== */
@@ -82,18 +81,18 @@
 
 .form-field--error {
     .label {
-        color: $newsRed;
+        color: $c-error;
     }
 
     .input-text,
     .input-text:focus {
-        border-color: $newsRed;
+        border-color: $c-error;
     }
 }
 
 .form-field__error-message {
     @include fs-data(3);
-    color: $newsRed;
+    color: $c-error;
     margin-top: rem(2px);
     margin-bottom: rem($gs-baseline / 2);
 }

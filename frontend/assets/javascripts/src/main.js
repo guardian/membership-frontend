@@ -21,8 +21,9 @@ require([
     'src/utils/addToClipboard',
     'src/utils/modal',
     'src/utils/form/processSubmit',
-    'lib/bower-components/raven-js/dist/raven', // add new deps ABOVE this
-    'src/utils/modernizr'
+    // Add new dependencies ABOVE this
+    'raven',
+    'modernizr'
 ], function(
     analytics,
     cookieRefresh,

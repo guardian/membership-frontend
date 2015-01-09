@@ -19,7 +19,7 @@ case class IdUser(id: String,
                     primaryEmailAddress: String,
                     publicFields: PublicFields,
                     privateFields: PrivateFields,
-                    statusFields: StatusFields)
+                    statusFields: Option[StatusFields])
 
 //this can't be a Map[String,String] as PrivateFields in Identity has other object types
 case class PrivateFields(firstName: Option[String] = None,

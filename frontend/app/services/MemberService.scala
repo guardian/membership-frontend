@@ -109,10 +109,7 @@ trait MemberService extends LazyLogging {
   }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    val eventService = event match {
-      case _: GuLiveEvent => GuardianLiveEventService
-      case _: MasterclassEvent => MasterclassEventService
-    }
+    val eventService = EventbriteService.getService(event)
 
     member.tier match {
       case Tier.Friend => Future.successful(None)

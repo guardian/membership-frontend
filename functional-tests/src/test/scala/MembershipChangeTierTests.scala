@@ -130,7 +130,4 @@ class MembershipChangeTierTests extends BaseMembershipTest {
         _.ICantBecomeAPatronAgain
       }
   }
-
-  // patron to partner
-
 }
