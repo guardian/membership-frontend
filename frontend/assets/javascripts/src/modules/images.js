@@ -1,6 +1,6 @@
 define(['lib/bower-components/imager.js/Imager', 'src/utils/helper'], function(Imager, utilsHelper) {
 
-    var IMAGE_LOADED_IMAGE = '.imager-loaded-image';
+    var IMAGE_LOADED_IMAGE = '.js-imager-loaded-image';
     var IMAGES_SLIDESHOW = '.js-image-slideshow';
 
     function init() {
