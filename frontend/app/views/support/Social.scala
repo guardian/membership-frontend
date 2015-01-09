@@ -1,12 +1,12 @@
 package views.support
 
-import play.utils.UriEncoding.encodePathSegment
+import java.net.URLEncoder
 
 import configuration.Config
 import model.Eventbrite.EBEvent
 
 case class Social(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String) {
-  def encode(str: String) = encodePathSegment(str, "utf-8").replace("&", "%26")
+  def encode(str: String) = URLEncoder.encode(str)
 
   val encodedEmailSubject = encode(emailSubject)
   val encodedEmailMessage = encode(emailMessage)
