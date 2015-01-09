@@ -24,195 +24,119 @@
         }
     }
 }
-.event-item__container {
-    position: relative;
-    @include mq(mobileLandscape) {
-        height: rem(450px);
-    }
-}
-.event-item__media {
-    a, img {
-        // Remove descenders
-        vertical-align: text-bottom;
-        display: block;
-        transition: opacity $transition-duration-medium ease, background-color $transition-duration-medium ease;
-    }
-    img {
-        // Prevent flicker on hover in WebKit
-        -webkit-backface-visibility: hidden;
-    }
-}
-.event-item__meta {
-    padding: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: rem($gs-baseline) rem($gs-gutter / 2);
-        height: auto;
-    }
-    @include mq(desktop) {
-        padding: rem($gs-gutter);
-    }
-}
-.event-item__title {
-    color: $black;
-    margin-bottom: rem($gs-baseline);
-    position: relative;
-
-    @include fs-headline(3);
-    font-weight: 500;
-}
-.event-item__time {
-    @include fs-data(4);
-    color: $black;
-}
-.event-item__description {
-    @include fs-bodyCopy(1);
-    padding: rem($gs-baseline) 0 0;
-    color: $black;
-
-    @include mq(desktop) {
-        @include fs-headline(2);
-        padding: rem($gs-baseline * 2) 0 0;
-    }
-}
-.event-item__cta {
-    width: 100%;
-    padding: $gs-baseline 0 0;
-
-    @include mq(tablet) {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 0 rem($gs-gutter / 2) rem($gs-gutter / 2);
-    }
-
-    @include mq(desktop) {
-        padding: 0 rem($gs-gutter) rem($gs-gutter);
-    }
-}
-.event-item__price-amount {
-    display: block;
-    @include fs-header(4);
-    color: $black;
-}
-.event-item__price-amount-discount {
-    display: block;
-    @include fs-data(3);
-    color: $c-neutral2;
-}
-// the buy button
-// TODO: Refactor out into an action
-.event-item__action {
-    position: absolute;
-    bottom: rem($gs-gutter / 2);
-    right: rem($gs-gutter / 2);
-    width: rem(36px);
-    height: rem(36px);
-    padding: 0 rem(8px) 0 0;
-    background-color: $mem-live-top;
-    @include border-radius(50px);
-    border: 0;
-
-    @include mq(desktop) {
-        bottom: rem($gs-gutter);
-        right: rem($gs-gutter);
-    }
-
-    &:focus {
-        outline: 0;
-    }
-
-    &:after {
-        @extend .icon-arrow-right-white;
-        content: '';
-        fill: $black;
-        float: right;
-    }
-
-    .theme--masterclasses & {
-        background-color: $mem-mc-top;
-        &:after {
-            @extend .icon-arrow-right-black;
+    .event-item__container {
+        position: relative;
+        @include mq(mobileLandscape) {
+            height: rem(450px);
         }
     }
-}
-
-/* Event Location Summary
-   ========================================================================== */
-
-.event-location {
-    // Remove space between inline block elements
-    font-size: 0;
-    line-height: 1;
-    color: $c-neutral2;
-}
-.event-location--reversed {
-    color: $white;
-}
-.event-location__detail {
-    @include fs-data(4);
-}
-
-/* Event Status
-   ========================================================================== */
-
-.event-status {
-    display: inline-block;
-
-    &:after {
-        content: '/';
-        color: fade-out($c-neutral1, .8);
-        display: inline-block;
-        font-weight: normal;
-        margin-left: .2em;
+    .event-item__media {
+        a, img {
+            // Remove descenders
+            vertical-align: text-bottom;
+            display: block;
+            transition: opacity $transition-duration-medium ease, background-color $transition-duration-medium ease;
+        }
+        img {
+            // Prevent flicker on hover in WebKit
+            -webkit-backface-visibility: hidden;
+        }
     }
-    &:hover:after {
-        text-decoration: none;
+    .event-item__meta {
+        padding: rem($gs-gutter / 4);
+        padding-top: rem(($gs-gutter / 4) - 1px);
+
+        @include mq(tablet) {
+            height: auto;
+        }
     }
-}
-.event-status--sold-out {
-    color: $mem-sold-out;
-}
+    .event-item__title {
+        color: $black;
+        margin-bottom: rem($gs-baseline);
+        position: relative;
+
+        @include fs-headline(3);
+        font-weight: 500;
+    }
+    .event-item__time {
+        @include fs-data(4);
+        color: $black;
+    }
+    .event-item__description {
+        @include fs-bodyCopy(1);
+        padding: rem($gs-baseline) 0 0;
+        color: $black;
+
+        @include mq(desktop) {
+            @include fs-headline(2);
+            padding: rem($gs-baseline * 2) 0 0;
+        }
+    }
+    .event-item__footer {
+        width: 100%;
+        padding-top: rem($gs-gutter / 4);
+
+        @include mq(mobileLandscape) {
+            padding: rem($gs-gutter / 4);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    }
+    .event-item__action {
+        position: absolute;
+        bottom: rem($gs-gutter / 4 + 1px);
+        right: rem(($gs-gutter / 4));
+    }
+    .event-item__price-amount {
+        display: block;
+        @include fs-header(4);
+        color: $black;
+    }
+    .event-item__price-amount-discount {
+        display: block;
+        @include fs-data(3);
+        color: $c-neutral2;
+    }
 
 /* ==========================================================================
    Event item (Hero modifier)
    ========================================================================== */
 
 .event-item--hero {
-    margin-bottom: $gutter-width-fluid;
     width: 100%;
     height: auto;
+    margin-bottom: rem($gs-baseline);
 
     .event-item__container {
         @include clearfix;
         height: auto;
     }
-
-    .event-item__cta {
+    .event-item__media {
+        display: table-header-group;
+    }
+    .event-item__content {
+        display: table-footer-group;
+    }
+    .event-item__footer {
         position: static;
-        padding: rem($gs-gutter) 0 0;
     }
 
     @include mq(tablet) {
         display: table;
 
         .event-item__media,
-        .event-item__meta {
+        .event-item__content {
             width: auto;
             display: table-cell;
             vertical-align: top;
         }
-        .event-item__media {
-            padding-right: $gutter-width-fluid / 2;
-        }
-        .event-item__meta {
+        .event-item__content {
             position: relative;
-            width: 33.3%;
+            width: (33.3% + ($gutter-width-fluid / 2));
         }
-        .event-item__cta {
+        .event-item__footer {
             position: absolute;
-            padding: rem($gs-gutter);
         }
         .event-item__description {
             display: none;
@@ -235,45 +159,59 @@
 }
 
 /* ==========================================================================
-   Event Item (Minimal modifier)
+   Event Item (Minimal & Card modifier)
    ========================================================================== */
 
-// use a shorter box for minimal theme
-.event-item--minimal {
-    .event-item__title {
-        @include fs-headline(2);
-        font-weight: 500;
-    }
-
-    @include mq(mobileLandscape) {
-        .event-item__container {
-            height: rem(280px);
-        }
-    }
-}
-
-/* ==========================================================================
-   Event Item (Card modifier)
-   ========================================================================== */
-
+.event-item--minimal,
 .event-item--card {
     .event-item__title {
         @include fs-headline(2);
         font-weight: 500;
     }
+    display: table;
+    width: 100%;
 
-    @include mq(tablet) {
+    .event-item__container {
+        height: auto;
+        overflow: hidden;
+    }
+    .event-item__media,
+    .event-item__content {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .event-item__media {
+        width: $trailblock-img-width;
+        margin-right: rem($gs-baseline);
+    }
+    .event-item__title {
+        @include fs-headline(2);
+        font-weight: 500;
+    }
+}
+
+.event-item--minimal {
+    @include mq(mobileLandscape) {
         .event-item__container {
-            height: auto;
-            overflow: hidden;
+            height: rem(280px);
         }
-        .event-item__media {
-            width: $trailblockImgWidthLarge;
-            float: left;
-            margin-right: rem($gs-baseline);
+        .event-item__media,
+        .event-item__content {
+            display: block;
+            width: 100%
         }
-        .event-item__meta {
-            padding-bottom: 0;
+    }
+}
+
+.event-item--card {
+    @include mq($from: mobileLandscape, $until: tablet) {
+        .event-item__container {
+            height: rem(280px);
+        }
+        .event-item__media,
+        .event-item__content {
+            display: block;
+            width: 100%
         }
     }
 }
@@ -292,45 +230,45 @@
         display: block;
     }
 }
-.event-snapshot__media,
-.event-snapshot__title {
-    margin-bottom: rem($gs-baseline / 2);
-}
-.event-snapshot__title {
-    @include fs-textSans(3);
-    font-weight: bold;
-
-    @include mq(mobileLandscape) {
-        @include fs-header(1);
+    .event-snapshot__media,
+    .event-snapshot__title {
+        margin-bottom: rem($gs-baseline / 2);
     }
-}
-.event-snapshot__media,
-.event-snapshot__content {
-    display: table-cell;
-    vertical-align: top;
+    .event-snapshot__title {
+        @include fs-textSans(3);
+        font-weight: bold;
 
-    @include mq(tablet) {
-        display: block;
+        @include mq(mobileLandscape) {
+            @include fs-header(1);
+        }
     }
-}
-.event-snapshot__content {
-    border-top: 1px solid $c-border-neutral;
-    padding-top: rem($gs-baseline / 2);
+    .event-snapshot__media,
+    .event-snapshot__content {
+        display: table-cell;
+        vertical-align: top;
 
-    @include mq(tablet) {
-        border: 0 none;
-        padding-top: 0;
+        @include mq(tablet) {
+            display: block;
+        }
     }
-}
-.event-snapshot__media {
-    width: 30%;
-    padding-right: $gutter-width-fluid;
+    .event-snapshot__content {
+        border-top: 1px solid $c-border-neutral;
+        padding-top: rem($gs-baseline / 2);
 
-    @include mq(tablet) {
-        width: auto;
-        padding-right: 0;
+        @include mq(tablet) {
+            border: 0 none;
+            padding-top: 0;
+        }
     }
-}
+    .event-snapshot__media {
+        width: 30%;
+        padding-right: $gutter-width-fluid;
+
+        @include mq(tablet) {
+            width: auto;
+            padding-right: 0;
+        }
+    }
 
 /* ==========================================================================
    Event Summary
@@ -366,7 +304,7 @@
         margin-right: rem(4px);
     }
 
-    .event-item__meta {
+    .event-item__content {
         @include f-data;
         @include font-size(rem(14px), rem(22px));
 

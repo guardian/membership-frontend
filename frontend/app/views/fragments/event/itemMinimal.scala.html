@@ -1,0 +1,18 @@
+@(event: model.Eventbrite.RichEvent, isCard: Boolean = false)
+
+<div class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
+    <div class="event-item__container">
+        <div class="event-item__media">
+            <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
+                <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="@event.name.text" data-class="responsive-img"></div>
+            </a>
+        </div>
+        <div class="event-item__content">
+            <div class="event-item__meta">
+                <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
+                    @fragments.event.itemMetaTitle(event)
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

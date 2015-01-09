@@ -57,6 +57,11 @@
 /* Text Helpers - Headings
    ========================================================================== */
 
+.h-intro {
+    @include fs-header(4);
+    text-transform: lowercase;
+    margin-bottom: 0;
+}
 
 .h-section,
 .h-section--inline,

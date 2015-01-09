@@ -1,8 +1,8 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, descriptionAnchor: Option[String] = None)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier.Tier, descriptionAnchor: Option[String] = None, isReversed: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 
-<div class="package package--promo tone-@tier.toString.toLowerCase--border">
+<div class="package package--promo @if(isReversed){package--promo--reversed }tone-@tier.toString.toLowerCase--border">
     <div class="package__header">
         <a href="/join/@tier.toString.toLowerCase/enter-details" class="no-underline minimal-link">
             @fragments.tier.tierHeaderPromo(tier)

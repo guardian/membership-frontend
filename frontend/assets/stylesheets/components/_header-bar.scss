@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Header Bar
+   ========================================================================== */
+
+.header-bar {
+    @include clearfix;
+    position: relative;
+    padding-left: rem($gs-gutter / 2);
+    padding-right: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding-left: rem(gs-span(2) + $gs-gutter * 2);
+    }
+}
+    .header-bar__title {
+        @include fs-headline(4);
+        padding: rem($gs-gutter / 2) 0 0;
+
+        @include mq(tablet) {
+            @include fs-headline(6);
+            max-width: rem(gs-span(8));
+            padding-bottom: rem($gs-baseline);
+        }
+
+        @include mq(mem-full) {
+            @include fs-headline(7);
+        }
+    }
+    .header-bar__logo {
+        float: right;
+        height: rem(44px);
+        background-position: right;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-bottom: rem($gs-gutter / 2);
+
+        @include mq(tablet) {
+            position: absolute;
+            right: rem($gs-gutter);
+            bottom: rem($gs-baseline);
+            height: rem(87px);
+            margin-bottom: 0;
+        }
+    }
