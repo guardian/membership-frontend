@@ -7,7 +7,6 @@
 <!--[if IE 9]>
 <script src="@Asset.at("javascripts/lib/polyfills.min.js")"></script>
 <![endif]-->
-
 <script id="gu">
     var guardian = {
         isModernBrowser: (
@@ -33,14 +32,16 @@
             homeImages: {
                 widths: [@Config.homeImageWidths.mkString(",")],
                 ratios: [@Config.homeImageRatios.mkString(",")]
-            }
+            },
+            svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },
         googleAnalytics: {
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
         },
         analyticsEnabled: true,
-        isDev: @(Config.stage == "DEV")
+        isDev: @(Config.stage == "DEV"),
+        iconsLoaded: false
     };
 
     (function(isModern) {
@@ -55,5 +56,68 @@
             document.documentElement.className += ' js-ancient-browser';
         }
 
+        @* Load SVG icon sprite, store in localStorage where possible *@
+        @* Based on: https://github.com/guardian/frontend/blob/master/common/app/views/fragments/loadCss.scala.html *@
+
+        /**
+         * Simple XHR abstraction
+         */
+        function loadData( url, cb ) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (cb) { cb.call(this, xhr); }
+                }
+            }
+            xhr.timeout = 5000;
+            xhr.send();
+        }
+        /**
+         * Add data to local storage, with buildNumber key
+         * Break cache if buildNumber has changed.
+         */
+        function addToLocalStorage(prefix, data) {
+            Object.keys(localStorage).forEach(function(key) {
+                if (key.match(new RegExp('^' + prefix + '.', 'g'))) {
+                    try {
+                        localStorage.removeItem(key);
+                    } catch(e) { }
+                }
+            });
+            try {
+                localStorage.setItem(prefix + '.' + guardian.membership.buildNumber, data);
+            } catch(e) {}
+        }
+        /**
+         * Insert SVG sprite into document
+         */
+        function inlineSvg(data) {
+            var div = document.createElement('div');
+            div.className = 'icon-sprite';
+            div.innerHTML = data;
+            // We need to wait for DOMContentLoaded before inserting SVG
+            document.addEventListener('DOMContentLoaded', function(){
+                document.body.insertBefore(div, document.body.childNodes[0]);
+            },false);
+        }
+        if (!guardian.isDev) {
+            /**
+             * Load icon sprite from local storage if available
+             */
+            (function() {
+                var data = localStorage.getItem('icons.' + guardian.membership.buildNumber);
+                if (data) {
+                    inlineSvg(data);
+                    guardian.iconsLoaded = true;
+                }
+            }());
+        }
+        if (!guardian.iconsLoaded && isModern) {
+            loadData( guardian.membership.svgSprite, function(xhr) {
+                inlineSvg(xhr.responseText);
+                addToLocalStorage('icons', xhr.responseText);
+            });
+        }
     })(guardian.isModernBrowser);
 </script>
