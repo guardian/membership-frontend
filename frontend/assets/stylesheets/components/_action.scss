@@ -62,7 +62,7 @@
 // TODO: Specificy issues
 // this variant moves the arrow to the other side
 // and hides the one on the right
-// Onlt used on change tier  / downgrade
+// Only used on change tier / downgrade
 .action.action--arrow-left {
     &:before {
         @extend .icon-arrow-left-white;

@@ -9,12 +9,11 @@
     padding-right: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        // min-height: rem(132px);
         padding-left: rem($gs-gutter);
     }
 
     @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + $gs-gutter * 2); // 180
+        padding-left: rem(gs-span(2) + $gs-gutter * 2);
     }
 }
     .header-bar__title {
@@ -32,7 +31,6 @@
         }
     }
     .header-bar__logo {
-
         float: right;
         height: rem(44px);
         background-position: right;
