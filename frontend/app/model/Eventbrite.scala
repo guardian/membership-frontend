@@ -139,6 +139,7 @@ object Eventbrite {
     val imgUrl: String
     val availableWidths: String
     val socialImgUrl: String
+    val imageMetadata: Option[Metadata]
     val tags: Seq[String]
 
     val maxDiscounts: Int
@@ -185,6 +186,8 @@ object Eventbrite {
     val availableWidths = ""
 
     val socialImgUrl = imgUrl
+
+    val imageMetadata = None
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 

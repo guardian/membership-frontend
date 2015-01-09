@@ -227,6 +227,17 @@
     }
 }
 
+.event-photo-credit {
+  color: $c-neutral2;
+  @include fs-textSans(1);
+  padding: rem($gs-baseline / 2);
+
+  @include mq(mem-full) {
+    padding-left: $gs-gutter * 10;
+    width: rem(gs-span(8) - $gs-gutter);
+  }
+}
+
 .event-content__container {
     background-color: $white;
     padding: rem($gs-gutter) rem($gs-gutter / 2);
