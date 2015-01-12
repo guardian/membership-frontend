@@ -18,7 +18,7 @@
         <label class="label" for="@countyOrStateLabel-@(formType)">@countyOrStateLabel.capitalize</label>
         <select name="@(formType).countyOrState"
                 id="@countyOrStateLabel-@(formType)"
-                class="js-@countyOrStateLabel-@(formType)"
+                class="select js-@countyOrStateLabel-@(formType)"
                 data-error-message="Please enter your @countyOrStateLabel.capitalize"
                 data-validation="required"
                 aria-required="true">
@@ -42,7 +42,7 @@
             <label class="label" for="country-@(formType)">Country</label>
             <select name="@(formType).country"
                 id="country-@(formType)"
-                class="js-country-@(formType)"
+                class="select js-country-@(formType)"
                 data-error-message="Please enter your Country"
                 data-validation="required"
                 aria-required="true">

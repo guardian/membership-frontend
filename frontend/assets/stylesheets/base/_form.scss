@@ -178,6 +178,11 @@
     }
 }
 
+// width needed for iphone so select doesn't exceed screen width
+.select {
+    width: 100%;
+}
+
 .select-minimal {
     border: 0;
     outline: 0;
