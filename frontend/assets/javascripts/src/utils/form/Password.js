@@ -2,10 +2,9 @@
 define([
     '$',
     'bean',
-    'src/utils/component',
-    'src/utils/helper'
+    'src/utils/component'
 ],
-function ($, bean, component, utilsHelper) {
+function ($, bean, component) {
     'use strict';
 
     // TODO The use of these files has changed considerably these files Staff, Free and Paid, Address, Form and Password need a refactor
@@ -70,9 +69,7 @@ function ($, bean, component, utilsHelper) {
 
         require(['js!zxcvbn'], function() {
 
-            utilsHelper.toArray(document.querySelectorAll('.' + self.classes.STRENGTH_INDICATOR)).map(function (elem) {
-                elem.classList.toggle('is-hidden');
-            });
+            $('.' + self.classes.STRENGTH_INDICATOR).toggleClass('is-hidden');
 
             bean.on(self.getElem('PASSWORD_STRENGTH_INPUT'), 'keyup.count', function () {
                 self.checkCount.call(self);
