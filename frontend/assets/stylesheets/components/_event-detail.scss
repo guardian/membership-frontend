@@ -115,15 +115,13 @@
     bottom: rem($gs-gutter / 2);
     right: rem($gs-gutter / 2);
 
-    height: rem(44px);
-    background-position: right bottom;
-    background-size: contain;
-    background-repeat: no-repeat;
+    max-height: 40px;
 
     @include mq(tablet) {
         bottom: rem($gs-gutter);
         right: rem($gs-gutter);
-        height: rem(87px);
+
+        max-height: none;
     }
 }
 

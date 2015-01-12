@@ -4,6 +4,7 @@
 
 @import views.support.Dates._
 @import views.support.Social.eventDetail
+@import views.support.Asset
 @import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.Eventbrite._
@@ -76,7 +77,7 @@
             @if(event.isNoTicketEvent == false) {
                 @fragments.event.ticketDetails(event)
             }
-            <i class="event-logo icon-@event.providerOpt.getOrElse(eventType)"></i>
+            <img class="event-logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(eventType) + ".svg")">
         </div>
 
     </div>
