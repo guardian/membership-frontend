@@ -109,11 +109,12 @@
                 <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
                     @fragments.event.image(event)
                 </div>
-                <div class="event-content__container">
-                    <div class="event-photo-credit">
-                        <span class="icon-caption-camera"></span>
-                        <span>@event.imageMetadata.flatMap(_.description)</span>
-                        <span>Photograph: @event.imageMetadata.flatMap(_.credit)</span>
+
+                <div class="event-image-credit u-event-content-width">
+                    <div class="event-image-credit__detail">
+                        <i class="icon-caption-camera u-align-middle"></i>
+                        <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
+                        <span class="u-align-middle">Photograph: @event.imageMetadata.flatMap(_.credit)</span>
                     </div>
                 </div>
             }
