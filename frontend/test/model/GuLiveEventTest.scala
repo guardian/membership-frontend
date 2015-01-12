@@ -21,7 +21,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
       guEvent.imgUrl mustEqual "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/{width}.jpg"
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
-      guEvent.imageMetadata.flatMap(_.credit) mustEqual Some("Gu membership")
+      guEvent.imageMetadata.map(_.photographer) mustEqual Some("Joe Bloggs/Guardian Images")
       guEvent.availableWidths mustEqual "1000,500"
       guEvent.socialImgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg"
     }
@@ -32,6 +32,8 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
       guEvent.imgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/{width}.jpg"
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
+      guEvent.imageMetadata.map(_.photographer) mustEqual Some("Joe Bloggs/Guardian Images")
+
       guEvent.availableWidths mustEqual "1000,500,140"
       guEvent.socialImgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/1000.jpg"
     }
@@ -41,6 +43,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
       guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None
+      guEvent.imageMetadata.map(_.photographer) mustEqual None
       guEvent.availableWidths mustEqual ""
       guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
@@ -51,7 +54,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
       guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None
-      guEvent.imageMetadata.flatMap(_.credit) mustEqual None
+      guEvent.imageMetadata.map(_.photographer).get mustEqual ""
       guEvent.availableWidths mustEqual ""
       guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
