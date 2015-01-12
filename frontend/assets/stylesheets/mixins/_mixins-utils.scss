@@ -43,6 +43,13 @@
     width: 1px !important;
 }
 
+@mixin image-replacement {
+    direction: ltr;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 // Clamps a block of text to a certain number of lines,
 // followed by an ellipsis in Webkit and Blink based browsers
 // Reference: http://dropshado.ws/post/1015351370/webkit-line-clamp

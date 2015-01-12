@@ -19,8 +19,7 @@ $browser-supports-flexbox: true !default;
 
 $gutter-width-fluid: 2%;
 $gutter: 16px; // TODO: Remove this, only used in _joiner.scss
-$trailblockImgWidth: 100%; // TOOD: Remove this?
-$trailblockImgWidthLarge: 140px; // TODO: Remove this? Only used in events listings
+$trailblock-img-width: 140px;
 $mobilePopupOffset: 43px;
 $pageOffset: 36px;
 $side-margins-top-magic-number: 114px;

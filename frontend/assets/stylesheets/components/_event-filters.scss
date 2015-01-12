@@ -5,7 +5,6 @@
 .event-filters {
     background-color: $white;
     padding: rem($gs-gutter / 2);
-    border-bottom: rem(1px) solid $mem-live-accent;
 
     @include mq(tablet) {
         padding: rem($gs-gutter);

@@ -8,17 +8,19 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
-<section class="event-blocks">
+<div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
-        <div class="event-block">
-            <h4 class="event-block__header event-block__header__title case--lower">Featured</h4>
-            <div class="event-block__events">
+        <section class="listing listing--lead listing--padded">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">Featured</h3>
+            </div>
+            <div class="listing__content">
                 @for(heroEvent <- eventPortfolio.heroOpt) {
-                    @fragments.event.item(heroEvent, true)
+                    @fragments.event.itemHero(heroEvent)
                 }
                 </ul>
-                <ul class="grid grid--3up">
+                <ul class="grid grid--3up grid--bordered grid--single-row">
                     @for(event <- eventPortfolio.priority) {
                         <li class="grid__item">
                             @fragments.event.item(event)
@@ -26,70 +28,78 @@
                     }
                 </ul>
             </div>
-        </div>
+        </section>
     }
 
-    <div class="event-block">
-        <div class="event-block__header">
-            <h4 class="event-block__header__title case--lower">What's on</h4>
+    <section class="listing listing--padded">
+        <div class="listing__lead-in">
+            <h3 class="listing__title h-intro">What's on</h3>
         </div>
-        @if(eventPortfolio.normal.isEmpty) {
-            <div class="event-block__empty">@noResultsMessage</div>
-        } else {
-            @if(isFilterable) {
-                <div class="event-block__no-results js-filter-empty">@noResultsMessage</div>
-            }
-            <div class="event-block__events">
-                <ul class="grid grid--3up"@if(isFilterable){ id="js-filter-container"}>
+        <div class="listing__content">
+            @if(eventPortfolio.normal.isEmpty) {
+                <div class="listing__empty">@noResultsMessage</div>
+            } else {
+                @if(isFilterable) {
+                    <div class="listing__no-results js-filter-empty">@noResultsMessage</div>
+                }
+                <ul class="grid grid--bordered grid--3up"@if(isFilterable){ id="js-filter-container"}>
                     @for(event <- eventPortfolio.normal) {
                         <li class="grid__item@if(isFilterable){ js-filter-item}">
-                            @fragments.event.item(event, false)
+                            @fragments.event.item(event)
                         </li>
                     }
                 </ul>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    </section>
 
     @if(showPastEvents && eventPortfolio.pastEvents) {
-        <div class="event-block">
-            <div class="event-block__header">
-                <h4 class="event-block__header__title case--lower">Past events</h4>
+        <section class="listing">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">Past events</h3>
             </div>
-            <div class="event-block__events">
-                <ul class="grid grid--4up">
-                    @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
-                        <li class="grid__item">
-                            @fragments.event.item(event, false, isMinimal=true)
-                        </li>
-                    }
-                </ul>
-                <ul class="grid grid--2up" id="js-toggle-past-events" data-toggle-hidden>
-                    @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
-                        <li class="grid__item">
-                            @fragments.event.item(event, false, isMinimal=true, isCard=true)
-                        </li>
-                    }
-                </ul>
+            <div class="listing__content">
+                @if(eventPortfolio.normal.isEmpty) {
+                    <div class="listing__empty">@noResultsMessage</div>
+                } else {
+                    <ul class="grid grid--bordered grid--4up">
+                        @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
+                            <li class="grid__item">
+                                @fragments.event.itemMinimal(event)
+                            </li>
+                        }
+                    </ul>
+                    <ul class="grid grid--bordered grid--2up" id="js-toggle-past-events" data-toggle-hidden>
+                        @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
+                            <li class="grid__item">
+                                @fragments.event.itemMinimal(event, isCard=true)
+                            </li>
+                        }
+                    </ul>
+                }
+                <button class="js-toggle action action--toggle u-no-margin" data-toggle="js-toggle-past-events" data-toggle-label="Less">More past events</button>
             </div>
-            <div class="event-block__footer">
-                <button class="js-toggle action action--no-top-margin action--toggle" data-toggle="js-toggle-past-events" data-toggle-label="Less">More past events</button>
-            </div>
-        </div>
+        </section>
     }
 
-</section>
+</div>
 
 @* ===== Join Today ===== *@
-
-
-<div class="home-slice home-slice--join-today">
-    <div class="home-slice__inner u-cf">
-        <h2 class="home-slice__headline">Join membership today</h2>
-        <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=false, mode="promo", showLearnMore=true)
-        </div>
+<section class="listing tone-tint">
+    <div class="listing__lead-in">
+        <h3 class="h-intro">Join membership today</h3>
     </div>
-</div>
+    <div class="listing__content">
+        <ul class="grid grid--single-row grid--bordered grid--3up-stacked">
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Friend, isReversed=true)
+            </li>
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
+            </li>
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Patron, isReversed=true)
+            </li>
+        </ul>
+    </div>
+</section>

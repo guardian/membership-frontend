@@ -81,17 +81,17 @@ trait Joiner extends Controller {
     for {
       user <- identityService.getFullUserDetails(user, identityRequest)
       passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields, user.statusFields, passwordExists)
+    } yield (user.privateFields, user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
     friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember { Redirect(routes.Joiner.thankyou(Tier.Friend)) } )
+      makeMember(Tier.Friend, Redirect(routes.Joiner.thankyou(Tier.Friend))) )
   }
 
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
     staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-        makeMember { Redirect(routes.Joiner.thankyouStaff()) } )
+        makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
@@ -113,13 +113,21 @@ trait Joiner extends Controller {
 
   def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember { Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url)) } )
+      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
 
-  private def makeMember(result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+  private def makeMember(tier: Tier.Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+
     MemberService.createMember(request.user, formData, IdentityRequest(request))
-      .map { _ => result }
-      .recover {
+      .map { _ =>
+        for {
+          eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+          event <- EventbriteService.getBookableEvent(eventId)
+        } {
+          EventbriteService.getService(event).wsMetrics.put(s"join-$tier-event", 1)
+        }
+        result
+      }.recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
         case error: Zuora.ResultError => Forbidden
         case error: ScalaforceError => Forbidden
@@ -138,7 +146,6 @@ trait Joiner extends Controller {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
         event <- EventbriteService.getBookableEvent(eventId)
       } yield {
-        EventbriteService.getService(event).wsMetrics.put(s"user-sent-to-eventbrite-iframe-$tier", 1)
 
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
