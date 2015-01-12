@@ -227,15 +227,40 @@
     }
 }
 
-.event-photo-credit {
-  color: $c-neutral2;
-  @include fs-textSans(1);
-  padding: rem($gs-baseline / 2);
+//TODO this will be found in two places (once another pull request has been merged) one needs removing
+.u-align-middle {
+    vertical-align: middle;
+}
 
-  @include mq(mem-full) {
-    padding-left: $gs-gutter * 10;
-    width: rem(gs-span(8) - $gs-gutter);
-  }
+.event-image-credit {
+    background-color: $white;
+    padding: rem(5px) rem($gs-gutter / 2) 0;
+
+    @include mq(tablet) {
+        padding-left: 0;
+        margin: 0 auto;
+    }
+
+    @include mq(desktop) {
+        padding-left: rem($gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding: rem($gs-baseline) 0 rem($gs-gutter * 3) rem($gs-gutter * 10);
+    }
+}
+
+.event-image-credit__detail {
+    color: $c-neutral2;
+    @include fs-textSans(1);
+
+    @include mq(tablet) {
+        width: rem(gs-span(5) + $gs-gutter * 3);
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(8) - $gs-gutter);
+    }
 }
 
 .event-content__container {
@@ -247,6 +272,7 @@
     }
 }
 
+.u-event-content-width,
 .event-content__container,
 .event-content__sticky.is-sticky {
     @include mq(tablet) {
