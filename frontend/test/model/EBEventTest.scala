@@ -114,4 +114,15 @@ class EBEventTest extends PlaySpecification {
       desc.mainImage mustEqual None
     }
   }
+
+  "providerOpt" should {
+    "be empty when there is no provider" in {
+      ebLiveEvent.providerOpt must beNone
+    }
+
+    "be some when there is a provider" in {
+      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent]
+      event.providerOpt must beSome("birkbeck")
+    }
+  }
 }

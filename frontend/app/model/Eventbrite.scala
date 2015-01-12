@@ -109,6 +109,11 @@ object Eventbrite {
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
     val isBookable = status == "live" && !isSoldOut
 
+    val providerOpt = for {
+      desc <- description
+      m <- "<!-- provider: (\\w+) -->".r.findFirstMatchIn(desc.html)
+    } yield m.group(1)
+
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
     val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member") }
 

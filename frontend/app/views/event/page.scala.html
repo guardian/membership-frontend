@@ -76,7 +76,7 @@
             @if(event.isNoTicketEvent == false) {
                 @fragments.event.ticketDetails(event)
             }
-            <i class="event-logo@if(eventType){ icon-@eventType}"></i>
+            <i class="event-logo icon-@event.providerOpt.getOrElse(eventType)"></i>
         </div>
 
     </div>

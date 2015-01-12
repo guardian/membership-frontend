@@ -1,0 +1,119 @@
+{
+    "resource_uri": "https://www.eventbriteapi.com/v3/events/14506809257/",
+    "name": {
+        "text": "Essentials of pigeon grooming with Will Franklin",
+        "html": "Essentials of pigeon grooming with Will Franklin"
+    },
+    "description": {
+        "text": "\nWill Franklin, famed pigeon-fancier, reveals at long last to the world his time-honoured techniques for grooming his flock of racing pigeons. Hear how the bespectacled bird-beautifier makes household names like Bob the Pigeon into a sleek, well-coiffured avian eye-catcher, and learn how to use just the right amount of Morton's Bird Shampoo to keep your pigeon's feathers looking lustrous. Will plans to close the session with a live demonstration of his infamous \"Pigeon Orchestra\", where he accompanies himself on ukulele, backed by a cooing choir of pigeons, performing his own compositions from his concept album \"Dark Side of the Pigeon\". A rare treat. ",
+        "html": "<!-- provider: birkbeck -->\r\n<P>Will Franklin, famed pigeon-fancier, reveals at long last to the world his time-honoured techniques for grooming his flock of racing pigeons. Hear how the bespectacled bird-beautifier makes household names like Bob the Pigeon into a sleek, well-coiffured avian eye-catcher, and learn how to use just the right amount of Morton's Bird Shampoo to keep your pigeon's feathers looking lustrous. Will plans to close the session with a live demonstration of his infamous \"Pigeon Orchestra\", where he accompanies himself on ukulele, backed by a cooing choir of pigeons, performing his own compositions from his concept album \"Dark Side of the Pigeon\". A rare treat.<\/P>"
+    },
+    "logo": null,
+    "id": "14506809257",
+    "url": "http://www.eventbrite.co.uk/e/essentials-of-pigeon-grooming-with-will-franklin-tickets-14506809257",
+    "logo_url": null,
+    "start": {
+        "timezone": "Europe/London",
+        "local": "2015-03-04T03:00:00",
+        "utc": "2015-03-04T03:00:00Z"
+    },
+    "end": {
+        "timezone": "Europe/London",
+        "local": "2015-03-04T03:30:00",
+        "utc": "2015-03-04T03:30:00Z"
+    },
+    "created": "2014-11-20T17:09:33Z",
+    "changed": "2015-01-12T15:56:55Z",
+    "capacity": 6,
+    "status": "live",
+    "currency": "GBP",
+    "listed": false,
+    "shareable": false,
+    "invite_only": false,
+    "online_event": false,
+    "show_remaining": false,
+    "organizer_id": "6571165409",
+    "venue_id": "9141637",
+    "category_id": null,
+    "subcategory_id": null,
+    "format_id": null,
+    "category": null,
+    "subcategory": null,
+    "format": null,
+    "organizer": {
+        "description": {
+            "text": "\r\nWelcome to Guardian masterclasses \u2013 a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n",
+            "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses \u2013 a unique programme of learning embedded within one of the world's most forward-thinking media organisations.<\/P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.<\/P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.<\/P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.<\/P>\r\n<\/DIV>"
+        },
+        "logo": {
+            "id": "6162617",
+            "url": "http://cdn.evbuc.com/images/6162617/101063397097/3/logo.png"
+        },
+        "resource_uri": "https://www.eventbriteapi.com/v3/organizers/6571165409/",
+        "id": "6571165409",
+        "name": "Mem Guardian Masterclasses",
+        "url": "http://www.eventbrite.com/o/mem-guardian-masterclasses-6571165409",
+        "num_past_events": 3,
+        "num_future_events": 1
+    },
+    "venue": {
+        "address": {
+            "address_1": null,
+            "address_2": null,
+            "city": "Grimsby",
+            "region": "England",
+            "postal_code": null,
+            "country": "GB",
+            "latitude": "53.567471",
+            "longitude": "-0.0807839999999942"
+        },
+        "resource_uri": "https://www.eventbriteapi.com/v3/venues/9141637/",
+        "id": "9141637",
+        "name": "Grimsby",
+        "latitude": "53.567471",
+        "longitude": "-0.0807839999999942"
+    },
+    "ticket_classes": [
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/14506809257/ticket_classes/31293203/",
+            "id": "31293203",
+            "name": "EARLY BIRD LOL",
+            "description": null,
+            "cost": {
+                "currency": "GBP",
+                "display": "\u00a33.14",
+                "value": 314
+            },
+            "fee": {
+                "currency": "GBP",
+                "display": "\u00a30.84",
+                "value": 84
+            },
+            "actual_cost": {
+                "currency": "GBP",
+                "display": "\u00a33.14",
+                "value": 314
+            },
+            "actual_fee": {
+                "currency": "GBP",
+                "display": "\u00a30.84",
+                "value": 84
+            },
+            "donation": false,
+            "free": false,
+            "minimum_quantity": 1,
+            "maximum_quantity": null,
+            "quantity_total": 6,
+            "quantity_sold": 0,
+            "sales_start": "2014-12-09T04:20:00Z",
+            "sales_end": "2015-03-01T02:00:00Z",
+            "hidden": false,
+            "include_fee": false,
+            "split_fee": false,
+            "hide_description": true,
+            "auto_hide": false,
+            "variants": [],
+            "event_id": "14506809257"
+        }
+    ]
+}
