@@ -11,13 +11,15 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce.{Member, FreeMember, PaidMember}
 
+import utils.Base64._
+
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
   implicit val writesInstant = Writes[Instant] { instant => JsString(instant.toString(standardFormat)) }
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
-    Ok(json).withCookies(Cookie("GU_MEM", Json.stringify(json), secure = true, httpOnly = false))
+    Ok(json).withCookies(Cookie("GU_MEM", Json.stringify(json).getBytes.toBase64, secure = true, httpOnly = false))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
