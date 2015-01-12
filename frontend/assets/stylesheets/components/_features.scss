@@ -4,6 +4,11 @@
 
 .section-features {
     clear: both;
+    margin-bottom: rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        margin-top: rem($gs-baseline * 3);
+    }
 }
 
 .feature-panel {
