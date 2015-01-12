@@ -1,4 +1,4 @@
-define(function () {
+define(['src/utils/decodeBase64'], function (decodeBase64) {
 
     /*
      Cookie functions originally from http://www.quirksmode.org/js/cookies.html
@@ -29,35 +29,34 @@ define(function () {
 
     function getCookie(name) {
         var nameEQ = name + '=';
-        var ca = doc.cookie.split(';');
-        var c;
-
+        var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
-            c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1, c.length);
-            }
-            if (c.indexOf(nameEQ) === 0) {
-
-                var returnValue;
-
-                try {
-                    returnValue = JSON.parse(returnValue = c.substring(nameEQ.length, c.length));
-                } catch(e){}
-
-                return returnValue;
-            }
+            var c = ca[i];
+            while (c.charAt(0) === ' ') { c = c.substring(1, c.length); }
+            if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
         }
         return null;
+    }
+
+    function getDecodedCookie(name) {
+        var cookieData = getCookie(name);
+        return decodeCookie(cookieData);
     }
 
     function removeCookie(name) {
         setCookie(name, '', -1);
     }
 
+    function decodeCookie(cookieData) {
+        return (cookieData) ? JSON.parse(decodeBase64(cookieData.split('.')[0])) : null;
+    }
+
     return {
         setCookie: setCookie,
         getCookie: getCookie,
-        removeCookie: removeCookie
+        removeCookie: removeCookie,
+        decodeCookie: decodeCookie,
+        getDecodedCookie: getDecodedCookie
     };
+
 });
