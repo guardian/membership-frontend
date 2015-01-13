@@ -7,6 +7,7 @@
     color: $c-neutral1;
     background-color: $c-background;
     padding: rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 2);
 
     @include mq(mobileLandscape) {
         padding: rem($gs-gutter);
@@ -52,7 +53,7 @@
     @include mq(tablet) {
         z-index: 100;
         position: relative;
-        margin-top: rem(-($gs-gutter * 5));
+        margin-top: rem(-($gs-baseline * 9));
         margin-bottom: rem($gs-gutter / 2);
     }
 }

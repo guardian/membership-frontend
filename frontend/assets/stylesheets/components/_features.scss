@@ -21,6 +21,7 @@
 .feature-panel__description {
     display: table-cell;
     vertical-align: middle;
+
     @include mq(mobileLandscape) {
         display: block;
     }
@@ -29,6 +30,7 @@
     width: rem(gs-span(2));
     padding-right: rem($gs-gutter/2);
     float: left;
+
     @include mq(mobileLandscape) {
         width: auto;
         float: none;
@@ -46,6 +48,10 @@
     @include mq(mobileLandscape) {
         border-top: none;
         padding-top: 0;
+    }
+    @include mq(desktop) {
+        font-size: get-font-size(headline, 3);
+        line-height: get-line-height(headline, 3);
     }
 }
 .feature-panel__cta {
