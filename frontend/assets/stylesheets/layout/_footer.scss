@@ -3,15 +3,12 @@
    ========================================================================== */
 
 .global-footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    z-index: 1;
-    margin: rem($pageOffset/2) 0 0;
+    margin: rem($gs-baseline) 0 0;
     background-color: $c-neutral8;
 
     @include mq(mobileLandscape) {
-        margin-top: rem($pageOffset);
+        margin-top: rem($gs-baseline * 3);
     }
 }
 .global-footer__banner {
