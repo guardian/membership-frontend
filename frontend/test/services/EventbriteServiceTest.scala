@@ -40,7 +40,7 @@ class EventbriteServiceTest extends PlaySpecification {
     val socialImgUrl = ""
     val tags = Nil
 
-    val metadata = Metadata("", "", "", "", "", false)
+    val metadata = Metadata("", "", "", "", "", false, None)
   }
 
 
