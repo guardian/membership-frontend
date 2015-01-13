@@ -3,18 +3,11 @@
 @import model.RichEvent._
 @import configuration.Config
 
-@termsAndConditions = @{
-    event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses", Config.guardianMasterclassesTermsUrl)
-        case _: GuLiveEvent => ("Guardian Live events", Config.guardianLiveEventsTermsUrl)
-    }
-}
-
 @if(event.isSoldOut) {
     <span class="action @actionClassSoldOut">Sold out</span>
 } else {
     <a class="action @actionClassBuy js-ticket-cta" data-link-name="Book Tickets" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
-    <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @termsAndConditions._1
-        <a href="@termsAndConditions._2" target="_blank">Terms and Conditions</a>
+    <div class="terms-info js-legal-terms">By proceeding, you agree to the<br /> @event.metadata.title
+        <a href="@event.metadata.termsUrl" target="_blank">Terms and Conditions</a>
     </div>
 }

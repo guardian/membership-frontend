@@ -5,11 +5,26 @@ import model.Eventbrite.EBEvent
 import services.MasterclassData
 
 object RichEvent {
+  case class Metadata(
+    identifier: String,
+    title: String,
+    shortTitle: String,
+    eventListUrl: String,
+    termsUrl: String
+  )
+
+  val guLiveMetadata = Metadata("guardian-live", "Guardian Live events", "Events", controllers.routes.Event.list.url,
+    Config.guardianLiveEventsTermsUrl)
+  val masterclassMetadata = Metadata("masterclasses", "Guardian Masterclasses", "Masterclasses",
+    controllers.routes.Event.masterclasses.url, Config.guardianMasterclassesTermsUrl)
+
   trait RichEvent {
     val event: EBEvent
     val imgUrl: String
     val socialImgUrl: String
     val tags: Seq[String]
+
+    val metadata: Metadata
   }
 
   case class GuLiveEvent(event: EBEvent) extends RichEvent {
@@ -24,6 +39,8 @@ object RichEvent {
     }
 
     val tags = Nil
+
+    val metadata = guLiveMetadata
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
@@ -33,6 +50,8 @@ object RichEvent {
     val socialImgUrl = imgUrl
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
+
+    val metadata = masterclassMetadata
   }
 
 
