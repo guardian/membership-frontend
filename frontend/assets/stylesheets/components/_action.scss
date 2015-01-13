@@ -426,6 +426,7 @@
 /* Wait
    ========================================================================== */
 // TODO: Document how this is used. i- suggests an icon prefix?
+// TODO benW has new designs for the loader coming soon
 
 .i-wait {
     display: none;
@@ -433,7 +434,7 @@
 .actions.js-waiting {
     .i-wait {
         display: inline-block;
-        vertical-align: middle;
+        padding: 0 0 rem($gs-gutter) rem($gs-baseline / 2);
 
         .i-wait__throbber {
             vertical-align: middle;

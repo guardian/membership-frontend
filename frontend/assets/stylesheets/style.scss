@@ -33,7 +33,7 @@
 @import 'base/base';
 @import 'base/links';
 @import 'base/lists';
-@import 'base/forms';
+@import 'base/form';
 @import 'base/tables';
 @import 'base/images';
 @import 'base/helpers';
@@ -76,6 +76,7 @@
 @import 'components/nav/brand-bar';
 @import 'components/action';
 @import 'components/page';
+@import 'components/form-layout';
 @import 'components/blocks';
 @import 'components/asides';
 @import 'components/listings';
@@ -103,14 +104,6 @@
 // Dev modules:
 // - Pattern library
 @import 'components/patterns';
-
-/* Pages
-   ========================================================================== */
-// TODO: These are conceptually no different to components (modules),
-// gradually (only two left...) merge them into modules as you work on related styles.
-
-@import 'pages/joiner';
-@import 'pages/login';
 
 /* ==========================================================================
    State

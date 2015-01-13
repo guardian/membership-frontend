@@ -6,36 +6,35 @@
 }
 
 <fieldset class="fieldset">
+
     <div class="fieldset__heading">
-        <h2 class="form__heading">Name</h2>
+        <h2 class="fieldset__headline">Name</h2>
     </div>
 
-    <div class="fieldset__fields ">
+    <div class="fieldset__fields">
 
         <div class="form-field">
-            <div class="form-field">
-                <label class="label label--inline" for="name-first">First</label>
-                <input type="text"
-                       name="name.first"
-                       id="name-first"
-                       value="@firstName"
-                       class="text-input text-input--block js-name-first"
-                       data-error-message="Please enter your first name"
-                       data-validation="required"
-                       aria-required="true"/>
-            </div>@*
-            == Inline block whitespace ==
-            *@<div class="form-field">
-                <label class="label label--inline" for="name-last">Last</label>
-                <input type="text"
-                       name="name.last"
-                       id="name-last"
-                       value="@lastName"
-                       class="text-input text-input--block js-name-last"
-                       data-error-message="Please enter your last name"
-                       data-validation="required"
-                       aria-required="true"/>
-            </div>
+            <label class="label" for="name-first">First</label>
+            <input type="text"
+                   name="name.first"
+                   id="name-first"
+                   value="@firstName"
+                   class="input-text js-name-first"
+                   data-error-message="Please enter your first name"
+                   data-validation="required"
+                   aria-required="true"/>
+        </div>
+
+        <div class="form-field form-field--no-margin">
+            <label class="label" for="name-last">Last</label>
+            <input type="text"
+                   name="name.last"
+                   id="name-last"
+                   value="@lastName"
+                   class="input-text js-name-last"
+                   data-error-message="Please enter your last name"
+                   data-validation="required"
+                   aria-required="true"/>
         </div>
 
     </div>
