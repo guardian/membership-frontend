@@ -4,10 +4,7 @@
 
 .header {
     position: relative;
-    margin-bottom: rem($pageOffset/2);
-    @include mq(tablet) {
-        margin-bottom: rem($pageOffset);
-    }
+    margin-bottom: rem($gs-baseline);
 
     .header__inner--popup {
         padding: 0;
