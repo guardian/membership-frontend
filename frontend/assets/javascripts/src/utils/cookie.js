@@ -2,10 +2,7 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
 
     /*
      Cookie functions originally from http://www.quirksmode.org/js/cookies.html
-     These are secure cookies and the value is JSON.stringify on set and JSON.parse on get
      */
-    var doc = document;
-
     function setCookie(name, value, days, isUnSecure) {
         var date;
         var expires;
@@ -24,7 +21,7 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
             value = JSON.stringify(value);
         }
 
-        doc.cookie = [name, '=', value, expires, '; path=/', secureCookieString ].join('');
+        document.cookie = [name, '=', value, expires, '; path=/', secureCookieString ].join('');
     }
 
     function getCookie(name) {
@@ -39,8 +36,7 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
     }
 
     function getDecodedCookie(name) {
-        var cookieData = getCookie(name);
-        return decodeCookie(cookieData);
+        return decodeCookie(getCookie(name));
     }
 
     function removeCookie(name) {
@@ -48,15 +44,15 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
     }
 
     function decodeCookie(cookieData) {
-        return (cookieData) ? JSON.parse(decodeBase64(cookieData.split('.')[0])) : null;
+        return cookieData ? JSON.parse(decodeBase64(cookieData.split('.')[0])) : null;
     }
 
     return {
         setCookie: setCookie,
         getCookie: getCookie,
+        getDecodedCookie: getDecodedCookie,
         removeCookie: removeCookie,
-        decodeCookie: decodeCookie,
-        getDecodedCookie: getDecodedCookie
+        decodeCookie: decodeCookie
     };
 
 });

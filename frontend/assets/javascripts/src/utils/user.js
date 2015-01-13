@@ -12,9 +12,9 @@ define([
     };
 
     var getUserFromCookie = function(){
+        var cookieData = cookie.getCookie('GU_U');
+        var userData = cookie.decodeCookie(cookieData);
         var userFromCookieCache;
-        var cookieData = cookie.getCookie('GU_U'),
-            userData = cookie.decodeCookie(cookieData);
         if (userData) {
             userFromCookieCache = {
                 id: userData[0],
