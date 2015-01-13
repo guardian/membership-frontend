@@ -2,7 +2,8 @@ package services
 
 import model.EventbriteTestObjects
 import play.api.test.PlaySpecification
-import model.Eventbrite.{RichEvent, EBEvent, EBError, EBObject}
+import model.Eventbrite.{EBEvent, EBError, EBObject}
+import model.RichEvent.RichEvent
 import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource

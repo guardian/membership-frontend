@@ -1,11 +1,10 @@
 package services
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import akka.agent.Agent
-import configuration.Config
-import model.EventPortfolio
-import model.Eventbrite._
-import model.EventbriteDeserializer._
-import monitoring.EventbriteMetrics
+
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -13,9 +12,12 @@ import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import configuration.Config
+import model.EventPortfolio
+import model.Eventbrite._
+import model.EventbriteDeserializer._
+import model.RichEvent._
+import monitoring.EventbriteMetrics
 
 trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   val apiToken: String

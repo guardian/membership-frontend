@@ -1,11 +1,11 @@
 @(member: com.gu.membership.salesforce.Member, subscription: model.Zuora.SubscriptionDetails,
-    cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.Eventbrite.RichEvent, String)], upgrade: Boolean)
+    cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
 
 @import views.support.Dates._
 @import views.support.Prices._
 @import views.support.Social.joinThankyou
 
-@iframeHeight(event: model.Eventbrite.RichEvent) = @{
+@iframeHeight(event: model.RichEvent.RichEvent) = @{
     val ticketHeight = 60
     val iframeChrome = 560
     event.ticket_classes.length * ticketHeight + iframeChrome

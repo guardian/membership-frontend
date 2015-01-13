@@ -15,7 +15,8 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.{IdMinimalUser, IdUser, ProductRatePlan, PaidTierPlan}
-import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
+import model.Eventbrite.EBCode
+import model.RichEvent._
 import model.Stripe.Customer
 import monitoring.MemberMetrics
 import utils.ScheduledTask

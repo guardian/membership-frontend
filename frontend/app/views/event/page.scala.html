@@ -1,12 +1,12 @@
-@(event: model.Eventbrite.RichEvent, pageInfo: model.PageInfo)
+@(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
 @import play.twirl.api.Html
 
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
-@import org.joda.time.Instant
 @import model.Eventbrite._
+@import model.RichEvent._
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
