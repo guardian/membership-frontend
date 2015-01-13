@@ -45,7 +45,7 @@
                     @fragments.event.addressSummary(event)
                 </div>
             </div>
-            @if(event.isNoTicketEvent == false) {
+            @if(!event.isNoTicketEvent) {
                 @fragments.event.ticketDetails(event)
             }
             <i class="event-logo icon-@event.metadata.identifier"></i>
@@ -130,7 +130,7 @@
                                 </div>
                             }
 
-                            @if(event.isNoTicketEvent == false) {
+                            @if(!event.isNoTicketEvent) {
 
                                 @for(ticket <- event.generalReleaseTicket) {
                                     @if(event.isSoldOut) {
