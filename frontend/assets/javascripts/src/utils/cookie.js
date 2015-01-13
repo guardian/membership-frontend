@@ -44,7 +44,11 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
     }
 
     function decodeCookie(cookieData) {
-        return cookieData ? JSON.parse(decodeBase64(cookieData.split('.')[0])) : null;
+        /**
+         * Check to see if we have cookie data AND is base64
+         */
+        var cookieVal = cookieData ? decodeBase64(cookieData.split('.')[0]) : undefined;
+        return cookieVal ? JSON.parse(cookieVal) : undefined;
     }
 
     return {
