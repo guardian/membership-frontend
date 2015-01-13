@@ -1,4 +1,5 @@
 @(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
@@ -6,23 +7,41 @@
 @main("Join", pageInfo=pageInfo, htmlClass = "join") {
 
     <main role="main" class="page-content">
+        @fragments.page.pageHeader("Become a member", Some("Join as a founding Partner or Patron and the price you pay today will never rise"))
 
-    <section class="become-a-member">
+        <section class="page-section">
+             <div class="page-section__content">
+                <ul class="grid grid--bordered grid--3up-stacked">
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
+                    </li>
+                </ul>
+            </div>
+        </section>
 
-    	<header class="section__heading u-cf">
-    	    <h1 class="section-headline section-headline--no-margin">Become a member</h1>
-    	</header>
-    	<div class="section-intro">Join as a founding Partner or Patron and the price you pay today will never rise</div>
+        <section class="page-section">
+            <div class="page-section__content">
+                <h3 class="h-section">What's included</h3>
+                <div id="package-benefits-friend">
+                    @fragments.tier.packageStack(Tier.Friend)
+                </div>
+                <div id="package-benefits-partner">
+                    @fragments.tier.packageStack(Tier.Partner)
+                </div>
+                <div id="package-benefits-patron">
+                    @fragments.tier.packageStack(Tier.Patron)
+                </div>
+            </div>
+        </section>
 
-        <div class="package-list package-list--flex-box">
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=true, mode="promo")
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=true, mode="promo")
-            @fragments.tier.benefits(currentTier=None, tier=Tier.Patron, showBenefitDetails=true, mode="promo")
-        </div>
-
-    </section>
-
-    @fragments.analytics.membershipTracking()
+        @fragments.analytics.membershipTracking()
 
     </main>
+
 }

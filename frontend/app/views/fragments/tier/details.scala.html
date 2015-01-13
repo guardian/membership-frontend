@@ -1,17 +1,17 @@
 @(
     currentTier: com.gu.membership.salesforce.Tier.Tier,
     showBenefitDetails: Boolean = true,
-    showBenefitCopy: Boolean = true,
-    isSmallBenefit: Boolean = false
+    showBenefitCopy: Boolean = true
 )
+
 @import model.Benefits
 @import model.Benefits.BenefitItem
 @import com.gu.membership.salesforce.Tier
 
-@benefitListing(benefits: Seq[BenefitItem], isLead: Boolean) = {
+@benefitListing(benefits: Seq[BenefitItem]) = {
     @for(benefit <- benefits) {
         <div class="benefits-item">
-            <div class="benefits-item__inner@if(isLead){ benefits-item__inner--highlighted} @if(isSmallBenefit){ benefits-item__inner--small}">
+            <div class="benefits-item__inner">
                 <li class="benefits-title">
                     <div class="benefits-title__first">
                         <i class="icon-@benefit.identifier icon--benefits"></i>
@@ -31,8 +31,7 @@
     <div class="package__title">What's included</div>
     <div class="package-benefits">
         <ul class="package-benefits__list u-unstyled">
-            @benefitListing(Benefits.details(currentTier).leadBenefits, isLead=true)
-            @benefitListing(Benefits.details(currentTier).otherBenefits, isLead=false)
+            @benefitListing(Benefits.details(currentTier).list)
         </ul>
     </div>
 }
