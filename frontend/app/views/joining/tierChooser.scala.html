@@ -1,13 +1,23 @@
 @(eventOpt: Option[model.RichEvent.RichEvent], pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import views.support.Dates._
-@import configuration.Config
+@import model.Eventbrite.GuLiveEvent
+@import model.Eventbrite.MasterclassEvent
+
+@title = @{
+    eventOpt.fold {
+        "Choose a membership tier"
+    } {
+        case _: MasterclassEvent => "Become a member of the Guardian to buy your masterclass"
+        case _: GuLiveEvent => "Guardian Live events are exclusively for Guardian members"
+    }
+}
 
 @main("Join Choose Tier", pageInfo=pageInfo) {
 
     <main role="main" class="page-content">
-        @fragments.page.pageHeader("Guardian Live events are exclusively for Guardian members")
+
+        @fragments.page.pageHeader(title)
 
         <section class="page-section page-section--no-padding">
             <div class="page-section__lead-in">
