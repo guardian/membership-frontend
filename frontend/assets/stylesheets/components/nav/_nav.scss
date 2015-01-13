@@ -58,13 +58,16 @@ $_global-nav-height: 36px;
     .nav__scroll {
         display: table;
         white-space: nowrap;
-        width: 100%;
+        width: auto;
         vertical-align: middle;
         height: rem($_global-nav-height);
         padding: 0 rem($_global-nav-height * 2) 0 rem($gs-gutter / 2);
 
         @include mq(tablet) {
             padding: 0 rem($gs-gutter);
+        }
+        @include mq(desktop) {
+            width: 100%;
         }
     }
     .nav__list {
