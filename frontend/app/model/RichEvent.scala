@@ -10,13 +10,14 @@ object RichEvent {
     title: String,
     shortTitle: String,
     eventListUrl: String,
-    termsUrl: String
+    termsUrl: String,
+    largeImg: Boolean
   )
 
   val guLiveMetadata = Metadata("guardian-live", "Guardian Live events", "Events", controllers.routes.Event.list.url,
-    Config.guardianLiveEventsTermsUrl)
+    Config.guardianLiveEventsTermsUrl, largeImg=true)
   val masterclassMetadata = Metadata("masterclasses", "Guardian Masterclasses", "Masterclasses",
-    controllers.routes.Event.masterclasses.url, Config.guardianMasterclassesTermsUrl)
+    controllers.routes.Event.masterclasses.url, Config.guardianMasterclassesTermsUrl, largeImg=false)
 
   trait RichEvent {
     val event: EBEvent

@@ -75,13 +75,10 @@
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        @event match {
-            case _: MasterclassEvent => {}
-            case _ => {
-                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
-                </div>
-            }
+        @if(event.metadata.largeImg) {
+            <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+            </div>
         }
 
         <div class="event-content__container u-cf">
@@ -95,9 +92,8 @@
             </div>
 
             <div class="event-content__sidebar">
-                @event match {
-                    case _: MasterclassEvent => { <img class="responsive-img hidden-mobile" src="@event.imgUrl" /> }
-                    case _ => {}
+                @if(!event.metadata.largeImg) {
+                    <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
                 }
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
