@@ -14,18 +14,14 @@
         margin-top: rem($pageOffset);
     }
 }
-.global-footer__banner {
-    border-top: rem(2px) solid $c-brandBlue;
-    margin-bottom: rem(($gs-baseline / 3) * 2);
-}
 .global-footer__primary {
     position: relative;
     overflow: hidden;
-    background-color: darken($mem-blue, 12%);
+    background-color: darken($mem-brandBlue, 5%);
 }
 .global-footer__brand {
     @include clearfix;
-    background-color: darken($mem-blue, 10%);
+    background-color: $mem-brandBlue;
     padding-left: rem($gs-gutter / 4);
     padding-right: rem($gs-gutter / 4);
 

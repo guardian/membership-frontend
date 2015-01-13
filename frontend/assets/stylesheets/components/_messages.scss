@@ -12,13 +12,13 @@
 }
 
 .flash-message--error {
-    background-color: $flash-error-background;
-    border-color: $flash-error-border;
-    color: $flash-error-color;
+    background-color: $c-flash-error-background;
+    border-color: $c-flash-error-border;
+    color: $c-flash-error;
 }
 
 .flash-message--success {
-    background-color: $flash-success-background;
-    border-color: $flash-success-border;
-    color: $flash-success-color;
+    background-color: $c-flash-success-background;
+    border-color: $c-flash-success-border;
+    color: $c-flash-success;
 }

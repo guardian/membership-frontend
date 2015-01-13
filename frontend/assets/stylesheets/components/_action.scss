@@ -32,14 +32,14 @@
     @extend %action;
 
     color: $white;
-    background-color: $mem-buttonBlue;
+    background-color: $c-button;
     text-decoration: none;
 
     &:focus,
     &:active,
     &:hover {
         text-decoration: none;
-        background-color: darken($mem-buttonBlue, 10%);
+        background-color: darken($c-button, 10%);
     }
 
     &:after {
@@ -129,7 +129,7 @@
     background-position: center center;
 
     @include border-radius(50px);
-    border: 1px solid $mem-buttonBlue;
+    border: 1px solid $c-button;
 
     &:focus {
         outline: 0;
@@ -142,9 +142,9 @@
 
 .action--secondary,
 .action--toggle {
-    color: $mem-buttonBlue;
+    color: $c-button;
     background-color: transparent;
-    border: 1px solid transparentize($mem-buttonBlue, 0.5);
+    border: 1px solid transparentize($c-button, 0.5);
 
     &:focus,
     &:active,
@@ -153,7 +153,7 @@
     }
 
     &:hover {
-        border-color: $mem-buttonBlue;
+        border-color: $c-button;
     }
 
 }
@@ -186,24 +186,24 @@
     &:active,
     &:focus {
         color: $black;
-        background-color: $offWhite;
+        background-color: $c-neutral4;
     }
     &:hover {
         color: $black;
-        background-color: darken($offWhite, 15%);
+        background-color: darken($c-neutral4, 15%);
     }
 }
 
 // TODO: These classes are only used inside the staff email change modal.
 // Should be made more generic, or into clearer modfiers.
 .action-secondary-small {
-    color: $mem-buttonBlue;
+    color: $c-button;
     border: 1px solid rgba(24, 104, 153, .25);
     background-color: $white;
     @extend %action;
 
     &:hover {
-        border: 1px solid $mem-buttonBlue;
+        border: 1px solid $c-button;
     }
 }
 .action-secondary-small--modal {
@@ -250,17 +250,17 @@
     min-width: 100%;
 
     .theme--guardian-live & {
-        background-color: $mem-live-top;
+        background-color: $c-tone-live;
 
         &:hover {
-            background-color: darken($mem-live-top, 5%);
+            background-color: darken($c-tone-live, 5%);
         }
     }
     .theme--masterclasses & {
         color: $c-neutral1;
-        background-color: $mem-mc-top;
+        background-color: $c-tone-masterclass;
         &:hover {
-            background-color: darken($mem-mc-top, 5%);
+            background-color: darken($c-tone-masterclass, 5%);
         }
         &:after {
             @extend .icon-arrow-right-black;
@@ -272,10 +272,10 @@
     min-width: 100%;
 
     .theme--guardian-live & {
-        background-color: $mem-live-top;
+        background-color: $c-tone-live;
     }
     .theme--masterclasses & {
-        background-color: $mem-mc-top;
+        background-color: $c-tone-masterclass;
     }
     &:hover {
         cursor: default;
@@ -288,18 +288,18 @@
 .action--join,
 .action--logged-in {
     text-align: left;
-    background-color: $mem-buttonBlue;
+    background-color: $c-button;
     color: $white;
     padding: rem(8px) rem(8px) rem(8px) rem(18px);
 
     &:visited,
     &:active,
     &:focus {
-        background-color: $mem-buttonBlue;
+        background-color: $c-button;
         color: $white;
     }
     &:hover {
-        background-color: darken($mem-buttonBlue, 15%);
+        background-color: darken($c-button, 15%);
     }
     i {
         float: right;
@@ -320,13 +320,13 @@
 }
 
 .action-cta--confirm {
-    background-color: $mem-buttonBlue;
+    background-color: $c-button;
 }
 
 .action-cta--cancel {
     &,
     &:hover {
-      background-color: $mem-button-cancel;
+      background-color: $c-button-cancel;
     }
 }
 
@@ -371,21 +371,21 @@
 // Currently not styled when used outside of a theme
 .action--search {
     .theme--guardian-live & {
-        background-color: $mem-live-top;
+        background-color: $c-tone-live;
         color: $white;
         &:hover,
         &:focus,
         &:active {
-            background-color: $mem-live-accent;
+            background-color: $c-tone-live-accent;
         }
     }
     .theme--masterclasses & {
-        background-color: $mem-mc-top;
+        background-color: $c-tone-masterclass;
         color: $c-neutral1;
         &:hover,
         &:focus,
         &:active {
-            background-color: $mem-mc-accent;
+            background-color: $c-tone-masterclass-accent;
         }
     }
 }
