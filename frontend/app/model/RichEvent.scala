@@ -38,7 +38,7 @@ object RichEvent {
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
     val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
-      val file = asset.secureFile.getOrElse(asset.file)
+      val file = asset.secureUrl.getOrElse(asset.file)
       val regex = "\\d+.jpg".r
       regex.replaceFirstIn(file, "{width}.jpg")
     }
