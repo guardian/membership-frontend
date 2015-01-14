@@ -3,10 +3,9 @@ package services
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri.parse
 import configuration.Config
-import model.Eventbrite.EventImage
-import model.Grid
 import model.Grid._
 import model.GridDeserializer._
+import model.RichEvent.EventImage
 import monitoring.GridApiMetrics
 import play.api.libs.ws.WSRequestHolder
 

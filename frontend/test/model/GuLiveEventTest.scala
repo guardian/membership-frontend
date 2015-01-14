@@ -3,6 +3,7 @@ package model
 import model.Eventbrite._
 import model.Grid.{GridResult, Metadata}
 import model.GridDeserializer._
+import model.RichEvent.{GuLiveEvent, EventImage}
 import org.specs2.mock.Mockito
 import play.api.test.PlaySpecification
 import utils.Resource
