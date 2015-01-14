@@ -1,10 +1,10 @@
 package configuration
 
-import com.github.nscala_time.time.Imports._
 import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron, Tier}
 import com.typesafe.config.ConfigFactory
+import model.Eventbrite.EBEvent
 import model.{StaffPlan, FriendTierPlan, PaidTierPlan}
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
@@ -73,6 +73,9 @@ object Config {
   val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
   val eventbriteWaitlistUrl = config.getString("eventbrite.waitlist.url")
+
+  def eventbriteWaitlistUrl(event: EBEvent): String =
+    eventbriteWaitlistUrl ? ("eid" -> event.id) & ("tid" -> 0)
 
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
