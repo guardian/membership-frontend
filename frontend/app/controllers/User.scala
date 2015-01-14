@@ -54,7 +54,7 @@ trait User extends Controller {
 
   def basicDetails(member: Member) = Json.obj(
     "userId" -> member.identityId,
-    "regNumber" -> member.regNumber,
+    "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
     "tier" -> member.tier.toString,
     "joinDate" -> member.joinDate

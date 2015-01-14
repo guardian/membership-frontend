@@ -6,6 +6,7 @@ import com.gu.membership.salesforce._
 import configuration.Config
 import model.Stripe.Card
 import model.{IdMinimalUser, FriendTierPlan, TierPlan}
+import play.api.libs.json.Json
 import services.zuora.ZuoraService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,7 +47,7 @@ case class TouchpointBackend(
   def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
     for {
       customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
-      memberId <- memberRepository.upsert(member.identityId, Map(Keys.DEFAULT_CARD_ID -> customer.card.id))
+      memberId <- memberRepository.upsert(member.identityId, Json.obj(Keys.DEFAULT_CARD_ID -> customer.card.id))
     } yield customer.card
   }
 
