@@ -303,7 +303,7 @@
     }
 
     @include mq(mem-full) {
-        padding: rem($gs-baseline) 0 rem($gs-gutter * 3) rem($gs-gutter * 10);
+        padding: rem($gs-baseline) 0 0 rem($gs-gutter * 10);
     }
 }
 
