@@ -2,7 +2,8 @@ package services
 
 import model.EventbriteTestObjects
 import play.api.test.PlaySpecification
-import model.Eventbrite.{RichEvent, EBEvent, EBError, EBObject}
+import model.Eventbrite.{EBEvent, EBError, EBObject}
+import model.RichEvent.{Metadata, RichEvent}
 import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
@@ -39,14 +40,15 @@ class EventbriteServiceTest extends PlaySpecification {
     val availableWidths = ""
     val socialImgUrl = ""
     val imageMetadata = None
-    val maxDiscounts = 2
-    val allowDiscountCodes = true
     val tags = Nil
+
+    val metadata = Metadata("", "", "", "", "", false, None)
   }
 
 
   class TestEventbriteService extends EventbriteService {
     val apiToken = ""
+    val maxDiscountQuantityAvailable = 2
     val apiURL = "http://localhost:9999/v1"
     val apiEventListUrl = "events"
 

@@ -2,7 +2,8 @@ package model
 
 import org.specs2.mutable.Specification
 
-import Eventbrite._
+import Eventbrite.EBEvent
+import RichEvent.MasterclassEvent
 import EventbriteDeserializer._
 import utils.Resource
 
