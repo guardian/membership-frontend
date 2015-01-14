@@ -57,9 +57,5 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
       guEvent.availableWidths mustEqual ""
       guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
-//
-//    "use fallback image when exports have failed to load in the Grid API" in {
-//      val invalidGrid = Resource.getJson("model/grid/api-image-no-exports.json")
-//    }
   }
 }
