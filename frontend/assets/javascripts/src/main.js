@@ -18,7 +18,6 @@ require([
     'src/modules/events/eventPriceEnhance',
     'src/modules/tier/Thankyou',
     'src/modules/patterns',
-    'src/utils/addToClipboard',
     'src/utils/modal',
     'src/utils/form/processSubmit',
     // Add new dependencies ABOVE this
@@ -43,9 +42,8 @@ require([
     choose,
     eventPriceEnhance,
     Thankyou,
-    patterns,
-    addToClipboard,
     modal,
+    patterns,
     processSubmit
 ) {
     'use strict';
@@ -89,12 +87,10 @@ require([
     // Feedback
     (new FeedbackForm()).init();
 
+    // Modal
+    modal.init();
+
     // Pattern library
     patterns.init();
 
-    // Test Users
-    addToClipboard.init();
-
-    // Modal
-    modal.init();
 });

@@ -1,0 +1,82 @@
+{
+    "uri": "https://some-media-api-service.co.uk/images/418fc497e24c89a0276ccb35c13abb3236c059f2",
+    "data": {
+        "id": "418fc497e24c89a0276ccb35c13abb3236c059f2",
+        "uploadTime": "2015-01-13T17:50:10Z",
+        "uploadedBy": "joe.bloggs@guardian.co.uk",
+        "identifiers": {
+
+        },
+        "source": {
+            "file": "http://some-media-api-service/418fc497e24c89a0276ccb35c13abb3236c059f2",
+            "size": 5040860,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 3000,
+                "height": 1800
+            },
+            "secureUrl": "https://some-media-api-service/418fc497e24c89a0276ccb35c13abb3236c059f2?AWSAccessKeyId=AKIAI6PFAVK5SIS4FXJQ&Expires=1421233800&Signature=HGjMN%2FqvHep3%2FT7ck8X0MVMTvm8%3D"
+        },
+        "thumbnail": {
+            "file": "http://some-media-api-service/418fc497e24c89a0276ccb35c13abb3236c059f2",
+            "size": 669369,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 256,
+                "height": 154
+            },
+            "secureUrl": "https://some-media-api-service/418fc497e24c89a0276ccb35c13abb3236c059f2?AWSAccessKeyId=AKIAI6PFAVK5SIS4FXJQ&Expires=1421233800&Signature=u%2FPYvOqfxUgbr3yFh0B92ykirFU%3D"
+        },
+        "metadata": {
+            "dateTaken": "2010-07-15T00:00:00Z",
+            "keywords": [
+
+            ],
+            "credit": "sfsdf",
+            "description": "sdfsfsfdsf"
+        },
+        "originalMetadata": {
+            "dateTaken": "2010-07-15T00:00:00Z",
+            "keywords": [
+
+            ]
+        },
+        "userMetadata": {
+            "uri": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2",
+            "data": {
+                "archived": {
+                    "uri": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2/archived",
+                    "data": false
+                },
+                "labels": {
+                    "uri": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2/labels",
+                    "data": [
+                        {
+                            "uri": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2/labels/uncertain credit",
+                            "data": "credit info"
+                        }
+                    ]
+                },
+                "metadata": {
+                    "uri": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2/metadata",
+                    "data": {
+                        "credit": "some person",
+                        "description": "description blurb"
+                    }
+                }
+            }
+        },
+        "valid": true,
+        "cost": "pay"
+    },
+    "links": [
+        {
+            "rel": "crops",
+            "href": "https://some-media-api-service/crops/418fc497e24c89a0276ccb35c13abb3236c059f2"
+        },
+        {
+            "rel": "metadata",
+            "href": "https://some-media-api-service/metadata/418fc497e24c89a0276ccb35c13abb3236c059f2"
+        }
+    ]
+}

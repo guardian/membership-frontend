@@ -1,0 +1,354 @@
+/* Base form styles
+   ========================================================================== */
+
+/* ==========================================================================
+   Form
+   ========================================================================== */
+.form {
+    @include mq(desktop) {
+        border-top: 1px solid $mem-brandBlue;
+    }
+}
+
+.form--top-border {
+    border-top: 1px solid $c-neutral3;
+}
+
+/* ==========================================================================
+   Form Fieldset
+   ========================================================================== */
+.fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid $c-neutral3;
+    display: table;
+    background-color: $c-neutral8;
+}
+
+.fieldset--simple {
+    background-color: transparent;
+    border-bottom: 0;
+
+    .fieldset__fields {
+        padding-top: rem(5px);
+    }
+}
+
+.fieldset--no-background {
+    background-color: transparent;
+}
+
+.fieldset__heading {
+    vertical-align: top;
+    padding: rem($gs-baseline / 2) rem($gs-baseline) rem($gs-baseline * 2) rem(10px);
+
+    @include mq(tablet) {
+        display: table-cell;
+        padding-right: rem($gs-gutter * 2);
+        width: gs-span(4) + $gs-gutter;
+    }
+}
+
+.fieldset__headline {
+    @include fs-header(3);
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.fieldset__note {
+    @include fs-textSans(2);
+    color: $c-neutral2;
+}
+
+.fieldset__fields {
+    vertical-align: top;
+    padding: rem(10px) rem(10px) rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: gs-span(5);
+        padding-left: 0;
+        padding-top: rem($gs-gutter * 2);
+    }
+}
+
+
+/* ==========================================================================
+   Form field
+   ========================================================================== */
+.form-field {
+    margin-bottom: rem($gs-baseline);
+}
+
+.form-field--no-margin {
+    margin-bottom: 0;
+}
+
+.form-field--error {
+    .label {
+        color: $c-error;
+    }
+
+    .input-text,
+    .input-text:focus {
+        border-color: $c-error;
+    }
+}
+
+.form-field__error-message {
+    @include fs-data(3);
+    color: $c-error;
+    margin-top: rem(2px);
+    margin-bottom: rem($gs-baseline / 2);
+}
+
+.form-note {
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    padding-top: rem($gs-baseline / 2);
+    margin-bottom: rem(8px);
+}
+
+.form-note--left {
+    float: left;
+}
+
+.form-note--right {
+    float: right;
+    margin-left: rem($gs-gutter);
+}
+
+.form-note--underneath {
+    margin-top: rem($gs-baseline / 2);
+}
+
+/* ==========================================================================
+   Form labels and inputs
+   ========================================================================== */
+.label {
+    @include fs-bodyCopy(2);
+    color: $c-neutral1;
+    cursor: pointer;
+    display: block;
+}
+
+.label--inline {
+    display: inline-block;
+}
+
+.input-text,
+.input-textarea {
+    color: $c-body;
+    border: 1px solid $c-neutral4;
+    @include fs-textSans(5);
+    padding: rem(8px) rem(8px) rem(7px);
+    outline: none;
+    width: 100%;
+    -webkit-appearance: none;
+
+    &:focus {
+        border-color: $c-border-brand;
+    }
+
+    @include mq(tablet) {
+        font-size: rem(14px);
+    }
+}
+
+.input-text--small {
+    width: 30%;
+}
+
+.input-textarea {
+    resize: vertical;
+}
+
+.input-textarea--long {
+    min-height: rem(($gs-baseline / 3) * 40);
+}
+
+.optional-marker {
+    &:after {
+        vertical-align: middle;
+        content: '(optional)';
+        color: $c-neutral2;
+        @include fs-textSans(1);
+        margin-left: rem(4px);
+    }
+}
+
+// width needed for iphone so select doesn't exceed screen width
+.select {
+    width: 100%;
+}
+
+.select-minimal {
+    border: 0;
+    outline: 0;
+    background-color: $white;
+    font-weight: bold;
+}
+
+.ts-and-cs {
+    @include fs-textSans(3);
+    color: $c-neutral2;
+}
+
+/* ==========================================================================
+   Psuedo radio form inputs
+   ========================================================================== */
+.psuedo-radio {
+    @include fs-textSans(3);
+    width: 100%;
+    border: 1px solid transparent;
+    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(36px);
+    position: relative;
+
+    &:hover {
+        border: 1px solid $c-neutral2;
+    }
+
+    &:before {
+        @include radio-circle($c-neutral5);
+    }
+}
+
+input[type=radio]:checked + .psuedo-radio {
+    border-color: $c-border-brand;
+
+    &:before {
+        @include radio-circle();
+    }
+}
+
+/* ==========================================================================
+   Payment titles
+   ========================================================================== */
+.payment-title {
+    @include fs-bodyHeading(2);
+}
+
+/* ==========================================================================
+   Billing address titles
+   ========================================================================== */
+
+.billing-address-choice {
+    @include fs-bodyCopy(2);
+}
+
+/* ==========================================================================
+   Card Detail
+   ========================================================================== */
+.form-padlock {
+    vertical-align: bottom;
+}
+
+.form-padlock-text {
+    @include fs-textSans(1);
+}
+
+/* ==========================================================================
+   Payment credit card types
+   ========================================================================== */
+$small-card: 32px;
+$large-card: 35px;
+$card-icon-offset: 1px;
+
+.credit-card-container {
+    position: relative;
+}
+
+.credit-card {
+    width: rem(54px);
+    height: $large-card;
+}
+
+.credit-card--input-visualisation {
+    position: absolute;
+    right: rem($card-icon-offset);
+    top: rem($card-icon-offset);
+}
+
+
+/* ==========================================================================
+   Credit card notes
+   ========================================================================== */
+.credit-card-note {
+    color: $c-neutral2;
+}
+
+.credit-card-note__header {
+    @include fs-textSans(3);
+    color: $c-neutral1;
+}
+
+.credit-card-input {
+    // bit messy but needs to account for outline plus icon offset
+    height: rem($large-card + $card-icon-offset + 2px);
+}
+
+/* ==========================================================================
+   Password Strength indicator
+   ========================================================================== */
+
+// TODO: Can these colours be moved into pasteup / shared w/ Identity?
+$password-strength-score-0: #e31f26;
+$password-strength-score-1: #e6711b;
+$password-strength-score-2: #ffbb00;
+$password-strength-score-3: #aad801;
+$password-strength-score-4: #33a22b;
+
+.password-strength-indicator {
+    background-color: $c-neutral5;
+    height: rem(8px);
+    margin-top: rem(4px);
+    margin-bottom: rem($gs-baseline * 2);
+    position: relative;
+
+    &:after {
+        bottom: 0;
+        content: '';
+        display: block;
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    &.score-0:after { width: 20%; background-color: $password-strength-score-0; }
+    &.score-1:after { width: 40%; background-color: $password-strength-score-1; }
+    &.score-2:after { width: 60%; background-color: $password-strength-score-2; }
+    &.score-3:after { width: 80%; background-color: $password-strength-score-3; }
+    &.score-4:after { width: 100%; background-color: $password-strength-score-4; }
+}
+
+/* ==========================================================================
+   Cvc toggle
+   ========================================================================== */
+.cvc-cta {
+    font-family: $f-sans-serif-text;
+    font-size: rem(13px);
+    line-height: rem(16px);
+}
+
+.cvc {
+    font-family: $f-sans-serif-text;
+    padding: rem($gs-baseline / 2) rem($gs-baseline / 2) rem($gs-baseline / 2) 0;
+    font-size: rem(13px);
+    line-height: rem(16px);
+}
+
+.cvc__image {
+    float: left;
+}
+
+.cvc__detail {
+    margin-left: rem(70px);
+}
+
+.cvc__heading {
+    font-weight: bold;
+    font-family: $f-sans-serif-text;
+    font-size: rem(13px);
+    line-height: rem(16px);
+}

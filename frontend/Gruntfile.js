@@ -126,27 +126,6 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
-            zeroclipboard: {
-                src: [
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.js',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.map',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.swf'
-                ],
-                dest: '<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/',
-                expand: true,
-                flatten: true
-            },
-            //TODO-ben zeroclipboardDist is a stop gap until we have the ability to hash folders and their contents
-            zeroclipboardDist: {
-                src: [
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.js',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.min.map',
-                    '<%= dirs.assets.javascripts %>/lib/bower-components/zeroclipboard/dist/ZeroClipboard.swf'
-                ],
-                dest: '<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/',
-                expand: true,
-                flatten: true
-            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: ['**', '!**/svgs/**'],
@@ -217,8 +196,7 @@ module.exports = function (grunt) {
                             '<%= dirs.publicDir.stylesheets %>/**/*.css',
                             '<%= dirs.publicDir.javascripts %>/**/*.js',
                             '<%= dirs.publicDir.javascripts %>/**/*.map',
-                            '<%= dirs.publicDir.images %>/**/*.*',
-                            '!<%= dirs.publicDir.javascripts %>/lib/zeroclipboard/**/*.*'
+                            '<%= dirs.publicDir.images %>/**/*.*'
                         ],
                         dest: '<%= dirs.publicDir.root %>/dist/'
                     }
@@ -346,8 +324,7 @@ module.exports = function (grunt) {
         if (!isDev) {
             grunt.task.run([
                 'asset_hash',
-                'clean:public:prod',
-                 'copy:zeroclipboardDist'
+                'clean:public:prod'
             ]);
         }
     });
@@ -374,8 +351,7 @@ module.exports = function (grunt) {
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture',
-            'copy:zeroclipboard'
+            'copy:omniture'
         ]);
     });
 

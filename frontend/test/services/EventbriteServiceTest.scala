@@ -37,7 +37,9 @@ class EventbriteServiceTest extends PlaySpecification {
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgUrl = ""
+    val availableWidths = ""
     val socialImgUrl = ""
+    val imageMetadata = None
     val tags = Nil
 
     val metadata = Metadata("", "", "", "", "", false, None)
@@ -73,7 +75,7 @@ class EventbriteServiceTest extends PlaySpecification {
     override def events: Seq[RichEvent] = Nil
     override def eventsArchive: Seq[RichEvent] = Nil
     override def priorityEventOrdering: Seq[String] = Nil
-    def mkRichEvent(event: EBEvent): RichEvent = TestRichEvent(event)
+    def mkRichEvent(event: EBEvent): Future[RichEvent] = Future.successful(TestRichEvent(event))
   }
 
   object TestEventbriteService {

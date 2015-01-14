@@ -105,13 +105,13 @@ class EBEventTest extends PlaySpecification {
       val desc = EBRichText("", "\"<P>A chance to say goodbye to Alan!<\\/P>\\r\\n<P>:-(<\\/P>\\r\\n" +
         "<!-- main-image: https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288 -->\"\n    }, ")
 
-      desc.mainImage mustEqual Some("https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
+      desc.mainImageUrl mustEqual Some("https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
     }
 
     "should not return media service url is missing" in {
       val desc = EBRichText("", "\"<P>A chance to say goodbye to Alan!")
 
-      desc.mainImage mustEqual None
+      desc.mainImageUrl mustEqual None
     }
   }
 }

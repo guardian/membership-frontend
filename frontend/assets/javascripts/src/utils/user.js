@@ -12,39 +12,18 @@ define([
     };
 
     var getUserFromCookie = function(){
-        var userFromCookieCache = null;
-
-        function readCookie(name){
-            var nameEQ = name + '=';
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') { c = c.substring(1, c.length); }
-                if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
-            }
-            return null;
+        var cookieData = cookie.getCookie('GU_U');
+        var userData = cookie.decodeCookie(cookieData);
+        var userFromCookieCache;
+        if (userData) {
+            userFromCookieCache = {
+                id: userData[0],
+                displayname: userData[2],
+                accountCreatedDate: userData[6],
+                emailVerified: userData[7],
+                rawResponse: cookieData
+            };
         }
-
-        function decodeBase64(str){
-            /*global escape: true */
-            /* See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/escape */
-            return decodeURIComponent(escape(new AtoB()(str.replace(/-/g, '+').replace(/_/g, '/').replace(/,/g, '='))));
-        }
-
-        if (userFromCookieCache === null) {
-            var cookieData = readCookie('GU_U'),
-                userData = cookieData ? JSON.parse(decodeBase64(cookieData.split('.')[0])) : null;
-            if (userData) {
-                userFromCookieCache = {
-                    id: userData[0],
-                    displayname: userData[2],
-                    accountCreatedDate: userData[6],
-                    emailVerified: userData[7],
-                    rawResponse: cookieData
-                };
-            }
-        }
-
         return userFromCookieCache;
     };
 
@@ -73,7 +52,7 @@ define([
             // for testing purposes to mimic a reload of the javascript and hence a clearing of the callbacks array
             callbacks = overRideCallbacks || callbacks;
 
-            var membershipUser = cookie.getCookie(MEM_USER_COOKIE_KEY);
+            var membershipUser = cookie.getDecodedCookie(MEM_USER_COOKIE_KEY);
             var identityUser = getUserFromCookie();
 
             if (identityUser) {

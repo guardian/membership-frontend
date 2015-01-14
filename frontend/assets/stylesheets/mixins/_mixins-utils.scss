@@ -99,7 +99,7 @@
     }
 }
 
-@mixin radio-circle($colour: $mem-brandLightblue) {
+@mixin radio-circle($colour: $mem-brandBlue) {
     @include border-radius (50%);
     content: ' ';
     background-color: $colour;

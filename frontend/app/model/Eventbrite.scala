@@ -1,19 +1,15 @@
 package model
 
-import com.netaporter.uri.Uri
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import play.api.data.validation.ValidationError
-
 import com.github.nscala_time.time.Imports._
-
-import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.Instant
-
-import configuration.Config
-import services.MasterclassData
-import utils.StringUtils.truncateToWordBoundary
+import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
+import configuration.Config
+import org.joda.time.Instant
+import org.joda.time.format.ISODateTimeFormat
+import play.api.data.validation.ValidationError
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import utils.StringUtils.truncateToWordBoundary
 
 object Eventbrite {
 
@@ -42,7 +38,7 @@ object Eventbrite {
       mcPattern.replaceAllIn(clean, "")
     }
 
-    def mainImage: Option[String] = "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(html).map(_.group(1))
+    def mainImageUrl = "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(html).map(_.group(1))
 
     lazy val blurb = truncateToWordBoundary(text, 120)
   }
@@ -82,14 +78,14 @@ object Eventbrite {
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
   case class EBTicketClass(id: String,
-                       name: String,
-                       free: Boolean,
-                       quantity_total: Int,
-                       quantity_sold: Int,
-                       cost: Option[EBPricing],
-                       sales_end: Instant,
-                       sales_start: Option[Instant],
-                       hidden: Option[Boolean]) extends EBObject {
+                           name: String,
+                           free: Boolean,
+                           quantity_total: Int,
+                           quantity_sold: Int,
+                           cost: Option[EBPricing],
+                           sales_end: Instant,
+                           sales_start: Option[Instant],
+                           hidden: Option[Boolean]) extends EBObject {
     val isHidden = hidden.exists(_ == true)
   }
 
@@ -110,7 +106,7 @@ object Eventbrite {
     val isBookable = status == "live" && !isSoldOut
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
-    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member") }
+    val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member")}
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
   }
@@ -121,6 +117,7 @@ object Eventbrite {
   }
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBCode
+
   case class EBAccessCode(code: String, quantity_available: Int) extends EBCode
 
   //https://developer.eventbrite.com/docs/order-object/
@@ -134,7 +131,6 @@ object Eventbrite {
   case class EBCost(value: Int) extends EBObject
 
   case class EBAttendee(quantity: Int) extends EBObject
-
 }
 
 object EventbriteDeserializer {
@@ -170,8 +166,8 @@ object EventbriteDeserializer {
   implicit val ebVenue = Json.reads[EBVenue]
 
   implicit val ebRichText: Reads[EBRichText] = (
-      (JsPath \ "text").readNullable[String].map(_.getOrElse("")) and
-        (JsPath \ "html").readNullable[String].map(_.getOrElse(""))
+    (JsPath \ "text").readNullable[String].map(_.getOrElse("")) and
+      (JsPath \ "html").readNullable[String].map(_.getOrElse(""))
     )(EBRichText.apply _)
 
   implicit val ebPricingReads = Json.reads[EBPricing]
