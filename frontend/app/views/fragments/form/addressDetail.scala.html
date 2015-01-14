@@ -1,112 +1,114 @@
-@(heading: String, note: String, formType: String, addressRequired: Boolean = true,
-address1: Option[String], address2: Option[String], town: Option[String], postcode: Option[String],
-county: Option[String], userCountry: Option[String])
+@(
+    heading: String = "",
+    note: String = "",
+    formType: String,
+    addressRequired: Boolean = true,
+    address1: Option[String],
+    address2: Option[String],
+    town: Option[String],
+    postcode: Option[String],
+    county: Option[String],
+    userCountry: Option[String]
+)
 
 @import com.gu.membership.zuora.{Country, Countries}
 
 @countyOrStateSelect(countyOrStateList: List[String], countyOrStateLabel: String) = {
-    <div class="form-field address-fieldset__country u-h">
+    <div class="form-field u-h">
         <label class="label" for="@countyOrStateLabel-@(formType)">@countyOrStateLabel.capitalize</label>
-        <div class="input">
-            <select name="@(formType).countyOrState"
-                    id="@countyOrStateLabel-@(formType)"
-                    class="js-@countyOrStateLabel-@(formType)"
-                    data-error-message="Please enter your @countyOrStateLabel.capitalize"
-                    data-validation="required"
-                    aria-required="true">
-            @for(countyOrState <- countyOrStateList) {
-                <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
-            }
-            </select>
-        </div>
+        <select name="@(formType).countyOrState"
+                id="@countyOrStateLabel-@(formType)"
+                class="select js-@countyOrStateLabel-@(formType)"
+                data-error-message="Please enter your @countyOrStateLabel.capitalize"
+                data-validation="required"
+                aria-required="true">
+        @for(countyOrState <- countyOrStateList) {
+            <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
+        }
+        </select>
     </div>
 }
 
-<fieldset class="fieldset address-fieldset js-@(formType)-fieldset">
+<fieldset class="fieldset js-@(formType)-fieldset">
 
-    <div class="address-fieldset__inner">
+    <div class="fieldset__heading">
+        <h2 class="fieldset__headline">@heading</h2>
+        <div class="fieldset__note">@note</div>
+    </div>
 
-        <div class="fieldset__heading">
-            <h2 class="form__heading">@heading</h2>
-            <div class="form__note">@note</div>
+    <div class="fieldset__fields">
+
+        <div class="form-field">
+            <label class="label" for="country-@(formType)">Country</label>
+            <select name="@(formType).country"
+                id="country-@(formType)"
+                class="select js-country-@(formType)"
+                data-error-message="Please enter your Country"
+                data-validation="required"
+                aria-required="true">
+                @for(country <- Countries.allSorted) {
+                    <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
+                }
+            </select>
         </div>
 
-        <div class="fieldset__fields">
+        <div class="form-field">
+            <label class="label@if(addressRequired == false){ optional-marker}"
+                   for="address-line-one-@(formType)">Address line 1</label>
+            <input type="text"
+                   name="@(formType).lineOne"
+                   value="@address1"
+                   id="address-line-one-@(formType)"
+                   class="input-text js-address-line-one"
+                   data-error-message="Please enter your @heading.toLowerCase() first line"
+                   @if(addressRequired == true){data-validation="required" aria-required="true"} />
+        </div>
 
-            <div class="form-field address-fieldset__country">
-                <label class="label" for="country-@(formType)">Country</label>
-                <div class="input">
-                    <select name="@(formType).country"
-                        id="country-@(formType)"
-                        class="js-country-@(formType)"
-                        data-error-message="Please enter your Country"
-                        data-validation="required"
-                        aria-required="true">
+        <div class="form-field">
+            <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
+            <input type="text"
+                   name="@(formType).lineTwo"
+                   value="@address2"
+                   id="address-line-two-@(formType)"
+                   class="input-text js-address-line-two"/>
+        </div>
 
-                        @for(country <- Countries.allSorted) {
-                            <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
-                        }
-                    </select>
-                </div>
-            </div>
+        <div class="form-field">
+            <label class="label @if(addressRequired == false){optional-marker}" for="town-@(formType)">Town</label>
+            <input type="text"
+                   name="@(formType).town"
+                   value="@town"
+                   id="town-@(formType)"
+                   class="input-text js-town"
+                   data-error-message="Please enter your @heading.toLowerCase() town"
+                   @if(addressRequired == true){data-validation="required" aria-required="true"} />
+        </div>
 
-            <div class="form-field">
-                <label class="label @if(addressRequired == false){optional-marker}" for="address-line-one-@(formType)">Address line 1</label>
+        @countyOrStateSelect(Countries.US.states.toList, "state")
+        @countyOrStateSelect(Countries.Canada.states.toList, "province")
+
+        <div class="js-county-container-@(formType)">
+            <div class="form-field js-county-section">
+                <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
                 <input type="text"
-                       name="@(formType).lineOne"
-                       value="@address1"
-                       id="address-line-one-@(formType)"
-                       class="text-input text-input--block js-address-line-one"
-                       data-error-message="Please enter your @heading.toLowerCase() first line"
-                       @if(addressRequired == true){data-validation="required" aria-required="true"} />
+                       name="@(formType).countyOrState"
+                       value="@county"
+                       id="county-or-state-@(formType)"
+                       class="input-text js-county-or-state-@(formType)"/>
             </div>
+        </div>
 
-            <div class="form-field">
-                <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
-                <input type="text"
-                       name="@(formType).lineTwo"
-                       value="@address2"
-                       id="address-line-two-@(formType)"
-                       class="text-input text-input--block js-address-line-two"/>
-            </div>
-
-            <div class="form-field">
-                <label class="label @if(addressRequired == false){optional-marker}" for="town-@(formType)">Town</label>
-                <input type="text"
-                       name="@(formType).town"
-                       value="@town"
-                       id="town-@(formType)"
-                       class="text-input text-input--block js-town"
-                       data-error-message="Please enter your @heading.toLowerCase() town"
-                       @if(addressRequired == true){data-validation="required" aria-required="true"} />
-            </div>
-
-            @countyOrStateSelect(Countries.US.states.toList, "state")
-            @countyOrStateSelect(Countries.Canada.states.toList, "province")
-
-            <div class="js-county-container-@(formType)">
-                <div class="form-field js-county-section">
-                    <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
-                    <input type="text"
-                    name="@(formType).countyOrState"
-                    value="@county"
-                    id="county-or-state-@(formType)"
-                    class="text-input text-input--block js-county-or-state-@(formType)"/>
-                </div>
-            </div>
-
-            <div class="form-field">
-                <label class="label optional-marker js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
-                <input type="text"
-                       name="@(formType).postCode"
-                       value="@postcode"
-                       id="postCode-@(formType)"
-                       maxlength="20"
-                       class="text-input text-input--block js-post-code"
-                       data-error-message="Please enter your @heading.toLowerCase() post code"
-                       data-validation="required"
-                       aria-required="true"/>
-            </div>
+        <div class="form-field form-field--no-margin">
+            <label class="label optional-marker js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
+            <input type="text"
+                   name="@(formType).postCode"
+                   value="@postcode"
+                   id="postCode-@(formType)"
+                   maxlength="20"
+                   class="input-text js-post-code"
+                   data-error-message="Please enter your @heading.toLowerCase() post code"
+                   data-validation="required"
+                   aria-required="true"/>
         </div>
     </div>
 </fieldset>

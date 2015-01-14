@@ -10,7 +10,6 @@
     "zxcvbn": "*",
     "curl": "~0.8.10",
     "imager.js": "~0.3.0",
-    "raven-js": "~1.1.16",
-    "zeroclipboard": "~2.1.6"
+    "raven-js": "~1.1.16"
   }
 }

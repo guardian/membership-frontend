@@ -2,22 +2,37 @@
    Slideshow
    ========================================================================== */
 
+$slideshow-height-tablet: 440px;
+$slideshow-height-desktop: 460px;
+
 .slideshow {
     position: relative;
     overflow: hidden;
+    background-color: $c-neutral4;
+
+    @include mq(tablet) {
+        min-height: rem($slideshow-height-tablet);
+    }
+    @include mq(desktop) {
+        min-height: rem($slideshow-height-desktop);
+    }
 }
 .slideshow__element {
+    margin: 0;
     width: 100%;
+    overflow: hidden;
     position: absolute;
     top: 0;
     left: 0;
-    margin: 0;
     z-index: 1;
     transition: opacity .5s ease-in;
     opacity: 0;
 
     @include mq(tablet) {
-        max-height: rem(460px);
+        max-height: rem($slideshow-height-tablet);
+    }
+    @include mq(desktop) {
+        max-height: rem($slideshow-height-desktop);
     }
 
     &.is-current {
@@ -42,8 +57,7 @@
     @include simple-gradient(transparent, rgba(0, 0, 0, .8));
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter);
-        padding-top: rem($gs-gutter * 2);
+        padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
     }
 }
 .slideshow__description {
@@ -52,6 +66,7 @@
 
     @include mq(tablet) {
         max-width: 50%;
+        padding-right: rem($gs-gutter);
     }
 }
 

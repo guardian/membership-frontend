@@ -6,7 +6,7 @@ import configuration.Config
 import model.Eventbrite.EBEvent
 
 case class Social(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String) {
-  def encode(str: String) = URLEncoder.encode(str)
+  def encode(str: String) = URLEncoder.encode(str, "UTF-8")
 
   val encodedEmailSubject = encode(emailSubject)
   val encodedEmailMessage = encode(emailMessage)

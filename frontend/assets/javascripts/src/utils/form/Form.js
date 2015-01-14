@@ -25,6 +25,7 @@ define([
     var ELLIPSE = '...';
     var GLOBAL_FORM_MESSAGE = 'This form has errors';
     var self;
+    var FORM_FIELD = 'form-field';
 
     function Form (formElement) {
         self = this;
@@ -190,7 +191,7 @@ define([
      * @param errorMessages
      */
     Form.prototype.displayGlobalErrors = function (errorMessages) {
-        var $paymentErrorsElement = $(this.getClass('PAYMENT_ERRORS'), this.formElement);
+        var $paymentErrorsElement = $(this.getClass('PAYMENT_ERRORS'));
         var errorString = '';
 
         if (errorMessages.length) {
@@ -248,7 +249,7 @@ define([
 
             this.checkValidatorExistsException(validator.name);
 
-            $('.label', utilsHelper.getSpecifiedParent($(elem), 'form-field')).removeClass('optional-marker');
+            $('.label', utilsHelper.getSpecifiedParent($(elem), FORM_FIELD)).removeClass('optional-marker');
 
             args = self.createArgsArray(validator.elem);
             self[validator.name].apply(self, args);
@@ -269,7 +270,7 @@ define([
         var errorMessages = [];
 
         $elements.forEach(function ($element) {
-            var $formField = utilsHelper.getSpecifiedParent($element, 'form-field');
+            var $formField = utilsHelper.getSpecifiedParent($element, FORM_FIELD);
 
             errorMessages.push($element.attr('data-error-message'));
             //tidy up potential error messages, error classes and remove element events
@@ -633,7 +634,7 @@ define([
      * @param validationResult
      */
     Form.prototype.addErrorDetail = function (validationResult) {
-        var $elementParentFormField = utilsHelper.getSpecifiedParent(validationResult.$element, 'form-field');
+        var $elementParentFormField = utilsHelper.getSpecifiedParent(validationResult.$element, FORM_FIELD);
 
         if (!validationResult.isValid) {
             $elementParentFormField.addClass('form-field--error');

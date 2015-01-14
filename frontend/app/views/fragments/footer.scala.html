@@ -1,14 +1,14 @@
 @import org.joda.time.DateTime
 @import configuration.Config
-<footer class="l-footer u-cf hidden-print" data-component="footer">
-    <div class="l-footer__primary">
-        <div id="footer-nav" class="gs-container">
-            <div class="brand-bar u-cf">
-                <a href="/" class="guardian-logo-footer hidden-mobile">
+<footer class="global-footer u-cf hidden-print" data-component="footer">
+    <div class="global-footer__primary">
+        <div id="footer-nav" class="l-constrained">
+            <div class="global-footer__brand">
+                <a href="/" class="global-footer__logo hidden-mobile">
                     <span class="u-h">@Config.siteTitle</span>
                     <i class="icon-membership_beta_mobile"></i>
                 </a>
-                <a class="brand-bar__item brand-bar__item--action no-underline" href="#top">
+                <a class="global-footer__top no-underline" href="#top">
                     <span class="control">
                         <span class="control__icon">
                             <i class="i icon-arrow-up-black"></i>
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <div class="l-footer__secondary gs-container" role="contentinfo">
+    <div class="global-footer__secondary l-constrained" role="contentinfo">
         <ul class="colophon u-cf case--lower">
             <li class="colophon__item"><a data-link-name="help" href="/help">Help</a></li>
             <li class="colophon__item"><a data-link-name="contact" href="@Config.guardianContactUsUrl">Contact us</a></li>
@@ -28,8 +28,8 @@
             <li class="colophon__item"><a data-link-name="privacy" href="@Config.guardianPrivacyUrl">Privacy policy</a></li>
             <li class="colophon__item"><a data-link-name="cookie" href="http://www.theguardian.com/info/cookies">Cookie policy</a></li>
         </ul>
-        <div class="l-footer__misc">
-            <div class="really-serious-copyright">© @{new DateTime().year.getAsText} Guardian News and Media Limited or its affiliated companies. All rights reserved. Build #@app.BuildInfo.buildNumber</div>
+        <div class="global-footer__misc">
+            <div class="really-serious-copyright">&copy; @{new DateTime().year.getAsText} Guardian News and Media Limited or its affiliated companies. All rights reserved. Build #@app.BuildInfo.buildNumber</div>
             <!-- build-commit-id: @app.BuildInfo.gitCommitId -->
         </div>
     </div>

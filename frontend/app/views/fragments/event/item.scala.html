@@ -1,5 +1,4 @@
-@(event: model.Eventbrite.RichEvent)
-
+@(event: model.RichEvent.RichEvent)
 @import views.support.Dates._
 @import configuration.Config
 @import model.Eventbrite._
@@ -8,7 +7,7 @@
     <div class="event-item__container">
         <div class="event-item__media">
             <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
-                <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="@event.name.text" data-class="responsive-img"></div>
+                @fragments.event.image(event)
             </a>
         </div>
         <div class="event-item__content">

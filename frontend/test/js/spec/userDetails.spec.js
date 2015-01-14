@@ -23,7 +23,7 @@ define([
         addCookies = function (member) {
             cookie.setCookie(GU_USER_COOKIE_KEY, GU_U_USER_COOKIE, 1, true);
             var details = member ? memberDetails : nonMemberDetails;
-            spyOn(cookie, 'getCookie').and.returnValue(details);
+            spyOn(cookie, 'getDecodedCookie').and.returnValue(details);
         },
 
         removeCookies = function () {

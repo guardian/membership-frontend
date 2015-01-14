@@ -1,24 +1,25 @@
 package services
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.util.{Success, Failure}
-
-import com.typesafe.scalalogging.slf4j.LazyLogging
-
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
-
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.{IdMinimalUser, IdUser, ProductRatePlan, PaidTierPlan}
-import model.Eventbrite.{MasterclassEvent, GuLiveEvent, EBCode, RichEvent}
+
+import model.Eventbrite.EBCode
+import model.RichEvent._
 import model.Stripe.Customer
+import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
+import play.api.libs.json.Json
 import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -50,28 +51,31 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging {
-  def initialData(user: IdUser, formData: JoinForm) = Map(
-    Keys.EMAIL -> user.primaryEmailAddress,
-    Keys.FIRST_NAME -> formData.name.first,
-    Keys.LAST_NAME -> formData.name.last,
-    Keys.MAILING_STREET -> formData.deliveryAddress.line,
-    Keys.MAILING_CITY -> formData.deliveryAddress.town,
-    Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
-    Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
-    Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
-    Keys.ALLOW_MEMBERSHIP_MAIL -> true
-  ) ++
-    formData.marketingChoices.thirdParty.map( Keys.ALLOW_THIRD_PARTY_EMAIL -> _) ++
-    formData.marketingChoices.gnm.map( Keys.ALLOW_GU_RELATED_MAIL -> _)
+  def initialData(user: IdUser, formData: JoinForm) = {
+    Seq(Json.obj(
+      Keys.EMAIL -> user.primaryEmailAddress,
+      Keys.FIRST_NAME -> formData.name.first,
+      Keys.LAST_NAME -> formData.name.last,
+      Keys.MAILING_STREET -> formData.deliveryAddress.line,
+      Keys.MAILING_CITY -> formData.deliveryAddress.town,
+      Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
+      Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
+      Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,
+      Keys.ALLOW_MEMBERSHIP_MAIL -> true
+    )) ++ Map(
+      Keys.ALLOW_THIRD_PARTY_EMAIL -> formData.marketingChoices.thirdParty,
+      Keys.ALLOW_GU_RELATED_MAIL -> formData.marketingChoices.gnm
+    ).collect { case (k, Some(v)) => Json.obj(k -> v) }
+  }.reduce(_ ++ _)
 
-  def memberData(plan: ProductRatePlan, customerOpt: Option[Customer]) = Map(
+  def memberData(plan: ProductRatePlan, customerOpt: Option[Customer]) = Json.obj(
     Keys.TIER -> plan.salesforceTier
   ) ++ customerOpt.map { customer =>
-    Map(
+    Json.obj(
       Keys.CUSTOMER_ID -> customer.id,
       Keys.DEFAULT_CARD_ID -> customer.card.id
     )
-  }.getOrElse(Map.empty)
+  }.getOrElse(Json.obj())
 
   def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
@@ -119,11 +123,9 @@ trait MemberService extends LazyLogging {
           // Add a "salt" to make access codes different to discount codes
           val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
           eventService.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-        } else if (event.allowDiscountCodes) {
+        } else {
           val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
           eventService.createOrGetDiscount(event, code).map(Some(_))
-        } else {
-          Future.successful(None)
         }
     }
   }

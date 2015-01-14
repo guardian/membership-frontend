@@ -24,6 +24,6 @@
     width: 100%;
     z-index: 10000;
     padding: .5em 1em;
-    background: $mem-trans-white;
+    background: transparentize($white, .95);
     text-align: center;
 }

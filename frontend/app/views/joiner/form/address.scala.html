@@ -1,34 +1,62 @@
-@(userFields: model.PrivateFields, marketingChoices: model.StatusFields,
-passwordExists: Boolean)(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    userFields: model.PrivateFields,
+    marketingChoices: model.StatusFields,
+    passwordExists: Boolean
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier.Friend
 @import helper._
 
-@main("Address details | Friend", isBrochure = true) {
+@main("Address details | Friend") {
 
-    <section class="section-payment u-cf">
+    <main role="main" class="page-content">
 
-        <form action="" method="POST" id="payment-form" class="form form-primary-container js-address-form">
-            @CSRF.formField
-            @fragments.form.sectionHeading("Location")
+        <section class="form-header">
+            <h1 class="form-headline">Location</h1>
+            @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
+        </section>
 
-            <div class="form__signin">
-                @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content">
+                @fragments.form.errorMessageDisplay()
+            </div>
+        </section>
+
+        <section class="form-section">
+
+            <div class="form-section__lead-in">
+                @fragments.joiner.joinStepCounter(3, 3)
             </div>
 
-            @fragments.joiner.joinStepCounter(3, 3)
-            @fragments.form.errorMessageDisplay()
-            @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-            @fragments.form.addressDetail("Address", "Tell us where you live and we'll keep you posted on events happening in your local community.", "deliveryAddress", false,
-            userFields.address1, userFields.address2, userFields.address3, userFields.postcode, userFields.address4, userFields.country)
-            @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+            <div class="form-section__content">
+                <form action="@routes.Joiner.joinFriend" method="POST" id="payment-form" class="form js-address-form">
+                    @CSRF.formField
+                    @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+                    @fragments.form.addressDetail(
+                        heading = "Address",
+                        note = "Tell us where you live and we'll keep you posted on events happening in your local community.",
+                        formType = "deliveryAddress",
+                        addressRequired = false,
+                        address1 = userFields.address1,
+                        address2 = userFields.address2,
+                        town = userFields.address3,
+                        postcode = userFields.postcode,
+                        county = userFields.address4,
+                        userCountry = userFields.country
+                    )
+                    @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
-            @if(!passwordExists) {
-                @fragments.form.passwordDetail()
-            }
+                    @if(!passwordExists) {
+                        @fragments.form.passwordDetail()
+                    }
 
-            @fragments.form.submit("Join now")
-        </form>
+                    @fragments.form.errorMessageDisplay()
+                    @fragments.form.submit("Join now")
 
-    </section>
+                </form>
+            </div>
+
+        </section>
+
+    </main>
 }
