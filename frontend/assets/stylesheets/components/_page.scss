@@ -191,7 +191,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     }
 
     .page-section__lead-in {
-        border-top: 1px solid $mem-blue;
+        border-top: 1px solid $mem-brandBlue;
     }
 
     @include mq(desktop) {
@@ -199,7 +199,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
             border-top: none;
         }
         .page-section__content {
-            border-top: 1px solid $mem-blue;
+            border-top: 1px solid $mem-brandBlue;
         }
     }
 }

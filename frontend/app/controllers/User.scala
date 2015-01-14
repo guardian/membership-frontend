@@ -1,5 +1,7 @@
 package controllers
 
+import org.apache.commons.codec.binary.Base64
+
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.Instant
 
@@ -17,7 +19,7 @@ trait User extends Controller {
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
-    Ok(json).withCookies(Cookie("GU_MEM", Json.stringify(json), secure = true, httpOnly = false))
+    Ok(json).withCookies(Cookie("GU_MEM", Base64.encodeBase64String(Json.stringify(json).getBytes), secure = true, httpOnly = false))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>

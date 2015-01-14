@@ -68,9 +68,9 @@ define([
                 spyOn(ajax, 'reqwest');
 
                 // PhantomJS double encodes cookies so this enables the getCookie inside of user.js to return the decoded value
-                spyOn(cookie, 'getCookie').and.returnValue(friendUserDetails);
+                spyOn(cookie, 'getDecodedCookie').and.returnValue(friendUserDetails);
 
-                cookie.setCookie(MEM_USER_COOKIE_KEY, friendUserDetails, 1, true);
+                cookie.setCookie(MEM_USER_COOKIE_KEY, window.btoa(JSON.stringify(friendUserDetails)), 1, true);
 
                 userUtil.getMemberDetail(function (membershipUser, err) {
                     expect(membershipUser.userId).toEqual(friendUserDetails.userId);
@@ -115,7 +115,7 @@ define([
                 spyOn(cookie, 'setCookie');
 
                 // PhantomJS double encodes cookies so this enables the getCookie inside of user.js to return the decoded value
-                spyOn(cookie, 'getCookie').and.returnValue(friendUserDetails);
+                spyOn(cookie, 'getDecodedCookie').and.returnValue(friendUserDetails);
 
                 userUtil.getMemberDetail(function (membershipUser, err) {
                     expect(membershipUser.userId).toEqual(friendUserDetails.userId);
@@ -169,9 +169,9 @@ define([
                 spyOn(ajax, 'reqwest');
 
                 // PhantomJS double encodes cookies so this enables the getCookie inside of user.js to return the decoded value
-                spyOn(cookie, 'getCookie').and.returnValue(nonMemberUserDetails);
+                spyOn(cookie, 'getDecodedCookie').and.returnValue(nonMemberUserDetails);
 
-                cookie.setCookie(MEM_USER_COOKIE_KEY, nonMemberUserDetails, 1, true);
+                cookie.setCookie(MEM_USER_COOKIE_KEY, window.btoa(JSON.stringify(nonMemberUserDetails)), 1, true);
 
                 userUtil.getMemberDetail(function (membershipUser, err) {
                     expect(membershipUser.userId).toEqual(nonMemberUserDetails.userId);
