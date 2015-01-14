@@ -18,7 +18,7 @@ object Grid {
 
   case class Export(id: String, assets: List[Asset])
 
-  case class Asset(file: String, secureFile: Option[String], dimensions: Dimensions)
+  case class Asset(file: String, secureUrl: Option[String], dimensions: Dimensions)
 
   case class Dimensions(height: Int, width: Int)
 
