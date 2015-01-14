@@ -41,7 +41,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def eventsArchive: Seq[RichEvent] = archivedEvents.get()
   def priorityEventOrdering: Seq[String] = priorityOrderedEventIds.get()
 
-  def mkRichEvent(event: EBEvent): RichEvent
+  def mkRichEvent(event: EBEvent): Future[RichEvent]
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -57,12 +57,14 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
 
   protected def getLiveEvents: Future[Seq[RichEvent]] = for {
     events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
-  } yield events.map(mkRichEvent)
+    richEvents <- Future.sequence(events.map(mkRichEvent))
+  } yield richEvents
 
   // only load 1 page of past events (masterclasses have 800+ of them)
   protected def getArchivedEvents: Future[Seq[RichEvent]] = for {
     eventsArchive <- get[EBResponse[EBEvent]]("users/me/owned_events?status=ended&order_by=start_desc")
-  } yield eventsArchive.data.map(mkRichEvent)
+    richEventsArchive <- Future.sequence(eventsArchive.data.map(mkRichEvent))
+  } yield richEventsArchive
 
   def getEventPortfolio: EventPortfolio = {
     val priorityIds = priorityEventOrdering
@@ -117,12 +119,20 @@ object GuardianLiveEventService extends EventbriteService {
   val apiToken = Config.eventbriteApiToken
 
   val wsMetrics = new EventbriteMetrics("Guardian Live")
+  val gridService = GridService(Config.gridConfig.url)
 
   private def getPriorityEventIds: Future[Seq[String]] =  for {
     ordering <- WS.url(Config.eventOrderingJsonUrl).get()
   } yield (ordering.json \ "order").as[Seq[String]]
 
-  def mkRichEvent(event: EBEvent): RichEvent = GuLiveEvent(event)
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
+
+    val imageOpt = event.description.flatMap(_.mainImageUrl)
+
+    imageOpt.fold(Future.successful(GuLiveEvent(event, None))) { url =>
+      gridService.getRequestedCrop(url).map(GuLiveEvent(event, _))
+    }
+  }
 
   def start() {
     Logger.info("Starting EventbriteService GuardianLive background tasks")
@@ -143,9 +153,9 @@ object MasterclassEventService extends EventbriteService {
 
   override def events: Seq[RichEvent] = allEvents.map(availableEvents).get()
 
-  def mkRichEvent(event: EBEvent): RichEvent = {
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
     val masterclassData = masterclassDataService.getData(event.id)
-    MasterclassEvent(event, masterclassData)
+    Future.successful(MasterclassEvent(event, masterclassData))
   }
 
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
