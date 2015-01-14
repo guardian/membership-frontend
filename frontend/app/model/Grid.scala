@@ -13,7 +13,7 @@ object Grid {
 
   case class Metadata(description: Option[String], credit: Option[String], byline: Option[String]) {
 
-    val photographer = s"${byline.getOrElse("")}${credit.map(c => s"/$c").getOrElse("")}"
+    val photographer = (byline ++ credit).mkString("/")
   }
 
   case class Export(id: String, assets: List[Asset])
