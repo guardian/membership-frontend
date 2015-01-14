@@ -68,10 +68,10 @@
 }
 .tier-header--partner {
     color: $black;
-    background-color: $mem-brandLightblue;
+    background-color: $c-tone-partner;
 }
 .tier-header--patron {
-    background-color: $mem-brandDarkBlue;
+    background-color: $c-tone-patron;
 }
 
 /* Tier Header - Stacked modifier
@@ -107,11 +107,16 @@
 
 .tier-header-promo {
     @include clearfix;
+    min-height: rem(gs-span(1.5));
+    @include mq(tablet) {
+        min-height: 0;
+    }
 }
     .tier-header-promo__pricing {
+        position: absolute;
+        bottom: rem($gs-baseline / 2);
         border: solid $c-border-neutral;
         border-width: 0;
-        margin-top: -(rem($gs-baseline / 2));
     }
     @include mq(tablet) {
         .tier-header-promo__title {
@@ -119,9 +124,11 @@
             width: 35%;
         }
         .tier-header-promo__pricing {
+            position: static;
             float: left;
             width: 65%;
             border-width: 0 0 1px 0;
+            margin-top: -(rem($gs-baseline / 2));
         }
     }
     @include mq(desktop) {

@@ -4,8 +4,7 @@
     showBenefitDetails: Boolean = true,
     mode: String = "",
     showBenefitCopy: Boolean = true,
-    showLearnMore: Boolean = false,
-    isSmallBenefit: Boolean = false
+    showLearnMore: Boolean = false
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
@@ -48,7 +47,7 @@
 
         <div class="package__outer hidden-mobile-portrait">
             <div class="package__inner">
-                @fragments.tier.details(currentTier = tier, showBenefitDetails = showBenefitDetails, showBenefitCopy = showBenefitCopy, isSmallBenefit = isSmallBenefit)
+                @fragments.tier.details(currentTier = tier, showBenefitDetails = showBenefitDetails, showBenefitCopy = showBenefitCopy)
             </div>
 
             <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">

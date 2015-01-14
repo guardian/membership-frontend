@@ -1,14 +1,16 @@
-<fieldset class="fieldset fieldset--slim">
+
+
+<fieldset class="fieldset">
 
     <div class="fieldset__heading">
-        <h2 class="form__heading">Tell us what you think</h2>
+        <h2 class="fieldset__headline">Tell us what you think</h2>
     </div>
 
     <div class="fieldset__fields">
 
         <div class="form-field">
             <label class="label" for="category">I have feedback about</label>
-            <div class="input">
+            <div>
                 <select name="category"
                         id="category"
                         data-validation="required"
@@ -24,15 +26,15 @@
 
         <div class="form-field">
             <label class="label" for="page">Which page on the web site are you referring to?</label>
-            <input class="text-input text-input--block" name="page" id="page" type="text"/>
-            <div class="form-field__note form-field__note--below">e.g. about membership</div>
+            <input class="input-text" name="page" id="page" type="text"/>
+            <div class="form-note">e.g. about membership</div>
         </div>
 
         <div class="form-field">
             <label class="label" for="feedback">Comments</label>
             <textarea name="feedback"
                       id="feedback"
-                      class="textarea--long textarea"
+                      class="input-textarea input-textarea--long"
                       data-error-message="Please enter your comment"
                       data-validation="required"
                       aria-required="true"></textarea>
@@ -42,10 +44,11 @@
 
 </fieldset>
 
-<fieldset class="fieldset fieldset--slim">
+
+<fieldset class="fieldset">
 
     <div class="fieldset__heading">
-        <h2 class="form__heading">About you</h2>
+        <h2 class="fieldset__headline">About you</h2>
     </div>
 
     <div class="fieldset__fields">
@@ -54,7 +57,7 @@
             <label class="label" for="name">Name</label>
             <input name="name"
                    id="name"
-                   class="text-input text-input-block"
+                   class="input-text"
                    type="text"
                    data-validation="required"
                    data-error-message="Please enter your name"
@@ -65,7 +68,7 @@
             <label class="label" for="email">Email address</label>
             <input name="email"
                    id="email"
-                   class="text-input text-input-block"
+                   class="input-text"
                    type="email"
                    data-validation="required"
                    data-error-message="Please enter your email address"

@@ -2,65 +2,66 @@
    Global Footer
    ========================================================================== */
 
-.l-footer {
-    position: absolute;
-    bottom: 0;
+.global-footer {
     width: 100%;
-    z-index: 1;
-    margin: rem($pageOffset/2) 0 0;
+    margin: rem($gs-baseline) 0 0;
     background-color: $c-neutral8;
 
     @include mq(mobileLandscape) {
-        margin-top: rem($pageOffset);
-    }
-
-    // TODO: Review layout container styles. Can these be abstracted
-    .gs-container {
-        @include mq(desktop) {
-            max-width: rem(gs-span(12) + $gs-gutter * 2);
-        }
-
-        @include mq(mem-full) {
-            max-width: rem(gs-span(14) + $gs-gutter * 2);
-        }
+        margin-top: rem($gs-baseline * 3);
     }
 }
-.l-footer__banner {
-    border-top: rem(2px) solid $c-brandBlue;
-    margin-bottom: rem(($gs-baseline / 3) * 2);
-}
-.l-footer__primary {
+.global-footer__primary {
     position: relative;
     overflow: hidden;
-    background-color: darken($mem-blue, 12%);
+    background-color: darken($mem-brandBlue, 5%);
 }
-.l-footer__secondary {
+.global-footer__brand {
+    @include clearfix;
+    background-color: $mem-brandBlue;
+    padding-left: rem($gs-gutter / 4);
+    padding-right: rem($gs-gutter / 4);
+
+    @include mq(mobileLandscape) {
+        padding-left: rem($gs-gutter / 2);
+        padding-right: rem($gs-gutter / 2);
+    }
+}
+.global-footer__top {
+    float: left;
+    height: rem(48px);
+    padding-top: rem($gs-baseline / 2);
+    padding-bottom: rem($gs-baseline / 2);
+}
+.global-footer__logo {
+    margin-top: rem($gs-baseline * .75);
+    float: right;
+    line-height: 0;
+}
+.global-footer__secondary {
     @include box-sizing(border-box);
     @include font($f-sans-serif-text, normal, 13, 19);
+    color: $c-neutral1;
     padding-right: rem($gs-gutter / 2);
     padding-left: rem($gs-gutter / 2);
-    color: $c-neutral1;
+
+    a {
+        color: $c-neutral1;
+    }
 
     @include mq(tablet) {
         padding-right: rem($gs-gutter);
         padding-left: rem($gs-gutter);
     }
-
-    a {
-        color: $c-neutral1;
-    }
 }
-.l-footer__misc {
+.global-footer__misc {
     padding-top: rem($gs-baseline / 2);
     padding-bottom: rem($gs-baseline * 1.5);
     border-top: 1px solid $c-neutral4;
 }
 
-.guardian-logo-footer {
-    margin-top: rem($gs-baseline * .75);
-    float: right;
-    line-height: 0;
-}
+/* Footer - Colophon
+   ========================================================================== */
 
 .colophon {
     @include fs-bodyHeading(1);

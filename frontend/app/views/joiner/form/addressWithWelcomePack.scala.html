@@ -8,30 +8,62 @@
 @import helper._
 
 @main("Enter Details | Staff", isBrochure = true) {
-    <section class="section-payment u-cf">
+
+    <main role="main" class="page-content">
+
+        <section class="form-header">
+            <h1 class="form-headline">Address</h1>
+        </section>
 
         @for(flashMsg <- flashMessage) {
-            @fragments.notifications.flashMessage(flashMsg)
+            <section class="form-section form-section--no-padding">
+                <div class="form-section__content">
+                    @fragments.notifications.flashMessage(flashMsg)
+                </div>
+            </section>
         }
 
-        <form action="" method="POST" id="payment-form" class="form form-primary-container js-staff-form">
-            @fragments.form.sectionHeading("Address")
-            @CSRF.formField
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content">
+                @fragments.form.errorMessageDisplay()
+            </div>
+        </section>
 
-            @fragments.form.errorMessageDisplay()
-            @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
-            @fragments.form.addressDetail("Delivery address",
-                "Once you've joined Guardian Membership we'll send you a welcome pack in the post.", "deliveryAddress",
-                true, userFields.address1, userFields.address2, userFields.address3, userFields.postcode,
-                userFields.address4, userFields.country)
-            @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing,
-                marketingChoices.receive3rdPartyMarketing)
+        <section class="form-section">
 
-            @if(!passwordExists) {
-                @fragments.form.passwordDetail()
-            }
+            <div class="form-section__content">
 
-            @fragments.form.submit("Join")
-        </form>
-    </section>
+                <form action="@routes.Joiner.joinStaff" method="POST" id="payment-form" class="form js-staff-form">
+                    @CSRF.formField
+                    @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+                    @fragments.form.addressDetail(
+                        heading = "Delivery address",
+                        note = "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
+                        formType = "deliveryAddress",
+                        addressRequired = true,
+                        address1 = userFields.address1,
+                        address2 = userFields.address2,
+                        town = userFields.address3,
+                        postcode = userFields.postcode,
+                        county = userFields.address4,
+                        userCountry = userFields.country
+                    )
+                    @fragments.form.marketingChoices(
+                        marketingChoices.receiveGnmMarketing,
+                        marketingChoices.receive3rdPartyMarketing
+                    )
+
+                    @if(!passwordExists) {
+                        @fragments.form.passwordDetail()
+                    }
+
+                    @fragments.form.errorMessageDisplay()
+                    @fragments.form.submit("Join")
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
 }

@@ -47,7 +47,7 @@ $_global-nav-height: 36px;
     -webkit-font-smoothing: subpixel-antialiased;
     -webkit-font-feature-settings: "kern" 1;
 
-    background-color: darken($mem-blue, 10%);
+    background-color: darken($mem-brandBlue, 10%);
     @include side-margins-calc('padding-left');
     @include side-margins-calc('padding-right');
 
@@ -58,13 +58,16 @@ $_global-nav-height: 36px;
     .nav__scroll {
         display: table;
         white-space: nowrap;
-        width: 100%;
+        width: auto;
         vertical-align: middle;
         height: rem($_global-nav-height);
         padding: 0 rem($_global-nav-height * 2) 0 rem($gs-gutter / 2);
 
         @include mq(tablet) {
             padding: 0 rem($gs-gutter);
+        }
+        @include mq(desktop) {
+            width: 100%;
         }
     }
     .nav__list {
@@ -170,7 +173,7 @@ $_global-nav-height: 36px;
     }
     .nav__link {
         @include fs-bodyHeading(1);
-        border-top: 1px solid $mem-blue-border;
+        border-top: 1px solid lighten($mem-brandBlue, 5%);
         display: block;
         background-color: transparent;
         -webkit-font-smoothing: subpixel-antialiased;

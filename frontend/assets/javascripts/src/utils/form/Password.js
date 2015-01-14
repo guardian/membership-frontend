@@ -49,21 +49,11 @@ function ($, bean, component) {
 
     Password.prototype.active = false;
 
-    Password.prototype.$passwordStrengthIndicatorTemplate = function () {
-        return $.create([
-            '<div class="password-strength-indicator ', this.classes.STRENGTH_INDICATOR, ' score-null is-off">',
-            '<div class="form-field__note form-field__note--below form-field__note--right password-strength ', this.classes.STRENGTH_LABEL, '">',
-            this.config.text.passwordLabel,
-            '</div>',
-            '</div>'
-        ].join(''));
-    };
-
     Password.prototype.$passwordToggleTemplate = function () {
 
         return $.create([
-            '<div class="form-field__note form-field__note--right mobile-only">',
-                '<a href="#toggle-password" class="', this.classes.TOGGLE_PASSWORD, '" data-password-label="Show password"',
+            '<div class="form-note form-note--right mobile-only">',
+                '<a href="#toggle-password" class="text-link ', this.classes.TOGGLE_PASSWORD, '" data-password-label="Show password"',
                     ' data-text-label="Hide password" data-link-name="Toggle password field">Show password</a>',
             '</div>'
         ].join(''));
@@ -79,9 +69,7 @@ function ($, bean, component) {
 
         require(['js!zxcvbn'], function() {
 
-            var $passwordStrengthIndicatorTemplate = self.$passwordStrengthIndicatorTemplate();
-
-            $passwordStrengthIndicatorTemplate.insertAfter(self.getElem('PASSWORD_STRENGTH_INPUT'));
+            $('.' + self.classes.STRENGTH_INDICATOR).toggleClass('is-hidden');
 
             bean.on(self.getElem('PASSWORD_STRENGTH_INPUT'), 'keyup.count', function () {
                 self.checkCount.call(self);

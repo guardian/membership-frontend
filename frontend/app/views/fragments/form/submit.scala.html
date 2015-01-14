@@ -1,21 +1,29 @@
-@(ctaTextPrepend: String, ctaTextAppend: String = "", tier: Option[com.gu.membership.salesforce.Tier.Tier] = None,
-    membershipTermsAndConditions: Boolean = true, isSlim: Boolean = false)
+@(
+    ctaTextPrepend: String,
+    ctaTextAppend: String = "",
+    tier: Option[com.gu.membership.salesforce.Tier.Tier] = None,
+    membershipTermsAndConditions: Boolean = true,
+    isSlim: Boolean = false
+)
 
 @import views.support.Asset
 @import model.Benefits
 @import configuration.Config
 
-@fragments.form.errorMessageDisplay(true, isSlim)
-<fieldset class="fieldset fieldset--no-bg@if(isSlim == true){ fieldset--slim}">
+<fieldset class="fieldset fieldset--simple">
     <div class="fieldset__heading"></div>
+
     <div class="fieldset__fields fieldset__fields--no-padding">
 
-        @if(membershipTermsAndConditions){
-            <p class="terms-info">By joining Guardian Membership, you are agreeing to our <a href="@Config.guardianMembershipTermsUrl" target="_blank">Terms and Conditions</a> and <a href="@Config.guardianPrivacyUrl" target="_blank">Privacy Policy</a>.</p>
-        }
+    @if(membershipTermsAndConditions){
+        <p class="ts-and-cs">By joining Guardian Membership, you are agreeing to our
+            <a href="@Config.guardianMembershipTermsUrl" class="text-link" target="_blank">Terms and Conditions</a> and
+            <a href="@Config.guardianPrivacyUrl" class="text-link" target="_blank">Privacy Policy</a>.
+        </p>
+    }
 
         <div class="actions js-waiting-container">
-            <button type="submit" class="submit-input action js-submit-input">
+            <button type="submit" class="action js-submit-input">
             @Html(tier.fold(ctaTextPrepend)(tier =>
                 ctaTextPrepend + " £<span class=\"js-cta-payment-option-price\">" +
                     Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
@@ -26,5 +34,6 @@
                 <span class="i-wait__message js-waiting-message"></span>
             </div>
         </div>
+
     </div>
 </fieldset>

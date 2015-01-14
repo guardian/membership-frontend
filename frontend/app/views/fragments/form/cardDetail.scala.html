@@ -6,49 +6,77 @@
 @import views.support.Dates
 
 <fieldset class="fieldset">
+
     <div class="fieldset__heading">
-        <h2 class="form__heading">Card details</h2>
-        <div class="form__note js-card-details-note">
-            <p class="form-padlock-text"><img src="@Asset.at("images/padlock.png")" alt="" class="form-padlock"/> This site is secure</p>
-            <p class="credit-card-note"><span class="credit-card-note__header">First payment</span> will be taken today under the name Guardian News & Media.</p>
-            <p class="credit-card-note"><span class="credit-card-note__header">Ongoing payments</span>
+        <h2 class="fieldset__headline">Card details</h2>
+        <div class="fieldset__note js-card-details-note">
+            <p class="form-padlock-text">
+                <img src="@Asset.at("images/padlock.png")" alt="Padlock" class="form-padlock"/> This site is secure
+            </p>
+            <div class="credit-card-note">
+                <h3 class="credit-card-note__header">First payment</h3>
+                <p>will be taken today under the name Guardian News & Media.</p>
+            </div>
+            <div class="credit-card-note">
+                <h3 class="credit-card-note__header">Ongoing payments</h3>
                 @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
-                    Your card will be charged £<span class="js-card-note-pricing-charge" data-annual="@pricing.yearly" data-month="@pricing.monthly">@pricing.yearly</span> every <span class="js-card-note-pricing-period" data-annual="year" data-month="month">year</span>.
-                    Payments will taken on or shortly after the <span class="js-card-note-payment-taken" data-annual="@Dates.dayInMonthWithSuffixAndMonth()" data-month="@Dates.dayInMonthWithSuffix()">@Dates.dayInMonthWithSuffixAndMonth()</span> every <span class="js-card-note-pricing-period" data-annual="year" data-month="month">year</span>.
+                    <p>Your card will be charged £
+                        <span class="js-card-note-pricing-charge"
+                              data-annual="@pricing.yearly"
+                              data-month="@pricing.monthly">@pricing.yearly</span>
+                        every
+                        <span class="js-card-note-pricing-period"
+                              data-annual="year"
+                              data-month="month">year</span>.
+                        Payments will taken on or shortly after the
+                        <span class="js-card-note-payment-taken"
+                              data-annual="@Dates.dayInMonthWithSuffixAndMonth()"
+                              data-month="@Dates.dayInMonthWithSuffix()">@Dates.dayInMonthWithSuffixAndMonth()</span>
+                        every <span class="js-card-note-pricing-period"
+                                    data-annual="year"
+                                    data-month="month">year</span>.</p>
                 }
-            </p>
-            <p class="credit-card-note"><span class="credit-card-note__header">Cancellation</span> You can cancel your membership online through your profile page.</p>
+            </div>
+            <div class="credit-card-note">
+                <h3 class="credit-card-note__header">Cancellation</h3>
+                <p>You can cancel your membership online through your profile page.</p>
+            </div>
         </div>
     </div>
 
     <div class="fieldset__fields">
+
         <div class="form-field">
+
             <div class="u-cf">
-                <label class="label form-field__note form-field__note--left" for="cc-num">Card number</label>
-                <div class="form-field__note form-field__note--right">
-                    <ul class="credit-card-container inline-list">
-                        <li class="credit-card-container-list__item inline-list__item">
+
+                <label class="label form-note form-note--left" for="cc-num">Card number</label>
+
+                <div class="form-note form-note--right">
+                    <ul class="inline-list">
+                        <li class="u-align-middle inline-list__item">
                             We accept
                         </li>
-                        <li class="credit-card-container-list__item inline-list__item">
-                            <i class="sprite-card sprite-card--smaller sprite-card--visa"></i>
+                        <li class="u-align-middle inline-list__item">
+                            <i class="sprite-card sprite-card--small sprite-card--visa"></i>
                         </li>
-                        <li class="credit-card-container-list__item inline-list__item">
-                            <i class="sprite-card sprite-card--smaller sprite-card--mastercard"></i>
+                        <li class="u-align-middle inline-list__item">
+                            <i class="sprite-card sprite-card--small sprite-card--mastercard"></i>
                         </li>
-                        <li class="credit-card-container-list__item inline-list__item">
-                            <i class="sprite-card sprite-card--smaller sprite-card--american-express"></i>
+                        <li class="u-align-middle inline-list__item">
+                            <i class="sprite-card sprite-card--small sprite-card--american-express"></i>
                         </li>
                     </ul>
                 </div>
             </div>
+
             <div class="credit-card-container">
-                <i class="js-credit-card-image credit-card--input-representation sprite-card sprite-card--unknown"></i>
+                <i class="credit-card--input-visualisation sprite-card sprite-card--unknown js-credit-card-image"></i>
                 <input type="tel"
                        size="20"
                        data-stripe="number"
-                       class="js-credit-card-number credit-card-input text-input"
+                       class="input-text credit-card-input js-credit-card-number"
                        id="cc-num"
                        placeholder="0000 0000 0000 0000"
                        maxlength="19"
@@ -59,23 +87,24 @@
         </div>
 
         <div class="form-field">
+
             <label class="label" for="cc-cvc"><span>Security code</span></label>
             <input type="tel"
                    size="4"
                    data-stripe="cvc"
-                   class="js-credit-card-cvc text-input text-input--small text-input--block"
+                   class="input-text input-text--small js-credit-card-cvc"
                    id="cc-cvc"
                    placeholder="CVC"
                    maxlength="4"
                    autocomplete="off"
                    data-validation="creditCardCVC"/>
-            <a class="cvc-cta js-cvc-cta" href="#">What's this?</a>
+            <a class="cvc-cta text-link js-cvc-cta" href="#">What's this?</a>
             <div class="cvc u-h u-cf js-cvc-image-container">
                 <div class="u-cf">
-                    <div class="cvc__primary">
+                    <div class="cvc__image">
                         <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
                     </div>
-                    <div class="cvc__secondary">
+                    <div class="cvc__detail">
                         <h3 class="cvc__heading">Visa, Mastercard</h3>
                         <p class="cvc__body">
                         The last 3 digits printed on the back within the signature strip
@@ -83,10 +112,10 @@
                     </div>
                 </div>
                 <div class="u-cf">
-                    <div class="cvc__primary">
+                    <div class="cvc__image">
                         <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
                     </div>
-                    <div class="cvc__secondary">
+                    <div class="cvc__detail">
                         <h3 class="cvc__heading">American Express</h3>
                         <p class="cvc__body">
                         The 4 digits printed on the front above the card number

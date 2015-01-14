@@ -123,7 +123,7 @@ define([
                 creditCardNumberInputElement = $('.js-credit-card-number', paymentFormFixtureElement)[0];
                 creditCardVerificationCodeInputElement = $('.js-credit-card-cvc', paymentFormFixtureElement)[0];
                 submitButtonElement = $('.js-submit-input', paymentFormFixtureElement)[0];
-                errorMessageDisplayElement = $('.js-payment-errors', paymentFormFixtureElement)[0];
+                errorMessageDisplayElement = $('.js-payment-errors', $(document.body))[0];
                 creditCardImageElement = $('.js-credit-card-image', paymentFormFixtureElement)[0];
                 expiryMonthElement = $('.js-credit-card-exp-month', paymentFormFixtureElement)[0];
                 expiryYearElement = $('.js-credit-card-exp-year', paymentFormFixtureElement)[0];
@@ -143,6 +143,7 @@ define([
 
         afterEach(function () {
             paymentFormFixtureElement = null;
+            $('.form').remove();
         });
 
         function getFormInputParents() {

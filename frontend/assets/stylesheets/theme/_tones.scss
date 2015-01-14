@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .tone-masterclasses {
-    background-color: $mem-mc-top;
+    background-color: $c-tone-masterclass;
 
     a {
         border-bottom-color: transparentize($c-neutral3, .5);
@@ -14,7 +14,7 @@
 }
 .tone-guardian-live {
     color: $white;
-    background-color: $mem-live-top;
+    background-color: $c-tone-live;
 
     a {
         border-bottom-color: transparentize($white, .5);
@@ -25,49 +25,49 @@
 }
 
 .tone-masterclasses--accent {
-    background-color: $mem-mc-accent;
+    background-color: $c-tone-masterclass-accent;
 }
 .tone-guardian-live--accent {
     color: $white;
-    background-color: $mem-live-accent;
+    background-color: $c-tone-live-accent;
 }
 
 .tone-masterclasses--border {
-    border-color: $mem-mc-top;
+    border-color: $c-tone-masterclass;
 }
 .tone-guardian-live--border {
-    border-color: $mem-live-top;
+    border-color: $c-tone-live;
 }
 
 .tone-masterclasses--trans {
-    background-color: transparentize($mem-mc-top, .1);
+    background-color: transparentize($c-tone-masterclass, .1);
 }
 .tone-guardian-live--trans {
     color: $white;
-    background-color: transparentize($mem-live-top, .1);
+    background-color: transparentize($c-tone-live, .1);
 }
 
 .tone-friend {
     color: $white;
-    background-color: $c-neutral1;
+    background-color: $c-tone-friend;
 }
 .tone-partner {
-    background-color: $mem-brandLightblue;
+    background-color: $c-tone-partner;
 }
 .tone-patron {
-    background-color: $mem-brandDarkBlue;
+    background-color: $c-tone-patron;
 }
 
 .tone-friend--border {
-    border-color: $c-neutral1;
+    border-color: $c-tone-friend;
 }
 .tone-partner--border {
-    border-color: $mem-brandLightblue;
+    border-color: $c-tone-partner;
 }
 .tone-patron--border {
-    border-color: $mem-brandDarkBlue;
+    border-color: $c-tone-patron;
 }
 
 .tone-tint {
-    background-color: $c-neutral7;
+    background-color: $c-tone-tint;
 }

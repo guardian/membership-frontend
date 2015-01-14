@@ -26,19 +26,17 @@ html.patron-page {
     }
 }
 
-// TODO: Can magic numbers be removed?
-// Magic numbers refer to footer height
+/**
+ * Use flexbox for sticky footer
+ * @see http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
+ */
 body {
-    min-height: 100%;
-    margin-bottom: rem(280px);
-
-    @include mq(mobileLandscape) {
-        margin-bottom: rem(260px);
-    }
-
-    @include mq(tablet) {
-        margin-bottom: rem(220px);
-    }
+    @include flex-display();
+    @include flex-direction(column);
+    min-height: 100vh;
+}
+.container-global {
+    @include flex(1);
 }
 
 /* Layout Helpers
@@ -74,6 +72,10 @@ body {
 // do we really need this? If so, document usage clearly.
 .l-row__item {
     padding-bottom: rem($gs-gutter * 2);
+}
+
+.u-align-middle {
+    vertical-align: middle;
 }
 
 /* Side Margins
