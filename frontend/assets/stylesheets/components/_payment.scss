@@ -8,7 +8,7 @@
 
 .steps {
     @include fs-header(2);
-    color: $mem-blue-dark;
+    color: $mem-brandBlueDark;
     border-top: 1px solid $c-border-brand;
     padding-top: rem($gs-baseline / 2);
     margin-bottom: rem($gs-gutter);

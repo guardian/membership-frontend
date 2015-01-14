@@ -18,7 +18,6 @@ $browser-supports-flexbox: true !default;
 // =============================================================================
 
 $gutter-width-fluid: 2%;
-$gutter: 16px; // TODO: Remove this, only used in _joiner.scss
 $trailblock-img-width: 140px;
 $mobilePopupOffset: 43px;
 $side-margins-top-magic-number: 114px;
@@ -123,76 +122,65 @@ $font-scale: (
 
 // Colours
 // =============================================================================
-// TODO - Clean up the colours in this file, potentially abstract into own file and use guss-colour() mixin and
 
 @import 'components/bower-components/guss-colours/_colours.scss';
 @import 'components/bower-components/pasteup-palette/src/_palette';
 @import 'components/bower-components/guss-colours/_colours.helpers.scss';
 
+// Shorthands
 $white: #ffffff;
-$offWhite: #d6d6d6;
 $black: #000000;
-$offBlack: #666666;
 $black-trans: rgba(0, 0, 0, .25);
 $white-trans: rgba(255, 255, 255, .25);
 
-$c-brandBlue: #214583;
-$c-brandLightBlue: #94b1ca;
+// Neutrals
+$c-neutral1: map-get($pasteup-palette, neutral-1);
+$c-neutral2: map-get($pasteup-palette, neutral-2);
+$c-neutral3: map-get($pasteup-palette, neutral-3);
+$c-neutral4: map-get($pasteup-palette, neutral-4);
+$c-neutral5: map-get($pasteup-palette, neutral-5);
+$c-neutral6: map-get($pasteup-palette, neutral-6);
+$c-neutral7: map-get($pasteup-palette, neutral-7);
+$c-neutral8: map-get($pasteup-palette, neutral-8);
 
-$c-newsDefault: #005689;
-$c-newsAccent: #4bc6df;
-
-$c-body: #333333;
-$c-link: $c-newsDefault;
-$c-error: #d61d00;
+$c-body: $c-neutral1;
+$c-background: $white;
 $c-background-transparent: rgba(51, 51, 51, .05);
-$c-background: #ffffff;
+$c-link: map-get($pasteup-palette, news-main-1);
+$c-error: map-get($pasteup-palette, error);
+$c-soldOut: #cc2b12;
 
-$c-neutral1: #333333;
-$c-neutral2: #767676;
-$c-neutral3: #bdbdbd;
-$c-neutral4: #dcdcdc;
-$c-neutral5: #dfdfdf;
-$c-neutral6: #eaeaea;
-$c-neutral7: #f1f1f1;
-$c-neutral8: #f6f6f6;
-$c-neutral9: #fdfdfd;
+// Tone colours
+// TODO: Could masterclass colours go into pasteup-palette?
+// Currently uses `multimedia` in pasteup and our accent is not defined
+$c-tone-live: map-get($pasteup-palette, live-main-1);
+$c-tone-live-accent: map-get($pasteup-palette, live-main-2);
+$c-tone-masterclass: #ffbb00;
+$c-tone-masterclass-accent: #fcdd03;
+$c-tone-friend: $c-neutral1;
+$c-tone-partner: map-get($pasteup-palette, news-main-2);
+$c-tone-patron: map-get($pasteup-palette, news-main-1);
+$c-tone-tint: $c-neutral7;
 
-// Membership paletts
-$mem-brandOrange: #ce6f14;
-$mem-brandBlue: #82c2d6;
-$mem-brandGrey: #dcddda;
-$mem-brandDarkBlue: $c-newsDefault;
-$mem-brandLightblue: #02c7e1;
-$mem-trans-white: rgba(255, 255, 255, .95);
-$mem-trans-red: rgba(180, 24, 0, .95);
-$mem-trans-green: rgba(170, 216, 1, .95);
-$mem-black: #333333;
-$mem-blue: #4bc6df;
-$mem-blue-dark: #197caa;
+// Membership palette
+$mem-brandBlue: map-get($pasteup-palette, news-main-2);
+$mem-brandBlueDark: #197caa;
+// TODO: This is going to come out when brochure pages are revisited,
+// only used on /about page for Space.
 $mem-green: #aad802;
-$mem-buttonBlue: $mem-blue-dark;
-$mem-darkGrey: #999999;
-$mem-button-confirm: #1a4683;
-$mem-button-cancel: #b8b8b8;
-$mem-blue-border: #6dcfe3;
-$mem-header: rgba(0, 0, 0, .7);
-$mem-sold-out: #cc2b12;
 
-$mem-live-top: #b51800;
-$mem-live-accent: #cc2b12;
-$mem-mc-top: #ffbb00;
-$mem-mc-accent: #fcdd03;
+// Buttons
+$c-button: $mem-brandBlueDark;
+$c-button-cancel: #b8b8b8;
 
-$mem-underline-white-trans: rgba(229, 208, 212, .5);
-$mem-event-button-hover: rgba(0, 0, 0, .65);
-
-$c-border-brand: $mem-blue;
+// Borders
+$c-border-brand: $mem-brandBlue;
 $c-border-neutral: $c-neutral3;
 
-$flash-error-color: #d61d00;
-$flash-error-border: #ff998a;
-$flash-error-background: #fdf4f3;
-$flash-success-color: #1c6326;
-$flash-success-border: #33a22b;
-$flash-success-background: #faffe5;
+// Messages
+$c-flash-error: #d61d00;
+$c-flash-error-border: #ff998a;
+$c-flash-error-background: #fdf4f3;
+$c-flash-success: #1c6326;
+$c-flash-success-border: #33a22b;
+$c-flash-success-background: #faffe5;

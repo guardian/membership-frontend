@@ -6,7 +6,7 @@
    ========================================================================== */
 .form {
     @include mq(desktop) {
-        border-top: 1px solid $mem-blue;
+        border-top: 1px solid $mem-brandBlue;
     }
 }
 
@@ -139,8 +139,8 @@
 
 .input-text,
 .input-textarea {
-    border: 1px solid $c-neutral4;
     color: $c-body;
+    border: 1px solid $c-neutral4;
     @include fs-textSans(5);
     padding: rem(8px) rem(8px) rem(7px);
     outline: none;
@@ -148,7 +148,7 @@
     -webkit-appearance: none;
 
     &:focus {
-        border-color: $mem-brandLightblue;
+        border-color: $c-border-brand;
     }
 
     @include mq(tablet) {
@@ -215,7 +215,7 @@
 }
 
 input[type=radio]:checked + .psuedo-radio {
-    border-color: $mem-brandLightblue;
+    border-color: $c-border-brand;
 
     &:before {
         @include radio-circle();
@@ -291,6 +291,8 @@ $card-icon-offset: 1px;
 /* ==========================================================================
    Password Strength indicator
    ========================================================================== */
+
+// TODO: Can these colours be moved into pasteup / shared w/ Identity?
 $password-strength-score-0: #e31f26;
 $password-strength-score-1: #e6711b;
 $password-strength-score-2: #ffbb00;

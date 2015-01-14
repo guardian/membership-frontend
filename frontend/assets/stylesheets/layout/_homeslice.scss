@@ -119,7 +119,7 @@
             width: 100%;
             min-height: rem(104px);
             padding: rem($gs-gutter) rem($gs-gutter / 2);
-            background-color: transparentize($mem-blue, .1);
+            background-color: transparentize($mem-brandBlue, .1);
 
             margin-top: -webkit-calc(((100%/5)*3) - #{$gs-gutter/2});
             margin-top: -moz-calc(((100%/5)*3) - #{$gs-gutter/2});
@@ -196,7 +196,7 @@
     // Title block colour modifiers ======================================== //
 
     &.home-slice--red .home-slice__headline-block {
-        background-color: transparentize($mem-live-accent, .1);
+        background-color: transparentize($c-tone-live-accent, .1);
         .home-slice__headline {
             color: $white;
         }
@@ -217,7 +217,7 @@
 
         .home-slice__headline-block {
             width: 100%;
-            background-color: transparentize($mem-blue, .1);
+            background-color: transparentize($mem-brandBlue, .1);
             position: relative;
             z-index: 2;
             margin-top: rem(-$gs-gutter/2);
@@ -457,7 +457,7 @@
 
 .join-today__join-box {
     position: relative;
-    background-color: $c-neutral9;
+    background-color: $c-neutral8;
     border: 1px solid $c-neutral5;
     margin-bottom: rem($gs-gutter);
     padding: rem(68px) rem($gs-gutter / 2) rem($gs-gutter / 2);
@@ -562,12 +562,12 @@
     }
 
     &.join-today__join-box--header--partner {
-        background-color: $mem-brandLightblue;
+        background-color: $c-tone-partner;
         color: $black;
     }
 
     &.join-today__join-box--header--patron {
-        background-color: $mem-brandDarkBlue;
+        background-color: $c-tone-patron;
         color: $white;
     }
 }

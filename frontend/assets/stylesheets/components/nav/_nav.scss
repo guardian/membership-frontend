@@ -47,7 +47,7 @@ $_global-nav-height: 36px;
     -webkit-font-smoothing: subpixel-antialiased;
     -webkit-font-feature-settings: "kern" 1;
 
-    background-color: darken($mem-blue, 10%);
+    background-color: darken($mem-brandBlue, 10%);
     @include side-margins-calc('padding-left');
     @include side-margins-calc('padding-right');
 
@@ -173,7 +173,7 @@ $_global-nav-height: 36px;
     }
     .nav__link {
         @include fs-bodyHeading(1);
-        border-top: 1px solid $mem-blue-border;
+        border-top: 1px solid lighten($mem-brandBlue, 5%);
         display: block;
         background-color: transparent;
         -webkit-font-smoothing: subpixel-antialiased;
