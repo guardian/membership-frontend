@@ -56,15 +56,24 @@
     @if(!event.isBookable) {
         <div class="event-header event-header--unavailable">
             <div class="event-header__container event-header__container--details event-header__container--unavailable">
-                <div class="event-ticket__details">
-                    <span class="block-level event-ticket__details__status">
-                        @if(event.isSoldOut && event.status == "live") { Sold out } else { Past event }
-                    </span>
-                    <span class="block-level event-ticket__details__blurb">Tickets are no longer available</span>
+                <div class="event-ticket event-ticket--aligned">
+                    <div class="event-ticket__details">
+                        <span class="block-level event-ticket__details__status">
+                            @if(event.isSoldOut && event.status == "live") { Sold out } else { Past event }
+                        </span>
+                    </div>
+                    <div class="event-ticket__action">
+                        @if(event.isSoldOut && event.status == "live") {
+                            <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl?eid=@event.id&amp;tid=0" data-link-name="Join waitlist">
+                                Add me to the waitlist
+                            </a>
+                        } else {
+                            @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
+                                <a class="action action--external action--buy-event-ticket-details" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
+                            }
+                        }
+                    </div>
                 </div>
-                @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
-                    <a class="action action--external action--buy-event-ticket-details" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
-                }
             </div>
         </div>
     }
@@ -102,16 +111,20 @@
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                     <div class="event-content__info @if(!event.isBookable) {event-content__info--unavailable}">
-
                         @if(!event.isBookable) {
-                            <div class="event-content__info__header">
-                                <span class="block-level event-content__info__header__status">
+                            <div class="status-panel">
+                                <div class="status-panel__header">
                                     @if(event.isSoldOut && event.status == "live") { Sold out } else { Past event }
-                                </span>
-                                <span class="block-level event-content__info__header__blurb">Tickets are no longer available</span>
+                                </div>
+                                @if(event.isSoldOut && event.status == "live") {
+                                    <div class="status-panel__content">
+                                        <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl?eid=@event.id&amp;tid=0" data-link-name="Join waitlist">
+                                            Add me to the waitlist
+                                        </a>
+                                    </div>
+                                }
                             </div>
                         }
-
                         <div class="event-content__info__inner u-cf">
                             <div class="event-content__item event-content__name" itemprop="name">@event.name.text</div>
                             <div class="event-content__item event-content__time event-content--line-divider u-cf">
