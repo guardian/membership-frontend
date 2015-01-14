@@ -1,8 +1,7 @@
 package model
 
-import configuration.Config
 import model.Eventbrite._
-import model.Grid.{Metadata, GridResult}
+import model.Grid.{GridResult, Metadata}
 import model.GridDeserializer._
 import org.specs2.mock.Mockito
 import play.api.test.PlaySpecification
@@ -16,7 +15,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
   "GuLiveEventTest" should {
     "contain secure url, metadata and socialUrl for image" in {
-      val image = EventImage(gridResponse.data.exports(0).assets, gridResponse.data.metadata)
+      val image = EventImage(gridResponse.data.exports.get(0).assets, gridResponse.data.metadata)
       val guEvent = GuLiveEvent(event, Some(image))
 
       guEvent.imgUrl mustEqual "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/{width}.jpg"
@@ -27,7 +26,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
     }
 
     "use file url, metadata, socialUrl for image when no secure url is present" in {
-      val image = EventImage(gridResponse.data.exports(1).assets, gridResponse.data.metadata)
+      val image = EventImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
       val guEvent = GuLiveEvent(event, Some(image))
 
       guEvent.imgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/{width}.jpg"
@@ -58,5 +57,9 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
       guEvent.availableWidths mustEqual ""
       guEvent.socialImgUrl must contain("event-placeholder.gif")
     }
+//
+//    "use fallback image when exports have failed to load in the Grid API" in {
+//      val invalidGrid = Resource.getJson("model/grid/api-image-no-exports.json")
+//    }
   }
 }

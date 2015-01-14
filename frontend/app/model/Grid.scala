@@ -9,7 +9,7 @@ object Grid {
 
   case class GridResult(uri: String, data: Data) extends GridObject
 
-  case class Data(id: String, metadata: Metadata, exports: List[Export])
+  case class Data(id: String, metadata: Metadata, exports: Option[List[Export]])
 
   case class Metadata(description: Option[String], credit: Option[String], byline: Option[String]) {
 

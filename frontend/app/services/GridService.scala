@@ -25,7 +25,11 @@ case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObjec
 
   def getRequestedCrop(url: String) : Future[Option[EventImage]] = {
     for (gridOpt <- getGrid(url))
-    yield gridOpt.map(grid => EventImage(findAssets(grid, cropParam(url)), grid.data.metadata))
+    yield {
+      gridOpt.flatMap { grid =>
+        grid.data.exports.map(exports => EventImage(findAssets(exports, cropParam(url)), grid.data.metadata))
+      }
+    }
   }
 
   def getGrid(url: String) = {
@@ -33,8 +37,7 @@ case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObjec
     else Future.successful(None)
   }
 
-  def findAssets(grid: GridResult, cropParameter: Option[String]) = {
-    val exports = grid.data.exports
+  def findAssets(exports: List[Export], cropParameter: Option[String]) = {
     val requestedExport = cropParameter.flatMap(cr => exports.find(_.id == cr)).orElse(exports.headOption)
     requestedExport.map(_.assets).getOrElse(Nil)
   }
