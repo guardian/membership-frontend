@@ -28,20 +28,19 @@ case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObjec
     val currentImageData = agent.get()
     if(currentImageData.contains(url)) Future.successful(currentImageData.get(url))
     else {
-      for (gridOpt <- getGrid(url))
-      yield {
-        gridOpt.flatMap { grid =>
-          grid.data.exports.map{ exports =>
-            val image = EventImage(findAssets(exports, cropParam(url)), grid.data.metadata)
-
-            agent send {
-              oldImageData =>
-                val newImageData = oldImageData + (url -> image)
-                logger.info(s"Adding image $url to the event image map")
-                newImageData
-            }
-            image
+      getGrid(url).map { gridOpt =>
+        for {
+          grid <- gridOpt
+          exports <- grid.data.exports
+        } yield {
+          val image = EventImage(findAssets(exports, cropParam(url)), grid.data.metadata)
+          agent send {
+            oldImageData =>
+              val newImageData = oldImageData + (url -> image)
+              logger.info(s"Adding image $url to the event image map")
+              newImageData
           }
+          image
         }
       }
     }
