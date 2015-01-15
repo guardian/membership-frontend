@@ -29,7 +29,7 @@ trait MasterclassDataService {
   val contentApi = new GuardianContentClient(Config.contentApiKey)
   lazy val content = Agent[Seq[MasterclassData]](Seq.empty)
 
-  private def getAllContent: Future[Seq[MasterclassData]] = {
+  protected def getAllContent: Future[Seq[MasterclassData]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {

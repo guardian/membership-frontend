@@ -29,7 +29,7 @@ trait Membership {
   val commonSettings = Seq(
     organization := "com.gu",
     version := appVersion,
-    scalaVersion := "2.10.4",
+    scalaVersion := "2.11.5",
     resolvers ++= Seq(
       "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
       Resolver.sonatypeRepo("releases")),
