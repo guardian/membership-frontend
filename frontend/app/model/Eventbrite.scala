@@ -104,12 +104,25 @@ object Eventbrite {
     val isBookable = status == "live" && !isSoldOut
     val isPastEvent = status != "live"
 
+    val providerOpt = for {
+      desc <- description
+      m <- "<!-- provider: (\\w+) -->".r.findFirstMatchIn(desc.html)
+      provider = m.group(1)
+      if EBEvent.providerWhitelist.contains(provider)
+    } yield provider
+
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
     val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member")}
 
     val mainImageUrl: Option[String] = description.flatMap(desc => "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(desc.html).map(_.group(1)) )
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
+  }
+
+  object EBEvent {
+    val providerWhitelist = Seq(
+      "birkbeck"
+    )
   }
 
   trait EBCode extends EBObject {

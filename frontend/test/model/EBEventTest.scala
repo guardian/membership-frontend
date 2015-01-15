@@ -108,4 +108,20 @@ class EBEventTest extends PlaySpecification {
       desc.cleanHtml must contain("<a href=\"blah\">Full course and returns information on</a>")
     }
   }
+
+  "providerOpt" should {
+    "be empty when there is no provider" in {
+      ebLiveEvent.providerOpt must beNone
+    }
+
+    "be some when there is a valid provider" in {
+      val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent]
+      event.providerOpt must beSome("birkbeck")
+    }
+
+    "be none when there is an invalid provider" in {
+      val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent]
+      event.providerOpt must beNone
+    }
+  }
 }
