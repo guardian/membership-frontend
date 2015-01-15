@@ -104,6 +104,8 @@
 
     .event-details__location {
         @include fs-data(4);
+        margin-bottom: rem($gs-baseline);
+
         .event-location {
             color: inherit;
         }
@@ -187,8 +189,23 @@
 .event-ticket__details {
     @include mq(tablet) {
         padding-right: rem($gs-gutter);
-        // Tweak for optical alignment (over actual alignment)
-        padding-bottom: rem(3px);
+        padding-bottom: rem(3px); // Tweak for optical alignment (over actual alignment)
+    }
+}
+
+.event-ticket--aligned {
+    padding-top: 0;
+    .event-ticket__details {
+        padding-bottom: rem($gs-baseline / 2);
+    }
+    @include mq(tablet) {
+        .event-ticket__details,
+        .event-ticket__action {
+            vertical-align: middle;
+        }
+        .event-ticket__details {
+            padding-bottom: 0;
+        }
     }
 }
 
@@ -217,10 +234,6 @@
         @include fs-header(5);
         -webkit-font-smoothing: antialiased;
     }
-}
-
-.event-ticket__details__blurb {
-    @include fs-textSans(1);
 }
 
 .event-ticket__price-amount {
@@ -449,20 +462,6 @@
     padding: rem($gs-gutter);
 }
 
-.event-content__info__header {
-    background-color: $c-neutral1;
-    padding: rem($gs-gutter);
-    color: $white;
-}
-
-.event-content__info__header__status {
-    @include fs-header(1);
-}
-
-.event-content__info__header__blurb {
-    @include fs-textSans(3);
-}
-
 .event-content__info {
     background-color: $c-neutral7;
     overflow: hidden;
@@ -555,4 +554,19 @@
     margin-right: -#{rem($gs-baseline)};
     right: 0;
     position: absolute;
+}
+
+/* Status Panel
+   ========================================================================== */
+
+.status-panel {
+   color: $white;
+   background-color: $c-neutral1;
+   padding: rem($gs-baseline) rem($gs-gutter);
+}
+.status-panel__header {
+   @include fs-header(2);
+}
+.status-panel__content {
+   margin-top: rem($gs-baseline / 2);
 }
