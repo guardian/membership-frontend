@@ -417,12 +417,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICantBecomeAPatronAgain = {
-    new EventsListPage(driver).clickPricing.clickPatronButton
+    new EventsListPage(driver).clickPricing.clickBecomeAPatron
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
   def ICantBecomeAPartnerAgain = {
-    new EventsListPage(driver).clickPricing.clickPartnerButton
+    new EventsListPage(driver).clickPricing.clickBecomeAPartner
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 
