@@ -1,27 +1,22 @@
 package controllers
 
-import actions.AnyMemberTierRequest
-import com.gu.membership.salesforce.Member
-import com.gu.membership.util.Timing
-import model.Eventbrite.{GuLiveEvent, RichEvent, EBEvent, MasterclassEvent}
-import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
-import monitoring.{Metrics, EventbriteMetrics}
-import org.joda.time.Instant
-
 import scala.concurrent.Future
 
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import com.netaporter.uri.dsl._
+
+import com.gu.membership.salesforce.Member
+import com.gu.membership.util.Timing
+
+import actions.AnyMemberTierRequest
 import actions.Functions._
 import actions.Fallbacks._
 import services.{MasterclassEventService, GuardianLiveEventService, MemberService, EventbriteService}
 import configuration.{Config, CopyConfig}
-
-import com.netaporter.uri.dsl._
-import views.support.Dates._
-import model.EventPortfolio
-import play.api.mvc.Result
+import model.RichEvent._
+import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
 
 trait Event extends Controller {
   val guLiveEvents: EventbriteService

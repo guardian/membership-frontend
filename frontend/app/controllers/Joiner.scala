@@ -15,8 +15,8 @@ import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import actions._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
-import model.Eventbrite.{EBCode, RichEvent}
 import model._
+import model.RichEvent._
 import model.StripeSerializer._
 import services._
 

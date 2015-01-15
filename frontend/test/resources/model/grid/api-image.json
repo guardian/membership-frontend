@@ -1,0 +1,149 @@
+{
+    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+    "data": {
+        "id": "aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+        "uploadTime": "2015-01-05T15:09:44Z",
+        "uploadedBy": "joe.bloggs.sivapalan@guardian.co.uk",
+        "identifiers": {
+
+        },
+        "source": {
+            "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+            "size": 431272,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 1920,
+                "height": 1152
+            },
+            "secureUrl": "https://some-media-thing/secure-url"
+        },
+        "thumbnail": {
+            "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+            "size": 10701,
+            "mimeType": "image/jpeg",
+            "dimensions": {
+                "width": 256,
+                "height": 154
+            },
+            "secureUrl": "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675?some-paraeters=sdfsdf"
+        },
+        "metadata": {
+            "keywords": [
+
+            ],
+            "credit": "Guardian Images",
+            "description": "It's Chris!",
+            "byline": "Joe Bloggs"
+        },
+        "originalMetadata": {
+            "keywords": [
+
+            ]
+        },
+        "exports": [
+            {
+                "id": "294_26_1584_950",
+                "specification": {
+                    "bounds": {
+                        "y": 26,
+                        "x": 294,
+                        "width": 1584,
+                        "height": 950
+                    },
+                    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+                    "aspectRatio": "5:3"
+                },
+                "assets": [
+                    {
+                        "secureUrl": "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg",
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg",
+                        "dimensions": {
+                            "width": 1000,
+                            "height": 600
+                        }
+                    },
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/500.jpg",
+                        "dimensions": {
+                            "width": 500,
+                            "height": 300
+                        }
+                    }
+                ],
+                "type": "crop"
+            },
+            {
+                "id": "0_130_1703_1022",
+                "specification": {
+                    "bounds": {
+                        "y": 130,
+                        "x": 0,
+                        "width": 1703,
+                        "height": 1022
+                    },
+                    "uri": "https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+                    "aspectRatio": "5:3"
+                },
+                "assets": [
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/1000.jpg",
+                        "dimensions": {
+                            "width": 1000,
+                            "height": 600
+                        }
+                    },
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/500.jpg",
+                        "dimensions": {
+                            "width": 500,
+                            "height": 300
+                        }
+                    },
+                    {
+                        "file": "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/140.jpg",
+                        "dimensions": {
+                            "width": 140,
+                            "height": 84
+                        }
+                    }
+                ],
+                "type": "crop"
+            }
+        ],
+        "userMetadata": {
+            "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675",
+            "data": {
+                "archived": {
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/archived",
+                    "data": false
+                },
+                "labels": {
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/labels",
+                    "data": [
+
+                    ]
+                },
+                "metadata": {
+                    "uri": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/metadata",
+                    "data": {
+                        "credit": "Gu membership",
+                        "description": "It's Chris!",
+                        "byline": "Gu membership"
+                    }
+                }
+            }
+        },
+        "valid": true,
+        "cost": "pay"
+    },
+    "links": [
+        {
+            "rel": "crops",
+            "href": "https://cropper.some-media-thing.co.uk/crops/aede0da05506d0d8cb993558b7eb9ad1d2d3e675"
+        },
+        {
+            "rel": "metadata",
+            "href": "https://some-media-metada-thing/metadata/aede0da05506d0d8cb993558b7eb9ad1d2d3e675"
+        }
+    ]
+}

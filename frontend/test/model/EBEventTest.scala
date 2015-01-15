@@ -38,6 +38,13 @@ class EBEventTest extends PlaySpecification {
     "not be bookable when it has started" in {
       startedEvent.isBookable mustEqual(false)
     }
+    "should return media service url if present" in {
+      ebLiveEvent.mainImageUrl mustEqual Some("https://some-media-tool.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
+
+    }
+    "should not return media service url is missing" in {
+      nonTicketedEvent.mainImageUrl must beNone
+    }
   }
 
   "isNoTicketEvent on event" should {
@@ -99,19 +106,6 @@ class EBEventTest extends PlaySpecification {
     "not remove the link if it is incorrectly formatted" in {
       val desc = EBRichText("", "<a href=\"blah\">Full course and returns information on</a>")
       desc.cleanHtml must contain("<a href=\"blah\">Full course and returns information on</a>")
-    }
-
-    "should return media service url if present" in {
-      val desc = EBRichText("", "\"<P>A chance to say goodbye to Alan!<\\/P>\\r\\n<P>:-(<\\/P>\\r\\n" +
-        "<!-- main-image: https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288 -->\"\n    }, ")
-
-      desc.mainImage mustEqual Some("https://media.test.dev-gutools.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
-    }
-
-    "should not return media service url is missing" in {
-      val desc = EBRichText("", "\"<P>A chance to say goodbye to Alan!")
-
-      desc.mainImage mustEqual None
     }
   }
 }

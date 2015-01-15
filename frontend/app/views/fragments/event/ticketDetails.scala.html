@@ -1,4 +1,4 @@
-@(event: model.Eventbrite.RichEvent)
+@(event: model.RichEvent.RichEvent)
 
 @for(ticket <- event.generalReleaseTicket) {
     <div class="event-ticket@if(ticket.free) { event-ticket--free }u-cf">

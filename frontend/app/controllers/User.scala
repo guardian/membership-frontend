@@ -1,17 +1,14 @@
 package controllers
 
-import org.apache.commons.codec.binary.Base64
-
-import org.joda.time.format.ISODateTimeFormat
+import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import org.joda.time.Instant
+import org.joda.time.format.ISODateTimeFormat
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json._
+import play.api.mvc.{Controller, Cookie}
+import utils.GuMemCookie
 
 import scala.concurrent.Future
-
-import play.api.mvc.{Cookie, Controller}
-import play.api.libs.json._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.gu.membership.salesforce.{Member, FreeMember, PaidMember}
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
@@ -19,8 +16,10 @@ trait User extends Controller {
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
-    Ok(json).withCookies(Cookie("GU_MEM", Base64.encodeBase64String(Json.stringify(json).getBytes), secure = true, httpOnly = false))
+    Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
   }
+
+
 
   def meDetails = AjaxMemberAction.async { implicit request =>
     def futureCardDetails = request.member match {

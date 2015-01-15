@@ -2,7 +2,8 @@ package services
 
 import org.specs2.mutable.Specification
 
-import model.Eventbrite.{MasterclassEvent, EBEvent, EBResponse}
+import model.Eventbrite.{EBEvent, EBResponse}
+import model.RichEvent.MasterclassEvent
 import model.EventbriteDeserializer._
 import utils.Resource
 

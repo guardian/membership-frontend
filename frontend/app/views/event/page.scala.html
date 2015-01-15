@@ -1,42 +1,14 @@
-@(event: model.Eventbrite.RichEvent, pageInfo: model.PageInfo)
+@(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
 @import play.twirl.api.Html
 
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 @import com.github.nscala_time.time.Imports._
-@import org.joda.time.Instant
 @import model.Eventbrite._
+@import model.RichEvent._
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
-
-@eventType = @{
-    event match {
-        case _: MasterclassEvent => "masterclasses"
-        case _: GuLiveEvent => "guardian-live"
-    }
-}
-
-@eventTypeLabel = @{
-    event match {
-        case _: MasterclassEvent => { "Masterclasses" }
-        case _: GuLiveEvent => { "Events" }
-    }
-}
-
-@eventTypeLabelFull = @{
-    event match {
-        case _: MasterclassEvent => ("Guardian Masterclasses")
-        case _: GuLiveEvent => ("Guardian Live events")
-    }
-}
-
-@eventListingLink = @{
-    event match {
-        case _: MasterclassEvent => ("/masterclasses")
-        case _: GuLiveEvent => ("/events")
-    }
-}
 
 @becomeMemberCta(ticket: EBTicketClass) = @{
     val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
@@ -47,20 +19,20 @@
     }
 }
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + eventType) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + event.metadata.identifier) {
 
-    <div class="event-header@if(eventType){ tone-@eventType}">
+    <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header case--lower">
-                    <a href="@eventListingLink" class="minimal-link">@eventTypeLabel</a>
+                    <a href="@event.metadata.eventListUrl" class="minimal-link">@event.metadata.shortTitle</a>
                 </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>
     </div>
 
-    <div class="event-header event-header--pricing@if(eventType){ tone-@eventType tone-@eventType--accent}">
+    <div class="event-header event-header--pricing tone-@event.metadata.identifier tone-@event.metadata.identifier--accent">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -73,10 +45,10 @@
                     @fragments.event.addressSummary(event)
                 </div>
             </div>
-            @if(event.isNoTicketEvent == false) {
+            @if(!event.isNoTicketEvent) {
                 @fragments.event.ticketDetails(event)
             }
-            <i class="event-logo@if(eventType){ icon-@eventType}"></i>
+            <i class="event-logo icon-@event.metadata.identifier"></i>
         </div>
 
     </div>
@@ -90,26 +62,27 @@
                     </span>
                     <span class="block-level event-ticket__details__blurb">Tickets are no longer available</span>
                 </div>
-                @event match {
-                    case _: GuLiveEvent => {
-                        <a class="action action--external action--buy-event-ticket-details" href="@Config.guardianMembershipUrl#video" data-link-name="Watch highlights">Watch highlights of past events</a>
-                    }
-                    case _ => {}
+                @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
+                    <a class="action action--external action--buy-event-ticket-details" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
                 }
-
             </div>
         </div>
     }
 
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
-        @event match {
-            case _: MasterclassEvent => {}
-            case _ => {
-                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-                    <div class="delayed-image-load" data-src="@event.imgUrl" data-alt="Please upload an event image" data-class="responsive-img"></div>
+        @if(event.metadata.largeImg) {
+            <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                @fragments.event.image(event)
+            </div>
+
+            <div class="event-image-credit u-event-content-width">
+                <div class="event-image-credit__detail">
+                    <i class="icon-caption-camera u-align-middle"></i>
+                    <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
+                    <span class="u-align-middle">Photograph: @event.imageMetadata.map(_.photographer)</span>
                 </div>
-            }
+            </div>
         }
 
         <div class="event-content__container u-cf">
@@ -123,9 +96,8 @@
             </div>
 
             <div class="event-content__sidebar">
-                @event match {
-                    case _: MasterclassEvent => { <img class="responsive-img hidden-mobile" src="@event.imgUrl" /> }
-                    case _ => {}
+                @if(!event.metadata.largeImg) {
+                    <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
                 }
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
@@ -166,7 +138,7 @@
                                 </div>
                             }
 
-                            @if(event.isNoTicketEvent == false) {
+                            @if(!event.isNoTicketEvent) {
 
                                 @for(ticket <- event.generalReleaseTicket) {
                                     @if(event.isSoldOut) {
@@ -210,7 +182,7 @@
                     </div>
 
                     @if(!event.isBookable) {
-                        <a class="action action--fullwidth action--search" href="@eventListingLink">Find other @eventTypeLabelFull</a>
+                        <a class="action action--fullwidth action--search" href="@event.metadata.eventListUrl">Find other @event.metadata.title</a>
                     }
                 </div>
             </div>

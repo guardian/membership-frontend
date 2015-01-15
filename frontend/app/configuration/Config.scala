@@ -9,7 +9,7 @@ import model.{StaffPlan, FriendTierPlan, PaidTierPlan}
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services.zuora.ZuoraApiConfig
-import services.{StripeCredentials, SalesforceConfig, StripeApiConfig, TouchpointBackendConfig}
+import services._
 import com.netaporter.uri.dsl._
 import scala.util.Try
 
@@ -191,5 +191,14 @@ object Config {
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
 
   val contentApiKey = config.getString("content.api.key")
+
+  val gridConfig = {
+    val con = config.getConfig("grid.images")
+    GridConfig(
+      con.getString("media.url"),
+      con.getString("api.url"),
+      con.getString("api.key")
+    )
+  }
 
 }
