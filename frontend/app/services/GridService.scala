@@ -1,7 +1,9 @@
 package services
 
+import akka.agent.Agent
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri.parse
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import model.Grid._
 import model.GridDeserializer._
@@ -12,9 +14,9 @@ import play.api.libs.ws.WSRequestHolder
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class GridConfig(url: String, apiUrl: String, key: String)
+case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObject, Error] with LazyLogging{
 
-case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObject, Error] {
+  lazy val agent = Agent[Map[String, EventImage]](Map.empty)
 
   def isUrlCorrectFormat(url: String) = url.startsWith(gridUrl)
 
@@ -23,10 +25,24 @@ case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObjec
   def cropParam(urlString: String) = parse(urlString).query.param("crop")
 
   def getRequestedCrop(url: String) : Future[Option[EventImage]] = {
-    for (gridOpt <- getGrid(url))
-    yield {
-      gridOpt.flatMap { grid =>
-        grid.data.exports.map(exports => EventImage(findAssets(exports, cropParam(url)), grid.data.metadata))
+    val currentImageData = agent.get()
+    if(currentImageData.contains(url)) Future.successful(currentImageData.get(url))
+    else {
+      for (gridOpt <- getGrid(url))
+      yield {
+        gridOpt.flatMap { grid =>
+          grid.data.exports.map{ exports =>
+            val image = EventImage(findAssets(exports, cropParam(url)), grid.data.metadata)
+
+            agent send {
+              oldImageData =>
+                val newImageData = oldImageData + (url -> image)
+                logger.info(s"Adding image $url to the event image map")
+                newImageData
+            }
+            image
+          }
+        }
       }
     }
   }
@@ -47,3 +63,6 @@ case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObjec
 
   override val wsMetrics: StatusMetrics = GridApiMetrics
 }
+
+case class GridConfig(url: String, apiUrl: String, key: String)
+
