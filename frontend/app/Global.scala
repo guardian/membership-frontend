@@ -19,7 +19,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
     MasterclassEventService.start()
 
     TouchpointBackend.All.foreach(_.start())
-    MasterclassDataService.start()
+    MasterclassDataService.contentTask.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {
