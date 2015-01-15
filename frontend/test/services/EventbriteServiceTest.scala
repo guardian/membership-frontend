@@ -3,7 +3,7 @@ package services
 import model.EventbriteTestObjects
 import play.api.test.PlaySpecification
 import model.Eventbrite.{EBEvent, EBError, EBObject}
-import model.RichEvent.{Metadata, RichEvent}
+import model.RichEvent.{ChooseTierMetadata, Metadata, RichEvent}
 import scala.concurrent.{Await, Future}
 import play.api.libs.json.Reads
 import utils.Resource
@@ -42,7 +42,7 @@ class EventbriteServiceTest extends PlaySpecification {
     val imageMetadata = None
     val tags = Nil
 
-    val metadata = Metadata("", "", "", "", "", false, None)
+    val metadata = Metadata("", "", "", "", "", false, None, ChooseTierMetadata("", ""))
   }
 
 

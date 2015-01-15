@@ -12,13 +12,39 @@ object RichEvent {
     eventListUrl: String,
     termsUrl: String,
     largeImg: Boolean,
-    highlightsUrlOpt: Option[String]
+    highlightsUrlOpt: Option[String],
+    chooseTier: ChooseTierMetadata
   )
 
-  val guLiveMetadata = Metadata("guardian-live", "Guardian Live events", "Events", controllers.routes.Event.list.url,
-    Config.guardianLiveEventsTermsUrl, largeImg=true, Some(Config.guardianMembershipUrl + "#video"))
-  val masterclassMetadata = Metadata("masterclasses", "Guardian Masterclasses", "Masterclasses",
-    controllers.routes.Event.masterclasses.url, Config.guardianMasterclassesTermsUrl, largeImg=false, None)
+  case class ChooseTierMetadata(title: String, sectionTitle: String)
+
+  val guLiveMetadata = Metadata(
+    identifier="guardian-live",
+    title="Guardian Live events",
+    shortTitle="Events",
+    eventListUrl=controllers.routes.Event.list.url,
+    termsUrl=Config.guardianLiveEventsTermsUrl,
+    largeImg=true,
+    highlightsUrlOpt=Some(Config.guardianMembershipUrl + "#video"),
+    chooseTier=ChooseTierMetadata(
+      "Guardian Live events are exclusively for Guardian members",
+      "Choose a membership tier to continue with your booking"
+    )
+  )
+
+  val masterclassMetadata = Metadata(
+    identifier="masterclasses",
+    title="Guardian Masterclasses",
+    shortTitle="Masterclasses",
+    eventListUrl=controllers.routes.Event.masterclasses.url,
+    termsUrl=Config.guardianMasterclassesTermsUrl,
+    largeImg=false,
+    highlightsUrlOpt=None,
+    chooseTier=ChooseTierMetadata(
+      "Choose a membership tier to continue with your booking",
+      "Become a Partner or Patron to save 20% on your masterclass"
+    )
+  )
 
   case class EventImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
 
