@@ -19,6 +19,7 @@ import model._
 import model.RichEvent._
 import model.StripeSerializer._
 import services._
+import services.EventbriteService._
 
 trait Joiner extends Controller {
 
@@ -124,7 +125,7 @@ trait Joiner extends Controller {
           eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
           event <- EventbriteService.getBookableEvent(eventId)
         } {
-          EventbriteService.getService(event).wsMetrics.put(s"join-$tier-event", 1)
+          event.service.wsMetrics.put(s"join-$tier-event", 1)
         }
         result
       }.recover {

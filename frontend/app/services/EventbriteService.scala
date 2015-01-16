@@ -173,15 +173,18 @@ object MasterclassEventServiceHelpers {
 }
 
 object EventbriteService {
-  def getBookableEvent(id: String): Option[RichEvent] =
-    GuardianLiveEventService.getBookableEvent(id) orElse MasterclassEventService.getBookableEvent(id)
+  val services = Seq(GuardianLiveEventService, MasterclassEventService)
 
-  def getEvent(id: String): Option[RichEvent] =
-    GuardianLiveEventService.getEvent(id) orElse MasterclassEventService.getEvent(id)
-
-  def getService(event: RichEvent): EventbriteService =
-    event match {
+  implicit class RichEventProvider(event: RichEvent) {
+    val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
       case _: MasterclassEvent => MasterclassEventService
     }
+  }
+
+  def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
+    services.flatMap { service => fn(service) }.headOption
+
+  def getBookableEvent(id: String) = searchServices(_.getBookableEvent(id))
+  def getEvent(id: String) = searchServices(_.getEvent(id))
 }
