@@ -157,9 +157,10 @@ trait Event extends Controller {
     }.getOrElse(NotFound)
   }
 
-//  //todo actions
-  def preview(id: String) = CachedAction.async { implicit request =>
-    EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path))
+  val PreviewAction = resultModifier(Cached(1)(_)) andThen GoogleAuthAction
+
+  def preview(id: String) = PreviewAction.async { implicit request =>
+   (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path)))
   }
 }
 
