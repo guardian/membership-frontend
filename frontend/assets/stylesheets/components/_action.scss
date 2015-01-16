@@ -2,6 +2,14 @@
    Actions
    ========================================================================== */
 
+/**
+ * Used to group a colleciton of icons,
+ * adds appropriate spacing between actions.
+ */
+.action-group > .action {
+    margin-right: rem($gs-gutter / 2);
+}
+
 %action {
     @include fs-textSans(4);
     font-weight: bold;
@@ -28,9 +36,7 @@
 }
 
 .action {
-
     @extend %action;
-
     color: $white;
     background-color: $c-button;
     text-decoration: none;
@@ -78,6 +84,109 @@
     }
 }
 
+.action-secondary,
+.action-toggle {
+    @extend %action;
+
+    color: $c-button;
+    background-color: transparent;
+    border: 1px solid transparentize($c-button, 0.5);
+
+    &:focus,
+    &:active,
+    &:hover {
+        background-color: transparent;
+    }
+
+    &:hover {
+        border-color: $c-button;
+    }
+
+}
+
+.action-toggle {
+   margin-bottom: $gutter-width-fluid;
+   &:before {
+       @extend .icon-plus;
+       content: '';
+       float: left;
+       margin: 0 rem($gs-baseline) 0 0;
+   }
+   &:after {
+       display: none;
+   }
+
+   &.is-toggled,
+   .action--toggle--toggled {
+       &:before {
+           @extend .icon-minus;
+       }
+   }
+}
+
+.action-proceed {
+    @include image-replacement();
+    width: rem(36px);
+    height: rem(36px);
+    padding: 0 rem(8px) 0 0;
+    background-color: transparent;
+    @extend .icon-arrow-right-blue;
+    background-position: center center;
+    @include border-radius(50px);
+    border: 1px solid $c-button;
+
+    &:focus {
+        outline: 0;
+    }
+}
+
+/* Action Modifiers
+   ========================================================================== */
+
+.action--external {
+   background-color: transparent;
+   border: 1px solid transparentize($white, 0.5);
+   width: 100%;
+
+   &:hover,
+   &:focus,
+   &:active {
+       border-color: $white;
+   }
+
+   @include mq($until: tablet) {
+       margin-top: rem($gs-baseline);
+       margin-bottom: 0;
+   }
+
+   @include mq(tablet) {
+       width: auto;
+   }
+}
+
+// TODO: Refactor to not need theme classes
+// Currently not styled when used outside of a theme
+.action--search {
+   .theme--guardian-live & {
+       background-color: $c-tone-live;
+       color: $white;
+       &:hover,
+       &:focus,
+       &:active {
+           background-color: $c-tone-live-accent;
+       }
+   }
+   .theme--masterclasses & {
+       background-color: $c-tone-masterclass;
+       color: $c-neutral1;
+       &:hover,
+       &:focus,
+       &:active {
+           background-color: $c-tone-masterclass-accent;
+       }
+   }
+}
+
 // TODO: Only used in cta.js.
 // Refactor to add disabled attribute
 .action--disabled {
@@ -117,69 +226,8 @@
     }
 }
 
-.action-proceed {
-
-    @include image-replacement();
-
-    width: rem(36px);
-    height: rem(36px);
-    padding: 0 rem(8px) 0 0;
-    background-color: transparent;
-    @extend .icon-arrow-right-blue;
-    background-position: center center;
-
-    @include border-radius(50px);
-    border: 1px solid $c-button;
-
-    &:focus {
-        outline: 0;
-    }
-
-}
-
-/* Actions - Secondary Modifiers
-   ========================================================================== */
-
-.action--secondary,
-.action--toggle {
-    color: $c-button;
-    background-color: transparent;
-    border: 1px solid transparentize($c-button, 0.5);
-
-    &:focus,
-    &:active,
-    &:hover {
-        background-color: transparent;
-    }
-
-    &:hover {
-        border-color: $c-button;
-    }
-
-}
-
-.action--toggle {
-   margin-bottom: $gutter-width-fluid;
-   &:before {
-       @extend .icon-plus;
-       content: '';
-       float: left;
-       margin: 0 rem($gs-baseline) 0 0;
-   }
-   &:after {
-       display: none;
-   }
-
-   &.is-toggled,
-   .action--toggle--toggled {
-       &:before {
-           @extend .icon-minus;
-       }
-   }
-}
-
-
 // TODO: Deprecated
+// Replace with .action-secondary
 .action--secondary-button {
     &,
     &:visited,
@@ -191,24 +239,6 @@
     &:hover {
         color: $black;
         background-color: darken($c-neutral4, 15%);
-    }
-}
-
-// TODO: These classes are only used inside the staff email change modal.
-// Should be made more generic, or into clearer modfiers.
-.action-secondary-small {
-    color: $c-button;
-    border: 1px solid rgba(24, 104, 153, .25);
-    background-color: $white;
-    @extend %action;
-
-    &:hover {
-        border: 1px solid $c-button;
-    }
-}
-.action-secondary-small--modal {
-    @include mq(mobileLandscape) {
-        margin-left: rem($gs-gutter / 2);
     }
 }
 
@@ -309,6 +339,7 @@
 
 /* Actions - CTA
    ========================================================================== */
+// TODO: Document usage here, can these be replaced with common actions?
 
 .action-cta {
     color: $white;
@@ -341,72 +372,6 @@
         width: auto;
         float: right;
     }
-}
-
-/* Actions - Utility Modifiers
-   ========================================================================== */
-
-.action--external {
-    background-color: transparent;
-    border: 1px solid transparentize($white, 0.5);
-    width: 100%;
-
-    &:hover,
-    &:focus,
-    &:active {
-        border-color: $white;
-    }
-
-    @include mq($until: tablet) {
-        margin-top: rem($gs-baseline);
-        margin-bottom: 0;
-    }
-
-    @include mq(tablet) {
-        width: auto;
-    }
-}
-
-// TODO: Refactor to not need theme classes
-// Currently not styled when used outside of a theme
-.action--search {
-    .theme--guardian-live & {
-        background-color: $c-tone-live;
-        color: $white;
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: $c-tone-live-accent;
-        }
-    }
-    .theme--masterclasses & {
-        background-color: $c-tone-masterclass;
-        color: $c-neutral1;
-        &:hover,
-        &:focus,
-        &:active {
-            background-color: $c-tone-masterclass-accent;
-        }
-    }
-}
-
-/* Actions - Display Modifiers
-   ========================================================================== */
-
-.action--fullwidth {
-    width: 100%;
-}
-
-// DEPRECATED: Prefer margin utility classes in _helpers.scss
-.action--no-margin {
-   margin-top: 0;
-   margin-bottom: 0;
-}
-.action--no-top-margin {
-    margin-top: 0;
-}
-.action--no-bottom-margin {
-   margin-bottom: 0;
 }
 
 /* Wait
