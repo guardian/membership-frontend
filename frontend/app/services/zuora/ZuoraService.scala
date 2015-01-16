@@ -49,8 +49,8 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
     }
   }
 
-  val authTask = ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes) { () => request(Login(apiConfig)) }
-  val pingTask = ScheduledTask(s"Zuora ${apiConfig.envName} ping", DateTime.now, 30.seconds, 30.seconds) { () =>
+  val authTask = ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes)(request(Login(apiConfig)))
+  val pingTask = ScheduledTask(s"Zuora ${apiConfig.envName} ping", DateTime.now, 30.seconds, 30.seconds) {
     request(Query("SELECT Id FROM Product")).map { _ => new DateTime }
   }
 

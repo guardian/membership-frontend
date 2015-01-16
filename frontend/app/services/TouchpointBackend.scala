@@ -38,7 +38,7 @@ case class TouchpointBackend(
   zuoraService : ZuoraService) {
 
   def start() = {
-    memberRepository.start()
+    memberRepository.salesforce.authTask.start()
     zuoraService.start()
   }
 

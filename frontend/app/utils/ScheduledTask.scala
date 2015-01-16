@@ -36,7 +36,7 @@ trait ScheduledTask[T] {
 }
 
 object ScheduledTask {
-  def apply[T](taskName: String, initValue: T, initDelay: FiniteDuration, intervalPeriod: FiniteDuration)(refresher: () => Future[T]) =
+  def apply[T](taskName: String, initValue: T, initDelay: FiniteDuration, intervalPeriod: FiniteDuration)(refresher: => Future[T]) =
     new ScheduledTask[T] {
       val initialValue = initValue
       val initialDelay = initDelay
@@ -44,6 +44,6 @@ object ScheduledTask {
 
       override val name = taskName
 
-      def refresh(): Future[T] = refresher()
+      def refresh(): Future[T] = refresher
     }
 }

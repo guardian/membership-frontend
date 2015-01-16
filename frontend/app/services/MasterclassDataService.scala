@@ -63,16 +63,10 @@ trait MasterclassDataService {
   }
 }
 
-object MasterclassDataService extends MasterclassDataService with ScheduledTask[Seq[MasterclassData]] {
-  def getData(eventId: String) = masterclassData.find(mc => mc.eventId.equals(eventId))
+object MasterclassDataService extends MasterclassDataService {
+  val contentTask = ScheduledTask[Seq[MasterclassData]]("MasterclassDataService", Nil, 2.seconds, 2.minutes)(getAllContent)
 
-  val initialValue = Nil
-  val interval = 2.minutes
-  val initialDelay = 2.seconds
-
-  def refresh(): Future[Seq[MasterclassData]] = getAllContent
-
-  def masterclassData: Seq[MasterclassData] = agent.get()
+  def getData(eventId: String) = contentTask.get().find(mc => mc.eventId.equals(eventId))
 }
 
 object MasterclassDataExtractor {
