@@ -12,11 +12,12 @@ object Dependencies {
   val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.10"
   val contentAPI = "com.gu" %% "content-api-client" % "3.5"
   val playWS = PlayImport.ws
+  val playCache = PlayImport.cache
   val playFilters = PlayImport.filters
 
   //projects
 
   val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
-    contentAPI, playWS, playFilters,sentryRavenLogback)
+    contentAPI, playWS, playCache, playFilters,sentryRavenLogback)
 
 }

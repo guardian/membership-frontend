@@ -1,5 +1,7 @@
 package services
 
+import play.api.cache.Cache
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -196,8 +198,9 @@ object EventbriteService {
   def getEvent(id: String): Option[RichEvent] =
     GuardianLiveEventService.getAllEvents(id) orElse MasterclassEventService.getAllEvents(id)
 
-  def getPreviewEvent(id: String): Future[RichEvent] =
+  def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
     GuardianLiveEventService.getPreviewEvent(id)
+  }
 
   def getService(event: RichEvent): EventbriteService =
     event match {
