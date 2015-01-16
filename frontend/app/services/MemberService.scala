@@ -25,14 +25,8 @@ case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository with ScheduledTask[Authentication] {
+class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository {
   val metrics = new MemberMetrics(salesforceConfig.envName)
-
-  val initialValue = Authentication("", "")
-  val initialDelay = 0.seconds
-  val interval = 30.minutes
-
-  def refresh() = salesforce.getAuthentication
 
   val salesforce = new Scalaforce {
     val consumerKey = salesforceConfig.consumerKey
@@ -46,7 +40,9 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
     val stage = Config.stage
     val application = "Frontend"
 
-    def authentication: Authentication = agent.get()
+    val authTask = ScheduledTask("", Authentication("", ""), 0.seconds, 30.minutes)(getAuthentication)
+
+    def authentication: Authentication = authTask.get()
   }
 }
 
