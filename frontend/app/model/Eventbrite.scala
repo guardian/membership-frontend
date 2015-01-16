@@ -102,7 +102,13 @@ object Eventbrite {
     val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
     val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
     val isBookable = status == "live" && !isSoldOut
-    val isPastEvent = status != "live"
+    val isPastEvent = status != "live" && status != "draft"
+
+    val statusText =
+      if(isPastEvent) "Past event"
+      else if(isSoldOut) "Sold out"
+      else if(status == "draft") "Preview of Draft Event"
+      else ""
 
     val providerOpt = for {
       desc <- description

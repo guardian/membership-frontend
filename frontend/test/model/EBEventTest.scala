@@ -35,8 +35,24 @@ class EBEventTest extends PlaySpecification {
     "not be bookable when sold out" in {
       soldOutEvent.isBookable mustEqual(false)
     }
+    "should display sold out text" in {
+      soldOutEvent.statusText mustEqual("Sold out")
+    }
+    "should display draft status in event" in {
+      ebDraftEvent.statusText mustEqual("Preview of Draft Event")
+    }
+    "should not display event status text" in {
+      ebLiveEvent.statusText mustEqual("")
+    }
     "not be bookable when it has started" in {
       startedEvent.isBookable mustEqual(false)
+    }
+    "should display past event text" in {
+      startedEvent.statusText mustEqual("Past event")
+      ebCompletedEvent.statusText mustEqual("Past event")
+    }
+    "not be bookable when it is in draft mode" in {
+      ebDraftEvent.isBookable mustEqual(false)
     }
     "should return media service url if present" in {
       ebLiveEvent.mainImageUrl mustEqual Some("https://some-media-tool.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")

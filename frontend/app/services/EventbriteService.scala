@@ -75,6 +75,12 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal, Some(eventsArchive))
   }
 
+  def getPreviewEvent(id: String): Future[RichEvent] = for {
+    event <- get[EBEvent](s"events/$id")
+    richEvent <- mkRichEvent(event)
+  } yield richEvent
+
+
   /**
    * scuzzy implementation to enable basic 'filtering by tag' - in this case, just matching the event name.
    */
@@ -189,6 +195,9 @@ object EventbriteService {
 
   def getEvent(id: String): Option[RichEvent] =
     GuardianLiveEventService.getAllEvents(id) orElse MasterclassEventService.getAllEvents(id)
+
+  def getPreviewEvent(id: String): Future[RichEvent] =
+    GuardianLiveEventService.getPreviewEvent(id)
 
   def getService(event: RichEvent): EventbriteService =
     event match {

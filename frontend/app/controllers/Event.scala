@@ -41,14 +41,18 @@ trait Event extends Controller {
 
   def details(id: String) = CachedAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      val pageInfo = PageInfo(
-        event.name.text,
-        request.path,
-        event.description.map(_.blurb),
-        Some(event.socialImgUrl)
-      )
-      Ok(views.html.event.page(event, pageInfo))
+      eventDetail(event, request.path)
     }.getOrElse(Redirect(Config.guardianMembershipUrl))
+  }
+
+  private def eventDetail(event: RichEvent, path: String) = {
+    val pageInfo = PageInfo(
+      event.name.text,
+      path,
+      event.description.map(_.blurb),
+      Some(event.socialImgUrl)
+    )
+    Ok(views.html.event.page(event, pageInfo))
   }
 
   def masterclasses = CachedAction { implicit request =>
@@ -151,6 +155,12 @@ trait Event extends Controller {
       trackConversionToThankyou(request, event)
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
+  }
+
+  val PreviewAction = resultModifier(Cached(1)(_)) andThen GoogleAuthAction
+
+  def preview(id: String) = PreviewAction.async { implicit request =>
+   (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path)))
   }
 }
 
