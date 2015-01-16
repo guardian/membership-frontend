@@ -40,8 +40,7 @@
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
         },
         analyticsEnabled: true,
-        isDev: @(Config.stage == "DEV"),
-        iconsLoaded: false
+        isDev: @(Config.stage == "DEV")
     };
 
     (function(isModern) {
@@ -77,9 +76,10 @@
          * Add data to local storage, with buildNumber key
          * Break cache if buildNumber has changed.
          */
-        function addToLocalStorage(prefix, data) {
+        function updateLocalStorage(prefix, data) {
+            var expr = new RegExp('^' + prefix + '.', 'g');
             Object.keys(localStorage).forEach(function(key) {
-                if (key.match(new RegExp('^' + prefix + '.', 'g'))) {
+                if (key.match(expr)) {
                     try {
                         localStorage.removeItem(key);
                     } catch(e) { }
@@ -96,28 +96,26 @@
             var div = document.createElement('div');
             div.className = 'icon-sprite';
             div.innerHTML = data;
-            // We need to wait for DOMContentLoaded before inserting SVG
+            /* We need to wait for DOMContentLoaded before inserting SVG */
             document.addEventListener('DOMContentLoaded', function(){
                 document.body.insertBefore(div, document.body.childNodes[0]);
             },false);
         }
-        if (!guardian.isDev) {
-            /**
-             * Load icon sprite from local storage if available
-             */
-            (function() {
-                var data = localStorage.getItem('icons.' + guardian.membership.buildNumber);
-                if (data) {
-                    inlineSvg(data);
-                    guardian.iconsLoaded = true;
-                }
-            }());
+
+        function loadSvgIcons() {
+            var data = !guardian.isDev && localStorage.getItem('icons.' + guardian.membership.buildNumber);
+            if (data) {
+                inlineSvg(data);
+            } else {
+                loadData(guardian.membership.svgSprite, function(xhr) {
+                    inlineSvg(xhr.responseText);
+                    updateLocalStorage('icons', xhr.responseText);
+                });
+            }
         }
-        if (!guardian.iconsLoaded && isModern) {
-            loadData( guardian.membership.svgSprite, function(xhr) {
-                inlineSvg(xhr.responseText);
-                addToLocalStorage('icons', xhr.responseText);
-            });
+
+        if (isModern) {
+            loadSvgIcons();
         }
     })(guardian.isModernBrowser);
 </script>
