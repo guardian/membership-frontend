@@ -1,0 +1,72 @@
+.utils-page-header {
+    padding: rem(10px);
+}
+
+.event-detail-container {
+    margin-bottom: rem(40px);
+    background-color: $c-neutral8;
+    padding: rem(20px);
+    @include border-radius(4px);
+}
+
+.event-detail {
+    margin-bottom: rem(10px);
+}
+
+.event-detail_image {
+
+    @include mq(mobileLandscape) {
+        width: 40%;
+        padding-right: rem(10px);
+        float: left;
+    }
+
+    @include mq(tablet) {
+        width: 30%;
+    }
+}
+
+.event-sub-detail {
+    color: $c-neutral2;
+    @include fs-data(2);
+}
+
+.event-trait-container {
+    display: table;
+    width: 100%;
+}
+
+.event-trait {
+    margin-bottom: rem(10px);
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: 20%;
+        padding-right: rem(4px);
+        margin-bottom: 0;
+    }
+}
+
+.event-trait--last {
+    padding-right: 0;
+}
+
+.event-trait_header {
+    color: $c-neutral1;
+    font-weight: normal;
+    @include fs-bodyCopy(1);
+
+    @include mq(tablet) {
+        text-align: center;
+    }
+}
+
+.event-trait_detail {
+    @include border-radius(4px);
+    min-height: rem(20px);
+    background-color: #e31f26;
+}
+
+.has-trait {
+    background-color: #aad801;
+}
