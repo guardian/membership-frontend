@@ -172,19 +172,35 @@
                                         </div>
                                     } else {
                                         @for(pricing <- ticket.cost) {
-                                            <div class="js-event-price event-content__item">
-                                                <div class="event-content__price event-content--line-divider js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
-                                                    @pricing.formattedPrice
+
+                                            @if(event.hasMemberTicket) {
+                                                <div class="js-event-price event-content__item">
+                                                    <div class="event-content__price event-content--line-divider js-event-price-value"
+                                                         data-discount-text="@pricing.discountPrice"
+                                                         itemprop="highPrice">
+                                                        @pricing.formattedPrice
+                                                    </div>
+
+                                                    <div class="event-content__trail">
+                                                        <span class="event-content__trail-tag js-event-price-discount"
+                                                              data-discount-text="Full price @pricing.formattedPrice"
+                                                              itemprop="lowPrice">
+                                                            Partners/Patrons @pricing.discountPrice
+                                                        </span>
+                                                        <span class="event-content__trail-saving js-event-price-saving"
+                                                              data-discount-text="(you save @pricing.savingPrice)">
+                                                            (Save @pricing.savingPrice)
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div class="event-content__trail">
-                                                    <span class="event-content__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
-                                                        Partners/Patrons @pricing.discountPrice
-                                                    </span>
-                                                    <span class="event-content__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                                        (save @pricing.savingPrice)
-                                                    </span>
+                                            } else {
+                                                <div class="event-content__item">
+                                                    <div class="event-content__price event-content--line-divider"
+                                                         itemprop="highPrice">
+                                                        @pricing.formattedPrice
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
                                         }
                                     }
                                     @if(event.isBookable) {
