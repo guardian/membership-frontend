@@ -119,6 +119,7 @@ object Eventbrite {
 
     val generalReleaseTicket = ticket_classes.find(!_.isHidden)
     val memberTickets = ticket_classes.filter { t => t.isHidden && t.name.toLowerCase.startsWith("guardian member")}
+    val hasMemberTicket = memberTickets.nonEmpty;
 
     val mainImageUrl: Option[String] = description.flatMap(desc => "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(desc.html).map(_.group(1)) )
 
