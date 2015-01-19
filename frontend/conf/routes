@@ -39,6 +39,9 @@ GET            /staff/login                       controllers.OAuth.login
 GET            /staff/loginAction                 controllers.OAuth.loginAction
 GET            /oauth2callback                    controllers.OAuth.oauth2Callback
 
+# Staff event page to show discounted events
+GET            /staff/event-overview              controllers.Staff.eventOverview
+
 GET            /choose-tier                       controllers.Joining.tierChooser()
 
 # Subscription

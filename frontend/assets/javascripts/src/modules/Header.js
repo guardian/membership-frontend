@@ -7,6 +7,7 @@ define([
 
     //TODO-ben refactor this file
 
+    var HEADER_SELECTOR = '.js-header';
     var config = {
         classes: {
             DOCUMENT_ELEMENT: 'html',
@@ -33,11 +34,13 @@ define([
     function Header() {}
 
     Header.prototype.init = function() {
-        this.cacheDomElements();
-        this.appendLocationDetailToIdentityReturnUrl();
-        this.populateUserDetails();
-        this.showMembersArea();
-        this.addListeners();
+        if (document.querySelector(HEADER_SELECTOR)) {
+            this.cacheDomElements();
+            this.appendLocationDetailToIdentityReturnUrl();
+            this.populateUserDetails();
+            this.showMembersArea();
+            this.addListeners();
+        }
     };
 
     Header.prototype.user = userUtil.getUserFromCookie();

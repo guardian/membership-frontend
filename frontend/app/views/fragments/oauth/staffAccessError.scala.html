@@ -1,0 +1,12 @@
+@(flashMessage: Option[model.FlashMessage])
+
+@import configuration.Config
+
+@for(flashMsg <- flashMessage) {
+    @fragments.notifications.flashMessage(flashMsg)
+}
+
+<p>
+    You need to be added to the right Google Group to view the events overview - contact
+    <a href="mailto:@Config.membershipDevEmail">@Config.membershipDevEmail</a> if you definitely need access.
+</p>
