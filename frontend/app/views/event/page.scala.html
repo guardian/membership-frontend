@@ -60,7 +60,7 @@
                 <div class="event-ticket event-ticket--aligned">
                     <div class="event-ticket__details">
                         <span class="block-level event-ticket__details__status">
-                            @if(event.isPastEvent) { Past event } else { Sold out }
+                            @event.statusText
                         </span>
                     </div>
                     <div class="event-ticket__action">
@@ -68,7 +68,8 @@
                             @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
                                 <a class="action action--external action--buy-event-ticket-details" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
                             }
-                        } else {
+                        }
+                        @if(event.isSoldOut && !event.isPastEvent) {
                             <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
                                 Add me to the waitlist
                             </a>
@@ -115,9 +116,9 @@
                         @if(!event.isBookable) {
                             <div class="status-panel">
                                 <div class="status-panel__header">
-                                    @if(event.isPastEvent) { Past event } else { Sold out }
+                                    @event.statusText
                                 </div>
-                                @if(!event.isPastEvent) {
+                                @if(event.isSoldOut && !event.isPastEvent) {
                                     <div class="status-panel__content">
                                         <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
                                             Add me to the waitlist

@@ -1,5 +1,7 @@
 package services
 
+import play.api.cache.Cache
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.Future
@@ -71,6 +73,11 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
     EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal, Some(eventsArchive))
   }
+
+  def getPreviewEvent(id: String): Future[RichEvent] = for {
+    event <- get[EBEvent](s"events/$id")
+    richEvent <- mkRichEvent(event)
+  } yield richEvent
 
   def getBookableEvent(id: String): Option[RichEvent] = events.find(_.id == id)
   def getEvent(id: String): Option[RichEvent] = (events ++ eventsArchive).find(_.id == id)
@@ -180,6 +187,10 @@ object EventbriteService {
       case _: GuLiveEvent => GuardianLiveEventService
       case _: MasterclassEvent => MasterclassEventService
     }
+  }
+
+  def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+    GuardianLiveEventService.getPreviewEvent(id)
   }
 
   def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
