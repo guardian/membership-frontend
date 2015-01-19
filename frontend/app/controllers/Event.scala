@@ -14,6 +14,7 @@ import actions.AnyMemberTierRequest
 import actions.Functions._
 import actions.Fallbacks._
 import services.{MasterclassEventService, GuardianLiveEventService, MemberService, EventbriteService}
+import services.EventbriteService._
 import configuration.{Config, CopyConfig}
 import model.RichEvent._
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
@@ -24,12 +25,10 @@ trait Event extends Controller {
 
   val memberService: MemberService
 
-  private def metrics(event: RichEvent) = EventbriteService.getService(event).wsMetrics
-
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
-        Timing.record(metrics(event), "buy-action-invoked") {
+        Timing.record(event.service.wsMetrics, "buy-action-invoked") {
           block(request)
         }
       }.getOrElse(Future.successful(NotFound))
@@ -119,7 +118,7 @@ trait Event extends Controller {
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(metrics(event), s"user-sent-to-eventbrite-${request.member.tier}") {
+    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
@@ -129,7 +128,7 @@ trait Event extends Controller {
   // log a conversion if the user came from a membership event page
   private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
     request.cookies.get(eventCookie(event)).foreach { _ =>
-      metrics(event).put("user-returned-to-thankyou-page", 1)
+      event.service.wsMetrics.put("user-returned-to-thankyou-page", 1)
     }
   }
 
