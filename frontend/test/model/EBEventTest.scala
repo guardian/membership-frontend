@@ -148,7 +148,7 @@ class EBEventTest extends PlaySpecification {
     event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
   }
 
-  "event should return true for hasMemberTicket" in {
+  "event should return false for hasMemberTicket" in {
     val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
 
     event.hasMemberTicket must beFalse
