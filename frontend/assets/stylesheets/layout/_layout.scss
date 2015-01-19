@@ -31,7 +31,7 @@ html.patron-page {
  * @see http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
  */
 body {
-    @include flex-display();
+    @include flexbox();
     @include flex-direction(column);
     min-height: 100vh;
 }
