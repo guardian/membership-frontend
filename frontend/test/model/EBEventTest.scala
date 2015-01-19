@@ -140,4 +140,18 @@ class EBEventTest extends PlaySpecification {
       event.providerOpt must beNone
     }
   }
+
+  "event should return true for hasMemberTicket" in {
+    val event = Resource.getJson("model/eventbrite/event-guardian-members-ticket-classes.json").as[EBEvent]
+
+    event.hasMemberTicket must beTrue
+    event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
+  }
+
+  "event should return true for hasMemberTicket" in {
+    val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+
+    event.hasMemberTicket must beFalse
+    event.memberTickets.map(_.id) mustEqual Seq()
+  }
 }
