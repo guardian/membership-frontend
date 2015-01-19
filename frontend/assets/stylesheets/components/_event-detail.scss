@@ -440,13 +440,6 @@
     }
 }
 
-.event__social-header {
-    @include fs-textSans(1);
-    border-top: 1px solid $c-neutral6;
-    padding-bottom: rem($gs-baseline / 2);
-    padding-top: rem(3px);
-}
-
 .event-content__sidebar {
     margin-bottom: rem($gs-gutter);
 

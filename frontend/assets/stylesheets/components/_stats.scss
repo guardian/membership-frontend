@@ -19,6 +19,7 @@
 
     @include mq(desktop) {
         display: table;
+        width: 100%;
     }
 }
 .stat-item__first,
