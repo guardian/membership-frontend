@@ -58,12 +58,12 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnAnEvent = {
-    new LandingPage(driver).clickEventsButton.clickFirstEvent
+    new LandingPage(driver).clickEventsButton.clickAnEvent
     this
   }
 
   def IClickTheFirstEvent = {
-    new MasterclassListPage(driver).clickFirstEvent()
+    new MasterclassListPage(driver).clickAnEvent()
     this
   }
 
@@ -97,7 +97,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickThePurchaseButton = {
-    new LandingPage(driver).clickEventsButton.clickFirstEvent.clickBuyButton
+    new LandingPage(driver).clickEventsButton.clickAnEvent.clickBuyButton
     this
   }
 
