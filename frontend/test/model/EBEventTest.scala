@@ -140,4 +140,14 @@ class EBEventTest extends PlaySpecification {
       event.providerOpt must beNone
     }
   }
+
+  "slugToId" should {
+    "return the id for a normal slug" in {
+      EBEvent.slugToId("this-is-a-slug-1234") must beSome("1234")
+    }
+
+    "return a standalone id not in a slug" in {
+      EBEvent.slugToId("1234") must beSome("1234")
+    }
+  }
 }
