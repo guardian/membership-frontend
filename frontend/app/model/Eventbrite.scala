@@ -9,7 +9,7 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.StringUtils.truncateToWordBoundary
+import utils.StringUtils._
 
 object Eventbrite {
 
@@ -122,13 +122,17 @@ object Eventbrite {
 
     val mainImageUrl: Option[String] = description.flatMap(desc => "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(desc.html).map(_.group(1)) )
 
-    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(id)
+    val slug = slugify(name.text) + "-" + id
+
+    lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
   }
 
   object EBEvent {
     val providerWhitelist = Seq(
       "birkbeck"
     )
+
+    def slugToId(slug: String): Option[String] = "-?(\\d+)$".r.findFirstMatchIn(slug).map(_.group(1))
   }
 
   trait EBCode extends EBObject {
