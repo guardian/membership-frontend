@@ -1,7 +1,7 @@
 package utils
 
 import org.specs2.mutable.Specification
-import StringUtils.truncateToWordBoundary
+import StringUtils._
 
 class StringUtilsTest extends Specification {
 
@@ -18,6 +18,22 @@ class StringUtilsTest extends Specification {
       truncateToWordBoundary("this is a test string", 13) mustEqual "this is a test …"
       truncateToWordBoundary("this is a test string", 14) mustEqual "this is a test …"
       truncateToWordBoundary("this is a test string", 15) mustEqual "this is a test …"
+    }
+  }
+
+  "slugify" should {
+    "normalize accented characters" in {
+      slugify("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝß") mustEqual "aaaaaaceeeeiiiinooooouuuuy"
+      slugify("àáâãäåçèéêëìíîïñòóôõöùúûüýÿ") mustEqual "aaaaaaceeeeiiiinooooouuuuyy"
+    }
+
+    "remove symbols" in {
+      slugify("Something & something else") mustEqual "something-something-else"
+      slugify("****£20 event name /|/|/|/| @blah ^^^") mustEqual "20-event-name-blah"
+    }
+
+    "never have multiple hyphens consecutively" in {
+      slugify("blah  +  blah") mustEqual "blah-blah"
     }
   }
 
