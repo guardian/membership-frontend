@@ -111,17 +111,11 @@ trait MemberService extends LazyLogging {
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
     member.tier match {
-      case Tier.Friend => Future.successful(None)
-
-      case _ =>
-        if (event.memberTickets.nonEmpty) {
+      case Tier.Partner | Tier.Patron if event.hasMemberTicket =>
           // Add a "salt" to make access codes different to discount codes
           val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
           event.service.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-        } else {
-          val code = DiscountCode.generate(s"${member.identityId}_${event.id}")
-          event.service.createOrGetDiscount(event, code).map(Some(_))
-        }
+      case _ => Future.successful(None)
     }
   }
 

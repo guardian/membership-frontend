@@ -1,7 +1,5 @@
 @(event: model.RichEvent.RichEvent)
 
-@import model.Eventbrite._
-
 <div class="event-item__tickets" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
     @if(event.isSoldOut) {
         <meta itemprop="availability" content="http://schema.org/SoldOut">
@@ -9,7 +7,7 @@
         <meta itemprop="availability" content="http://schema.org/InStock">
     }
 
-    @if(event.isNoTicketEvent == false) {
+    @if(!event.isNoTicketEvent) {
         <div class="event-item__price">
             @for(ticket <- event.generalReleaseTicket) {
                 @if(ticket.free) {
@@ -18,17 +16,30 @@
                     </span>
                 } else {
                     @for(pricing <- ticket.cost) {
-                        <div class="js-event-price">
-                            <div class="event-item__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                        @if(event.hasMemberTicket) {
+                            <div class="js-event-price">
+                                <div class="event-item__price-amount js-event-price-value"
+                                      data-discount-text="@pricing.discountPrice"
+                                      itemprop="highPrice">
                                 @pricing.formattedPrice
+                                </div>
+
+                                <div class="event-item__price-amount-discount js-event-price-discount"
+                                      data-discount-text="Full price @pricing.formattedPrice"
+                                      itemprop="lowPrice" content="@pricing.discountPrice">
+                                    Partners/Patrons: @pricing.discountPrice
+                                </div>
+                                <div class="event-item__price-amount-discount js-event-price-saving"
+                                      data-discount-text="You save @pricing.savingPrice">
+                                    (Save @pricing.savingPrice)
+                                </div>
                             </div>
-                            <div class="event-item__price-amount-discount js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice" content="@pricing.discountPrice">
-                               Partners/Patrons: @pricing.discountPrice
-                            </div>
-                            <div class="event-item__price-amount-discount js-event-price-saving" data-discount-text="You save @pricing.savingPrice">
-                                Save @pricing.savingPrice
-                            </div>
-                        </div>
+                        } else {
+                            <span class="event-item__price-amount"
+                                  itemprop="highPrice">
+                                @pricing.formattedPrice
+                            </span>
+                        }
                     }
                 }
             }
