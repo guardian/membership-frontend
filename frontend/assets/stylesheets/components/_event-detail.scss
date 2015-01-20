@@ -11,20 +11,20 @@
 }
 
 .event-header__container {
-    margin: 0 auto;
-    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-gutter + $gs-baseline);
     background-color: transparent;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-baseline);
+    margin: 0 auto;
 
     @include mq(tablet) {
-        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter + $gs-baseline);
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-baseline * 3);
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(12) + $gs-gutter * 2);
+        width: rem(map-get($max-widths, max-tablet) + $gs-gutter * 2);
     }
 
     @include mq(mem-full) {
-        width: rem(gs-span(14) + $gs-gutter * 2);
+        width: rem(map-get($max-widths, max-desktop) + $gs-gutter * 2);
     }
 }
 
@@ -53,7 +53,7 @@
     margin: rem($gs-baseline) 0;
     max-height: 40px;
 
-    @include mq(tablet) {
+    @include mq(mobileLandscape) {
         position: absolute;
         bottom: rem($gs-baseline);
         right: rem($gs-baseline);
@@ -105,7 +105,11 @@
 
 .event-details {
 
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        margin-bottom: rem($gs-gutter);
+    }
 
     .event-details__time {
         max-width: rem(gs-span(8));
@@ -443,7 +447,8 @@
 }
     .event-info__inner {
         @include clearfix;
-        padding: rem($gs-baseline) rem($gs-gutter / 4);
+        padding: rem($gs-gutter / 4);
+        padding-bottom: rem($gs-baseline);
     }
     .event-info__name {
         @include fs-header(2);

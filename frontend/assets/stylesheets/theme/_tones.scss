@@ -99,6 +99,9 @@
 }
 .tone-text-discover {
     color: tone('discover', 'contrast');
+    &:active {
+        color: $white;
+    }
 }
 
 /* Tiers
