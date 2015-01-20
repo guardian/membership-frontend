@@ -6,38 +6,39 @@
     @include clearfix;
     background-color: $c-neutral7;
     transition: background-color $transition-duration-medium ease;
+    position: relative;
+    display: block;
 
+    @include mq(mobileLandscape) {
+        height: rem(400px);
+    }
+
+    &,
+    &:active,
     &:hover,
-    *:hover {
+    &:focus {
+        color: $black;
         text-decoration: none;
     }
+
     &:hover {
         background-color: $c-neutral5;
         .event-item__title {
             text-decoration: underline;
         }
-        .event-item__media a {
+        .event-item__media {
             background-color: $black;
-        }
-        .event-item__media img {
-            opacity: .8;
+            img {
+                opacity: .8;
+            }
         }
     }
 }
-    .event-item__container {
-        position: relative;
-        @include mq(mobileLandscape) {
-            height: rem(450px);
-        }
-    }
     .event-item__media {
-        a, img {
-            // Remove descenders
-            vertical-align: text-bottom;
-            display: block;
-            transition: opacity $transition-duration-medium ease, background-color $transition-duration-medium ease;
-        }
+        transition: background-color $transition-duration-medium ease;
+
         img {
+            transition: opacity $transition-duration-medium ease;
             // Prevent flicker on hover in WebKit
             -webkit-backface-visibility: hidden;
         }
@@ -45,27 +46,18 @@
     .event-item__meta {
         padding: rem($gs-gutter / 4);
         padding-top: rem(($gs-gutter / 4) - 1px);
-
-        @include mq(tablet) {
-            height: auto;
-        }
     }
     .event-item__title {
-        color: $black;
-        margin-bottom: rem($gs-baseline);
-        position: relative;
-
         @include fs-headline(3);
+        margin-bottom: rem($gs-baseline);
         font-weight: 500;
     }
     .event-item__time {
         @include fs-data(4);
-        color: $black;
     }
     .event-item__description {
         @include fs-bodyCopy(1);
         padding: rem($gs-baseline) 0 0;
-        color: $black;
 
         @include mq(desktop) {
             @include fs-headline(2);
@@ -89,12 +81,9 @@
         right: rem(($gs-gutter / 4));
     }
     .event-item__price-amount {
-        display: block;
         @include fs-header(4);
-        color: $black;
     }
     .event-item__price-amount-discount {
-        display: block;
         @include fs-data(3);
         color: $c-neutral2;
     }
@@ -108,10 +97,6 @@
     height: auto;
     margin-bottom: rem($gs-baseline);
 
-    .event-item__container {
-        @include clearfix;
-        height: auto;
-    }
     .event-item__media {
         display: table-header-group;
     }
@@ -170,11 +155,9 @@
     }
     display: table;
     width: 100%;
+    height: auto;
+    overflow: hidden;
 
-    .event-item__container {
-        height: auto;
-        overflow: hidden;
-    }
     .event-item__media,
     .event-item__content {
         display: table-cell;
@@ -192,9 +175,8 @@
 
 .event-item--minimal {
     @include mq(mobileLandscape) {
-        .event-item__container {
-            height: rem(280px);
-        }
+        height: rem(280px);
+
         .event-item__media,
         .event-item__content {
             display: block;
@@ -205,9 +187,8 @@
 
 .event-item--card {
     @include mq($from: mobileLandscape, $until: tablet) {
-        .event-item__container {
-            height: rem(280px);
-        }
+        height: rem(280px);
+
         .event-item__media,
         .event-item__content {
             display: block;
