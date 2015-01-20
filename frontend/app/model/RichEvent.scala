@@ -46,6 +46,20 @@ object RichEvent {
     )
   )
 
+  val discoverMetadata = Metadata(
+    identifier="discover",
+    title="Guardian Discover",
+    shortTitle="Discover",
+    eventListUrl=controllers.routes.Event.list.url,
+    termsUrl=Config.guardianLiveEventsTermsUrl,
+    largeImg=true,
+    highlightsUrlOpt=Some(Config.guardianMembershipUrl + "#video"),
+    chooseTier=ChooseTierMetadata(
+      "Guardian Discover events are exclusively for Guardian members",
+      "Choose a membership tier to continue with your booking"
+    )
+  )
+
   case class EventImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
 
   trait RichEvent {
@@ -81,7 +95,7 @@ object RichEvent {
 
     val tags = Nil
 
-    val metadata = guLiveMetadata
+    val metadata = discoverMetadata
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
