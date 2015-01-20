@@ -7,6 +7,12 @@
     background-color: $c-neutral8;
     padding: rem(20px);
     @include border-radius(4px);
+
+    @include mq(tablet) {
+        max-width: rem(gs-span(8));
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
 
 .event-detail {
@@ -16,13 +22,15 @@
 .event-detail_image {
 
     @include mq(mobileLandscape) {
-        width: 40%;
+        width: 30%;
         padding-right: rem(10px);
         float: left;
     }
+}
 
-    @include mq(tablet) {
-        width: 30%;
+.event-detail_info {
+    @include mq(mobileLandscape) {
+        padding-left: 30%;
     }
 }
 
@@ -32,8 +40,12 @@
 }
 
 .event-trait-container {
-    display: table;
     width: 100%;
+
+    @include mq(tablet) {
+        display: table;
+        max-width: rem(gs-span(8));
+    }
 }
 
 .event-trait {
