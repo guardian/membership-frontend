@@ -19,15 +19,15 @@
                 } else {
                     @for(pricing <- ticket.cost) {
                         <div class="js-event-price">
-                            <span class="event-item__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                            <div class="event-item__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
                                 @pricing.formattedPrice
-                            </span>
-                            <span class="event-item__price-amount-discount js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice" content="@pricing.discountPrice">
+                            </div>
+                            <div class="event-item__price-amount-discount js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice" content="@pricing.discountPrice">
                                Partners/Patrons: @pricing.discountPrice
-                            </span>
-                            <span class="event-item__price-amount-discount js-event-price-saving" data-discount-text="You save @pricing.savingPrice">
+                            </div>
+                            <div class="event-item__price-amount-discount js-event-price-saving" data-discount-text="You save @pricing.savingPrice">
                                 Save @pricing.savingPrice
-                            </span>
+                            </div>
                         </div>
                     }
                 }
