@@ -89,10 +89,13 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  * Main page headline for functional pages
  */
 .page-headline {
-    @include fs-headline(5);
+    @include fs-headline(4);
 
+    @include mq(tablet) {
+        font-size: get-font-size(headline, 5);
+    }
     @include mq(desktop) {
-        @include fs-headline(7);
+        font-size: get-font-size(headline, 7);
     }
 }
 

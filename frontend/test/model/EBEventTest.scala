@@ -141,17 +141,29 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "event should return true for hasMemberTicket" in {
-    val event = Resource.getJson("model/eventbrite/event-guardian-members-ticket-classes.json").as[EBEvent]
+  "hasMemberTicket" should {
+    "return true for hasMemberTicket" in {
+      val event = Resource.getJson("model/eventbrite/event-guardian-members-ticket-classes.json").as[EBEvent]
 
-    event.hasMemberTicket must beTrue
-    event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
+      event.hasMemberTicket must beTrue
+      event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
+    }
+
+    "return false for hasMemberTicket" in {
+      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+
+      event.hasMemberTicket must beFalse
+      event.memberTickets.map(_.id) mustEqual Seq()
+    }
   }
 
-  "event should return false for hasMemberTicket" in {
-    val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+  "slugToId" should {
+    "return the id for a normal slug" in {
+      EBEvent.slugToId("this-is-a-slug-1234") must beSome("1234")
+    }
 
-    event.hasMemberTicket must beFalse
-    event.memberTickets.map(_.id) mustEqual Seq()
+    "return a standalone id not in a slug" in {
+      EBEvent.slugToId("1234") must beSome("1234")
+    }
   }
 }

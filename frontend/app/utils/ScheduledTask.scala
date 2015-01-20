@@ -27,7 +27,7 @@ trait ScheduledTask[T] {
     system.scheduler.schedule(initialDelay, interval) {
       agent.sendOff { _ =>
         Logger.debug(s"Refreshing $name scheduled task")
-        Await.result(refresh(), 15.seconds)
+        Await.result(refresh(), 25.seconds)
       }
     }
   }
