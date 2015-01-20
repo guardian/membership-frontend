@@ -34,13 +34,12 @@
     min-height: rem(75px);
 
     @include mq(tablet) {
-        padding: rem($gs-gutter / 2) rem($gs-gutter);
+        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-baseline);
         min-height: rem(120px);
     }
 
     @include mq(mem-full) {
-        padding: rem($gs-gutter / 2) rem($gs-gutter);
-        padding-left: rem(gs-span(2) + $gs-gutter * 3);
+        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
     }
 }
 
@@ -48,6 +47,24 @@
     min-height: 0;
     overflow: auto;
 }
+
+.event-header__logo {
+    float: right;
+    margin: rem($gs-baseline) 0;
+    max-height: 40px;
+
+    @include mq(tablet) {
+        position: absolute;
+        bottom: rem($gs-baseline);
+        right: rem($gs-baseline);
+        margin: 0;
+    }
+
+    @include mq(desktop) {
+        max-height: none;
+    }
+}
+
 
 .event-masthead {
     position: relative;
@@ -71,16 +88,15 @@
     .event-masthead__title {
         @include fs-header(1);
         border-bottom: 1px dotted rgba(255, 255, 255, .29);
-        padding-bottom: rem(5px);
+        padding-bottom: rem($gs-gutter / 4);
 
         @include mq(tablet) {
-            @include fs-header(4);
-            padding: 0 rem($gs-gutter) 0 0;
+            @include fs-header(3);
         }
 
         @include mq(mem-full) {
-            @include fs-header(5);
-            width: rem(gs-span(2) + $gs-gutter * 2);
+            width: rem(gs-span(2));
+            margin-right: rem($gs-gutter);
             border-bottom: 0;
             float: left;
         }
@@ -88,6 +104,8 @@
 }
 
 .event-details {
+
+    margin-bottom: rem($gs-gutter);
 
     .event-details__time {
         max-width: rem(gs-span(8));
@@ -104,26 +122,10 @@
 
     .event-details__location {
         @include fs-data(4);
-        margin-bottom: rem($gs-baseline);
 
         .event-location {
             color: inherit;
         }
-    }
-}
-
-.event-logo {
-    position: absolute;
-    bottom: rem($gs-gutter / 2);
-    right: rem($gs-gutter / 2);
-
-    max-height: 40px;
-
-    @include mq(tablet) {
-        bottom: rem($gs-gutter);
-        right: rem($gs-gutter);
-
-        max-height: none;
     }
 }
 
@@ -166,7 +168,6 @@
     color: $c-soldOut;
 }
 
-
 /* ==========================================================================
    Event Ticket
    ========================================================================== */
@@ -188,6 +189,14 @@
     @include mq(tablet) {
         padding-right: rem($gs-gutter);
         padding-bottom: rem(3px); // Tweak for optical alignment (over actual alignment)
+    }
+}
+.event-ticket__action {
+    .action {
+        margin: rem($gs-baseline) 0;
+        @include mq(tablet) {
+            margin: 0 rem($gs-gutter) 0 0;
+        }
     }
 }
 
@@ -314,7 +323,7 @@
     }
 
     @include mq(mem-full) {
-        padding: rem($gs-baseline) 0 0 rem($gs-gutter * 10);
+        padding: rem($gs-baseline) 0 0 rem(gs-span(2) + ($gs-gutter * 2));
     }
 }
 
@@ -370,26 +379,6 @@
         #{$property}: rem(gs-span(10) + $gs-gutter * 2);
     }
 }
-
-.event-content__sticky.is-sticky {
-    @include mq(tablet) {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-
-        .event-content__tickets {
-            display: none;
-        }
-    }
-
-    @include mq(desktop) {
-        padding-right: rem($gs-gutter);
-    }
-
-    @include event-content__body-width('padding-left');
-}
-
 .event-content__body {
     position: relative;
 
@@ -416,14 +405,8 @@
     margin-bottom: rem($gs-gutter * 2);
 
     @include mq(mem-full) {
-        width: rem(gs-span(8) - $gs-gutter);
         float: right;
-    }
-
-    .section-header {
-        @include fs-headline(3);
-        font-weight: 900;
-        margin: rem(27px) 0 rem(10px);
+        width: rem(gs-span(8));
     }
 
     img {
@@ -432,7 +415,7 @@
 }
 
 .event__social {
-    width: rem(gs-span(2) + $gs-gutter);
+    width: rem(gs-span(2));
     margin-bottom: rem($gs-gutter * 2);
 
     @include mq(tablet) {
@@ -449,97 +432,101 @@
     }
 }
 
-.event-content__info__inner {
-    padding: rem($gs-gutter);
-}
 
-.event-content__info {
-    background-color: $c-neutral7;
-    overflow: hidden;
+/* Event Info Panel
+   ========================================================================== */
+
+.event-info {
+    @include clearfix();
     @include fs-textSans(3);
-
-    &--no-padding {
-        padding: 0;
-        background-color: transparent;
+    background-color: $c-neutral7;
+}
+    .event-info__inner {
+        @include clearfix;
+        padding: rem($gs-baseline) rem($gs-gutter / 4);
     }
-
-    .event-content__name {
+    .event-info__name {
         @include fs-header(2);
-        padding-bottom: rem($gs-gutter + 8px);
+        padding-bottom: rem($gs-baseline * 2);
     }
-
-    .event-content__price {
-        padding-bottom: 0;
-        @include fs-header(5);
+    // TODO: Refactor out into stat-item
+    .event-info__tickets {
+        border-bottom: 1px dotted $c-neutral3;
+        padding-bottom: rem($gs-gutter / 4);
+        margin-bottom: rem($gs-baseline);
     }
-
-    .event-content__sale-dates {
-
+    .event-info__sale-dates {
         .sale-dates__header {
             @include fs-textSans(3);
             font-weight: bold;
             display: inline;
         }
-
-        .sale-dates__list {
-            &:last-child {
-                padding-bottom: rem(5px);
-            }
+        .sale-dates__list:last-child {
+            padding-bottom: rem(5px);
         }
-
         .sale-dates__item {
             @include fs-textSans(3);
             text-align: right;
-
             .sale-dates__item--left {
                 float: left;
             }
         }
     }
-
-    .event-content__sale-ends {
-        padding: 0 0 rem(5px) rem($gs-gutter * 2);
-    }
-
-    .event-content__trail {
-        @include fs-textSans(1);
-        display: block;
-    }
-
-    .event-content__first {
+    .event-info__first {
         float: left;
         width: rem($gs-gutter * 2);
     }
-
-    .event-content__second {
+    .event-info__second {
         float: left;
-        width: rem(220px);
+        width: rem(240px);
         position: relative;
-        .event-item__location-name {
-            @include fs-textSans(3);
-            color: $c-neutral1;
-        }
     }
-
-    .terms-info {
+    .event-info__price {
+        padding-bottom: 0;
+        @include fs-header(5);
+    }
+    .event-info__trail {
+        @include fs-textSans(1);
+        display: block;
+    }
+    .event-info__terms {
         @include fs-textSans(1);
         padding-top: rem($gs-baseline/2);
     }
 
+.event-info--bordered {
+    border-top: 1px solid;
 }
-
-.event-content__info--unavailable {
-    .event-content__item {
-        color: $c-neutral2;
+.event-info--unavailable {
+    .event-info__inner {
+        opacity: 0.6;
     }
 }
 
-.event-content--line-divider {
-    border-top: 1px dotted $c-neutral3;
-    padding: rem(5px) 0;
+/**
+ * Stick event info
+ */
+.event-content__sticky.is-sticky {
+    @include mq(tablet) {
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        right: 0;
+        left: 0;
+
+        .sticky-hidden {
+            display: none;
+        }
+    }
+
+    @include mq(desktop) {
+        padding-right: rem($gs-gutter);
+    }
+
+    @include event-content__body-width('padding-left');
 }
 
-.sales-dates__toggle {
+.sales-dates-toggle {
     padding: rem($gs-baseline/2) rem($gs-baseline);
     margin-top: -#{rem($gs-baseline/2)};
     margin-right: -#{rem($gs-baseline)};
@@ -553,7 +540,7 @@
 .status-panel {
    color: $white;
    background-color: $c-neutral1;
-   padding: rem($gs-baseline) rem($gs-gutter);
+   padding: rem($gs-baseline);
 }
 .status-panel__header {
    @include fs-header(2);
