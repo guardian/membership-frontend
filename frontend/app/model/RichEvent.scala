@@ -57,11 +57,7 @@ object RichEvent {
     title="Guardian Discover",
     shortTitle="Discover",
     pluralTitle="Discover events",
-    description=Some("""
-      |Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis saepe,
-      | eveniet repellendus doloribus architecto officia neque delectus odio sit libero,
-      | magnam tempore impedit cumque nulla tempora, reprehenderit accusantium illo totam!
-    """.stripMargin),
+    description=None,
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
@@ -107,7 +103,7 @@ object RichEvent {
 
     val tags = Nil
 
-    val metadata = discoverMetadata
+    val metadata = guLiveMetadata
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
