@@ -5,13 +5,11 @@
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 @import views.support.Asset
-@import com.github.nscala_time.time.Imports._
 @import model.Eventbrite._
 @import model.RichEvent._
-@import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + event.metadata.identifier) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
@@ -105,11 +103,17 @@
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                     @fragments.event.infoPanel(event)
                     @if(!event.isBookable) {
-                        <a class="action u-fullwidth action--search" href="@event.metadata.eventListUrl">Find other @event.metadata.title</a>
+                        <a class="action action--secondary action--fullwidth" href="@event.metadata.eventListUrl">
+                            Find other @event.metadata.pluralTitle
+                            <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                        </a>
                     }
                 </div>
             </div>
         </div>
+
+        @fragments.event.seriesDetails(event)
+
     </div>
 
 }
