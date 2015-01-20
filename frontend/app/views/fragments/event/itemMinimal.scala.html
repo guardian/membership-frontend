@@ -3,13 +3,13 @@
 <div class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
     <div class="event-item__container">
         <div class="event-item__media">
-            <a href="/event/@event.id" itemprop="image" content="@event.socialImgUrl">
+            <a href="@routes.Event.details(event.slug)" itemprop="image" content="@event.socialImgUrl">
                 @fragments.event.image(event)
             </a>
         </div>
         <div class="event-item__content">
             <div class="event-item__meta">
-                <a href="/event/@event.id" itemprop="url" content="@event.memUrl">
+                <a href="@routes.Event.details(event.slug)" itemprop="url" content="@event.memUrl">
                     @fragments.event.itemMetaTitle(event)
                 </a>
             </div>

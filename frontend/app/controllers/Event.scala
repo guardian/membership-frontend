@@ -1,5 +1,7 @@
 package controllers
 
+import model.Eventbrite.EBEvent
+
 import scala.concurrent.Future
 
 import play.api.mvc._
@@ -38,10 +40,19 @@ trait Event extends Controller {
   private def BuyAction(id: String) = NoCacheAction andThen recordBuyIntention(id) andThen
     authenticated(onUnauthenticated = notYetAMemberOn(_)) andThen memberRefiner()
 
-  def details(id: String) = CachedAction { implicit request =>
-    EventbriteService.getEvent(id).map { event =>
-      eventDetail(event, request.path)
-    }.getOrElse(Redirect(Config.guardianMembershipUrl))
+  def details(slug: String) = CachedAction { implicit request =>
+    val eventOpt = for {
+      id <- EBEvent.slugToId(slug)
+      event <- EventbriteService.getEvent(id)
+    } yield {
+      if (slug == event.slug) {
+        eventDetail(event, request.path)
+      } else {
+        Redirect(routes.Event.details(event.slug))
+      }
+    }
+
+    eventOpt.getOrElse(Redirect(Config.guardianMembershipUrl))
   }
 
   private def eventDetail(event: RichEvent, path: String) = {
