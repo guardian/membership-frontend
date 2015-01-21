@@ -35,6 +35,14 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     } yield richEvents
   }
 
+  val refreshTimeDraftEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
+  lazy val draftEventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite draft events", Nil, 1.second, refreshTimeDraftEvents) {
+    for {
+      eventsDraft <- getPaginated[EBEvent]("users/me/owned_events?status=draft")
+      richDraftEvents <- Future.sequence(eventsDraft.map(mkRichEvent))
+    } yield richDraftEvents
+  }
+
   val refreshTimeArchivedEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   lazy val archivedEventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite archived events", Nil, 1.second, refreshTimeArchivedEvents) {
     for {
@@ -46,10 +54,12 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def start() {
     Logger.info("Starting EventbriteService background tasks")
     eventsTask.start()
+    draftEventsTask.start()
     archivedEventsTask.start()
   }
 
   def events: Seq[RichEvent] = eventsTask.get()
+  def eventsDraft: Seq[RichEvent] = draftEventsTask.get()
   def eventsArchive: Seq[RichEvent] = archivedEventsTask.get()
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
