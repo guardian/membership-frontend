@@ -78,3 +78,26 @@
    width: 32px;
    height: 32px;
 }
+
+/* Icon Holder
+   ========================================================================== */
+
+.icon-holder {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 26px; height: 26px;
+    background-color: transparent;
+    border-radius: 1000px;
+    border: 1px solid $c-border-brand;
+    color: $mem-brandBlue;
+
+    .icon-inline {
+        @include transform(translateY(-50%));
+        top: 50%;
+        position: relative;
+        margin: 0 auto;
+        display: block;
+        width: 16px; height: 16px;
+    }
+}
