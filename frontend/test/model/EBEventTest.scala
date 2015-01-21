@@ -63,12 +63,12 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "isNoTicketEvent on event" should {
+  "isSoldThruEventbrite on event" should {
     "should return true when comment <!-- noTicketEvent --> is present in description" in {
-      nonTicketedEvent.isNoTicketEvent mustEqual(true)
+      nonTicketedEvent.isSoldThruEventbrite mustEqual(false)
     }
     "should return false when comment <!-- noTicketEvent --> is NOT in description" in {
-      ticketedEvent.isNoTicketEvent mustEqual(false)
+      ticketedEvent.isSoldThruEventbrite mustEqual(true)
     }
   }
 
@@ -164,6 +164,50 @@ class EBEventTest extends PlaySpecification {
 
     "return a standalone id not in a slug" in {
       EBEvent.slugToId("1234") must beSome("1234")
+    }
+  }
+
+  "possiblyMissingDiscount" should {
+    "report event as possiblyMissingDiscount event" in {
+      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+
+      event.possiblyMissingDiscount must beTrue
+      event.isFree must beFalse
+      event.isSoldThruEventbrite must beTrue
+      event.isSoldOut must beFalse
+    }
+  }
+
+  "isFree" should {
+    "report event as a free event" in {
+      val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent]
+
+      event.isFree must beTrue
+      event.possiblyMissingDiscount must beFalse
+      event.isSoldThruEventbrite must beTrue
+      event.isSoldOut must beFalse
+    }
+  }
+
+  "isSoldThruEventbrite" should {
+    "report event as not being sold through Eventbrite" in {
+      val event = Resource.getJson("model/eventbrite/event-not-sold-through-eventbrite-ticket-classes.json").as[EBEvent]
+
+      event.isSoldThruEventbrite must beFalse
+      event.possiblyMissingDiscount must beFalse
+      event.isFree must beFalse
+      event.isSoldOut must beFalse
+    }
+  }
+
+  "isSoldOut" should {
+    "report event as sold out event" in {
+      val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent]
+
+      event.isSoldOut must beTrue
+      event.possiblyMissingDiscount must beFalse
+      event.isFree must beFalse
+      event.isSoldThruEventbrite must beTrue
     }
   }
 }
