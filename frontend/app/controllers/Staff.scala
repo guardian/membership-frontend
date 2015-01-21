@@ -9,7 +9,7 @@ trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
 
   def eventOverview = PermanentStaffNonMemberAction.async { implicit request =>
-     Future.successful(Ok(views.html.staff.eventOverview(guLiveEvents.events)))
+     Future.successful(Ok(views.html.staff.eventOverview(guLiveEvents.events, guLiveEvents.eventsDraft)))
   }
 }
 
