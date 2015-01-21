@@ -1,15 +1,21 @@
 package controllers
 
+import actions.Functions._
+import configuration.Config
 import play.api.mvc.Controller
 import services.GuardianLiveEventService
 
 import scala.concurrent.Future
 
 trait Staff extends Controller {
+  val permanentStaffGroups = Config.staffAuthorisedEmailGroups
   val guLiveEvents = GuardianLiveEventService
 
-  def eventOverview = PermanentStaffNonMemberAction.async { implicit request =>
-     Future.successful(Ok(views.html.staff.eventOverview(guLiveEvents.events, guLiveEvents.eventsDraft)))
+  val AuthorisedStaff = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
+    permanentStaffGroups, views.html.fragments.oauth.staffWrongGroup())
+
+  def eventOverview = AuthorisedStaff { implicit request =>
+     Ok(views.html.staff.eventOverview(guLiveEvents.events, guLiveEvents.eventsDraft))
   }
 }
 
