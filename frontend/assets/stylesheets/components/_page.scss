@@ -92,10 +92,10 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     @include fs-headline(4);
 
     @include mq(tablet) {
-        font-size: get-font-size(headline, 5);
+        @include fs-headline(5);
     }
     @include mq(desktop) {
-        font-size: get-font-size(headline, 7);
+        @include fs-headline(7);
     }
 }
 
