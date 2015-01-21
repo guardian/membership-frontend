@@ -1,11 +1,10 @@
 @(liveEvents: Seq[model.RichEvent.RichEvent], draftEvents: Seq[model.RichEvent.RichEvent])
 
 @import configuration.Config
-@import views.support.Event
 
-@eventTrait(attribute: views.support.Event.Attribute) = {
-    <li class="event-trait @attribute.className@if(!attribute.value){ is-hidden}">
-        @attribute.text
+@eventTrait(text: String, displayTrait: Boolean, identifier: String = "") = {
+    <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}@if(!displayTrait){ is-hidden}">
+        @text
     </li>
 }
 
@@ -16,37 +15,47 @@
 
         <ul class="events-overview u-unstyled u-cf">
         @for(event <- events) {
-            @defining(Event.eventDetail(event)) { eventDetail =>
-                <li class="event-item">
-                    <article class="event-detail">
-                        <div>
-                            <div class="event-detail_image">
-                                <a href="/event/@event.id" class="" target="_blank">
-                                    <img src="@event.socialImgUrl" alt="" class="responsive-img"/>
-                                    <span class="pseudo-link event-detail-title">@event.name.text</span>
-                                </a>
-                            </div>
-                            <div class="event-detail_info copy">
-                                <a href="@(s"${Config.membershipUrl}/preview-event/${event.id}")"
-                                   target="_blank"
-                                   class="event-sub-detail">Preview</a>
-                                <a href="@(s"https://dashboard.ophan.co.uk/info?url=${Config.membershipUrl}/event/${event.id}")"
-                                   target="_blank"
-                                   class="event-sub-detail">View in Ophan</a>
-                                <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.id}")"
-                                   target="_blank"
-                                   class="event-sub-detail">Edit on Eventbrite</a>
-                            </div>
+            <li class="event-item">
+                <article class="event-detail">
+                    <div>
+                        <div class="event-detail_image">
+                            <a href="/event/@event.id" class="" target="_blank">
+                                <img src="@event.socialImgUrl" alt="" class="responsive-img"/>
+                                <span class="pseudo-link event-detail-title">@event.name.text</span>
+                            </a>
                         </div>
-                        <ul class="event-trait-container u-unstyled">
-                            @eventTrait(eventDetail.free)
-                            @eventTrait(eventDetail.noDiscount)
-                            @eventTrait(eventDetail.notSoldThroughEventbrite)
-                            @eventTrait(eventDetail.soldOut)
-                        </ul>
-                    </article>
-                </li>
-            }
+                        <div class="event-detail_info copy">
+                            <a href="@(s"${Config.membershipUrl}/preview-event/${event.id}")"
+                               target="_blank"
+                               class="event-sub-detail">preview</a>
+                            <a href="@(s"https://dashboard.ophan.co.uk/info?url=${Config.membershipUrl}/event/${event.id}")"
+                               target="_blank"
+                               class="event-sub-detail">ophan</a>
+                            <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.id}")"
+                               target="_blank"
+                               class="event-sub-detail">eventbrite</a>
+                        </div>
+                    </div>
+                    <ul class="event-trait-container u-unstyled">
+
+                        @if(event.isFree) {
+                            @eventTrait("Free Event", event.isFree, "moderate")
+                        }
+
+                        @if(event.possiblyMissingDiscount) {
+                            @eventTrait("No Discount", event.possiblyMissingDiscount, "important")
+                        }
+
+                        @if(!event.isSoldThruEventbrite) {
+                            @eventTrait("Not Sold though Eventbrite", !event.isSoldThruEventbrite, "noteworthy")
+                        }
+
+                        @if(event.isSoldOut) {
+                            @eventTrait("Sold out", event.isSoldOut)
+                        }
+                    </ul>
+                </article>
+            </li>
         }
         </ul>
     </section>
