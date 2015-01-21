@@ -1,68 +1,68 @@
-@(events: Seq[model.RichEvent.RichEvent])
+@(liveEvents: Seq[model.RichEvent.RichEvent], draftEvents: Seq[model.RichEvent.RichEvent])
 
-@import model.RichEvent._
 @import configuration.Config
 @import views.support.Event
 
-@eventTrait(title: String, hasTrait: Boolean, isLast: Boolean = false) = {
-    <li class="event-trait@if(isLast){ event-trait--last}">
-        <h4 class="event-trait_header">@title</h4>
-        <div class="event-trait_detail@if(hasTrait){ has-trait}"></div>
+@eventTrait(attribute: views.support.Event.Attribute) = {
+    <li class="event-trait @attribute.className@if(!attribute.value){ is-hidden}">
+        @attribute.text
     </li>
 }
 
-@mainBasic("Event Overview") {
+@eventOverviewSection(title: String, events: Seq[model.RichEvent.RichEvent]) = {
+
+    <section class="utils-page-section">
+        <h2 class="utils-page-section-header">@title</h2>
+
+        <ul class="events-overview u-unstyled u-cf">
+        @for(event <- events) {
+            @defining(Event.eventDetail(event)) { eventDetail =>
+                <li class="event-item">
+                    <article class="event-detail">
+                        <div>
+                            <div class="event-detail_image">
+                                <a href="/event/@event.id" class="" target="_blank">
+                                    <img src="@event.socialImgUrl" alt="" class="responsive-img"/>
+                                    <span class="pseudo-link event-detail-title">@event.name.text</span>
+                                </a>
+                            </div>
+                            <div class="event-detail_info copy">
+                                <a href="@(s"${Config.membershipUrl}/preview-event/${event.id}")"
+                                   target="_blank"
+                                   class="event-sub-detail">Preview</a>
+                                <a href="@(s"https://dashboard.ophan.co.uk/info?url=${Config.membershipUrl}/event/${event.id}")"
+                                   target="_blank"
+                                   class="event-sub-detail">View in Ophan</a>
+                                <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.id}")"
+                                   target="_blank"
+                                   class="event-sub-detail">Edit on Eventbrite</a>
+                            </div>
+                        </div>
+                        <ul class="event-trait-container u-unstyled">
+                            @eventTrait(eventDetail.free)
+                            @eventTrait(eventDetail.noDiscount)
+                            @eventTrait(eventDetail.notSoldThroughEventbrite)
+                            @eventTrait(eventDetail.soldOut)
+                        </ul>
+                    </article>
+                </li>
+            }
+        }
+        </ul>
+    </section>
+}
+
+@tools("Event Overview") {
 
     <main role="main" class="page-content">
 
-        <section class="utils-page-header l-constrained">
+        <section class="utils-page-section">
             <h1 class="page-headline">Events Overview</h1>
-            <p class="page-intro">A breakdown of Live events currently displayed on Membership</p>
+            <p class="page-intro">A breakdown of Live events and Draft events associated with Membership</p>
         </section>
 
-        <section class="l-constrained">
-
-            @for(event <- events) {
-                @defining(Event.eventDetail(event)) { eventDetail =>
-
-                    <div class="event-detail-container">
-
-                        <div class="event-detail u-cf">
-
-                            <div class="event-detail_image">
-                                <a href="/event/@event.id" target="_blank">
-                                @fragments.event.image(event)
-                                </a>
-                            </div>
-
-                            <div class="event-detail_info copy">
-                                <a href="/event/@event.id" target="_blank">@event.name.text</a>
-                                <div>
-                                    <a href="@(s"${Config.membershipUrl}/preview-event/${event.id}")"
-                                    target="_blank"
-                                    class="event-sub-detail">Preview</a>
-                                </div>
-                                <div>
-                                    <a href="@(s"https://dashboard.ophan.co.uk/info?url=${Config.membershipUrl}/event/${event.id}")"
-                                    target="_blank"
-                                    class="event-sub-detail">Ophan</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <ul class="event-trait-container u-unstyled">
-                            @eventTrait("Free", eventDetail.isFree)
-                            @eventTrait("Discounted", eventDetail.isDiscounted)
-                            @eventTrait("noTicketEvent", eventDetail.isNoTicketEvent)
-                            @eventTrait("Sold out", eventDetail.isSoldOut)
-                            @eventTrait("Member Ticket", eventDetail.hasMemberTicket, true)
-                        </ul>
-
-                    </div>
-                }
-            }
-
-        </section>
+        @eventOverviewSection("Live Events", liveEvents)
+        @eventOverviewSection("Draft Events", draftEvents)
 
     </main>
 }
