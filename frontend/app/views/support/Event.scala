@@ -1,23 +1,33 @@
 package views.support
 
+import model.Eventbrite.EBEvent
+
 object Event {
 
-  case class Detail(
-    isFree: Boolean,
-    isDiscounted: Boolean,
-    isNoTicketEvent: Boolean,
-    isSoldOut: Boolean,
-    hasMemberTicket: Boolean
+  val ImportantClassName = "event-trait--important"
+  val ModerateClassName = "event-trait--moderate"
+  val NoteWorthyClassName = "event-trait--noteworthy"
+
+  case class Attribute(text: String, value: Boolean, className: String = "")
+
+  case class EventAttributes(
+    free: Attribute,
+    noDiscount: Attribute,
+    notSoldThroughEventbrite: Attribute,
+    soldOut: Attribute
   )
 
-  def eventDetail(event: model.RichEvent.RichEvent) = {
+  def eventDetail(event: EBEvent) = {
+      val free = !event.isNoTicketEvent && event.generalReleaseTicket.exists(_.free)
+      val noDiscount = !event.isNoTicketEvent && event.generalReleaseTicket.exists(!_.free && !event.hasMemberTicket)
+      val notSoldThroughEventbrite = event.isNoTicketEvent
+      val soldOut = event.isSoldOut
 
-      val isFree = !event.isNoTicketEvent && event.generalReleaseTicket.exists(_.free)
-      val isDiscounted = !event.isNoTicketEvent && event.generalReleaseTicket.exists(!_.free && !event.hasMemberTicket)
-      val isNoTicketEvent = event.isNoTicketEvent
-      val isSoldOut = event.isSoldOut
-      val hasMemberTicket = event.hasMemberTicket
-
-      Detail(isFree, isDiscounted, isNoTicketEvent, isSoldOut, hasMemberTicket)
+    EventAttributes(
+      Attribute("Free Event", free, ModerateClassName),
+      Attribute("No Discount", noDiscount, ImportantClassName),
+      Attribute("Not Sold though Eventbrite", notSoldThroughEventbrite, NoteWorthyClassName),
+      Attribute("Sold out", soldOut)
+    )
   }
 }
