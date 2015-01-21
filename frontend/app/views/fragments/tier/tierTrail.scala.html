@@ -8,7 +8,7 @@
 
 <div class="tier-trail">
     <h3 class="tier-trail__name">
-        <i class="icon icon--inline icon--medium icon-g-@tier.toString.toLowerCase"></i>
+        @fragments.inlineIcon("g-mark", List("icon-inline--medium", "tone-" + tier.toString.toLowerCase + "--fill"))
         @tier
     </h3>
     @if(showCaption) {

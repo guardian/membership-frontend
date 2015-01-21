@@ -27,6 +27,8 @@ frontend/conf/assets.map
 membership.sublime-project
 membership.sublime-workspace
 
+frontend/assets/images/inline-svgs/*.svg
+frontend/assets/images/svg-sprite.svg
 frontend/assets/stylesheets/icons.scss
 frontend/public/
 

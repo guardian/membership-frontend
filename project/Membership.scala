@@ -31,7 +31,7 @@ trait Membership {
     version := appVersion,
     scalaVersion := "2.11.5",
     resolvers ++= Seq(
-      "Guardian Github Releases" at "http://guardian.github.io/maven/repo-releases",
+      "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
       Resolver.sonatypeRepo("releases")),
     sources in (Compile,doc) := Seq.empty,
     publishArtifact in (Compile, packageDoc) := false,

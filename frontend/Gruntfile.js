@@ -128,7 +128,11 @@ module.exports = function (grunt) {
             },
             images: {
                 cwd: '<%= dirs.assets.images %>',
-                src: ['**', '!**/svgs/**'],
+                src: [
+                    '**',
+                    '!**/svgs/**',
+                    '!**/inline-svgs/**'
+                ],
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true
             }
@@ -300,6 +304,41 @@ module.exports = function (grunt) {
                     failOnError: true
                 }
             }
+        },
+
+        svgmin: {
+            options: {
+                plugins: [
+                    { removeViewBox: false },
+                    { removeUselessStrokeAndFill: false },
+                    { removeEmptyAttrs: false },
+                    { cleanUpIds: false }
+                ]
+            },
+            dist: {
+                expand: true,
+                cwd: '<%= dirs.assets.images %>/inline-svgs/raw',
+                src: ['*.svg'],
+                dest: '<%= dirs.assets.images %>/inline-svgs'
+            }
+        },
+
+        svgstore: {
+            options: {
+                prefix : 'icon-',
+                symbol: true,
+                inheritviewbox: true,
+                svg: {
+                    id: 'svg-sprite',
+                    width: 0,
+                    height: 0
+                }
+            },
+            icons : {
+                files: {
+                    '<%= dirs.assets.images %>/svg-sprite.svg': ['<%= dirs.assets.images %>/inline-svgs/*.svg']
+                }
+            }
         }
 
     });
@@ -335,6 +374,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:css',
             'clean:images',
+            'svgSprite',
             'copy:images',
             'shell:svgencode',
             'sass:compile',
@@ -371,6 +411,12 @@ module.exports = function (grunt) {
         grunt.config.set('karma.options.singleRun', (singleRun === false) ? false : true);
         grunt.task.run(['karma:unit']);
     });
+
+    /***********************************************************************
+     * Icons
+     ***********************************************************************/
+
+    grunt.registerTask('svgSprite', ['svgmin', 'svgstore']);
 
     /***********************************************************************
      * Clean

@@ -107,21 +107,6 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
     } yield discount
   }
 
-  def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] = {
-    val uri = s"events/${event.id}/discounts"
-
-    for {
-      discounts <- getPaginated[EBDiscount](uri)
-      discount <- discounts.find(_.code == code).map(Future.successful).getOrElse {
-        post[EBDiscount](uri, Map(
-          "discount.code" -> Seq(code),
-          "discount.percent_off" -> Seq("20"),
-          "discount.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString)
-        ))
-      }
-    } yield discount
-  }
-
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
@@ -178,10 +163,6 @@ object MasterclassEventService extends EventbriteService {
 
   override def getEventsOrdering: Seq[String] = Nil
   override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
-
-  // This should never happen as we only display masterclasses with access codes enabled
-  override def createOrGetDiscount(event: RichEvent, code: String): Future[EBDiscount] =
-    Future.failed(MasterclassEventServiceError(s"Masterclasses aren't allowed discount codes, attempted on event ${event.id}"))
 }
 
 object MasterclassEventServiceHelpers {

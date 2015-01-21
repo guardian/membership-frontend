@@ -1,18 +1,13 @@
 @(event: model.RichEvent.RichEvent, isCard: Boolean = false)
 
-<div class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
-    <div class="event-item__container">
-        <div class="event-item__media">
-            <a href="@routes.Event.details(event.slug)" itemprop="image" content="@event.socialImgUrl">
-                @fragments.event.image(event)
-            </a>
-        </div>
-        <div class="event-item__content">
-            <div class="event-item__meta">
-                <a href="@routes.Event.details(event.slug)" itemprop="url" content="@event.memUrl">
-                    @fragments.event.itemMetaTitle(event)
-                </a>
-            </div>
+<a href="@routes.Event.details(event.slug)" class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
+    <meta itemprop="url" content="@event.memUrl">
+    <div class="event-item__media" itemprop="image" content="@event.socialImgUrl">
+        @fragments.event.image(event)
+    </div>
+    <div class="event-item__content">
+        <div class="event-item__meta">
+            @fragments.event.itemMetaTitle(event)
         </div>
     </div>
-</div>
+</a>

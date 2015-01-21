@@ -57,3 +57,28 @@
 .icon-wrapper {
     display: block;
 }
+
+/* Inline Icons
+   ========================================================================== */
+
+.icon-sprite {
+   display: none;
+}
+
+.icon-inline {
+   width: 16px;
+   height: 16px;
+   display: inline-block;
+   vertical-align: middle;
+   fill: currentColor;
+}
+
+.icon-inline--medium {
+   width: 24px;
+   height: 24px;
+}
+
+.icon-inline--large {
+   width: 32px;
+   height: 32px;
+}

@@ -9,19 +9,29 @@
                 </div>
             } else {
                 @for(pricing <- ticket.cost) {
-                    <div class="js-event-price">
+
+                    @if(event.hasMemberTicket) {
+                        <div class="js-event-price">
+                            <div class="event-ticket__price">
+                                <span class="event-ticket__price-amount js-event-price-value"
+                                      data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
+                            </div>
+                            <div class="event-ticket__trail">
+                                <span class="event-ticket__trail-tag js-event-price-discount"
+                                      data-discount-text="Full price @pricing.formattedPrice">
+                                    Partners/Patrons @pricing.discountPrice
+                                </span>
+                                <span class="event-ticket__trail-saving js-event-price-saving"
+                                      data-discount-text="(you save @pricing.savingPrice)">
+                                    (save @pricing.savingPrice)
+                                </span>
+                            </div>
+                        </div>
+                    } else {
                         <div class="event-ticket__price">
-                            <span class="event-ticket__price-amount js-event-price-value" data-discount-text="@pricing.discountPrice">@pricing.formattedPrice</span>
+                            <span class="event-ticket__price-amount">@pricing.formattedPrice</span>
                         </div>
-                        <div class="event-ticket__trail">
-                            <span class="event-ticket__trail-tag js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice">
-                                Partners/Patrons @pricing.discountPrice
-                            </span>
-                            <span class="event-ticket__trail-saving js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                (save @pricing.savingPrice)
-                            </span>
-                        </div>
-                    </div>
+                    }
                 }
             }
         </div>
