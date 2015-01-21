@@ -1,0 +1,129 @@
+{"resource_uri": "https://www.eventbriteapi.com/v3/events/11871378613/", "name": {
+    "text": "Born that way: Is there a gay gene and should it matter?",
+    "html": "Born that way: Is there a gay gene and should it matter?"
+}, "description": {
+    "text": "",
+    "html": ""
+}, "logo": {
+    "id": "6517887",
+    "url": "http://cdn.evbuc.com/images/6517887/104062388105/1/logo.jpg"
+}, "id": "11871378613", "url": "http://www.eventbrite.co.uk/e/born-that-way-is-there-a-gay-gene-and-should-it-matter-tickets-11871378613", "logo_url": "http://cdn.evbuc.com/images/6517887/104062388105/1/logo.jpg", "start": {
+    "timezone": "Europe/London",
+    "local": "2014-07-17T19:00:00",
+    "utc": "2014-07-17T18:00:00Z"
+}, "end": {
+    "timezone": "Europe/London",
+    "local": "2014-07-17T20:30:00",
+    "utc": "2014-07-17T19:30:00Z"
+}, "created": "2014-06-05T15:39:31Z", "changed": "2014-07-23T10:23:10Z", "capacity": 90, "status": "live", "currency": "GBP", "listed": true, "shareable": true, "invite_only": false, "online_event": false, "show_remaining": false, "organizer_id": "6693856275", "venue_id": "6951459", "category_id": null, "subcategory_id": null, "format_id": null, "category": null, "subcategory": null, "format": null, "organizer": {
+    "description": null,
+    "logo": {
+        "id": "8559825",
+        "url": "http://cdn.evbuc.com/images/8559825/104062388105/2/logo.jpg"
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/organizers/6693856275/",
+    "id": "6693856275",
+    "name": "Guardian Live events",
+    "url": "http://www.eventbrite.com/o/guardian-live-events-6693856275",
+    "num_past_events": 11,
+    "num_future_events": 0
+}, "venue": {
+    "address": {
+        "address_1": "Kings Place",
+        "address_2": "90 York Way",
+        "city": "London",
+        "region": null,
+        "postal_code": "N1 9AG",
+        "country": "GB",
+        "latitude": "51.534966",
+        "longitude": "-0.1221447000000353"
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/venues/6951459/",
+    "id": "6951459",
+    "name": "Hall 2",
+    "latitude": "51.534966",
+    "longitude": "-0.1221447000000353"
+}, "ticket_classes": [
+    {
+        "resource_uri": "https://www.eventbriteapi.com/v3/events/11871378613/ticket_classes/26283059/",
+        "id": "26283059",
+        "name": "Standard plus book",
+        "description": null,
+        "cost": {
+            "currency": "GBP",
+            "display": "\u00a326.50",
+            "value": 2650
+        },
+        "fee": {
+            "currency": "GBP",
+            "display": "\u00a30.00",
+            "value": 0
+        },
+        "actual_cost": {
+            "currency": "GBP",
+            "display": "\u00a324.26",
+            "value": 2426
+        },
+        "actual_fee": {
+            "currency": "GBP",
+            "display": "\u00a32.24",
+            "value": 224
+        },
+        "donation": false,
+        "free": false,
+        "minimum_quantity": 1,
+        "maximum_quantity": null,
+        "quantity_total": 90,
+        "quantity_sold": 91,
+        "sales_start": "2014-06-06T00:50:00Z",
+        "sales_end": "2014-07-17T17:00:00Z",
+        "hidden": false,
+        "include_fee": true,
+        "split_fee": false,
+        "hide_description": true,
+        "auto_hide": false,
+        "variants": [],
+        "event_id": "11871378613"
+    },
+    {
+        "event_id": "13963113047",
+        "variants": [],
+        "auto_hide": false,
+        "hide_description": true,
+        "split_fee": false,
+        "include_fee": false,
+        "hidden": true,
+        "actual_fee": {
+            "value": 137,
+            "display": "£1.37",
+            "currency": "GBP"
+        },
+        "actual_cost": {
+            "value": 1200,
+            "display": "£12.00",
+            "currency": "GBP"
+        },
+        "fee": {
+            "value": 137,
+            "display": "£1.37",
+            "currency": "GBP"
+        },
+        "cost": {
+            "value": 1200,
+            "display": "£12.00",
+            "currency": "GBP"
+        },
+        "description": null,
+        "name": "Guardian Members",
+        "id": "30292991",
+        "resource_uri": "https://www.eventbriteapi.com/v3/events/13963113047/ticket_classes/30292991/",
+        "donation": false,
+        "free": false,
+        "minimum_quantity": 1,
+        "maximum_quantity": 2,
+        "quantity_total": 6,
+        "quantity_sold": 0,
+        "sales_start": "2014-10-29T01:00:00Z",
+        "sales_end": "2014-12-07T02:00:00Z"
+    }
+]}

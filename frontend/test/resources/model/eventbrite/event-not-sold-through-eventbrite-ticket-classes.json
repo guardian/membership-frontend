@@ -1,0 +1,64 @@
+{"resource_uri": "https://www.eventbriteapi.com/v3/events/13602460325/", "name": {
+    "text": "Guardian Live with Russell Brand: all around the UK",
+    "html": "Guardian Live with Russell Brand: all around the UK"
+}, "description": {
+    "text": "",
+    "html": "<!-- noTicketEvent -->"
+}, "logo": null, "id": "13602460325", "url": "http://www.eventbrite.co.uk/e/guardian-live-with-russell-brand-all-around-the-uk-tickets-13602460325", "logo_url": null, "start": {
+    "timezone": "Europe/London",
+    "local": "2014-10-23T19:00:00",
+    "utc": "2014-10-23T18:00:00Z"
+}, "end": {
+    "timezone": "Europe/London",
+    "local": "2014-10-23T20:30:00",
+    "utc": "2014-10-23T19:30:00Z"
+}, "created": "2014-10-09T11:59:43Z", "changed": "2015-01-14T10:49:06Z", "capacity": 1, "status": "completed", "currency": "GBP", "listed": false, "shareable": false, "invite_only": false, "online_event": false, "show_remaining": false, "organizer_id": "6693856275", "venue_id": "8552507", "category_id": null, "subcategory_id": null, "format_id": null, "category": null, "subcategory": null, "format": null, "organizer": {
+    "description": null,
+    "logo": {
+        "id": "8559825",
+        "url": "http://cdn.evbuc.com/images/8559825/104062388105/2/logo.jpg"
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/organizers/6693856275/",
+    "id": "6693856275",
+    "name": "Guardian Live events",
+    "url": "http://www.eventbrite.com/o/guardian-live-events-6693856275",
+    "num_past_events": 11,
+    "num_future_events": 0
+}, "venue": {
+    "address": {
+        "address_1": null,
+        "address_2": null,
+        "city": null,
+        "region": null,
+        "postal_code": null,
+        "country": null,
+        "latitude": "0.000000",
+        "longitude": "0.000000"
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/venues/8552507/",
+    "id": "8552507",
+    "name": "200+ cinemas around the UK",
+    "latitude": "0.000000",
+    "longitude": "0.000000"
+}, "ticket_classes": [
+    {
+        "resource_uri": "https://www.eventbriteapi.com/v3/events/13602460325/ticket_classes/29629601/",
+        "id": "29629601",
+        "name": "3rd Party",
+        "description": null,
+        "donation": false,
+        "free": true,
+        "minimum_quantity": 1,
+        "maximum_quantity": null,
+        "quantity_total": 1,
+        "quantity_sold": 0,
+        "sales_start": "2014-10-09T03:55:00Z",
+        "sales_end": "2014-10-23T17:00:00Z",
+        "hidden": false,
+        "include_fee": false,
+        "split_fee": false,
+        "hide_description": true,
+        "auto_hide": false,
+        "event_id": "13602460325"
+    }
+]}
