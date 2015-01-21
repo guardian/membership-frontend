@@ -100,7 +100,7 @@ object Eventbrite {
                      status: String) extends EBObject {
 
     val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
-    val isNoTicketEvent = description.exists(_.html.contains("<!-- noTicketEvent -->"))
+    val isSoldThruEventbrite = !description.exists(_.html.contains("<!-- noTicketEvent -->"))
     val isBookable = status == "live" && !isSoldOut
     val isPastEvent = status != "live" && status != "draft"
 

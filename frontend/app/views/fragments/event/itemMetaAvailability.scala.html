@@ -9,7 +9,7 @@
         <meta itemprop="availability" content="http://schema.org/InStock">
     }
 
-    @if(event.isNoTicketEvent == false) {
+    @if(event.isSoldThruEventbrite) {
         <div class="event-item__price">
             @for(ticket <- event.generalReleaseTicket) {
                 @if(ticket.free) {
