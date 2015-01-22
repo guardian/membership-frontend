@@ -1,0 +1,107 @@
+.utils-page-section {
+    padding: rem(10px) rem(10px) rem(30px);
+}
+
+.utils-page-section-header {
+    border-bottom: 2px solid $mem-brandBlue;
+}
+
+.events-overview {
+
+    @include mq(mobileLandscape) {
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid;
+    }
+
+    .event-item {
+
+        @include mq(mobileLandscape) {
+            float: left;
+            margin-left: $gutter-width-fluid / 2;
+            padding-left: $gutter-width-fluid / 2;
+            margin-bottom: rem($gs-baseline);
+            width: 50% - ($gutter-width-fluid / 2);
+            &:nth-of-type(2n+1) {
+                clear: left;
+            }
+        }
+
+        @include mq(tablet) {
+            width: 25% - ($gutter-width-fluid / 2);
+            &:nth-of-type(2n+1) {
+                clear: none;
+            }
+            &:nth-of-type(4n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+    }
+}
+
+.event-detail {
+    margin-bottom: rem(10px);
+    padding: rem(10px);
+}
+
+.event-detail_image {
+    @include mq(mobileLandscape) {
+        position: relative;
+    }
+
+    &:hover {
+        .pseudo-link {
+            text-decoration: underline;
+        }
+    }
+}
+
+.event-detail-title {
+    @include mq(tablet) {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: $white;
+        width: 100%;
+        background-color: rgba(255, 255, 255, .7);
+        padding: rem(6px);
+    }
+}
+
+.event-sub-detail {
+    color: $c-neutral2;
+    @include fs-data(2);
+}
+
+.event-trait-container {
+    margin-top: rem(4px);
+    width: 100%;
+
+    @include mq(tablet) {
+        display: table;
+        max-width: rem(gs-span(8));
+    }
+}
+
+.event-trait {
+    color: $white;
+    padding: rem(4px) rem(8px);
+    margin-top: rem(4px);
+    margin-right: rem(4px);
+    display: inline-block;
+    background-color: $mem-brandBlue;
+    @include fs-data(2);
+    @include border-radius(4px);
+}
+
+.event-trait--moderate {
+    background-color: #33a22b;
+}
+
+.event-trait--noteworthy {
+    background-color: #e6711b;
+}
+
+.event-trait--important {
+    background-color: #e31f26;
+}

@@ -12,7 +12,7 @@ object Testing extends Controller with LazyLogging {
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
     Set("membership.dev@guardian.co.uk", "touchpoint@guardian.co.uk"),
-      views.html.fragments.oauth.testUsersWrongGroup())
+      views.html.fragments.oauth.staffWrongGroup())
 
   def testUser = AuthorisedTester { implicit request =>
     val testUserString = testUsers.generate()
