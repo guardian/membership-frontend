@@ -13,7 +13,7 @@ class DowngradeConfirmationPage(driver: WebDriver) extends BaseMembershipPage(dr
 
   private def newPackageTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[3]/section/div[2]/table/tbody/tr[1]/td"))
 
-  private def endDateTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/section/div[2]/table/tbody/tr[4]/td"))
+  private def endDateTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/section/div[2]/table/tbody/tr[2]/td"))
 
   private def startDateTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[3]/section/div[2]/table/tbody/tr[2]/td"))
 
