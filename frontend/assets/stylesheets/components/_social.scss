@@ -32,11 +32,7 @@
     }
 
     .icon-inline {
-        @include transform(translateY(-50%));
-        top: 50%;
-        position: relative;
-        margin: 0 auto;
-        display: block;
+        @include vertically-center();
         width: 20px; height: 20px;
     }
 }

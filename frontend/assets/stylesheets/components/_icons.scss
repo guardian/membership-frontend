@@ -93,11 +93,7 @@
     color: $mem-brandBlue;
 
     .icon-inline {
-        @include transform(translateY(-50%));
-        top: 50%;
-        position: relative;
-        margin: 0 auto;
-        display: block;
+        @include vertically-center();
         width: 16px; height: 16px;
     }
 }
