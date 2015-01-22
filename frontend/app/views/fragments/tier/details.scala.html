@@ -14,7 +14,7 @@
             <div class="benefits-item__inner">
                 <li class="benefits-title">
                     <div class="benefits-title__first">
-                        <i class="icon-@benefit.identifier icon--benefits"></i>
+                        @fragments.inlineIcon(benefit.icon, List("icon-inline--medium", "icon-inline--top"))
                     </div>
                     <div class="benefits-title__second">@benefit.title</div>
                 </li>
