@@ -60,10 +60,12 @@ $gs-max-columns: 16;
     $offset: ($gs-gutter * 2);
     @include mq(tablet) {
         $width: map-get($max-widths, max-tablet);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
         #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
     }
     @include mq(mem-full) {
         $width: map-get($max-widths, max-desktop);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
         #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
     }
 }
