@@ -23,7 +23,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
       guEvent.imageMetadata.map(_.photographer) mustEqual Some("Joe Bloggs/Guardian Images")
       guEvent.availableWidths mustEqual "1000,500"
-      guEvent.socialImgUrl mustEqual "//some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg"
+      guEvent.socialImgUrl mustEqual "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg"
     }
 
     "use file url, metadata, socialUrl for image when no secure url is present" in {
@@ -35,7 +35,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
       guEvent.imageMetadata.map(_.photographer) mustEqual Some("Joe Bloggs/Guardian Images")
 
       guEvent.availableWidths mustEqual "1000,500,140"
-      guEvent.socialImgUrl mustEqual "//some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/1000.jpg"
+      guEvent.socialImgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/1000.jpg"
     }
 
     "use fallback image when no image is found from the Grid" in {
