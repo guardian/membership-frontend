@@ -75,7 +75,9 @@ object RichEvent {
 
     val imageMetadata = image.map(_.metadata)
 
-    val socialImgUrl = image.flatMap(_.assets.find(_.dimensions.width == widths.max)).fold(fallbackImage)(_.file)
+    val socialImgUrl = image.flatMap(_.assets.find(_.dimensions.width == widths.max)).fold(fallbackImage){ asset =>
+      asset.secureUrl.getOrElse(asset.file)
+    }
 
     val tags = Nil
 
