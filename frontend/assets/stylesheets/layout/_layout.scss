@@ -105,6 +105,7 @@ body {
          */
         top: rem($side-margins-top-magic-number);
         height: 100%;
+        height: -webkit-calc(100% - #{$side-margins-top-magic-number});
         height: calc(100% - #{$side-margins-top-magic-number});
         width: 0;
 
