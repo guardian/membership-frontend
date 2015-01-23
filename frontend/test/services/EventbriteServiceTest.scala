@@ -1,26 +1,15 @@
 package services
 
-import model.EventbriteTestObjects
+import model.EventbriteTestObjects.TestRichEvent
 import play.api.test.PlaySpecification
 import model.Eventbrite.{EBEvent, EBError, EBObject}
-import model.RichEvent.{ChooseTierMetadata, Metadata, RichEvent}
-import scala.concurrent.{Await, Future}
+import model.RichEvent.RichEvent
+import scala.concurrent.Future
 import play.api.libs.json.Reads
 import utils.Resource
-import scala.concurrent.duration._
 import monitoring.EventbriteMetrics
 
 class EventbriteServiceTest extends PlaySpecification {
-
-  case class TestRichEvent(event: EBEvent) extends RichEvent {
-    val imgUrl = ""
-    val availableWidths = ""
-    val socialImgUrl = ""
-    val imageMetadata = None
-    val tags = Nil
-
-    val metadata = Metadata("", "", "", "", "", false, None, ChooseTierMetadata("", ""))
-  }
 
 
   class TestEventbriteService extends EventbriteService {
@@ -51,8 +40,8 @@ class EventbriteServiceTest extends PlaySpecification {
 
     override def events: Seq[RichEvent] = Nil
     override def eventsArchive: Seq[RichEvent] = Nil
-    override def getEventsOrdering: Seq[String] = Nil
-    override def getEventsTagged(tag: String): Seq[RichEvent] = Nil
+    override def getFeaturedEvents: Seq[RichEvent] = Nil
+    override def getTaggedEvents(tag: String): Seq[RichEvent] = Nil
 
     def mkRichEvent(event: EBEvent): Future[RichEvent] = Future.successful(TestRichEvent(event))
   }
