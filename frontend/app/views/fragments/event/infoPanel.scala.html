@@ -33,20 +33,12 @@
 
     <div class="event-info__inner">
 
-        @if(!event.isNoTicketEvent) {
-            @if(event.isSoldOut) {
-                <meta itemprop="availability" content="http://schema.org/SoldOut">
-            } else {
-                <meta itemprop="availability" content="http://schema.org/InStock">
-            }
-        }
-
         <h4 class="event-info__name" itemprop="name">@event.name.text</h4>
 
         @fragments.event.stats(event)
 
         @* TODO: Make part of event stats *@
-        @if(!event.isNoTicketEvent) {
+        @if(event.isSoldThruEventbrite) {
             @for(ticket <- event.generalReleaseTicket) {
                 @if(event.isBookable) {
                     @fragments.event.ticketSales(event, ticket)
@@ -54,7 +46,14 @@
             }
         }
 
-        @if(!event.isNoTicketEvent) {
+        @if(event.isSoldThruEventbrite) {
+
+            @if(event.isSoldOut) {
+                <meta itemprop="availability" content="http://schema.org/SoldOut">
+            } else {
+                <meta itemprop="availability" content="http://schema.org/InStock">
+            }
+
             @fragments.pricing.priceInfoEvent(event)
 
             @for(ticket <- event.generalReleaseTicket) {
