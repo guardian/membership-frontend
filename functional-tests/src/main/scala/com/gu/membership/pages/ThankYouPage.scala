@@ -7,19 +7,19 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class ThankYouPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def packageCell = driver.findElement(By.xpath("//tbody/tr[1]/td"))
+  private def packageCell = driver.findElement(By.id("qa-joiner-summary-tier"))
 
-  private def startDateCell = driver.findElement(By.xpath("//tbody/tr[2]/td"))
+  private def startDateCell = driver.findElement(By.id("qa-joiner-summary-start"))
 
-  private def amountPaidTodayCell = driver.findElement(By.xpath("//tbody/tr[3]/td"))
+  private def amountPaidTodayCell = driver.findElement(By.id("qa-joiner-summary-today"))
 
-  private def monthlyPaymentCell = driver.findElement(By.xpath("//tbody/tr[4]/td"))
+  private def monthlyPaymentCell = driver.findElement(By.id("qa-joiner-summary-recurring"))
 
-  private def nextPaymentCell = driver.findElement(By.xpath("//tbody/tr[5]/td"))
+  private def nextPaymentCell = driver.findElement(By.id("qa-joiner-summary-next"))
+
+  private def cardNumberCell = driver.findElement(By.id("qa-joiner-summary-card"))
 
   private def getStartedButton = driver.findElement(By.cssSelector(".action"))
-
-  private def cardNumberCell = driver.findElement(By.xpath("//tbody/tr[6]/td"))
 
   def getPackage: String = packageCell.getText
 
