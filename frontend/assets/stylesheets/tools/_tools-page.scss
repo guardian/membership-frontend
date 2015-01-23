@@ -10,28 +10,56 @@
 
     @include mq(mobileLandscape) {
         width: 100% + $gutter-width-fluid;
-        margin-left: -$gutter-width-fluid;
+        margin-left: -$gutter-width-fluid *.75;
     }
 
     .event-item {
 
         @include mq(mobileLandscape) {
             float: left;
-            margin-left: $gutter-width-fluid / 2;
-            padding-left: $gutter-width-fluid / 2;
+            margin-left: $gutter-width-fluid / 4;
+            padding-left: $gutter-width-fluid / 4;
             margin-bottom: rem($gs-baseline);
-            width: 50% - ($gutter-width-fluid / 2);
-            &:nth-of-type(2n+1) {
-                clear: left;
-            }
+            width: 50% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(2n+1) { clear: left; }
         }
 
         @include mq(tablet) {
-            width: 25% - ($gutter-width-fluid / 2);
-            &:nth-of-type(2n+1) {
-                clear: none;
+            width: 33.3% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(2n+1) { clear: none; }
+            &:nth-of-type(3n+1) {
+                clear: left;
+                border-left: 0;
             }
+        }
+
+        @include mq(desktop) {
+            width: 25% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(3n+1) { clear: none; }
             &:nth-of-type(4n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+
+        @include mq(mem-full) {
+            width: 20% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(4n+1) { clear: none; }
+            &:nth-of-type(5n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+
+        @include mq(wide) {
+            width: 16.6% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(5n+1) { clear: none; }
+            &:nth-of-type(6n+1) {
                 clear: left;
                 border-left: 0;
             }
