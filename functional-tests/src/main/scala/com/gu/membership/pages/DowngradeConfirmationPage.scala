@@ -7,15 +7,15 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class DowngradeConfirmationPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def profileButton = driver.findElement(By.cssSelector(".action-cta.action-cta--confirm"))
+  private def profileButton = driver.findElement(By.id("qa-downgrade-profile-link"))
 
-  private def currentPackageTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/section/div[2]/table/tbody/tr[1]/td"))
+  private def currentPackageTd = driver.findElement(By.id("qa-tier-summary-tier"))
 
-  private def newPackageTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[3]/section/div[2]/table/tbody/tr[1]/td"))
+  private def newPackageTd = driver.findElement(By.id("qa-downgrade-summary-tier"))
 
-  private def endDateTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/section/div[2]/table/tbody/tr[2]/td"))
+  private def endDateTd = driver.findElement(By.id("qa-tier-summary-end"))
 
-  private def startDateTd = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[3]/section/div[2]/table/tbody/tr[2]/td"))
+  private def startDateTd = driver.findElement(By.id("qa-downgrade-summary-start"))
 
   def clickProfileButton = {
     profileButton.click

@@ -8,13 +8,15 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class BaseMembershipPage(driver: WebDriver) extends BasePage(driver) {
 
-  private def accountControlDiv = driver.findElement(By.cssSelector(".identity__account"))
+  private def accountControlLink = driver.findElement(By.id("qa-identity-control"))
 
-  private def editProfileLink = driver.findElement(By.xpath("//a[contains(text(), 'Edit profile')]"))
+  private def editProfileLink = driver.findElement(By.id("qa-identity-nav-edit"))
 
-  private def pricingLink = driver.findElement(By.xpath("//header/div[2]/nav/div/ul/li[6]/a"))
+  private def pricingLink = driver.findElement(By.id("qa-nav-pricing"))
 
-  private def logoLink = driver.findElement(By.cssSelector(".icon-logo-beta"))
+  private def eventsButton = driver.findElement(By.id("qa-nav-events"))
+
+  private def logoLink = driver.findElement(By.id("qa-header-logo"))
 
   def clickLogo = {
     logoLink.click
@@ -22,7 +24,7 @@ class BaseMembershipPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickAccountControl = {
-    accountControlDiv.click
+    accountControlLink.click
     new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(editProfileLink))
     this
   }
@@ -35,5 +37,10 @@ class BaseMembershipPage(driver: WebDriver) extends BasePage(driver) {
   def clickPricing = {
     pricingLink.click
     new JoinFlowChooseTierPage(driver)
+  }
+
+  def clickEventsButton: EventsListPage = {
+    eventsButton.click
+    new EventsListPage(driver)
   }
 }
