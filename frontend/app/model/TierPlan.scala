@@ -1,7 +1,6 @@
 package model
 
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.Tier
 
 trait ProductRatePlan {
   def salesforceTier: String
@@ -9,7 +8,7 @@ trait ProductRatePlan {
 
 trait TierPlan extends ProductRatePlan {
   val tier: Tier
-  def salesforceTier = tier.toString
+  def salesforceTier = tier.name
 }
 
 object FriendTierPlan extends TierPlan {

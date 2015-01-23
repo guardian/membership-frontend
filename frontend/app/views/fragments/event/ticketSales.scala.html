@@ -7,10 +7,10 @@
 @import com.gu.membership.salesforce.Tier
 
 
-@ticketDateForTier(tier: Tier.Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
+@ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
     val ticketDate = if(needToDisplayTimes) salesDate.prettyWithTime
                      else salesDate.pretty
-    Html(s"<time class='js-ticket-sale-start-${tier.toString.toLowerCase}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>$ticketDate</time>")
+    Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>$ticketDate</time>")
 }
 
 @ticketEndSaleDate(endSalesDate: Instant, needToDisplayTimes: Boolean) = @{

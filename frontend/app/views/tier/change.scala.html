@@ -1,4 +1,4 @@
-@(currentTier: com.gu.membership.salesforce.Tier.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
 @import com.gu.membership.salesforce.Tier
@@ -18,8 +18,8 @@
             <div class="content__container">
                 <section class="package-list package-list--flex-box">
 
-                    @for(tier <- Tier.values.toSeq.sorted){
-                        @if(tier >= Tier.Friend){ @fragments.tier.benefits(Some(currentTier), tier) }
+                    @for(tier <- Tier.all) {
+                        @fragments.tier.benefits(Some(currentTier), tier)
                     }
 
                 </section>

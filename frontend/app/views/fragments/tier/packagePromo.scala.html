@@ -1,10 +1,10 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, descriptionAnchor: Option[String] = None, isReversed: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier, descriptionAnchor: Option[String] = None, isReversed: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 
-<div class="package package--promo @if(isReversed){package--promo--reversed }tone-@tier.toString.toLowerCase--border">
+<div class="package package--promo @if(isReversed){package--promo--reversed }tone-@tier.slug--border">
     <div class="package__header">
-        <a href="/join/@tier.toString.toLowerCase/enter-details" class="no-underline minimal-link">
+        <a href="@routes.Joiner.enterDetails(tier)" class="no-underline minimal-link">
             @fragments.tier.tierHeaderPromo(tier)
         </a>
     </div>
@@ -16,7 +16,7 @@
             }
         </div>
         <div class="package__actions">
-            <a class="action action--snap u-no-bottom-margin" href="/join/@tier.toString.toLowerCase/enter-details" data-link-name="Become a @tier">
+            <a class="action action--snap u-no-bottom-margin" href="@routes.Joiner.enterDetails(tier)" data-link-name="Become a @tier">
                 <span class="action__label">
                     Become a @tier
                 </span>
