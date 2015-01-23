@@ -15,26 +15,26 @@
     </li>
 }
 <li class="@navItemClass()">
-    <a href="/events" class="nav__link case--lower" id="qa-nav-events">Events</a>
+    <a href="/events" class="nav__link case--lower" @if(inlineMode) { id="qa-nav-events"}>Events</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/masterclasses" class="nav__link case--lower" id="qa-nav-masterclasses">Masterclasses</a>
+    <a href="/masterclasses" class="nav__link case--lower">Masterclasses</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/about" class="nav__link case--lower" id="qa-nav-about">About membership</a>
+    <a href="/about" class="nav__link case--lower">About membership</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/patrons" class="nav__link case--lower" id="qa-nav-patrons">Patrons</a>
+    <a href="/patrons" class="nav__link case--lower">Patrons</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/join" class="nav__link case--lower" id="qa-nav-pricing">Pricing</a>
+    <a href="/join" class="nav__link case--lower" @if(inlineMode) { id="qa-nav-pricing"}>Pricing</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/help" class="nav__link case--lower" id="qa-nav-help">Help</a>
+    <a href="/help" class="nav__link case--lower">Help</a>
 </li>
 <li class="@navItemClass()">
-    <a href="/feedback" class="nav__link nav__link case--lower" id="qa-nav-feedback">Feedback</a>
+    <a href="/feedback" class="nav__link nav__link case--lower">Feedback</a>
 </li>
 <li class="@navItemClass() nav__item--right">
-    <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last case--lower js-members-area" id="qa-nav-members">Members' Area</a>
+    <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last case--lower js-members-area">Members' Area</a>
 </li>
