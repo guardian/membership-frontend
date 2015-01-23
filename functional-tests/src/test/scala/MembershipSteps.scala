@@ -1,7 +1,9 @@
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.{Properties, Date}
 
 import com.gu.automation.support.{Config, TestLogger}
+import com.gu.identity.testing.usernames.{Encoder, TestUsernames}
 import com.gu.membership.pages._
 import org.openqa.selenium.{JavascriptExecutor, Cookie, WebDriver}
 
@@ -145,7 +147,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IEnterInfoIntoIdentity = {
-    new IdentityEditPage(driver).clickAccountDetailsTab.enterName("Test", "Automation").enterAddress("somewhere", "nice")
+    new IdentityEditPage(driver).clickAccountDetailsTab.enterAddress("somewhere", "nice")
       .enterCountry("Angola").enterPostcode("N1 9GU").enterState("London").enterTown("London").clickSave
     this
   }
@@ -239,7 +241,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def ISeeAnErrorWhenMyCardHasNoFunds = {
     val page = new PaymentPage(driver).cardWidget
-    page.submitPayment("Test", "Automation", "90 York", " Way", "London", "UK", "N19GU", cardWithNoFunds, "111", "12",
+    page.submitPayment("", "", "90 York", " Way", "London", "UK", "N19GU", cardWithNoFunds, "111", "12",
       "2018")
     val errorMessage = page.getErrorMessage
     Assert.assert(errorMessage, "This form has errors",
@@ -302,8 +304,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAFriend = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterFirstName("Test").enterLastName("Automation")
-      .enterPostCode("N19GU").clickJoinNow
+    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterPostCode("N19GU").clickJoinNow
     this
   }
 
@@ -455,11 +456,10 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
 
-  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("Test", "Automation", "90 York",
+  private def pay: ThankYouPage = new PaymentPage(driver).cardWidget.submitPayment("", "", "90 York",
     "Way", "UK", "London", "N19GU", validCardNumber, "111", "12", "2021")
 
-  private def becomeFriend = new PaymentPage(driver).cardWidget.enterFirstName("test")
-    .enterLastName("Automation").enterPostCode("N1 9GU").clickSubmitPayment
+  private def becomeFriend = new PaymentPage(driver).cardWidget.enterPostCode("N1 9GU").clickSubmitPayment
 
   private def isInFuture(dateTime: String) = {
     // TODO James Oram MEM-141 should make this not fail occasionally
@@ -487,7 +487,18 @@ object CookieHandler {
 
   def register(driver: WebDriver) {
     driver.manage().addCookie(surveyCookie)
-    val user = System.currentTimeMillis().toString
+    val propertyName="identity.test.users.secret"
+
+    val file: String = "/etc/gu/membership-keys.conf"
+
+    val prop = new Properties()
+    prop.load(new FileInputStream(file))
+
+    val secret = prop.getProperty(propertyName).replace("\"","")
+
+    val usernames = TestUsernames(Encoder.withSecret(secret))
+
+    val user = usernames.generate()
     val password = scala.util.Random.alphanumeric.take(10).mkString
     val email = user + "@testme.com"
     new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
