@@ -12,7 +12,7 @@
                 <nav>
                     <ul class="inline-list u-cf" role="menubar">
                         <li class="menu-item">
-                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon control-container" title="Your account">
+                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="no-underline icon-wrapper js-identity-icon control-container" title="Your account" id="qa-identity-control">
                                 <span class="control js-user-icon">
                                     <span class="control__icon">
                                         <i class="icon-user-black"></i>
@@ -44,7 +44,7 @@
 
             <div class="header__secondary header__logo">
                 <span itemscope itemtype="http://schema.org/Organization">
-                    <a href="/" itemprop="url" class="icon-wrapper">
+                    <a href="/" itemprop="url" class="icon-wrapper" id="qa-header-logo">
                         <span class="u-h" itemprop="name">@Config.siteTitle</span>
                         <i class="icon-membership_beta_mobile mobile-only"></i>
                         <i class="icon-logo-beta hidden-mobile"></i>
@@ -60,7 +60,7 @@
                                 <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
                             </li>
                             <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/public/edit" data-member-href="@Config.idWebAppUrl/membership/edit" class="nav__link js-edit-profile">Edit profile</a>
+                                <a href="@Config.idWebAppUrl/public/edit" data-member-href="@Config.idWebAppUrl/membership/edit" class="nav__link js-edit-profile" id="qa-identity-nav-edit">Edit profile</a>
                             </li>
                             <li class="nav__item">
                                 <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>

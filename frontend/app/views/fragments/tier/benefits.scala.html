@@ -69,7 +69,7 @@
                                 <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">@Benefits.details(tier).cta</button>
                             </form>
                         } else {
-                            <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm">
+                            <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm" id="qa-change-tier-@tier.toString.toLowerCase">
                                 @Benefits.details(tier).cta
                             </a>
                         }

@@ -8,7 +8,7 @@
         <th role="rowheader">
             Tier
         </th>
-        <td>
+        <td id="qa-tier-summary-tier">
             @currentSubscription.planName
         </td>
     </tr>
@@ -16,7 +16,7 @@
         <th role="rowheader">
             End Date
         </th>
-        <td>
+        <td id="qa-tier-summary-end">
             @currentSubscription.endDate.pretty
         </td>
     </tr>
@@ -24,7 +24,7 @@
         <th role="rowheader">
             @if(currentSubscription.annual){ Annual } else { Monthly } Payment
         </th>
-        <td>
+        <td id="qa-tier-summary-recurring">
             @currentSubscription.planAmount.pretty
         </td>
     </tr>
@@ -32,7 +32,7 @@
         <th role="rowheader">
             Last Payment
         </th>
-        <td>
+        <td id="qa-tier-summary-start">
             @currentSubscription.startDate.pretty
         </td>
     </tr>

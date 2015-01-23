@@ -36,30 +36,30 @@
                 <table class="table table--responsive-font table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td>@member.tier</td>
+                        <td id="qa-joiner-summary-tier">@member.tier</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td>@subscription.startDate.pretty</td>
+                        <td id="qa-joiner-summary-start">@subscription.startDate.pretty</td>
                     </tr>
                     @for(card <- cardOpt) {
                         <tr role="row">
                             <th role="rowheader">Amount paid today</th>
-                            <td>@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-today">@subscription.planAmount.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">
                                 @if(subscription.annual) { Annual } else { Monthly } payment
                             </th>
-                            <td>@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-recurring">@subscription.planAmount.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment</th>
-                            <td>@subscription.endDate.pretty</td>
+                            <td id="qa-joiner-summary-next">@subscription.endDate.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Card</th>
-                            <td>•••• •••• •••• •••• @card.last4</td>
+                            <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.last4</td>
                         </tr>
                     }
                 </table>
