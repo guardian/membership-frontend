@@ -38,11 +38,9 @@
         @fragments.event.stats(event)
 
         @* TODO: Make part of event stats *@
-        @if(event.isSoldThruEventbrite) {
+        @if(event.isSoldThruEventbrite && event.isBookable) {
             @for(ticket <- event.generalReleaseTicket) {
-                @if(event.isBookable) {
-                    @fragments.event.ticketSales(event, ticket)
-                }
+                @fragments.event.ticketSales(event, ticket)
             }
         }
 
