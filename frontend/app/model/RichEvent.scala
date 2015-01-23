@@ -25,7 +25,10 @@ object RichEvent {
     title="Guardian Live events",
     shortTitle="Events",
     pluralTitle="Guardian Live events",
-    description=None,
+    description=Some("""
+      |Guardian Live is a programme of discussions, debates, interviews, keynote speeches and festivals.
+      |Members can attend events that take the power of open journalism from print and digital into live experiences.
+    """.stripMargin),
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
@@ -41,7 +44,10 @@ object RichEvent {
     title="Guardian Masterclasses",
     shortTitle="Masterclasses",
     pluralTitle="Masterclasses",
-    description=None,
+    description=Some("""
+      |Guardian Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing,
+      | journalism, photography and design, film and digital media, music and cultural appreciation.
+    """.stripMargin),
     eventListUrl=controllers.routes.Event.masterclasses.url,
     termsUrl=Config.guardianMasterclassesTermsUrl,
     largeImg=false,
@@ -55,13 +61,13 @@ object RichEvent {
   val discoverMetadata = Metadata(
     identifier="discover",
     title="Guardian Discover",
-    shortTitle="Discover",
+    shortTitle="Events",
     pluralTitle="Discover events",
     description=None,
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
-    highlightsUrlOpt=Some(Config.guardianMembershipUrl + "#video"),
+    highlightsUrlOpt=None,
     chooseTier=ChooseTierMetadata(
       "Guardian Discover events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
