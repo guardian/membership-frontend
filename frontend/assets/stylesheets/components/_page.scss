@@ -17,44 +17,40 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     background-color: $white;
     padding-bottom: rem($gs-gutter * 3);
 }
-.page-slice__inner {
-    width: 100%;
+    .page-slice__headline {
+        @include fs-headline(4);
+        padding: rem($gs-gutter / 2);
+        border-top: 2px solid $c-neutral6;
+        @include mq(tablet) {
+            @include fs-headline(7);
+            padding: rem($gs-baseline) rem($gs-gutter);
+        }
+    }
+    .page-slice__content {
+        padding: rem($gs-gutter / 2);
 
+        @include mq(tablet) {
+            padding: rem($gs-gutter);
+        }
+        @include mq(mem-full) {
+            padding-left: rem($gs-gutter * 9);
+        }
+    }
+
+.page-slice--split {
+    padding-bottom: 0;
     @include mq(desktop) {
-        width: rem(gs-span(12) + $gs-gutter * 2);
-        margin: 0 auto;
-    }
-
-    @include mq(mem-full) {
-        width: rem(gs-span(14) + $gs-gutter * 2);
-    }
-}
-.page-slice__headline {
-    @include fs-headline(6);
-    padding: rem($gs-gutter/2);
-    border-top: 2px solid $c-neutral6;
-    @include mq(tablet) {
-        @include fs-headline(7);
-        padding: rem($gs-baseline) rem($gs-gutter);
+        .page-slice__headline {
+            width: 30%;
+            float: left;
+        }
+        .page-slice__content {
+            float: right;
+            width: 58%;
+            padding: rem($gs-gutter);
+        }
     }
 }
-
-/* Page Slice Content
-   - Inner content for a page slice (pushed to right)
-   ========================================================================== */
-
-.page-slice-content {
-
-    padding: rem($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: rem($gs-gutter);
-    }
-    @include mq(mem-full) {
-        padding-left: rem($gs-gutter * 9);
-    }
-}
-
 
 /* ==========================================================================
    Functional Page Layout Components

@@ -92,12 +92,18 @@
 
     @* ===== Join Today ===== *@
 
-    <div class="home-slice home-slice--join-today">
-        <div class="home-slice__inner u-cf">
-            <h2 class="home-slice__headline">Not ready to become a Patron yet?<br />Join as a Friend or a Partner</h2>
-            <div class="join-today__join-boxes package-list package-list--flex-box package-list--bordered">
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Friend, showBenefitDetails=false, mode="promo", showLearnMore=true)
-                @fragments.tier.benefits(currentTier=None, tier=Tier.Partner, showBenefitDetails=false, mode="promo", showLearnMore=true)
+    <div class="page-slice page-slice--split tone-tint">
+        <div class="page-slice__inner l-constrained">
+            <h2 class="page-slice__headline">Not ready to become a Patron yet? Join as a Friend or a Partner</h2>
+            <div class="page-slice__content">
+                <ul class="grid grid--bordered grid--2up-stacked">
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Friend, isReversed=true)
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
