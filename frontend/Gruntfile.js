@@ -328,6 +328,7 @@ module.exports = function (grunt) {
                 prefix : 'icon-',
                 symbol: true,
                 inheritviewbox: true,
+                cleanup: ['fill'],
                 svg: {
                     id: 'svg-sprite',
                     width: 0,

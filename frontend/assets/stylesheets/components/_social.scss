@@ -1,20 +1,54 @@
-.social {
-    height: rem(36px);
-    margin-left: rem(-10px);
+/* ==========================================================================
+   Social
+   ========================================================================== */
+
+.social-list {
+    @include clearfix();
+    margin: 0;
+    list-style: none;
+}
+    .social-list__item {
+        float: left;
+        margin-right: rem($gs-gutter / 4);
+    }
+    .social-list__item:last-child {
+        margin-right: 0;
+    }
+
+/* Social Actions
+   ========================================================================== */
+
+.social-action {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 36px; height: 36px;
+    border-radius: 1000px;
+    background-color: $c-neutral2;
+    color: $white;
+
+    &:hover {
+        background-color: darken($c-neutral2, 10%);
+    }
+
+    .icon-inline {
+        @include vertically-center();
+        width: 20px; height: 20px;
+    }
 }
 
-.social__item {
-    float: left;
-    padding-left: rem(10px);
-    width: rem(36px + 10px);
+.social-action--twitter {
+    background-color: $c-thirdparty-twitter;
+
+    &:hover {
+        background-color: darken($c-thirdparty-twitter, 10%);
+    }
 }
 
-.social__action {
-    display: block;
-}
+.social-action--facebook {
+    background-color: $c-thirdparty-facebook;
 
-.social-icon {
-    @extend %icon-holder-circle;
-    border-color: $c-neutral2;
-    border: 0;
+    &:hover {
+        background-color: darken($c-thirdparty-facebook, 10%);
+    }
 }
