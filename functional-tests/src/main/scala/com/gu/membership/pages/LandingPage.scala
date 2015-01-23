@@ -1,6 +1,5 @@
 package com.gu.membership.pages
 
-import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{By, WebDriver}
 
  class LandingPage(driver: WebDriver) extends BaseMembershipPage(driver) {
@@ -19,7 +18,6 @@ import org.openqa.selenium.{By, WebDriver}
    }
 
    def clickJoinButton: JoinPage = {
-     new Actions(driver).moveToElement(joinButton).perform()
      joinButton.click
      new JoinPage(driver)
    }
