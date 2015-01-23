@@ -101,7 +101,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
           "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
-          "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
+          "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
         ))
       }(Future.successful)
     } yield discount
