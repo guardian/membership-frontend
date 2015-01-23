@@ -13,7 +13,7 @@ define([
             DOCUMENT_ELEMENT: 'html',
             HEADER_JOIN_US_CTA: '.js-header-join-us-cta',
             SECTIONS_POP_UP_JOIN_US_CTA: '.js-sections-nav-join-us',
-            SECTIONS_POP_UP_NAV: '.js-sections-nav-popup',
+            SECTIONS_POP_UP_NAV: '.js-global-nav',
             SECTIONS_POP_UP_PAGE_LIST: '.js-sections-nav-popup-page-list',
             MENU_ICON: '.js-menu-icon',
             IDENTITY_NOTICE: '.identity__notice',
@@ -64,8 +64,7 @@ define([
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
-            config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-hidden');
+            config.DOM.SECTIONS_POP_UP_NAV.toggleClass('is-active');
             config.DOM.MENU_ICON.toggleClass('close-icon-white--active');
             self.setMenuListener.call(self, config.DOM.SECTIONS_POP_UP_NAV);
         });
@@ -75,7 +74,7 @@ define([
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
-                config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
+                config.DOM.SECTIONS_POP_UP_NAV.removeClass('is-active');
                 config.DOM.IDENTITY_POP_UP_NAV.toggleClass('is-hidden');
                 config.DOM.IDENTITY_ICON.toggleClass('menu-item--active');
                 config.DOM.USER_ICON.toggleClass('control--active');
@@ -101,7 +100,7 @@ define([
     Header.prototype.addCloseMenuListener = function () {
         bean.on(config.DOM.DOCUMENT_ELEMENT[0], 'click', function () {
             config.DOM.IDENTITY_POP_UP_NAV.addClass('is-hidden');
-            config.DOM.SECTIONS_POP_UP_NAV.addClass('is-hidden');
+            config.DOM.SECTIONS_POP_UP_NAV.removeClass('is-active');
         });
     };
 

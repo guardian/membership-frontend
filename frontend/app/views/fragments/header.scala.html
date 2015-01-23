@@ -75,28 +75,19 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="mobile-menu mobile-only">
-                    <a href="#" role="menuitem" class="mobile-menu__button js-menu-icon" title="Menu">
-                        <span class="control__icon">
-                            <i></i>
-                            <i></i>
-                            <i></i>
-                        </span>
-                    </a>
-                </div>
-                <div class="nav-popup--sections nav-popup nav-popup--small is-hidden js-sections-nav-popup">
-                    <nav role="navigation" aria-label="@Config.siteTitle sections">
-                        <ul class="nav nav--columns nav--top-border-off u-cf js-sections-nav-popup-page-list">
-                            @fragments.nav()
-                        </ul>
-                    </nav>
-                </div>
             </div>
         </div>
-        <nav role="navigation" class="nav nav--global nav--global--header">
+        <button role="menuitem" class="mobile-menu mobile-only js-menu-icon" title="Menu">
+            <span class="control__icon">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </button>
+        <nav role="navigation" class="nav nav--global nav--global--header js-global-nav">
             <div class="nav__scroll">
                 <ul class="nav__list inline-list">
-                    @fragments.nav(inlineMode=true)
+                    @fragments.nav()
                 </ul>
             </div>
         </nav>

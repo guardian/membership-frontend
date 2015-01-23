@@ -11,12 +11,9 @@
         position: relative;
     }
     .header__branding {
-        // move the logo area above side margins
-        z-index: 2;
-        position: relative;
         background-color: transparentize($mem-brandBlue, .1);
-        padding-top: rem(5px);
-        padding-bottom: rem(5px);
+        padding-top: rem($gs-gutter / 4);
+        padding-bottom: rem($gs-gutter / 4);
         height: rem(48px);
 
         @include mq(tablet) {
