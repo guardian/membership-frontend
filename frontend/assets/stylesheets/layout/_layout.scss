@@ -68,12 +68,6 @@ body {
     }
 }
 
-// TOOD: Code smell. This is related to generated classes from guss-layout,
-// do we really need this? If so, document usage clearly.
-.l-row__item {
-    padding-bottom: rem($gs-gutter * 2);
-}
-
 .u-align-middle {
     vertical-align: middle;
 }
@@ -139,15 +133,5 @@ body {
 .page-content--padded {
     @include mq(tablet) {
         padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
-    }
-}
-
-// TODO: Too broad. What is this affecting?
-// Only on downgrade page??
-.secondary-content {
-    flex-basis: 16em;
-    order: 2;
-    @if $old-ie {
-        float: left;
     }
 }
