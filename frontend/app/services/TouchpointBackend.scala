@@ -53,7 +53,7 @@ case class TouchpointBackend(
 
   def cancelSubscription(member: Member): Future[String] = {
     for {
-      subscription <- subscriptionService.cancelSubscription(member.salesforceAccountId, member.tier == Tier.Friend)
+      subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
       ""
@@ -62,7 +62,7 @@ case class TouchpointBackend(
 
   def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
     for {
-      _ <- subscriptionService.downgradeSubscription(member.salesforceAccountId, FriendTierPlan)
+      _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
       memberRepository.metrics.putDowngrade(tierPlan.tier)
       ""

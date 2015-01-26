@@ -32,7 +32,7 @@ trait DowngradeTier {
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
     val subscriptionService = request.touchpointBackend.subscriptionService
     for {
-      subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
       currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
     } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
@@ -94,7 +94,7 @@ trait CancelTier {
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
     def subscriptionDetailsFor(memberOpt: Option[Member]) = {
       memberOpt.collect { case paidMember: PaidMember =>
-        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember.salesforceAccountId)
+        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember)
       }
     }
 
