@@ -18,7 +18,7 @@
         }
         <p class="signpost-item__description">@description</p>
         <div class="signpost__cta">
-            <a class="action action--no-bottom-margin" href="@btnSrc">@btnText</a>
+            <a class="action u-no-bottom-margin" href="@btnSrc">@btnText</a>
         </div>
     </li>
 }
@@ -69,8 +69,8 @@
 
                     @if(staffEmail.emailsMatch) {
                         <p>Join Guardian Staff Membership as <strong>@identityEmail</strong></p>
-                        <a class="action action--no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
-                        <a class="action action--secondary-button action--no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
+                        <a class="action u-no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
+                        <a class="action action--secondary-button u-no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
                     } else {
                         <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 
@@ -88,7 +88,7 @@
                                     <div class="signpost__cta">
                                         <form action="@routes.Joiner.updateEmailStaff" method="POST">
                                             @CSRF.formField
-                                            <button class="action action--no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
+                                            <button class="action u-no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
                                         </form>
                                     </div>
                                 </li>

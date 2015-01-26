@@ -61,10 +61,6 @@
 /* Inline Icons
    ========================================================================== */
 
-.icon-sprite {
-   display: none;
-}
-
 .icon-inline {
    width: 16px;
    height: 16px;
@@ -81,4 +77,23 @@
 .icon-inline--large {
    width: 32px;
    height: 32px;
+}
+
+/* Icon Holder
+   ========================================================================== */
+
+.icon-holder {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 26px; height: 26px;
+    background-color: transparent;
+    border-radius: 1000px;
+    border: 1px solid $c-border-brand;
+    color: $mem-brandBlue;
+
+    .icon-inline {
+        @include vertically-center();
+        width: 16px; height: 16px;
+    }
 }

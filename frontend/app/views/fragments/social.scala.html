@@ -2,29 +2,23 @@
 
 @import configuration.Config
 
-    <ul class="social u-unstyled u-cf">
-        <li class="social__item">
-            <a class="social__action" target="_blank" href="mailto:?subject=@social.encodedEmailSubject&amp;body=@social.encodedEmailMessage">
-                <span class="u-h">Share via Email</span>
-                <span class="social-icon">
-                    <i class="icon-share-email-colour"></i>
-                </span>
-            </a>
-        </li>
-        <li class="social__item">
-            <a class="social__action" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl">
-                <span class="u-h">Share on Facebook</span>
-                <span class="social-icon">
-                    <i class="icon-share-facebook-colour"></i>
-                </span>
-            </a>
-        </li>
-        <li class="social__item">
-            <a class="social__action" target="_blank" href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername">
-                <span class="u-h">Share on Twitter</span>
-                <span class="social-icon">
-                    <i class="icon-share-twitter-colour"></i>
-                </span>
-            </a>
-        </li>
-    </ul>
+<ul class="social-list">
+    <li class="social-list__item">
+        <a class="social-action social-action--email" target="_blank" href="mailto:?subject=@social.encodedEmailSubject&amp;body=@social.encodedEmailMessage">
+            <span class="u-h">Share via Email</span>
+            @fragments.inlineIcon("share-email")
+        </a>
+    </li>
+    <li class="social-list__item">
+        <a class="social-action social-action--facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl">
+            <span class="u-h">Share on Facebook</span>
+            @fragments.inlineIcon("share-facebook")
+        </a>
+    </li>
+    <li class="social-list__item">
+        <a class="social-action social-action--twitter" target="_blank" href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername">
+            <span class="u-h">Share on Twitter</span>
+            @fragments.inlineIcon("share-twitter")
+        </a>
+    </li>
+</ul>

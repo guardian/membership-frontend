@@ -93,13 +93,10 @@
          * Insert SVG sprite into document
          */
         function inlineSvg(data) {
-            var div = document.createElement('div');
-            div.className = 'icon-sprite';
-            div.innerHTML = data;
-            /* We need to wait for DOMContentLoaded before inserting SVG */
-            document.addEventListener('DOMContentLoaded', function(){
-                document.body.insertBefore(div, document.body.childNodes[0]);
-            },false);
+            var el = document.createElement('div');
+            el.innerHTML = data;
+            var ref = document.getElementsByTagName('script')[0];
+            ref.parentNode.insertBefore(el, ref);
         }
 
         function loadSvgIcons() {

@@ -63,8 +63,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   def eventsArchive: Seq[RichEvent] = archivedEventsTask.get()
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
-  def getEventsOrdering: Seq[String]
-  def getEventsTagged(tag: String): Seq[RichEvent]
+  def getFeaturedEvents: Seq[RichEvent]
+  def getTaggedEvents(tag: String): Seq[RichEvent]
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -79,9 +79,8 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
   }
 
   def getEventPortfolio: EventPortfolio = {
-    val priorityIds = getEventsOrdering
-    val (priorityEvents, normal) = events.partition(e => priorityIds.contains(e.id))
-    EventPortfolio(priorityEvents.sortBy(e => priorityIds.indexOf(e.id)), normal, Some(eventsArchive))
+    val featuredEvents = getFeaturedEvents
+    EventPortfolio(featuredEvents, events.diff(featuredEvents), Some(eventsArchive))
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
@@ -101,7 +100,7 @@ trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
           "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
-          "access_code.ticket_ids" -> Seq(ticketClasses.head.id) // TODO: support multiple ticket classes when Eventbrite fix their API
+          "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
         ))
       }(Future.successful)
     } yield discount
@@ -131,8 +130,8 @@ object GuardianLiveEventService extends EventbriteService {
     }
   }
 
-  override def getEventsOrdering: Seq[String] = eventsOrderingTask.get()
-  override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
+  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
+  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
 
   override def start() {
     super.start()
@@ -145,7 +144,7 @@ case class MasterclassEventServiceError(s: String) extends Throwable {
 }
 
 object MasterclassEventService extends EventbriteService {
-  import MasterclassEventServiceHelpers._
+  import EventbriteServiceHelpers._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1
@@ -161,13 +160,18 @@ object MasterclassEventService extends EventbriteService {
     Future.successful(MasterclassEvent(event, masterclassData))
   }
 
-  override def getEventsOrdering: Seq[String] = Nil
-  override def getEventsTagged(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
+  override def getFeaturedEvents: Seq[RichEvent] = Nil
+  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
 }
 
-object MasterclassEventServiceHelpers {
+object EventbriteServiceHelpers {
   def availableEvents(events: Seq[RichEvent]): Seq[RichEvent] =
     events.filter(_.memberTickets.exists { t => t.quantity_sold < t.quantity_total } )
+
+  def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
+    val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.id) }
+    orderedEvents.sortBy { event => orderedIds.indexOf(event.id) } ++ normalEvents.filter(!_.isSoldOut).take(4 - orderedEvents.length)
+  }
 }
 
 object EventbriteService {

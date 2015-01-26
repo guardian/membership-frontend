@@ -89,7 +89,7 @@
 
             <div class="event-image-credit u-event-content-width">
                 <div class="event-image-credit__detail">
-                    <i class="icon-caption-camera u-align-middle"></i>
+                    @fragments.inlineIcon("caption-camera")
                     <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
                     <span class="u-align-middle">Photograph: @event.imageMetadata.map(_.photographer)</span>
                 </div>
@@ -213,7 +213,7 @@
                     </div>
 
                     @if(!event.isBookable) {
-                        <a class="action action--fullwidth action--search" href="@event.metadata.eventListUrl">Find other @event.metadata.title</a>
+                        <a class="action u-fullwidth action--search" href="@event.metadata.eventListUrl">Find other @event.metadata.title</a>
                     }
                 </div>
             </div>
