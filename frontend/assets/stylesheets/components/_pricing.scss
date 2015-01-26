@@ -7,7 +7,7 @@
 
 .price-info {
     position: relative;
-    max-width: rem(gs-span(4) - $gs-gutter);
+    max-width: rem(gs-span(4));
 
     @include mq(tablet) {
         display: table;

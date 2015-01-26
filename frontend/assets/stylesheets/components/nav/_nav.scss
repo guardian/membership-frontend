@@ -41,6 +41,10 @@ $_global-nav-height: 36px;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
 
+    @include mq(desktop) {
+        overflow-x: hidden;
+    }
+
     @include fs-headline(2);
     font-weight: normal;
     -moz-osx-font-smoothing: auto;
