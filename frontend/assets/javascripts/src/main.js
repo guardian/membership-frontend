@@ -13,6 +13,7 @@ require([
     'src/modules/images',
     'src/modules/sticky',
     'src/modules/Header',
+    'src/modules/navigation',
     'src/modules/UserDetails',
     'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
@@ -38,6 +39,7 @@ require([
     images,
     sticky,
     Header,
+    navigation,
     UserDetails,
     choose,
     eventPriceEnhance,
@@ -69,6 +71,7 @@ require([
     sticky.init();
     var header = new Header();
     header.init();
+    navigation.init();
     (new UserDetails()).init();
 
     // Events
