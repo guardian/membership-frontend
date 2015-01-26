@@ -30,6 +30,7 @@ $global-nav-height: 36px;
 
 .nav--global {
 
+    @include clearfix();
     clear: both;
     display: block;
     height: auto;
@@ -85,7 +86,8 @@ $global-nav-height: 36px;
         text-transform: lowercase;
 
         @include mq(desktop) {
-            display: inline-block;
+            display: block;
+            float: left;
         }
     }
     .nav__item--right {
