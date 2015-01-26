@@ -79,6 +79,20 @@
    height: 32px;
 }
 
+.icon-inline--top {
+    vertical-align: top;
+}
+.icon-inline--bottom {
+    vertical-align: bottom;
+}
+
+.icon-inline--brand {
+    fill: $mem-brandBlue;
+}
+.icon-inline--neutral {
+    fill: $c-neutral2;
+}
+
 /* Icon Holder
    ========================================================================== */
 
