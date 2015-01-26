@@ -3,26 +3,23 @@
    ========================================================================== */
 
 .header {
-    position: relative;
+    background-color: transparentize($mem-brandBlue, .1);
     margin-bottom: rem($gs-baseline);
+    position: relative;
+    z-index: 2;
 
     .header__inner--popup {
         padding: 0;
         position: relative;
     }
     .header__branding {
-        background-color: transparentize($mem-brandBlue, .1);
+        @include clearfix();
         padding-top: rem($gs-gutter / 4);
         padding-bottom: rem($gs-gutter / 4);
         height: rem(48px);
 
         @include mq(tablet) {
             height: auto;
-        }
-
-        @include mq($from: desktop) {
-            @include side-margins-calc('padding-left');
-            @include side-margins-calc('padding-right');
         }
     }
     .header__primary {

@@ -6,6 +6,8 @@
     width: 100%;
     margin: rem($gs-baseline) 0 0;
     background-color: $c-neutral8;
+    position: relative;
+    z-index: 2;
 
     @include mq(mobileLandscape) {
         margin-top: rem($gs-baseline * 3);

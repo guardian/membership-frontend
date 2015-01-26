@@ -7,7 +7,7 @@
         <p>Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership. <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.</p>
     </div>
     <div class="header__inner">
-        <div class="u-cf header__branding">
+        <div class="header__branding l-constrained">
             <div class="header__primary">
                 <nav>
                     <ul class="inline-list u-cf" role="menubar">
@@ -84,12 +84,6 @@
                 <i></i>
             </span>
         </button>
-        <nav role="navigation" class="nav nav--global nav--global--header js-global-nav">
-            <div class="nav__scroll">
-                <ul class="nav__list inline-list">
-                    @fragments.nav()
-                </ul>
-            </div>
-        </nav>
+        @fragments.nav()
     </div>
 </header>
