@@ -7,11 +7,11 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class ChangeTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def becomeAFriendButton = driver.findElement(By.cssSelector(".package .action.action-cta--confirm"))
+  private def becomeAFriendButton = driver.findElement(By.id("qa-change-tier-friend"))
 
-  private def becomeAPartnerButton = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/div[1]/section/div[2]/div[2]/div[2]/a"))
+  private def becomeAPartnerButton = driver.findElement(By.id("qa-change-tier-partner"))
 
-  private def becomeAPatronButton = driver.findElement(By.xpath(".//*[@id='container']/div/main/div[2]/div[1]/section/div[3]/div[2]/div[2]/a"))
+  private def becomeAPatronButton = driver.findElement(By.id("qa-change-tier-patron"))
 
   private def cancelLink = driver.findElement(By.id("qa-cancel-membership"))
 
