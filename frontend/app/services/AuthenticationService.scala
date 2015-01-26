@@ -20,6 +20,11 @@ trait AuthenticationService {
     user = guUCookieData.user if user.id == minimalSecureUser.id
   } yield IdMinimalUser(user.id, user.publicFields.displayName)
 
+  def identityAuthenticatedUser[A](request: RequestHeader): Option[IdMinimalUser] = for {
+    scGuU <- request.cookies.get("SC_GU_U")
+    minimalSecureUser <- cookieDecoder.getUserDataForScGuU(scGuU.value)
+  } yield IdMinimalUser(minimalSecureUser.id, minimalSecureUser.publicFields.displayName)
+
   def requestPresentsAuthenticationCredentials(request: Request[_]) = authenticatedUserFor(request).isDefined
 }
 
