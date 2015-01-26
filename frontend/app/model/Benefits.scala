@@ -9,12 +9,8 @@ object Benefits {
     list: Seq[BenefitItem],
     pricing: Option[Pricing],
     cta: String,
-    desc: String,
-    leadBenefitsCount: Integer
-  ) {
-    // TODO: Remove need for lead and other benefits
-    val (leadBenefits, otherBenefits) = list.splitAt(leadBenefitsCount)
-  }
+    desc: String
+  )
 
   case class BenefitItem(title: String, description: String, identifier: String, icon: String)
 
@@ -59,15 +55,15 @@ object Benefits {
   var patronWithBenefitsLimited = benefitsFilter("priority_booking", "complim_items", "unique_experiences")
 
   val friendBenefits = Benefits("Benefits", friendsWithBenefits,
-    None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events", 3)
+    None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events")
 
   val partnerBenefits = Benefits("Friend benefits, plus…", partnerWithBenefits,
     Some(Pricing(135, 15)), "Become a Partner", "Get closer to the stories and experience the " +
-      "Guardian brought to life, with early booking and discounted tickets", 5);
+      "Guardian brought to life, with early booking and discounted tickets")
 
   val patronBenefits = Benefits("Partner benefits, plus…", patronWithBenefits,
     Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the " +
-      "open exchange of ideas, with a backstage pass to the Guardian", 4)
+      "open exchange of ideas, with a backstage pass to the Guardian")
 
   val details = Map(
     Tier.Friend -> friendBenefits,
