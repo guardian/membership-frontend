@@ -9,29 +9,28 @@
  * The root component nav and >li>a selectors should not be modified directly,
  * instead use modifier classes such as "nav--columns"
  */
-
 .nav {
     list-style: none;
     margin: 0;
     padding: 0;
-    z-index: 100; //To ensure it sits above anything else
 
     > li,
     > li > a {
         display: inline-block;
         zoom: 1;
     }
-
 }
 
 /* ==========================================================================
    Nav - Global Navigation
    ========================================================================== */
 
-// Semi magic-number. Height of toggle link.
-$_global-nav-height: 36px;
+// Height of toggle link.
+$global-nav-height: 36px;
+
 .nav--global {
 
+    @include clearfix();
     clear: both;
     display: block;
     height: auto;
@@ -51,9 +50,7 @@ $_global-nav-height: 36px;
     -webkit-font-smoothing: subpixel-antialiased;
     -webkit-font-feature-settings: "kern" 1;
 
-    background-color: darken($mem-brandBlue, 10%);
-    @include side-margins-calc('padding-left');
-    @include side-margins-calc('padding-right');
+    background-color: darken($mem-brandBlue, 12%);
 
     &::-webkit-scrollbar {
         display: none;
@@ -64,8 +61,9 @@ $_global-nav-height: 36px;
         white-space: nowrap;
         width: auto;
         vertical-align: middle;
-        height: rem($_global-nav-height);
-        padding: 0 rem($_global-nav-height * 2) 0 rem($gs-gutter / 2);
+        height: rem($global-nav-height);
+        padding: 0 rem($global-nav-height * 2) 0 rem($gs-gutter / 2);
+        background-color: darken($mem-brandBlue, 10%);
 
         @include mq(tablet) {
             padding: 0 rem($gs-gutter);
@@ -84,9 +82,11 @@ $_global-nav-height: 36px;
     .nav__item {
         display: table-cell;
         vertical-align: middle;
+        text-transform: lowercase;
 
         @include mq(desktop) {
-            display: inline-block;
+            display: block;
+            float: left;
         }
     }
     .nav__item--right {
@@ -123,6 +123,61 @@ $_global-nav-height: 36px;
     }
     .icon-home {
         vertical-align: top;
+    }
+}
+
+@include mq($until: tablet) {
+    .nav--global.is-active {
+
+        display: block;
+        height: auto;
+        padding: 0;
+        padding-top: rem($global-nav-height);
+        position: absolute;
+        z-index: 2;
+        top: 100%;
+        width: 100%;
+        background: darken($mem-brandBlue, 10%);
+
+        .nav__scroll,
+        .nav__list,
+        .nav__item {
+            display: block;
+            height: auto;
+            padding: 0;
+        }
+
+        .nav__item {
+            width: 100%;
+        }
+        .nav__item--home {
+            display: none;
+        }
+
+        .nav__link {
+            @include fs-bodyHeading(1);
+            margin: 0;
+            border-top: 1px solid lighten($mem-brandBlue, 5%);
+            display: block;
+            background-color: transparent;
+            -webkit-font-smoothing: subpixel-antialiased;
+            text-decoration: none;
+            padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
+
+            &,
+            &:active,
+            &:focus {
+                color: $black;
+                text-decoration: none;
+            }
+            &:hover {
+                text-decoration: underline;
+            }
+
+            @include mq(desktop) {
+                border-top: 0;
+            }
+        }
     }
 }
 
@@ -204,20 +259,22 @@ $_global-nav-height: 36px;
    ========================================================================== */
 
 .mobile-menu {
+
     position: absolute;
     right: 0;
-    background-color: lighten($black, 20%);
+    bottom: 0;
     z-index: 3;
-    top: rem(43px);
 
-    a.mobile-menu__button {
-        color: $white;
-        display: block;
-        text-decoration: none;
-        padding: rem(3px) rem(9px) rem(9px);
-        box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
-    }
-    .mobile-menu__button i {
+    color: $white;
+    display: block;
+    height: rem($global-nav-height);
+    border: 0 none;
+    padding: rem(3px) rem(9px) rem(9px);
+    box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
+    background-color: lighten($black, 20%);
+    text-decoration: none;
+
+    i {
         border-top: rem(2px) solid rgba(255, 255, 255, .9);
         display: block;
         width: rem(20px);
@@ -226,17 +283,21 @@ $_global-nav-height: 36px;
         -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
         transition: opacity .1s, transform .1s ease-in;
     }
-    .close-icon-white--active i {
-        @include transform-origin(43%);
 
-        &:nth-child(1) {
-            @include transform(translateY(rem(4px)) rotate(45deg));
-        }
-        &:nth-child(2) {
-            opacity: 0;
-        }
-        &:nth-child(3) {
-            @include transform(translateY(rem(-4px)) rotate(-45deg));
+    &.is-active {
+        top: 100%;
+        i {
+            @include transform-origin(43%);
+
+            &:nth-child(1) {
+                @include transform(translateY(rem(4px)) rotate(45deg));
+            }
+            &:nth-child(2) {
+                opacity: 0;
+            }
+            &:nth-child(3) {
+                @include transform(translateY(rem(-4px)) rotate(-45deg));
+            }
         }
     }
 }

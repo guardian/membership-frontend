@@ -1,40 +1,40 @@
-@(inlineMode: Boolean = false)
+@()
 
 @import configuration.Config
 
-@navItemClass() = @{
-    if (inlineMode) "inline-list__item nav__item" else "nav__item"
-}
-
-@if(inlineMode) {
-    <li class="@navItemClass()">
-        <a href="/" class="nav__link" id="qa-nav-home">
-            @fragments.inlineIcon("home")
-            <span class="u-h">Home</span>
-        </a>
-    </li>
-}
-<li class="@navItemClass()">
-    <a href="/events" class="nav__link case--lower" @if(inlineMode) { id="qa-nav-events"}>Events</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/masterclasses" class="nav__link case--lower">Masterclasses</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/about" class="nav__link case--lower">About membership</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/patrons" class="nav__link case--lower">Patrons</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/join" class="nav__link case--lower" @if(inlineMode) { id="qa-nav-pricing"}>Pricing</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/help" class="nav__link case--lower">Help</a>
-</li>
-<li class="@navItemClass()">
-    <a href="/feedback" class="nav__link nav__link case--lower">Feedback</a>
-</li>
-<li class="@navItemClass() nav__item--right">
-    <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last case--lower js-members-area">Members' Area</a>
-</li>
+<nav role="navigation" class="nav nav--global nav--global--header js-global-nav">
+    <div class="nav__scroll l-constrained">
+        <ul class="nav__list inline-list">
+            <li class="nav__item nav__item--home">
+                <a href="/" class="nav__link">
+                    @fragments.inlineIcon("home")
+                    <span class="u-h">Home</span>
+                </a>
+            </li>
+            <li class="nav__item">
+                <a href="/events" class="nav__link" id="qa-nav-events">Events</a>
+            </li>
+            <li class="nav__item">
+                <a href="/masterclasses" class="nav__link" id="qa-nav-masterclasses">Masterclasses</a>
+            </li>
+            <li class="nav__item">
+                <a href="/about" class="nav__link" id="qa-nav-about">About membership</a>
+            </li>
+            <li class="nav__item">
+                <a href="/patrons" class="nav__link" id="qa-nav-patrons">Patrons</a>
+            </li>
+            <li class="nav__item">
+                <a href="/join" class="nav__link" id="qa-nav-pricing">Pricing</a>
+            </li>
+            <li class="nav__item">
+                <a href="/help" class="nav__link" id="qa-nav-help">Help</a>
+            </li>
+            <li class="nav__item">
+                <a href="/feedback" class="nav__link" id="qa-nav-feedback">Feedback</a>
+            </li>
+            <li class="nav__item nav__item--right">
+                <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last js-members-area is-hidden">Members' Area</a>
+            </li>
+        </ul>
+    </div>
+</nav>
