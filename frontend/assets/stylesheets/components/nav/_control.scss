@@ -2,6 +2,9 @@
    Controls
    ========================================================================== */
 
+.control-container {
+    display: block;
+}
 .control-container:hover {
     color: $white;
 
