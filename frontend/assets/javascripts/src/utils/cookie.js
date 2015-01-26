@@ -17,10 +17,6 @@ define(['src/utils/decodeBase64'], function (decodeBase64) {
             expires = '';
         }
 
-        if (typeof value === 'object') {
-            value = JSON.stringify(value);
-        }
-
         document.cookie = [name, '=', value, expires, '; path=/', secureCookieString ].join('');
     }
 
