@@ -74,7 +74,7 @@ trait MemberService extends LazyLogging {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
+  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
@@ -98,7 +98,7 @@ trait MemberService extends LazyLogging {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        memberId.salesforceAccountId
+        memberId
       }
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
@@ -120,7 +120,7 @@ trait MemberService extends LazyLogging {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
     for {
@@ -131,7 +131,7 @@ trait MemberService extends LazyLogging {
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
-      memberId.salesforceAccountId
+      memberId
     }
   }
 }
