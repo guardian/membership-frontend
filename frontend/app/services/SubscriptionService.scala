@@ -32,8 +32,8 @@ object SubscriptionServiceHelpers {
 trait AmendSubscription {
   self: SubscriptionService =>
 
-  private def checkForPendingAmendments(sfAccountId: String)(fn: String => Future[AmendResult]): Future[AmendResult] = {
-    getSubscriptionStatus(sfAccountId).flatMap { subscriptionStatus =>
+  private def checkForPendingAmendments(memberId: MemberId)(fn: String => Future[AmendResult]): Future[AmendResult] = {
+    getSubscriptionStatus(memberId).flatMap { subscriptionStatus =>
       if (subscriptionStatus.future.isEmpty) {
         fn(subscriptionStatus.current)
       } else {
@@ -42,8 +42,8 @@ trait AmendSubscription {
     }
   }
 
-  def cancelSubscription(sfAccountId: String, instant: Boolean): Future[AmendResult] = {
-    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+  def cancelSubscription(memberId: MemberId, instant: Boolean): Future[AmendResult] = {
+    checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
@@ -52,8 +52,8 @@ trait AmendSubscription {
     }
   }
 
-  def downgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[AmendResult] = {
-    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+  def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+    checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         result <- zuora.request(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
@@ -62,8 +62,8 @@ trait AmendSubscription {
     }
   }
 
-  def upgradeSubscription(sfAccountId: String, newTierPlan: TierPlan): Future[AmendResult] = {
-    checkForPendingAmendments(sfAccountId) { subscriptionId =>
+  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+    checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
         result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
@@ -75,12 +75,12 @@ trait AmendSubscription {
 class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription {
   import SubscriptionServiceHelpers._
 
-  private def getAccount(sfAccountId: String): Future[Account] =
-    zuora.query[Account](s"crmId='$sfAccountId'").map(sortAccounts(_).last)
+  private def getAccount(memberId: MemberId): Future[Account] =
+    zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
 
-  def getSubscriptionStatus(sfAccountId: String): Future[SubscriptionStatus] = {
+  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
     for {
-      account <- getAccount(sfAccountId)
+      account <- getAccount(memberId)
       subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
 
       if subscriptions.size > 0
@@ -105,23 +105,22 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield SubscriptionDetails(ratePlan, ratePlanCharge)
   }
 
-  def getCurrentSubscriptionDetails(sfAccountId: String): Future[SubscriptionDetails] = {
+  def getCurrentSubscriptionDetails(memberId: MemberId): Future[SubscriptionDetails] = {
     for {
-      subscriptionStatus <- getSubscriptionStatus(sfAccountId)
+      subscriptionStatus <- getSubscriptionStatus(memberId)
       subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
     } yield subscriptionDetails
   }
 
-  def createPaymentMethod(sfAccountId: String, customer: Stripe.Customer): Future[UpdateResult] = {
+  def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
-      account <- getAccount(sfAccountId)
+      account <- getAccount(memberId)
       paymentMethod <- zuora.request(CreatePaymentMethod(account, customer))
       result <- zuora.request(EnablePayment(account, paymentMethod))
     } yield result
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId.account, memberId.contact, customerOpt, tierPlanRateIds(joinData.plan),
-      joinData.name, joinData.deliveryAddress))
+    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress))
   }
 }

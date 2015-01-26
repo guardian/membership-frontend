@@ -98,7 +98,7 @@ trait MemberService extends LazyLogging {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        memberId.account
+        memberId.salesforceAccountId
       }
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
@@ -125,13 +125,13 @@ trait MemberService extends LazyLogging {
     val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
     for {
       customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
-      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member.salesforceAccountId, newPaidPlan)
+      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newPaidPlan)
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, Some(customer)))
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
-      memberId.account
+      memberId.salesforceAccountId
     }
   }
 }

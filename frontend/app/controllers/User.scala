@@ -34,7 +34,7 @@ trait User extends Controller {
 
     val futurePaymentDetails = for {
       cardDetails <- futureCardDetails
-      subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member.salesforceAccountId)
+      subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
     } yield Json.obj(
       "optIn" -> !subscriptionStatus.cancelled,

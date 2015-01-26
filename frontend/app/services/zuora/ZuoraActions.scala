@@ -1,5 +1,7 @@
 package services.zuora
 
+import com.gu.membership.salesforce.MemberId
+
 import scala.xml.{Elem, Null}
 
 import org.joda.time.DateTime
@@ -88,8 +90,8 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
     </ns1:query>
 }
 
-case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Option[Stripe.Customer],
-                     ratePlanId: String, name: NameForm, address: Address) extends ZuoraAction[SubscribeResult] {
+case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
+                     address: Address) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = formatDateTime(DateTime.now)
@@ -111,11 +113,11 @@ case class Subscribe(sfAccountId: String, sfContactId: String, customerOpt: Opti
           <ns2:BcdSettingOption>AutoSet</ns2:BcdSettingOption>
           <ns2:BillCycleDay>0</ns2:BillCycleDay>
           <ns2:Currency>GBP</ns2:Currency>
-          <ns2:Name>{sfAccountId}</ns2:Name>
+          <ns2:Name>{memberId.salesforceAccountId}</ns2:Name>
           <ns2:PaymentTerm>Due Upon Receipt</ns2:PaymentTerm>
           <ns2:Batch>Batch1</ns2:Batch>
-          <ns2:CrmId>{sfAccountId}</ns2:CrmId>
-          <ns2:sfContactId__c>{sfContactId}</ns2:sfContactId__c>
+          <ns2:CrmId>{memberId.salesforceAccountId}</ns2:CrmId>
+          <ns2:sfContactId__c>{memberId.salesforceContactId}</ns2:sfContactId__c>
         </ns1:Account>
         {payment}
         <ns1:BillToContact xsi:type="ns2:Contact">
