@@ -17,11 +17,11 @@ case class MasterclassResponse[T](pagination: ContentAPIPagination, data: Seq[T]
 
 trait MasterclassDataService extends GuardianContent {
 
-  protected def getAllContent: Future[Seq[MasterclassData]] = {
+  protected def masterclasses: Future[Seq[MasterclassData]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
-          response <- masterclasses(nextPage)
+          response <- masterclassesQuery(nextPage)
         } yield {
           val masterclassData = response.results.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
           val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
@@ -34,7 +34,7 @@ trait MasterclassDataService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  val contentTask = ScheduledTask[Seq[MasterclassData]]("MasterclassDataService", Nil, 2.seconds, 2.minutes)(getAllContent)
+  val contentTask = ScheduledTask[Seq[MasterclassData]]("MasterclassDataService", Nil, 2.seconds, 2.minutes)(masterclasses)
 
   def getData(eventId: String) = contentTask.get().find(mc => mc.eventId.equals(eventId))
 }

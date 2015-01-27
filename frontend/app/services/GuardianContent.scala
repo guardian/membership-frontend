@@ -18,7 +18,7 @@ trait GuardianContent {
 
   val contentApi = new GuardianContentClient(Config.contentApiKey)
 
-  def masterclasses(page: Int): Future[ItemResponse] = {
+  def masterclassesQuery(page: Int): Future[ItemResponse] = {
     val date = new DateTime(2014, 1, 1, 0, 0)
     val itemQuery = ItemQuery("guardian-masterclasses")
       .fromDate(date)
