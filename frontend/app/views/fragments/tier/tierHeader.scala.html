@@ -1,6 +1,6 @@
-@(tier: com.gu.membership.salesforce.Tier.Tier, isStacked: Boolean = false)
+@(tier: com.gu.membership.salesforce.Tier, isStacked: Boolean = false)
 
-<div class="tier-header@if(isStacked) { tier-header--stacked} tier-header--@tier.toString.toLowerCase">
+<div class="tier-header@if(isStacked) { tier-header--stacked} tier-header--@tier.slug">
     <h3 class="tier-header__title">
         <i class="icon icon-g-white-28"></i>
         @tier

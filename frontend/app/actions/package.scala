@@ -1,6 +1,6 @@
-import com.gu.membership.salesforce.{Member, PaidMember, Tier}
+import com.gu.membership.salesforce.{Member, PaidMember}
 import com.gu.membership.util.Timing
-import com.gu.{googleauth, identity}
+import com.gu.googleauth
 import model.IdMinimalUser
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
@@ -23,7 +23,7 @@ package object actions {
     def forMemberOpt[A, T](f: Option[Member] => T)(implicit executor: ExecutionContext): Future[T] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
-          memberOpt <- touchpointBackend.memberRepository.get(req.user.id).map(_.filter(_.tier > Tier.None))
+          memberOpt <- touchpointBackend.memberRepository.get(req.user.id)
         } yield f(memberOpt)
       }
     }

@@ -65,13 +65,13 @@ object Benefits {
     Some(Pricing(540, 60)), "Become a Patron", "Support the Guardian’s mission of promoting the " +
       "open exchange of ideas, with a backstage pass to the Guardian")
 
-  val details = Map(
+  val details = Map[Tier, Benefits](
     Tier.Friend -> friendBenefits,
     Tier.Partner -> partnerBenefits,
     Tier.Patron -> patronBenefits
   )
 
-  val detailsLimited = Map(
+  val detailsLimited = Map[Tier, Seq[BenefitItem]](
     Tier.Friend -> friendsWithBenefitsLimited,
     Tier.Partner -> partnerWithBenefitsLimited,
     Tier.Patron -> patronWithBenefitsLimited

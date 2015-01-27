@@ -120,7 +120,7 @@ trait MemberService extends LazyLogging {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
+  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
     for {
