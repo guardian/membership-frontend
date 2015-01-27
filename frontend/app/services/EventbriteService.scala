@@ -151,12 +151,12 @@ object MasterclassEventService extends EventbriteService {
 
   val wsMetrics = new EventbriteMetrics("Masterclasses")
 
-  val masterclassDataService = MasterclassDataService
+  val contentApiService = GuardianContentService
 
   override def events: Seq[RichEvent] = availableEvents(super.events)
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val masterclassData = masterclassDataService.getData(event.id)
+    val masterclassData = contentApiService.getMasterclassData(event.id)
     Future.successful(MasterclassEvent(event, masterclassData))
   }
 
