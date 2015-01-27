@@ -3,29 +3,23 @@
    ========================================================================== */
 
 .header {
-    position: relative;
+    background-color: transparentize($mem-brandBlue, .1);
     margin-bottom: rem($gs-baseline);
+    position: relative;
+    z-index: 2;
 
     .header__inner--popup {
         padding: 0;
         position: relative;
     }
     .header__branding {
-        // move the logo area above side margins
-        z-index: 2;
-        position: relative;
-        background-color: transparentize($mem-brandBlue, .1);
-        padding-top: rem(5px);
-        padding-bottom: rem(5px);
+        @include clearfix();
+        padding-top: rem($gs-gutter / 4);
+        padding-bottom: rem($gs-gutter / 4);
         height: rem(48px);
 
         @include mq(tablet) {
             height: auto;
-        }
-
-        @include mq($from: desktop) {
-            @include side-margins-calc('padding-left');
-            @include side-margins-calc('padding-right');
         }
     }
     .header__primary {
@@ -59,6 +53,9 @@
             margin-bottom: rem($gs-gutter);
             height: rem(50px);
         }
+    }
+    .header__logo__link {
+        display: block;
     }
 }
 

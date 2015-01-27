@@ -141,6 +141,7 @@ module.exports = function (grunt) {
         clean: {
             js : ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
+            icons: ['<%= dirs.assets.images %>/inline-svgs/*.svg'],
             assetMap: 'conf/assets.map',
             hooks: {
                 src: ['../.git/hooks/pre-commit'],
@@ -417,7 +418,7 @@ module.exports = function (grunt) {
      * Icons
      ***********************************************************************/
 
-    grunt.registerTask('svgSprite', ['svgmin', 'svgstore']);
+    grunt.registerTask('svgSprite', ['clean:icons', 'svgmin', 'svgstore']);
 
     /***********************************************************************
      * Clean

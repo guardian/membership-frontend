@@ -2,20 +2,14 @@
    Tones
    ========================================================================== */
 
-.tone-masterclasses {
-    background-color: $c-tone-masterclass;
+/* Live
+   ========================================================================== */
 
-    a {
-        border-bottom-color: transparentize($c-neutral3, .5);
-    }
-    a:hover {
-        border-bottom-color: $c-neutral1;
-    }
-}
-.tone-guardian-live {
+.tone-guardian-live,
+.tone-accent-guardian-live,
+.tone-trans-guardian-live {
     color: $white;
-    background-color: $c-tone-live;
-
+    background-color: tone('live');
     a {
         border-bottom-color: transparentize($white, .5);
     }
@@ -23,61 +17,130 @@
         border-bottom-color: $white;
     }
 }
-
-.tone-masterclasses--accent {
-    background-color: $c-tone-masterclass-accent;
+.tone-accent-guardian-live {
+    background-color: tone('live', 'accent');
 }
-.tone-guardian-live--accent {
+.tone-trans-guardian-live {
+    background-color: transparentize(tone('live'), .1);
+}
+.tone-border-guardian-live {
+    border-color: tone('live');
+}
+.tone-action-guardian-live {
     color: $white;
-    background-color: $c-tone-live-accent;
+    background-color: tone('live');
+    &:hover, &:focus, &:active {
+        background-color: darken(tone('live'), 5%);
+    }
 }
 
-.tone-masterclasses--border {
-    border-color: $c-tone-masterclass;
+/* Masterclasses
+   ========================================================================== */
+
+.tone-masterclasses,
+.tone-accent-masterclasses,
+.tone-trans-masterclasses {
+    color: $c-neutral1;
+    background-color: tone('masterclass');
+    a {
+        border-bottom-color: transparentize($c-neutral3, .5);
+    }
+    a:hover, a:active {
+        border-bottom-color: $c-neutral1;
+    }
 }
-.tone-guardian-live--border {
-    border-color: $c-tone-live;
+.tone-accent-masterclasses {
+    background-color: tone('masterclass', 'accent');
+}
+.tone-trans-masterclasses {
+    background-color: transparentize(tone('masterclass'), .1);
+}
+.tone-border-masterclasses {
+    border-color: tone('masterclass');
+}
+.tone-action-masterclasses {
+    color: $c-neutral1;
+    background-color: tone('masterclass');
+    &:hover, &:focus, &:active {
+        background-color: darken(tone('masterclass'), 5%);
+    }
 }
 
-.tone-masterclasses--trans {
-    background-color: transparentize($c-tone-masterclass, .1);
-}
-.tone-guardian-live--trans {
+/* Discover
+   ========================================================================== */
+
+.tone-discover,
+.tone-accent-discover,
+.tone-trans-discover {
     color: $white;
-    background-color: transparentize($c-tone-live, .1);
+    background-color: tone('discover');
+    a {
+        border-bottom-color: transparentize($white, .5);
+    }
+    a:hover {
+        border-bottom-color: $white;
+    }
 }
+.tone-accent-discover {
+    background-color: tone('discover', 'accent');
+}
+.tone-trans-discover {
+    background-color: transparentize(tone('discover'), .1);
+}
+.tone-border-discover {
+    border-color: tone('discover');
+}
+.tone-action-discover {
+    color: $white;
+    background-color: tone('discover');
+    &:hover, &:focus, &:active {
+        background-color: darken(tone('discover'), 5%);
+    }
+}
+.tone-text-discover {
+    color: tone('discover', 'contrast');
+    &:active {
+        color: $white;
+    }
+}
+
+/* Tiers
+   ========================================================================== */
 
 .tone-friend {
     color: $white;
-    background-color: $c-tone-friend;
+    background-color: tone('friend');
 }
-.tone-partner {
-    background-color: $c-tone-partner;
+.tone-border-friend {
+    border-color: tone('friend');
 }
-.tone-patron {
-    background-color: $c-tone-patron;
-}
-
-.tone-friend--border {
-    border-color: $c-tone-friend;
-}
-.tone-partner--border {
-    border-color: $c-tone-partner;
-}
-.tone-patron--border {
-    border-color: $c-tone-patron;
-}
-
-.tone-friend--fill {
+.tone-fill-friend {
     fill: $c-tone-friend;
 }
-.tone-partner--fill {
+
+.tone-partner {
+    background-color: tone('partner');
+}
+.tone-border-partner {
+    border-color: tone('partner');
+}
+.tone-fill-partner {
     fill: $c-tone-partner;
 }
-.tone-patron--fill {
+
+.tone-patron {
+    background-color: tone('patron');
+}
+.tone-border-patron {
+    border-color: tone('patron');
+}
+.tone-fill-patron {
     fill: $c-tone-patron;
 }
 
+/* Neutral
+   ========================================================================== */
+
 .tone-tint {
-    background-color: $c-tone-tint;
+    background-color: $c-neutral7;
 }

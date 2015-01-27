@@ -5,35 +5,24 @@
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 @import views.support.Asset
-@import com.github.nscala_time.time.Imports._
 @import model.Eventbrite._
 @import model.RichEvent._
-@import com.gu.membership.salesforce.Tier
 @import configuration.Config
 
-@becomeMemberCta(ticket: EBTicketClass) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
-    val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
-
-    if(!friendCanBuyTicket) {
-        Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
-    }
-}
-
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event " + "theme--" + event.metadata.identifier) {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header case--lower">
-                    <a href="@event.metadata.eventListUrl" class="minimal-link">@event.metadata.shortTitle</a>
+                    <a href="@event.metadata.eventListUrl" class="minimal-link tone-text-@event.metadata.identifier">@event.metadata.shortTitle</a>
                 </div>
                 <h1 class="event-masthead__name">@event.name.text</h1>
             </div>
         </div>
     </div>
 
-    <div class="event-header event-header--pricing tone-@event.metadata.identifier tone-@event.metadata.identifier--accent">
+    <div class="event-header event-header--pricing tone-@event.metadata.identifier tone-accent-@event.metadata.identifier">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -49,7 +38,7 @@
             @if(event.isSoldThruEventbrite) {
                 @fragments.event.ticketDetails(event)
             }
-            <img class="event-logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
+            <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
         </div>
 
     </div>
@@ -66,7 +55,7 @@
                     <div class="event-ticket__action">
                         @if(event.isPastEvent) {
                             @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
-                                <a class="action action--external action--buy-event-ticket-details" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
+                                <a class="action action--external u-no-margin" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
                             }
                         }
                         @if(event.isSoldOut && !event.isPastEvent) {
@@ -112,112 +101,19 @@
                 }
 
                 <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
-                    <div class="event-content__info @if(!event.isBookable) {event-content__info--unavailable}">
-                        @if(!event.isBookable) {
-                            <div class="status-panel">
-                                <div class="status-panel__header">
-                                    @event.statusText
-                                </div>
-                                @if(event.isSoldOut && !event.isPastEvent) {
-                                    <div class="status-panel__content">
-                                        <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
-                                            Add me to the waitlist
-                                        </a>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        <div class="event-content__info__inner u-cf">
-                            <div class="event-content__item event-content__name" itemprop="name">@event.name.text</div>
-                            <div class="event-content__item event-content__time event-content--line-divider u-cf">
-                                <div class="event-content__first">
-                                    <i class="icon-early_booking icon--info"></i>
-                                </div>
-                                <div class="event-content__second" itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</div>
-                            </div>
-
-                            @if(event.venue.addressLine) {
-                                <div class="event-content__item event-content__location event-content--line-divider u-cf" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                    <div class="event-content__first">
-                                        <i class="icon-location icon--info"></i>
-                                    </div>
-                                    <div class="event-content__second copy">
-                                        <span class="event-content__venue-name" itemprop="name">@event.venue.name</span>
-                                        @for(addressLine <- event.venue.addressLine) {
-                                            <span class="event-content__address" itemprop="address">@addressLine</span>
-                                        }
-                                        @for(googleMapsLink <- event.venue.googleMapsLink) {
-                                            <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
-                                        }
-                                    </div>
-                                </div>
-                            }
-
-                            @if(event.isSoldThruEventbrite) {
-
-                                @for(ticket <- event.generalReleaseTicket) {
-                                    @if(event.isSoldOut) {
-                                        <meta itemprop="availability" content="http://schema.org/SoldOut">
-                                    } else {
-                                        <meta itemprop="availability" content="http://schema.org/InStock">
-                                    }
-
-                                    @if(event.isBookable) {
-                                        @fragments.event.ticketSales(event, ticket)
-                                    }
-
-                                    @if(ticket.free) {
-                                        <div class="event-content__price event-content--line-divider">
-                                            <span class="event-content__price-amount">Free</span>
-                                        </div>
-                                    } else {
-                                        @for(pricing <- ticket.cost) {
-
-                                            @if(event.hasMemberTicket) {
-                                                <div class="js-event-price event-content__item">
-                                                    <div class="event-content__price event-content--line-divider js-event-price-value"
-                                                         data-discount-text="@pricing.discountPrice"
-                                                         itemprop="highPrice">
-                                                        @pricing.formattedPrice
-                                                    </div>
-
-                                                    <div class="event-content__trail">
-                                                        <span class="event-content__trail-tag js-event-price-discount"
-                                                              data-discount-text="Full price @pricing.formattedPrice"
-                                                              itemprop="lowPrice">
-                                                            Partners/Patrons @pricing.discountPrice
-                                                        </span>
-                                                        <span class="event-content__trail-saving js-event-price-saving"
-                                                              data-discount-text="(you save @pricing.savingPrice)">
-                                                            (Save @pricing.savingPrice)
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            } else {
-                                                <div class="event-content__item">
-                                                    <div class="event-content__price event-content--line-divider"
-                                                         itemprop="highPrice">
-                                                        @pricing.formattedPrice
-                                                    </div>
-                                                </div>
-                                            }
-                                        }
-                                    }
-                                    @if(event.isBookable) {
-                                        @fragments.event.ticketCta(event, "action--sold-out-event-content-sidebar", "action--buy-event-content-sidebar")
-                                        @becomeMemberCta(ticket)
-                                    }
-                                }
-                            }
-                        </div>
-                    </div>
-
+                    @fragments.event.infoPanel(event)
                     @if(!event.isBookable) {
-                        <a class="action u-fullwidth action--search" href="@event.metadata.eventListUrl">Find other @event.metadata.title</a>
+                        <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
+                            Find other @event.metadata.pluralTitle
+                            <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                        </a>
                     }
                 </div>
             </div>
         </div>
+
+        @fragments.event.seriesDetails(event)
+
     </div>
 
 }

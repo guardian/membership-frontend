@@ -74,7 +74,7 @@ trait MemberService extends LazyLogging {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[String] = {
+  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
@@ -98,7 +98,7 @@ trait MemberService extends LazyLogging {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        memberId.account
+        memberId
       }
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
@@ -120,18 +120,18 @@ trait MemberService extends LazyLogging {
   }
 
   // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[String] = {
+  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier.Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
     for {
       customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
-      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member.salesforceAccountId, customer)
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member.salesforceAccountId, newPaidPlan)
+      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newPaidPlan)
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, Some(customer)))
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
-      memberId.account
+      memberId
     }
   }
 }

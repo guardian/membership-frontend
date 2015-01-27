@@ -5,6 +5,7 @@
 .nav-popup {
     position: absolute;
     top: 0;
+    z-index: 10;
     clear: both;
     padding: rem(($gs-baseline / 3) * 2) 0;
     list-style: none;

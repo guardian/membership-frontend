@@ -53,11 +53,6 @@
     }
 }
 
-// TODO: Only used in global header, can this be made more explicit? Or documented
-.icon-wrapper {
-    display: block;
-}
-
 /* Inline Icons
    ========================================================================== */
 
@@ -77,6 +72,20 @@
 .icon-inline--large {
    width: 32px;
    height: 32px;
+}
+
+.icon-inline--top {
+    vertical-align: top;
+}
+.icon-inline--bottom {
+    vertical-align: bottom;
+}
+
+.icon-inline--brand {
+    fill: $mem-brandBlue;
+}
+.icon-inline--neutral {
+    fill: $c-neutral2;
 }
 
 /* Icon Holder

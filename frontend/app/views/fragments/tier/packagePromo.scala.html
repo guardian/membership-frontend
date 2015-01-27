@@ -2,7 +2,7 @@
 
 @import model.Benefits
 
-<div class="package package--promo @if(isReversed){package--promo--reversed }tone-@tier.toString.toLowerCase--border">
+<div class="package package--promo @if(isReversed){package--promo--reversed }tone-border-@tier.toString.toLowerCase">
     <div class="package__header">
         <a href="/join/@tier.toString.toLowerCase/enter-details" class="no-underline minimal-link">
             @fragments.tier.tierHeaderPromo(tier)

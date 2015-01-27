@@ -7,60 +7,54 @@
 @main("Change Tier Summary | " + futureSubscription.planName + " from " + currentSubscription.planName) {
 
     <main role="main" class="page-content">
-        <div class="content__container">
-            <section>
-                @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
-                <p>You will continue to receive all the great Membership benefits until @currentSubscription.endDate.pretty</p>
-            </section>
-        </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-2">
-                <div class="l-row__item">
-                    <h2 class="content__headline">Current Membership Summary</h2>
-                </div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    @fragments.tier.summary(currentSubscription)
-                </div>
-            </section>
-        </div>
-        <div class="content__container content__container--border">
-            <section class="l-row l-row--items-2">
-                <div class="l-row__item">
-                    <h2 class="content__headline">New Membership Summary</h2>
-                </div>
-                <div class="l-row__item l-row__item--boost-2 secondary-content">
-                    <table class="table table--responsive-font table--striped" role="grid">
-                        <tr role="row">
-                            <th role="rowheader">
-                                Tier
-                            </th>
-                            <td>
-                                Friend
-                            </td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">
-                                Start Date
-                            </th>
-                            <td>
-                                @futureSubscription.startDate.pretty
-                            </td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">
-                                @if(futureSubscription.annual){ Annual } else { Monthly } Payment
-                            </th>
-                            <td>
-                                @futureSubscription.planAmount.pretty
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </section>
-        </div>
-        <section class="content__container u-align-right">
-            <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta action-cta--confirm">My Profile</a>
+
+        @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + currentSubscription.endDate.pretty))
+
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Current Membership summary</h2>
+            </div>
+            <div class="page-section__content">
+                @fragments.tier.summary(currentSubscription)
+            </div>
         </section>
+
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">New Membership summary</h2>
+            </div>
+            <div class="page-section__content">
+                <table class="table table--responsive-font table--striped" role="grid">
+                    <tr role="row">
+                        <th role="rowheader">
+                            Tier
+                        </th>
+                        <td id="qa-downgrade-summary-tier">
+                            Friend
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">
+                            Start date
+                        </th>
+                        <td id="qa-downgrade-summary-start">
+                            @futureSubscription.startDate.pretty
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">
+                            @if(futureSubscription.annual){ Annual } else { Monthly } payment
+                        </th>
+                        <td>
+                            @futureSubscription.planAmount.pretty
+                        </td>
+                    </tr>
+                </table>
+
+                <a href="@Config.idWebAppUrl/membership/edit" class="action u-align-right" id="qa-downgrade-profile-link">My profile</a>
+            </div>
+        </section>
+
     </main>
 
 }

@@ -2,8 +2,4 @@
 
 $browser-supports-flexbox: false;
 
-// Import global styles
 @import 'style';
-
-// Import IE9 overrides
-@import '_ie9';

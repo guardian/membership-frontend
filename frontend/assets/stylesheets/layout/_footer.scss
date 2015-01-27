@@ -6,6 +6,8 @@
     width: 100%;
     margin: rem($gs-baseline) 0 0;
     background-color: $c-neutral8;
+    position: relative;
+    z-index: 2;
 
     @include mq(mobileLandscape) {
         margin-top: rem($gs-baseline * 3);
@@ -64,20 +66,15 @@
    ========================================================================== */
 
 .colophon {
+    @include clearfix();
     @include fs-bodyHeading(1);
     list-style: none;
     margin: 0;
     padding-top: rem($gs-baseline * 2);
     padding-bottom: rem($gs-baseline / 2);
 
-    @include columns(2);
-
-    @include mq(tablet) {
-        @include columns(3);
-    }
-
-    @include mq(wide) {
-        @include columns(4);
+    @include mq(desktop) {
+        max-width: 75%;
     }
 
     a {
@@ -86,7 +83,14 @@
     }
 }
 .colophon__item {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
+    float: left;
+    display: block;
+    width: 50%;
+
+    @include mq(tablet) {
+        width: 33.333%;
+    }
 }
 
 .really-serious-copyright {

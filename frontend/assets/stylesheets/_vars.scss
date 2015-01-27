@@ -20,7 +20,6 @@ $browser-supports-flexbox: true !default;
 $gutter-width-fluid: 2%;
 $trailblock-img-width: 140px;
 $mobilePopupOffset: 43px;
-$side-margins-top-magic-number: 114px;
 
 // Animation Settings
 // =============================================================================
@@ -151,8 +150,7 @@ $c-error: map-get($pasteup-palette, error);
 $c-soldOut: #cc2b12;
 
 // Tone colours
-// TODO: Could masterclass colours go into pasteup-palette?
-// Currently uses `multimedia` in pasteup and our accent is not defined
+// DEPRECATED: prefer palette-tones / tone()
 $c-tone-live: map-get($pasteup-palette, live-main-1);
 $c-tone-live-accent: map-get($pasteup-palette, live-main-2);
 $c-tone-masterclass: #ffbb00;
@@ -160,7 +158,33 @@ $c-tone-masterclass-accent: #fcdd03;
 $c-tone-friend: $c-neutral1;
 $c-tone-partner: map-get($pasteup-palette, news-main-2);
 $c-tone-patron: map-get($pasteup-palette, news-main-1);
-$c-tone-tint: $c-neutral7;
+
+// Usage: tone('live', 'accent')
+//        tone('live') => defaults to 'base' key
+$palette-tones: (
+    live: (
+        base: map-get($pasteup-palette, live-main-1),
+        accent: map-get($pasteup-palette, live-main-2)
+    ),
+    masterclass: (
+        base: #ffbb00,
+        accent: #ffd21e
+    ),
+    discover: (
+        base: #951655,
+        accent: #b82266,
+        contrast: #fdadba
+    ),
+    friend: (
+        base: $c-neutral1
+    ),
+    partner: (
+        base: map-get($pasteup-palette, news-main-2)
+    ),
+    patron: (
+        base: map-get($pasteup-palette, news-main-1)
+    )
+);
 
 // Membership palette
 $mem-brandBlue: map-get($pasteup-palette, news-main-2);

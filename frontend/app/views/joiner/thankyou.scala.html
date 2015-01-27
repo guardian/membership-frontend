@@ -19,14 +19,18 @@
     }
 }
 
+@personalisedWelcome = {
+    @for(firstName <- member.firstName) {
+        Hello @firstName<br/>
+    }
+}
+
 @main(title) {
 
     <main role="main" class="page-content">
-        <section class="page-header page-header--aligned">
-            <h1 class="page-headline">Hello @member.firstName.<br/> Welcome to Guardian Membership!</h1>
-            <p class="page-intro">You're the newest member of the Guardian Membership community and we're thrilled to have you on board.</p>
-            <p class="page-intro">We've sent confirmation of your membership to @member.email</p>
-        </section>
+
+        @fragments.page.pageHeader(personalisedWelcome + "Welcome to Guardian Membership",
+            Some("You're the newest member of the Guardian Membership community and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -36,76 +40,75 @@
                 <table class="table table--responsive-font table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td>@member.tier</td>
+                        <td id="qa-joiner-summary-tier">@member.tier</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td>@subscription.startDate.pretty</td>
+                        <td id="qa-joiner-summary-start">@subscription.startDate.pretty</td>
                     </tr>
                     @for(card <- cardOpt) {
                         <tr role="row">
                             <th role="rowheader">Amount paid today</th>
-                            <td>@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-today">@subscription.planAmount.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">
                                 @if(subscription.annual) { Annual } else { Monthly } payment
                             </th>
-                            <td>@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-recurring">@subscription.planAmount.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment</th>
-                            <td>@subscription.endDate.pretty</td>
+                            <td id="qa-joiner-summary-next">@subscription.endDate.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Card</th>
-                            <td>•••• •••• •••• •••• @card.last4</td>
+                            <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.last4</td>
                         </tr>
                     }
                 </table>
             </div>
         </section>
 
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Tell your friends</h2>
+            </div>
+            <div class="page-section__content">
+                @fragments.social(joinThankyou)
+            </div>
+        </section>
 
-    @eventDetailsOpt match {
-        case Some((event, iframeUrl)) => {
+        @eventDetailsOpt match {
+            case Some((event, iframeUrl)) => {
 
-            <section class="page-section page-section--bordered">
-                <div class="page-section__lead-in">
-                    <h2 class="page-section__headline">Complete your ticket purchase</h2>
-                </div>
-                <div class="page-section__content">
-                    <p>
-                       We're currently improving our ticket purchasing system, in the meantime you will have to enter
-                       some details again.
-                    </p>
-                    <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0"
-                    hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
-                </div>
-            </section>
+                <section class="page-section page-section--bordered">
+                    <div class="page-section__lead-in">
+                        <h2 class="page-section__headline">Complete your ticket purchase</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <p>
+                           We're currently improving our ticket purchasing system, in the meantime you will have to enter
+                           some details again.
+                        </p>
+                        <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0"
+                        hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+                    </div>
+                </section>
+            }
+
+            case None => {
+
+                <section class="page-section page-section--bordered">
+                    <div class="page-section__lead-in">
+                        <h2 class="page-section__headline">Find Guardian Live events</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <a class="action u-no-top-margin" href="@routes.Event.list">Get started</a>
+                    </div>
+                </section>
+            }
         }
-
-        case None => {
-
-            <section class="page-section page-section--bordered">
-                <div class="page-section__lead-in">
-                    <h2 class="page-section__headline">Tell your friends</h2>
-                </div>
-                <div class="page-section__content">
-                    @fragments.social(joinThankyou)
-                </div>
-            </section>
-
-            <section class="page-section page-section--bordered">
-                <div class="page-section__lead-in">
-                    <h2 class="page-section__headline">Find Guardian Live events</h2>
-                </div>
-                <div class="page-section__content">
-                    <a class="action" href="/events">Get started</a>
-                </div>
-            </section>
-        }
-    }
 
     </main>
 
