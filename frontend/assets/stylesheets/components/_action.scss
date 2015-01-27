@@ -63,6 +63,21 @@
     &[disabled]:focus {
         background-color: $c-neutral5;
     }
+
+    .action__icon {
+        margin-top: rem(2px);
+    }
+    .action__icon--left {
+        float: left;
+        margin-left: rem(-$gs-gutter / 2);
+        margin-right: rem($gs-gutter / 2);
+    }
+    .action__icon--right {
+        float: right;
+        margin-right: rem(-$gs-gutter / 2);
+        margin-left: rem($gs-gutter / 2);
+    }
+
 }
 
 // TODO: Specificy issues
@@ -226,6 +241,73 @@
     }
 }
 
+.action-proceed {
+
+    @include image-replacement();
+
+    width: rem(36px);
+    height: rem(36px);
+    padding: 0 rem(8px) 0 0;
+    background-color: transparent;
+    @extend .icon-arrow-right-blue;
+    background-position: center center;
+
+    @include border-radius(50px);
+    border: 1px solid $c-button;
+
+    &:focus {
+        outline: 0;
+    }
+
+}
+
+/* Actions - Secondary Modifiers
+   ========================================================================== */
+
+.action--secondary,
+.action--toggle {
+    color: $c-button;
+    background-color: $white;
+    border: 1px solid transparentize($c-button, 0.5);
+
+    &:focus,
+    &:active,
+    &:hover {
+        background-color: transparent;
+    }
+
+    &:hover {
+        border-color: $c-button;
+    }
+
+}
+
+.action--secondary {
+    &:after {
+        display: none;
+    }
+}
+
+.action--toggle {
+   margin-bottom: $gutter-width-fluid;
+   &:before {
+       @extend .icon-plus;
+       content: '';
+       float: left;
+       margin: 0 rem($gs-baseline) 0 0;
+   }
+   &:after {
+       display: none;
+   }
+
+   &.is-toggled,
+   .action--toggle--toggled {
+       &:before {
+           @extend .icon-minus;
+       }
+   }
+}
+
 // TODO: Deprecated
 // Replace with .action-secondary
 .action--secondary-button {
@@ -245,95 +327,10 @@
 /* Actions - Booking Modifiers
    ========================================================================== */
 
-.action--buy-event-ticket-details {
+.action--booking {
     background-color: $black;
     &:hover {
         background-color: transparentize($black, 0.35);
-    }
-
-    @include mq(tablet) {
-        margin: 0 rem($gs-gutter) 0 0;
-        min-width: 0;
-    }
-}
-
-.action--sold-out-event-ticket-details {
-    background-color: $black;
-    padding-right: rem(18px);
-
-    &:hover {
-        background-color: $black;
-        cursor: default;
-    }
-    &:after {
-        display: none;
-    }
-
-    @include mq(tablet) {
-        float: left;
-        margin: rem(6px $gs-gutter 0 0);
-        min-width: 0;
-    }
-}
-
-.action--buy-event-content-sidebar {
-    min-width: 100%;
-
-    .theme--guardian-live & {
-        background-color: $c-tone-live;
-
-        &:hover {
-            background-color: darken($c-tone-live, 5%);
-        }
-    }
-    .theme--masterclasses & {
-        color: $c-neutral1;
-        background-color: $c-tone-masterclass;
-        &:hover {
-            background-color: darken($c-tone-masterclass, 5%);
-        }
-        &:after {
-            @extend .icon-arrow-right-black;
-        }
-    }
-}
-
-.action--sold-out-event-content-sidebar {
-    min-width: 100%;
-
-    .theme--guardian-live & {
-        background-color: $c-tone-live;
-    }
-    .theme--masterclasses & {
-        background-color: $c-tone-masterclass;
-    }
-    &:hover {
-        cursor: default;
-    }
-    &:after {
-        display: none;
-    }
-}
-
-.action--join,
-.action--logged-in {
-    text-align: left;
-    background-color: $c-button;
-    color: $white;
-    padding: rem(8px) rem(8px) rem(8px) rem(18px);
-
-    &:visited,
-    &:active,
-    &:focus {
-        background-color: $c-button;
-        color: $white;
-    }
-    &:hover {
-        background-color: darken($c-button, 15%);
-    }
-    i {
-        float: right;
-        margin-top: rem(2px);
     }
 }
 
@@ -371,6 +368,30 @@
     @include mq(tablet) {
         width: auto;
         float: right;
+    }
+}
+
+/* Actions - Utility Modifiers
+   ========================================================================== */
+
+.action--external {
+    background-color: transparent;
+    border: 1px solid transparentize($white, 0.5);
+    width: 100%;
+
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: $white;
+    }
+
+    @include mq($until: tablet) {
+        margin-top: rem($gs-baseline);
+        margin-bottom: 0;
+    }
+
+    @include mq(tablet) {
+        width: auto;
     }
 }
 

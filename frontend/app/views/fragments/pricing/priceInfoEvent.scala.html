@@ -6,10 +6,25 @@
             <div class="price-info-inline__value">Free</div>
         } else {
             @for(pricing <- ticket.cost) {
-                <div class="price-info-inline__value">@pricing.formattedPrice</div>
-                <div class="price-info-inline__trail">
-                    Partners/Patrons: @pricing.discountPrice
-                </div>
+                @if(event.hasMemberTicket) {
+                    <div class="js-event-price">
+                        <div class="price-info-inline__value js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
+                            @pricing.formattedPrice
+                        </div>
+                        <div class="price-info-inline__trail">
+                            <span class="js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
+                                Partners/Patrons @pricing.discountPrice
+                            </span>
+                            <span class="js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
+                                (save @pricing.savingPrice)
+                            </span>
+                        </div>
+                    </div>
+                } else {
+                    <div class="price-info-inline__value" itemprop="highPrice">
+                        @pricing.formattedPrice
+                    </div>
+                }
             }
         }
     </div>

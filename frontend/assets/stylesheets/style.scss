@@ -4,7 +4,8 @@
  *
  * SETTINGS & TOOLS
  * Vars.................Variables and settings
- * Mixins...............Useful mixins
+ * Function.............Sass functions
+ * Mixins...............Sass mixins
  * Extends..............Placeholder classes used only for @extend
  *
  * BASE.................Global / element level rules
@@ -20,6 +21,7 @@
    ========================================================================== */
 
 @import 'vars';
+@import 'functions';
 @import 'mixins/mixins-utils';
 @import 'mixins/mixins-layout';
 @import 'mixins/mixins-flexbox';
@@ -83,6 +85,7 @@
 @import 'components/event-items';
 @import 'components/event-filters';
 @import 'components/event-detail';
+@import 'components/series';
 @import 'components/benefits';
 @import 'components/payment';
 @import 'components/packages';
