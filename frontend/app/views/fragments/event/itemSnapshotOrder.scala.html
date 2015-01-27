@@ -1,0 +1,39 @@
+@(event: model.RichEvent.RichEvent, order: model.Eventbrite.EBOrder)
+
+@import configuration.Config
+@import views.support.Asset
+@import views.support.Prices._
+
+<div class="event-snapshot event-snapshot--wide" itemscope itemtype="http://schema.org/Event">
+    <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
+        @fragments.event.image(event)
+    </div>
+    <div class="event-snapshot__content">
+        <h2 class="event-snapshot__title">
+            @if(event.isSoldOut){
+                <span class="event-status event-status--sold-out">Sold out</span>
+            }
+            <span itemprop="name">@event.name.text</span>
+        </h2>
+        <div class="stats-listing">
+            @fragments.event.stats(event)
+            <div class="stat-item stat-item--last">
+                <div class="stat-item__first">
+                    @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
+                </div>
+                <div class="stat-item__second">
+                    <div class="order-summary">
+                        <div class="order-summary__id">Order no. @order.id</div>
+                        <div class="order-summary__ticket">
+                            @order.ticketCount ticket@if(order.ticketCount > 1){s}
+                            @if(order.totalCost > 0) { @order.totalCost.pretty } else { free }
+                        </div>
+                        <div class="order-summary__recipient">Sent to <strong>@order.email</strong></div>
+                        <div class="order-summary__reference copy">The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
+                        <img class="u-pad-top" src="@Asset.at("images/logos/eventbrite.svg")">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

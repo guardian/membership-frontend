@@ -34,7 +34,9 @@
 
 .text-note {
     @include fs-data(2);
-    color: $c-neutral3;
+    color: $c-neutral2;
+}
+.text-note--block {
     margin: rem($gs-baseline) 0;
     display: block;
 }
