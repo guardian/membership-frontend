@@ -17,8 +17,6 @@ case class MasterclassResponse[T](pagination: ContentAPIPagination, data: Seq[T]
 
 trait MasterclassDataService extends GuardianContent {
 
-  lazy val content = Agent[Seq[MasterclassData]](Seq.empty)
-
   protected def getAllContent: Future[Seq[MasterclassData]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
@@ -35,13 +33,13 @@ trait MasterclassDataService extends GuardianContent {
 
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
-}
 
-object MasterclassDataService extends MasterclassDataService {
   val contentTask = ScheduledTask[Seq[MasterclassData]]("MasterclassDataService", Nil, 2.seconds, 2.minutes)(getAllContent)
 
   def getData(eventId: String) = contentTask.get().find(mc => mc.eventId.equals(eventId))
 }
+
+object MasterclassDataService extends MasterclassDataService
 
 object MasterclassDataExtractor {
 
