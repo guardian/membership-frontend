@@ -19,7 +19,7 @@ case class ContentAPIPagination(currentPage: Int, pages: Int) {
 
 trait GuardianContentService extends GuardianContent {
 
-  protected def eventbriteContent: Future[Seq[Content]] = {
+  private def eventbrite: Future[Seq[Content]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
@@ -35,7 +35,7 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  protected def masterclasses: Future[Seq[MasterclassData]] = {
+  private def masterclasses: Future[Seq[MasterclassData]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
@@ -52,11 +52,13 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  def getMasterclassData(eventId: String) = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
+  def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
+  
+  def eventbriteContent(eventId: String): Option[Content] = eventbriteContentTask.get().find(_.references.contains(eventId))
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
 
-  val eventbriteContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Eventbrite content", Nil, 2.seconds, 5.minutes)(eventbriteContent)
+  val eventbriteContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Eventbrite content", Nil, 2.seconds, 5.minutes)(eventbrite)
 
 }
 

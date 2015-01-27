@@ -1,5 +1,6 @@
 package model
 
+import com.gu.contentapi.client.model.Content
 import configuration.Config
 import model.Eventbrite.EBEvent
 import services.MasterclassData
@@ -90,7 +91,7 @@ object RichEvent {
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
   }
 
-  case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
+  case class GuLiveEvent(event: EBEvent, image: Option[EventImage], content: Option[Content]) extends RichEvent {
     val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
       val file = asset.secureUrl.getOrElse(asset.file)
       val regex = "\\d+.jpg".r

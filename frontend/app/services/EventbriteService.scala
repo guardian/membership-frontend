@@ -116,6 +116,8 @@ object GuardianLiveEventService extends EventbriteService {
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
   val gridService = GridService(Config.gridConfig.url)
+  val contentApiService = GuardianContentService
+
 
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, refreshTimePriorityEvents) {
@@ -125,8 +127,11 @@ object GuardianLiveEventService extends EventbriteService {
   }
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None))) { url =>
-      gridService.getRequestedCrop(url).map(GuLiveEvent(event, _))
+
+    val eventbriteContent = contentApiService.eventbriteContent(event.id)
+
+    event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None, eventbriteContent))) { url =>
+      gridService.getRequestedCrop(url).map(GuLiveEvent(event, _, eventbriteContent))
     }
   }
 
@@ -156,7 +161,8 @@ object MasterclassEventService extends EventbriteService {
   override def events: Seq[RichEvent] = availableEvents(super.events)
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val masterclassData = contentApiService.getMasterclassData(event.id)
+    val masterclassData = contentApiService.masterclassContent(event.id)
+    //todo change this to have link to weburl
     Future.successful(MasterclassEvent(event, masterclassData))
   }
 
