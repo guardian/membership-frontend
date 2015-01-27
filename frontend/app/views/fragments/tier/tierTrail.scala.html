@@ -8,7 +8,7 @@
 
 <div class="tier-trail">
     <h3 class="tier-trail__name">
-        @fragments.inlineIcon("g-mark", List("icon-inline--medium", s"tone-${tier.slug}--fill"))
+        @fragments.inlineIcon("g-mark", List("icon-inline--medium", "tone-fill-" + tier.slug))
         @tier
     </h3>
     @if(showCaption) {

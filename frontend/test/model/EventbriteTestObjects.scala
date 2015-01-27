@@ -21,7 +21,18 @@ object EventbriteTestObjects {
     val imageMetadata = None
     val tags = Nil
 
-    val metadata = Metadata("", "", "", "", "", false, None, ChooseTierMetadata("", ""))
+    val metadata = Metadata(
+      identifier="",
+      title="",
+      shortTitle="",
+      pluralTitle="",
+      description=None,
+      eventListUrl="",
+      termsUrl="",
+      largeImg=false,
+      highlightsUrlOpt=None,
+      chooseTier=ChooseTierMetadata("", "")
+    )
   }
 
 }

@@ -261,6 +261,10 @@
         )
     }
 
+    @pattern("Series Detail") {
+        @fragments.event.seriesDetails(eventPortfolio.orderedEvents.head)
+    }
+
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         @fragments.event.itemHero(eventPortfolio.orderedEvents.head)
     }

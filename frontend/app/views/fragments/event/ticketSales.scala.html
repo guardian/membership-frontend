@@ -21,18 +21,18 @@
 
 @event match {
     case _: GuLiveEvent => {
-        <div class="event-content__tickets event-content--line-divider u-cf" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
-            <div class="event-content__sale-dates u-cf">
-                <div class="event-content__first">
+        <div class="event-info__tickets sticky-hidden u-cf" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+            <div class="event-info__sale-dates u-cf">
+                <div class="event-info__first">
                     <i class="icon-book_tickets icon--info"></i>
                 </div>
-                <div class="event-content__second">
+                <div class="event-info__second">
                     <div class="sale-dates__header">Ticket release dates</div>
 
                     @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
 
                         @if(ticketSaleDates.anyoneCanBuyTicket) {
-                            <button class="js-toggle fake-link u-align-right sales-dates__toggle"
+                            <button class="js-toggle fake-link u-align-right sales-dates-toggle"
                                     data-toggle-label="Hide"
                                     data-toggle="js-event-ticket-dates-@event.id">
                                 Show
