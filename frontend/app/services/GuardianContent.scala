@@ -1,13 +1,12 @@
 package services
 
-import com.gu.contentapi.client.{GuardianContentClient, GuardianContentApiError}
-import com.gu.contentapi.client.model.ItemResponse
+import com.gu.contentapi.client.{GuardianContentApiError, GuardianContentClient}
+import com.gu.contentapi.client.model.{ItemQuery, ItemResponse}
 import configuration.Config
 import monitoring.ContentApiMetrics
 import org.joda.time.DateTime
 import play.api.Logger
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.concurrent.Future
 import scala.util.Failure
 
@@ -21,14 +20,14 @@ trait GuardianContent {
 
   def masterclasses(page: Int): Future[ItemResponse] = {
     val date = new DateTime(2014, 1, 1, 0, 0)
-    contentApi.item.itemId("guardian-masterclasses")
+    val itemQuery = ItemQuery("guardian-masterclasses")
       .fromDate(date)
       .pageSize(100)
       .page(page)
       .showReferences("eventbrite")
       .showFields("body")
       .showElements("image")
-      .response.andThen {
+      contentApi.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
         ContentApiMetrics.putResponseCode(status, "GET content")
         Logger.error(s"Error response from Content API $status")
