@@ -56,7 +56,7 @@ trait CommonActions {
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
 
   def createBasicGuMemCookie(implicit request: RequestHeader) =
-    AuthenticationService.identityAuthenticatedUser(request).fold(Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))) { user =>
+    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))) { user =>
       val json = Json.obj("userId" -> user.id)
       Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
     }
