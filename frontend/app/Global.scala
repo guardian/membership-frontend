@@ -20,7 +20,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
 
     TouchpointBackend.All.foreach(_.start())
     GuardianContentService.masterclassContentTask.start()
-    GuardianContentService.eventbriteContentTask.start()
+    GuardianContentService.contentTask.start()
   }
 
   override def onHandlerNotFound(request: RequestHeader): Future[Result] = {

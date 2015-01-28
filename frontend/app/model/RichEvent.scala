@@ -15,11 +15,12 @@ object RichEvent {
     eventListUrl: String,
     termsUrl: String,
     largeImg: Boolean,
-    highlightsUrlOpt: Option[String],
+    highlightsUrlOpt: Option[HighlightsMetadata] = None,
     chooseTier: ChooseTierMetadata
   )
 
   case class ChooseTierMetadata(title: String, sectionTitle: String)
+  case class HighlightsMetadata(title: String, url: String)
 
   val guLiveMetadata = Metadata(
     identifier="guardian-live",
@@ -33,7 +34,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
-    highlightsUrlOpt=Some(Config.guardianMembershipUrl + "#video"),
     chooseTier=ChooseTierMetadata(
       "Guardian Live events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -52,7 +52,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.masterclasses.url,
     termsUrl=Config.guardianMasterclassesTermsUrl,
     largeImg=false,
-    highlightsUrlOpt=None,
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
       "Become a Partner or Patron to save 20% on your masterclass"
@@ -68,7 +67,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
-    highlightsUrlOpt=None,
     chooseTier=ChooseTierMetadata(
       "Guardian Discover events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -110,7 +108,12 @@ object RichEvent {
 
     val tags = Nil
 
-    val metadata = guLiveMetadata
+    val metadata = {
+      val highlight = content.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
+        .orElse(Some(HighlightsMetadata("Watch highlights of past events", Config.guardianMembershipUrl + "#video")))
+      guLiveMetadata.copy(highlightsUrlOpt = highlight)
+    }
+
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {

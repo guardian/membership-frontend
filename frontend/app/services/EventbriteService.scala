@@ -128,7 +128,7 @@ object GuardianLiveEventService extends EventbriteService {
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
 
-    val eventbriteContent = contentApiService.eventbriteContent(event.id)
+    val eventbriteContent = contentApiService.content(event.id)
 
     event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None, eventbriteContent))) { url =>
       gridService.getRequestedCrop(url).map(GuLiveEvent(event, _, eventbriteContent))

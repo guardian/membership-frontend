@@ -23,7 +23,7 @@ trait GuardianContentService extends GuardianContent {
     val enumerator = Enumerator.unfoldM(Option(1)) {
       _.map { nextPage =>
         for {
-          response <- eventbriteContent(nextPage)
+          response <- eventbriteQuery(nextPage)
         } yield {
           val pagination = ContentAPIPagination(response.currentPage, response.pages)
           Some(pagination.nextPageOpt, response.results)
@@ -54,11 +54,11 @@ trait GuardianContentService extends GuardianContent {
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
   
-  def eventbriteContent(eventId: String): Option[Content] = eventbriteContentTask.get().find(_.references.contains(eventId))
+  def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
 
-  val eventbriteContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Eventbrite content", Nil, 2.seconds, 5.minutes)(eventbrite)
+  val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
 
 }
 
@@ -83,9 +83,10 @@ trait GuardianContent {
     }
   }
 
-  def eventbriteContent(page: Int): Future[SearchResponse] = {
+  def eventbriteQuery(page: Int): Future[SearchResponse] = {
     val searchQuery = SearchQuery()
       .referenceType("eventbrite")
+      .showReferences("eventbrite")
       .pageSize(100)
       .page(page)
     client.getResponse(searchQuery).andThen {

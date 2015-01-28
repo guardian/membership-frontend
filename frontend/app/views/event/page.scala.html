@@ -55,7 +55,7 @@
                     <div class="event-ticket__action">
                         @if(event.isPastEvent) {
                             @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
-                                <a class="action action--external u-no-margin" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
+                                <a class="action action--external u-no-margin" href="@highlightsUrl.url" data-link-name="Watch highlights">@highlightsUrl.title</a>
                             }
                         }
                         @if(event.isSoldOut && !event.isPastEvent) {
