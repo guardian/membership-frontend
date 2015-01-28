@@ -62,7 +62,7 @@
                     }
                 }
                 @if(!isCurrentPackage && mode != "promo") {
-                    @if(currentTier.getOrElse("") == Tier.Friend || tier == Tier.Friend) {
+                    @if(currentTier.exists(_ < tier) || tier == Tier.Friend) {
                         @if(mode == "downgrade") {
                             <form action="/tier/change/@tier.slug" method="POST">
                                 @CSRF.formField
