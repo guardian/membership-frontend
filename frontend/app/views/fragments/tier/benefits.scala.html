@@ -1,6 +1,6 @@
 @(
-    currentTier: Option[com.gu.membership.salesforce.Tier.Tier],
-    tier: com.gu.membership.salesforce.Tier.Tier,
+    currentTier: Option[com.gu.membership.salesforce.Tier],
+    tier: com.gu.membership.salesforce.Tier,
     showBenefitDetails: Boolean = true,
     mode: String = "",
     showBenefitCopy: Boolean = true,
@@ -31,7 +31,7 @@
                     }
                 </div>
             }
-            <div class="tier-header tier-header--stacked tier-header--@tier.toString.toLowerCase">
+            <div class="tier-header tier-header--stacked tier-header--@tier.slug">
                 <div class="package__select-zone mobile-portrait-only js-benefit-header">
                     <button class="package__select-toggle js-benefit-button"></button>
                 </div>
@@ -52,7 +52,7 @@
 
             <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
                 @if(mode == "promo") {
-                    <a class="action js-opt-become-member" href="/join/@tier.toString.toLowerCase/enter-details" id="qa-@tier.toString.toLowerCase" data-link-name="Become a @tier">Become a @tier</a>
+                    <a class="action js-opt-become-member" href="@routes.Joiner.enterDetails(tier)" id="qa-@tier.slug" data-link-name="Become a @tier">Become a @tier</a>
                     @if(showLearnMore) {
                         @if(tier == Tier.Patron) {
                             <a class="action action--secondary-button" href="/patrons">Learn more about @{tier}s</a>
@@ -64,12 +64,12 @@
                 @if(!isCurrentPackage && mode != "promo") {
                     @if(currentTier.getOrElse("") == Tier.Friend || tier == Tier.Friend) {
                         @if(mode == "downgrade") {
-                            <form action="/tier/change/@tier.toString.toLowerCase" method="POST">
+                            <form action="/tier/change/@tier.slug" method="POST">
                                 @CSRF.formField
                                 <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">@Benefits.details(tier).cta</button>
                             </form>
                         } else {
-                            <a href="/tier/change/@tier.toString.toLowerCase" class="action action-cta--confirm" id="qa-change-tier-@tier.toString.toLowerCase">
+                            <a href="/tier/change/@tier.slug" class="action action-cta--confirm" id="qa-change-tier-@tier.slug">
                                 @Benefits.details(tier).cta
                             </a>
                         }

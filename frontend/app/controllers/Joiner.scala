@@ -52,7 +52,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterDetails(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def enterDetails(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
@@ -112,12 +112,12 @@ trait Joiner extends Controller {
     }
   }
 
-  def joinPaid(tier: Tier.Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
 
-  private def makeMember(tier: Tier.Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
+  private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
 
     MemberService.createMember(request.user, formData, IdentityRequest(request))
       .map { _ =>
@@ -135,7 +135,7 @@ trait Joiner extends Controller {
       }
   }
 
-  def thankyou(tier: Tier.Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
