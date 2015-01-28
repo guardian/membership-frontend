@@ -5,7 +5,7 @@ import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.Tier
+import com.gu.membership.salesforce.Tier
 import com.gu.membership.zuora.{Address, Country, Countries}
 
 import model._
@@ -110,7 +110,7 @@ object MemberForm {
 
   val paidMemberJoinForm: Form[PaidMemberJoinForm] = Form(
     mapping(
-      "tier" -> nonEmptyText.transform[Tier](Tier.withName, _.toString),
+      "tier" -> nonEmptyText.transform[Tier](Tier.slugMap, _.slug),
       "name" -> nameMapping,
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,

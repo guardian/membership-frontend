@@ -7,7 +7,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 
 import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier.Tier
+import com.gu.membership.salesforce.Tier
 
 import actions.MemberRequest
 import forms.MemberForm._

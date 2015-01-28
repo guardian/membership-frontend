@@ -1,0 +1,68 @@
+@(event: model.RichEvent.RichEvent)
+
+@import views.support.Dates._
+@import configuration.Config
+@import com.gu.membership.salesforce.Tier
+@import model.Eventbrite.EBTicketClass
+
+@becomeMemberCta(ticket: EBTicketClass) = @{
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
+    val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
+
+    if(!friendCanBuyTicket) {
+        Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
+    }
+}
+
+<div class="event-info@if(event.isBookable && event.metadata.largeImg) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
+
+    @if(!event.isBookable) {
+        <div class="status-panel">
+            <div class="status-panel__header">
+                @if(event.isPastEvent) { Past event } else { Sold out }
+            </div>
+            @if(!event.isPastEvent) {
+                <div class="status-panel__content">
+                    <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
+                        Add me to the waitlist
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="event-info__inner">
+
+        <h4 class="event-info__name" itemprop="name">@event.name.text</h4>
+
+        @fragments.event.stats(event)
+
+        @* TODO: Make part of event stats *@
+        @if(event.isSoldThruEventbrite && event.isBookable) {
+            @for(ticket <- event.generalReleaseTicket) {
+                @fragments.event.ticketSales(event, ticket)
+            }
+        }
+
+        @if(event.isSoldThruEventbrite) {
+
+            @if(event.isSoldOut) {
+                <meta itemprop="availability" content="http://schema.org/SoldOut">
+            } else {
+                <meta itemprop="availability" content="http://schema.org/InStock">
+            }
+
+            @fragments.pricing.priceInfoEvent(event)
+
+            @for(ticket <- event.generalReleaseTicket) {
+                @if(event.isBookable) {
+                    <a class="js-ticket-cta action" data-link-name="Book Tickets" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
+                    <div class="event-info__terms js-legal-terms copy">
+                        By proceeding, you agree to the @event.metadata.title <a href="@event.metadata.termsUrl" target="_blank">Terms and Conditions</a>
+                    </div>
+                    @becomeMemberCta(ticket)
+                }
+            }
+        }
+    </div>
+</div>

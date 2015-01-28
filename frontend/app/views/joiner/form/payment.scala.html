@@ -1,5 +1,5 @@
 @(
-    tier: com.gu.membership.salesforce.Tier.Tier,
+    tier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
     marketingChoices: model.StatusFields,
     passwordExists: Boolean,
@@ -32,7 +32,7 @@
             <div class="form-section__content">
                 <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-stripe-form">
                     @CSRF.formField
-                    <input type="hidden" name="tier" class="js-tier-field" value="@tier"/>
+                    <input type="hidden" name="tier" class="js-tier-field" value="@tier.slug"/>
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                     @fragments.form.addressDetail(
                         heading = "Delivery address",

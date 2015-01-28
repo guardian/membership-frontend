@@ -11,16 +11,16 @@ class MemberMetrics(val backendEnv: String) extends TouchpointBackendMetrics {
     put(s"sign-ups-${plan.salesforceTier}")
   }
 
-  def putUpgrade(tier: Tier.Tier) {
-    put(s"upgrade-${tier.toString}")
+  def putUpgrade(tier: Tier) {
+    put(s"upgrade-${tier.name}")
   }
 
-  def putDowngrade(tier:Tier.Tier) {
-    put(s"downgrade-${tier.toString}")
+  def putDowngrade(tier: Tier) {
+    put(s"downgrade-${tier.name}")
   }
 
-  def putCancel(tier:Tier.Tier) {
-    put(s"cancel-${tier.toString}")
+  def putCancel(tier: Tier) {
+    put(s"cancel-${tier.name}")
   }
 
   def putFailSignUp(plan: ProductRatePlan) {

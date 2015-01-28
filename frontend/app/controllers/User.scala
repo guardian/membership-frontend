@@ -55,7 +55,7 @@ trait User extends Controller {
     "userId" -> member.identityId,
     "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
-    "tier" -> member.tier.toString,
+    "tier" -> member.tier.name,
     "joinDate" -> member.joinDate
   )
 }

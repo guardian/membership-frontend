@@ -11,7 +11,6 @@ import monitoring.EventbriteMetrics
 
 class EventbriteServiceTest extends PlaySpecification {
 
-
   class TestEventbriteService extends EventbriteService {
     val apiToken = ""
     val maxDiscountQuantityAvailable = 2
