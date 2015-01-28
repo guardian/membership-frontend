@@ -103,6 +103,17 @@
 
     .icon-inline {
         @include vertically-center();
+        position: relative;
         width: 16px; height: 16px;
     }
+}
+.icon-holder--large {
+    width: 32px; height: 32px;
+    .icon-inline {
+        width: 24px; height: 24px;
+    }
+}
+.icon-holder--neutral {
+    color: $c-neutral1;
+    border-color: $c-neutral1;
 }

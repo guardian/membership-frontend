@@ -80,13 +80,17 @@ $filter-icon-size: 18px;
 .filter-search__cross {
     position: absolute;
     top: 50%;
+    line-height: 1;
     margin-top: rem(-$filter-icon-size / 2);
     border: 0;
+    color: $c-neutral3;
     background-color: transparent;
 }
 .filter-search__icon {
     left: rem($gs-gutter / 2);
 }
 .filter-search__cross {
+    @include transform(translateY(-55%));
+    margin: 0; padding: 0;
     right: rem($gs-gutter / 2);
 }
