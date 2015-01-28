@@ -56,15 +56,11 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    request.member match {
-      case freeMember: FreeMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(freeMember, tier))
-      case _ => Future.successful(NotFound)
-    }
+    paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(request.member, tier))
   }
 
-  private def doUpgrade(freeMember: FreeMember, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
-    MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request))
+  private def doUpgrade(member: Member, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
+    MemberService.upgradeSubscription(member, request.user, tier, formData, IdentityRequest(request))
       .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)).discardingCookies(DiscardingCookie("GU_MEM")) }
       .recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))

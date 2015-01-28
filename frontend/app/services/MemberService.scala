@@ -119,15 +119,23 @@ trait MemberService extends LazyLogging {
     }
   }
 
-  // TODO: this currently only handles free -> paid
-  def upgradeSubscription(member: FreeMember, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
+  def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
+
+    def futureCustomerOpt = member match {
+      case _: FreeMember => for {
+        customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
+        paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
+      } yield Some(customer)
+
+      case _: PaidMember => Future.successful(None)
+    }
+
     for {
-      customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
-      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
+      customerOpt <- futureCustomerOpt
       subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newPaidPlan)
-      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, Some(customer)))
+      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, customerOpt))
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
