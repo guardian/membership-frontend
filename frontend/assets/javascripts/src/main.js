@@ -62,8 +62,7 @@ require([
     images.init();
     slideshow.init();
     sticky.init();
-    var header = new Header();
-    header.init();
+    (new Header()).init();
     navigation.init();
     (new UserDetails()).init();
 
