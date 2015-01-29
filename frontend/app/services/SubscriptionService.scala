@@ -123,4 +123,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
     zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress))
   }
+
+  def getInvoiceItems(subscriptionId: String): Future[Seq[InvoiceItem]] = zuora.query[InvoiceItem](s"SubscriptionId='$subscriptionId'")
 }
