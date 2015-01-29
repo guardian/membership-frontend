@@ -84,7 +84,7 @@ object RichEvent {
     val metadata: Metadata
 
     val imageMetadata: Option[Grid.Metadata]
-
+    val content: Option[Content]
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
   }
@@ -120,6 +120,8 @@ object RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
       .getOrElse(fallbackImage)
       .replace("http://static", "https://static-secure")
+
+    val content = None
 
     val availableWidths = ""
 
