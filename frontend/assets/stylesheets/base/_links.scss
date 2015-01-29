@@ -49,6 +49,39 @@ a,
     }
 }
 
+
+.block-hover {
+    transition: background-color $transition-duration-medium ease;
+
+    &,
+    &:active,
+    &:hover,
+    &:focus {
+        color: $black;
+        text-decoration: none;
+    }
+
+    &:hover {
+        background-color: $c-neutral5;
+        .block-hover__media {
+            background-color: $black;
+            img {
+                opacity: .8;
+            }
+        }
+    }
+}
+.block-hover__media {
+    transition: background-color $transition-duration-medium ease;
+
+    img {
+        transition: opacity $transition-duration-medium ease;
+        // Prevent flicker on hover in WebKit
+        -webkit-backface-visibility: hidden;
+    }
+}
+
+
 // Skip to main content link
 // Needs to override .u-h
 // hence the !important declarations
