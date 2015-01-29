@@ -14,7 +14,8 @@ object PlayArtifact extends Plugin {
 
     playArtifactResources := Seq(
       dist.value -> s"packages/${magentaPackageName.value}/app.zip",
-      baseDirectory.value / "conf" / "deploy.json" -> "deploy.json"
+      baseDirectory.value / "conf" / "deploy.json" -> "deploy.json",
+      baseDirectory.value / "asset-size.sh" -> "asset-size.sh"
     ),
 
     playArtifactFile := "artifacts.zip",
