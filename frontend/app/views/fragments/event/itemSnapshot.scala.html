@@ -1,6 +1,6 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, isStacked: Boolean = false)
 
-<div class="event-snapshot" itemscope itemtype="http://schema.org/Event">
+<div class="event-snapshot@if(isStacked){ event-snapshot--stack}" itemscope itemtype="http://schema.org/Event">
     <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
         @fragments.event.image(event)
     </div>
@@ -11,7 +11,9 @@
             }
             <span itemprop="name">@event.name.text</span>
         </h2>
-        @fragments.event.stats(event)
+        <div class="stats-listing">
+            @fragments.event.stats(event)
+        </div>
         @fragments.pricing.priceInfoEvent(event)
     </div>
 </div>

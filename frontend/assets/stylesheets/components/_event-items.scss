@@ -206,10 +206,6 @@
     width: 100%;
     display: table;
     margin-bottom: rem($gs-baseline);
-
-    @include mq(tablet) {
-        display: block;
-    }
 }
     .event-snapshot__media,
     .event-snapshot__title {
@@ -220,17 +216,14 @@
         font-weight: bold;
 
         @include mq(mobileLandscape) {
-            @include fs-header(1);
+            @include fs-header(2);
+            margin-bottom: rem($gs-baseline);
         }
     }
     .event-snapshot__media,
     .event-snapshot__content {
         display: table-cell;
         vertical-align: top;
-
-        @include mq(tablet) {
-            display: block;
-        }
     }
     .event-snapshot__content {
         border-top: 1px solid $c-border-neutral;
@@ -244,90 +237,19 @@
     .event-snapshot__media {
         width: 30%;
         padding-right: $gutter-width-fluid;
+    }
 
-        @include mq(tablet) {
+.event-snapshot--stack {
+    @include mq(tablet) {
+        display: block;
+
+        .event-snapshot__media,
+        .event-snapshot__content {
+            display: block;
+        }
+        .event-snapshot__media {
             width: auto;
             padding-right: 0;
         }
-    }
-
-/* ==========================================================================
-   Event Summary
-   ========================================================================== */
-// TODO: Can this be removed? event/itemSummary fragment not used,
-// only used on thank-you page. Replace with event-snapshot?
-
-.event-summary {
-    @include clearfix;
-    margin: rem($gs-baseline * 2) 0;
-
-    .event-item__media {
-        @include mq(tablet) {
-            float: left;
-            width: rem(gs-span(3));
-        }
-    }
-
-    .event-item__title {
-        @include f-header;
-        @include font-size(rem(18px), rem(22px));
-        margin-bottom: rem($gs-baseline * 2);
-    }
-
-    .event-status--sold-out {
-        display: inline-block;
-        color: $white;
-        background-color: $c-tone-live-accent;
-        @include fs-data(2);
-        position: relative;
-        top: rem(-3px);
-        padding: rem(1px) rem(3px);
-        margin-right: rem(4px);
-    }
-
-    .event-item__content {
-        @include f-data;
-        @include font-size(rem(14px), rem(22px));
-
-        @include mq(tablet) {
-            border-top: rem(1px) dotted $c-neutral3;
-            margin-left: rem(gs-span(3) + $gs-gutter);
-            padding-top: rem($gs-baseline / 2);
-        }
-    }
-
-    .event-item__detail {
-        border-top: rem(1px) dotted $c-neutral3;
-        padding: rem($gs-baseline / 2) 0 rem($gs-baseline / 2) rem($gs-gutter * 2);
-
-        &:last-child,
-        p:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-    }
-
-    .event-item__location {
-        line-height: rem(18px);
-    }
-
-    .event-item__location-detail {
-        display: block;
-    }
-
-    .event-item__icon {
-        background-size: rem(25px);
-        float: left;
-        margin-left: rem(-$gs-gutter * 2);
-        height: rem(25px);
-        width: rem(25px);
-    }
-
-    .icon-eventbrite {
-        margin-top: rem(3px);
-    }
-
-    .icon-early_booking-grey {
-        margin-top: rem(-2px);
     }
 }

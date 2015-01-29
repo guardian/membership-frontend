@@ -1,77 +1,51 @@
 @(event: model.RichEvent.RichEvent, order: model.Eventbrite.EBOrder)
 
 @import configuration.Config
-@import views.support.Dates._
-@import views.support.Prices._
 @import views.support.Social.eventThankyou
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
 
     <main role="main" class="page-content">
 
-    <section class="content__container content__container--slim">
-        <h1 class="section-headline">Thanks @order.first_name.<br/> See you there!</h1>
-        <h2 class="content__headline">You're going to</h2>
+        @fragments.page.pageHeader("Thanks " + order.first_name + ", See you there!")
 
-        <div class="event-summary">
-            <div class="event-item__media">
-                @fragments.event.image(event)
-            </div><div class="event-item__meta">
-                <h2 class="event-item__title">
-                    @event.name.text
-                </h2>
-
-                <div class="event-item__detail">
-                    <i class="icon-early_booking event-item__icon"></i>
-                    <time datetime="@event.start">@prettyDateWithTimeAndDayName(event.start)</time>
-                </div>
-
-                <div class="event-item__detail">
-                    <i class="icon-location event-item__icon"></i>
-                    @for(name <- event.venue.name) {
-                        <span class="event-item__location-name">@name</span>
-                    }
-                    @for(location <- event.venue.address) {
-                        <span class="event-item__location-detail">@location.address_1 </span>
-                        <span class="event-item__location-detail">@location.city @location.postal_code </span>
-                    }
-                </div>
-
-                <div class="event-item__detail">
-                    <i class="icon-book_tickets event-item__icon"></i>
-                    <i class="icon-eventbrite"></i>
-                    <div>Order no. @order.id</div>
-                    <div>
-                        @order.ticketCount ticket@if(order.ticketCount > 1){s}
-                        @if(order.totalCost > 0) {
-                            @order.totalCost.pretty
-                        } else {
-                            free
-                        }
-                    </div>
-                    <div>Sent to <strong>@order.email</strong></div>
-                    <div>The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
-                </div>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">You're going to</h2>
             </div>
-        </div>
-    </section>
+            <div class="page-section__content">
+                @fragments.event.itemSnapshotOrder(event, order)
+            </div>
+        </section>
 
-    <section class="content__container content__container--slim">
-        <h2 class="content__headline">Before the event</h2>
-        <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
-    </section>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Before the event</h2>
+            </div>
+            <div class="page-section__content copy">
+                <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+            </div>
+        </section>
 
-    <section class="content__container content__container--slim">
-        <h2 class="content__headline">Tell your friends</h2>
-        @fragments.social(eventThankyou(event))
-    </section>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Tell your friends</h2>
+            </div>
+            <div class="page-section__content">
+                @fragments.social(eventThankyou(event))
+            </div>
+        </section>
 
-    <section class="content__container content__container--slim hidden-print">
-        <h2 class="content__headline">Find more Guardian Live events</h2>
-        <a class="action" href="/events">See all events</a>
-    </section>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Find more events</h2>
+            </div>
+            <div class="page-section__content">
+                <a class="action u-no-top-margin" href="@routes.Event.list">See all events</a>
+            </div>
+        </section>
 
-    @fragments.analytics.eventConversion(event)
+        @fragments.analytics.eventConversion(event)
 
     </main>
 }
