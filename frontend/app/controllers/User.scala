@@ -19,8 +19,6 @@ trait User extends Controller {
     Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
   }
 
-
-
   def meDetails = AjaxMemberAction.async { implicit request =>
     def futureCardDetails = request.member match {
       case paidMember: PaidMember =>
