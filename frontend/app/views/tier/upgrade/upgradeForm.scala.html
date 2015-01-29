@@ -2,7 +2,8 @@
     currentTier: com.gu.membership.salesforce.Tier,
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
-    pageInfo: model.PageInfo
+    pageInfo: model.PageInfo,
+    cardOpt: Option[model.Stripe.Card]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._
@@ -35,14 +36,16 @@
                         "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
                         userFields.postcode, userFields.address4, userFields.country
                     )
-                    @fragments.form.paymentOptions(targetTier)
+                    @if(cardOpt.isEmpty) {
+                        @fragments.form.paymentOptions(targetTier)
+                    }
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
                         userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
                         userFields.billingCountry
                     )
-                    @fragments.form.cardDetail(targetTier)
+                    @fragments.form.cardDetail(targetTier, cardOpt)
                     @fragments.form.submit("Pay", "now", Some(targetTier))
                 </form>
 

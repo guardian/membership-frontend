@@ -13,7 +13,9 @@ object Stripe {
 
   case class StripeList[T](total_count: Int, data: Seq[T]) extends StripeObject
 
-  case class Card(id: String, `type`: String, last4: String) extends StripeObject
+  case class Card(id: String, `type`: String, last4: String) extends StripeObject {
+    val issuer = `type`.toLowerCase
+  }
 
   case class Customer(id: String, cards: StripeList[Card]) extends StripeObject {
     // customers should always have a card

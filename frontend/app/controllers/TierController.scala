@@ -43,12 +43,20 @@ trait UpgradeTier {
   self: TierController =>
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
+
+    def futureCustomerOpt = request.member match {
+      case paidMember: PaidMember =>
+        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+      case _: FreeMember => Future.successful(None)
+    }
+
     if (request.member.tier < tier) {
       for {
+        customerOpt <- futureCustomerOpt
         user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
       }
     }
     else
@@ -61,8 +69,13 @@ trait UpgradeTier {
 
   private def doUpgrade(member: Member, tier: Tier)(formData: MemberChangeForm)(implicit request: MemberRequest[_, _]) = {
     MemberService.upgradeSubscription(member, request.user, tier, formData, IdentityRequest(request))
-      .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)).discardingCookies(DiscardingCookie("GU_MEM")) }
-      .recover {
+      .map { _ =>
+        val result = formData.payment.fold(Redirect(routes.TierController.upgradeThankyou(tier))) { _ =>
+          Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
+        }
+
+        result.discardingCookies(DiscardingCookie("GU_MEM"))
+      }.recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
         case error: Zuora.ResultError => Forbidden
         case error: ScalaforceError => Forbidden
