@@ -57,8 +57,10 @@
                            data-filter-field="title"
                            placeholder="Filter by title"
                            autocomplete="off" />
-                    <i class="filter-search__icon icon-search"></i>
-                    <button class="filter-search__cross icon-cross_in_circle is-hidden js-filter-clear"></button>
+                    <span class="filter-search__icon">
+                        @fragments.inlineIcon("search")
+                    </span>
+                    <button class="filter-search__cross is-hidden js-filter-clear">@fragments.inlineIcon("filter-clear")</button>
                 </label>
             </div>
         </div>

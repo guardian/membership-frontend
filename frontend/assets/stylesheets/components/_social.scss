@@ -33,10 +33,10 @@
 
     .icon-inline {
         @include vertically-center();
+        position: relative;
         width: 20px; height: 20px;
     }
 }
-
 .social-action--twitter {
     background-color: $c-thirdparty-twitter;
 
@@ -44,7 +44,6 @@
         background-color: darken($c-thirdparty-twitter, 10%);
     }
 }
-
 .social-action--facebook {
     background-color: $c-thirdparty-facebook;
 

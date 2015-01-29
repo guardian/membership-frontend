@@ -4,18 +4,21 @@
     <div class="global-footer__primary">
         <div id="footer-nav" class="l-constrained">
             <div class="global-footer__brand">
+
+                @* Footer logo *@
                 <a href="/" class="global-footer__logo hidden-mobile">
                     <span class="u-h">@Config.siteTitle</span>
                     <i class="icon-membership_beta_mobile"></i>
                 </a>
-                <a class="global-footer__top no-underline" href="#top">
-                    <span class="control">
-                        <span class="control__icon">
-                            <i class="i icon-arrow-up-black"></i>
-                        </span>
+
+                @* Back to top *@
+                <a class="to-top no-underline" href="#top">
+                    <span class="to-top__item icon-holder icon-holder--large icon-holder--neutral">
+                        @fragments.inlineIcon("arrow-up")
                     </span>
-                    <span class="control__info case--lower no-underline--override">Back to top</span>
+                    <span class="to-top__item to-top__label no-underline--override">Back to top</span>
                 </a>
+
             </div>
         </div>
     </div>
