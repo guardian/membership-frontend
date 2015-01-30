@@ -1,10 +1,15 @@
 @(event: model.RichEvent.RichEvent)
 
+@import com.gu.contentapi.client.model.Asset
+
 @for(content <- event.content) {
+    <h4 class="h-section h-section--secondary">More about this event</h4>
     <div class="related-entry block-hover">
         <a href="@content.webUrl" class="minimal-link no-underline">
             <div class="related-entry__media block-hover__media">
-                <img src="http://placehold.it/600x360" alt="" class="responsive-img" />
+                @for(image <- event.pastImageOpt) {
+                    <img src="@image.file" alt="" class="responsive-img" />
+                }
             </div>
             <div class="related-entry__content">
                 <h3 class="related-entry__title">

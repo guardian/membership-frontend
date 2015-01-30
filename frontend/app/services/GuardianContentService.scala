@@ -87,6 +87,7 @@ trait GuardianContent {
     val searchQuery = SearchQuery()
       .referenceType("eventbrite")
       .showReferences("eventbrite")
+      .showElements("image")
       .pageSize(100)
       .page(page)
     client.getResponse(searchQuery).andThen {

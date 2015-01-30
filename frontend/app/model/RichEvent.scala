@@ -1,6 +1,6 @@
 package model
 
-import com.gu.contentapi.client.model.Content
+import com.gu.contentapi.client.model.{Asset, Content}
 import configuration.Config
 import model.Eventbrite.EBEvent
 import services.MasterclassData
@@ -87,6 +87,7 @@ object RichEvent {
     val content: Option[Content]
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
+    val pastImageOpt: Option[Asset]
   }
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage], content: Option[Content]) extends RichEvent {
@@ -97,6 +98,14 @@ object RichEvent {
     }
 
     private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+
+    val pastImageOpt = {
+      val elementOpt = content.flatMap(c => c.elements.flatMap(_.find(_.relation == "main")))
+      elementOpt.flatMap{ element =>
+        val assets = element.assets
+        assets.find(a => a.typeData.get("width") == Some("460"))
+      }
+    }
 
     val availableWidths = widths.mkString(",")
 
@@ -131,6 +140,8 @@ object RichEvent {
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
     val metadata = masterclassMetadata
+
+    val pastImageOpt = None
   }
 
 

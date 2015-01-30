@@ -98,8 +98,10 @@
 
             <div class="event-content__sidebar">
 
-                <h4 class="h-section h-section--secondary">More about this event</h4>
-                @fragments.event.relatedEntry(event)
+
+                @if(event.isPastEvent) {
+                    @fragments.event.relatedEntry(event)
+                }
 
                 @if(!event.metadata.largeImg) {
                     <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
