@@ -21,18 +21,11 @@
     cursor: pointer;
     border: 0;
     text-align: left;
-    width: 100%;
-    max-width: rem($gs-gutter * 15);
+    min-width: rem(gs-span(2));
     padding: rem(8px) rem($gs-gutter);
     @include border-radius(50%);
     vertical-align: bottom;
     outline: none;
-
-    @include mq(mobileLandscape) {
-        width: auto;
-        min-width: rem(80px);
-        max-width: none;
-    }
 }
 
 .action {
@@ -56,7 +49,7 @@
         }
         content: '';
         float: right;
-        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem(30px);
+        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
 
     .action__icon {
