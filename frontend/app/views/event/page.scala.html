@@ -107,15 +107,17 @@
                     <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
                 }
 
-                @if(!event.isPastEvent){<div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">}
-                    @fragments.event.infoPanel(event)
-                    @if(!event.isBookable) {
-                        <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
-                            Find other @event.metadata.pluralTitle
-                            <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
-                        </a>
-                    }
-                @if(!event.isPastEvent){</div>}
+                @if(!event.isPastEvent){
+                    <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
+                        @fragments.event.infoPanel(event)
+                    </div>
+                }
+                @if(!event.isBookable) {
+                <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
+                    Find other @event.metadata.pluralTitle
+                    <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                </a>
+                }
             </div>
         </div>
 
