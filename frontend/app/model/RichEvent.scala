@@ -130,7 +130,6 @@ object RichEvent {
       .getOrElse(fallbackImage)
       .replace("http://static", "https://static-secure")
 
-    val content = None
 
     val availableWidths = ""
 
@@ -141,6 +140,7 @@ object RichEvent {
 
     val metadata = masterclassMetadata
 
+    val content = None
     val pastImageOpt = None
   }
 

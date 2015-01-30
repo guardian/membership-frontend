@@ -17,7 +17,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
   "GuLiveEventTest" should {
     "contain secure url, metadata and socialUrl for image" in {
       val image = EventImage(gridResponse.data.exports.get(0).assets, gridResponse.data.metadata)
-      val guEvent = GuLiveEvent(event, Some(image))
+      val guEvent = GuLiveEvent(event, Some(image), None)
 
       guEvent.imgUrl mustEqual "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/{width}.jpg"
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
@@ -28,7 +28,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
     "use file url, metadata, socialUrl for image when no secure url is present" in {
       val image = EventImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
-      val guEvent = GuLiveEvent(event, Some(image))
+      val guEvent = GuLiveEvent(event, Some(image), None)
 
       guEvent.imgUrl mustEqual "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/0_130_1703_1022/{width}.jpg"
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
@@ -39,7 +39,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
     }
 
     "use fallback image when no image is found from the Grid" in {
-      val guEvent = GuLiveEvent(event, None)
+      val guEvent = GuLiveEvent(event, None, None)
 
       guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None
@@ -50,7 +50,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
     "use fallback image when assets in export is an empty list from the Grid" in {
       val image = EventImage(Nil, Metadata(None, None, None))
-      val guEvent = GuLiveEvent(event, Some(image))
+      val guEvent = GuLiveEvent(event, Some(image), None)
 
       guEvent.socialImgUrl must contain("event-placeholder.gif")
       guEvent.imageMetadata.flatMap(_.description) mustEqual None

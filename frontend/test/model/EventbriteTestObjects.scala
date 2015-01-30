@@ -20,6 +20,8 @@ object EventbriteTestObjects {
     val socialImgUrl = ""
     val imageMetadata = None
     val tags = Nil
+    val content = None
+    val pastImageOpt = None
 
     val metadata = Metadata(
       identifier="",
