@@ -15,7 +15,11 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 .page-slice {
     @include clearfix;
     background-color: $white;
-    padding-bottom: rem($gs-gutter * 3);
+    padding-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 2);
+    }
 }
     .page-slice__headline {
         @include fs-headline(4);
@@ -50,6 +54,10 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
             padding: rem($gs-gutter);
         }
     }
+}
+
+.page-slice--slim {
+    padding-bottom: 0;
 }
 
 /* ==========================================================================

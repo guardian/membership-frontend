@@ -56,8 +56,8 @@ blockquote,
 .blockquote {
     font-style: italic;
     font-weight: 300;
-    margin-bottom: rem(10px);
     margin: 0;
+    margin-bottom: rem($gs-baseline);
 
     &:before {
         content: '';
