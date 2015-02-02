@@ -68,6 +68,8 @@ object Zuora {
       SubscriptionDetails(planName, ratePlanCharge.price, ratePlanCharge.effectiveStartDate, endDate, ratePlan.id)
     }
   }
+
+  case class PaymentSummary(current: InvoiceItem, previous: Seq[InvoiceItem])
 }
 
 object ZuoraReaders {

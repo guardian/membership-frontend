@@ -1,4 +1,4 @@
-@(member: com.gu.membership.salesforce.Member, invoiceItems: Seq[model.Zuora.InvoiceItem],
+@(member: com.gu.membership.salesforce.Member, paymentSummary: model.Zuora.PaymentSummary,
     cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
 
 @import views.support.Dates._
@@ -44,22 +44,22 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td id="qa-joiner-summary-start">@invoiceItems.last.serviceStartDate.pretty</td>
+                        <td id="qa-joiner-summary-start">@paymentSummary.current.serviceStartDate.pretty</td>
                     </tr>
                     @for(card <- cardOpt) {
                         <tr role="row">
                             <th role="rowheader">Amount paid today</th>
-                            <td id="qa-joiner-summary-today">@invoiceItems.last.price.pretty</td>
+                            <td id="qa-joiner-summary-today">@paymentSummary.current.price.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">
-                                @if(invoiceItems.last.annual) { Annual } else { Monthly } payment
+                                @if(paymentSummary.current.annual) { Annual } else { Monthly } payment
                             </th>
-                            <td id="qa-joiner-summary-recurring">@invoiceItems.last.price.pretty</td>
+                            <td id="qa-joiner-summary-recurring">@paymentSummary.current.price.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment</th>
-                            <td id="qa-joiner-summary-next">@invoiceItems.last.serviceEndDate.pretty</td>
+                            <td id="qa-joiner-summary-next">@paymentSummary.current.serviceEndDate.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Card</th>
