@@ -30,7 +30,7 @@
             </div>
 
             <div class="form-section__content">
-                <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-stripe-form">
+                <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-stripe-form" novalidate>
                     @CSRF.formField
                     <input type="hidden" name="tier" class="js-tier-field" value="@tier.slug"/>
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
