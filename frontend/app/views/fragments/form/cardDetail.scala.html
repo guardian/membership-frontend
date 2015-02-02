@@ -81,7 +81,8 @@
                        placeholder="0000 0000 0000 0000"
                        maxlength="19"
                        autocomplete="off"
-                       data-validation="creditCardNumber"/>
+                       data-validation="validCreditCardNumber"/>
+                @fragments.form.errorMessage("Sorry, the card number that you have entered is incorrect. Please check and retype.")
             </div>
 
         </div>
@@ -97,9 +98,8 @@
                    placeholder="CVC"
                    maxlength="4"
                    autocomplete="off"
-                   data-validation="creditCardCVC"/>
-            <a class="cvc-cta text-link js-cvc-cta" href="#">What's this?</a>
-            <div class="cvc u-h u-cf js-cvc-image-container">
+                   data-validation="validCVC"/>
+            @fragments.form.errorMessage("Sorry, the security code that you have entered is incorrect. Please check and retype.")
                 <div class="u-cf">
                     <div class="cvc__image">
                         <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
@@ -127,19 +127,26 @@
 
         <div class="form-field">
             <label class="label" for="cc-exp-month"><span>Expiry</span></label>
-            <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month">
+            <select data-stripe="exp-month"
+                    id="cc-exp-month"
+                    data-validation="validCreditCardMonth"
+                    class="js-credit-card-exp-month">
                 <option selected="selected">Month</option>
                 @for(month <- selectDates.validCardMonths){
                 <option value="@month">@month</option>
                 }
             </select>
             <span> / </span>
-            <select data-stripe="exp-year" id="cc-exp-year" class="js-credit-card-exp-year">
+            <select data-stripe="exp-year"
+                    id="cc-exp-year"
+                    data-validation="validCreditCardYear"
+                    class="js-credit-card-exp-year">
                 <option selected="selected">Year</option>
                 @for((year, formattedYear) <- selectDates.validCardYears){
                 <option value="@year">@formattedYear</option>
                 }
             </select>
+            @fragments.form.errorMessage("Sorry, the expiry date that you have entered is invalid. Please check and re-enter.")
         </div>
     </div>
 </fieldset>

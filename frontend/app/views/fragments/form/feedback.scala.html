@@ -13,14 +13,14 @@
             <div>
                 <select name="category"
                         id="category"
-                        data-validation="required"
-                        data-error-message="Please select a feedback category"
+                        required
                         aria-required="true">
                     <option value="">Select feedback category</option>
                     <option>Suggest an improvement</option>
                     <option>Give general feedback</option>
                     <option>Accessibility issue</option>
                 </select>
+                @fragments.form.errorMessage("Please select a feedback category")
             </div>
         </div>
 
@@ -35,9 +35,9 @@
             <textarea name="feedback"
                       id="feedback"
                       class="input-textarea input-textarea--long"
-                      data-error-message="Please enter your comment"
-                      data-validation="required"
+                      required
                       aria-required="true"></textarea>
+            @fragments.form.errorMessage("Please enter your comment")
         </div>
 
     </div>
@@ -59,9 +59,9 @@
                    id="name"
                    class="input-text"
                    type="text"
-                   data-validation="required"
-                   data-error-message="Please enter your name"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your name")
         </div>
 
         <div class="form-field">
@@ -70,9 +70,9 @@
                    id="email"
                    class="input-text"
                    type="email"
-                   data-validation="required"
-                   data-error-message="Please enter your email address"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your email address")
         </div>
 
     </div>

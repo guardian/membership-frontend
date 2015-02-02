@@ -25,7 +25,7 @@
         <div class="actions js-waiting-container">
             <button type="submit" class="action js-submit-input">
             @Html(tier.fold(ctaTextPrepend)(tier =>
-                ctaTextPrepend + " £<span class=\"js-cta-payment-option-price\">" +
+                ctaTextPrepend + " £<span class=\"js-submit-price-option\">" +
                     Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
             ))
             </button>
