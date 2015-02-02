@@ -117,7 +117,7 @@ define([
     };
 
     Cta.prototype.upgradeComingSoonMemberCtaButton = function () {
-        $(this.getElem('MEMBER_CTA')).text(TICKETS_AVAILABLE_SOON).addClass('action--disabled').removeAttr('href');
+        $(this.getElem('MEMBER_CTA')).text(TICKETS_AVAILABLE_SOON).addClass('is-disabled').removeAttr('href');
     };
 
     Cta.prototype.upgradeMemberCtaButton = function () {
