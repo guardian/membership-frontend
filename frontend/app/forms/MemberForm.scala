@@ -29,7 +29,7 @@ object MemberForm {
                             password: Option[String] ) extends JoinForm {
     val plan = FriendTierPlan
   }
-  
+
   case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String] ) extends JoinForm {
     val plan = StaffPlan
@@ -41,8 +41,7 @@ object MemberForm {
     val plan = PaidTierPlan(tier, payment.annual)
   }
 
-  case class PaidMemberChangeForm(payment: PaymentForm, deliveryAddress: Address,
-                                  billingAddress: Option[Address])
+  case class MemberChangeForm(payment: Option[PaymentForm], deliveryAddress: Address, billingAddress: Option[Address])
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
@@ -120,12 +119,12 @@ object MemberForm {
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
-  val paidMemberChangeForm: Form[PaidMemberChangeForm] = Form(
+  val paidMemberChangeForm: Form[MemberChangeForm] = Form(
     mapping(
-      "payment" -> paymentMapping,
+      "payment" -> optional(paymentMapping),
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping)
-    )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
+    )(MemberChangeForm.apply)(MemberChangeForm.unapply)
   )
 
   val feedbackForm: Form[FeedbackForm] = Form(

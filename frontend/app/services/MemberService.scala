@@ -119,13 +119,13 @@ trait MemberService extends LazyLogging {
     }
   }
 
-  def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
+  def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: MemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
-    val newPaidPlan = PaidTierPlan(newTier, form.payment.annual)
+    val newPaidPlan = PaidTierPlan(newTier, form.payment.fold(true)(_.annual)) // TODO
 
     def futureCustomerOpt = member match {
       case _: FreeMember => for {
-        customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
+        customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.get.token) // TODO
         paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
       } yield Some(customer)
 

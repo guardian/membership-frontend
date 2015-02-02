@@ -59,7 +59,7 @@ trait UpgradeTier {
     paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(request.member, tier))
   }
 
-  private def doUpgrade(member: Member, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
+  private def doUpgrade(member: Member, tier: Tier)(formData: MemberChangeForm)(implicit request: MemberRequest[_, _]) = {
     MemberService.upgradeSubscription(member, request.user, tier, formData, IdentityRequest(request))
       .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)).discardingCookies(DiscardingCookie("GU_MEM")) }
       .recover {

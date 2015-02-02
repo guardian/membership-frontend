@@ -52,7 +52,7 @@ case class IdentityService(identityApi: IdentityApi) {
     identityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
-  def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: PaidMemberChangeForm, identityRequest: IdentityRequest) {
+  def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: MemberChangeForm, identityRequest: IdentityRequest) {
     val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
     val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
     val json = Json.obj("privateFields" -> fields)

@@ -72,8 +72,8 @@ class IdentityServiceTest extends Specification with Mockito {
     val identityAPI = mock[IdentityApi]
 
     val identityService = new IdentityService(identityAPI)
-    val paidMemberChangeForm = PaidMemberChangeForm(
-      PaymentForm(true, "token"),
+    val paidMemberChangeForm = MemberChangeForm(
+      Some(PaymentForm(true, "token")),
       Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
       Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK))
     )
