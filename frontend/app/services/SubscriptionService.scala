@@ -24,6 +24,8 @@ object SubscriptionServiceHelpers {
     amendments.sortBy { amendment => versions(amendment.subscriptionId) }
   }
 
+  def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
+
   def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
