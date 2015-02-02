@@ -10,15 +10,6 @@ html {
     background-size: cover;
 }
 
-// TODO: Remove these when brochure pages are refactored
-// This should be a component (banner image component?),
-// rather than being manually added at thr root level.
-html.about-membership {
-    background: url(/assets/images/backgrounds/740-About-hero.jpg) no-repeat top center fixed;
-    @include mq(tablet) {
-        background: url(/assets/images/backgrounds/1920-About-hero.jpg) no-repeat top center fixed;
-    }
-}
 html.patron-page {
     background: url(/assets/images/backgrounds/740-Patrons-hero.jpg) no-repeat top center fixed;
     @include mq(tablet) {

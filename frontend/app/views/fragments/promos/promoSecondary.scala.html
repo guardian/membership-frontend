@@ -1,0 +1,28 @@
+@(
+    title: Html,
+    imageUrl: String,
+    stampImageOpt: Option[String] = None,
+    isLead: Boolean = false,
+    toneClass: Option[String] = None
+)(content: Html)
+
+@import views.support.Asset
+
+<div class="promo-secondary">
+    <div class="promo-secondary__media @toneClass.mkString(" ")">
+        <div class="promo-secondary__header">
+            <h2 class="promo-secondary__title h-promo">@title</h2>
+        </div>
+        <div class="promo-secondary__image@if(stampImageOpt){ stamped-image}">
+            <img src="@Asset.at(imageUrl)" alt="@title" class="responsive-img">
+            @for(url <- stampImageOpt) {
+                <div class="stamped-image__container">
+                    <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
+                </div>
+            }
+        </div>
+    </div>
+    <div class="promo-secondary__description">
+        @content
+    </div>
+</div>

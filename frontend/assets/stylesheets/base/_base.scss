@@ -52,11 +52,12 @@ p {
     margin-bottom: rem($gs-baseline * 1.3333);
 }
 
-blockquote {
+blockquote,
+.blockquote {
     font-style: italic;
     font-weight: 300;
-    margin-bottom: rem(10px);
     margin: 0;
+    margin-bottom: rem($gs-baseline);
 
     &:before {
         content: '';
@@ -66,5 +67,26 @@ blockquote {
         background-repeat: no-repeat;
         width: 34px; height: 20px;
         margin-right: rem($gs-baseline / 2);
+    }
+}
+.blockquote__citation {
+    @include fs-data(4);
+    font-style: normal;
+    margin-top: rem($gs-baseline / 2);
+    display: block;
+}
+
+.blockquote--feature {
+    font-style: normal;
+    @include fs-headline(3);
+
+    .blockquote__citation {
+        font: inherit;
+        color: $c-neutral2;
+        margin: 0;
+    }
+
+    @include mq(tablet) {
+        @include fs-headline(4);
     }
 }
