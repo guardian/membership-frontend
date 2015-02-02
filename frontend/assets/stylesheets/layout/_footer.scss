@@ -31,6 +31,7 @@
 .global-footer__logo {
     float: right;
     line-height: 0;
+    width: 250px;
 }
 .global-footer__secondary {
     @include box-sizing(border-box);

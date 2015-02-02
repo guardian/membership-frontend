@@ -1,5 +1,7 @@
 @import org.joda.time.DateTime
 @import configuration.Config
+@import views.support.Asset
+
 <footer class="global-footer u-cf hidden-print" data-component="footer">
     <div class="global-footer__primary">
         <div id="footer-nav" class="l-constrained">
@@ -8,7 +10,7 @@
                 @* Footer logo *@
                 <a href="/" class="global-footer__logo hidden-mobile">
                     <span class="u-h">@Config.siteTitle</span>
-                    <i class="icon-membership_beta_mobile"></i>
+                    <img src="@Asset.at("images/logos/membership-logo-small.svg")" alt="@Config.siteTitle" class="responsive-image">
                 </a>
 
                 @* Back to top *@
