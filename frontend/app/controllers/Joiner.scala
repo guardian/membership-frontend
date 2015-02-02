@@ -4,7 +4,7 @@ import actions.Functions._
 
 import scala.concurrent.Future
 
-import play.api.mvc.{Controller, Request, Result}
+import play.api.mvc.{DiscardingCookie, Controller, Request, Result}
 import play.api.libs.json.Json
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -162,7 +162,7 @@ trait Joiner extends Controller {
       paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(subscriptionStatus.current)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade))
+    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

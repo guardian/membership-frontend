@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Promos
+   ========================================================================== */
+
+/* ==========================================================================
+   Promo Primary
+   ========================================================================== */
+
+.promo-primary {
+    clear: both;
+    overflow: auto;
+    background-color: $white;
+}
+.promo-primary,
+.promo-primary__media {
+    position: relative;
+}
+.promo-primary__header {
+    color: $black;
+    background-color: transparentize($mem-brandBlue, .1);
+    min-height: rem(gs-height(2));
+    padding: rem($gs-baseline) rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 3);
+
+    @include mq(tablet) {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: rem($gs-baseline * 2);
+        width: 100%;
+        max-width: 45%;
+        padding: rem($gs-baseline) rem($gs-gutter);
+        padding-bottom: rem($gs-baseline * 4);
+    }
+}
+.promo-primary__media {
+    @include mq(desktop) {
+        max-height: rem(gs-height(10));
+        overflow: hidden;
+    }
+}
+.promo-primary__image {
+    @include mq(desktop) {
+        position: relative;
+        top: -(rem(gs-height(2)));
+    }
+}
+.promo-primary__content {
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        width: 75%;
+        float: right;
+        position: relative;
+        margin-top: -(rem(gs-height(2)));
+        background-color: $white;
+        padding: rem($gs-gutter);
+    }
+    @include mq(desktop) {
+        width: 55%;
+        margin-top: -(rem(gs-height(2) + $gs-gutter));
+    }
+}
+
+/**
+ * Promo primary lead (modifier)
+ */
+.promo-primary--lead {
+    .promo-primary__header {
+        @include mq(tablet) {
+            top: 30%;
+        }
+        @include mq(desktop) {
+            top: rem(gs-height(4.5));
+        }
+    }
+}
+
+/* ==========================================================================
+   Promo Secondary
+   ========================================================================== */
+
+.promo-secondary {
+    @include mq(tablet) {
+        padding: rem($gs-gutter);
+    }
+}
+.promo-secondary__media {
+    @include clearfix();
+    background-color: $c-neutral5;
+    margin-bottom: rem($gs-baseline);
+}
+.promo-secondary__header {
+    min-height: rem(gs-height(2));
+    padding: rem($gs-baseline) rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 3);
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+        padding-right: rem($gs-gutter);
+        width: 35%;
+        float: right;
+    }
+}
+.promo-secondary__image {
+    display: block;
+    position: relative;
+
+    @include mq(tablet) {
+        width: 65%;
+        float: left;
+    }
+}
+.promo-secondary__description {
+    clear: both;
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        max-width: 65%;
+        padding-left: 0;
+    }
+    @include mq(desktop) {
+        padding-left: rem($gs-gutter * 3);
+    }
+}

@@ -21,18 +21,11 @@
     cursor: pointer;
     border: 0;
     text-align: left;
-    width: 100%;
-    max-width: rem($gs-gutter * 15);
+    min-width: rem(gs-span(2));
     padding: rem(8px) rem($gs-gutter);
     @include border-radius(50%);
     vertical-align: bottom;
     outline: none;
-
-    @include mq(mobileLandscape) {
-        width: auto;
-        min-width: rem(80px);
-        max-width: none;
-    }
 }
 
 .action {
@@ -44,8 +37,9 @@
     &:focus,
     &:active,
     &:hover {
-        text-decoration: none;
+        color: $white;
         background-color: darken($c-button, 10%);
+        text-decoration: none;
     }
 
     &:after {
@@ -55,13 +49,7 @@
         }
         content: '';
         float: right;
-        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem(30px);
-    }
-
-    &[disabled],
-    &[disabled]:hover,
-    &[disabled]:focus {
-        background-color: $c-neutral5;
+        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
 
     .action__icon {
@@ -78,6 +66,15 @@
         margin-left: rem($gs-gutter / 2);
     }
 
+}
+
+/**
+ * Disabled state
+ */
+.action.is-disabled,
+.action[disabled],
+.action[disabled]:hover {
+    background-color: $c-neutral5;
 }
 
 // TODO: Specificy issues
@@ -202,20 +199,6 @@
    }
 }
 
-// TODO: Only used in cta.js.
-// Refactor to add disabled attribute
-.action--disabled {
-    &,
-    &:visited,
-    &:hover,
-    &:focus,
-    &:active {
-        background-color: #cccccc;
-        color: #ffffff;
-    }
-    border: 0;
-    cursor: default;
-}
 
 .action--snap {
     min-width: 0;

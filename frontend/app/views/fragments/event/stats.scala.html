@@ -2,27 +2,28 @@
 
 @import views.support.Dates._
 
-<div class="stats-listing">
-    <div class="stat-item">
-        <div class="stat-item__first">
-            <i class="icon icon-early_booking"></i>
-        </div>
-        <div class="stat-item__second">
-            <span itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</span>
-        </div>
+
+<div class="stat-item">
+    <div class="stat-item__first">
+        @fragments.inlineIcon("time", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
-    <div class="stat-item">
-        <div class="stat-item__first">
-            <i class="icon icon-location"></i>
-        </div>
-        <div class="stat-item__second copy" itemprop="location" itemscope itemtype="http://schema.org/Place">
-            @if(event.venue.name) {@event.venue.name}@if(event.venue.address){, }
-            @for(location <- event.venue.address) {
-                @location.city, @location.postal_code
-            }
-            @for(googleMapsLink <- event.venue.googleMapsLink) {
-                <a href="@googleMapsLink" data-link-name="Event Google Map">Google Map</a>
-            }
-        </div>
+    <div class="stat-item__second">
+        <span itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</span>
+    </div>
+</div>
+<div class="stat-item">
+    <div class="stat-item__first">
+        @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
+    </div>
+    <div class="stat-item__second copy" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        @if(event.venue.name) {@event.venue.name}@if(event.venue.address){, }
+        @for(location <- event.venue.address) {
+            @location.city @location.postal_code
+        }
+        @for(googleMapsLink <- event.venue.googleMapsLink) {
+            <div class="google-map">
+                <a href="@googleMapsLink" data-link-name="Event Google map">Google map</a>
+            </div>
+        }
     </div>
 </div>

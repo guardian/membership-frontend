@@ -21,24 +21,17 @@
 .global-footer__brand {
     @include clearfix;
     background-color: $mem-brandBlue;
-    padding-left: rem($gs-gutter / 4);
-    padding-right: rem($gs-gutter / 4);
+    padding: rem($gs-baseline / 2) rem($gs-gutter / 4);
 
     @include mq(mobileLandscape) {
         padding-left: rem($gs-gutter / 2);
         padding-right: rem($gs-gutter / 2);
     }
 }
-.global-footer__top {
-    float: left;
-    height: rem(48px);
-    padding-top: rem($gs-baseline / 2);
-    padding-bottom: rem($gs-baseline / 2);
-}
 .global-footer__logo {
-    margin-top: rem($gs-baseline * .75);
     float: right;
     line-height: 0;
+    width: 250px;
 }
 .global-footer__secondary {
     @include box-sizing(border-box);
@@ -60,6 +53,23 @@
     padding-top: rem($gs-baseline / 2);
     padding-bottom: rem($gs-baseline * 1.5);
     border-top: 1px solid $c-neutral4;
+}
+
+/**
+ * Back to top
+ */
+.to-top {
+    display: table;
+}
+.to-top__item {
+    display: table-cell;
+    vertical-align: middle;
+}
+.to-top__label {
+    @include fs-bodyHeading(1);
+    color: $black;
+    padding-left: rem($gs-gutter / 4);
+    text-transform: lowercase;
 }
 
 /* Footer - Colophon

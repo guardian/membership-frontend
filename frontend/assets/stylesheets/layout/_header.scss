@@ -40,38 +40,40 @@
             margin-right: rem($gs-gutter / 2);
         }
     }
-
     .header__logo {
         clear: right;
-        width: rem(243px);
-        float: right;
-        margin-right: rem($gs-gutter / 2);
-        height: rem(25px);
+        text-align: right;
+        padding-right: rem($gs-gutter / 2);
 
         @include mq(tablet) {
-            width: auto;
-            margin-bottom: rem($gs-gutter);
-            height: rem(50px);
+            width: 100%;
+            margin-top: -(rem($gs-gutter / 2));
+            margin-bottom: rem($gs-gutter / 4);
+        }
+    }
+    .header__logo__image {
+        height: 30px;
+        width: auto;
+
+        @include mq(tablet) {
+            height: 55px;
         }
     }
     .header__logo__link {
         display: block;
     }
-}
-
-.identity__tier {
-
-    &:before {
-        vertical-align: top;
-        content: '(';
-    }
-
-    &:after {
-        vertical-align: top;
-        content: ')';
+    @include mq(tablet) {
+        .i-logo {
+            margin-top: rem($gs-gutter / 2);
+            margin-bottom: rem($gs-gutter / 2);
+        }
     }
 }
 
+
+/**
+ * TODO: Document usage
+ */
 .menu-item {
     float: left;
     padding-top: 0;
@@ -85,12 +87,10 @@
         color: $white;
     }
 }
-
 .menu-item--last {
     border: 0;
     margin: 0;
 }
-
 .menu-item--active {
     // for text underlines
     color: $white;
@@ -101,24 +101,16 @@
     }
 }
 
-.close-icon-white--active {
-    border-color: $white;
-    .icon-menu-white {
-        @extend %icon-close-icon-white;
+.identity__tier {
+    &:before {
+        vertical-align: top;
+        content: '(';
+    }
+    &:after {
+        vertical-align: top;
+        content: ')';
     }
 }
-
 .identity__notice {
     @include fs-data(4);
-}
-
-/* Media Queries
-   ========================================================================== */
-@include mq(tablet) {
-    .header {
-        .i-logo {
-            margin-top: rem($gs-gutter / 2);
-            margin-bottom: rem($gs-gutter / 2);
-        }
-    }
 }

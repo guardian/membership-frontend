@@ -2,14 +2,18 @@ package actions
 
 import actions.Fallbacks._
 import actions.Functions._
+import play.api.libs.json.Json
 import com.gu.googleauth
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
-import play.api.mvc.{DiscardingCookie, ActionBuilder}
+import play.api.mvc.{RequestHeader, Cookie, DiscardingCookie, ActionBuilder}
 import play.api.mvc.Results._
+import services.AuthenticationService
+import utils.GuMemCookie
 
 trait CommonActions {
+
   val NoCacheAction = resultModifier(NoCache(_))
 
   val CachedAction = resultModifier(Cached(_))
@@ -45,15 +49,18 @@ trait CommonActions {
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
-  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = _ => forbidAndDropGuMemCookie)
+  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = createBasicGuMemCookie(_))
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = _ => forbidAndDropGuMemCookie)
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = createBasicGuMemCookie(_))
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
-  
-  def forbidAndDropGuMemCookie = Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))
-}
 
+  def createBasicGuMemCookie(implicit request: RequestHeader) =
+    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))) { user =>
+      val json = Json.obj("userId" -> user.id)
+      Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
+    }
+}
 
 trait OAuthActions extends googleauth.Actions {
   val authConfig = Config.googleAuthConfig

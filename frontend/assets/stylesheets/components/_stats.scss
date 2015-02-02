@@ -6,6 +6,7 @@
     border-top: 1px dotted $c-neutral3;
     padding-top: rem($gs-baseline / 2);
 }
+
 .stat-item {
     @include clearfix;
     @include fs-data(2);
@@ -38,4 +39,10 @@
 }
 .stat-item__second {
     position: relative;
+}
+
+.stat-item--last {
+    border-bottom: 0 none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }

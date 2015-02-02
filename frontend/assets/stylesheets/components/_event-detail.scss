@@ -308,11 +308,6 @@
     }
 }
 
-//TODO this will be found in two places (once another pull request has been merged) one needs removing
-.u-align-middle {
-    vertical-align: middle;
-}
-
 .event-image-credit {
     background-color: $white;
     padding: rem(5px) rem($gs-gutter / 2) 0;
@@ -458,7 +453,7 @@
     .event-info__tickets {
         border-bottom: 1px dotted $c-neutral3;
         padding-bottom: rem($gs-gutter / 4);
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: rem($gs-baseline / 4);
     }
     .event-info__sale-dates {
         .sale-dates__header {
