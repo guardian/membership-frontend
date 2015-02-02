@@ -1,6 +1,7 @@
 @()
 
 @import configuration.Config
+@import views.support.Asset
 
 <header class="header hidden-print js-header" role="banner">
     <div class="js-warning">
@@ -42,14 +43,12 @@
                 </ul>
             </div>
 
-            <div class="header__secondary header__logo">
-                <span itemscope itemtype="http://schema.org/Organization">
-                    <a href="/" itemprop="url" class="header__logo__link" id="qa-header-logo">
-                        <span class="u-h" itemprop="name">@Config.siteTitle</span>
-                        <i class="icon-membership_beta_mobile mobile-only"></i>
-                        <i class="icon-logo-beta hidden-mobile"></i>
-                    </a>
-                </span>
+            <div class="header__logo" itemscope itemtype="http://schema.org/Organization">
+                <a href="/" itemprop="url" class="header__logo__link" id="qa-header-logo">
+                    <span class="u-h" itemprop="name">@Config.siteTitle</span>
+                    <img src="@Asset.at("images/logos/membership-logo.svg")" alt="@Config.siteTitle" class="header__logo__image hidden-mobile" itemprop="logo">
+                    <img src="@Asset.at("images/logos/membership-logo-small.svg")" alt="@Config.siteTitle" class="header__logo__image mobile-only">
+                </a>
             </div>
 
             <div class="header__inner header__inner--popup">

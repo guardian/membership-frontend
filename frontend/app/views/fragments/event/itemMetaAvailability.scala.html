@@ -1,6 +1,7 @@
 @(event: model.RichEvent.RichEvent)
 
 <div class="event-item__tickets" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+    <meta itemprop="url" content="@event.memUrl">
     @if(event.isSoldOut) {
         <meta itemprop="availability" content="http://schema.org/SoldOut">
     } else {

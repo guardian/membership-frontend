@@ -2,6 +2,34 @@
    Tones
    ========================================================================== */
 
+/* Brand
+   ========================================================================== */
+
+.tone-brand,
+.tone-trans-brand {
+    color: $c-neutral1;
+    background-color: $mem-brandBlue;
+}
+.tone-trans-brand {
+    background-color: transparentize($mem-brandBlue, .1);
+}
+
+/* Dark variant */
+.tone-brand-dark,
+.tone-trans-brand-dark {
+    color: $white;
+    background-color: $mem-brandBlueDark;
+    a {
+        border-bottom-color: transparentize($white, .5);
+    }
+    a:hover {
+        border-bottom-color: $white;
+    }
+}
+.tone-trans-brand-dark {
+    background-color: transparentize($mem-brandBlueDark, .1);
+}
+
 /* Live
    ========================================================================== */
 

@@ -1,6 +1,5 @@
 require([
     'src/utils/analytics/setup',
-    'src/utils/cookieRefresh',
     'ajax',
     'src/modules/tier/JoinFree',
     'src/modules/info/Feedback',
@@ -17,7 +16,6 @@ require([
     'src/modules/UserDetails',
     'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
-    'src/modules/tier/Thankyou',
     'src/modules/patterns',
     'src/utils/modal',
     'src/utils/form/processSubmit',
@@ -26,7 +24,6 @@ require([
     'modernizr'
 ], function(
     analytics,
-    cookieRefresh,
     ajax,
     JoinFree,
     FeedbackForm,
@@ -43,7 +40,6 @@ require([
     UserDetails,
     choose,
     eventPriceEnhance,
-    Thankyou,
     modal,
     patterns,
     processSubmit
@@ -59,9 +55,6 @@ require([
 
     ajax.init({page: {ajaxUrl: ''}});
 
-    // TODO: Remove this, see module
-    cookieRefresh.init();
-
     analytics.init();
 
     // Global
@@ -69,8 +62,7 @@ require([
     images.init();
     slideshow.init();
     sticky.init();
-    var header = new Header();
-    header.init();
+    (new Header()).init();
     navigation.init();
     (new UserDetails()).init();
 
@@ -84,7 +76,6 @@ require([
     (new JoinFree()).init();
     (new PaidForm()).init();
     (new StaffForm()).init();
-    (new Thankyou()).init(header);
     processSubmit.init();
 
     // Feedback

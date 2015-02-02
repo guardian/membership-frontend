@@ -35,14 +35,16 @@
 
         <h4 class="event-info__name" itemprop="name">@event.name.text</h4>
 
-        @fragments.event.stats(event)
-
-        @* TODO: Make part of event stats *@
-        @if(event.isSoldThruEventbrite && event.isBookable) {
-            @for(ticket <- event.generalReleaseTicket) {
-                @fragments.event.ticketSales(event, ticket)
+        <div class="stats-listing">
+            @fragments.event.stats(event)
+            @* TODO: Make part of event stats *@
+            @if(event.isSoldThruEventbrite && event.isBookable) {
+                @for(ticket <- event.generalReleaseTicket) {
+                    @fragments.event.ticketSales(event, ticket)
+                }
             }
-        }
+        </div>
+
 
         @if(event.isSoldThruEventbrite) {
 

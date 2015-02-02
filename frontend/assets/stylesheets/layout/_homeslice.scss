@@ -14,6 +14,7 @@
 
 .home-slice {
 
+    clear: both;
     position: relative;
 
     // White backing for homeslice containers (layered with images)
@@ -80,21 +81,6 @@
     }
 
     // Per-homeslice images ================================================ //
-
-    &.home-slice--home-two:after {
-        background-image: url(/assets/images/homeslice/740-Russell-Brand.jpg);
-        @include mq(tablet) {
-            background-image: url(/assets/images/homeslice/1140-Russell-Brand.jpg);
-        }
-    }
-
-    &.home-slice--home-four:after {
-        background-image: url(/assets/images/homeslice/740-Midland-goods-shed.jpg);
-        @include mq(tablet) {
-            background-image: url(/assets/images/homeslice/1140-Midland-goods-shed.jpg);
-        }
-    }
-
     &.home-slice--patron-two:after {
         background-image: url(/assets/images/homeslice/patrons/740-Alan-profile.jpg);
         @include mq(tablet) {

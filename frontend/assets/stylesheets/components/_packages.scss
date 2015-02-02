@@ -105,7 +105,6 @@
         float: right;
     }
 
-    .about-membership &,
     .join &,
     .change-tier & {
         @include mq (desktop) {

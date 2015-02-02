@@ -2,7 +2,7 @@ package controllers
 
 import scala.concurrent.Future
 
-import play.api.mvc.{DiscardingCookie, Controller}
+import play.api.mvc.Controller
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 
@@ -65,7 +65,7 @@ trait UpgradeTier {
 
   private def doUpgrade(freeMember: FreeMember, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
     MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request))
-      .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)).discardingCookies(DiscardingCookie("GU_MEM")) }
+      .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) }
       .recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
         case error: Zuora.ResultError => Forbidden

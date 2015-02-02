@@ -99,7 +99,6 @@ $gs-max-columns: 16;
 @mixin vertically-center() {
     @include transform(translateY(-50%));
     top: 50%;
-    position: relative;
     margin: 0 auto;
     display: block;
 }
