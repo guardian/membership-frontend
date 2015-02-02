@@ -16,7 +16,8 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         ELEMENTS_TO_TOGGLE  = '[data-toggle-hidden]';
 
     var toggleElm = function ($elem) {
-        return function () {
+        return function (e) {
+            e.preventDefault();
             var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
 
             $(document.getElementById(toggleElmId)).toggle();
