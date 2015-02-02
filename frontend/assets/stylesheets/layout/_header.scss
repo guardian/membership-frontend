@@ -40,18 +40,21 @@
             margin-right: rem($gs-gutter / 2);
         }
     }
-
     .header__logo {
         clear: right;
-        width: rem(243px);
         float: right;
         margin-right: rem($gs-gutter / 2);
-        height: rem(25px);
 
         @include mq(tablet) {
             width: auto;
-            margin-bottom: rem($gs-gutter);
-            height: rem(50px);
+            margin-bottom: rem($gs-gutter / 4);
+        }
+    }
+    .header__logo__image {
+        height: 30px;
+
+        @include mq(tablet) {
+            height: 55px;
         }
     }
     .header__logo__link {

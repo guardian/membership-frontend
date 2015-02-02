@@ -32,6 +32,9 @@
     float: right;
     line-height: 0;
 }
+.global-footer__logo__image {
+    height: 30px;
+}
 .global-footer__secondary {
     @include box-sizing(border-box);
     @include font($f-sans-serif-text, normal, 13, 19);
