@@ -126,9 +126,10 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress))
   }
 
-  def getPaymentSummary(subscriptionId: String): Future[PaymentSummary] = {
+  def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
     for {
-      invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='$subscriptionId'")
+      subscription <- getSubscriptionStatus(memberId)
+      invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
     } yield {
       val sortedInvoiceItems = sortInvoiceItems(invoiceItems)
       PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))

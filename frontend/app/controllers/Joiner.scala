@@ -158,8 +158,7 @@ trait Joiner extends Controller {
     }
 
     for {
-      subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
-      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(subscriptionStatus.current)
+      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
     } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
