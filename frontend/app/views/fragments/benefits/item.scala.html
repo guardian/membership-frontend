@@ -1,7 +1,7 @@
-@(benefit: model.Benefits.BenefitItem)
+@(benefit: model.Benefits.BenefitItem, iconClasses: Seq[String] = Nil)
 
 <div class="benefit">
-    <div class="benefit__icon">
+    <div class="benefit__icon @iconClasses.mkString(" ")">
         @fragments.inlineIcon(benefit.icon, List("icon-inline--medium", "icon-inline--top"))
     </div>
     <div class="benefit__details">

@@ -74,20 +74,15 @@
     background-color: $c-tone-patron;
 }
 
-/* Tier Header - Stacked modifier
-   ========================================================================== */
-
+/**
+ * Tier Header - Stacked modifier
+ */
 .tier-header--stacked {
 
-    $stack-height: 144px;
+    min-height: rem(144px);
 
-    min-height: rem($stack-height);
-
-    @include mq(mobile) {
+    @include mq($from: tablet, $until: desktop) {
         min-height: 0;
-    }
-    @include mq(desktop) {
-        min-height: rem($stack-height);
     }
 
     .tier-header__title {
@@ -101,47 +96,3 @@
         padding-top: rem($gs-gutter * 2);
     }
 }
-
-/* Tier Header - Promo
-   ========================================================================== */
-
-.tier-header-promo {
-    @include clearfix;
-    min-height: rem(gs-span(1.5));
-    @include mq(tablet) {
-        min-height: 0;
-    }
-}
-    .tier-header-promo__pricing {
-        position: absolute;
-        bottom: rem($gs-baseline / 2);
-        border: solid $c-border-neutral;
-        border-width: 0;
-    }
-    @include mq(tablet) {
-        .tier-header-promo__title {
-            float: left;
-            width: 35%;
-        }
-        .tier-header-promo__pricing {
-            position: static;
-            float: left;
-            width: 65%;
-            border-width: 0 0 1px 0;
-            margin-top: -(rem($gs-baseline / 2));
-        }
-    }
-    @include mq(desktop) {
-        .tier-header-promo__title,
-        .tier-header-promo__pricing {
-            float: none;
-            width: auto;
-        }
-        .tier-header-promo__title {
-            margin-bottom: rem($gs-gutter * 2);
-        }
-        .tier-header-promo__pricing {
-            border-width: 1px 0;
-            min-height: rem($gs-gutter * 3);
-        }
-    }
