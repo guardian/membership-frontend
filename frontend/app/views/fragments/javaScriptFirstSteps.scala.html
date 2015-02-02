@@ -39,7 +39,7 @@
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
         },
-        analyticsEnabled: true,
+        analyticsEnabled: @if(Config.stage == "PROD") { true } else { false },
         isDev: @(Config.stage == "DEV")
     };
 
