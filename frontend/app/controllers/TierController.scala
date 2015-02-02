@@ -64,22 +64,29 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(request.member, tier))
-  }
+    val identityRequest = IdentityRequest(request)
 
-  private def doUpgrade(member: Member, tier: Tier)(formData: MemberChangeForm)(implicit request: MemberRequest[_, _]) = {
-    MemberService.upgradeSubscription(member, request.user, tier, formData, IdentityRequest(request))
-      .map { _ =>
-        val result = formData.payment.fold(Redirect(routes.TierController.upgradeThankyou(tier))) { _ =>
-          Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
-        }
+    def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
+    } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
-        result.discardingCookies(DiscardingCookie("GU_MEM"))
-      }.recover {
-        case error: Stripe.Error => Forbidden(Json.toJson(error))
-        case error: Zuora.ResultError => Forbidden
-        case error: ScalaforceError => Forbidden
-      }
+    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = for {
+      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, form, identityRequest)
+    } yield Redirect(routes.TierController.upgradeThankyou(tier))
+
+    val futureResult = request.member match {
+      case freeMember: FreeMember =>
+        freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
+
+      case paidMember: PaidMember =>
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+    }
+
+    futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
+      case error: Zuora.ResultError => Forbidden
+      case error: ScalaforceError => Forbidden
+    }
   }
 
   def upgradeThankyou(tier: Tier) = Joiner.thankyou(tier, upgrade=true)

@@ -119,23 +119,34 @@ trait MemberService extends LazyLogging {
     }
   }
 
-  def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: MemberChangeForm, identityRequest: IdentityRequest): Future[MemberId] = {
+  def upgradeFreeSubscription(freeMember: FreeMember, user: IdMinimalUser, newTier: Tier, form: FreeMemberChangeForm,
+                              identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
-    val newPaidPlan = PaidTierPlan(newTier, form.payment.fold(true)(_.annual)) // TODO
-
-    def futureCustomerOpt = member match {
-      case _: FreeMember => for {
-        customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.get.token) // TODO
-        paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(member, customer)
-      } yield Some(customer)
-
-      case _: PaidMember => Future.successful(None)
-    }
 
     for {
-      customerOpt <- futureCustomerOpt
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newPaidPlan)
-      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newPaidPlan, customerOpt))
+      customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
+      paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(freeMember, customer)
+      memberId <- upgradeSubscription(freeMember, user, newTier, form, form.payment.annual, Some(customer), identityRequest)
+    } yield memberId
+  }
+
+  def upgradePaidSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm,
+                              identityRequest: IdentityRequest): Future[MemberId] = {
+    for {
+      paymentSummary <- TouchpointBackend.forUser(user).subscriptionService.getPaymentSummary(paidMember)
+      memberId <- upgradeSubscription(paidMember, user, newTier, form, paymentSummary.current.annual, None, identityRequest)
+    } yield memberId
+
+  }
+
+  private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: MemberChangeForm,
+                                  annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest): Future[MemberId] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
+    val newRatePlan = PaidTierPlan(newTier, annual)
+
+    for {
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan)
+      memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newRatePlan, customerOpt))
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)

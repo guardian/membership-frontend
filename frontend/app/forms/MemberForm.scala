@@ -41,7 +41,13 @@ object MemberForm {
     val plan = PaidTierPlan(tier, payment.annual)
   }
 
-  case class MemberChangeForm(payment: Option[PaymentForm], deliveryAddress: Address, billingAddress: Option[Address])
+  trait MemberChangeForm {
+    val deliveryAddress: Address
+    val billingAddress: Option[Address]
+  }
+
+  case class PaidMemberChangeForm(deliveryAddress: Address, billingAddress: Option[Address]) extends MemberChangeForm
+  case class FreeMemberChangeForm(payment: PaymentForm, deliveryAddress: Address, billingAddress: Option[Address]) extends MemberChangeForm
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
@@ -119,12 +125,19 @@ object MemberForm {
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
-  val paidMemberChangeForm: Form[MemberChangeForm] = Form(
+  val freeMemberChangeForm: Form[FreeMemberChangeForm] = Form(
     mapping(
-      "payment" -> optional(paymentMapping),
+      "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping)
-    )(MemberChangeForm.apply)(MemberChangeForm.unapply)
+    )(FreeMemberChangeForm.apply)(FreeMemberChangeForm.unapply)
+  )
+
+  val paidMemberChangeForm: Form[PaidMemberChangeForm] = Form(
+    mapping(
+      "deliveryAddress" -> paidAddressMapping,
+      "billingAddress" -> optional(paidAddressMapping)
+    )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
 
   val feedbackForm: Form[FeedbackForm] = Form(
