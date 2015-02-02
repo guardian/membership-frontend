@@ -78,11 +78,13 @@
                 <table class="table table--responsive-font table--striped" role="grid">
                     <tr>
                         <th role="rowheader">Tier</th>
-                        <th role="rowheader">Payment amount</th>
+                        <th role="rowheader">Charge number</th>
+                        <th role="rowheader">Charge amount</th>
                     </tr>
-                    @for(invoice <- (paymentSummary.previous :+ paymentSummary.current)) {
+                    @for(invoice <- paymentSummary.previous :+ paymentSummary.current) {
                         <tr role="row">
                             <td>@invoice.productName</td>
+                            <td>@invoice.chargeNumber</td>
                             <td>@invoice.price.pretty</td>
                         </tr>
                     }
