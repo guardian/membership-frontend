@@ -68,3 +68,8 @@
     border: 0;
     background: transparent;
 }
+
+.u-parentheses {
+    &:before { content: '('; }
+    &:after { content: ')'; }
+}
