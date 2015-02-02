@@ -100,6 +100,8 @@
                    autocomplete="off"
                    data-validation="validCVC"/>
             @fragments.form.errorMessage("Sorry, the security code that you have entered is incorrect. Please check and retype.")
+            <a class="cvc-cta text-link js-toggle" data-toggle="js-cvc-image-container" href="#">What's this?</a>
+            <div id="js-cvc-image-container" class="cvc u-cf" data-toggle-hidden>
                 <div class="u-cf">
                     <div class="cvc__image">
                         <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
