@@ -16,7 +16,10 @@
             </div>
             <div class="action-group">
                 <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
-                <a class="action action--secondary-button u-no-top-margin js-scroll-to" href="#whats-included">What's included</a>
+                <a class="action action--secondary u-no-top-margin js-scroll-to" href="#whats-included">
+                    What's included
+                    @fragments.actionIcon("arrow-right")
+                </a>
             </div>
         }
     </div>
@@ -65,7 +68,10 @@
             </div>
             <div class="action-group">
                 <a class="action u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
-                <a class="action action--secondary-button u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
+                <a class="action action--secondary u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">
+                    Building progress blog
+                    @fragments.actionIcon("arrow-right")
+                </a>
             </div>
         }
     </div>

@@ -115,7 +115,7 @@
                 @if(!event.isBookable) {
                     <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
                         Find other @event.metadata.pluralTitle
-                        <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                        @fragments.actionIcon("arrow-right")
                     </a>
                 }
             </div>
