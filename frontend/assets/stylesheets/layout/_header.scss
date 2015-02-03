@@ -8,10 +8,6 @@
     position: relative;
     z-index: 2;
 
-    .header__inner--popup {
-        padding: 0;
-        position: relative;
-    }
     .header__branding {
         @include clearfix();
         padding-top: rem($gs-gutter / 4);

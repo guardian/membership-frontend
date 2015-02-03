@@ -35,6 +35,7 @@
 }
 .nav-control__item {
     margin-right: rem($gs-baseline);
+    position: relative;
 
     @include mq(tablet) {
         padding-top: rem(3px);

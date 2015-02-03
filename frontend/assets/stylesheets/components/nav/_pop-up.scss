@@ -56,7 +56,6 @@
     z-index: 4;
     background-color: $white;
     width: rem(175px);
-    margin-left: rem($gs-gutter / 2);
 
     @include mq(tablet) {
         left: rem(30px);
