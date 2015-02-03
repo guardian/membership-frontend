@@ -117,8 +117,10 @@ object RichEvent {
     val tags = Nil
 
     val metadata = {
+      val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
+        Config.guardianMembershipUrl + "#video")
       val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
-        .orElse(Some(HighlightsMetadata("Watch highlights of past events", Config.guardianMembershipUrl + "#video")))
+        .orElse(Some(fallbackHighlightsMetadata))
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
 
