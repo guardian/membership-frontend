@@ -1,6 +1,6 @@
 package controllers
 
-import model.Zuora.PaymentSummary
+import model.Zuora.{PaidPreview, PreviewInvoiceItem, PaymentSummary}
 
 import scala.concurrent.Future
 
@@ -44,24 +44,24 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
-  case class PaidPreview(card: Stripe.Card, invoiceItems: PaymentSummary)
-
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
 
-    def futureCustomerOpt = request.member match {
+    def futurePaidPreviewOpt = request.member match {
       case paidMember: PaidMember =>
-        MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
-        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+        for {
+          preview <- MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
+          customer <- request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+        } yield Some(PaidPreview(customer.card, preview))
       case _: FreeMember => Future.successful(None)
     }
 
     if (request.member.tier < tier) {
       for {
-        customerOpt <- futureCustomerOpt
+        paidPreviewOpt <- futurePaidPreviewOpt
         user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
       }
     }
     else

@@ -46,5 +46,15 @@ class SubscriptionServiceHelpersTest extends Specification {
       sortedInvoiceItems(0).id mustEqual "2c92c0f94b34f993014b4a1c3b0104b7"
       sortedInvoiceItems(1).id mustEqual "2c92c0f94b34f993014b4a1c3b0004b6"
     }
+
+    "sort preview invoice items by price ascending" in {
+      val amendResult = amendResultReader.read(Resource.get("model/zuora/amend-result-preview.xml")).right.get
+
+      val sortedInvoiceItems = SubscriptionServiceHelpers.sortPreviewInvoiceItems(amendResult.invoiceItems)
+
+      sortedInvoiceItems(0).price mustEqual -135f
+      sortedInvoiceItems(1).price mustEqual 540f
+
+    }
   }
 }

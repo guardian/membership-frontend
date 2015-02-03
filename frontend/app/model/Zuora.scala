@@ -27,11 +27,6 @@ object Zuora {
     val annual = nextPaymentDate == serviceStartDate.plusYears(1)
   }
 
-  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime) {
-    val nextPaymentDate = serviceEndDate.plusDays(1)
-    // TODO: is there a better way?
-    val annual = nextPaymentDate == serviceStartDate.plusYears(1)
-  }
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
@@ -80,6 +75,8 @@ object Zuora {
   case class PaymentSummary(current: InvoiceItem, previous: Seq[InvoiceItem]) {
     val totalPrice = current.price + previous.map(_.price).sum
   }
+  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String)
+  case class PaidPreview(card: Stripe.Card, invoiceItems: Seq[PreviewInvoiceItem])
 }
 
 object ZuoraReaders {
@@ -174,7 +171,8 @@ object ZuoraDeserializer {
       PreviewInvoiceItem(
         (node \ "ChargeAmount").text.toFloat + (node \ "TaxAmount").text.toFloat,
         new DateTime((node \ "ServiceStartDate").text),
-        new DateTime((node \ "ServiceEndDate").text)
+        new DateTime((node \ "ServiceEndDate").text),
+        (node \ "ProductId").text
       )
     }
 
