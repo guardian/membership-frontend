@@ -60,6 +60,11 @@ trait GuardianContentService extends GuardianContent {
 
   val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
 
+  def start() {
+    masterclassContentTask.start()
+    contentTask.start()
+  }
+
 }
 
 object GuardianContentService extends GuardianContentService
