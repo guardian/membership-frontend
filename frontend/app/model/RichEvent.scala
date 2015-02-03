@@ -84,13 +84,13 @@ object RichEvent {
     val metadata: Metadata
 
     val imageMetadata: Option[Grid.Metadata]
-    val content: Option[Content]
+    val contentOpt: Option[Content]
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
     val pastImageOpt: Option[Asset]
   }
 
-  case class GuLiveEvent(event: EBEvent, image: Option[EventImage], content: Option[Content]) extends RichEvent {
+  case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
     val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
       val file = asset.secureUrl.getOrElse(asset.file)
       val regex = "\\d+.jpg".r
@@ -99,13 +99,12 @@ object RichEvent {
 
     private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
 
-    val pastImageOpt = {
-      val elementOpt = content.flatMap(c => c.elements.flatMap(_.find(_.relation == "main")))
-      elementOpt.flatMap{ element =>
-        val assets = element.assets
-        assets.find(a => a.typeData.get("width") == Some("460"))
-      }
-    }
+    val pastImageOpt = for {
+      content <- contentOpt
+      elements <- content.elements
+      element <- elements.find(_.relation == "main")
+      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
+    } yield assetOpt
 
     val availableWidths = widths.mkString(",")
 
@@ -118,7 +117,7 @@ object RichEvent {
     val tags = Nil
 
     val metadata = {
-      val highlight = content.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
+      val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
         .orElse(Some(HighlightsMetadata("Watch highlights of past events", Config.guardianMembershipUrl + "#video")))
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
@@ -140,7 +139,7 @@ object RichEvent {
 
     val metadata = masterclassMetadata
 
-    val content = None
+    val contentOpt = None
     val pastImageOpt = None
   }
 

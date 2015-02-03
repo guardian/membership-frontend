@@ -2,7 +2,7 @@
 
 @import com.gu.contentapi.client.model.Asset
 
-@for(content <- event.content) {
+@for(content <- event.contentOpt) {
     <h4 class="h-section h-section--secondary">More about this event</h4>
     <div class="related-entry block-hover">
         <a href="@content.webUrl" class="minimal-link no-underline">
