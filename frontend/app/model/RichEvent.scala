@@ -15,7 +15,7 @@ object RichEvent {
     eventListUrl: String,
     termsUrl: String,
     largeImg: Boolean,
-    highlightsUrlOpt: Option[HighlightsMetadata] = None,
+    highlightsOpt: Option[HighlightsMetadata] = None,
     chooseTier: ChooseTierMetadata
   )
 
@@ -120,7 +120,7 @@ object RichEvent {
     val metadata = {
       val highlight = content.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
         .orElse(Some(HighlightsMetadata("Watch highlights of past events", Config.guardianMembershipUrl + "#video")))
-      guLiveMetadata.copy(highlightsUrlOpt = highlight)
+      guLiveMetadata.copy(highlightsOpt = highlight)
     }
 
   }

@@ -32,7 +32,7 @@ object EventbriteTestObjects {
       eventListUrl="",
       termsUrl="",
       largeImg=false,
-      highlightsUrlOpt=None,
+      highlightsOpt=None,
       chooseTier=ChooseTierMetadata("", "")
     )
   }
