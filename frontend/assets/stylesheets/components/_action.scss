@@ -213,7 +213,7 @@
     }
     @include mq(tablet) {
         height: auto;
-        width: 100%;
+        width: auto;
         max-width: rem(gs-span(3));
         &:after {
             margin-top: 2px;
