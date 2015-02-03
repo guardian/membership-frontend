@@ -99,11 +99,8 @@ define([
      * @param errsToFlush
      */
     var flushErrIds = function (errsToFlush) {
-        errsToFlush.map(function (err) {
-            var index = form.errs.indexOf(err);
-            if (index !== -1) {
-                form.errs.splice(index, 1);
-            }
+        form.errs = form.errs.filter(function (err) {
+            return errsToFlush.indexOf(err) === -1;
         });
 
         displayFormGlobalError(form.errs);

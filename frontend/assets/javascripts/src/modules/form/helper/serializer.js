@@ -12,11 +12,12 @@ define(['src/utils/helper'], function (utilsHelper) {
 
         if (mixin) { utilsHelper.extend(data, mixin); }
 
-        elems.map(function (elem) {
-            if (elem.name !== '' && elem.type && (elem.type !== 'checkbox' && elem.type !== 'radio' || elem.checked)) {
-                data[elem.name] = elem.value;
-            }
+        elems.filter(function (elem) {
+            return elem.name !== '' && elem.type && (elem.type !== 'checkbox' && elem.type !== 'radio' || elem.checked);
+        }).map(function (elem) {
+            data[elem.name] = elem.value;
         });
+
         return data;
     };
 

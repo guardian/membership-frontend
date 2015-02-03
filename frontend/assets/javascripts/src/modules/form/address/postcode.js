@@ -1,3 +1,7 @@
+/**
+ * This file controls the address line one, town and postcode input validation when you choose Ireland as a country and
+ * resets the validation when you change to another country
+ */
 define([
     '$',
     'src/modules/form/validation/actions'
@@ -15,7 +19,8 @@ define([
     };
 
     /**
-     * toggle postcode validation dependant on country selected
+     * If you choose Ireland as a country remove the postcode validation
+     * Reset the validation when you change to a country other than Ireland
      * @param context
      * @param optionTxt
      */
@@ -30,7 +35,9 @@ define([
     };
 
     /**
-     * toggle address validation dependant on country selected
+     * If we are on a form that does not have address line one and town validation by default then we can toggle it
+     * If you choose Ireland as a country add the address line one and town input validation
+     * Remove this validation (address line one and town input) when you change to a country other than Ireland
      * @param context
      * @param optionTxt
      */
@@ -38,7 +45,6 @@ define([
         var $addressLineOneInput = $(ADDRESS_LINE_ONE_INPUT_SELECTOR, context);
         var $townInput = $(TOWN_INPUT_SELECTOR, context);
 
-        // if we are on a form that doesn't have address validation by default toggle it
         if (!$addressLineOneInput[0].hasAttribute('required') && !$townInput[0].hasAttribute('required')) {
             if (optionTxt === IRELAND_STRING) {
                 actions.addValidation([$addressLineOneInput, $townInput]);

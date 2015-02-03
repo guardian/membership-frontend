@@ -34,53 +34,46 @@ define([
         if (elem.hasAttribute('disabled')) { return true; }
 
         if (elem.getAttribute(DATA_VALIDATION_ATTRIBUTE_NAME)) {
-            valid = profileValidation(valid, elem);
+            valid = valid && profileValidation(elem);
         }
 
-        valid = requiredValidation(valid, elem);
-        valid = lengthValidation(valid, elem);
-        valid = patternValidation(valid, elem);
+        valid = valid && requiredValidation(elem);
+        valid = valid && lengthValidation(elem);
+        valid = valid && patternValidation(elem);
 
         return valid;
     };
 
     /**
      * If elem has the required attribute it must have a value
-     * @param valid
      * @param elem
      * @returns {*|boolean}
      */
-    var requiredValidation = function (valid, elem) {
-        return valid && (!elem.hasAttribute('required') || elem.value !== '');
+    var requiredValidation = function (elem) {
+        return !elem.hasAttribute('required') || elem.value !== '';
     };
 
     /**
      * if elem has the minlength, maxlength attributes check value length is within these bounds
-     * @param valid
      * @param elem
      * @returns {*|boolean}
      */
-    var lengthValidation = function (valid, elem) {
+    var lengthValidation = function (elem) {
         var value = elem.value;
         var minLength = elem.getAttribute('minlength');
         var maxLength = elem.getAttribute('maxlength');
-        return valid && ((!minLength || value.length >= minLength) && (!maxLength || value.length <= maxLength));
+        return (!minLength || value.length >= minLength) && (!maxLength || value.length <= maxLength);
     };
 
     /**
      * if the elem has a pattern check it
-     * @param valid
      * @param elem
      * @returns {*}
      */
-    var patternValidation = function (valid, elem) {
+    var patternValidation = function (elem) {
         var pattern = elem.getAttribute('pattern');
-        if (valid && pattern) {
-            var regEx = new RegExp(pattern);
-            return regEx.text(pattern);
-        }
 
-        return valid;
+        return !pattern || new RegExp(pattern).test(elem.value);
     };
 
     /**
@@ -89,9 +82,9 @@ define([
      * @param elem
      * @returns {*}
      */
-    var profileValidation = function (valid, elem) {
+    var profileValidation = function (elem) {
         var profile = elem.getAttribute(DATA_VALIDATION_ATTRIBUTE_NAME);
-        return valid && (validationProfileExists(profile) && validationProfiles[profile](elem));
+        return validationProfileExists(profile) && validationProfiles[profile](elem);
     };
 
     var validationProfileExists = function (profile) {

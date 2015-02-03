@@ -40,11 +40,7 @@ define(function () {
             }
         }
 
-        if (!errMsg) {
-            errMsg = paymentErrMsgs.generic_error;
-        }
-
-        return errMsg;
+        return errMsg || paymentErrMsgs.generic_error;
     };
 
     return {

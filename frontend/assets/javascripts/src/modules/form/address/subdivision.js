@@ -9,12 +9,11 @@ define(['$'], function ($) {
     var COUNTY_CONTAINER_SELECTOR = '.js-county-container';
     var POSTCODE_LABEL_SELECTOR = '.js-postcode-label';
 
-    var detachElems = function($elements) {
-        $elements.forEach(function (elem) {
-            var $elem = $(elem);
-            if ($elem.parent().length !== 0) {
-                $elem.detach();
-            }
+    var detachElems = function(elems) {
+        elems.filter(function ($elem) {
+            return $elem.parent().length !== 0;
+        }).map(function ($elem) {
+            $elem.detach();
         });
     };
 

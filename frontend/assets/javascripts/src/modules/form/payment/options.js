@@ -11,7 +11,7 @@ define(['bean'], function (bean) {
     var init = function () {
         if (PAYMENT_OPTIONS_CONTAINER_ELEM) {
             addListeners();
-            populateCardNote();
+            populateCardNote(PAYMENT_OPTIONS_CONTAINER_ELEM.querySelector('[checked]').value);
         }
     };
 

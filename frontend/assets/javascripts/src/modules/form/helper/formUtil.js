@@ -15,9 +15,7 @@ define([
             var required = elem.hasAttribute('required');
             var validationProfile = elem.getAttribute('data-validation');
 
-            if ((inputTypes.indexOf(nodeName) !== -1) && (required || validationProfile)) {
-                return true;
-            }
+            return inputTypes.indexOf(nodeName) !== -1 && (required || validationProfile);
         });
     };
 
