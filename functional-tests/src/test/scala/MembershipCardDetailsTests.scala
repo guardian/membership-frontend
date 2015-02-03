@@ -33,18 +33,17 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    // TODO James Oram this test apparently can't be run in January - fix
-//    scenarioWeb("41. User can't add a card with invalid expiry date") {
-//      implicit driver =>
-//      given {
-//        MembershipSteps().IAmLoggedInAsAPartner
-//      }
-//      .when {
-//        _.IGoToMembershipTabToChangeDetails
-//      }
-//      .then {
-//        _.ISeeAnErrorMessageWhenMyExpiryDateIsInThePast
-//      }
-//    }
+    scenarioWeb("41. User can't add a card with invalid expiry date") {
+      implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedInAsAPartner
+      }
+      .when {
+        _.IGoToMembershipTabToChangeDetails
+      }
+      .then {
+        _.ISeeAnErrorMessageWhenMyExpiryDateIsInThePast
+      }
+    }
   }
 }
