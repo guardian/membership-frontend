@@ -51,6 +51,16 @@ class ZuoraDeserializerTest extends Specification {
       amend.ids.length mustEqual 2
       amend.ids(0) mustEqual "2c92c0f847f1dcf00147fe0a50520707"
       amend.ids(1) mustEqual "2c92c0f847f1dcf00147fe0a50f3071f"
+      amend.invoiceItems.length mustEqual 0
+    }
+
+    "have preview invoice items" in {
+      val amend = amendResultReader.read(Resource.get("model/zuora/amend-result-preview.xml")).right.get
+
+      amend.ids.length mustEqual 1
+      amend.invoiceItems.length mustEqual 2
+      amend.invoiceItems(0).price mustEqual -135f
+      amend.invoiceItems(1).price mustEqual 540f
     }
   }
 

@@ -64,11 +64,11 @@ trait AmendSubscription {
     }
   }
 
-  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan, preview: Boolean): Future[AmendResult] = {
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
-        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
+        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan), preview))
       } yield result
     }
   }

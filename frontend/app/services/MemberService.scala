@@ -11,6 +11,7 @@ import forms.MemberForm._
 import model.Eventbrite.EBCode
 import model.RichEvent._
 import model.Stripe.Customer
+import model.Zuora.PreviewInvoiceItem
 import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
 import play.api.libs.json.Json
@@ -145,7 +146,7 @@ trait MemberService extends LazyLogging {
     val newRatePlan = PaidTierPlan(newTier, annual)
 
     for {
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan, preview = false)
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newRatePlan, customerOpt))
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
@@ -153,6 +154,17 @@ trait MemberService extends LazyLogging {
       memberId
     }
   }
+  
+  def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
+
+    for {
+      paymentSummary <- touchpointBackend.subscriptionService.getPaymentSummary(paidMember)
+      newRatePlan = PaidTierPlan(newTier, paymentSummary.current.annual)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(paidMember, newRatePlan, preview = true)
+    } yield subscriptionResult.invoiceItems
+  }
+
 }
 
 object MemberService extends MemberService

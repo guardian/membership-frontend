@@ -9,7 +9,7 @@ object Zuora {
 
   case class Authentication(token: String, url: String) extends ZuoraResult
 
-  case class AmendResult(ids: Seq[String]) extends ZuoraResult
+  case class AmendResult(ids: Seq[String], invoiceItems: Seq[PreviewInvoiceItem]) extends ZuoraResult
   case class CreateResult(id: String) extends ZuoraResult
   case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraResult
   case class SubscribeResult(id: String) extends ZuoraResult
@@ -22,6 +22,12 @@ object Zuora {
     extends ZuoraQuery
   case class InvoiceItem(id: String, price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime,
                          chargeNumber: String, productName: String) extends ZuoraQuery {
+    val nextPaymentDate = serviceEndDate.plusDays(1)
+    // TODO: is there a better way?
+    val annual = nextPaymentDate == serviceStartDate.plusYears(1)
+  }
+
+  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime) {
     val nextPaymentDate = serviceEndDate.plusDays(1)
     // TODO: is there a better way?
     val annual = nextPaymentDate == serviceStartDate.plusYears(1)
@@ -164,7 +170,15 @@ object ZuoraDeserializer {
   }
 
   implicit val amendResultReader = ZuoraResultReader.multi("amendResponse") { result =>
-    AmendResult((result \ "AmendmentIds").map(_.text))
+    val invoiceItems = (result \ "InvoiceDatas" \ "InvoiceItem").map {node =>
+      PreviewInvoiceItem(
+        (node \ "ChargeAmount").text.toFloat + (node \ "TaxAmount").text.toFloat,
+        new DateTime((node \ "ServiceStartDate").text),
+        new DateTime((node \ "ServiceEndDate").text)
+      )
+    }
+
+    AmendResult((result \ "AmendmentIds").map(_.text), invoiceItems)
   }
 
   implicit val createResultReader = ZuoraResultReader("createResponse") { result =>

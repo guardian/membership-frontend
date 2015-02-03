@@ -1,5 +1,7 @@
 package controllers
 
+import model.Zuora.PaymentSummary
+
 import scala.concurrent.Future
 
 import play.api.mvc.{DiscardingCookie, Controller}
@@ -42,10 +44,13 @@ trait DowngradeTier {
 trait UpgradeTier {
   self: TierController =>
 
+  case class PaidPreview(card: Stripe.Card, invoiceItems: PaymentSummary)
+
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
 
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
+        MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
       case _: FreeMember => Future.successful(None)
     }
