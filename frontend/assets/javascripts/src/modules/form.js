@@ -2,6 +2,7 @@
  Form JS
 
  Validation
+ Add the 'noValidate' attribute to the form to stop html5 validation and add the class .js-form to use the form interaction work.
  The validation now works with attributes on inputs. We use the required, minlength, maxlength, data-validation, pattern attributes to validate.
  The data-validation attribute is used when we need custom validation such as client side checking of credit card type, or month and year validation.
 
