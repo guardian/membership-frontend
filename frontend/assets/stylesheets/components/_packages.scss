@@ -349,7 +349,7 @@
 }
 
 .package-promo--spread {
-    @include mq(desktop) {
+    @include mq(tablet) {
         @include package-promo-spread();
         margin-bottom: rem($gs-gutter);
     }

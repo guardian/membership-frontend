@@ -25,8 +25,9 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
         @include fs-headline(4);
         padding: rem($gs-gutter / 2);
         border-top: 2px solid $c-neutral6;
-        @include mq(tablet) {
-            @include fs-headline(7);
+
+        @include mq(desktop) {
+            @include fs-headline(6, true);
             padding: rem($gs-baseline) rem($gs-gutter);
         }
     }
@@ -45,14 +46,19 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: 0;
     @include mq(desktop) {
         .page-slice__headline {
-            width: 45%;
-            padding-right: 15%;
             float: left;
+            width: rem(gs-span(4));
         }
         .page-slice__content {
             float: right;
-            width: 55%;
+            width: rem(gs-span(9) - $gs-gutter);
             padding: rem($gs-gutter);
+        }
+    }
+    @include mq(mem-full) {
+        .page-slice__headline {
+            width: rem(gs-span(6));
+            padding-right: rem(gs-span(2));
         }
     }
 }

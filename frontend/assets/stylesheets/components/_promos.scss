@@ -28,7 +28,7 @@
         left: 0;
         top: rem($gs-baseline * 2);
         width: 100%;
-        max-width: 45%;
+        max-width: rem(gs-span(6));
         padding: rem($gs-baseline) rem($gs-gutter);
         padding-bottom: rem($gs-baseline * 4);
         min-height: rem(gs-height(3));
@@ -50,7 +50,7 @@
     padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        width: 75%;
+        width: rem(gs-span(9) - $gs-gutter);
         float: right;
         position: relative;
         margin-top: -(rem(gs-height(2)));
@@ -58,7 +58,6 @@
         padding: rem($gs-gutter);
     }
     @include mq(desktop) {
-        width: 55%;
         margin-top: -(rem(gs-height(2) + $gs-gutter));
         padding-bottom: 0;
     }
