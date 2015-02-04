@@ -31,6 +31,7 @@
         max-width: 45%;
         padding: rem($gs-baseline) rem($gs-gutter);
         padding-bottom: rem($gs-baseline * 4);
+        min-height: rem(gs-height(3));
     }
 }
 .promo-primary__media {
@@ -59,6 +60,7 @@
     @include mq(desktop) {
         width: 55%;
         margin-top: -(rem(gs-height(2) + $gs-gutter));
+        padding-bottom: 0;
     }
 }
 
