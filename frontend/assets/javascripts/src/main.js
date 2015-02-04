@@ -1,10 +1,6 @@
 require([
     'src/utils/analytics/setup',
     'ajax',
-    'src/modules/tier/JoinFree',
-    'src/modules/info/Feedback',
-    'src/modules/tier/PaidForm',
-    'src/modules/tier/StaffForm',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
@@ -19,16 +15,13 @@ require([
     'src/modules/patterns',
     'src/utils/modal',
     'src/utils/form/processSubmit',
+    'src/modules/form',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
 ], function(
     analytics,
     ajax,
-    JoinFree,
-    FeedbackForm,
-    PaidForm,
-    StaffForm,
     Cta,
     filter,
     toggle,
@@ -42,7 +35,8 @@ require([
     eventPriceEnhance,
     modal,
     patterns,
-    processSubmit
+    processSubmit,
+    form
 ) {
     'use strict';
 
@@ -73,13 +67,10 @@ require([
 
     // Join
     choose.init();
-    (new JoinFree()).init();
-    (new PaidForm()).init();
-    (new StaffForm()).init();
-    processSubmit.init();
 
-    // Feedback
-    (new FeedbackForm()).init();
+    // Forms
+    form.init();
+    processSubmit.init();
 
     // Modal
     modal.init();
