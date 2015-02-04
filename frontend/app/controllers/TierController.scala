@@ -79,7 +79,8 @@ trait UpgradeTier {
         freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
 
       case paidMember: PaidMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+        Future.successful(NotFound)
+        //paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
