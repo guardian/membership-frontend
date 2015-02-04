@@ -1,5 +1,5 @@
 @(member: com.gu.membership.salesforce.Member, subscription: model.Zuora.SubscriptionDetails,
-    cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
+    cardOpt: Option[com.gu.membership.stripe.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
 
 @import views.support.Dates._
 @import views.support.Prices._
