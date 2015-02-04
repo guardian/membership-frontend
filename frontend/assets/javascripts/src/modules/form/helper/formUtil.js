@@ -20,7 +20,7 @@ define([
     };
 
     var getFormElem = function () {
-        return document.querySelector('form');
+        return document.querySelector('.js-form');
     };
 
     var getInputsToValidate = function (elems) {

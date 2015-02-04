@@ -31,7 +31,7 @@
 
             <div class="form-section__content">
 
-                <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="form form--top-border js-feedback-form" novalidate>
+                <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="form form--top-border js-form" novalidate>
                     @CSRF.formField
                     @fragments.form.feedback()
                     @fragments.form.errorMessageDisplay()
