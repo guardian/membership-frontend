@@ -24,8 +24,6 @@ object SubscriptionServiceHelpers {
     amendments.sortBy { amendment => versions(amendment.subscriptionId) }
   }
 
-  def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
-
   def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
@@ -130,9 +128,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     for {
       subscription <- getSubscriptionStatus(memberId)
       invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
-    } yield {
-      val sortedInvoiceItems = sortInvoiceItems(invoiceItems)
-      PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
-    }
+    } yield PaymentSummary(invoiceItems)
   }
 }

@@ -74,6 +74,13 @@ object Zuora {
   case class PaymentSummary(current: InvoiceItem, previous: Seq[InvoiceItem]) {
     val totalPrice = current.price + previous.map(_.price).sum
   }
+
+  object PaymentSummary {
+    def apply(items: Seq[InvoiceItem]): PaymentSummary = {
+      val sortedInvoiceItems = items.sortBy(_.chargeNumber)
+      PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
+    }
+  }
 }
 
 object ZuoraReaders {
