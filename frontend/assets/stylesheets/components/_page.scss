@@ -45,12 +45,13 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: 0;
     @include mq(desktop) {
         .page-slice__headline {
-            width: 30%;
+            width: 45%;
+            padding-right: 15%;
             float: left;
         }
         .page-slice__content {
             float: right;
-            width: 58%;
+            width: 55%;
             padding: rem($gs-gutter);
         }
     }
