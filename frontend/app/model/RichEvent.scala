@@ -1,5 +1,6 @@
 package model
 
+import com.gu.contentapi.client.model.{Asset, Content}
 import configuration.Config
 import model.Eventbrite.EBEvent
 import services.MasterclassData
@@ -14,11 +15,12 @@ object RichEvent {
     eventListUrl: String,
     termsUrl: String,
     largeImg: Boolean,
-    highlightsUrlOpt: Option[String],
+    highlightsOpt: Option[HighlightsMetadata] = None,
     chooseTier: ChooseTierMetadata
   )
 
   case class ChooseTierMetadata(title: String, sectionTitle: String)
+  case class HighlightsMetadata(title: String, url: String)
 
   val guLiveMetadata = Metadata(
     identifier="guardian-live",
@@ -32,7 +34,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
-    highlightsUrlOpt=Some(Config.guardianMembershipUrl + "#video"),
     chooseTier=ChooseTierMetadata(
       "Guardian Live events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -51,7 +52,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.masterclasses.url,
     termsUrl=Config.guardianMasterclassesTermsUrl,
     largeImg=false,
-    highlightsUrlOpt=None,
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
       "Become a Partner or Patron to save 20% on your masterclass"
@@ -67,7 +67,6 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
-    highlightsUrlOpt=None,
     chooseTier=ChooseTierMetadata(
       "Guardian Discover events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -85,12 +84,13 @@ object RichEvent {
     val metadata: Metadata
 
     val imageMetadata: Option[Grid.Metadata]
-
+    val contentOpt: Option[Content]
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
+    val pastImageOpt: Option[Asset]
   }
 
-  case class GuLiveEvent(event: EBEvent, image: Option[EventImage]) extends RichEvent {
+  case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
     val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
       val file = asset.secureUrl.getOrElse(asset.file)
       val regex = "\\d+.jpg".r
@@ -98,6 +98,13 @@ object RichEvent {
     }
 
     private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+
+    val pastImageOpt = for {
+      content <- contentOpt
+      elements <- content.elements
+      element <- elements.find(_.relation == "main")
+      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
+    } yield assetOpt
 
     val availableWidths = widths.mkString(",")
 
@@ -109,13 +116,21 @@ object RichEvent {
 
     val tags = Nil
 
-    val metadata = guLiveMetadata
+    val metadata = {
+      val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
+        Config.guardianMembershipUrl + "#video")
+      val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
+        .orElse(Some(fallbackHighlightsMetadata))
+      guLiveMetadata.copy(highlightsOpt = highlight)
+    }
+
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
       .getOrElse(fallbackImage)
       .replace("http://static", "https://static-secure")
+
 
     val availableWidths = ""
 
@@ -125,6 +140,9 @@ object RichEvent {
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
     val metadata = masterclassMetadata
+
+    val contentOpt = None
+    val pastImageOpt = None
   }
 
 

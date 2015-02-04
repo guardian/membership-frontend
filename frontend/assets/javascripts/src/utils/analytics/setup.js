@@ -13,7 +13,7 @@ define([
         }
 
         if (guardian.analyticsEnabled) {
-            require('ophan', function () {});
+            require('ophan/membership', function () {});
             omnitureAnalytics.init();
             googleAnalytics.init();
         }

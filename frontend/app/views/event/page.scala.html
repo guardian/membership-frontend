@@ -54,8 +54,8 @@
                     </div>
                     <div class="event-ticket__action">
                         @if(event.isPastEvent) {
-                            @for(highlightsUrl <- event.metadata.highlightsUrlOpt) {
-                                <a class="action action--external u-no-margin" href="@highlightsUrl" data-link-name="Watch highlights">Watch highlights of past events</a>
+                            @for(highlight <- event.metadata.highlightsOpt) {
+                                <a class="action action--external u-no-margin" href="@highlight.url" data-link-name="Watch highlights">@highlight.title</a>
                             }
                         }
                         @if(event.isSoldOut && !event.isPastEvent) {
@@ -95,20 +95,29 @@
                 </div>
             </div>
 
+
             <div class="event-content__sidebar">
+
+
+                @if(event.isPastEvent) {
+                    @fragments.event.relatedEntry(event)
+                }
+
                 @if(!event.metadata.largeImg) {
                     <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
                 }
 
-                <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
-                    @fragments.event.infoPanel(event)
-                    @if(!event.isBookable) {
-                        <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
-                            Find other @event.metadata.pluralTitle
-                            <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
-                        </a>
-                    }
-                </div>
+                @if(!event.isPastEvent){
+                    <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
+                        @fragments.event.infoPanel(event)
+                    </div>
+                }
+                @if(!event.isBookable) {
+                    <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
+                        Find other @event.metadata.pluralTitle
+                        <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                    </a>
+                }
             </div>
         </div>
 

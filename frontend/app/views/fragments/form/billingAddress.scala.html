@@ -6,7 +6,7 @@
     </div>
 }
 
-<fieldset class="fieldset js-toggle-billing-address u-h">
+<fieldset class="fieldset u-h js-toggle-billing-address">
 
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">@heading</h2>
@@ -14,15 +14,15 @@
 
     <div class="fieldset__fields">
 
-        <div class="form-field">
+        <div class="form-field js-billing-input-container">
 
             <label class="label" for="use-delivery-address">
-                <input class="is-hidden js-billing-input" type="radio" name="address.type" id="use-delivery-address" value="true" checked="checked"/>
+                <input class="is-hidden" type="radio" name="address.type" id="use-delivery-address" value="true" checked="checked"/>
                 @pseudoRadio("Use delivery address")
             </label>
 
             <label class="label" for="use-billing-address">
-                <input class="is-hidden js-billing-input" type="radio" name="address.type" id="use-billing-address" value="false"/>
+                <input class="is-hidden js-use-billing-address" type="radio" name="address.type" id="use-billing-address" value="false"/>
                 @pseudoRadio("Add a different billing address")
             </label>
 

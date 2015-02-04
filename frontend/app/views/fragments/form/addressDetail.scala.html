@@ -18,14 +18,14 @@
         <label class="label" for="@countyOrStateLabel-@(formType)">@countyOrStateLabel.capitalize</label>
         <select name="@(formType).countyOrState"
                 id="@countyOrStateLabel-@(formType)"
-                class="select js-@countyOrStateLabel-@(formType)"
-                data-error-message="Please enter your @countyOrStateLabel.capitalize"
-                data-validation="required"
+                class="select js-@countyOrStateLabel"
+                required
                 aria-required="true">
         @for(countyOrState <- countyOrStateList) {
             <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
         }
         </select>
+        @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
     </div>
 }
 
@@ -42,14 +42,14 @@
             <label class="label" for="country-@(formType)">Country</label>
             <select name="@(formType).country"
                 id="country-@(formType)"
-                class="select js-country-@(formType)"
-                data-error-message="Please enter your Country"
-                data-validation="required"
+                class="select js-country"
+                required
                 aria-required="true">
                 @for(country <- Countries.allSorted) {
                     <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
                 }
             </select>
+            @fragments.form.errorMessage("Please enter your Country")
         </div>
 
         <div class="form-field">
@@ -60,8 +60,8 @@
                    value="@address1"
                    id="address-line-one-@(formType)"
                    class="input-text js-address-line-one"
-                   data-error-message="Please enter your @heading.toLowerCase() first line"
-                   @if(addressRequired == true){data-validation="required" aria-required="true"} />
+                   @if(addressRequired == true){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} first line")
         </div>
 
         <div class="form-field">
@@ -80,35 +80,35 @@
                    value="@town"
                    id="town-@(formType)"
                    class="input-text js-town"
-                   data-error-message="Please enter your @heading.toLowerCase() town"
-                   @if(addressRequired == true){data-validation="required" aria-required="true"} />
+                   @if(addressRequired == true){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} town")
         </div>
 
         @countyOrStateSelect(Countries.US.states.toList, "state")
         @countyOrStateSelect(Countries.Canada.states.toList, "province")
 
-        <div class="js-county-container-@(formType)">
+        <div class="js-county-container">
             <div class="form-field js-county-section">
                 <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
                 <input type="text"
                        name="@(formType).countyOrState"
                        value="@county"
                        id="county-or-state-@(formType)"
-                       class="input-text js-county-or-state-@(formType)"/>
+                       class="input-text js-county-or-state"/>
             </div>
         </div>
 
         <div class="form-field form-field--no-margin">
-            <label class="label optional-marker js-postcode-@(formType)" for="postCode-@(formType)">Post code</label>
+            <label class="label optional-marker js-postcode-label" for="postCode-@(formType)">Post code</label>
             <input type="text"
                    name="@(formType).postCode"
                    value="@postcode"
                    id="postCode-@(formType)"
                    maxlength="20"
-                   class="input-text js-post-code"
-                   data-error-message="Please enter your @heading.toLowerCase() post code"
-                   data-validation="required"
+                   class="input-text js-postcode"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} post code")
         </div>
     </div>
 </fieldset>
