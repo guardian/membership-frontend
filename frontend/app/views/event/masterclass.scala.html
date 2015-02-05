@@ -54,9 +54,13 @@
                     <input type="text"
                            class="filter-search__input"
                            id="js-filter"
-                           data-filter-field="title"
                            placeholder="Filter by title"
-                           autocomplete="off" />
+                           autocomplete="off"
+                           data-filter-field="title"
+                           data-metric-trigger="keyup"
+                           data-metric-category="filter"
+                           data-metric-action="search"
+                    />
                     <span class="filter-search__icon">
                         @fragments.inlineIcon("search")
                     </span>

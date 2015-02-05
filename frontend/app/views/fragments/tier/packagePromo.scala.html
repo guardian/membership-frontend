@@ -31,7 +31,13 @@
             </div>
         }
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin" href="@routes.Joiner.enterDetails(tier)" data-link-name="Become a @tier">
+            <a
+                class="action action--snap u-no-bottom-margin"
+                href="@routes.Joiner.enterDetails(tier)"
+                data-metric-trigger="click"
+                data-metric-category="join"
+                data-metric-action="@tier.toString.toLowerCase()"
+            >
                 <span class="action__label">
                     Become a @tier
                 </span>

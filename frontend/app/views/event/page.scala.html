@@ -59,9 +59,7 @@
                             }
                         }
                         @if(event.isSoldOut && !event.isPastEvent) {
-                            <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
-                                Add me to the waitlist
-                            </a>
+                            @fragments.event.waitlist(event, List("u-no-margin"))
                         }
                     </div>
                 </div>
