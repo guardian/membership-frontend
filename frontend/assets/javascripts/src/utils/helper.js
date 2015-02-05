@@ -42,20 +42,12 @@ define(function () {
         return height;
     };
 
+    // TODO: Replace with lodash-amd
     var toArray = function (nodeList) {
         return Array.prototype.slice.call(nodeList);
     };
 
-    var extend = function (target, source) {
-        for (var prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                target[prop] = source[prop];
-            }
-        }
-    };
-
     return {
-        extend: extend,
         toArray: toArray,
         getLocationDetail: getLocationDetail,
         getSpecifiedParent: getSpecifiedParent,
