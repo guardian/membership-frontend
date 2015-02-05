@@ -10,31 +10,60 @@
     <div class="header__inner">
         <div class="header__branding l-constrained">
             <div class="header__primary">
-                <nav>
-                    <ul class="inline-list u-cf" role="menubar">
-                        <li class="menu-item">
-                            <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="control-container no-underline js-identity-icon" title="Your account" id="qa-identity-control">
-                                <span class="control js-user-icon">
-                                    <span class="control__icon">
-                                        <i class="icon-user-black"></i>
-                                    </span>
+                <ul class="nav nav-control u-cf" role="menubar">
+                    <li class="nav-control__item">
+                        <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="control no-underline js-identity-icon" title="Your account" id="qa-identity-control">
+                            <span class="control__item">
+                                <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
+                                    @fragments.inlineIcon("user")
                                 </span>
-                                <span class="hidden-mobile js-user-detail">
-                                    <span class="identity__notice control__info case--lower">Sign in</span>
-                                    <span class="identity__account control__info u-h no-underline--override js-user-displayname"></span>
-                                    <span class="identity__tier control__info u-h no-underline--override js-user-tier"></span>
+                            </span>
+                            <span class="control__item hidden-mobile js-user-detail">
+                                <span class="control__info">
+                                    <span class="identity__notice case--lower">Sign in</span>
+                                    <span class="identity__account no-underline--override u-h js-user-displayname"></span>
+                                    <span class="identity__tier no-underline--override u-h u-parentheses js-user-tier"></span>
                                 </span>
-                            </a>
-                        </li>
-                        <li class="menu-item menu-item--last is-hidden js-header-join-us-cta">
-                            <a href="/join" role="menuitem" class="no-underline hidden-mobile control-container" title="Join us">
-                                <span class="control control--no-border"><i class="icon-g-black"></i></span>
+                            </span>
+                        </a>
+
+                        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
+                            <nav role="navigation" aria-label="Profile menu">
+                                <ul class="nav nav--columns">
+                                    <li class="nav__item">
+                                        <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
+                                    </li>
+                                    <li class="nav__item">
+                                        <a href="@Config.idWebAppUrl/public/edit" data-member-href="@Config.idWebAppUrl/membership/edit" class="nav__link js-edit-profile" id="qa-identity-nav-edit">Edit profile</a>
+                                    </li>
+                                    <li class="nav__item">
+                                        <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>
+                                    </li>
+                                    <li class="nav__item">
+                                        <a href="@Config.idWebAppUrl/password/change" class="nav__link"
+                                           data-link-name="Change password">Change password</a>
+                                    </li>
+                                    <li class="nav__item">
+                                        <a href="@Config.idWebAppUrl/signout" class="nav__link">Sign out</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </li>
+                    <li class="nav-control__item nav-control__item--last is-hidden js-header-join-us-cta">
+                        <a href="/join" role="menuitem" class="control no-underline hidden-mobile" title="Join us">
+                            <span class="control__item">
+                                @fragments.inlineIcon("g-mark", List("icon-inline--large"))
+                            </span>
+                            <span class="control__item">
                                 <span class="control__info no-underline--override case--lower hidden-mobile">Join us</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
             </div>
+
+            @* External navigation *@
             <div class="header__secondary">
                 <ul class="nav nav--external nav--brand hidden-tablet">
                     <li><a href="http://www.theguardian.com/" class="nav__link case--lower">The Guardian</a></li>
@@ -43,6 +72,7 @@
                 </ul>
             </div>
 
+            @* Branding *@
             <div class="header__logo" itemscope itemtype="http://schema.org/Organization">
                 <a href="/" itemprop="url" class="header__logo__link" id="qa-header-logo">
                     <span class="u-h" itemprop="name">@Config.siteTitle</span>
@@ -51,33 +81,9 @@
                 </a>
             </div>
 
-            <div class="header__inner header__inner--popup">
-                <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
-                    <nav role="navigation" aria-label="Profile menu">
-                        <ul class="nav nav--columns">
-                            <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
-                            </li>
-                            <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/public/edit" data-member-href="@Config.idWebAppUrl/membership/edit" class="nav__link js-edit-profile" id="qa-identity-nav-edit">Edit profile</a>
-                            </li>
-                            <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>
-                            </li>
-                            <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/password/change" class="nav__link"
-                                   data-link-name="Change password">Change password</a>
-                            </li>
-                            <li class="nav__item">
-                                <a href="@Config.idWebAppUrl/signout" class="nav__link">Sign out</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
         </div>
         <button role="menuitem" class="mobile-menu mobile-only js-menu-icon" title="Menu">
-            <span class="control__icon">
+            <span class="mobile-menu__icon">
                 <i></i>
                 <i></i>
                 <i></i>
