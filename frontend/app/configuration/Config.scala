@@ -201,4 +201,6 @@ object Config {
     )
   }
 
+  val trackerUrl = config.getString("snowplow.url")
+
 }

@@ -13,8 +13,9 @@ import model.RichEvent._
 import model.Stripe.Customer
 import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import services.EventbriteService._
+import tracking.{SingleEvent, EventTracking}
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,7 +48,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
   }
 }
 
-trait MemberService extends LazyLogging {
+trait MemberService extends LazyLogging with EventTracking {
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
@@ -89,7 +90,8 @@ trait MemberService extends LazyLogging {
       for {
         fullUser <- identityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
-        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
+        userData = initialData(fullUser, formData)
+        memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
@@ -98,6 +100,7 @@ trait MemberService extends LazyLogging {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
+        trackEvent(SingleEvent(memberId, fullUser, formData, "membershipRegistration"))
         memberId
       }
     }.andThen {
