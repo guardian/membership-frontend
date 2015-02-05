@@ -52,7 +52,14 @@
 
             <div class="package__item package__item-cta@if(mode == "promo" && showLearnMore) { package__item--promo}">
                 @if(mode == "promo") {
-                    <a class="action js-opt-become-member" href="@routes.Joiner.enterDetails(tier)" id="qa-@tier.slug" data-link-name="Become a @tier">Become a @tier</a>
+
+                    <a class="action js-opt-become-member"
+                       href="@routes.Joiner.enterDetails(tier)"
+                       id="qa-@tier.slug"
+                       data-metric-trigger="click"
+                       data-metric-category="join"
+                       data-metric-action="@tier.toString.toLowerCase()">Become a @tier</a>
+
                     @if(showLearnMore) {
                         @if(tier == Tier.Patron) {
                             <a class="action action--secondary" href="/patrons">
