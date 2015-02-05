@@ -1,5 +1,6 @@
 package services
 
+import com.gu.membership.util.WebServiceHelper
 import play.api.cache.Cache
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,7 +21,7 @@ import model.RichEvent._
 import monitoring.EventbriteMetrics
 import utils.ScheduledTask
 
-trait EventbriteService extends utils.WebServiceHelper[EBObject, EBError] {
+trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
   val maxDiscountQuantityAvailable: Int
 

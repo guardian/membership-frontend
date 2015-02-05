@@ -3,7 +3,7 @@
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
     pageInfo: model.PageInfo,
-    cardOpt: Option[model.Stripe.Card]
+    cardOpt: Option[com.gu.membership.stripe.Stripe.Card]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._

@@ -55,9 +55,15 @@
                     <a class="action js-opt-become-member" href="@routes.Joiner.enterDetails(tier)" id="qa-@tier.slug" data-link-name="Become a @tier">Become a @tier</a>
                     @if(showLearnMore) {
                         @if(tier == Tier.Patron) {
-                            <a class="action action--secondary-button" href="/patrons">Learn more about @{tier}s</a>
+                            <a class="action action--secondary" href="/patrons">
+                                Learn more about @{tier}s
+                                @fragments.actionIcon("arrow-right")
+                            </a>
                         } else {
-                            <a class="action action--secondary-button" href="/about">Learn more about @{tier}s</a>
+                            <a class="action action--secondary" href="/about">
+                                Learn more about @{tier}s
+                                @fragments.actionIcon("arrow-right")
+                            </a>
                         }
                     }
                 }

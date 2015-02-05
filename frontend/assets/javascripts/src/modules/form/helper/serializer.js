@@ -1,4 +1,4 @@
-define(['src/utils/helper'], function (utilsHelper) {
+define(['lodash/object/extend'], function (extend) {
 
     /**
      * serialize form elements
@@ -8,10 +8,7 @@ define(['src/utils/helper'], function (utilsHelper) {
      * @returns {{}}
      */
     var serializer = function (elems, mixin) {
-        var data = {};
-
-        if (mixin) { utilsHelper.extend(data, mixin); }
-
+        var data = extend({}, mixin);
         elems.filter(function (elem) {
             return elem.name !== '' && elem.type && (elem.type !== 'checkbox' && elem.type !== 'radio' || elem.checked);
         }).map(function (elem) {

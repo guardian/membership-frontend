@@ -1,18 +1,16 @@
 package services
 
-import services.zuora._
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import com.github.nscala_time.time.Imports._
-
-import com.gu.membership.salesforce.{MemberId, Tier}
-
+import com.gu.membership.salesforce.MemberId
+import com.gu.membership.stripe.Stripe
 import forms.MemberForm.JoinForm
-import model.{ProductRatePlan, Stripe, TierPlan}
 import model.Zuora._
 import model.ZuoraDeserializer._
+import model.{ProductRatePlan, TierPlan}
+import services.zuora._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -73,7 +71,7 @@ trait AmendSubscription {
 }
 
 class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription {
-  import SubscriptionServiceHelpers._
+  import services.SubscriptionServiceHelpers._
 
   private def getAccount(memberId: MemberId): Future[Account] =
     zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)

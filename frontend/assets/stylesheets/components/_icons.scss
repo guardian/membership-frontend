@@ -23,7 +23,6 @@
     background-size: 32px;
     width: 32px; height: 32px;
 }
-
 .icon--faq {
     background-size: 18px;
     width: 18px; height: 18px;
@@ -70,8 +69,8 @@
 }
 
 .icon-inline--large {
-   width: 32px;
-   height: 32px;
+   width: 36px;
+   height: 36px;
 }
 
 .icon-inline--top {
@@ -107,12 +106,15 @@
         width: 16px; height: 16px;
     }
 }
+
 .icon-holder--large {
-    width: 32px; height: 32px;
+    width: 36px; height: 36px;
+
     .icon-inline {
-        width: 24px; height: 24px;
+        width: 20px; height: 20px;
     }
 }
+
 .icon-holder--neutral {
     color: $c-neutral1;
     border-color: $c-neutral1;

@@ -2,19 +2,18 @@ package controllers
 
 import scala.concurrent.Future
 
+import play.api.libs.json.Json
 import play.api.mvc.{DiscardingCookie, Controller}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
 
 import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
 
-import actions.MemberRequest
-import forms.MemberForm._
-import model.StripeSerializer._
-import model._
-import services._
 import actions._
+import forms.MemberForm._
+import model.{Zuora, PageInfo, FriendTierPlan}
+import services.{MemberService, IdentityApi, IdentityService}
 
 trait DowngradeTier {
   self: TierController =>
