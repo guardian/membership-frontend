@@ -202,4 +202,6 @@ object Config {
     )
   }
 
+  val casURL = config.getString("cas.url")
+
 }
