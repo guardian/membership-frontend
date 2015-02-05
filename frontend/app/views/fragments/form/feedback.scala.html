@@ -25,7 +25,7 @@
         </div>
 
         <div class="form-field">
-            <label class="label" for="page">Which page on the web site are you referring to?</label>
+            <label class="label optional-marker" for="page">Which page on the web site are you referring to?</label>
             <input class="input-text" name="page" id="page" type="text"/>
             <div class="form-note">e.g. about membership</div>
         </div>
@@ -64,12 +64,15 @@
             @fragments.form.errorMessage("Please enter your name")
         </div>
 
+        @* //TODO this email check needs to be done on the server
+        email regex taken from http://www.w3.org/TR/html-markup/input.email.html#input.email.attrs.value.single *@
         <div class="form-field">
             <label class="label" for="email">Email address</label>
             <input name="email"
                    id="email"
                    class="input-text"
                    type="email"
+                   pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                    required
                    aria-required="true"/>
             @fragments.form.errorMessage("Please enter your email address")
