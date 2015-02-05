@@ -64,12 +64,14 @@
             @fragments.form.errorMessage("Please enter your name")
         </div>
 
+        @* email regex taken from http://www.w3.org/TR/html-markup/input.email.html#input.email.attrs.value.single *@
         <div class="form-field">
             <label class="label" for="email">Email address</label>
             <input name="email"
                    id="email"
                    class="input-text"
                    type="email"
+                   pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                    required
                    aria-required="true"/>
             @fragments.form.errorMessage("Please enter your email address")
