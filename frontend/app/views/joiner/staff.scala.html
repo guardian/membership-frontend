@@ -69,8 +69,13 @@
 
                     @if(staffEmail.emailsMatch) {
                         <p>Join Guardian Staff Membership as <strong>@identityEmail</strong></p>
-                        <a class="action u-no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
-                        <a class="action action--secondary-button u-no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
+                        <div class="action-group">
+                            <a class="action u-no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
+                            <a class="action action--secondary u-no-bottom-margin" href="@Config.idWebAppUrl/signout">
+                                Sign out
+                                @fragments.actionIcon("arrow-right")
+                            </a>
+                        </div>
                     } else {
                         <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 

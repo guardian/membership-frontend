@@ -47,6 +47,10 @@ body {
     }
 }
 
+.l-inset {
+    padding: rem($gs-gutter);
+}
+
 .l-pad-left {
     @include mq(tablet) {
         padding-left: rem(gs-span(1) + $gs-gutter);

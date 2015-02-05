@@ -21,7 +21,7 @@
     cursor: pointer;
     border: 0;
     text-align: left;
-    min-width: rem(gs-span(2));
+    // min-width: rem(gs-span(2));
     padding: rem(8px) rem($gs-gutter);
     @include border-radius(50%);
     vertical-align: bottom;
@@ -44,16 +44,13 @@
 
     &:after {
         @extend .icon-arrow-right-white;
-        &.action--secondary-button {
-            @extend .icon-arrow-right-black;
-        }
         content: '';
         float: right;
         margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
 
     .action__icon {
-        margin-top: rem(2px);
+        width: 21px; height: 21px;
     }
     .action__icon--left {
         float: left;
@@ -68,15 +65,6 @@
 
 }
 
-/**
- * Disabled state
- */
-.action.is-disabled,
-.action[disabled],
-.action[disabled]:hover {
-    background-color: $c-neutral5;
-}
-
 // TODO: Specificy issues
 // this variant moves the arrow to the other side
 // and hides the one on the right
@@ -84,9 +72,6 @@
 .action.action--arrow-left {
     &:before {
         @extend .icon-arrow-left-white;
-        &.action--secondary-button {
-            @extend .icon-arrow-left-black;
-        }
         content: '';
         float: left;
         margin: rem(2px) rem(18px) 0 0;
@@ -96,28 +81,48 @@
     }
 }
 
-.action-secondary,
-.action-toggle {
-    @extend %action;
 
-    color: $c-button;
-    background-color: transparent;
-    border: 1px solid transparentize($c-button, 0.5);
+/* Action Modifiers
+   ========================================================================== */
 
-    &:focus,
-    &:active,
-    &:hover {
-        background-color: transparent;
-    }
 
-    &:hover {
-        border-color: $c-button;
-    }
+/**
+ * Secondary modifier
+ */
+.action--secondary,
+.action--toggle {
+   @extend %action;
+
+   color: $c-button;
+   background-color: transparent;
+   border: 1px solid transparentize($c-button, 0.5);
+
+   &:focus,
+   &:active,
+   &:hover {
+       color: $c-button;
+       background-color: transparent;
+   }
+
+   &:hover,
+   &:active {
+       border-color: $c-button;
+   }
+
+   &:after {
+       display: none;
+   }
 
 }
 
-.action-toggle {
+
+/**
+ * Toggle buttons
+ * @extends from action-secondary
+ */
+.action--toggle {
    margin-bottom: $gutter-width-fluid;
+
    &:before {
        @extend .icon-plus;
        content: '';
@@ -136,25 +141,29 @@
    }
 }
 
-.action-proceed {
-    @include image-replacement();
-    width: rem(36px);
-    height: rem(36px);
-    padding: 0 rem(8px) 0 0;
-    background-color: transparent;
-    @extend .icon-arrow-right-blue;
-    background-position: center center;
-    @include border-radius(50px);
-    border: 1px solid $c-button;
 
-    &:focus {
-        outline: 0;
+/**
+ * Booking modifier
+ *
+ * Primary booking link on event pages.
+ */
+.action--booking {
+    color: $white;
+    background-color: $black;
+
+    &:hover {
+        background-color: lighten($black, 15%);
     }
 }
 
-/* Action Modifiers
-   ========================================================================== */
 
+/**
+ * External link modifier
+ * e.g. "Watch higlights link for past events"
+ *
+ * Transparent background so expected usage is
+ * on a solid tone background.
+ */
 .action--external {
    background-color: transparent;
    border: 1px solid transparentize($white, 0.5);
@@ -164,6 +173,7 @@
    &:focus,
    &:active {
        border-color: $white;
+       background-color: transparent;
    }
 
    @include mq($until: tablet) {
@@ -176,30 +186,15 @@
    }
 }
 
-// TODO: Refactor to not need theme classes
-// Currently not styled when used outside of a theme
-.action--search {
-   .theme--guardian-live & {
-       background-color: $c-tone-live;
-       color: $white;
-       &:hover,
-       &:focus,
-       &:active {
-           background-color: $c-tone-live-accent;
-       }
-   }
-   .theme--masterclasses & {
-       background-color: $c-tone-masterclass;
-       color: $c-neutral1;
-       &:hover,
-       &:focus,
-       &:active {
-           background-color: $c-tone-masterclass-accent;
-       }
-   }
-}
 
-
+/**
+ * Snap modifier
+ *
+ * Small screens: Circular button w/ no label
+ * Large screens: Full button w/ text label
+ *
+ * e.g.: Join page (/join)
+ */
 .action--snap {
     min-width: 0;
     width: rem(40px);
@@ -224,96 +219,38 @@
     }
 }
 
+/* Actions - Disabled
+   ========================================================================== */
+
+/**
+ * Disabled state
+ */
+.action.is-disabled,
+.action[disabled],
+.action[disabled]:hover {
+    background-color: $c-neutral5;
+}
+
+/* Actions - Proceed
+   ========================================================================== */
+
+/**
+ * Circular button on event listings
+ * TODO: Replace w/ miniminal-button and icon-holder
+ */
 .action-proceed {
-
     @include image-replacement();
-
     width: rem(36px);
     height: rem(36px);
     padding: 0 rem(8px) 0 0;
     background-color: transparent;
     @extend .icon-arrow-right-blue;
     background-position: center center;
-
     @include border-radius(50px);
     border: 1px solid $c-button;
 
     &:focus {
         outline: 0;
-    }
-
-}
-
-/* Actions - Secondary Modifiers
-   ========================================================================== */
-
-.action--secondary,
-.action--toggle {
-    color: $c-button;
-    background-color: $white;
-    border: 1px solid transparentize($c-button, 0.5);
-
-    &:focus,
-    &:active,
-    &:hover {
-        background-color: transparent;
-    }
-
-    &:hover {
-        border-color: $c-button;
-    }
-
-}
-
-.action--secondary {
-    &:after {
-        display: none;
-    }
-}
-
-.action--toggle {
-   margin-bottom: $gutter-width-fluid;
-   &:before {
-       @extend .icon-plus;
-       content: '';
-       float: left;
-       margin: 0 rem($gs-baseline) 0 0;
-   }
-   &:after {
-       display: none;
-   }
-
-   &.is-toggled,
-   .action--toggle--toggled {
-       &:before {
-           @extend .icon-minus;
-       }
-   }
-}
-
-// TODO: Deprecated
-// Replace with .action-secondary
-.action--secondary-button {
-    &,
-    &:visited,
-    &:active,
-    &:focus {
-        color: $black;
-        background-color: $c-neutral4;
-    }
-    &:hover {
-        color: $black;
-        background-color: darken($c-neutral4, 15%);
-    }
-}
-
-/* Actions - Booking Modifiers
-   ========================================================================== */
-
-.action--booking {
-    background-color: $black;
-    &:hover {
-        background-color: transparentize($black, 0.35);
     }
 }
 
@@ -351,30 +288,6 @@
     @include mq(tablet) {
         width: auto;
         float: right;
-    }
-}
-
-/* Actions - Utility Modifiers
-   ========================================================================== */
-
-.action--external {
-    background-color: transparent;
-    border: 1px solid transparentize($white, 0.5);
-    width: 100%;
-
-    &:hover,
-    &:focus,
-    &:active {
-        border-color: $white;
-    }
-
-    @include mq($until: tablet) {
-        margin-top: rem($gs-baseline);
-        margin-bottom: 0;
-    }
-
-    @include mq(tablet) {
-        width: auto;
     }
 }
 
