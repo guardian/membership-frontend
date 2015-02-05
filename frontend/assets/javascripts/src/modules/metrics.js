@@ -1,8 +1,9 @@
 /* global ga */
 define([
     'lodash/object/extend',
-    'lodash/function/debounce'
-], function (extend, debounce) {
+    'lodash/function/debounce',
+    'src/utils/url'
+], function (extend, debounce, urlHelper) {
 
     var METRIC_ATTRS = {
         'trigger': 'data-metric-trigger',
@@ -12,7 +13,7 @@ define([
     };
 
     function init() {
-        var trackingElems = document.querySelectorAll('[data-metric-trigger]');
+        var trackingElems = document.querySelectorAll('[' + METRIC_ATTRS.trigger + ']');
         if (window.ga && trackingElems) {
             configureListeners(trackingElems);
         }
@@ -46,18 +47,29 @@ define([
         if (elem && label) {
             logMetric(extend({
                 'eventCategory': elem.getAttribute(METRIC_ATTRS.category),
-                'eventAction': elem.getAttribute(METRIC_ATTRS.category),
+                'eventAction': elem.getAttribute(METRIC_ATTRS.action),
                 'eventLabel': label
-            }), extras);
+            }, extras));
         }
     }
 
     function clickListener(elem) {
-        elem.addEventListener('click', function() {
-            /* Use link text & URL pathname for the label */
-            var label = elem.getAttribute(METRIC_ATTRS.label) || elem.textContent;
+        elem.addEventListener('click', function(e) {
+            var url, label, extra;
+
+            url = elem.getAttribute('href');
+            label = elem.getAttribute(METRIC_ATTRS.label) || elem.textContent;
             label += ' | ' + window.location.pathname;
-            extractMetricsFromListener(elem, label);
+
+            if (urlHelper.isExternal(url)) {
+                e.preventDefault();
+                extra = {
+                    'hitCallback': function () {
+                        document.location = url;
+                    }
+                };
+            }
+            extractMetricsFromListener(elem, label, extra);
         });
     }
 
