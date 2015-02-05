@@ -1,0 +1,9 @@
+{
+    "expiry": {
+        "expiryType": "sub",
+        "provider": "provider",
+        "expiryDate": "2015-02-24",
+        "subscriptionCode": "XXX",
+        "content": "CONTENT"
+    }
+}
