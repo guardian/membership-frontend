@@ -21,17 +21,22 @@
     min-height: rem(gs-height(2));
     padding: rem($gs-baseline) rem($gs-gutter / 2);
     padding-bottom: rem($gs-baseline * 3);
+    width: 100%;
 
     @include mq(tablet) {
         position: absolute;
         z-index: 1;
-        left: 0;
-        top: rem($gs-baseline * 2);
-        width: 100%;
-        max-width: rem(gs-span(6));
+        left: 0; top: rem($gs-baseline * 2);
         padding: rem($gs-baseline) rem($gs-gutter);
         padding-bottom: rem($gs-baseline * 4);
         min-height: rem(gs-height(3));
+        width: auto;
+        min-width: rem(gs-span(4));
+    }
+
+    @include mq(desktop) {
+        width: 100%;
+        max-width: rem(gs-span(6));
     }
 }
 .promo-primary__media {
