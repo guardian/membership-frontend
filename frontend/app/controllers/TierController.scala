@@ -1,20 +1,17 @@
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.mvc.Controller
+import actions.{MemberRequest, _}
+import com.gu.membership.salesforce.{Tier, _}
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
+import forms.MemberForm._
+import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-
-import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier
-
-import actions.MemberRequest
-import forms.MemberForm._
-import model.StripeSerializer._
-import model._
+import play.api.mvc.Controller
 import services._
-import actions._
+
+import scala.concurrent.Future
 
 trait DowngradeTier {
   self: TierController =>

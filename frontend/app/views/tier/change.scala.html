@@ -18,7 +18,7 @@
             <div class="content__container">
                 <section class="package-list package-list--flex-box">
 
-                    @for(tier <- Tier.all) {
+                    @for(tier <- Tier.allPublic) {
                         @fragments.tier.benefits(Some(currentTier), tier)
                     }
 
