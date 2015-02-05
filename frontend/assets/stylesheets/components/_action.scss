@@ -21,7 +21,6 @@
     cursor: pointer;
     border: 0;
     text-align: left;
-    // min-width: rem(gs-span(2));
     padding: rem(8px) rem($gs-gutter);
     @include border-radius(50%);
     vertical-align: bottom;
