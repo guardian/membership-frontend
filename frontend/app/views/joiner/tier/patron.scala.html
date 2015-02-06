@@ -32,7 +32,12 @@
     <div class="page-slice page-slice--slim l-constrained">
         @fragments.promos.promoSecondary(Html("Backstage pass to<br>the Guardian"), imageUrl="images/patrons/patrons-backstage-740.jpg", toneClass=Some("tone-brand")) {
             <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
-            <a class="action u-no-top-margin" data-link-name="Become a Patron" href="@routes.Joiner.enterDetails(Tier.Patron)">Become a Patron today</a>
+            <a class="action u-no-top-margin"
+               href="@routes.Joiner.enterDetails(Tier.Patron)"
+               data-metric-trigger="click"
+               data-metric-category="join"
+               data-metric-action="patron"
+            >Become a Patron today</a>
         }
     </div>
 

@@ -22,7 +22,10 @@
         }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
             <div class="google-map">
-                <a href="@googleMapsLink" data-link-name="Event Google map">Google map</a>
+                <a href="@googleMapsLink"
+                   data-metric-trigger="click"
+                   data-metric-category="events"
+                   data-metric-action="map">Google map</a>
             </div>
         }
     </div>

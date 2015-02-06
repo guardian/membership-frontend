@@ -1,7 +1,11 @@
-@(event: model.RichEvent.RichEvent, extraActionClasses: Seq[String] = Nil)
+@(event: model.RichEvent.RichEvent, extraClasses: Seq[String] = Nil)
 
 @import model.RichEvent._
 @import configuration.Config
 
-<a class="js-ticket-cta action @extraActionClasses.mkString(" ")" data-link-name="Book Tickets" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
-<div class="terms-info js-legal-terms">By proceeding, you agree to the @event.metadata.title <a href="@event.metadata.termsUrl" target="_blank">Terms and Conditions</a></div>
+<a class="js-ticket-cta action @extraClasses.mkString(" ")"
+   href="/event/@event.id/buy"
+   data-metric-trigger="click"
+   data-metric-category="events"
+   data-metric-action="book-tickets"
+   itemprop="url">Book tickets</a>

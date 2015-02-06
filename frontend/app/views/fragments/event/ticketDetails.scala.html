@@ -38,6 +38,7 @@
         @if(event.isBookable) {
             <div class="event-ticket__action">
                 @fragments.event.ticketCta(event, List("action--booking"))
+                @fragments.event.terms(event)
             </div>
         }
     </div>

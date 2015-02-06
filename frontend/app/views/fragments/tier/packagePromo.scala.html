@@ -10,7 +10,12 @@
 
 <div class="package-promo@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--enhanced") tone-border-@tier.slug">
     <div class="package-promo__header">
-        <a href="@routes.Joiner.enterDetails(tier)" class="no-underline minimal-link">
+        <a class="no-underline minimal-link"
+           href="@routes.Joiner.enterDetails(tier)"
+           data-metric-trigger="click"
+           data-metric-category="join"
+           data-metric-action="@tier.toString.toLowerCase()"
+        >
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(tier, showCaption=false)
@@ -31,7 +36,13 @@
             </div>
         }
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin" href="@routes.Joiner.enterDetails(tier)" data-link-name="Become a @tier">
+            <a
+                class="action action--snap u-no-bottom-margin"
+                href="@routes.Joiner.enterDetails(tier)"
+                data-metric-trigger="click"
+                data-metric-category="join"
+                data-metric-action="@tier.toString.toLowerCase()"
+            >
                 <span class="action__label">
                     Become a @tier
                 </span>

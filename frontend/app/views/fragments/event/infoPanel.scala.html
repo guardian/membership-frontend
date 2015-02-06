@@ -23,9 +23,7 @@
             </div>
             @if(!event.isPastEvent) {
                 <div class="status-panel__content">
-                    <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
-                        Add me to the waitlist
-                    </a>
+                    @fragments.event.waitlist(event, List("u-no-margin"))
                 </div>
             }
         </div>
@@ -45,7 +43,6 @@
             }
         </div>
 
-
         @if(event.isSoldThruEventbrite) {
 
             @if(event.isSoldOut) {
@@ -58,10 +55,8 @@
 
             @for(ticket <- event.generalReleaseTicket) {
                 @if(event.isBookable) {
-                    <a class="js-ticket-cta action" data-link-name="Book Tickets" href="/event/@event.id/buy" itemprop="url">Book tickets</a>
-                    <div class="event-info__terms js-legal-terms copy">
-                        By proceeding, you agree to the @event.metadata.title <a href="@event.metadata.termsUrl" target="_blank">Terms and Conditions</a>
-                    </div>
+                    @fragments.event.ticketCta(event)
+                    @fragments.event.terms(event, List("event-info__terms"))
                     @becomeMemberCta(ticket)
                 }
             }
