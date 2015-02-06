@@ -153,12 +153,6 @@
     }
 }
 
-.section-sub-headline {
-    @include fs-headline(4);
-    background-color: $white;
-    padding-top: rem($gs-baseline / 2);
-}
-
 .section-body-headline {
     @include fs-headline(4);
     background-color: $white;
