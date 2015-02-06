@@ -44,11 +44,15 @@ define([
     }
 
     function extractMetricsFromListener(elem, label, extras) {
-        if (elem && label) {
+
+        var category = elem.getAttribute(METRIC_ATTRS.category);
+        var action = elem.getAttribute(METRIC_ATTRS.action);
+
+        if (category && action) {
             logMetric(extend({
-                'eventCategory': elem.getAttribute(METRIC_ATTRS.category),
-                'eventAction': elem.getAttribute(METRIC_ATTRS.action),
-                'eventLabel': label
+                'eventCategory': category,
+                'eventAction': action,
+                'eventLabel': label || false // Label is optional
             }, extras));
         }
     }
