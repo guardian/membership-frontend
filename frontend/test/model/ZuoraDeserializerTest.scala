@@ -161,5 +161,14 @@ class ZuoraDeserializerTest extends Specification {
       subscriptions(1) mustEqual Subscription("2c92c0f847cdc31e0147cf243a166af0", 3)
       subscriptions(2) mustEqual Subscription("2c92c0f847cdc31e0147cf24396f6ae1", 2)
     }
+
+    "extract an InvoiceItem" in {
+      val invoiceItems = invoiceItemReader.read(query("model/zuora/invoice-result.xml"))
+
+      invoiceItems.size mustEqual 2
+
+      invoiceItems(0).id mustEqual "2c92c0f94b34f993014b4a1c3b0004b6"
+      invoiceItems(1).id mustEqual "2c92c0f94b34f993014b4a1c3b0104b7"
+    }
   }
 }

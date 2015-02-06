@@ -155,10 +155,10 @@ trait Joiner extends Controller {
     }
 
     for {
-      subscription <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member)
+      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
+    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
   }
 
   def thankyouStaff = thankyou(Tier.Partner)
