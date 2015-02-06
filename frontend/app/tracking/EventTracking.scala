@@ -36,11 +36,12 @@ case class EventSubject(salesforceContactId: String,
                         postcode: String) {
   def toMap: JMap[String, Object] = {
 
-    //todo crypt it ALL
+    def bcrypt(string: String) = string+Config.bcryptPepper.bcrypt(Config.bcryptSalt)
+
     EventTracking.setSubMap(
       Map(
-        "salesforceContactId" -> salesforceContactId,
-        "identityId" -> identityId,
+        "salesforceContactId" -> bcrypt(salesforceContactId),
+        "identityId" -> bcrypt(identityId),
         "postcode" -> postcode
       )
     )
