@@ -17,6 +17,7 @@ require([
     'src/utils/modal',
     'src/utils/form/processSubmit',
     'src/modules/form',
+    'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
@@ -38,7 +39,8 @@ require([
     modal,
     patterns,
     processSubmit,
-    form
+    form,
+    metrics
 ) {
     'use strict';
 
@@ -80,5 +82,8 @@ require([
 
     // Pattern library
     patterns.init();
+
+    // Metrics
+    metrics.init();
 
 });
