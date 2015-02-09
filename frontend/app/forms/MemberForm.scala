@@ -1,12 +1,9 @@
 package forms
 
-import play.api.data.validation.Constraints
 import play.api.data.{Mapping, Form}
 import play.api.data.Forms._
 
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.zuora.{Address, Country, Countries}
+import com.gu.membership.salesforce.{Country, Countries, Address, Tier}
 
 import model._
 
@@ -56,7 +53,6 @@ object MemberForm {
 
   val nonPaidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> text,
-    "lineTwo" -> text,
     "town" -> text,
     "countyOrState" -> text,
     "postCode" -> text(maxLength=20),
@@ -65,7 +61,6 @@ object MemberForm {
 
   val paidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> nonEmptyText,
-    "lineTwo" -> text,
     "town" -> nonEmptyText,
     "countyOrState" -> text,
     "postCode" -> text(maxLength=20),

@@ -54,7 +54,7 @@ trait MemberService extends LazyLogging {
       Keys.FIRST_NAME -> formData.name.first,
       Keys.LAST_NAME -> formData.name.last,
       Keys.MAILING_STREET -> formData.deliveryAddress.line,
-      Keys.MAILING_CITY -> formData.deliveryAddress.town,
+      Keys.MAILING_CITY -> formData.deliveryAddress.city,
       Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
       Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
       Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,

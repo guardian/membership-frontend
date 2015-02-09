@@ -411,12 +411,7 @@
                             note = "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
                             formType = "deliveryAddress",
                             addressRequired = true,
-                            address1 = None,
-                            address2 = None,
-                            town = None,
-                            postcode = None,
-                            county = None,
-                            userCountry = None
+                            address = None
                         )
                         @fragments.form.passwordDetail()
 
@@ -425,12 +420,7 @@
                         @fragments.form.addressDetail(
                             formType = "billingAddress",
                             addressRequired = true,
-                            address1 = None,
-                            address2 = None,
-                            town = None,
-                            postcode = None,
-                            county = None,
-                            userCountry = None
+                            address = None
                         )
                         @fragments.form.cardDetail(Tier.Partner)
                         @fragments.form.errorMessageDisplay()

@@ -39,12 +39,7 @@
                         note = "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
                         formType = "deliveryAddress",
                         addressRequired = true,
-                        address1 = userFields.address1,
-                        address2 = userFields.address2,
-                        town = userFields.address3,
-                        postcode = userFields.postcode,
-                        county = userFields.address4,
-                        userCountry = userFields.country
+                        address = None
                     )
                     @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 
@@ -57,12 +52,7 @@
                     @fragments.form.addressDetail(
                         formType = "billingAddress",
                         addressRequired = true,
-                        address1 = userFields.billingAddress1,
-                        address2 = userFields.billingAddress2,
-                        town = userFields.billingAddress3,
-                        postcode = userFields.billingPostcode,
-                        county = userFields.billingAddress4,
-                        userCountry = userFields.billingCountry
+                        address = None
                     )
                     @fragments.form.cardDetail(tier)
                     @fragments.form.errorMessageDisplay()
