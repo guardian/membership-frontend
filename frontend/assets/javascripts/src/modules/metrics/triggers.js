@@ -43,18 +43,21 @@ define([
         }
     }
 
+    function getLabel(elem) {
+        var label = elem.getAttribute(METRIC_ATTRS.label) || elem.textContent;
+        label += ' | ' + window.location.pathname;
+        return label;
+    }
+
     function clickListener(elem) {
         elem.addEventListener('click', function() {
-            var label = elem.getAttribute(METRIC_ATTRS.label) || elem.textContent;
-            label += ' | ' + window.location.pathname;
-            extractMetricsFromListener(elem, label);
+            extractMetricsFromListener(elem, getLabel(elem));
         });
     }
 
     function keyupListener(elem) {
         elem.addEventListener('keyup', debounce(function() {
-            var label = elem.value.toLowerCase();
-            extractMetricsFromListener(elem, label);
+            extractMetricsFromListener(elem, elem.value.toLowerCase());
         }, 500));
     }
 
