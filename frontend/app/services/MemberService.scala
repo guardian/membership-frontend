@@ -100,7 +100,7 @@ trait MemberService extends LazyLogging with EventTracking {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        trackEvent(SingleEvent(memberId, fullUser, formData, "membershipRegistration"))
+        trackEvent(SingleEvent(memberId, user, formData, "membershipRegistration"))
         memberId
       }
     }.andThen {
@@ -134,9 +134,32 @@ trait MemberService extends LazyLogging with EventTracking {
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
+
+      trackEvent(
+        SingleEvent(
+          memberId = memberId,
+          user = user,
+          deliveryPostcode = form.deliveryAddress.postCode,
+          billingPostcode = form.billingAddress.map(_.postCode),
+          tier = newTier.name,
+          subscriptionPaymentAnnual = Some(form.payment.annual),
+          marketingChoices = None,
+          eventSource = "membershipUpgrade")
+      )
       memberId
     }
   }
 }
+
+/**
+ *  def apply(memberId: MemberId,
+            user: IdMinimalUser,
+            deliveryPostcode: String,
+            billingPostcode: Option[String],
+            tier: String,
+            subscriptionPaymentAnnual: Option[Boolean],
+            marketingChoices: Option[MarketingChoicesForm],
+            eventSource: String):
+ */
 
 object MemberService extends MemberService

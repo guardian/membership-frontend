@@ -7,8 +7,8 @@ import com.snowplowanalytics.snowplow.tracker._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import configuration.Config
-import forms.MemberForm.{MarketingChoicesForm, PaidMemberJoinForm, JoinForm}
-import model.IdUser
+import forms.MemberForm.{PaidMemberChangeForm, MarketingChoicesForm, PaidMemberJoinForm, JoinForm}
+import model.{IdMinimalUser, IdUser}
 import com.github.t3hnar.bcrypt._
 import scala.collection.JavaConversions._
 import play.api.Logger
@@ -19,30 +19,58 @@ case class SingleEvent (user: EventSubject, eventSource: String) extends Tracker
 }
 
 object SingleEvent {
-  def apply(memberId: MemberId, user: IdUser, userFormData: JoinForm, eventSource: String): SingleEvent  = {
+  def apply(memberId: MemberId, user: IdMinimalUser, userFormData: JoinForm, eventSource: String): SingleEvent  = {
 
     val subscriptionPlan = userFormData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => if (paidMemberJoinForm.payment.annual) Some("annual") else Some("monthly")
+      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
       case _ => None
     }
 
     val billingPostcode = userFormData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.billingAddress.map(_.postCode).orElse(Some(paidMemberJoinForm.deliveryAddress.postCode))
+      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.billingAddress.map(_.postCode)
       case _ => None
     }
+
+    SingleEvent(
+      memberId,user,
+      userFormData.deliveryAddress.postCode,
+      billingPostcode,
+      userFormData.plan.salesforceTier,
+      subscriptionPlan,
+      Some(userFormData.marketingChoices),
+      eventSource)
+  }
+
+  def apply(memberId: MemberId,
+            user: IdMinimalUser,
+            deliveryPostcode: String,
+            billingPostcode: Option[String],
+            tier: String,
+            subscriptionPaymentAnnual: Option[Boolean],
+            marketingChoices: Option[MarketingChoicesForm],
+            eventSource: String): SingleEvent = {
+
+    val subscriptionPlan = subscriptionPaymentAnnual match {
+      case Some(true) =>  Some("annual")
+      case Some(false) => Some("monthly")
+      case None => None
+    }
+
+    val billPostcode = billingPostcode.orElse(Some(deliveryPostcode))
 
     SingleEvent(
       EventSubject(
         salesforceContactId = memberId.salesforceContactId,
         identityId = user.id,
-        deliveryPostcode = userFormData.deliveryAddress.postCode,
-        billingPostcode =  billingPostcode,
-        tier = userFormData.plan.salesforceTier,
+        deliveryPostcode = deliveryPostcode,
+        billingPostcode =  billPostcode,
+        tier = tier,
         subscriptionPlan = subscriptionPlan,
-        marketingChoices = userFormData.marketingChoices
-      
+        marketingChoices = None
       ), eventSource)
   }
+
+
 }
 
 trait TrackerData {
@@ -57,7 +85,7 @@ case class EventSubject(salesforceContactId: String,
                         billingPostcode: Option[String],
                         tier: String,
                         subscriptionPlan: Option[String],
-                        marketingChoices: MarketingChoicesForm
+                        marketingChoices: Option[MarketingChoicesForm]
                          ) {
   def toMap: JMap[String, Object] = {
 
@@ -68,13 +96,15 @@ case class EventSubject(salesforceContactId: String,
       "salesforceContactId" -> bcrypt(salesforceContactId),
       "identityId" -> bcrypt(identityId),
       "tier" -> tier,
-      "deliveryPostcode" -> deliveryPostcode,
-      "marketingChoicesForm" -> EventTracking.setSubMap(Map(
-        "gnm" -> marketingChoices.gnm.getOrElse(false),
-        "thirdParty" -> marketingChoices.thirdParty.getOrElse(false),
-        "membership" -> true
-      ))
+      "deliveryPostcode" -> deliveryPostcode
     ) ++
+      marketingChoices.map { mc =>
+        "marketingChoicesForm" -> EventTracking.setSubMap(Map(
+          "gnm" -> mc.gnm.getOrElse(false),
+          "thirdParty" -> mc.thirdParty.getOrElse(false),
+          "membership" -> true
+        ))
+      } ++
       billingPostcode.map("billingPostcode" -> _) ++
       subscriptionPlan.map("subscriptionPlan" -> _)
 
