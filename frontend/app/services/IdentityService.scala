@@ -1,7 +1,7 @@
 package services
 
 import com.gu.membership.util.Timing
-import com.gu.membership.zuora.Address
+import com.gu.membership.salesforce.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -71,9 +71,8 @@ case class IdentityService(identityApi: IdentityApi) {
 
   private def deliveryAddress(addressForm: Address): JsObject = {
     Json.obj(
-      "address1" -> addressForm.lineOne,
-      "address2" -> addressForm.lineTwo,
-      "address3" -> addressForm.town,
+      "address1" -> addressForm.line,
+      "address3" -> addressForm.city,
       "address4" -> addressForm.countyOrState,
       "postcode" -> addressForm.postCode,
       "country" -> addressForm.country.name
@@ -82,9 +81,8 @@ case class IdentityService(identityApi: IdentityApi) {
 
   private def billingAddress(billingAddress: Address): JsObject = {
     Json.obj(
-      "billingAddress1" -> billingAddress.lineOne,
-      "billingAddress2" -> billingAddress.lineTwo,
-      "billingAddress3" -> billingAddress.town,
+      "billingAddress1" -> billingAddress.line,
+      "billingAddress3" -> billingAddress.city,
       "billingAddress4" -> billingAddress.countyOrState,
       "billingPostcode" -> billingAddress.postCode,
       "billingCountry" -> billingAddress.country.name

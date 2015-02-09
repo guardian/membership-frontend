@@ -37,12 +37,7 @@
                         note = "Tell us where you live and we'll keep you posted on events happening in your local community.",
                         formType = "deliveryAddress",
                         addressRequired = false,
-                        address1 = userFields.address1,
-                        address2 = userFields.address2,
-                        town = userFields.address3,
-                        postcode = userFields.postcode,
-                        county = userFields.address4,
-                        userCountry = userFields.country
+                        address = None
                     )
                     @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
 

@@ -1,5 +1,5 @@
 @(
-    currentTier: com.gu.membership.salesforce.Tier,
+    member: com.gu.membership.salesforce.Member,
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
     pageInfo: model.PageInfo,
@@ -8,7 +8,7 @@
 
 @import helper._
 
-@main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
+@main("Change Tier | " + targetTier + " from " + member.tier, pageInfo = pageInfo) {
 
     <main role="main" class="page-content">
 
@@ -33,17 +33,14 @@
                     @fragments.form.addressDetail(
                         "Delivery address",
                         "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
-                        "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
-                        userFields.postcode, userFields.address4, userFields.country
+                        "deliveryAddress", true, Some(member.deliveryAddress)
                     )
                     @if(cardOpt.isEmpty) {
                         @fragments.form.paymentOptions(targetTier)
                     }
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
-                        "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
-                        userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
-                        userFields.billingCountry
+                        "", "", "billingAddress", true, Some(member.billingAddress)
                     )
                     @fragments.form.cardDetail(targetTier, cardOpt)
                     @fragments.form.submit("Pay", "now", Some(targetTier))

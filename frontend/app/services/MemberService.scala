@@ -49,12 +49,24 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 
 trait MemberService extends LazyLogging {
   def initialData(user: IdUser, formData: JoinForm) = {
-    Seq(Json.obj(
+    val billingData = formData match {
+      case paid: PaidMemberJoinForm => paid.billingAddress.fold(Json.obj()) { billingAddress =>
+        Json.obj(
+          Keys.BILLING_STREET -> billingAddress.line,
+          Keys.BILLING_CITY -> billingAddress.city,
+          Keys.BILLING_STATE -> billingAddress.countyOrState,
+          Keys.BILLING_POSTCODE -> billingAddress.postCode,
+          Keys.BILLING_COUNTRY -> billingAddress.country.alpha2
+        )
+      }
+      case _ => Json.obj()
+    }
+    Seq(billingData ++ Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
       Keys.FIRST_NAME -> formData.name.first,
       Keys.LAST_NAME -> formData.name.last,
       Keys.MAILING_STREET -> formData.deliveryAddress.line,
-      Keys.MAILING_CITY -> formData.deliveryAddress.town,
+      Keys.MAILING_CITY -> formData.deliveryAddress.city,
       Keys.MAILING_STATE -> formData.deliveryAddress.countyOrState,
       Keys.MAILING_POSTCODE -> formData.deliveryAddress.postCode,
       Keys.MAILING_COUNTRY -> formData.deliveryAddress.country.alpha2,

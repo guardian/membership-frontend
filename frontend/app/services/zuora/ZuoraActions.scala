@@ -1,8 +1,7 @@
 package services.zuora
 
-import com.gu.membership.salesforce.MemberId
+import com.gu.membership.salesforce.{Address, MemberId}
 import com.gu.membership.stripe.Stripe
-import com.gu.membership.zuora.Address
 import forms.MemberForm.NameForm
 import model.Zuora._
 import org.joda.time.DateTime
@@ -121,7 +120,7 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
           <ns2:FirstName>{name.first}</ns2:FirstName>
           <ns2:LastName>{name.last}</ns2:LastName>
           <ns2:Address1>{address.line}</ns2:Address1>
-          <ns2:City>{address.town}</ns2:City>
+          <ns2:City>{address.city}</ns2:City>
           <ns2:PostalCode>{address.postCode}</ns2:PostalCode>
           <ns2:State>{address.countyOrState}</ns2:State>
           <ns2:Country>{address.country.alpha2}</ns2:Country>

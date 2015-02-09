@@ -3,15 +3,10 @@
     note: String = "",
     formType: String,
     addressRequired: Boolean = true,
-    address1: Option[String],
-    address2: Option[String],
-    town: Option[String],
-    postcode: Option[String],
-    county: Option[String],
-    userCountry: Option[String]
+    address: Option[com.gu.membership.salesforce.Address]
 )
 
-@import com.gu.membership.zuora.{Country, Countries}
+@import com.gu.membership.salesforce.{Country, Countries}
 
 @countyOrStateSelect(countyOrStateList: List[String], countyOrStateLabel: String) = {
     <div class="form-field u-h">
@@ -22,7 +17,7 @@
                 required
                 aria-required="true">
         @for(countyOrState <- countyOrStateList) {
-            <option value="@countyOrState"@if(county.getOrElse("") == countyOrState){ selected}>@countyOrState</option>
+            <option value="@countyOrState"@if(address.exists(_.countyOrState == countyOrState)){ selected}>@countyOrState</option>
         }
         </select>
         @fragments.form.errorMessage(s"Please enter your ${countyOrStateLabel.capitalize}")
@@ -46,42 +41,33 @@
                 required
                 aria-required="true">
                 @for(country <- Countries.allSorted) {
-                    <option value="@country.alpha2"@if(userCountry.getOrElse("") == country.name){ selected}>@country.name</option>
+                    <option value="@country.alpha2"@if(address.exists(_.country == country)){ selected}>@country.name</option>
                 }
             </select>
             @fragments.form.errorMessage("Please enter your Country")
         </div>
 
         <div class="form-field">
-            <label class="label@if(addressRequired == false){ optional-marker}"
-                   for="address-line-one-@(formType)">Address line 1</label>
+            <label class="label@if(!addressRequired){ optional-marker}"
+                   for="address-line-one-@(formType)">Address line</label>
             <input type="text"
                    name="@(formType).lineOne"
-                   value="@address1"
+                   value="@address.map(_.line)"
                    id="address-line-one-@(formType)"
                    class="input-text js-address-line-one"
-                   @if(addressRequired == true){required aria-required="true"} />
-            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} first line")
+                   @if(addressRequired){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase} first line")
         </div>
 
         <div class="form-field">
-            <label class="label optional-marker" for="address-line-two-@(formType)">Address line 2</label>
-            <input type="text"
-                   name="@(formType).lineTwo"
-                   value="@address2"
-                   id="address-line-two-@(formType)"
-                   class="input-text js-address-line-two"/>
-        </div>
-
-        <div class="form-field">
-            <label class="label @if(addressRequired == false){optional-marker}" for="town-@(formType)">Town</label>
+            <label class="label @if(!addressRequired){optional-marker}" for="town-@(formType)">Town</label>
             <input type="text"
                    name="@(formType).town"
-                   value="@town"
+                   value="@address.map(_.city)"
                    id="town-@(formType)"
                    class="input-text js-town"
-                   @if(addressRequired == true){required aria-required="true"} />
-            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} town")
+                   @if(addressRequired){required aria-required="true"} />
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase} town")
         </div>
 
         @countyOrStateSelect(Countries.US.states.toList, "state")
@@ -92,7 +78,7 @@
                 <label class="label optional-marker" for="county-or-state-@(formType)">County</label>
                 <input type="text"
                        name="@(formType).countyOrState"
-                       value="@county"
+                       value="@address.map(_.countyOrState)"
                        id="county-or-state-@(formType)"
                        class="input-text js-county-or-state"/>
             </div>
@@ -102,13 +88,13 @@
             <label class="label optional-marker js-postcode-label" for="postCode-@(formType)">Post code</label>
             <input type="text"
                    name="@(formType).postCode"
-                   value="@postcode"
+                   value="@address.map(_.postCode)"
                    id="postCode-@(formType)"
                    maxlength="20"
                    class="input-text js-postcode"
                    required
                    aria-required="true"/>
-            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} post code")
+            @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase} post code")
         </div>
     </div>
 </fieldset>

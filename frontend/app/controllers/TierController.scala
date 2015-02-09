@@ -55,7 +55,7 @@ trait UpgradeTier {
         user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
       }
     }
     else

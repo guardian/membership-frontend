@@ -1,13 +1,11 @@
 {
     "privateFields": {
         "address1":"line one",
-        "address2":"line 2",
         "address3":"town",
         "address4":"country",
         "postcode":"postcode",
         "country":"United Kingdom",
         "billingAddress1":"line one",
-        "billingAddress2":"line 2",
         "billingAddress3":"town",
         "billingAddress4":"country",
         "billingPostcode":"postcode",
