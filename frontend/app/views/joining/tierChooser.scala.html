@@ -2,9 +2,9 @@
 
 @import com.gu.membership.salesforce.Tier
 
-@main("Join Choose Tier", pageInfo=pageInfo) {
+@main("Join Choose Tier", pageInfo=pageInfo, isBrochure=true) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader(eventOpt.fold("Choose a membership tier")(_.metadata.chooseTier.title))
 

@@ -4,9 +4,9 @@
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Change Tier Summary | " + futureSubscription.planName + " from " + currentSubscription.planName) {
+@main("Change Tier Summary | " + futureSubscription.planName + " from " + currentSubscription.planName, isBrochure=true) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + currentSubscription.endDate.pretty))
 

@@ -2,7 +2,9 @@
 
 @import configuration.Config
 
-@main("Home Page") {
+@main("Home Page", isBrochure=true) {
+
+<main role="main" class="l-constrained">
 
     @* ===== Slideshow ===== *@
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
@@ -61,5 +63,7 @@
             </ul>
         </div>
     </section>
+
+</main>
 
 }

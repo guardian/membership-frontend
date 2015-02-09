@@ -25,9 +25,9 @@
     }
 }
 
-@main(title) {
+@main(title, isBrochure=true) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader(personalisedWelcome + "Welcome to Guardian Membership",
             Some("You're the newest member of the Guardian Membership community and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))

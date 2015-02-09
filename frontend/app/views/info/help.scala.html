@@ -1,8 +1,8 @@
 @import configuration.Config
 @import model.Faq
 
-@main("Help") {
-    <main role="main" class="page-content">
+@main("Help", isBrochure=true) {
+    <main role="main" class="page-content l-constrained">
         @fragments.page.pageHeader("FAQ", Some("Common questions about Guardian Membership"))
         <section class="page-section">
             <div class="page-section__content">
