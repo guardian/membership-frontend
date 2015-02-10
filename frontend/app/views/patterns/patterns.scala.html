@@ -309,10 +309,6 @@
         @fragments.event.stats(eventPortfolio.orderedEvents.head)
     }
 
-    @pattern("Event – Price Info", "Price for an event, used in Event Snapshot.") {
-        @fragments.pricing.priceInfoEvent(eventPortfolio.orderedEvents.head)
-    }
-
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
         @fragments.pricing.priceInfo(Tier.Partner)
     }

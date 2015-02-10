@@ -7,7 +7,6 @@
 @import views.support.Asset
 @import model.Eventbrite._
 @import model.RichEvent._
-@import configuration.Config
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
 
@@ -36,7 +35,19 @@
                 </div>
             </div>
             @if(event.isSoldThruEventbrite) {
-                @fragments.event.ticketDetails(event)
+                @for(ticket <- event.generalReleaseTicket) {
+                    <div class="event-ticket@if(ticket.free) { event-ticket--free }u-cf">
+                        <div class="event-ticket__details">
+                            @fragments.pricing.priceInfoEvent(event, isPrimary=true)
+                        </div>
+                        @if(event.isBookable) {
+                            <div class="event-ticket__action">
+                                @fragments.event.ticketCta(event, List("action--booking"))
+                                @fragments.event.terms(event)
+                            </div>
+                        }
+                    </div>
+                }
             }
             <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
         </div>
@@ -97,9 +108,7 @@
                 </div>
             </div>
 
-
             <div class="event-content__sidebar">
-
 
                 @if(event.isPastEvent) {
                     @fragments.event.relatedEntry(event)
