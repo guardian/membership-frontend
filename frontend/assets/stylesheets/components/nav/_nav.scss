@@ -22,6 +22,30 @@
 }
 
 /* ==========================================================================
+   Nav - Control Navigation
+   ========================================================================== */
+
+.nav-control {
+    @extend .nav;
+
+    > li,
+    > li > a {
+        vertical-align: top;
+    }
+}
+.nav-control__item {
+    margin-right: rem($gs-baseline);
+    position: relative;
+
+    @include mq(tablet) {
+        padding-top: rem(3px);
+    }
+}
+.nav-control__item--last {
+    margin-right: 0;
+}
+
+/* ==========================================================================
    Nav - Global Navigation
    ========================================================================== */
 
@@ -300,4 +324,10 @@ $global-nav-height: 36px;
             }
         }
     }
+}
+.mobile-menu__icon {
+    display: block;
+    text-align: center;
+    height: rem($gs-baseline * 2);
+    padding-top: rem($gs-baseline / 2);
 }

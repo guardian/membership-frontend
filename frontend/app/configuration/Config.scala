@@ -3,6 +3,7 @@ package configuration
 import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
+import com.gu.membership.stripe.{StripeCredentials, StripeApiConfig}
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import model.{StaffPlan, FriendTierPlan, PaidTierPlan}
@@ -143,10 +144,6 @@ object Config {
   }
 
   val twitterUsername = config.getString("twitter.username")
-  val twitterIphoneAppName = config.getString("twitter.app.iphone.name")
-  val twitterIphoneAppId = config.getString("twitter.app.iphone.id")
-  val twitterGoogleplayAppName = config.getString("twitter.app.googleplay.name")
-  val twitterGoogleplayAppId = config.getString("twitter.app.googleplay.id")
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 

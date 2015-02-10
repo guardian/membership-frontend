@@ -1,6 +1,7 @@
 package services
 
 import akka.agent.Agent
+import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri.parse
 import com.typesafe.scalalogging.slf4j.LazyLogging
@@ -14,7 +15,7 @@ import play.api.libs.ws.WSRequestHolder
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class GridService(gridUrl: String) extends utils.WebServiceHelper[GridObject, Error] with LazyLogging{
+case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
 
   lazy val agent = Agent[Map[String, EventImage]](Map.empty)
 

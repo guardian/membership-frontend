@@ -7,11 +7,11 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class JoinPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def becomeAFriendLink = driver.findElement(By.cssSelector("li:nth-of-type(1) .action__label"))
+  private def becomeAFriendLink = driver.findElement(By.cssSelector(".qa-package-friend"))
 
-  private def becomeAPartnerLink = driver.findElement(By.cssSelector("li:nth-of-type(2) .action__label"))
+  private def becomeAPartnerLink = driver.findElement(By.cssSelector(".qa-package-partner"))
 
-  private def becomeAPatronLink = driver.findElement(By.cssSelector("li:nth-of-type(3) .action__label"))
+  private def becomeAPatronLink = driver.findElement(By.cssSelector(".qa-package-patron"))
 
   def clickBecomeAFriend = {
     becomeAFriendLink.click

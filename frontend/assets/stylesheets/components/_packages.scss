@@ -240,45 +240,131 @@
 /* Package - Promo
    ========================================================================== */
 
-.package--promo {
+.package-promo {
     position: relative;
     border-top: 5px solid;
-
-    .package__header {
+    background-color: $c-neutral7;
+}
+    .package-promo__header {
         padding: rem($gs-gutter / 4);
     }
-    .package__content {
+    .package-promo__content {
         padding: 0;
     }
-    .package__description {
+    .package-promo__description {
+        display: none;
+        @include fs-headline(2);
         margin-bottom: rem($gs-gutter);
         p { margin-bottom: 0; }
     }
-    .package__actions {
+    .package-promo__actions {
         position: absolute;
         bottom: rem($gs-baseline / 2);
         right: rem($gs-baseline / 2);
     }
-
-    @include mq(tablet) {
-        .package__content {
-            margin-left: 35%;
-            padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
-        }
-        .package__actions {
-            position: static;
-        }
+    .package-promo__tier {
+        @include clearfix;
+        min-height: rem(gs-span(1.5));
+    }
+    .package-promo__tier__pricing {
+        position: absolute;
+        bottom: rem($gs-baseline / 2);
+        border: solid $c-border-neutral;
+        border-width: 0;
     }
 
-    @include mq(desktop) {
-        .package__content {
-            margin-left: 0;
-            padding-left: rem($gs-gutter / 4);
-            padding-top: 0;
+/**
+ * Mixins are used here because we need
+ * variants of the package promo which
+ * react to different breakpoints.
+ *
+ * Element queries would solve this…
+ */
+@mixin package-promo-spread() {
+    .package-promo__description {
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: rem($gs-baseline);
+    }
+    .package-promo__content {
+        margin-left: 35%;
+        padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
+    }
+    .package-promo__actions {
+        position: static;
+        padding-top: rem($gs-gutter / 4);
+        padding-bottom: rem($gs-gutter / 4);
+    }
+    .package-promo__tier {
+        min-height: 0;
+    }
+    .package-promo__tier__title {
+        float: left;
+        width: 35%;
+    }
+    .package-promo__tier__pricing {
+        position: static;
+        float: left;
+        width: 65%;
+        border-width: 0 0 1px 0;
+        margin-top: -(rem($gs-gutter / 4));
+    }
+}
+
+@mixin package-promo-stacked() {
+    .package-promo__description {
+        display: inline-block;
+        min-height: rem($gs-gutter * 6);
+    }
+    .package-promo__content {
+        margin-left: 0;
+        padding: 0 rem($gs-gutter / 4);
+    }
+    .package-promo__actions {
+        position: static;
+        padding-bottom: rem($gs-baseline);
+    }
+    .package-promo__tier__title,
+    .package-promo__tier__pricing {
+        float: none;
+        width: auto;
+    }
+    .package-promo__tier__title {
+        margin-bottom: rem($gs-gutter * 2);
+    }
+    .package-promo__tier__pricing {
+        position: static;
+        border-width: 1px 0;
+        min-height: rem($gs-gutter * 3);
+    }
+}
+
+.package-promo--simple {
+    @include mq(tablet) {
+        @include package-promo-stacked();
+        .package-promo__description {
+            min-height: 0;
         }
     }
 }
-.package--promo--reversed {
+
+.package-promo--spread {
+    @include mq(tablet) {
+        @include package-promo-spread();
+        margin-bottom: rem($gs-gutter);
+    }
+}
+
+.package-promo--enhanced {
+    @include mq(tablet) {
+        @include package-promo-spread();
+    }
+    @include mq(desktop) {
+        @include package-promo-stacked();
+    }
+}
+
+.package-promo--reversed {
     background-color: $white;
 }
 
@@ -291,40 +377,37 @@
     @include clearfix;
     position: relative;
     margin-bottom: rem($gs-gutter);
+}
+.package-feature__promo {
     @include mq(tablet) {
-        margin-bottom: 0;
+        float: left;
+        width: (45% - $gutter-width-fluid);
+        margin-right: $gutter-width-fluid;
+    }
+    @include mq(desktop) {
+        width: 35%;
+        margin-right: 0;
     }
 }
-    .package-feature__caption {
-        font-weight: bold;
-        margin: rem($gs-gutter/2) 0;
+.package-feature__benefits {
+    @include mq(tablet) {
+        float: right;
+        width: 55%;
     }
-    .package-feature__content {
-        @include mq(tablet) {
-            display: table;
-            width: 100%;
-        }
+    @include mq(desktop) {
+        width: 65%;
+        padding-left: rem($gs-gutter);
     }
-    .package-feature__benefits,
-    .package-feature__action {
-        @include mq(tablet) {
-            display: table-cell;
-        }
+}
+.package-feature__leadin {
+    @include fs-headline(2);
+    font-weight: 500;
+    padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
+
+    @include mq(tablet) {
+        border-top: 5px solid;
     }
-    .package-feature__benefits {
-        @include mq(tablet) {
-            width: 60%;
-        }
-        @include mq(desktop) {
-            width: 75%;
-        }
-    }
-    .package-feature__action {
-        @include mq(tablet) {
-            vertical-align: top;
-            text-align: right;
-        }
-    }
+}
 
 /* ==========================================================================
    Package Stack

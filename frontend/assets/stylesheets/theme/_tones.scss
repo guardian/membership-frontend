@@ -27,7 +27,7 @@
     }
 }
 .tone-trans-brand-dark {
-    background-color: transparentize($mem-brandBlueDark, .1);
+    background-color: transparentize(darken($mem-brandBlueDark, 10%), .1);
 }
 
 /* Live
@@ -139,6 +139,9 @@
     color: $white;
     background-color: tone('friend');
 }
+.tone-color-friend {
+    color: tone('friend');
+}
 .tone-border-friend {
     border-color: tone('friend');
 }
@@ -149,6 +152,9 @@
 .tone-partner {
     background-color: tone('partner');
 }
+.tone-color-partner {
+    color: tone('partner');
+}
 .tone-border-partner {
     border-color: tone('partner');
 }
@@ -158,6 +164,9 @@
 
 .tone-patron {
     background-color: tone('patron');
+}
+.tone-color-patron {
+    color: tone('patron');
 }
 .tone-border-patron {
     border-color: tone('patron');

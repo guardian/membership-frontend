@@ -29,7 +29,7 @@
             <div class="form-section__content">
 
                 <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
-                      class="form js-stripe-form" data-change-to-tier="@targetTier">
+                      class="form js-form" data-change-to-tier="@targetTier">
                     @CSRF.formField
                     @fragments.form.addressDetail(
                         "Delivery address",

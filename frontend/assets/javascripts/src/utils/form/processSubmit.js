@@ -4,8 +4,8 @@
  */
 define(['src/utils/helper'], function (utilsHelper) {
 
-    var FORM_ELEMENT_SELECTOR = '.js-form';
-    var FORM_SUBMIT_ELEMENT_SELECTOR = '.js-form-submit';
+    var FORM_ELEMENT_SELECTOR = '.js-processing-form';
+    var FORM_SUBMIT_ELEMENT_SELECTOR = '.js-processing-form-submit';
     var LOADER_CONTAINER_SELECTOR = '.js-loader-container';
     var IS_HIDDEN_CLASS = 'is-hidden';
 

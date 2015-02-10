@@ -2,15 +2,15 @@ package services
 
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Customer
 import com.gu.membership.util.Timing
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-
 import model.Eventbrite.EBCode
 import model.RichEvent._
-import model.Stripe.Customer
 import model.Zuora.PreviewInvoiceItem
 import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
@@ -66,7 +66,7 @@ trait MemberService extends LazyLogging {
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
 
-  def memberData(plan: ProductRatePlan, customerOpt: Option[Customer]) = Json.obj(
+  def memberData(plan: ProductRatePlan, customerOpt: Option[Stripe.Customer]) = Json.obj(
     Keys.TIER -> plan.salesforceTier
   ) ++ customerOpt.map { customer =>
     Json.obj(

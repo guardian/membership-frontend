@@ -1,5 +1,6 @@
 package services
 
+import com.gu.membership.stripe.StripeApiConfig
 import services.zuora.ZuoraApiConfig
 
 

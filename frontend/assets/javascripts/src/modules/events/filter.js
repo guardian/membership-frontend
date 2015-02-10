@@ -1,7 +1,4 @@
-define([
-    '$',
-    'src/utils/analytics/ga'
-], function ($, googleAnalytics) {
+define(['$'], function ($) {
 
     var FILTER_INPUT    = document.getElementById('js-filter');
     var FILTER_PARENT   = document.getElementById('js-filter-container');
@@ -41,9 +38,6 @@ define([
         currentTimeout = window.setTimeout(function () {
 
             var value = FILTER_INPUT.value.toLowerCase();
-
-            // Track that we have filtered
-            trackFilter(value);
 
             // Build results object
             var results = buildResults(value);
@@ -104,12 +98,6 @@ define([
             FILTER_EMPTY.addClass(SHOWN_CLASS);
         } else {
             FILTER_EMPTY.removeClass(SHOWN_CLASS);
-        }
-    }
-
-    function trackFilter(value) {
-        if (value) {
-            googleAnalytics.trackEvent('Event filter', 'Masterclasses', value);
         }
     }
 

@@ -1,0 +1,5 @@
+@(event: model.RichEvent.RichEvent, extraClasses: Seq[String] = Nil)
+
+@import model.RichEvent._
+
+<div class="terms-info js-legal-terms copy  @extraClasses.mkString(" ")">By proceeding, you agree to the @event.metadata.title <a href="@event.metadata.termsUrl" target="_blank">Terms and Conditions</a></div>

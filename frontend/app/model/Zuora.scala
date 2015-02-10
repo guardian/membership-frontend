@@ -1,8 +1,10 @@
 package model
 
-import scala.util.{Success, Failure, Try}
-import scala.xml.Node
+import com.gu.membership.stripe.Stripe
 import org.joda.time.DateTime
+
+import scala.util.{Failure, Success, Try}
+import scala.xml.Node
 
 object Zuora {
   trait ZuoraResult
@@ -26,7 +28,6 @@ object Zuora {
     // TODO: is there a better way?
     val annual = nextPaymentDate == serviceStartDate.plusYears(1)
   }
-
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
@@ -75,12 +76,21 @@ object Zuora {
   case class PaymentSummary(current: InvoiceItem, previous: Seq[InvoiceItem]) {
     val totalPrice = current.price + previous.map(_.price).sum
   }
+
+  object PaymentSummary {
+    def apply(items: Seq[InvoiceItem]): PaymentSummary = {
+      val sortedInvoiceItems = items.sortBy(_.chargeNumber)
+      PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
+    }
+  }
   case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String)
-  case class PaidPreview(card: Stripe.Card, invoiceItems: Seq[PreviewInvoiceItem])
+  case class PaidPreview(card: Stripe.Card, invoiceItems: Seq[PreviewInvoiceItem]) {
+    val totalPrice = invoiceItems.map(_.price).sum
+  }
 }
 
 object ZuoraReaders {
-  import Zuora._
+  import model.Zuora._
 
   trait ZuoraReader[T <: ZuoraResult] {
     val responseTag: String
@@ -159,8 +169,8 @@ object ZuoraReaders {
 }
 
 object ZuoraDeserializer {
-  import Zuora._
-  import ZuoraReaders._
+  import model.Zuora._
+  import model.ZuoraReaders._
 
   implicit val authenticationReader = ZuoraReader("loginResponse") { result =>
     Right(Authentication((result \ "Session").text, (result \ "ServerUrl").text))

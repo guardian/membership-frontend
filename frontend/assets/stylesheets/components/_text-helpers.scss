@@ -90,14 +90,18 @@
     }
 }
 
-.h-promo {
+.h-promo,
+.h-promo--primary {
     @include fs-headline(4);
 
     @include mq(tablet) {
-        @include fs-headline(6);
+        @include fs-headline(6, true);
     }
-    @include mq(desktop) {
-        @include fs-headline(7);
+}
+
+.h-promo--primary {
+    @include mq(tablet) {
+        @include fs-headline(7, true);
     }
 }
 
@@ -147,12 +151,6 @@
     @include mq(desktop) {
         @include fs-bodyCopy(3);
     }
-}
-
-.section-sub-headline {
-    @include fs-headline(4);
-    background-color: $white;
-    padding-top: rem($gs-baseline / 2);
 }
 
 .section-body-headline {

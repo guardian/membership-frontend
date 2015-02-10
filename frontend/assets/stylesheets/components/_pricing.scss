@@ -151,6 +151,25 @@
     @include fs-data(2);
 
     @include mq(mobileLandscape) {
-        @include fs-data(3);
+        @include fs-data(3, true);
+    }
+}
+
+.price-info-inline--primary {
+    color: $white;
+
+    .price-info-inline__value {
+        @include fs-header(4);
+        font-weight: bold;
+
+        @include mq(mobileLandscape) {
+            @include fs-header(4, true);
+        }
+        @include mq(tablet) {
+            @include fs-header(6, true);
+        }
+    }
+    .price-info-inline__trail {
+        color: inherit;
     }
 }

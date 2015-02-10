@@ -94,18 +94,17 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    // TODO James Oram this test apparently can't be run in January - fix
-//    scenarioWeb("24. User with invalid expiry date in card cannot make a purchase") {
-//      implicit driver =>
-//      given {
-//        MembershipSteps().IAmLoggedIn
-//      }
-//      .when {
-//        _.IClickOnThePurchaseSubscriptionCTA
-//      }
-//      .then {
-//        _.ISeeAnErrorMessageWhenMyExpiryDateIsInThePast
-//      }
-//    }
+    scenarioWeb("24. User with invalid expiry date in card cannot make a purchase") {
+      implicit driver =>
+      given {
+        MembershipSteps().IAmLoggedIn
+      }
+      .when {
+        _.IClickOnThePurchaseSubscriptionCTA
+      }
+      .then {
+        _.ISeeAnErrorMessageWhenMyExpiryDateIsInThePast
+      }
+    }
   }
 }

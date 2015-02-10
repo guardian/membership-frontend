@@ -1,10 +1,10 @@
 package model
 
-import play.api.libs.json.{Reads, Json}
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Deserializer._
+import com.gu.membership.stripe.Stripe.{Card, Customer, StripeList}
+import play.api.libs.json.Reads
 import play.api.test.PlaySpecification
-
-import Stripe._
-import StripeDeserializer._
 import utils.Resource
 
 class StripeDeserializerTest extends PlaySpecification {
@@ -18,7 +18,7 @@ class StripeDeserializerTest extends PlaySpecification {
   }
 
   "StripeDeserializer" should {
-    deserialize[Error]("error")
+    deserialize[Stripe.Error]("error")
     deserialize[Card]("card")
     deserialize[Customer]("customer")
 

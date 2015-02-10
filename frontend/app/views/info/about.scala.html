@@ -10,23 +10,25 @@
     <div class="page-slice l-constrained l-side-margins">
         @fragments.promos.promoPrimary(title=Html("About<br>Membership"), imageUrl="images/about/about-intro-1140.jpg", isLead=true) {
             <div class="text-feature">
-                <p>Guardian Membership feeds your curiosity and broadens your perspective.</p>
-                <p>We introduce you to some of the world's most influential thinkers. Not only our speakers, but the community of members around you.</p>
-                <p>Join now as Founding Partner or Patron and the price you pay will not rise.</p>
+                <p>Guardian Members are changing the idea of what a news organisation does today.</p>
+                <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
+                <p>Become a Founding Partner or Patron today and the price you pay will not rise.</p>
             </div>
             <div class="action-group">
                 <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
-                <a class="action action--secondary-button u-no-top-margin js-scroll-to" href="#whats-included">What's included</a>
+                <a class="action action--secondary u-no-top-margin js-scroll-to" href="#whats-included">
+                    What's included
+                    @fragments.actionIcon("arrow-right")
+                </a>
             </div>
         }
     </div>
 
     @* ===== Bring the Guardian to life ===== *@
     <div class="page-slice l-constrained l-side-margins">
-        @fragments.promos.promoPrimary(title=Html("Browse our events and book your tickets now"), imageUrl="images/about/about-events-1140.jpg", stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {
+        @fragments.promos.promoPrimary(title=Html("Guardian Live: Experience the Guardian brought to life"), imageUrl="images/about/about-events-1140.jpg", stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {
             <div class="text-feature">
-                <p>Guardian Live is a programme of discussions, debates, interviews, keynote speeches and festivals.</p>
-                <p>Members can attend events that take the power of open journalism from print and digital into live experiences.</p>
+                <p>Book tickets for our programme of discussions, debates, interviews, keynote speeches and festivals.</p>
             </div>
             <a class="action u-no-top-margin" href="@routes.Event.list">See our live events</a>
         }
@@ -34,10 +36,9 @@
 
     @* ===== Guardian Masterclasses ===== *@
     <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("Courses from the guardian"), imageUrl="images/about/about-masterclasses-740.jpg", stampImageOpt=Some("images/logos/guardian-masterclasses-reversed.svg"), toneClass=Some("tone-masterclasses")) {
+        @fragments.promos.promoSecondary(Html("Guardian Masterclasses: Learn with the Guardian"), imageUrl="images/about/about-masterclasses-740.jpg", stampImageOpt=Some("images/logos/guardian-masterclasses-reversed.svg"), toneClass=Some("tone-masterclasses")) {
             <p class="text-feature">
-                Guardian Masterclasses offer a broad range of short and long courses across a variety of disciplines
-                from creative writing, journalism, photography, design, film and digital media, music and cultural appreciation.
+                Guardian Masterclasses offer a broad range of short and long courses across a variety of disciplines with a 20% discount for Partners and Patrons.
             </p>
             <a class="action u-no-top-margin" href="@routes.Event.masterclasses">View all courses</a>
         }
@@ -66,7 +67,10 @@
             </div>
             <div class="action-group">
                 <a class="action u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">More about the building</a>
-                <a class="action action--secondary-button u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">Building progress blog</a>
+                <a class="action action--secondary u-no-top-margin" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">
+                    Building progress blog
+                    @fragments.actionIcon("arrow-right")
+                </a>
             </div>
         }
     </div>
@@ -79,14 +83,14 @@
                 <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
             </blockquote>
             <div class="action-group">
-                <a class="action u-no-top-margin" href="@routes.Info.patron" data-link-name="Become a Patron">Become a Patron</a>
+                <a class="action u-no-top-margin" href="@routes.Info.patron">Become a Patron</a>
             </div>
         }
     </div>
 
     @* ===== What's Included ===== *@
-    <div class="page-slice l-side-margins l-constrained" id="whats-included">
-        <h2 class="page-slice__headline">What's included</h2>
+    <div class="page-slice tone-tint l-side-margins l-constrained" id="whats-included">
+        <h2 class="page-slice__headline">What's included in Membership</h2>
         <div class="page-slice__content">
             @fragments.tier.packageFeature(Tier.Friend)
             @fragments.tier.packageFeature(Tier.Partner)

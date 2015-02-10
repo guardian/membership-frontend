@@ -1,10 +1,7 @@
 require([
-    'src/utils/analytics/setup',
     'ajax',
-    'src/modules/tier/JoinFree',
-    'src/modules/info/Feedback',
-    'src/modules/tier/PaidForm',
-    'src/modules/tier/StaffForm',
+    'src/utils/analytics/setup',
+    'src/modules/metrics',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
@@ -19,16 +16,15 @@ require([
     'src/modules/patterns',
     'src/utils/modal',
     'src/utils/form/processSubmit',
+    'src/modules/form',
+    'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
 ], function(
-    analytics,
     ajax,
-    JoinFree,
-    FeedbackForm,
-    PaidForm,
-    StaffForm,
+    analytics,
+    metrics,
     Cta,
     filter,
     toggle,
@@ -42,7 +38,9 @@ require([
     eventPriceEnhance,
     modal,
     patterns,
-    processSubmit
+    processSubmit,
+    form,
+    metrics
 ) {
     'use strict';
 
@@ -56,6 +54,7 @@ require([
     ajax.init({page: {ajaxUrl: ''}});
 
     analytics.init();
+    metrics.init();
 
     // Global
     toggle.init();
@@ -73,18 +72,18 @@ require([
 
     // Join
     choose.init();
-    (new JoinFree()).init();
-    (new PaidForm()).init();
-    (new StaffForm()).init();
-    processSubmit.init();
 
-    // Feedback
-    (new FeedbackForm()).init();
+    // Forms
+    form.init();
+    processSubmit.init();
 
     // Modal
     modal.init();
 
     // Pattern library
     patterns.init();
+
+    // Metrics
+    metrics.init();
 
 });

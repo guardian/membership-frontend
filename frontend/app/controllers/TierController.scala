@@ -1,22 +1,18 @@
 package controllers
 
-import model.Zuora.{PaidPreview, PreviewInvoiceItem, PaymentSummary}
-
-import scala.concurrent.Future
-
-import play.api.mvc.{DiscardingCookie, Controller}
+import actions._
+import com.gu.membership.salesforce._
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
+import forms.MemberForm._
+import model.Zuora.PaidPreview
+import model.{FriendTierPlan, PageInfo, Zuora}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.mvc.{Controller, DiscardingCookie}
+import services.{IdentityApi, IdentityService, MemberService}
 
-import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier
-
-import actions.MemberRequest
-import forms.MemberForm._
-import model.StripeSerializer._
-import model._
-import services._
-import actions._
+import scala.concurrent.Future
 
 trait DowngradeTier {
   self: TierController =>
@@ -84,6 +80,7 @@ trait UpgradeTier {
         freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
 
       case paidMember: PaidMember =>
+        //Future.successful(NotFound)
         paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
     }
 

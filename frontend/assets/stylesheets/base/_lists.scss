@@ -58,3 +58,7 @@ nav ol {
         margin-bottom: 0;
     }
 }
+.list-stack--bordered {
+    border-top: 1px dotted $c-border-neutral;
+    padding-top: rem($gs-baseline / 2);
+}

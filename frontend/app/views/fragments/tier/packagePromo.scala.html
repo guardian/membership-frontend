@@ -1,22 +1,48 @@
-@(tier: com.gu.membership.salesforce.Tier, descriptionAnchor: Option[String] = None, isReversed: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    tier: com.gu.membership.salesforce.Tier,
+    showDescription: Boolean = true,
+    descriptionAnchor: Option[String] = None,
+    modifierClass: Option[String] = None,
+    isReversed: Boolean = false
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
 
-<div class="package package--promo @if(isReversed){package--promo--reversed }tone-border-@tier.slug">
-    <div class="package__header">
-        <a href="@routes.Joiner.enterDetails(tier)" class="no-underline minimal-link">
-            @fragments.tier.tierHeaderPromo(tier)
+<div class="package-promo@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--enhanced") tone-border-@tier.slug">
+    <div class="package-promo__header">
+        <a class="no-underline minimal-link"
+           href="@routes.Joiner.enterDetails(tier)"
+           data-metric-trigger="click"
+           data-metric-category="join"
+           data-metric-action="@tier.toString.toLowerCase()"
+        >
+            <div class="package-promo__tier">
+                <div class="package-promo__tier__title">
+                    @fragments.tier.tierTrail(tier, showCaption=false)
+                </div>
+                <div class="package-promo__tier__pricing">
+                    @fragments.pricing.priceInfo(tier, canFlex=false)
+                </div>
+            </div>
         </a>
     </div>
-    <div class="package__content">
-        <div class="package__description copy hidden-tablet">
-            <p>@Benefits.details(tier).desc</p>
-            @if(descriptionAnchor) {
-                <p class="text-caption tablet-only"><a href="@descriptionAnchor">What's included</a></p>
-            }
-        </div>
-        <div class="package__actions">
-            <a class="action action--snap u-no-bottom-margin" href="@routes.Joiner.enterDetails(tier)" data-link-name="Become a @tier">
+    <div class="package-promo__content">
+        @if(showDescription) {
+            <div class="package-promo__description copy">
+                <p>@Benefits.details(tier).desc</p>
+                @if(descriptionAnchor) {
+                    <p class="text-caption tablet-only"><a href="@descriptionAnchor">What's included</a></p>
+                }
+            </div>
+        }
+        <div class="package-promo__actions">
+            <a
+                class="action action--snap u-no-bottom-margin qa-package-@tier.toString.toLowerCase()"
+                href="@routes.Joiner.enterDetails(tier)"
+                data-metric-trigger="click"
+                data-metric-category="join"
+                data-metric-action="@tier.toString.toLowerCase()"
+            >
                 <span class="action__label">
                     Become a @tier
                 </span>

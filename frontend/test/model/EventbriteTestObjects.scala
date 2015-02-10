@@ -20,6 +20,8 @@ object EventbriteTestObjects {
     val socialImgUrl = ""
     val imageMetadata = None
     val tags = Nil
+    val contentOpt = None
+    val pastImageOpt = None
 
     val metadata = Metadata(
       identifier="",
@@ -30,7 +32,7 @@ object EventbriteTestObjects {
       eventListUrl="",
       termsUrl="",
       largeImg=false,
-      highlightsUrlOpt=None,
+      highlightsOpt=None,
       chooseTier=ChooseTierMetadata("", "")
     )
   }

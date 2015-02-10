@@ -1,16 +1,14 @@
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.mvc._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.data._
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
 import play.api.data.Forms._
+import play.api.data._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.mvc._
 
-import model.Stripe
-import model.StripeSerializer._
-import services.MemberService
+import scala.concurrent.Future
 
 trait Subscription extends Controller {
   def updateCard() = AjaxPaidMemberAction.async { implicit request =>

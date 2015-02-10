@@ -1,22 +1,20 @@
-@(tier: com.gu.membership.salesforce.Tier)
+@(tier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import model.Benefits
+@import com.gu.membership.salesforce.Tier
 
 <div class="package-feature">
-    <div class="package-feature__header">
-        @fragments.tier.tierHeader(tier)
+    <div class="package-feature__promo">
+        @fragments.tier.packagePromo(tier, isReversed=true, modifierClass=Some("package-promo--simple"))
     </div>
-    <div class="package-feature__caption">
-        @Benefits.details(tier).leadin
-    </div>
-    <div class="package-feature__content">
-        <div class="package-feature__benefits">
-            @fragments.benefits.featured(tier)
+    <div class="package-feature__benefits">
+        <div class="package-feature__leadin tone-border-@tier.slug">
+            @Benefits.details(tier).leadin
         </div>
-        <div class="package-feature__action">
-            <a class="action u-no-margin js-opt-become-member" data-link-name="@Benefits.details(tier).cta" href="@routes.Joiner.enterDetails(tier)">
-                @Benefits.details(tier).cta
-            </a>
-        </div>
+        <ul class="list-stack list-stack--bordered">
+            @for(benefit <- Benefits.detailsLimited(tier)) {
+                <li>@fragments.benefits.item(benefit, iconClasses=List("tone-color-" + tier.slug))</li>
+            }
+        </ul>
     </div>
 </div>
