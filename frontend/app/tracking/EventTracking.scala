@@ -15,13 +15,14 @@ import play.api.Logger
 
 case class SingleEvent (eventSource: String, user: EventSubject) extends TrackerData {
   def toMap: JMap[String, Object] =
-    Map("eventSource" -> eventSource, "from" -> user.toMap)
+    Map("eventSource" -> eventSource) ++ user.toMap
 }
 
 object SingleEvent {
 
   def apply(eventSource: String,
             member: Member,
+            newTier: Option[String] = None,
             deliveryPostcode: Option[String] = None,
             billingPostcode: Option[String] = None,
             subscriptionPaymentAnnual: Option[Boolean] = None,
@@ -33,6 +34,7 @@ object SingleEvent {
         salesforceContactId = member.salesforceContactId,
         identityId = member.identityId,
         tier = member.tier.name,
+        newTier = newTier,
         deliveryPostcode = deliveryPostcode,
         billingPostcode = billingPostcode.orElse(deliveryPostcode),
         subscriptionPaymentAnnual = subscriptionPaymentAnnual,
@@ -50,6 +52,7 @@ trait TrackerData {
 case class EventSubject(salesforceContactId: String,
                         identityId: String,
                         tier: String,
+                        newTier: Option[String],
                         deliveryPostcode: Option[String],
                         billingPostcode: Option[String],
                         subscriptionPaymentAnnual: Option[Boolean],
@@ -78,6 +81,7 @@ case class EventSubject(salesforceContactId: String,
           "membership" -> true
         ))
       } ++
+      newTier.map("newTier" -> _) ++
       deliveryPostcode.map("deliveryPostcode" -> _) ++
       billingPostcode.map("billingPostcode" -> _) ++
       subscriptionPlan.map("subscriptionPlan" -> _)

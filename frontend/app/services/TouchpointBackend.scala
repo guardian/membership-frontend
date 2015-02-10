@@ -67,6 +67,7 @@ case class TouchpointBackend(
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
       memberRepository.metrics.putDowngrade(tierPlan.tier)
+      trackEvent(SingleEvent("downgradeMembership", member, Some(FriendTierPlan.tier.name)))
       ""
     }
   }

@@ -139,6 +139,7 @@ trait MemberService extends LazyLogging with EventTracking {
         SingleEvent(
           eventSource = "membershipUpgrade",
           member = member,
+          newTier = Some(newTier.name),
           deliveryPostcode = Some(form.deliveryAddress.postCode),
           billingPostcode = form.billingAddress.map(_.postCode),
           subscriptionPaymentAnnual = Some(form.payment.annual),
@@ -164,6 +165,7 @@ trait MemberService extends LazyLogging with EventTracking {
         member.salesforceContactId,
         user.id,
         formData.plan.salesforceTier,
+        None,
         Some(formData.deliveryAddress.postCode),
         billingPostcode, subscriptionPaymentAnnual,
         Some(formData.marketingChoices)
