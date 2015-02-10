@@ -2,7 +2,7 @@ package tracking
 
 import java.util.{List => JList, Map => JMap}
 
-import com.gu.membership.salesforce.MemberId
+import com.gu.membership.salesforce.{Member, Tier, MemberId}
 import com.snowplowanalytics.snowplow.tracker._
 import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
@@ -13,64 +13,32 @@ import com.github.t3hnar.bcrypt._
 import scala.collection.JavaConversions._
 import play.api.Logger
 
-case class SingleEvent (user: EventSubject, eventSource: String) extends TrackerData {
+case class SingleEvent (eventSource: String, user: EventSubject) extends TrackerData {
   def toMap: JMap[String, Object] =
     Map("eventSource" -> eventSource, "from" -> user.toMap)
 }
 
 object SingleEvent {
-  def apply(memberId: MemberId, user: IdMinimalUser, userFormData: JoinForm, eventSource: String): SingleEvent  = {
 
-    val subscriptionPlan = userFormData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
-      case _ => None
-    }
-
-    val billingPostcode = userFormData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.billingAddress.map(_.postCode)
-      case _ => None
-    }
+  def apply(eventSource: String,
+            member: Member,
+            deliveryPostcode: Option[String] = None,
+            billingPostcode: Option[String] = None,
+            subscriptionPaymentAnnual: Option[Boolean] = None,
+            marketingChoices: Option[MarketingChoicesForm] = None): SingleEvent = {
 
     SingleEvent(
-      memberId,user,
-      userFormData.deliveryAddress.postCode,
-      billingPostcode,
-      userFormData.plan.salesforceTier,
-      subscriptionPlan,
-      Some(userFormData.marketingChoices),
-      eventSource)
-  }
-
-  def apply(memberId: MemberId,
-            user: IdMinimalUser,
-            deliveryPostcode: String,
-            billingPostcode: Option[String],
-            tier: String,
-            subscriptionPaymentAnnual: Option[Boolean],
-            marketingChoices: Option[MarketingChoicesForm],
-            eventSource: String): SingleEvent = {
-
-    val subscriptionPlan = subscriptionPaymentAnnual match {
-      case Some(true) =>  Some("annual")
-      case Some(false) => Some("monthly")
-      case None => None
-    }
-
-    val billPostcode = billingPostcode.orElse(Some(deliveryPostcode))
-
-    SingleEvent(
+      eventSource,
       EventSubject(
-        salesforceContactId = memberId.salesforceContactId,
-        identityId = user.id,
+        salesforceContactId = member.salesforceContactId,
+        identityId = member.identityId,
+        tier = member.tier.name,
         deliveryPostcode = deliveryPostcode,
-        billingPostcode =  billPostcode,
-        tier = tier,
-        subscriptionPlan = subscriptionPlan,
+        billingPostcode = billingPostcode.orElse(deliveryPostcode),
+        subscriptionPaymentAnnual = subscriptionPaymentAnnual,
         marketingChoices = None
-      ), eventSource)
+      ))
   }
-
-
 }
 
 trait TrackerData {
@@ -81,12 +49,18 @@ trait TrackerData {
 
 case class EventSubject(salesforceContactId: String,
                         identityId: String,
-                        deliveryPostcode: String,
-                        billingPostcode: Option[String],
                         tier: String,
-                        subscriptionPlan: Option[String],
-                        marketingChoices: Option[MarketingChoicesForm]
-                         ) {
+                        deliveryPostcode: Option[String],
+                        billingPostcode: Option[String],
+                        subscriptionPaymentAnnual: Option[Boolean],
+                        marketingChoices: Option[MarketingChoicesForm]) {
+
+  val subscriptionPlan = subscriptionPaymentAnnual match {
+    case Some(true) =>  Some("annual")
+    case Some(false) => Some("monthly")
+    case None => None
+  }
+
   def toMap: JMap[String, Object] = {
 
     def bcrypt(string: String) = string+Config.bcryptPepper.bcrypt(Config.bcryptSalt)
@@ -95,8 +69,7 @@ case class EventSubject(salesforceContactId: String,
     val dataMap = Map(
       "salesforceContactId" -> bcrypt(salesforceContactId),
       "identityId" -> bcrypt(identityId),
-      "tier" -> tier,
-      "deliveryPostcode" -> deliveryPostcode
+      "tier" -> tier
     ) ++
       marketingChoices.map { mc =>
         "marketingChoicesForm" -> EventTracking.setSubMap(Map(
@@ -105,6 +78,7 @@ case class EventSubject(salesforceContactId: String,
           "membership" -> true
         ))
       } ++
+      deliveryPostcode.map("deliveryPostcode" -> _) ++
       billingPostcode.map("billingPostcode" -> _) ++
       subscriptionPlan.map("subscriptionPlan" -> _)
 

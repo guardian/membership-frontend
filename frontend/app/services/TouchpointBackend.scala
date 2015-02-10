@@ -8,6 +8,7 @@ import model.Stripe.Card
 import model.{IdMinimalUser, FriendTierPlan, TierPlan}
 import play.api.libs.json.Json
 import services.zuora.ZuoraService
+import tracking.{SingleEvent, EventTracking}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,7 +36,7 @@ object TouchpointBackend {
 case class TouchpointBackend(
   memberRepository: FrontendMemberRepository,
   stripeService: StripeService,
-  zuoraService : ZuoraService) {
+  zuoraService : ZuoraService) extends EventTracking {
 
   def start() = {
     memberRepository.salesforce.authTask.start()
@@ -56,6 +57,7 @@ case class TouchpointBackend(
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
+      trackEvent(SingleEvent("cancelMembership", member))
       ""
     }
   }

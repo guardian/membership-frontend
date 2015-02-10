@@ -15,7 +15,7 @@ import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
 import play.api.libs.json.{JsObject, Json}
 import services.EventbriteService._
-import tracking.{SingleEvent, EventTracking}
+import tracking.{EventSubject, SingleEvent, EventTracking}
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -100,7 +100,7 @@ trait MemberService extends LazyLogging with EventTracking {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        trackEvent(SingleEvent(memberId, user, formData, "membershipRegistration"))
+        trackRegistration(formData, memberId, user)
         memberId
       }
     }.andThen {
@@ -137,29 +137,40 @@ trait MemberService extends LazyLogging with EventTracking {
 
       trackEvent(
         SingleEvent(
-          memberId = memberId,
-          user = user,
-          deliveryPostcode = form.deliveryAddress.postCode,
+          eventSource = "membershipUpgrade",
+          member = member,
+          deliveryPostcode = Some(form.deliveryAddress.postCode),
           billingPostcode = form.billingAddress.map(_.postCode),
-          tier = newTier.name,
           subscriptionPaymentAnnual = Some(form.payment.annual),
-          marketingChoices = None,
-          eventSource = "membershipUpgrade")
+          marketingChoices = None)
       )
       memberId
     }
   }
-}
 
-/**
- *  def apply(memberId: MemberId,
-            user: IdMinimalUser,
-            deliveryPostcode: String,
-            billingPostcode: Option[String],
-            tier: String,
-            subscriptionPaymentAnnual: Option[Boolean],
-            marketingChoices: Option[MarketingChoicesForm],
-            eventSource: String):
- */
+  private def trackRegistration(formData: JoinForm, member: MemberId, user: IdMinimalUser) {
+    val subscriptionPaymentAnnual = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
+      case _ => None
+    }
+
+    val billingPostcode = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.billingAddress.map(_.postCode).orElse(Some(formData.deliveryAddress.postCode))
+      case _ => None
+    }
+
+    val eventSubject =
+      EventSubject(
+        member.salesforceContactId,
+        user.id,
+        formData.plan.salesforceTier,
+        Some(formData.deliveryAddress.postCode),
+        billingPostcode, subscriptionPaymentAnnual,
+        Some(formData.marketingChoices)
+    )
+
+    trackEvent(SingleEvent("membershipRegistration", eventSubject))
+  }
+}
 
 object MemberService extends MemberService
