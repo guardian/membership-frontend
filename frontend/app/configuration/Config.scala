@@ -3,6 +3,7 @@ package configuration
 import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
+import com.gu.membership.stripe.{StripeCredentials, StripeApiConfig}
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
 import model.{StaffPlan, FriendTierPlan, PaidTierPlan}

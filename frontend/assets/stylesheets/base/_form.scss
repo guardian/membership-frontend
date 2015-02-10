@@ -91,7 +91,9 @@
     }
 
     .input-text,
-    .input-text:focus {
+    .input-text:focus,
+    .input-textarea,
+    .input-textarea:focus {
         border-color: $c-error;
     }
 }

@@ -2,19 +2,18 @@ package controllers
 
 import scala.concurrent.Future
 
-import play.api.mvc.Controller
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
+import play.api.mvc.{DiscardingCookie, Controller}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import com.gu.membership.salesforce._
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
 
-import actions.MemberRequest
-import forms.MemberForm._
-import model.StripeSerializer._
-import model._
-import services._
 import actions._
+import forms.MemberForm._
+import model.{Zuora, PageInfo, FriendTierPlan}
+import services.{MemberService, IdentityApi, IdentityService}
 
 trait DowngradeTier {
   self: TierController =>
@@ -43,12 +42,20 @@ trait UpgradeTier {
   self: TierController =>
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
+
+    def futureCustomerOpt = request.member match {
+      case paidMember: PaidMember =>
+        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+      case _: FreeMember => Future.successful(None)
+    }
+
     if (request.member.tier < tier) {
       for {
+        customerOpt <- futureCustomerOpt
         user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo))
+        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
       }
     }
     else
@@ -56,21 +63,30 @@ trait UpgradeTier {
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
-    request.member match {
-      case freeMember: FreeMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), doUpgrade(freeMember, tier))
-      case _ => Future.successful(NotFound)
-    }
-  }
+    val identityRequest = IdentityRequest(request)
 
-  private def doUpgrade(freeMember: FreeMember, tier: Tier)(formData: PaidMemberChangeForm)(implicit request: MemberRequest[_, _]) = {
-    MemberService.upgradeSubscription(freeMember, request.user, tier, formData, IdentityRequest(request))
-      .map { _ => Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url)) }
-      .recover {
-        case error: Stripe.Error => Forbidden(Json.toJson(error))
-        case error: Zuora.ResultError => Forbidden
-        case error: ScalaforceError => Forbidden
-      }
+    def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
+    } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
+
+    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = for {
+      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, form, identityRequest)
+    } yield Redirect(routes.TierController.upgradeThankyou(tier))
+
+    val futureResult = request.member match {
+      case freeMember: FreeMember =>
+        freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
+
+      case paidMember: PaidMember =>
+        Future.successful(NotFound)
+        //paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+    }
+
+    futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
+      case error: Stripe.Error => Forbidden(Json.toJson(error))
+      case error: Zuora.ResultError => Forbidden
+      case error: ScalaforceError => Forbidden
+    }
   }
 
   def upgradeThankyou(tier: Tier) = Joiner.thankyou(tier, upgrade=true)

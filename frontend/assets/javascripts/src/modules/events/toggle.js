@@ -7,7 +7,7 @@
 //     * data-toggle-label is optional.
 //     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
 
-define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalytics) {
+define(['$', 'bean'], function ($, bean) {
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',
         TOGGLE_DATA_ELM     = 'toggle',
@@ -24,7 +24,6 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
             $elem.toggleClass(TOGGLE_CLASS);
 
             toggleLabel($elem);
-            trackUsage($elem, toggleElmId);
         };
     };
 
@@ -36,12 +35,7 @@ define(['$', 'bean', 'src/utils/analytics/ga'], function ($, bean, googleAnalyti
         }
     };
 
-    var trackUsage = function($elem, id) {
-        var hasToggled = ($elem.hasClass(TOGGLE_CLASS));
-        googleAnalytics.trackEvent('Toggle element', id, (hasToggled ? 'Show' : 'Hide'));
-    };
-
-     var hideToggleElements = function () {
+    var hideToggleElements = function () {
         var toggleContainers = document.querySelectorAll(ELEMENTS_TO_TOGGLE);
         $(toggleContainers).hide();
     };

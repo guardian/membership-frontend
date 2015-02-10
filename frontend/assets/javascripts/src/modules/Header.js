@@ -18,9 +18,7 @@ define([
             IDENTITY_ICON: '.js-identity-icon',
             IDENTITY_POP_UP_NAV: '.js-profile-nav-popup',
             COMMENT_ACTIVITY_LINK: '.js-comment-activity',
-            EDIT_PROFILE_LINK: '.js-edit-profile',
-            USER_ICON: '.js-user-icon',
-            USER_DETAIL: '.js-user-detail'
+            EDIT_PROFILE_LINK: '.js-edit-profile'
         },
         text: {
             SIGNED_IN_PREFIX: 'You are signed in as'
@@ -62,9 +60,7 @@ define([
                 e.stopImmediatePropagation();
 
                 config.DOM.IDENTITY_POP_UP_NAV.toggleClass('is-hidden');
-                config.DOM.IDENTITY_ICON.toggleClass('menu-item--active');
-                config.DOM.USER_ICON.toggleClass('control--active');
-                config.DOM.USER_DETAIL.toggleClass('control--active');
+                config.DOM.IDENTITY_ICON.toggleClass('is-active');
 
                 self.setMenuListener.call(self, config.DOM.IDENTITY_POP_UP_NAV);
             }

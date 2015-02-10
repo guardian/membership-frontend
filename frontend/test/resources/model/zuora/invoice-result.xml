@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:queryResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:result>
+                <ns1:done>true</ns1:done>
+                <ns1:queryLocator xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1"/>
+                <ns1:records xmlns:ns2="http://object.api.zuora.com/"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:InvoiceItem">
+                    <ns2:Id>2c92c0f94b34f993014b4a1c3b0004b6</ns2:Id>
+                    <ns2:ChargeAmount>450</ns2:ChargeAmount>
+                    <ns2:ChargeNumber>C-00014202</ns2:ChargeNumber>
+                    <ns2:ServiceEndDate>2016-02-01T00:00:00.000-08:00</ns2:ServiceEndDate>
+                    <ns2:ServiceStartDate>2015-02-02T00:00:00.000-08:00</ns2:ServiceStartDate>
+                    <ns2:TaxAmount>90</ns2:TaxAmount>
+                    <ns2:ProductName>Patron</ns2:ProductName>
+                </ns1:records>
+                <ns1:records xmlns:ns2="http://object.api.zuora.com/"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:InvoiceItem">
+                    <ns2:Id>2c92c0f94b34f993014b4a1c3b0104b7</ns2:Id>
+                    <ns2:ChargeAmount>-112.5</ns2:ChargeAmount>
+                    <ns2:ChargeNumber>C-00014201</ns2:ChargeNumber>
+                    <ns2:ServiceEndDate>2016-02-01T00:00:00.000-08:00</ns2:ServiceEndDate>
+                    <ns2:ServiceStartDate>2015-02-02T00:00:00.000-08:00</ns2:ServiceStartDate>
+                    <ns2:TaxAmount>-22.5</ns2:TaxAmount>
+                    <ns2:ProductName>Partner</ns2:ProductName>
+                </ns1:records>
+                <ns1:size>2</ns1:size>
+            </ns1:result>
+        </ns1:queryResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

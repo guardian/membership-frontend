@@ -1,4 +1,7 @@
-define(['stripe'], function (stripe) {
+define([
+    'stripe',
+    'src/modules/form/validation/display'
+], function (stripe, display) {
     'use strict';
 
     /**
@@ -20,25 +23,41 @@ define(['stripe'], function (stripe) {
     };
 
     /**
-     * use stripe lib utility to check for a valid looking month value pre fill year with current year as the
-     * select will give us a >= currentYear so here we only want to check the month is >= currentMonth
+     * use stripe lib utility to check for a valid looking date.
+     * If the date is valid then flush errors for both the month and year when month input is validated as we need
+     * to treat month/year inputs as a pair for validation
      * @param monthElem
      * @returns {*}
      */
     var validCreditCardMonth = function (monthElem) {
-        var now = new Date();
-        return stripe.card.validateExpiry(monthElem.value, now.getFullYear().toString());
+        var yearElem = document.querySelector('.js-credit-card-exp-year');
+        var isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+
+        if (isValid) {
+            // treat month/year inputs as a pair if month validates both month and year are valid so flush errors
+            display.flushErrIds([monthElem.id, yearElem.id]);
+        }
+
+        return isValid;
     };
 
     /**
-     * use stripe lib utility to check for a valid looking year value pre fill month with monthElem.value here we only
-     * want to check the year is >= currentYear
+     * use stripe lib utility to check for a valid looking date.
+     * If the date is valid then flush errors for both the month and year when year input is validated as we need
+     * to treat month/year inputs as a pair for validation
      * @param yearElem
      * @returns {*}
      */
     var validCreditCardYear = function (yearElem) {
         var monthElem = document.querySelector('.js-credit-card-exp-month');
-        return stripe.card.validateExpiry(monthElem.value, yearElem.value);
+        var isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+
+        if (isValid) {
+            // treat month/year inputs as a pair if year validates both year and month are valid so flush errors
+            display.flushErrIds([monthElem.id, yearElem.id]);
+        }
+
+        return isValid;
     };
 
     return {

@@ -1,6 +1,7 @@
 require([
-    'src/utils/analytics/setup',
     'ajax',
+    'src/utils/analytics/setup',
+    'src/modules/metrics',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/events/toggle',
@@ -16,12 +17,14 @@ require([
     'src/utils/modal',
     'src/utils/form/processSubmit',
     'src/modules/form',
+    'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
 ], function(
-    analytics,
     ajax,
+    analytics,
+    metrics,
     Cta,
     filter,
     toggle,
@@ -36,7 +39,8 @@ require([
     modal,
     patterns,
     processSubmit,
-    form
+    form,
+    metrics
 ) {
     'use strict';
 
@@ -50,6 +54,7 @@ require([
     ajax.init({page: {ajaxUrl: ''}});
 
     analytics.init();
+    metrics.init();
 
     // Global
     toggle.init();
@@ -77,5 +82,8 @@ require([
 
     // Pattern library
     patterns.init();
+
+    // Metrics
+    metrics.init();
 
 });

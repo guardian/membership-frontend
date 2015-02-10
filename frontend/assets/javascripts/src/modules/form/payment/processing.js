@@ -52,13 +52,14 @@ define([
      * @param response
      */
     var stripeResponseHandler = function (status, response) {
+        var data, errMsg;
         if (response.error) {
-            var errMsg = paymentErrorMessages.getMessage(response.error);
+            errMsg = paymentErrorMessages.getMessage(response.error);
             if (errMsg) {
                 handleError(errMsg);
             }
         } else {
-            var data = serializer(utilsHelper.toArray(form.elem.elements), { 'payment.token': response.id });
+            data = serializer(utilsHelper.toArray(form.elem.elements), { 'payment.token': response.id });
 
             loader.setProcessingMessage('Making payment...');
 

@@ -1,7 +1,15 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, isPrimary: Boolean = false)
 
 @for(ticket <- event.generalReleaseTicket) {
-    <div class="price-info-inline">
+    <div class="price-info-inline@if(isPrimary){ price-info-inline--primary}" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+
+        <meta itemprop="url" content="@event.memUrl">
+        @if(event.isSoldOut) {
+            <meta itemprop="availability" content="http://schema.org/SoldOut">
+        } else {
+            <meta itemprop="availability" content="http://schema.org/InStock">
+        }
+
         @if(ticket.free) {
             <div class="price-info-inline__value">Free</div>
         } else {

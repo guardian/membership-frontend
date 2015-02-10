@@ -1,17 +1,14 @@
 package services.zuora
 
 import com.gu.membership.salesforce.MemberId
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.zuora.Address
+import forms.MemberForm.NameForm
+import model.Zuora._
+import org.joda.time.DateTime
+import services.zuora.ZuoraServiceHelpers._
 
 import scala.xml.{Elem, Null}
-
-import org.joda.time.DateTime
-
-import com.gu.membership.zuora.Address
-
-import forms.MemberForm.NameForm
-import model.Stripe
-import model.Zuora._
-import services.zuora.ZuoraServiceHelpers._
 
 trait ZuoraAction[T <: ZuoraResult] {
   protected val body: Elem

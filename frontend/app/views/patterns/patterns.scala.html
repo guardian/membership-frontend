@@ -131,49 +131,35 @@
         </table>
     }
 
-    @pattern("Lists - Inline List") {
-        <ul class="inline-list">
-            <li class="inline-list__item"><a href="#">Item 1</a></li>
-            <li class="inline-list__item"><a href="#">Item 2</a></li>
-            <li class="inline-list__item"><a href="#">Item 3</a></li>
-        </ul>
-    }
-
-    @pattern("Lists - Inline List w/Dividers", "Inline list with divider modifier") {
-        <ul class="inline-list inline-list--divided">
-            <li class="inline-list__item"><a href="#">Item 1</a></li>
-            <li class="inline-list__item"><a href="#">Item 2</a></li>
-            <li class="inline-list__item"><a href="#">Item 3</a></li>
-        </ul>
-    }
-
-    @pattern("Headings - Section", "h-section") {
-        <h3 class="h-section">Section Heading</h3>
-    }
-
-    @pattern("Action - Primary") {
-        <a class="action" href="#">Action</a>
-    }
-
-    @pattern("Action - Secondary") {
-        <a class="action action--secondary-button" href="#">Action</a>
-    }
-
-    @pattern("Action - Full Width", "Full width button modifier") {
-        <a class="action u-fullwidth" href="#">Action</a>
-    }
-
-    @pattern("Action Proceed") {
-        <a class="action-proceed" href="#">Action</a>
+    @pattern("Actions") {
+        <p><button class="action">Action</button></p>
+        <p><a class="action action--snap" href="#">
+            <span class="action__label">
+                Snap Action
+            </span>
+        </a></p>
+        <p><button class="action u-fullwidth">Action w/ full-width modifier</button></p>
+        <p><button class="action" disabled>Disabled Action</button></p>
+        <p><button class="action action--secondary">Secondary Action</button></p>
+        <p><button class="action action--secondary">
+            Secondary Action + Icon
+            @fragments.actionIcon("arrow-right")
+        </button></p>
+        <p><button class="action action--toggle js-toggle">Toggle Action</button></p>
+        <p><a class="action-proceed" href="#">Proceed</a></p>
+        <p><button class="action action--booking">Booking Action</button></p>
+        <div class="l-inset tone-guardian-live">
+            <button class="action action--external u-no-margin">External Action</button>
+        </div>
     }
 
     @pattern("Toggle Component - Button", "JS toggle component") {
-        <button class="js-toggle action-toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <button class="action action--toggle js-toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
         <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
     @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
-        <button class="js-toggle action-toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
+        <button class="action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
         <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
     }
 
@@ -189,6 +175,22 @@
                 <button class="action u-no-bottom-margin js-modal-cta" data-modal="js-change-email-modal" type="submit">Change email for me</button>
             </form>
         </div>
+    }
+
+    @pattern("Lists - Inline List") {
+        <ul class="inline-list">
+            <li class="inline-list__item"><a href="#">Item 1</a></li>
+            <li class="inline-list__item"><a href="#">Item 2</a></li>
+            <li class="inline-list__item"><a href="#">Item 3</a></li>
+        </ul>
+    }
+
+    @pattern("Lists - Inline List w/Dividers", "Inline list with divider modifier") {
+        <ul class="inline-list inline-list--divided">
+            <li class="inline-list__item"><a href="#">Item 1</a></li>
+            <li class="inline-list__item"><a href="#">Item 2</a></li>
+            <li class="inline-list__item"><a href="#">Item 3</a></li>
+        </ul>
     }
 
     @pattern("Page Header") {
@@ -305,10 +307,6 @@
 
     @pattern("Event – Stats", "Key stats for an event (location and time), used in Event Snapshot.") {
         @fragments.event.stats(eventPortfolio.orderedEvents.head)
-    }
-
-    @pattern("Event – Price Info", "Price for an event, used in Event Snapshot.") {
-        @fragments.pricing.priceInfoEvent(eventPortfolio.orderedEvents.head)
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
