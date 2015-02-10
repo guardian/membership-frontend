@@ -8,7 +8,7 @@
 @import model.Eventbrite._
 @import model.RichEvent._
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
