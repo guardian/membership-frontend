@@ -1,0 +1,7 @@
+@(userFields: model.PrivateFields)
+
+<div class="address">
+    @userFields.address1@for( address2 <- userFields.address2 ) {, @address2,}<br/>
+    @for( town <- userFields.address3 ) {@town}<br/>
+    @userFields.postcode
+</div>

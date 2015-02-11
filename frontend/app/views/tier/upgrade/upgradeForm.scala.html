@@ -47,29 +47,6 @@
                         userFields.billingCountry
                     )
                     @fragments.form.cardDetail(targetTier, paidPreviewOpt.map(_.card))
-
-
-                    <section class="page-section page-section--bordered">
-                        <div class="page-section__lead-in">
-                            <h2 class="page-section__headline">Your payment breakdown</h2>
-                        </div>
-                        <div class="page-section__content">
-                            <table class="table table--responsive-font table--striped" role="grid">
-                                <tr>
-                                    <th role="rowheader">Tier</th>
-                                    <th role="rowheader">Charge amount</th>
-                                </tr>
-                                @for(
-                                    invoiceItem <- paidPreviewOpt.map(_.invoiceItems).getOrElse(Nil)
-                                ) {
-                                    <tr role="row">
-                                        <td>@invoiceItem.productId</td>
-                                        <td>@invoiceItem.price.pretty</td>
-                                    </tr>
-                                }
-                            </table>
-                        </div>
-                    </section>
                     @fragments.form.submit("Pay", "now", Some(targetTier))
                 </form>
 
