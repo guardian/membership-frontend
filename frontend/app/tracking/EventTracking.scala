@@ -73,11 +73,12 @@ case class EventSubject(salesforceContactId: String,
           }
         } ++
         tierAmendment.map { tierAmend =>
-          "tierAmendment" -> EventTracking.setSubMap {
+          "amendTier" -> EventTracking.setSubMap {
             Map(
-              "tierFrom" -> tierAmend.tierFrom.name,
-              "tierTo" -> tierAmend.tierTo.name
-            ) ++ tierAmend.effectiveFromDate.map("effectiveFromDate" -> _)
+              "from" -> tierAmend.tierFrom.name,
+              "to" -> tierAmend.tierTo.name
+            ) ++
+            tierAmend.effectiveFromDate.map("effectiveDate" -> _)
           }
         }
 
@@ -110,6 +111,11 @@ object EventTracking {
   val url = Config.trackerUrl
 
   def setSubMap(in:Map[String, Any]): JMap[String, Object] = {
-    mapAsJavaMap(in).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]
+    println("--- in")
+    println(in)
+    val x = mapAsJavaMap(in).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]
+    println("===out")
+    println(x)
+    x
   }
 }
