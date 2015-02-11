@@ -60,7 +60,7 @@
 
         @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
-            @fragments.header()
+            @fragments.header(pageInfo)
             <div class="page-side-margins" id="container">
             @if(isBrochure != true) {
                 <div class="page-container">
@@ -75,7 +75,7 @@
         </div>
 
         @fragments.unsupportedBrowser()
-        @fragments.footer()
+        @fragments.footer(pageInfo)
 
         @fragments.javaScriptRequireJS()
 

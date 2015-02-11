@@ -1,4 +1,4 @@
-@()
+@(pageInfo: model.PageInfo)
 
 @import configuration.Config
 @import views.support.Asset
@@ -91,6 +91,6 @@
                 <i></i>
             </span>
         </button>
-        @fragments.nav()
+        @fragments.nav(pageInfo)
     </div>
 </header>
