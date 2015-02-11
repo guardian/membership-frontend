@@ -2,10 +2,11 @@ package services
 
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
-
+import com.gu.membership.stripe.{Stripe, StripeService}
+import com.gu.monitoring.StatusMetrics
 import configuration.Config
-import model.Stripe.Card
-import model.{IdMinimalUser, FriendTierPlan, TierPlan}
+import model.{FriendTierPlan, IdMinimalUser, TierPlan}
+import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
 import services.zuora.ZuoraService
 
@@ -15,7 +16,11 @@ import scala.concurrent.Future
 object TouchpointBackend {
 
   def apply(touchpointBackendConfig: TouchpointBackendConfig): TouchpointBackend = {
-    val stripeService = new StripeService(touchpointBackendConfig.stripe)
+
+    val stripeService = new StripeService(touchpointBackendConfig.stripe, new TouchpointBackendMetrics with StatusMetrics {
+      val backendEnv = touchpointBackendConfig.stripe.envName
+      val service = "Stripe"
+    })
 
     val zuoraService = new ZuoraService(touchpointBackendConfig.zuora)
 
@@ -44,7 +49,7 @@ case class TouchpointBackend(
 
   val subscriptionService = new SubscriptionService(zuoraService.apiConfig.productRatePlans, zuoraService)
 
-  def updateDefaultCard(member: PaidMember, token: String): Future[Card] = {
+  def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
     for {
       customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
       memberId <- memberRepository.upsert(member.identityId, Json.obj(Keys.DEFAULT_CARD_ID -> customer.card.id))
@@ -60,11 +65,11 @@ case class TouchpointBackend(
     }
   }
 
-  def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
+  def downgradeSubscription(member: Member): Future[String] = {
     for {
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
-      memberRepository.metrics.putDowngrade(tierPlan.tier)
+      memberRepository.metrics.putDowngrade(member.tier)
       ""
     }
   }

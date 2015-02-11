@@ -9,7 +9,7 @@
 
 @main("Enter Details | Staff") {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         <section class="form-header">
             <h1 class="form-headline">Address</h1>
@@ -33,7 +33,7 @@
 
             <div class="form-section__content">
 
-                <form action="@routes.Joiner.joinStaff" method="POST" id="payment-form" class="form js-staff-form">
+                <form action="@routes.Joiner.joinStaff" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                     @fragments.form.addressDetail(

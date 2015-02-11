@@ -5,95 +5,53 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 
-@main("Patrons", isBrochure = true, htmlClass = "patron-page", pageInfo=pageInfo) {
+@main("Patrons", pageInfo=pageInfo) {
 
-    @* ===== Patron hero ===== *@
-
-    <div class="home-slice home-slice--epic u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h1 class="home-slice__headline">Patrons of the Guardian</h1>
+    @* ===== About Patronage ===== *@
+    <div class="page-slice l-constrained l-side-margins">
+        @fragments.promos.promoPrimary(title=Html("Patrons of<br>the Guardian"), imageUrl="images/patrons/patrons-intro-1140.jpg", isLead=true) {
+            <div class="text-feature">
+                <p>The Patron tier is for those who care deeply about the Guardian’s journalism and the impact it has on the world.</p>
+                <p>From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
             </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">The Patron tier is for those who care deeply about the Guardian’s journalism and the impact it has on the world.</p>
-                <p class="home-slice__copy">From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
-
-                @* === Patron === *@
-
-                <div class="join-today__join-box join-today__join-box--stripped-down-standalone">
-                    <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
-                    @fragments.pricing.priceInfo(Tier.Patron)
-                    <div class="join-today__teaser">
-                        <a class="action" href="/join/patron/enter-details">
-                            <span class="action__text js-opt-become-member" data-link-name="Become a Patron | Introduction">Become a Patron today</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+            @fragments.tier.packagePromo(Tier.Patron, showDescription=false, modifierClass=Some("package-promo--spread"))
+        }
     </div>
 
     @* ===== Ensuring our independence ===== *@
-
-    <div class="home-slice u-cf home-slice--red home-slice--patron-two">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Ensuring our independence</h2>
+    <div class="page-slice l-constrained l-side-margins">
+        @fragments.promos.promoPrimary(title=Html("Ensuring our<br>independence"), imageUrl="images/patrons/patrons-alan-1140.jpg", toneClass=Some("tone-trans-brand-dark")) {
+            <div class="text-feature">
+                <p>The Guardian has no proprietor. Our editor has total independence.</p>
+                <p>The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>
             </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">The Guardian has no proprietor.  Our editor has total independence.</p>
-                <p class="home-slice__copy">The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>
-            </div>
-        </div>
+        }
     </div>
 
-    @* ===== Founding Members ===== *@
-
-    <div class="home-slice home-slice--content u-cf">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Backstage pass to the Guardian</h2>
-            </div>
-            <div class="home-slice__copy-block">
-                <div class="home-slice__media">
-                    <img src="@Asset.at("images/homeslice/patrons/740-backstage.jpg")" alt="" class="responsive-img" />
-                </div>
-                <div class="home-slice__offset-copy">
-                    <p class="home-slice__copy">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
-                    <a class="action home-slice__action js-opt-become-member" data-link-name="Become a Patron | Backstage Pass" href="/join/patron/enter-details">Become a Patron today</a>
-                </div>
-            </div>
-        </div>
+    @* ===== Backstage Pass ===== *@
+    <div class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoSecondary(Html("Backstage pass to<br>the Guardian"), imageUrl="images/patrons/patrons-backstage-740.jpg", toneClass=Some("tone-brand")) {
+            <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
+            <a class="action u-no-top-margin"
+               href="@routes.Joiner.enterDetails(Tier.Patron)"
+               data-metric-trigger="click"
+               data-metric-category="join"
+               data-metric-action="patron"
+            >Become a Patron today</a>
+        }
     </div>
 
-    @* ===== Backstage pass to the Guardian ===== *@
-
-    <div class="home-slice u-cf home-slice--green home-slice--patron-four">
-        <div class="home-slice__inner u-cf">
-            <div class="home-slice__headline-block">
-                <h2 class="home-slice__headline">Choose to get involved</h2>
-            </div>
-            <div class="home-slice__copy-block">
-                <p class="home-slice__copy">Patrons are crucial to the future development of Membership, and there will be opportunities to get involved.  From hosting your own events to connecting members to one another, you will shape the future of the community.</p>
-                @* === Patron === *@
-
-                <div class="join-today__join-box join-today__join-box--stripped-down-standalone">
-                    <div class="join-today__join-box--header join-today__join-box--header--patron">Patron</div>
-                    @fragments.pricing.priceInfo(Tier.Patron)
-                    <div class="join-today__teaser">
-                        <a class="action" href="/join/patron/enter-details">
-                            <span class="action__text js-opt-become-member" data-link-name="Become a Patron | Get Involved">Become a Patron today</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @* ===== Get Involved ===== *@
+    <div class="page-slice l-constrained l-side-margins">
+        @fragments.promos.promoPrimary(title=Html("Choose to get involved"), imageUrl="images/patrons/patrons-get-involved-1140.jpg", toneClass=Some("tone-trans-brand-dark")) {
+            <p class="text-feature">Patrons are crucial to the future development of Membership, and there will be opportunities to get involved.  From hosting your own events to connecting members to one another, you will shape the future of the community.</p>
+            @fragments.tier.packagePromo(Tier.Patron, showDescription=false, modifierClass=Some("package-promo--spread"))
+        }
     </div>
 
     @* ===== Join Today ===== *@
-
-    <div class="page-slice page-slice--split tone-tint">
-        <div class="page-slice__inner l-constrained">
+    <div class="page-slice page-slice--split tone-tint l-constrained">
+        <div class="page-slice__inner">
             <h2 class="page-slice__headline">Not ready to become a Patron yet? Join as a Friend or a Partner</h2>
             <div class="page-slice__content">
                 <ul class="grid grid--bordered grid--2up-stacked">

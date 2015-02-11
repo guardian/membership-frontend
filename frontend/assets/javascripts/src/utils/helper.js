@@ -2,25 +2,25 @@ define(function () {
 
     /**
      * get parent by className
-     * @param $element
+     * @param element
      * @param parentClass
-     * @returns {*}
+     * @returns element
      */
-    var getSpecifiedParent = function ($element, parentClass) {
+    var getSpecifiedParent = function (element, parentClass) {
 
         var i = 0;
 
         do {
-            $element = $element.parent();
+            element = element.parentNode;
 
             if (i > 10) {
                 throw 'You are either traversing a lot of elements! Is this wise? Or your $element argument is undefined';
             }
             i++;
 
-        } while ($element && !$element.hasClass(parentClass));
+        } while (element && !element.classList.contains(parentClass));
 
-        return $element;
+        return element;
     };
 
 
@@ -42,6 +42,7 @@ define(function () {
         return height;
     };
 
+    // TODO: Replace with lodash-amd
     var toArray = function (nodeList) {
         return Array.prototype.slice.call(nodeList);
     };

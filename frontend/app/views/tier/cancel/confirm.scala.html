@@ -6,7 +6,7 @@
 
 @main("Cancel Tier") {
 
-    <main role="main" class="page-content page-content--padded">
+    <main role="main" class="page-content page-content--padded l-constrained">
 
         @fragments.layout.sectionHeader("We don't like goodbyes&hellip;")
 
@@ -22,10 +22,10 @@
             </div>
         </div>
 
-        <form method="POST" action="/tier/cancel/confirm" class="js-form">
+        <form method="POST" action="/tier/cancel/confirm" class="js-processing-form">
             @CSRF.formField
             <div class="u-align-right">
-                <button id="qa-confirm-cancel" class="action js-form-submit" type="submit">Cancel membership</button>
+                <button id="qa-confirm-cancel" class="action js-processing-form-submit" type="submit">Cancel membership</button>
                 <div class="is-hidden js-loader-container">
                     <img src="@Asset.at("images/wait.gif")" alt="Loading..."/>
                     <span class="loader-message">Processing...</span>

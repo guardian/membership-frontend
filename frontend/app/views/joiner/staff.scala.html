@@ -9,6 +9,7 @@
 @import configuration.Config
 @import helper._
 @import play.twirl.api.Html
+@import model.Benefits
 @import model.Faq
 
 @signPostItem(btnText: String, btnSrc: String, title: String = "")(description: Html) = {
@@ -25,7 +26,7 @@
 
 @main("Staff Membership") {
 
-    <main class="page-content" role="main">
+    <main class="page-content l-constrained" role="main">
 
         @for(flashMsg <- flashMessage) {
             @fragments.notifications.flashMessage(flashMsg)
@@ -69,8 +70,13 @@
 
                     @if(staffEmail.emailsMatch) {
                         <p>Join Guardian Staff Membership as <strong>@identityEmail</strong></p>
-                        <a class="action u-no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
-                        <a class="action action--secondary-button u-no-bottom-margin" href="@Config.idWebAppUrl/signout">Sign out</a>
+                        <div class="action-group">
+                            <a class="action u-no-bottom-margin" href="@routes.Joiner.enterStaffDetails">Join</a>
+                            <a class="action action--secondary u-no-bottom-margin" href="@Config.idWebAppUrl/signout">
+                                Sign out
+                                @fragments.actionIcon("arrow-right")
+                            </a>
+                        </div>
                     } else {
                         <p>Before joining you must have a profile on <strong>theguardian.com</strong> set up using your work email address <strong>(@staffEmail.googleEmail)</strong></p>
 
@@ -107,7 +113,13 @@
                 <h2 class="page-section__headline">Benefits</h2>
             </div>
             <div class="page-section__content">
-                @fragments.benefits.detail(Tier.Partner)
+                <ul class="grid grid--3up">
+                    @for(benefit <- Benefits.details(Tier.Partner).list) {
+                        <li class="grid__item">
+                            @fragments.benefits.item(benefit=benefit)
+                        </li>
+                    }
+                </ul>
             </div>
         </section>
 

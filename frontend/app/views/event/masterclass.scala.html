@@ -7,7 +7,9 @@
 
 @import model.RichEvent.MasterclassEvent
 
-@main("Masterclasses", htmlClass="events-bg theme--masterclasses", pageInfo=pageInfo) {
+@main("Masterclasses", pageInfo=pageInfo) {
+
+    <main role="main" class="l-constrained">
 
     @fragments.event.headerBar(
         "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
@@ -54,9 +56,13 @@
                     <input type="text"
                            class="filter-search__input"
                            id="js-filter"
-                           data-filter-field="title"
                            placeholder="Filter by title"
-                           autocomplete="off" />
+                           autocomplete="off"
+                           data-filter-field="title"
+                           data-metric-trigger="keyup"
+                           data-metric-category="filter"
+                           data-metric-action="search"
+                    />
                     <span class="filter-search__icon">
                         @fragments.inlineIcon("search")
                     </span>
@@ -67,5 +73,7 @@
     </div>
 
     @views.html.event.list(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
+
+    </main>
 
 }

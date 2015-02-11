@@ -1,0 +1,12 @@
+@(event: model.RichEvent.RichEvent, extraClasses: Seq[String] = Nil)
+
+@import configuration.Config
+
+<a class="action action--external @extraClasses.mkString(" ")"
+   href="@Config.eventbriteWaitlistUrl(event)"
+   data-metric-trigger="click"
+   data-metric-category="events"
+   data-metric-action="waitlist"
+>
+    Add me to the waitlist
+</a>

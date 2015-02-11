@@ -1,4 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier)
+@(tier: com.gu.membership.salesforce.Tier, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
 
 @import views.support.selectDates
 @import views.support.Asset
@@ -46,100 +46,122 @@
     </div>
 
     <div class="fieldset__fields">
+        @cardOpt.fold {
+            <div class="form-field">
 
-        <div class="form-field">
+                <div class="u-cf">
 
-            <div class="u-cf">
+                    <label class="label form-note form-note--left" for="cc-num">Card number</label>
 
-                <label class="label form-note form-note--left" for="cc-num">Card number</label>
-
-                <div class="form-note form-note--right">
-                    <ul class="inline-list">
-                        <li class="u-align-middle inline-list__item">
-                            We accept
-                        </li>
-                        <li class="u-align-middle inline-list__item">
-                            <i class="sprite-card sprite-card--small sprite-card--visa"></i>
-                        </li>
-                        <li class="u-align-middle inline-list__item">
-                            <i class="sprite-card sprite-card--small sprite-card--mastercard"></i>
-                        </li>
-                        <li class="u-align-middle inline-list__item">
-                            <i class="sprite-card sprite-card--small sprite-card--american-express"></i>
-                        </li>
-                    </ul>
+                    <div class="form-note form-note--right">
+                        <ul class="inline-list">
+                            <li class="u-align-middle inline-list__item">
+                                We accept
+                            </li>
+                            <li class="u-align-middle inline-list__item">
+                                <i class="sprite-card sprite-card--small sprite-card--visa"></i>
+                            </li>
+                            <li class="u-align-middle inline-list__item">
+                                <i class="sprite-card sprite-card--small sprite-card--mastercard"></i>
+                            </li>
+                            <li class="u-align-middle inline-list__item">
+                                <i class="sprite-card sprite-card--small sprite-card--american-express"></i>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+
+                <div class="credit-card-container">
+                    <i class="credit-card--input-visualisation sprite-card sprite-card--unknown js-credit-card-image"></i>
+                    <input type="tel"
+                           size="20"
+                           data-stripe="number"
+                           class="input-text credit-card-input js-credit-card-number"
+                           id="cc-num"
+                           placeholder="0000 0000 0000 0000"
+                           maxlength="19"
+                           autocomplete="off"
+                           data-validation="validCreditCardNumber"/>
+                    @fragments.form.errorMessage("Sorry, the card number that you have entered is incorrect. Please check and retype.")
+                </div>
+
             </div>
 
-            <div class="credit-card-container">
-                <i class="credit-card--input-visualisation sprite-card sprite-card--unknown js-credit-card-image"></i>
+            <div class="form-field">
+
+                <label class="label" for="cc-cvc"><span>Security code</span></label>
                 <input type="tel"
-                       size="20"
-                       data-stripe="number"
-                       class="input-text credit-card-input js-credit-card-number"
-                       id="cc-num"
-                       placeholder="0000 0000 0000 0000"
-                       maxlength="19"
+                       size="4"
+                       data-stripe="cvc"
+                       class="input-text input-text--small js-credit-card-cvc"
+                       id="cc-cvc"
+                       placeholder="CVC"
+                       maxlength="4"
                        autocomplete="off"
-                       data-validation="creditCardNumber"/>
-            </div>
-
-        </div>
-
-        <div class="form-field">
-
-            <label class="label" for="cc-cvc"><span>Security code</span></label>
-            <input type="tel"
-                   size="4"
-                   data-stripe="cvc"
-                   class="input-text input-text--small js-credit-card-cvc"
-                   id="cc-cvc"
-                   placeholder="CVC"
-                   maxlength="4"
-                   autocomplete="off"
-                   data-validation="creditCardCVC"/>
-            <a class="cvc-cta text-link js-cvc-cta" href="#">What's this?</a>
-            <div class="cvc u-h u-cf js-cvc-image-container">
-                <div class="u-cf">
-                    <div class="cvc__image">
-                        <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                       data-validation="validCVC"/>
+                @fragments.form.errorMessage("Sorry, the security code that you have entered is incorrect. Please check and retype.")
+                <a class="cvc-cta text-link js-toggle" data-toggle="js-cvc-image-container" href="#">What's this?</a>
+                <div id="js-cvc-image-container" class="cvc u-cf" data-toggle-hidden>
+                    <div class="u-cf">
+                        <div class="cvc__image">
+                            <img src="@Asset.at("images/form/cvc-card.png")" alt="CVC explanation"/>
+                        </div>
+                        <div class="cvc__detail">
+                            <h3 class="cvc__heading">Visa, Mastercard</h3>
+                            <p class="cvc__body">
+                            The last 3 digits printed on the back within the signature strip
+                            </p>
+                        </div>
                     </div>
-                    <div class="cvc__detail">
-                        <h3 class="cvc__heading">Visa, Mastercard</h3>
-                        <p class="cvc__body">
-                        The last 3 digits printed on the back within the signature strip
-                        </p>
-                    </div>
-                </div>
-                <div class="u-cf">
-                    <div class="cvc__image">
-                        <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
-                    </div>
-                    <div class="cvc__detail">
-                        <h3 class="cvc__heading">American Express</h3>
-                        <p class="cvc__body">
-                        The 4 digits printed on the front above the card number
-                        </p>
+                    <div class="u-cf">
+                        <div class="cvc__image">
+                            <img src="@Asset.at("images/form/cvc-card-american-express.png")" alt="CVC explanation American Express"/>
+                        </div>
+                        <div class="cvc__detail">
+                            <h3 class="cvc__heading">American Express</h3>
+                            <p class="cvc__body">
+                            The 4 digits printed on the front above the card number
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-field">
-            <label class="label" for="cc-exp-month"><span>Expiry</span></label>
-            <select data-stripe="exp-month" id="cc-exp-month" class="js-credit-card-exp-month">
-                <option selected="selected">Month</option>
-                @for(month <- selectDates.validCardMonths){
-                <option value="@month">@month</option>
-                }
-            </select>
-            <span> / </span>
-            <select data-stripe="exp-year" id="cc-exp-year" class="js-credit-card-exp-year">
-                <option selected="selected">Year</option>
-                @for((year, formattedYear) <- selectDates.validCardYears){
-                <option value="@year">@formattedYear</option>
-                }
-            </select>
-        </div>
+            <div class="form-field">
+                <label class="label" for="cc-exp-month"><span>Expiry</span></label>
+                <select data-stripe="exp-month"
+                        id="cc-exp-month"
+                        data-validation="validCreditCardMonth"
+                        class="js-credit-card-exp-month">
+                    <option selected="selected">Month</option>
+                    @for(month <- selectDates.validCardMonths){
+                    <option value="@month">@month</option>
+                    }
+                </select>
+                <span> / </span>
+                <select data-stripe="exp-year"
+                        id="cc-exp-year"
+                        data-validation="validCreditCardYear"
+                        class="js-credit-card-exp-year">
+                    <option selected="selected">Year</option>
+                    @for((year, formattedYear) <- selectDates.validCardYears){
+                    <option value="@year">@formattedYear</option>
+                    }
+                </select>
+                @fragments.form.errorMessage("Sorry, the expiry date that you have entered is invalid. Please check and re-enter.")
+            </div>
+        } { card =>
+            <div class="form-field">
+
+                <div class="u-cf">
+
+                    <label class="label form-note">Card number</label>
+
+                    •••• •••• •••• •••• @card.last4
+                    <i class="sprite-card sprite-card--small sprite-card--@(card.issuer)"></i>
+
+                </div>
+            </div>
+        }
     </div>
 </fieldset>

@@ -9,7 +9,7 @@
 
 @main("Address details | Friend") {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         <section class="form-header">
             <h1 class="form-headline">Location</h1>
@@ -29,7 +29,7 @@
             </div>
 
             <div class="form-section__content">
-                <form action="@routes.Joiner.joinFriend" method="POST" id="payment-form" class="form js-address-form">
+                <form action="@routes.Joiner.joinFriend" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                     @fragments.form.addressDetail(

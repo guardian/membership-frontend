@@ -1,25 +1,22 @@
 package controllers
 
 import actions.Functions._
-
-import scala.concurrent.Future
-
-import play.api.mvc.{DiscardingCookie, Controller, Request, Result}
-import play.api.libs.json.Json
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.netaporter.uri.dsl._
-
-import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
-
 import actions._
+import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
+import com.gu.membership.stripe.Stripe
+import com.gu.membership.stripe.Stripe.Serializer._
+import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
-import model._
 import model.RichEvent._
-import model.StripeSerializer._
+import model._
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
+import play.api.mvc.{Controller, DiscardingCookie, Request, Result}
 import services._
 import services.EventbriteService._
+
+import scala.concurrent.Future
 
 trait Joiner extends Controller {
 
@@ -158,10 +155,10 @@ trait Joiner extends Controller {
     }
 
     for {
-      subscription <- request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(request.member)
+      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, subscription, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
+    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

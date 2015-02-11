@@ -6,7 +6,7 @@
 
 @main("Change Tier", htmlClass = "change-tier") {
 
-    <main role="main" class="page-content page-content--padded">
+    <main role="main" class="page-content page-content--padded l-constrained">
         <div class="content__container">
             <section class="content__section">
                 <a href="@Config.idWebAppUrl/membership/edit" class="action action--arrow-left action-cta--confirm">Edit profile</a>
@@ -18,7 +18,7 @@
             <div class="content__container">
                 <section class="package-list package-list--flex-box">
 
-                    @for(tier <- Tier.all) {
+                    @for(tier <- Tier.allPublic) {
                         @fragments.tier.benefits(Some(currentTier), tier)
                     }
 

@@ -5,32 +5,28 @@
 
 @main("Cancel Tier summary") {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
-        <section class="content__container content__container--slim">
+        @fragments.page.pageHeader("Sorry to see you go…", subscriptionDetailsOpt.map("You will continue to receive all the great Membership benefits until " + _.endDate.pretty))
 
-            @fragments.layout.sectionHeader("Sorry to see you go&hellip;")
-
-            @for(subscriptionDetails <- subscriptionDetailsOpt) {
-                <p>You will continue to receive all the great Membership benefits until @subscriptionDetails.endDate.pretty</p>
-
-                <h2 class="section-sub-headline">Current Membership Summary</h2>
-
-                <section>
-                    @fragments.tier.summary(subscriptionDetails)
-                </section>
-            }
-
-            @if(subscriptionDetailsOpt.isEmpty) {
-                <p>We are processing your cancellation and will send a confirmation email shortly.</p>
-            }
-
-            <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community</p>
-
-            <div class="content__container u-align-right">
-                <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta action-cta--confirm">My Profile</a>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Current Membership summary</h2>
             </div>
+            <div class="page-section__content">
 
+                @for(subscriptionDetails <- subscriptionDetailsOpt) {
+                    @fragments.tier.summary(subscriptionDetails)
+                }
+
+                @if(subscriptionDetailsOpt.isEmpty) {
+                    <p>We are processing your cancellation and will send a confirmation email shortly.</p>
+                }
+
+                <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
+
+                <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta">My Profile</a>
+            </div>
         </section>
 
     </main>

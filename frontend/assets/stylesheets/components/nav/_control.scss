@@ -1,87 +1,42 @@
 /* ==========================================================================
    Controls
    ========================================================================== */
-
-.control-container {
-    display: block;
-}
-.control-container:hover {
-    color: $white;
-
-    .control {
-        border-color: $white;
-    }
-    .control__info {
-        color: $white;
-    }
-    .icon-user-black {
-        @extend %icon-user-white;
-    }
-    .icon-g-black {
-        @extend %icon-g-white;
-    }
-}
-
 .control {
-    @extend %icon-holder-circle;
-    font-family: $f-serif-text;
-    font-size: rem(13px);
-    cursor: pointer;
-    outline: none;
+    color: $black;
+    display: table;
+    width: 100%;
+}
+.control__item {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: rem($gs-gutter / 4);
 }
 .control__info {
+    @include disable-user-select();
     @include fs-bodyHeading(1);
-    line-height: rem($gs-gutter * 1.75);
+    color: $black;
     text-overflow: ellipsis;
-    vertical-align: top;
     white-space: nowrap;
     overflow: hidden;
     text-align: left;
     max-width: rem($gs-gutter * 10);
-    padding-left: rem($gs-gutter / 4);
-    height: rem($gs-gutter * 1.75);
-    color: $black;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 .control__icon {
-    display: block;
-    text-align: center;
-    height: rem($gs-baseline * 2);
-    padding-top: rem($gs-baseline / 2);
+    color: $black;
 }
-.control--faq {
-    width: rem($gs-gutter + ($gs-baseline / 2));
-    height: rem($gs-gutter + ($gs-baseline / 2));
-    border-color: $mem-brandBlue;
-    position: absolute;
+
+/**
+ * Control, hover & active state
+ */
+.control:hover,
+.control.is-active {
+    color: $white;
 
     .control__icon {
-        padding-top: rem(3px);
+        border-color: $white;
     }
-}
-.control--no-border {
-    border: 0;
-}
-.control--active {
-    border-color: $white;
-    .control__info {
+    .control__info,
+    .control__icon {
         color: $white;
-    }
-}
-.control--cancel {
-    border: 1px solid $c-neutral3;
-
-    .control__icon {
-        padding-top: rem(4px);
-        opacity: .2;
-    }
-    &:hover {
-        border: 1px solid $c-neutral1;
-        .control__icon {
-            opacity: 1;
-        }
     }
 }

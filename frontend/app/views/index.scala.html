@@ -4,6 +4,8 @@
 
 @main("Home Page") {
 
+<main role="main" class="l-constrained">
+
     @* ===== Slideshow ===== *@
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
         @fragments.media.slideshowItem("https://media.guim.co.uk/eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368/{width}.jpg", "Guardian Live event: Pussy Riot - art, sex and disobedience")
@@ -16,7 +18,7 @@
 
     @* ===== Introduction ===== *@
     <section class="block-description block-description--right block-description--pull tier-hidden">
-        <p class="block-description__text">We're bringing the Guardian to life through live events and meet-ups. <a class="text-highlight" href="/join">Join and be part of the conversations that matter.</a></p>
+        <p class="block-description__text"><a class="text-highlight" href="/join">Join the Guardian.</a> Support open, independent journalism and experience it brought to life.</p>
         <a class="action u-no-bottom-margin" href="/join" id="qa-join">Join today</a>
     </section>
 
@@ -61,5 +63,7 @@
             </ul>
         </div>
     </section>
+
+</main>
 
 }

@@ -27,7 +27,7 @@
     }
 }
 .tone-trans-brand-dark {
-    background-color: transparentize($mem-brandBlueDark, .1);
+    background-color: transparentize(darken($mem-brandBlueDark, 10%), .1);
 }
 
 /* Live

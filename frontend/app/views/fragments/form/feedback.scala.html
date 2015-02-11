@@ -13,19 +13,19 @@
             <div>
                 <select name="category"
                         id="category"
-                        data-validation="required"
-                        data-error-message="Please select a feedback category"
+                        required
                         aria-required="true">
                     <option value="">Select feedback category</option>
                     <option>Suggest an improvement</option>
                     <option>Give general feedback</option>
                     <option>Accessibility issue</option>
                 </select>
+                @fragments.form.errorMessage("Please select a feedback category")
             </div>
         </div>
 
         <div class="form-field">
-            <label class="label" for="page">Which page on the web site are you referring to?</label>
+            <label class="label optional-marker" for="page">Which page on the web site are you referring to?</label>
             <input class="input-text" name="page" id="page" type="text"/>
             <div class="form-note">e.g. about membership</div>
         </div>
@@ -35,9 +35,9 @@
             <textarea name="feedback"
                       id="feedback"
                       class="input-textarea input-textarea--long"
-                      data-error-message="Please enter your comment"
-                      data-validation="required"
+                      required
                       aria-required="true"></textarea>
+            @fragments.form.errorMessage("Please enter your comment")
         </div>
 
     </div>
@@ -59,20 +59,23 @@
                    id="name"
                    class="input-text"
                    type="text"
-                   data-validation="required"
-                   data-error-message="Please enter your name"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your name")
         </div>
 
+        @* //TODO this email check needs to be done on the server
+        email regex taken from http://www.w3.org/TR/html-markup/input.email.html#input.email.attrs.value.single *@
         <div class="form-field">
             <label class="label" for="email">Email address</label>
             <input name="email"
                    id="email"
                    class="input-text"
                    type="email"
-                   data-validation="required"
-                   data-error-message="Please enter your email address"
+                   pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your email address")
         </div>
 
     </div>

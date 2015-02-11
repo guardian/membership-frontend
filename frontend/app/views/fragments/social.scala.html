@@ -4,19 +4,37 @@
 
 <ul class="social-list">
     <li class="social-list__item">
-        <a class="social-action social-action--email" target="_blank" href="mailto:?subject=@social.emailSubject&amp;body=@social.emailMessage">
+        <a class="social-action social-action--email"
+           target="_blank"
+           href="mailto:?subject=@social.emailSubject&amp;body=@social.emailMessage"
+           data-metric-trigger="click"
+           data-metric-category="social"
+           data-metric-action="email"
+        >
             <span class="u-h">Share via Email</span>
             @fragments.inlineIcon("share-email")
         </a>
     </li>
     <li class="social-list__item">
-        <a class="social-action social-action--facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl">
+        <a class="social-action social-action--facebook"
+           target="_blank"
+           href="https://www.facebook.com/sharer/sharer.php?u=@social.encodedFacebookUrl"
+           data-metric-trigger="click"
+           data-metric-category="social"
+           data-metric-action="facebook"
+        >
             <span class="u-h">Share on Facebook</span>
             @fragments.inlineIcon("share-facebook")
         </a>
     </li>
     <li class="social-list__item">
-        <a class="social-action social-action--twitter" target="_blank" href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername">
+        <a class="social-action social-action--twitter"
+           target="_blank"
+           href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername"
+           data-metric-trigger="click"
+           data-metric-category="social"
+           data-metric-action="twitter"
+        >
             <span class="u-h">Share on Twitter</span>
             @fragments.inlineIcon("share-twitter")
         </a>

@@ -2,14 +2,15 @@
     currentTier: com.gu.membership.salesforce.Tier,
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
-    pageInfo: model.PageInfo
+    pageInfo: model.PageInfo,
+    cardOpt: Option[com.gu.membership.stripe.Stripe.Card]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._
 
 @main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         <section class="page-header">
             <h1 class="page-headline">Payment</h1>
@@ -27,7 +28,7 @@
             <div class="form-section__content">
 
                 <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
-                      class="form js-stripe-form" data-change-to-tier="@targetTier">
+                      class="form js-form" data-change-to-tier="@targetTier">
                     @CSRF.formField
                     @fragments.form.addressDetail(
                         "Delivery address",
@@ -35,14 +36,16 @@
                         "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
                         userFields.postcode, userFields.address4, userFields.country
                     )
-                    @fragments.form.paymentOptions(targetTier)
+                    @if(cardOpt.isEmpty) {
+                        @fragments.form.paymentOptions(targetTier)
+                    }
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
                         userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
                         userFields.billingCountry
                     )
-                    @fragments.form.cardDetail(targetTier)
+                    @fragments.form.cardDetail(targetTier, cardOpt)
                     @fragments.form.submit("Pay", "now", Some(targetTier))
                 </form>
 

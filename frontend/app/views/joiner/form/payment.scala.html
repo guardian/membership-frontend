@@ -8,9 +8,9 @@
 
 @import helper._
 
-@main("Payment | " + tier, pageInfo = pageInfo) {
+@main("Payment | " + tier, pageInfo=pageInfo) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         <section class="form-header">
             <h1 class="form-headline">Address & billing</h1>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="form-section__content">
-                <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-stripe-form">
+                <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField
                     <input type="hidden" name="tier" class="js-tier-field" value="@tier.slug"/>
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)

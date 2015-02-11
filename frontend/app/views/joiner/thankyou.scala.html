@@ -1,5 +1,5 @@
-@(member: com.gu.membership.salesforce.Member, subscription: model.Zuora.SubscriptionDetails,
-    cardOpt: Option[model.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
+@(member: com.gu.membership.salesforce.Member, paymentSummary: model.Zuora.PaymentSummary,
+    cardOpt: Option[com.gu.membership.stripe.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -13,9 +13,9 @@
 
 @title = @{
     if (upgrade) {
-        "Change Tier Summary | " + subscription.planName + " from Friend"
+        "Change Tier Summary | " + member.tier.name
     } else {
-        "Thank you | " + subscription.planName
+        "Thank you | " + member.tier.name
     }
 }
 
@@ -27,7 +27,7 @@
 
 @main(title) {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader(personalisedWelcome + "Welcome to Guardian Membership",
             Some("You're the newest member of the Guardian Membership community and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
@@ -44,22 +44,22 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td id="qa-joiner-summary-start">@subscription.startDate.pretty</td>
+                        <td id="qa-joiner-summary-start">@paymentSummary.current.serviceStartDate.pretty</td>
                     </tr>
                     @for(card <- cardOpt) {
                         <tr role="row">
                             <th role="rowheader">Amount paid today</th>
-                            <td id="qa-joiner-summary-today">@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-today">@paymentSummary.totalPrice.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">
-                                @if(subscription.annual) { Annual } else { Monthly } payment
+                                @if(paymentSummary.current.annual) { Annual } else { Monthly } payment
                             </th>
-                            <td id="qa-joiner-summary-recurring">@subscription.planAmount.pretty</td>
+                            <td id="qa-joiner-summary-recurring">@paymentSummary.current.price.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment</th>
-                            <td id="qa-joiner-summary-next">@subscription.endDate.pretty</td>
+                            <td id="qa-joiner-summary-next">@paymentSummary.current.nextPaymentDate.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Card</th>

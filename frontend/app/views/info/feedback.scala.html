@@ -2,9 +2,9 @@
 
 @import helper.CSRF
 
-@main("Feedback", htmlClass = "feedback") {
+@main("Feedback") {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         <section class="form-header">
             <h1 class="form-headline">Feedback</h1>
@@ -14,7 +14,7 @@
         <section class="form-section form-section--no-padding">
             <div class="form-section__content copy">
                 <div class="form-detail">
-                    <p>Use the form below to send us your comments or suggestions on Guardian membership. We'd like to hear it.</p>
+                    <p>Use the form below to send us your comments or suggestions on Guardian Membership. We'd like to hear it.</p>
                     <p>We read all feedback carefully, but please note we cannot respond to all comments submitted.</p>
                     <p>If you’re having any problems please visit our <a href="/help">help section</a>.</p>
                 </div>
@@ -31,7 +31,7 @@
 
             <div class="form-section__content">
 
-                <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="form form--top-border js-feedback-form">
+                <form action="@routes.Info.feedback" method="POST" id="feedback-form" class="form form--top-border js-form" novalidate>
                     @CSRF.formField
                     @fragments.form.feedback()
                     @fragments.form.errorMessageDisplay()

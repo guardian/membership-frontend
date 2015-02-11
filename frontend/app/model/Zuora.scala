@@ -20,6 +20,12 @@ object Zuora {
   case class Account(id: String, createdDate: DateTime) extends ZuoraQuery
   case class Amendment(id: String, amendType: String, contractEffectiveDate: DateTime, subscriptionId: String)
     extends ZuoraQuery
+  case class InvoiceItem(id: String, price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime,
+                         chargeNumber: String, productName: String) extends ZuoraQuery {
+    val nextPaymentDate = serviceEndDate.plusDays(1)
+    // TODO: is there a better way?
+    val annual = nextPaymentDate == serviceStartDate.plusYears(1)
+  }
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
@@ -62,6 +68,17 @@ object Zuora {
       val planName = ratePlan.name.split(" - ")(0)
 
       SubscriptionDetails(planName, ratePlanCharge.price, ratePlanCharge.effectiveStartDate, endDate, ratePlan.id)
+    }
+  }
+
+  case class PaymentSummary(current: InvoiceItem, previous: Seq[InvoiceItem]) {
+    val totalPrice = current.price + previous.map(_.price).sum
+  }
+
+  object PaymentSummary {
+    def apply(items: Seq[InvoiceItem]): PaymentSummary = {
+      val sortedInvoiceItems = items.sortBy(_.chargeNumber)
+      PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
     }
   }
 }
@@ -193,6 +210,14 @@ object ZuoraDeserializer {
 
   implicit val amendmentReader = ZuoraQueryReader("Amendment", Seq("Id", "Type", "ContractEffectiveDate", "SubscriptionId")) { result =>
     Amendment(result("Id"), result("Type"), new DateTime(result("ContractEffectiveDate")), result("SubscriptionId"))
+  }
+
+  implicit val invoiceItemReader = ZuoraQueryReader("InvoiceItem",
+    Seq("Id", "ChargeAmount", "TaxAmount","ServiceStartDate", "ServiceEndDate", "ChargeNumber", "ProductName")) { result =>
+
+    InvoiceItem(result("Id"), result("ChargeAmount").toFloat + result("TaxAmount").toFloat,
+      new DateTime(result("ServiceStartDate")), new DateTime(result("ServiceEndDate")), result("ChargeNumber"),
+      result("ProductName"))
   }
 
   implicit val ratePlanReader = ZuoraQueryReader("RatePlan", Seq("Id", "Name")) { result =>

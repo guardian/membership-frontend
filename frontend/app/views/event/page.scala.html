@@ -7,9 +7,8 @@
 @import views.support.Asset
 @import model.Eventbrite._
 @import model.RichEvent._
-@import configuration.Config
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
@@ -36,7 +35,19 @@
                 </div>
             </div>
             @if(event.isSoldThruEventbrite) {
-                @fragments.event.ticketDetails(event)
+                @for(ticket <- event.generalReleaseTicket) {
+                    <div class="event-ticket@if(ticket.free) { event-ticket--free }u-cf">
+                        <div class="event-ticket__details">
+                            @fragments.pricing.priceInfoEvent(event, isPrimary=true)
+                        </div>
+                        @if(event.isBookable) {
+                            <div class="event-ticket__action">
+                                @fragments.event.ticketCta(event, List("action--booking"))
+                                @fragments.event.terms(event)
+                            </div>
+                        }
+                    </div>
+                }
             }
             <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
         </div>
@@ -55,13 +66,15 @@
                     <div class="event-ticket__action">
                         @if(event.isPastEvent) {
                             @for(highlight <- event.metadata.highlightsOpt) {
-                                <a class="action action--external u-no-margin" href="@highlight.url" data-link-name="Watch highlights">@highlight.title</a>
+                                <a class="action action--external u-no-margin"
+                                   href="@highlight.url"
+                                   data-metric-trigger="click"
+                                   data-metric-category="events"
+                                   data-metric-action="highlights">@highlight.title</a>
                             }
                         }
                         @if(event.isSoldOut && !event.isPastEvent) {
-                            <a class="action action--external u-no-margin" href="@Config.eventbriteWaitlistUrl(event)" data-link-name="Join waitlist">
-                                Add me to the waitlist
-                            </a>
+                            @fragments.event.waitlist(event, List("u-no-margin"))
                         }
                     </div>
                 </div>
@@ -95,9 +108,7 @@
                 </div>
             </div>
 
-
             <div class="event-content__sidebar">
-
 
                 @if(event.isPastEvent) {
                     @fragments.event.relatedEntry(event)
@@ -113,9 +124,9 @@
                     </div>
                 }
                 @if(!event.isBookable) {
-                    <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
+                    <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
                         Find other @event.metadata.pluralTitle
-                        <i class="icon icon-arrow-right-blue action__icon action__icon--right"></i>
+                        @fragments.actionIcon("arrow-right")
                     </a>
                 }
             </div>

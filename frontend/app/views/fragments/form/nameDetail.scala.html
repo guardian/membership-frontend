@@ -20,9 +20,9 @@
                    id="name-first"
                    value="@firstName"
                    class="input-text js-name-first"
-                   data-error-message="Please enter your first name"
-                   data-validation="required"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your first name")
         </div>
 
         <div class="form-field form-field--no-margin">
@@ -32,9 +32,9 @@
                    id="name-last"
                    value="@lastName"
                    class="input-text js-name-last"
-                   data-error-message="Please enter your last name"
-                   data-validation="required"
+                   required
                    aria-required="true"/>
+            @fragments.form.errorMessage("Please enter your last name")
         </div>
 
     </div>
