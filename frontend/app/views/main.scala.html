@@ -1,6 +1,5 @@
 @(
     title: String,
-    isBrochure: Boolean = false,
     htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
@@ -9,7 +8,6 @@
 @import views.support.Asset
 
 <!DOCTYPE html>
-
 <html class="js-off id--signed-out @htmlClass">
     <head>
         <meta charset="utf-8">
@@ -61,16 +59,8 @@
         @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
             @fragments.header()
-            <div class="page-side-margins" id="container">
-            @if(isBrochure != true) {
-                <div class="page-container">
-            }
-
+            <div class="l-side-margins" id="container">
                 @content
-
-            @if(isBrochure != true) {
-                </div>
-            }
             </div>
         </div>
 
