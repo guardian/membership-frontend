@@ -136,6 +136,7 @@
 
 .price-info-inline {
     @include clearfix;
+    color: inherit;
 }
 .price-info-inline__value {
     padding-bottom: 0;
@@ -156,8 +157,6 @@
 }
 
 .price-info-inline--primary {
-    color: $white;
-
     .price-info-inline__value {
         @include fs-header(4);
         font-weight: bold;
