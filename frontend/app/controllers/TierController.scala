@@ -63,7 +63,7 @@ trait UpgradeTier {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
         request.member match {
           case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, currentSubscription)) //todo change to read-ony form
-          case _ => Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
+          case _ => Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
         }
 
       }
