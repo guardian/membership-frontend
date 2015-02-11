@@ -65,11 +65,11 @@ case class TouchpointBackend(
     }
   }
 
-  def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
+  def downgradeSubscription(member: Member): Future[String] = {
     for {
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
-      memberRepository.metrics.putDowngrade(tierPlan.tier)
+      memberRepository.metrics.putDowngrade(member.tier)
       ""
     }
   }
