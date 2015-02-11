@@ -4,7 +4,7 @@
 @import model.Eventbrite.EBTicketClass
 
 @paidMembersOnly(ticket: EBTicketClass) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
+    val ticketSaleDates = model.TicketSaleDates.datesFor(event.times, ticket)
     !ticketSaleDates.tierCanBuyTicket(Tier.Friend)
 }
 

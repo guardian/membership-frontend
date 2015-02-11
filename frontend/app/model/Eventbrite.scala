@@ -72,6 +72,8 @@ object Eventbrite {
   }
 
 
+  case class EventTimes(created: Instant, start: DateTime)
+
   /**
    * https://developer.eventbrite.com/docs/ticket-class-object/
    */
@@ -98,6 +100,8 @@ object Eventbrite {
                      capacity: Int,
                      ticket_classes: Seq[EBTicketClass],
                      status: String) extends EBObject {
+
+    val times = EventTimes(created, start)
 
     val isSoldOut = ticket_classes.map(_.quantity_sold).sum >= capacity
     val isSoldThruEventbrite = !description.exists(_.html.contains("<!-- noTicketEvent -->"))

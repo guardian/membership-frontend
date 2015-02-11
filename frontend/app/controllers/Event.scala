@@ -123,7 +123,7 @@ trait Event extends Controller {
 
   private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean =
     event.generalReleaseTicket.exists { ticket =>
-      TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
+      TicketSaleDates.datesFor(event.times, ticket).tierCanBuyTicket(member.tier)
     }
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"

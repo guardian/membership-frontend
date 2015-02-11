@@ -25,7 +25,7 @@
                 <div class="event-info__second">
                     <div class="sale-dates__header">Ticket release dates</div>
 
-                    @defining(model.TicketSaleDates.datesFor(event, ticket)) { ticketSaleDates =>
+                    @defining(model.TicketSaleDates.datesFor(event.times, ticket)) { ticketSaleDates =>
 
                         @if(ticketSaleDates.anyoneCanBuyTicket) {
                             <button class="js-toggle fake-link u-align-right sales-dates-toggle"
