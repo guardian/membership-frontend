@@ -12,8 +12,8 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   private def eventSalesEndSpan = driver.findElement(By.xpath("//*[contains(., \"Sale ends\")]/time"))
 
   private def eventPriceSpan = driver.findElement(By.cssSelector(".price-info-inline__value.js-event-price-value"))
-
-  private def discountedEventPriceSpan = driver.findElement(By.cssSelector(".event-ticket__trail-tag.js-event-price-discount"))
+  // TODO add hooks on the template so we can avoid these nasty locators
+  private def discountedEventPriceSpan = driver.findElement(By.xpath(".//*[@id='container']/div[2]/div/div[2]/div[1]/div/div/div[2]/span[1]"))
 
   private def eventDescriptionDiv = driver.findElement(By.cssSelector(".event__description.copy"))
 
@@ -21,7 +21,7 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventName = driver.findElement(By.cssSelector(".event-masthead__name"))
 
-  private def originalPriceSpan = driver.findElement(By.cssSelector(".event-ticket__price-amount"))
+  private def originalPriceSpan = driver.findElement(By.xpath(".//*[@id='container']/div[2]/div/div[2]/div[1]/div/div/div[1]"))
 
   def getEventLocation: String = eventLocationSpan.getText
 
