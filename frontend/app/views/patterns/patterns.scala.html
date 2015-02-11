@@ -19,7 +19,7 @@
 
 @main("Pattern Library") {
 
-    <main class="page-content">
+    <main class="page-content l-constrained">
 
     <div class="pattern-nav js-pattern-nav"></div>
 
@@ -331,18 +331,6 @@
 
     @pattern("Tier Trail - No Caption", "Tier name with no caption") {
         @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
-    }
-
-    @pattern("Tier Header - Friend") {
-        @fragments.tier.tierHeader(Tier.Friend)
-    }
-
-    @pattern("Tier Header - Partner") {
-        @fragments.tier.tierHeader(Tier.Partner)
-    }
-
-    @pattern("Tier Header - Patron") {
-        @fragments.tier.tierHeader(Tier.Patron)
     }
 
     @pattern("Package - Promo") {

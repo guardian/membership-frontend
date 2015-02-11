@@ -32,44 +32,6 @@
 }
 
 /* ==========================================================================
-   Benefits - Feature Listing
-   ========================================================================== */
-
-.benefits-featured {
-    margin-bottom: 0;
-}
-.benefits-featured__item {
-    margin-bottom: rem($gs-gutter/2);
-    .benefit {
-        border-top: 1px dotted $c-neutral3;
-        padding-top: rem($gs-gutter/2);
-    }
-}
-
-/* ==========================================================================
-   Benefits - Tier Listing
-   ========================================================================== */
-
-.benefits-tier {
-    overflow: hidden;
-    @include fs-bodyCopy(1);
-    margin-bottom: 0;
-}
-.benefits-tier__list {
-    @include mq(tablet) {
-        margin-top: -($gs-gutter/2);
-    }
-}
-.benefits-tier__item {
-    border-top: 1px dotted $c-neutral3;
-    padding-top: rem($gs-gutter/2);
-    @include mq(tablet) {
-        min-height: rem($gs-gutter * 6);
-    }
-
-}
-
-/* ==========================================================================
    Old Benefits Styles
    TODO: Remove once full benefits refactoring work happens
    ========================================================================== */

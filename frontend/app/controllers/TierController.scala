@@ -23,7 +23,7 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, FriendTierPlan)
+      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member)
     } yield Redirect("/tier/change/friend/summary")
   }
 

@@ -7,7 +7,9 @@
 
 @import model.RichEvent.MasterclassEvent
 
-@main("Masterclasses", htmlClass="events-bg theme--masterclasses", pageInfo=pageInfo) {
+@main("Masterclasses", pageInfo=pageInfo) {
+
+    <main role="main" class="l-constrained">
 
     @fragments.event.headerBar(
         "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
@@ -71,5 +73,7 @@
     </div>
 
     @views.html.event.list(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
+
+    </main>
 
 }

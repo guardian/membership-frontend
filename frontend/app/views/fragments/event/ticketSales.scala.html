@@ -8,15 +8,11 @@
 
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
-    val ticketDate = if(needToDisplayTimes) salesDate.prettyWithTime
-                     else salesDate.pretty
-    Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>$ticketDate</time>")
+    Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>${salesDate.pretty(needToDisplayTimes)}</time>")
 }
 
 @ticketEndSaleDate(endSalesDate: Instant, needToDisplayTimes: Boolean) = @{
-    val ticketDate = if(needToDisplayTimes) endSalesDate.prettyWithTime
-                     else endSalesDate.pretty
-    Html(s"<time datetime='$endSalesDate'>$ticketDate</time>")
+    Html(s"<time datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes)}</time>")
 }
 
 @event match {

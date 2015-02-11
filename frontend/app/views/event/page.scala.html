@@ -8,7 +8,7 @@
 @import model.Eventbrite._
 @import model.RichEvent._
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
@@ -124,7 +124,7 @@
                     </div>
                 }
                 @if(!event.isBookable) {
-                    <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
+                    <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
                         Find other @event.metadata.pluralTitle
                         @fragments.actionIcon("arrow-right")
                     </a>
