@@ -15,7 +15,7 @@ import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import monitoring.MemberMetrics
 import play.api.libs.json.{JsObject, Json}
 import services.EventbriteService._
-import tracking.{EventSubject, SingleEvent, EventTracking}
+import tracking._
 import utils.ScheduledTask
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -153,16 +153,20 @@ trait MemberService extends LazyLogging with EventTracking {
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
-
       trackEvent(
         SingleEvent(
           eventSource = "membershipUpgrade",
-          member = member,
-          newTier = Some(newTier.name),
-          deliveryPostcode = Some(form.deliveryAddress.postCode),
-          billingPostcode = form.billingAddress.map(_.postCode),
-          subscriptionPaymentAnnual = Some(annual),
-          marketingChoices = None)
+          EventSubject(
+            salesforceContactId = memberId.salesforceContactId,
+            identityId = user.id,
+            tier = member.tier.name,
+            tierAmendment = Some(UpgradeAmendment(member.tier, newTier)),
+            deliveryPostcode = Some(form.deliveryAddress.postCode),
+            billingPostcode = form.billingAddress.map(_.postCode),
+            subscriptionPaymentAnnual = Some(annual),
+            marketingChoices = None
+          )
+        )
       )
       memberId
     }
