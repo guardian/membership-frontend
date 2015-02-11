@@ -12,10 +12,10 @@ class EventbriteDeserializerTest extends PlaySpecification {
   "EventbriteDeserializer" should {
 
     "should deserialize event json" in {
-      val event = Resource.getJson("model/eventbrite/events.json")
+      val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
       val ebResponse = event.as[EBResponse[EBEvent]]
 
-      ebResponse.data.head.name.text === "Chris' big time jamboree"
+      ebResponse.data.head.name.text === "Born that way: Is there a gay gene and should it matter?"
     }
 
     "should deserialize event location" in {
