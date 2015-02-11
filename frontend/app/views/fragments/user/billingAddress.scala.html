@@ -3,8 +3,6 @@
 @if(userFields.billingAddress1) {
     @fragments.user.deliveryAddress(userFields)
 } else {
-    <div class="address">
-        @userFields.billingAddress1@for( billingAddress2 <- userFields.billingAddress2 ) {, @billingAddress2,}<br/>
-        @for( town <- userFields.billingAddress3 ) {@town} @userFields.billingPostcode<br/>
-    </div>
+    @userFields.billingAddress1@for( billingAddress2 <- userFields.billingAddress2 ) {, @billingAddress2,}<br/>
+    @for( town <- userFields.billingAddress3 ) {@town} @userFields.billingPostcode<br/>
 }

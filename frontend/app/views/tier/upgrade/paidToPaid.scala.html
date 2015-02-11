@@ -24,8 +24,8 @@
                 <h2 class="page-section__headline">What happens now</h2>
             </div>
             <div class="page-section__content">
-                <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@currentTier</strong> membership up until today and the amount remaining will be deducted from you're first payment as a <strong>@targetTier</strong>.</p>
-                <p><strong>@targetTier</strong> payments start today and will re-occur @{currentSubscription.paymentPeriodLabel}ly.</p>
+                <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@currentTier</strong> membership up until today and the amount remaining will be deducted from your first payment as a <strong>@targetTier</strong>.</p>
+                <p><strong>@targetTier</strong> payments start today and will recur @{currentSubscription.paymentPeriodLabel}ly.</p>
             </div>
         </div>
 
@@ -91,7 +91,7 @@
                 <h2 class="page-section__headline">Delivery Address</h2>
             </div>
             <div class="page-section__content">
-            @fragments.user.deliveryAddress(userFields)
+                <address>@fragments.user.deliveryAddress(userFields)</address>
             </div>
         </section>
 
@@ -101,7 +101,7 @@
                 <h2 class="page-section__headline">Billing Address</h2>
             </div>
             <div class="page-section__content">
-                @fragments.user.billingAddress(userFields)
+                <address>@fragments.user.billingAddress(userFields)</address>
             </div>
         </section>
 
