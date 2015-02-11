@@ -72,7 +72,7 @@ case class TouchpointBackend(
     for {
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
-      memberRepository.metrics.putDowngrade(FriendTierPlan.tier)
+      memberRepository.metrics.putDowngrade(member.tier)
       val eventSubject = EventSubject(
         member.salesforceContactId,
         member.identityId,

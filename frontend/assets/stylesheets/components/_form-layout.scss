@@ -26,7 +26,7 @@
 
     @include mq(desktop) {
         width: rem(gs-span(11));
-        float: left;
+        margin-left: 0;
         padding-left: rem(gs-span(2) + $gs-gutter);
     }
 }

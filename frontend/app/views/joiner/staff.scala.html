@@ -9,6 +9,7 @@
 @import configuration.Config
 @import helper._
 @import play.twirl.api.Html
+@import model.Benefits
 @import model.Faq
 
 @signPostItem(btnText: String, btnSrc: String, title: String = "")(description: Html) = {
@@ -112,7 +113,13 @@
                 <h2 class="page-section__headline">Benefits</h2>
             </div>
             <div class="page-section__content">
-                @fragments.benefits.detail(Tier.Partner)
+                <ul class="grid grid--3up">
+                    @for(benefit <- Benefits.details(Tier.Partner).list) {
+                        <li class="grid__item">
+                            @fragments.benefits.item(benefit=benefit)
+                        </li>
+                    }
+                </ul>
             </div>
         </section>
 
