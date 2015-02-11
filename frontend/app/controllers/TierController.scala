@@ -42,11 +42,13 @@ trait UpgradeTier {
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
 
-    def futurePaidPreviewOpt = request.member match {
+    val futurePaidPreviewOpt = request.member match {
       case paidMember: PaidMember =>
+        val previewUpgradeSubscriptionFuture = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
+        val stripeCustomerFuture = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
         for {
-          preview <- MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
-          customer <- request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+          preview <- previewUpgradeSubscriptionFuture
+          customer <- stripeCustomerFuture
         } yield Some(PaidPreview(customer.card, preview))
       case _: FreeMember => Future.successful(None)
     }
@@ -54,11 +56,13 @@ trait UpgradeTier {
     val subscriptionService = request.touchpointBackend.subscriptionService
 
     if (request.member.tier < tier) {
+      val subscriptionStatusFuture = subscriptionService.getSubscriptionStatus(request.member)
+      val identityDetailsFuture = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       for {
         paidPreviewOpt <- futurePaidPreviewOpt
-        subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
+        subscriptionStatus <- subscriptionStatusFuture
         currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-        user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
+        user <- identityDetailsFuture
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
         request.member match {
