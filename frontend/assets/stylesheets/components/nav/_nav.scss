@@ -91,6 +91,7 @@ $global-nav-height: 36px;
 
         @include mq(tablet) {
             padding: 0 rem($gs-gutter);
+            display: block;
         }
         @include mq(desktop) {
             width: 100%;
@@ -130,7 +131,7 @@ $global-nav-height: 36px;
             text-decoration: underline;
         }
 
-        @include mq(desktop) {
+        @include mq(tablet) {
             padding: rem(8px) 0 rem(6px);
             &, &:active {
                 text-decoration: none;
@@ -148,6 +149,60 @@ $global-nav-height: 36px;
     .icon-home {
         vertical-align: top;
     }
+}
+
+.nav--global--subnav {
+    background-color: $c-neutral5;
+    .nav__scroll {
+        background-color: $c-neutral6;
+        @include mq($until: tablet) {
+            display: block;
+        }
+    }
+}
+
+.nav__list--breadcrumbs,
+.nav__list--subnav {
+    height: $global-nav-height;
+    float: left;
+
+    .nav__link {
+        padding-top: rem($gs-baseline / 2);
+        padding-bottom: rem($gs-baseline);
+    }
+}
+
+.nav__list--breadcrumbs {
+    border-right: 2px solid $white;
+
+    .nav__link {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: rem($gs-gutter / 2);
+    }
+
+    .nav__item:after {
+        content: ">";
+        display: inline-block;
+        margin-right: rem($gs-gutter / 2);
+    }
+
+    .nav__item:last-child {
+        .nav__link {
+            margin-right: rem($gs-gutter);
+        }
+        &:after {
+            display: none;
+        }
+    }
+}
+
+.nav__list--subnav {
+    margin-left: rem($gs-gutter);
+}
+
+.nav--global.nav--global--subnav.is-active {
+    z-index: 1;
 }
 
 @include mq($until: tablet) {
