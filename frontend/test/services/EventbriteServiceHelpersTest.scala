@@ -3,26 +3,10 @@ package services
 import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects.TestRichEvent
-import model.RichEvent.MasterclassEvent
 import org.specs2.mutable.Specification
 import utils.Resource
 
 class EventbriteServiceHelpersTest extends Specification {
-  "availableEvents" should {
-    "only show events which have tickets available for members" in {
-      val response = Resource.getJson("model/eventbrite/events-with-member-tickets.json").as[EBResponse[EBEvent]]
-
-      val events = response.data.map { event => MasterclassEvent(event, None) }
-
-      events(0).memberTickets.map(_.id) mustEqual Seq("31250189")
-      events(1).memberTickets.map(_.id) mustEqual Seq("31250231")
-      events(2).memberTickets.map(_.id) mustEqual Seq()
-
-      val availableEvents = EventbriteServiceHelpers.availableEvents(events)
-
-      availableEvents.map(_.id) mustEqual Seq(availableEvents(0).id)
-    }
-  }
 
   "getEventsOrdering" should {
     val events = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json").as[EBResponse[EBEvent]].data.map(TestRichEvent)

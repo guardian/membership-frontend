@@ -9,9 +9,11 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
+import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.EBCode
+import model.RichEvent.RichEvent
 import model.RichEvent._
-import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
+import model._
 import monitoring.MemberMetrics
 import play.api.libs.json.Json
 import services.EventbriteService._
@@ -109,15 +111,14 @@ trait MemberService extends LazyLogging {
     }
   }
 
-  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    member.tier match {
-      case Tier.Partner | Tier.Patron if event.hasMemberTicket =>
-          // Add a "salt" to make access codes different to discount codes
-          val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-          event.service.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-      case _ => Future.successful(None)
-    }
-  }
+  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = (for {
+      ticketing <- event.internalTicketing
+      benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
+    } yield {
+      // Add a "salt" to make access codes different to discount codes
+      val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+      event.service.createOrGetAccessCode(event, code, ticketing.memberBenefitTickets).map(Some(_))
+    }).getOrElse(Future.successful(None))
 
   def upgradeFreeSubscription(freeMember: FreeMember, user: IdMinimalUser, newTier: Tier, form: FreeMemberChangeForm,
                               identityRequest: IdentityRequest): Future[MemberId] = {

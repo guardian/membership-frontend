@@ -1,15 +1,13 @@
 package model
 
-import scala.collection.immutable.SortedMap
-
-import org.joda.time.Instant
-import org.joda.time.DateTimeZone.UTC
 import com.github.nscala_time.time.Imports._
-
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Patron, Partner}
+import com.gu.membership.salesforce.Tier.{Partner, Patron}
+import model.Eventbrite.{EBTicketClass, EventTimes}
+import org.joda.time.DateTimeZone.UTC
+import org.joda.time.Instant
 
-import model.Eventbrite.{EBEvent, EBTicketClass}
+import scala.collection.immutable.SortedMap
 
 case class TicketSaleDates(generalAvailability: Instant, memberAdvanceTicketSales: Option[Map[Tier, Instant]] = None, needToDistinguishTimes: Boolean = false) {
 
@@ -39,10 +37,10 @@ object TicketSaleDates {
     6.weeks.standardDuration -> Map(Patron -> 2.weeks, Partner -> 1.week)
   )
 
-  def datesFor(event: EBEvent, tickets: EBTicketClass): TicketSaleDates = {
-    val effectiveSaleStart = tickets.sales_start.getOrElse(event.created)
+  def datesFor(eventTimes: EventTimes, tickets: EBTicketClass): TicketSaleDates = {
+    val effectiveSaleStart = tickets.sales_start.getOrElse(eventTimes.created)
 
-    val saleStartLeadTimeOnEvent = (effectiveSaleStart to event.start).duration
+    val saleStartLeadTimeOnEvent = (effectiveSaleStart to eventTimes.start).duration
 
     memberLeadTimeOverGeneralRelease.until(saleStartLeadTimeOnEvent).values.lastOption match {
       case Some(memberLeadTimes) =>

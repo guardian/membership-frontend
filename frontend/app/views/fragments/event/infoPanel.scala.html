@@ -3,11 +3,6 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Eventbrite.EBTicketClass
 
-@paidMembersOnly(ticket: EBTicketClass) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
-    !ticketSaleDates.tierCanBuyTicket(Tier.Friend)
-}
-
 <div class="event-info@if(event.isBookable && event.metadata.largeImg) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
 
     @if(!event.isBookable) {
@@ -30,24 +25,18 @@
         <div class="stats-listing">
             @fragments.event.stats(event)
             @* TODO: Make part of event stats *@
-            @if(event.isSoldThruEventbrite && event.isBookable) {
-                @for(ticket <- event.generalReleaseTicket) {
-                    @fragments.event.ticketSales(event, ticket)
-                }
+            @for(ticketing <- event.internalTicketing if event.isBookable) {
+                @fragments.event.ticketSales(event, ticketing)
             }
         </div>
 
-        @if(event.isSoldThruEventbrite) {
-
+         @for(ticketing <- event.internalTicketing) {
             @fragments.pricing.priceInfoEvent(event)
-
-            @for(ticket <- event.generalReleaseTicket) {
-                @if(event.isBookable) {
-                    @fragments.event.ticketCta(event)
-                    @fragments.event.terms(event, List("event-info__terms"))
-                    @if(paidMembersOnly(ticket)) {
-                        <a class="action js-member-cta" href="@routes.Joiner.tierList">Become a member</a>
-                    }
+            @if(event.isBookable) {
+                @fragments.event.ticketCta(event)
+                @fragments.event.terms(event, List("event-info__terms"))
+                @if(ticketing.isCurrentlyAvailableToPaidMembersOnly) {
+                    <a class="action js-member-cta" href="@routes.Joiner.tierList">Become a member</a>
                 }
             }
         }
