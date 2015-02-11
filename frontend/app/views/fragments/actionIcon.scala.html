@@ -1,5 +1,5 @@
-@(name: String, isReversed: Boolean = false)
+@(name: String, leftIcon: Boolean = false)
 
-<svg class="icon-inline action__icon@if(isReversed){ action__icon--left}else{ action__icon--right}">
+<svg class="icon-inline action__icon@if(leftIcon){ action__icon--left}else{ action__icon--right}">
     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-@name"></use>
 </svg>
