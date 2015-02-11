@@ -59,6 +59,7 @@ object Zuora {
                                  ratePlanId: String) {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
+    val paymentPeriodLabel = if (annual) "year" else "month"
   }
 
   object SubscriptionDetails {
@@ -83,8 +84,15 @@ object Zuora {
       PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
     }
   }
-  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String)
+  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String) {
+    val renewalDate = serviceEndDate.plusDays(1)
+  }
+
   case class PaidPreview(card: Stripe.Card, invoiceItems: Seq[PreviewInvoiceItem]) {
+    val sortedInvoiceItems = invoiceItems.sortBy(_.price)
+    // TODO: We assume that this is only using paid-to-paid upgrades
+    //    if we start supporting paid-to-pad downgrades we need to revisit this
+    val futureSubscriptionInvoice = sortedInvoiceItems.last
     val totalPrice = invoiceItems.map(_.price).sum
   }
 }

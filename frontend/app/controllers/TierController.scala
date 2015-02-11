@@ -51,14 +51,18 @@ trait UpgradeTier {
       case _: FreeMember => Future.successful(None)
     }
 
+    val subscriptionService = request.touchpointBackend.subscriptionService
+
     if (request.member.tier < tier) {
       for {
         paidPreviewOpt <- futurePaidPreviewOpt
+        subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
+        currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
         user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
         request.member match {
-          case paidMember: PaidMember => Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt)) //todo change to read-ony form
+          case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, currentSubscription)) //todo change to read-ony form
           case _ => Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
         }
 
@@ -75,17 +79,15 @@ trait UpgradeTier {
       memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
-    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = for {
-      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, form, identityRequest)
+    def handlePaid(paidMember: PaidMember) = for {
+      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest)
     } yield Redirect(routes.TierController.upgradeThankyou(tier))
 
     val futureResult = request.member match {
       case freeMember: FreeMember =>
         freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
 
-      case paidMember: PaidMember =>
-        //Future.successful(NotFound)
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+      case paidMember: PaidMember => handlePaid(paidMember)
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
