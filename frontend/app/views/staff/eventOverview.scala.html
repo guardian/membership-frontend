@@ -1,9 +1,11 @@
 @(liveEvents: Seq[model.RichEvent.RichEvent], draftEvents: Seq[model.RichEvent.RichEvent])
 
+@import model.Eventbrite.InternalTicketing
+@import model.Eventbrite.ExternalTicketing
 @import configuration.Config
 
-@eventTrait(text: String, displayTrait: Boolean, identifier: String = "") = {
-    <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}@if(!displayTrait){ is-hidden}">
+@eventTrait(text: String, identifier: String = "") = {
+    <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}">
         @text
     </li>
 }
@@ -37,21 +39,23 @@
                         </div>
                     </div>
                     <ul class="event-trait-container u-unstyled">
+                        @event.ticketing.collect {
+                            case ExternalTicketing => {
+                                @eventTrait("Not Sold though Eventbrite", "noteworthy")
+                            }
+                            case ticketing: InternalTicketing => {
+                                @if(ticketing.isFree) {
+                                    @eventTrait("Free Event", "moderate")
+                                }
 
-                        @if(event.isFree) {
-                            @eventTrait("Free Event", event.isFree, "moderate")
-                        }
+                                @if(ticketing.isPossiblyMissingDiscount) {
+                                    @eventTrait("No Discount", "important")
+                                }
 
-                        @if(event.possiblyMissingDiscount) {
-                            @eventTrait("No Discount", event.possiblyMissingDiscount, "important")
-                        }
-
-                        @if(!event.isSoldThruEventbrite) {
-                            @eventTrait("Not Sold though Eventbrite", !event.isSoldThruEventbrite, "noteworthy")
-                        }
-
-                        @if(event.isSoldOut) {
-                            @eventTrait("Sold out", event.isSoldOut)
+                                @if(ticketing.isSoldOut) {
+                                    @eventTrait("Sold out")
+                                }
+                            }
                         }
                     </ul>
                 </article>
