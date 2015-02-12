@@ -31,6 +31,8 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def accountDetailsTab = driver.findElement(By.cssSelector("#tabs-account-profile-2-tab>a"))
 
+  private def upsellDiv = driver.findElement(By.cssSelector(".membership-up-sell"))
+
   val cardWidget = new CreditCardWidget(driver)
 
   def clickChangeButton = {
@@ -48,7 +50,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     this
   }
 
-  def isMembershipTabVisible = {
+  def isAnUpsell = {
     try {
       membershipTab.isDisplayed
     } catch {
@@ -62,7 +64,10 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     new ChangeTierPage(driver)
   }
 
-  def getMembershipTier: String = tierSpan.getText
+  def getMembershipTier: String = {
+    new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeTierButton))
+    tierSpan.getText
+  }
 
   def getStartDate: String = startDateSpan.getText
 
