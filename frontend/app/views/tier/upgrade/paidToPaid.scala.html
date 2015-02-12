@@ -38,19 +38,19 @@
                 <table class="table table--responsive-font table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td>@currentSubscription.planName</td>
+                        <td id="qa-upgrade-current-tier">@currentSubscription.planName</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly Payment</th>
-                        <td>@currentSubscription.planAmount.pretty</td>
+                        <td id="qa-upgrade-current-payment">@currentSubscription.planAmount.pretty</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Last payment</th>
-                        <td>@prettyDate(currentSubscription.startDate)</td>
+                        <td id="qa-upgrade-current-last-date">@prettyDate(currentSubscription.startDate)</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">End date</th>
-                        <td>@prettyDate(new DateTime())</td>
+                        <td id="qa-upgrade-current-end-date">@prettyDate(new DateTime())</td>
                     </tr>
                 </table>
             </div>
@@ -66,19 +66,19 @@
                     <table class="table table--responsive-font table--striped" role="grid">
                         <tr role="row">
                             <th role="rowheader">Tier</th>
-                            <td>@targetTier</td>
+                            <td id="qa-upgrade-new-tier">@targetTier</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">New @{currentSubscription.paymentPeriodLabel}ly payment</th>
-                            <td>@preview.futureSubscriptionInvoice.price.pretty</td>
+                            <td id="qa-upgrade-new-recurring-payment">@preview.futureSubscriptionInvoice.price.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">First payment</th>
-                            <td>@preview.totalPrice.pretty</td>
+                            <td id="qa-upgrade-new-first-payment">@preview.totalPrice.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment due</th>
-                            <td>@prettyDate(preview.futureSubscriptionInvoice.renewalDate)</td>
+                            <td id="qa-upgrade-new-date">@prettyDate(preview.futureSubscriptionInvoice.renewalDate)</td>
                         </tr>
                     </table>
                 }
@@ -133,7 +133,7 @@
                     <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
                         @CSRF.formField
                         <div class="actions js-waiting-container">
-                            <button type="submit" class="action js-submit-input">Pay @preview.totalPrice.pretty Now</button>
+                            <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
                             <div class="i-wait">
                                 <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
                                 <span class="i-wait__message js-waiting-message"></span>
