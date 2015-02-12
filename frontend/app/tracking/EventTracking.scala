@@ -3,14 +3,15 @@ package tracking
 import java.util.{List => JList, Map => JMap}
 
 import com.github.nscala_time.time.Imports._
+import com.github.t3hnar.bcrypt._
 import com.gu.membership.salesforce.Tier
-import com.snowplowanalytics.snowplow.tracker.{Tracker, Subject}
 import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
+import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
 import play.api.Logger
-import com.github.t3hnar.bcrypt._
+
 import scala.collection.JavaConversions._
 
 case class SingleEvent (eventSource: String, user: EventSubject) extends TrackerData {
@@ -93,7 +94,7 @@ trait EventTracking {
 
   def trackEvent(data: TrackerData) {
     try {
-      val tracker = getTracker(data.user.salesforceContactId)
+      val tracker = getTracker
       val dataMap = data.toMap
       tracker.trackUnstructuredEvent(dataMap)
     } catch {
@@ -102,10 +103,9 @@ trait EventTracking {
     }
   }
 
-  private def getTracker(userId: String): Tracker = {
+  private def getTracker: Tracker = {
     val emitter = new Emitter(EventTracking.url, HttpMethod.GET)
     val subject = new Subject
-    subject.setUserId(userId)
     new Tracker(emitter, subject, "membership", "membership-frontend")
   }
 }
