@@ -51,8 +51,7 @@ case class EventSubject(salesforceContactId: String,
 
   def toMap: JMap[String, Object] = {
 
-    def bcrypt(string: String) = string+Config.bcryptPepper.bcrypt(Config.bcryptSalt)
-
+    def bcrypt(string: String) = (string+Config.bcryptPepper).bcrypt(Config.bcryptSalt)
 
     val dataMap =
       Map(
@@ -60,8 +59,8 @@ case class EventSubject(salesforceContactId: String,
         "identityId" -> bcrypt(identityId),
         "tier" -> tier
       ) ++
-        deliveryPostcode.map("deliveryPostcode" -> _) ++
-        billingPostcode.map("billingPostcode" -> _) ++
+        deliveryPostcode.map("deliveryPostcode" -> truncatePostcode(_)) ++
+        billingPostcode.map("billingPostcode" -> truncatePostcode(_)) ++
         subscriptionPlan.map("subscriptionPlan" -> _) ++
         marketingChoices.map { mc =>
           "marketingChoicesForm" -> EventTracking.setSubMap {
@@ -83,6 +82,10 @@ case class EventSubject(salesforceContactId: String,
         }
 
     EventTracking.setSubMap(dataMap)
+  }
+
+  def truncatePostcode(postcode: String) = {
+    postcode.splitAt(postcode.length-3)._1.trim
   }
 }
 
@@ -110,12 +113,6 @@ trait EventTracking {
 object EventTracking {
   val url = Config.trackerUrl
 
-  def setSubMap(in:Map[String, Any]): JMap[String, Object] = {
-    println("--- in")
-    println(in)
-    val x = mapAsJavaMap(in).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]
-    println("===out")
-    println(x)
-    x
-  }
+  def setSubMap(in:Map[String, Any]): JMap[String, Object] =
+    mapAsJavaMap(in).asInstanceOf[java.util.Map[java.lang.String, java.lang.Object]]
 }
