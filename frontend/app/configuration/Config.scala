@@ -203,7 +203,7 @@ object Config {
   }
 
   val trackerUrl = config.getString("snowplow.url")
-  val bcryptSalt = config.getString("event.tracking.bcrypt.salt")
-  val bcryptPepper = config.getString("event.tracking.bcrypt.pepper")
+  val bcryptSalt = config.getString("activity.tracking.bcrypt.salt")
+  val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
 }

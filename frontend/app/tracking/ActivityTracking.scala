@@ -14,15 +14,15 @@ import play.api.Logger
 
 import scala.collection.JavaConversions._
 
-case class SingleEvent (eventSource: String, user: EventSubject) extends TrackerData {
+case class MemberActivity (source: String, member: MemberData) extends TrackerData {
   def toMap: JMap[String, Object] =
-    Map("eventSource" -> eventSource) ++ user.toMap
+    Map("eventSource" -> source) ++ member.toMap
 }
 
 
 trait TrackerData {
-  def user: EventSubject
-  def eventSource: String
+  def member: MemberData
+  def source: String
   def toMap: JMap[String, Object]
 }
 
@@ -35,7 +35,7 @@ sealed trait TierAmendment {
 case class UpgradeAmendment(tierFrom: Tier, tierTo: Tier, effectiveFromDate: Option[DateTime] = Some(DateTime.now)) extends TierAmendment
 case class DowngradeAmendment(tierFrom: Tier, tierTo: Tier = Tier.Friend, effectiveFromDate: Option[DateTime] = None) extends TierAmendment
 
-case class EventSubject(salesforceContactId: String,
+case class MemberData(salesforceContactId: String,
                         identityId: String,
                         tier: String,
                         tierAmendment: Option[TierAmendment] = None,
@@ -64,7 +64,7 @@ case class EventSubject(salesforceContactId: String,
         billingPostcode.map("billingPostcode" -> truncatePostcode(_)) ++
         subscriptionPlan.map("subscriptionPlan" -> _) ++
         marketingChoices.map { mc =>
-          "marketingChoicesForm" -> EventTracking.setSubMap {
+          "marketingChoicesForm" -> ActivityTracking.setSubMap {
             Map(
               "gnm" -> mc.gnm.getOrElse(false),
               "thirdParty" -> mc.thirdParty.getOrElse(false),
@@ -73,7 +73,7 @@ case class EventSubject(salesforceContactId: String,
           }
         } ++
         tierAmendment.map { tierAmend =>
-          "amendTier" -> EventTracking.setSubMap {
+          "amendTier" -> ActivityTracking.setSubMap {
             Map(
               "from" -> tierAmend.tierFrom.name,
               "to" -> tierAmend.tierTo.name
@@ -82,7 +82,7 @@ case class EventSubject(salesforceContactId: String,
           }
         }
 
-    EventTracking.setSubMap(dataMap)
+    ActivityTracking.setSubMap(dataMap)
   }
 
   def truncatePostcode(postcode: String) = {
@@ -90,27 +90,27 @@ case class EventSubject(salesforceContactId: String,
   }
 }
 
-trait EventTracking {
+trait ActivityTracking {
 
-  def trackEvent(data: TrackerData) {
+  def track(data: TrackerData) {
     try {
       val tracker = getTracker
       val dataMap = data.toMap
       tracker.trackUnstructuredEvent(dataMap)
     } catch {
       case error: Throwable =>
-      Logger.error(s"Event tracking error: ${error.getMessage}")
+      Logger.error(s"Activity tracking error: ${error.getMessage}")
     }
   }
 
   private def getTracker: Tracker = {
-    val emitter = new Emitter(EventTracking.url, HttpMethod.GET)
+    val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
     val subject = new Subject
     new Tracker(emitter, subject, "membership", "membership-frontend")
   }
 }
 
-object EventTracking {
+object ActivityTracking {
   val url = Config.trackerUrl
 
   def setSubMap(in:Map[String, Any]): JMap[String, Object] =

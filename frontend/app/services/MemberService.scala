@@ -48,7 +48,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
   }
 }
 
-trait MemberService extends LazyLogging with EventTracking {
+trait MemberService extends LazyLogging with ActivityTracking {
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
@@ -153,10 +153,10 @@ trait MemberService extends LazyLogging with EventTracking {
     } yield {
       IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
-      trackEvent(
-        SingleEvent(
-          eventSource = "membershipUpgrade",
-          EventSubject(
+      track(
+        MemberActivity(
+          source = "membershipUpgrade",
+          MemberData(
             salesforceContactId = memberId.salesforceContactId,
             identityId = user.id,
             tier = member.tier.name,
@@ -184,7 +184,7 @@ trait MemberService extends LazyLogging with EventTracking {
     }
 
     val eventSubject =
-      EventSubject(
+      MemberData(
         member.salesforceContactId,
         user.id,
         formData.plan.salesforceTier,
@@ -194,7 +194,7 @@ trait MemberService extends LazyLogging with EventTracking {
         Some(formData.marketingChoices)
     )
 
-    trackEvent(SingleEvent("membershipRegistration", eventSubject))
+    track(MemberActivity("membershipRegistration", eventSubject))
   }
 }
 

@@ -41,7 +41,7 @@ object TouchpointBackend {
 case class TouchpointBackend(
   memberRepository: FrontendMemberRepository,
   stripeService: StripeService,
-  zuoraService : ZuoraService) extends EventTracking {
+  zuoraService : ZuoraService) extends ActivityTracking {
 
   def start() = {
     memberRepository.salesforce.authTask.start()
@@ -62,8 +62,8 @@ case class TouchpointBackend(
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
-      val eventSubject = EventSubject(member.salesforceContactId, member.identityId, member.tier.name)
-      trackEvent(SingleEvent("cancelMembership", eventSubject))
+      val eventSubject = MemberData(member.salesforceContactId, member.identityId, member.tier.name)
+      track(MemberActivity("cancelMembership", eventSubject))
       ""
     }
   }
@@ -73,13 +73,13 @@ case class TouchpointBackend(
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
       memberRepository.metrics.putDowngrade(member.tier)
-      val eventSubject = EventSubject(
+      val eventSubject = MemberData(
         member.salesforceContactId,
         member.identityId,
         member.tier.name,
         Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
         )
-      trackEvent(SingleEvent("downgradeMembership", eventSubject))
+      track(MemberActivity("downgradeMembership", eventSubject))
       ""
     }
   }
