@@ -344,8 +344,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     this
   }
 
-  def IDontSeeTheMembershipTab = {
-    Assert.assert(new IdentityEditPage(driver).isMembershipTabVisible, false, "Membership tab should not be visible")
+  def theMembershipTabIsAnUpsell = {
+    Assert.assert(new IdentityEditPage(driver).isAnUpsell, true, "Membership tab is an upsell")
     this
   }
 
