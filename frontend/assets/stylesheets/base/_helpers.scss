@@ -47,6 +47,14 @@
     margin-bottom: 0 !important;
 }
 
+.u-anchor {
+    @include mq($until: mem-full) {
+        position: absolute;
+        right: rem($gs-gutter / 2);
+        top: rem($gs-gutter / 2);
+    }
+}
+
 .u-divider {
     padding-top: rem($gs-baseline / 2);
     border-top: 1px solid $c-border-brand;

@@ -120,6 +120,13 @@
     }
 }
 
+.icon-holder--small {
+    width: 20px; height: 20px;
+    .icon-inline {
+        width: 12px; height: 12px;
+    }
+}
+
 .icon-holder--neutral {
     color: $c-neutral1;
     border-color: $c-neutral1;

@@ -31,6 +31,12 @@
     }
 }
 
+.until-desktop {
+    @include mq($from: desktop) {
+        display: none !important;
+    }
+}
+
 .tablet-only {
     @include mq($until: tablet) {
         display: none !important;

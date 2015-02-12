@@ -73,7 +73,7 @@ trait UpgradeTier {
       }
     }
     else
-      Future.successful(NotFound)
+      Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
   }
 
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>

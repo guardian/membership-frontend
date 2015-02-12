@@ -19,12 +19,6 @@
     }
 }
 
-.grid--bordered {
-    .grid__item {
-        border-color: $c-neutral5;
-    }
-}
-
 // Drop bottom margins if we know we only
 // have a single row of grid items.
 .grid--single-row {
@@ -32,6 +26,24 @@
         .grid__item {
             margin-bottom: 0 !important;
         }
+    }
+}
+
+.grid--bordered {
+    .grid__item {
+        border-color: $c-neutral5;
+    }
+}
+
+/**
+ * See: One True Layout Method
+ *      http://css-tricks.com/fluid-width-equal-height-columns/
+ */
+.grid--stretch {
+    overflow: hidden;
+    .grid__item {
+        margin-bottom: -99999px !important;
+        padding-bottom: 99999px !important;
     }
 }
 
