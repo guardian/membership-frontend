@@ -43,8 +43,11 @@ define(function() {
         var SVG_EMBED = document.getElementById('svg-sprite');
         var ICON_GRID = document.querySelectorAll('.js-icon-grid');
         [].forEach.call(ICON_GRID, function(grid) {
-            var html = [].map.call(SVG_EMBED.querySelectorAll('symbol'), function(symbol) {
-                return '<svg class="icon-inline"><use xlink:href="#' + symbol.id + '"/></use></svg>';
+            var iconList = [].map.call(SVG_EMBED.querySelectorAll('symbol'), function(symbol) {
+                return symbol.id;
+            });
+            var html = iconList.map(function(id) {
+                return '<svg class="icon-inline"><use xlink:href="#' + id + '"/></use></svg>';
             }).join('');
             grid.innerHTML = html;
         });

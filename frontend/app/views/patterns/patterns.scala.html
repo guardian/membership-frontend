@@ -153,7 +153,10 @@
             Secondary Action + Icon
             @fragments.actionIcon("arrow-right")
         </button></p>
-        <p><button class="action action--toggle js-toggle">Toggle Action</button></p>
+        <p><button class="action action--secondary js-toggle" data-toggle-label="Show less" data-toggle-icon="minus">
+            @fragments.actionIcon("plus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show more</span>
+        </button></p>
         <p><a class="action-proceed" href="#">Proceed</a></p>
         <p><button class="action action--booking">Booking Action</button></p>
         <div class="l-inset tone-guardian-live">
@@ -162,17 +165,24 @@
     }
 
     @pattern("Toggle Component - Button", "JS toggle component") {
-        <button class="action action--toggle js-toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <button class="action action--secondary js-toggle" data-toggle="foo" data-toggle-label="Show less" data-toggle-icon="minus">
+            @fragments.actionIcon("plus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show more</span>
+        </button>
+
         <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
     @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
-        <button class="action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
+        <button class="action action--secondary js-toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more" data-toggle-icon="plus">
+            @fragments.actionIcon("minus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show less</span>
+        </button>
         <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
     }
 
     @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
-        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
+        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less"><span class="js-toggle-label">Show more</span></a>
         <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 

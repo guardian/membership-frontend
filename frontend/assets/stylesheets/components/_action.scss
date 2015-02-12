@@ -84,12 +84,10 @@
 /* Action Modifiers
    ========================================================================== */
 
-
 /**
  * Secondary modifier
  */
-.action--secondary,
-.action--toggle {
+.action--secondary {
    @extend %action;
 
    color: $c-button;
@@ -113,33 +111,6 @@
    }
 
 }
-
-
-/**
- * Toggle buttons
- * @extends from action-secondary
- */
-.action--toggle {
-   margin-bottom: $gutter-width-fluid;
-
-   &:before {
-       @extend .icon-plus;
-       content: '';
-       float: left;
-       margin: 0 rem($gs-baseline) 0 0;
-   }
-   &:after {
-       display: none;
-   }
-
-   &.is-toggled,
-   .action--toggle--toggled {
-       &:before {
-           @extend .icon-minus;
-       }
-   }
-}
-
 
 /**
  * Booking modifier
