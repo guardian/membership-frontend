@@ -491,6 +491,7 @@
     }
     .event-info__terms {
         @include fs-textSans(1);
+        display: block;
         padding-top: rem($gs-baseline/2);
     }
 
@@ -504,7 +505,7 @@
 }
 
 /**
- * Stick event info
+ * Sticky event info
  */
 .event-content__sticky.is-sticky {
     @include mq(tablet) {
