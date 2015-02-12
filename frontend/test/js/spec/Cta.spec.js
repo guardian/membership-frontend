@@ -94,7 +94,6 @@ define([
             });
 
             spyOn(cta, 'disableBuyTicketsCtaButton').and.callThrough();
-            spyOn(cta, 'upgradeComingSoonMemberCtaButton').and.callThrough();
             spyOn(cta, 'upgradeMemberCtaButton').and.callThrough();
             spyOn(cta, 'removeMemberCtaButton').and.callThrough();
 
@@ -143,7 +142,6 @@ define([
             it('loggedIn Friend - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed' , function (done) {
                 ctaClassSetup(salesStartOneWeekInTheFuture, 'Friend', true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -152,7 +150,6 @@ define([
             it('loggedIn Partner - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed', function (done) {
                 ctaClassSetup(salesStartOneWeekInTheFuture, 'Partner', true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -161,7 +158,6 @@ define([
             it('loggedIn Patron - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button NOT displayed', function (done) {
                 ctaClassSetup(salesStartOneWeekInTheFuture, 'Patron', true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -170,7 +166,6 @@ define([
             it('loggedIn NOT a member - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
                 ctaClassSetup(salesStartOneWeekInTheFuture, null, true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -179,7 +174,6 @@ define([
             it('loggedOut - "' + COMING_SOON + '" button disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
                 ctaClassSetup(salesStartOneWeekInTheFuture, null, true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -199,7 +193,6 @@ define([
                 ctaClassSetup(saleStartedYesterday, 'Friend', true);
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
@@ -207,8 +200,7 @@ define([
             it('loggedIn Partner - "' + BUY_TICKETS + '" button disabled and "' + TICKETS_AVAILABLE_SOON + '" button displayed', function (done) {
                 ctaClassSetup(saleStartedYesterday, 'Partner', true);
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
+                expect(cta.upgradeMemberCtaButton).toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
             });
@@ -218,7 +210,6 @@ define([
                 ctaClassSetup(saleStartedYesterday, 'Patron', true);
 
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
 
@@ -230,7 +221,6 @@ define([
                 ctaClassSetup(saleStartedYesterday, null, true)
 
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
 
@@ -242,7 +232,6 @@ define([
                 ctaClassSetup(saleStartedYesterday, null, true)
 
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
 
@@ -262,7 +251,6 @@ define([
             it('loggedIn Friend - "' + BUY_TICKETS + '" disabled  and "' + UPGRADE_MEMBERSHIP + '" button displayed', function (done) {
                 ctaClassSetup(saleStarted8DaysAgo, 'Friend', true);
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -271,7 +259,6 @@ define([
             it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted8DaysAgo, 'Partner', true);
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -280,7 +267,6 @@ define([
             it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted8DaysAgo, 'Patron', true);
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).toHaveBeenCalled();
                 done();
@@ -289,7 +275,6 @@ define([
             it('loggedIn not a member - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
                 ctaClassSetup(saleStarted8DaysAgo, null, true)
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -298,7 +283,6 @@ define([
             it('loggedOut - "' + BUY_TICKETS + '" disabled and "' + BECOME_A_MEMBER + '" button displayed', function (done) {
                 ctaClassSetup(saleStarted8DaysAgo, null, true)
                 expect(cta.disableBuyTicketsCtaButton).toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -317,7 +301,6 @@ define([
             it('loggedIn Friend - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted15DaysAgo, 'Friend', true);
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -326,7 +309,6 @@ define([
             it('loggedIn Partner - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted15DaysAgo, 'Partner', true);
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -335,7 +317,6 @@ define([
             it('loggedIn Patron - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted15DaysAgo, 'Patron', true);
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -344,7 +325,6 @@ define([
             it('loggedIn not a member - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted15DaysAgo, null, true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
@@ -353,7 +333,6 @@ define([
             it('loggedOut - "' + BUY_TICKETS + '" enabled and memberCTA button removed', function (done) {
                 ctaClassSetup(saleStarted15DaysAgo, null, true)
                 expect(cta.disableBuyTicketsCtaButton).not.toHaveBeenCalled();
-                expect(cta.upgradeComingSoonMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.upgradeMemberCtaButton).not.toHaveBeenCalled();
                 expect(cta.removeMemberCtaButton).not.toHaveBeenCalled();
                 done();
