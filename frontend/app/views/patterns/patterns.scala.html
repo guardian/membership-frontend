@@ -29,6 +29,14 @@
         <div class="js-icon-grid pattern-icon-grid"></div>
     }
 
+    @pattern("Helpers - Text") {
+        <p class="text-feature">This is some feature text using the .text-feature helper class</p>
+        <p class="text-lead">This is a lead paragraph using the .text-lead helper class</p>
+        <p class="text-highlight">This is some highlighted text using the .text-highlight helper class</p>
+        <p class="text-note">This note using the .text-note helper class</p>
+        <p class="text-caption">This is some caption text using the .text-caption helper class</p>
+    }
+
     @pattern("Base - Inline Text Elements") {
         <div class="copy">
             <p><a href="#">This is a text link</a></p>
@@ -267,6 +275,18 @@
         @fragments.event.seriesDetails(eventPortfolio.orderedEvents.head)
     }
 
+    @pattern("Promo - Primary") {
+        @fragments.promos.promoPrimary(Html("Primary Promo"), imageUrl="images/about/about-events-1140.jpg", toneClass=Some("tone-trans-guardian-live")) {
+            <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+        }
+    }
+
+    @pattern("Promo - Secondary") {
+        @fragments.promos.promoSecondary(Html("Secondary Promo"), imageUrl="images/about/about-masterclasses-740.jpg", toneClass=Some("tone-guardian-live")) {
+            <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+        }
+    }
+
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         @fragments.event.itemHero(eventPortfolio.orderedEvents.head)
     }
@@ -299,6 +319,10 @@
                 </li>
             }
         </ul>
+    }
+
+    @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
+        @fragments.event.infoPanel(eventPortfolio.orderedEvents.head)
     }
 
     @pattern("Event – Snapshot", "Simple snapshot of event information") {
