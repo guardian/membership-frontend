@@ -1,4 +1,4 @@
-@(imgSrc: String, text: String = "../../../../public")
+@(imgSrc: String, text: String = "")
 
 @import views.support.Asset
 
@@ -7,6 +7,6 @@
         <div class="call-out tone-trans-brand">
             <h2 class="call-out__title">@text</h2>
         </div>
-        <img src="@Asset.at(imgSrc)" alt="" class="responsive-img">
+        <img src="@Asset.at(imgSrc)" alt="Offer Image" class="responsive-img">
     </div>
 </div>
