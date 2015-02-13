@@ -1,0 +1,18 @@
+.offer {
+    width: 50%;
+    float: left;
+}
+
+.offer-benefits {
+    margin-bottom: rem($gs-baseline*3);
+
+    li:nth-last-child(1),
+    li:nth-last-child(2) {
+        margin-bottom: 0;
+    }
+
+    @include mq(tablet) {
+        margin-bottom: 0;
+    }
+}
+
