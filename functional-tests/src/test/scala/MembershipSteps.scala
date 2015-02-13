@@ -395,10 +395,23 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IChooseToBecomeAPatron = {
-    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
-      .clickBecomeAPatron.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
+    thanksToPatron.creditCard.submitPayment("90 York", "Way", "UK", "London", "N19GU", validCardNumber, "111",
         "12", "2031")
     new UpgradePage(driver).clickSubmit
+    this
+  }
+
+  def thanksToPatron = {
+    new ThankYouPage(driver).clickAccountControl.clickEditProfile.clickMembershipTab.clickChangeTier
+      .clickBecomeAPatron
+  }
+
+  def IChooseToUpgradeToAPatron = {
+    thanksToPatron
+    val page = new UpgradeToPatronPage(driver)
+    Assert.assert(page.getNewTier.equals("Patron"), true, "New tier should be patron")
+    Assert.assert(isNotInPast(page.getOldTierEndDate) && !isInFuture(page.getOldTierEndDate), true, "Today should be the last day of the old tier")
+    page.clickUpgrade
     this
   }
 
@@ -443,7 +456,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def SearchResultsMatch(keyword: String) = {
-    println("keyword: " + keyword + " string: " + new MasterclassListPage(driver).getEventTitleByIndex(0))
     val found = new MasterclassListPage(driver).getEventTitleByIndex(0).contains(keyword)
     Assert.assert(found, true, "First result should contain keyword")
   }
@@ -451,7 +463,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   private def verifyTier(yearlyPayment: String) = {
     val page = new ThankYouPage(driver)
     Assert.assert(isInFuture(page.getNextPaymentDate), true, "The next payment date should be in the future")
-    Assert.assert(page.getAmountPaidToday, yearlyPayment, "Amount paid today should be " + yearlyPayment)
     Assert.assert(page.getPaymentAmount, yearlyPayment, "The yearly payment should be the same as the current payment")
     Assert.assert(page.getCardNumber.endsWith("4242"), true, "The card number should be correct")
   }
@@ -462,7 +473,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   private def becomeFriend = new PaymentPage(driver).cardWidget.enterPostCode("N1 9GU").clickSubmitPayment
 
   private def isInFuture(dateTime: String) = {
-    // TODO James Oram MEM-141 should make this not fail occasionally
     val sdf = new SimpleDateFormat("d MMMM yyyy")
     sdf.parse(dateTime).after(new Date())
   }
