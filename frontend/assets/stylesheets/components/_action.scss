@@ -224,43 +224,6 @@
     }
 }
 
-/* Actions - CTA
-   ========================================================================== */
-// TODO: Document usage here, can these be replaced with common actions?
-
-.action-cta {
-    color: $white;
-    border: 0;
-    display: inline-block;
-    cursor: pointer;
-    min-width: rem($gs-baseline * 6);
-    line-height: rem($gs-gutter);
-}
-
-.action-cta--confirm {
-    background-color: $c-button;
-}
-
-.action-cta--cancel {
-    &,
-    &:hover {
-      background-color: $c-button-cancel;
-    }
-}
-
-.action-cta--disabled {
-    cursor: default;
-}
-
-.action-cta--full-width-mobile {
-    width: 100%;
-    vertical-align: middle;
-    @include mq(tablet) {
-        width: auto;
-        float: right;
-    }
-}
-
 /* Wait
    ========================================================================== */
 // TODO: Document how this is used. i- suggests an icon prefix?
