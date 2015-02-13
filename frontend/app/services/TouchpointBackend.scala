@@ -62,8 +62,7 @@ case class TouchpointBackend(
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
-      val eventSubject = MemberData(member.salesforceContactId, member.identityId, member.tier.name)
-      track(MemberActivity("cancelMembership", eventSubject))
+      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name)))
       ""
     }
   }
@@ -73,13 +72,15 @@ case class TouchpointBackend(
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
       memberRepository.metrics.putDowngrade(member.tier)
-      val eventSubject = MemberData(
-        member.salesforceContactId,
-        member.identityId,
-        member.tier.name,
-        Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
-        )
-      track(MemberActivity("downgradeMembership", eventSubject))
+      track(
+        MemberActivity(
+          "downgradeMembership",
+          MemberData(
+          member.salesforceContactId,
+          member.identityId,
+          member.tier.name,
+          Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
+      )))
       ""
     }
   }

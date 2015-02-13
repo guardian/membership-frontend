@@ -183,7 +183,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       case _ => None
     }
 
-    val eventSubject =
+    val trackingInfo =
       MemberData(
         member.salesforceContactId,
         user.id,
@@ -194,7 +194,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         Some(formData.marketingChoices)
     )
 
-    track(MemberActivity("membershipRegistration", eventSubject))
+    track(MemberActivity("membershipRegistration", trackingInfo))
   }
 }
 
