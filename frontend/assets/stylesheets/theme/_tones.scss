@@ -178,6 +178,12 @@
 /* Neutral
    ========================================================================== */
 
+.tone-white {
+    background-color: $white;
+}
 .tone-tint {
     background-color: $c-neutral7;
+}
+.tone-featured-tint {
+    background-color: $c-neutral6;
 }
