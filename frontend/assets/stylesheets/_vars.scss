@@ -149,15 +149,32 @@ $c-link: map-get($pasteup-palette, news-main-1);
 $c-error: map-get($pasteup-palette, error);
 $c-soldOut: #cc2b12;
 
-// Tone colours
-// DEPRECATED: prefer palette-tones / tone()
-$c-tone-live: map-get($pasteup-palette, live-main-1);
-$c-tone-live-accent: map-get($pasteup-palette, live-main-2);
-$c-tone-masterclass: #ffbb00;
-$c-tone-masterclass-accent: #fcdd03;
-$c-tone-friend: $c-neutral1;
-$c-tone-partner: map-get($pasteup-palette, news-main-2);
-$c-tone-patron: map-get($pasteup-palette, news-main-1);
+// Membership palette
+$mem-brandBlue: map-get($pasteup-palette, news-main-2);
+$mem-brandBlueDark: #197caa;
+
+// Buttons
+$c-button: $mem-brandBlueDark;
+$c-button-cancel: #b8b8b8;
+
+// Borders
+$c-border-brand: $mem-brandBlue;
+$c-border-neutral: $c-neutral3;
+
+// Messages
+$c-flash-error: #d61d00;
+$c-flash-error-border: #ff998a;
+$c-flash-error-background: #fdf4f3;
+$c-flash-success: #1c6326;
+$c-flash-success-border: #33a22b;
+$c-flash-success-background: #faffe5;
+
+// Thirdparty
+$c-thirdparty-twitter: #55acee;
+$c-thirdparty-facebook: #3b5998;
+
+// Tone Colours
+// =============================================================================
 
 // Usage: tone('live', 'accent')
 //        tone('live') => defaults to 'base' key
@@ -185,30 +202,3 @@ $palette-tones: (
         base: map-get($pasteup-palette, news-main-1)
     )
 );
-
-// Membership palette
-$mem-brandBlue: map-get($pasteup-palette, news-main-2);
-$mem-brandBlueDark: #197caa;
-// TODO: This is going to come out when brochure pages are revisited,
-// only used on /about page for Space.
-$mem-green: #aad802;
-
-// Buttons
-$c-button: $mem-brandBlueDark;
-$c-button-cancel: #b8b8b8;
-
-// Borders
-$c-border-brand: $mem-brandBlue;
-$c-border-neutral: $c-neutral3;
-
-// Messages
-$c-flash-error: #d61d00;
-$c-flash-error-border: #ff998a;
-$c-flash-error-background: #fdf4f3;
-$c-flash-success: #1c6326;
-$c-flash-success-border: #33a22b;
-$c-flash-success-background: #faffe5;
-
-// Thirdparty
-$c-thirdparty-twitter: #55acee;
-$c-thirdparty-facebook: #3b5998;
