@@ -1,3 +1,17 @@
+.offer-letterbox {
+    @include mq(desktop) {
+        max-height: rem(gs-height(10));
+        overflow: hidden;
+    }
+}
+
+.offer-letterbox__crop {
+    @include mq(desktop) {
+        position: relative;
+        top: -(rem(gs-height(2)));
+    }
+}
+
 .offer {
     width: 50%;
     float: left;
