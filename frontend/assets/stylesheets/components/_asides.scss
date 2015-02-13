@@ -44,3 +44,9 @@
     padding: rem($gs-baseline * 2);
     margin-bottom: rem($gs-baseline * 2);
 }
+
+.aside-feature {
+    @include mq(tablet) {
+        margin-top: rem(62px);
+    }
+}

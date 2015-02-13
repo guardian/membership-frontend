@@ -187,6 +187,36 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     }
 }
 
+/* Page Section - slim (Modifier)
+   ========================================================================== */
+
+/**
+ * Example usage:
+ * <div class="page-section page-section--slim">
+ *     <div class="page-section__content">[...]</div>
+ * </div>
+ */
+.page-section--slim {
+    padding-bottom: 0;
+    .page-section__content {
+        @include mq(desktop) {
+            width: rem(gs-span(9));
+            padding-left: rem($gs-gutter*4);
+            padding-right: rem($gs-gutter*2);
+            margin-right: rem($gs-gutter);
+        }
+        @include mq(mem-full) {
+            width: rem(gs-span(10));
+            padding-left: $_page-offset;
+        }
+    }
+    .page-section__supplementary {
+        @include mq(mem-full) {
+            width: rem(gs-span(4));
+        }
+    }
+}
+
 /* Page Section - Bordered (Modifier)
    ========================================================================== */
 
