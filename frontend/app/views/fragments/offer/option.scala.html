@@ -1,0 +1,10 @@
+@(title: String, offer: String, fullPrice: String, rightGutter: Boolean = false, note: String = "")
+<div class="offer@if(rightGutter){ l-gutter-right}">
+    <h3 class="h-offer u-divider-dotted">@title</h3>
+    <p class="h-sub u-divider-dotted">@offer</p>
+    <p class="h-sub u-no-bottom-margin">Full price</p>
+    <p class="h-sub u-no-bottom-margin">@fullPrice</p>
+    @if(note) {
+    <p class="text-caption">@note</p>
+    }
+</div>

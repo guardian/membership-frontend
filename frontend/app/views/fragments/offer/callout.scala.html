@@ -1,0 +1,12 @@
+@(imgSrc: String, text: String = "../../../../public")
+
+@import views.support.Asset
+
+<div class="offer-letterbox">
+    <div class="offer-letterbox__crop call-out-container">
+        <div class="call-out tone-trans-brand">
+            <h2 class="call-out__title">@text</h2>
+        </div>
+        <img src="@Asset.at(imgSrc)" alt="" class="responsive-img">
+    </div>
+</div>
