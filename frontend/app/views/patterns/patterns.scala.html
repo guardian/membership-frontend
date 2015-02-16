@@ -297,6 +297,22 @@
         }
     }
 
+    @pattern("Promo - Image", "Image with a letter box crop and call out") {
+        @fragments.promos.letterbox(
+            "images/offer/subscriptions/audience-1140.jpg",
+            "Guardian Live Audience",
+            Some("Call out text inserted here"),
+            Seq("tone-trans-brand"))
+    }
+
+    @pattern("Offer - Option", "Image with a letter box crop and call out") {
+        @fragments.offer.option(
+            "Pay annually",
+            s"Pay nothing for 6 months then pay £00",
+            s"£00.00/year"
+        )
+    }
+
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         @fragments.event.itemHero(eventPortfolio.orderedEvents.head)
     }
