@@ -1,0 +1,8 @@
+@(userFields: model.PrivateFields)
+
+@if(userFields.billingAddress1) {
+    @fragments.user.deliveryAddress(userFields)
+} else {
+    @userFields.billingAddress1@if(userFields.billingAddress2){, @userFields.billingAddress2}<br>
+    @for( town <- userFields.billingAddress3 ) {@town} @userFields.billingPostcode<br/>
+}

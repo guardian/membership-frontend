@@ -13,23 +13,25 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
 
   private def tierSpan = driver.findElement(By.id("qa-membership-tier"))
 
-  private def startDateSpan = driver.findElement(By.cssSelector(".js-membership-join-date"))
+  private def startDateSpan = driver.findElement(By.id("qa-mem-join-date"))
 
-  private def paymentCostSpan = driver.findElement(By.cssSelector(".membership-payment-cost"))
+  private def paymentCostSpan = driver.findElement(By.id("qa-mem-payment-cost"))
 
-  private def nextPaymentSpan = driver.findElement(By.cssSelector(".js-membership-payment-next"))
+  private def nextPaymentSpan = driver.findElement(By.id("qa-mem-current-period-end"))
 
-  private def cardDetailsSpan = driver.findElement(By.xpath("(//span[contains(@class, 'membership-tab__card-details')])[2]"))
+  private def cardDetailsSpan = driver.findElement(By.id("qa-card-details"))
 
-  private def changeCardButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-open"))
+  private def changeCardButton = driver.findElement(By.id("qa-change-card"))
 
-  private def successFlashMessage = driver.findElement(By.cssSelector(".form__success"))
+  private def successFlashMessage = driver.findElement(By.id("qa-success-message"))
 
-  private def changeTierButton = driver.findElement(By.cssSelector("[data-link-name=\"Change tier\"]"))
+  private def changeTierButton = driver.findElement(By.id("qa-change-tier"))
 
-  private def cancelledMembershipH2 = driver.findElement(By.cssSelector(".subscription-change__title"))
+  private def cancelledMembershipH2 = driver.findElement(By.id("qa-cancelled-membership"))
 
   private def accountDetailsTab = driver.findElement(By.cssSelector("#tabs-account-profile-2-tab>a"))
+
+  private def upsellDiv = driver.findElement(By.cssSelector(".membership-up-sell"))
 
   val cardWidget = new CreditCardWidget(driver)
 
@@ -48,7 +50,7 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     this
   }
 
-  def isMembershipTabVisible = {
+  def isAnUpsell = {
     try {
       membershipTab.isDisplayed
     } catch {
@@ -62,7 +64,10 @@ class IdentityEditPage(driver: WebDriver) extends BasePage(driver) {
     new ChangeTierPage(driver)
   }
 
-  def getMembershipTier: String = tierSpan.getText
+  def getMembershipTier: String = {
+    new WebDriverWait(driver, 25).until(ExpectedConditions.visibilityOf(changeTierButton))
+    tierSpan.getText
+  }
 
   def getStartDate: String = startDateSpan.getText
 

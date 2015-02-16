@@ -151,15 +151,14 @@
                 @fragments.form.errorMessage("Sorry, the expiry date that you have entered is invalid. Please check and re-enter.")
             </div>
         } { card =>
-            <div class="form-field">
-
-                <div class="u-cf">
-
-                    <label class="label form-note">Card number</label>
-
-                    •••• •••• •••• •••• @card.last4
-                    <i class="sprite-card sprite-card--small sprite-card--@(card.issuer)"></i>
-
+            <div class="form-field u-cf">
+                <div class="card-summary">
+                    <div class="card-summary__type">
+                        <i class="sprite-card sprite-card--small sprite-card--@(card.issuer)"></i>
+                    </div>
+                    <div class="card-summary__digits">
+                        •••• •••• •••• •••• @card.last4
+                    </div>
                 </div>
             </div>
         }

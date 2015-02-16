@@ -149,8 +149,13 @@ case class MasterclassEventServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
+object MasterclassEventsProvider {
+  val MasterclassesWithAvailableMemberDiscounts: (RichEvent) => Boolean =
+    _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
+}
+
 object MasterclassEventService extends EventbriteService {
-  import EventbriteServiceHelpers._
+  import MasterclassEventsProvider._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
   val maxDiscountQuantityAvailable = 1
@@ -159,7 +164,7 @@ object MasterclassEventService extends EventbriteService {
 
   val contentApiService = GuardianContentService
 
-  override def events: Seq[RichEvent] = availableEvents(super.events)
+  override def events: Seq[RichEvent] = super.events.filter(MasterclassesWithAvailableMemberDiscounts)
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
     val masterclassData = contentApiService.masterclassContent(event.id)
@@ -172,8 +177,6 @@ object MasterclassEventService extends EventbriteService {
 }
 
 object EventbriteServiceHelpers {
-  def availableEvents(events: Seq[RichEvent]): Seq[RichEvent] =
-    events.filter(_.memberTickets.exists { t => t.quantity_sold < t.quantity_total } )
 
   def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
     val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.id) }

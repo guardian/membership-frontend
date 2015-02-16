@@ -1,18 +1,7 @@
 @(event: model.RichEvent.RichEvent)
 
-@import views.support.Dates._
-@import configuration.Config
 @import com.gu.membership.salesforce.Tier
 @import model.Eventbrite.EBTicketClass
-
-@becomeMemberCta(ticket: EBTicketClass) = @{
-    val ticketSaleDates = model.TicketSaleDates.datesFor(event, ticket)
-    val friendCanBuyTicket = ticketSaleDates.tierCanBuyTicket(Tier.Friend)
-
-    if(!friendCanBuyTicket) {
-        Html("<div><a class='action js-member-cta' href='/join'>Become a member</a></div>")
-    }
-}
 
 <div class="event-info@if(event.isBookable && event.metadata.largeImg) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
 
@@ -36,28 +25,18 @@
         <div class="stats-listing">
             @fragments.event.stats(event)
             @* TODO: Make part of event stats *@
-            @if(event.isSoldThruEventbrite && event.isBookable) {
-                @for(ticket <- event.generalReleaseTicket) {
-                    @fragments.event.ticketSales(event, ticket)
-                }
+            @for(ticketing <- event.internalTicketing if event.isBookable) {
+                @fragments.event.ticketSales(event, ticketing)
             }
         </div>
 
-        @if(event.isSoldThruEventbrite) {
-
-            @if(event.isSoldOut) {
-                <meta itemprop="availability" content="http://schema.org/SoldOut">
-            } else {
-                <meta itemprop="availability" content="http://schema.org/InStock">
-            }
-
+         @for(ticketing <- event.internalTicketing) {
             @fragments.pricing.priceInfoEvent(event)
-
-            @for(ticket <- event.generalReleaseTicket) {
-                @if(event.isBookable) {
-                    @fragments.event.ticketCta(event)
-                    @fragments.event.terms(event, List("event-info__terms"))
-                    @becomeMemberCta(ticket)
+            @if(event.isBookable) {
+                @fragments.event.ticketCta(event)
+                @fragments.event.terms(event, List("event-info__terms"))
+                @if(ticketing.isCurrentlyAvailableToPaidMembersOnly) {
+                    <a class="action js-member-cta" href="@routes.Joiner.tierList">Become a member</a>
                 }
             }
         }

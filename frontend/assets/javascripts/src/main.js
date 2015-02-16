@@ -4,9 +4,9 @@ require([
     'src/modules/metrics',
     'src/modules/events/Cta',
     'src/modules/events/filter',
-    'src/modules/events/toggle',
     'src/modules/slideshow',
     'src/modules/images',
+    'src/modules/toggle',
     'src/modules/sticky',
     'src/modules/Header',
     'src/modules/navigation',
@@ -17,6 +17,7 @@ require([
     'src/utils/modal',
     'src/utils/form/processSubmit',
     'src/modules/form',
+    'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
@@ -26,9 +27,9 @@ require([
     metrics,
     Cta,
     filter,
-    toggle,
     slideshow,
     images,
+    toggle,
     sticky,
     Header,
     navigation,
@@ -38,7 +39,8 @@ require([
     modal,
     patterns,
     processSubmit,
-    form
+    form,
+    metrics
 ) {
     'use strict';
 
@@ -80,5 +82,8 @@ require([
 
     // Pattern library
     patterns.init();
+
+    // Metrics
+    metrics.init();
 
 });

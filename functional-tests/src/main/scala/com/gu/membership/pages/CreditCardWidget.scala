@@ -32,7 +32,7 @@ class CreditCardWidget(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def submitPaymentButton = driver.findElement(By.xpath("//button[contains(@class,'submit-input')]"))
 
-  private def updateCCButton = driver.findElement(By.cssSelector(".submit-input.js-membership-change-cc-submit"))
+  private def updateCCButton = driver.findElement(By.cssSelector(".js-mem-change-cc-submit"))
 
   private def errorMessage = driver.findElement(By.cssSelector(".qa-form-error"))
 
