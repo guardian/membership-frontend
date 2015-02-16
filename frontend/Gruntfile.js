@@ -65,6 +65,16 @@ module.exports = function (grunt) {
             }
         },
 
+        postcss: {
+            options: {
+                map: true,
+                processors: [
+                    require('autoprefixer-core')({browsers: ['> 5%', 'last 2 versions', 'IE 9', 'Safari 6']}).postcss
+                ]
+            },
+            dist: { src: '<%= dirs.publicDir.stylesheets %>/*.css' }
+        },
+
         requirejs: {
             compile: {
                 options: {
@@ -381,6 +391,7 @@ module.exports = function (grunt) {
             'copy:images',
             'shell:svgencode',
             'sass:compile',
+            'postcss',
             'imagemin'
         ]);
     });
