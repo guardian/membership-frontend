@@ -383,7 +383,7 @@
 
 .package-promo--stretch {
     @include mq(desktop) {
-        min-height: rem(gs-height(6.5));
+        min-height: rem(300px); // Magic number
 
         .package-promo__actions {
             padding-bottom: 0;
