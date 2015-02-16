@@ -57,7 +57,7 @@ body {
 }
 
 .l-gutter {
-    padding: rem($gs-baseline) rem(20px) rem($gs-baseline*3);
+    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
 }
 
 .l-gutter-right {
