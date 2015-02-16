@@ -31,11 +31,16 @@ define([
      */
     var validCreditCardMonth = function (monthElem) {
         var yearElem = document.querySelector('.js-credit-card-exp-year');
-        var isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+        var isValid = true;
 
-        if (isValid) {
-            // treat month/year inputs as a pair if month validates both month and year are valid so flush errors
-            display.flushErrIds([monthElem.id, yearElem.id]);
+        // we only want to validate expiry if the year select has a number value i.e not the default value
+        if (!isNaN(parseInt(yearElem.value, 10))) {
+            isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+
+            if (isValid) {
+                // treat month/year inputs as a pair if month validates both month and year are valid so flush errors
+                display.flushErrIds([monthElem.id, yearElem.id]);
+            }
         }
 
         return isValid;
