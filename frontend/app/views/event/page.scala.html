@@ -8,7 +8,7 @@
 @import model.Eventbrite._
 @import model.RichEvent._
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo, isBrochure = true, htmlClass = "js-event") {
+@main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
@@ -34,20 +34,18 @@
                     @fragments.event.addressSummary(event)
                 </div>
             </div>
-            @if(event.isSoldThruEventbrite) {
-                @for(ticket <- event.generalReleaseTicket) {
-                    <div class="event-ticket@if(ticket.free) { event-ticket--free }u-cf">
-                        <div class="event-ticket__details">
-                            @fragments.pricing.priceInfoEvent(event, isPrimary=true)
-                        </div>
-                        @if(event.isBookable) {
-                            <div class="event-ticket__action">
-                                @fragments.event.ticketCta(event, List("action--booking"))
-                                @fragments.event.terms(event)
-                            </div>
-                        }
+            @for(internalTicketing <- event.internalTicketing) {
+                <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free }u-cf">
+                    <div class="event-ticket__details">
+                        @fragments.pricing.priceInfoEvent(event, isPrimary=true) <!-- internalTicketing -->
                     </div>
-                }
+                    @if(event.isBookable) {
+                        <div class="event-ticket__action">
+                            @fragments.event.ticketCta(event, List("action--booking"))
+                            @fragments.event.terms(event)
+                        </div>
+                    }
+                </div>
             }
             <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
         </div>
@@ -72,10 +70,12 @@
                                    data-metric-category="events"
                                    data-metric-action="highlights">@highlight.title</a>
                             }
+                        } else {
+                            @if(event.isSoldOut) {
+                                @fragments.event.waitlist(event, List("u-no-margin"))
+                            }
                         }
-                        @if(event.isSoldOut && !event.isPastEvent) {
-                            @fragments.event.waitlist(event, List("u-no-margin"))
-                        }
+
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                     </div>
                 }
                 @if(!event.isBookable) {
-                    <a class="action action--secondary u-fullwidth u-no-top-margin" href="@event.metadata.eventListUrl">
+                    <a class="action action--secondary u-fullwidth" href="@event.metadata.eventListUrl">
                         Find other @event.metadata.pluralTitle
                         @fragments.actionIcon("arrow-right")
                     </a>

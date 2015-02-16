@@ -1,0 +1,41 @@
+/* Offer Option
+   ========================================================================== */
+
+/**
+ * Example usage:
+ * <div class="offer">
+ *     <h3 class="offer__title">Title</h3>
+ *     <p class="offer__deal">Deal on offer</p>
+ *     <p class="offer__heading">Heading</p>
+ *     <p class="offer__price">Price</p>
+ *     <p class="offer__note">(Optional)</p>
+ * </div>
+ *
+ */
+
+.offer {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px dotted $c-neutral3;
+}
+
+.offer__title {
+    @include fs-headline(4);
+    font-weight: 500;
+    padding-bottom: rem($gs-baseline*2);
+}
+
+.offer__deal {
+    @include fs-headline(2);
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px dotted $c-neutral3;
+}
+
+.offer__price,
+.offer__heading {
+    @include fs-headline(2);
+    margin-bottom: 0;
+}
+
+.offer__note {
+    @include fs-textSans(2);
+}

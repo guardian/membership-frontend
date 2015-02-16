@@ -1,11 +1,12 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
 
-@main("Events", htmlClass="events-bg theme--guardian-live", pageInfo=pageInfo) {
+@main("Events", pageInfo=pageInfo) {
+    <main role="main" class="l-constrained">
+        @fragments.event.headerBar(
+            "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+            "guardian-live"
+        )
 
-    @fragments.event.headerBar(
-        "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-        "guardian-live"
-    )
-
-    @views.html.event.list(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
+        @views.html.event.list(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
+    </main>
 }

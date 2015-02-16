@@ -146,7 +146,7 @@
     border-color: tone('friend');
 }
 .tone-fill-friend {
-    fill: $c-tone-friend;
+    fill: tone('friend');
 }
 
 .tone-partner {
@@ -159,7 +159,7 @@
     border-color: tone('partner');
 }
 .tone-fill-partner {
-    fill: $c-tone-partner;
+    fill: tone('partner');
 }
 
 .tone-patron {
@@ -172,12 +172,15 @@
     border-color: tone('patron');
 }
 .tone-fill-patron {
-    fill: $c-tone-patron;
+    fill: tone('patron');
 }
 
 /* Neutral
    ========================================================================== */
 
+.tone-white {
+    background-color: $white;
+}
 .tone-tint {
     background-color: $c-neutral7;
 }
