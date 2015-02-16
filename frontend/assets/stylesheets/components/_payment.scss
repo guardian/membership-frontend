@@ -48,6 +48,39 @@ $current-indicator: rem(72px);
    }
 }
 
+/* Security Note
+   ========================================================================== */
+
+.security-note {
+    @include fs-data(3);
+    color: $c-neutral1;
+    margin: rem($gs-baseline / 2) 0;
+}
+
+/* Card Summary
+   ========================================================================== */
+
+.card-summary {
+    margin-bottom: rem($gs-baseline * 2);
+}
+.card-summary__type,
+.card-summary__digits {
+    display: inline-block;
+    vertical-align: middle;
+}
+.card-summary__type {
+    margin-right: rem($gs-baseline / 2);
+}
+.card-summary__digits {
+    @include fs-data(5);
+}
+.card-summary__digits:before {
+    @include fs-data(6);
+    display: inline-block;
+    content: '•••• •••• •••• ••••';
+    margin-right: rem($gs-baseline / 2);
+}
+
 /* Payment Cards Sprite
    ========================================================================== */
 
@@ -65,6 +98,7 @@ $sprite-card-offset-visa:               -355px;
 .sprite-card {
     background: url(/assets/images/card-sprite.png) no-repeat top left;
     display: inline-block;
+    vertical-align: middle;
     background-size: $sprite-card-width/2 auto; // scales 2x image down
     width: $sprite-card-width/2;
     height: $sprite-card-height/2;

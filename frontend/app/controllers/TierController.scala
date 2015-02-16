@@ -1,19 +1,18 @@
 package controllers
 
-import scala.concurrent.Future
-
-import play.api.libs.json.Json
-import play.api.mvc.{DiscardingCookie, Controller}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
+import actions._
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
-
-import actions._
 import forms.MemberForm._
-import model.{Zuora, PageInfo, FriendTierPlan}
-import services.{MemberService, IdentityApi, IdentityService}
+import model.Zuora.PaidPreview
+import model.{FriendTierPlan, PageInfo, Zuora}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
+import play.api.mvc.{Controller, DiscardingCookie}
+import services.{IdentityApi, IdentityService, MemberService}
+
+import scala.concurrent.Future
 
 trait DowngradeTier {
   self: TierController =>
@@ -43,19 +42,34 @@ trait UpgradeTier {
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
 
-    def futureCustomerOpt = request.member match {
+    val futurePaidPreviewOpt = request.member match {
       case paidMember: PaidMember =>
-        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+        val previewUpgradeSubscriptionFuture = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
+        val stripeCustomerFuture = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+        for {
+          preview <- previewUpgradeSubscriptionFuture
+          customer <- stripeCustomerFuture
+        } yield Some(PaidPreview(customer.card, preview))
       case _: FreeMember => Future.successful(None)
     }
 
+    val subscriptionService = request.touchpointBackend.subscriptionService
+
     if (request.member.tier < tier) {
+      val subscriptionStatusFuture = subscriptionService.getSubscriptionStatus(request.member)
+      val identityDetailsFuture = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
       for {
-        customerOpt <- futureCustomerOpt
-        user <- IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
+        paidPreviewOpt <- futurePaidPreviewOpt
+        subscriptionStatus <- subscriptionStatusFuture
+        currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+        user <- identityDetailsFuture
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-        Ok(views.html.tier.upgrade.upgradeForm(request.member.tier, tier, user.privateFields, pageInfo, customerOpt.map(_.card)))
+        request.member match {
+          case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, currentSubscription)) //todo change to read-ony form
+          case _ => Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
+        }
+
       }
     }
     else
@@ -69,17 +83,15 @@ trait UpgradeTier {
       memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
-    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = for {
-      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, form, identityRequest)
+    def handlePaid(paidMember: PaidMember) = for {
+      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest)
     } yield Redirect(routes.TierController.upgradeThankyou(tier))
 
     val futureResult = request.member match {
       case freeMember: FreeMember =>
         freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
 
-      case paidMember: PaidMember =>
-        Future.successful(NotFound)
-        //paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+      case paidMember: PaidMember => handlePaid(paidMember)
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {

@@ -11,17 +11,16 @@
     event.ticket_classes.length * ticketHeight + iframeChrome
 }
 
-@title = @{
-    if (upgrade) {
-        "Change Tier Summary | " + member.tier.name
-    } else {
-        "Thank you | " + member.tier.name
-    }
-}
+@title = @{ if (upgrade) "Thank you for upgrading" else "Thank you | " + member.tier.name }
 
-@personalisedWelcome = {
-    @for(firstName <- member.firstName) {
-        Hello @firstName<br/>
+@pageHeader = @{
+    if(upgrade) {
+        "All done! Thanks for upgrading"
+    } else {
+        for(firstName <- member.firstName) {
+            "Hello " + firstName + "<br/>"
+        }
+        "Welcome to Guardian Membership"
     }
 }
 
@@ -29,8 +28,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(personalisedWelcome + "Welcome to Guardian Membership",
-            Some("You're the newest member of the Guardian Membership community and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
+        @fragments.page.pageHeader(pageHeader, Some("You're the newest " + member.tier + " of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -101,10 +99,11 @@
 
                 <section class="page-section page-section--bordered">
                     <div class="page-section__lead-in">
-                        <h2 class="page-section__headline">Find Guardian Live events</h2>
+                        <h2 class="page-section__headline">Get Started</h2>
                     </div>
                     <div class="page-section__content">
-                        <a class="action u-no-top-margin" href="@routes.Event.list">Get started</a>
+                        <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
+                        <a class="action" href="@routes.Event.list">Get started</a>
                     </div>
                 </section>
             }

@@ -1,0 +1,148 @@
+@(
+    currentTier: com.gu.membership.salesforce.Tier,
+    targetTier: com.gu.membership.salesforce.Tier,
+    userFields: model.PrivateFields,
+    pageInfo: model.PageInfo,
+    paidPreviewOpt: Option[model.Zuora.PaidPreview],
+    currentSubscription: model.Zuora.SubscriptionDetails
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import helper._
+@import org.joda.time.DateTime
+@import views.support.Prices._
+@import views.support.Dates._
+@import views.support.Asset
+
+@main("Upgrade to " + targetTier, pageInfo=pageInfo) {
+
+    <main role="main" class="page-content l-constrained">
+
+        @fragments.page.pageHeader("Great, glad to see you've decided to become a " + targetTier)
+
+        <div class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">What happens now</h2>
+            </div>
+            <div class="page-section__content">
+                <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@currentTier</strong> membership up until today and the amount remaining will be deducted from your first payment as a <strong>@targetTier</strong>.</p>
+                <p><strong>@targetTier</strong> payments start today and will recur @{currentSubscription.paymentPeriodLabel}ly.</p>
+            </div>
+        </div>
+
+        @* Current tier *@
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Current tier summary</h2>
+            </div>
+            <div class="page-section__content">
+                <table class="table table--responsive-font table--striped" role="grid">
+                    <tr role="row">
+                        <th role="rowheader">Tier</th>
+                        <td id="qa-upgrade-current-tier">@currentSubscription.planName</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly Payment</th>
+                        <td id="qa-upgrade-current-payment">@currentSubscription.planAmount.pretty</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">Last payment</th>
+                        <td id="qa-upgrade-current-last-date">@prettyDate(currentSubscription.startDate)</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">End date</th>
+                        <td id="qa-upgrade-current-end-date">@prettyDate(new DateTime())</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        @* New tier *@
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">New tier summary</h2>
+            </div>
+            <div class="page-section__content">
+                @paidPreviewOpt.map { preview =>
+                    <table class="table table--responsive-font table--striped" role="grid">
+                        <tr role="row">
+                            <th role="rowheader">Tier</th>
+                            <td id="qa-upgrade-new-tier">@targetTier</td>
+                        </tr>
+                        <tr role="row">
+                            <th role="rowheader">New @{currentSubscription.paymentPeriodLabel}ly payment</th>
+                            <td id="qa-upgrade-new-recurring-payment">@preview.futureSubscriptionInvoice.price.pretty</td>
+                        </tr>
+                        <tr role="row">
+                            <th role="rowheader">First payment</th>
+                            <td id="qa-upgrade-new-first-payment">@preview.totalPrice.pretty</td>
+                        </tr>
+                        <tr role="row">
+                            <th role="rowheader">Next payment due</th>
+                            <td id="qa-upgrade-new-date">@prettyDate(preview.futureSubscriptionInvoice.renewalDate)</td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        </section>
+
+        @* Delivery Address *@
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Delivery address</h2>
+            </div>
+            <div class="page-section__content">
+                <address>@fragments.user.deliveryAddress(userFields)</address>
+            </div>
+        </section>
+
+        @* Billing Address *@
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Billing address</h2>
+            </div>
+            <div class="page-section__content">
+                <address>@fragments.user.billingAddress(userFields)</address>
+            </div>
+        </section>
+
+        @* Payment Confirmation *@
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">
+                    Card details
+                    <div class="security-note">@fragments.inlineIcon("secure", List("icon-inline--small", "icon-inline--top")) This site is secure</div>
+                </h2>
+            </div>
+            <div class="page-section__content">
+                @for(card <- paidPreviewOpt.map(_.card)) {
+                    @fragments.user.cardSummary(card)
+                }
+                @paidPreviewOpt.map { preview =>
+
+                    <p class="text-note">
+                        <strong>First payment:</strong> Your first payment of <strong>@preview.totalPrice.pretty</strong>
+                        will be taken today under the name Guardian Membership.
+                    </p>
+                    <p class="text-note">
+                        <strong>Ongoing payments:</strong> Your card will be charged
+                        <strong>@preview.futureSubscriptionInvoice.price.pretty</strong> every @currentSubscription.paymentPeriodLabel.
+                        Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(preview.futureSubscriptionInvoice.renewalDate)
+                        each @currentSubscription.paymentPeriodLabel.
+                    </p>
+
+                    <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
+                        @CSRF.formField
+                        <div class="actions js-waiting-container">
+                            <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
+                            <div class="i-wait">
+                                <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
+                                <span class="i-wait__message js-waiting-message"></span>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </section>
+
+    </main>
+}

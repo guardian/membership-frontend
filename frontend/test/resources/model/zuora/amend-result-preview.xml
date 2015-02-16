@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <ns1:amendResponse xmlns:ns1="http://api.zuora.com/">
+            <ns1:results>
+                <ns1:AmendmentIds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1"/>
+                <ns1:InvoiceDatas>
+                    <ns1:Invoice xmlns:ns2="http://object.api.zuora.com/"
+                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:Invoice">
+                        <ns2:AccountId>2c92c0f84b4e1ee5014b4f49a3760b5e</ns2:AccountId>
+                        <ns2:Amount>405.00</ns2:Amount>
+                        <ns2:AmountWithoutTax>337.50</ns2:AmountWithoutTax>
+                        <ns2:TargetDate>2015-02-03T03:53:50.314-08:00</ns2:TargetDate>
+                        <ns2:TaxAmount>67.50</ns2:TaxAmount>
+                    </ns1:Invoice>
+                    <ns1:InvoiceItem xmlns:ns2="http://object.api.zuora.com/"
+                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:InvoiceItem">
+                        <ns2:AccountingCode>Deferred Revenue - Partner</ns2:AccountingCode>
+                        <ns2:ChargeAmount>-112.500000000</ns2:ChargeAmount>
+                        <ns2:ChargeDate>2015-02-03T03:53:39.448-08:00</ns2:ChargeDate>
+                        <ns2:ChargeDescription></ns2:ChargeDescription>
+                        <ns2:ChargeName>Partner Membership - Annual</ns2:ChargeName>
+                        <ns2:ProductId>2c92c0f945fee1c9014605749e350967</ns2:ProductId>
+                        <ns2:Quantity>1</ns2:Quantity>
+                        <ns2:ServiceEndDate>2016-02-02T03:53:32.000-08:00</ns2:ServiceEndDate>
+                        <ns2:ServiceStartDate>2015-02-03T03:53:50.314-08:00</ns2:ServiceStartDate>
+                        <ns2:TaxAmount>-22.500000000</ns2:TaxAmount>
+                        <ns2:TaxExemptAmount>0.0</ns2:TaxExemptAmount>
+                        <ns2:UnitPrice>135.000000000</ns2:UnitPrice>
+                        <ns2:UOM></ns2:UOM>
+                    </ns1:InvoiceItem>
+                    <ns1:InvoiceItem xmlns:ns2="http://object.api.zuora.com/"
+                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:InvoiceItem">
+                        <ns2:AccountingCode>Deferred Revenue - Patron</ns2:AccountingCode>
+                        <ns2:ChargeAmount>450.000000000</ns2:ChargeAmount>
+                        <ns2:ChargeDate>2015-02-03T03:53:39.452-08:00</ns2:ChargeDate>
+                        <ns2:ChargeDescription></ns2:ChargeDescription>
+                        <ns2:ChargeName>Patron Membership - Annual</ns2:ChargeName>
+                        <ns2:ProductId>2c92c0f845fed48301460578272d67ba</ns2:ProductId>
+                        <ns2:Quantity>1</ns2:Quantity>
+                        <ns2:ServiceEndDate>2016-02-02T03:53:50.000-08:00</ns2:ServiceEndDate>
+                        <ns2:ServiceStartDate>2015-02-03T03:53:50.000-08:00</ns2:ServiceStartDate>
+                        <ns2:TaxAmount>90.000000000</ns2:TaxAmount>
+                        <ns2:TaxExemptAmount>0.0</ns2:TaxExemptAmount>
+                        <ns2:UnitPrice>540.000000000</ns2:UnitPrice>
+                        <ns2:UOM></ns2:UOM>
+                    </ns1:InvoiceItem>
+                </ns1:InvoiceDatas>
+                <ns1:InvoiceId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1"/>
+                <ns1:PaymentTransactionNumber xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1"/>
+                <ns1:SubscriptionId xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="1"/>
+                <ns1:Success>true</ns1:Success>
+                <ns1:TotalDeltaMrr>33.750000000</ns1:TotalDeltaMrr>
+                <ns1:TotalDeltaTcv>405.000000000</ns1:TotalDeltaTcv>
+            </ns1:results>
+        </ns1:amendResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

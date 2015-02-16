@@ -1,15 +1,17 @@
 package model
 
-import scala.util.{Success, Failure, Try}
-import scala.xml.Node
+import com.gu.membership.stripe.Stripe
 import org.joda.time.DateTime
+
+import scala.util.{Failure, Success, Try}
+import scala.xml.Node
 
 object Zuora {
   trait ZuoraResult
 
   case class Authentication(token: String, url: String) extends ZuoraResult
 
-  case class AmendResult(ids: Seq[String]) extends ZuoraResult
+  case class AmendResult(ids: Seq[String], invoiceItems: Seq[PreviewInvoiceItem]) extends ZuoraResult
   case class CreateResult(id: String) extends ZuoraResult
   case class QueryResult(results: Seq[Map[String, String]]) extends ZuoraResult
   case class SubscribeResult(id: String) extends ZuoraResult
@@ -57,6 +59,7 @@ object Zuora {
                                  ratePlanId: String) {
     // TODO: is there a better way?
     val annual = endDate == startDate.plusYears(1)
+    val paymentPeriodLabel = if (annual) "year" else "month"
   }
 
   object SubscriptionDetails {
@@ -81,10 +84,21 @@ object Zuora {
       PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
     }
   }
+  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String) {
+    val renewalDate = serviceEndDate.plusDays(1)
+  }
+
+  case class PaidPreview(card: Stripe.Card, invoiceItems: Seq[PreviewInvoiceItem]) {
+    val sortedInvoiceItems = invoiceItems.sortBy(_.price)
+    // TODO: We assume that this is only using paid-to-paid upgrades
+    //    if we start supporting paid-to-pad downgrades we need to revisit this
+    val futureSubscriptionInvoice = sortedInvoiceItems.last
+    val totalPrice = invoiceItems.map(_.price).sum
+  }
 }
 
 object ZuoraReaders {
-  import Zuora._
+  import model.Zuora._
 
   trait ZuoraReader[T <: ZuoraResult] {
     val responseTag: String
@@ -163,15 +177,24 @@ object ZuoraReaders {
 }
 
 object ZuoraDeserializer {
-  import Zuora._
-  import ZuoraReaders._
+  import model.Zuora._
+  import model.ZuoraReaders._
 
   implicit val authenticationReader = ZuoraReader("loginResponse") { result =>
     Right(Authentication((result \ "Session").text, (result \ "ServerUrl").text))
   }
 
   implicit val amendResultReader = ZuoraResultReader.multi("amendResponse") { result =>
-    AmendResult((result \ "AmendmentIds").map(_.text))
+    val invoiceItems = (result \ "InvoiceDatas" \ "InvoiceItem").map {node =>
+      PreviewInvoiceItem(
+        (node \ "ChargeAmount").text.toFloat + (node \ "TaxAmount").text.toFloat,
+        new DateTime((node \ "ServiceStartDate").text),
+        new DateTime((node \ "ServiceEndDate").text),
+        (node \ "ProductId").text
+      )
+    }
+
+    AmendResult((result \ "AmendmentIds").map(_.text), invoiceItems)
   }
 
   implicit val createResultReader = ZuoraResultReader("createResponse") { result =>

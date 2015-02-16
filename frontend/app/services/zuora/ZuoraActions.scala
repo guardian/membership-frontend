@@ -230,7 +230,7 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
   }
 }
 
-case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String)
+case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String, preview: Boolean)
   extends ZuoraAction[AmendResult] {
 
   override val singleTransaction = true
@@ -282,7 +282,7 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
           <ns1:ProcessPayments>true</ns1:ProcessPayments>
         </ns1:AmendOptions>
         <ns1:PreviewOptions>
-          <ns1:EnablePreviewMode>false</ns1:EnablePreviewMode>
+          <ns1:EnablePreviewMode>{preview}</ns1:EnablePreviewMode>
           <ns1:PreviewThroughTermEnd>true</ns1:PreviewThroughTermEnd>
         </ns1:PreviewOptions>
       </ns1:requests>
