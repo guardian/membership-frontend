@@ -41,7 +41,7 @@ body {
 }
 
 .l-inset {
-    padding: rem($gs-gutter);
+    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
 }
 
 .l-pad-left {
@@ -54,14 +54,6 @@ body {
     @include mq(tablet) {
         padding-right: rem(gs-span(1) + $gs-gutter);
     }
-}
-
-.l-gutter {
-    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
-}
-
-.l-gutter-right {
-    padding-right: rem($gs-gutter);
 }
 
 /* Side Margins

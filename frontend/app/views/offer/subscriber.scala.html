@@ -15,7 +15,7 @@
                 Seq("tone-trans-brand"))
             </div>
 
-            <section class="page-slice l-gutter l-constrained">
+            <section class="page-slice l-inset l-constrained">
                 <div class="page-section page-section--slim">
                     <div class="page-section__content">
                         <p class="text-feature">
@@ -26,10 +26,12 @@
                 </div>
             </section>
 
-            <section class="page-slice tone-tint l-gutter l-constrained">
+            <section class="page-slice tone-tint l-inset l-constrained">
                 <div class="page-section page-section--slim">
-                    <div class="page-section__content">
+                    <div class="page-section__header">
                         <h2 class="h-feature">What's included</h2>
+                    </div>
+                    <div class="page-section__content">
                         <ul class="grid grid--3up">
                         @for(benefit <- benefits.list){
                             <li class="grid__item">
@@ -39,7 +41,7 @@
                         </ul>
                     </div>
                     <div class="page-section__supplementary">
-                        <aside class="aside-feature" role="complementary">
+                        <aside role="complementary">
                             <p class="text-feature">
                                 Get closer to the stories that matter and experience the Guardian brought to life, with priority booking and discounted tickets</p>
                             <div>
@@ -54,10 +56,12 @@
                 </div>
             </section>
 
-            <section class="page-slice l-gutter l-constrained">
+            <section class="page-slice l-inset l-constrained">
                 <div class="page-section page-section--slim">
-                    <div class="page-section__content">
+                    <div class="page-section__header">
                         <h2 class="h-feature">Subscriber offer</h2>
+                    </div>
+                    <div class="page-section__content">
                         <div class="grid grid--2up">
                             @for(pricing <- benefits.pricing) {
                             <div class="grid__item">
@@ -89,10 +93,12 @@
             )
             </div>
 
-            <section class="page-slice l-gutter l-constrained">
+            <section class="page-slice l-inset l-constrained">
                 <div class="page-section page-section--slim">
-                    <div class="page-section__content">
+                    <div class="page-section__header">
                         <h2 class="h-feature">Questions</h2>
+                    </div>
+                    <div class="page-section__content">
                         <div class="l-pad-right">
                             @fragments.faq.answers(Faq.help)
                         </div>
