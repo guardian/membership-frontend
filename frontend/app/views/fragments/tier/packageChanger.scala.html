@@ -35,6 +35,7 @@
         @if(tier != currentTier) {
             <div class="package-promo__actions">
                 <a class="action action--snap u-no-bottom-margin"
+                   id="qa-change-tier-@tier.slug"
                    href="@routes.TierController.upgrade(tier)"
                    data-metric-trigger="click"
                    data-metric-category="changeTier"
