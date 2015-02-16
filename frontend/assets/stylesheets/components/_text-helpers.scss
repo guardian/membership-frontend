@@ -90,7 +90,22 @@
         border-width: 1px 0 0 0;
     }
 }
+.h-feature {
+    @include fs-headline(5);
+    font-weight: 500;
 
+    @include mq(desktop) {
+        @include fs-headline(6, true);
+    }
+}
+.h-offer {
+    @include fs-headline(4);
+    padding-bottom: rem($gs-baseline*2);
+    font-weight: 500;
+}
+.h-sub {
+    @include fs-headline(2);
+}
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);

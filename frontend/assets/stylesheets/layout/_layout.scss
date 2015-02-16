@@ -41,7 +41,7 @@ body {
 }
 
 .l-inset {
-    padding: rem($gs-gutter);
+    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
 }
 
 .l-pad-left {
