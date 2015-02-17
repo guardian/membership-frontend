@@ -1,6 +1,7 @@
 package controllers
 
 import model.Eventbrite.EBEvent
+import tracking.{EventData, EventActivity, ActivityTracking}
 
 import scala.concurrent.Future
 
@@ -21,7 +22,7 @@ import configuration.{Config, CopyConfig}
 import model.RichEvent._
 import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
 
-trait Event extends Controller {
+trait Event extends Controller with ActivityTracking {
   val guLiveEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
@@ -55,7 +56,8 @@ trait Event extends Controller {
     eventOpt.getOrElse(Redirect(Config.guardianMembershipUrl))
   }
 
-  private def eventDetail(event: RichEvent, path: String) = {
+  private def eventDetail(event: RichEvent, path: String, isPreviewMode: Boolean = false) = {
+    if(!isPreviewMode) track(EventActivity("viewEventDetails", None, EventData(event)))
     val pageInfo = PageInfo(
       event.name.text,
       path,
@@ -168,7 +170,7 @@ trait Event extends Controller {
   }
 
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path)))
+   (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path, isPreviewMode = true)))
   }
 }
 
