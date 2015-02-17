@@ -55,7 +55,10 @@
     padding-top: rem($gs-baseline / 2);
     border-top: 1px solid $c-border-neutral;
 }
-
+.u-divider-dotted {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px dotted $c-neutral3;
+}
 .u-pad-top {
     margin-top: rem($gs-baseline / 2);
 }

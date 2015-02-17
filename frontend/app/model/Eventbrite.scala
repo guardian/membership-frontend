@@ -207,6 +207,7 @@ object Eventbrite {
   object EBEvent {
     val providerWhitelist = Seq(
       "birkbeck",
+      "idler",
       "csm"
     )
 

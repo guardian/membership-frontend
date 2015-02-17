@@ -1,0 +1,14 @@
+@(imgSrc: String, imgAlt: String, calloutOpt: Option[String] = None, toneClass: Seq[String] = Nil)
+
+@import views.support.Asset
+
+<div class="letterbox@if(calloutOpt.isDefined){ letterbox--callout}">
+    <div class="letterbox__crop">
+        @for(callout <- calloutOpt){
+        <div class="call-out @toneClass.mkString(" ")">
+            <h2 class="call-out__title">@callout</h2>
+        </div>
+        }
+        <img src="@Asset.at(imgSrc)" alt="@imgAlt" class="responsive-img">
+    </div>
+</div>

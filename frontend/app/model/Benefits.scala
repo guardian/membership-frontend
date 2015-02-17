@@ -35,6 +35,7 @@ object Benefits {
   case class Pricing(yearly: Int, monthly: Int) {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
+    lazy val yearlyWith6MonthSaving = yearly / 2f
   }
 
   def benefitsFilter(identifiers: String*) = identifiers.flatMap { id =>
