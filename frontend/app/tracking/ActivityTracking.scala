@@ -109,11 +109,17 @@ case class EventData(event: RichEvent) {
       "isPastEvent" -> event.isPastEvent,
       "isSoldOut" -> event.isSoldOut
     ) ++
-      Map("ticketClasses" -> event.ticket_classes.map(ticketClassToMap(_))) ++
       Map("tags" -> event.tags.toList) ++
       event.internalTicketing.map("isFree" -> _.isFree) ++
+      event.internalTicketing.map("ticketsSold" -> _.ticketsSold) ++
+      event.internalTicketing.map("saleEnds" -> _.salesEnd) ++
+      event.internalTicketing.map("isCurrentlyAvailableToPaidMembersOnly" -> _.isCurrentlyAvailableToPaidMembersOnly) ++
+      event.internalTicketing.flatMap(_.generalReleaseTicketOpt).map("generalReleaseTicketOpt" -> ticketClassToMap(_)) ++
+      event.internalTicketing.flatMap(_.memberBenefitTicketOpt).map("memberBenefitTicketOpt" -> ticketClassToMap(_)) ++
       event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
       event.providerOpt.map("provider" -> _)
+
+    //todo ticket sale dates, memberdiscountopt?
 
     ActivityTracking.setSubMap(dataMap)
   }
@@ -127,6 +133,7 @@ case class EventData(event: RichEvent) {
       "quantitySold" -> ticketClass.quantity_sold,
       "saleEnds" -> ticketClass.sales_end
     ) ++
+      ticketClass.sales_start.map("salesStart" -> _) ++
       ticketClass.cost.map("value" -> _.value) ++
       ticketClass.cost.map("formattedPrice" -> _.formattedPrice) ++
       ticketClass.hidden.map("hidden" -> _)
