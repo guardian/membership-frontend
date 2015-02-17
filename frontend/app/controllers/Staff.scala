@@ -11,7 +11,7 @@ trait Staff extends Controller {
      Ok(views.html.staff.eventOverview(guLiveEvents.events, guLiveEvents.eventsDraft))
   }
 
-  def masterclassOverview = AuthorisedStaff { implicit request =>
+  def masterclassOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.staff.eventOverview(masterclassEvents.events, masterclassEvents.eventsDraft, "masterclass"))
   }
 }
