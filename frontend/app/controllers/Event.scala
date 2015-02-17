@@ -164,6 +164,10 @@ trait Event extends Controller {
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
    (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path)))
   }
+
+  def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
+   (EventbriteService.getPreviewMasterclass(id).map(eventDetail(_, request.path)))
+  }
 }
 
 object Event extends Event {

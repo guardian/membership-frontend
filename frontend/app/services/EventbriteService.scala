@@ -198,6 +198,10 @@ object EventbriteService {
     GuardianLiveEventService.getPreviewEvent(id)
   }
 
+  def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+    MasterclassEventService.getPreviewEvent(id)
+  }
+
   def searchServices(fn: EventbriteService => Option[RichEvent]): Option[RichEvent] =
     services.flatMap { service => fn(service) }.headOption
 

@@ -63,6 +63,7 @@ GET            /event/:id/thankyou                controllers.Event.thankyou(id,
 GET            /event/:id/thankyou/pixel          controllers.Event.thankyouPixel(id)
 
 GET            /preview-event/:id                 controllers.Event.preview(id)
+GET            /preview-masterclass/:id           controllers.Event.previewMasterclass(id)
 
 # Tier
 GET            /tier/change                       controllers.TierController.change

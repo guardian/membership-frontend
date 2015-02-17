@@ -1,4 +1,8 @@
-@(liveEvents: Seq[model.RichEvent.RichEvent], draftEvents: Seq[model.RichEvent.RichEvent])
+@(
+    liveEvents: Seq[model.RichEvent.RichEvent],
+    draftEvents: Seq[model.RichEvent.RichEvent],
+    previewType: String = "event"
+)
 
 @import model.Eventbrite.InternalTicketing
 @import model.Eventbrite.ExternalTicketing
@@ -27,7 +31,7 @@
                             </a>
                         </div>
                         <div class="event-detail_info copy">
-                            <a href="@(s"${Config.membershipUrl}/preview-event/${event.id}")"
+                            <a href="@(s"${Config.membershipUrl}/preview-${previewType}/${event.id}")"
                                target="_blank"
                                class="event-sub-detail">preview</a>
                             <a href="@(s"https://dashboard.ophan.co.uk/info?url=${event.memUrl}")"

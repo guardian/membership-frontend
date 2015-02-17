@@ -20,7 +20,7 @@ trait Staff extends Controller {
   }
 
   def masterclassOverview = AuthorisedStaff { implicit request =>
-     Ok(views.html.staff.eventOverview(masterclassEvents.events, masterclassEvents.eventsDraft))
+     Ok(views.html.staff.eventOverview(masterclassEvents.events, masterclassEvents.eventsDraft, "masterclass"))
   }
 }
 
