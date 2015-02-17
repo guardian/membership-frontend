@@ -5,14 +5,12 @@ import java.util.{List => JList, Map => JMap}
 import com.github.nscala_time.time.Imports._
 import com.github.t3hnar.bcrypt._
 import com.gu.membership.salesforce.Tier
-import com.snowplowanalytics.snowplow.tracker.{Tracker, Subject}
-import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
-import com.snowplowanalytics.snowplow.tracker.core.emitter.{RequestMethod, HttpMethod}
+import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
-import model.Eventbrite.{EBTicketClass, EBEvent}
+import model.Eventbrite.EBTicketClass
 import model.RichEvent.RichEvent
 import play.api.Logger
 
@@ -108,13 +106,13 @@ case class EventData(event: RichEvent) {
       "capacity" -> event.capacity,
       "status" -> event.status,
       "isBookable" -> event.isBookable,
-      "isFree" -> event.isFree,
       "isPastEvent" -> event.isPastEvent,
-      "isSoldOut" -> event.isSoldOut,
-      "isSoldThruEventbrite" -> event.isSoldThruEventbrite
-    ) ++ Map("ticketClasses" -> event.ticket_classes.map(ticketClassToMap(_))) ++
-      Map("tags" -> event.tags.toList)
-    event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
+      "isSoldOut" -> event.isSoldOut
+    ) ++
+      Map("ticketClasses" -> event.ticket_classes.map(ticketClassToMap(_))) ++
+      Map("tags" -> event.tags.toList) ++
+      event.internalTicketing.map("isFree" -> _.isFree) ++
+      event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
       event.providerOpt.map("provider" -> _)
 
     ActivityTracking.setSubMap(dataMap)
@@ -130,8 +128,6 @@ case class EventData(event: RichEvent) {
       "saleEnds" -> ticketClass.sales_end
     ) ++
       ticketClass.cost.map("value" -> _.value) ++
-      ticketClass.cost.map("discountPrice" -> _.discountPrice) ++
-      ticketClass.cost.map("savingPrice" -> _.savingPrice) ++
       ticketClass.cost.map("formattedPrice" -> _.formattedPrice) ++
       ticketClass.hidden.map("hidden" -> _)
 

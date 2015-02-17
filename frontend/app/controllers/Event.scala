@@ -1,18 +1,5 @@
 package controllers
 
-import model.Eventbrite.EBEvent
-import tracking.{EventData, EventActivity, ActivityTracking}
-
-import scala.concurrent.Future
-
-import play.api.mvc._
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-
-import com.netaporter.uri.dsl._
-
-import com.gu.membership.salesforce.Member
-import com.gu.membership.util.Timing
-
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
@@ -27,11 +14,11 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, MemberService}
 import services.EventbriteService._
-
-trait Event extends Controller with ActivityTracking {
+import tracking.{ActivityTracking, EventActivity, EventData}
 import scala.concurrent.Future
 
-trait Event extends Controller {
+trait Event extends Controller with ActivityTracking {
+
   val guLiveEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
