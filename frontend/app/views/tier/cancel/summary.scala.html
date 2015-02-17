@@ -5,7 +5,7 @@
 
 @main("Cancel Tier summary") {
 
-    <main role="main" class="page-content">
+    <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader("Sorry to see you go…", subscriptionDetailsOpt.map("You will continue to receive all the great Membership benefits until " + _.endDate.pretty))
 
@@ -25,7 +25,7 @@
 
                 <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
 
-                <a href="@Config.idWebAppUrl/membership/edit" class="action action-cta">My Profile</a>
+                <a href="@Config.idWebAppUrl/membership/edit" class="action">My Profile</a>
             </div>
         </section>
 

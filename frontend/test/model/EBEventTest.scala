@@ -63,12 +63,12 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "isSoldThruEventbrite on event" should {
-    "should return true when comment <!-- noTicketEvent --> is present in description" in {
-      nonTicketedEvent.isSoldThruEventbrite mustEqual(false)
+  "internal ticketing (tickets sold by us thru eventbrite, rather than external partners)" should {
+    "be present when comment <!-- noTicketEvent --> is NOT in description" in {
+      ticketedEvent.internalTicketing must beSome
     }
-    "should return false when comment <!-- noTicketEvent --> is NOT in description" in {
-      ticketedEvent.isSoldThruEventbrite mustEqual(true)
+    "be none when comment <!-- noTicketEvent --> IS present in description" in {
+      nonTicketedEvent.internalTicketing must beNone
     }
   }
 
@@ -141,19 +141,21 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "hasMemberTicket" should {
-    "return true for hasMemberTicket" in {
-      val event = Resource.getJson("model/eventbrite/event-guardian-members-ticket-classes.json").as[EBEvent]
+  "memberDiscountOpt" should {
+    "return Some when there is a general release ticket AND a discount-benefit ticket" in {
+      val event = Resource.getJson("model/eventbrite/event-guardian-members-discount.json").as[EBEvent]
+      val ticketing = event.internalTicketing.get
 
-      event.hasMemberTicket must beTrue
-      event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
+      ticketing.memberDiscountOpt must beSome
+      ticketing.memberBenefitTickets.map(_.id) mustEqual Seq("32044312")
     }
 
-    "return false for hasMemberTicket" in {
+    "return None when there is only a general release ticket" in {
       val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
+      val ticketing = event.internalTicketing.get
 
-      event.hasMemberTicket must beFalse
-      event.memberTickets.map(_.id) mustEqual Seq()
+      ticketing.memberDiscountOpt must beNone
+      ticketing.memberBenefitTickets.map(_.id) must beEmpty
     }
   }
 
@@ -167,36 +169,11 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "possiblyMissingDiscount" should {
-    "report event as possiblyMissingDiscount event" in {
-      val event = Resource.getJson("model/eventbrite/event-standard-ticket-classes.json").as[EBEvent]
-
-      event.possiblyMissingDiscount must beTrue
-      event.isFree must beFalse
-      event.isSoldThruEventbrite must beTrue
-      event.isSoldOut must beFalse
-    }
-  }
-
   "isFree" should {
     "report event as a free event" in {
       val event = Resource.getJson("model/eventbrite/event-free-ticket-classes.json").as[EBEvent]
 
-      event.isFree must beTrue
-      event.possiblyMissingDiscount must beFalse
-      event.isSoldThruEventbrite must beTrue
-      event.isSoldOut must beFalse
-    }
-  }
-
-  "isSoldThruEventbrite" should {
-    "report event as not being sold through Eventbrite" in {
-      val event = Resource.getJson("model/eventbrite/event-not-sold-through-eventbrite-ticket-classes.json").as[EBEvent]
-
-      event.isSoldThruEventbrite must beFalse
-      event.possiblyMissingDiscount must beFalse
-      event.isFree must beFalse
-      event.isSoldOut must beFalse
+      event.internalTicketing.get.isFree must beTrue
     }
   }
 
@@ -205,9 +182,6 @@ class EBEventTest extends PlaySpecification {
       val event = Resource.getJson("model/eventbrite/event-sold-out-ticket-classes.json").as[EBEvent]
 
       event.isSoldOut must beTrue
-      event.possiblyMissingDiscount must beFalse
-      event.isFree must beFalse
-      event.isSoldThruEventbrite must beTrue
     }
   }
 }

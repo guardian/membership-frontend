@@ -1,0 +1,5 @@
+@(userFields: model.PrivateFields)
+
+@userFields.address1@if(userFields.address2){, @userFields.address2}<br>
+@for( town <- userFields.address3 ) {@town}<br/>
+@userFields.postcode

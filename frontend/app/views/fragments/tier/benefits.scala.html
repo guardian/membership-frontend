@@ -79,21 +79,21 @@
                         @if(mode == "downgrade") {
                             <form action="/tier/change/@tier.slug" method="POST">
                                 @CSRF.formField
-                                <button class="action action-cta action-cta--confirm action-cta--full-width-mobile">@Benefits.details(tier).cta</button>
+                                <button class="action u-fullwidth">@Benefits.details(tier).cta</button>
                             </form>
                         } else {
-                            <a href="/tier/change/@tier.slug" class="action action-cta--confirm" id="qa-change-tier-@tier.slug">
+                            <a href="/tier/change/@tier.slug" class="action u-fullwidth" id="qa-change-tier-@tier.slug">
                                 @Benefits.details(tier).cta
                             </a>
                         }
                     } else {
-                        <span class="action action-cta--cancel action-cta--disabled">
+                        <span class="action is-disabled u-fullwidth">
                             Coming soon
                         </span>
                     }
                 } else {
                     @if(mode == "downgrade" || mode == "cancel") {
-                        <a href="/tier/change" class="action action--arrow-left action-cta">Stay as a @currentTier</a>
+                        <a href="/tier/change" class="action action--arrow-left u-fullwidth">Stay as a @currentTier</a>
                     }
                 }
             </div>

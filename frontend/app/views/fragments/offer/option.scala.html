@@ -1,0 +1,10 @@
+@(title: String, offer: String, fullPrice: String, noteOpt: Option[String] = None)
+<div class="offer">
+    <h3 class="offer__title">@title</h3>
+    <p class="offer__deal">@offer</p>
+    <p class="offer__heading">Full price</p>
+    <p class="offer__price">@fullPrice</p>
+    @for(note <- noteOpt) {
+    <p class="offer__note">@note</p>
+    }
+</div>

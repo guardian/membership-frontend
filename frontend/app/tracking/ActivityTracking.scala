@@ -7,6 +7,7 @@ import com.github.t3hnar.bcrypt._
 import com.gu.membership.salesforce.Tier
 import com.snowplowanalytics.snowplow.tracker.{Tracker, Subject}
 import com.snowplowanalytics.snowplow.tracker.core.emitter.HttpMethod
+import com.snowplowanalytics.snowplow.tracker.core.emitter.{RequestMethod, HttpMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
@@ -155,6 +156,7 @@ trait ActivityTracking {
 
   private def getTracker: Tracker = {
     val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
+    emitter.setRequestMethod(RequestMethod.Asynchronous)
     val subject = new Subject
     new Tracker(emitter, subject, "membership", "membership-frontend")
   }

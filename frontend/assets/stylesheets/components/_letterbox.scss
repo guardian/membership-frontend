@@ -1,0 +1,83 @@
+/* Letterbox image crop
+   ========================================================================== */
+
+/**
+ * Example usage:
+ *  <div class="letterbox letterbox--callout">
+ *      <div class="letterbox__crop">
+ *          <div class="call-out tone-trans-brand">
+ *              <h2 class="call-out__title">Title</h2>
+ *          </div>
+ *          <img src="image src" alt="alt text" class="responsive-img">
+ *      </div>
+ *  </div>
+ *
+ */
+.letterbox {
+    @include mq(desktop) {
+        max-height: rem(gs-height(10));
+        overflow: hidden;
+    }
+}
+
+.letterbox--callout {
+    position: relative;
+}
+
+.letterbox__crop {
+    @include mq(desktop) {
+        position: relative;
+        top: -(rem(gs-height(2)));
+    }
+}
+
+/* Callout used within a letterbox
+   ========================================================================== */
+
+/**
+ * Example usage:
+ *  <div class="letterbox letterbox--callout">
+ *      <div class="letterbox__crop">
+ *          <div class="call-out tone-trans-brand">
+ *              <h2 class="call-out__title">Title</h2>
+ *          </div>
+ *          <img src="image src" alt="alt text" class="responsive-img">
+ *      </div>
+ *  </div>
+ *
+ */
+.call-out {
+    position: absolute;
+    padding: rem($gs-baseline) rem($gs-gutter);
+    width: 100%;
+    bottom: 0;
+    left: 0;
+
+    @include mq(tablet) {
+        @include border-radius(100%);
+        width: rem(gs-span(4));
+        height: rem(gs-span(4));
+        left: rem(-$gs-gutter);
+        bottom: rem($gs-baseline*2);
+    }
+    @include mq(desktop) {
+        left: rem($gs-gutter*4);
+        bottom: rem($gs-gutter*3);
+    }
+    @include mq(mem-full) {
+        bottom: rem($gs-baseline*13);
+        left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+
+.call-out__title {
+    @include fs-headline(5);
+    color: $white;
+
+    @include mq(tablet) {
+        @include fs-headline(7);
+        @include vertically-center();
+        position: relative;
+        width: rem(gs-span(3));
+    }
+}

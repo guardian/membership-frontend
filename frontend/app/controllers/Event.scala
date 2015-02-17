@@ -14,15 +14,24 @@ import com.gu.membership.salesforce.Member
 import com.gu.membership.util.Timing
 
 import actions.AnyMemberTierRequest
-import actions.Functions._
 import actions.Fallbacks._
-import services.{MasterclassEventService, GuardianLiveEventService, MemberService, EventbriteService}
-import services.EventbriteService._
+import actions.Functions._
+import com.gu.membership.salesforce.Tier
+import com.gu.membership.util.Timing
+import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
+import model.Eventbrite.EBEvent
 import model.RichEvent._
-import model.{TicketSaleDates, Eventbrite, EventPortfolio, PageInfo}
+import model.{EventPortfolio, Eventbrite, PageInfo}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc._
+import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, MemberService}
+import services.EventbriteService._
 
 trait Event extends Controller with ActivityTracking {
+import scala.concurrent.Future
+
+trait Event extends Controller {
   val guLiveEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
@@ -114,7 +123,7 @@ trait Event extends Controller with ActivityTracking {
     EventbriteService.getEvent(id).map { event =>
       event match {
         case _: GuLiveEvent =>
-          if (memberCanBuyTicket(event, request.member)) redirectToEventbrite(request, event)
+          if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
           else Future.successful(Redirect(routes.TierController.change()))
 
         case _: MasterclassEvent =>
@@ -123,10 +132,8 @@ trait Event extends Controller with ActivityTracking {
     }.getOrElse(Future.successful(NotFound))
   }
 
-  private def memberCanBuyTicket(event: Eventbrite.EBEvent, member: Member): Boolean =
-    event.generalReleaseTicket.exists { ticket =>
-      TicketSaleDates.datesFor(event, ticket).tierCanBuyTicket(member.tier)
-    }
+  private def tierCanBuyTickets(event: Eventbrite.EBEvent, tier: Tier): Boolean =
+    event.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 

@@ -105,7 +105,6 @@
         float: right;
     }
 
-    .join &,
     .change-tier & {
         @include mq (desktop) {
             position: absolute;
@@ -156,7 +155,6 @@
     min-height: rem($gs-gutter * 4);
 
     // TODO: Remove this
-    .join &,
     .change-tier & {
         @include mq(desktop) {
             margin-bottom: rem($gs-gutter * 3);

@@ -22,6 +22,10 @@ object SubscriptionServiceHelpers {
     amendments.sortBy { amendment => versions(amendment.subscriptionId) }
   }
 
+  def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
+
+  def sortPreviewInvoiceItems(items: Seq[PreviewInvoiceItem]) = items.sortBy(_.price)
+  
   def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
@@ -60,11 +64,11 @@ trait AmendSubscription {
     }
   }
 
-  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan, preview: Boolean): Future[AmendResult] = {
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
-        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan)))
+        result <- zuora.request(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan), preview))
       } yield result
     }
   }
