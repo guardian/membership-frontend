@@ -81,7 +81,6 @@ GET            /tier/change/:tier/summary         controllers.TierController.upg
 # Information
 GET            /help                              controllers.Info.help
 GET            /feedback                          controllers.Info.feedback
-GET            /feedback/thankyou                 controllers.Info.feedbackThankyou
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /about                             controllers.Info.about
 GET            /patrons                           controllers.Info.patron
