@@ -41,6 +41,7 @@ GET            /oauth2callback                    controllers.OAuth.oauth2Callba
 
 # Staff event page to show discounted events
 GET            /staff/event-overview              controllers.Staff.eventOverview
+GET            /staff/masterclass-overview        controllers.Staff.masterclassOverview
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
 
