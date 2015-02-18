@@ -12,21 +12,21 @@
 
 # Membership Frontend
 
-## Ubuntu
+## Getting Started
 
-In an ideal world, your Ubuntu package install would be:
+To get started working on Membership you will need to complete the following steps:
 
-```
-$ sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
-```
+1. Work through the **General Setup** instructions for this project
+2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
+3. Start up Membership by running the commands in the **Run** section of this README
 
-### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
+### Working on client-side features
 
-See Joyent's instructions on [installing Node & NPM on Ubuntu](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#ubuntu-mint-elementary-os).
-If the available [nodejs](http://packages.ubuntu.com/trusty/nodejs) or [NPM](http://packages.ubuntu.com/trusty/npm)
-package for your version of Ubuntu is old, you'll [probably](http://askubuntu.com/questions/49390/how-do-i-install-the-latest-version-of-node-js)
-want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
-which includes both Node.js and NPM.
+If you are doing clien-side work on Membership you should also make yourself familar with the following:
+
+- Look over the [pattern library](https://membership.theguardian.com/patterns) to get an understanding of the design language of the site.
+- Read through [FRONTEND.md](FRONTEND.md) to get a high-level understanding of how our client-side code is structured.
+
 
 ## General Setup
 
@@ -40,43 +40,62 @@ which includes both Node.js and NPM.
    127.0.0.1   mem.thegulocal.com
    ```
 
-1. ./nginx/setup.sh
+1. Run `./nginx/setup.sh`
 1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev.
 
     If you have the AWS CLI set up you can run
     ```
     aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
     ```
-1. In ~/.bash_profile add
-    ```
-    export AWS_ACCESS_KEY=<access-key-id>
+1. In ~/.bash_profile add:
+    
+```
+export AWS_ACCESS_KEY=<access-key-id>
+export AWS_SECRET_KEY=<secret-key>
+```
 
-    export AWS_SECRET_KEY=<secret-key>
-    ```
+### Ubuntu
+
+In an ideal world, your Ubuntu package install would be:
+
+```
+$ sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
+```
+
+#### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
+
+See Joyent's instructions on [installing Node & NPM on Ubuntu](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#ubuntu-mint-elementary-os).
+If the available [nodejs](http://packages.ubuntu.com/trusty/nodejs) or [NPM](http://packages.ubuntu.com/trusty/npm)
+package for your version of Ubuntu is old, you'll [probably](http://askubuntu.com/questions/49390/how-do-i-install-the-latest-version-of-node-js)
+want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
+which includes both Node.js and NPM.
 
 ## Run
-The app normally runs on ports 9100 respectively.
-You can run the following commands to start them (separate console windows)
+
+The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
 
 ```
  nginx/setup.sh
 ./start-frontend.sh
 ```
 
-## Run membership locally with Identity on NGW
-To be able to go through the registration flow locally you will need to have the Identity API and Identity project in NGW running.
+### Run membership locally with Identity on theguardian.com
 
-Identity repo: https://github.com/guardian/identity
+To be able to go through the registration flow locally you will need to have the Identity API and Identity project in theguardian.com running.
 
-Run through the set up instructions. Once complete you will just need to run
+**Identity repo**: [https://github.com/guardian/identity](https://github.com/guardian/identity)
+
+Run through the set up instructions; once complete you will need to run:
+
 ```
  nginx/setup.sh
  ./start-api.sh
 ```
 
-NGW Frontend repo: https://github.com/guardian/frontend
+**theguardian.com frontend repo**: [https://github.com/guardian/frontend](https://github.com/guardian/frontend)
 
-Run through the set up instructions. Once complete you will just need to run
+Run through the set up instructions; once complete you will need to run:
+
 ```
 nginx/setup.sh
 ./sbt
@@ -86,15 +105,27 @@ idrun
 
 ## To run frontend tests
 
-+ $ karma start
+```
+karma start
+```
 
 # Grunt Tasks
 
 ## Watch and compile front-end files
-+ $ grunt watch
+
+```
+grunt watch
+```
 
 ## Compile front-end files
-+ $ grunt compile
+
+```
+grunt compile
+```
+
+# Client-side Principles
+
+See [FRONTEND.md](FRONTEND.md) for high-level client-side principles for Membership.
 
 # Pattern Library
 
@@ -102,17 +133,8 @@ A library of common patterns used accross the membership site is available at [m
 
 When building new components break them down into fragments and include them in the pattern library.
 
-# Images
-
-## SVGs
-
-Running the grunt task `shell:svgencode` will automatically base64 encode files in `assets/svgs` and create a class and mixin for each one in a generated SCSS file. The classes/mixins are named `icon-<filename without extension>`.
-
-### Adding new SVGs
-
-When adding new SVGs to the `assets/svgs` directory run the file through [SVGO](https://github.com/svg/svgo) first to optimise it. For Mac users there is an app for doing this: [SVGO GUI](https://github.com/svg/svgo-gui)
-
 # Updating AMIs
+
 We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html. To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
 
 ## Building
@@ -125,7 +147,6 @@ This will take several minutes to build the new AMI. Once complete, you should s
 ```
 eu-west-1: ami-xxxxxxxx
 ```
-
 
 ## Deploying
 
@@ -181,60 +202,4 @@ Upgrade a project's package.json
 
 ## Troubleshooting
 
-###NPM Hangs or doesn't download all dependencies
-
-If you run `./setup.sh` and npm doesn't install all of its dependencies it may help to do the following
-1. `cd ./frontend`
-2. Remove node folder `rm -rf node_modules`
-3. Run `npm cache clean`
-4. Run `./setup.sh` to install project-specific client-side dependencies.
-
-###NPM "EACCES"
-
-If you get errors like this on `npm install`
-```
-npm WARN locking Error: EACCES, open '/Users/jduffell/.npm/_locks/karma-requirejs-4becac899d6c8f35.lock'
-```
-
-Sometimes when you install npm, it ends up owned by root (but in your home
-directory).
-
-Check that you own your own .npm directory `ls -ld ~/.npm`
-
-If it is owned by root, then take ownership of it
-`sudo chown -R username:username ~/.npm`
-
-
-###File handles - "Too many files open"
-
-You may run into a "too many files open" error during
-compilation or reloading. You can find out how many file handles you are
-allowed per process by running `ulimit -n`. This can be quite low, e.g. 1024 on linux or 256 on Mac
-
-####Linux
-
-To increase the limit do the following (instructions from Ubuntu 12.10)...
-
-In the file `/etc/security/limits.conf` add the following two lines
-```
-*  soft  nofile 20000
-*  hard  nofile 65000
-```
-
-And in the file `/etc/pam.d/common-session` add the following line.
-```
-session required pam_limits.so
-```
-
-Restart the machine.
-
-For more info see http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
-
-####Mac
-
-* Edit your `~/.bash-profile` file
-* add the following line: `ulimit -n 1024`
-* save and close the file
-* back at the command prompt enter: `source .bash_profile` and hit return.
-
-Now you should be able to compile and run. Yay.
+See [Troubleshooting.md](docs/Troubleshooting.md) for information on common problems and how to fix them.
