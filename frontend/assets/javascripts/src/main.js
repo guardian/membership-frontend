@@ -1,7 +1,6 @@
 require([
     'ajax',
     'src/utils/analytics/setup',
-    'src/modules/metrics',
     'src/modules/events/Cta',
     'src/modules/events/filter',
     'src/modules/slideshow',
@@ -24,7 +23,6 @@ require([
 ], function(
     ajax,
     analytics,
-    metrics,
     Cta,
     filter,
     slideshow,
@@ -54,7 +52,6 @@ require([
     ajax.init({page: {ajaxUrl: ''}});
 
     analytics.init();
-    metrics.init();
 
     // Global
     toggle.init();
