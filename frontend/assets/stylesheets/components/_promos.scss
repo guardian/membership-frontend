@@ -2,13 +2,17 @@
    Promos
    ========================================================================== */
 
+.promo-primary,
+.promo-secondary {
+    clear: both;
+    overflow: hidden;
+}
+
 /* ==========================================================================
    Promo Primary
    ========================================================================== */
 
 .promo-primary {
-    clear: both;
-    overflow: auto;
     background-color: $white;
 }
 .promo-primary,
