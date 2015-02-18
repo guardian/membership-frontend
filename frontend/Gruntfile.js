@@ -380,8 +380,8 @@ module.exports = function (grunt) {
             'svgSprite',
             'copy:images',
             'shell:svgencode',
-            'sass:compile',
-            'imagemin'
+            'sass:compile'
+            // 'imagemin'
         ]);
     });
     grunt.registerTask('compile:js', function() {
