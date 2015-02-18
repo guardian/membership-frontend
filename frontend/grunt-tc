@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf node_modules/
+
 set -o xtrace
 set -o nounset
 set -o errexit
