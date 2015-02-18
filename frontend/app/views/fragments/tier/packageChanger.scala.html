@@ -34,15 +34,22 @@
         </div>
         @if(tier != currentTier) {
             <div class="package-promo__actions">
-                <a class="action action--snap u-no-bottom-margin"
-                   id="qa-change-tier-@tier.slug"
-                   href="@routes.TierController.upgrade(tier)"
-                   data-metric-trigger="click"
-                   data-metric-category="changeTier"
-                   data-metric-action="@tier.toString.toLowerCase()"
-                >
-                    <span class="action__label">Become a @tier</span>
-                </a>
+                @* TODO: When paid-to-paid upgrades are enabled this check can be removed *@
+                @if(currentTier == Tier.Friend || tier == Tier.Friend) {
+                    <a class="action action--snap u-no-bottom-margin"
+                       id="qa-change-tier-@tier.slug"
+                       href="@routes.TierController.upgrade(tier)"
+                       data-metric-trigger="click"
+                       data-metric-category="changeTier"
+                       data-metric-action="@tier.toString.toLowerCase()"
+                    >
+                        <span class="action__label">Become a @tier</span>
+                    </a>
+                } else {
+                    <span class="action action--snap is-disabled">
+                        <span class="action__label">Coming soon</span>
+                    </span>
+                }
             </div>
         }
     </div>
