@@ -2,6 +2,7 @@
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
+@import model.FlashMessage
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -403,6 +404,14 @@
 
     @pattern("Package - Stack") {
         @fragments.tier.packageStack(Tier.Partner)
+    }
+
+    @pattern("Flash Message - Success") {
+        @fragments.notifications.flashMessage(FlashMessage.success("A successful Message!"))
+    }
+
+    @pattern("Flash Message - Failure") {
+        @fragments.notifications.flashMessage(FlashMessage.error("An error Message!"))
     }
 
     @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
