@@ -8,11 +8,11 @@ trait Staff extends Controller {
   val masterclassEvents = MasterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview(guLiveEvents.events, guLiveEvents.eventsDraft))
+     Ok(views.html.staff.eventOverview.guLive(guLiveEvents.events, guLiveEvents.eventsDraft))
   }
 
   def masterclassOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview(masterclassEvents.events, masterclassEvents.eventsDraft, "masterclass"))
+     Ok(views.html.staff.eventOverview.masterclass(masterclassEvents.events, masterclassEvents.eventsDraft))
   }
 }
 
