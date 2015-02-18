@@ -12,14 +12,16 @@
     </li>
 }
 
-@previewUrlSubCategory(event: model.RichEvent.RichEvent) = @{
-    event match {
-        case _: GuLiveEvent => "event"
-        case _: MasterclassEvent => "masterclass"
+@previewUrlSubCategory(eventOpt: Option[model.RichEvent.RichEvent]) = @{
+    eventOpt.fold("") { event =>
+        event match {
+            case _: GuLiveEvent => "event"
+            case _: MasterclassEvent => "masterclass"
+        }
     }
 }
 
-@defining(previewUrlSubCategory(events.head)) { previewSubCategory =>
+@defining(previewUrlSubCategory(events.headOption)) { previewSubCategory =>
 
     <section class="utils-page-section">
         <h2 class="utils-page-section-header">@title</h2>
