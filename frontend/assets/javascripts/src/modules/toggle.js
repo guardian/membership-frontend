@@ -24,7 +24,7 @@ define(['$', 'bean'], function ($, bean) {
             e.preventDefault();
             var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
 
-            $(document.getElementById(toggleElmId)).toggle();
+            $(document.getElementById(toggleElmId)).toggle().toggleClass(TOGGLE_CLASS);
             $elem.toggleClass(TOGGLE_CLASS);
 
             toggleIcon($elem);

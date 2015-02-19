@@ -79,7 +79,7 @@
                         @if(mode == "downgrade") {
                             <form action="/tier/change/@tier.slug" method="POST">
                                 @CSRF.formField
-                                <button class="action u-fullwidth">@Benefits.details(tier).cta</button>
+                                <button class="action u-fullwidth" id="qa-confirm-downgrade">@Benefits.details(tier).cta</button>
                             </form>
                         } else {
                             <a href="/tier/change/@tier.slug" class="action u-fullwidth" id="qa-change-tier-@tier.slug">

@@ -32,6 +32,30 @@
 }
 
 /* ==========================================================================
+   Benefits - Chooser
+   ========================================================================== */
+
+.benefits-chooser {
+    padding-top: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline);
+
+    @include mq($from: tablet, $until: desktop) {
+        margin-left: 35%;
+    }
+    @include mq($until: desktop) {
+        .benefits-chooser__list {
+            display: none;
+            &.is-toggled {
+                display: block;
+            }
+        }
+    }
+    @include mq(desktop) {
+        padding-top: 0;
+    }
+}
+
+/* ==========================================================================
    Old Benefits Styles
    TODO: Remove once full benefits refactoring work happens
    ========================================================================== */
