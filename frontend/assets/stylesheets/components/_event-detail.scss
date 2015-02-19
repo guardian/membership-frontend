@@ -349,8 +349,7 @@
 }
 
 .u-event-content-width,
-.event-content__container,
-.event-content__sticky.is-sticky {
+.event-content__container {
     @include mq(tablet) {
         width: rem(gs-span(9) + $gs-gutter * 2);
         margin: 0 auto;
@@ -365,32 +364,23 @@
     }
 }
 
-@mixin event-content__body-width($property) {
-    @include mq(tablet) {
-        #{$property}: rem(gs-span(5) + $gs-gutter * 3);
-    }
-
-    @include mq(desktop) {
-        #{$property}: rem(gs-span(8) + $gs-gutter * 2);
-    }
-
-    @include mq(mem-full) {
-        #{$property}: rem(gs-span(10) + $gs-gutter * 2);
-    }
-}
 .event-content__body {
     position: relative;
 
     @include mq(tablet) {
         float: left;
         padding: 0 rem($gs-gutter) 0 0;
+        width: rem(gs-span(5) + $gs-gutter * 3);
     }
 
     @include mq(desktop) {
         padding: 0 rem($gs-gutter);
+        width: rem(gs-span(8) + $gs-gutter * 2);
     }
 
-    @include event-content__body-width('width');
+    @include mq(mem-full) {
+        width: rem(gs-span(10) + $gs-gutter * 2);
+    }
 }
 
 .event__price-note,
@@ -431,6 +421,22 @@
     }
 }
 
+.event-content__sticky.is-sticky {
+    @include mq(tablet) {
+        width: gs-span(4);
+        position: fixed;
+        top: 0;
+        z-index: 1;
+    }
+}
+
+.sales-dates-toggle {
+    padding: rem($gs-baseline/2) rem($gs-baseline);
+    margin-top: -#{rem($gs-baseline/2)};
+    margin-right: -#{rem($gs-baseline)};
+    right: 0;
+    position: absolute;
+}
 
 /* Event Info Panel
    ========================================================================== */
@@ -504,36 +510,6 @@
     }
 }
 
-/**
- * Sticky event info
- */
-.event-content__sticky.is-sticky {
-    @include mq(tablet) {
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        right: 0;
-        left: 0;
-
-        .sticky-hidden {
-            display: none;
-        }
-    }
-
-    @include mq(desktop) {
-        padding-right: rem($gs-gutter);
-    }
-
-    @include event-content__body-width('padding-left');
-}
-
-.sales-dates-toggle {
-    padding: rem($gs-baseline/2) rem($gs-baseline);
-    margin-top: -#{rem($gs-baseline/2)};
-    margin-right: -#{rem($gs-baseline)};
-    right: 0;
-    position: absolute;
-}
 
 /* Status Panel
    ========================================================================== */
