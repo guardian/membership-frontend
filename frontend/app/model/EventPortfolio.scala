@@ -9,7 +9,7 @@ case class EventPortfolio(
     orderedEvents: Seq[RichEvent],
     normal: Seq[RichEvent],
     pastEvents: Option[Seq[RichEvent]],
-    otherEvents: Option[EventGroup] = None
+    otherEvents: Option[EventGroup]
   ) {
   lazy val heroOpt = orderedEvents.headOption
   lazy val priority = orderedEvents.drop(1)
