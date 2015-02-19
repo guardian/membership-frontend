@@ -13,6 +13,7 @@ import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.EBTicketClass
 import model.RichEvent.RichEvent
 import play.api.Logger
+import org.joda.time._
 
 import scala.collection.JavaConversions._
 
@@ -83,11 +84,13 @@ case class MemberData(salesforceContactId: String,
               "from" -> tierAmend.tierFrom.name,
               "to" -> tierAmend.tierTo.name
             ) ++
-            tierAmend.effectiveFromDate.map("effectiveDate" -> _)
+            tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
         }
 
-    ActivityTracking.setSubMap(dataMap)
+    val memberMap = Map("member-test-3" -> ActivityTracking.setSubMap(dataMap)) //todo change mapping name
+
+    ActivityTracking.setSubMap(memberMap)
   }
 
   def truncatePostcode(postcode: String) = {
@@ -100,28 +103,28 @@ case class EventData(event: RichEvent) {
 
     val dataMap = Map(
       "id" -> event.id,
-      "startTime" -> event.start,
-      "endTime" -> event.end,
-      "created" -> event.created,
+      "startTime" -> event.start.getMillis,
+      "endTime" -> event.end.getMillis,
+      "created" -> event.created.getMillis,
       "capacity" -> event.capacity,
       "status" -> event.status,
       "isBookable" -> event.isBookable,
       "isPastEvent" -> event.isPastEvent,
       "isSoldOut" -> event.isSoldOut
     ) ++
-      Map("tags" -> event.tags.toList) ++
+      Map("tag-test" -> seqAsJavaList(event.tags)) ++
       event.internalTicketing.map("isFree" -> _.isFree) ++
       event.internalTicketing.map("ticketsSold" -> _.ticketsSold) ++
-      event.internalTicketing.map("saleEnds" -> _.salesEnd) ++
+      event.internalTicketing.map("saleEnds" -> _.salesEnd.getMillis) ++
       event.internalTicketing.map("isCurrentlyAvailableToPaidMembersOnly" -> _.isCurrentlyAvailableToPaidMembersOnly) ++
       event.internalTicketing.flatMap(_.generalReleaseTicketOpt).map("generalReleaseTicketOpt" -> ticketClassToMap(_)) ++
       event.internalTicketing.flatMap(_.memberBenefitTicketOpt).map("memberBenefitTicketOpt" -> ticketClassToMap(_)) ++
       event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
       event.providerOpt.map("provider" -> _)
 
-    //todo ticket sale dates, memberdiscountopt?
+    val eventMap = Map("event-test-3" -> ActivityTracking.setSubMap(dataMap)) //todo change mapping name
 
-    ActivityTracking.setSubMap(dataMap)
+    ActivityTracking.setSubMap(eventMap)
   }
 
   private def ticketClassToMap(ticketClass: EBTicketClass): JMap[String, Object] = {
@@ -131,17 +134,17 @@ case class EventData(event: RichEvent) {
       "free" -> ticketClass.free,
       "quantityTotal" -> ticketClass.quantity_total,
       "quantitySold" -> ticketClass.quantity_sold,
-      "saleEnds" -> ticketClass.sales_end
+      "saleEnds" -> ticketClass.sales_end.getMillis,
+      "durationBeforeSaleEnds" -> (ticketClass.sales_end.getMillis - DateTime.now.getMillis)
     ) ++
-      ticketClass.sales_start.map("salesStart" -> _) ++
+      ticketClass.sales_start.map("salesStart" -> _.getMillis) ++
+      ticketClass.sales_start.map(s => "durationAfterSaleStart" -> ( DateTime.now.getMillis - s.getMillis)) ++
       ticketClass.cost.map("value" -> _.value) ++
-      ticketClass.cost.map("formattedPrice" -> _.formattedPrice) ++
+      ticketClass.cost.map("formattedPrice" -> _.formattedPrice.replace("£", "")) ++
       ticketClass.hidden.map("hidden" -> _)
 
     ActivityTracking.setSubMap(dataMap)
-
   }
-
 }
 
 trait ActivityTracking {

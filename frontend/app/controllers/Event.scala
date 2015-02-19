@@ -14,7 +14,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, MemberService}
 import services.EventbriteService._
-import tracking.{ActivityTracking, EventActivity, EventData}
+import tracking.{MemberData, ActivityTracking, EventActivity, EventData}
 import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
@@ -128,8 +128,12 @@ trait Event extends Controller with ActivityTracking {
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
-      } yield Found(event.url ? ("discount" -> discountOpt.map(_.code)))
-        .withCookies(Cookie(eventCookie(event), ""))
+      } yield {
+        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
+        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))
+        Found(event.url ? ("discount" -> discountOpt.map(_.code)))
+          .withCookies(Cookie(eventCookie(event), ""))
+      }
     }
 
   // log a conversion if the user came from a membership event page
