@@ -7,14 +7,20 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
+@canChangeTier = @{
+    tier != currentTier && currentTier == Tier.Friend || tier == Tier.Friend
+}
+
 <div class="package-promo package-promo--stretch @modifierClass.getOrElse("package-promo--enhanced") @if(tier == currentTier){ package-promo--current} tone-border-@tier.toString.toLowerCase">
     <div class="package-promo__header">
-        <a class="no-underline minimal-link"
-           href="@routes.TierController.upgrade(tier)"
-           data-metric-trigger="click"
-           data-metric-category="changeTier"
-           data-metric-action="@tier.toString.toLowerCase()"
-        >
+        @if(canChangeTier) {
+            <a class="no-underline minimal-link"
+               href="@routes.TierController.upgrade(tier)"
+               data-metric-trigger="click"
+               data-metric-category="changeTier"
+               data-metric-action="@tier.toString.toLowerCase()"
+            >
+        }
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(tier, showCaption=false)
@@ -26,7 +32,9 @@
                     @fragments.pricing.priceInfo(tier, canFlex=false)
                 </div>
             </div>
-        </a>
+        @if(canChangeTier) {
+            </a>
+        }
     </div>
     <div class="package-promo__content">
         <div class="package-promo__description copy hidden-tablet">
