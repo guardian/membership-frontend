@@ -78,7 +78,7 @@ trait Event extends Controller {
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
     Ok(views.html.event.masterclass(
-      EventPortfolio(Nil, masterclassEvents.getTaggedEvents(tag), None),
+      EventPortfolio(Nil, masterclassEvents.getTaggedEvents(tag), None, None),
       pageInfo,
       MasterclassEvent.decodeTag(rawTag),
       MasterclassEvent.decodeTag(rawSubTag)
@@ -101,7 +101,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getTaggedEvents(tag), None), pageInfo))
+    Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getTaggedEvents(tag), None, None), pageInfo))
   }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>

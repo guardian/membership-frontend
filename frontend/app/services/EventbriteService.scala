@@ -14,7 +14,7 @@ import play.api.libs.json.Reads
 import play.api.libs.ws._
 
 import configuration.Config
-import model.EventPortfolio
+import model.{EventGroup, EventPortfolio}
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -66,6 +66,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def mkRichEvent(event: EBEvent): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
+  def getPartnerEvents: Option[EventGroup]
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -81,7 +82,14 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def getEventPortfolio: EventPortfolio = {
     val featuredEvents = getFeaturedEvents
-    EventPortfolio(featuredEvents, events.diff(featuredEvents), Some(eventsArchive))
+    val partnerGroup = getPartnerEvents
+    val partnerEvents = partnerGroup.map(_.events).getOrElse(Nil)
+    EventPortfolio(
+      featuredEvents,
+      events.diff(featuredEvents++partnerEvents),
+      Some(eventsArchive),
+      partnerGroup
+    )
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
@@ -138,7 +146,7 @@ object GuardianLiveEventService extends EventbriteService {
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-
+  override def getPartnerEvents: Option[EventGroup] = Some(EventGroup("Partner Events", events.filter(_.providerOpt.isDefined)))
   override def start() {
     super.start()
     eventsOrderingTask.start()
@@ -174,6 +182,7 @@ object MasterclassEventService extends EventbriteService {
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
+  override def getPartnerEvents: Option[EventGroup] = None
 }
 
 object EventbriteServiceHelpers {
