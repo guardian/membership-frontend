@@ -32,6 +32,7 @@ object EventbriteTestObjects {
       eventListUrl="",
       termsUrl="",
       largeImg=false,
+      preSale=true,
       highlightsOpt=None,
       chooseTier=ChooseTierMetadata("", "")
     )

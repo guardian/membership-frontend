@@ -1,11 +1,9 @@
 @(event: model.RichEvent.RichEvent, ticketing: model.Eventbrite.InternalTicketing)
 
 @import views.support.Dates._
-@import com.github.nscala_time.time.Imports._
 @import org.joda.time.Instant
 @import model.RichEvent._
 @import com.gu.membership.salesforce.Tier
-
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
     Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>${salesDate.pretty(needToDisplayTimes)}</time>")
@@ -15,46 +13,36 @@
     Html(s"<time datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes)}</time>")
 }
 
-@event match {
-    case _: GuLiveEvent => {
-        <div class="event-info__tickets sticky-hidden u-cf" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
-            <div class="event-info__sale-dates u-cf">
-                <div class="event-info__first">
-                    @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
-                </div>
-                <div class="event-info__second">
-                    <div class="sale-dates__header">Ticket release dates</div>
-
-                    @if(ticketing.salesDates.anyoneCanBuyTicket) {
-                        <button class="js-toggle fake-link u-align-right sales-dates-toggle"
-                                data-toggle-label="Hide"
-                                data-toggle="js-event-ticket-dates-@event.id">
-                            Show
-                        </button>
-                    }
-
-                    <ul class="sale-dates__list u-unstyled u-cf"
-                        id="js-event-ticket-dates-@event.id"@if(ticketing.salesDates.anyoneCanBuyTicket) { data-toggle-hidden}>
-                        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
-                            <li class="sale-dates__item" itemscope itemtype="http://schema.org/Offer">
-                                <meta itemprop="eligibleCustomerType" content="@tier">
-                                <meta itemprop="availabilityEnds" content="@ticketing.salesDates.datesByTier(tier)">
-                                <span class="sale-dates__item--left">@(tier + "s")</span>
-                                @ticketDateForTier(tier, ticketing.salesDates.datesByTier(tier), ticketing.salesDates.needToDistinguishTimes)
-                            </li>
-                        }
-                    </ul>
-
-                    <ul class="sale-dates__list u-unstyled u-cf">
-                        <li class="sale-dates__item">
-                            <span class="sale-dates__item--left">Sale ends</span>
-
-                            @ticketEndSaleDate(ticketing.salesEnd, ticketing.salesDates.needToDistinguishTimes)
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="ticket-sales" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+    <span class="ticket-sales__header">Ticket release dates</span>
+    @if(ticketing.salesDates.anyoneCanBuyTicket) {
+        <button class="ticket-sales__toggle u-button-reset u-align-right js-toggle"
+                data-toggle-label="Hide"
+                data-toggle="js-event-ticket-dates-@event.id">
+            Show
+        </button>
     }
-    case _: MasterclassEvent => {}
-}
+    <ul class="ticket-sales__list u-unstyled"
+        id="js-event-ticket-dates-@event.id"
+        @if(ticketing.salesDates.anyoneCanBuyTicket) { data-toggle-hidden}
+    >
+        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
+            <li class="ticket-sales__item" itemscope itemtype="http://schema.org/Offer">
+                <meta itemprop="eligibleCustomerType" content="@tier">
+                <meta itemprop="availabilityEnds" content="@ticketing.salesDates.datesByTier(tier)">
+                <span class="ticket-sales__item__label">@(tier + "s")</span>
+                <span class="ticket-sales__item__date">
+                    @ticketDateForTier(tier, ticketing.salesDates.datesByTier(tier), ticketing.salesDates.needToDistinguishTimes)
+                </span>
+            </li>
+        }
+    </ul>
+    <ul class="ticket-sales__list u-unstyled">
+        <li class="ticket-sales__item">
+            <span class="ticket-sales__item_label">Sale ends</span>
+            <span class="ticket-sales__item__date">
+                @ticketEndSaleDate(ticketing.salesEnd, ticketing.salesDates.needToDistinguishTimes)
+            </span>
+        </li>
+    </ul>
+</div>
