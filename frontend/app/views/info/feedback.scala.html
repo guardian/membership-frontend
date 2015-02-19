@@ -1,10 +1,14 @@
-@()(implicit token: play.filters.csrf.CSRF.Token)
+@(flashMsgOpt: Option[model.FlashMessage] = None)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper.CSRF
 
 @main("Feedback") {
 
     <main role="main" class="page-content l-constrained">
+
+        @for(flashMsg <- flashMsgOpt) {
+            @fragments.notifications.flashMessage(flashMsg)
+        }
 
         <section class="form-header">
             <h1 class="form-headline">Feedback</h1>

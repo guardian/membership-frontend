@@ -1,0 +1,77 @@
+@(title: String, events: Seq[model.RichEvent.RichEvent])
+@import model.RichEvent.MasterclassEvent
+@import model.RichEvent.GuLiveEvent
+
+@import model.Eventbrite.InternalTicketing
+@import model.Eventbrite.ExternalTicketing
+@import configuration.Config
+
+@eventTrait(text: String, identifier: String = "") = {
+    <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}">
+    @text
+    </li>
+}
+
+@previewUrlSubCategory(eventOpt: Option[model.RichEvent.RichEvent]) = @{
+    eventOpt.fold("") { event =>
+        event match {
+            case _: GuLiveEvent => "event"
+            case _: MasterclassEvent => "masterclass"
+        }
+    }
+}
+
+@defining(previewUrlSubCategory(events.headOption)) { previewSubCategory =>
+
+    <section class="utils-page-section">
+        <h2 class="utils-page-section-header">@title</h2>
+
+        <ul class="events-overview u-unstyled u-cf">
+        @for(event <- events) {
+            <li class="event-item">
+                <article class="event-detail">
+                    <div>
+                        <div class="event-detail_image">
+                            <a href="/event/@event.id" target="_blank">
+                                <img src="@event.socialImgUrl" alt="Event Image" class="responsive-img"/>
+                                <span class="pseudo-link event-detail-title">@event.name.text</span>
+                            </a>
+                        </div>
+                        <div class="event-detail_info copy">
+                            <a href="@(s"${Config.membershipUrl}/preview-${previewSubCategory}/${event.id}")"
+                            target="_blank"
+                            class="event-sub-detail">preview</a>
+                            <a href="@(s"https://dashboard.ophan.co.uk/info?url=${event.memUrl}")"
+                            target="_blank"
+                            class="event-sub-detail">ophan</a>
+                            <a href="@(s"${Config.eventbriteUrl}/myevent?eid=${event.id}")"
+                            target="_blank"
+                            class="event-sub-detail">eventbrite</a>
+                        </div>
+                    </div>
+                    <ul class="event-trait-container u-unstyled">
+                    @event.ticketing.collect {
+                        case ExternalTicketing => {
+                            @eventTrait("Not Sold though Eventbrite", "noteworthy")
+                        }
+                        case ticketing: InternalTicketing => {
+                            @if(ticketing.isFree) {
+                                @eventTrait("Free Event", "moderate")
+                            }
+
+                            @if(ticketing.isPossiblyMissingDiscount) {
+                                @eventTrait("No Discount", "important")
+                            }
+
+                            @if(ticketing.isSoldOut) {
+                                @eventTrait("Sold out")
+                            }
+                        }
+                    }
+                    </ul>
+                </article>
+            </li>
+        }
+        </ul>
+    </section>
+}

@@ -164,6 +164,21 @@ For a reminder on why we do this, here's @tackley on the subject:
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
 
+## Package.json
+
+Once in a while it is worth updating the package.json dependencies for our build tasks
+
+You can use [`npm-check-updates`](https://www.npmjs.com/package/npm-check-updates)
+
+Show any new dependencies for the project
+
+`$ npm-check-updates`
+
+Upgrade a project's package.json
+
+`$ npm-check-updates -u`
+
+
 ## Troubleshooting
 
 ###NPM Hangs or doesn't download all dependencies

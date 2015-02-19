@@ -8,6 +8,7 @@ import scala.concurrent.Future
 import play.api.libs.json.Reads
 import utils.Resource
 import monitoring.EventbriteMetrics
+import model.EventGroup
 
 class EventbriteServiceTest extends PlaySpecification {
 
@@ -41,6 +42,7 @@ class EventbriteServiceTest extends PlaySpecification {
     override def eventsArchive: Seq[RichEvent] = Nil
     override def getFeaturedEvents: Seq[RichEvent] = Nil
     override def getTaggedEvents(tag: String): Seq[RichEvent] = Nil
+    override def getPartnerEvents: Option[EventGroup] = None
 
     def mkRichEvent(event: EBEvent): Future[RichEvent] = Future.successful(TestRichEvent(event))
   }

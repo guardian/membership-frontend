@@ -2,37 +2,82 @@
 
 @import configuration.Config
 @import com.gu.membership.salesforce.Tier
-@import helper._
+@import model.Benefits
 
-@main("Change Tier", htmlClass = "change-tier") {
+@main("Change Tier") {
 
-    <main role="main" class="page-content page-content--padded l-constrained">
-        <div class="content__container">
-            <section class="content__section">
-                <a href="@Config.idWebAppUrl/membership/edit" class="action action--arrow-left">Edit profile</a>
-                <h1 class="content__headline">Change tier</h1>
-            </section>
-        </div>
-        <div class="package-container">
-            <h2 class="package-container__header">Choose the tier you would like to switch to:</h2>
-            <div class="content__container">
-                <section class="package-list package-list--flex-box">
+    <main role="main" class="page-content l-constrained">
 
-                    @for(tier <- Tier.allPublic) {
-                        @fragments.tier.benefits(Some(currentTier), tier)
-                    }
+        @fragments.page.pageHeader("Change tier")
 
-                </section>
+        <section class="page-section">
+            <div class="page-section__lead-in">
+                <a href="@Config.idWebAppUrl/membership/edit" class="action action--secondary u-anchor u-no-top-margin">
+                    @fragments.actionIcon("arrow-left", leftIcon=true)
+                    <span class="action__label">Edit profile</span>
+                </a>
             </div>
-            <div class="content__container content__container--border-dark content__footer">
+            <div class="page-section__content">
 
-                <ul class="inline-list inline-list--divided">
+                <h1 class="h-section">Choose the tier you would like to switch to:</h1>
+
+                @* Packages *@
+                <ul class="grid grid--bordered grid--stretch grid--3up-stacked">
+                    @for(tier <- Tier.allPublic) {
+                        <li class="grid__item">
+
+                            @fragments.tier.packageChanger(tier, currentTier)
+
+                            @* Benefits *@
+                            <div class="benefits-chooser">
+                                <a class="mini-link until-desktop js-toggle" data-toggle="toggle-benefit-@tier.toString.toLowerCase" data-toggle-label="Hide what's included" data-toggle-icon="arrow-up">
+                                    <span class="toggle-link__icon icon-holder icon-holder--small">
+                                        @fragments.inlineIcon("arrow-down", List("inline-icon--small"))
+                                    </span>
+                                    <span class="js-toggle-label">Show what's included</span>
+                                </a>
+                                <div class="benefits-chooser__list" id="toggle-benefit-@tier.toString.toLowerCase">
+                                    <ul class="list-stack">
+                                        <li class="list-stack__title">
+                                            What's included
+                                        </li>
+                                        @for(benefit <- Benefits.details(tier).list) {
+                                            <li>@fragments.benefits.item(benefit)</li>
+                                        }
+                                    </ul>
+                                    @if(tier != currentTier) {
+                                        @* TODO: When paid-to-paid upgrades are enabled this check can be removed *@
+                                        @if(currentTier == Tier.Friend || tier == Tier.Friend) {
+                                            <a class="action"
+                                               href="@routes.TierController.upgrade(tier)"
+                                               data-metric-trigger="click"
+                                               data-metric-category="changeTier"
+                                               data-metric-action="@tier.toString.toLowerCase()"
+                                            >
+                                                <span class="action__label">Become a @tier</span>
+                                            </a>
+                                        } else {
+                                            <span class="action is-disabled">
+                                                <span class="action__label">Coming soon</span>
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                        </li>
+                    }
+                </ul>
+
+                @* Help & cancellation links *@
+                <ul class="inline-list inline-list--bordered copy">
                     <li class="inline-list__item"><a href="/help">Help</a></li>
-                    <li class="inline-list__item"><a id="qa-cancel-membership" href="/tier/cancel">Cancel Guardian membership</a></li>
+                    <li class="inline-list__item"><a href="/tier/cancel" id="qa-cancel-membership">Cancel Guardian membership</a></li>
                 </ul>
 
             </div>
-        </div>
+        </section>
+
   </main>
 
 }

@@ -140,11 +140,13 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  */
 .page-section {
     @include clearfix;
-    position: relative;
     padding-bottom: rem($gs-baseline * 2);
 
     @include mq(desktop) {
         width: auto;
+    }
+    @include mq(mem-full) {
+        position: relative;
     }
 }
 .page-section--no-padding {

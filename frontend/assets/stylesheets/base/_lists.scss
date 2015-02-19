@@ -1,22 +1,16 @@
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
 dt {
     font-weight: bold;
 }
 
-// Addresses paddings set differently in IE6/7
 menu,
 ol,
 ul {
     padding: 0;
 }
-
-// Corrects list images handled incorrectly in IE7
-nav ul,
-nav ol {
-    list-style: none;
-    list-style-image: none;
-}
-
-// Some list helpers
 
 // Remove margin and bullets from lists.
 .u-unstyled,
@@ -27,27 +21,28 @@ nav ol {
 
 // List of inline items
 .inline-list {
-    @extend %u-unstyled;
+    margin: 0;
+    list-style: none;
 }
 .inline-list__item {
+    @include fs-data(4);
     display: inline-block; // Prevent linebreak within an item
-}
+    margin-right: $gutter-width-fluid;
 
-.inline-list--divided {
-    .inline-list__item:after {
-        display: inline-block;
-        content: ' \2022 ';
-        margin: 0 rem($gs-baseline / 2);
+    &:last-child {
+        margin-right: 0;
     }
-    .inline-list__item:last-child:after {
-        display: none;
-        content: '';
-    }
+}
+.inline-list--bordered {
+    margin-top: rem($gs-baseline * 2);
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px solid $c-border-brand;
 }
 
 .list-stack {
-    margin: 0;
+    margin: 0 0 rem($gs-baseline);
     list-style: none;
+
     li {
         border-bottom: 1px dotted $c-border-neutral;
         padding-bottom: rem($gs-baseline / 2);
@@ -57,6 +52,14 @@ nav ol {
         border-bottom: 0 none;
         margin-bottom: 0;
     }
+}
+.list-stack__title {
+    @include fs-bodyCopy(2);
+    font-weight: bold;
+    margin-top: rem($gs-baseline);
+    padding: rem($gs-baseline / 2) 0;
+    border-top: dotted $c-border-neutral;
+    border-width: 1px 0;
 }
 .list-stack--bordered {
     border-top: 1px dotted $c-border-neutral;

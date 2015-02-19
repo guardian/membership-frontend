@@ -93,6 +93,8 @@ body {
     @include clearfix;
     background-color: $c-background;
     padding: 0 rem($gs-gutter / 2);
+    position: relative;
+
     @include mq(mobileLandscape) {
         padding: 0 rem($gs-gutter);
     }

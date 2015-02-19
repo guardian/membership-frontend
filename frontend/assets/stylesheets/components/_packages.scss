@@ -262,7 +262,22 @@
     }
     .package-promo__tier {
         @include clearfix;
+        position: relative;
         min-height: rem(gs-span(1.5));
+    }
+    .package-promo__tier__current {
+        @include fs-bodyCopy(1);
+        position: absolute;
+        top: rem(4px); right: rem(4px);
+        @include mq(tablet) {
+            position: static;
+            margin-left: rem(28px);
+            margin-top: -(rem($gs-gutter / 4));
+        }
+        @include mq(desktop) {
+            margin: 0;
+            position: absolute;
+        }
     }
     .package-promo__tier__pricing {
         position: absolute;
@@ -359,6 +374,23 @@
     }
     @include mq(desktop) {
         @include package-promo-stacked();
+    }
+}
+
+.package-promo--current {
+    background-color: $c-neutral5;
+}
+
+.package-promo--stretch {
+    @include mq(desktop) {
+        min-height: rem(300px); // Magic number
+
+        .package-promo__actions {
+            padding-bottom: 0;
+            position: absolute;
+            left: rem($gs-gutter / 4);
+            bottom: rem($gs-baseline);
+        }
     }
 }
 

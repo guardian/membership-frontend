@@ -41,6 +41,7 @@ GET            /oauth2callback                    controllers.OAuth.oauth2Callba
 
 # Staff event page to show discounted events
 GET            /staff/event-overview              controllers.Staff.eventOverview
+GET            /staff/masterclass-overview        controllers.Staff.masterclassOverview
 
 GET            /choose-tier                       controllers.Joining.tierChooser()
 
@@ -62,6 +63,7 @@ GET            /event/:id/thankyou                controllers.Event.thankyou(id,
 GET            /event/:id/thankyou/pixel          controllers.Event.thankyouPixel(id)
 
 GET            /preview-event/:id                 controllers.Event.preview(id)
+GET            /preview-masterclass/:id           controllers.Event.previewMasterclass(id)
 
 # Tier
 GET            /tier/change                       controllers.TierController.change
@@ -81,7 +83,6 @@ GET            /tier/change/:tier/summary         controllers.TierController.upg
 # Information
 GET            /help                              controllers.Info.help
 GET            /feedback                          controllers.Info.feedback
-GET            /feedback/thankyou                 controllers.Info.feedbackThankyou
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /about                             controllers.Info.about
 GET            /patrons                           controllers.Info.patron
