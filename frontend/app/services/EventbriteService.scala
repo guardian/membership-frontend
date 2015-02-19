@@ -146,7 +146,7 @@ object GuardianLiveEventService extends EventbriteService {
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-  override def getPartnerEvents = Some(EventGroup("Partner Events", events.filter(_.providerOpt.isDefined)))
+  override def getPartnerEvents: Option[EventGroup] = Some(EventGroup("Partner Events", events.filter(_.providerOpt.isDefined)))
   override def start() {
     super.start()
     eventsOrderingTask.start()
@@ -182,7 +182,7 @@ object MasterclassEventService extends EventbriteService {
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
-  override def getPartnerEvents = None
+  override def getPartnerEvents: Option[EventGroup] = None
 }
 
 object EventbriteServiceHelpers {
