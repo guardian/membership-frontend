@@ -23,11 +23,7 @@
         <h4 class="event-info__name" itemprop="name">@event.name.text</h4>
 
         <div class="stats-listing">
-            @fragments.event.stats(event)
-            @* TODO: Make part of event stats *@
-            @for(ticketing <- event.internalTicketing if event.isBookable) {
-                @fragments.event.ticketSales(event, ticketing)
-            }
+            @fragments.event.stats(event, showTicketSales=true)
         </div>
 
          @for(ticketing <- event.internalTicketing) {

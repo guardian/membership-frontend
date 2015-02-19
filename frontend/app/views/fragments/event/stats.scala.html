@@ -1,8 +1,9 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, showTicketSales: Boolean = false)
 
 @import views.support.Dates._
+@import model.RichEvent.{GuLiveEvent, MasterclassEvent}
 
-
+@* Event start time *@
 <div class="stat-item">
     <div class="stat-item__first">
         @fragments.inlineIcon("time", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
@@ -11,6 +12,8 @@
         <span itemprop="startDate" content="@event.start">@prettyDateWithTimeAndDayName(event.start)</span>
     </div>
 </div>
+
+@* Event locations *@
 <div class="stat-item">
     <div class="stat-item__first">
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
@@ -30,3 +33,17 @@
         }
     </div>
 </div>
+
+@* Event ticket sale dates *@
+@if(showTicketSales && event.metadata.preSale) {
+    @for(ticketing <- event.internalTicketing if event.isBookable) {
+        <div class="stat-item">
+            <div class="stat-item__first">
+                @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
+            </div>
+            <div class="stat-item__second">
+                @fragments.event.ticketSales(event, ticketing)
+            </div>
+        </div>
+    }
+}

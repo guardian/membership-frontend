@@ -430,14 +430,6 @@
     }
 }
 
-.sales-dates-toggle {
-    padding: rem($gs-baseline/2) rem($gs-baseline);
-    margin-top: -#{rem($gs-baseline/2)};
-    margin-right: -#{rem($gs-baseline)};
-    right: 0;
-    position: absolute;
-}
-
 /* Event Info Panel
    ========================================================================== */
 
@@ -454,29 +446,6 @@
     .event-info__name {
         @include fs-header(2);
         padding-bottom: rem($gs-baseline * 2);
-    }
-    // TODO: Refactor out into stat-item
-    .event-info__tickets {
-        border-bottom: 1px dotted $c-neutral3;
-        padding-bottom: rem($gs-gutter / 4);
-        margin-bottom: rem($gs-baseline / 4);
-    }
-    .event-info__sale-dates {
-        .sale-dates__header {
-            @include fs-textSans(3);
-            font-weight: bold;
-            display: inline;
-        }
-        .sale-dates__list:last-child {
-            padding-bottom: rem(5px);
-        }
-        .sale-dates__item {
-            @include fs-textSans(3);
-            text-align: right;
-            .sale-dates__item--left {
-                float: left;
-            }
-        }
     }
     .event-info__first {
         float: left;
@@ -510,7 +479,6 @@
     }
 }
 
-
 /* Status Panel
    ========================================================================== */
 
@@ -524,4 +492,37 @@
 }
 .status-panel__content {
    margin-top: rem($gs-baseline / 2);
+}
+
+/* Ticket Sales
+   ========================================================================== */
+
+.ticket-sales {
+    margin-top: rem($gs-baseline / 4);
+    position: relative;
+}
+.ticket-sales__header {
+    font-weight: bold;
+}
+.ticket-sales__toggle {
+    right: 0;
+    top: 0;
+    position: absolute;
+}
+.ticket-sales__toggle:hover,
+.ticket-sales__toggle:active {
+    text-decoration: underline;
+}
+.ticket-sales__item {
+    @include clearfix();
+}
+.ticket-sales__item__label,
+.ticket-sales__item__date {
+    display: inline-block;
+}
+.ticket-sales__item__label {
+    float: left;
+}
+.ticket-sales__item__date {
+    float: right;
 }
