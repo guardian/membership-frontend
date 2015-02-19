@@ -2,16 +2,18 @@
 
 @import views.support.Asset
 
-@for(description <- event.metadata.description) {
-    <div class="series-detail l-constrained tone-@event.metadata.identifier">
-        <div class="series-detail__content">
-            <h3 class="series-detail__title">
-                About @event.metadata.title
-            </h3>
-            <div class="series-detail__description">
-                @description
+@if(event.providerOpt.isEmpty) {
+    @for(description <- event.metadata.description) {
+        <div class="series-detail l-constrained tone-@event.metadata.identifier">
+            <div class="series-detail__content">
+                <h3 class="series-detail__title">
+                    About @event.metadata.title
+                </h3>
+                <div class="series-detail__description">
+                    @description
+                </div>
             </div>
+            <img class="series-detail__logo" src="@Asset.at("images/providers/" + event.metadata.identifier + ".svg")">
         </div>
-        <img class="series-detail__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
-    </div>
+    }
 }
