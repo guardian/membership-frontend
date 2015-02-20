@@ -12,13 +12,15 @@ import model.RichEvent._
 import model.{EventPortfolio, Eventbrite, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, MemberService}
+import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, DiscoverEventService, MemberService}
 import services.EventbriteService._
+import com.github.nscala_time.time.Imports._
 
 import scala.concurrent.Future
 
 trait Event extends Controller {
   val guLiveEvents: EventbriteService
+  val discoverEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
   val memberService: MemberService
@@ -85,13 +87,31 @@ trait Event extends Controller {
     ))
   }
 
+  private def chronologicalSort(events: Seq[model.RichEvent.RichEvent]) = {
+    events.sortWith(_.event.start < _.event.start)
+  }
+
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.guardianLive(guLiveEvents.getEventPortfolio, pageInfo))
+    val pastEvents = discoverEvents.getEventPortfolio.pastEvents.fold {
+      guLiveEvents.getEventPortfolio.pastEvents
+    } { discoverPastEvents =>
+      guLiveEvents.getEventPortfolio.pastEvents.fold(Some(discoverPastEvents)) { guPastEvents =>
+        Some(chronologicalSort(guPastEvents ++ discoverPastEvents))
+      }
+    }
+    Ok(views.html.event.guardianLive(
+      EventPortfolio(
+        guLiveEvents.getEventPortfolio.orderedEvents,
+        chronologicalSort(guLiveEvents.getEventPortfolio.normal ++ discoverEvents.getEventPortfolio.normal),
+        pastEvents,
+        guLiveEvents.getEventPortfolio.otherEvents
+      ),
+      pageInfo))
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -101,7 +121,14 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getTaggedEvents(tag), None, None), pageInfo))
+    Ok(views.html.event.guardianLive(
+      EventPortfolio(
+        Seq.empty,
+        chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ discoverEvents.getTaggedEvents(tag)),
+        None,
+        None
+      ),
+      pageInfo))
   }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
@@ -172,6 +199,7 @@ trait Event extends Controller {
 
 object Event extends Event {
   val guLiveEvents = GuardianLiveEventService
+  val discoverEvents = DiscoverEventService
   val masterclassEvents = MasterclassEventService
   val memberService = MemberService
 }
