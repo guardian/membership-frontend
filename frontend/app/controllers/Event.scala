@@ -3,7 +3,7 @@ package controllers
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{MemberId, Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
@@ -27,6 +27,7 @@ trait Event extends Controller with ActivityTracking {
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
+        track(EventActivity("buyActionInvoked", None, EventData(event))) //todo could we check GU_MEM cookie?
         Timing.record(event.service.wsMetrics, "buy-action-invoked") {
           block(request)
         }
@@ -137,8 +138,10 @@ trait Event extends Controller with ActivityTracking {
     }
 
   // log a conversion if the user came from a membership event page
-  private def trackConversionToThankyou(request: Request[_], event: RichEvent) {
+  private def trackConversionToThankyou(request: Request[_], event: RichEvent, member: Option[Member]) {
     request.cookies.get(eventCookie(event)).foreach { _ =>
+      val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
+      track(EventActivity("eventThankYou", memberData, EventData(event)))
       event.service.wsMetrics.put("user-returned-to-thankyou-page", 1)
     }
   }
@@ -150,7 +153,7 @@ trait Event extends Controller with ActivityTracking {
         event <- guLiveEvents.getBookableEvent(id)
       } yield {
         guLiveEvents.getOrder(oid).map { order =>
-          trackConversionToThankyou(request, event)
+          trackConversionToThankyou(request, event, Some(request.member))
           Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
         }
       }
@@ -162,7 +165,7 @@ trait Event extends Controller with ActivityTracking {
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      trackConversionToThankyou(request, event)
+      trackConversionToThankyou(request, event, None) //todo could we check GU_MEM cookie?
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }

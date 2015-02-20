@@ -2,7 +2,6 @@ package tracking
 
 import java.util.{List => JList, Map => JMap}
 
-import com.github.nscala_time.time.Imports._
 import com.github.t3hnar.bcrypt._
 import com.gu.membership.salesforce.Tier
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
@@ -11,7 +10,7 @@ import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.EBTicketClass
-import model.RichEvent.RichEvent
+import model.RichEvent.{MasterclassEvent, GuLiveEvent, RichEvent}
 import play.api.Logger
 import org.joda.time._
 
@@ -88,7 +87,7 @@ case class MemberData(salesforceContactId: String,
           }
         }
 
-    val memberMap = Map("member-test-3" -> ActivityTracking.setSubMap(dataMap)) //todo change mapping name
+    val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
 
     ActivityTracking.setSubMap(memberMap)
   }
@@ -99,6 +98,12 @@ case class MemberData(salesforceContactId: String,
 }
 
 case class EventData(event: RichEvent) {
+
+  val group = event match {
+    case _: GuLiveEvent => "Guardian Live"
+    case _: MasterclassEvent => "Masterclass"
+
+  }
   def toMap: JMap[String, Object] = {
 
     val dataMap = Map(
@@ -110,9 +115,10 @@ case class EventData(event: RichEvent) {
       "status" -> event.status,
       "isBookable" -> event.isBookable,
       "isPastEvent" -> event.isPastEvent,
-      "isSoldOut" -> event.isSoldOut
+      "isSoldOut" -> event.isSoldOut,
+      "group" -> group
     ) ++
-      Map("tag-test" -> seqAsJavaList(event.tags)) ++
+      Map("tags" -> seqAsJavaList(event.tags)) ++
       event.internalTicketing.map("isFree" -> _.isFree) ++
       event.internalTicketing.map("ticketsSold" -> _.ticketsSold) ++
       event.internalTicketing.map("saleEnds" -> _.salesEnd.getMillis) ++
@@ -122,7 +128,7 @@ case class EventData(event: RichEvent) {
       event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
       event.providerOpt.map("provider" -> _)
 
-    val eventMap = Map("event-test-3" -> ActivityTracking.setSubMap(dataMap)) //todo change mapping name
+    val eventMap = Map("event" -> ActivityTracking.setSubMap(dataMap))
 
     ActivityTracking.setSubMap(eventMap)
   }
