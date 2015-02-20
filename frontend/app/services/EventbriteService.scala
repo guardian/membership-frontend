@@ -220,17 +220,22 @@ object EventbriteServiceHelpers {
 }
 
 object EventbriteService {
-  val services = Seq(GuardianLiveEventService, MasterclassEventService)
+  val services = Seq(GuardianLiveEventService, DiscoverEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
+      case _: DiscoverEvent => DiscoverEventService
       case _: MasterclassEvent => MasterclassEventService
     }
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
     GuardianLiveEventService.getPreviewEvent(id)
+  }
+
+  def getPreviewDiscoverEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+    DiscoverEventService.getPreviewEvent(id)
   }
 
   def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
