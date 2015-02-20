@@ -66,6 +66,15 @@
                             @if(ticketing.isSoldOut) {
                                 @eventTrait("Sold out")
                             }
+
+                            @for(discountTicketing <- ticketing.memberDiscountOpt) {
+                                @if(discountTicketing.nonStandardSaving) {
+                                        @eventTrait(s"${discountTicketing.roundedSavingPercentage}% discount", "important")
+                                }
+                                @if(event.deficientGuardianMembersTickets) {
+                                        @eventTrait("Fewer discount tickets than general", "important")
+                                }
+                            }
                         }
                     }
                     </ul>
