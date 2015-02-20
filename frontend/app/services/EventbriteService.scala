@@ -153,6 +153,32 @@ object GuardianLiveEventService extends EventbriteService {
   }
 }
 
+object DiscoverEventService extends EventbriteService {
+  val apiToken = Config.eventbriteDiscoverApiToken
+  val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for discovery?
+
+  val wsMetrics = new EventbriteMetrics("Discover")
+
+  val gridService = GridService(Config.gridConfig.url)
+  val contentApiService = GuardianContentService
+
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
+
+    val eventbriteContent = contentApiService.content(event.id)
+
+    event.mainImageUrl.fold(Future.successful(DiscoverEvent(event, None, eventbriteContent))) { url =>
+      gridService.getRequestedCrop(url).map(DiscoverEvent(event, _, eventbriteContent))
+    }
+  }
+
+  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
+  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
+  override def getPartnerEvents: Option[EventGroup] = None
+  override def start() {
+    super.start()
+  }
+}
+
 case class MasterclassEventServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
