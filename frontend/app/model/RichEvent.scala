@@ -92,6 +92,8 @@ object RichEvent {
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
     val pastImageOpt: Option[Asset]
+
+    def deficientGuardianMembersTickets: Boolean
   }
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
@@ -128,6 +130,7 @@ object RichEvent {
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
 
+    def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
@@ -147,6 +150,8 @@ object RichEvent {
 
     val contentOpt = None
     val pastImageOpt = None
+
+    def deficientGuardianMembersTickets = false
   }
 
 

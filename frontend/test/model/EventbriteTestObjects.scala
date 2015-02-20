@@ -36,6 +36,8 @@ object EventbriteTestObjects {
       highlightsOpt=None,
       chooseTier=ChooseTierMetadata("", "")
     )
+
+    def deficientGuardianMembersTickets: Boolean = false
   }
 
 }

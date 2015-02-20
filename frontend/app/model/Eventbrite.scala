@@ -154,6 +154,10 @@ object Eventbrite {
 
     val savingText = formatPrice(saving)
 
+    val roundedSavingPercentage: Int = math.round(100 * (saving.toFloat / generalRelease.priceInPence))
+
+    lazy val nonStandardSaving = roundedSavingPercentage != Config.roundedDiscountPercentage
+
     val isSoldOut = member.isSoldOut
 
     val fewerMembersTicketsThanGeneralTickets = member.quantity_total < generalRelease.quantity_total
