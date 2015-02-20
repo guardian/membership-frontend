@@ -7,7 +7,7 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class AreYouSurePage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def continueButton = driver.findElement(By.cssSelector(".action-cta.action-cta--confirm"))
+  private def continueButton = driver.findElement(By.id("qa-confirm-downgrade"))
 
   def clickContinue = {
     continueButton.click()
