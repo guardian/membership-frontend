@@ -69,7 +69,7 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events, None, None), pageInfo))
   }
 
   def masterclassesByTag(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
@@ -97,18 +97,11 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    val pastEvents = discoverEvents.getEventPortfolio.pastEvents.fold {
-      guLiveEvents.getEventPortfolio.pastEvents
-    } { discoverPastEvents =>
-      guLiveEvents.getEventPortfolio.pastEvents.fold(Some(discoverPastEvents)) { guPastEvents =>
-        Some(chronologicalSort(guPastEvents ++ discoverPastEvents))
-      }
-    }
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getEventPortfolio.orderedEvents,
         chronologicalSort(guLiveEvents.getEventPortfolio.normal ++ discoverEvents.getEventPortfolio.normal),
-        pastEvents,
+        (guLiveEvents.getEventPortfolio.pastEvents ++ discoverEvents.getEventPortfolio.pastEvents).headOption.map(chronologicalSort(_).reverse),
         guLiveEvents.getEventPortfolio.otherEvents
       ),
       pageInfo))
