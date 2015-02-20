@@ -133,6 +133,43 @@ object RichEvent {
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
+  case class DiscoverEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
+    val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
+      val file = asset.secureUrl.getOrElse(asset.file)
+      val regex = "\\d+.jpg".r
+      regex.replaceFirstIn(file, "{width}.jpg")
+    }
+
+    private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+
+    val pastImageOpt = for {
+      content <- contentOpt
+      elements <- content.elements
+      element <- elements.find(_.relation == "main")
+      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
+    } yield assetOpt
+
+    val availableWidths = widths.mkString(",")
+
+    val imageMetadata = image.map(_.metadata)
+
+    val socialImgUrl = image.flatMap(_.assets.find(_.dimensions.width == widths.max)).fold(fallbackImage){ asset =>
+      asset.secureUrl.getOrElse(asset.file)
+    }
+
+    val tags = Nil
+
+    val metadata = {
+      val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
+        Config.guardianMembershipUrl + "#video")
+      val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
+        .orElse(Some(fallbackHighlightsMetadata))
+      discoverMetadata.copy(highlightsOpt = highlight)
+    }
+
+    def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
+  }
+
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
       .getOrElse(fallbackImage)
