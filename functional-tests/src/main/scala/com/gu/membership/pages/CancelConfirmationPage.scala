@@ -7,7 +7,7 @@ import org.openqa.selenium.{By, WebDriver}
  */
 class CancelConfirmationPage(driver: WebDriver) extends BasePage(driver) {
 
-  private def myProfileButton = driver.findElement(By.cssSelector(".action-cta"))
+  private def myProfileButton = driver.findElement(By.cssSelector(".action"))
 
   def clickBackToMyProfile = {
     myProfileButton.click()
