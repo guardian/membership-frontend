@@ -11,7 +11,7 @@ case class Test(name: String, result: () => Boolean)
 object Healthcheck extends Controller {
 
   val tests = Seq(
-    Test("Events", GuardianLiveEventService.events.nonEmpty _),
+    // Test("Events", GuardianLiveEventService.events.nonEmpty _),
     Test("CloudWatch", CloudWatchHealth.hasPushedMetricSuccessfully _),
     Test("Zuora", () => TouchpointBackend.Normal.zuoraService.pingTask.get() > DateTime.now - 2.minutes)
   )
