@@ -102,10 +102,10 @@ trait Event extends Controller with ActivityTracking {
     )
     Ok(views.html.event.guardianLive(
       EventPortfolio(
-        guLiveEvents.getEventPortfolio.orderedEvents,
-        chronologicalSort(guLiveEvents.getEventPortfolio.normal ++ discoverEvents.getEventPortfolio.normal),
-        (guLiveEvents.getEventPortfolio.pastEvents ++ discoverEvents.getEventPortfolio.pastEvents).headOption.map(chronologicalSort(_).reverse),
-        guLiveEvents.getEventPortfolio.otherEvents
+        guLiveEvents.getFeaturedEvents,
+        chronologicalSort(guLiveEvents.getEvents ++ discoverEvents.getEvents),
+        (guLiveEvents.getEventsArchive ++ discoverEvents.getEventsArchive).headOption.map(chronologicalSort(_).reverse),
+        guLiveEvents.getPartnerEvents
       ),
       pageInfo))
   }

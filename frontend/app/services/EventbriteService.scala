@@ -65,8 +65,10 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
+  def getEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
   def getPartnerEvents: Option[EventGroup]
+  def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -78,18 +80,6 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     }
 
     enumerator(Iteratee.consume()).flatMap(_.run)
-  }
-
-  def getEventPortfolio: EventPortfolio = {
-    val featuredEvents = getFeaturedEvents
-    val partnerGroup = getPartnerEvents
-    val partnerEvents = partnerGroup.map(_.events).getOrElse(Nil)
-    EventPortfolio(
-      featuredEvents,
-      events.diff(featuredEvents++partnerEvents),
-      Some(eventsArchive),
-      partnerGroup
-    )
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
@@ -145,6 +135,7 @@ object GuardianLiveEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
+  override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events))
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
   override def getPartnerEvents: Option[EventGroup] = Some(EventGroup("Programming Partner Events", events.filter(_.providerOpt.isDefined)))
   override def start() {
@@ -172,6 +163,7 @@ object DiscoverEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
+  override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
   override def getPartnerEvents: Option[EventGroup] = None
   override def start() {
@@ -207,6 +199,7 @@ object MasterclassEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
+  override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
   override def getPartnerEvents: Option[EventGroup] = None
 }
