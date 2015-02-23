@@ -23,18 +23,19 @@
                         }
                     </select>
                 </div>
+                <div class="form-note">Choose a provider to display their logo on the events page</div>
             </div>
 
             <div class="form-field">
                 <label class="label" for="event-image">Event Image</label>
                 <input class="input-text js-event-image" id="event-image" data-tag="main-image" type="text"/>
-                <div class="form-note">The event image url <p><i>e.g https://media.gutools.co.uk/images/0816c7b393</i></p></div>
+                <div class="form-note">The events main image url <p><i>e.g https://media.gutools.co.uk/images/0816c7b393</i></p></div>
             </div>
 
             <div class="form-field">
                 <label class="label label--inline" for="not-sold-through-eventbrite">Not Sold though Eventbrite</label>
                 <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
-                <div class="form-note">This event does not use the ticketing system from Eventbrite</div>
+                <div class="form-note">This will not show tickets or prices from Eventbrite on this event</div>
             </div>
         </div>
 
@@ -42,9 +43,8 @@
 
     <fieldset class="fieldset">
 
-        <div class="fieldset__heading">
-            <h2 class="fieldset__headline">Results</h2>
-        </div>
+        <h2 class="fieldset__headline">Results</h2>
+        <div class="form-note">Please copy and paste the below comments into the events description html on Eventbrite</div>
 
         <div class="results">
             <div class="result-section is-hidden js-result-provider"></div>
