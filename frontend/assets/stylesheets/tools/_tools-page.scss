@@ -6,6 +6,16 @@
     border-bottom: 2px solid $mem-brandBlue;
 }
 
+.results {
+    background-color: $white;
+    margin: 0 rem(20px) rem(20px);
+}
+
+.result-section {
+    padding: rem(12px) rem(24px);
+    color: $c-neutral2;
+}
+
 .events-overview {
 
     @include mq(mobileLandscape) {
