@@ -146,6 +146,12 @@ module.exports = function (grunt) {
                 ],
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true
+            },
+            tools: {
+                src: '<%= dirs.assets.javascripts %>/src/tools.js',
+                dest: '<%= dirs.publicDir.javascripts %>/',
+                expand: true,
+                flatten: true
             }
         },
 
@@ -405,7 +411,8 @@ module.exports = function (grunt) {
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture'
+            'copy:omniture',
+            'copy:tools'
         ]);
     });
 
