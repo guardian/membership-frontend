@@ -18,7 +18,6 @@ tools.commentBuilder = (function(doc) {
         image.addEventListener('keyup', function (e) {
             var input = e.target;
 
-            resultProvider.classList[input.value ? 'remove' : 'add']('is-hidden');
             resultProvider.textContent = input.value ? createExampleComment(input.value, input.getAttribute('data-tag')) : '';
         }, false);
 
@@ -27,15 +26,11 @@ tools.commentBuilder = (function(doc) {
             var value = select.options[select.selectedIndex].value;
             var tag = select.getAttribute('data-tag');
 
-            resultImage.classList[value ? 'remove' : 'add']('is-hidden');
             resultImage.textContent = value ? createExampleComment(value, tag) : '';
         }, false);
 
         notSoldThroughEventbrite.addEventListener('change', function (e) {
-            var isChecked = e.target.checked;
-
-            resultNotSoldThroughEventbrite.classList[isChecked ? 'remove' : 'add']('is-hidden');
-            resultNotSoldThroughEventbrite.textContent = isChecked ? '<!-- noTicketEvent -->' : '';
+            resultNotSoldThroughEventbrite.textContent = e.target.checked ? '<!-- noTicketEvent -->' : '';
         }, false);
     };
 
