@@ -29,13 +29,17 @@
             <div class="form-field">
                 <label class="label" for="event-image">Event Image</label>
                 <input class="input-text js-event-image" id="event-image" data-tag="main-image" type="text"/>
-                <div class="form-note">The events main image url <p><i>e.g https://media.gutools.co.uk/images/0816c7b393</i></p></div>
+                <div class="form-note">
+                    <i>e.g https://media.gutools.co.uk/images/0816c7b393</i>
+                    <div><a href="https://media.gutools.co.uk/search">Get image url</a></div>
+                </div>
             </div>
 
             <div class="form-field">
-                <label class="label label--inline" for="not-sold-through-eventbrite">Not Sold though Eventbrite</label>
                 <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
-                <div class="form-note">This will not show tickets or prices from Eventbrite on this event</div>
+                <label class="label label--inline" for="not-sold-through-eventbrite">No tickets sold through Eventbrite</label>
+
+                <div class="form-note"><strong>NOTE</strong> only select this option if tickets are available to purchase through third parties</div>
             </div>
         </div>
 
