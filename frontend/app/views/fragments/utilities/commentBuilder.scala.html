@@ -1,6 +1,13 @@
 @import model.Eventbrite.EBEvent
 @import views.support.Asset
+@import model.RichEvent.MasterclassEvent
 
+@tagInput(tagName: String, id: String) = {
+    <div class="utils-tag-picker">
+        <input type="checkbox" class="js-tag-picker utils-tag-picker__input" id="@id" data-tag-name="@tagName" />
+        <label for="@id" class="utils-tag-picker__label">@tagName</label>
+    </div>
+}
 
 <section class="utils-page-section">
 
@@ -39,17 +46,32 @@
             </div>
         </div>
 
+        <div class="fieldset__fields">
+            <label>Event tags (Masterclass only)</label>
+            @for((category, count) <- MasterclassEvent.tags.zipWithIndex) {
+                @tagInput(category.categoryName, "cat-" + count)
+                @if(category.subCategories) {
+                    @for((subCategory, subCount) <- category.subCategories.zipWithIndex) {
+                        @tagInput(subCategory, "sub-cat-" + subCount)
+                    }
+                }
+            }
+        </div>
+
     </fieldset>
 
     <fieldset class="fieldset">
 
-        <h2 class="fieldset__headline">Results</h2>
-        <div class="form-note">Please copy and paste the below comments into the events description html on Eventbrite</div>
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Results</h2>
+            <div class="form-note">Please copy and paste the below comments into the events description html on Eventbrite</div>
+        </div>
 
         <div class="results">
             <div class="result-section js-result-provider"></div>
             <div class="result-section js-result-image"></div>
             <div class="result-section js-result-not-sold-through-eventbrite"></div>
+            <div class="result-section js-result-custom-tags"></div>
         </div>
 
     </fieldset>
