@@ -1,0 +1,63 @@
+@import model.Eventbrite.EBEvent
+@import views.support.Asset
+
+
+<section class="utils-page-section">
+
+    <h2 class="utils-page-section-header">Comment Builder</h2>
+    <fieldset class="fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Comments</h2>
+        </div>
+
+        <div class="fieldset__fields">
+
+            <div class="form-field">
+                <label class="label" for="event-provider">Event Provider</label>
+                <div>
+                    <select id="event-provider" data-tag="provider" class="js-event-provider">
+                        <option value="">Choose provider</option>
+                        @for(provider <- EBEvent.providerWhitelist){
+                            <option value="@provider">@provider.capitalize</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label class="label" for="event-image">Event Image</label>
+                <input class="input-text js-event-image" id="event-image" data-tag="main-image" type="text"/>
+                <div class="form-note">The event image url <p><i>e.g https://media.gutools.co.uk/images/0816c7b393</i></p></div>
+            </div>
+
+            <div class="form-field">
+                <label class="label label--inline" for="not-sold-through-eventbrite">Not Sold though Eventbrite</label>
+                <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
+                <div class="form-note">This event does not use the ticketing system from Eventbrite</div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Results</h2>
+        </div>
+
+        <div class="results">
+            <div class="result-section is-hidden js-result-provider"></div>
+            <div class="result-section is-hidden js-result-image"></div>
+            <div class="result-section is-hidden js-result-not-sold-through-eventbrite"></div>
+        </div>
+
+    </fieldset>
+
+</section>
+<script src="@Asset.at("javascripts/tools.js")"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        tools.commentBuilder.init();
+    }, false);
+</script>
