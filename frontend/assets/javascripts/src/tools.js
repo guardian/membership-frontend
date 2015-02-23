@@ -45,7 +45,7 @@ tools.commentBuilder = (function(doc) {
                     return elm.getAttribute('data-tag-name');
                 });
                 if (tags.length) {
-                    tags = '<!-- tags:' + tags.join(',') + ' -->';
+                    tags = COMMENT_START + ' tags:' + tags.join(',') + ' ' + COMMENT_END;
                 } else {
                     tags = '';
                 }

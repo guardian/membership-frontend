@@ -48,18 +48,19 @@
 
                 <div class="form-note"><strong>NOTE</strong> only select this option if tickets are available to purchase through third parties</div>
             </div>
-        </div>
 
-        <div class="fieldset__fields">
-            <label>Event tags (Masterclass only)</label>
-            @for((category, count) <- MasterclassEvent.tags.zipWithIndex) {
-                @tagInput(category.categoryName, "cat-" + count)
-                @if(category.subCategories) {
-                    @for((subCategory, subCount) <- category.subCategories.zipWithIndex) {
-                        @tagInput(subCategory, "sub-cat-" + subCount)
+            <div class="form-field">
+                <label>Event tags</label>
+                <div class="form-note">(Masterclass only)</div>
+                @for((category, count) <- MasterclassEvent.tags.zipWithIndex) {
+                    @tagInput(category.categoryName, "cat-" + count)
+                    @if(category.subCategories) {
+                        @for((subCategory, subCount) <- category.subCategories.zipWithIndex) {
+                            @tagInput(subCategory, "sub-cat-" + subCount)
+                        }
                     }
                 }
-            }
+            </div>
         </div>
 
     </fieldset>
