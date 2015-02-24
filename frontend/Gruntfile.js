@@ -403,8 +403,7 @@ module.exports = function (grunt) {
             'copy:images',
             'shell:svgencode',
             'sass:compile',
-            'postcss',
-            'imagemin'
+            'postcss'
         ]);
     });
     grunt.registerTask('compile:js', function() {

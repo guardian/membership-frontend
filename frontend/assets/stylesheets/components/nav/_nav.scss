@@ -114,6 +114,11 @@ $global-nav-height: 36px;
             float: left;
         }
     }
+
+    .nav__item--sub {
+        display: none;
+    }
+
     .nav__item--right {
         @include mq(desktop) {
             float: right;
@@ -155,16 +160,11 @@ $global-nav-height: 36px;
     background-color: $c-neutral5;
     .nav__scroll {
         background-color: $c-neutral6;
-        @include mq($until: tablet) {
-            display: block;
-        }
     }
 }
 
 .nav__list--breadcrumbs,
 .nav__list--subnav {
-    height: $global-nav-height;
-    float: left;
 
     .nav__link {
         padding-top: rem($gs-baseline / 2);
@@ -198,11 +198,15 @@ $global-nav-height: 36px;
 }
 
 .nav__list--subnav {
-    margin-left: rem($gs-gutter);
+    padding-left: rem($gs-gutter);
 }
 
 .nav--global.nav--global--subnav.is-active {
     z-index: 1;
+}
+
+.nav--global--subnav .nav__list {
+    display: table-cell;
 }
 
 @include mq($until: tablet) {
@@ -231,6 +235,14 @@ $global-nav-height: 36px;
         }
         .nav__item--home {
             display: none;
+        }
+
+        .nav__item--sub {
+            display: block;
+            a {
+                font-weight: 100;
+                padding-left: rem(20px);
+            }
         }
 
         .nav__link {
@@ -341,7 +353,6 @@ $global-nav-height: 36px;
 
     position: absolute;
     right: 0;
-    bottom: 0;
     z-index: 3;
 
     color: $white;
