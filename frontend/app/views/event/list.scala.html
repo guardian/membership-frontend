@@ -8,10 +8,6 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 
-@emptyListing = {
-    <div class="listing__empty">@noResultsMessage</div>
-}
-
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
@@ -41,7 +37,7 @@
         </div>
         <div class="listing__content">
             @if(eventPortfolio.normal.isEmpty) {
-                @emptyListing
+                <div class="listing__empty">@noResultsMessage</div>
             } else {
                 @if(isFilterable) {
                     <div class="listing__no-results js-filter-empty">@noResultsMessage</div>
@@ -64,7 +60,7 @@
             </div>
             <div class="listing__content">
             @if(otherEvents.events.isEmpty) {
-                @emptyListing
+                <div class="listing__empty">@noResultsMessage</div>
             } else {
                 <ul class="grid grid--bordered grid--3up">
                 @for(event <- otherEvents.events) {
@@ -85,7 +81,7 @@
             </div>
             <div class="listing__content">
                 @if(eventPortfolio.normal.isEmpty) {
-                    @emptyListing
+                    <div class="listing__empty">@noResultsMessage</div>
                 } else {
                     <ul class="grid grid--bordered grid--4up">
                         @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
