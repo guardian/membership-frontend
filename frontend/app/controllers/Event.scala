@@ -97,11 +97,13 @@ trait Event extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
+    val pastEvents = (guLiveEvents.getEventsArchive ++ discoverEvents.getEventsArchive).headOption
+      .map(chronologicalSort(_).reverse)
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ discoverEvents.getEvents),
-        (guLiveEvents.getEventsArchive ++ discoverEvents.getEventsArchive).headOption.map(chronologicalSort(_).reverse),
+        pastEvents,
         guLiveEvents.getPartnerEvents
       ),
       pageInfo))
