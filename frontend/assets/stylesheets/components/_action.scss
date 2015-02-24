@@ -125,11 +125,10 @@
 .action--booking {
     color: $white;
     background-color: $black;
-    border-color: $black;
+    border: 0 none;
 
     &:hover {
         background-color: lighten($black, 15%);
-        border-color: lighten($black, 15%);
     }
 }
 
@@ -208,6 +207,19 @@
     background-color: $c-neutral5;
     border-color: $c-neutral5;
 }
+
+/**
+ * Disabled state for booking actions
+ */
+.action--booking.is-disabled,
+.action--booking[disabled],
+.action--booking[disabled]:hover {
+    opacity: 0.2;
+    color: $white;
+    background-color: $black;
+    border-color: $black;
+}
+
 
 /* Actions - Proceed
    ========================================================================== */
