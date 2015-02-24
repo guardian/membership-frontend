@@ -208,9 +208,7 @@ object Eventbrite {
       desc <- description
       m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(desc.html)
       uri <- Try(Uri.parse(m.group(1))) match {
-        case Success(uri) =>
-          Logger.debug(s"Event $id main-image source url: $uri")
-          Some(uri)
+        case Success(uri) => Some(uri)
         case Failure(e) =>
           Logger.error(s"Event $id - can't parse main-image url from text '${m.matched}'", e)
           None
