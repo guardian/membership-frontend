@@ -6,7 +6,6 @@
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import model.Benefits
 
 <div class="event-blocks">
 
@@ -16,6 +15,7 @@
                 <h3 class="listing__title h-intro">Featured</h3>
             </div>
             <div class="listing__content">
+                <ul>
                 @for(heroEvent <- eventPortfolio.heroOpt) {
                     @fragments.event.itemHero(heroEvent)
                 }
