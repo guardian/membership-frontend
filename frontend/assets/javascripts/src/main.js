@@ -1,7 +1,7 @@
 require([
     'ajax',
     'src/utils/analytics/setup',
-    'src/modules/events/Cta',
+    'src/modules/events/cta',
     'src/modules/events/filter',
     'src/modules/slideshow',
     'src/modules/images',
@@ -22,7 +22,7 @@ require([
 ], function(
     ajax,
     analytics,
-    Cta,
+    cta,
     filter,
     slideshow,
     images,
@@ -61,7 +61,7 @@ require([
     (new UserDetails()).init();
 
     // Events
-    (new Cta()).init();
+    cta.init();
     filter.init();
     eventPriceEnhance.init();
 
