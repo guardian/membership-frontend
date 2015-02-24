@@ -8,12 +8,12 @@
 
 .results {
     background-color: $white;
-    margin: 0 rem(20px) rem(20px);
-    min-height: rem(150px);
+    margin: rem(20px);
+    min-height: rem(120px);
+    padding: rem(10px);
 }
 
 .result-section {
-    padding: rem(12px) rem(24px);
     color: $c-neutral2;
 }
 
@@ -146,6 +146,6 @@
 }
 
 .utils-tag-picker {
-  margin-left: rem(10px);
-  margin-bottom: rem(3px);
+    margin-left: rem(10px);
+    margin-bottom: rem(3px);
 }
