@@ -227,10 +227,6 @@ object EventbriteService {
     GuardianLiveEventService.getPreviewEvent(id)
   }
 
-  def getPreviewDiscoverEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    DiscoverEventService.getPreviewEvent(id)
-  }
-
   def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
     MasterclassEventService.getPreviewEvent(id)
   }
