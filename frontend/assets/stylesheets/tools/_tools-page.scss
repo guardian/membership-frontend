@@ -6,6 +6,17 @@
     border-bottom: 2px solid $mem-brandBlue;
 }
 
+.results {
+    background-color: $white;
+    margin: rem(20px);
+    min-height: rem(120px);
+    padding: rem(10px);
+}
+
+.result-section {
+    color: $c-neutral2;
+}
+
 .events-overview {
 
     @include mq(mobileLandscape) {
@@ -132,4 +143,9 @@
 
 .event-trait--important {
     background-color: #e31f26;
+}
+
+.utils-tag-picker {
+    margin-left: rem(10px);
+    margin-bottom: rem(3px);
 }

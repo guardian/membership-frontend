@@ -99,6 +99,18 @@ module.exports = function (grunt) {
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
                 }
+            },
+            compileTools: {
+                options: {
+                    name: 'src/tools',
+                    baseUrl: '<%= dirs.assets.javascripts %>',
+                    findNestedDependencies: false,
+                    wrapShim: true,
+                    optimize: isDev ? 'none' : 'uglify2',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    out: '<%= dirs.publicDir.javascripts %>/tools.js'
+                }
             }
         },
 
@@ -402,6 +414,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:js',
             'requirejs:compile',
+            'requirejs:compileTools',
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',

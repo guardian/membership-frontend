@@ -1,0 +1,83 @@
+@import model.Eventbrite.EBEvent
+@import model.RichEvent.MasterclassEvent
+
+@tagInput(tagName: String, id: String) = {
+    <div class="utils-tag-picker">
+        <input type="checkbox" class="js-tag-picker utils-tag-picker__input" id="@id" data-tag-name="@tagName" />
+        <label for="@id" class="utils-tag-picker__label">@tagName</label>
+    </div>
+}
+
+<section class="utils-page-section js-comment-builder">
+
+    <h2 class="utils-page-section-header">Comment Builder</h2>
+    <fieldset class="fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Comments</h2>
+        </div>
+
+        <div class="fieldset__fields">
+
+            <div class="form-field">
+                <label class="label" for="event-provider">Event Provider</label>
+                <div>
+                    <select id="event-provider" data-tag="provider" class="js-event-provider">
+                        <option value="">Choose provider</option>
+                        @for(provider <- EBEvent.providerWhitelist){
+                            <option value="@provider">@provider.capitalize</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-note">Choose a provider to display their logo on the events page</div>
+            </div>
+
+            <div class="form-field">
+                <label class="label" for="event-image">Event Image</label>
+                <input class="input-text js-event-image" id="event-image" data-tag="main-image" type="text"/>
+                <div class="form-note">
+                    <i>e.g https://media.gutools.co.uk/images/0816c7b393</i>
+                    <div><a href="https://media.gutools.co.uk/search">Get image url</a></div>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
+                <label class="label label--inline" for="not-sold-through-eventbrite">No tickets sold through Eventbrite</label>
+
+                <div class="form-note"><strong>NOTE</strong> only select this option if tickets are available to purchase through third parties</div>
+            </div>
+
+            <div class="form-field">
+                <label>Event tags</label>
+                <div class="form-note">(Masterclass only)</div>
+                @for((category, count) <- MasterclassEvent.tags.zipWithIndex) {
+                    @tagInput(category.categoryName, "cat-" + count)
+                    @if(category.subCategories) {
+                        @for((subCategory, subCount) <- category.subCategories.zipWithIndex) {
+                            @tagInput(subCategory, "sub-cat-" + subCount)
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="fieldset">
+
+        <div class="fieldset__heading">
+            <h2 class="fieldset__headline">Results</h2>
+            <div class="form-note">Please copy and paste the below comments into the events description html on Eventbrite</div>
+        </div>
+
+        <div class="results">
+            <div class="result-section js-result-provider"></div>
+            <div class="result-section js-result-image"></div>
+            <div class="result-section js-result-not-sold-through-eventbrite"></div>
+            <div class="result-section js-result-custom-tags"></div>
+        </div>
+
+    </fieldset>
+
+</section>
