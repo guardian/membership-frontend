@@ -11,10 +11,12 @@
 <section class="utils-page-section js-comment-builder">
 
     <h2 class="utils-page-section-header">Comment Builder</h2>
+
     <fieldset class="fieldset">
 
         <div class="fieldset__heading">
             <h2 class="fieldset__headline">Comments</h2>
+            <div class="fieldset__note">This tool will enable you to create the comments needed to specify certain event details.</div>
         </div>
 
         <div class="fieldset__fields">
@@ -42,15 +44,8 @@
             </div>
 
             <div class="form-field">
-                <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
-                <label class="label label--inline" for="not-sold-through-eventbrite">No tickets sold through Eventbrite</label>
-
-                <div class="form-note"><strong>NOTE</strong> only select this option if tickets are available to purchase through third parties</div>
-            </div>
-
-            <div class="form-field">
                 <label>Event tags</label>
-                <div class="form-note">(Masterclass only)</div>
+                <div class="form-note">Create the tags you wish the event to be associated with (Masterclass only)</div>
                 @for((category, count) <- MasterclassEvent.tags.zipWithIndex) {
                     @tagInput(category.categoryName, "cat-" + count)
                     @if(category.subCategories) {
@@ -60,6 +55,14 @@
                     }
                 }
             </div>
+
+            <div class="form-field">
+                <input id="not-sold-through-eventbrite" class="js-not-sold-through-eventbrite" type="checkbox"/>
+                <label class="label label--inline" for="not-sold-through-eventbrite">No tickets sold through Eventbrite</label>
+
+                <div class="form-note"><strong>NOTE</strong> only select this option if tickets are available to purchase through third parties</div>
+            </div>
+
         </div>
 
     </fieldset>
@@ -74,8 +77,8 @@
         <div class="results">
             <div class="result-section js-result-provider"></div>
             <div class="result-section js-result-image"></div>
-            <div class="result-section js-result-not-sold-through-eventbrite"></div>
             <div class="result-section js-result-custom-tags"></div>
+            <div class="result-section js-result-not-sold-through-eventbrite"></div>
         </div>
 
     </fieldset>
