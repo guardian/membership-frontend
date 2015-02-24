@@ -1,6 +1,7 @@
 package com.gu.membership.pages
 
 import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.support.ui.{ExpectedConditions, WebDriverWait}
 import org.openqa.selenium.{By, JavascriptExecutor, WebDriver}
 
 /**
@@ -55,7 +56,7 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
     } catch {
       case _ : Throwable => ; driver.asInstanceOf[JavascriptExecutor].executeScript("document.forms[0].submit()")
     }
-
-      new CheckEmailPage(driver)
+    new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".submit-input")))
+    new CheckEmailPage(driver)
   }
 }
