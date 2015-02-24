@@ -3,6 +3,7 @@ package services
 import akka.agent.Agent
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
+import com.netaporter.uri.Uri
 import com.netaporter.uri.Uri.parse
 import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
@@ -17,15 +18,15 @@ import scala.concurrent.Future
 
 case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Error] with LazyLogging{
 
-  lazy val agent = Agent[Map[String, EventImage]](Map.empty)
+  lazy val agent = Agent[Map[Uri, EventImage]](Map.empty)
 
-  def isUrlCorrectFormat(url: String) = url.startsWith(gridUrl)
+  def isUrlCorrectFormat(url: Uri) = url.toString.startsWith(gridUrl)
 
-  def getEndpoint(url: String) = url.replace(gridUrl, "")
+  def getEndpoint(url: Uri) = url.toString.replace(gridUrl, "")
 
-  def cropParam(urlString: String) = parse(urlString).query.param("crop")
+  def cropParam(url: Uri) = url.query.param("crop")
 
-  def getRequestedCrop(url: String) : Future[Option[EventImage]] = {
+  def getRequestedCrop(url: Uri) : Future[Option[EventImage]] = {
     val currentImageData = agent.get()
     if(currentImageData.contains(url)) Future.successful(currentImageData.get(url))
     else {
@@ -47,7 +48,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
     }
   }
 
-  def getGrid(url: String) = {
+  def getGrid(url: Uri) = {
     if (isUrlCorrectFormat(url)) get[GridResult](getEndpoint(url)).map(Some(_))
     else Future.successful(None)
   }

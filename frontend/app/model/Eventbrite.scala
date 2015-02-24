@@ -7,10 +7,13 @@ import com.netaporter.uri.dsl._
 import configuration.Config
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
+import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.StringUtils._
+
+import scala.util.{Failure, Success, Try}
 
 object Eventbrite {
 
@@ -201,7 +204,18 @@ object Eventbrite {
       if EBEvent.providerWhitelist.contains(provider)
     } yield provider
 
-    val mainImageUrl: Option[String] = description.flatMap(desc => "<!--\\s*main-image: (.*?)\\s*-->".r.findFirstMatchIn(desc.html).map(_.group(1)) )
+    val mainImageUrl: Option[Uri] = for {
+      desc <- description
+      m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(desc.html)
+      uri <- Try(Uri.parse(m.group(1))) match {
+        case Success(uri) =>
+          Logger.debug(s"Event $id main-image source url: $uri")
+          Some(uri)
+        case Failure(e) =>
+          Logger.error(s"Event $id - can't parse main-image url from text '${m.matched}'", e)
+          None
+      }
+    } yield uri
 
     val slug = slugify(name.text) + "-" + id
 
