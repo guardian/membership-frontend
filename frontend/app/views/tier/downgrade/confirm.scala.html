@@ -8,18 +8,41 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.layout.sectionHeader("Are you sure?")
-        <p>You will no longer receive all the great benefits</p>
-        <a href="/tier/change" class="action action--arrow-left">Back</a>
+        @fragments.page.pageHeader("Are you sure?",
+            Some("You will no longer receive all the great benefits"))
 
-        <div class="package-container">
-            <div class="package-list package-list--flex-box">
-
-                @fragments.tier.benefits(currentTier=Some(currentTier), tier=currentTier, mode="downgrade")
-                @fragments.tier.benefits(currentTier=Some(currentTier), tier=Tier.Friend, mode="downgrade")
-
+        <section class="page-section">
+            <div class="page-section__content">
+                <ul class="grid grid--2up-stacked grid--bordered grid--stretch">
+                    <li class="grid__item">
+                        <a href="@routes.TierController.change" class="action action--secondary u-no-top-margin">
+                            @fragments.actionIcon("arrow-left", leftIcon=true)
+                            <span class="action__label">Stay as a @currentTier</span>
+                        </a>
+                        <h3 class="h-stack">This is what you'll be giving up</h3>
+                        @fragments.tier.tierTrail(currentTier, showCaption=false)
+                        <ul class="list-stack">
+                            @for(benefit <- Benefits.details(currentTier).list) {
+                                <li>@fragments.benefits.item(benefit)</li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="grid__item">
+                        <form action="@routes.TierController.upgrade(Tier.Friend)" method="POST" class="u-cf">
+                            @CSRF.formField
+                            <button class="action u-align-right u-no-top-margin" id="qa-confirm-downgrade">@Benefits.details(Tier.Friend).cta</button>
+                        </form>
+                        <h3 class="h-stack">Why not stay as a Friend</h3>
+                        @fragments.tier.tierTrail(Tier.Friend, showCaption=false)
+                        <ul class="list-stack">
+                            @for(benefit <- Benefits.details(Tier.Friend).list) {
+                                <li>@fragments.benefits.item(benefit)</li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </div>
+        </section>
 
     </main>
 

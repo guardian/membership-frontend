@@ -6,6 +6,9 @@
  * Used to group a colleciton of icons,
  * adds appropriate spacing between actions.
  */
+.action-group {
+    clear: both;
+}
 .action-group > .action {
     margin-right: rem($gs-gutter / 2);
 }
@@ -32,12 +35,14 @@
     color: $white;
     background-color: $c-button;
     text-decoration: none;
+    border: 1px solid $c-button;
 
     &:focus,
     &:active,
     &:hover {
         color: $white;
         background-color: darken($c-button, 10%);
+        border-color: darken($c-button, 10%);
         text-decoration: none;
     }
 
@@ -120,9 +125,11 @@
 .action--booking {
     color: $white;
     background-color: $black;
+    border-color: $black;
 
     &:hover {
         background-color: lighten($black, 15%);
+        border-color: lighten($black, 15%);
     }
 }
 
@@ -199,6 +206,7 @@
 .action[disabled],
 .action[disabled]:hover {
     background-color: $c-neutral5;
+    border-color: $c-neutral5;
 }
 
 /* Actions - Proceed

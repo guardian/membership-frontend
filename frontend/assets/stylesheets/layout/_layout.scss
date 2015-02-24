@@ -44,6 +44,14 @@ body {
     padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
 }
 
+
+.l-pad-top {
+    margin-top: rem($gs-baseline / 2);
+}
+.l-pad-bottom {
+    margin-bottom: rem($gs-baseline / 2);
+}
+
 .l-pad-left {
     @include mq(tablet) {
         padding-left: rem(gs-span(1) + $gs-gutter);

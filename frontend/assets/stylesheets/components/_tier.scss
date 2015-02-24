@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .tier-trail {
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline);
 }
     .tier-trail__name {
         @include fs-header(4);
