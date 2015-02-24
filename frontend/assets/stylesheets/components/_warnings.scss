@@ -2,123 +2,17 @@
    Warnings
    ========================================================================== */
 
-/* JS Warning
-   ========================================================================== */
-
-.js-warning {
-   background-color: #e9e939;
-   padding: rem(5px);
-   font-size: 1.4rem;
-   text-align: center;
-   opacity: .8;
+.warning-message {
+    font-size: 1.4rem;
+    padding: rem($gs-baseline / 2);
+    background-color: $c-warning;
+    text-align: center;
+    opacity: 0.8;
 }
 
-.js-warning p {
-   margin: 0;
-}
-
-// hide JS warning messages by default
-.js-warning {
-   display: none;
-}
-
-// show the container if any JS requirement fails
-.js-off .js-warning {
-   display: block;
-}
-
-
-/* Browser Warning
-   ========================================================================== */
-
-// don't show the site itself to broken browsers :(
-.js-ancient-browser .container-global {
-    display: none !important;
-}
-
-// we hide the "please upgrade" message by default
-.browser-upgrade-msg {
+.browser-warning {
     display: none;
 }
-
-// hide the main BG image
-html.js-ancient-browser {
-    background: none !important;
-}
-
-// show the upgrade message when browser isn't modern
-.js-ancient-browser .browser-upgrade-msg {
+.js-ancient-browser .browser-warning {
     display: block;
-}
-
-.browser-upgrade-msg {
-    padding: 3% 20% 0;
-    text-align: center;
-}
-
-.browser-upgrade-msg__box {
-    @include rem((
-        padding: 20px 10px,
-        margin-bottom: 15px,
-        font-size: 14px
-    ));
-    background-color: #eeeeee;
-    overflow: hidden;
-}
-
-.browser-upgrade-msg__help__item {
-    width: 50%;
-    float: left;
-    @include rem((
-        padding: 10px 0,
-        margin: 10px 0 0
-    ));
-}
-
-.browser-upgrade-msg__help__item--divider {
-    border-right: 1px solid #999999;
-}
-
-.browser-upgrade-msg__header {
-    @include rem((
-        font-size: 26px,
-        margin-bottom: 15px
-    ));
-    font-weight: bold;
-}
-
-.browser-upgrade-msg__subheader,
-.browser-upgrade-msg__blurb {
-    @include rem((
-        font-size: 18px
-    ));
-}
-
-.browser-upgrade-msg__blurb:after {
-    content: '-';
-    display: block;
-    @include rem((
-        margin-top: 5px
-    ));
-    color: #999999;
-    text-align: center;
-}
-
-.browser-upgrade-msg__blurb:last-child:after {
-    content: none;
-    margin: 0;
-}
-
-.browser-upgrade-msg__minor-text {
-    @include rem((
-        font-size: 11px
-    ));
-}
-
-.browser-upgrade-msg__logo {
-    width: auto;
-    background-color: transparent;
-    @include rem((
-        margin-bottom: 15px
-    ));
 }

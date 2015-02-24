@@ -56,6 +56,15 @@
     <body id="top">
         <a class="u-h skip" href="#container">Skip to main content</a>
 
+        <noscript>
+            <div class="warning-message copy hidden-print">
+                Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership. <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.
+            </div>
+        </noscript>
+        <div class="browser-warning warning-message copy hidden-print">
+            You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+        </div>
+
         @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
             @fragments.header()
@@ -64,7 +73,6 @@
             </div>
         </div>
 
-        @fragments.unsupportedBrowser()
         @fragments.footer()
 
         @fragments.javaScriptRequireJS()
