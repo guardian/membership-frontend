@@ -4,6 +4,7 @@ import model.Grid.GridResult
 import org.specs2.mutable.Specification
 import utils.Resource
 import model.GridDeserializer._
+import com.netaporter.uri.dsl._
 
 class GridServiceTest extends Specification {
 

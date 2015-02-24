@@ -1,5 +1,6 @@
 package model
 
+import com.netaporter.uri.Uri
 import model.Eventbrite._
 import play.api.test.PlaySpecification
 import org.joda.time.{ Instant, DateTime }
@@ -21,6 +22,8 @@ class EBEventTest extends PlaySpecification {
   val startedEvent = ebResponse.data.find(_.id == "12972720757").get
 
   val ticketedEvent = ebLiveEvent;
+
+  def updateEventWithDescription(event: EBEvent, desc: String) = event.copy(description = Some(EBRichText(desc,desc)))
 
   "event" should {
     "be sold out" in {
@@ -55,8 +58,15 @@ class EBEventTest extends PlaySpecification {
       ebDraftEvent.isBookable mustEqual(false)
     }
     "should return media service url if present" in {
-      ebLiveEvent.mainImageUrl mustEqual Some("https://some-media-tool.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288")
-
+      ebLiveEvent.mainImageUrl mustEqual Some(Uri.parse("https://some-media-tool.co.uk/images/sdf8u8sdf898hnsdcvs89dc?crop=0_3_480_288"))
+    }
+    "should be tolerent in parsing, even if there are extraneous characters after the url" in {
+      updateEventWithDescription(ebLiveEvent, "<!-- main-image: https://media.gutools.co.uk/images/e5b35b1f20588172b24960314cbf8e9c8482d3bf?crop=27_0_1800_1080 ! -->")
+        .mainImageUrl must beSome(Uri.parse("https://media.gutools.co.uk/images/e5b35b1f20588172b24960314cbf8e9c8482d3bf?crop=27_0_1800_1080"))
+    }
+    "should not blow up even if the url is really bizarre" in {
+      updateEventWithDescription(ebLiveEvent, "<!-- main-image: http://test.net/## -->")
+        .mainImageUrl must beNone
     }
     "should not return media service url is missing" in {
       nonTicketedEvent.mainImageUrl must beNone

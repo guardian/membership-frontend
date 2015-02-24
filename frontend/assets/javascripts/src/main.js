@@ -10,7 +10,6 @@ require([
     'src/modules/Header',
     'src/modules/navigation',
     'src/modules/UserDetails',
-    'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/patterns',
     'src/utils/modal',
@@ -32,7 +31,6 @@ require([
     Header,
     navigation,
     UserDetails,
-    choose,
     eventPriceEnhance,
     modal,
     patterns,
@@ -66,9 +64,6 @@ require([
     (new Cta()).init();
     filter.init();
     eventPriceEnhance.init();
-
-    // Join
-    choose.init();
 
     // Forms
     form.init();
