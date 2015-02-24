@@ -34,7 +34,7 @@ define(['src/modules/events/cta'], function (cta) {
                 var tierDate = new Date('1 Feb 2015');
 
                 /**
-                 * Should return status as bookable is the default action,
+                 * Should return false as bookable is the default action,
                  * so don't do anything.
                  */
                 expect(cta.newStatus(preSaleStart, preSaleEnd, tierDate)).toEqual(false);

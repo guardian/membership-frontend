@@ -1,8 +1,7 @@
 define([
     '$',
-    'bean',
     'src/utils/user'
-], function($, bean, userUtil) {
+], function($, userUtil) {
 
     var CTA_ELEM = '.js-ticket-cta';
 
