@@ -35,7 +35,7 @@
                         <label class="event-filters__category">
                             <span class="event-filters__category__label">Subcategory:</span>
                             <select class="event-filters__category__select select-minimal js-filter-category">
-                                <option value="/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
+                                <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
                                 @for(subCategory <- category.subCategories) {
                                     <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
                                 }
