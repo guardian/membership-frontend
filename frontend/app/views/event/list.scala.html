@@ -15,11 +15,9 @@
                 <h3 class="listing__title h-intro">Featured</h3>
             </div>
             <div class="listing__content">
-                <ul>
                 @for(heroEvent <- eventPortfolio.heroOpt) {
                     @fragments.event.itemHero(heroEvent)
                 }
-                </ul>
                 <ul class="grid grid--3up grid--bordered grid--single-row">
                     @for(event <- eventPortfolio.priority) {
                         <li class="grid__item">
