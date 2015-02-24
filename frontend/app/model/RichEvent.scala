@@ -122,16 +122,18 @@ object RichEvent {
 
     val tags = Nil
 
+    val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
+      Config.guardianMembershipUrl + "#video")
+
+    val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
+      .orElse(Some(fallbackHighlightsMetadata))
+
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content])
     extends LiveEvent(image, contentOpt) {
     val metadata = {
-      val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
-        Config.guardianMembershipUrl + "#video")
-      val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
-        .orElse(Some(fallbackHighlightsMetadata))
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
   }
@@ -139,10 +141,6 @@ object RichEvent {
   case class DiscoverEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content])
     extends LiveEvent(image, contentOpt) {
     val metadata = {
-      val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
-        Config.guardianMembershipUrl + "#video")
-      val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
-        .orElse(Some(fallbackHighlightsMetadata))
       discoverMetadata.copy(highlightsOpt = highlight)
     }
   }
