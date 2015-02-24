@@ -1,5 +1,4 @@
 @import model.Eventbrite.EBEvent
-@import views.support.Asset
 @import model.RichEvent.MasterclassEvent
 
 @tagInput(tagName: String, id: String) = {
@@ -9,7 +8,7 @@
     </div>
 }
 
-<section class="utils-page-section">
+<section class="utils-page-section js-comment-builder">
 
     <h2 class="utils-page-section-header">Comment Builder</h2>
     <fieldset class="fieldset">
@@ -82,9 +81,3 @@
     </fieldset>
 
 </section>
-<script src="@Asset.at("javascripts/tools.js")"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        tools.commentBuilder.init();
-    }, false);
-</script>
