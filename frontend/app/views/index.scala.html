@@ -4,6 +4,8 @@
 
 @main("Home Page") {
 
+<main role="main" class="l-constrained">
+
     @* ===== Slideshow ===== *@
     <section class="slideshow js-slideshow" data-slideshow-duration="5000">
         @fragments.media.slideshowItem("https://media.guim.co.uk/eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368/{width}.jpg", "Guardian Live event: Pussy Riot - art, sex and disobedience")
@@ -30,7 +32,7 @@
         <div class="section-features tier-hidden">
             <ul class="grid grid--bordered grid--4up">
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/promo/promo-benefits.jpg", "Discover what's included with Guardian Membership", "/about")
+                    @fragments.page.featurePanel("images/promo/promo-polly.jpg", "Polly Toynbee: 'If you read the Guardian, join the Guardian'", "http://www.theguardian.com/membership/2015/feb/06/polly-toynbee-if-you-read-the-guardian-join-the-guardian")
                 </li>
                 <li class="grid__item">
                     @fragments.page.featurePanel("images/promo/promo-events.jpg", "Browse our events programme and book tickets now", "/events")
@@ -56,10 +58,12 @@
                     @fragments.page.featurePanel("images/promo/promo-members.png", "Visit our members area on theguardian.com", Config.guardianMembershipUrl)
                 </li>
                 <li class="grid__item">
-                    @fragments.page.featurePanel("images/promo/promo-space.jpg", "Transforming the Midland Goods Shed into new space for debate, culture and curiosity", Config.guardianMembershipBuildingSpaceUrl)
+                    @fragments.page.featurePanel("images/promo/promo-space.jpg", "Transforming the Midland Goods Shed into a new space for debate, culture and curiosity", Config.guardianMembershipBuildingSpaceUrl)
                 </li>
             </ul>
         </div>
     </section>
+
+</main>
 
 }

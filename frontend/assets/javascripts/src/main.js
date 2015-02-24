@@ -1,44 +1,42 @@
 require([
     'ajax',
     'src/utils/analytics/setup',
-    'src/modules/metrics',
     'src/modules/events/Cta',
     'src/modules/events/filter',
-    'src/modules/events/toggle',
     'src/modules/slideshow',
     'src/modules/images',
+    'src/modules/toggle',
     'src/modules/sticky',
     'src/modules/Header',
     'src/modules/navigation',
     'src/modules/UserDetails',
-    'src/modules/tier/choose',
     'src/modules/events/eventPriceEnhance',
     'src/modules/patterns',
     'src/utils/modal',
     'src/utils/form/processSubmit',
     'src/modules/form',
+    'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
 ], function(
     ajax,
     analytics,
-    metrics,
     Cta,
     filter,
-    toggle,
     slideshow,
     images,
+    toggle,
     sticky,
     Header,
     navigation,
     UserDetails,
-    choose,
     eventPriceEnhance,
     modal,
     patterns,
     processSubmit,
-    form
+    form,
+    metrics
 ) {
     'use strict';
 
@@ -52,7 +50,6 @@ require([
     ajax.init({page: {ajaxUrl: ''}});
 
     analytics.init();
-    metrics.init();
 
     // Global
     toggle.init();
@@ -68,9 +65,6 @@ require([
     filter.init();
     eventPriceEnhance.init();
 
-    // Join
-    choose.init();
-
     // Forms
     form.init();
     processSubmit.init();
@@ -80,5 +74,8 @@ require([
 
     // Pattern library
     patterns.init();
+
+    // Metrics
+    metrics.init();
 
 });

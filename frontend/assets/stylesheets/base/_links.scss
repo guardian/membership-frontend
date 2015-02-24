@@ -33,6 +33,13 @@ a,
     color: inherit;
 }
 
+.mini-link {
+    @include fs-data(2);
+    &:hover {
+        text-decoration: none;
+    }
+}
+
 .no-underline {
     cursor: pointer;
     text-decoration: none;
@@ -48,7 +55,6 @@ a,
         text-decoration: underline;
     }
 }
-
 
 .block-hover {
     transition: background-color $transition-duration-medium ease;

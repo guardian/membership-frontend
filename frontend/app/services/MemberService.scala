@@ -9,13 +9,19 @@ import com.typesafe.scalalogging.slf4j.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
+import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.EBCode
+import model.RichEvent.RichEvent
 import model.RichEvent._
+import model.Zuora.PreviewInvoiceItem
 import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
+import model._
 import monitoring.MemberMetrics
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import services.EventbriteService._
+import tracking._
 import utils.ScheduledTask
+import views.html.fragments.form.marketingChoices
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +53,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
   }
 }
 
-trait MemberService extends LazyLogging {
+trait MemberService extends LazyLogging with ActivityTracking {
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
@@ -89,7 +95,8 @@ trait MemberService extends LazyLogging {
       for {
         fullUser <- identityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
-        memberId <- touchpointBackend.memberRepository.upsert(user.id, initialData(fullUser, formData))
+        userData = initialData(fullUser, formData)
+        memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
         subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
@@ -98,6 +105,7 @@ trait MemberService extends LazyLogging {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
+        trackRegistration(formData, memberId, user)
         memberId
       }
     }.andThen {
@@ -109,14 +117,23 @@ trait MemberService extends LazyLogging {
     }
   }
 
-  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    member.tier match {
-      case Tier.Partner | Tier.Patron if event.hasMemberTicket =>
-          // Add a "salt" to make access codes different to discount codes
-          val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-          event.service.createOrGetAccessCode(event, code, event.memberTickets).map(Some(_))
-      case _ => Future.successful(None)
-    }
+  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = (for {
+      ticketing <- event.internalTicketing
+      benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
+    } yield {
+      // Add a "salt" to make access codes different to discount codes
+      val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+      event.service.createOrGetAccessCode(event, code, ticketing.memberBenefitTickets).map(Some(_))
+    }).getOrElse(Future.successful(None))
+
+  def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
+    val touchpointBackend = TouchpointBackend.forUser(user)
+
+    for {
+      paymentSummary <- touchpointBackend.subscriptionService.getPaymentSummary(paidMember)
+      newRatePlan = PaidTierPlan(newTier, paymentSummary.current.annual)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(paidMember, newRatePlan, preview = true)
+    } yield subscriptionResult.invoiceItems
   }
 
   def upgradeFreeSubscription(freeMember: FreeMember, user: IdMinimalUser, newTier: Tier, form: FreeMemberChangeForm,
@@ -126,32 +143,72 @@ trait MemberService extends LazyLogging {
     for {
       customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
       paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(freeMember, customer)
-      memberId <- upgradeSubscription(freeMember, user, newTier, form, form.payment.annual, Some(customer), identityRequest)
+      memberId <- upgradeSubscription(freeMember, user, newTier, Some(form), form.payment.annual, Some(customer), identityRequest)
     } yield memberId
   }
 
-  def upgradePaidSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier, form: PaidMemberChangeForm,
+  def upgradePaidSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier,
                               identityRequest: IdentityRequest): Future[MemberId] = {
     for {
       paymentSummary <- TouchpointBackend.forUser(user).subscriptionService.getPaymentSummary(paidMember)
-      memberId <- upgradeSubscription(paidMember, user, newTier, form, paymentSummary.current.annual, None, identityRequest)
+      memberId <- upgradeSubscription(paidMember, user, newTier, None, paymentSummary.current.annual, None, identityRequest)
     } yield memberId
 
   }
 
-  private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: MemberChangeForm,
+  private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: Option[MemberChangeForm],
                                   annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newRatePlan = PaidTierPlan(newTier, annual)
 
     for {
-      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan)
+      subscriptionResult <- touchpointBackend.subscriptionService.upgradeSubscription(member, newRatePlan, preview = false)
       memberId <- touchpointBackend.memberRepository.upsert(member.identityId, memberData(newRatePlan, customerOpt))
     } yield {
-      IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, form, identityRequest)
+      form.map(IdentityService(IdentityApi).updateUserFieldsBasedOnUpgrade(user, _, identityRequest))
       touchpointBackend.memberRepository.metrics.putUpgrade(newTier)
+      track(
+        MemberActivity(
+          source = "membershipUpgrade",
+          MemberData(
+            salesforceContactId = memberId.salesforceContactId,
+            identityId = user.id,
+            tier = member.tier.name,
+            tierAmendment = Some(UpgradeAmendment(member.tier, newTier)),
+            deliveryPostcode = form.map(_.deliveryAddress.postCode),
+            billingPostcode = form.flatMap(f => f.billingAddress.map(_.postCode)).orElse(form.map(_.deliveryAddress.postCode)),
+            subscriptionPaymentAnnual = Some(annual),
+            marketingChoices = None
+          )
+        )
+      )
       memberId
     }
+  }
+
+  private def trackRegistration(formData: JoinForm, member: MemberId, user: IdMinimalUser) {
+    val subscriptionPaymentAnnual = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
+      case _ => None
+    }
+
+    val billingPostcode = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.billingAddress.map(_.postCode).orElse(Some(formData.deliveryAddress.postCode))
+      case _ => None
+    }
+
+    val trackingInfo =
+      MemberData(
+        member.salesforceContactId,
+        user.id,
+        formData.plan.salesforceTier,
+        None,
+        Some(formData.deliveryAddress.postCode),
+        billingPostcode, subscriptionPaymentAnnual,
+        Some(formData.marketingChoices)
+    )
+
+    track(MemberActivity("membershipRegistration", trackingInfo))
   }
 }
 

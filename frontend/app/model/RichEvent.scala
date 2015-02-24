@@ -15,6 +15,7 @@ object RichEvent {
     eventListUrl: String,
     termsUrl: String,
     largeImg: Boolean,
+    preSale: Boolean,
     highlightsOpt: Option[HighlightsMetadata] = None,
     chooseTier: ChooseTierMetadata
   )
@@ -34,6 +35,7 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
+    preSale=true,
     chooseTier=ChooseTierMetadata(
       "Guardian Live events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -52,6 +54,7 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.masterclasses.url,
     termsUrl=Config.guardianMasterclassesTermsUrl,
     largeImg=false,
+    preSale=false,
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
       "Become a Partner or Patron to save 20% on your masterclass"
@@ -67,6 +70,7 @@ object RichEvent {
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
+    preSale=true,
     chooseTier=ChooseTierMetadata(
       "Guardian Discover events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
@@ -88,6 +92,8 @@ object RichEvent {
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
     val pastImageOpt: Option[Asset]
+
+    def deficientGuardianMembersTickets: Boolean
   }
 
   case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
@@ -124,6 +130,7 @@ object RichEvent {
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
 
+    def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
@@ -143,6 +150,8 @@ object RichEvent {
 
     val contentOpt = None
     val pastImageOpt = None
+
+    def deficientGuardianMembersTickets = false
   }
 
 

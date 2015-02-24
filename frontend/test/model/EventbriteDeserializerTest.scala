@@ -11,14 +11,14 @@ class EventbriteDeserializerTest extends PlaySpecification {
 
   "EventbriteDeserializer" should {
 
-    "should deserialize event json" in {
-      val event = Resource.getJson("model/eventbrite/events.json")
+    "deserialize event json" in {
+      val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
       val ebResponse = event.as[EBResponse[EBEvent]]
 
-      ebResponse.data.head.name.text === "Chris' big time jamboree"
+      ebResponse.data.head.name.text === "Born that way: Is there a gay gene and should it matter?"
     }
 
-    "should deserialize event location" in {
+    "deserialize event location" in {
       val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
       val ebResponse = event.as[EBResponse[EBEvent]]
 
@@ -34,10 +34,6 @@ class EventbriteDeserializerTest extends PlaySpecification {
     "deserialize a really complicated ticket class structure" in {
       val event = Resource.getJson("model/eventbrite/event-ticket-classes.json").as[EBEvent]
       event.ticket_classes.length mustEqual 5
-
-      event.generalReleaseTicket.get.id mustEqual "30292989"
-
-      event.memberTickets.map(_.id) mustEqual Seq("30292991", "30338645")
     }
 
     "remove leading/trailing space from strings" in {

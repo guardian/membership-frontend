@@ -1,6 +1,5 @@
 @(
     title: String,
-    isBrochure: Boolean = false,
     htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
@@ -8,8 +7,7 @@
 @import configuration.Config
 @import views.support.Asset
 
-<!DOCTYPE html>
-
+<!DOCTYPE html lang="en-GB">
 <html class="js-off id--signed-out @htmlClass">
     <head>
         <meta charset="utf-8">
@@ -58,27 +56,28 @@
     <body id="top">
         <a class="u-h skip" href="#container">Skip to main content</a>
 
+        <noscript>
+            <div class="warning-message copy hidden-print">
+                Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership. <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.
+            </div>
+        </noscript>
+        <div class="browser-warning warning-message copy hidden-print">
+            You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+        </div>
+
         @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
             @fragments.header(pageInfo)
-            <div class="page-side-margins" id="container">
-            @if(isBrochure != true) {
-                <div class="page-container">
-            }
-
+            <div class="l-side-margins" id="container">
                 @content
-
-            @if(isBrochure != true) {
-                </div>
-            }
             </div>
         </div>
 
-        @fragments.unsupportedBrowser()
         @fragments.footer(pageInfo)
 
         @fragments.javaScriptRequireJS()
 
         @fragments.analytics.googleRemarketing()
+        @fragments.analytics.userZoom()
     </body>
 </html>

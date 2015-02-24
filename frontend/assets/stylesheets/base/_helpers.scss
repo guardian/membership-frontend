@@ -47,6 +47,14 @@
     margin-bottom: 0 !important;
 }
 
+.u-anchor {
+    @include mq($until: mem-full) {
+        position: absolute;
+        right: rem($gs-gutter / 2);
+        top: rem($gs-gutter / 2);
+    }
+}
+
 .u-divider {
     padding-top: rem($gs-baseline / 2);
     border-top: 1px solid $c-border-brand;
@@ -55,17 +63,15 @@
     padding-top: rem($gs-baseline / 2);
     border-top: 1px solid $c-border-neutral;
 }
-
-.u-pad-top {
-    margin-top: rem($gs-baseline / 2);
-}
-.u-pad-bottom {
-    margin-bottom: rem($gs-baseline / 2);
+.u-divider-dotted {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px dotted $c-neutral3;
 }
 
 .u-button-reset {
     padding: 0;
     border: 0;
+    outline: none;
     background: transparent;
 }
 

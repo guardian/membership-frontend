@@ -1,0 +1,64 @@
+@(
+    tier: com.gu.membership.salesforce.Tier,
+    currentTier: com.gu.membership.salesforce.Tier,
+    modifierClass: Option[String] = None
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
+
+@canChangeTier = @{
+    tier != currentTier && currentTier == Tier.Friend || tier == Tier.Friend
+}
+
+<div class="package-promo package-promo--stretch @modifierClass.getOrElse("package-promo--enhanced") @if(tier == currentTier){ package-promo--current} tone-border-@tier.toString.toLowerCase">
+    <div class="package-promo__header">
+        @if(canChangeTier) {
+            <a class="no-underline minimal-link"
+               href="@routes.TierController.upgrade(tier)"
+               data-metric-trigger="click"
+               data-metric-category="changeTier"
+               data-metric-action="@tier.toString.toLowerCase()"
+            >
+        }
+            <div class="package-promo__tier">
+                <div class="package-promo__tier__title">
+                    @fragments.tier.tierTrail(tier, showCaption=false)
+                    @if(tier == currentTier){
+                        <div class="package-promo__tier__current">Your tier</div>
+                    }
+                </div>
+                <div class="package-promo__tier__pricing">
+                    @fragments.pricing.priceInfo(tier, canFlex=false)
+                </div>
+            </div>
+        @if(canChangeTier) {
+            </a>
+        }
+    </div>
+    <div class="package-promo__content">
+        <div class="package-promo__description copy hidden-tablet">
+            <p>@Benefits.details(tier).desc</p>
+        </div>
+        @if(tier != currentTier) {
+            <div class="package-promo__actions">
+                @* TODO: When paid-to-paid upgrades are enabled this check can be removed *@
+                @if(currentTier == Tier.Friend || tier == Tier.Friend) {
+                    <a class="action action--snap u-no-bottom-margin"
+                       id="qa-change-tier-@tier.slug"
+                       href="@routes.TierController.upgrade(tier)"
+                       data-metric-trigger="click"
+                       data-metric-category="changeTier"
+                       data-metric-action="@tier.toString.toLowerCase()"
+                    >
+                        <span class="action__label">Become a @tier</span>
+                    </a>
+                } else {
+                    <span class="action action--snap is-disabled">
+                        <span class="action__label">Coming soon</span>
+                    </span>
+                }
+            </div>
+        }
+    </div>
+</div>

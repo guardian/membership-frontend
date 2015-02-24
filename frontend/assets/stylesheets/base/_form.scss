@@ -4,6 +4,11 @@
 /* ==========================================================================
    Form
    ========================================================================== */
+
+form {
+    margin-bottom: 0;
+}
+
 .form {
     @include mq(desktop) {
         border-top: 1px solid $mem-brandBlue;
@@ -69,7 +74,6 @@
         display: table-cell;
         width: gs-span(5);
         padding-left: 0;
-        padding-top: rem($gs-gutter * 2);
     }
 }
 

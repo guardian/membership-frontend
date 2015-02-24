@@ -14,6 +14,7 @@ object Dates {
   implicit class RichInstant(dt: Instant) {
     lazy val pretty = prettyDate(new DateTime(dt))
     lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
+    def pretty(includeTime: Boolean): String = if (includeTime) prettyWithTime else pretty
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")

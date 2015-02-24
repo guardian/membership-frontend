@@ -96,6 +96,11 @@ idrun
 ## Compile front-end files
 + $ grunt compile
 
+# Pattern Library
+
+A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns)
+
+When building new components break them down into fragments and include them in the pattern library.
 
 # Images
 
@@ -106,11 +111,6 @@ Running the grunt task `shell:svgencode` will automatically base64 encode files 
 ### Adding new SVGs
 
 When adding new SVGs to the `assets/svgs` directory run the file through [SVGO](https://github.com/svg/svgo) first to optimise it. For Mac users there is an app for doing this: [SVGO GUI](https://github.com/svg/svgo-gui)
-
-## Asset hashing
-
-By default all of the images within ```assets/images/``` will have an asset hash applied to them when the Grunt compile task is ran in production mode. If you wish to have assets without an asset hash please place them within ```assets/images/noAssetHash```. These images will have a cache lifetime set by the server and you will have to manually bust the cache by changing the filename.
-
 
 # Updating AMIs
 We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html. To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
@@ -163,6 +163,21 @@ For a reminder on why we do this, here's @tackley on the subject:
 >For AWS access keys, always prefer to use instance profiles instead.
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
+
+## Package.json
+
+Once in a while it is worth updating the package.json dependencies for our build tasks
+
+You can use [`npm-check-updates`](https://www.npmjs.com/package/npm-check-updates)
+
+Show any new dependencies for the project
+
+`$ npm-check-updates`
+
+Upgrade a project's package.json
+
+`$ npm-check-updates -u`
+
 
 ## Troubleshooting
 

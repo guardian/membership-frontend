@@ -1,8 +1,11 @@
 package model
 
 import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.Tier.{Partner, Patron}
 
 object Benefits {
+
+  val DiscountTicketTiers = Set[Tier](Partner, Patron)
 
   case class Benefits(
     leadin: String,
@@ -32,6 +35,7 @@ object Benefits {
   case class Pricing(yearly: Int, monthly: Int) {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
+    lazy val yearlyWith6MonthSaving = yearly / 2f
   }
 
   def benefitsFilter(identifiers: String*) = identifiers.flatMap { id =>
@@ -65,14 +69,14 @@ object Benefits {
 
   val details = Map[Tier, Benefits](
     Tier.Friend -> friendBenefits,
-    Tier.Partner -> partnerBenefits,
-    Tier.Patron -> patronBenefits
+    Partner -> partnerBenefits,
+    Patron -> patronBenefits
   )
 
   val detailsLimited = Map[Tier, Seq[BenefitItem]](
     Tier.Friend -> friendsWithBenefitsLimited,
-    Tier.Partner -> partnerWithBenefitsLimited,
-    Tier.Patron -> patronWithBenefitsLimited
+    Partner -> partnerWithBenefitsLimited,
+    Patron -> patronWithBenefitsLimited
   )
 
 }

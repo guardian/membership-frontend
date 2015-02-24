@@ -1,0 +1,18 @@
+@(currentTier: com.gu.membership.salesforce.Tier, targetTier: com.gu.membership.salesforce.Tier)
+
+@import configuration.Config
+
+@main("Unavailable Tier") {
+
+    <main role="main" class="page-content l-constrained">
+
+        @fragments.page.pageHeader("Unavailable Tier", Some("Unable to change from " + currentTier + " to " + targetTier))
+
+        <div class="page-section">
+            <div class="page-section__content copy">
+                <p>Sorry you are currently unable to change your tier from <strong>@currentTier</strong> to <strong>@targetTier</strong>. Please contact <a href="mailto:@Config.membershipSupport">@Config.membershipSupport</a> for assistance.</p>
+            </div>
+        </div>
+
+    </main>
+}

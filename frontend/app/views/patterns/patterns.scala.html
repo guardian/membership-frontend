@@ -2,6 +2,7 @@
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
+@import model.FlashMessage
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -19,7 +20,7 @@
 
 @main("Pattern Library") {
 
-    <main class="page-content">
+    <main class="page-content l-constrained">
 
     <div class="pattern-nav js-pattern-nav"></div>
 
@@ -27,6 +28,14 @@
 
     @pattern("Icons") {
         <div class="js-icon-grid pattern-icon-grid"></div>
+    }
+
+    @pattern("Helpers - Text") {
+        <p class="text-feature">This is some feature text using the .text-feature helper class</p>
+        <p class="text-lead">This is a lead paragraph using the .text-lead helper class</p>
+        <p class="text-highlight">This is some highlighted text using the .text-highlight helper class</p>
+        <p class="text-note">This note using the .text-note helper class</p>
+        <p class="text-caption">This is some caption text using the .text-caption helper class</p>
     }
 
     @pattern("Base - Inline Text Elements") {
@@ -145,7 +154,10 @@
             Secondary Action + Icon
             @fragments.actionIcon("arrow-right")
         </button></p>
-        <p><button class="action action--toggle js-toggle">Toggle Action</button></p>
+        <p><button class="action action--secondary js-toggle" data-toggle-label="Show less" data-toggle-icon="minus">
+            @fragments.actionIcon("plus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show more</span>
+        </button></p>
         <p><a class="action-proceed" href="#">Proceed</a></p>
         <p><button class="action action--booking">Booking Action</button></p>
         <div class="l-inset tone-guardian-live">
@@ -154,17 +166,24 @@
     }
 
     @pattern("Toggle Component - Button", "JS toggle component") {
-        <button class="action action--toggle js-toggle" data-toggle="foo" data-toggle-label="Show less">Show more</button>
+        <button class="action action--secondary js-toggle" data-toggle="foo" data-toggle-label="Show less" data-toggle-icon="minus">
+            @fragments.actionIcon("plus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show more</span>
+        </button>
+
         <div id="foo" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
     @pattern("Toggle Component - Button (inverted)", "JS toggle component – off by default") {
-        <button class="action action--toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more">Show less</button>
+        <button class="action action--secondary js-toggle is-toggled" data-toggle="foo-inverted" data-toggle-label="Show more" data-toggle-icon="plus">
+            @fragments.actionIcon("minus", leftIcon=true)
+            <span class="action__label js-toggle-label">Show less</span>
+        </button>
         <div id="foo-inverted">This is a really boring sentence, you should hide it right now.</div>
     }
 
     @pattern("Toggle Component - Link", "JS toggle component can be used on any element, not just buttons") {
-        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less">Show more</a>
+        <a class="js-toggle" data-toggle="bar" data-toggle-label="Show less"><span class="js-toggle-label">Show more</span></a>
         <div id="bar" data-toggle-hidden>This is initially hidden Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius cum consequatur quod inventore, itaque adipisci ut quibusdam illum, deleniti molestiae vel, repudiandae, sunt est eum dolores odit sint deserunt velit!</div>
     }
 
@@ -178,15 +197,7 @@
     }
 
     @pattern("Lists - Inline List") {
-        <ul class="inline-list">
-            <li class="inline-list__item"><a href="#">Item 1</a></li>
-            <li class="inline-list__item"><a href="#">Item 2</a></li>
-            <li class="inline-list__item"><a href="#">Item 3</a></li>
-        </ul>
-    }
-
-    @pattern("Lists - Inline List w/Dividers", "Inline list with divider modifier") {
-        <ul class="inline-list inline-list--divided">
+        <ul class="inline-list inline-list--bordered">
             <li class="inline-list__item"><a href="#">Item 1</a></li>
             <li class="inline-list__item"><a href="#">Item 2</a></li>
             <li class="inline-list__item"><a href="#">Item 3</a></li>
@@ -267,6 +278,34 @@
         @fragments.event.seriesDetails(eventPortfolio.orderedEvents.head)
     }
 
+    @pattern("Promo - Primary") {
+        @fragments.promos.promoPrimary(Html("Primary Promo"), imageUrl="images/about/about-events-1140.jpg", toneClass=Some("tone-trans-guardian-live")) {
+            <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+        }
+    }
+
+    @pattern("Promo - Secondary") {
+        @fragments.promos.promoSecondary(Html("Secondary Promo"), imageUrl="images/about/about-masterclasses-740.jpg", toneClass=Some("tone-guardian-live")) {
+            <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+        }
+    }
+
+    @pattern("Promo - Image", "Image with a letter box crop and call out") {
+        @fragments.promos.letterbox(
+            "images/offer/subscriptions/audience-1140.jpg",
+            "Guardian Live Audience",
+            Some("Call out text inserted here"),
+            Seq("tone-trans-brand"))
+    }
+
+    @pattern("Offer - Option", "Image with a letter box crop and call out") {
+        @fragments.offer.option(
+            "Pay annually",
+            s"Pay nothing for 6 months then pay £00",
+            s"£00.00/year"
+        )
+    }
+
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
         @fragments.event.itemHero(eventPortfolio.orderedEvents.head)
     }
@@ -301,16 +340,16 @@
         </ul>
     }
 
+    @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
+        @fragments.event.infoPanel(eventPortfolio.orderedEvents.head)
+    }
+
     @pattern("Event – Snapshot", "Simple snapshot of event information") {
         @fragments.event.itemSnapshot(eventPortfolio.orderedEvents.head)
     }
 
     @pattern("Event – Stats", "Key stats for an event (location and time), used in Event Snapshot.") {
         @fragments.event.stats(eventPortfolio.orderedEvents.head)
-    }
-
-    @pattern("Event – Price Info", "Price for an event, used in Event Snapshot.") {
-        @fragments.pricing.priceInfoEvent(eventPortfolio.orderedEvents.head)
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
@@ -337,18 +376,6 @@
         @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
-    @pattern("Tier Header - Friend") {
-        @fragments.tier.tierHeader(Tier.Friend)
-    }
-
-    @pattern("Tier Header - Partner") {
-        @fragments.tier.tierHeader(Tier.Partner)
-    }
-
-    @pattern("Tier Header - Patron") {
-        @fragments.tier.tierHeader(Tier.Patron)
-    }
-
     @pattern("Package - Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
@@ -369,6 +396,14 @@
 
     @pattern("Package - Stack") {
         @fragments.tier.packageStack(Tier.Partner)
+    }
+
+    @pattern("Flash Message - Success") {
+        @fragments.notifications.flashMessage(FlashMessage.success("A successful Message!"))
+    }
+
+    @pattern("Flash Message - Failure") {
+        @fragments.notifications.flashMessage(FlashMessage.error("An error Message!"))
     }
 
     @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {

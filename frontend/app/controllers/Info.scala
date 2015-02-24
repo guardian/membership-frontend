@@ -2,7 +2,7 @@ package controllers
 
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.PageInfo
+import model.{FlashMessage, PageInfo}
 import play.api.mvc.Controller
 import services.EmailService
 
@@ -24,15 +24,12 @@ trait Info extends Controller {
   }
 
   def feedback = NoCacheAction { implicit request =>
-    Ok(views.html.info.feedback())
+    val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
+    Ok(views.html.info.feedback(flashMsgOpt))
   }
 
   def giftingPlaceholder = NoCacheAction { implicit request =>
     Ok(views.html.info.giftingPlaceholder())
-  }
-
-  def feedbackThankyou() = CachedAction { implicit request =>
-    Ok(views.html.info.feedbackThankyou())
   }
 
   def patron() = CachedAction { implicit request =>
@@ -51,7 +48,7 @@ trait Info extends Controller {
   private def sendFeedback(formData: FeedbackForm) = {
     EmailService.sendFeedback(formData)
 
-    Future.successful(Redirect(routes.Info.feedbackThankyou()))
+    Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
   }
 }
 

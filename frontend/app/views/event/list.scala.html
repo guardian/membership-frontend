@@ -53,6 +53,23 @@
         </div>
     </section>
 
+    @eventPortfolio.otherEvents.map { otherEvents =>
+        <section class="listing">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">@otherEvents.sequenceTitle</h3>
+            </div>
+            <div class="listing__content">
+                <ul class="grid grid--bordered grid--3up">
+                    @for(event <- otherEvents.events) {
+                        <li class="grid__item">
+                            @fragments.event.item(event)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+
     @if(showPastEvents && eventPortfolio.pastEvents) {
         <section class="listing">
             <div class="listing__lead-in">
@@ -77,7 +94,10 @@
                         }
                     </ul>
                 }
-                <button class="action action--toggle u-no-margin js-toggle" data-toggle="js-toggle-past-events" data-toggle-label="Less">More past events</button>
+                <button class="action action--secondary u-no-margin js-toggle" data-toggle="js-toggle-past-events" data-toggle-label="Less" data-toggle-icon="minus">
+                    @fragments.actionIcon("plus", leftIcon=true)
+                    <span class="action__label js-toggle-label">More past events</span>
+                </button>
             </div>
         </section>
     }

@@ -1,0 +1,113 @@
+@import model.Faq
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
+@import views.support.Prices._
+
+@main("Subscribers") {
+    @defining(Benefits.details(Tier.Partner)) { benefits =>
+        <main role="main">
+
+            <div class="page-slice page-slice--slim l-constrained l-side-margins">
+            @fragments.promos.letterbox(
+                "images/offer/subscriptions/audience-1140.jpg",
+                "Guardian Live Audience",
+                Some("Pay nothing for 6 months"),
+                Seq("tone-trans-brand"))
+            </div>
+
+            <section class="page-slice l-inset l-constrained">
+                <div class="page-section page-section--slim">
+                    <div class="page-section__content">
+                        <p class="text-feature">
+                            A unique opportunity for subscribers to experience the partner tier of Guardian membership (worth £15/ month) free for 6 months.
+                        </p>
+                        <a class="action" href="@routes.Joiner.tierList">Join now</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-slice tone-tint l-inset l-constrained">
+                <div class="page-section page-section--slim">
+                    <div class="page-section__header">
+                        <h2 class="h-feature">What's included</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <ul class="grid grid--3up">
+                        @for(benefit <- benefits.list){
+                            <li class="grid__item">
+                                <div class="u-divider-dotted">@fragments.benefits.item(benefit)</div>
+                            </li>
+                        }
+                        </ul>
+                    </div>
+                    <div class="page-section__supplementary">
+                        <aside role="complementary">
+                            <p class="text-feature">
+                                Get closer to the stories that matter and experience the Guardian brought to life, with priority booking and discounted tickets</p>
+                            <div>
+                                <a class="action" href="@routes.Joiner.tierList">Join now</a>
+                            </div>
+                            <div>
+                                <a class="action action--secondary" href="@routes.Info.about">
+                                    More about Membership
+                                    @fragments.actionIcon("arrow-right")
+                                </a>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-slice l-inset l-constrained">
+                <div class="page-section page-section--slim">
+                    <div class="page-section__header">
+                        <h2 class="h-feature">Subscriber offer</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <div class="grid grid--2up">
+                            @for(pricing <- benefits.pricing) {
+                            <div class="grid__item">
+                                @fragments.offer.option(
+                                    "Pay annually",
+                                    s"Pay nothing for 6 months then pay ${pricing.yearlyWith6MonthSaving.pretty}",
+                                    s"${pricing.yearly.pretty}/year"
+                                )
+                            </div>
+                            <div class="grid__item">
+                                @fragments.offer.option(
+                                    "Pay monthly",
+                                    s"Pay nothing for 6 months then pay ${pricing.monthly.pretty}/month",
+                                    s"${pricing.monthly.pretty}/month",
+                                    Some(s"equivalent to ${pricing.yearlyMonthlyCost.pretty}/year")
+                                )
+                            </div>
+                            }
+                        </div>
+                        <a class="action" href="@routes.Joiner.tierList">Join now</a>
+                    </div>
+                </div>
+            </section>
+
+            <div class="page-slice page-slice--slim l-constrained l-side-margins">
+            @fragments.promos.letterbox(
+                "images/offer/subscriptions/guardian-window-1140.jpg",
+                "Guardian logo in window"
+            )
+            </div>
+
+            <section class="page-slice l-inset l-constrained">
+                <div class="page-section page-section--slim">
+                    <div class="page-section__header">
+                        <h2 class="h-feature">Questions</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <div class="l-pad-right">
+                            @fragments.faq.answers(Faq.help)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    }
+}

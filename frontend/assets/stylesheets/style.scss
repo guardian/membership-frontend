@@ -68,7 +68,6 @@
 @import 'components/icons';
 @import 'components/text-helpers';
 @import 'components/grid';
-@import 'components/content';
 @import 'components/from-content-api';
 @import 'components/nav/nav';
 @import 'components/nav/pop-up';
@@ -89,6 +88,7 @@
 @import 'components/payment';
 @import 'components/packages';
 @import 'components/pricing';
+@import 'components/offer';
 @import 'components/stats';
 @import 'components/tier';
 @import 'components/user';
@@ -102,6 +102,7 @@
 @import 'components/features';
 @import 'components/messages';
 @import 'components/warnings';
+@import 'components/letterbox';
 
 // Dev modules:
 // - Pattern library

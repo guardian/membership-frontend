@@ -76,7 +76,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
         }
     }
 
-    scenarioWeb("29. Membership tab does not appear if you are not a member") {
+    scenarioWeb("29. Membership tab is an upsell if you are not a member") {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -85,7 +85,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
         _.IGoToIdentity
       }
       .then {
-        _.IDontSeeTheMembershipTab
+        _.theMembershipTabIsAnUpsell
       }
     }
   }

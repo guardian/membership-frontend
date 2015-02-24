@@ -1,30 +1,36 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, isPrimary: Boolean = false)
 
-@for(ticket <- event.generalReleaseTicket) {
-    <div class="price-info-inline">
-        @if(ticket.free) {
+@for(ticketing <- event.internalTicketing) {
+    <div class="price-info-inline@if(isPrimary){ price-info-inline--primary}" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+
+        <meta itemprop="url" content="@event.memUrl">
+        @if(ticketing.isSoldOut) {
+            <meta itemprop="availability" content="http://schema.org/SoldOut">
+        } else {
+            <meta itemprop="availability" content="http://schema.org/InStock">
+        }
+
+        @if(ticketing.isFree) {
             <div class="price-info-inline__value">Free</div>
         } else {
-            @for(pricing <- ticket.cost) {
-                @if(event.hasMemberTicket) {
-                    <div class="js-event-price">
-                        <div class="price-info-inline__value js-event-price-value" data-discount-text="@pricing.discountPrice" itemprop="highPrice">
-                            @pricing.formattedPrice
-                        </div>
-                        <div class="price-info-inline__trail">
-                            <span class="js-event-price-discount" data-discount-text="Full price @pricing.formattedPrice" itemprop="lowPrice">
-                                Partners/Patrons @pricing.discountPrice
-                            </span>
-                            <span class="js-event-price-saving" data-discount-text="(you save @pricing.savingPrice)">
-                                (save @pricing.savingPrice)
-                            </span>
-                        </div>
+            @ticketing.memberDiscountOpt.fold {
+                <div class="price-info-inline__value" itemprop="highPrice">
+                    @ticketing.generalReleaseTicketOpt.map(_.priceText)
+                </div>
+            } { discountTicketing =>
+                <div class="js-event-price">
+                    <div class="price-info-inline__value js-event-price-value" data-discount-text="@discountTicketing.member.priceText" itemprop="highPrice">
+                    @discountTicketing.generalRelease.cost.get.formattedPrice
                     </div>
-                } else {
-                    <div class="price-info-inline__value" itemprop="highPrice">
-                        @pricing.formattedPrice
+                    <div class="price-info-inline__trail">
+                        <span class="js-event-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText" itemprop="lowPrice">
+                            Partners/Patrons @discountTicketing.member.priceText
+                        </span>
+                        <span class="js-event-price-saving" data-discount-text="(you save @discountTicketing.savingText)">
+                            (save @discountTicketing.savingText)
+                        </span>
                     </div>
-                }
+                </div>
             }
         }
     </div>

@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .tier-trail {
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline);
 }
     .tier-trail__name {
         @include fs-header(4);
@@ -68,10 +68,10 @@
 }
 .tier-header--partner {
     color: $black;
-    background-color: $c-tone-partner;
+    background-color: tone('partner');
 }
 .tier-header--patron {
-    background-color: $c-tone-patron;
+    background-color: tone('patron');
 }
 
 /**

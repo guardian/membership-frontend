@@ -9,6 +9,7 @@ import model.{FriendTierPlan, IdMinimalUser, TierPlan}
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
 import services.zuora.ZuoraService
+import tracking._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,7 +41,7 @@ object TouchpointBackend {
 case class TouchpointBackend(
   memberRepository: FrontendMemberRepository,
   stripeService: StripeService,
-  zuoraService : ZuoraService) {
+  zuoraService : ZuoraService) extends ActivityTracking {
 
   def start() = {
     memberRepository.salesforce.authTask.start()
@@ -61,15 +62,25 @@ case class TouchpointBackend(
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
+      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name)))
       ""
     }
   }
 
-  def downgradeSubscription(member: Member, tierPlan: TierPlan): Future[String] = {
+  def downgradeSubscription(member: Member): Future[String] = {
     for {
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
-      memberRepository.metrics.putDowngrade(tierPlan.tier)
+      memberRepository.metrics.putDowngrade(member.tier)
+      track(
+        MemberActivity(
+          "downgradeMembership",
+          MemberData(
+          member.salesforceContactId,
+          member.identityId,
+          member.tier.name,
+          Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
+      )))
       ""
     }
   }

@@ -1,0 +1,58 @@
+@(
+    currentTier: com.gu.membership.salesforce.Tier,
+    targetTier: com.gu.membership.salesforce.Tier,
+    userFields: model.PrivateFields,
+    pageInfo: model.PageInfo,
+    paidPreviewOpt: Option[model.Zuora.PaidPreview]
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@import helper._
+@import views.support.Prices._
+
+@main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
+
+    <main role="main" class="page-content l-constrained">
+
+        <section class="page-header">
+            <h1 class="page-headline">Payment</h1>
+            @fragments.joiner.signedInAs(routes.TierController.upgradeConfirm(targetTier).url)
+        </section>
+
+        <section class="form-section form-section--no-padding">
+            <div class="form-section__content">
+            @fragments.form.errorMessageDisplay()
+            </div>
+        </section>
+
+        <section class="form-section">
+
+            <div class="form-section__content">
+
+                <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
+                      class="form js-form" data-change-to-tier="@targetTier">
+                    @CSRF.formField
+                    @fragments.form.addressDetail(
+                        "Delivery address",
+                        "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
+                        "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
+                        userFields.postcode, userFields.address4, userFields.country
+                    )
+                    @if(paidPreviewOpt.isEmpty) {
+                        @fragments.form.paymentOptions(targetTier)
+                    }
+                    @fragments.form.billingAddress("Billing address")
+                    @fragments.form.addressDetail(
+                        "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
+                        userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
+                        userFields.billingCountry
+                    )
+                    @fragments.form.cardDetail(targetTier, paidPreviewOpt.map(_.card))
+                    @fragments.form.submit("Pay", "now", Some(targetTier))
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+}

@@ -41,7 +41,15 @@ body {
 }
 
 .l-inset {
-    padding: rem($gs-gutter);
+    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
+}
+
+
+.l-pad-top {
+    margin-top: rem($gs-baseline / 2);
+}
+.l-pad-bottom {
+    margin-bottom: rem($gs-baseline / 2);
 }
 
 .l-pad-left {
@@ -93,6 +101,8 @@ body {
     @include clearfix;
     background-color: $c-background;
     padding: 0 rem($gs-gutter / 2);
+    position: relative;
+
     @include mq(mobileLandscape) {
         padding: 0 rem($gs-gutter);
     }

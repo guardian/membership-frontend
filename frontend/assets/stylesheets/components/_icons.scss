@@ -63,6 +63,11 @@
    fill: currentColor;
 }
 
+.icon-inline--small {
+   width: 13px;
+   height: 13px;
+}
+
 .icon-inline--medium {
    width: 24px;
    height: 24px;
@@ -108,10 +113,22 @@
 }
 
 .icon-holder--large {
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
 
     .icon-inline {
-        width: 20px; height: 20px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.icon-holder--small {
+    width: 20px;
+    height: 20px;
+
+    .icon-inline {
+        width: 12px;
+        height: 12px;
     }
 }
 

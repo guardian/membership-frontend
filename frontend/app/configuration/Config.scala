@@ -165,6 +165,8 @@ object Config {
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
 
+  val roundedDiscountPercentage: Int = math.round((1-discountMultiplier.toFloat)*100)
+
   val stage = config.getString("stage")
 
   val ophanJsUrl = config.getString("ophan.js.url")
@@ -201,5 +203,9 @@ object Config {
       con.getString("api.key")
     )
   }
+
+  val trackerUrl = config.getString("snowplow.url")
+  val bcryptSalt = config.getString("activity.tracking.bcrypt.salt")
+  val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
 }

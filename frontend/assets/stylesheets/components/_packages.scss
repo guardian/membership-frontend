@@ -2,244 +2,6 @@
    Packages
    ========================================================================== */
 
-.package-container {
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    padding-top: rem($gs-gutter * 3);
-}
-
-.package-container__header {
-    padding-bottom: rem($gs-gutter);
-    border-bottom: 1px dotted $c-neutral1;
-
-    @include mq(tablet) {
-        margin-bottom: rem($gs-gutter * 4);
-    }
-}
-
-/* Package
-   ========================================================================== */
-// TODO: Package styles need some cleanup
-// Rules are not ordered clearly, components mixed up together.
-
-.package {
-    display: block;
-    overflow: hidden;
-    background-color: $c-neutral7;
-
-    &:last-child {
-        margin-right: 0;
-    }
-}
-
-.package-list {
-    padding-top: 0;
-}
-
-.package-list--flex-box {
-
-    @include mq(desktop) {
-        @include flexbox;
-        @include align-items(stretch);
-        margin: 0 auto;
-        border-spacing: rem($gs-gutter);
-    }
-
-    .package {
-        margin: 0 0 rem($gs-gutter / 2);
-        background-color: $c-neutral7;
-
-        &:last-child {
-            margin-right: 0;
-        }
-
-        @include mq(desktop) {
-            // .package is a flexbox too to
-            // align CTA buttons to bottom
-            // regardless of package length(!)
-            @include flexbox;
-            @include justify-content(space-between);
-            @include flex-direction(column);
-            @include align-items(stretch);
-            @include flex-grow(1);
-            @include flex-basis(0); // this fixes a bug, dunno why
-            // give them manual widths for no flexbox browsers
-            margin-bottom: rem($gs-gutter);
-            position: relative;
-            margin-right: rem($gs-gutter);
-            overflow: visible;
-
-            .no-flexbox & {
-                width: 31%;
-                float: left;
-            }
-            // override button widths for flexbox
-            .action {
-                width: auto;
-                min-width: 100%;
-            }
-        }
-    }
-
-    .price-info {
-        @include mq(desktop) {
-            width: 100%;
-            float: none;
-        }
-    }
-}
-
-.package-list--bordered .package {
-    border: 1px solid $c-neutral5;
-}
-
-.package__item-cta {
-    padding: rem($gs-gutter / 2);
-    height: auto;
-    text-align: right;
-
-    @include mq($from: tablet, $until: desktop) {
-        position: relative;
-        padding: rem($gs-gutter);
-        width: rem(290px);
-        float: right;
-    }
-
-    .join &,
-    .change-tier & {
-        @include mq (desktop) {
-            position: absolute;
-            padding: 1rem;
-            width: 100%;
-            bottom: 0;
-        }
-    }
-
-    .action {
-        margin: rem($gs-gutter) 0 0;
-    }
-}
-
-.package__item--promo {
-    // see above – we show 2 buttons here so need more space
-    height: auto;
-}
-
-.package__current-indicator {
-    color: $white;
-    background-color: $c-neutral2;
-    text-align: center;
-    padding: rem($gs-baseline);
-
-    @include mq(desktop) {
-        font-size: rem(14px);
-        position: absolute;
-        display: block;
-        z-index: 4;
-        width: 100%;
-        margin: rem(-46px) auto;
-    }
-}
-
-// TODO: Scope flex code more explicitly.
-// These are not always flexbox.
-.package__outer {
-    @include flex-grow(1);
-}
-
-.package__content {
-    padding: rem($gs-gutter / 2);
-}
-
-.package__inner {
-    padding: rem($gs-gutter / 2);
-    min-height: rem($gs-gutter * 4);
-
-    // TODO: Remove this
-    .join &,
-    .change-tier & {
-        @include mq(desktop) {
-            margin-bottom: rem($gs-gutter * 3);
-        }
-    }
-}
-
-.package--current {
-    border: 1px solid #9c9c9c;
-}
-
-.package__select-zone {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-    cursor: pointer;
-}
-
-.package__title {
-    @include fs-bodyHeading(2);
-    border-top: 1px solid $c-neutral3;
-    padding: rem($gs-gutter / 2) 0;
-    width: 100%;
-}
-
-.package-benefits {
-    position: relative;
-}
-
-.package-benefits__leadin {
-    @include fs-bodyHeading(2);
-}
-
-.package-benefits__list {
-    @include fs-bodyCopy(1);
-    margin-bottom: 0;
-}
-
-.package__price {
-    clear: both;
-    overflow: hidden;
-
-    @include mq($from: tablet) {
-        margin-bottom: rem(20px);
-        height: rem(45px);
-    }
-
-    @include mq($from: tablet, $until: desktop) {
-        display: inline-block;
-        width: 30%;
-        margin-right: 14%;
-        margin-top: 0;
-        vertical-align: top;
-        height: auto;
-    }
-}
-
-.package__select-toggle {
-    @extend %mobile-expand-collapse;
-}
-
-.package__description {
-    @include fs-headline(2);
-    @include mq($from: tablet, $until: desktop) {
-        display: inline-block;
-        vertical-align: top;
-    }
-    @include mq(desktop) {
-        min-height: rem($gs-gutter * 6);
-    }
-}
-
-// TODO: Can be removed when choose.js / mobile toggle pattern is deprecatedpackage--promo
-.toggle--open {
-    @include rotate(180deg);
-}
-
-/* Package - Promo
-   ========================================================================== */
-
 .package-promo {
     position: relative;
     border-top: 5px solid;
@@ -264,7 +26,22 @@
     }
     .package-promo__tier {
         @include clearfix;
+        position: relative;
         min-height: rem(gs-span(1.5));
+    }
+    .package-promo__tier__current {
+        @include fs-bodyCopy(1);
+        position: absolute;
+        top: rem(4px); right: rem(4px);
+        @include mq(tablet) {
+            position: static;
+            margin-left: rem(28px);
+            margin-top: -(rem($gs-gutter / 4));
+        }
+        @include mq(desktop) {
+            margin: 0;
+            position: absolute;
+        }
     }
     .package-promo__tier__pricing {
         position: absolute;
@@ -361,6 +138,23 @@
     }
     @include mq(desktop) {
         @include package-promo-stacked();
+    }
+}
+
+.package-promo--current {
+    background-color: $c-neutral5;
+}
+
+.package-promo--stretch {
+    @include mq(desktop) {
+        min-height: rem(300px); // Magic number
+
+        .package-promo__actions {
+            padding-bottom: 0;
+            position: absolute;
+            left: rem($gs-gutter / 4);
+            bottom: rem($gs-baseline);
+        }
     }
 }
 

@@ -65,6 +65,16 @@ module.exports = function (grunt) {
             }
         },
 
+        postcss: {
+            options: {
+                map: true,
+                processors: [
+                    require('autoprefixer-core')({browsers: ['> 5%', 'last 2 versions', 'IE 9', 'Safari 6']}).postcss
+                ]
+            },
+            dist: { src: '<%= dirs.publicDir.stylesheets %>/*.css' }
+        },
+
         requirejs: {
             compile: {
                 options: {
@@ -88,6 +98,18 @@ module.exports = function (grunt) {
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/main.js'
+                }
+            },
+            compileTools: {
+                options: {
+                    name: 'src/tools',
+                    baseUrl: '<%= dirs.assets.javascripts %>',
+                    findNestedDependencies: false,
+                    wrapShim: true,
+                    optimize: isDev ? 'none' : 'uglify2',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    out: '<%= dirs.publicDir.javascripts %>/tools.js'
                 }
             }
         },
@@ -381,6 +403,7 @@ module.exports = function (grunt) {
             'copy:images',
             'shell:svgencode',
             'sass:compile',
+            'postcss',
             'imagemin'
         ]);
     });
@@ -391,6 +414,7 @@ module.exports = function (grunt) {
         grunt.task.run([
             'clean:js',
             'requirejs:compile',
+            'requirejs:compileTools',
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',

@@ -19,7 +19,7 @@
 
 .aside--pull {
     @include mq(desktop) {
-        margin-top: -(rem($gs-gutter/2));
+        margin-top: -(rem($gs-baseline/2));
     }
 }
 
