@@ -11,7 +11,6 @@ define([
     var PATRON = 'Patron';
     var TIER_CHANGE_URL = '/tier/change';
     var UPGRADE = 'Upgrade membership';
-    var TICKETS_AVAILABLE_SOON = 'Tickets available soon';
 
     var Cta = function (containerElem) {
         this.elem = containerElem;
@@ -86,38 +85,28 @@ define([
         var now = Date.now();
         var $memberCtaElement = $(this.getElem('MEMBER_CTA'));
 
-        if ($memberCtaElement.length) {
-            if (this.userIsLoggedIn) {
-                if (memberTier) {
-                    // tickets not yet on sale
-                    if (salesStart > now) {
-                        this.removeMemberCtaButton();
-                    }
-                    // tickets on sale < 7 days
-                    if (salesStart < now && partnerSaleStart > now) {
-                        if (memberTier === PARTNER) {
-                            this.upgradeComingSoonMemberCtaButton();
-                        } else if (memberTier === FRIEND) {
-                            this.upgradeMemberCtaButton();
-                        } else if (memberTier === PATRON) {
-                            this.removeMemberCtaButton();
-                        }
-                    }
-                    // tickets on sale > 8 days < 14 days
-                    if (partnerSaleStart < now && friendSaleStart > now) {
-                        if (memberTier === FRIEND) {
-                            this.upgradeMemberCtaButton();
-                        } else if (memberTier === PARTNER || memberTier === PATRON) {
-                            this.removeMemberCtaButton();
-                        }
-                    }
+        if ($memberCtaElement.length && this.userIsLoggedIn && memberTier) {
+            // tickets not yet on sale
+            if (salesStart > now) {
+                this.removeMemberCtaButton();
+            }
+            // tickets on sale < 7 days
+            if (salesStart < now && partnerSaleStart > now) {
+                if (memberTier === FRIEND || memberTier === PARTNER) {
+                    this.upgradeMemberCtaButton();
+                } else if (memberTier === PATRON) {
+                    this.removeMemberCtaButton();
+                }
+            }
+            // tickets on sale > 8 days < 14 days
+            if (partnerSaleStart < now && friendSaleStart > now) {
+                if (memberTier === FRIEND) {
+                    this.upgradeMemberCtaButton();
+                } else if (memberTier === PARTNER || memberTier === PATRON) {
+                    this.removeMemberCtaButton();
                 }
             }
         }
-    };
-
-    Cta.prototype.upgradeComingSoonMemberCtaButton = function () {
-        $(this.getElem('MEMBER_CTA')).text(TICKETS_AVAILABLE_SOON).addClass('is-disabled').removeAttr('href');
     };
 
     Cta.prototype.upgradeMemberCtaButton = function () {
@@ -138,20 +127,16 @@ define([
     };
 
     Cta.prototype.init = function () {
-        var self = this;
         this.elem = this.elem || this.getElem('EVENT');
 
-        /* buttons are either both not here, both here, or only one is here */
         if (this.getElem('MEMBER_CTA') || this.getElem('BUY_TICKET_CTA')) {
-
             this.userIsLoggedIn = user.isLoggedIn();
-
             user.getMemberDetail(function (memberDetail) {
-                self.memberTier = memberDetail && memberDetail.tier;
-                self.parseDates();
-                self.buyTicketCta();
-                self.memberCta();
-            });
+                this.memberTier = memberDetail && memberDetail.tier;
+                this.parseDates();
+                this.buyTicketCta();
+                this.memberCta();
+            }.bind(this));
         }
     };
 

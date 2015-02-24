@@ -138,6 +138,7 @@ object Eventbrite {
 
     val salesDates = TicketSaleDates.datesFor(eventTimes, primaryTicket)
 
+    val salesStart = primaryTicket.sales_start
     val salesEnd = primaryTicket.sales_end
 
     val isCurrentlyAvailableToPaidMembersOnly =
