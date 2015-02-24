@@ -8,8 +8,7 @@ object Nav {
     id: String,
     href: String,
     title: String,
-    subNav: Seq[NavItem] = Nil,
-    footerOnly: Boolean = false
+    subNav: Seq[NavItem] = Nil
   )
 
   def fetchNav(url: String) = {
@@ -29,9 +28,7 @@ object Nav {
         NavItem("patrons", "/patrons", "Patrons")
       )
     ),
-    NavItem("pricing", "/join", "Pricing"),
-    NavItem("help", "/help", "Help", Nil, true),
-    NavItem("feedback", "/feedback", "Feedback", Nil, true)
+    NavItem("pricing", "/join", "Pricing")
   )
 
 }
