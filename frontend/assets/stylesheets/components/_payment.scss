@@ -96,7 +96,7 @@ $sprite-card-offset-visa:               -355px;
 // by default we scale the 2x image down by half
 // for retina displays
 .sprite-card {
-    background: url(/assets/images/card-sprite.png) no-repeat top left;
+    background: url(/assets/images/form/card-sprite.png) no-repeat top left;
     display: inline-block;
     vertical-align: middle;
     background-size: $sprite-card-width/2 auto; // scales 2x image down
