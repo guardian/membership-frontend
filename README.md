@@ -25,7 +25,7 @@ To get started working on Membership you will need to complete the following ste
 If you are doing clien-side work on Membership you should also make yourself familar with the following:
 
 - Look over the [pattern library](https://membership.theguardian.com/patterns) to get an understanding of the design language of the site.
-- Read through [FRONTEND.md](FRONTEND.md) to get a high-level understanding of how our client-side code is structured.
+- Read through [FRONTEND.md](docs/FRONTEND.md) to get a high-level understanding of how our client-side code is structured.
 
 
 ## General Setup
@@ -48,7 +48,7 @@ If you are doing clien-side work on Membership you should also make yourself fam
     aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
     ```
 1. In ~/.bash_profile add:
-    
+
 ```
 export AWS_ACCESS_KEY=<access-key-id>
 export AWS_SECRET_KEY=<secret-key>
