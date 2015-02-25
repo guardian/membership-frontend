@@ -2,13 +2,8 @@
    Benefits
    ========================================================================== */
 
-/* ==========================================================================
-   Benefit
-   - Base benefit component. Single benefit.
-   ========================================================================== */
-
 .benefit {
-    @include clearfix;
+    @include clearfix();
     display: table;
     width: 100%;
 }
@@ -24,108 +19,9 @@
 .benefit__title {
     @include fs-headline(2);
     font-weight: 500;
-    padding: 0 0 rem($gs-baseline / 6) 0;
+    padding: 0;
 }
 .benefit__copy {
     @include fs-textSans(3);
     color: $c-neutral2;
-}
-
-/* ==========================================================================
-   Benefits - Chooser
-   ========================================================================== */
-
-.benefits-chooser {
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-baseline);
-
-    @include mq($from: tablet, $until: desktop) {
-        margin-left: 35%;
-    }
-    @include mq($until: desktop) {
-        .benefits-chooser__list {
-            display: none;
-            &.is-toggled {
-                display: block;
-            }
-        }
-    }
-    @include mq(desktop) {
-        padding-top: 0;
-    }
-}
-
-/* ==========================================================================
-   Old Benefits Styles
-   TODO: Remove once full benefits refactoring work happens
-   ========================================================================== */
-
-.benefits-item {
-    @include mq(tablet) {
-        width: 33.3%;
-        float: left;
-    }
-
-    @include mq(desktop) {
-        width: 100%;
-        float: none;
-        margin: 0;
-    }
-}
-
-.benefits-item__inner {
-    margin: 0 rem($gs-baseline / 2);
-
-    @include mq(tablet) {
-        height: rem(150px);
-    }
-
-    @include mq(desktop) {
-        margin: 0;
-        height: auto;
-    }
-}
-
-.benefits-item__inner--highlighted {
-    background-color: $c-neutral6;
-    padding: 0px rem(7px);
-}
-
-.benefits-item__inner--small {
-    height: auto;
-
-    @include mq(tablet) {
-        height: rem(62px);
-    }
-
-    @include mq(desktop) {
-        height: auto;
-    }
-}
-
-.benefits-title {
-    @include fs-bodyHeading(2);
-    border-top: 1px dotted $c-neutral3;
-    padding: rem(7px) 0 rem($gs-baseline / 6) 0;
-    clear: both;
-}
-
-.benefits-copy {
-    @include fs-textSans(3);
-    padding: 0 0 rem($gs-baseline) rem(45px);
-    display: block;
-}
-
-.benefits-title--first {
-    border-top: none;
-}
-
-.benefits-title__first {
-    float: left;
-    width: rem($gs-gutter * 2 + 5);
-    color: $mem-brandBlue;
-}
-
-.benefits-title__second {
-    width: auto;
 }

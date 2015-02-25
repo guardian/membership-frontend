@@ -2,6 +2,11 @@
    Packages
    ========================================================================== */
 
+/* ==========================================================================
+   Package Promo
+   - Main package panel used across the site
+   ========================================================================== */
+
 .package-promo {
     position: relative;
     border-top: 5px solid;
@@ -234,3 +239,28 @@
             margin-left: 0;
         }
     }
+
+/* ==========================================================================
+   Package Chooser
+   - Package benefits toggle (See /tier/change)
+   ========================================================================== */
+
+.package-chooser {
+    padding-top: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline);
+
+    @include mq($from: tablet, $until: desktop) {
+        margin-left: 35%;
+    }
+    @include mq($until: desktop) {
+        .package-chooser__list {
+            display: none;
+            &.is-toggled {
+                display: block;
+            }
+        }
+    }
+    @include mq(desktop) {
+        padding-top: 0;
+    }
+}
