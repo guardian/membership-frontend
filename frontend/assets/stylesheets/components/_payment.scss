@@ -53,8 +53,8 @@ $current-indicator: rem(72px);
 
 .security-note {
     @include fs-data(3);
-    color: $c-neutral1;
-    margin: rem($gs-baseline / 2) 0;
+    color: $c-neutral2;
+    margin: rem($gs-baseline / 2) 0 rem($gs-baseline) 0;
 }
 
 /* Card Summary
