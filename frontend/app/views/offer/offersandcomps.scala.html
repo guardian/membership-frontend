@@ -1,0 +1,16 @@
+@import com.gu.membership.salesforce.Tier
+@import com.gu.contentapi.client.model.Content
+@(content: Seq[Content])
+@main("test") {
+
+    <main role="main">
+
+        <div class="page-slice page-slice--slim l-constrained l-side-margins">
+            foo
+            @content
+        </div>
+
+
+
+    </main>
+}
