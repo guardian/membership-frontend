@@ -101,7 +101,11 @@
         <div class="event-content__container u-cf">
 
             <div class="event-content__body">
-                <div class="event__description copy" itemprop="description">@Html(event.description.getOrElse(EBRichText("foobar", "foobarhtml")).cleanHtml)</div>
+                @for(description <- event.description) {
+                    <div class="event__description copy" itemprop="description">
+                        @Html(description.cleanHtml)
+                    </div>
+                }
                 <div class="event__social">
                     <div class="h-aside hidden-mobile">Share this</div>
                     @fragments.social(eventDetail(event))
