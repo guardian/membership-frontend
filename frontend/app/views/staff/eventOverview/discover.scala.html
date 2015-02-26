@@ -1,0 +1,13 @@
+@(liveEvents: Seq[model.RichEvent.RichEvent], draftEvents: Seq[model.RichEvent.RichEvent], path: String)
+
+@tools("Event Overview") {
+    <main role="main" class="page-content">
+        <section class="utils-page-section">
+            <h1 class="page-headline">Discover Events Overview</h1>
+            <p class="page-intro">A breakdown of Live and Draft Discover events associated with Membership</p>
+        </section>
+        @fragments.eventOverview.menu(path)
+        @fragments.event.overviewSection("Live Events", liveEvents)
+        @fragments.event.overviewSection("Draft Events", draftEvents)
+    </main>
+}
