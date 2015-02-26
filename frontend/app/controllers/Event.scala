@@ -132,7 +132,7 @@ trait Event extends Controller with ActivityTracking {
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>
       event match {
-        case _: GuLiveEvent =>
+        case _: GuLiveEvent | _: DiscoverEvent =>
           if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
           else Future.successful(Redirect(routes.TierController.change()))
 
