@@ -16,6 +16,8 @@ trait Offer extends Controller {
     Ok(views.html.offer.subscriber())
   }
 
+  // TODO FYI this controller was originally meant for the subscribers landing page - maybe we need a rethink on the names
+  // TODO of these controllers as I feel these methods don't belong together
   def offersAndComps = CachedAction { implicit request =>
     Ok(views.html.offer.offersandcomps(contentApiService.membersOnlyContent, "Sorry, no matching events were found."))
   }

@@ -1,16 +1,103 @@
-@import com.gu.membership.salesforce.Tier
-@import com.gu.contentapi.client.model.Content
-@(content: Seq[Content])
-@main("test") {
+@(membersOnlyContent: Seq[services.MembersOnlyContentData], noResultText: String)
 
-    <main role="main">
+@import services.MembersOnlyContentData
+@import views.support.Dates._
+@import org.joda.time.DateTime
 
-        <div class="page-slice page-slice--slim l-constrained l-side-margins">
-            foo
-            @content
+@item(event: MembersOnlyContentData) = {
+    <a href="@event.webUrl" class="event-item" itemscope itemtype="http://schema.org/Event">
+        <meta itemprop="url" content="@event.webUrl">
+        @for(mainImg <- event.imgUrl) {
+            @image(mainImg)
+        }
+        <div class="event-item__content">
+            <div class="event-item__meta">
+                <h4 class="event-item__title">
+                    <span itemprop="name">@event.webTitle</span>
+                </h4>
+                @for(webPublicationDate <- event.webPublicationDateOpt) {
+                    @publicationDate(webPublicationDate)
+                }
+            </div>
         </div>
+    </a>
+}
 
+@image(mainImg: String) = {
+    <div class="event-item__media" itemprop="image" content="@mainImg">
+        <img class="responsive-img" src="@mainImg" alt=""/>
+    </div>
+}
 
+@publicationDate(webPublicationDate: DateTime) = {
+    <div class="event-item__time"
+         itemprop="startDate"
+         content="@webPublicationDate">@webPublicationDate.pretty</div>
+}
 
+@main("Offers & Competitions") {
+    <main role="main" class="l-constrained">
+        <div class="event-blocks">
+            <section class="listing listing--lead listing--padded">
+                <div class="listing__lead-in">
+                    <h3 class="listing__title h-intro">Featured</h3>
+                </div>
+                <div class="listing__content">
+                @if(membersOnlyContent.isEmpty) {
+                    <div class="listing__empty">@noResultText</div>
+                } else {
+                    @for(event <- membersOnlyContent.headOption) {
+                        <a href="@event.webUrl" class="event-item event-item--hero" itemscope itemtype="http://schema.org/Offer">
+                            <meta itemprop="url" content="@event.webUrl">
+                            <div class="event-item__content">
+                                <div class="event-item__meta">
+                                    <h4 class="event-item__title">
+                                        <span itemprop="name">@event.webTitle</span>
+                                    </h4>
+                                    @for(webPublicationDate <- event.webPublicationDateOpt) {
+                                        @publicationDate(webPublicationDate)
+                                    }
+                                    @for(trailText <- event.trailText) {
+                                        <div class="event-item__description" itemprop="description">
+                                        @trailText
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            @for(mainImg <- event.imgUrl) {
+                                @image(mainImg)
+                            }
+                        </a>
+                    }
+                    <ul class="grid grid--3up grid--bordered grid--single-row">
+                    @for(event <- membersOnlyContent.take(4).drop(1)) {
+                        <li class="grid__item">
+                        @item(event)
+                        </li>
+                    }
+                    </ul>
+                }
+                </div>
+            </section>
+
+            <section class="listing listing--padded">
+                <div class="listing__lead-in">
+                    <h3 class="listing__title h-intro">What's on</h3>
+                </div>
+                <div class="listing__content">
+                @if(membersOnlyContent.length < 5) {
+                    <div class="listing__empty">@noResultText</div>
+                } else {
+                    <ul class="grid grid--bordered grid--3up">
+                    @for(event <- membersOnlyContent.takeRight(membersOnlyContent.length - 4)) {
+                        <li class="grid__item">
+                        @item(event)
+                        </li>
+                    }
+                    </ul>
+                }
+                </div>
+            </section>
+        </div>
     </main>
 }
