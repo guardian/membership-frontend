@@ -50,19 +50,20 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def membersOnly: Future[Seq[Content]] = {
+  private def membersOnly: Future[Seq[MembersOnlyContentData]] = {
       for {
         response <- membersOnlyContentQuery(1)
       } yield {
-        response.results
+        val membersOnlyData = response.results.flatMap(MembersOnlyContentDataExtractor.extractDetails)
+        membersOnlyData
       }
   }
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
-  
+
   def eventbriteContent(eventId: String): Option[Content] = eventbriteContentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
-  def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
+  def membersOnlyContent: Seq[MembersOnlyContentData] = membersOnlyContentTask.get()
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
     "GuardianContentService - Masterclass content",
@@ -78,7 +79,7 @@ trait GuardianContentService extends GuardianContent {
     5.minutes
   )(eventbrite)
 
-  val membersOnlyContentTask = ScheduledTask[Seq[Content]](
+  val membersOnlyContentTask = ScheduledTask[Seq[MembersOnlyContentData]](
     "GuardianContentService - Content with Guardian Members Only",
     Nil,
     1.second,
