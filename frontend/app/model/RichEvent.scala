@@ -84,11 +84,10 @@ object RichEvent {
     val imgUrl: String
     val socialImgUrl: String
     val tags: Seq[String]
-
     val metadata: Metadata
-
     val imageMetadata: Option[Grid.Metadata]
     val contentOpt: Option[Content]
+    val srcsetOpt: Option[Seq[String]]
     val availableWidths: String
     val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
     val pastImageOpt: Option[Asset]
@@ -97,13 +96,20 @@ object RichEvent {
   }
 
   abstract class LiveEvent(image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
-    val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage) { asset =>
-      val file = asset.secureUrl.getOrElse(asset.file)
-      val regex = "\\d+.jpg".r
-      regex.replaceFirstIn(file, "{width}.jpg")
-    }
 
     private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
+
+    val imageMetadata = image.map(_.metadata)
+
+    val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage){ asset =>
+      asset.secureUrl.getOrElse(asset.file)
+    }
+
+    val availableWidths = widths.mkString(",")
+
+    val srcsetOpt = image.map(_.assets.map { asset =>
+        asset.secureUrl.getOrElse(asset.file) + " " + asset.dimensions.width.toString() + "w"
+    })
 
     val pastImageOpt = for {
       content <- contentOpt
@@ -111,10 +117,6 @@ object RichEvent {
       element <- elements.find(_.relation == "main")
       assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
     } yield assetOpt
-
-    val availableWidths = widths.mkString(",")
-
-    val imageMetadata = image.map(_.metadata)
 
     val socialImgUrl = image.flatMap(_.assets.find(_.dimensions.width == widths.max)).fold(fallbackImage){ asset =>
       asset.secureUrl.getOrElse(asset.file)
@@ -150,17 +152,20 @@ object RichEvent {
       .getOrElse(fallbackImage)
       .replace("http://static", "https://static-secure")
 
+    val imageMetadata = None
 
     val availableWidths = ""
 
+    val srcsetOpt = None
+
     val socialImgUrl = imgUrl
 
-    val imageMetadata = None
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
     val metadata = masterclassMetadata
 
     val contentOpt = None
+
     val pastImageOpt = None
 
     def deficientGuardianMembersTickets = false

@@ -1,3 +1,15 @@
 @(event: model.RichEvent.RichEvent)
 
-<div class="js-imager-loaded-image" data-src="@event.imgUrl" data-available-widths="@event.availableWidths" data-alt="@event.name.text" data-class="responsive-img"></div>
+@event.srcsetOpt.fold {
+    <img src="@event.imgUrl"
+         alt="@event.name.text"
+         class="responsive-img"
+    />
+} { srcset =>
+    <img src="@event.imgUrl"
+         srcset="@srcset.mkString(", ")"
+         sizes="100vw"
+         alt="@event.name.text"
+         class="responsive-img"
+    />
+}
