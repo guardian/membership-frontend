@@ -10,7 +10,7 @@ import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.EBTicketClass
-import model.RichEvent.{MasterclassEvent, GuLiveEvent, RichEvent}
+import model.RichEvent.{DiscoverEvent, MasterclassEvent, GuLiveEvent, RichEvent}
 import play.api.Logger
 import org.joda.time._
 
@@ -101,6 +101,7 @@ case class EventData(event: RichEvent) {
 
   val group = event match {
     case _: GuLiveEvent => "Guardian Live"
+    case _: DiscoverEvent => "Discover"
     case _: MasterclassEvent => "Masterclass"
 
   }

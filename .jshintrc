@@ -26,6 +26,7 @@
         "require"  : false,
         "define"   : false,
         "s"        : false,
-        "guardian" : false
+        "guardian" : false,
+        "JSON"     : false
     }
 }

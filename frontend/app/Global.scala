@@ -16,6 +16,7 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFil
     SentryLogging.init()
 
     GuardianLiveEventService.start()
+    DiscoverEventService.start()
     MasterclassEventService.start()
 
     TouchpointBackend.All.foreach(_.start())
