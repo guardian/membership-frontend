@@ -1,0 +1,13 @@
+@(path: String)
+
+<ul class="menu">
+@for((href, text) <- Seq((routes.Staff.eventOverview, "Live Events"),
+                         (routes.Staff.discoverOverview, "Discover Events"),
+                         (routes.Staff.masterclassOverview, "Masterclass Courses"),
+                         (routes.Staff.eventDetails, "Event Details"))){
+
+    <li class="menu__item@if(path == href.toString){ menu-highlight}">
+        <a href="@href" class="menu__link">@text</a>
+    </li>
+}
+ </ul>
