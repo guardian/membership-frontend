@@ -12,14 +12,16 @@ import model.RichEvent._
 import model.{EventPortfolio, Eventbrite, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, MemberService}
+import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, DiscoverEventService, MemberService}
 import services.EventbriteService._
+import com.github.nscala_time.time.Imports._
 import tracking.{MemberData, ActivityTracking, EventActivity, EventData}
 import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
 
   val guLiveEvents: EventbriteService
+  val discoverEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
   val memberService: MemberService
@@ -70,7 +72,7 @@ trait Event extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclass(masterclassEvents.getEventPortfolio, pageInfo))
+    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events, None, None), pageInfo))
   }
 
   def masterclassesByTag(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
@@ -88,13 +90,26 @@ trait Event extends Controller with ActivityTracking {
     ))
   }
 
+  private def chronologicalSort(events: Seq[model.RichEvent.RichEvent]) = {
+    events.sortWith(_.event.start < _.event.start)
+  }
+
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.guardianLive(guLiveEvents.getEventPortfolio, pageInfo))
+    val pastEvents = (guLiveEvents.getEventsArchive ++ discoverEvents.getEventsArchive).headOption
+      .map(chronologicalSort(_).reverse)
+    Ok(views.html.event.guardianLive(
+      EventPortfolio(
+        guLiveEvents.getFeaturedEvents,
+        chronologicalSort(guLiveEvents.getEvents ++ discoverEvents.getEvents),
+        pastEvents,
+        guLiveEvents.getPartnerEvents
+      ),
+      pageInfo))
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -104,13 +119,20 @@ trait Event extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.guardianLive(EventPortfolio(Seq.empty, guLiveEvents.getTaggedEvents(tag), None, None), pageInfo))
+    Ok(views.html.event.guardianLive(
+      EventPortfolio(
+        Seq.empty,
+        chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ discoverEvents.getTaggedEvents(tag)),
+        None,
+        None
+      ),
+      pageInfo))
   }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>
       event match {
-        case _: GuLiveEvent =>
+        case _: GuLiveEvent | _: DiscoverEvent =>
           if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
           else Future.successful(Redirect(routes.TierController.change()))
 
@@ -181,6 +203,7 @@ trait Event extends Controller with ActivityTracking {
 
 object Event extends Event {
   val guLiveEvents = GuardianLiveEventService
+  val discoverEvents = DiscoverEventService
   val masterclassEvents = MasterclassEventService
   val memberService = MemberService
 }
