@@ -29,7 +29,9 @@ We use Sass for our stylesheets and break styles down into the following groups:
 We largely use the following naming conventions in our CSS:
 
 - We (sparingly) use low-level helper classes for commmon traits, e.g., headings, utilities
-- We use a version of BEM to distinguish between components
+- We use a version of BEM for components
+- If it is a component in markup then the BEM classes should display this to the reader
+- Componentize markup where possible for reuse, until it feels "right" not too big not too small
 - We use state classes (e.g., `is-toggled`) to style components affecteder by JavaScript
 
 ## Helpers
@@ -44,7 +46,7 @@ Any low-level helper classes or traits use a set of common prefixes. Where possi
 
 ### Layout helpers
 
-Layout helpers are common traits used to extract out common layout traits, for example constraining widths (`l-constrained`) or insetting content (`l-pad`).
+Layout helpers are common traits used to extract out common layout traits, for example constraining widths (`l-constrained`) or insetting content (`l-inset`).
 
 ### Text traits
 
@@ -63,7 +65,7 @@ Utilities classe (prefixed with `u-`) are patterns for common overrides, they ar
 
 ## Components
 
-Syntax: `<componentName>[--modifierName|-descendantName]`
+Syntax: `<component-name>[__descendant|--modifier]`
 
 Component driven development offers several benefits when reading and writing HTML and CSS:
 
@@ -186,6 +188,14 @@ One risk with BEM naming conventions is that it’s possible to use a child-sele
 > Separate style and behavior concerns by using `.js-` prefixed classes for behavior.
 
 **`.js-` classes should never appear in your stylesheets.** They are for JavaScript only. Inversely, there is rarely a reason to see presentation classes like `.header-nav-button` in JavaScript. You should use state classes like `.is-state` in your JavaScript and your stylesheets as `.component.is-state`.
+
+## Functional Testing
+
+> Add specific hooks for functional testing / quality assurance to avoid repetition of presentational classes in tests.
+
+For all hooks needed for functional tests use an ID prefixed with `qa-`. As functional tests often need to interact with a **specific** element IDs are appropriate. Use `qa-` prefixed classnames where IDs aren't suitable.
+
+**`.qa-` classes should never appear in your stylesheets.** They are for functional tests only.
 
 <a name="prefixes"></a>
 ## Vendor Prefixes
