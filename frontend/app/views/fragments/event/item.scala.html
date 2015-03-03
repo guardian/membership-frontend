@@ -7,7 +7,7 @@
 <a href="@routes.Event.details(event.slug)" class="event-item" itemscope itemtype="http://schema.org/Event">
     <meta itemprop="url" content="@event.memUrl">
     <div class="event-item__media" itemprop="image" content="@event.socialImgUrl">
-        @fragments.event.image(event)
+        @fragments.event.image(event, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
     </div>
     <div class="event-item__content">
         <div class="event-item__meta">
