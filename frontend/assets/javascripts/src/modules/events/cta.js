@@ -4,108 +4,82 @@ define([
 ], function($, userUtil) {
 
     var CTA_ELEM = '.js-ticket-cta';
-
-    /**
-     * CTA Actions
-     *
-     * Map properties to status
-     * If a property is set to false that attribute won't be updated
-     */
     var CTA_ACTIONS = {
         join: {
+            id: 'join',
             label: 'Become a member',
-            action: '/join',
-            disabled: false
+            href: '/join'
         },
         upgrade: {
+            id: 'upgrade',
             label: 'Upgrade membership',
-            action: '/tier/change',
-            disabled: false
+            href: '/tier/change'
         },
         unavailable: {
+            id: 'unavailable',
             label: 'Tickets available soon',
-            action: false,
             disabled: true
         }
     };
 
     /**
-     * Get sales dates
-     *
-     * Determine the pre-sale start and end date
-     * and all available tier dates.
+     * Determine the ticket sale start and end date. Get all available tier ticket dates.
      */
-    function getSalesDates() {
+    function getTicketSaleDates() {
 
-        var tierDates = {
-            friend: new Date($('.js-ticket-sale-start-friend').attr('datetime')),
-            // Supporter has same sale start date as Friend
-            supporter: new Date($('.js-ticket-sale-start-friend').attr('datetime')),
-            partner: new Date($('.js-ticket-sale-start-partner').attr('datetime')),
-            patron: new Date($('.js-ticket-sale-start-patron').attr('datetime'))
+        function dateTime(selector) {
+            return new Date($(selector).attr('datetime'));
+        }
+
+        var tiersSaleStartDates = {
+            friend: dateTime('.js-ticket-sale-start-friend'),
+            supporter: dateTime('.js-ticket-sale-start-friend'), // Supporter has same sale start date as Friend
+            partner: dateTime('.js-ticket-sale-start-partner'),
+            patron: dateTime('.js-ticket-sale-start-patron')
         };
 
         return {
-            preSaleStart: tierDates.patron,
-            preSaleEnd: tierDates.friend,
-            tiers: tierDates
+            priorityBookingStart: tiersSaleStartDates.patron,
+            priorityBookingEnd: tiersSaleStartDates.friend,
+            tiersSaleStart: tiersSaleStartDates
         };
     }
 
     /**
-     * Get the sale date for the current tier
+     * Get status object for CTA
      *
-     * Returns false if there is no tier,
-     * or the tier is not eligible for pre-sales
-     */
-    function getTierSaleDate(tierDates, memberTier) {
-        return (memberTier) ? tierDates[memberTier.toLowerCase()] || false : false;
-    }
-
-    /**
-     * Get new status for CTA
+     * Rules for the CTA
+     * - If event is not on sale to anyone return 'unavailable' status object
+     * - If event is within priority booking mode and user is not logged-in return 'join' status object
+     * - If event is within priority booking mode, and user is logged-in user with a tier sale start date in the
+     * future return 'upgrade' status object
+     * - If event is within priority booking mode, and user is logged-in user with a tier sale start date in the
+     * past return empty status object
+     * - If event is on sale to everyone, and user is logged-in with or without a tier return empty status object
      *
-     * 1. If event is bookable return false (don't do anything)
-     * 2. If event if off-sale return 'unavailable'
-     * 3. If in pre-sale mode and not logged-in return 'join'
-     * 4. If in pre-sale, logged-in but tier can't book yet return 'upgrade'
-     * 5. If in pre-sale, logged-in and tier can book return false (don't do anything)
+     * @param priorityBookingStart
+     * @param priorityBookingEnd
+     * @param memberTierTicketSaleStart
+     * @returns {*}
      */
-    function newStatus(preSaleStart, preSaleEnd, tierDate) {
-        var status = false;
-
+    function getCtaStatus(priorityBookingStart, priorityBookingEnd, memberTierTicketSaleStart) {
+        var status = {};
         var now = Date.now();
-        var isOffSale = (now < preSaleStart.getTime());
-        var isPreSale = (now > preSaleStart.getTime() && now < preSaleEnd.getTime());
+        var eventNotOnSale = (now < priorityBookingStart.getTime());
+        var eventWithinPriorityBookingWindow = (now > priorityBookingStart.getTime() && now < priorityBookingEnd.getTime());
 
-        /**
-         * Event is not on-sale
-         */
-        if (isOffSale) {
-            status = 'unavailable';
+        if (eventNotOnSale) {
+            status = CTA_ACTIONS.unavailable;
         }
 
-        /**
-         * Event is in pre-sale mode
-         */
-        if (isPreSale) {
-            status = 'join';
-            /**
-             * We have a sale date for the tier
-             * (false if we are signed-out or have no sale-date)
-             */
-            if (tierDate) {
-                /**
-                 * Current tier's sale date is in the future
-                 */
-                if (tierDate > now) {
-                    status = 'upgrade';
+        if (eventWithinPriorityBookingWindow) {
+            status = CTA_ACTIONS.join;
+
+            if (memberTierTicketSaleStart) {
+                if (memberTierTicketSaleStart > now) {
+                    status = CTA_ACTIONS.upgrade; // Tickets are not yet on sale for this tier
                 } else {
-                    /**
-                     * Current tier's sale date is in the present,
-                     * so is bookable. Leave the button alone
-                     */
-                    status = false;
+                    status = {};
                 }
             }
         }
@@ -114,26 +88,32 @@ define([
     }
 
     /**
-     * Enhance CTA
-     *
      * Updates label, action or disabled status depending on status.
+     *
+     * @param elem
+     * @param ctaStatus
      */
     function enhanceCta(elem, ctaStatus) {
-        var newLabel = CTA_ACTIONS[ctaStatus].label || false,
-            newAction = CTA_ACTIONS[ctaStatus].action || false,
-            shouldDisable = CTA_ACTIONS[ctaStatus].disabled || false;
+        elem.text(ctaStatus.label);
 
-        if (newLabel) {
-            elem.text(newLabel);
+        if (ctaStatus.href) {
+            elem.attr('href', ctaStatus.href);
         }
 
-        if (newAction) {
-            elem.attr('href', newAction);
-        }
-
-        if (shouldDisable) {
+        if (ctaStatus.disable) {
             elem.addClass('is-disabled').attr('disabled', true);
         }
+    }
+
+    /**
+     * Get a members ticket sale start date or return undefined
+     * @param memberDetail
+     * @param ticketSaleDates
+     * @returns {*|memberDetails.tier}
+     */
+    function getMemberTierTicketSaleStart(memberDetail, ticketSaleDates) {
+        var memberTier = memberDetail && memberDetail.tier;
+        return memberTier && ticketSaleDates.tiersSaleStart[memberTier.toLowerCase()];
     }
 
     function init() {
@@ -141,22 +121,22 @@ define([
         if (elem.length) {
             userUtil.getMemberDetail(function (memberDetail) {
 
-                var memberTier = memberDetail && memberDetail.tier,
-                    ticketSales = getSalesDates(),
-                    tierSaleDate = getTierSaleDate(ticketSales.tiers, memberTier),
-                    ctaStatus = newStatus(ticketSales.preSaleStart, ticketSales.preSaleEnd, tierSaleDate);
+                var ticketSaleDates = getTicketSaleDates();
+                var ctaStatus = getCtaStatus(
+                    ticketSaleDates.priorityBookingStart,
+                    ticketSaleDates.priorityBookingEnd,
+                    getMemberTierTicketSaleStart(memberDetail, ticketSaleDates)
+                );
 
-                if (ctaStatus) {
+                if (Object.keys(ctaStatus).length) {
                     enhanceCta(elem, ctaStatus);
                 }
-
             });
         }
     }
 
     return {
-        newStatus: newStatus,
+        getCtaStatus: getCtaStatus,
         init: init
     };
-
 });
