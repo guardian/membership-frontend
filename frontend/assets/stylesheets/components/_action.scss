@@ -125,7 +125,7 @@
 .action--booking {
     color: $white;
     background-color: $black;
-    border-color: $black;
+    border: none;
 
     &:hover {
         background-color: lighten($black, 15%);
