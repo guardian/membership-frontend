@@ -55,6 +55,10 @@
             document.documentElement.className += ' js-ancient-browser';
         }
 
+        @* Disable lazySizes auto-init so we can control when it runs *@
+        window.lazySizesConfig = window.lazySizesConfig || {};
+        window.lazySizesConfig.init = false;
+
         @* Load SVG icon sprite, store in localStorage where possible *@
         @* Based on: https://github.com/guardian/frontend/blob/master/common/app/views/fragments/loadCss.scala.html *@
 
