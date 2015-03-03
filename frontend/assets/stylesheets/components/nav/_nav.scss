@@ -182,9 +182,10 @@ $global-nav-height: 36px;
     }
 
     .nav__item:after {
-        content: ">";
+        content: "›";
         display: inline-block;
         margin-right: rem($gs-gutter / 2);
+        vertical-align: text-bottom;
     }
 
     .nav__item:last-child {
