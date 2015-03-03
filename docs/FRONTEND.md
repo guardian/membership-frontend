@@ -14,7 +14,7 @@
 <a name="architecture"></a>
 ## Architecture
 
-We use Sass for are stylesheets and break styles down into the following groups:
+We use Sass for our stylesheets and break styles down into the following groups:
 
 1. **Settings**: Global variables (colours, breakpoints etc.)
 2. **Mixins**: Functions and mixins
@@ -40,7 +40,7 @@ Any low-level helper classes or traits use a set of common prefixes. Where possi
 - `.h-` for heading traits
 - `.text-` for text helpers
 - `.grid-` for grid helpers
-- `.u-`o-  fr utilities
+- `.u-` for utilities
 
 ### Layout helpers
 
@@ -117,7 +117,7 @@ A component descendant is a class that is attached to a descendant node of a com
 
 ### State Classes
 
-Use `is-state-name` for state-based modifications of components. The state name should be lowercase with multiple words separated with hyphens. **Avoid stling these classes directly; they should be used as an adjoining class.**
+Use `is-state-name` for state-based modifications of components. The state name should be lowercase with multiple words separated with hyphens. **Avoid styling these classes directly; they should be used as an adjoining class.**
 
 JS can add/remove these classes. This means that the same state names can be used in multiple contexts, but every component must define its own styles for the state (as they are scoped to the component).
 
@@ -171,7 +171,7 @@ While the former keeps specificity as low as possible, it’s easier to reason a
 
 ### Don’t use BEM children out of context.
 
-One risk with BEM naming conventions is that it’s possible to use a child-selector outside of the context of it’s original parent. So if you see something like the following then it’s a sign that your component wasn’t granular enough or you need to refactor your views:
+One risk with BEM naming conventions is that it’s possible to use a child-selector outside of the context of its original parent. So if you see something like the following then it’s a sign that your component wasn’t granular enough or you need to refactor your views:
 
 ```
 <article class="some-component">
@@ -190,7 +190,7 @@ One risk with BEM naming conventions is that it’s possible to use a child-sele
 <a name="prefixes"></a>
 ## Vendor Prefixes
 
-We use [Autoprefixer](https://github.com/postcss/autoprefixer) for vendor prefixes so write any prefixed CSS using the spec version only and the build process will add any requried prefixes. It's suprising how few vendor prefixes a anymore.
+We use [Autoprefixer](https://github.com/postcss/autoprefixer) for vendor prefixes so write any prefixed CSS using the spec version only and the build process will add any requried prefixes. It's suprising how few vendor prefixes you need anymore.
 
 <a name="reading"></a>
 ## Further reading
