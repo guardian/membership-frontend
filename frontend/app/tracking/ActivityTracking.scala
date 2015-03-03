@@ -2,15 +2,17 @@ package tracking
 
 import java.util.{List => JList, Map => JMap}
 
-import com.github.nscala_time.time.Imports._
 import com.github.t3hnar.bcrypt._
 import com.gu.membership.salesforce.Tier
-import com.snowplowanalytics.snowplow.tracker.core.emitter.{RequestMethod, HttpMethod}
+import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
+import model.Eventbrite.EBTicketClass
+import model.RichEvent.{DiscoverEvent, MasterclassEvent, GuLiveEvent, RichEvent}
 import play.api.Logger
+import org.joda.time._
 
 import scala.collection.JavaConversions._
 
@@ -19,9 +21,12 @@ case class MemberActivity (source: String, member: MemberData) extends TrackerDa
     Map("eventSource" -> source) ++ member.toMap
 }
 
+case class EventActivity(source: String, member: Option[MemberData], eventData: EventData) extends TrackerData {
+  def toMap: JMap[String, Object] =
+    Map("eventSource" -> source) ++ eventData.toMap ++ member.fold(ActivityTracking.setSubMap(Map.empty))(_.toMap)
+}
 
 trait TrackerData {
-  def member: MemberData
   def source: String
   def toMap: JMap[String, Object]
 }
@@ -78,15 +83,74 @@ case class MemberData(salesforceContactId: String,
               "from" -> tierAmend.tierFrom.name,
               "to" -> tierAmend.tierTo.name
             ) ++
-            tierAmend.effectiveFromDate.map("effectiveDate" -> _)
+            tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
         }
 
-    ActivityTracking.setSubMap(dataMap)
+    val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
+
+    ActivityTracking.setSubMap(memberMap)
   }
 
   def truncatePostcode(postcode: String) = {
     postcode.splitAt(postcode.length-3)._1.trim
+  }
+}
+
+case class EventData(event: RichEvent) {
+
+  val group = event match {
+    case _: GuLiveEvent => "Guardian Live"
+    case _: DiscoverEvent => "Discover"
+    case _: MasterclassEvent => "Masterclass"
+
+  }
+  def toMap: JMap[String, Object] = {
+
+    val dataMap = Map(
+      "id" -> event.id,
+      "startTime" -> event.start.getMillis,
+      "endTime" -> event.end.getMillis,
+      "created" -> event.created.getMillis,
+      "capacity" -> event.capacity,
+      "status" -> event.status,
+      "isBookable" -> event.isBookable,
+      "isPastEvent" -> event.isPastEvent,
+      "isSoldOut" -> event.isSoldOut,
+      "group" -> group
+    ) ++
+      Map("tags" -> seqAsJavaList(event.tags)) ++
+      event.internalTicketing.map("isFree" -> _.isFree) ++
+      event.internalTicketing.map("ticketsSold" -> _.ticketsSold) ++
+      event.internalTicketing.map("saleEnds" -> _.salesEnd.getMillis) ++
+      event.internalTicketing.map("isCurrentlyAvailableToPaidMembersOnly" -> _.isCurrentlyAvailableToPaidMembersOnly) ++
+      event.internalTicketing.flatMap(_.generalReleaseTicketOpt).map("generalReleaseTicketOpt" -> ticketClassToMap(_)) ++
+      event.internalTicketing.flatMap(_.memberBenefitTicketOpt).map("memberBenefitTicketOpt" -> ticketClassToMap(_)) ++
+      event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
+      event.providerOpt.map("provider" -> _)
+
+    val eventMap = Map("event" -> ActivityTracking.setSubMap(dataMap))
+
+    ActivityTracking.setSubMap(eventMap)
+  }
+
+  private def ticketClassToMap(ticketClass: EBTicketClass): JMap[String, Object] = {
+    val dataMap = Map(
+      "id" -> ticketClass.id,
+      "name" -> ticketClass.name,
+      "free" -> ticketClass.free,
+      "quantityTotal" -> ticketClass.quantity_total,
+      "quantitySold" -> ticketClass.quantity_sold,
+      "saleEnds" -> ticketClass.sales_end.getMillis,
+      "durationBeforeSaleEnds" -> (ticketClass.sales_end.getMillis - DateTime.now.getMillis)
+    ) ++
+      ticketClass.sales_start.map("salesStart" -> _.getMillis) ++
+      ticketClass.sales_start.map(s => "durationAfterSaleStart" -> ( DateTime.now.getMillis - s.getMillis)) ++
+      ticketClass.cost.map("value" -> _.value) ++
+      ticketClass.cost.map("formattedPrice" -> _.formattedPrice.replace("£", "")) ++
+      ticketClass.hidden.map("hidden" -> _)
+
+    ActivityTracking.setSubMap(dataMap)
   }
 }
 

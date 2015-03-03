@@ -1,8 +1,8 @@
 @import model.Eventbrite.EBEvent
 @import model.RichEvent.MasterclassEvent
 
-@tagInput(tagName: String, id: String) = {
-    <div class="utils-tag-picker">
+@tagInput(tagName: String, id: String, classNames: Seq[String] = Nil) = {
+    <div class="utils-tag-picker @classNames.mkString(" ")">
         <input type="checkbox" class="js-tag-picker utils-tag-picker__input" id="@id" data-tag-name="@tagName" />
         <label for="@id" class="utils-tag-picker__label">@tagName</label>
     </div>
@@ -39,7 +39,7 @@
                 <input class="input-text js-event-image" id="event-image" data-tag="main-image" type="text"/>
                 <div class="form-note">
                     <i>e.g https://media.gutools.co.uk/images/0816c7b393</i>
-                    <div><a href="https://media.gutools.co.uk/search">Get image url</a></div>
+                    <div><a href="https://media.gutools.co.uk/search" target="_blank">Get image url</a></div>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
                     @tagInput(category.categoryName, "cat-" + count)
                     @if(category.subCategories) {
                         @for((subCategory, subCount) <- category.subCategories.zipWithIndex) {
-                            @tagInput(subCategory, "sub-cat-" + subCount)
+                            @tagInput(subCategory, "sub-cat-" + subCount, Seq("sub-cat"))
                         }
                     }
                 }

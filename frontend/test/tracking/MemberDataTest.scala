@@ -11,16 +11,7 @@ class MemberDataTest extends Specification {
     Some(DowngradeAmendment(Tier.Partner)), Some("N1 9GU"), None, Some(true), Some(MarketingChoicesForm(Some(true), Some(false))))
 
   "MemberData" should {
-    "create a valid JMap for tracking" in {
-
-      val eventSubjectAsMap = memberData.toMap
-      eventSubjectAsMap.get("salesforceContactId") !=  contain("salesforce123")
-      eventSubjectAsMap.get("identityId") !=  contain("identity123")
-      eventSubjectAsMap.get("deliveryPostcode") mustEqual "N1"
-      eventSubjectAsMap.get("amendTier").toString mustEqual("{from=Partner, to=Friend}")
-
-    }
-
+   
     "truncate postcode" in {
       memberData.truncatePostcode("N1 9GU") mustEqual "N1"
       memberData.truncatePostcode("N19GU") mustEqual "N1"

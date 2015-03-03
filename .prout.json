@@ -1,5 +1,5 @@
 {
   "checkpoints": {
-    "PROD": { "url": "https://membership.theguardian.com/", "overdue": "15M" }
+    "PROD": { "url": "https://membership.theguardian.com/", "overdue": "14M" }
   }
 }

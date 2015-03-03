@@ -1,6 +1,6 @@
 @(
     title: Html,
-    imageUrl: String,
+    imageBasePath: String,
     stampImageOpt: Option[String] = None,
     isLead: Boolean = false,
     toneClass: Option[String] = None
@@ -14,7 +14,7 @@
     </div>
     <div class="promo-primary__media@if(stampImageOpt){ stamped-image}">
         <div class="promo-primary__image">
-            <img src="@Asset.at(imageUrl)" alt="@title" class="responsive-img">
+            <div class="js-imager-loaded-image" data-src="@imageBasePath/{width}.jpg" data-available-widths="1000,500,140" data-alt="@title" data-class="responsive-img"></div>
         </div>
         @for(url <- stampImageOpt) {
             <div class="stamped-image__container">

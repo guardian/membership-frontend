@@ -13,8 +13,8 @@ require([
     'src/modules/events/eventPriceEnhance',
     'src/modules/patterns',
     'src/utils/modal',
-    'src/utils/form/processSubmit',
     'src/modules/form',
+    'src/modules/form/processSubmit',
     'src/modules/metrics',
     // Add new dependencies ABOVE this
     'raven',

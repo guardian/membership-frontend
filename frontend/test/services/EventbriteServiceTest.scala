@@ -41,6 +41,7 @@ class EventbriteServiceTest extends PlaySpecification {
     override def events: Seq[RichEvent] = Nil
     override def eventsArchive: Seq[RichEvent] = Nil
     override def getFeaturedEvents: Seq[RichEvent] = Nil
+    override def getEvents: Seq[RichEvent] = Nil
     override def getTaggedEvents(tag: String): Seq[RichEvent] = Nil
     override def getPartnerEvents: Option[EventGroup] = None
 

@@ -6,7 +6,6 @@
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import model.Benefits
 
 <div class="event-blocks">
 
@@ -19,7 +18,6 @@
                 @for(heroEvent <- eventPortfolio.heroOpt) {
                     @fragments.event.itemHero(heroEvent)
                 }
-                </ul>
                 <ul class="grid grid--3up grid--bordered grid--single-row">
                     @for(event <- eventPortfolio.priority) {
                         <li class="grid__item">
@@ -59,13 +57,17 @@
                 <h3 class="listing__title h-intro">@otherEvents.sequenceTitle</h3>
             </div>
             <div class="listing__content">
+            @if(otherEvents.events.isEmpty) {
+                <div class="listing__empty">@noResultsMessage</div>
+            } else {
                 <ul class="grid grid--bordered grid--3up">
-                    @for(event <- otherEvents.events) {
-                        <li class="grid__item">
-                            @fragments.event.item(event)
-                        </li>
-                    }
+                @for(event <- otherEvents.events) {
+                    <li class="grid__item">
+                    @fragments.event.item(event)
+                    </li>
+                }
                 </ul>
+            }
             </div>
         </section>
     }

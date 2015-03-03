@@ -134,10 +134,7 @@
                         @CSRF.formField
                         <div class="actions js-waiting-container">
                             <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
-                            <div class="i-wait">
-                                <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
-                                <span class="i-wait__message js-waiting-message"></span>
-                            </div>
+                            <div class="loader js-loader"></div>
                         </div>
                     </form>
                 }

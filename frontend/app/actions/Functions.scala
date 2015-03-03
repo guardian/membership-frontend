@@ -28,7 +28,7 @@ case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
  */
 object Functions extends LazyLogging {
 
-  val googleGroupChecker = new GoogleGroupChecker(Config.googleGroupCheckerAuthConfig)
+  lazy val googleGroupChecker = new GoogleGroupChecker(Config.googleGroupCheckerAuthConfig)
 
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)

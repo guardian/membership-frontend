@@ -65,8 +65,10 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
+  def getEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
   def getPartnerEvents: Option[EventGroup]
+  def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
 
   private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     val enumerator = Enumerator.unfoldM(Option(1)) {
@@ -78,18 +80,6 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     }
 
     enumerator(Iteratee.consume()).flatMap(_.run)
-  }
-
-  def getEventPortfolio: EventPortfolio = {
-    val featuredEvents = getFeaturedEvents
-    val partnerGroup = getPartnerEvents
-    val partnerEvents = partnerGroup.map(_.events).getOrElse(Nil)
-    EventPortfolio(
-      featuredEvents,
-      events.diff(featuredEvents++partnerEvents),
-      Some(eventsArchive),
-      partnerGroup
-    )
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
@@ -118,15 +108,15 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id")
 }
 
-object GuardianLiveEventService extends EventbriteService {
-  val apiToken = Config.eventbriteApiToken
-  val maxDiscountQuantityAvailable = 2
-
-  val wsMetrics = new EventbriteMetrics("Guardian Live")
-
+abstract class LiveService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
+}
 
+object GuardianLiveEventService extends LiveService {
+  val apiToken = Config.eventbriteApiToken
+  val maxDiscountQuantityAvailable = 2
+  val wsMetrics = new EventbriteMetrics("Guardian Live")
 
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
   lazy val eventsOrderingTask = ScheduledTask[Seq[String]]("Event ordering", Nil, 1.second, refreshTimePriorityEvents) {
@@ -136,7 +126,6 @@ object GuardianLiveEventService extends EventbriteService {
   }
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-
     val eventbriteContent = contentApiService.content(event.id)
 
     event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None, eventbriteContent))) { url =>
@@ -145,11 +134,34 @@ object GuardianLiveEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
+  override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
   override def getPartnerEvents: Option[EventGroup] = Some(EventGroup("Programming Partner Events", events.filter(_.providerOpt.isDefined)))
   override def start() {
     super.start()
     eventsOrderingTask.start()
+  }
+}
+
+object DiscoverEventService extends LiveService {
+  val apiToken = Config.eventbriteDiscoverApiToken
+  val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for discovery?
+  val wsMetrics = new EventbriteMetrics("Discover")
+
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
+    val eventbriteContent = contentApiService.content(event.id)
+
+    event.mainImageUrl.fold(Future.successful(DiscoverEvent(event, None, eventbriteContent))) { url =>
+      gridService.getRequestedCrop(url).map(DiscoverEvent(event, _, eventbriteContent))
+    }
+  }
+
+  override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
+  override def getEvents: Seq[RichEvent] = events
+  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
+  override def getPartnerEvents: Option[EventGroup] = None
+  override def start() {
+    super.start()
   }
 }
 
@@ -181,6 +193,7 @@ object MasterclassEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
+  override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
   override def getPartnerEvents: Option[EventGroup] = None
 }
@@ -194,17 +207,22 @@ object EventbriteServiceHelpers {
 }
 
 object EventbriteService {
-  val services = Seq(GuardianLiveEventService, MasterclassEventService)
+  val services = Seq(GuardianLiveEventService, DiscoverEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
+      case _: DiscoverEvent => DiscoverEventService
       case _: MasterclassEvent => MasterclassEventService
     }
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
     GuardianLiveEventService.getPreviewEvent(id)
+  }
+
+  def getPreviewDiscoverEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+    DiscoverEventService.getPreviewEvent(id)
   }
 
   def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {

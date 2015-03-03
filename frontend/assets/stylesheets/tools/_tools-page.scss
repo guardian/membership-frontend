@@ -1,5 +1,5 @@
 .utils-page-section {
-    padding: rem(10px) rem(10px) rem(30px);
+    padding: rem(10px);
 }
 
 .utils-page-section-header {
@@ -146,6 +146,40 @@
 }
 
 .utils-tag-picker {
-    margin-left: rem(10px);
     margin-bottom: rem(3px);
 }
+
+.sub-cat {
+    margin-left: rem(20px);
+}
+
+.menu {
+    padding-left: rem(10px);
+    border-bottom: 1px solid $c-neutral4;
+    color: $black;
+}
+
+.menu__item {
+    display: inline-block;
+    padding: rem(6px) rem(20px);
+    background-color: $c-neutral8;
+    border: 1px solid $c-neutral8;
+}
+
+.menu__link {
+    color: $c-neutral2;
+}
+
+.menu-highlight {
+    background-color: $white;
+    border: 1px solid $c-neutral4;
+    border-bottom: 1px solid $white;
+    position: relative;
+    z-index: 100;
+    top: 1px;
+
+    .menu__link {
+        color: $c-neutral1;
+    }
+}
+
