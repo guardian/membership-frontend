@@ -117,12 +117,16 @@ form {
 }
 
 .form-note--left {
-    float: left;
+    @include mq(mobileLandscape) {
+        float: left;
+    }
 }
 
 .form-note--right {
-    text-align: right;
-    margin-left: rem($gs-gutter);
+    @include mq(mobileLandscape) {
+        text-align: right;
+        margin-left: rem($gs-gutter);
+    }
 }
 
 .form-note--underneath {
