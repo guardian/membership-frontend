@@ -117,12 +117,16 @@ form {
 }
 
 .form-note--left {
-    float: left;
+    @include mq(mobileLandscape) {
+        float: left;
+    }
 }
 
 .form-note--right {
-    float: right;
-    margin-left: rem($gs-gutter);
+    @include mq(mobileLandscape) {
+        text-align: right;
+        margin-left: rem($gs-gutter);
+    }
 }
 
 .form-note--underneath {
@@ -241,17 +245,6 @@ input[type=radio]:checked + .psuedo-radio {
 
 .billing-address-choice {
     @include fs-bodyCopy(2);
-}
-
-/* ==========================================================================
-   Card Detail
-   ========================================================================== */
-.form-padlock {
-    vertical-align: bottom;
-}
-
-.form-padlock-text {
-    @include fs-textSans(1);
 }
 
 /* ==========================================================================
