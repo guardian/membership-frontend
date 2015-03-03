@@ -26,6 +26,13 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
       guEvent.socialImgUrl mustEqual "https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg"
     }
 
+    "generate srcset string for an image" in {
+      val image = EventImage(gridResponse.data.exports.get(0).assets, gridResponse.data.metadata)
+      val guEvent = GuLiveEvent(event, Some(image), None)
+
+      guEvent.srcsetOpt mustEqual Some(List("https://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/1000.jpg 1000w", "http://some-media-thing/aede0da05506d0d8cb993558b7eb9ad1d2d3e675/294_26_1584_950/500.jpg 500w"))
+    }
+
     "use file url, metadata, socialUrl for image when no secure url is present" in {
       val image = EventImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
       val guEvent = GuLiveEvent(event, Some(image), None)
