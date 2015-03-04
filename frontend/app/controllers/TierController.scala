@@ -6,10 +6,10 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import forms.MemberForm._
 import model.Zuora.PaidPreview
-import model.{FriendTierPlan, PageInfo, Zuora}
+import model.{FlashMessage, PageInfo, Zuora}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, DiscardingCookie}
+import play.api.mvc.{Result, Controller, DiscardingCookie}
 import services.{IdentityApi, IdentityService, MemberService}
 
 import scala.concurrent.Future
@@ -41,6 +41,7 @@ trait UpgradeTier {
   self: TierController =>
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
+    val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
     val futurePaidPreviewOpt = request.member match {
       case paidMember: PaidMember =>
@@ -66,7 +67,7 @@ trait UpgradeTier {
       } yield {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
         request.member match {
-          case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, currentSubscription)) //todo change to read-ony form
+          case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, currentSubscription, flashMsgOpt))
           case _ => Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
         }
 
@@ -83,15 +84,32 @@ trait UpgradeTier {
       memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
-    def handlePaid(paidMember: PaidMember) = for {
-      memberId <- MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest)
-    } yield Redirect(routes.TierController.upgradeThankyou(tier))
+    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
+      val reauthFailedMessage: Future[Result] = Future {
+        Redirect(routes.TierController.upgrade(tier))
+          .flashing("error" ->
+          s"Email and password do not match, please check and re-enter details.") //todo confirm error message
+      }
+
+      def doUpgrade: Future[Result] = {
+        MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest).map {
+          _ => Redirect(routes.TierController.upgradeThankyou(tier))
+        }
+      }
+
+      for {
+        status <- IdentityService(IdentityApi).reauthUser(paidMember.email, form.password, identityRequest)
+        result <- if (status == 200) doUpgrade else reauthFailedMessage
+      } yield result
+
+    }
 
     val futureResult = request.member match {
       case freeMember: FreeMember =>
         freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
 
-      case paidMember: PaidMember => handlePaid(paidMember)
+      case paidMember: PaidMember =>
+        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {

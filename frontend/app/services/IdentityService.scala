@@ -12,6 +12,7 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json._
 import play.api.libs.ws.WS
+import play.api.mvc.Results
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,7 +50,7 @@ case class IdentityService(identityApi: IdentityApi) {
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
     val json = Json.obj("newPassword" -> password)
-    identityApi.post("/user/password", json, identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
+    identityApi.post("/user/password", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
   def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: MemberChangeForm, identityRequest: IdentityRequest) {
@@ -64,9 +65,15 @@ case class IdentityService(identityApi: IdentityApi) {
     postFields(json, user, identityRequest)
   }
 
+  def reauthUser(email: String, password: String, identityRequest: IdentityRequest) = {
+    val params = ("email" -> email) :: ("password" -> password) :: identityRequest.trackingParameters
+    identityApi.post("auth", None, identityRequest.headers, params, "reauth")
+
+  }
+
   private def postFields(json: JsObject, user: IdMinimalUser, identityRequest: IdentityRequest) = {
     Logger.info(s"Posting updated information to Identity for user :${user.id}")
-    identityApi.post(s"user/${user.id}", json, identityRequest.headers, identityRequest.trackingParameters, "update-user")
+    identityApi.post(s"user/${user.id}", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
 
   private def deliveryAddress(addressForm: Address): JsObject = {
@@ -119,9 +126,10 @@ trait IdentityApi {
     }
   }
 
-  def post(endpoint: String, data: JsObject, headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
+  def post(endpoint: String, data: Option[JsObject], headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
     Timing.record(IdentityApiMetrics, metricName) {
-      val response = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(5000).post(data)
+      val requestHolder = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(5000)
+      val response = data.map(requestHolder.post(_)).getOrElse(requestHolder.post(Results.EmptyContent()))
       response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
       response.map(_.status)
     }

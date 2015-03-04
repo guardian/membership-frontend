@@ -46,7 +46,7 @@ object MemberForm {
     val billingAddress: Option[Address]
   }
 
-  case class PaidMemberChangeForm(deliveryAddress: Address, billingAddress: Option[Address]) extends MemberChangeForm
+  case class PaidMemberChangeForm(password: String)
   case class FreeMemberChangeForm(payment: PaymentForm, deliveryAddress: Address, billingAddress: Option[Address]) extends MemberChangeForm
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
@@ -135,8 +135,7 @@ object MemberForm {
 
   val paidMemberChangeForm: Form[PaidMemberChangeForm] = Form(
     mapping(
-      "deliveryAddress" -> paidAddressMapping,
-      "billingAddress" -> optional(paidAddressMapping)
+      "password" -> nonEmptyText
     )(PaidMemberChangeForm.apply)(PaidMemberChangeForm.unapply)
   )
 
