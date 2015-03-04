@@ -1,42 +1,36 @@
-//TODO we have to bring in a lot here due to dependencies as a separate pull request these need splitting out.
 /* ==========================================================================
-   Settings & Tools
+   Event Overview Styles
    ========================================================================== */
-@import 'vars';
-@import 'mixins/mixins-utils';
-@import 'mixins/mixins-layout';
+@import 'tools/vars';
+@import 'components/bower-components/sass-mq/mq';
+@import 'components/bower-components/guss-typography/typography';
+@import 'components/bower-components/guss-rem/rem';
 
 /* ==========================================================================
    Base
    ========================================================================== */
 @import 'base/normalize';
-@import 'base/base';
-@import 'base/links';
-@import 'base/lists';
-@import 'base/form';
-@import 'base/tables';
-@import 'base/images';
-@import 'base/helpers';
+@import 'tools/base/base';
+@import 'tools/base/helpers';
+@import 'tools/base/images';
+@import 'tools/base/links';
+@import 'tools/base/lists';
 
 /* ==========================================================================
-   Module
+   Components
    ========================================================================== */
-@import 'components/from-content-api';
+@import 'tools/components/event-overview';
+@import 'tools/components/event-traits';
+@import 'tools/components/form';
+@import 'tools/components/menu';
+@import 'tools/components/results';
 
 /* ==========================================================================
-   Icon Sprites
+   Layout
    ========================================================================== */
-
-// Data-uri'd icon sprites and extends
-@import 'icons';
-
-/* ==========================================================================
-   Tool styles
-   ========================================================================== */
-@import 'tools/tools-page';
+@import 'tools/layout/page';
 
 /* ==========================================================================
    Webfonts
    ========================================================================== */
-
 @import 'webfonts';
