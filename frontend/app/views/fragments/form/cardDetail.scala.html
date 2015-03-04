@@ -10,9 +10,7 @@
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Card details</h2>
         <div class="fieldset__note js-card-details-note">
-            <p class="form-padlock-text">
-                <img src="@Asset.at("images/padlock.png")" alt="Padlock" class="form-padlock"/> This site is secure
-            </p>
+            @fragments.form.securityNote()
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">First payment</h3>
                 <p>will be taken today under the name Guardian News & Media.</p>

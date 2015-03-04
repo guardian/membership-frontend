@@ -125,7 +125,7 @@
 .action--booking {
     color: $white;
     background-color: $black;
-    border-color: $black;
+    border: none;
 
     &:hover {
         background-color: lighten($black, 15%);
@@ -229,33 +229,5 @@
 
     &:focus {
         outline: 0;
-    }
-}
-
-/* Wait
-   ========================================================================== */
-// TODO: Document how this is used. i- suggests an icon prefix?
-// TODO benW has new designs for the loader coming soon
-
-.i-wait {
-    display: none;
-}
-.actions.js-waiting {
-    .i-wait {
-        display: inline-block;
-        padding: 0 0 rem($gs-gutter) rem($gs-baseline / 2);
-
-        .i-wait__throbber {
-            vertical-align: middle;
-            width: rem(21px);
-            height: rem(21px);
-        }
-
-        .i-wait__message {
-            vertical-align: middle;
-            @include fs-bodyCopy(1);
-            color: $c-neutral2;
-            margin-left: rem(2px);
-        }
     }
 }

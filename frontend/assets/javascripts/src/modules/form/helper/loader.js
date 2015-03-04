@@ -1,28 +1,28 @@
 /**
  * loader and processing message utilities
  */
-define(['$'], function ($) {
+define(function() {
     'use strict';
 
-    var JS_WAITING_CLASSNAME = 'js-waiting';
-    var SUBMIT_BTN_SELECTOR = '.js-submit-input';
-    var LOADER_ELEM = document.querySelector('.js-waiting-container');
-    var LOADER_MSG_ELEM = document.querySelector('.js-waiting-message');
+    var LOADER_ELEM = document.querySelector('.js-loader');
+    var SUBMIT_SELECTOR = '.js-submit-input';
+    var LOADING = 'is-loading';
 
     var startLoader = function () {
-        LOADER_ELEM.classList.add(JS_WAITING_CLASSNAME);
+        LOADER_ELEM.classList.add(LOADING);
     };
 
     var stopLoader = function () {
-        LOADER_ELEM.classList.remove(JS_WAITING_CLASSNAME);
+        LOADER_ELEM.classList.remove(LOADING);
     };
 
     var setProcessingMessage = function (msg) {
-        LOADER_MSG_ELEM.textContent = msg;
+        LOADER_ELEM.textContent = msg;
     };
 
     var disableSubmitButton = function (isDisabled) {
-        $(SUBMIT_BTN_SELECTOR).attr('disabled', !!isDisabled);
+        var submitEl = document.querySelector(SUBMIT_SELECTOR);
+        submitEl.setAttribute('disabled', !!isDisabled);
     };
 
     return {

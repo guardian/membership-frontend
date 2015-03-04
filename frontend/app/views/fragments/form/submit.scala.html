@@ -22,17 +22,14 @@
         </p>
     }
 
-        <div class="actions js-waiting-container">
+        <div class="actions">
             <button type="submit" class="action js-submit-input">
             @Html(tier.fold(ctaTextPrepend)(tier =>
                 ctaTextPrepend + " £<span class=\"js-submit-price-option\">" +
                     Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
             ))
             </button>
-            <div class="i-wait">
-                <img class="i-wait__throbber" src="@Asset.at("images/wait.gif")" alt=""/>
-                <span class="i-wait__message js-waiting-message"></span>
-            </div>
+            <div class="loader js-loader"></div>
         </div>
 
     </div>

@@ -29,14 +29,14 @@
                             @fragments.tier.packageChanger(tier, currentTier)
 
                             @* Benefits *@
-                            <div class="benefits-chooser">
+                            <div class="package-chooser">
                                 <a class="mini-link until-desktop js-toggle" data-toggle="toggle-benefit-@tier.toString.toLowerCase" data-toggle-label="Hide what's included" data-toggle-icon="arrow-up">
                                     <span class="toggle-link__icon icon-holder icon-holder--small">
                                         @fragments.inlineIcon("arrow-down", List("inline-icon--small"))
                                     </span>
                                     <span class="js-toggle-label">Show what's included</span>
                                 </a>
-                                <div class="benefits-chooser__list" id="toggle-benefit-@tier.toString.toLowerCase">
+                                <div class="package-chooser__list" id="toggle-benefit-@tier.toString.toLowerCase">
                                     <ul class="list-stack">
                                         <li class="list-stack__title">
                                             What's included
