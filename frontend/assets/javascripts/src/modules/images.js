@@ -1,9 +1,21 @@
-define(['lib/bower-components/imager.js/Imager', 'src/utils/helper'], function(Imager, utilsHelper) {
+define([
+    'respimage',
+    'lazySizes',
+    'lib/bower-components/imager.js/Imager',
+    'src/utils/helper'
+], function(respimage, lazySizes, Imager, utilsHelper) {
 
+    var LAZYLOAD_CLASS = 'js-lazyload';
     var IMAGE_LOADED_IMAGE = '.js-imager-loaded-image';
     var IMAGES_SLIDESHOW = '.js-image-slideshow';
 
     function init() {
+
+        window.lazySizesConfig.lazyClass = LAZYLOAD_CLASS;
+        var lazyImgs = document.querySelectorAll('.' + LAZYLOAD_CLASS);
+        if(lazyImgs.length) {
+            lazySizes.init();
+        }
 
         var imagerImages = utilsHelper.toArray(document.querySelectorAll(IMAGE_LOADED_IMAGE));
 

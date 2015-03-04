@@ -22,6 +22,7 @@ object EventbriteTestObjects {
     val tags = Nil
     val contentOpt = None
     val pastImageOpt = None
+    val srcsetOpt= None
 
     val metadata = Metadata(
       identifier="",

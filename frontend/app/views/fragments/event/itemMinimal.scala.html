@@ -1,9 +1,11 @@
 @(event: model.RichEvent.RichEvent, isCard: Boolean = false)
 
+@sizesVal = @{ if(isCard) "10vw" else "(min-width: 739px) 25vw, (min-width: 479px) 50vw, 100vw"  }
+
 <a href="@routes.Event.details(event.slug)" class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
     <meta itemprop="url" content="@event.memUrl">
     <div class="event-item__media" itemprop="image" content="@event.socialImgUrl">
-        @fragments.event.image(event)
+        @fragments.event.image(event, sizes=Some(sizesVal))
     </div>
     <div class="event-item__content">
         <div class="event-item__meta">

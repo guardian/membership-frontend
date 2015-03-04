@@ -88,6 +88,8 @@ module.exports = function (grunt) {
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
                         'qwery': 'lib/bower-components/qwery/qwery',
                         'reqwest': 'lib/bower-components/reqwest/reqwest',
+                        'respimage': 'lib/bower-components/respimage/respimage',
+                        'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
                         'raven': 'lib/bower-components/raven-js/dist/raven',
                         'ajax': 'src/utils/ajax',
                         'stripe': 'lib/stripe/stripe.min'

@@ -6,7 +6,7 @@ import org.openqa.selenium.{JavascriptExecutor, By, WebDriver, WebElement}
 
 class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def eventsImageList: util.List[WebElement] = driver.findElements(By.cssSelector(".image-replace"))
+  private def eventLinkList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item"))
 
   private def eventsTitleList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__title>span"))
 
@@ -16,14 +16,14 @@ class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   def getEventTitleByIndex(index: Int): String = eventsTitleList.get(index).getText
 
-  def getEventsListSize: Int = eventsImageList.size()
+  def getEventsListSize: Int = eventLinkList.size()
 
   def getEventLocationByIndex(index: Int): String = eventsLocationList.get(index).getText
 
   def getEventTimeByIndex(index: Int): String = eventsTimeList.get(index).getText
 
   def clickEventByIndex(index: Int): EventPage = {
-    val event = eventsImageList.get(index)
+    val event = eventLinkList.get(index)
     val y = event.getLocation
     driver.asInstanceOf[JavascriptExecutor].executeScript(s"window.scrollTo(0, $y)")
     event.click

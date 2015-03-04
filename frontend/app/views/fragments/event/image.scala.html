@@ -1,3 +1,18 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, sizes: Option[String] = None, lazyLoad: Boolean = true)
 
-<div class="js-imager-loaded-image" data-src="@event.imgUrl" data-available-widths="@event.availableWidths" data-alt="@event.name.text" data-class="responsive-img"></div>
+@srcVal = @{ if (lazyLoad) event.fallbackImage else event.imgUrl }
+
+@event.srcsetOpt.fold {
+    <img src="@srcVal"
+         @if(lazyLoad){data-src="@event.imgUrl"}
+         alt="@event.name.text"
+         class="responsive-img@if(lazyLoad){ js-lazyload}"
+    />
+} { srcset =>
+    <img src="@srcVal"
+         @if(lazyLoad){data-}srcset="@srcset.mkString(", ")"
+         sizes="@sizes.getOrElse("100vw")"
+         alt="@event.name.text"
+         class="responsive-img@if(lazyLoad){ js-lazyload}"
+    />
+}
