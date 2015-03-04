@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Events overview
+   ========================================================================== */
+.events-overview {
+
+    @include mq(mobileLandscape) {
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid *.75;
+    }
+
+    .event-item {
+
+        @include mq(mobileLandscape) {
+            float: left;
+            margin-left: $gutter-width-fluid / 4;
+            padding-left: $gutter-width-fluid / 4;
+            margin-bottom: rem($baseline);
+            width: 50% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(2n+1) { clear: left; }
+        }
+
+        @include mq(tablet) {
+            width: 33.3% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(2n+1) { clear: none; }
+            &:nth-of-type(3n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+
+        @include mq(desktop) {
+            width: 25% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(3n+1) { clear: none; }
+            &:nth-of-type(4n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+
+        @include mq(mem-full) {
+            width: 20% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(4n+1) { clear: none; }
+            &:nth-of-type(5n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+
+        @include mq(wide) {
+            width: 16.6% - ($gutter-width-fluid / 4);
+
+            &:nth-of-type(5n+1) { clear: none; }
+            &:nth-of-type(6n+1) {
+                clear: left;
+                border-left: 0;
+            }
+        }
+    }
+}
+
+.event-detail {
+    margin-bottom: rem(10px);
+    padding: rem(10px);
+}
+
+.event-detail_image {
+    @include mq(mobileLandscape) {
+        position: relative;
+    }
+
+    &:hover {
+        .pseudo-link {
+            text-decoration: underline;
+        }
+    }
+}
+
+.event-detail-title {
+    @include mq(tablet) {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: $white;
+        width: 100%;
+        background-color: rgba(255, 255, 255, .7);
+        padding: rem(6px);
+    }
+}
+
+.event-sub-detail {
+    color: $c-neutral1;
+    @include fs-data(2);
+    border-radius: rem(5px);
+    background-color: $c-neutral7;
+    padding: rem(2px) rem(4px);
+    transition: background-color $transition-duration-medium ease;
+
+    &:hover {
+        background-color: $c-neutral5;
+    }
+}

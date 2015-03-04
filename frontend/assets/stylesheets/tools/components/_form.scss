@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+/* ==========================================================================
+   Form labels and inputs
+   ========================================================================== */
+.label {
+    @include fs-bodyCopy(2);
+    color: $c-neutral1;
+    cursor: pointer;
+    display: block;
+}
+
+.label--inline {
+    display: inline-block;
+}
+
+.input-text {
+    color: $c-neutral1;
+    border: 1px solid $c-neutral4;
+    @include fs-textSans(5);
+    padding: rem(8px) rem(8px) rem(7px);
+    outline: none;
+    width: 100%;
+    -webkit-appearance: none;
+
+    &:focus {
+        border-color: $mem-brandBlue;
+    }
+}
+
+/* ==========================================================================
+   Form Fieldset
+   ========================================================================== */
+.fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid $c-neutral3;
+    display: table;
+    background-color: $c-neutral8;
+}
+
+.fieldset__heading {
+    vertical-align: top;
+    padding: rem($baseline / 2) rem($baseline) rem($baseline * 2) rem(10px);
+
+    @include mq(tablet) {
+        display: table-cell;
+        padding-right: rem($gutter * 2);
+        width: rem(300px + $gutter);
+    }
+}
+
+.fieldset__headline {
+    @include fs-header(3);
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.fieldset__note {
+    @include fs-textSans(2);
+    color: $c-neutral2;
+}
+
+.fieldset__fields {
+    vertical-align: top;
+    padding: rem(10px) rem(10px) rem($baseline * 2);
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: rem(380px);
+        padding-left: 0;
+    }
+}
+
+/* ==========================================================================
+   Form field
+   ========================================================================== */
+.form-field {
+    margin-bottom: rem($baseline);
+}
+
+.form-note {
+    @include fs-data(3);
+    color: $c-neutral2;
+    padding-top: rem($baseline / 2);
+    margin-bottom: rem(8px);
+}
+
+
+/* ==========================================================================
+   Checkbox
+   ========================================================================== */
+.utils-tag-picker {
+    margin-bottom: rem(3px);
+}
+
+.sub-cat {
+    margin-left: rem(20px);
+}
