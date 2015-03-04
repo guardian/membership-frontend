@@ -43,19 +43,6 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     val page = new EventsListPage(driver)
     val eventCount = page.getEventsListSize - 1
     Assert.assert(eventCount > 6, true, "There are 6 or more events")
-    loop(eventCount)
-
-    def loop(index: Int) {
-//      if (index == 0) return
-//      else
-////        Assert.assertNotEmpty(page.getEventTitleByIndex(index))
-////        Assert.assertNotEmpty(page.getEventLocationByIndex(index))
-//        None
-//        val eventTime = page.getEventTimeByIndex(index)
-//        Assert.assertNotEmpty(eventTime)
-//        Assert.assert(isNotInPast(eventTime), true, "The event should be in the future")
-//        loop(index - 1)
-    }
     this
   }
 
