@@ -4,7 +4,8 @@
     userFields: model.PrivateFields,
     pageInfo: model.PageInfo,
     paidPreviewOpt: Option[model.Zuora.PaidPreview],
-    currentSubscription: model.Zuora.SubscriptionDetails
+    currentSubscription: model.Zuora.SubscriptionDetails,
+    flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import helper._
@@ -12,12 +13,19 @@
 @import views.support.Prices._
 @import views.support.Dates._
 @import views.support.Asset
+@import configuration.Config
 
 @main("Upgrade to " + targetTier, pageInfo=pageInfo) {
 
     <main role="main" class="page-content l-constrained">
 
         @fragments.page.pageHeader("Great, glad to see you've decided to become a " + targetTier)
+
+        @for(flashMsg <- flashMessage) {
+            <div class="page-section">
+                @fragments.notifications.flashMessage(flashMsg)
+            </div>
+        }
 
         <div class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -129,15 +137,39 @@
                         Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(preview.futureSubscriptionInvoice.renewalDate)
                         each @currentSubscription.paymentPeriodLabel.
                     </p>
+                }
 
-                    <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
-                        @CSRF.formField
+                <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
+                    @CSRF.formField
+                    <div class="fieldset__fields js-password-container">
+
+                        <div class="form-field form-field--no-margin">
+                            <label class="label label--inline" for="user-password">Re-enter your password</label>
+
+                            <input class="input-text"
+                                   type="password"
+                                   id="user-password"
+                                   name="password"
+                                   value=""
+                                   autocomplete="off"
+                                   autocapitalize="off"
+                                   autocorrect="off"
+                                   spellcheck="false"
+                                   required/>
+                            @fragments.form.errorMessage("Please enter a password")
+                        </div>
+                        <a href="@Config.idWebAppUrl/reset">Forgotten your password?</a>
+
+                    </div>
+
+                    @paidPreviewOpt.map { preview =>
+
                         <div class="actions js-waiting-container">
                             <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
                             <div class="loader js-loader"></div>
                         </div>
-                    </form>
-                }
+                    }
+                </form>
             </div>
         </section>
 
