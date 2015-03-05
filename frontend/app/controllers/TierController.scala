@@ -88,7 +88,7 @@ trait UpgradeTier {
       val reauthFailedMessage: Future[Result] = Future {
         Redirect(routes.TierController.upgrade(tier))
           .flashing("error" ->
-          s"Email and password do not match, please check and re-enter details.") //todo confirm error message
+          s"That password does not match our records. Please try again.")
       }
 
       def doUpgrade: Future[Result] = {
