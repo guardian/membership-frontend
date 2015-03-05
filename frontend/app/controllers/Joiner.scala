@@ -7,12 +7,13 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
+import controllers.Testing.AuthorisedTester
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.RichEvent._
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, DiscardingCookie, Request, Result}
+import play.api.mvc._
 import services._
 import services.EventbriteService._
 
@@ -23,6 +24,8 @@ trait Joiner extends Controller {
   val memberService: MemberService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+
+  def secureHiddenTiers(tier: Tier) = if (Tier.allPublic.contains(tier)) Action else AuthorisedTester
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -49,7 +52,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def enterDetails(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def enterDetails(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
@@ -109,7 +112,7 @@ trait Joiner extends Controller {
     }
   }
 
-  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinPaid(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
@@ -132,7 +135,7 @@ trait Joiner extends Controller {
       }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
