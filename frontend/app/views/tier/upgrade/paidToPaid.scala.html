@@ -133,36 +133,46 @@
                         Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(preview.futureSubscriptionInvoice.renewalDate)
                         each @currentSubscription.paymentPeriodLabel.
                     </p>
+                }
+            </div>
+        </section>
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">
+                    Re-enter password
+                </h2>
+            </div>
+            <div class="page-section__content">
+                <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
+                    @CSRF.formField
+                    <div class="fieldset__fields js-password-container">
 
-                    <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
-                        @CSRF.formField
-                        Please re-enter your Guardian Identity password:
-                        <div class="fieldset__fields js-password-container">
+                        <div class="form-field form-field--no-margin">
+                            <label class="label label--inline" for="user-password">WHAT SHALL WE PUT HERE?</label>
 
-                            <div class="form-field form-field--no-margin">
-                                <label class="label label--inline" for="user-password">Password</label>
-
-                                <input class="input-text"
-                                       type="password"
-                                       id="user-password"
-                                       name="password"
-                                       value=""
-                                       autocomplete="off"
-                                       autocapitalize="off"
-                                       autocorrect="off"
-                                       spellcheck="false"
-                                       required/>
-                                @fragments.form.errorMessage("Please enter a password")
-                            </div>
-
+                            <input class="input-text"
+                                   type="password"
+                                   id="user-password"
+                                   name="password"
+                                   value=""
+                                   autocomplete="off"
+                                   autocapitalize="off"
+                                   autocorrect="off"
+                                   spellcheck="false"
+                                   required/>
+                            @fragments.form.errorMessage("Please enter a password")
                         </div>
+
+                    </div>
+
+                    @paidPreviewOpt.map { preview =>
 
                         <div class="actions js-waiting-container">
                             <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
                             <div class="loader js-loader"></div>
                         </div>
-                    </form>
-                }
+                    }
+                </form>
             </div>
         </section>
 
