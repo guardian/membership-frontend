@@ -29,7 +29,11 @@
     <main class="page-content l-constrained" role="main">
 
         @for(flashMsg <- flashMessage) {
-            @fragments.notifications.flashMessage(flashMsg)
+            <section class="page-section page-section--no-padding">
+                <div class="page-section__content">
+                @fragments.notifications.flashMessage(flashMsg)
+                </div>
+            </section>
         }
 
         @fragments.page.pageHeader("Guardian Staff Membership",
