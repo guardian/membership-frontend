@@ -1,0 +1,23 @@
+@(
+    title: Html,
+    videoUrl: String,
+    toneClass: Option[String] = None
+)(content: Html)
+
+@import views.support.Asset
+
+<div class="promo-secondary">
+    <div class="promo-secondary__media @toneClass.mkString(" ")">
+        <div class="promo-secondary__header">
+            <h2 class="promo-secondary__title h-promo">@title</h2>
+        </div>
+        <div class="promo-secondary__video">
+            <div class="responsive-video">
+                <iframe class="responsive-video__iframe" width="715" height="429" src="@videoUrl" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="promo-secondary__description">
+        @content
+    </div>
+</div>
