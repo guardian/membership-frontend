@@ -24,6 +24,20 @@
         }
     </div>
 
+    @* ===== What is Membership Video ===== *@
+    <div class="page-slice page-slice--slim l-constrained">
+    @fragments.promos.promoVideoSecondary(
+        Html("If you believe in Guardian journalism, become a Guardian Member"),
+        videoUrl=Config.videoWhatIsGuardianMembership,
+        toneClass=Some("tone-trans-brand-dark")){
+        <div class="text-feature">
+            <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
+            <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
+        </div>
+        <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
+    }
+    </div>
+
     @* ===== Bring the Guardian to life ===== *@
     <div class="page-slice l-constrained l-side-margins">
         @fragments.promos.promoPrimary(title=Html("Guardian Live: Experience the Guardian brought to life"), imageBasePath="https://media.guim.co.uk/76ef58a05920591099012edb80e7415379392a4c/0_0_1140_684", stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {

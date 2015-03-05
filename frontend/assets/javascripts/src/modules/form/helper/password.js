@@ -3,7 +3,6 @@ define(['bean'], function (bean) {
     'use strict';
 
     var STRENGTH_INDICATOR_ELEM = document.querySelector('.js-password-strength-indicator');
-    var USER_PASSWORD_ELEM = document.getElementById('user-password');
     var PASSWORD_STRENGTH_INPUT_ELEM = document.querySelector('.js-password-strength');
     var STRENGTH_LABEL_ELEM = document.querySelector('.js-password-strength-label');
     var config = {
@@ -22,7 +21,7 @@ define(['bean'], function (bean) {
     };
 
     var init = function() {
-        if (USER_PASSWORD_ELEM) {
+        if (PASSWORD_STRENGTH_INPUT_ELEM) {
             addListeners();
         }
     };

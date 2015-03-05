@@ -41,6 +41,8 @@ object Config {
   val membershipSupportStaffEmail = config.getString("membership.staff.email")
   val membershipDevEmail = config.getString("membership.dev.email")
 
+  val videoWhatIsGuardianMembership = config.getString("video.what.is.guardian.membership.url")
+
   val idWebAppUrl = config.getString("identity.webapp.url")
 
   def idWebAppSigninUrl(uri: String): String =
