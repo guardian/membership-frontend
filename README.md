@@ -94,7 +94,16 @@ Run through the set up instructions; once complete you will need to run:
 
 **theguardian.com frontend repo**: [https://github.com/guardian/frontend](https://github.com/guardian/frontend)
 
-Run through the set up instructions; once complete you will need to run:
+Run through the set up instructions - note you need to make sure that your Frontend is
+set up to point at your _local_ Identity, not the `CODE` Identity, which means adding
+this to your `frontend.properties`:
+
+```
+id.apiRoot=https://idapi.thegulocal.com
+id.apiClientToken=frontend-dev-client-token
+```
+
+Once complete you will need to run:
 
 ```
 nginx/setup.sh
