@@ -2,9 +2,16 @@ package views.support
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Instant
+import org.joda.time.format.PeriodFormat
 import play.twirl.api.Html
 
 object Dates {
+
+  val humanPeriodFormat = PeriodFormat.getDefault()
+
+  implicit class RichPeriod(period: Period) {
+    lazy val pretty = period.withMillis(0).toString(humanPeriodFormat)
+  }
 
   implicit class RichDateTime(dt: DateTime) {
     lazy val pretty = prettyDate(dt)

@@ -1,5 +1,7 @@
 @(userString: String)
 
+@import views.support.Dates._
+@import utils.TestUsers.ValidityPeriod
 @import configuration.Config
 
 @main("Test Users") {
@@ -12,7 +14,7 @@
             <div class="page-section__content copy">
                 <h2 class="section-body-headline">New Test User key: <strong>@userString</strong></h2>
                 <div class="text-intro">
-                    <p>Your user will be valid for the next half hour. When registering please populate the following fields with your new test user key.</p>
+                    <p>Your user will be valid for the next @ValidityPeriod.pretty. When registering please populate the following fields with your new test user key.</p>
                 </div>
                 <div class="aside aside--panel">
                     <ul class="u-unstyled">
