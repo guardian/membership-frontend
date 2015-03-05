@@ -1,6 +1,5 @@
-@(imgSrc: String, description: String)
+@(imgGroup: model.ResponsiveImageGroup, description: String)
 
-@import views.support.Asset
 
 <figure class="slideshow__element js-slideshow-item">
     <figcaption class="slideshow__detail">
@@ -11,5 +10,10 @@
         </div>
         <div class="slideshow__description">@description</div>
     </figcaption>
-    <div data-src="@imgSrc" data-alt="@description" data-class="responsive-img slideshow__image" class="js-image-slideshow"></div>
+    <img
+        alt="@imgGroup.altText"
+        data-srcset="@imgGroup.srcset"
+        sizes="100vw"
+        class="responsive-img slideshow__image js-lazyload"
+    />
 </figure>

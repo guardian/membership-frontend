@@ -7,7 +7,6 @@ define([
 
     var LAZYLOAD_CLASS = 'js-lazyload';
     var IMAGE_LOADED_IMAGE = '.js-imager-loaded-image';
-    var IMAGES_SLIDESHOW = '.js-image-slideshow';
 
     function init() {
 
@@ -27,15 +26,6 @@ define([
                     lazyload: true,
                     lazyloadOffset: 100
                 });
-            });
-        }
-
-        if (document.querySelectorAll(IMAGES_SLIDESHOW).length) {
-            new Imager(IMAGES_SLIDESHOW, {
-                availableWidths: guardian.membership.homeImages.widths,
-                availablePixelRatios: guardian.membership.homeImages.ratios,
-                lazyload: true,
-                lazyloadOffset: 100
             });
         }
 

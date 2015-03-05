@@ -1,3 +1,5 @@
+@(pageImages: Seq[model.ResponsiveImageGroup])
+
 @import configuration.Config
 
 @main("Home Page") {
@@ -5,13 +7,10 @@
 <main role="main" class="l-constrained">
 
     @* ===== Slideshow ===== *@
-    <section class="slideshow js-slideshow" data-slideshow-duration="5000">
-        @fragments.media.slideshowItem("https://media.guim.co.uk/eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368/{width}.jpg", "Guardian Live event: Pussy Riot - art, sex and disobedience")
-        @fragments.media.slideshowItem("https://media.guim.co.uk/da867c363957d748bd04cfd9d4890033203a58c6/0_0_2279_1368/{width}.jpg", "Guardian Live with Russell Brand")
-        @fragments.media.slideshowItem("https://media.guim.co.uk/733834b0b9f84e4367cf676919008bfd88007f25/0_0_2279_1368/{width}.jpg", "A life in music: Jimmy Page")
-        @fragments.media.slideshowItem("https://media.guim.co.uk/e736acb945406974844bea77ca49b2c1e450013e/0_0_2279_1368/{width}.jpg", "Guardian Live with Russell Brand")
-        @fragments.media.slideshowItem("https://media.guim.co.uk/1e687530a52ef14cd9c1eacb1e8757600c382f86/0_0_2279_1368/{width}.jpg", "Observer Ideas - Stories that inspire: Tinie Tempah")
-        @fragments.media.slideshowItem("https://media.guim.co.uk/85d46476d07fb744327c60a4c5117a7ddc2796d0/0_0_2279_1368/{width}.jpg", "Guardian Live event: Vivienne Westwood")
+    <section class="slideshow js-slideshow" data-slideshow-duration="6000">
+        @for(imgGroup <- pageImages) {
+            @fragments.media.slideshowItem(imgGroup, imgGroup.altText)
+        }
     </section>
 
     @* ===== Introduction ===== *@
