@@ -36,6 +36,7 @@ object Benefits {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
     lazy val yearlyWith6MonthSaving = yearly / 2f
+    lazy val hasYearlySaving = yearlySaving > 0
   }
 
   def benefitsFilter(identifiers: String*) = identifiers.flatMap { id =>
