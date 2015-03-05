@@ -1,6 +1,12 @@
 package model
 
 import com.gu.membership.salesforce.Tier
+import model.PaidTiers.isPaid
+
+
+object PaidTiers {
+  def isPaid(tier: Tier) = tier >= Tier.Supporter
+}
 
 trait ProductRatePlan {
   def salesforceTier: String
@@ -18,7 +24,7 @@ object FriendTierPlan extends TierPlan {
 }
 
 case class PaidTierPlan(tier: Tier, annual: Boolean) extends TierPlan {
-  assert(tier >= Tier.Partner)
+  assert(isPaid(tier))
 }
 
 object StaffPlan extends ProductRatePlan {

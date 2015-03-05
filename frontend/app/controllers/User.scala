@@ -1,6 +1,7 @@
 package controllers
 
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
+import model.PaidTiers
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -56,6 +57,7 @@ trait User extends Controller {
     "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
     "tier" -> member.tier.name,
+    "isPaidTier" -> PaidTiers.isPaid(member.tier),
     "joinDate" -> member.joinDate
   )
 }
