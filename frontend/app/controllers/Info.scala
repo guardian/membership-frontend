@@ -12,10 +12,6 @@ import scala.concurrent.Future
 
 trait Info extends Controller {
 
-  val permanentStaffGroups = Config.staffAuthorisedEmailGroups
-  val AuthorisedStaff = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
-    permanentStaffGroups, views.html.fragments.oauth.staffWrongGroup())
-
   def help = CachedAction { implicit request =>
     Ok(views.html.info.help())
   }

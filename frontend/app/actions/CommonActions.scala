@@ -36,6 +36,9 @@ trait CommonActions {
     GoogleAuthenticatedStaffAction andThen
     isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffUnauthorisedError())
 
+  val AuthorisedStaff =
+    GoogleAuthenticatedStaffAction andThen
+    isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffWrongGroup())
 
   val AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen
