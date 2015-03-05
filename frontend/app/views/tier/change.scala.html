@@ -46,8 +46,6 @@
                                         }
                                     </ul>
                                     @if(tier != currentTier) {
-                                        @* TODO: When paid-to-paid upgrades are enabled this check can be removed *@
-                                        @if(currentTier == Tier.Friend || tier == Tier.Friend) {
                                             <a class="action"
                                                href="@routes.TierController.upgrade(tier)"
                                                data-metric-trigger="click"
@@ -56,12 +54,7 @@
                                             >
                                                 <span class="action__label">Become a @tier</span>
                                             </a>
-                                        } else {
-                                            <span class="action is-disabled">
-                                                <span class="action__label">Coming soon</span>
-                                            </span>
                                         }
-                                    }
                                 </div>
                             </div>
 
