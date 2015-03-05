@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Responsive Video
+   ========================================================================== */
+/**
+ * Example usage:
+ * <div class="responsive-video">
+ *     <iframe class="responsive-video__iframe"></iframe>
+ * </div>
+ **/
+.responsive-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: rem(35px);
+    height: 0;
+    overflow: hidden;
+}
+.responsive-video__iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
