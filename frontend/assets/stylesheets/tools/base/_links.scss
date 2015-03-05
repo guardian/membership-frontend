@@ -1,0 +1,18 @@
+/* ==========================================================================
+   Links
+   ========================================================================== */
+a {
+    overflow: hidden;
+    color: $news-main-1;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+    &:active {
+        color: $news-main-1;
+        text-decoration: none;
+    }
+}

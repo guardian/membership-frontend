@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Menu
+   ========================================================================== */
+
+.menu {
+    padding-left: rem(10px);
+    color: $black;
+    margin: 0;
+    font-size: 0;
+}
+
+.menu__tabs {
+    @include fs-headline(2);
+    margin-right: rem(5px);
+    display: inline-block;
+}
+
+.menu__link {
+    color: $c-neutral2;
+    display: block;
+    padding: rem(6px) rem(20px);
+    background-color: $c-neutral8;
+    border: 1px solid $c-neutral8;
+    transition: all $transition-duration-medium ease;
+
+    &:hover {
+        background-color: $c-neutral5;
+        border: 1px solid $c-neutral5;
+    }
+}
+
+.menu-highlight {
+    position: relative;
+    z-index: 100;
+    top: 1px;
+
+    .menu__link {
+        background-color: $white;
+        color: $c-neutral1;
+        border: 1px solid $c-neutral4;
+        border-bottom: 1px solid $white;
+    }
+}
+
+.menu-separator {
+    border-bottom: 1px solid $c-neutral4;
+}

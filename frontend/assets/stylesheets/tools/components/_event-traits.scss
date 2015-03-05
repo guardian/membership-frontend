@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Events traits
+   ========================================================================== */
+.event-trait-container {
+    margin-top: rem(4px);
+    width: 100%;
+
+    @include mq(tablet) {
+        display: table;
+        max-width: rem(620px);
+    }
+}
+
+.event-trait {
+    color: $white;
+    padding: rem(4px) rem(8px);
+    margin-top: rem(4px);
+    margin-right: rem(4px);
+    display: inline-block;
+    background-color: $mem-brandBlue;
+    @include fs-data(2);
+    border-radius: rem(4px);
+}
+
+.event-trait--moderate {
+    background-color: #33a22b;
+}
+
+.event-trait--noteworthy {
+    background-color: #e6711b;
+}
+
+.event-trait--important {
+    background-color: #e31f26;
+}

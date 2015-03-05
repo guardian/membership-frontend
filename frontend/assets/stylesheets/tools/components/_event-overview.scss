@@ -1,22 +1,6 @@
-.utils-page-section {
-    padding: rem(10px);
-}
-
-.utils-page-section-header {
-    border-bottom: 2px solid $mem-brandBlue;
-}
-
-.results {
-    background-color: $white;
-    margin: rem(20px);
-    min-height: rem(120px);
-    padding: rem(10px);
-}
-
-.result-section {
-    color: $c-neutral2;
-}
-
+/* ==========================================================================
+   Events overview
+   ========================================================================== */
 .events-overview {
 
     @include mq(mobileLandscape) {
@@ -30,7 +14,7 @@
             float: left;
             margin-left: $gutter-width-fluid / 4;
             padding-left: $gutter-width-fluid / 4;
-            margin-bottom: rem($gs-baseline);
+            margin-bottom: rem($baseline);
             width: 50% - ($gutter-width-fluid / 4);
 
             &:nth-of-type(2n+1) { clear: left; }
@@ -113,95 +97,9 @@
     border-radius: rem(5px);
     background-color: $c-neutral7;
     padding: rem(2px) rem(4px);
-    transition: background-color .5s ease;
+    transition: background-color $transition-duration-medium ease;
 
     &:hover {
         background-color: $c-neutral5;
     }
-}
-
-.event-trait-container {
-    margin-top: rem(4px);
-    width: 100%;
-
-    @include mq(tablet) {
-        display: table;
-        max-width: rem(gs-span(8));
-    }
-}
-
-.event-trait {
-    color: $white;
-    padding: rem(4px) rem(8px);
-    margin-top: rem(4px);
-    margin-right: rem(4px);
-    display: inline-block;
-    background-color: $mem-brandBlue;
-    @include fs-data(2);
-    @include border-radius(4px);
-}
-
-.event-trait--moderate {
-    background-color: #33a22b;
-}
-
-.event-trait--noteworthy {
-    background-color: #e6711b;
-}
-
-.event-trait--important {
-    background-color: #e31f26;
-}
-
-.utils-tag-picker {
-    margin-bottom: rem(3px);
-}
-
-.sub-cat {
-    margin-left: rem(20px);
-}
-
-
-.menu {
-    padding-left: rem(10px);
-    color: $black;
-    margin: 0;
-    font-size: 0;
-}
-
-.menu__tabs {
-    @include fs-headline(2);
-    margin-right: rem(5px);
-    display: inline-block;
-}
-
-.menu__link {
-    color: $c-neutral2;
-    display: block;
-    padding: rem(6px) rem(20px);
-    background-color: $c-neutral8;
-    border: 1px solid $c-neutral8;
-    transition: all .5s ease;
-
-    &:hover {
-        background-color: $c-neutral5;
-        border: 1px solid $c-neutral5;
-    }
-}
-
-.menu-highlight {
-    position: relative;
-    z-index: 100;
-    top: 1px;
-
-    .menu__link {
-        background-color: $white;
-        color: $c-neutral1;
-        border: 1px solid $c-neutral4;
-        border-bottom: 1px solid $white;
-    }
-}
-
-.menu-separator {
-    border-bottom: 1px solid $c-neutral4;
 }
