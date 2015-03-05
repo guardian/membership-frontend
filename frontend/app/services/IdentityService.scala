@@ -129,8 +129,8 @@ trait IdentityApi {
   def post(endpoint: String, data: Option[JsObject], headers: List[(String, String)], parameters: List[(String, String)], metricName: String): Future[Int] = {
     Timing.record(IdentityApiMetrics, metricName) {
       val requestHolder = WS.url(s"${Config.idApiUrl}/$endpoint").withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(5000)
-      val response = data.map(requestHolder.post(_)).getOrElse(requestHolder.post(Results.EmptyContent()))
-      response.map (r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
+      val response = requestHolder.post(data.getOrElse(JsNull))
+      response.foreach(r => recordAndLogResponse(r.status, s"POST $metricName", endpoint ))
       response.map(_.status)
     }
   }
