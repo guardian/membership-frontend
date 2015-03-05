@@ -25,7 +25,7 @@ class IdentityServiceTest extends Specification with Mockito {
       identityService.updateEmail(user, "joe.bloggs@awesome-email.com", identityRequest)
 
       val expectedJson = Json.parse("{\"primaryEmailAddress\": \"joe.bloggs@awesome-email.com\"}").as[JsObject]
-      there was one(identityAPI).post("user/4444", expectedJson , headers, trackingParameters, "update-user")
+      there was one(identityAPI).post("user/4444", Some(expectedJson) , headers, trackingParameters, "update-user")
     }
 
     "post json for updating users details on joining friend" in {
@@ -43,7 +43,7 @@ class IdentityServiceTest extends Specification with Mockito {
       identityService.updateUserFieldsBasedOnJoining(user, friendForm, identityRequest)
 
       val expectedJson = Resource.getJson(s"model/identity/update-friend.json").as[JsObject]
-      there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
+      there was one(identityAPI).post("user/4444", Some(expectedJson), headers, trackingParameters, "update-user")
     }
 
     "post json for updating users details on joining paid tier" in {
@@ -64,7 +64,7 @@ class IdentityServiceTest extends Specification with Mockito {
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)
 
       val expectedJson = Resource.getJson(s"model/identity/update-paid.json").as[JsObject]
-      there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
+      there was one(identityAPI).post("user/4444", Some(expectedJson), headers, trackingParameters, "update-user")
     }
   }
 
@@ -81,7 +81,7 @@ class IdentityServiceTest extends Specification with Mockito {
     identityService.updateUserFieldsBasedOnUpgrade(user, paidMemberChangeForm, identityRequest)
 
     val expectedJson = Resource.getJson(s"model/identity/update-upgrade.json").as[JsObject]
-    there was one(identityAPI).post("user/4444", expectedJson, headers, trackingParameters, "update-user")
+    there was one(identityAPI).post("user/4444", Some(expectedJson), headers, trackingParameters, "update-user")
 
   }
 }
