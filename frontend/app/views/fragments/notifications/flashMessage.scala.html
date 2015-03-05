@@ -1,10 +1,5 @@
 @(flashMessage: model.FlashMessage)
 
-<section class="page-section page-section--no-padding">
-    <div class="page-section__content">
-        <div class="flash-message flash-message--@flashMessage.level">
-            @flashMessage.message
-        </div>
-    </div>
-</section>
-
+<div class="flash-message flash-message--@flashMessage.level">
+    @flashMessage.message
+</div>
