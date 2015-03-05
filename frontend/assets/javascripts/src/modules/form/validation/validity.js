@@ -78,13 +78,12 @@ define([
 
     /**
      * if the elem has a validation profile and this is a validation profile we hold then validate the elem against it
-     * @param valid
      * @param elem
-     * @returns {*}
+     * @returns {boolean}
      */
     var profileValidation = function (elem) {
         var profile = elem.getAttribute(DATA_VALIDATION_ATTRIBUTE_NAME);
-        return validationProfileExists(profile) && validationProfiles[profile](elem);
+        return !!(validationProfileExists(profile) && validationProfiles[profile](elem));
     };
 
     var validationProfileExists = function (profile) {
