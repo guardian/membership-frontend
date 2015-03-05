@@ -11,13 +11,13 @@
             <div class="text-feature">
                 <p>Supporters protect our editorial freedom and help us seek out those stories that people are determined to keep hidden.</p>
             </div>
-            @fragments.tier.packagePromo(Tier.Partner, showDescription=false, modifierClass=Some("package-promo--spread"))
+            @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, modifierClass=Some("package-promo--spread"))
         }
     </div>
 
     @* ===== Ensuring our independence ===== *@
     <div class="page-slice l-constrained l-side-margins">
-        @fragments.promos.promoSecondary(title=Html("Ensuring our independance"), imageBasePath="https://media.guim.co.uk/e6459f638392c8176e277733f6f0802953100fa4/0_0_1140_683", toneClass=Some("tone-trans-brand-dark")) {
+        @fragments.promos.promoPrimary(title=Html("Ensuring our independance"), imageBasePath="https://media.guim.co.uk/e6459f638392c8176e277733f6f0802953100fa4/0_0_1140_683", toneClass=Some("tone-trans-brand-dark")) {
             <div class="text-feature">
                 <p>The Guardian has no proprietor. Our editor answers to nobody. Supporters ensure that the Guardian remains an independent voice standing witness to issues that matter without interference.</p>
             </div>
@@ -42,17 +42,18 @@
         <div class="page-slice__inner">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice__content">
-                <ul class="grid grid--3up">
-                    @for(benefit <- Benefits.details(Tier.Friend).list) {
+                <ul class="grid grid--2up">
+                    @for(benefit <- Benefits.details(Tier.Supporter).list) {
                         <li class="grid__item">
-                            @fragments.benefits.item(benefit=benefit)
+                        @fragments.benefits.item(
+                            benefit=benefit,
+                            iconClasses=Seq("tone-color-supporter"),
+                            componentClasses=Seq("u-divider-dotted")
+                        )
                         </li>
                     }
                 </ul>
-
-                <p class="text-feature">Support the Guardian’s mission of promoting the open exchange of ideas</p>
-
-                @fragments.tier.packagePromo(Tier.Partner, showDescription=false, isReversed=true, modifierClass=Some("package-promo--spread"))
+                @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true, modifierClass=Some("package-promo--spread"))
             </div>
         </div>
     </div>
