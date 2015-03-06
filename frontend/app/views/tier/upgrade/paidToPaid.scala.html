@@ -143,10 +143,12 @@
 
                 <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
                     @CSRF.formField
-                    <div class="fieldset__fields js-password-container">
-                        @fragments.form.enterPassword("Re-enter your password")
-                        @fragments.form.forgottenPassword("Forgotten your password?")
-                    </div>
+                    <fieldset class="fieldset fieldset--simple">
+                        <div class="fieldset__fields js-password-container">
+                            @fragments.form.enterPassword("Re-enter your password")
+                            @fragments.form.forgottenPassword("Forgotten your password?")
+                        </div>
+                    </fieldset>
 
                     @paidPreviewOpt.map { preview =>
 
