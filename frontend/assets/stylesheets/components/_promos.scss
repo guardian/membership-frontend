@@ -135,3 +135,11 @@
         padding-left: rem($gs-gutter * 3);
     }
 }
+
+.promo-secondary--padded {
+    padding-bottom: rem($gs-baseline * 3);
+
+    .promo-secondary__description {
+        padding-bottom: 0;
+    }
+}
