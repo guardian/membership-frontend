@@ -124,7 +124,7 @@ object Config {
       apiToken = backendConf.getString("salesforce.api.token")
     )
 
-    def plansFor(paidTier: Tier) = {
+    def plansForTier(paidTier: Tier) = {
       def paidTierPlan(annual: Boolean) = {
         val period = if (annual) "annual" else "monthly"
         PaidTierPlan(paidTier, annual) -> backendConf.getString(s"zuora.api.${paidTier.slug}.$period")
@@ -138,9 +138,10 @@ object Config {
       backendConf.getString("zuora.api.url"),
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
-        Map(FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
-          StaffPlan -> backendConf.getString(s"zuora.api.staff")) ++
-          plansFor(Tier.Partner) ++ plansFor(Tier.Patron)
+      productRatePlans = Map(
+          FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
+          StaffPlan -> backendConf.getString(s"zuora.api.staff")
+        ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
       )
 
     TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
@@ -150,19 +151,13 @@ object Config {
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
-  val facebookJoinerConversionTrackingId = Map[Tier, String](
-    Tier.Friend -> config.getString("facebook.joiner.conversion.friend"),
-    Tier.Partner -> config.getString("facebook.joiner.conversion.partner"),
-    Tier.Patron -> config.getString("facebook.joiner.conversion.patron")
-  )
+  val facebookJoinerConversionTrackingId =
+    Tier.allPublic.map { tier => tier -> config.getString(s"facebook.joiner.conversion.${tier.slug}") }.toMap
 
   val facebookEventTicketSaleTrackingId = config.getString("facebook.ticket.purchase")
 
-  val googleAdwordsJoinerConversionLabel = Map[Tier, String](
-    Tier.Friend -> config.getString("google.adwords.joiner.conversion.friend"),
-    Tier.Partner -> config.getString("google.adwords.joiner.conversion.partner"),
-    Tier.Patron -> config.getString("google.adwords.joiner.conversion.patron")
-  )
+  val googleAdwordsJoinerConversionLabel =
+    Tier.allPublic.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
   val corsAllowOrigin = config.getString("cors.allow.origin")
 

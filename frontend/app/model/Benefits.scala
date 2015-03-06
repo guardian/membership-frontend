@@ -51,8 +51,6 @@ object Benefits {
     "complim_items", "unique_experiences", "plus_1_guest", "membership_card",
     "live_stream", "digital_digest", "video_highlights")
 
-  val friendsWithBenefitsLimited = benefitsFilter("book_tickets", "digital_digest", "video_highlights")
-
   var partnerWithBenefitsLimited = benefitsFilter("discount", "discount_masterclasses", "early_booking",
     "plus_1_guest", "live_stream", "membership_card")
 
@@ -61,22 +59,26 @@ object Benefits {
   val friendBenefits = Benefits("Benefits", friendsWithBenefits,
     None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events")
 
+  val supporterBenefits = Benefits("Friend benefits, plus…", friendsWithBenefits,
+    Some(Pricing(60, 5)), "Become a Supporter", "Do some sort of copy for this")
+
   val partnerBenefits = Benefits("Friend benefits, plus…", partnerWithBenefits,
     Some(Pricing(135, 15)), "Become a Partner", "Support the Guardian and experience it brought to life, with early booking and discounted tickets")
 
   val patronBenefits = Benefits("Partner benefits, plus…", patronWithBenefits,
     Some(Pricing(540, 60)), "Become a Patron", "Defend the Guardian’s independence and promote the open exchange of ideas, with a backstage pass to the Guardian")
 
-  val details = Map[Tier, Benefits](
-    Tier.Friend -> friendBenefits,
-    Partner -> partnerBenefits,
-    Patron -> patronBenefits
-  )
+  def details(tier: Tier) = tier match {
+    case Tier.Friend => friendBenefits
+    case Tier.Supporter => supporterBenefits
+    case Tier.Partner => partnerBenefits
+    case Tier.Patron => patronBenefits
+  }
 
-  val detailsLimited = Map[Tier, Seq[BenefitItem]](
-    Tier.Friend -> friendsWithBenefitsLimited,
-    Partner -> partnerWithBenefitsLimited,
-    Patron -> patronWithBenefitsLimited
-  )
-
+  def detailsLimited(tier: Tier) = tier match {
+    case Tier.Friend => friendsWithBenefits
+    case Tier.Supporter => friendsWithBenefits
+    case Tier.Partner => partnerWithBenefitsLimited
+    case Tier.Patron => patronWithBenefitsLimited
+  }
 }
