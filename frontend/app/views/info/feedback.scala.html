@@ -7,7 +7,11 @@
     <main role="main" class="page-content l-constrained">
 
         @for(flashMsg <- flashMsgOpt) {
-            @fragments.notifications.flashMessage(flashMsg)
+            <section class="form-section form-section--no-padding">
+                <div class="form-section__content">
+                @fragments.notifications.flashMessage(flashMsg)
+                </div>
+            </section>
         }
 
         <section class="form-header">
