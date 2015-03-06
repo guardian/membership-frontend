@@ -9,7 +9,7 @@ import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
 import forms.MemberForm.MarketingChoicesForm
-import model.Eventbrite.EBTicketClass
+import model.Eventbrite.{EBOrder, EBTicketClass}
 import model.RichEvent.{DiscoverEvent, MasterclassEvent, GuLiveEvent, RichEvent}
 import play.api.Logger
 import org.joda.time._
@@ -21,9 +21,13 @@ case class MemberActivity (source: String, member: MemberData) extends TrackerDa
     Map("eventSource" -> source) ++ member.toMap
 }
 
-case class EventActivity(source: String, member: Option[MemberData], eventData: EventData) extends TrackerData {
+case class EventActivity(source: String, member: Option[MemberData],
+                         eventData: EventData, order: Option[OrderData] = None) extends TrackerData {
   def toMap: JMap[String, Object] =
-    Map("eventSource" -> source) ++ eventData.toMap ++ member.fold(ActivityTracking.setSubMap(Map.empty))(_.toMap)
+    Map("eventSource" -> source) ++
+      eventData.toMap ++
+      member.fold(ActivityTracking.setSubMap(Map.empty))(_.toMap) ++
+      order.fold(ActivityTracking.setSubMap(Map.empty))(_.toMap)
 }
 
 trait TrackerData {
@@ -151,6 +155,22 @@ case class EventData(event: RichEvent) {
       ticketClass.hidden.map("hidden" -> _)
 
     ActivityTracking.setSubMap(dataMap)
+  }
+}
+
+case class OrderData(order: EBOrder) {
+
+  def bcrypt(string: String) = (string+Config.bcryptPepper).bcrypt(Config.bcryptSalt)
+  def toMap: JMap[String, Object] = {
+
+    val dataMap = Map(
+      "ticketCount" -> order.ticketCount,
+      "totalCost" -> order.totalCost,
+      "orderId" -> bcrypt(order.id)
+    )
+    val orderMap = Map("order" -> ActivityTracking.setSubMap(dataMap))
+    ActivityTracking.setSubMap(orderMap)
+
   }
 }
 
