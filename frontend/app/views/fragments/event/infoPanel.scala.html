@@ -31,9 +31,6 @@
             @if(event.isBookable) {
                 @fragments.event.ticketCta(event)
                 @fragments.event.terms(event, List("event-info__terms"))
-                @if(ticketing.isCurrentlyAvailableToPaidMembersOnly) {
-                    <a class="action js-member-cta" href="@routes.Joiner.tierList">Become a member</a>
-                }
             }
         }
     </div>
