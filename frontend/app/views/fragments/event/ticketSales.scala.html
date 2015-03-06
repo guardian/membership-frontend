@@ -2,6 +2,7 @@
 
 @import views.support.Dates._
 @import org.joda.time.Instant
+@import com.github.nscala_time.time.Imports._
 @import model.RichEvent._
 @import com.gu.membership.salesforce.Tier
 
@@ -10,7 +11,7 @@
 }
 
 @ticketEndSaleDate(endSalesDate: Instant, needToDisplayTimes: Boolean) = @{
-    Html(s"<time datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes)}</time>")
+    Html(s"<time datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes || endSalesDate.isContemporary())}</time>")
 }
 
 <div class="ticket-sales" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">

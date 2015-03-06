@@ -22,6 +22,7 @@ object Dates {
     lazy val pretty = prettyDate(new DateTime(dt))
     lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
     def pretty(includeTime: Boolean): String = if (includeTime) prettyWithTime else pretty
+    def isContemporary(threshold: Duration = 24.hours) = new Interval(dt - threshold, dt + threshold).contains(DateTime.now)
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
