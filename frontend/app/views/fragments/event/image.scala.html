@@ -1,18 +1,10 @@
 @(event: model.RichEvent.RichEvent, sizes: Option[String] = None, lazyLoad: Boolean = true)
 
-@srcVal = @{ if (lazyLoad) event.fallbackImage else event.imgUrl }
-
-@event.srcsetOpt.fold {
-    <img src="@srcVal"
-         @if(lazyLoad){data-src="@event.imgUrl"}
-         alt="@event.name.text"
-         class="responsive-img@if(lazyLoad){ js-lazyload}"
-    />
-} { srcset =>
-    <img src="@srcVal"
-         @if(lazyLoad){data-}srcset="@srcset.mkString(", ")"
-         sizes="@sizes.getOrElse("100vw")"
-         alt="@event.name.text"
-         class="responsive-img@if(lazyLoad){ js-lazyload}"
+@for(img <- event.imgOpt) {
+    <img src="@img.defaultImage"
+    @if(lazyLoad){data-srcset="@img.srcset"} else {srcset="@img.srcset"}
+    sizes="@sizes.getOrElse("100vw")"
+    alt="@img.altText"
+    class="responsive-img @if(lazyLoad) { js-lazyload} "
     />
 }
