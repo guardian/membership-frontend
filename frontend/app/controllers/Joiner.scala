@@ -36,6 +36,16 @@ trait Joiner extends Controller {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
+  def tierChooser = NoCacheAction { implicit request =>
+    val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleChooseTier,
+      request.path,
+      Some(CopyConfig.copyDescriptionChooseTier)
+    )
+    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
+  }
+
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)

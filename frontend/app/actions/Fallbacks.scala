@@ -10,7 +10,7 @@ object Fallbacks {
   def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.TierController.change())
 
   def notYetAMemberOn(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.Joining.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
+    redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
 
   def chooseSigninOrRegister(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Login.chooseSigninOrRegister(request.uri))
