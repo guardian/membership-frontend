@@ -144,24 +144,8 @@
                 <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
                     @CSRF.formField
                     <div class="fieldset__fields js-password-container">
-
-                        <div class="form-field form-field--no-margin">
-                            <label class="label label--inline" for="user-password">Re-enter your password</label>
-
-                            <input class="input-text"
-                                   type="password"
-                                   id="user-password"
-                                   name="password"
-                                   value=""
-                                   autocomplete="off"
-                                   autocapitalize="off"
-                                   autocorrect="off"
-                                   spellcheck="false"
-                                   required/>
-                            @fragments.form.errorMessage("Please enter a password")
-                        </div>
-                        <a href="@Config.idWebAppUrl/reset">Forgotten your password?</a>
-
+                        @fragments.form.enterPassword("Re-enter your password")
+                        @fragments.form.forgottenPassword("Forgotten your password?")
                     </div>
 
                     @paidPreviewOpt.map { preview =>
