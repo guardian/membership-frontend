@@ -3,6 +3,7 @@
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
 @import model.FlashMessage
+@import configuration.Config
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -288,6 +289,22 @@
         @fragments.promos.promoSecondary(Html("Secondary Promo"), imageBasePath="https://media.guim.co.uk/83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684", toneClass=Some("tone-guardian-live")) {
             <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
         }
+    }
+
+
+    @pattern("Promo Video - Secondary") {
+        <div class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoVideoSecondary(
+            Html("If you believe in Guardian journalism, become a Guardian Member"),
+            videoUrl = Config.videoWhatIsGuardianMembership,
+            toneClass = Some("tone-trans-brand-dark")) {
+            <div class="text-feature">
+                <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
+                <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
+            </div>
+            <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
+        }
+        </div>
     }
 
     @pattern("Promo - Image", "Image with a letter box crop and call out") {
