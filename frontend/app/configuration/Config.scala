@@ -89,6 +89,8 @@ object Config {
   val touchpointDefaultBackend = touchpointBackendConfigFor("default")
   val touchpointTestBackend = touchpointBackendConfigFor("test")
 
+  val phdMediaVideoCampaignUrl = config.getString("phd.media.video.campaign.url")
+
   def touchpointBackendConfigFor(typ: String) = {
     val touchpointConfig = config.getConfig("touchpoint.backend")
     val backendEnvironmentName = touchpointConfig.getString(typ)
