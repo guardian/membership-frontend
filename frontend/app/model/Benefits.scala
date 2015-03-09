@@ -1,7 +1,7 @@
 package model
 
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
+import com.gu.membership.salesforce.Tier.{Partner, Patron}
 
 object Benefits {
 
@@ -80,7 +80,7 @@ object Benefits {
 
   def detailsLimited(tier: Tier) = tier match {
     case Tier.Friend => friendsWithBenefits
-    case Tier.Supporter => supporterBenefits
+    case Tier.Supporter => supporterWithBenefits
     case Tier.Partner => partnerWithBenefitsLimited
     case Tier.Patron => patronWithBenefitsLimited
   }
