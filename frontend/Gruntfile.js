@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     style: 'compressed',
-                    sourcemap: isDev ? 'auto' : 'none',
+                    sourcemap: isDev ? true : false,
                     noCache: true,
                     quiet: isDev ? false : true,
                     loadPath: [
