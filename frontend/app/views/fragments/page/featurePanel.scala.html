@@ -1,4 +1,4 @@
-@(imgSrc: String, description: String, anchorHref: String)
+@(imgSrc: String, description: String, anchorHref: String, isVideo: Boolean = false)
 
 @import views.support.Asset
 
@@ -7,6 +7,11 @@
         <div class="feature-panel__media">
             <img src="@Asset.at(imgSrc)" alt="@description" class="responsive-img" />
         </div>
-        <h3 class="feature-panel__description">@description</h3>
+        <h3 class="feature-panel__description">
+            @if(isVideo) {
+                @fragments.inlineIcon("video")
+            }
+            @description
+        </h3>
     </a>
 </div>
