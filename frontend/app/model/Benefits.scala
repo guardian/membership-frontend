@@ -36,6 +36,7 @@ object Benefits {
     lazy val yearlyMonthlyCost = (12 * monthly)
     lazy val yearlySaving = yearlyMonthlyCost - yearly
     lazy val yearlyWith6MonthSaving = yearly / 2f
+    lazy val hasYearlySaving = yearlySaving > 0
   }
 
   def benefitsFilter(identifiers: String*) = identifiers.flatMap { id =>
@@ -43,6 +44,8 @@ object Benefits {
   }
 
   val friendsWithBenefits = benefitsFilter("book_tickets", "digital_digest", "video_highlights")
+
+  val supporterWithBenefits = benefitsFilter("book_tickets", "live_stream", "digital_digest", "membership_card")
 
   val partnerWithBenefits = benefitsFilter("discount", "discount_masterclasses", "plus_1_guest", "early_booking",
     "membership_card", "live_stream", "digital_digest", "video_highlights")
@@ -59,8 +62,8 @@ object Benefits {
   val friendBenefits = Benefits("Benefits", friendsWithBenefits,
     None, "Become a Friend", "Stay up to date and book tickets to Guardian Live events")
 
-  val supporterBenefits = Benefits("Friend benefits, plus…", friendsWithBenefits,
-    Some(Pricing(60, 5)), "Become a Supporter", "Do some sort of copy for this")
+  val supporterBenefits = Benefits("Benefits", supporterWithBenefits,
+    Some(Pricing(60, 5)), "Become a Supporter", "Stay up to date and book tickets to Guardian Live events")
 
   val partnerBenefits = Benefits("Friend benefits, plus…", partnerWithBenefits,
     Some(Pricing(135, 15)), "Become a Partner", "Support the Guardian and experience it brought to life, with early booking and discounted tickets")
@@ -77,7 +80,7 @@ object Benefits {
 
   def detailsLimited(tier: Tier) = tier match {
     case Tier.Friend => friendsWithBenefits
-    case Tier.Supporter => friendsWithBenefits
+    case Tier.Supporter => supporterWithBenefits
     case Tier.Partner => partnerWithBenefitsLimited
     case Tier.Patron => patronWithBenefitsLimited
   }

@@ -196,6 +196,9 @@ $palette-tones: (
     friend: (
         base: $c-neutral1
     ),
+    supporter: (
+        base: $black
+    ),
     partner: (
         base: map-get($pasteup-palette, news-main-2)
     ),
