@@ -1,4 +1,5 @@
-@()
+@import model.Nav
+@(pageInfo: model.PageInfo)
 
 @import configuration.Config
 
@@ -11,30 +12,47 @@
                     <span class="u-h">Home</span>
                 </a>
             </li>
-            <li class="nav__item">
-                <a href="/events" class="nav__link" id="qa-nav-events">Events</a>
-            </li>
-            <li class="nav__item">
-                <a href="/masterclasses" class="nav__link" id="qa-nav-masterclasses">Masterclasses</a>
-            </li>
-            <li class="nav__item">
-                <a href="/about" class="nav__link" id="qa-nav-about">About membership</a>
-            </li>
-            <li class="nav__item">
-                <a href="/patrons" class="nav__link" id="qa-nav-patrons">Patrons</a>
-            </li>
-            <li class="nav__item">
-                <a href="/join" class="nav__link" id="qa-nav-pricing">Pricing</a>
-            </li>
-            <li class="nav__item">
-                <a href="/help" class="nav__link" id="qa-nav-help">Help</a>
-            </li>
-            <li class="nav__item">
-                <a href="/feedback" class="nav__link" id="qa-nav-feedback">Feedback</a>
-            </li>
+            @for(nav <- Nav.navigation) {
+                <li class="nav__item">
+                    <a href="@nav.href" class="nav__link" id="qa-nav-@nav.id">@nav.title</a>
+                </li>
+                @if(nav.subNav) {
+                    @for(subNav <- nav.subNav) {
+                        <li class="nav__item nav__item--sub">
+                            <a href="@subNav.href" class="nav__link" id="qa-nav-@subNav.id">@subNav.title</a>
+                        </li>
+                    }
+                }
+            }
             <li class="nav__item nav__item--right">
                 <a href="@Config.guardianMembershipUrl" class="nav__link nav__link--last js-members-area is-hidden">Members' Area</a>
             </li>
         </ul>
     </div>
 </nav>
+
+@defining(Nav.fetchNav(pageInfo.url)) { subNavForPage =>
+    @subNavForPage.map { navItem =>
+        @if(navItem.subNav) {
+            <nav role="navigation" class="nav nav--global nav--global--header nav--global--subnav js-sub-nav">
+                <div class="nav__scroll nav__scroll--subnav l-constrained">
+                    <ul class="nav__list nav__list--breadcrumbs inline-list">
+                        <li class="nav__item">
+                            <a class="nav__link" href="/">Home</a>
+                        </li>
+                        <li class="nav__item">
+                            <a class="nav__link" href="@navItem.href">@navItem.title</a>
+                        </li>
+                    </ul>
+                    <ul class="nav__list nav__list--subnav inline-list">
+                        @for(subNav <- navItem.subNav) {
+                            <li class="nav__item">
+                                <a href="@subNav.href" class="nav__link" id="qa-nav-@subNav.id">@subNav.title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        }
+    }
+}
