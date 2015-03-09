@@ -2,14 +2,6 @@
 
 @import model.Benefits
 
-@pseudoRadio(title: String, detail: String, note: String) = {
-    <div class="psuedo-radio">
-        <div class="payment-title">@title</div>
-        <div>@detail</div>
-        <div>@note</div>
-    </div>
-}
-
 <fieldset class="fieldset">
 
     <div class="fieldset__heading">
@@ -31,11 +23,14 @@
                            value="annual"
                            checked="checked"
                            data-pricing-option-amount="@pricing.yearly"/>
-                    @pseudoRadio(
-                        s"Pay £${pricing.yearly}/year",
-                        s"£${pricing.yearly} one off annual payment (save £${pricing.yearlySaving} a year)",
-                        "1 year membership, 3 months free"
-                    )
+
+                    <div class="pseudo-radio">
+                        <div class="pseudo-radio__header">Pay £@pricing.yearly/year</div>
+                        @if(pricing.hasYearlySaving) {
+                            <p class="pseudo-radio__note">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving a year)</p>
+                            <p class="pseudo-radio__note">1 year membership, 3 months free</p>
+                        }
+                    </div>
                 }
             </label>
 
@@ -48,11 +43,14 @@
                            id="monthly"
                            value="month"
                            data-pricing-option-amount="@pricing.monthly"/>
-                    @pseudoRadio(
-                        s"Pay £${pricing.monthly}/month",
-                        s"£${pricing.monthly} per month (£${pricing.yearlyMonthlyCost} per year)",
-                        "1 year membership, pay in instalments over a year"
-                    )
+
+                    <div class="pseudo-radio">
+                        <div class="pseudo-radio__header">Pay £@pricing.monthly/month</div>
+                        @if(pricing.hasYearlySaving) {
+                            <p class="pseudo-radio__note">£@pricing.monthly per month (£@pricing.yearlyMonthlyCost per year)</p>
+                            <p class="pseudo-radio__note">1 year membership, pay in instalments over a year</p>
+                        }
+                    </div>
                 }
             </label>
         </div>
