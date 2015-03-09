@@ -10,9 +10,10 @@ class NavTest extends PlaySpecification {
         Nav.fetchNav("/about").get.id mustEqual "about"
     }
 
-    "return the parent item when the current URL is a subnav item" in {
-      Nav.fetchNav("/patrons").get.id mustEqual "about"
-    }
+    // todo: add this test when we have a subnav
+    // "return the parent item when the current URL is a subnav item" in {
+    //   Nav.fetchNav("/patrons").get.id mustEqual "about"
+    // }
 
   }
 
