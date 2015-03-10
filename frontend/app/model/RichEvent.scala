@@ -97,7 +97,7 @@ object RichEvent {
 
     val imgOpt = image.flatMap { imgData =>
       Some(ResponsiveImageGroup(
-        altText=event.name.toString(),
+        altText=event.name.text,
         availableImages=imgData.assets.map { asset =>
           ResponsiveImage(
             path=asset.secureUrl.getOrElse(asset.file),
@@ -147,7 +147,7 @@ object RichEvent {
     val imgOpt = data.flatMap(_.images.headOption).flatMap { asset =>
       asset.file.map { imgUrl =>
         ResponsiveImageGroup(
-          altText = event.name.toString(),
+          altText = event.name.text,
           availableImages = Seq(ResponsiveImage(
             path = imgUrl.replace("http://static", "https://static-secure"),
             width = asset.typeData.get("width").map(_.toInt).getOrElse(460)
