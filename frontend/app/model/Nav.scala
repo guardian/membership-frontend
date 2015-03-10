@@ -23,6 +23,7 @@ object Nav {
     NavItem("events", "/events", "Events"),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
     NavItem("about", "/about", "About membership"),
+    NavItem("partrons", "/patrons", "Patrons"),
     NavItem("pricing", "/join", "Pricing")
   )
 
