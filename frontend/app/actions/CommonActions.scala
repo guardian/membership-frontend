@@ -2,15 +2,18 @@ package actions
 
 import actions.Fallbacks._
 import actions.Functions._
-import play.api.libs.json.Json
 import com.gu.googleauth
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
-import play.api.mvc.{RequestHeader, Cookie, DiscardingCookie, ActionBuilder}
+import play.api.libs.json.Json
 import play.api.mvc.Results._
+import play.api.mvc._
 import services.AuthenticationService
 import utils.GuMemCookie
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait CommonActions {
 
@@ -18,9 +21,17 @@ trait CommonActions {
 
   val CachedAction = resultModifier(Cached(_))
 
-  val Cors = resultModifier(_.withHeaders(
-    ACCESS_CONTROL_ALLOW_ORIGIN -> Config.corsAllowOrigin,
-    ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true"))
+  val Cors = new ActionBuilder[Request] {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+      block(request).map { result =>
+        (for (originHeader <- request.headers.get(ORIGIN) if Config.corsAllowOrigin.contains(originHeader)) yield {
+          result.withHeaders(
+            ACCESS_CONTROL_ALLOW_ORIGIN -> originHeader,
+            ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true")
+        }).getOrElse(result)
+      }
+    }
+  }
 
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
@@ -36,6 +47,9 @@ trait CommonActions {
     GoogleAuthenticatedStaffAction andThen
     isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffUnauthorisedError())
 
+  val AuthorisedStaff =
+    GoogleAuthenticatedStaffAction andThen
+    isInAuthorisedGroupGoogleAuthReq(permanentStaffGroups, views.html.fragments.oauth.staffWrongGroup())
 
   val AuthenticatedStaffNonMemberAction =
     AuthenticatedAction andThen

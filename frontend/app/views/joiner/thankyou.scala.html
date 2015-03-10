@@ -114,4 +114,8 @@
     @fragments.analytics.googleJoinerConversion(member.tier)
     @fragments.analytics.facebookJoinerConversion(member.tier)
     @fragments.analytics.membershipJoinerConversion()
+    @fragments.analytics.videoCampaignPHD.thankyouPage(
+        member.regNumber.fold("free")(regNumber => regNumber),
+        cardOpt.fold("free")( card => "%.2f".format(paymentSummary.totalPrice))
+    )
 }

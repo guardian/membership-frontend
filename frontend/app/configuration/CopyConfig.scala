@@ -14,6 +14,9 @@ object CopyConfig {
   val copyTitleChooseTier = config.getString("copy.choosetier.title")
   val copyDescriptionChooseTier = config.getString("copy.choosetier.description")
 
+  val copyTitleSupporters = config.getString("copy.supporters.title")
+  val copyDescriptionSupporters = config.getString("copy.supporters.description")
+
   val copyTitlePatrons = config.getString("copy.patrons.title")
   val copyDescriptionPatrons = config.getString("copy.patrons.description")
 

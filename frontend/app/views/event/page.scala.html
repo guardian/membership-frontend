@@ -85,17 +85,18 @@
     <div class="event-content" itemscope itemtype="http://schema.org/Event">
 
         @if(event.metadata.largeImg) {
-            <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
-                @fragments.event.image(event, lazyLoad=false)
-            </div>
-
-            <div class="event-image-credit u-event-content-width">
-                <div class="event-image-credit__detail">
-                    @fragments.inlineIcon("caption-camera")
-                    <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
-                    <span class="u-align-middle">Photograph: @event.imageMetadata.map(_.photographer)</span>
+            @for(img <- event.imgOpt) {
+                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                    @fragments.event.image(event, lazyLoad=false)
                 </div>
-            </div>
+                <div class="event-image-credit u-event-content-width">
+                    <div class="event-image-credit__detail">
+                        @fragments.inlineIcon("caption-camera")
+                        <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
+                        <span class="u-align-middle">Photograph: @event.imageMetadata.map(_.photographer)</span>
+                    </div>
+                </div>
+            }
         }
 
         <div class="event-content__container u-cf">
@@ -119,7 +120,9 @@
                 }
 
                 @if(!event.metadata.largeImg) {
-                    <img class="responsive-img hidden-mobile" src="@event.imgUrl" />
+                    @for(img <- event.imgOpt) {
+                        <img class="responsive-img hidden-mobile" src="@img.defaultImage" />
+                    }
                 }
 
                 @if(!event.isPastEvent){
