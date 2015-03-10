@@ -81,46 +81,34 @@ object RichEvent {
 
   trait RichEvent {
     val event: EBEvent
-    val imgUrl: String
+    val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: String
     val tags: Seq[String]
     val metadata: Metadata
     val imageMetadata: Option[Grid.Metadata]
     val contentOpt: Option[Content]
-    val srcsetOpt: Option[Seq[String]]
-    val availableWidths: String
-    val fallbackImage = views.support.Asset.at("images/event-placeholder.gif")
     val pastImageOpt: Option[Asset]
-
     def deficientGuardianMembersTickets: Boolean
   }
 
   abstract class LiveEvent(image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
 
-    private val widths = image.fold(List.empty[Int])(_.assets.map(_.dimensions.width))
-
     val imageMetadata = image.map(_.metadata)
 
-    val imgUrl = image.flatMap(_.assets.headOption).fold(fallbackImage){ asset =>
-      asset.secureUrl.getOrElse(asset.file)
+    val imgOpt = image.flatMap { imgData =>
+      Some(ResponsiveImageGroup(
+        altText=event.name.text,
+        availableImages=imgData.assets.map { asset =>
+          ResponsiveImage(
+            path=asset.secureUrl.getOrElse(asset.file),
+            width=asset.dimensions.width
+          )
+        }
+      ))
     }
 
-    val availableWidths = widths.mkString(",")
-
-    val srcsetOpt = image.map(_.assets.map { asset =>
-        asset.secureUrl.getOrElse(asset.file) + " " + asset.dimensions.width.toString() + "w"
-    })
-
-    val pastImageOpt = for {
-      content <- contentOpt
-      elements <- content.elements
-      element <- elements.find(_.relation == "main")
-      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
-    } yield assetOpt
-
-    val socialImgUrl = image.flatMap(_.assets.find(_.dimensions.width == widths.max)).fold(fallbackImage){ asset =>
-      asset.secureUrl.getOrElse(asset.file)
-    }
+    //TODO: Should be Option[String]
+    val socialImgUrl = imgOpt.map(_.defaultImage).getOrElse("")
 
     val tags = Nil
 
@@ -129,6 +117,13 @@ object RichEvent {
 
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))
+
+    val pastImageOpt = for {
+      content <- contentOpt
+      elements <- content.elements
+      element <- elements.find(_.relation == "main")
+      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
+    } yield assetOpt
 
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
@@ -148,17 +143,23 @@ object RichEvent {
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
-    val imgUrl = data.flatMap(_.images.headOption).flatMap(_.file)
-      .getOrElse(fallbackImage)
-      .replace("http://static", "https://static-secure")
+
+    val imgOpt = data.flatMap(_.images.headOption).flatMap { asset =>
+      asset.file.map { imgUrl =>
+        ResponsiveImageGroup(
+          altText = event.name.text,
+          availableImages = Seq(ResponsiveImage(
+            path = imgUrl.replace("http://static", "https://static-secure"),
+            width = asset.typeData.get("width").map(_.toInt).getOrElse(460)
+          ))
+        )
+      }
+    }
 
     val imageMetadata = None
 
-    val availableWidths = ""
-
-    val srcsetOpt = None
-
-    val socialImgUrl = imgUrl
+    //TODO: Should be Option[String]
+    val socialImgUrl = imgOpt.map(_.defaultImage).getOrElse("")
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 

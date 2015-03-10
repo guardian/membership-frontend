@@ -15,14 +15,12 @@ object EventbriteTestObjects {
   def eventTicketClass = EBTicketClass("", "", false, 0, 0, None, eventTime.toInstant, None, None)
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
-    val imgUrl = ""
-    val availableWidths = ""
+    val imgOpt = None
     val socialImgUrl = ""
     val imageMetadata = None
     val tags = Nil
     val contentOpt = None
     val pastImageOpt = None
-    val srcsetOpt= None
 
     val metadata = Metadata(
       identifier="",
