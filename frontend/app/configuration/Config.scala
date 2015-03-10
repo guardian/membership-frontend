@@ -1,5 +1,6 @@
 package configuration
 
+import com.gu.cas.CASServiceConfig
 import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
@@ -205,5 +206,7 @@ object Config {
   val trackerUrl = config.getString("snowplow.url")
   val bcryptSalt = config.getString("activity.tracking.bcrypt.salt")
   val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
+
+  val casServiceConfig = CASServiceConfig(config.getString("cas.url"))
 
 }
