@@ -95,7 +95,7 @@ object RichEvent {
 
     val imageMetadata = image.map(_.metadata)
 
-    val imgOpt = image.map { imgData =>
+    val imgOpt = image.flatMap { imgData =>
       Some(ResponsiveImageGroup(
         altText=event.name.toString(),
         availableImages=imgData.assets.map { asset =>
@@ -105,7 +105,7 @@ object RichEvent {
           )
         }
       ))
-    }.getOrElse(None)
+    }
 
     //TODO: Should be Option[String]
     val socialImgUrl = imgOpt.map(_.defaultImage).getOrElse("")
