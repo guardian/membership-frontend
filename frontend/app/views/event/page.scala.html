@@ -35,7 +35,7 @@
                 </div>
             </div>
             @for(internalTicketing <- event.internalTicketing) {
-                <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free }u-cf">
+                <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
                     <div class="event-ticket__details">
                         @fragments.pricing.priceInfoEvent(event, isPrimary=true) <!-- internalTicketing -->
                     </div>
