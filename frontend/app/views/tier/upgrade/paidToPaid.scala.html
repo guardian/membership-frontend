@@ -29,13 +29,20 @@
             </section>
         }
 
-        <div class="page-section page-section--bordered">
+        <div class="page-section">
             <div class="page-section__lead-in">
-                <h2 class="page-section__headline">What happens now</h2>
+                <a href="@routes.TierController.change" class="action action--secondary u-no-top-margin">
+                    @fragments.actionIcon("arrow-left", leftIcon=true)
+                    <span class="action__label">Change Tier</span>
+                </a>
             </div>
             <div class="page-section__content">
+                <h2 class="h-section">What happens now</h2>
                 <p>When you upgrade we want to make sure you are charged the right amount. We will charge for your <strong>@currentTier</strong> membership up until today and the amount remaining will be deducted from your first payment as a <strong>@targetTier</strong>.</p>
                 <p><strong>@targetTier</strong> payments start today and will recur @{currentSubscription.paymentPeriodLabel}ly.</p>
+            </div>
+            <div class="page-section__supplementary">
+
             </div>
         </div>
 
@@ -51,14 +58,14 @@
                         <td id="qa-upgrade-current-tier">@currentSubscription.planName</td>
                     </tr>
                     <tr role="row">
+                        <th role="rowheader">Start Date</th>
+                        <td id="qa-upgrade-current-start-date">@prettyDate(currentSubscription.startDate)</td>
+                    </tr>
+                    <tr role="row">
                         <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly Payment</th>
                         <td id="qa-upgrade-current-payment">@currentSubscription.planAmount.pretty</td>
                     </tr>
-                    <tr role="row">
-                        <th role="rowheader">Last payment</th>
-                        <td id="qa-upgrade-current-last-date">@prettyDate(currentSubscription.startDate)</td>
-                    </tr>
-                    <tr role="row">
+                       <tr role="row">
                         <th role="rowheader">End date</th>
                         <td id="qa-upgrade-current-end-date">@prettyDate(new DateTime())</td>
                     </tr>
@@ -79,12 +86,16 @@
                             <td id="qa-upgrade-new-tier">@targetTier</td>
                         </tr>
                         <tr role="row">
-                            <th role="rowheader">New @{currentSubscription.paymentPeriodLabel}ly payment</th>
-                            <td id="qa-upgrade-new-recurring-payment">@preview.futureSubscriptionInvoice.price.pretty</td>
+                            <th role="rowheader">Start date</th>
+                            <td id="qa-upgrade-new-start-date">@prettyDate(new DateTime())</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">First payment</th>
                             <td id="qa-upgrade-new-first-payment">@preview.totalPrice.pretty</td>
+                        </tr>
+                        <tr role="row">
+                            <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly payment</th>
+                            <td id="qa-upgrade-new-recurring-payment">@preview.futureSubscriptionInvoice.price.pretty</td>
                         </tr>
                         <tr role="row">
                             <th role="rowheader">Next payment due</th>
@@ -102,6 +113,7 @@
             </div>
             <div class="page-section__content">
                 <address>@fragments.user.deliveryAddress(userFields)</address>
+                <p class="text-note">We’ll send you a new welcome pack in the post.</p>
             </div>
         </section>
 
@@ -146,7 +158,9 @@
                     <fieldset class="fieldset fieldset--simple">
                         <div class="fieldset__fields js-password-container">
                             @fragments.form.enterPassword("Re-enter your password")
-                            @fragments.form.forgottenPassword("Forgotten your password?")
+                            <p class="copy l-pad-top">
+                                <a href="@Config.idWebAppUrl/reset" class="text-note">Forgotten your password?</a>
+                            </p>
                         </div>
                     </fieldset>
 
