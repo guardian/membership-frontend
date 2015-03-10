@@ -208,8 +208,8 @@ form {
 /* ==========================================================================
    Psuedo radio form inputs
    ========================================================================== */
-.psuedo-radio {
-    @include fs-textSans(3);
+
+.pseudo-radio {
     width: 100%;
     border: 1px solid transparent;
     padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(36px);
@@ -223,33 +223,30 @@ form {
         @include radio-circle($c-neutral5);
     }
 }
-
-input[type=radio]:checked + .psuedo-radio {
+input[type=radio]:checked + .pseudo-radio {
     border-color: $c-border-brand;
-
     &:before {
-        @include radio-circle();
+        background-color: $mem-brandBlue;
     }
 }
-
-/* ==========================================================================
-   Payment titles
-   ========================================================================== */
-.payment-title {
-    @include fs-bodyHeading(2);
-}
-
-/* ==========================================================================
-   Billing address titles
-   ========================================================================== */
-
-.billing-address-choice {
+.pseudo-radio__label {
     @include fs-bodyCopy(2);
+    line-height: 1.2;
+}
+.pseudo-radio__header {
+    @include fs-bodyHeading(2);
+    line-height: 1.2;
+    margin-bottom: rem($gs-baseline / 2);
+}
+.pseudo-radio__note {
+    @include fs-textSans(3);
+    margin-bottom: 0;
 }
 
 /* ==========================================================================
    Payment credit card types
    ========================================================================== */
+
 $small-card: 32px;
 $large-card: 35px;
 $card-icon-offset: 1px;
@@ -273,6 +270,7 @@ $card-icon-offset: 1px;
 /* ==========================================================================
    Credit card notes
    ========================================================================== */
+
 .credit-card-note {
     color: $c-neutral2;
 }
