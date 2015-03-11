@@ -58,11 +58,11 @@
                         <td id="qa-upgrade-current-tier">@currentSubscription.planName</td>
                     </tr>
                     <tr role="row">
-                        <th role="rowheader">Start Date</th>
+                        <th role="rowheader">Start date</th>
                         <td id="qa-upgrade-current-start-date">@prettyDate(currentSubscription.startDate)</td>
                     </tr>
                     <tr role="row">
-                        <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly Payment</th>
+                        <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly payment</th>
                         <td id="qa-upgrade-current-payment">@currentSubscription.planAmount.pretty</td>
                     </tr>
                        <tr role="row">
@@ -110,10 +110,10 @@
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
                 <h2 class="page-section__headline">Delivery address</h2>
+                <p class="text-note">We’ll send you a new welcome pack in the post.</p>
             </div>
             <div class="page-section__content">
                 <address>@fragments.user.deliveryAddress(userFields)</address>
-                <p class="text-note">We’ll send you a new welcome pack in the post.</p>
             </div>
         </section>
 
