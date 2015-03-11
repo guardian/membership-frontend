@@ -50,12 +50,11 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def membersOnly: Future[Seq[MembersOnlyContentData]] = {
+  private def membersOnly: Future[Seq[Content]] = {
       for {
         response <- membersOnlyContentQuery(1)
       } yield {
-        val membersOnlyData = response.results.flatMap(MembersOnlyContentDataExtractor.extractDetails)
-        membersOnlyData
+        response.results
       }
   }
 
@@ -63,7 +62,7 @@ trait GuardianContentService extends GuardianContent {
 
   def eventbriteContent(eventId: String): Option[Content] = eventbriteContentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
-  def membersOnlyContent: Seq[MembersOnlyContentData] = membersOnlyContentTask.get()
+  def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
     "GuardianContentService - Masterclass content",
@@ -79,7 +78,7 @@ trait GuardianContentService extends GuardianContent {
     5.minutes
   )(eventbrite)
 
-  val membersOnlyContentTask = ScheduledTask[Seq[MembersOnlyContentData]](
+  val membersOnlyContentTask = ScheduledTask[Seq[Content]](
     "GuardianContentService - Content with Guardian Members Only",
     Nil,
     1.second,
@@ -129,11 +128,13 @@ trait GuardianContent {
   }
 
   def membersOnlyContentQuery(page: Int): Future[ItemResponse] = {
-    val itemQuery = ItemQuery("membership")
+    val itemQuery = ItemQuery("extra")
       .showFields("all")
-      .showElements("image")
+      .showElements("all")
+      .showTags("all")
       .pageSize(100)
       .page(page)
+      .tag("type/quiz | tone/extraoffers")
     //todo: filter response for member access flag
     client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>

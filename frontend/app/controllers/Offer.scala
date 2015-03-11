@@ -2,8 +2,10 @@ package controllers
 
 import actions.Functions._
 import configuration.Config
+import model.MembersOnlyContentExtractor
 import play.api.mvc.Controller
 import services.GuardianContentService
+
 
 trait Offer extends Controller {
   val permanentStaffGroups = Config.staffAuthorisedEmailGroups
@@ -19,7 +21,8 @@ trait Offer extends Controller {
   // TODO FYI this controller was originally meant for the subscribers landing page - maybe we need a rethink on the names
   // TODO of these controllers as I feel these methods don't belong together
   def offersAndComps = CachedAction { implicit request =>
-    Ok(views.html.offer.offersandcomps(contentApiService.membersOnlyContent, "Sorry, no matching events were found."))
+    val memberOnlyContent = contentApiService.membersOnlyContent.flatMap(MembersOnlyContentExtractor.extractDetails)
+    Ok(views.html.offer.offersandcomps(memberOnlyContent, "Sorry, no matching events were found."))
   }
 }
 
