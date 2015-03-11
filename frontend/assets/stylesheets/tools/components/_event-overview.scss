@@ -80,6 +80,8 @@
 }
 
 .event-detail-title {
+    @include fs-data(3);
+
     @include mq(tablet) {
         position: absolute;
         bottom: 0;
