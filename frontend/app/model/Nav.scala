@@ -23,7 +23,9 @@ object Nav {
     NavItem("events", "/events", "Events"),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
     NavItem("about", "/about", "About membership"),
-    NavItem("pricing", "/join", "Pricing")
+    NavItem("partrons", "/patrons", "Patrons"),
+    NavItem("pricing", "/join", "Pricing"),
+    NavItem("feedback", "/feedback", "Feedback")
   )
 
 }
