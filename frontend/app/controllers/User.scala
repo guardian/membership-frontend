@@ -1,9 +1,8 @@
 package controllers
 
-import com.gu.cas.CAS.{CASError, CASSuccess, CASResult}
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import model.PaidTiers
-import org.joda.time.{DateTime, Instant}
+import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -65,19 +64,9 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  //TODO need to make sure we don't get spammed on this endpoint - is being signed into Identity enough?
-  //Should we have a in memory cache?
   //todo subscriber ID not been used
   def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
-
-    def isValidSubscriber = for(casResult <- casService.check(id, postcode)) yield {
-      casResult match {
-        case success: CASSuccess if new DateTime(success.expiryDate).isAfter(DateTime.now()) => true
-        case _ => false
-      }
-    }
-
-    for (validSubscriber <- isValidSubscriber) yield {
+    for (validSubscriber <- casService.isValidSubscriber(id, postcode)) yield {
       if(validSubscriber) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
       else Ok(Json.obj("subscriber-id" -> id, "valid" -> false))
     }
