@@ -61,7 +61,7 @@ trait Event extends Controller with ActivityTracking {
       event.name.text,
       path,
       event.description.map(_.blurb),
-      Some(event.socialImgUrl)
+      event.socialImgUrl
     )
     Ok(views.html.event.page(event, pageInfo))
   }

@@ -20,7 +20,9 @@
 
         <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
         <meta property="og:description" content="@pageInfo.description"/>
-        <meta property="og:image" content="@pageInfo.image"/>
+        @for(pageImage <- pageInfo.image) {
+            <meta property="og:image" content="@pageImage"/>
+        }
         <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
 
         <meta property="og:type" content="website"/>
