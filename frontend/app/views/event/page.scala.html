@@ -86,7 +86,7 @@
 
         @if(event.metadata.largeImg) {
             @for(img <- event.imgOpt) {
-                <div class="event-content__image" itemprop="image" content="@event.socialImgUrl">
+                <div class="event-content__image">
                     @fragments.event.image(event, lazyLoad=false)
                 </div>
                 <div class="event-image-credit u-event-content-width">
