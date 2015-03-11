@@ -60,35 +60,20 @@ trait GuardianContentService extends GuardianContent {
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
-  def eventbriteContent(eventId: String): Option[Content] = eventbriteContentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
+  def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
   def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
 
-  val masterclassContentTask = ScheduledTask[Seq[MasterclassData]](
-    "GuardianContentService - Masterclass content",
-    Nil,
-    2.seconds,
-    2.minutes
-  )(masterclasses)
+  val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
 
-  val eventbriteContentTask = ScheduledTask[Seq[Content]](
-    "GuardianContentService - Content with Eventbrite reference",
-    Nil,
-    1.millis,
-    5.minutes
-  )(eventbrite)
+  val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
 
-  val membersOnlyContentTask = ScheduledTask[Seq[Content]](
-    "GuardianContentService - Content with Guardian Members Only",
-    Nil,
-    1.second,
-    2.minutes
-  )(membersOnly)
+  val membersOnlyContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(membersOnly)
 
   def start() {
     masterclassContentTask.start()
-    eventbriteContentTask.start()
     membersOnlyContentTask.start()
+    contentTask.start()
   }
 
 }
