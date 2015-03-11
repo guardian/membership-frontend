@@ -2,6 +2,27 @@
    Listings
    ========================================================================== */
 
+.listing-header {
+    background-color: $c-background;
+    padding: rem($gs-gutter / 2);
+
+    @include mq(mem-full) {
+        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+        padding-bottom: rem($gs-gutter * 4);
+    }
+}
+
+.listing-headline {
+    @include fs-headline(4);
+
+    @include mq(tablet) {
+        @include fs-headline(5);
+    }
+    @include mq(desktop) {
+        @include fs-headline(7);
+    }
+}
+
 .listing {
     @include clearfix;
     clear: both;

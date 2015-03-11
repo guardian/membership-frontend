@@ -2,18 +2,17 @@ package model
 
 import com.gu.contentapi.client.model.{Asset, Content}
 
-case class MembersOnlyContent(content: Content, assets: List[Asset], fields: Option[Map[String, String]]) {
+case class MembersOnlyContent(content: Content, assetsMain: List[Asset], fields: Option[Map[String, String]]) {
 
-  val imageSizes = assets.flatMap { asset =>
+  val sortedImageSizes = assetsMain.flatMap { asset =>
     for {
       file <- asset.file.map(_.replace("http://static", "https://static-secure"))
       width <- asset.typeData.get("width")
     } yield (file, width)
   }.sortBy(_._2.toInt)
-
   val secureThumbnail = content.fields.flatMap(_.get("secureThumbnail"))
-  val mainImg = imageSizes.lastOption.fold(secureThumbnail.getOrElse(""))(_._1)
-  val srcset = imageSizes.map { imageDetails =>
+  val mainImg = sortedImageSizes.lastOption.fold(secureThumbnail.getOrElse(""))(_._1)
+  val srcset = sortedImageSizes.map { imageDetails =>
     val (secureFile, width) = imageDetails
     secureFile + " " + width + "w"
   }.mkString(", ")
@@ -27,7 +26,7 @@ case class MembersOnlyContent(content: Content, assets: List[Asset], fields: Opt
 
 object MembersOnlyContentExtractor {
   def extractDetails(content: Content): Seq[MembersOnlyContent] = {
-    val assets = content.elements.flatMap(_.find(_.relation == "main")).fold(List[Asset]())(_.assets)
-    Seq(MembersOnlyContent(content, assets, content.fields))
+    val assetsMain = content.elements.flatMap(_.find(_.relation == "main")).fold(List[Asset]())(_.assets)
+    Seq(MembersOnlyContent(content, assetsMain, content.fields))
   }
 }
