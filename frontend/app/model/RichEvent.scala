@@ -107,7 +107,7 @@ object RichEvent {
       ))
     }
 
-    val socialImgUrl = imgOpt.flatMap(_.defaultImage)
+    val socialImgUrl = imgOpt.map(_.defaultImage)
 
     val tags = Nil
 
@@ -157,7 +157,7 @@ object RichEvent {
 
     val imageMetadata = None
 
-    val socialImgUrl = imgOpt.flatMap(_.defaultImage)
+    val socialImgUrl = imgOpt.map(_.defaultImage)
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 

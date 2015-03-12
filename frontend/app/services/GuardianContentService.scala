@@ -27,6 +27,7 @@ trait GuardianContentService extends GuardianContent {
         } yield {
           val pagination = ContentAPIPagination(response.currentPage, response.pages)
           Some(pagination.nextPageOpt, response.results)
+
         }
       }.getOrElse(Future.successful(None))
     }
@@ -43,6 +44,7 @@ trait GuardianContentService extends GuardianContent {
           val masterclassData = response.results.flatMap(MasterclassDataExtractor.extractEventbriteInformation)
           val pagination = ContentAPIPagination(response.currentPage.getOrElse(0), response.pages.getOrElse(0))
           Some(pagination.nextPageOpt, masterclassData)
+
         }
       }.getOrElse(Future.successful(None))
     }

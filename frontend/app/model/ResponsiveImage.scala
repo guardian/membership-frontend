@@ -7,7 +7,7 @@ case class ResponsiveImageGroup(
   altText: String,
   availableImages: Seq[ResponsiveImage]
 ) {
-  val defaultImage = availableImages.headOption.map(_.path)
+  val defaultImage = availableImages.head.path
   val srcset = availableImages.map { img =>
     img.path + " " + img.width.toString() + "w"
   }.mkString(", ")
