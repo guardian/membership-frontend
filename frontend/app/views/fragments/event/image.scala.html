@@ -2,9 +2,10 @@
 
 @for(img <- event.imgOpt) {
     <img src="@img.defaultImage"
-    @if(lazyLoad){data-srcset="@img.srcset"} else {srcset="@img.srcset"}
-    sizes="@sizes.getOrElse("100vw")"
-    alt="@img.altText"
-    class="responsive-img @if(lazyLoad) { js-lazyload} "
+        @if(lazyLoad){data-srcset="@img.srcset"} else {srcset="@img.srcset"}
+        sizes="@sizes.getOrElse("100vw")"
+        alt="@img.altText"
+        class="responsive-img @if(lazyLoad) { js-lazyload} "
+        itemprop="image"
     />
 }

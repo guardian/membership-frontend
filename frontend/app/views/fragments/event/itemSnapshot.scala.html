@@ -1,7 +1,7 @@
 @(event: model.RichEvent.RichEvent, isStacked: Boolean = false)
 
 <div class="event-snapshot@if(isStacked){ event-snapshot--stack}" itemscope itemtype="http://schema.org/Event">
-    <div class="event-snapshot__media" itemprop="image" content="@event.socialImgUrl">
+    <div class="event-snapshot__media">
         @fragments.event.image(event)
     </div>
     <div class="event-snapshot__content">

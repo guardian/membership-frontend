@@ -82,7 +82,7 @@ object RichEvent {
   trait RichEvent {
     val event: EBEvent
     val imgOpt: Option[model.ResponsiveImageGroup]
-    val socialImgUrl: String
+    val socialImgUrl: Option[String]
     val tags: Seq[String]
     val metadata: Metadata
     val imageMetadata: Option[Grid.Metadata]
@@ -107,8 +107,7 @@ object RichEvent {
       ))
     }
 
-    //TODO: Should be Option[String]
-    val socialImgUrl = imgOpt.map(_.defaultImage).getOrElse("")
+    val socialImgUrl = imgOpt.map(_.defaultImage)
 
     val tags = Nil
 
@@ -158,8 +157,7 @@ object RichEvent {
 
     val imageMetadata = None
 
-    //TODO: Should be Option[String]
-    val socialImgUrl = imgOpt.map(_.defaultImage).getOrElse("")
+    val socialImgUrl = imgOpt.map(_.defaultImage)
 
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
 
