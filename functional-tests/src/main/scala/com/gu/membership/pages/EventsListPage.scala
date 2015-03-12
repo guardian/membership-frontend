@@ -6,21 +6,13 @@ import org.openqa.selenium.{JavascriptExecutor, By, WebDriver, WebElement}
 
 class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def eventLinkList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item"))
+  private def eventLinkList: util.List[WebElement] = driver.findElements(By.cssSelector(".qa-available-event-item"))
 
-  private def eventsTitleList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__title>span"))
-
-  private def eventsLocationList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__location"))
-
-  private def eventsTimeList: util.List[WebElement] = driver.findElements(By.cssSelector(".event-item__time"))
+  private def eventsTitleList: util.List[WebElement] = driver.findElements(By.cssSelector(".qa-event-item-title"))
 
   def getEventTitleByIndex(index: Int): String = eventsTitleList.get(index).getText
 
   def getEventsListSize: Int = eventLinkList.size()
-
-  def getEventLocationByIndex(index: Int): String = eventsLocationList.get(index).getText
-
-  def getEventTimeByIndex(index: Int): String = eventsTimeList.get(index).getText
 
   def clickEventByIndex(index: Int): EventPage = {
     val event = eventLinkList.get(index)
@@ -31,6 +23,6 @@ class EventsListPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   }
 
   def clickAnEvent(): EventPage = {
-    clickEventByIndex(10)
+    clickEventByIndex(3)
   }
 }
