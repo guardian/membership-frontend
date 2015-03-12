@@ -35,14 +35,6 @@
     }
 }
 
-.event-item--small {
-    height: auto;
-
-    .event-item__content {
-        height: rem(120px);
-    }
-}
-
     .event-item__media {
         transition: background-color $transition-duration-medium ease;
 
