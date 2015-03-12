@@ -139,6 +139,7 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
           <ns1:Subscription xsi:type="ns2:Subscription">
             <ns2:AutoRenew>true</ns2:AutoRenew>
             <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
+            <ns2:ContractAcceptanceDate>{now}</ns2:ContractAcceptanceDate>
             <ns2:InitialTerm>12</ns2:InitialTerm>
             <ns2:RenewalTerm>12</ns2:RenewalTerm>
             <ns2:TermStartDate>{now}</ns2:TermStartDate>
@@ -166,6 +167,7 @@ case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, da
         <ns1:Amendments>
           <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:Name>Cancellation</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>
@@ -194,6 +196,7 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
       <ns1:requests>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:Name>Downgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>
@@ -207,6 +210,7 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
         </ns1:Amendments>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:Name>Downgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>
@@ -242,6 +246,7 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
       <ns1:requests>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:Name>Upgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>
@@ -255,6 +260,7 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
         </ns1:Amendments>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:EffectiveDate>{dateStr}</ns2:EffectiveDate>
           <ns2:Name>Upgrade</ns2:Name>
           <ns2:Status>Completed</ns2:Status>
@@ -264,6 +270,7 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
         </ns1:Amendments>
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
+          <ns2:ContractAcceptanceDate>{dateStr}</ns2:ContractAcceptanceDate>
           <ns2:Name>Upgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>
