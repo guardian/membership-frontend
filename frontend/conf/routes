@@ -101,6 +101,7 @@ GET            /assets/*assetFile                 controllers.CachedAssets.at(pa
 
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
+GET            /user/subscriber/details           controllers.User.subscriberDetails(id: String, postcode: String)
 
 # Vanity URLS
 

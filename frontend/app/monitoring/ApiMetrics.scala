@@ -9,3 +9,7 @@ object IdentityApiMetrics extends Metrics with StatusMetrics {
 object GridApiMetrics extends Metrics with StatusMetrics {
   val service = "Grid API"
 }
+
+object CASMetrics extends Metrics with StatusMetrics {
+  val service = "CAS"
+}

@@ -206,4 +206,6 @@ object Config {
   val bcryptSalt = config.getString("activity.tracking.bcrypt.salt")
   val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
+  val casServiceConfig = config.getString("cas.url")
+
 }
