@@ -97,12 +97,11 @@ object RichEvent {
 
     val imgOpt = image.flatMap { imgData =>
       Some(ResponsiveImageGroup(
-        altText=event.name.text,
-        availableImages=imgData.assets.map { asset =>
-          ResponsiveImage(
-            path=asset.secureUrl.getOrElse(asset.file),
-            width=asset.dimensions.width
-          )
+        altText = event.name.text,
+        availableImages = imgData.assets.map { asset =>
+          val path = asset.secureUrl.getOrElse(asset.file)
+          val width = asset.dimensions.width
+          ResponsiveImage(path, width)
         }
       ))
     }
