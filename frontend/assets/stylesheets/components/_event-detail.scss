@@ -104,47 +104,34 @@
 }
 
 .event-details {
-
     margin-bottom: rem($gs-baseline / 2);
 
     @include mq(tablet) {
-        margin-bottom: rem($gs-gutter);
-    }
-
-    .event-details__time {
-        max-width: rem(gs-span(8));
-        @include fs-headline(2);
-
-        @include mq(tablet) {
-            @include fs-headline(4);
-        }
-    }
-
-    .event-details__time__part {
-        white-space: nowrap;
-    }
-
-    .event-details__location {
-        @include fs-data(4);
-
-        .event-location {
-            color: inherit;
-        }
+        margin-bottom: rem($gs-baseline);
     }
 }
+.event-details__time {
+    @include fs-headline(2);
 
+    @include mq(tablet) {
+        @include fs-headline(4, true);
+    }
+}
+.event-details__time__part {
+    white-space: nowrap;
+}
+.event-details__location {
+    @include fs-data(4);
+    color: inherit;
+}
 
 /* ==========================================================================
    Event Location Summary
    ========================================================================== */
+
 .event-location {
-    // Remove space between inline block elements
-    font-size: 0;
+    font-size: 0; // Remove space between inline block elements
     line-height: 1;
-    color: $c-neutral2;
-}
-.event-location--reversed {
-    color: $white;
 }
 .event-location__detail {
     @include fs-data(4);
@@ -177,7 +164,6 @@
    ========================================================================== */
 
 .event-ticket {
-    padding-top: rem($gs-gutter);
     @include mq(tablet) {
         display: table;
     }

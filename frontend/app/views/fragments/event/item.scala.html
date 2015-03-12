@@ -13,7 +13,7 @@
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)
             <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
-            <div itemprop="location" itemscope itemtype="http://schema.org/Place">
+            <div class="event-item__location" itemprop="location" itemscope itemtype="http://schema.org/Place">
                 @fragments.event.addressSummary(event)
             </div>
             <div class="event-item__footer">

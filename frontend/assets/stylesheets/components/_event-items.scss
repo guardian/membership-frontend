@@ -55,6 +55,9 @@
     .event-item__time {
         @include fs-data(4);
     }
+    .event-item__location {
+        color: $c-neutral2;
+    }
     .event-item__description {
         @include fs-bodyCopy(1);
         padding: rem($gs-baseline) 0 0;
