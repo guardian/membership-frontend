@@ -113,6 +113,7 @@ case class EventData(event: RichEvent) {
 
     val dataMap = Map(
       "id" -> event.id,
+      "name" -> event.name.text,
       "startTime" -> event.start.getMillis,
       "endTime" -> event.end.getMillis,
       "created" -> event.created.getMillis,
