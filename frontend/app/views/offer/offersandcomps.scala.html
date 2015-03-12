@@ -5,48 +5,48 @@
         <section class="listing-header">
             <h1 class="listing-headline">Offers and competitions</h1>
         </section>
-        <div class="event-blocks">
-            <section class="listing listing--lead listing--padded">
-                <div class="listing__lead-in">
-                    <h3 class="listing__title h-intro">most recent</h3>
-                </div>
-                <div class="listing__content">
-                @if(membersOnlyContent.isEmpty) {
-                    <div class="listing__empty">@noResultText</div>
-                } else {
-                    <ul class="grid grid--bordered grid--3up">
-                    @for(memberContent <- membersOnlyContent) {
-                        <li class="grid__item">
-                            <a href="@memberContent.content.webUrl" class="event-item event-item--small" itemscope itemtype="http://schema.org/Event">
-                                <meta itemprop="url" content="@memberContent.content.webUrl">
-                                @for(img <- memberContent.imgOpt) {
-                                    <div class="event-item__media" itemprop="image" content="@img.defaultImage">
-                                        <img class="responsive-img"
-                                        src="@img.defaultImage"
-                                        sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
-                                        srcset="@img.srcset"
-                                        alt="@img.altText"/>
-                                    </div>
-                                }
-                                <div class="event-item__content">
-                                    <div class="event-item__meta">
-                                        <h4 class="event-item__title" itemprop="name">
-                                            @fragments.inlineIcon("outbound-link", Seq("icon-inline--brand-dark"))
-                                            @if(memberContent.tagTitle) {
-                                                <span class="tone-outbound-link">@memberContent.tagTitle</span>
-                                                <span class="tone-tint-foreground"> / </span>
-                                            }
-                                        <span>@memberContent.content.webTitle</span>
-                                        </h4>
-                                    </div>
+        <section class="listing listing--lead listing--padded">
+            <div class="listing__lead-in">
+                <h3 class="listing__title h-intro">most recent</h3>
+            </div>
+            <div class="listing__content">
+            @if(membersOnlyContent.isEmpty) {
+                <div class="listing__empty">@noResultText</div>
+            } else {
+                <ul class="grid grid--bordered grid--3up">
+                @for(memberContent <- membersOnlyContent) {
+                    <li class="grid__item">
+                        <a href="@memberContent.content.webUrl" class="article-front" itemscope itemtype="http://schema.org/Event">
+                            <meta itemprop="url" content="@memberContent.content.webUrl">
+                            @for(img <- memberContent.imgOpt) {
+                                <div class="article-front__media" itemprop="image" content="@img.defaultImage">
+                                    <img class="responsive-img"
+                                    src="@img.defaultImage"
+                                    sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
+                                    srcset="@img.srcset"
+                                    alt="@img.altText"/>
                                 </div>
-                            </a>
-                        </li>
-                    }
-                    </ul>
+                            }
+                            <div class="article-front__content">
+                                <div class="article-front__meta">
+                                    <h4 class="article-front__title" itemprop="name">
+                                        <span class="link-outbound">
+                                        @fragments.inlineIcon("outbound-link", Seq("icon-inline--brand-dark"))
+                                            @if(memberContent.tagTitle) {
+                                                <span class="link-outbound__highlight">@memberContent.tagTitle</span>
+                                                <span class="link-outbound__separator"> / </span>
+                                            }
+                                            <span>@memberContent.content.webTitle</span>
+                                        </span>
+                                    </h4>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
                 }
-                </div>
-            </section>
-        </div>
+                </ul>
+            }
+            </div>
+        </section>
     </main>
 }
