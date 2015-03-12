@@ -19,13 +19,15 @@
                         <li class="grid__item">
                             <a href="@memberContent.content.webUrl" class="event-item event-item--small" itemscope itemtype="http://schema.org/Event">
                                 <meta itemprop="url" content="@memberContent.content.webUrl">
-                                <div class="event-item__media" itemprop="image" content="@memberContent.mainImg">
-                                    <img class="responsive-img"
-                                         src="@memberContent.mainImg"
-                                         srcset="@memberContent.srcset"
-                                         sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
-                                         alt=""/>
-                                </div>
+                                @for(img <- memberContent.imgOpt) {
+                                    <div class="event-item__media" itemprop="image" content="@img.defaultImage">
+                                        <img class="responsive-img"
+                                        src="@img.defaultImage"
+                                        sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
+                                        srcset="@img.srcset"
+                                        alt="@img.altText"/>
+                                    </div>
+                                }
                                 <div class="event-item__content">
                                     <div class="event-item__meta">
                                         <h4 class="event-item__title" itemprop="name">
