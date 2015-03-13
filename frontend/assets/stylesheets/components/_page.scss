@@ -116,9 +116,10 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 .page-intro {
     color: $c-neutral2;
     @include fs-headline(2);
+    margin-bottom: 0;
 
     @include mq(tablet) {
-        @include fs-headline(3);
+        @include fs-headline(3, true);
     }
 }
 
@@ -140,20 +141,21 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  */
 .page-section {
     @include clearfix;
-    padding-bottom: rem($gs-baseline * 2);
+    padding-bottom: rem($gs-baseline);
 
     @include mq(desktop) {
         width: auto;
     }
     @include mq(mem-full) {
         position: relative;
+        min-height: rem(gs-height(3));
     }
 }
 .page-section--no-padding {
     padding-bottom: 0;
 }
 .page-section__header {
-    padding-bottom: rem($gs-baseline*3);
+    padding-bottom: rem($gs-baseline * 3);
 
     @include mq(mem-full) {
         padding-left: $_page-offset;
@@ -168,7 +170,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 }
 .page-section__headline {
     @include fs-header(3);
-    padding-bottom: rem($gs-gutter * 1.6);
+    margin-bottom: rem($gs-baseline / 4);
 }
 .page-section__content {
     @include mq(tablet) {
