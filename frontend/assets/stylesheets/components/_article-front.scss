@@ -1,0 +1,55 @@
+/* ==========================================================================
+   Article front
+   ========================================================================== */
+.article-front {
+    @include clearfix;
+    background-color: $c-neutral7;
+    transition: background-color $transition-duration-medium ease;
+    position: relative;
+    display: block;
+    height: auto;
+
+    &,
+    &:active,
+    &:hover,
+    &:focus {
+        color: $black;
+        text-decoration: none;
+    }
+
+    &:hover {
+        background-color: $c-neutral5;
+        .article-front__title {
+            text-decoration: underline;
+        }
+        .article-front__media {
+            background-color: $black;
+            img {
+                opacity: .8;
+            }
+        }
+    }
+}
+.article-front__content {
+    height: rem(120px);
+}
+.article-front__media {
+    min-height: rem(179px); // height of images from capi
+    background-color: $c-neutral4;
+    transition: background-color $transition-duration-medium ease;
+
+    img {
+        transition: opacity $transition-duration-medium ease;
+        // Prevent flicker on hover in WebKit
+        -webkit-backface-visibility: hidden;
+    }
+}
+.article-front__meta {
+    padding: rem($gs-gutter / 4);
+    padding-top: rem(($gs-gutter / 4) - 1px);
+}
+.article-front__title {
+    @include fs-headline(3);
+    margin-bottom: rem($gs-baseline);
+    font-weight: 500;
+}
