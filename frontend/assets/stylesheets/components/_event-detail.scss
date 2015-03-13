@@ -423,6 +423,7 @@
     @include clearfix();
     @include fs-textSans(3);
     background-color: $c-neutral7;
+    margin-bottom: rem($gs-baseline);
 }
     .event-info__inner {
         @include clearfix;
