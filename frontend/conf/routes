@@ -91,20 +91,17 @@ GET            /about                             controllers.Info.about
 GET            /about/supporters                  controllers.Info.supporters
 GET            /patrons                           controllers.Info.patron
 
-
 # Offer
-GET            /offers/subscriber                  controllers.Offers.subscriber
+GET            /offers/subscriber                 controllers.Offers.subscriber
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)
-
 
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
 GET            /user/subscriber/details           controllers.User.subscriberDetails(id: String, postcode: String)
 
 # Vanity URLS
-
 GET            /founder                           controllers.VanityUrl.redirect
 
 # Styleguide
