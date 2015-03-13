@@ -23,9 +23,3 @@ case class MembersOnlyContent(content: Content) {
     }
   }
 }
-
-object MembersOnlyContentExtractor {
-  def extractDetails(content: Content): Seq[MembersOnlyContent] = {
-    Seq(MembersOnlyContent(content))
-  }
-}
