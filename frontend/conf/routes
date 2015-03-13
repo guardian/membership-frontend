@@ -93,7 +93,7 @@ GET            /patrons                           controllers.Info.patron
 
 
 # Offer
-GET            /offer/subscriber                  controllers.Offer.subscriber
+GET            /offers/subscriber                  controllers.Offers.subscriber
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)
