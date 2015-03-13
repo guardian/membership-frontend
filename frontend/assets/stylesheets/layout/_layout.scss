@@ -44,6 +44,10 @@ body {
     padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
 }
 
+.l-pad-vertical {
+    margin-top: rem($gs-baseline / 2);
+    margin-bottom: rem($gs-baseline / 2);
+}
 
 .l-pad-top {
     margin-top: rem($gs-baseline / 2);

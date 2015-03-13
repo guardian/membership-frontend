@@ -36,7 +36,7 @@ form {
     border-bottom: 0;
 
     .fieldset__fields {
-        padding-top: rem(5px);
+        padding-top: rem($gs-gutter / 2);
     }
 }
 
@@ -46,7 +46,7 @@ form {
 
 .fieldset__heading {
     vertical-align: top;
-    padding: rem($gs-baseline / 2) rem($gs-baseline) rem($gs-baseline * 2) rem(10px);
+    padding: rem($gs-baseline / 2) rem($gs-baseline) rem($gs-baseline * 2) rem($gs-gutter / 2);
 
     @include mq(tablet) {
         display: table-cell;
@@ -68,7 +68,7 @@ form {
 
 .fieldset__fields {
     vertical-align: top;
-    padding: rem(10px) rem(10px) rem($gs-baseline * 2);
+    padding: rem($gs-gutter / 2) rem($gs-gutter / 2) rem($gs-baseline * 2);
 
     @include mq(tablet) {
         display: table-cell;
