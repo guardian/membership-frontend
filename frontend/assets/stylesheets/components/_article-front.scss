@@ -34,6 +34,8 @@
     height: rem(120px);
 }
 .article-front__media {
+    min-height: rem(179px); // height of images from capi
+    background-color: $c-neutral4;
     transition: background-color $transition-duration-medium ease;
 
     img {

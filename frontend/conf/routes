@@ -110,5 +110,5 @@ GET            /founder                           controllers.VanityUrl.redirect
 # Styleguide
 GET            /patterns                          controllers.PatternLibrary.patterns
 
-# LOL
+# Offers and Competitions
 GET            /offers                            controllers.Offer.offersAndComps
