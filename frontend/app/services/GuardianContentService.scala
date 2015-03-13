@@ -52,13 +52,7 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def membersOnly: Future[Seq[Content]] = {
-      for {
-        response <- membersOnlyContentQuery(1).map(_.results)
-      } yield {
-        response
-      }
-  }
+  private def membersOnly: Future[Seq[Content]] = membersOnlyContentQuery(1).map(_.results)
 
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
