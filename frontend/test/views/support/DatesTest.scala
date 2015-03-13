@@ -5,10 +5,21 @@ import org.specs2.mutable.Specification
 
 class DatesTest extends Specification {
   "dateRange" should {
+    "respect Guardian style: 1am, 6.30pm, etc" in {
+      Dates.prettyTime(new DateTime(2015, 3, 22,  1,  0)) mustEqual "1am"
+      Dates.prettyTime(new DateTime(2015, 3, 22, 18, 30)) mustEqual "6.30pm"
+    }
+
+    "respect Guardian style on date ranges" in {
+      val dt1 = new DateTime(2015, 3, 22, 14, 45)
+      val dt2 = new DateTime(2015, 3, 22, 17,  0)
+      Dates.dateRange(dt1, dt2) mustEqual Dates.Range("Sunday 22 March 2015, 2.45pm", "5pm")
+    }
+
     "merge date if both dates are on the same day" in {
       val dt1 = new DateTime(2014, 11, 6, 10, 20)
       val dt2 = new DateTime(2014, 11, 6, 12, 30)
-      Dates.dateRange(dt1, dt2) mustEqual Dates.Range("Thursday 6 November 2014, 10:20am", "12:30pm")
+      Dates.dateRange(dt1, dt2) mustEqual Dates.Range("Thursday 6 November 2014, 10.20am", "12.30pm")
     }
 
     "merge month and year if both are the same" in {
