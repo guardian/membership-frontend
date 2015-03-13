@@ -111,4 +111,4 @@ GET            /founder                           controllers.VanityUrl.redirect
 GET            /patterns                          controllers.PatternLibrary.patterns
 
 # Offers and Competitions
-GET            /offers                            controllers.Offer.offersAndComps
+GET            /offers-competitions               controllers.OffersAndCompetitions.list
