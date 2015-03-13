@@ -18,8 +18,9 @@ import services._
 import services.EventbriteService._
 
 import scala.concurrent.Future
+import tracking.{EventData, EventActivity, MemberData, ActivityTracking}
 
-trait Joiner extends Controller {
+trait Joiner extends Controller with ActivityTracking {
 
   val memberService: MemberService
 
@@ -130,12 +131,14 @@ trait Joiner extends Controller {
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
 
     MemberService.createMember(request.user, formData, IdentityRequest(request))
-      .map { _ =>
+      .map { member =>
         for {
           eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
           event <- EventbriteService.getBookableEvent(eventId)
         } {
           event.service.wsMetrics.put(s"join-$tier-event", 1)
+          val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
+          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))
         }
         result
       }.recover {
