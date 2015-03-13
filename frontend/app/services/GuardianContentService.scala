@@ -54,9 +54,9 @@ trait GuardianContentService extends GuardianContent {
 
   private def membersOnly: Future[Seq[Content]] = {
       for {
-        response <- membersOnlyContentQuery(1)
+        response <- membersOnlyContentQuery(1).map(_.results)
       } yield {
-        response.results
+        response
       }
   }
 
