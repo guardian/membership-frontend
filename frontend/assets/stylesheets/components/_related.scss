@@ -48,3 +48,26 @@
         @include fs-headline(3, true);
     }
 }
+
+.entry {
+    display: table;
+    width: 100%;
+    border-top: 1px solid $c-neutral3;
+    background-color: $c-neutral7;
+    margin-bottom: rem($gs-gutter / 2);
+    padding: rem($gs-gutter / 4);
+}
+.entry__media,
+.entry__content {
+    display: table-cell;
+    vertical-align: top;
+}
+.entry__media  {
+    width: rem(gs-span(2));
+    padding-right: rem($gs-gutter/2);
+}
+.entry__title {
+    color: $black;
+    @include fs-headline(2);
+    font-weight: 500;
+}
