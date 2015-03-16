@@ -63,7 +63,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
-  def enterDetails(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
+  def enterDetails(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberWithKnownTierChangeAction(tier)).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {

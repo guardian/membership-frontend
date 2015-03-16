@@ -3,6 +3,7 @@ package actions
 import actions.Fallbacks._
 import actions.Functions._
 import com.gu.googleauth
+import com.gu.membership.salesforce.Tier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -36,6 +37,8 @@ trait CommonActions {
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
+
+  def AuthenticatedNonMemberWithKnownTierChangeAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onPaidMember = result => tierChangeEnterDetails(tier)(result))
 
   val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
 
