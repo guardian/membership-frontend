@@ -1,4 +1,9 @@
-@(eventOpt: Option[model.RichEvent.RichEvent], pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    pageInfo: model.PageInfo,
+    sectionTitle: String,
+    eventOpt: Option[model.RichEvent.RichEvent],
+    contentAccessOpt: Option[model.MembershipAccess]
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 
@@ -13,18 +18,31 @@
                 @fragments.joiner.joinStepCounter(1, 3)
             </div>
             <div class="page-section__content">
-                <h2 class="h-section h-section--lead">@eventOpt.fold("Choose a membership tier to continue with your booking")(_.metadata.chooseTier.sectionTitle)</h2>
-                <ul class="grid grid--single-row grid--bordered grid--3up-stacked">
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
-                    </li>
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
-                    </li>
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
-                    </li>
-                </ul>
+                <h2 class="h-section h-section--lead">@sectionTitle</h2>
+
+                @if(contentAccessOpt.filter(_.isPaidAccess)) {
+                    <ul class="grid grid--bordered grid--2up-stacked">
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
+                        </li>
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
+                        </li>
+                    </ul>
+                } else {
+                    <ul class="grid grid--bordered grid--3up-stacked">
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
+                        </li>
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
+                        </li>
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
+                        </li>
+                    </ul>
+                }
+
             </div>
             @for(event <- eventOpt) {
                 <div class="page-section__supplementary">

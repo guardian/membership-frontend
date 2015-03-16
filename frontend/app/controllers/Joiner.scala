@@ -11,6 +11,7 @@ import controllers.Testing.AuthorisedTester
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.RichEvent._
 import model._
+import model.MembershipAccess
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -40,21 +41,32 @@ trait Joiner extends Controller with ActivityTracking {
     Ok(views.html.joiner.tierList(pageInfo))
   }
 
+
+
   def tierChooser = NoCacheAction { implicit request =>
+
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
+
     val pageInfo = PageInfo(
       CopyConfig.copyTitleChooseTier,
       request.path,
       Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    val contentReferer = request.headers.get("referer");
-    val contentAccess = request.getQueryString("membershipAccess")
+    val contentReferer = request.headers.get("referer")
 
-    if(contentReferer.nonEmpty && contentAccess.nonEmpty) {
-      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withCookies(Cookie("GU_MEM_REFERER", contentReferer.get, secure = true, httpOnly = false))
+    val contentAccessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
+
+    val sectionTitle = contentAccessOpt.map {
+      case i if i.isMembershipAccess => "You need to be a Guardian member to access this content"
+      case i if i.isPaidAccess => "You need to be a Partner or a Patron to access this content"
+    }.getOrElse(eventOpt.fold("Choose a membership tier to continue with your booking")(_.metadata.chooseTier.sectionTitle))
+
+    if(contentReferer.nonEmpty && contentAccessOpt.nonEmpty) {
+      Ok(views.html.joiner.tierChooser(pageInfo, sectionTitle, eventOpt, contentAccessOpt))
+        .withCookies(Cookie("GU_MEM_REFERER", contentReferer.get, secure = true, httpOnly = false))
     } else {
-      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
+      Ok(views.html.joiner.tierChooser(pageInfo, sectionTitle, eventOpt, contentAccessOpt))
     }
 
   }
