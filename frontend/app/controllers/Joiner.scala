@@ -15,12 +15,15 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import services._
+import services.GuardianContentService
 import services.EventbriteService._
 
 import scala.concurrent.Future
 import tracking.{EventData, EventActivity, MemberData, ActivityTracking}
 
 trait Joiner extends Controller with ActivityTracking {
+
+  val contentApiService = GuardianContentService
 
   val memberService: MemberService
 
@@ -44,7 +47,16 @@ trait Joiner extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionChooseTier)
     )
-    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
+
+    val contentReferer = request.headers.get("referer");
+    val contentAccess = request.getQueryString("membershipAccess")
+
+    if(contentReferer.nonEmpty && contentAccess.nonEmpty) {
+      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withCookies(Cookie("GU_MEM_REFERER", contentReferer.get, secure = true, httpOnly = false))
+    } else {
+      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
+    }
+
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
@@ -149,6 +161,7 @@ trait Joiner extends Controller with ActivityTracking {
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
+
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
@@ -170,11 +183,24 @@ trait Joiner extends Controller with ActivityTracking {
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
 
+    val futureContentOpt = request.cookies.get("GU_MEM_REFERER").map(_.value).map { referer =>
+      val refererPath = referer.replace("http://www.theguardian.com", "")
+      contentApiService.contentItemQuery(refererPath).map(_.content.map(MembersOnlyContent))
+    }.getOrElse(Future.successful(None))
+
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
+      contentOpt <- futureContentOpt
+    } yield Ok(views.html.joiner.thankyou(
+        request.member,
+        paymentSummary,
+        customerOpt.map(_.card),
+        eventDetailsOpt,
+        contentOpt,
+        upgrade
+    )).discardingCookies(DiscardingCookie("GU_MEM"))
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

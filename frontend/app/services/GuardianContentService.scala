@@ -123,6 +123,17 @@ trait GuardianContent {
     }
   }
 
+  def contentItemQuery(path: String): Future[ItemResponse] = {
+    val itemQuery = ItemQuery(path)
+      .showFields("all")
+      .showElements("all")
+      .showTags("all")
+    client.getResponse(itemQuery).andThen {
+      case Failure(GuardianContentApiError(status, message)) =>
+        logAndRecordError(status)
+    }
+  }
+
   def logAndRecordError(status: Int) {
     ContentApiMetrics.putResponseCode(status, "GET content")
     Logger.error(s"Error response from Content API $status")

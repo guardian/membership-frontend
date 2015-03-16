@@ -1,5 +1,11 @@
-@(member: com.gu.membership.salesforce.Member, paymentSummary: model.Zuora.PaymentSummary,
-    cardOpt: Option[com.gu.membership.stripe.Stripe.Card], eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)], upgrade: Boolean)
+@(
+    member: com.gu.membership.salesforce.Member,
+    paymentSummary: model.Zuora.PaymentSummary,
+    cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
+    eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)],
+    contentOpt: Option[model.MembersOnlyContent],
+    upgrade: Boolean
+)
 
 @import views.support.Dates._
 @import views.support.Prices._
@@ -89,7 +95,7 @@
                     <div class="page-section__content">
                         <p>
                            We're currently improving our ticket purchasing system, in the meantime you will have to enter
-                           some details again.
+                            some details again.
                         </p>
                         <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0"
                         hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
