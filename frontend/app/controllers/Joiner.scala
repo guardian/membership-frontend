@@ -48,9 +48,14 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     )
 
     val contentReferer = request.headers.get(REFERER)
-    val contentAccess = request.getQueryString("membershipAccess")
+    val contentAccessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
 
-    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
+    val sectionTitle = contentAccessOpt.map {
+      case i if i.isMembersOnly => "You need to be a Guardian member to access this content"
+      case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to access this content"
+    }.getOrElse(eventOpt.fold("Choose a membership tier to continue with your booking")(_.metadata.chooseTier.sectionTitle))
+
+    Ok(views.html.joiner.tierChooser(pageInfo, sectionTitle, eventOpt, contentAccessOpt)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
