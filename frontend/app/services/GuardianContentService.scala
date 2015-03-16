@@ -115,7 +115,7 @@ trait GuardianContent {
       .showTags("all")
       .pageSize(100)
       .page(page)
-      .tag("type/quiz | tone/extraoffers")
+      .tag("tone/extraoffers")
     //todo: filter response for member access flag
     client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
