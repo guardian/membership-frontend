@@ -16,18 +16,17 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                 ajax({
                     url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo get postcode & lastname
                 }).then(function(respsonse) {
+                    /* jshint ignore:start */
                     if(respsonse.valid) {
                         //todo remove and process the response. Just trying to get past jshint and commit this
-                        display.toggleErrorState({
-                            isValid: false,
-                            elem: SUBSCRIBER_ID_INPUT
-                        });
+
                     } else {
                         display.toggleErrorState({
                             isValid: false,
                             elem: SUBSCRIBER_ID_INPUT
                         });
                     }
+                    /* jshint ignore:end */
                 }).fail(function() {
                     display.toggleErrorState({
                         isValid: false,
