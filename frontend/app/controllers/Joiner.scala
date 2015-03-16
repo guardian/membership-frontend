@@ -184,7 +184,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
 
     val futureContentOpt = request.cookies.get("GU_MEM_REFERER").map(_.value).map { referer =>
-      val refererPath = referer.replace("http://www.theguardian.com", "")
+      val refererPath = referer.replace(Config.guardianUrl, "")
       contentApiService.contentItemQuery(refererPath).map(_.content.map(MembersOnlyContent))
     }.getOrElse(Future.successful(None))
 
