@@ -5,11 +5,27 @@
 <fieldset class="fieldset">
 
     <div class="fieldset__heading">
+        <h2 class="fieldset__headline">Subscribers pay nothing for 6 months</h2>
+        <div class="fieldset__note">what this link TODO</div>
         <h2 class="fieldset__headline">Select payment option</h2>
         <div class="fieldset__note">Price includes VAT</div>
     </div>
 
     <div class="fieldset__fields">
+
+        <div class="fieldset__fields">
+
+            <div class="form-field">
+                <label class="label optional-marker" for="subscriber">Subscriber account number</label>
+                <input type="text"
+                       name="subscriber"
+                       id="subscriber"
+                       value=""
+                       class="input-text js-subscriber-id-input" />
+                <button class="action js-subscriber-id-submit">HELLO </button>
+                @fragments.form.errorMessage("NOPE")
+            </div>
+        </div>
 
         <div class="form-field js-payment-options-container">
 
