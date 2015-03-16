@@ -83,61 +83,36 @@
             </div>
         </section>
 
-        @contentOpt.fold {
-            @eventDetailsOpt match {
-                case Some((event, iframeUrl)) => {
+        @eventDetailsOpt match {
+            case Some((event, iframeUrl)) => {
 
-                    <section class="page-section page-section--bordered">
-                        <div class="page-section__lead-in">
-                            <h2 class="page-section__headline">Complete your ticket purchase</h2>
-                        </div>
-                        <div class="page-section__content">
-                            <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again.</p>
-                            <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0"
-                            hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
-                        </div>
-                    </section>
-                }
-
-                case None => {
-
-                    <section class="page-section page-section--bordered">
-                        <div class="page-section__lead-in">
-                            <h2 class="page-section__headline">Get Started</h2>
-                        </div>
-                        <div class="page-section__content">
-                            <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
-                            <a class="action" href="@routes.Event.list">Get started</a>
-                        </div>
-                    </section>
-                }
+                <section class="page-section page-section--bordered">
+                    <div class="page-section__lead-in">
+                        <h2 class="page-section__headline">Complete your ticket purchase</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <p>
+                           We're currently improving our ticket purchasing system, in the meantime you will have to enter
+                           some details again.
+                        </p>
+                        <iframe src="@iframeUrl" width="100%" height="@iframeHeight(event)" frameborder="0" vspace="0"
+                        hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
+                    </div>
+                </section>
             }
-        } { content =>
-            <section class="page-section page-section--bordered">
-                <div class="page-section__lead-in">
-                    <h2 class="page-section__headline">Get Started</h2>
-                </div>
-                <div class="page-section__content">
-                    <a href="@content.content.webUrl" class="entry block-hover minimal-link no-underline">
-                        @for(img <- content.imgOpt) {
-                            <div class="entry__media">
-                                <img class="block-hover__media responsive-img"
-                                src="@img.defaultImage"
-                                sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
-                                srcset="@img.srcset"
-                                alt="@img.altText"
-                                itemprop="image"/>
-                            </div>
-                        }
-                        <div class="entry__content">
-                            <h3 class="entry__title">
-                                @fragments.inlineIcon("outbound-link", Seq("icon-inline--brand-dark"))
-                                @content.content.webTitle
-                            </h3>
-                        </div>
-                    </a>
-                </div>
-            </section>
+
+            case None => {
+
+                <section class="page-section page-section--bordered">
+                    <div class="page-section__lead-in">
+                        <h2 class="page-section__headline">Get Started</h2>
+                    </div>
+                    <div class="page-section__content">
+                        <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
+                        <a class="action" href="@routes.Event.list">Get started</a>
+                    </div>
+                </section>
+            }
         }
 
     </main>
