@@ -183,9 +183,10 @@ trait Joiner extends Controller with ActivityTracking {
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
 
-    val futureContentOpt = request.cookies.get("GU_MEM_REFERER").map(_.value).map { referer =>
-      val refererPath = referer.replace(Config.guardianUrl, "")
-      contentApiService.contentItemQuery(refererPath).map(_.content.map(MembersOnlyContent))
+    val refererCookie = request.cookies.get("GU_MEM_REFERER").map(_.value.replace(Config.guardianUrl, ""))
+
+    val futureContentOpt = refererCookie.map { referer =>
+      contentApiService.contentItemQuery(referer).map(_.content.map(MembersOnlyContent))
     }.getOrElse(Future.successful(None))
 
     for {
