@@ -20,7 +20,8 @@ requirejs.config({
         'domready': 'lib/bower-components/domready/ready',
         'stripe': 'lib/stripe/stripe.min',
         'reqwest': 'lib/bower-components/reqwest/reqwest',
-        'ajax': 'src/utils/ajax'
+        'ajax': 'src/utils/ajax',
+        'lodash': 'lib/bower-components/lodash-amd/modern'
     },
 
     // ask Require.js to load these files (all our tests)
