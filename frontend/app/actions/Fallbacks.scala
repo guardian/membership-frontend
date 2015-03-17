@@ -1,5 +1,6 @@
 package actions
 
+import com.gu.membership.salesforce.Tier
 import play.api.mvc.Results._
 import play.api.mvc.{Call, RequestHeader}
 import play.twirl.api.Html
@@ -8,6 +9,9 @@ import play.twirl.api.Html
 object Fallbacks {
 
   def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.TierController.change())
+
+  def tierChangeEnterDetails(tier: Tier)(implicit req: RequestHeader) =
+    redirectTo(controllers.routes.TierController.upgrade(tier))
 
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
