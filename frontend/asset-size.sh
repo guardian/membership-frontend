@@ -7,8 +7,8 @@ for stylesheet in ${STYLESHEETS[@]}; do
     size=`cat $stylesheet | wc -c`
     gzip_size=`gzip -c $stylesheet | wc -c`
 
-    aws cloudwatch put-metric-data --namespace TestGlob --metric-name $name --dimensions "Compression=None" --value $size
-    aws cloudwatch put-metric-data --namespace TestGlob --metric-name $name --dimensions "Compression=Gzip" --value $gzip_size
+    aws cloudwatch put-metric-data --namespace Assets --metric-name $name --dimensions "Compression=None" --value $size
+    aws cloudwatch put-metric-data --namespace Assets --metric-name $name --dimensions "Compression=Gzip" --value $gzip_size
 done
 
 JAVASCRIPTS=("public/dist/javascripts/*/*.js")
@@ -18,6 +18,6 @@ for javascript in ${JAVASCRIPTS[@]}; do
     size=`cat $javascript | wc -c`
     gzip_size=`gzip -c $javascript | wc -c`
 
-    aws cloudwatch put-metric-data --namespace TestGlob --metric-name $name --dimensions "Compression=None" --value $size
-    aws cloudwatch put-metric-data --namespace TestGlob --metric-name $name --dimensions "Compression=Gzip" --value $gzip_size
+    aws cloudwatch put-metric-data --namespace Assets --metric-name $name --dimensions "Compression=None" --value $size
+    aws cloudwatch put-metric-data --namespace Assets --metric-name $name --dimensions "Compression=Gzip" --value $gzip_size
 done
