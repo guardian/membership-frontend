@@ -42,7 +42,7 @@ trait Info extends Controller {
       request.path,
       Some(CopyConfig.copyDescriptionSupporters)
     )
-    Ok(views.html.info.supporters(pageInfo))
+    Ok(views.html.info.supporter(pageInfo))
   }
 
   def patron() = CachedAction { implicit request =>
