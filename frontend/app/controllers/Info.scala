@@ -36,7 +36,7 @@ trait Info extends Controller {
 
 
   // TODO move this to CachedAction once this work is ready to go into the wild
-  def supporters = GoogleAuthenticatedStaffAction { implicit request =>
+  def supporter = GoogleAuthenticatedStaffAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleSupporters,
       request.path,
