@@ -4,7 +4,7 @@
 @import configuration.Config
 @import model.Eventbrite._
 
-<a href="@routes.Event.details(event.slug)" class="event-item event-item--hero" itemscope itemtype="http://schema.org/Event">
+<a href="@routes.Event.details(event.slug)" class="event-item event-item--hero@if(event.isBookable){ qa-available-event-item}" itemscope itemtype="http://schema.org/Event">
     <meta itemprop="url" content="@event.memUrl">
     <div class="event-item__content">
         <div class="event-item__meta">
