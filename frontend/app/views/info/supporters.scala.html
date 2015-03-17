@@ -2,39 +2,53 @@
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
+@import configuration.Config
 
 @main("Supporters", pageInfo=pageInfo) {
 
     @* ===== About Supporters ===== *@
     <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title=Html("Be part of the Guardian"), imageBasePath="https://media.guim.co.uk/a56fc5b2ded2ced952f5fdac62d49d7232128d73/0_0_1140_684", isLead=true) {
+        @fragments.promos.promoPrimary(title=Html("Introducing Supporter Membership"), imageBasePath="https://media.guim.co.uk/a56fc5b2ded2ced952f5fdac62d49d7232128d73/0_0_1140_684", isLead=true) {
             <div class="text-feature">
-                <p>Supporters protect our editorial freedom and help us seek out those stories that people are determined to keep hidden.</p>
+                <p>Introducing Supporter from Guardian Membership.  Keep our journalism fearless, open and free from interference. For £5 a month.</p>
             </div>
             @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, modifierClass=Some("package-promo--spread"))
         }
     </div>
 
+    @* ===== Support open, independent journalism ===== *@
+    <div id="what-is-guardian-membership" class="page-slice page-slice--slim l-constrained">
+    @fragments.promos.promoVideoSecondary(
+        Html("Support open, independent journalism"),
+        videoUrl=Config.videoWhatIsGuardianMembership,
+        toneClass=Some("tone-trans-brand-dark")){
+        <div class="text-feature">
+            <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
+        </div>
+    }
+    </div>
+
     @* ===== Ensuring our independence ===== *@
     <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title=Html("Ensuring our independence"), imageBasePath="https://media.guim.co.uk/f39c1024643f4860588fbf0b127475b73efa539c/0_0_1140_684", toneClass=Some("tone-trans-brand-dark")) {
+        @fragments.promos.promoPrimary(title=Html("Fearless, progressive and free from interference"), imageBasePath="https://media.guim.co.uk/f39c1024643f4860588fbf0b127475b73efa539c/0_0_1140_684") {
             <div class="text-feature">
-                <p>The Guardian has no proprietor. Our editor answers to nobody. Supporters ensure that the Guardian remains an independent voice standing witness to issues that matter without interference.</p>
+                <p>The Guardian publishes the stories that others keep hidden. We have become the most read, serious English-language newspaper in the world, visited by 120 million unique browsers each month. Our journalism is for everyone. The Guardian is open, without a paywall, and we remain true to our 200-year old progressive values.</p>
+                <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
+            </div>
+            <div class="action-group">
+                <a class="action" href="@routes.Joiner.enterDetails(Tier.Supporter)">Become a Supporter</a>
             </div>
         }
     </div>
 
-    @* ===== Fuel our journalism ===== *@
-    <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title=Html("Fuel our journalism"), imageBasePath="https://media.guim.co.uk/8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683", toneClass=Some("tone-trans-brand")) {
-            <blockquote class="blockquote blockquote--feature">
-                The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.
-                <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-            </blockquote>
-            <div class="action-group">
-                <a class="action u-no-top-margin" href="@routes.Joiner.enterDetails(Tier.Partner)">Become a Supporter</a>
-            </div>
-        }
+    @* =====  Join The Guardian and support The Guardian ===== *@
+    <div class="page-slice page-slice--slim l-constrained">
+    @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), imageBasePath="http://media.guim.co.uk/aef2fcabd080837cdef8d7059088eef4ff73b00f/0_0_1140_684", toneClass=Some("tone-trans-brand-dark")) {
+        <blockquote class="blockquote blockquote--feature">
+            You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
+            <cite class="blockquote__citation">Polly Toynbee</cite>
+        </blockquote>
+    }
     </div>
 
     @* ===== Join Today ===== *@
