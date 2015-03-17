@@ -42,6 +42,10 @@ define(function () {
         return height;
     };
 
+    var getBreakpoint = function() {
+        return window.getComputedStyle(document.body, ':after').getPropertyValue('content');
+    };
+
     // TODO: Replace with lodash-amd
     var toArray = function (nodeList) {
         return Array.prototype.slice.call(nodeList);
@@ -51,6 +55,7 @@ define(function () {
         toArray: toArray,
         getLocationDetail: getLocationDetail,
         getSpecifiedParent: getSpecifiedParent,
-        getOuterHeight: getOuterHeight
+        getOuterHeight: getOuterHeight,
+        getBreakpoint: getBreakpoint
     };
 });
