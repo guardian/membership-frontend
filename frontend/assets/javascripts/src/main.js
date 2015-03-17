@@ -1,6 +1,6 @@
 require([
     'ajax',
-    'src/utils/analytics/setup',
+    'src/modules/analytics/setup',
     'src/modules/events/cta',
     'src/modules/events/filter',
     'src/modules/slideshow',
@@ -12,7 +12,7 @@ require([
     'src/modules/UserDetails',
     'src/modules/events/eventPriceEnhance',
     'src/modules/patterns',
-    'src/utils/modal',
+    'src/modules/modal',
     'src/modules/form',
     'src/modules/form/processSubmit',
     'src/modules/metrics',
