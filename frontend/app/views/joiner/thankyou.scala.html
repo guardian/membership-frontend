@@ -4,6 +4,8 @@
 @import views.support.Dates._
 @import views.support.Prices._
 @import views.support.Social.joinThankyou
+@import com.gu.membership.salesforce.Tier
+@import configuration.Config
 
 @iframeHeight(event: model.RichEvent.RichEvent) = @{
     val ticketHeight = 60
@@ -22,6 +24,17 @@
         }
         "Welcome to Guardian Membership"
     }
+}
+
+@getStarted(content: Html) = {
+    <section class="page-section page-section--bordered">
+        <div class="page-section__lead-in">
+            <h2 class="page-section__headline">Get Started</h2>
+        </div>
+        <div class="page-section__content">
+            @content
+        </div>
+    </section>
 }
 
 @main(title) {
@@ -96,16 +109,20 @@
             }
 
             case None => {
-
-                <section class="page-section page-section--bordered">
-                    <div class="page-section__lead-in">
-                        <h2 class="page-section__headline">Get Started</h2>
-                    </div>
-                    <div class="page-section__content">
-                        <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
-                        <a class="action" href="@routes.Event.list">Get started</a>
-                    </div>
-                </section>
+                @member.tier match {
+                    case Tier.Supporter => {
+                        @getStarted {
+                            <p>Visit the Members area of theguardian.com, see all the latest news and highlights from our membership programme.</p>
+                            <a class="action" href="@Config.guardianMembershipUrl">Get started</a>
+                        }
+                    }
+                    case _ => {
+                        @getStarted {
+                            <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
+                            <a class="action" href="@routes.Event.list">Get started</a>
+                        }
+                    }
+                }
             }
         }
 
