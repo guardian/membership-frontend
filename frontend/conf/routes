@@ -88,7 +88,7 @@ GET            /help                              controllers.Info.help
 GET            /feedback                          controllers.Info.feedback
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /about                             controllers.Info.about
-GET            /about/supporters                  controllers.Info.supporters
+GET            /about/supporter                   controllers.Info.supporter
 GET            /patrons                           controllers.Info.patron
 
 # Offer

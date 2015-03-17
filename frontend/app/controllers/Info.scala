@@ -36,13 +36,13 @@ trait Info extends Controller {
 
 
   // TODO move this to CachedAction once this work is ready to go into the wild
-  def supporters = GoogleAuthenticatedStaffAction { implicit request =>
+  def supporter = GoogleAuthenticatedStaffAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleSupporters,
       request.path,
       Some(CopyConfig.copyDescriptionSupporters)
     )
-    Ok(views.html.info.supporters(pageInfo))
+    Ok(views.html.info.supporter(pageInfo))
   }
 
   def patron() = CachedAction { implicit request =>
