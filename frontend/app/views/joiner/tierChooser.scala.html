@@ -20,7 +20,7 @@
             <div class="page-section__content">
                 <h2 class="h-section h-section--lead">@sectionTitle</h2>
 
-                @if(contentAccessOpt.filter(_.isPaidAccess)) {
+                @if(contentAccessOpt.filter(_.isPaidMembersOnly)) {
                     <ul class="grid grid--bordered grid--2up-stacked">
                         <li class="grid__item">
                             @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))

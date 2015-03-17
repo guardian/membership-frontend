@@ -58,8 +58,8 @@ trait Joiner extends Controller with ActivityTracking {
     val contentAccessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
 
     val sectionTitle = contentAccessOpt.map {
-      case i if i.isMembershipAccess => "You need to be a Guardian member to access this content"
-      case i if i.isPaidAccess => "You need to be a Partner or a Patron to access this content"
+      case i if i.isMembersOnly => "You need to be a Guardian member to access this content"
+      case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to access this content"
     }.getOrElse(eventOpt.fold("Choose a membership tier to continue with your booking")(_.metadata.chooseTier.sectionTitle))
 
     if(contentReferer.nonEmpty && contentAccessOpt.nonEmpty) {
