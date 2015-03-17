@@ -1,7 +1,8 @@
 @(event: model.RichEvent.RichEvent, sizes: Option[String] = None, lazyLoad: Boolean = true)
 
 @for(img <- event.imgOpt) {
-    <img src="@img.defaultImage"
+    <img
+        @if(!lazyLoad){src="@img.defaultImage"}
         @if(lazyLoad){data-srcset="@img.srcset"} else {srcset="@img.srcset"}
         sizes="@sizes.getOrElse("100vw")"
         alt="@img.altText"

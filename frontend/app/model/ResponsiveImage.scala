@@ -7,8 +7,14 @@ case class ResponsiveImageGroup(
   altText: String,
   availableImages: Seq[ResponsiveImage]
 ) {
-  val defaultImage = availableImages.head.path
-  val srcset = availableImages.map { img =>
+
+  private val sortedImages = availableImages.sortBy(_.width)
+
+  val smallestImage = sortedImages.head.path
+  val defaultImage = sortedImages.find(_.width > 300).map(_.path).getOrElse(smallestImage)
+
+  val srcset = sortedImages.map { img =>
     img.path + " " + img.width.toString() + "w"
   }.mkString(", ")
+
 }
