@@ -1,41 +1,66 @@
 define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, ajax, display) {
     'use strict';
 
-    var SUBSCRIBER_ID_INPUT = document.querySelector('.js-subscriber-id-input');
-    var SUBSCRIBER_ID_SUBMIT = document.querySelector('.js-subscriber-id-submit');
+    var PAYMENT_OPTIONS_CONTAINER_ELEM = document.querySelector('.js-payment-options-container');
+    var SUBSCRIBER_PAYMENT_OPTIONS_CONTAINER_ELEM = document.querySelector('.js-subscriber-payment-options-container');
+    var SUBSCRIBER_ID_INPUT_ELEM = document.querySelector('.js-subscriber-id-input');
+    var SUBSCRIBER_ID_SUBMIT_ELEM = document.querySelector('.js-subscriber-id-submit');
     var POSTCODE_ELEM = document.querySelector('.js-postcode');
+    var SUBMIT_INPUT_ELEM = document.querySelector('.js-submit-input');
 
-    var init = function() {
-        if (SUBSCRIBER_ID_INPUT && SUBSCRIBER_ID_SUBMIT) {
-            bean.on(SUBSCRIBER_ID_SUBMIT, 'click', function(e) {
-                e.preventDefault();
+    function init() {
+        if (SUBSCRIBER_ID_INPUT_ELEM && SUBSCRIBER_ID_SUBMIT_ELEM) {
+            bean.on(SUBSCRIBER_ID_SUBMIT_ELEM, 'click', function(event) {
+                event.preventDefault();
 
-                var subscriberId = SUBSCRIBER_ID_INPUT.value;
-                var postcode = POSTCODE_ELEM.value;
+                var subscriberId = SUBSCRIBER_ID_INPUT_ELEM.value,
+                    postcode = POSTCODE_ELEM.value;
 
                 ajax({
-                    url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo get postcode & lastname
+                    url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo lastname
                 }).then(function(respsonse) {
-                    /* jshint ignore:start */
                     if(respsonse.valid) {
-                        //todo remove and process the response. Just trying to get past jshint and commit this
-
+                        handleSuccess();
                     } else {
-                        display.toggleErrorState({
-                            isValid: false,
-                            elem: SUBSCRIBER_ID_INPUT
-                        });
+                        handleError();
                     }
-                    /* jshint ignore:end */
-                }).fail(function() {
-                    display.toggleErrorState({
-                        isValid: false,
-                        elem: SUBSCRIBER_ID_INPUT
-                    });
-                });
+                }).fail(handleError);
             });
         }
-    };
+    }
+
+    function handleSuccess() {
+        /**
+         * Disable subscriber number fields
+         */
+        SUBSCRIBER_ID_SUBMIT_ELEM.setAttribute('disabled', true);
+        SUBSCRIBER_ID_INPUT_ELEM.setAttribute('readonly', true);
+
+        /**
+         * Toggle payment options
+         */
+        PAYMENT_OPTIONS_CONTAINER_ELEM.setAttribute('hidden', true);
+        SUBSCRIBER_PAYMENT_OPTIONS_CONTAINER_ELEM.removeAttribute('hidden');
+
+        /**
+         * Deselect any currently selected options,
+         *  select first subscriber option.
+         */
+        PAYMENT_OPTIONS_CONTAINER_ELEM.querySelector('[checked]').removeAttribute('checked');
+        SUBSCRIBER_PAYMENT_OPTIONS_CONTAINER_ELEM.querySelectorAll('[type="radio"]')[0].setAttribute('checked', true);
+
+        /**
+         * Update submit label
+         */
+        SUBMIT_INPUT_ELEM.textContent = 'Join Now';
+    }
+
+    function handleError() {
+        display.toggleErrorState({
+            isValid: false,
+            elem: SUBSCRIBER_ID_INPUT_ELEM
+        });
+    }
 
     return {
         init: init

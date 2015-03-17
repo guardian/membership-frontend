@@ -52,7 +52,9 @@
                         @fragments.form.createPassword()
                     }
 
+                    @fragments.form.subscriberNumber()
                     @fragments.form.paymentOptions(tier)
+                    @fragments.form.paymentOptionsForSubscribers()
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         formType = "billingAddress",
