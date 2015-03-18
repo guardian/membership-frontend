@@ -1,3 +1,5 @@
+
+
 package controllers
 
 import actions.Functions._
@@ -5,6 +7,7 @@ import actions._
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
+import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
 import controllers.Testing.AuthorisedTester
@@ -22,6 +25,7 @@ import scala.concurrent.Future
 import tracking.{EventData, EventActivity, MemberData, ActivityTracking}
 
 trait Joiner extends Controller with ActivityTracking {
+  val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
 
@@ -48,15 +52,10 @@ trait Joiner extends Controller with ActivityTracking {
       Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    val contentReferer = request.headers.get("referer");
+    val contentReferer = request.headers.get("referer")
     val contentAccess = request.getQueryString("membershipAccess")
 
-    if(contentReferer.nonEmpty && contentAccess.nonEmpty) {
-      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withCookies(Cookie("GU_MEM_REFERER", contentReferer.get, secure = true, httpOnly = false))
-    } else {
-      Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
-    }
-
+    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
@@ -183,10 +182,8 @@ trait Joiner extends Controller with ActivityTracking {
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
 
-    val refererCookie = request.cookies.get("GU_MEM_REFERER").map(_.value.replace(Config.guardianUrl, ""))
-
-    val futureContentOpt = refererCookie.map { referer =>
-      contentApiService.contentItemQuery(referer).map(_.content.map(MembersOnlyContent))
+    val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
+      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
     }.getOrElse(Future.successful(None))
 
     for {
