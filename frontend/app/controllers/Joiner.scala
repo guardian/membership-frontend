@@ -190,7 +190,7 @@ trait Joiner extends Controller with ActivityTracking {
       paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-      contentOpt <- futureContentOpt
+      contentOpt <- futureContentOpt.recover { case _ => None }
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
