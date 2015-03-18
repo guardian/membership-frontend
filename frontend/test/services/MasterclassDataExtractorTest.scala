@@ -38,8 +38,6 @@ class MasterclassDataExtractorTest extends Specification {
       val masterclassContent = masterclassesContent(0)
       masterclassContent.eventId mustEqual("13906168725")
       masterclassContent.webUrl mustEqual("writing-gu-url")
-      masterclassContent.images.size mustEqual(2)
-      masterclassContent.images.flatMap(_.file) must contain(exactly("main-image-file-location-1", "main-image-file-location-2"))
     }
 
     "create multiple masterclass content for multiple eventbrite urls" in {
@@ -51,7 +49,6 @@ class MasterclassDataExtractorTest extends Specification {
       masterclassesContent.size mustEqual(2)
       masterclassesContent.map(_.eventId) must contain(exactly("13906168725", "1234"))
       masterclassesContent.map(_.webUrl) must contain(exactly("writing-gu-url", "writing-gu-url"))
-      masterclassesContent.flatMap(_.images.flatMap(_.file)) must contain(exactly("main-image-file-location-1", "main-image-file-location-2", "main-image-file-location-1", "main-image-file-location-2"))
 
     }
 
@@ -78,11 +75,5 @@ class MasterclassDataExtractorTest extends Specification {
       masterclassesContent.size mustEqual(0)
     }
 
-    "create a masterclass with empty asset list if no main element is found" in {
-      val itemWithNoMainElement = item.copy(elements = Some(List(thumbnailElement)))
-      val masterclassesContent = extractEventbriteInformation(itemWithNoMainElement)
-
-      masterclassesContent(0).images must be(List())
-    }
   }
 }
