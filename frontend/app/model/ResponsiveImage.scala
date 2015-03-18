@@ -1,10 +1,40 @@
 package model
 
+import com.gu.contentapi.client.model.Content
+import model.RichEvent.GridImage
+
+object ResponsiveImageGroup {
+  def apply(content: Content): Option[ResponsiveImageGroup] = {
+    val elementOpt = content.elements.flatMap(_.find(_.relation == "main"))
+    elementOpt.flatMap { element =>
+      Some(ResponsiveImageGroup(
+        altText = element.assets.headOption.flatMap(_.typeData.get("altText")),
+        metadata = None,
+        availableImages = element.assets.flatMap { asset =>
+          for {
+            secureFile <- asset.file.map(_.replace("http://static", "https://static-secure"))
+            width <- asset.typeData.get("width")
+          } yield ResponsiveImage(secureFile, width.toInt)
+        }
+      ))
+    }
+  }
+  def apply(image: GridImage): ResponsiveImageGroup = ResponsiveImageGroup(
+    altText = image.metadata.description,
+    metadata = Some(image.metadata),
+    availableImages = image.assets.map { asset =>
+      val path = asset.secureUrl.getOrElse(asset.file)
+      val width = asset.dimensions.width
+      ResponsiveImage(path, width)
+    }
+  )
+}
+
 case class ResponsiveImage(path: String, width: Int)
 
 case class ResponsiveImageGroup(
-  name: Option[String] = None,
-  altText: String,
+  altText: Option[String],
+  metadata: Option[Grid.Metadata] = None,
   availableImages: Seq[ResponsiveImage]
 ) {
 

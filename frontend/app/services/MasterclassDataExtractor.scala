@@ -1,11 +1,12 @@
 package services
 
 import com.gu.contentapi.client.model.{Asset, Content}
+import model.ResponsiveImageGroup
 
 import scala.util.matching.Regex
 
 //todo refactor this to use Content and not webUrl and images
-case class MasterclassData(eventId: String, webUrl: String, images: List[Asset])
+case class MasterclassData(eventId: String, webUrl: String, images: Option[ResponsiveImageGroup])
 
 object MasterclassDataExtractor {
 
@@ -13,16 +14,13 @@ object MasterclassDataExtractor {
   val regex = new Regex(eventbriteUrl)
 
   def extractEventbriteInformation(content: Content): Seq[MasterclassData] = {
-    val elementOpt = content.elements.flatMap(_.find(_.relation == "main"))
-    val assets = elementOpt.map(_.assets).getOrElse(List.empty)
-
     val eventbriteIdsFromRefs =
       content.references.filter(_.`type` == "eventbrite").map(_.id.stripPrefix("eventbrite/"))
 
     val eventbriteIds =
       if (eventbriteIdsFromRefs.nonEmpty) eventbriteIdsFromRefs else scrapeEventbriteIdsFrom(content)
 
-    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, assets))
+    eventbriteIds.map(eventId => MasterclassData(eventId, content.webUrl, ResponsiveImageGroup(content)))
   }
 
   def scrapeEventbriteIdsFrom(content: Content): Seq[String] = for {

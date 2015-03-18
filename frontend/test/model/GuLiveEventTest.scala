@@ -3,7 +3,7 @@ package model
 import model.EventbriteTestObjects._
 import model.Grid.{GridResult, Metadata}
 import model.GridDeserializer._
-import model.RichEvent.{GuLiveEvent, EventImage}
+import model.RichEvent.{GuLiveEvent, GridImage}
 import org.specs2.mock.Mockito
 import play.api.test.PlaySpecification
 import utils.Resource
@@ -18,7 +18,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
 
     "contain metadata and socialUrl for an event image" in {
 
-      val image = EventImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
+      val image = GridImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
       val guEvent = GuLiveEvent(event, Some(image), None)
 
       guEvent.imageMetadata.flatMap(_.description) mustEqual Some("It's Chris!")
