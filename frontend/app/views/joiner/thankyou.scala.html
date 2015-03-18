@@ -19,7 +19,13 @@
     event.ticket_classes.length * ticketHeight + iframeChrome
 }
 
-@title = @{ if (upgrade) "Thank you for upgrading" else "Thank you | " + member.tier.name }
+@title = @{
+    if(upgrade) {
+        s"Thank you for upgrading | ${member.tier.name}"
+    } else {
+        s"Thank you | ${member.tier.name}"
+    }
+}
 
 @pageHeader = @{
     if(upgrade) {
