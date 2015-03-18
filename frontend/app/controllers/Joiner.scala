@@ -52,7 +52,7 @@ trait Joiner extends Controller with ActivityTracking {
       Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    val contentReferer = request.headers.get("referer")
+    val contentReferer = request.headers.get(REFERER)
     val contentAccess = request.getQueryString("membershipAccess")
 
     Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
