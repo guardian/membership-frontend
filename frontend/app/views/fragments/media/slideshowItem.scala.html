@@ -1,5 +1,4 @@
-@(imgGroup: model.ResponsiveImageGroup, description: String)
-
+@(imgGroup: model.ResponsiveImageGroup, descriptionOpt: Option[String])
 
 <figure class="slideshow__element js-slideshow-item">
     <figcaption class="slideshow__detail">
@@ -8,7 +7,9 @@
             <span class="progress-indicator__separator">/ </span>
             <span class="progress-indicator__count js-slideshow-total"></span>
         </div>
-        <div class="slideshow__description">@description</div>
+        @for(description <- descriptionOpt) {
+            <div class="slideshow__description">@description</div>
+        }
     </figcaption>
     <img
         alt="@imgGroup.altText"

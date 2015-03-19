@@ -77,7 +77,7 @@ object RichEvent {
     )
   )
 
-  case class EventImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
+  case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
 
   trait RichEvent {
     val event: EBEvent
@@ -85,26 +85,14 @@ object RichEvent {
     val socialImgUrl: Option[String]
     val tags: Seq[String]
     val metadata: Metadata
-    val imageMetadata: Option[Grid.Metadata]
     val contentOpt: Option[Content]
     val pastImageOpt: Option[Asset]
     def deficientGuardianMembersTickets: Boolean
   }
 
-  abstract class LiveEvent(image: Option[EventImage], contentOpt: Option[Content]) extends RichEvent {
+  abstract class LiveEvent(image: Option[GridImage], contentOpt: Option[Content]) extends RichEvent {
 
-    val imageMetadata = image.map(_.metadata)
-
-    val imgOpt = image.flatMap { imgData =>
-      Some(ResponsiveImageGroup(
-        altText = event.name.text,
-        availableImages = imgData.assets.map { asset =>
-          val path = asset.secureUrl.getOrElse(asset.file)
-          val width = asset.dimensions.width
-          ResponsiveImage(path, width)
-        }
-      ))
-    }
+    val imgOpt = image.map(ResponsiveImageGroup(_))
 
     val socialImgUrl = imgOpt.map(_.defaultImage)
 
@@ -126,14 +114,14 @@ object RichEvent {
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
-  case class GuLiveEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content])
+  case class GuLiveEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
     extends LiveEvent(image, contentOpt) {
     val metadata = {
       guLiveMetadata.copy(highlightsOpt = highlight)
     }
   }
 
-  case class DiscoverEvent(event: EBEvent, image: Option[EventImage], contentOpt: Option[Content])
+  case class DiscoverEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
     extends LiveEvent(image, contentOpt) {
     val metadata = {
       discoverMetadata.copy(highlightsOpt = highlight)
@@ -141,34 +129,14 @@ object RichEvent {
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
-
-    val imgOpt = data.flatMap(_.images.headOption).flatMap { asset =>
-      asset.file.map { imgUrl =>
-        ResponsiveImageGroup(
-          altText = event.name.text,
-          availableImages = Seq(ResponsiveImage(
-            path = imgUrl.replace("http://static", "https://static-secure"),
-            width = asset.typeData.get("width").map(_.toInt).getOrElse(460)
-          ))
-        )
-      }
-    }
-
-    val imageMetadata = None
-
+    val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
-
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
-
     val metadata = masterclassMetadata
-
     val contentOpt = None
-
     val pastImageOpt = None
-
     def deficientGuardianMembersTickets = false
   }
-
 
   object MasterclassEvent {
     case class tagItem(categoryName: String, subCategories: Seq[String] = Seq())
