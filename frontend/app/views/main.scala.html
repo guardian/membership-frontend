@@ -25,6 +25,21 @@
         }
         <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
 
+        <script type="application/ld+json">
+            {
+                "@@context": "http://schema.org",
+                "@@type": "Organization",
+                "name": "Guardian Membership",
+                "url": "@(Config.membershipUrl)",
+                "logo": "@(Config.membershipUrl)@Asset.at("images/favicons/152x152.png")",
+                "sameAs" : [
+                    "http://www.twitter.com/@(Config.twitterUsername)",
+                    "@(Config.youtubeUrl)",
+                    "@(Config.googleplusUrl)"
+                ]
+            }
+        </script>
+
         <meta property="og:type" content="website"/>
         <meta property="fb:app_id" content="@Config.facebookAppId"/>
         <meta name="twitter:site" content="@@@Config.twitterUsername"/>
