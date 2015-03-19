@@ -151,6 +151,8 @@ object Config {
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
+  val youtubeMembershipVerificationId = config.getString("youtube.membership.verification.id")
+
   val facebookJoinerConversionTrackingId =
     Tier.allPublic.map { tier => tier -> config.getString(s"facebook.joiner.conversion.${tier.slug}") }.toMap
 
