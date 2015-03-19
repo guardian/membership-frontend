@@ -3,11 +3,22 @@
 @import helper._
 @import model.Benefits
 @import com.gu.membership.salesforce.Tier
+@import org.joda.time.DateTime
+@import com.github.nscala_time.time.Imports._
+
+@* //TODO remove this and relevant imports on 31/3/2015 *@
+@foundingMember = @{
+    if(DateTime.now < new DateTime(2015, 3, 31, 0, 0).withZone(DateTimeZone.UTC)) {
+        Some("Join before March 31st to become a Founding Member and the price you pay will not rise.")
+    } else {
+        None
+    }
+}
 
 @main("Join", pageInfo=pageInfo) {
 
     <main role="main" class="page-content l-constrained">
-        @fragments.page.pageHeader("Become a member", Some("Join before March 31st to become a Founding Member and the price you pay will not rise."))
+        @fragments.page.pageHeader("Become a member", foundingMember)
 
         <section class="page-section">
              <div class="page-section__content">
