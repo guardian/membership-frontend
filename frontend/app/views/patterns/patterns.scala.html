@@ -1,9 +1,7 @@
 @(eventPortfolio: model.EventPortfolio)(implicit token: play.filters.csrf.CSRF.Token)
-@import helper._
-@import model.Benefits
 @import com.gu.membership.salesforce.Tier
-@import model.FlashMessage
 @import configuration.Config
+@import model.{Benefits, FlashMessage}
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">

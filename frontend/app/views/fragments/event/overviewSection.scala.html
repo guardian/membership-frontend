@@ -1,11 +1,7 @@
 @(title: String, events: Seq[model.RichEvent.RichEvent])
-@import model.RichEvent.MasterclassEvent
-@import model.RichEvent.GuLiveEvent
-@import model.RichEvent.DiscoverEvent
-
-@import model.Eventbrite.InternalTicketing
-@import model.Eventbrite.ExternalTicketing
 @import configuration.Config
+@import model.Eventbrite.{ExternalTicketing, InternalTicketing}
+@import model.RichEvent.{DiscoverEvent, GuLiveEvent, MasterclassEvent}
 
 @eventTrait(text: String, identifier: String = "") = {
     <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}">

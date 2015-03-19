@@ -1,12 +1,10 @@
 @(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
+@import model.RichEvent._
 @import play.twirl.api.Html
-
+@import views.support.Asset
 @import views.support.Dates._
 @import views.support.Social.eventDetail
-@import views.support.Asset
-@import model.Eventbrite._
-@import model.RichEvent._
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 

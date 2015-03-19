@@ -1,8 +1,6 @@
 @(event: model.RichEvent.RichEvent)
 
 @import views.support.Dates._
-@import configuration.Config
-@import model.Eventbrite._
 
 <a href="@routes.Event.details(event.slug)" class="event-item@if(event.isBookable){ qa-available-event-item}" itemscope itemtype="http://schema.org/Event">
     <meta itemprop="url" content="@event.memUrl">

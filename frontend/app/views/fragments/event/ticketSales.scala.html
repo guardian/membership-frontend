@@ -1,10 +1,9 @@
 @(event: model.RichEvent.RichEvent, ticketing: model.Eventbrite.InternalTicketing)
 
-@import views.support.Dates._
-@import org.joda.time.Instant
-@import com.github.nscala_time.time.Imports._
-@import model.RichEvent._
 @import com.gu.membership.salesforce.Tier
+@import model.RichEvent._
+@import org.joda.time.Instant
+@import views.support.Dates._
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
     Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>${salesDate.pretty(needToDisplayTimes)}</time>")
