@@ -1,5 +1,4 @@
 package configuration
-import configuration.Config
 
 object Social {
   val youtube = "https://www.youtube.com/user/guardianmembership"
