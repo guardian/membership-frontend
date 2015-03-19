@@ -33,8 +33,6 @@ trait Joiner extends Controller with ActivityTracking {
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
-  def secureHiddenTiers(tier: Tier) = if (Tier.allPublic.contains(tier)) Action else AuthorisedTester
-
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleJoin,
@@ -74,7 +72,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
-  def enterDetails(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberWithKnownTierChangeAction(tier)).async { implicit request =>
+  def enterDetails(tier: Tier) = AuthenticatedNonMemberWithKnownTierChangeAction(tier).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
@@ -134,7 +132,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
-  def joinPaid(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
+  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
@@ -159,7 +157,7 @@ trait Joiner extends Controller with ActivityTracking {
       }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
 
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
