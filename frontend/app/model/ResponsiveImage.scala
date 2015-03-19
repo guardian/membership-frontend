@@ -3,6 +3,14 @@ package model
 import com.gu.contentapi.client.model.Content
 import model.RichEvent.GridImage
 
+object ResponsiveImageGenerator {
+  def apply(id: String, sizes: Seq[Int]): Seq[ResponsiveImage] = {
+    sizes.map { size =>
+      ResponsiveImage(s"https://media.guim.co.uk/$id/$size.jpg", size)
+    }
+  }
+}
+
 object ResponsiveImageGroup {
   def apply(content: Content): Option[ResponsiveImageGroup] = {
     val elementOpt = content.elements.flatMap(_.find(_.relation == "main"))
