@@ -85,7 +85,6 @@ object Config {
 
   val facebookAppId = config.getString("facebook.app.id")
 
-
   val touchpointDefaultBackend = touchpointBackendConfigFor("default")
   val touchpointTestBackend = touchpointBackendConfigFor("test")
 
