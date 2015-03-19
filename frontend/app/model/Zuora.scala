@@ -84,7 +84,7 @@ object Zuora {
       PaymentSummary(sortedInvoiceItems.last, sortedInvoiceItems.dropRight(1))
     }
   }
-  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String) {
+  case class PreviewInvoiceItem(price: Float, serviceStartDate: DateTime, serviceEndDate: DateTime, productId: String, unitPrice: Float) {
     val renewalDate = serviceEndDate.plusDays(1)
   }
 
@@ -95,6 +95,9 @@ object Zuora {
     val futureSubscriptionInvoice = sortedInvoiceItems.last
     val totalPrice = invoiceItems.map(_.price).sum
   }
+
+  case class PaymentSummaryWithFreeStartingPeriod(subscriptionDetails: SubscriptionDetails, previewInvoiceItems: Seq[PreviewInvoiceItem])
+
 }
 
 object ZuoraReaders {
@@ -190,7 +193,8 @@ object ZuoraDeserializer {
         (node \ "ChargeAmount").text.toFloat + (node \ "TaxAmount").text.toFloat,
         new DateTime((node \ "ServiceStartDate").text),
         new DateTime((node \ "ServiceEndDate").text),
-        (node \ "ProductId").text
+        (node \ "ProductId").text,
+        (node \ "UnitPrice").text.toFloat
       )
     }
 

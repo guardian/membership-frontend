@@ -2,13 +2,14 @@ package controllers
 
 import actions.Functions._
 import actions._
+import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
 import controllers.Testing.AuthorisedTester
-import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
+import forms.MemberForm._
 import model.RichEvent._
 import model._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -16,9 +17,9 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import services._
 import services.EventbriteService._
+import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 
 import scala.concurrent.Future
-import tracking.{EventData, EventActivity, MemberData, ActivityTracking}
 
 trait Joiner extends Controller with ActivityTracking {
 
@@ -124,13 +125,21 @@ trait Joiner extends Controller with ActivityTracking {
   }
 
   def joinPaid(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
-      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
+    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), {
+
+      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) } ) //TODO pass subscriberOffer to thankyou
   }
 
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
 
-    MemberService.createMember(request.user, formData, IdentityRequest(request))
+    val useSubscriberOffer = formData match {
+      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.subscriberOffer
+      case _ => false
+    }
+
+    //todo check user can use subscriber offer (again) before proceeding
+
+    MemberService.createMember(request.user, formData, IdentityRequest(request), useSubscriberOffer)
       .map { member =>
         for {
           eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
@@ -148,7 +157,7 @@ trait Joiner extends Controller with ActivityTracking {
       }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false, freeStartingPeriodOffer: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
@@ -170,11 +179,43 @@ trait Joiner extends Controller with ActivityTracking {
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
 
+    def getPaymentSummaryForMembershipsWithFreePeriod = {
+      val subscriptionStatusFuture = request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
+
+      for {
+        subscriptionStatus <- subscriptionStatusFuture
+        subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, true)
+        customerOpt <- futureCustomerOpt
+        eventDetailsOpt <- futureEventDetailsOpt
+      } yield {
+        val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
+
+        firstPreviewItem.map { firstPreviewInvoice =>
+
+          MembershipSummary(subscriptionDetails.startDate, subscriptionDetails.endDate, 0f,
+            subscriptionDetails.planAmount, Some(firstPreviewInvoice.price), firstPreviewInvoice.serviceStartDate)
+        }
+      }
+    }
+
+    def getPaymentSummaryForMembershipsNoFreePeriod = {
+      for {
+        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
+
+      } yield Some(MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
+        paymentSummary.totalPrice, paymentSummary.current.price, None, paymentSummary.current.nextPaymentDate))
+    }
+
     for {
-      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-    } yield Ok(views.html.joiner.thankyou(request.member, paymentSummary, customerOpt.map(_.card), eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
+      summary <- if(freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod else getPaymentSummaryForMembershipsNoFreePeriod
+    } yield {
+
+
+      Ok(views.html.joiner.thankyou(request.member, customerOpt.map(_.card), summary, eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
+    }
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

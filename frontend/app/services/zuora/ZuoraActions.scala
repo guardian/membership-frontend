@@ -88,10 +88,12 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address) extends ZuoraAction[SubscribeResult] {
+                     address: Address, subscriberOffer: Boolean) extends ZuoraAction[SubscribeResult] {
 
   val body = {
-    val now = formatDateTime(DateTime.now)
+    val now = DateTime.now
+    val effectiveDate = formatDateTime(now)
+    val contractAcceptanceDate = if (subscriberOffer) formatDateTime(now.plusMonths(6)) else effectiveDate
 
     val payment = customerOpt.map { customer =>
       <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
@@ -138,11 +140,11 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
         <ns1:SubscriptionData>
           <ns1:Subscription xsi:type="ns2:Subscription">
             <ns2:AutoRenew>true</ns2:AutoRenew>
-            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
-            <ns2:ContractAcceptanceDate>{now}</ns2:ContractAcceptanceDate>
+            <ns2:ContractEffectiveDate>{effectiveDate}</ns2:ContractEffectiveDate>
+            <ns2:ContractAcceptanceDate>{contractAcceptanceDate}</ns2:ContractAcceptanceDate>
             <ns2:InitialTerm>12</ns2:InitialTerm>
             <ns2:RenewalTerm>12</ns2:RenewalTerm>
-            <ns2:TermStartDate>{now}</ns2:TermStartDate>
+            <ns2:TermStartDate>{effectiveDate}</ns2:TermStartDate>
             <ns2:TermType>TERMED</ns2:TermType>
           </ns1:Subscription>
           <ns1:RatePlanData>
@@ -153,6 +155,45 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
         </ns1:SubscriptionData>
       </ns1:subscribes>
     </ns1:subscribe>
+
+  }
+}
+
+/**
+ * A hack to get when a subscription charge dates will be effective. While it's possible to get this data from an
+ * Invoice of a subscription that charges the user immediately (e.g. annual partner sign up), it's not possible to get this for data
+ * for subscriptions that charge in the future (subs offer that charges 6 months in). To achieve the latter an amend
+ * call with preview can be used - this works for the first case too.
+ *
+ */
+case class SubscriptionDetailsViaAmend(subscriptionId: String, subscriberOffer: Boolean) extends ZuoraAction[AmendResult] {
+
+
+  val now = DateTime.now
+  val dateStr = if (subscriberOffer) formatDateTime(now.plusMonths(6)) else now
+
+  val body = {
+    <ns1:amend>
+      <ns1:requests>
+        <ns1:Amendments>
+          <ns2:ContractEffectiveDate>2015-03-19</ns2:ContractEffectiveDate>
+          <ns2:EffectiveDate>2015-03-19</ns2:EffectiveDate>
+          <ns2:CustomerAcceptanceDate>2015-03-19</ns2:CustomerAcceptanceDate>
+          <ns2:Name>GetSubscriptionDetailsViaAmend</ns2:Name>
+          <ns2:Status>Completed</ns2:Status>
+          <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+          <ns2:Type>TermsAndConditions</ns2:Type>
+        </ns1:Amendments>
+        <ns1:AmendOptions>
+          <ns1:GenerateInvoice>False</ns1:GenerateInvoice>
+          <ns1:ProcessPayments>False</ns1:ProcessPayments>
+        </ns1:AmendOptions>
+        <ns1:PreviewOptions>
+          <ns1:EnablePreviewMode>True</ns1:EnablePreviewMode>
+          <ns1:PreviewThroughTermEnd>True</ns1:PreviewThroughTermEnd>
+        </ns1:PreviewOptions>
+      </ns1:requests>
+    </ns1:amend>
   }
 }
 

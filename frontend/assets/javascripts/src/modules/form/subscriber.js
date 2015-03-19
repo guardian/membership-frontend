@@ -7,6 +7,7 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
     var SUBSCRIBER_ID_SUBMIT_ELEM = document.querySelector('.js-subscriber-id-submit');
     var POSTCODE_ELEM = document.querySelector('.js-postcode');
     var SUBMIT_INPUT_ELEM = document.querySelector('.js-submit-input');
+    var HIDDEN_SUBSCRIBER_INPUT_ELEM = document.querySelector('.js-hidden-subscriber-input');
 
     function init() {
         if (SUBSCRIBER_ID_INPUT_ELEM && SUBSCRIBER_ID_SUBMIT_ELEM) {
@@ -53,6 +54,11 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
          * Update submit label
          */
         SUBMIT_INPUT_ELEM.textContent = 'Join Now';
+
+        /**
+         * Update the subscriberOffer hidden input to true
+         */
+        HIDDEN_SUBSCRIBER_INPUT_ELEM.setAttribute('value', true);
     }
 
     function handleError() {

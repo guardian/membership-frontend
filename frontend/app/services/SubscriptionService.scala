@@ -7,6 +7,7 @@ import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.{ProductRatePlan, TierPlan}
+import org.joda.time.DateTime
 import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -122,9 +123,8 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield result
   }
 
-  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress))
-  }
+  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], useSubscriberOffer: Boolean): Future[SubscribeResult] =
+    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, useSubscriberOffer))
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
     for {
@@ -132,4 +132,16 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
     } yield PaymentSummary(invoiceItems)
   }
+
+  def getPaymentSummaryWithFreeStartingPeriod(subscriptionId: String, subscriberOffer: Boolean): Future[Seq[PreviewInvoiceItem]] = {
+    for {
+
+      result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, subscriberOffer))
+    } yield {
+
+      result.invoiceItems
+    }
+  }
 }
+
+
