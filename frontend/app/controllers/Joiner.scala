@@ -157,26 +157,6 @@ trait Joiner extends Controller with ActivityTracking {
       }
   }
 
-  def returnDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[Destination]] =
-     Future.sequence(Seq(contentDestinationFor(request), eventDestinationFor(request))).map(_.flatten.headOption)
-
-  def contentDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[ContentDestination]] = {
-    request.session.get(JoinReferrer).map { referer =>
-      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent).map(ContentDestination(_)))
-    }.getOrElse(Future.successful(None))
-  }
-
-  def eventDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[EventDestination]] = {
-    val optFuture = for {
-      eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-      event <- EventbriteService.getBookableEvent(eventId)
-    } yield MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
-      EventDestination(event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))))
-    }
-
-    Future.sequence(optFuture.toSeq).map(_.headOption)
-  }
-
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
 
     def futureCustomerOpt = request.member match {
@@ -185,15 +165,36 @@ trait Joiner extends Controller with ActivityTracking {
       case _ => Future.successful(None)
     }
 
+    def futureEventDetailsOpt = {
+      val optFuture = for {
+        eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+        event <- EventbriteService.getBookableEvent(eventId)
+      } yield {
+
+        MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
+          (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
+        }
+
+      }
+
+      Future.sequence(optFuture.toSeq).map(_.headOption)
+    }
+
+    val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
+      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
+    }.getOrElse(Future.successful(None))
+
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
       customerOpt <- futureCustomerOpt
-      destinationOpt <- returnDestinationFor(request)
+      eventDetailsOpt <- futureEventDetailsOpt
+      contentOpt <- futureContentOpt.recover { case _ => None }
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
         customerOpt.map(_.card),
-        destinationOpt,
+        eventDetailsOpt,
+        contentOpt,
         upgrade
     )).discardingCookies(DiscardingCookie("GU_MEM"))
   }

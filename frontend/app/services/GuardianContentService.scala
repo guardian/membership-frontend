@@ -125,7 +125,7 @@ trait GuardianContent {
 
   def contentItemQuery(path: String): Future[ItemResponse] = {
     val itemQuery = ItemQuery(path)
-      .showFields("trailText")
+      .showFields("all")
       .showElements("all")
       .showTags("all")
     client.getResponse(itemQuery).andThen {

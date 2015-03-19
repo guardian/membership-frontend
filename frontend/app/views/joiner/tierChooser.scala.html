@@ -14,7 +14,7 @@
             </div>
             <div class="page-section__content">
                 <h2 class="h-section h-section--lead">@eventOpt.fold("Choose a membership tier to continue with your booking")(_.metadata.chooseTier.sectionTitle)</h2>
-                <ul class="grid grid--bordered grid--3up-stacked">
+                <ul class="grid grid--single-row grid--bordered grid--3up-stacked">
                     <li class="grid__item">
                         @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
                     </li>
