@@ -94,8 +94,6 @@ object Eventbrite {
 
     val isSoldOut = quantity_sold >= quantity_total
 
-    val ticketsNotSold = quantity_total - quantity_sold
-
     val priceInPence = cost.map(_.value).getOrElse(0)
 
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
@@ -133,8 +131,6 @@ object Eventbrite {
     val memberBenefitTicketOpt = memberBenefitTickets.headOption
 
     val ticketsSold = allTickets.map(_.quantity_sold).sum
-
-    val ticketsNotSold = capacity - ticketsSold
 
     val isSoldOut = ticketsSold >= capacity
 
