@@ -1,4 +1,4 @@
-@(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
@@ -41,15 +41,17 @@
         }
     </div>
 
-    @* =====  Join The Guardian and support The Guardian ===== *@
-    <div class="page-slice page-slice--slim l-constrained">
-    @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), imageBasePath="//media.guim.co.uk/17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200", toneClass=Some("tone-trans-brand-dark")) {
-        <blockquote class="blockquote blockquote--feature">
-            You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
-            <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
-        </blockquote>
+    @for(img <- pageImages.find(_.name.contains("polly-toynbee"))) {
+        @* ===== Join The Guardian and support The Guardian ===== *@
+        <div class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, toneClass = Some("tone-trans-brand-dark")) {
+            <blockquote class="blockquote blockquote--feature">
+                You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
+                <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
+            </blockquote>
+        }
+        </div>
     }
-    </div>
 
     @* ===== Join Today ===== *@
     <div class="page-slice page-slice--split tone-tint l-constrained">

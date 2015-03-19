@@ -1,4 +1,4 @@
-@(pageInfo: model.PageInfo)(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 
@@ -25,18 +25,21 @@
         }
     </div>
 
-    @* ===== Backstage Pass ===== *@
-    <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("Backstage pass to<br>the Guardian"), imageBasePath="https://media.guim.co.uk/83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684", toneClass=Some("tone-brand")) {
-            <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
+    @for(img <- pageImages.find(_.name.contains("backstage-pass"))) {
+        @* ===== Backstage Pass ===== *@
+        <div class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoSecondary(Html("Backstage pass to<br>the Guardian"), img=img, toneClass = Some("tone-brand")) {
+            <p class="text-feature">
+                In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
             <a class="action"
-               href="@routes.Joiner.enterDetails(Tier.Patron)"
-               data-metric-trigger="click"
-               data-metric-category="join"
-               data-metric-action="patron"
+            href="@routes.Joiner.enterDetails(Tier.Patron)"
+            data-metric-trigger="click"
+            data-metric-category="join"
+            data-metric-action="patron"
             >Become a Patron today</a>
         }
-    </div>
+        </div>
+    }
 
     @* ===== Get Involved ===== *@
     <div class="page-slice l-constrained">
