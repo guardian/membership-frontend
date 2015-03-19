@@ -1,4 +1,45 @@
 /* ==========================================================================
+   Articles
+   ========================================================================== */
+
+.article-snapshot {
+    width: 100%;
+    display: table;
+    margin-bottom: rem($gs-baseline);
+}
+.article-snapshot__title {
+    @include fs-textSans(3);
+    font-weight: bold;
+    margin-bottom: rem($gs-baseline / 4);
+
+    @include mq(mobileLandscape) {
+        @include fs-header(2);
+    }
+}
+.article-snapshot__trail {
+    @include fs-data(4);
+    color: $c-neutral2;
+}
+.article-snapshot__media,
+.article-snapshot__content {
+    display: table-cell;
+    vertical-align: top;
+}
+.article-snapshot__content {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        border: 0 none;
+        padding-top: 0;
+    }
+}
+.article-snapshot__media {
+    width: 30%;
+    padding-right: $gutter-width-fluid;
+}
+
+/* ==========================================================================
    Related Content
    ========================================================================== */
 

@@ -11,7 +11,7 @@
             <span itemprop="name">@item.content.webTitle</span>
         </h2>
         @for(fields <- item.content.fields) {
-            <p class="article-snapshot__trail">@Html(fields("trailText"))</p>
+            <p class="article-snapshot__trail hidden-mobile">@Html(fields("trailText"))</p>
         }
     </div>
 </a>
