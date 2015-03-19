@@ -4,7 +4,7 @@
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
 
-@import configuration.Config
+@import configuration.{Config, Social}
 @import views.support.Asset
 
 <!DOCTYPE html lang="en-GB">
@@ -25,6 +25,12 @@
         }
         <meta property="og:url" content="@(Config.membershipUrl + pageInfo.url)"/>
 
+        <meta property="og:type" content="website"/>
+        <meta property="fb:app_id" content="@Config.facebookAppId"/>
+        <meta name="twitter:site" content="@@@Config.twitterUsername"/>
+        <meta name="twitter:card" content="summary"/>
+        <meta name="google-site-verification" content="@Config.youtubeMembershipVerificationId"/>
+
         <script type="application/ld+json">
             {
                 "@@context": "http://schema.org",
@@ -33,18 +39,12 @@
                 "url": "@(Config.membershipUrl)",
                 "logo": "@(Config.membershipUrl)@Asset.at("images/favicons/152x152.png")",
                 "sameAs" : [
-                    "http://www.twitter.com/@(Config.twitterUsername)",
-                    "@(Config.youtubeUrl)",
-                    "@(Config.googleplusUrl)"
+                    "@(Social.youtube)",
+                    "@(Social.googleplus)",
+                    "@(Social.twitter)"
                 ]
             }
         </script>
-
-        <meta property="og:type" content="website"/>
-        <meta property="fb:app_id" content="@Config.facebookAppId"/>
-        <meta name="twitter:site" content="@@@Config.twitterUsername"/>
-        <meta name="twitter:card" content="summary"/>
-        <meta name="google-site-verification" content="@Config.youtubeMembershipVerificationId"/>
 
         <title>@(title + " | " + Config.siteTitle )</title>
         @fragments.javaScriptFirstSteps(pageInfo)
