@@ -33,10 +33,8 @@ trait Info extends Controller {
   def giftingPlaceholder = NoCacheAction { implicit request =>
     Ok(views.html.info.giftingPlaceholder())
   }
-
-
-  // TODO move this to CachedAction once this work is ready to go into the wild
-  def supporter = GoogleAuthenticatedStaffAction { implicit request =>
+  
+  def supporter = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleSupporters,
       request.path,
