@@ -513,3 +513,14 @@
 .ticket-sales__item__date {
     float: right;
 }
+
+/* ==========================================================================
+   Tickets left
+   ========================================================================== */
+.not-sold-tickets {
+    @include fs-data(2);
+    color: $c-flash-error;
+    padding-bottom: rem($gs-baseline/2);
+    margin-left: rem($gs-gutter);
+    display: inline-block;
+}

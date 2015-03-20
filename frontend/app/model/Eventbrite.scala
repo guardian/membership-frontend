@@ -132,6 +132,8 @@ object Eventbrite {
 
     val ticketsSold = allTickets.map(_.quantity_sold).sum
 
+    val ticketsNotSold = capacity - ticketsSold
+
     val isSoldOut = ticketsSold >= capacity
 
     val isFree = primaryTicket.free
@@ -186,6 +188,9 @@ object Eventbrite {
     val internalTicketing: Option[InternalTicketing] = ticketing collect {
       case t: InternalTicketing => t
     }
+
+    val isLimitedAvailability = internalTicketing.exists(_.ticketsNotSold <= 77)
+    val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
 
     val isSoldOut = internalTicketing.exists(_.isSoldOut)
     val isBookable = status == "live" && !isSoldOut
