@@ -1,5 +1,3 @@
-
-
 package controllers
 
 import actions.Functions._
@@ -169,7 +167,13 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def contentDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[ContentDestination]] = {
     request.session.get(JoinReferrer).map { referer =>
-      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent).map(ContentDestination(_)))
+      if(referer.host.contains(Config.guardianHost)) {
+        contentApiService.contentItemQuery(referer.path).map { resp =>
+          resp.content.map(MembersOnlyContent).map(ContentDestination(_))
+        } recover { case _ => None }
+      } else {
+        Future.successful(None)
+      }
     }.getOrElse(Future.successful(None))
   }
 
