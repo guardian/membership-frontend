@@ -125,9 +125,8 @@ trait Joiner extends Controller with ActivityTracking {
   }
 
   def joinPaid(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest), {
-
-      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) } ) //TODO pass subscriberOffer to thankyou
+    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
 
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
@@ -157,7 +156,10 @@ trait Joiner extends Controller with ActivityTracking {
       }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false, freeStartingPeriodOffer: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
+  def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
+
+    val freeStartingPeriodOffer = true //todo this needs to come from zuora
+
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
@@ -186,8 +188,6 @@ trait Joiner extends Controller with ActivityTracking {
         subscriptionStatus <- subscriptionStatusFuture
         subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
         paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, true)
-        customerOpt <- futureCustomerOpt
-        eventDetailsOpt <- futureEventDetailsOpt
       } yield {
         val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
 

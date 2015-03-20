@@ -88,7 +88,7 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address, subscriberOffer: Boolean) extends ZuoraAction[SubscribeResult] {
+                     address: Address, subscriberOffer: Boolean, casIdOpt: Option[String]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
@@ -101,6 +101,10 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
         <ns2:SecondTokenId>{customer.id}</ns2:SecondTokenId>
         <ns2:Type>CreditCardReferenceTransaction</ns2:Type>
       </ns1:PaymentMethod>
+    }.getOrElse(Null)
+
+    val casId = casIdOpt.map { id =>
+      <ns2:CASSubscriberID__c>{id}</ns2:CASSubscriberID__c>
     }.getOrElse(Null)
 
     // NOTE: This appears to be white-space senstive in some way. Zuora rejected
@@ -146,6 +150,7 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
             <ns2:RenewalTerm>12</ns2:RenewalTerm>
             <ns2:TermStartDate>{effectiveDate}</ns2:TermStartDate>
             <ns2:TermType>TERMED</ns2:TermType>
+            {casId}
           </ns1:Subscription>
           <ns1:RatePlanData>
             <ns1:RatePlan xsi:type="ns2:RatePlan">

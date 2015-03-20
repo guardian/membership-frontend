@@ -90,6 +90,11 @@ trait MemberService extends LazyLogging with ActivityTracking {
         case _ => Future.successful(None)
       }
 
+      val casId = formData match {
+        case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.casId
+        case _ => None
+      }
+
       formData.password.map(identityService.updateUserPassword(_, identityRequest, user.id))
 
       for {
@@ -97,7 +102,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         customerOpt <- futureCustomerOpt
         userData = initialData(fullUser, formData)
         memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
-        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, useSubscriberOffer)
+        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, useSubscriberOffer, casId)
 
         // Set some fields once subscription has been successful
         updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))

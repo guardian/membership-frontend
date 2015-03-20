@@ -123,8 +123,12 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield result
   }
 
-  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], useSubscriberOffer: Boolean): Future[SubscribeResult] =
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, useSubscriberOffer))
+  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer],
+                         useSubscriberOffer: Boolean, casId: Option[String]): Future[SubscribeResult] =
+    zuora.request(
+      Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress,
+        useSubscriberOffer, casId)
+    )
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
     for {
@@ -134,13 +138,8 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   }
 
   def getPaymentSummaryWithFreeStartingPeriod(subscriptionId: String, subscriberOffer: Boolean): Future[Seq[PreviewInvoiceItem]] = {
-    for {
-
-      result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, subscriberOffer))
-    } yield {
-
-      result.invoiceItems
-    }
+    for (result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, subscriberOffer)))
+    yield result.invoiceItems
   }
 }
 
