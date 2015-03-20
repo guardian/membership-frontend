@@ -7,11 +7,11 @@
     upgrade: Boolean
 )
 
+@import com.gu.membership.salesforce.Tier
+@import configuration.Config
 @import views.support.Dates._
 @import views.support.Prices._
 @import views.support.Social.joinThankyou
-@import com.gu.membership.salesforce.Tier
-@import configuration.Config
 
 @iframeHeight(event: model.RichEvent.RichEvent) = @{
     val ticketHeight = 60

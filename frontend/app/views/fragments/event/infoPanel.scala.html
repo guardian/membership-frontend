@@ -1,8 +1,5 @@
 @(event: model.RichEvent.RichEvent)
 
-@import com.gu.membership.salesforce.Tier
-@import model.Eventbrite.EBTicketClass
-
 <div class="event-info@if(event.isBookable && event.metadata.largeImg) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
 
     @if(!event.isBookable) {

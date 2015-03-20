@@ -1,9 +1,8 @@
 @(currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import helper._
-@import views.support.Asset
 @import model.Benefits
+@import views.html.helper._
 
 @currentTierDetails = {
     <h3 class="h-stack">This is what you'll be giving up</h3>

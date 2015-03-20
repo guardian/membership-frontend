@@ -7,10 +7,9 @@
 
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
-@import helper._
+@import model.{Benefits, Faq}
 @import play.twirl.api.Html
-@import model.Benefits
-@import model.Faq
+@import views.html.helper._
 
 @signPostItem(btnText: String, btnSrc: String, title: String = "")(description: Html) = {
     <li class="signpost-item">

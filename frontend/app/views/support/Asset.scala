@@ -1,9 +1,9 @@
 package views.support
 
-import scala.io.Source
+import play.api.libs.json.{JsObject, Json}
 
-import play.api.libs.json.{Json, JsObject}
-import collection.mutable.{ Map => MutableMap }
+import scala.collection.mutable.{Map => MutableMap}
+import scala.io.Source
 
 object Asset {
   lazy val map = {

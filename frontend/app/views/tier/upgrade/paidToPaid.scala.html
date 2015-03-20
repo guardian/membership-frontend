@@ -8,12 +8,11 @@
     flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
-@import helper._
-@import org.joda.time.DateTime
-@import views.support.Prices._
-@import views.support.Dates._
-@import views.support.Asset
 @import configuration.Config
+@import org.joda.time.DateTime
+@import views.html.helper._
+@import views.support.Dates._
+@import views.support.Prices._
 
 @main("Upgrade to " + targetTier, pageInfo=pageInfo) {
 

@@ -6,8 +6,7 @@
     paidPreviewOpt: Option[model.Zuora.PaidPreview]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
-@import helper._
-@import views.support.Prices._
+@import views.html.helper._
 
 @main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
 
