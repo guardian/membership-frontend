@@ -5,7 +5,7 @@ import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import com.netaporter.uri.Uri
 import com.netaporter.uri.Uri.parse
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import model.Grid._
 import model.GridDeserializer._

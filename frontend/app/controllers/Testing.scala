@@ -1,6 +1,6 @@
 package controllers
 
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import play.api.mvc.{Controller, Cookie}
 import play.twirl.api.Html
 import utils.TestUsers.testUsers
