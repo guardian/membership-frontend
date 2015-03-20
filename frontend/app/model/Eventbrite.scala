@@ -133,6 +133,8 @@ object Eventbrite {
 
     val ticketsSold = allTickets.map(_.quantity_sold).sum
 
+    val ticketsNotSold = capacity - ticketsSold
+
     val isSoldOut = ticketsSold >= capacity
 
     val isSoldOut = allTickets.forall(_.isSoldOut) || ticketsSold >= capacity
@@ -191,7 +193,9 @@ object Eventbrite {
       case t: InternalTicketing => t
     }
 
-    val ticketsNotSold = capacity - ticket_classes.map(_.quantity_sold).sum
+    val isLimitedAvailability = internalTicketing.exists(_.ticketsNotSold <= 77)
+    val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
+
     val isSoldOut = internalTicketing.exists(_.isSoldOut)
     val isBookable = status == "live" && !isSoldOut
     val isPastEvent = status != "live" && status != "draft"

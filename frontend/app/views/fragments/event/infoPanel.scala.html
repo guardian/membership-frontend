@@ -28,10 +28,12 @@
             @if(event.isBookable) {
                 <div class="l-pad-vertical">
                     @fragments.event.ticketCta(event)
-                    @if(event.ticketsNotSold <= 15) {
+                    @if(event.isLimitedAvailability){
+                        @for(ticketsNotSold <- event.ticketsNotSold){
                         <div class="not-sold-tickets">
-                            Only @event.ticketsNotSold ticket@if(event.ticketsNotSold > 1) {s} <br>remaining
+                            Only @event.ticketsNotSold ticket@if(ticketsNotSold > 1) {s} <br>remaining
                         </div>
+                        }
                     }
                 </div>
                 @fragments.event.terms(event, List("event-info__terms"))
