@@ -9,7 +9,7 @@ import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
 import model.Eventbrite.{EBOrder, EBEvent}
 import model.RichEvent._
-import model.{EventPortfolio, Eventbrite, PageInfo}
+import model.{IdMinimalUser, EventPortfolio, Eventbrite, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, DiscoverEventService, MemberService}
@@ -29,7 +29,7 @@ trait Event extends Controller with ActivityTracking {
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
       EventbriteService.getEvent(eventId).map { event =>
-        track(EventActivity("buyActionInvoked", None, EventData(event))) //todo could we check GU_MEM cookie?
+        trackAnon(EventActivity("buyActionInvoked", None, EventData(event)))(request)
         Timing.record(event.service.wsMetrics, "buy-action-invoked") {
           block(request)
         }
@@ -46,7 +46,8 @@ trait Event extends Controller with ActivityTracking {
       event <- EventbriteService.getEvent(id)
     } yield {
       if (slug == event.slug) {
-        eventDetail(event, request.path)
+        trackAnon(EventActivity("viewEventDetails", None, EventData(event)))
+        eventDetail(event)
       } else {
         Redirect(routes.Event.details(event.slug))
       }
@@ -55,11 +56,10 @@ trait Event extends Controller with ActivityTracking {
     eventOpt.getOrElse(Redirect(Config.guardianMembershipUrl))
   }
 
-  private def eventDetail(event: RichEvent, path: String, isPreviewMode: Boolean = false) = {
-    if(!isPreviewMode) track(EventActivity("viewEventDetails", None, EventData(event)))
+  private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
     val pageInfo = PageInfo(
       event.name.text,
-      path,
+      request.path,
       event.description.map(_.blurb),
       event.socialImgUrl
     )
@@ -152,18 +152,19 @@ trait Event extends Controller with ActivityTracking {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield {
-        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
-        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))
+          val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
+          track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
         Found(event.url ? ("discount" -> discountOpt.map(_.code)))
           .withCookies(Cookie(eventCookie(event), ""))
       }
     }
 
   // log a conversion if the user came from a membership event page
-  private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder], member: Option[Member]) {
+  private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
+                                        member: Option[Member]) {
     request.cookies.get(eventCookie(event)).foreach { _ =>
       val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
-      track(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))
+      trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
       event.service.wsMetrics.put("user-returned-to-thankyou-page", 1)
     }
   }
@@ -187,22 +188,22 @@ trait Event extends Controller with ActivityTracking {
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      trackConversionToThankyou(request, event, None, None) //todo could we check GU_MEM cookie?
+      trackConversionToThankyou(request, event, None, None)
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }
 
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   (EventbriteService.getPreviewEvent(id).map(eventDetail(_, request.path, isPreviewMode = true)))
+   EventbriteService.getPreviewEvent(id).map(eventDetail)
   }
 
   def previewDiscover(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-    (EventbriteService.getPreviewDiscoverEvent(id).map(eventDetail(_, request.path)))
+    EventbriteService.getPreviewDiscoverEvent(id).map(eventDetail)
   }
 
 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   (EventbriteService.getPreviewMasterclass(id).map(eventDetail(_, request.path)))
+   EventbriteService.getPreviewMasterclass(id).map(eventDetail)
   }
 }
 
