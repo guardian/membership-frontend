@@ -8,7 +8,9 @@ import actions.Functions._
 
 object Testing extends Controller with LazyLogging {
 
-  val analyticsOffCookie = Cookie("ANALYTICS_OFF_KEY", "true", httpOnly = false)
+  val AnalyticsCookieName = "ANALYTICS_OFF_KEY"
+
+  val analyticsOffCookie = Cookie(AnalyticsCookieName, "true", httpOnly = false)
 
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
     Set("membership.dev@guardian.co.uk", "touchpoint@guardian.co.uk", "crm@guardian.co.uk"),

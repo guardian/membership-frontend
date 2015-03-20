@@ -147,7 +147,7 @@ trait Joiner extends Controller with ActivityTracking {
         } {
           event.service.wsMetrics.put(s"join-$tier-event", 1)
           val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))
+          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
         }
         result
       }.recover {

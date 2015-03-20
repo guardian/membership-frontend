@@ -8,11 +8,14 @@ import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestM
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
 import configuration.Config
+import controllers.Testing
 import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.{EBOrder, EBTicketClass}
-import model.RichEvent.{DiscoverEvent, MasterclassEvent, GuLiveEvent, RichEvent}
-import play.api.Logger
+import model.IdMinimalUser
+import model.RichEvent.{DiscoverEvent, GuLiveEvent, MasterclassEvent, RichEvent}
 import org.joda.time._
+import play.api.Logger
+import play.api.mvc.RequestHeader
 
 import scala.collection.JavaConversions._
 
@@ -177,7 +180,17 @@ case class OrderData(order: EBOrder) {
 
 trait ActivityTracking {
 
-  def track(data: TrackerData) {
+  def trackAnon(data: TrackerData)(implicit request: RequestHeader) {
+    val analyticsOff = request.cookies.get(Testing.AnalyticsCookieName).isDefined
+
+    if (!analyticsOff) executeTracking(data)
+  }
+
+  def track(data: TrackerData)(implicit user: IdMinimalUser) {
+    if (!user.isTestUser) executeTracking(data)
+  }
+
+  private def executeTracking(data: TrackerData) {
     try {
       val tracker = getTracker
       val dataMap = data.toMap
