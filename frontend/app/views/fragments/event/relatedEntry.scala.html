@@ -5,8 +5,8 @@
     <div class="related-entry block-hover">
         <a href="@content.webUrl" class="minimal-link no-underline">
             <div class="related-entry__media block-hover__media">
-                @for(image <- event.pastImageOpt) {
-                    <img src="@image.file" alt="" class="responsive-img" />
+                @for(img <- event.pastImageOpt) {
+                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
                 }
             </div>
             <div class="related-entry__content">
