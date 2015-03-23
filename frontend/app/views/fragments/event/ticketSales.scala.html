@@ -14,15 +14,17 @@
 }
 
 <div class="ticket-sales" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
-    <span class="ticket-sales__header">Ticket release dates</span>
+    <span class="ticket-sales__header">@if(ticketing.salesDates.anyoneCanBuyTicket) {Tickets on sale now} else {Ticket release dates}</span>
     @if(ticketing.salesDates.anyoneCanBuyTicket) {
-        <button class="ticket-sales__toggle u-button-reset u-align-right js-toggle"
+        <button class="ticket-sales__toggle u-button-reset js-toggle"
                 data-toggle-label="Hide"
                 data-toggle="js-event-ticket-dates-@event.id"
                 data-metric-trigger="click"
                 data-metric-category="events"
-                data-metric-action="toggle-release-dates">
-            Show
+                data-metric-action="toggle-release-dates"
+                data-toggle-icon="triangle-up">
+            @fragments.inlineIcon("triangle-down", Seq("u-align-right"))
+            Release dates
         </button>
     }
     <ul class="ticket-sales__list u-unstyled"

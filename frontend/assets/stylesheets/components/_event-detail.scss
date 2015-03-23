@@ -492,9 +492,9 @@
     font-weight: bold;
 }
 .ticket-sales__toggle {
-    right: 0;
-    top: 0;
-    position: absolute;
+    @include fs-data(2);
+    color: $c-neutral2;
+    display: block;
 }
 .ticket-sales__toggle:hover,
 .ticket-sales__toggle:active {
