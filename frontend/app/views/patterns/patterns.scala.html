@@ -1,4 +1,5 @@
-@(eventPortfolio: model.EventPortfolio)(implicit token: play.filters.csrf.CSRF.Token)
+@(eventPortfolio: model.EventPortfolio, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+
 @import com.gu.membership.salesforce.Tier
 @import configuration.Config
 @import model.{Benefits, FlashMessage}
@@ -277,24 +278,34 @@
         @fragments.event.seriesDetails(eventPortfolio.orderedEvents.head)
     }
 
-    @pattern("Promo - Primary") {
-        @fragments.promos.promoPrimary("Primary Promo", imageBasePath="https://media.guim.co.uk/d8f51bea15bf046df4d166cfd60771b9c24a631f/0_0_1140_683", toneClass=Some("tone-trans-guardian-live")) {
-            <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+    @for(img <- pageImages.find(_.name.contains("sample-1"))) {
+        @pattern("Promo - Primary") {
+            @fragments.promos.promoPrimary("Primary Promo", img=img, toneClass=Some("tone-trans-guardian-live")) {
+                <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+            }
         }
     }
 
-    @pattern("Promo Video - Secondary") {
-        <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoVideoSecondary(
-            Html("If you believe in Guardian journalism, become a Guardian Member"),
-            videoUrl = Config.videoWhatIsGuardianMembership,
-            toneClass = Some("tone-trans-brand-dark")) {
-            <div class="text-feature">
-                <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
-                <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
-            </div>
-            <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
+    @for(img <- pageImages.find(_.name.contains("sample-2"))) {
+        @pattern("Promo - Secondary") {
+            @fragments.promos.promoSecondary(Html("Secondary Promo"), img=img, toneClass=Some("tone-brand-dark")) {
+                <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
+            }
         }
+    }
+
+    @pattern("Promo - Video") {
+        <div class="page-slice page-slice--slim l-constrained">
+            @fragments.promos.promoVideoSecondary(
+                Html("If you believe in Guardian journalism, become a Guardian Member"),
+                videoUrl = Config.videoWhatIsGuardianMembership,
+                toneClass = Some("tone-trans-brand-dark")) {
+                <div class="text-feature">
+                    <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
+                    <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
+                </div>
+                <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
+            }
         </div>
     }
 

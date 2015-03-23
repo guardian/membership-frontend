@@ -6,44 +6,48 @@
 @main("About", pageInfo=pageInfo) {
 
     @* ===== About Membership ===== *@
-    <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title="About Membership", imageBasePath="https://media.guim.co.uk/0f30a12f5d00d2b0e445e81c171cd0168d3cf5a7/0_0_1140_684", isLead=true) {
-            <div class="text-feature">
-                <p>Guardian Members are changing the idea of what a news organisation does today.</p>
-                <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
-                <p>Join before March 31st to become a Founding Member and the price you pay will not rise.</p>
-            </div>
-            <div class="action-group">
-                <a class="action" href="@routes.Joiner.tierList">Join today</a>
-                <a class="action action--secondary js-scroll-to" href="#whats-included">
-                    What's included
-                    @fragments.actionIcon("arrow-right")
-                </a>
-            </div>
-        }
-    </div>
+    @for(img <- pageImages.find(_.name.contains("intro"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="About Membership", img=img, isLead=true) {
+                <div class="text-feature">
+                    <p>Guardian Members are changing the idea of what a news organisation does today.</p>
+                    <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
+                    <p>Join before March 31st to become a Founding Member and the price you pay will not rise.</p>
+                </div>
+                <div class="action-group">
+                    <a class="action" href="@routes.Joiner.tierList">Join today</a>
+                    <a class="action action--secondary js-scroll-to" href="#whats-included">
+                        What's included
+                        @fragments.actionIcon("arrow-right")
+                    </a>
+                </div>
+            }
+        </div>
+    }
 
     @* ===== What is Membership Video ===== *@
     <div id="what-is-guardian-membership" class="page-slice page-slice--slim l-constrained">
-    @fragments.promos.promoVideoSecondary(
-        Html("If you believe in Guardian journalism, become a Guardian Member"),
-        videoUrl=Config.videoWhatIsGuardianMembership,
-        toneClass=Some("tone-trans-brand-dark")){
-        <div class="text-feature">
-            <p>Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership.</p>
-        </div>
-    }
+        @fragments.promos.promoVideoSecondary(
+            Html("If you believe in Guardian journalism, become a Guardian Member"),
+            videoUrl=Config.videoWhatIsGuardianMembership,
+            toneClass=Some("tone-trans-brand-dark")){
+            <div class="text-feature">
+                <p>Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership.</p>
+            </div>
+        }
     </div>
 
     @* ===== Bring the Guardian to life ===== *@
-    <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title="Guardian Live: Experience the Guardian brought to life", imageBasePath="https://media.guim.co.uk/76ef58a05920591099012edb80e7415379392a4c/0_0_1140_684", stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {
-            <div class="text-feature">
-                <p>Book tickets for our programme of discussions, debates, interviews, keynote speeches and festivals.</p>
-            </div>
-            <a class="action" href="@routes.Event.list">See our live events</a>
-        }
-    </div>
+    @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Guardian Live: Experience the Guardian brought to life", img=img, stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {
+                <div class="text-feature">
+                    <p>Book tickets for our programme of discussions, debates, interviews, keynote speeches and festivals.</p>
+                </div>
+                <a class="action" href="@routes.Event.list">See our live events</a>
+            }
+        </div>
+    }
 
     @for(img <- pageImages.find(_.name.contains("masterclasses"))) {
         @* ===== Guardian Masterclasses ===== *@
@@ -58,16 +62,19 @@
     }
 
     @* ===== Founding Members ===== *@
-    <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title="Founding members: join us at the start", imageBasePath="https://media.guim.co.uk/bb922fe62efbe24af2df336dd2b621c5799246b4/0_0_1140_683") {
-            <blockquote class="blockquote blockquote--feature">
-                If you read the Guardian, join the Guardian. Support fearless, open, independent journalism.
-                <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
-            </blockquote>
-            <p class="text-feature">Join before March 31st to become a Founding Member and the price you pay will not rise.</p>
-            <a class="action" href="@routes.Joiner.tierList" id="qa-join">Join today</a>
-        }
-    </div>
+    @for(img <- pageImages.find(_.name.contains("founding-members"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Founding members: join us at the start", img=img) {
+                <blockquote class="blockquote blockquote--feature">
+                    If you read the Guardian, join the Guardian. Support fearless, open, independent journalism.
+                    <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
+                </blockquote>
+                <p class="text-feature">
+                    Join before March 31st to become a Founding Member and the price you pay will not rise.</p>
+                <a class="action" href="@routes.Joiner.tierList" id="qa-join">Join today</a>
+            }
+        </div>
+    }
 
     @for(img <- pageImages.find(_.name.contains("midland-goods-shed"))) {
         @* ===== Big ideas ===== *@
@@ -91,15 +98,17 @@
     }
 
     @* ===== Become a Patron ===== *@
-    <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary(title="Become a Patron and support the Guardian's future", imageBasePath="https://media.guim.co.uk/175fba5c61d2b398973befa5d6b49c1257740d5c/0_0_1140_683", toneClass=Some("tone-trans-brand-dark")) {
-            <blockquote class="blockquote blockquote--feature">
-                The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.
-                <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
-            </blockquote>
-            <a class="action" href="@routes.Info.patron">Become a Patron</a>
-        }
-    </div>
+    @for(img <- pageImages.find(_.name.contains("patrons"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Become a Patron and support the Guardian's future", img=img, toneClass=Some("tone-trans-brand-dark")) {
+                <blockquote class="blockquote blockquote--feature">
+                    The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.
+                    <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
+                </blockquote>
+                <a class="action" href="@routes.Info.patron">Become a Patron</a>
+            }
+        </div>
+    }
 
     @* ===== What's Included ===== *@
     <div class="page-slice tone-tint l-constrained" id="whats-included">
