@@ -23,7 +23,7 @@
             @location.city @location.postal_code
         }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
-            <div class="google-map">
+            <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink"
                    data-metric-trigger="click"
                    data-metric-category="events"
