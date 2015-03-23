@@ -11,6 +11,8 @@
 <html class="js-off id--signed-out @htmlClass">
     <head>
         <meta charset="utf-8">
+        <title>@(title + " | " + Config.siteTitle )</title>
+
         @fragments.meta.mobile()
         <meta name="description"                    content="@pageInfo.description"/>
         <meta name="rating"                         content="general"/>
@@ -46,7 +48,6 @@
             }
         </script>
 
-        <title>@(title + " | " + Config.siteTitle )</title>
         @fragments.javaScriptFirstSteps(pageInfo)
 
         <!--[if (gt IE 9) | (IEMobile)]><!-->
