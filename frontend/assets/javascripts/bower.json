@@ -9,7 +9,6 @@
     "reqwest": "~1.1.0",
     "zxcvbn": "*",
     "curl": "~0.8.10",
-    "imager.js": "~0.3.0",
     "raven-js": "~1.1.16",
     "lodash-amd": "~3.1.0",
     "respimage": "~1.3.0",
