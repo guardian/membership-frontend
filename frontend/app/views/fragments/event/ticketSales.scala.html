@@ -18,7 +18,10 @@
     @if(ticketing.salesDates.anyoneCanBuyTicket) {
         <button class="ticket-sales__toggle u-button-reset u-align-right js-toggle"
                 data-toggle-label="Hide"
-                data-toggle="js-event-ticket-dates-@event.id">
+                data-toggle="js-event-ticket-dates-@event.id"
+                data-metric-trigger="click"
+                data-metric-category="events"
+                data-metric-action="toggle-release-dates">
             Show
         </button>
     }
