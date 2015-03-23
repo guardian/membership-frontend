@@ -30,6 +30,11 @@
                             (save @discountTicketing.savingText)
                         </span>
                     </div>
+                    @if(!isPrimary && event.isBookable && event.isLimitedAvailability) {
+                        <div class="price-info-inline__trail price-info-inline__limited">
+                            @event.limitedAvailabilityText
+                        </div>
+                    }
                 </div>
             }
         }

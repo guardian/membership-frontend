@@ -5,11 +5,6 @@
 .event-header {
     @include clearfix;
 }
-.event-header--unavailable {
-    color: $white;
-    background-color: $c-neutral1;
-}
-
 .event-header__container {
     background-color: transparent;
     padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-baseline);
@@ -27,7 +22,6 @@
         width: rem(map-get($max-widths, max-desktop) + $gs-gutter * 2);
     }
 }
-
 .event-header__container--details {
     padding: rem($gs-gutter / 2);
     position: relative;
@@ -42,12 +36,6 @@
         padding-left: rem(gs-span(2) + ($gs-gutter * 2));
     }
 }
-
-.event-header__container--unavailable {
-    min-height: 0;
-    overflow: auto;
-}
-
 .event-header__logo {
     float: right;
     margin: rem($gs-baseline) 0;
@@ -64,8 +52,30 @@
         max-height: none;
     }
 }
+.event-header__message {
+    @include fs-data(4);
+}
+
+/**
+ * Extra event header details
+ */
+.event-header--extra {
+    color: $white;
+    background-color: $c-neutral1;
+
+    .event-header__container {
+        min-height: 0;
+        overflow: auto;
+        padding-top: rem($gs-baseline);
+        padding-bottom: rem($gs-baseline);
+    }
+}
 
 
+/**
+ * TODO: Combine with event header,
+ *       reduce layout complexity.
+ */
 .event-masthead {
     position: relative;
 
