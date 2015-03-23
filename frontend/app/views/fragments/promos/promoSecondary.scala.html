@@ -1,6 +1,6 @@
 @(
     title: Html,
-    imageBasePath: String,
+    img: model.ResponsiveImageGroup,
     stampImageOpt: Option[String] = None,
     toneClass: Option[String] = None
 )(content: Html)
@@ -13,7 +13,7 @@
             <h2 class="promo-secondary__title h-promo">@title</h2>
         </div>
         <div class="promo-secondary__image@if(stampImageOpt){ stamped-image}">
-            <div class="js-imager-loaded-image" data-src="@imageBasePath/{width}.jpg" data-available-widths="1000,500,140" data-alt="@title" data-class="responsive-img"></div>
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
             @for(url <- stampImageOpt) {
                 <div class="stamped-image__container">
                     <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
