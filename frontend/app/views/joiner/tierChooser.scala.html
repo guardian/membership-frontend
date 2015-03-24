@@ -9,8 +9,8 @@
 
 @sectionTitle = @{
     contentAccessOpt.map {
-        case i if i.isMembersOnly => "You need to be a Guardian member to gain access"
-        case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to gain access"
+        case i if i.isMembersOnly => "You need to be a Guardian member to view this page"
+        case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to view this page"
     }.getOrElse(eventOpt.fold("Choose a membership tier to continue")(_.metadata.chooseTier.sectionTitle))
 }
 
