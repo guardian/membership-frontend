@@ -1,25 +1,22 @@
 package services
 
 import com.gu.membership.util.WebServiceHelper
-import play.api.cache.Cache
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.Future
-
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.iteratee.{Enumerator, Iteratee}
-import play.api.libs.json.Reads
-import play.api.libs.ws._
-
 import configuration.Config
-import model.{EventGroup, EventPortfolio}
+import model.EventGroup
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
 import monitoring.EventbriteMetrics
+import play.api.Logger
+import play.api.Play.current
+import play.api.cache.Cache
+import play.api.libs.json.Reads
+import play.api.libs.ws._
 import utils.ScheduledTask
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -31,7 +28,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   lazy val eventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite events", Nil, 1.second, refreshTimeAllEvents) {
     for {
-      events <- getPaginated[EBEvent]("users/me/owned_events?status=live")
+      events <- getAll[EBEvent]("users/me/owned_events?status=live")
       richEvents <- Future.sequence(events.map(mkRichEvent))
     } yield richEvents
   }
@@ -39,7 +36,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val refreshTimeDraftEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
   lazy val draftEventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite draft events", Nil, 1.second, refreshTimeDraftEvents) {
     for {
-      eventsDraft <- getPaginated[EBEvent]("users/me/owned_events?status=draft")
+      eventsDraft <- getAll[EBEvent]("users/me/owned_events?status=draft")
       richDraftEvents <- Future.sequence(eventsDraft.map(mkRichEvent))
     } yield richDraftEvents
   }
@@ -70,16 +67,13 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getPartnerEvents: Option[EventGroup]
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
 
-  private def getPaginated[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
-    val enumerator = Enumerator.unfoldM(Option(1)) {
-      _.map { nextPage =>
-        for {
-          response <- get[EBResponse[T]](url, "page" -> nextPage.toString)
-        } yield Some((response.pagination.nextPageOpt, response.data))
-      }.getOrElse(Future.successful(None))
-    }
+  private def getAll[T](url: String)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
+    def getPage(page: Int) = get[EBResponse[T]](url, "page" -> page.toString)
 
-    enumerator(Iteratee.consume()).flatMap(_.run)
+    for {
+      initialResponse <- getPage(1)
+      followingResponses: Seq[EBResponse[T]] <- Future.traverse(2 to initialResponse.pagination.page_count)(getPage)
+    } yield (initialResponse +: followingResponses).flatMap(_.data)
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
@@ -94,7 +88,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     val uri = s"events/${event.id}/access_codes"
 
     for {
-      discounts <- getPaginated[EBAccessCode](uri)
+      discounts <- getAll[EBAccessCode](uri)
       discount <- discounts.find(_.code == code).fold {
         post[EBAccessCode](uri, Map(
           "access_code.code" -> Seq(code),
