@@ -148,7 +148,6 @@
     }
 }
 .price-info-inline__trail {
-    color: $c-neutral2;
     @include fs-data(2);
 
     @include mq(mobileLandscape) {

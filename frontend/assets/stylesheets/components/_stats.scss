@@ -42,10 +42,6 @@
 }
 .stat-item__supplementary {
     @include fs-data(2);
-
-    a {
-        color: $c-neutral2;
-    }
 }
 
 .stat-item--last {

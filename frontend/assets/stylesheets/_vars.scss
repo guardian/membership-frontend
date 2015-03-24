@@ -154,6 +154,9 @@ $c-soldOut: #cc2b12;
 $mem-brandBlue: map-get($pasteup-palette, news-main-2);
 $mem-brandBlueDark: #197caa;
 
+//Guardian palette
+$guardian-brand: map-get($pasteup-palette, guardian-brand);
+
 // Buttons
 $c-button: $mem-brandBlueDark;
 $c-button-cancel: #b8b8b8;
