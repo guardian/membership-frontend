@@ -5,7 +5,7 @@ import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
 import com.gu.membership.util.Timing
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -185,8 +185,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
             subscriptionPaymentAnnual = Some(annual),
             marketingChoices = None
           )
-        )
-      )
+        ))(user)
       memberId
     }
   }
@@ -213,7 +212,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         Some(formData.marketingChoices)
     )
 
-    track(MemberActivity("membershipRegistration", trackingInfo))
+    track(MemberActivity("membershipRegistration", trackingInfo))(user)
   }
 }
 

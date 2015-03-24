@@ -1,12 +1,10 @@
 @(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
+@import model.RichEvent._
 @import play.twirl.api.Html
-
+@import views.support.Asset
 @import views.support.Dates._
 @import views.support.Social.eventDetail
-@import views.support.Asset
-@import model.Eventbrite._
-@import model.RichEvent._
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
@@ -87,15 +85,19 @@
         @if(event.metadata.largeImg) {
             @for(img <- event.imgOpt) {
                 <div class="event-content__image">
-                    @fragments.event.image(event, lazyLoad=false)
+                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" itemprop="image" />
                 </div>
-                <div class="event-image-credit u-event-content-width">
-                    <div class="event-image-credit__detail">
-                        @fragments.inlineIcon("caption-camera")
-                        <span class="u-align-middle">@event.imageMetadata.flatMap(_.description)</span>
-                        <span class="u-align-middle">Photograph: @event.imageMetadata.map(_.photographer)</span>
+                @for(imgMetadata <- img.metadata) {
+                    <div class="event-image-credit u-event-content-width">
+                        <div class="event-image-credit__detail">
+                            @fragments.inlineIcon("caption-camera")
+                            @for(imgDescription <- imgMetadata.description) {
+                                <span class="u-align-middle">@imgDescription</span>
+                            }
+                            <span class="u-align-middle">Photograph: @imgMetadata.photographer</span>
+                        </div>
                     </div>
-                </div>
+                }
             }
         }
 
@@ -118,6 +120,7 @@
                 @if(event.isPastEvent) {
                     @fragments.event.relatedEntry(event)
                 }
+
 
                 @if(!event.metadata.largeImg) {
                     @for(img <- event.imgOpt) {

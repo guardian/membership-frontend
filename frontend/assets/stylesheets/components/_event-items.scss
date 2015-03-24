@@ -34,62 +34,63 @@
         }
     }
 }
-    .event-item__media {
-        transition: background-color $transition-duration-medium ease;
 
-        img {
-            transition: opacity $transition-duration-medium ease;
-            // Prevent flicker on hover in WebKit
-            -webkit-backface-visibility: hidden;
-        }
+.event-item__media {
+    transition: background-color $transition-duration-medium ease;
+
+    img {
+        transition: opacity $transition-duration-medium ease;
+        // Prevent flicker on hover in WebKit
+        -webkit-backface-visibility: hidden;
     }
-    .event-item__meta {
+}
+.event-item__meta {
+    padding: rem($gs-gutter / 4);
+    padding-top: rem(($gs-gutter / 4) - 1px);
+}
+.event-item__title {
+    @include fs-headline(3);
+    margin-bottom: rem($gs-baseline);
+    font-weight: 500;
+}
+.event-item__time {
+    @include fs-data(4);
+}
+.event-item__location {
+    color: $c-neutral2;
+}
+.event-item__description {
+    @include fs-bodyCopy(1);
+    padding: rem($gs-baseline) 0 0;
+
+    @include mq(desktop) {
+        @include fs-headline(2);
+        padding: rem($gs-baseline * 2) 0 0;
+    }
+}
+.event-item__footer {
+    width: 100%;
+    padding-top: rem($gs-gutter / 4);
+
+    @include mq(mobileLandscape) {
         padding: rem($gs-gutter / 4);
-        padding-top: rem(($gs-gutter / 4) - 1px);
-    }
-    .event-item__title {
-        @include fs-headline(3);
-        margin-bottom: rem($gs-baseline);
-        font-weight: 500;
-    }
-    .event-item__time {
-        @include fs-data(4);
-    }
-    .event-item__location {
-        color: $c-neutral2;
-    }
-    .event-item__description {
-        @include fs-bodyCopy(1);
-        padding: rem($gs-baseline) 0 0;
-
-        @include mq(desktop) {
-            @include fs-headline(2);
-            padding: rem($gs-baseline * 2) 0 0;
-        }
-    }
-    .event-item__footer {
-        width: 100%;
-        padding-top: rem($gs-gutter / 4);
-
-        @include mq(mobileLandscape) {
-            padding: rem($gs-gutter / 4);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-        }
-    }
-    .event-item__action {
         position: absolute;
-        bottom: rem($gs-gutter / 4 + 1px);
-        right: rem(($gs-gutter / 4));
+        bottom: 0;
+        left: 0;
     }
-    .event-item__price-amount {
-        @include fs-header(4);
-    }
-    .event-item__price-amount-discount {
-        @include fs-data(3);
-        color: $c-neutral2;
-    }
+}
+.event-item__action {
+    position: absolute;
+    bottom: rem($gs-gutter / 4 + 1px);
+    right: rem(($gs-gutter / 4));
+}
+.event-item__price-amount {
+    @include fs-header(4);
+}
+.event-item__price-amount-discount {
+    @include fs-data(3);
+    color: $c-neutral2;
+}
 
 /* ==========================================================================
    Event item (Hero modifier)

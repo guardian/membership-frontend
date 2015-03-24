@@ -127,7 +127,6 @@ $global-nav-height: 36px;
     .nav__link {
         color: $black;
         position: relative;
-        display: block;
         margin: 0 rem($gs-gutter) 0 0;
         padding: 0;
 
@@ -137,6 +136,7 @@ $global-nav-height: 36px;
         }
 
         @include mq(tablet) {
+            display: block;
             padding: rem(8px) 0 rem(6px);
             &, &:active {
                 text-decoration: none;

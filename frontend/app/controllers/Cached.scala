@@ -1,12 +1,16 @@
 package controllers
 
+import com.github.nscala_time.time.Imports._
 import org.joda.time.DateTime
 import play.api.mvc.Result
-import com.github.nscala_time.time.Imports._
+
+import scala.math.max
 
 object Cached {
 
   private val cacheableStatusCodes = Seq(200, 301, 404)
+
+  private val tenDaysInSeconds = 10.days.standardDuration.seconds
 
   def apply(result: Result): Result = apply(60)(result)
 
@@ -18,8 +22,9 @@ object Cached {
 
   private def cacheHeaders(maxAge: Int, result: Result) = {
     val now = DateTime.now
+    val staleWhileRevalidateSeconds = max(maxAge / 10, 1)
     result.withHeaders(
-      "Cache-Control" -> s"max-age=$maxAge",
+      "Cache-Control" -> s"max-age=$maxAge, stale-while-revalidate=$staleWhileRevalidateSeconds, stale-if-error=$tenDaysInSeconds",
       "Expires" -> toHttpDateTimeString(now + maxAge.seconds),
       "Date" -> toHttpDateTimeString(now)
     )

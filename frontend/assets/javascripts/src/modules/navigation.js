@@ -1,34 +1,41 @@
 define(['src/utils/user'], function (userUtil) {
 
-    var MENU_ICON = '.js-menu-icon';
-    var NAVIGATION ='.js-global-nav';
-    var SUB_NAVIGATION ='.js-sub-nav';
-    var MEMBERS_AREA = '.js-members-area';
+    var MENU_TOGGLE_SELECTOR = '.js-menu-icon';
+    var NAVIGATION_SELECTOR ='.js-global-nav';
+    var NAVIGATION_SUB_SELECTOR ='.js-sub-nav';
+    var MEMBERS_AREA_SELECTOR = '.js-members-area';
+
     var ACTIVE_CLASS = 'is-active';
     var HIDDEN_CLASS = 'is-hidden';
 
-    function addListeners(menuEl, navigationEl, subNavigationEl) {
-        menuEl.addEventListener('click', function(event) {
+    function addListeners(menuToggleEl) {
+
+        var navigationEl = document.querySelector(NAVIGATION_SELECTOR),
+            navigationSubEl = document.querySelector(NAVIGATION_SUB_SELECTOR);
+
+        menuToggleEl.addEventListener('click', function(event) {
             event.preventDefault();
-            menuEl.classList.toggle(ACTIVE_CLASS);
-            navigationEl.classList.toggle(ACTIVE_CLASS);
-            subNavigationEl.classList.toggle(ACTIVE_CLASS);
+            menuToggleEl.classList.toggle(ACTIVE_CLASS);
+            if(navigationEl) {
+                navigationEl.classList.toggle(ACTIVE_CLASS);
+            }
+            if(navigationSubEl) {
+                navigationSubEl.classList.toggle(ACTIVE_CLASS);
+            }
         });
     }
 
     function showMembersArea() {
-        var membersAreaLink = document.querySelector(MEMBERS_AREA);
+        var membersAreaLink = document.querySelector(MEMBERS_AREA_SELECTOR);
         if (userUtil.getUserFromCookie() && membersAreaLink) {
             membersAreaLink.classList.remove(HIDDEN_CLASS);
         }
     }
 
     function init() {
-        var menuEl = document.querySelector(MENU_ICON),
-            navigationEl = document.querySelector(NAVIGATION),
-            subNavigationEl = document.querySelector(SUB_NAVIGATION);
-        if (menuEl) {
-            addListeners(menuEl, navigationEl, subNavigationEl);
+        var menuToggleEl = document.querySelector(MENU_TOGGLE_SELECTOR);
+        if (menuToggleEl) {
+            addListeners(menuToggleEl);
             showMembersArea();
         }
     }

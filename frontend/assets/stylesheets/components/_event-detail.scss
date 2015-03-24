@@ -247,16 +247,12 @@
     @include fs-textSans(1);
 
     @include mq(tablet) {
-        max-width: rem(gs-span(3) + $gs-gutter * 2);
         display: inline-block;
     }
 
     a {
         text-decoration: none;
-        color: inherit;
         padding-bottom: rem(2px);
-        border-bottom: 1px solid;
-        border-color: inherit;
     }
 }
 
@@ -423,6 +419,7 @@
     @include clearfix();
     @include fs-textSans(3);
     background-color: $c-neutral7;
+    margin-bottom: rem($gs-baseline);
 }
     .event-info__inner {
         @include clearfix;
@@ -454,6 +451,7 @@
         @include fs-textSans(1);
         display: block;
         padding-top: rem($gs-baseline/2);
+        color: $c-neutral2;
     }
 
 .event-info--bordered {
@@ -491,9 +489,7 @@
     font-weight: bold;
 }
 .ticket-sales__toggle {
-    right: 0;
-    top: 0;
-    position: absolute;
+    display: block;
 }
 .ticket-sales__toggle:hover,
 .ticket-sales__toggle:active {
@@ -511,4 +507,7 @@
 }
 .ticket-sales__item__date {
     float: right;
+}
+.ticket-sales__list {
+    @include fs-data(4);
 }

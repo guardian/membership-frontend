@@ -52,16 +52,23 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
+  private def membersOnly: Future[Seq[Content]] = membersOnlyContentQuery(1).map(_.results)
+
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
-  
+
   def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
+
+  def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
 
   val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
 
+  val membersOnlyContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(membersOnly)
+
   def start() {
     masterclassContentTask.start()
+    membersOnlyContentTask.start()
     contentTask.start()
   }
 
@@ -96,6 +103,32 @@ trait GuardianContent {
       .pageSize(100)
       .page(page)
     client.getResponse(searchQuery).andThen {
+      case Failure(GuardianContentApiError(status, message)) =>
+        logAndRecordError(status)
+    }
+  }
+
+  def membersOnlyContentQuery(page: Int): Future[ItemResponse] = {
+    val itemQuery = ItemQuery("extra")
+      .showFields("all")
+      .showElements("all")
+      .showTags("all")
+      .pageSize(100)
+      .page(page)
+      .tag("tone/extraoffers")
+    //todo: filter response for member access flag
+    client.getResponse(itemQuery).andThen {
+      case Failure(GuardianContentApiError(status, message)) =>
+        logAndRecordError(status)
+    }
+  }
+
+  def contentItemQuery(path: String): Future[ItemResponse] = {
+    val itemQuery = ItemQuery(path)
+      .showFields("all")
+      .showElements("all")
+      .showTags("all")
+    client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
         logAndRecordError(status)
     }

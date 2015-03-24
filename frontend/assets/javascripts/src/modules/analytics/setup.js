@@ -1,9 +1,9 @@
 /*global guardian:true */
 define([
-    'src/utils/analytics/ga',
-    'src/utils/analytics/omniture',
-    'src/utils/cookie'
-], function (googleAnalytics, omnitureAnalytics, cookie) {
+    'src/utils/cookie',
+    'src/modules/analytics/ga',
+    'src/modules/analytics/omniture'
+], function (cookie, googleAnalytics, omnitureAnalytics) {
 
     var ANALYTICS_OFF_KEY = 'ANALYTICS_OFF_KEY';
 

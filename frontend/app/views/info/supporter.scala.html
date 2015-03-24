@@ -1,0 +1,81 @@
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
+
+@main("Supporters", pageInfo=pageInfo) {
+
+    @* ===== About Supporters ===== *@
+    @for(img <- pageImages.find(_.name.contains("intro"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Introducing Supporter Membership", img=img, isLead=true) {
+                <div class="text-feature">
+                    <p>Supporters keep our journalism fearless, open and free from interference. For £5 a month.</p>
+                </div>
+                @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, modifierClass=Some("package-promo--spread"))
+            }
+        </div>
+    }
+
+    @* ===== Support open, independent journalism ===== *@
+    <div id="supporter-video" class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoVideoSecondary(
+            Html("Support open, independent journalism"),
+            videoUrl="https://www.youtube.com/embed/uTm3spGwpFI",
+            toneClass=Some("tone-trans-brand-dark")){
+            <div class="text-feature">
+                <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
+            </div>
+        }
+    </div>
+
+    @* ===== Ensuring our independence ===== *@
+    @for(img <- pageImages.find(_.name.contains("fearless"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Fearless, progressive and free from interference", img=img) {
+                <div class="text-feature">
+                    <p>The Guardian publishes the stories that others keep hidden.</p>
+                    <p>We have become the most read, serious English-language newspaper in the world, visited by 120 million unique browsers each month. Our journalism is for everyone. The Guardian is open, without a paywall, and we remain true to our 200-year old progressive values.</p>
+                    <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
+                </div>
+                <div class="action-group">
+                    <a class="action" href="@routes.Joiner.enterDetails(Tier.Supporter)">Become a Supporter</a>
+                </div>
+            }
+        </div>
+    }
+
+    @* ===== Join The Guardian and support The Guardian ===== *@
+    @for(img <- pageImages.find(_.name.contains("polly-toynbee"))) {
+        <div class="page-slice page-slice--slim l-constrained">
+        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, toneClass=Some("tone-trans-brand-dark")) {
+            <blockquote class="blockquote blockquote--feature">
+                You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
+                <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
+            </blockquote>
+        }
+        </div>
+    }
+
+    @* ===== Join Today ===== *@
+    <div class="page-slice page-slice--split tone-tint l-constrained">
+        <div class="page-slice__inner">
+            <h2 class="page-slice__headline">What's included</h2>
+            <div class="page-slice__content">
+                <ul class="grid grid--2up">
+                    @for(benefit <- Benefits.details(Tier.Supporter).list) {
+                        <li class="grid__item">
+                        @fragments.benefits.item(
+                            benefit=benefit,
+                            iconClasses=Seq("tone-color-supporter"),
+                            componentClasses=Seq("u-divider-dotted")
+                        )
+                        </li>
+                    }
+                </ul>
+                @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true, modifierClass=Some("package-promo--spread"))
+            </div>
+        </div>
+    </div>
+
+}

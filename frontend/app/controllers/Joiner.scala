@@ -8,7 +8,6 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.netaporter.uri.dsl._
 import configuration.{Config, CopyConfig}
-import controllers.Testing.AuthorisedTester
 import forms.MemberForm._
 import model.RichEvent._
 import model._
@@ -22,12 +21,13 @@ import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import scala.concurrent.Future
 
 trait Joiner extends Controller with ActivityTracking {
+  val JoinReferrer = "join-referrer"
+
+  val contentApiService = GuardianContentService
 
   val memberService: MemberService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
-
-  def secureHiddenTiers(tier: Tier) = if (Tier.allPublic.contains(tier)) Action else AuthorisedTester
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -45,7 +45,11 @@ trait Joiner extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionChooseTier)
     )
-    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo))
+
+    val contentReferer = request.headers.get(REFERER)
+    val contentAccess = request.getQueryString("membershipAccess")
+
+    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
@@ -64,7 +68,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
-  def enterDetails(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
+  def enterDetails(tier: Tier) = AuthenticatedNonMemberWithKnownTierChangeAction(tier).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
@@ -124,7 +128,7 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
-  def joinPaid(tier: Tier) = (secureHiddenTiers(tier) andThen AuthenticatedNonMemberAction).async { implicit request =>
+  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }
@@ -146,7 +150,7 @@ trait Joiner extends Controller with ActivityTracking {
         } {
           event.service.wsMetrics.put(s"join-$tier-event", 1)
           val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))
+          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
         }
         result
       }.recover {
@@ -156,8 +160,7 @@ trait Joiner extends Controller with ActivityTracking {
       }
   }
 
-  def thankyou(tier: Tier, upgrade: Boolean = false) = (secureHiddenTiers(tier) andThen MemberAction).async { implicit request =>
-
+  def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
     val freeStartingPeriodOffer = true //todo this needs to come from zuora
 
     def futureCustomerOpt = request.member match {
@@ -207,15 +210,23 @@ trait Joiner extends Controller with ActivityTracking {
         paymentSummary.totalPrice, paymentSummary.current.price, None, paymentSummary.current.nextPaymentDate))
     }
 
+    val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
+      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
+    }.getOrElse(Future.successful(None))
+
     for {
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
       summary <- if(freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod else getPaymentSummaryForMembershipsNoFreePeriod
-    } yield {
-
-
-      Ok(views.html.joiner.thankyou(request.member, customerOpt.map(_.card), summary, eventDetailsOpt, upgrade)).discardingCookies(DiscardingCookie("GU_MEM"))
-    }
+      contentOpt <- futureContentOpt.recover { case _ => None }
+    } yield Ok(views.html.joiner.thankyou(
+        request.member,
+        summary, 
+        customerOpt.map(_.card), 
+        eventDetailsOpt,
+        contentOpt,
+        upgrade
+    )).discardingCookies(DiscardingCookie("GU_MEM"))
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

@@ -1,0 +1,84 @@
+{
+    "resource_uri": "https://www.eventbriteapi.com/v3/events/16261270899/",
+    "name": {
+        "text": "Not all tickets sold, but populated waitlist",
+        "html": "Not all tickets sold, but populated waitlist"
+    },
+    "description": {
+        "text": "EventBrite won't sell tickets to users when there are still people on the waitlist - the tickets appear as SOLD OUT to the users. \n\u00a0 \n---------- Forwarded message ---------- From:\u00a0Jenny Date: 17 March 2015 at 16:28 \nWe define sold out value by eventbrites value of quantity_sold > quantity_total. However looking at the API response (I've removed the key):\u00a0https://www.eventbriteapi.com/v3/events/14942366019/?token= it has a value on the tickets called\u00a0\"on_sale_status\":\u00a0\"SOLD_OUT\" \n\n \n",
+        "html": "<P>EventBrite won't sell tickets to users when there are still people on the waitlist - the tickets appear as SOLD OUT to the users.<\/P>\r\n<P>\u00a0<\/P>\r\n<P>---------- Forwarded message ----------<BR>From:\u00a0<STRONG>Jenny<\/STRONG><BR>Date: 17 March 2015 at 16:28<\/P>\r\n<P><SPAN STYLE=\"color: #222222; font-family: arial, sans-serif; font-size: small;\">We define sold out value by eventbrites value of quantity_sold &gt; quantity_total. However looking at the API response (I've removed the key):\u00a0<\/SPAN><A STYLE=\"color: #1155cc; font-family: arial, sans-serif; font-size: small;\" HREF=\"https://www.eventbriteapi.com/v3/events/14942366019/?token=\" TARGET=\"_blank\" REL=\"nofollow\">https://www.eventbriteapi.com/v3/events/14942366019/?token=<\/A><SPAN STYLE=\"color: #222222; font-family: arial, sans-serif; font-size: small;\"> it has a value on the tickets called\u00a0<\/SPAN><SPAN STYLE=\"color: #007700; font-family: inherit; font-size: 13px; font-style: inherit; font-weight: inherit;\">\"on_sale_status\"<\/SPAN><SPAN STYLE=\"color: #000000; font-family: inherit; font-style: inherit; font-weight: inherit; padding: 0px; margin: 0px; outline: 0px; font-size: 13px;\">:<\/SPAN><SPAN STYLE=\"color: #000000;\">\u00a0<\/SPAN><SPAN STYLE=\"color: #000000; font-family: inherit; font-style: inherit; font-weight: inherit; padding: 0px; margin: 0px; outline: 0px; font-size: 13px; background-color: #fff0f0;\">\"SOLD_OUT\"<\/SPAN><\/P>\r\n<DIV DIR=\"ltr\">\r\n<DIV><SPAN STYLE=\"color: #000000; font-family: inherit; font-style: inherit; font-weight: inherit; padding: 0px; margin: 0px; outline: 0px; font-size: 13px; background-color: #fff0f0;\"><BR><\/SPAN><\/DIV>\r\n<\/DIV>"
+    },
+    "logo": null,
+    "id": "16261270899",
+    "url": "http://www.eventbrite.co.uk/e/not-all-tickets-sold-but-populated-waitlist-tickets-16261270899",
+    "logo_url": null,
+    "start": {
+        "timezone": "Europe/London",
+        "local": "2020-04-30T19:00:00",
+        "utc": "2020-04-30T18:00:00Z"
+    },
+    "end": {
+        "timezone": "Europe/London",
+        "local": "2020-04-30T22:00:00",
+        "utc": "2020-04-30T21:00:00Z"
+    },
+    "created": "2015-03-21T14:36:49Z",
+    "changed": "2015-03-22T10:58:25Z",
+    "capacity": 3,
+    "status": "live",
+    "currency": "GBP",
+    "listed": false,
+    "shareable": true,
+    "invite_only": false,
+    "online_event": false,
+    "show_remaining": false,
+    "organizer_id": "6571165409",
+    "venue_id": null,
+    "category_id": null,
+    "subcategory_id": null,
+    "format_id": null,
+    "subcategory": null,
+    "organizer": {
+        "description": {
+            "text": "\r\nWelcome to Guardian masterclasses \u2013 a unique programme of learning embedded within one of the world's most forward-thinking media organisations.\r\nMasterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.\r\nHarnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.\r\nThe programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.\r\n",
+            "html": "<DIV ID=\"article-wrapper\">\r\n<P>Welcome to Guardian masterclasses \u2013 a unique programme of learning embedded within one of the world's most forward-thinking media organisations.<\/P>\r\n<P>Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing, journalism, photography and design, film and digital media, music and cultural appreciation.<\/P>\r\n<P>Harnessing the expertise and specialisms within the organisation, our courses are led by first class and award winning guardian professionals whilst also drawing on the skills and expertise of other leading figures at the forefront of the creative and digital industries.<\/P>\r\n<P>The programme is aimed at anyone interested in personal or professional development whether that be refining your skills, focusing your ambition or simply broadening your mind and gaining inspiration.<\/P>\r\n<\/DIV>"
+        },
+        "logo": {
+            "id": "6162617",
+            "url": "http://cdn.evbuc.com/images/6162617/101063397097/3/logo.png"
+        },
+        "resource_uri": "https://www.eventbriteapi.com/v3/organizers/6571165409/",
+        "id": "6571165409",
+        "name": "TEST ACCOUNT Membership",
+        "url": "http://www.eventbrite.com/o/test-account-membership-6571165409",
+        "num_past_events": 3,
+        "num_future_events": 0
+    },
+    "venue": null,
+    "category": null,
+    "format": null,
+    "ticket_classes": [
+        {
+            "resource_uri": "https://www.eventbriteapi.com/v3/events/16261270899/ticket_classes/34612131/",
+            "id": "34612131",
+            "name": "General",
+            "description": null,
+            "donation": false,
+            "free": true,
+            "minimum_quantity": 1,
+            "maximum_quantity": null,
+            "maximum_quantity_per_order": 1,
+            "on_sale_status": "SOLD_OUT",
+            "quantity_total": 3,
+            "quantity_sold": 2,
+            "sales_end": "2020-04-30T17:00:00Z",
+            "hidden": false,
+            "include_fee": false,
+            "split_fee": false,
+            "hide_description": true,
+            "auto_hide": false,
+            "variants": [],
+            "event_id": "16261270899"
+        }
+    ]
+}

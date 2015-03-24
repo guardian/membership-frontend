@@ -1,8 +1,5 @@
 @(event: model.RichEvent.RichEvent)
 
-@import com.gu.membership.salesforce.Tier
-@import model.Eventbrite.EBTicketClass
-
 <div class="event-info@if(event.isBookable && event.metadata.largeImg) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
 
     @if(!event.isBookable) {
@@ -29,7 +26,9 @@
          @for(ticketing <- event.internalTicketing) {
             @fragments.pricing.priceInfoEvent(event)
             @if(event.isBookable) {
-                @fragments.event.ticketCta(event)
+                <div class="l-pad-vertical">
+                    @fragments.event.ticketCta(event)
+                </div>
                 @fragments.event.terms(event, List("event-info__terms"))
             }
         }

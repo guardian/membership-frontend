@@ -1,7 +1,6 @@
 @(event: model.RichEvent.RichEvent, showTicketSales: Boolean = false)
 
 @import views.support.Dates._
-@import model.RichEvent.{GuLiveEvent, MasterclassEvent}
 
 @* Event start time *@
 <div class="stat-item">
@@ -24,7 +23,7 @@
             @location.city @location.postal_code
         }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
-            <div class="google-map">
+            <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink"
                    data-metric-trigger="click"
                    data-metric-category="events"

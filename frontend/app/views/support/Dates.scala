@@ -26,7 +26,7 @@ object Dates {
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
-  def prettyTime(dt: DateTime): String = dt.toString("h:mm") + dt.toString("a").toLowerCase
+  def prettyTime(dt: DateTime): String = dt.toString(if (dt.getMinuteOfHour==0) "h" else "h.mm") + dt.toString("a").toLowerCase
 
   def prettyDateWithTime(dt: DateTime): String = prettyDate(dt) + ", " + prettyTime(dt)
 

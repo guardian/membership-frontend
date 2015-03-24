@@ -1,9 +1,7 @@
 @(tier: com.gu.membership.salesforce.Tier, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
 
-@import views.support.selectDates
-@import views.support.Asset
 @import model.Benefits
-@import views.support.Dates
+@import views.support.{Asset, Dates, selectDates}
 
 <fieldset class="fieldset">
 
@@ -19,10 +17,9 @@
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
                 @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
-                    <p>Your card will be charged £
-                        <span class="js-card-note-pricing-charge"
-                              data-annual="@pricing.yearly"
-                              data-month="@pricing.monthly">@pricing.yearly</span>
+                    <p>Your card will be charged £<span class="js-card-note-pricing-charge"
+                                                         data-annual="@pricing.yearly"
+                                                         data-month="@pricing.monthly">@pricing.yearly</span>
                         every
                         <span class="js-card-note-pricing-period"
                               data-annual="year"

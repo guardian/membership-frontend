@@ -4,13 +4,15 @@
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
 
-@import configuration.Config
+@import configuration.{Config, Social}
 @import views.support.Asset
 
 <!DOCTYPE html lang="en-GB">
 <html class="js-off id--signed-out @htmlClass">
     <head>
         <meta charset="utf-8">
+        <title>@(title + " | " + Config.siteTitle )</title>
+
         @fragments.meta.mobile()
         <meta name="description"                    content="@pageInfo.description"/>
         <meta name="rating"                         content="general"/>
@@ -29,8 +31,23 @@
         <meta property="fb:app_id" content="@Config.facebookAppId"/>
         <meta name="twitter:site" content="@@@Config.twitterUsername"/>
         <meta name="twitter:card" content="summary"/>
+        <meta name="google-site-verification" content="qf7V0ceP_mY_0jTl7R7C1wZSKn2gK7TlharWVLr8Ea0" />
 
-        <title>@(title + " | " + Config.siteTitle )</title>
+        <script type="application/ld+json">
+            {
+                "@@context": "http://schema.org",
+                "@@type": "Organization",
+                "name": "Guardian Membership",
+                "url": "@(Config.membershipUrl)",
+                "logo": "@(Config.membershipUrl)@Asset.at("images/favicons/152x152.png")",
+                "sameAs" : [
+                    "@(Social.youtube)",
+                    "@(Social.googleplus)",
+                    "@(Social.twitter)"
+                ]
+            }
+        </script>
+
         @fragments.javaScriptFirstSteps(pageInfo)
 
         <!--[if (gt IE 9) | (IEMobile)]><!-->
@@ -82,5 +99,6 @@
         @fragments.analytics.googleRemarketing()
         @fragments.analytics.userZoom()
         @fragments.analytics.crazyegg()
+        @fragments.analytics.krux()
     </body>
 </html>

@@ -104,3 +104,12 @@ a,
     text-align: center;
     outline: none;
 }
+
+.link-outbound {}
+
+.link-outbound__highlight {
+    color: $mem-brandBlueDark;
+}
+.link-outbound__separator {
+    color: $c-neutral3;
+}

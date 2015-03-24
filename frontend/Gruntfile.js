@@ -80,6 +80,7 @@ module.exports = function (grunt) {
                 options: {
                     name: 'src/main',
                     baseUrl: '<%= dirs.assets.javascripts %>',
+                    // Keep these in sync with the paths found in the karma test-main.js paths
                     paths: {
                         '$': 'src/utils/$',
                         'modernizr': 'lib/modernizr',

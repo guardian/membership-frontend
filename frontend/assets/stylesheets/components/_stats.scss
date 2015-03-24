@@ -40,6 +40,9 @@
 .stat-item__second {
     position: relative;
 }
+.stat-item__supplementary {
+    @include fs-data(2);
+}
 
 .stat-item--last {
     border-bottom: 0 none;
