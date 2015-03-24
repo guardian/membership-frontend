@@ -225,7 +225,8 @@ object Eventbrite {
     val providerWhitelist = Seq(
       "birkbeck",
       "idler",
-      "csm"
+      "csm",
+      "tpg"
     )
 
     def slugToId(slug: String): Option[String] = "-?(\\d+)$".r.findFirstMatchIn(slug).map(_.group(1))
