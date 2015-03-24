@@ -178,26 +178,37 @@
         display: table;
     }
 }
-.event-ticket__details,
-.event-ticket__action {
+.event-ticket__item {
     @include mq(tablet) {
         display: table-cell;
-        vertical-align: bottom;
+        vertical-align: middle;
+        padding-right: rem($gs-gutter);
     }
 }
 .event-ticket__details {
     @include mq(tablet) {
-        padding-right: rem($gs-gutter);
         padding-bottom: rem(3px); // Tweak for optical alignment (over actual alignment)
     }
 }
 .event-ticket__action {
-    .action {
-        margin: rem($gs-baseline) 0;
-        @include mq(tablet) {
-            margin: 0 rem($gs-gutter) 0 0;
-        }
+    padding-top: rem($gs-baseline);
+    padding-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        padding-top: 0;
+        padding-bottom: 0;
     }
+}
+.event-ticket__terms {
+    @include fs-textSans(1);
+
+    @include mq(tablet) {
+        max-width: rem(gs-span(4));
+    }
+}
+.event-ticket__terms a {
+    color: inherit;
+    border-color: inherit;
 }
 
 .event-ticket--aligned {
@@ -251,21 +262,6 @@
 .event-ticket__trail {
     @include fs-textSans(1);
 }
-
-// TODO: This has too much layout / colour code in for a root component
-.terms-info {
-    @include fs-textSans(1);
-
-    @include mq(tablet) {
-        display: inline-block;
-    }
-
-    a {
-        text-decoration: none;
-        padding-bottom: rem(2px);
-    }
-}
-
 
 .event__picture-byline {
     clear: both;
@@ -462,6 +458,15 @@
         display: block;
         padding-top: rem($gs-baseline/2);
         color: $c-neutral2;
+
+        @include mq(tablet) {
+            display: inline-block;
+        }
+
+        a {
+            text-decoration: none;
+            padding-bottom: rem(2px);
+        }
     }
 
 .event-info--bordered {
