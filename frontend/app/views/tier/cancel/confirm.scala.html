@@ -9,7 +9,7 @@
     @fragments.tier.tierTrail(currentTier, showCaption=false)
     <ul class="list-stack">
         @for(benefit <- Benefits.details(currentTier).list) {
-            <li>@fragments.benefits.item(benefit)</li>
+            <li>@fragments.tier.benefitItem(benefit)</li>
         }
     </ul>
 }
@@ -23,7 +23,7 @@
     @fragments.tier.tierTrail(Tier.Friend, showCaption=false)
     <ul class="list-stack">
         @for(benefit <- Benefits.details(Tier.Friend).list) {
-            <li>@fragments.benefits.item(benefit)</li>
+            <li>@fragments.tier.benefitItem(benefit)</li>
         }
     </ul>
 }

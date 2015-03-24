@@ -42,7 +42,7 @@
                                             What's included
                                         </li>
                                         @for(benefit <- Benefits.details(tier).list) {
-                                            <li>@fragments.benefits.item(benefit)</li>
+                                            <li>@fragments.tier.benefitItem(benefit)</li>
                                         }
                                     </ul>
                                     @if(tier != currentTier) {
