@@ -34,13 +34,15 @@
             </div>
             @for(internalTicketing <- event.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
-                    <div class="event-ticket__details">
+                    <div class="event-ticket__item event-ticket__details">
                         @fragments.pricing.priceInfoEvent(event, isPrimary=true) <!-- internalTicketing -->
                     </div>
                     @if(event.isBookable) {
-                        <div class="event-ticket__action">
+                        <div class="event-ticket__item event-ticket__action">
                             @fragments.event.ticketCta(event, List("action--booking"))
-                            @fragments.event.terms(event, List("terms-info--constrained"))
+                        </div>
+                        <div class="event-ticket__item event-ticket__terms copy">
+                            @fragments.event.terms(event)
                         </div>
                     }
                 </div>
