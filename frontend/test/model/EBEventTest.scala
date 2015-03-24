@@ -193,5 +193,10 @@ class EBEventTest extends PlaySpecification {
 
       event.isSoldOut must beTrue
     }
+    "report an event with spare capacity as Sold Out if EventBrite says it is (due to people on waitlist)" in {
+      val event = Resource.getJson("model/eventbrite/event.not-sold-out-but-populated-waitlist.json").as[EBEvent]
+
+      event.isSoldOut must beTrue
+    }
   }
 }

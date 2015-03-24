@@ -12,7 +12,7 @@ object EventbriteTestObjects {
   def eventLocation = new EBAddress(None, None, None, None, None, None)
   def eventVenue = new EBVenue(Option(eventLocation), None)
   def eventWithName(name: String = "") = EBEvent(eventName(name), Option(eventDescription()), "", name, eventTime, eventTime + 2.hours, (eventTime - 1.month).toInstant, eventVenue, 0, Seq.empty, "live")
-  def eventTicketClass = EBTicketClass("", "", false, 0, 0, None, eventTime.toInstant, None, None)
+  def eventTicketClass = EBTicketClass("", "", false, 0, 0, None, None, eventTime.toInstant, None, None)
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgOpt = None

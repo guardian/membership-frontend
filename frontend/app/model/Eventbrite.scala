@@ -84,6 +84,7 @@ object Eventbrite {
                            free: Boolean,
                            quantity_total: Int,
                            quantity_sold: Int,
+                           on_sale_status: Option[String], // Currently undocumented, so treating as optional. "SOLD_OUT", "AVAILABLE", "UNAVAILABLE"
                            cost: Option[EBPricing],
                            sales_end: Instant,
                            sales_start: Option[Instant],
@@ -92,7 +93,7 @@ object Eventbrite {
 
     val isMemberBenefit = isHidden && name.toLowerCase.startsWith("guardian member")
 
-    val isSoldOut = quantity_sold >= quantity_total
+    val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
     val priceInPence = cost.map(_.value).getOrElse(0)
 
@@ -132,7 +133,7 @@ object Eventbrite {
 
     val ticketsSold = allTickets.map(_.quantity_sold).sum
 
-    val isSoldOut = ticketsSold >= capacity
+    val isSoldOut = allTickets.forall(_.isSoldOut) || ticketsSold >= capacity
 
     val isFree = primaryTicket.free
 
