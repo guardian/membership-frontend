@@ -1,14 +1,18 @@
 @(faqs: List[model.Faq.Item])
 
-<ul class="help-list u-unstyled">
-@for(faq <- faqs){
-    <li class="help-item">
-        <a class="help-question" href="#@faq.id">
-            <span class="icon-holder">
-                @fragments.inlineIcon("arrow-down")
-            </span>
-            <span class="help-question__text">@faq.question</span>
-        </a>
-    </li>
-}
+<ul class="faq-list u-unstyled">
+    @for(faq <- faqs){
+        <li class="faq-list__item">
+            <a class="faq-question" href="#@faq.id">
+                <div class="faq-question__icon">
+                    <span class="icon-holder">
+                        @fragments.inlineIcon("arrow-down")
+                    </span>
+                </div>
+                <span class="faq-question__text">
+                    @faq.question
+                </span>
+            </a>
+        </li>
+    }
 </ul>
