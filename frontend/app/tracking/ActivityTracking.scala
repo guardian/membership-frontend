@@ -12,7 +12,7 @@ import controllers.Testing
 import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.{EBOrder, EBTicketClass}
 import model.IdMinimalUser
-import model.RichEvent.{DiscoverEvent, GuLiveEvent, MasterclassEvent, RichEvent}
+import model.RichEvent.{LocalEvent, GuLiveEvent, MasterclassEvent, RichEvent}
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
@@ -108,7 +108,7 @@ case class EventData(event: RichEvent) {
 
   val group = event match {
     case _: GuLiveEvent => "Guardian Live"
-    case _: DiscoverEvent => "Discover"
+    case _: LocalEvent => "Local"
     case _: MasterclassEvent => "Masterclass"
 
   }

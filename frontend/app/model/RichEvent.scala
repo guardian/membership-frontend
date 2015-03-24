@@ -61,7 +61,7 @@ object RichEvent {
     )
   )
 
-  val discoverMetadata = Metadata(
+  val localMetadata = Metadata(
     identifier="local",
     title="Guardian Local",
     shortTitle="Events",
@@ -116,10 +116,10 @@ object RichEvent {
     }
   }
 
-  case class DiscoverEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
+  case class LocalEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
     extends LiveEvent(image, contentOpt) {
     val metadata = {
-      discoverMetadata.copy(highlightsOpt = highlight)
+      localMetadata.copy(highlightsOpt = highlight)
     }
   }
 
