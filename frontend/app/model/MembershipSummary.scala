@@ -8,6 +8,7 @@ case class MembershipSummary(startDate: DateTime,
                              planAmount: Float,
                              nextPaymentPrice: Option[Float],
                              nextPaymentDate: DateTime) {
-  val annual = endDate == startDate.plusYears(1)
+
+  val annual = endDate.plusDays(1) == startDate.plusYears(1)
 
 }

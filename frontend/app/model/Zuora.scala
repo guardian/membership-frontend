@@ -64,7 +64,7 @@ object Zuora {
 
   object SubscriptionDetails {
     def apply(ratePlan: RatePlan, ratePlanCharge: RatePlanCharge): SubscriptionDetails = {
-      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now)
+      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now) //todo FIX: this causes an incorrect date for subscriber offer
 
       // Zuora requires rate plan names to be unique, even though they are never used as identifiers
       // We want to show the same name for annual and monthly, so remove the " - annual" or " - monthly"

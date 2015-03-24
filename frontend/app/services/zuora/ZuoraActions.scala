@@ -175,15 +175,16 @@ case class SubscriptionDetailsViaAmend(subscriptionId: String, subscriberOffer: 
 
 
   val now = DateTime.now
-  val dateStr = if (subscriberOffer) formatDateTime(now.plusMonths(6)) else now
+  val effectiveDate = formatDateTime(now)
+  val contractAcceptanceDate = if (subscriberOffer) formatDateTime(now.plusMonths(6)) else effectiveDate
 
   val body = {
     <ns1:amend>
       <ns1:requests>
         <ns1:Amendments>
-          <ns2:ContractEffectiveDate>2015-03-19</ns2:ContractEffectiveDate>
-          <ns2:EffectiveDate>2015-03-19</ns2:EffectiveDate>
-          <ns2:CustomerAcceptanceDate>2015-03-19</ns2:CustomerAcceptanceDate>
+          <ns2:ContractEffectiveDate>{contractAcceptanceDate}</ns2:ContractEffectiveDate>
+          <ns2:EffectiveDate>{contractAcceptanceDate}</ns2:EffectiveDate>
+          <ns2:CustomerAcceptanceDate>{contractAcceptanceDate}</ns2:CustomerAcceptanceDate>
           <ns2:Name>GetSubscriptionDetailsViaAmend</ns2:Name>
           <ns2:Status>Completed</ns2:Status>
           <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
