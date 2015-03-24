@@ -86,7 +86,7 @@ object RichEvent {
     val tags: Seq[String]
     val metadata: Metadata
     val contentOpt: Option[Content]
-    val pastImageOpt: Option[Asset]
+    val pastImageOpt: Option[ResponsiveImageGroup]
     def deficientGuardianMembersTickets: Boolean
   }
 
@@ -104,12 +104,7 @@ object RichEvent {
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))
 
-    val pastImageOpt = for {
-      content <- contentOpt
-      elements <- content.elements
-      element <- elements.find(_.relation == "main")
-      assetOpt <- element.assets.find(_.typeData.get("width") == Some("460"))
-    } yield assetOpt
+    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
 
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
