@@ -62,17 +62,17 @@ object RichEvent {
   )
 
   val discoverMetadata = Metadata(
-    identifier="discover",
-    title="Guardian Discover",
+    identifier="local",
+    title="Guardian Local",
     shortTitle="Events",
-    pluralTitle="Discover events",
+    pluralTitle="Local events",
     description=None,
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
     preSale=true,
     chooseTier=ChooseTierMetadata(
-      "Guardian Discover events are exclusively for Guardian members",
+      "Guardian Local events are exclusively for Guardian members",
       "Choose a membership tier to continue with your booking"
     )
   )
