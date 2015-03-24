@@ -255,6 +255,17 @@
         padding-bottom: rem(2px);
     }
 }
+.terms-info--constrained {
+    @include mq(tablet) {
+        max-width: rem(gs-span(3) + $gs-gutter * 2);
+    }
+
+    a {
+        color: inherit;
+        border-bottom: 1px solid;
+        border-color: inherit;
+    }
+}
 
 
 .event__picture-byline {
