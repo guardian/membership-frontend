@@ -82,8 +82,13 @@ define([
         };
     })();
 
+    var hasTier = function(memberDetail) {
+        return !!(memberDetail && memberDetail.tier);
+    };
+
     return {
         isLoggedIn: isLoggedIn,
+        hasTier: hasTier,
         getUserFromCookie: getUserFromCookie,
         getMemberDetail: getMemberDetail,
         idCookieAdapter: idCookieAdapter
