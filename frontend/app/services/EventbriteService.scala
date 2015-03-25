@@ -95,6 +95,9 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 abstract class LiveService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
+
+  def gridImageFor(event: EBEvent) =
+    event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
 
 object GuardianLiveEventService extends LiveService {
@@ -109,13 +112,8 @@ object GuardianLiveEventService extends LiveService {
     } yield (ordering.json \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val eventbriteContent = contentApiService.content(event.id)
-
-    event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None, eventbriteContent))) { url =>
-      gridService.getRequestedCrop(url).map(GuLiveEvent(event, _, eventbriteContent))
-    }
-  }
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
+    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
@@ -132,13 +130,8 @@ object DiscoverEventService extends LiveService {
   val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for discovery?
   val wsMetrics = new EventbriteMetrics("Discover")
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val eventbriteContent = contentApiService.content(event.id)
-
-    event.mainImageUrl.fold(Future.successful(DiscoverEvent(event, None, eventbriteContent))) { url =>
-      gridService.getRequestedCrop(url).map(DiscoverEvent(event, _, eventbriteContent))
-    }
-  }
+  def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
+    yield DiscoverEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
   override def getEvents: Seq[RichEvent] = events
