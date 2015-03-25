@@ -11,17 +11,14 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.EBCode
-import model.RichEvent.RichEvent
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
-import model.{IdMinimalUser, IdUser, PaidTierPlan, ProductRatePlan}
 import model._
 import monitoring.MemberMetrics
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
-import views.html.fragments.form.marketingChoices
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -83,11 +80,31 @@ trait MemberService extends LazyLogging with ActivityTracking {
   def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, useSubscriberOffer: Boolean): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
+    val casService = CASService
+
 
     Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
       def futureCustomerOpt = formData match {
         case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case _ => Future.successful(None)
+      }
+
+      //todo check user can use subscriber offer (again) before proceeding
+
+      formData match {
+        case paidMemberJoinForm: PaidMemberJoinForm => {
+          val casIdOpt = paidMemberJoinForm.casId
+          casIdOpt map { casId =>
+            for {
+              validSubscriber <- casService.isValidSubscriber(casId, formData.deliveryAddress.postCode)
+              casIdNotUsed <- touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
+            } yield {
+              if(!validSubscriber) throw MemberServiceError("Subscription ID or postcode error")
+              else if (casIdNotUsed.nonEmpty) throw MemberServiceError("Subscription ID has been used on Membership")
+            }
+          }
+        }
+        case _ => //do nothing
       }
 
       val casId = formData match {

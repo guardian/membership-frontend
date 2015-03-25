@@ -24,6 +24,7 @@ trait Joiner extends Controller with ActivityTracking {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
+  val casService = CASService
 
   val memberService: MemberService
 
@@ -139,8 +140,6 @@ trait Joiner extends Controller with ActivityTracking {
       case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.subscriberOffer
       case _ => false
     }
-
-    //todo check user can use subscriber offer (again) before proceeding
 
     MemberService.createMember(request.user, formData, IdentityRequest(request), useSubscriberOffer)
       .map { member =>

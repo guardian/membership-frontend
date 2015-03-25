@@ -64,7 +64,7 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  //todo subscriber ID not been used
+  //todo remove?
   def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
     for (validSubscriber <- casService.isValidSubscriber(id, postcode)) yield {
       if(validSubscriber) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))

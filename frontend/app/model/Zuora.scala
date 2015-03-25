@@ -31,7 +31,7 @@ object Zuora {
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
-  case class Subscription(id: String, version: Int) extends ZuoraQuery
+  case class Subscription(id: String, version: Int, casId: Option[String]) extends ZuoraQuery
 
   trait Error extends Throwable {
     val code: String
@@ -256,7 +256,7 @@ object ZuoraDeserializer {
       new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
   }
 
-  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version")) { result =>
-    Subscription(result("Id"), result("Version").toInt)
+  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c")) { result =>
+    Subscription(result("Id"), result("Version").toInt, result.get("CASSubscriberID__c"))
   }
 }
