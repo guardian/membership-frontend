@@ -1,4 +1,4 @@
-@(event: model.RichEvent.RichEvent, isPrimary: Boolean = false)
+@(event: model.RichEvent.RichEvent, isPrimary: Boolean = false, showLimited: Boolean = false)
 
 @for(ticketing <- event.internalTicketing) {
     <div class="price-info-inline@if(isPrimary){ price-info-inline--primary}" itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
@@ -30,7 +30,7 @@
                             (save @discountTicketing.savingText)
                         </span>
                     </div>
-                    @if(!isPrimary && event.isBookable && event.isLimitedAvailability) {
+                    @if(showLimited && event.isBookable && event.isLimitedAvailability) {
                         <div class="price-info-inline__trail price-info-inline__limited">
                             @event.limitedAvailabilityText
                         </div>
