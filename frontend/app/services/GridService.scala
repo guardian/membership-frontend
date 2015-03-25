@@ -46,7 +46,10 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
         }
       }
     }
-  }
+  }.recover { case e =>
+    logger.error(s"Error getting crop for $url", e)
+    None
+  } // We should return no image, rather than die
 
   def getGrid(url: Uri) = {
     if (isUrlCorrectFormat(url)) get[GridResult](getEndpoint(url)).map(Some(_))
