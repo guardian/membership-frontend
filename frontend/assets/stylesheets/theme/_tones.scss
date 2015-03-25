@@ -94,14 +94,14 @@
     }
 }
 
-/* Discover
+/* Local
    ========================================================================== */
 
-.tone-discover,
-.tone-accent-discover,
-.tone-trans-discover {
+.tone-local,
+.tone-accent-local,
+.tone-trans-local {
     color: $white;
-    background-color: tone('discover');
+    background-color: tone('local');
     a {
         border-bottom-color: transparentize($white, .5);
     }
@@ -109,24 +109,24 @@
         border-bottom-color: $white;
     }
 }
-.tone-accent-discover {
-    background-color: tone('discover', 'accent');
+.tone-accent-local {
+    background-color: tone('local', 'accent');
 }
-.tone-trans-discover {
-    background-color: transparentize(tone('discover'), .1);
+.tone-trans-local {
+    background-color: transparentize(tone('local'), .1);
 }
-.tone-border-discover {
-    border-color: tone('discover');
+.tone-border-local {
+    border-color: tone('local');
 }
-.tone-action-discover {
+.tone-action-local {
     color: $white;
-    background-color: tone('discover');
+    background-color: tone('local');
     &:hover, &:focus, &:active {
-        background-color: darken(tone('discover'), 5%);
+        background-color: darken(tone('local'), 5%);
     }
 }
-.tone-text-discover {
-    color: tone('discover', 'contrast');
+.tone-text-local {
+    color: tone('local', 'contrast');
     &:active {
         color: $white;
     }

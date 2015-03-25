@@ -1,19 +1,19 @@
 package controllers
 
 import play.api.mvc.Controller
-import services.{DiscoverEventService, GuardianLiveEventService, MasterclassEventService}
+import services.{LocalEventService, GuardianLiveEventService, MasterclassEventService}
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
-  val discoverEvents = DiscoverEventService
+  val localEvents = LocalEventService
   val masterclassEvents = MasterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.staff.eventOverview.guLive(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))
   }
 
-  def discoverOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview.discover(discoverEvents.events, discoverEvents.eventsDraft, request.path))
+  def localOverview = GoogleAuthenticatedStaffAction { implicit request =>
+     Ok(views.html.staff.eventOverview.local(localEvents.events, localEvents.eventsDraft, request.path))
   }
 
   def masterclassOverview = GoogleAuthenticatedStaffAction { implicit request =>
