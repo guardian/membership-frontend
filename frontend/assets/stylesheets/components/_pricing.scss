@@ -154,6 +154,9 @@
         @include fs-data(3, true);
     }
 }
+.price-info-inline__limited {
+    color: $c-limitedAvailability;
+}
 
 .price-info-inline--primary {
     .price-info-inline__value {

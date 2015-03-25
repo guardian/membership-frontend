@@ -7,7 +7,7 @@ object Grid {
 
   case class Error(message: String) extends Throwable with GridObject
 
-  case class GridResult(uri: String, data: Data) extends GridObject
+  case class GridResult(data: Data) extends GridObject
 
   case class Data(id: String, metadata: Metadata, exports: Option[List[Export]])
 

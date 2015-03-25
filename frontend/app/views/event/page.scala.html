@@ -8,6 +8,7 @@
 
 @main("Event Detail | " + event.name.text, pageInfo=pageInfo, htmlClass = "js-event") {
 
+    @* Event Name *@
     <div class="event-header tone-@event.metadata.identifier">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
@@ -19,6 +20,7 @@
         </div>
     </div>
 
+    @* Event Pricing *@
     <div class="event-header event-header--pricing tone-@event.metadata.identifier tone-accent-@event.metadata.identifier">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
@@ -34,12 +36,14 @@
             </div>
             @for(internalTicketing <- event.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
-                    <div class="event-ticket__details">
+                    <div class="event-ticket__item event-ticket__details">
                         @fragments.pricing.priceInfoEvent(event, isPrimary=true) <!-- internalTicketing -->
                     </div>
                     @if(event.isBookable) {
-                        <div class="event-ticket__action">
+                        <div class="event-ticket__item event-ticket__action">
                             @fragments.event.ticketCta(event, List("action--booking"))
+                        </div>
+                        <div class="event-ticket__item event-ticket__terms copy">
                             @fragments.event.terms(event)
                         </div>
                     }
@@ -50,9 +54,19 @@
 
     </div>
 
+    @* Limited availability messaging *@
+    @if(event.isBookable && event.isLimitedAvailability) {
+        <div class="event-header event-header--extra">
+            <div class="event-header__container event-header__container--details">
+                <span class="event-header__message">@event.limitedAvailabilityText</span>
+            </div>
+        </div>
+    }
+
+    @* Sold out & past events *@
     @if(!event.isBookable) {
-        <div class="event-header event-header--unavailable">
-            <div class="event-header__container event-header__container--details event-header__container--unavailable">
+        <div class="event-header event-header--extra">
+            <div class="event-header__container event-header__container--details">
                 <div class="event-ticket event-ticket--aligned">
                     <div class="event-ticket__details">
                         <div class="event-ticket__details__status">
@@ -62,7 +76,7 @@
                     <div class="event-ticket__action">
                         @if(event.isPastEvent) {
                             @for(highlight <- event.metadata.highlightsOpt) {
-                                <a class="action action--external u-no-margin"
+                                <a class="action action--external"
                                    href="@highlight.url"
                                    data-metric-trigger="click"
                                    data-metric-category="events"
@@ -70,10 +84,9 @@
                             }
                         } else {
                             @if(event.isSoldOut) {
-                                @fragments.event.waitlist(event, List("u-no-margin"))
+                                @fragments.event.waitlist(event)
                             }
                         }
-
                     </div>
                 </div>
             </div>
@@ -116,18 +129,14 @@
             </div>
 
             <div class="event-content__sidebar">
-
                 @if(event.isPastEvent) {
                     @fragments.event.relatedEntry(event)
                 }
-
-
                 @if(!event.metadata.largeImg) {
                     @for(img <- event.imgOpt) {
                         <img class="responsive-img hidden-mobile" src="@img.defaultImage" />
                     }
                 }
-
                 @if(!event.isPastEvent){
                     <div class="event-content__sticky js-sticky" data-sticky-sibling=".event-content__body">
                         @fragments.event.infoPanel(event)

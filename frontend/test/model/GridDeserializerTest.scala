@@ -13,7 +13,6 @@ class GridDeserializerTest extends PlaySpecification {
       val grid = Resource.getJson("model/grid/api-image.json")
       val gridResponse = grid.as[GridResult]
 
-      gridResponse.uri mustEqual("https://some-media-api-service/images/aede0da05506d0d8cb993558b7eb9ad1d2d3e675")
       gridResponse.data.metadata.byline mustEqual(Some("Joe Bloggs"))
 
       val exports = gridResponse.data.exports.get

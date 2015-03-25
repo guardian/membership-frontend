@@ -25,29 +25,19 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val wsUrl = Config.eventbriteApiUrl
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  val refreshTimeAllEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
-  lazy val eventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite events", Nil, 1.second, refreshTimeAllEvents) {
-    for {
-      events <- getAll[EBEvent]("users/me/owned_events?status=live")
-      richEvents <- Future.sequence(events.map(mkRichEvent))
-    } yield richEvents
-  }
+  def eventsTaskFor(status: String): ScheduledTask[Seq[RichEvent]] =
+    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, Config.eventbriteRefreshTime.seconds) {
+      for {
+        events <- getAll[EBEvent](s"users/me/owned_events?status=$status")
+        richEvents <- Future.traverse(events)(mkRichEvent)
+      } yield richEvents
+    }
 
-  val refreshTimeDraftEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
-  lazy val draftEventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite draft events", Nil, 1.second, refreshTimeDraftEvents) {
-    for {
-      eventsDraft <- getAll[EBEvent]("users/me/owned_events?status=draft")
-      richDraftEvents <- Future.sequence(eventsDraft.map(mkRichEvent))
-    } yield richDraftEvents
-  }
+  lazy val eventsTask = eventsTaskFor("live")
 
-  val refreshTimeArchivedEvents = new FiniteDuration(Config.eventbriteRefreshTime, SECONDS)
-  lazy val archivedEventsTask = ScheduledTask[Seq[RichEvent]]("Eventbrite archived events", Nil, 1.second, refreshTimeArchivedEvents) {
-    for {
-      eventsArchive <- get[EBResponse[EBEvent]]("users/me/owned_events?status=ended&order_by=start_desc")
-      richEventsArchive <- Future.sequence(eventsArchive.data.map(mkRichEvent))
-    } yield richEventsArchive
-  }
+  lazy val draftEventsTask =  eventsTaskFor("draft")
+
+  lazy val archivedEventsTask = eventsTaskFor("ended")
 
   def start() {
     Logger.info("Starting EventbriteService background tasks")

@@ -119,7 +119,7 @@
                 <ul class="grid grid--3up">
                     @for(benefit <- Benefits.details(Tier.Partner).list) {
                         <li class="grid__item">
-                            @fragments.benefits.item(benefit=benefit)
+                            @fragments.tier.benefitItem(benefit=benefit)
                         </li>
                     }
                 </ul>
