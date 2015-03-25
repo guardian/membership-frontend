@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Event Details - Info Panel
+   ========================================================================== */
+
+.event-info {
+    @include clearfix();
+    @include fs-textSans(3);
+    background-color: $c-neutral7;
+    margin-bottom: rem($gs-baseline);
+}
+.event-info__inner {
+    @include clearfix;
+    padding: rem($gs-gutter / 4);
+    padding-bottom: rem($gs-baseline);
+}
+.event-info__name {
+    @include fs-header(2);
+    padding-bottom: rem($gs-baseline * 2);
+}
+.event-info__first {
+    float: left;
+    width: rem($gs-gutter * 2);
+}
+.event-info__second {
+    float: left;
+    width: rem(240px);
+    position: relative;
+}
+.event-info__price {
+    padding-bottom: 0;
+    @include fs-header(5);
+}
+.event-info__trail {
+    @include fs-textSans(1);
+    display: block;
+}
+.event-info__terms {
+    @include fs-textSans(1);
+    display: block;
+    padding-top: rem($gs-baseline/2);
+    color: $c-neutral2;
+
+    @include mq(tablet) {
+        display: inline-block;
+    }
+
+    a {
+        text-decoration: none;
+        padding-bottom: rem(2px);
+    }
+}
+
+.event-info--bordered {
+    border-top: 1px solid;
+}
+.event-info--unavailable {
+    .event-info__inner {
+        opacity: 0.6;
+    }
+}
+
+/* Status Panel
+   ========================================================================== */
+
+.status-panel {
+   color: $white;
+   background-color: $c-neutral1;
+   padding: rem($gs-baseline);
+}
+.status-panel__header {
+   @include fs-header(2);
+}
+.status-panel__content {
+   margin-top: rem($gs-baseline / 2);
+}
+
+/* Ticket Sales
+   ========================================================================== */
+
+.ticket-sales {
+    margin-top: rem($gs-baseline / 4);
+    position: relative;
+}
+.ticket-sales__header {
+    font-weight: bold;
+}
+.ticket-sales__toggle {
+    display: block;
+}
+.ticket-sales__toggle:hover,
+.ticket-sales__toggle:active {
+    text-decoration: underline;
+}
+.ticket-sales__item {
+    @include clearfix();
+}
+.ticket-sales__item__label,
+.ticket-sales__item__date {
+    display: inline-block;
+}
+.ticket-sales__item__label {
+    float: left;
+}
+.ticket-sales__item__date {
+    float: right;
+}
+.ticket-sales__list {
+    @include fs-data(4);
+}

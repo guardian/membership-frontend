@@ -152,11 +152,6 @@
        background-color: transparent;
    }
 
-   @include mq($until: tablet) {
-       margin-top: rem($gs-baseline);
-       margin-bottom: 0;
-   }
-
    @include mq(tablet) {
        width: auto;
    }
