@@ -19,8 +19,8 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
 
                 ajax({
                     url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo lastname
-                }).then(function(respsonse) {
-                    if(respsonse.valid) {
+                }).then(function(response) {
+                    if(response.valid) {
                         handleSuccess();
                     } else {
                         handleError();
