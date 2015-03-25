@@ -12,7 +12,7 @@
         </div>
         <ul class="list-stack list-stack--bordered">
             @for(benefit <- Benefits.detailsLimited(tier)) {
-                <li>@fragments.benefits.item(benefit, iconClasses=List("tone-color-" + tier.slug))</li>
+                <li>@fragments.tier.benefitItem(benefit, iconClasses=List("tone-color-" + tier.slug))</li>
             }
         </ul>
     </div>

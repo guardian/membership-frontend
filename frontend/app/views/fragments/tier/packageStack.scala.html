@@ -9,7 +9,7 @@
     <div class="package-stack__content">
         <ul class="list-stack">
             @for(benefit <- Benefits.detailsLimited(tier)) {
-                <li>@fragments.benefits.item(benefit)</li>
+                <li>@fragments.tier.benefitItem(benefit)</li>
             }
         </ul>
     </div>
