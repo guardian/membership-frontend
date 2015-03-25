@@ -257,3 +257,26 @@
         }
     }
 }
+
+/* ==========================================================================
+   Event Status
+   = Status label/prefix on event items
+   ========================================================================== */
+
+.event-status {
+    display: inline-block;
+
+    &:after {
+        content: '/';
+        color: fade-out($c-neutral1, .8);
+        display: inline-block;
+        font-weight: normal;
+        margin-left: .2em;
+    }
+    &:hover:after {
+        text-decoration: none;
+    }
+}
+.event-status--sold-out {
+    color: $c-soldOut;
+}
