@@ -23,12 +23,6 @@ define(function () {
         return element;
     };
 
-
-    var getLocationDetail = function () {
-        var windowLocation = window.location;
-        return windowLocation.pathname + windowLocation.search;
-    };
-
     /**
      * Get outer height including margin
      * @param  {DOMElement} el
@@ -53,7 +47,6 @@ define(function () {
 
     return {
         toArray: toArray,
-        getLocationDetail: getLocationDetail,
         getSpecifiedParent: getSpecifiedParent,
         getOuterHeight: getOuterHeight,
         getBreakpoint: getBreakpoint

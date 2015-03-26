@@ -1,35 +1,37 @@
 /* ==========================================================================
-   Help page
+   FAQs
    ========================================================================== */
 
-.help-intro {
-    padding-bottom: rem($gs-gutter * 2);
-}
-
-.help-list {
+.faq-list {
     border-top: 1px solid $mem-brandBlue;
     margin-bottom: rem($gs-baseline);
 }
-
-.help-item {
+.faq-list__item {
     background-color: $c-neutral8;
     padding: rem($gs-baseline);
     border-bottom: 1px dotted $c-neutral3;
 }
 
-.help-question {
-    display: block;
+.faq-question {
+    display: table;
+    width: 100%;
 }
-.help-question__text {
+.faq-question__icon,
+.faq-question__text {
+    display: table-cell;
+    vertical-align: top;
+}
+.faq-question__icon {
+    width: rem($gs-gutter * 2);
+}
+.faq-question__text {
     color: $c-body;
-    display: inline-block;
-    padding-left: rem($gs-baseline / 2);
 }
 
-.help-faqs {
+.faq-answer {
     padding-bottom: rem($gs-gutter);
 }
-.help-faqs__headline {
+.faq-answer__headline {
     @include fs-headline(3);
     margin-bottom: 0;
     font-weight: bold;

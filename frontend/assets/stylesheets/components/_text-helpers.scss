@@ -14,11 +14,6 @@
     @include fs-textSans(2);
 }
 
-// TODO: Remove?
-.text-intro {
-    margin: rem($gs-baseline * 2) 0 rem($gs-baseline * 3);
-}
-
 .text-feature {
     @include fs-headline(2);
 
@@ -38,10 +33,6 @@
     @include fs-data(3);
     color: $c-neutral2;
     margin-bottom: rem($gs-baseline / 2);
-}
-.text-note--block {
-    margin: rem($gs-baseline) 0;
-    display: block;
 }
 
 .text-highlight {
@@ -128,51 +119,4 @@
     @include fs-textSans(1);
     border-top: 1px solid $c-neutral7;
     padding: rem($gs-baseline / 2) 0;
-}
-
-/* Text Helpers - Headings
-   ========================================================================== */
-
-
-.section-headline {
-    @include fs-headline(5);
-
-    @include mq(desktop) {
-        @include fs-headline(7);
-    }
-
-    display: inline-block;
-    padding-top: rem($gs-baseline - 2);
-    margin-bottom: rem($gs-baseline * 4);
-}
-
-.section-headline--no-margin {
-    padding-top: rem(4px);
-    border-top: 0;
-    margin-bottom: 0;
-}
-
-.section-headline--padding-left {
-    border-top: 0;
-
-    @include mq(desktop) {
-        padding-left: rem(gs-span(2));
-    }
-
-    @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + $gs-gutter);
-    }
-}
-
-.section-intro {
-    @include fs-bodyCopy(2);
-
-    @include mq(desktop) {
-        @include fs-bodyCopy(3);
-    }
-}
-
-.section-body-headline {
-    @include fs-headline(4);
-    background-color: $white;
 }

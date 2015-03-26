@@ -9,11 +9,6 @@
         background-color: $white !important;
     }
 
-    // no need for extra vertical space below
-    .page-container--with-padding {
-        padding-bottom: 0 !important;
-    }
-
     // toggle stuff we don't need
     .hidden-print,
     .page-side-margins:before,
@@ -29,10 +24,5 @@
     // prevent image colliding with text
     .event-item__media img {
         width: 100%;
-    }
-
-    // don't take up precious vertical space!
-    h1.section-headline br {
-        display: none;
     }
 }

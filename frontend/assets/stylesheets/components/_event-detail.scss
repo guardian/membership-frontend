@@ -52,24 +52,6 @@
         max-height: none;
     }
 }
-.event-header__message {
-    @include fs-data(4);
-}
-
-/**
- * Extra event header details
- */
-.event-header--extra {
-    color: $white;
-    background-color: $c-neutral1;
-
-    .event-header__container {
-        min-height: 0;
-        overflow: auto;
-        padding-top: rem($gs-baseline);
-        padding-bottom: rem($gs-baseline);
-    }
-}
 
 
 /**
@@ -113,6 +95,9 @@
     }
 }
 
+/**
+ * Event details
+ */
 .event-details {
     margin-bottom: rem($gs-baseline / 2);
 
@@ -135,6 +120,51 @@
     color: inherit;
 }
 
+
+/**
+ * Event extra bar
+ * (event status)
+ *
+ * TODO: Extract out padding on event-extra__container into a layout helper?
+ */
+.event-extra {
+    color: $white;
+    background-color: $c-neutral1;
+}
+.event-extra__container {
+    position: relative;
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: rem($gs-baseline) rem($gs-gutter);
+    }
+
+    @include mq(mem-full) {
+        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+    }
+}
+.event-extra__item {
+    padding-bottom: rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        display: inline-block;
+        vertical-align: middle;
+        padding-bottom: 0;
+        padding-right: rem($gs-gutter);
+    }
+}
+.event-extra__message {
+    @include fs-data(4);
+}
+.event-extra__status {
+    @include fs-textSans(2);
+    font-weight: bold;
+
+    @include mq(tablet) {
+        @include fs-header(5);
+    }
+}
+
 /* ==========================================================================
    Event Location Summary
    ========================================================================== */
@@ -145,28 +175,6 @@
 }
 .event-location__detail {
     @include fs-data(4);
-}
-
-/* ==========================================================================
-   Event Status
-   ========================================================================== */
-
-.event-status {
-    display: inline-block;
-
-    &:after {
-        content: '/';
-        color: fade-out($c-neutral1, .8);
-        display: inline-block;
-        font-weight: normal;
-        margin-left: .2em;
-    }
-    &:hover:after {
-        text-decoration: none;
-    }
-}
-.event-status--sold-out {
-    color: $c-soldOut;
 }
 
 /* ==========================================================================
@@ -240,20 +248,6 @@
     }
 }
 
-/* Status extras
-   ========================================================================== */
-// TODO: Document and refactor
-
-.event-ticket__details__status {
-    @include fs-textSans(1);
-    font-weight: bold;
-
-    @include mq(tablet) {
-        @include fs-header(5);
-        -webkit-font-smoothing: antialiased;
-    }
-}
-
 .event-ticket__price-amount {
     @include fs-header(5);
     -webkit-font-smoothing: antialiased;
@@ -263,17 +257,9 @@
     @include fs-textSans(1);
 }
 
-.event__picture-byline {
-    clear: both;
-    @include fs-textSans(1);
-    color: $c-neutral2;
-    margin-bottom: rem($gs-gutter * 2);
-
-    @include mq(mem-full) {
-        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
-        margin-bottom: 0;
-    }
-}
+/* Event Content
+   ========================================================================== */
+// TODO: Document and refactor
 
 .event-content {
     padding: 0;
@@ -293,6 +279,18 @@
 
     img {
         width: 100%;
+    }
+}
+
+.event__picture-byline {
+    clear: both;
+    @include fs-textSans(1);
+    color: $c-neutral2;
+    margin-bottom: rem($gs-gutter * 2);
+
+    @include mq(mem-full) {
+        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
+        margin-bottom: 0;
     }
 }
 
@@ -416,113 +414,4 @@
         top: 0;
         z-index: 1;
     }
-}
-
-/* Event Info Panel
-   ========================================================================== */
-
-.event-info {
-    @include clearfix();
-    @include fs-textSans(3);
-    background-color: $c-neutral7;
-    margin-bottom: rem($gs-baseline);
-}
-    .event-info__inner {
-        @include clearfix;
-        padding: rem($gs-gutter / 4);
-        padding-bottom: rem($gs-baseline);
-    }
-    .event-info__name {
-        @include fs-header(2);
-        padding-bottom: rem($gs-baseline * 2);
-    }
-    .event-info__first {
-        float: left;
-        width: rem($gs-gutter * 2);
-    }
-    .event-info__second {
-        float: left;
-        width: rem(240px);
-        position: relative;
-    }
-    .event-info__price {
-        padding-bottom: 0;
-        @include fs-header(5);
-    }
-    .event-info__trail {
-        @include fs-textSans(1);
-        display: block;
-    }
-    .event-info__terms {
-        @include fs-textSans(1);
-        display: block;
-        padding-top: rem($gs-baseline/2);
-        color: $c-neutral2;
-
-        @include mq(tablet) {
-            display: inline-block;
-        }
-
-        a {
-            text-decoration: none;
-            padding-bottom: rem(2px);
-        }
-    }
-
-.event-info--bordered {
-    border-top: 1px solid;
-}
-.event-info--unavailable {
-    .event-info__inner {
-        opacity: 0.6;
-    }
-}
-
-/* Status Panel
-   ========================================================================== */
-
-.status-panel {
-   color: $white;
-   background-color: $c-neutral1;
-   padding: rem($gs-baseline);
-}
-.status-panel__header {
-   @include fs-header(2);
-}
-.status-panel__content {
-   margin-top: rem($gs-baseline / 2);
-}
-
-/* Ticket Sales
-   ========================================================================== */
-
-.ticket-sales {
-    margin-top: rem($gs-baseline / 4);
-    position: relative;
-}
-.ticket-sales__header {
-    font-weight: bold;
-}
-.ticket-sales__toggle {
-    display: block;
-}
-.ticket-sales__toggle:hover,
-.ticket-sales__toggle:active {
-    text-decoration: underline;
-}
-.ticket-sales__item {
-    @include clearfix();
-}
-.ticket-sales__item__label,
-.ticket-sales__item__date {
-    display: inline-block;
-}
-.ticket-sales__item__label {
-    float: left;
-}
-.ticket-sales__item__date {
-    float: right;
-}
-.ticket-sales__list {
-    @include fs-data(4);
 }

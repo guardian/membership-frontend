@@ -95,6 +95,9 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 abstract class LiveService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
+
+  def gridImageFor(event: EBEvent) =
+    event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
 
 object GuardianLiveEventService extends LiveService {
@@ -109,13 +112,8 @@ object GuardianLiveEventService extends LiveService {
     } yield (ordering.json \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val eventbriteContent = contentApiService.content(event.id)
-
-    event.mainImageUrl.fold(Future.successful(GuLiveEvent(event, None, eventbriteContent))) { url =>
-      gridService.getRequestedCrop(url).map(GuLiveEvent(event, _, eventbriteContent))
-    }
-  }
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
+    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
@@ -127,18 +125,13 @@ object GuardianLiveEventService extends LiveService {
   }
 }
 
-object DiscoverEventService extends LiveService {
-  val apiToken = Config.eventbriteDiscoverApiToken
-  val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for discovery?
-  val wsMetrics = new EventbriteMetrics("Discover")
+object LocalEventService extends LiveService {
+  val apiToken = Config.eventbriteLocalApiToken
+  val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for local?
+  val wsMetrics = new EventbriteMetrics("Local")
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
-    val eventbriteContent = contentApiService.content(event.id)
-
-    event.mainImageUrl.fold(Future.successful(DiscoverEvent(event, None, eventbriteContent))) { url =>
-      gridService.getRequestedCrop(url).map(DiscoverEvent(event, _, eventbriteContent))
-    }
-  }
+  def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
+    yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
   override def getEvents: Seq[RichEvent] = events
@@ -191,12 +184,12 @@ object EventbriteServiceHelpers {
 }
 
 object EventbriteService {
-  val services = Seq(GuardianLiveEventService, DiscoverEventService, MasterclassEventService)
+  val services = Seq(GuardianLiveEventService, LocalEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
     val service = event match {
       case _: GuLiveEvent => GuardianLiveEventService
-      case _: DiscoverEvent => DiscoverEventService
+      case _: LocalEvent => LocalEventService
       case _: MasterclassEvent => MasterclassEventService
     }
   }
@@ -205,8 +198,8 @@ object EventbriteService {
     GuardianLiveEventService.getPreviewEvent(id)
   }
 
-  def getPreviewDiscoverEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
-    DiscoverEventService.getPreviewEvent(id)
+  def getPreviewLocalEvent(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {
+    LocalEventService.getPreviewEvent(id)
   }
 
   def getPreviewMasterclass(id: String): Future[RichEvent] = Cache.getOrElse[Future[RichEvent]](s"preview-event-$id", 2) {

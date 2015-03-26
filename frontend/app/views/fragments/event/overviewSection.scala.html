@@ -1,7 +1,7 @@
 @(title: String, events: Seq[model.RichEvent.RichEvent])
 @import configuration.Config
 @import model.Eventbrite.{ExternalTicketing, InternalTicketing}
-@import model.RichEvent.{DiscoverEvent, GuLiveEvent, MasterclassEvent}
+@import model.RichEvent.{LocalEvent, GuLiveEvent, MasterclassEvent}
 
 @eventTrait(text: String, identifier: String = "") = {
     <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}">
@@ -14,7 +14,7 @@
         event match {
             case _: GuLiveEvent => "event"
             case _: MasterclassEvent => "masterclass"
-            case _: DiscoverEvent => "discover"
+            case _: LocalEvent => "local"
         }
     }
 }
