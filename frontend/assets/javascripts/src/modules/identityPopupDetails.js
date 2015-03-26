@@ -7,6 +7,8 @@
  */
 define(['src/utils/user'], function (userUtil) {
 
+    var IS_HIDDEN = 'is-hidden';
+    var SIGNED_IN_TEXT = 'You are signed in as';
     var MENU_CTA_TEXT_ELEM = document.querySelector('.js-identity-menu-cta-text');
     var MENU_EDIT_PROFILE_ELEM = document.querySelector('.js-identity-menu-edit-profile');
     var MENU_COMMENT_ACTIVITY_ELEM = document.querySelector('.js-identity-menu-comment-activity');
@@ -30,8 +32,8 @@ define(['src/utils/user'], function (userUtil) {
     }
 
     function hideIdentityCtaText() {
-        MENU_CTA_TEXT_ELEM.textContent = 'You are signed in as';
-        MENU_CTA_TEXT_ELEM.classList.add('is-visually-hidden');
+        MENU_CTA_TEXT_ELEM.textContent = SIGNED_IN_TEXT;
+        MENU_CTA_TEXT_ELEM.classList.add('u-h');
     }
 
     function updateEditProfileLink() {
@@ -47,7 +49,7 @@ define(['src/utils/user'], function (userUtil) {
     }
 
     function showJoinUsCta() {
-        HEADER_JOIN_US_CTA_ELEM.classList.remove('is-hidden');
+        HEADER_JOIN_US_CTA_ELEM.classList.remove(IS_HIDDEN);
     }
 
     return {

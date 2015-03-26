@@ -15,8 +15,8 @@ require([
     'src/modules/form',
     'src/modules/form/processSubmit',
     'src/modules/metrics',
-    'src/modules/menu',
-    'src/modules/menuDetails',
+    'src/modules/identityPopup',
+    'src/modules/identityPopupDetails',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
@@ -37,8 +37,8 @@ require([
     processSubmit,
     form,
     metrics,
-    menu,
-    menuDetails
+    identityPopup,
+    identityPopupDetails
 ) {
     'use strict';
 
@@ -58,8 +58,8 @@ require([
     images.init();
     slideshow.init();
     sticky.init();
-    menu.init();
-    menuDetails.init();
+    identityPopup.init();
+    identityPopupDetails.init();
     navigation.init();
     (new UserDetails()).init();
 

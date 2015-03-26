@@ -9,6 +9,8 @@ define([
     'src/utils/user'
 ], function (bean, userUtil) {
 
+    var IS_HIDDEN = 'is-hidden';
+    var IS_ACTIVE = 'is-active';
     var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-cta');
     var IDENTITY_MENU_ELEM = document.querySelector('.js-identity-menu');
     var HTML_ELEM = document.documentElement;
@@ -26,10 +28,10 @@ define([
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            IDENTITY_MENU_ELEM.classList.toggle('is-hidden');
-            IDENTITY_MENU_CTA_ELEM.classList.toggle('is-active');
+            IDENTITY_MENU_ELEM.classList.toggle(IS_HIDDEN);
+            IDENTITY_MENU_CTA_ELEM.classList.toggle(IS_ACTIVE);
 
-            if(IDENTITY_MENU_ELEM.classList.contains('is-hidden')) {
+            if(IDENTITY_MENU_ELEM.classList.contains(IS_HIDDEN)) {
                 removeDocumentListener();
             } else {
                 addDocumentListener();
@@ -39,7 +41,7 @@ define([
 
     function addDocumentListener() {
         bean.on(HTML_ELEM, 'click', function () {
-            IDENTITY_MENU_ELEM.classList.add('is-hidden');
+            IDENTITY_MENU_ELEM.classList.add(IS_HIDDEN);
         });
     }
 
@@ -52,11 +54,16 @@ define([
         var currentUrl = windowLocation.pathname + windowLocation.search;
 
         IDENTITY_MENU_CTA_ELEM.setAttribute('href',
-            IDENTITY_MENU_CTA_ELEM.getAttribute('href').replace(/(returnUrl=[^&]+)/g, '$1' + currentUrl)
+            populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
         );
     }
 
+    function populateReturnUrl(href, currentUrl) {
+        return href.replace(/(returnUrl=[^&]+)/g, '$1' + currentUrl);
+    }
+
     return {
-        init: init
+        init: init,
+        populateReturnUrl: populateReturnUrl
     };
 });
