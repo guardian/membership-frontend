@@ -77,6 +77,8 @@ case class MemberData(salesforceContactId: String,
         deliveryPostcode.map("deliveryPostcode" -> truncatePostcode(_)) ++
         billingPostcode.map("billingPostcode" -> truncatePostcode(_)) ++
         subscriptionPlan.map("subscriptionPlan" -> _) ++
+        city.map("city" -> _) ++
+        country.map("country" -> _) ++
         marketingChoices.map { mc =>
           "marketingChoicesForm" -> ActivityTracking.setSubMap {
             Map(
