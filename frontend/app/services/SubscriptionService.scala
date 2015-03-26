@@ -147,8 +147,8 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield PaymentSummary(invoiceItems)
   }
 
-  def getPaymentSummaryWithFreeStartingPeriod(subscriptionId: String, subscriberOffer: Boolean): Future[Seq[PreviewInvoiceItem]] = {
-    for (result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, subscriberOffer)))
+  def getPaymentSummaryWithFreeStartingPeriod(subscriptionId: String, paymentDelay: Period): Future[Seq[PreviewInvoiceItem]] = {
+    for (result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, paymentDelay)))
     yield result.invoiceItems
   }
 

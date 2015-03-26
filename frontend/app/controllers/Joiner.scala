@@ -12,6 +12,7 @@ import configuration.{Config, CopyConfig}
 import forms.MemberForm._
 import model.RichEvent._
 import model._
+import org.joda.time
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -30,6 +31,9 @@ trait Joiner extends Controller with ActivityTracking {
   val memberService: MemberService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+
+  val subscriberOfferDelayPeriod = 6.months
+
 
   def tierList = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -145,7 +149,9 @@ trait Joiner extends Controller with ActivityTracking {
               validSubscriber <- casService.isValidSubscriber(casId, formData.deliveryAddress.postCode)
               casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
             } yield {
-              if(validSubscriber && casIdNotUsed.isEmpty) Right(Some(6.months))
+              if(validSubscriber && casIdNotUsed.isEmpty) {
+                Right(Some(subscriberOfferDelayPeriod))
+              }
               else Left("Subscription ID invalid messaging")
             }
           }
@@ -216,7 +222,7 @@ trait Joiner extends Controller with ActivityTracking {
       for {
         subscriptionStatus <- subscriptionStatusFuture
         subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, true)
+        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, subscriberOfferDelayPeriod)
       } yield {
         val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
 
