@@ -54,7 +54,9 @@ case class MemberData(salesforceContactId: String,
                         deliveryPostcode: Option[String] = None,
                         billingPostcode: Option[String] = None,
                         subscriptionPaymentAnnual: Option[Boolean] = None,
-                        marketingChoices: Option[MarketingChoicesForm] = None) {
+                        marketingChoices: Option[MarketingChoicesForm] = None,
+                        city: Option[String] = None,
+                        country: Option[String] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
