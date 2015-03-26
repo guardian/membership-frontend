@@ -11,10 +11,12 @@
         @fragments.page.pageHeader("Test Users")
 
         <section class="page-section">
-            <div class="page-section__content copy">
-                <h2 class="section-body-headline">New Test User key: <strong>@userString</strong></h2>
-                <div class="text-intro">
-                    <p>Your user will be valid for the next @ValidityPeriod.pretty. When registering please populate the following fields with your new test user key.</p>
+            <div class="page-section__content">
+                <div class="copy">
+                    <h2>New Test User key: <strong>@userString</strong></h2>
+                    <div class="text-intro">
+                        <p>Your user will be valid for the next @ValidityPeriod.pretty. When registering please populate the following fields with your new test user key.</p>
+                    </div>
                 </div>
                 <div class="aside aside--panel">
                     <ul class="u-unstyled">
@@ -23,12 +25,10 @@
                         <li class="user-detail-list-item">Email: <strong>@userString@@gu.com</strong></li>
                     </ul>
                 </div>
-                <div class="signin__actions">
-                    <div class="signin__register">
-                        <a class="action u-no-bottom-margin" href="@Config.idWebAppRegisterUrl("/")" target="_blank">Register Now</a>
-                        <p class="text-note text-note--block">(Opens in new window)</p>
-                    </div>
+                <div class="action-group">
+                    <a class="action" href="@Config.idWebAppRegisterUrl("/")" target="_blank">Register Now</a>
                 </div>
+                <p class="text-note">(Opens in new window)</p>
             </div>
         </section>
 
