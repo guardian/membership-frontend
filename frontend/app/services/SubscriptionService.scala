@@ -81,11 +81,16 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   private def getAccount(memberId: MemberId): Future[Account] =
     zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
 
-  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+  def getSubscriptions(memberId: MemberId): Future[Seq[Subscription]] = {
     for {
       account <- getAccount(memberId)
-      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'") //todo use getLatestSubscription
+      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
+    } yield subscriptions
+  }
 
+  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+    for {
+      subscriptions <- getSubscriptions(memberId)
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
@@ -102,18 +107,9 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   }
 
   def getLatestSubscription(memberId: MemberId): Future[Subscription] = {
-    for {
-      account <- getAccount(memberId)
-      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
-
-      if subscriptions.size > 0
-
-      where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
-      amendments <- zuora.query[Amendment](where)
-    } yield
-      sortSubscriptions(subscriptions).last
-
-    }
+    for (subscriptions <- getSubscriptions(memberId))
+    yield sortSubscriptions(subscriptions).last
+  }
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
