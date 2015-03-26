@@ -81,8 +81,7 @@
         padding-right: $gutter-width-fluid;
 
     }
-    .price-info__item--single,
-    .price-info__item--last {
+    .price-info__item--single {
         text-align: right;
     }
     .price-info__item--single {
@@ -90,7 +89,7 @@
     }
     .price-info__item--last {
         padding-right: 0;
-        padding-left: $gutter-width-fluid;
+        padding-left: $gs-gutter;
     }
 }
 
