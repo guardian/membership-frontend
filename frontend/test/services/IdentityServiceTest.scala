@@ -58,7 +58,9 @@ class IdentityServiceTest extends Specification with Mockito {
         Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
         Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK)),
         MarketingChoicesForm(Some(false), Some(false)),
-        None
+        None,
+        None,
+        false
       )
 
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)
