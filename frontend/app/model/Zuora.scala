@@ -251,8 +251,9 @@ object ZuoraDeserializer {
     RatePlan(result("Id"), result("Name"))
   }
 
+
   implicit val ratePlanChargeReader = ZuoraQueryReader("RatePlanCharge", Seq("Id", "ChargedThroughDate", "EffectiveStartDate", "Price", "BillCycleDay", "EffectiveEndDate")) { result =>
-    println(result)
+    println(result) //TODO remove and figure out what dates are required for subscriber offer (or if a new query is required)
     RatePlanCharge(result("Id"), result.get("ChargedThroughDate").map(new DateTime(_)),
       new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
   }
