@@ -15,6 +15,7 @@ import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
 import model._
 import monitoring.MemberMetrics
+import org.joda.time.Period
 import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
@@ -77,7 +78,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, useSubscriberOffer: Boolean): Future[MemberId] = {
+  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, paymentDelay: Option[Period]): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
     val casService = CASService
@@ -87,24 +88,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
       def futureCustomerOpt = formData match {
         case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case _ => Future.successful(None)
-      }
-
-      //todo check user can use subscriber offer (again) before proceeding
-
-      formData match {
-        case paidMemberJoinForm: PaidMemberJoinForm => {
-          val casIdOpt = paidMemberJoinForm.casId
-          casIdOpt map { casId =>
-            for {
-              validSubscriber <- casService.isValidSubscriber(casId, formData.deliveryAddress.postCode)
-              casIdNotUsed <- touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
-            } yield {
-              if(!validSubscriber) throw MemberServiceError("Subscription ID or postcode error")
-              else if (casIdNotUsed.nonEmpty) throw MemberServiceError("Subscription ID has been used on Membership")
-            }
-          }
-        }
-        case _ => //do nothing
       }
 
       val casId = formData match {
@@ -119,7 +102,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         customerOpt <- futureCustomerOpt
         userData = initialData(fullUser, formData)
         memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
-        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, useSubscriberOffer, casId)
+        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, paymentDelay, casId)
 
         // Set some fields once subscription has been successful
         updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))

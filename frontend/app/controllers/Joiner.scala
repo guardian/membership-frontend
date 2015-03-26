@@ -2,6 +2,7 @@ package controllers
 
 import actions.Functions._
 import actions._
+import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
@@ -136,27 +137,52 @@ trait Joiner extends Controller with ActivityTracking {
 
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
 
-    val useSubscriberOffer = formData match {
-      case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.subscriberOffer
-      case _ => false
+    def checkCASIfRequiredAndReturnPaymentDelay(formData: JoinForm)(implicit request: AuthRequest[_]): Future[Either[String,Option[Period]]] = {
+      formData match {
+        case paidMemberJoinForm: PaidMemberJoinForm => {
+          paidMemberJoinForm.casId map { casId =>
+            for {
+              validSubscriber <- casService.isValidSubscriber(casId, formData.deliveryAddress.postCode)
+              casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
+            } yield {
+              if(validSubscriber && casIdNotUsed.isEmpty) Right(Some(6.months))
+              else Left("Subscription ID invalid messaging")
+            }
+          }
+        }.getOrElse(Future.successful(Right(None)))
+        case _ => Future.successful(Right(None))
+      }
     }
 
-    MemberService.createMember(request.user, formData, IdentityRequest(request), useSubscriberOffer)
-      .map { member =>
-        for {
-          eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-          event <- EventbriteService.getBookableEvent(eventId)
-        } {
-          event.service.wsMetrics.put(s"join-$tier-event", 1)
-          val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
-          track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
+    def makeMemberAfterValidation(subscriberValidation: Either[String, Option[Imports.Period]]) = {
+      subscriberValidation.fold({ errorString: String =>
+        Future.successful(Forbidden)
+      },{ paymentDelayOpt: Option[Period] =>
+        MemberService.createMember(request.user, formData, IdentityRequest(request), paymentDelayOpt)
+          .map { member =>
+          for {
+            eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
+            event <- EventbriteService.getBookableEvent(eventId)
+          } {
+            event.service.wsMetrics.put(s"join-$tier-event", 1)
+            val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
+            track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
+          }
+          result
+        }.recover {
+          case error: Stripe.Error => Forbidden(Json.toJson(error))
+          case error: Zuora.ResultError => Forbidden
+          case error: ScalaforceError => Forbidden
+          case error: MemberServiceError => Forbidden
         }
-        result
-      }.recover {
-        case error: Stripe.Error => Forbidden(Json.toJson(error))
-        case error: Zuora.ResultError => Forbidden
-        case error: ScalaforceError => Forbidden
-      }
+      })
+    }
+
+    for {
+      subscriberValidation <- checkCASIfRequiredAndReturnPaymentDelay(formData)
+      member <- makeMemberAfterValidation(subscriberValidation)
+    } yield member
+
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>

@@ -1,5 +1,6 @@
 package services.zuora
 
+import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.zuora.Address
@@ -88,12 +89,12 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address, subscriberOffer: Boolean, casIdOpt: Option[String]) extends ZuoraAction[SubscribeResult] {
+                     address: Address, paymentDelay: Option[Period], casIdOpt: Option[String]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
     val effectiveDate = formatDateTime(now)
-    val contractAcceptanceDate = if (subscriberOffer) formatDateTime(now.plusMonths(6)) else effectiveDate
+    val contractAcceptanceDate = paymentDelay.map(delay => formatDateTime(now + delay)).getOrElse(effectiveDate)
 
     val payment = customerOpt.map { customer =>
       <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
