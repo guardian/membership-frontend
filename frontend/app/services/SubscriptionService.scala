@@ -84,7 +84,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
     for {
       account <- getAccount(memberId)
-      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
+      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'") //todo use getLatestSubscription
 
       if subscriptions.size > 0
 
@@ -100,6 +100,20 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         }
     }
   }
+
+  def getLatestSubscription(memberId: MemberId): Future[Subscription] = {
+    for {
+      account <- getAccount(memberId)
+      subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
+
+      if subscriptions.size > 0
+
+      where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
+      amendments <- zuora.query[Amendment](where)
+    } yield
+      sortSubscriptions(subscriptions).last
+
+    }
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {

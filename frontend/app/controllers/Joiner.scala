@@ -186,7 +186,6 @@ trait Joiner extends Controller with ActivityTracking {
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
-    val freeStartingPeriodOffer = true //todo this needs to come from zuora
 
     def futureCustomerOpt = request.member match {
       case paidMember: PaidMember =>
@@ -199,15 +198,17 @@ trait Joiner extends Controller with ActivityTracking {
         eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
         event <- EventbriteService.getBookableEvent(eventId)
       } yield {
-
         MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
           (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
         }
-
       }
-
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
+
+    def futureFreeStartingPeriodOffer =
+      for (subscription <- request.touchpointBackend.subscriptionService.getLatestSubscription(request.member))
+      yield subscription.casId.isDefined
+
 
     def getPaymentSummaryForMembershipsWithFreePeriod = {
       val subscriptionStatusFuture = request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
@@ -220,7 +221,6 @@ trait Joiner extends Controller with ActivityTracking {
         val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
 
         firstPreviewItem.map { firstPreviewInvoice =>
-
           MembershipSummary(subscriptionDetails.startDate, subscriptionDetails.endDate, 0f,
             subscriptionDetails.planAmount, Some(firstPreviewInvoice.price), firstPreviewInvoice.serviceStartDate)
         }
@@ -242,6 +242,7 @@ trait Joiner extends Controller with ActivityTracking {
     for {
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
+      freeStartingPeriodOffer <- futureFreeStartingPeriodOffer
       summary <- if(freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod else getPaymentSummaryForMembershipsNoFreePeriod
       contentOpt <- futureContentOpt.recover { case _ => None }
     } yield Ok(views.html.joiner.thankyou(
