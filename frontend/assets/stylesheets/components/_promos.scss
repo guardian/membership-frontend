@@ -143,3 +143,58 @@
         padding-bottom: 0;
     }
 }
+
+/* ==========================================================================
+   Promo Alt
+   ========================================================================== */
+
+.promo-alt {
+    margin-bottom: rem($gs-baseline);
+}
+.promo-alt__panel {
+    @include clearfix();
+    margin-bottom: rem($gs-baseline);
+    background-color: $c-neutral5;
+}
+.promo-alt__header {
+
+    padding: rem($gs-gutter);
+    color: $c-neutral1;
+    background-color: $white;
+
+    @include mq(tablet) {
+        width: 30%;
+        float: left;
+        padding: rem($gs-baseline);
+        color: inherit;
+        background-color: transparent;
+    }
+}
+.promo-alt__title {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px solid $c-border-neutral;
+
+    @include mq(tablet) {
+        border-top: none;
+        padding-top: 0;
+    }
+}
+.promo-alt__media {
+    display: block;
+    position: relative;
+
+    @include mq(tablet) {
+        width: 70%;
+        float: left;
+    }
+}
+.promo-alt__description {
+    clear: both;
+    padding: rem($gs-baseline / 2) rem($gs-gutter);
+
+    @include mq(tablet) {
+        padding-left: 30%;
+        max-width: 85%;
+        padding-bottom: rem($gs-baseline);
+    }
+}

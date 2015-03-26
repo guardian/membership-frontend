@@ -159,6 +159,31 @@ trait Info extends Controller {
     Ok(views.html.info.patron(pageInfo, pageImages))
   }
 
+  // def subscriberOffer = GoogleAuthenticatedStaffAction { implicit request =>
+  def subscriberOffer = NoCacheAction { implicit request =>
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("intro"),
+        altText=Some("Guardian Live Audience"),
+        availableImages=ResponsiveImageGenerator(
+          id="38dafd8e470b0d7b3399034f0ccbcce63a0dff25/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("guardian-live"),
+        altText=Some("Guardian Live"),
+        availableImages=ResponsiveImageGenerator(
+          id="76ef58a05920591099012edb80e7415379392a4c/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      )
+    )
+
+    Ok(views.html.info.subscriberOffer(pageImages))
+  }
+
   def submitFeedback = NoCacheAction.async { implicit request =>
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }

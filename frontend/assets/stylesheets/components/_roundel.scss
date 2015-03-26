@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Pills
+   ========================================================================== */
+
+.roundel {
+
+    color: $white;
+    line-height: 1;
+    background-color: $c-neutral1;
+    display: inline-block;
+    margin: rem($gs-baseline / 2) 0;
+    border-radius: 100%;
+    width: 115px;
+    height: 115px;
+    text-align: center;
+}
+
+.roundel__title {
+    @include fs-data(3);
+    @include vertically-center();
+    position: relative;
+
+    @include mq(tablet) {
+        @include fs-data(4, true);
+    }
+}

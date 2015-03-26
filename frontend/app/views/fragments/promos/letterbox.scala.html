@@ -1,14 +1,12 @@
-@(imgSrc: String, imgAlt: String, calloutOpt: Option[String] = None, toneClass: Seq[String] = Nil)
+@(img: model.ResponsiveImageGroup, titleOpt: Option[String] = None)
 
-@import views.support.Asset
-
-<div class="letterbox@if(calloutOpt.isDefined){ letterbox--callout}">
+<div class="letterbox">
     <div class="letterbox__crop">
-        @for(callout <- calloutOpt){
-        <div class="call-out @toneClass.mkString(" ")">
-            <h2 class="call-out__title">@callout</h2>
-        </div>
-        }
-        <img src="@Asset.at(imgSrc)" alt="@imgAlt" class="responsive-img">
+        <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
     </div>
+    @for(title <- titleOpt){
+        <div class="letterbox__header">
+            <h2 class="letterbox__title">@title</h2>
+        </div>
+    }
 </div>

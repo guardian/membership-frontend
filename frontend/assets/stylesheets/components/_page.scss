@@ -18,7 +18,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: rem($gs-baseline);
 
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 2);
+        padding-bottom: rem($gs-baseline * 3);
     }
 }
     .page-slice__headline {
@@ -129,7 +129,6 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 /**
  * Example usage:
  * <div class="page-section page-section--bordered">
- *     <div class="page-section__header">[...]</div>
  *     <div class="page-section__leadin">
  *         <h2 class="page-section__headline">Headline</h2>
  *     </div>
@@ -149,16 +148,6 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     @include mq(mem-full) {
         position: relative;
         min-height: rem(gs-height(3));
-    }
-}
-.page-section--no-padding {
-    padding-bottom: 0;
-}
-.page-section__header {
-    padding-bottom: rem($gs-baseline * 3);
-
-    @include mq(mem-full) {
-        padding-left: $_page-offset;
     }
 }
 .page-section__lead-in {
@@ -199,33 +188,42 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     }
 }
 
-/* Page Section - slim (Modifier)
+.page-section--no-padding {
+    padding-bottom: 0;
+}
+
+/* Page Section Spread
    ========================================================================== */
 
-/**
- * Example usage:
- * <div class="page-section page-section--slim">
- *     <div class="page-section__content">[...]</div>
- * </div>
- */
-.page-section--slim {
-    padding-bottom: 0;
-    .page-section__content {
-        @include mq(desktop) {
-            width: rem(gs-span(9));
-            padding-left: rem($gs-gutter*4);
-            padding-right: rem($gs-gutter*2);
-            margin-right: rem($gs-gutter);
-        }
-        @include mq(mem-full) {
-            width: rem(gs-span(10));
-            padding-left: $_page-offset;
-        }
+.page-section-spread {
+    @include clearfix;
+    padding-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        position: relative;
+        min-height: rem(gs-height(3));
     }
-    .page-section__supplementary {
-        @include mq(mem-full) {
-            width: rem(gs-span(4));
-        }
+}
+.page-section-spread__lead-in {
+    margin-bottom: rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        width: 30%;
+        padding-right: rem($gs-gutter);
+        margin-bottom: 0;
+        position: absolute;
+        left: 0;
+    }
+}
+.page-section-spread__content {
+
+    @include mq(tablet) {
+        padding-left: 30%;
+    }
+
+    @include mq(desktop) {
+        width: 85% - $gutter-width-fluid;
+        float: left;
     }
 }
 

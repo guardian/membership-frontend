@@ -52,6 +52,14 @@ p {
     margin-bottom: rem($gs-baseline * 1.3333);
 }
 
+table {
+    width: 100%;
+}
+th,
+td {
+    text-align: left;
+}
+
 blockquote,
 .blockquote {
     font-style: italic;

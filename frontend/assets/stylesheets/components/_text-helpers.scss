@@ -29,6 +29,10 @@
     @include fs-header(3);
 }
 
+.text-trail {
+    @include fs-headline(2);
+}
+
 .text-note {
     @include fs-data(3);
     color: $c-neutral2;
@@ -83,18 +87,10 @@
     }
 }
 
-.h-feature {
-    @include fs-headline(5);
-    font-weight: 500;
-
-    @include mq(desktop) {
-        @include fs-headline(6, true);
-    }
-}
-
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);
+    font-weight: 500;
 
     @include mq(tablet) {
         @include fs-headline(6, true);
