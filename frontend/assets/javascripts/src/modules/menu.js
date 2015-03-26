@@ -1,3 +1,9 @@
+/**
+ * This file:
+ * Controls the listeners for the identity icon menu found in the header
+ * Controls the html document listener to close the identity icon menu
+ * Sets the identity icon returnUrl when a user needs to sign in (controlled via JavaScript for caching reasons)
+ */
 define([
     'bean',
     'src/utils/user'
