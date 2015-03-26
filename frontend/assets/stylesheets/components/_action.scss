@@ -46,9 +46,20 @@
         text-decoration: none;
     }
 
+
+    /**
+     * TODO: Temporary inlining to help with removal of old icon sprite
+     * This should move to being an inline SVG. Requires a template refactor to get there.
+     */
     &:after {
-        @extend .icon-arrow-right-white;
         content: '';
+
+        display: inline-block;
+        background-repeat: no-repeat;
+        width: 20px;
+        height: 18px;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDIwIDE3Ljg5NSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAgMTcuODk1Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjAgOS4zNTJsLTkuMDg0IDguNTQzLS44Ni0uODEgNi41NDItNy4zMWgtMTYuNTk4di0xLjY1NWgxNi41OThsLTYuNTQyLTcuMzEuODYtLjgxIDkuMDg0IDguNTA4di44NDR6Ii8+PC9zdmc+);
+
         float: right;
         margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
@@ -68,23 +79,6 @@
     }
 
 }
-
-// TODO: Specificy issues
-// this variant moves the arrow to the other side
-// and hides the one on the right
-// Only used on change tier / downgrade
-.action.action--arrow-left {
-    &:before {
-        @extend .icon-arrow-left-white;
-        content: '';
-        float: left;
-        margin: rem(2px) rem(18px) 0 0;
-    }
-    &:after {
-        display: none;
-    }
-}
-
 
 /* Action Modifiers
    ========================================================================== */
@@ -229,7 +223,14 @@
     height: rem(36px);
     padding: 0 rem(8px) 0 0;
     background-color: transparent;
-    @extend .icon-arrow-right-blue;
+
+
+    display: inline-block;
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 17.895px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTcuODk1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0aXRsZT5iYWNrZ3JvdW5kPC90aXRsZT48cGF0aCBmaWxsPSJub25lIiBkPSJNLTEtMWg1LjI0N3Y0LjkwNWgtNS4yNDd6Ii8+PHRpdGxlPkxheWVyIDE8L3RpdGxlPjxwYXRoIGQ9Ik0yMCA5LjM1MmwtOS4wODQgOC41NDMtLjg2LS44MSA2LjU0Mi03LjMxaC0xNi41OTh2LTEuNjU1aDE2LjU5OGwtNi41NDItNy4zMS44Ni0uODEgOS4wODQgOC41MDh2Ljg0NHoiIGZpbGw9IiMxOTdjYWEiLz48L3N2Zz4=);
+
     background-position: center center;
     @include border-radius(50px);
     border: 1px solid $c-button;
