@@ -137,5 +137,9 @@
     @fragments.analytics.googleJoinerConversion(member.tier)
     @fragments.analytics.facebookJoinerConversion(member.tier)
     @fragments.analytics.membershipJoinerConversion()
-    //todo reinstate analtyics
+
+    @fragments.analytics.videoCampaignPHD.thankyouPage(
+        member.regNumber.fold("free")(regNumber => regNumber),
+        membershipSummaryOpt.fold("free")( summary => "%.2f".format(summary.amountPaidToday))
+    )
 }
