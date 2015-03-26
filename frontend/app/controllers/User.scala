@@ -9,6 +9,7 @@ import play.api.libs.json._
 import play.api.mvc.{Controller, Cookie}
 import services.CASService
 import utils.GuMemCookie
+import actions._
 
 import scala.concurrent.Future
 
@@ -64,10 +65,14 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  //todo remove?
+  //todo check if specific errors are required in the json
   def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
-    for (validSubscriber <- casService.isValidSubscriber(id, postcode)) yield {
-      if(validSubscriber) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
+    for {
+      validSubscriber <- casService.isValidSubscriber(id, postcode)
+      casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
+    }
+    yield {
+      if(validSubscriber && casIdNotUsed.isEmpty) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
       else Ok(Json.obj("subscriber-id" -> id, "valid" -> false))
     }
   }
