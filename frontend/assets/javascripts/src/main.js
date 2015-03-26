@@ -7,7 +7,6 @@ require([
     'src/modules/images',
     'src/modules/toggle',
     'src/modules/sticky',
-    'src/modules/Header',
     'src/modules/navigation',
     'src/modules/UserDetails',
     'src/modules/events/eventPriceEnhance',
@@ -16,6 +15,8 @@ require([
     'src/modules/form',
     'src/modules/form/processSubmit',
     'src/modules/metrics',
+    'src/modules/identityPopup',
+    'src/modules/identityPopupDetails',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
@@ -28,7 +29,6 @@ require([
     images,
     toggle,
     sticky,
-    Header,
     navigation,
     UserDetails,
     eventPriceEnhance,
@@ -36,7 +36,9 @@ require([
     patterns,
     processSubmit,
     form,
-    metrics
+    metrics,
+    identityPopup,
+    identityPopupDetails
 ) {
     'use strict';
 
@@ -56,7 +58,8 @@ require([
     images.init();
     slideshow.init();
     sticky.init();
-    (new Header()).init();
+    identityPopup.init();
+    identityPopupDetails.init();
     navigation.init();
     (new UserDetails()).init();
 

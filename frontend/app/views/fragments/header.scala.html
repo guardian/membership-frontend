@@ -9,7 +9,7 @@
             <div class="header__primary">
                 <ul class="nav nav-control u-cf" role="menubar">
                     <li class="nav-control__item">
-                        <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="control no-underline js-identity-icon" title="Your account" id="qa-identity-control">
+                        <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="control no-underline js-identity-menu-cta" title="Your account" id="qa-identity-control">
                             <span class="control__item">
                                 <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
                                     @fragments.inlineIcon("user")
@@ -17,21 +17,21 @@
                             </span>
                             <span class="control__item hidden-mobile js-user-detail">
                                 <span class="control__info">
-                                    <span class="identity__notice case--lower">Sign in</span>
+                                    <span class="identity__notice case--lower js-identity-menu-cta-text">Sign in</span>
                                     <span class="identity__account no-underline--override u-h js-user-displayname"></span>
                                     <span class="identity__tier no-underline--override u-h u-parentheses js-user-tier"></span>
                                 </span>
                             </span>
                         </a>
 
-                        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-profile-nav-popup">
+                        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-identity-menu">
                             <nav role="navigation" aria-label="Profile menu">
                                 <ul class="nav nav--columns">
                                     <li class="nav__item">
-                                        <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-comment-activity">Comment activity</a>
+                                        <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-identity-menu-comment-activity">Comment activity</a>
                                     </li>
                                     <li class="nav__item">
-                                        <a class="nav__link js-edit-profile"
+                                        <a class="nav__link js-identity-menu-edit-profile"
                                            id="qa-identity-nav-edit"
                                            href="@Config.idWebAppUrl/public/edit"
                                            data-member-href="@Config.idWebAppUrl/membership/edit">Edit profile</a>
