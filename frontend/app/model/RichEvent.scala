@@ -66,7 +66,8 @@ object RichEvent {
     title="Guardian Local",
     shortTitle="Events",
     pluralTitle="Local events",
-    description=None,
+    description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
+      "come together and enjoy arts, food and culture from around the UK."),
     eventListUrl=controllers.routes.Event.list.url,
     termsUrl=Config.guardianLiveEventsTermsUrl,
     largeImg=true,
