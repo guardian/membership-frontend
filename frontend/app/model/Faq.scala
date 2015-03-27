@@ -45,7 +45,7 @@ object Faq {
       "how-much-does-it-cost"
     ),
     Item("What is the difference between a Friend, a Partner and a Patron?",
-      Html("You can read a full description of each membership tier <a href='join' class='u-underline'>here</a>."),
+      Html("You can read a full description of each membership tier <a href='join'>here</a>."),
       "difference-between-tiers"
     ),
     Item("Why do I have to sign in to the Guardian to become a member?",
@@ -69,7 +69,7 @@ object Faq {
       "how-many-tickets-can-i-buy"
     ),
     Item("How will I know what Guardian Live events are coming up?",
-      Html("Our <a href='events' class='u-underline'>events listing page</a> is updated regularly and when you join membership you will receive a weekly email newsletter containing information about upcoming events."),
+      Html("Our <a href='events'>events listing page</a> is updated regularly and when you join membership you will receive a weekly email newsletter containing information about upcoming events."),
       "what-events-are-upcoming"
     ),
     Item("What happens if I don't want to receive the weekly email?",
@@ -89,23 +89,23 @@ object Faq {
       "do-not-live-in-uk"
     ),
     Item("What happens if I want to change my membership tier?",
-      Html(s"You can change your membership tier online. Just go to your <a href='${Config.idWebAppUrl}/membership/edit' class='u-underline'>Profile</a> page on the membership site and follow the instructions."),
+      Html(s"You can change your membership tier online. Just go to your <a href='${Config.idWebAppUrl}/membership/edit'>Profile</a> page on the membership site and follow the instructions."),
       "change-membership-tier"
     ),
     Item("What happens if I want to cancel my membership?",
-      Html("You can cancel your membership by following the instructions on this <a href='tier/cancel' class='u-underline'>page</a>. Your membership will run until the end of your current payment term."),
+      Html("You can cancel your membership by following the instructions on this <a href='tier/cancel'>page</a>. Your membership will run until the end of your current payment term."),
       "cancel-membership"
     ),
     Item("I've got feedback about membership",
-      Html("Please fill in the feedback form on the site <a href='feedback' class='u-underline'>here</a>."),
+      Html("Please fill in the feedback form on the site <a href='feedback'>here</a>."),
       "feedback-about-membership"
     ),
     Item("How do I know you are protecting my personal information?",
-      Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our privacy policy <a href='http://www.theguardian.com/help/privacy-policy' class='u-underline'>here</a>."),
+      Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our privacy policy <a href='http://www.theguardian.com/help/privacy-policy'>here</a>."),
       "personal-data-protection"
     ),
     Item("What are the terms and conditions of membership?",
-      Html("You can read the full set of terms and conditions <a href='http://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions' class='u-underline'>here</a>."),
+      Html("You can read the full set of terms and conditions <a href='http://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions'>here</a>."),
       "terms-conditions-of-membership"
     ),
     Item("How can I find out about disabled/wheelchair access for the venue?",
@@ -113,7 +113,7 @@ object Faq {
       "wheelchair-access-for-venue"
     ),
     Item("I've got a question",
-      Html(s"Please email <a href='mailto:${Config.membershipSupport}' class='u-underline'>${Config.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "have-a-question"
     ),
     Item("What are Guardian Masterclasses?",
@@ -121,11 +121,11 @@ object Faq {
       "what-are-guardian-masterclasses"
     ),
     Item("Can I book a Guardian Masterclass course without becoming a member?",
-      Html("Yes, Guardian Masterclasses are available to everyone from the <a href='http://www.theguardian.com/guardian-masterclasses' class='u-underline'>masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href='https://membership.theguardian.com/masterclasses'>Membership Masterclasses listings page</a>."),
+      Html("Yes, Guardian Masterclasses are available to everyone from the <a href='http://www.theguardian.com/guardian-masterclasses'>masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href='https://membership.theguardian.com/masterclasses'>Membership Masterclasses listings page</a>."),
       "can-I-book-without-becoming-member"
     ),
     Item("How many Guardian Masterclasses places can I book for each course?",
-      Html("Yes, Guardian Masterclasses are available to everyone from the <a href='http://www.theguardian.com/guardian-masterclasses' class='u-underline'>masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href='https://membership.theguardian.com/masterclasses'>Membership Masterclasses listings page</a>."),
+      Html("Yes, Guardian Masterclasses are available to everyone from the <a href='http://www.theguardian.com/guardian-masterclasses'>masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href='https://membership.theguardian.com/masterclasses'>Membership Masterclasses listings page</a>."),
       "how-many-places-per-course"
     ),
     Item("How will I know what Guardian Masterclasses events are coming up?",
