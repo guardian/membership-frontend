@@ -6,7 +6,7 @@
     isSlim: Boolean = false
 )
 
-@import configuration.Config
+@import configuration.{Config, Links}
 @import model.Benefits
 
 <fieldset class="fieldset fieldset--simple">
@@ -16,8 +16,8 @@
 
     @if(membershipTermsAndConditions){
         <p class="ts-and-cs">By joining Guardian Membership, you are agreeing to our
-            <a href="@Config.guardianMembershipTermsUrl" class="text-link" target="_blank">Terms and Conditions</a> and
-            <a href="@Config.guardianPrivacyUrl" class="text-link" target="_blank">Privacy Policy</a>.
+            <a href="@Links.membershipTerms" class="text-link" target="_blank">Terms and Conditions</a> and
+            <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
         </p>
     }
 

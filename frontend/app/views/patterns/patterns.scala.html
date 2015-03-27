@@ -1,7 +1,7 @@
 @(eventPortfolio: model.EventPortfolio, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import configuration.{Config, Videos}
 @import model.{Benefits, FlashMessage}
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
@@ -298,7 +298,7 @@
         <div class="page-slice page-slice--slim l-constrained">
             @fragments.promos.promoVideoSecondary(
                 Html("If you believe in Guardian journalism, become a Guardian Member"),
-                videoUrl = Config.videoWhatIsGuardianMembership,
+                videoUrl = Videos.whatIsMembership,
                 toneClass = Some("tone-trans-brand-dark")) {
                 <div class="text-feature">
                     <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
