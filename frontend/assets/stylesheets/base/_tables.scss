@@ -44,16 +44,12 @@ td {
         border-bottom: 1px dotted $c-neutral8;
     }
 
-}
-
-.table--responsive-font {
     @include mq($from: desktop) {
         th,
         td,
         thead td {
-            font-size: rem(14px);
-            line-height: rem(22px);
-            padding: rem(14px) rem(12px) rem(13px);
+            @include fs-textSans(4);
+            padding: rem(14px) rem($gs-baseline) rem(13px);
         }
     }
 }
