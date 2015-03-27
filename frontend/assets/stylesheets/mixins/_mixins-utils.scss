@@ -2,6 +2,11 @@
 // Mixins
 // =============================================================================
 
+@mixin font-smoothing() {
+    -moz-osx-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+}
+
 @mixin disable-user-select() {
     -webkit-user-select: none;
     -moz-user-select: none;

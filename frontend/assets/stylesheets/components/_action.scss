@@ -2,6 +2,9 @@
    Actions
    ========================================================================== */
 
+/* Action Group
+   ========================================================================== */
+
 /**
  * Used to group a colleciton of icons,
  * adds appropriate spacing between actions.
@@ -14,28 +17,27 @@
     margin-bottom: rem($gs-gutter / 2);
 }
 
-%action {
-    @include fs-textSans(4);
-    font-weight: bold;
-    text-decoration: none;
-    -moz-osx-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    display: inline-block;
-    cursor: pointer;
-    border: 0;
-    text-align: left;
-    padding: rem(8px) rem($gs-gutter);
-    @include border-radius(50%);
-    vertical-align: bottom;
-    outline: none;
-}
+/* Action
+   ========================================================================== */
 
 .action {
-    @extend %action;
+
+    @include font-smoothing();
+    @include fs-textSans(4);
+
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+    display: inline-block;
+    vertical-align: bottom;
+    outline: none;
+
     color: $white;
     background-color: $c-button;
-    text-decoration: none;
+    padding: rem(8px) rem($gs-gutter);
     border: 1px solid $c-button;
+    @include border-radius(50%);
 
     &:focus,
     &:active,
@@ -45,7 +47,6 @@
         border-color: darken($c-button, 10%);
         text-decoration: none;
     }
-
 
     /**
      * TODO: Temporary inlining to help with removal of old icon sprite
@@ -87,7 +88,6 @@
  * Secondary modifier
  */
 .action--secondary {
-   @extend %action;
 
    color: $c-button;
    background-color: transparent;
@@ -207,35 +207,4 @@
     color: $white;
     background-color: $black;
     border-color: $black;
-}
-
-
-/* Actions - Proceed
-   ========================================================================== */
-
-/**
- * Circular button on event listings
- * TODO: Replace w/ miniminal-button and icon-holder
- */
-.action-proceed {
-    @include image-replacement();
-    width: rem(36px);
-    height: rem(36px);
-    padding: 0 rem(8px) 0 0;
-    background-color: transparent;
-
-
-    display: inline-block;
-    background-repeat: no-repeat;
-    width: 20px;
-    height: 17.895px;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTcuODk1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0aXRsZT5iYWNrZ3JvdW5kPC90aXRsZT48cGF0aCBmaWxsPSJub25lIiBkPSJNLTEtMWg1LjI0N3Y0LjkwNWgtNS4yNDd6Ii8+PHRpdGxlPkxheWVyIDE8L3RpdGxlPjxwYXRoIGQ9Ik0yMCA5LjM1MmwtOS4wODQgOC41NDMtLjg2LS44MSA2LjU0Mi03LjMxaC0xNi41OTh2LTEuNjU1aDE2LjU5OGwtNi41NDItNy4zMS44Ni0uODEgOS4wODQgOC41MDh2Ljg0NHoiIGZpbGw9IiMxOTdjYWEiLz48L3N2Zz4=);
-
-    background-position: center center;
-    @include border-radius(50px);
-    border: 1px solid $c-button;
-
-    &:focus {
-        outline: 0;
-    }
 }
