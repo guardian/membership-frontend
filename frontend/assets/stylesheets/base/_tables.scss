@@ -48,8 +48,7 @@ td {
         th,
         td,
         thead td {
-            font-size: rem(14px);
-            line-height: rem(22px);
+            @include fs-textSans(4);
             padding: rem(14px) rem($gs-baseline) rem(13px);
         }
     }
