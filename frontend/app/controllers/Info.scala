@@ -159,8 +159,7 @@ trait Info extends Controller {
     Ok(views.html.info.patron(pageInfo, pageImages))
   }
 
-  // def subscriberOffer = GoogleAuthenticatedStaffAction { implicit request =>
-  def subscriberOffer = NoCacheAction { implicit request =>
+  def subscriberOffer = GoogleAuthenticatedStaffAction { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
