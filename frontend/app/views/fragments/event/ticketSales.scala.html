@@ -10,7 +10,7 @@
 }
 
 @ticketEndSaleDate(endSalesDate: Instant, needToDisplayTimes: Boolean) = @{
-    Html(s"<time datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes || endSalesDate.isContemporary())}</time>")
+    Html(s"<time class='qa-event-detail-sales-end' datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes || endSalesDate.isContemporary())}</time>")
 }
 
 <div class="ticket-sales" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">

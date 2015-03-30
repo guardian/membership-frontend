@@ -5,23 +5,24 @@ import org.openqa.selenium.{By, WebDriver}
 
 class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def eventLocationSpan = driver.findElement(By.cssSelector(".stat-item__second.copy"))
+  private def eventLocationSpan = driver.findElement(By.cssSelector(".qa-event-detail-location"))
 
-  private def eventTimeDiv = driver.findElement(By.cssSelector(".stat-item__second>span"))
+  private def eventTimeDiv = driver.findElement(By.cssSelector(".qa-event-detail-datetime"))
 
-  private def eventSalesEndSpan = driver.findElement(By.xpath("//*[contains(., \"Sale ends\")]/time"))
+  private def eventSalesEndSpan = driver.findElement(By.cssSelector(".qa-event-detail-sales-end"))
 
-  private def eventPriceSpan = driver.findElement(By.cssSelector(".price-info-inline__value.js-event-price-value"))
-  // TODO add hooks on the template so we can avoid these nasty locators
-  private def discountedEventPriceSpan = driver.findElement(By.xpath(".//*[@id='container']/div[2]/div/div[2]/div[1]/div/div/div[2]/span[1]"))
+  private def eventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price")).head
 
-  private def eventDescriptionDiv = driver.findElement(By.cssSelector(".event__description.copy"))
+  private def discountedEventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price-discount")).head
 
-  private def buyButton = driver.findElement(By.cssSelector(".js-ticket-cta.action.action--booking"))
+  private def eventDescriptionDiv = driver.findElement(By.cssSelector(".qa-event-detail-description"))
 
-  private def eventName = driver.findElement(By.cssSelector(".event-masthead__name"))
+  private def buyButton = driver.findElement(By.cssSelector(".qa-event-detail-booking-action"))
 
-  private def originalPriceSpan = driver.findElement(By.xpath(".//*[@id='container']/div[2]/div/div[2]/div[1]/div/div/div[1]"))
+  private def eventName = driver.findElement(By.cssSelector(".qa-event-detail-name"))
+
+  // TODO: Remove this version, duplicated by eventPriceSpan
+  private def originalPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price")).head
 
   def getEventLocation: String = eventLocationSpan.getText
 
