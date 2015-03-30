@@ -1,7 +1,7 @@
 @(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import configuration.{Config, Links, Videos}
 
 @main("About", pageInfo=pageInfo) {
 
@@ -29,7 +29,7 @@
     <div id="what-is-guardian-membership" class="page-slice page-slice--slim l-constrained">
         @fragments.promos.promoVideoSecondary(
             Html("If you believe in Guardian journalism, become a Guardian Member"),
-            videoUrl=Config.videoWhatIsGuardianMembership,
+            videoUrl=Videos.whatIsMembership,
             toneClass=Some("tone-trans-brand-dark")){
             <div class="text-feature">
                 <p>Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership.</p>
@@ -86,9 +86,9 @@
                     activities and courses from Guardian Live and institutions we admire, as well as being the home of Guardian Membership.</p>
             </div>
             <div class="action-group">
-                <a class="action" target="_blank" href="@Config.guardianMembershipBuildingSpaceUrl">
+                <a class="action" target="_blank" href="@Links.membershipBuilding">
                     More about the building</a>
-                <a class="action action--secondary" target="_blank" href="@Config.guardianMembershipBuildingBlogUrl">
+                <a class="action action--secondary" target="_blank" href="@Links.membershipBuildingBlog">
                     Building progress blog
                     @fragments.actionIcon("arrow-right")
                 </a>
