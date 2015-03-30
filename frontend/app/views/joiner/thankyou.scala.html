@@ -70,7 +70,13 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Next payment</th>
-                        <td id="qa-joiner-summary-next">@summary.nextPaymentPrice @summary.nextPaymentDate.pretty</td>
+                        <td id="qa-joiner-summary-next">
+                        @if(summary.nextPaymentPrice.isDefined) {
+                            @summary.nextPaymentPrice.get.pretty (@summary.nextPaymentDate.pretty)
+                        } else {
+                            @summary.nextPaymentDate.pretty
+                        }
+                        </td>
                     </tr>
                     }
                     @for(card <- cardOpt) {
