@@ -28,6 +28,9 @@
         font-weight: 500;
         color: $mem-brandBlueDark;
     }
+    .block-description__text {
+        margin-bottom: rem($gs-baseline / 2);
+    }
 
 // Blocks description padded (modifier)
 .block-description--padded {
