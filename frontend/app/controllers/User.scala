@@ -65,7 +65,6 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  //todo check if specific errors are required in the json
   def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
     for {
       validSubscriber <- casService.isValidSubscriber(id, postcode)
