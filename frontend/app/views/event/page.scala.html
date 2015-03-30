@@ -15,7 +15,7 @@
                 <div class="event-masthead__title section-header case--lower">
                     <a href="@event.metadata.eventListUrl" class="minimal-link tone-text-@event.metadata.identifier">@event.metadata.shortTitle</a>
                 </div>
-                <h1 class="event-masthead__name">@event.name.text</h1>
+                <h1 class="event-masthead__name qa-event-detail-name">@event.name.text</h1>
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
                         - <span class="event-details__time__part">@range.end</span>
                     }
                 </div>
-                <div class="event-details__location">
+                <div class="event-details__location qa-event-detail-location">
                     @fragments.event.addressSummary(event)
                 </div>
             </div>
@@ -41,7 +41,7 @@
                     </div>
                     @if(event.isBookable) {
                         <div class="event-ticket__item event-ticket__action">
-                            @fragments.event.ticketCta(event, List("action--booking"))
+                            @fragments.event.ticketCta(event, List("action--booking", "qa-event-detail-booking-action"))
                         </div>
                         <div class="event-ticket__item event-ticket__terms copy">
                             @fragments.event.terms(event)
@@ -114,7 +114,7 @@
 
             <div class="event-content__body">
                 @for(description <- event.description) {
-                    <div class="event__description copy" itemprop="description">
+                    <div class="event__description copy qa-event-detail-description" itemprop="description">
                         @Html(description.cleanHtml)
                     </div>
                 }

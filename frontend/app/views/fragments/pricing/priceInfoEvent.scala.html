@@ -19,11 +19,11 @@
                 </div>
             } { discountTicketing =>
                 <div class="js-event-price">
-                    <div class="price-info-inline__value js-event-price-value" data-discount-text="@discountTicketing.member.priceText" itemprop="highPrice">
+                    <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText" itemprop="highPrice">
                     @discountTicketing.generalRelease.cost.get.formattedPrice
                     </div>
                     <div class="price-info-inline__trail">
-                        <span class="js-event-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText" itemprop="lowPrice">
+                        <span class="js-event-price-discount qa-event-detail-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText" itemprop="lowPrice">
                             Partners/Patrons @discountTicketing.member.priceText
                         </span>
                         <span class="js-event-price-saving" data-discount-text="(you save @discountTicketing.savingText)">

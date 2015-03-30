@@ -267,7 +267,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def OriginalPriceIsComparedToDiscountedPrice = {
-    Assert.assertNotEmpty(new EventPage(driver).getOriginalPrice, "There is an original price displayed next to the discounted price")
+    Assert.assertNotEmpty(new EventPage(driver).getEventPrice, "There is an original price displayed next to the discounted price")
     this
   }
 
