@@ -27,12 +27,7 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val membershipUrl = config.getString("membership.url")
-
-  // TODO: Move to Email config object
   val membershipFeedback = config.getString("membership.feedback")
-  val membershipSupport = config.getString("membership.support")
-  val membershipSupportStaffEmail = config.getString("membership.staff.email")
-  val membershipDevEmail = config.getString("membership.dev.email")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 

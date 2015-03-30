@@ -1,6 +1,6 @@
 package model
 
-import configuration.Config
+import configuration.{Config, Email}
 import play.twirl.api.Html
 
 object Faq {
@@ -27,7 +27,7 @@ object Faq {
       Html("Your Guardian Staff Membership will last for a long as you are a permanent member of staff")
     ),
     Item("I've got an additional question that's not listed here",
-      Html(s"Please email <a href='mailto:${Config.membershipSupportStaffEmail}'>${Config.membershipSupportStaffEmail}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
+      Html(s"Please email <a href='mailto:${Email.staffMembership}'>${Email.staffMembership}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
     )
   )
 
@@ -113,7 +113,7 @@ object Faq {
       "wheelchair-access-for-venue"
     ),
     Item("I've got a question",
-      Html(s"Please email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "have-a-question"
     ),
     Item("What are Guardian Masterclasses?",

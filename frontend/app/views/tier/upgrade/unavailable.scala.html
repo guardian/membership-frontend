@@ -1,6 +1,6 @@
 @(currentTier: com.gu.membership.salesforce.Tier, targetTier: com.gu.membership.salesforce.Tier)
 
-@import configuration.Config
+@import configuration.Email
 
 @main("Unavailable Tier") {
 
@@ -10,7 +10,7 @@
 
         <div class="page-section">
             <div class="page-section__content copy">
-                <p>Sorry you are currently unable to change your tier from <strong>@currentTier</strong> to <strong>@targetTier</strong>. Please contact <a href="mailto:@Config.membershipSupport">@Config.membershipSupport</a> for assistance.</p>
+                <p>Sorry you are currently unable to change your tier from <strong>@currentTier</strong> to <strong>@targetTier</strong>. Please contact <a href="mailto:@Email.membershipSupport">@Email.membershipSupport</a> for assistance.</p>
             </div>
         </div>
 
