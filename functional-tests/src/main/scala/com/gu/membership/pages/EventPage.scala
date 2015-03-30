@@ -11,18 +11,15 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
   private def eventSalesEndSpan = driver.findElement(By.cssSelector(".qa-event-detail-sales-end"))
 
-  private def eventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price")).head
+  private def eventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price")).get(0)
 
-  private def discountedEventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price-discount")).head
+  private def discountedEventPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price-discount")).get(0)
 
   private def eventDescriptionDiv = driver.findElement(By.cssSelector(".qa-event-detail-description"))
 
   private def buyButton = driver.findElement(By.cssSelector(".qa-event-detail-booking-action"))
 
   private def eventName = driver.findElement(By.cssSelector(".qa-event-detail-name"))
-
-  // TODO: Remove this version, duplicated by eventPriceSpan
-  private def originalPriceSpan = driver.findElements(By.cssSelector(".qa-event-detail-price")).head
 
   def getEventLocation: String = eventLocationSpan.getText
 
@@ -35,8 +32,6 @@ class EventPage(driver: WebDriver) extends BaseMembershipPage(driver) {
   def getEventDescription: String = eventDescriptionDiv.getText
 
   def getDiscountedEvent: String = discountedEventPriceSpan.getText
-
-  def getOriginalPrice: String = originalPriceSpan.getText
 
   def clickSignInButton: LoginPage = {
     clickConversionButton
