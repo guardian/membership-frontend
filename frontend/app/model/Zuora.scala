@@ -31,7 +31,7 @@ object Zuora {
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
-  case class Subscription(id: String, version: Int, casId: Option[String]) extends ZuoraQuery
+  case class Subscription(id: String, version: Int, casId: Option[String], termStartDate: DateTime) extends ZuoraQuery
 
   trait Error extends Throwable {
     val code: String
@@ -55,6 +55,7 @@ object Zuora {
     val cancelled = amendType.exists(_ == "Cancellation")
   }
 
+  //todo redo SubscriptionDetails as it feels incorrect
   case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
                                  ratePlanId: String) {
     // TODO: is there a better way?
@@ -64,7 +65,7 @@ object Zuora {
 
   object SubscriptionDetails {
     def apply(ratePlan: RatePlan, ratePlanCharge: RatePlanCharge): SubscriptionDetails = {
-      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now) //todo FIX: this causes an incorrect date for subscriber offer
+      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now)
 
       // Zuora requires rate plan names to be unique, even though they are never used as identifiers
       // We want to show the same name for annual and monthly, so remove the " - annual" or " - monthly"
@@ -252,13 +253,12 @@ object ZuoraDeserializer {
   }
 
 
-  implicit val ratePlanChargeReader = ZuoraQueryReader("RatePlanCharge", Seq("Id", "ChargedThroughDate", "EffectiveStartDate", "Price", "BillCycleDay", "EffectiveEndDate")) { result =>
-    println(result) //TODO remove and figure out what dates are required for subscriber offer (or if a new query is required)
+  implicit val ratePlanChargeReader = ZuoraQueryReader("RatePlanCharge", Seq("Id", "ChargedThroughDate", "EffectiveStartDate", "Price")) { result =>
     RatePlanCharge(result("Id"), result.get("ChargedThroughDate").map(new DateTime(_)),
       new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
   }
 
-  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c")) { result =>
-    Subscription(result("Id"), result("Version").toInt, result.get("CASSubscriberID__c"))
+  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c", "TermStartDate")) { result =>
+    Subscription(result("Id"), result("Version").toInt, result.get("CASSubscriberID__c"), new DateTime(result("TermStartDate")))
   }
 }

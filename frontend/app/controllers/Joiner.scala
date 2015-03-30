@@ -222,12 +222,13 @@ trait Joiner extends Controller with ActivityTracking {
       for {
         subscriptionStatus <- subscriptionStatusFuture
         subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+        latestSubscription <- request.touchpointBackend.subscriptionService.getLatestSubscription(request.member)
         paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, subscriberOfferDelayPeriod)
       } yield {
         val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
 
         firstPreviewItem.map { firstPreviewInvoice =>
-          MembershipSummary(subscriptionDetails.startDate, subscriptionDetails.endDate, 0f,
+          MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
             subscriptionDetails.planAmount, Some(firstPreviewInvoice.price), firstPreviewInvoice.serviceStartDate)
         }
       }
