@@ -23,23 +23,39 @@
     width: 100%;
     color: $white;
     background-image: linear-gradient(0deg, rgba(0, 0, 0, .9) 0%, transparent 100%);
-    padding: rem(gs-height(3)) rem($gs-gutter) rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
+    padding-top: rem(gs-height(2));
 
     @include mq(tablet) {
+        padding: rem($gs-gutter);
+        padding-top: rem(gs-height(2));
+    }
+
+    @include mq(desktop) {
         padding-left: 30%;
         padding-bottom: rem($gs-gutter * 2);
     }
 }
-.letterbox__title {
-    @include fs-headline(6);
-    font-weight: 500;
 
-    @include mq(mobileLandscape) {
-        @include fs-headline(7, true);
-    }
+.letterbox__title {
+    @include f-headline;
+    font-weight: 500;
+    max-width: 65%;
+
+    /**
+     * Scalable font-size.
+     * Calc w/ base size + % of viewport = scalable type.
+     * http://madebymike.com.au/writing/precise-control-responsive-typography/
+     * 1vw = 1/100th of the width of the viewport.
+     *
+     * Includes basic px fallback for no-calc support.
+     * - calc support: http://caniuse.com/#search=calc
+     */
+    font-size: convert-to-px(get-font-size(headline, 4));
+    font-size: calc(#{convert-to-px(get-font-size(headline, 2))} + 4vw);
+    line-height: 1;
 
     @include mq(tablet) {
         @include fs-headline(9, true);
-        max-width: 60%;
     }
 }

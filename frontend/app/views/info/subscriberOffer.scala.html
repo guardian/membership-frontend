@@ -4,7 +4,7 @@
 @import com.gu.membership.salesforce.Tier
 @import model.Benefits
 @import views.support.Prices._
-@import configuration.Config
+@import configuration.{Config, Videos}
 
 @main("Subscribers") {
     @defining(Benefits.details(Tier.Partner)) { benefits =>
@@ -31,12 +31,18 @@
             <section class="page-slice tone-tint l-inset l-constrained">
                 <div class="page-section-spread">
                     <div class="page-section-spread__lead-in">
-                        <h2 class="h-promo">Exclusive offer for subscribers</h2>
-                        <span class="roundel">
-                            <span class="roundel__title">
-                                Offer ends 31st May 2015
-                            </span>
-                        </span>
+                        <div class="roundel-group roundel-group--snap u-cf">
+                            <div class="roundel-group__title">
+                                <h2 class="h-promo">Exclusive offer for subscribers</h2>
+                            </div>
+                            <div class="roundel-group__roundel">
+                                <span class="roundel">
+                                    <span class="roundel__title">
+                                        Offer ends 31st May 2015
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="page-section-spread__content">
                         @fragments.pricing.offerTable(Tier.Partner)
@@ -56,7 +62,7 @@
                 <div class="page-slice page-slice--slim l-constrained">
                     @fragments.promos.promoAltVideo(
                         title="“If you read the Guardian, join the Guardian”",
-                        videoUrl=Config.videoWhatIsGuardianMembership,
+                        videoUrl=Videos.whatIsMembership,
                         toneClassOpt=Some("tone-brand")
                     ) {
                         <p class="text-feature">

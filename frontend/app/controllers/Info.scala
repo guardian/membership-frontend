@@ -2,7 +2,7 @@ package controllers
 
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, FlashMessage, PageInfo}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
 import play.api.mvc.Controller
 import services.EmailService
 import scala.concurrent.Future
@@ -174,9 +174,11 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("guardian-live"),
         altText=Some("Guardian Live"),
-        availableImages=ResponsiveImageGenerator(
-          id="76ef58a05920591099012edb80e7415379392a4c/0_0_1140_684",
-          sizes=List(1000,500)
+        availableImages=Seq(
+          ResponsiveImage(
+            path="/assets/images/tmp/guardian_live800.jpg",
+            width=800
+          )
         )
       )
     )
