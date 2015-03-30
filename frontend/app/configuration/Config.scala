@@ -57,11 +57,6 @@ object Config {
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
 
-  val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
-  val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
-  val homeImageWidths = config.getList("membership.home.images.widths").unwrapped
-  val homeImageRatios = config.getList("membership.home.images.ratios").unwrapped
-
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")

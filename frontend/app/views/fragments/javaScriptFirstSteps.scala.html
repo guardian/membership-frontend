@@ -25,14 +25,6 @@
         }
         membership: {
             buildNumber: '@app.BuildInfo.buildNumber',
-            eventImages: {
-                widths: [@Config.eventImageWidths.mkString(",")],
-                ratios: [@Config.eventImageRatios.mkString(",")]
-            },
-            homeImages: {
-                widths: [@Config.homeImageWidths.mkString(",")],
-                ratios: [@Config.homeImageRatios.mkString(",")]
-            },
             svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },
         googleAnalytics: {
