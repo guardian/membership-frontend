@@ -26,22 +26,13 @@ object Config {
   lazy val awsAccessKey = config.getString("aws.access.key")
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
-  val guardianMembershipUrl = config.getString("guardian.membership.url")
-  val guardianLiveEventsTermsUrl = config.getString("guardian.live.events.terms.url")
-  val guardianMasterclassesTermsUrl = config.getString("guardian.masterclasses.terms.url")
-  val guardianMembershipTermsUrl = config.getString("guardian.membership.terms.url")
-  val guardianPrivacyUrl = config.getString("guardian.privacy.url")
-  var guardianMembershipBuildingBlogUrl = config.getString("guardian.membership.building.blog.url")
-  var guardianMembershipBuildingSpaceUrl = config.getString("guardian.membership.building.space.url")
-  val guardianContactUsUrl = config.getString("guardian.membership.contact.us.url")
-
   val membershipUrl = config.getString("membership.url")
+
+  // TODO: Move to Email config object
   val membershipFeedback = config.getString("membership.feedback")
   val membershipSupport = config.getString("membership.support")
   val membershipSupportStaffEmail = config.getString("membership.staff.email")
   val membershipDevEmail = config.getString("membership.dev.email")
-
-  val videoWhatIsGuardianMembership = config.getString("video.what.is.guardian.membership.url")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
@@ -56,11 +47,6 @@ object Config {
 
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
-
-  val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
-  val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
-  val homeImageWidths = config.getList("membership.home.images.widths").unwrapped
-  val homeImageRatios = config.getList("membership.home.images.ratios").unwrapped
 
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 

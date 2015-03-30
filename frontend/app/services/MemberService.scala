@@ -183,7 +183,9 @@ trait MemberService extends LazyLogging with ActivityTracking {
             deliveryPostcode = form.map(_.deliveryAddress.postCode),
             billingPostcode = form.flatMap(f => f.billingAddress.map(_.postCode)).orElse(form.map(_.deliveryAddress.postCode)),
             subscriptionPaymentAnnual = Some(annual),
-            marketingChoices = None
+            marketingChoices = None,
+            city = form.map(_.deliveryAddress.town),
+            country = form.map(_.deliveryAddress.country.name)
           )
         ))(user)
       memberId
@@ -208,8 +210,11 @@ trait MemberService extends LazyLogging with ActivityTracking {
         formData.plan.salesforceTier,
         None,
         Some(formData.deliveryAddress.postCode),
-        billingPostcode, subscriptionPaymentAnnual,
-        Some(formData.marketingChoices)
+        billingPostcode,
+        subscriptionPaymentAnnual,
+        Some(formData.marketingChoices),
+        Some(formData.deliveryAddress.town),
+        Some(formData.deliveryAddress.country.name)
     )
 
     track(MemberActivity("membershipRegistration", trackingInfo))(user)

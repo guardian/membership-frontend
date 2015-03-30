@@ -12,6 +12,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   val validCardNumber = "4242424242424242"
   val cardWithNoFunds = "4000000000000341"
   val secondaryCard   = "5555555555554444"
+  val partnerAnnualPrice = "£136.00"
+  val patronAnnualPrice = "£541.00"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
@@ -211,9 +213,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   def ICanSeeMyPaymentDetails = {
     val thankYouPage = pay
     val paidAmount = thankYouPage.getAmountPaidToday
-    Assert.assert(paidAmount, "£135.00", "Should have paid £15")
+    Assert.assert(paidAmount, partnerAnnualPrice, "Should have paid £136")
     val nextPaymentAmount = thankYouPage.getPaymentAmount
-    Assert.assert(nextPaymentAmount, "£135.00", "Next payment should be £15")
+    Assert.assert(nextPaymentAmount, partnerAnnualPrice, "Next payment should be £136")
     val cardNumber = thankYouPage.getCardNumber
     Assert.assert(cardNumber.endsWith("4242"), true, "Should see correct card details")
     this
@@ -302,11 +304,11 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICanSeeTheMembershipTabForAPartner = {
-   ICanSeeTheMembershipTab("partner", "£135.00")
+   ICanSeeTheMembershipTab("partner", partnerAnnualPrice)
   }
 
   def ICanSeeTheMembershipTabForAPatron = {
-    ICanSeeTheMembershipTab("patron", "£540.00")
+    ICanSeeTheMembershipTab("patron", patronAnnualPrice)
   }
 
   def ICanSeeTheMembershipTabForFriend = {
@@ -409,9 +411,9 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
     Assert.assert(page.getNewPackage, "Friend", "The new package should be Friend")
   }
 
-  def IAmAPartner = verifyTier("£135.00")
+  def IAmAPartner = verifyTier(partnerAnnualPrice)
 
-  def IAmAPatron = verifyTier("£540.00")
+  def IAmAPatron = verifyTier(patronAnnualPrice)
 
   def IAmNotAMember {
     Assert.assert(new IdentityEditPage(driver).isMembershipCancelled, true, "Membership should be cancelled")

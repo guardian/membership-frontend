@@ -1,7 +1,7 @@
 package model
 
 import com.gu.contentapi.client.model.{Asset, Content}
-import configuration.Config
+import configuration.{Links, Config}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
 
@@ -33,7 +33,7 @@ object RichEvent {
       |Members can attend events that take the power of open journalism from print and digital into live experiences.
     """.stripMargin),
     eventListUrl=controllers.routes.Event.list.url,
-    termsUrl=Config.guardianLiveEventsTermsUrl,
+    termsUrl=Links.guardianLiveTerms,
     largeImg=true,
     preSale=true,
     chooseTier=ChooseTierMetadata(
@@ -52,7 +52,7 @@ object RichEvent {
       | journalism, photography and design, film and digital media, music and cultural appreciation.
     """.stripMargin),
     eventListUrl=controllers.routes.Event.masterclasses.url,
-    termsUrl=Config.guardianMasterclassesTermsUrl,
+    termsUrl=Links.guardianMasterclassesTerms,
     largeImg=false,
     preSale=false,
     chooseTier=ChooseTierMetadata(
@@ -66,9 +66,10 @@ object RichEvent {
     title="Guardian Local",
     shortTitle="Events",
     pluralTitle="Local events",
-    description=None,
+    description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
+      "come together and enjoy arts, food and culture from around the UK."),
     eventListUrl=controllers.routes.Event.list.url,
-    termsUrl=Config.guardianLiveEventsTermsUrl,
+    termsUrl=Links.guardianLiveTerms,
     largeImg=true,
     preSale=true,
     chooseTier=ChooseTierMetadata(
@@ -99,7 +100,7 @@ object RichEvent {
     val tags = Nil
 
     val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
-      Config.guardianMembershipUrl + "#video")
+      Links.membershipFront + "#video")
 
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))

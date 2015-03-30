@@ -6,7 +6,7 @@ import actions.Functions._
 import com.gu.membership.salesforce.{MemberId, Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.dsl._
-import configuration.{Config, CopyConfig}
+import configuration.{Config, CopyConfig, Links}
 import model.Eventbrite.{EBOrder, EBEvent}
 import model.RichEvent._
 import model.{IdMinimalUser, EventPortfolio, Eventbrite, PageInfo}
@@ -53,7 +53,7 @@ trait Event extends Controller with ActivityTracking {
       }
     }
 
-    eventOpt.getOrElse(Redirect(Config.guardianMembershipUrl))
+    eventOpt.getOrElse(Redirect(Links.membershipFront))
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {

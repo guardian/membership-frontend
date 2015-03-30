@@ -1,6 +1,6 @@
 @(event: model.RichEvent.RichEvent, order: model.Eventbrite.EBOrder)
 
-@import configuration.Config
+@import configuration.{Config, Links}
 @import views.support.Social.eventThankyou
 
 @main("Event Thankyou - " + event.name.text + " (" + event.id + ")") {
@@ -23,7 +23,7 @@
                 <h2 class="page-section__headline">Before the event</h2>
             </div>
             <div class="page-section__content copy">
-                <p>Read related articles and what other members have to say at <a href="@Config.guardianMembershipUrl">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
+                <p>Read related articles and what other members have to say at <a href="@Links.membershipFront">theguardian.com/membership</a>. You'll also see all the latest news, highlights and ideas from our membership community.</p>
             </div>
         </section>
 

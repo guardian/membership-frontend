@@ -7,7 +7,7 @@
     upgrade: Boolean)
 
 @import com.gu.membership.salesforce.Tier
-@import configuration.Config
+@import configuration.{Config, Links}
 @import views.support.Dates._
 @import views.support.Prices._
 @import views.support.Social.joinThankyou
@@ -48,7 +48,7 @@
                 <h2 class="page-section__headline">Your membership summary</h2>
             </div>
             <div class="page-section__content">
-                <table class="table table--responsive-font table--striped" role="grid">
+                <table class="table table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
                         <td id="qa-joiner-summary-tier">@member.tier</td>
@@ -120,7 +120,7 @@
                     @member.tier match {
                         case Tier.Supporter => {
                             <p>Visit the Members area of theguardian.com, see all the latest news and highlights from our membership programme.</p>
-                            <a class="action" href="@Config.guardianMembershipUrl">Get started</a>
+                            <a class="action" href="@Links.membershipFront">Get started</a>
                         }
                         case _ => {
                             <p>This season of events is packed with discussions, debates and interviews you’ll love.  We’ll send you a welcome email shortly to help you get the most from your membership. Why not take a few moments to find out the latest from membership</p>
