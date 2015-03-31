@@ -164,7 +164,7 @@ object Faq {
       "no-email"
     ),
     Item("What if my subscription ends during my free Membership trial? ",
-      Html("Your Partner Membership will be unaffected by  any changes made to your current subscription."),
+      Html("Your Partner Membership will be unaffected by any changes made to your current subscription."),
       "subscription-ends"
     ),
     Item("Can I join Membership over the phone?",
@@ -179,7 +179,7 @@ object Faq {
       Html("Yes, Guardian Membership is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
       "outside-uk"
     ),
-    Item("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our privacy policy h​ere.​",
+    Item("How do I know you are protecting my personal information?",
       Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our <a href='http://www.theguardian.com/help/privacy-policy'>privacy policy</a>.​"),
       "privacy"
     ),
