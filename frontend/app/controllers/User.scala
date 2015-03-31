@@ -41,8 +41,8 @@ trait User extends Controller {
     } yield Json.obj(
       "optIn" -> !subscriptionStatus.cancelled,
       "subscription" -> (cardDetails ++ Json.obj(
-        "start" -> subscriptionDetails.startDate,
-        "end" -> subscriptionDetails.endDate,
+        "start" -> subscriptionDetails.effectiveStartDate,
+        "end" -> subscriptionDetails.chargedThroughDate,
         "cancelledAt" -> subscriptionStatus.future.isDefined,
         "plan" -> Json.obj(
           "name" -> subscriptionDetails.planName,

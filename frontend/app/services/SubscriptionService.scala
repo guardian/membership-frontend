@@ -7,6 +7,7 @@ import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.{ProductRatePlan, TierPlan}
+import org.joda.time.DateTime
 import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,7 +26,7 @@ object SubscriptionServiceHelpers {
   def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
 
   def sortPreviewInvoiceItems(items: Seq[PreviewInvoiceItem]) = items.sortBy(_.price)
-  
+
   def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
@@ -48,18 +49,29 @@ trait AmendSubscription {
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-        cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
+        cancelDate = if (instant) DateTime.now else subscriptionDetails.chargedThroughDate.getOrElse(DateTime.now())
         result <- zuora.request(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
       } yield result
     }
   }
 
   def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+
+    //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
+    //otherwise if the customer acceptance date is in the future then that should be passed else pass the current time
+    def effectiveFrom(subscriptionDetails: SubscriptionDetails) = {
+      subscriptionDetails.chargedThroughDate.getOrElse {
+          if(subscriptionDetails.contractAcceptanceDate.isAfterNow) subscriptionDetails.contractAcceptanceDate
+          else DateTime.now()
+      }
+    }
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+        dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
+
         result <- zuora.request(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
-          tierPlanRateIds(newTierPlan), subscriptionDetails.endDate))
+          tierPlanRateIds(newTierPlan), dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
   }
@@ -80,11 +92,19 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   private def getAccount(memberId: MemberId): Future[Account] =
     zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
 
-  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+  //TODO before we do subs we need to filter by rate plans membership knows about
+  def getSubscriptions(memberId: MemberId): Future[Seq[Subscription]] = {
     for {
       account <- getAccount(memberId)
       subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
+    } yield subscriptions
+  }
 
+  def getSubscription(subscriptionId: String): Future[Subscription] = zuora.queryOne[Subscription](s"Id='$subscriptionId'")
+
+  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+    for {
+      subscriptions <- getSubscriptions(memberId)
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
@@ -100,11 +120,17 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     }
   }
 
+  def getLatestSubscription(memberId: MemberId): Future[Subscription] = {
+    for (subscriptions <- getSubscriptions(memberId))
+    yield sortSubscriptions(subscriptions).last
+  }
+
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
+      subscription <- getSubscription(subscriptionId)
       ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
       ratePlanCharge <- zuora.queryOne[RatePlanCharge](s"RatePlanId='${ratePlan.id}'")
-    } yield SubscriptionDetails(ratePlan, ratePlanCharge)
+    } yield SubscriptionDetails(subscription, ratePlan, ratePlanCharge)
   }
 
   def getCurrentSubscriptionDetails(memberId: MemberId): Future[SubscriptionDetails] = {
