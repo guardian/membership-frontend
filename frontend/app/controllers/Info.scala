@@ -5,6 +5,7 @@ import forms.MemberForm._
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
 import play.api.mvc.Controller
 import services.EmailService
+import views.support.Asset
 import scala.concurrent.Future
 
 trait Info extends Controller {
@@ -175,7 +176,7 @@ trait Info extends Controller {
         altText=Some("Guardian Live"),
         availableImages=Seq(
           ResponsiveImage(
-            path="/assets/images/tmp/guardian_live800.jpg",
+            path=Asset.at("images/tmp/guardian_live800.jpg"),
             width=800
           )
         )
