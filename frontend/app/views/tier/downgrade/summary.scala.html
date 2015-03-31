@@ -8,7 +8,9 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + currentSubscription.endDate.pretty))
+        @currentSubscription.chargedThroughDate.map { endDate =>
+            @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.pretty))
+        }
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -38,7 +40,7 @@
                             Start date
                         </th>
                         <td id="qa-downgrade-summary-start">
-                            @futureSubscription.startDate.pretty
+                            @futureSubscription.effectiveStartDate.pretty
                         </td>
                     </tr>
                     <tr role="row">

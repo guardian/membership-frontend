@@ -245,6 +245,7 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
         <ns1:Amendments>
           <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
           <ns2:CustomerAcceptanceDate>{dateStr}</ns2:CustomerAcceptanceDate>
+          <ns2:ContractEffectiveDate>{dateStr}</ns2:ContractEffectiveDate>
           <ns2:Name>Downgrade</ns2:Name>
           <ns2:RatePlanData>
             <ns1:RatePlan>

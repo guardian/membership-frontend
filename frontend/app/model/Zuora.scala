@@ -30,7 +30,7 @@ object Zuora {
   case class RatePlan(id: String, name: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
-  case class Subscription(id: String, version: Int, casId: Option[String], termStartDate: DateTime) extends ZuoraQuery
+  case class Subscription(id: String, version: Int, casId: Option[String], termStartDate: DateTime, contractAcceptanceDate: DateTime) extends ZuoraQuery
 
   trait Error extends Throwable {
     val code: String
@@ -54,21 +54,26 @@ object Zuora {
     val cancelled = amendType.exists(_ == "Cancellation")
   }
 
-  case class SubscriptionDetails(planName: String, planAmount: Float, startDate: DateTime, endDate: DateTime,
+  case class SubscriptionDetails(planName: String, planAmount: Float, effectiveStartDate: DateTime,
+                                 contractAcceptanceDate: DateTime, chargedThroughDate: Option[DateTime],
                                  ratePlanId: String) {
-    val annual = endDate == startDate.plusYears(1)
+
+    val inFreePeriodOffer = chargedThroughDate.isEmpty && contractAcceptanceDate.isAfterNow
+
+    val annual = chargedThroughDate == effectiveStartDate.plusYears(1)
     val paymentPeriodLabel = if (annual) "year" else "month"
   }
 
   object SubscriptionDetails {
-    def apply(ratePlan: RatePlan, ratePlanCharge: RatePlanCharge): SubscriptionDetails = {
-      val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now)
+    def apply(subscription: Subscription, ratePlan: RatePlan, ratePlanCharge: RatePlanCharge): SubscriptionDetails = {
+      //val endDate = ratePlanCharge.chargedThroughDate.getOrElse(DateTime.now)
 
       // Zuora requires rate plan names to be unique, even though they are never used as identifiers
       // We want to show the same name for annual and monthly, so remove the " - annual" or " - monthly"
       val planName = ratePlan.name.split(" - ")(0)
 
-      SubscriptionDetails(planName, ratePlanCharge.price, ratePlanCharge.effectiveStartDate, endDate, ratePlan.id)
+      SubscriptionDetails(planName, ratePlanCharge.price, ratePlanCharge.effectiveStartDate, subscription.contractAcceptanceDate,
+        ratePlanCharge.chargedThroughDate, ratePlan.id)
     }
   }
 
@@ -252,7 +257,7 @@ object ZuoraDeserializer {
       new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
   }
 
-  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c", "TermStartDate")) { result =>
-    Subscription(result("Id"), result("Version").toInt, result.get("CASSubscriberID__c"), new DateTime(result("TermStartDate")))
+  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c", "TermStartDate", "ContractAcceptanceDate")) { result =>
+    Subscription(result("Id"), result("Version").toInt, result.get("CASSubscriberID__c"), new DateTime(result("TermStartDate")), new DateTime(result("ContractAcceptanceDate")))
   }
 }

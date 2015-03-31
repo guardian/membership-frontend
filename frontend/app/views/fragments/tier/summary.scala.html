@@ -17,10 +17,10 @@
             End date
         </th>
         <td id="qa-tier-summary-end">
-            @currentSubscription.endDate.pretty
+            @if(!currentSubscription.inFreePeriodOffer) { @currentSubscription.chargedThroughDate.map(_.pretty)} else { @currentSubscription.effectiveStartDate.pretty}
         </td>
     </tr>
-    @if(!currentSubscription.startDate.isAfterNow()) {
+    @if(!currentSubscription.effectiveStartDate.isAfterNow()) {
         <tr role="row">
         <th role="rowheader">
             @if(currentSubscription.annual){ Annual } else { Monthly } Payment
@@ -34,7 +34,7 @@
             Last payment
             </th>
             <td id="qa-tier-summary-start">
-            @currentSubscription.startDate.pretty
+            @currentSubscription.effectiveStartDate.pretty
             </td>
         </tr>
     }
