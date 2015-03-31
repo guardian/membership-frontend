@@ -22,20 +22,22 @@
             @currentSubscription.endDate.pretty
         </td>
     </tr>
-    <tr role="row">
+    @if(!currentSubscription.startDate.isAfterNow()) {
+        <tr role="row">
         <th role="rowheader">
             @if(currentSubscription.annual){ Annual } else { Monthly } Payment
         </th>
         <td id="qa-tier-summary-recurring">
             @currentSubscription.planAmount.pretty
         </td>
-    </tr>
-    <tr role="row">
-        <th role="rowheader">
+        </tr>
+        <tr role="row">
+            <th role="rowheader">
             Last payment
-        </th>
-        <td id="qa-tier-summary-start">
+            </th>
+            <td id="qa-tier-summary-start">
             @currentSubscription.startDate.pretty
-        </td>
-    </tr>
+            </td>
+        </tr>
+    }
 </table>
