@@ -41,7 +41,12 @@ body {
 }
 
 .l-inset {
-    padding: rem($gs-baseline) rem($gs-gutter) rem($gs-baseline*2);
+    padding: rem($gs-baseline) rem($gs-gutter / 2) rem($gs-baseline * 2);
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+        padding-right: rem($gs-gutter);
+    }
 }
 
 .l-pad-vertical {

@@ -47,8 +47,8 @@ object Benefits {
 
   val supporterWithBenefits = benefitsFilter("membership_card", "live_stream", "digital_digest", "book_tickets")
 
-  val partnerWithBenefits = benefitsFilter("discount", "discount_masterclasses", "plus_1_guest", "early_booking",
-    "membership_card", "live_stream", "digital_digest", "video_highlights")
+  val partnerWithBenefits = benefitsFilter("early_booking", "plus_1_guest", "live_stream", "discount", "discount_masterclasses",
+    "membership_card", "digital_digest", "video_highlights", "book_tickets")
 
   val patronWithBenefits = benefitsFilter("discount", "discount_masterclasses", "priority_booking",
     "complim_items", "unique_experiences", "plus_1_guest", "membership_card",

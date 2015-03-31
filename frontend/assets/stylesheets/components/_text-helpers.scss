@@ -15,18 +15,19 @@
 }
 
 .text-feature {
-    @include fs-headline(2);
+    @include fs-headline(3);
 
-    @include mq(mobileLandscape) {
-        @include fs-headline(3);
-    }
     @include mq(tablet) {
-        @include fs-headline(4);
+        @include fs-headline(4, true);
     }
 }
 
 .text-lead {
     @include fs-header(3);
+}
+
+.text-trail {
+    @include fs-headline(2);
 }
 
 .text-note {
@@ -77,24 +78,17 @@
 .h-section--lead {
     padding-top: 0;
     border-width: 0;
+
     @include mq(mem-full) {
         padding-top: rem($gs-baseline / 2);
         border-width: 1px 0 0 0;
     }
 }
 
-.h-feature {
-    @include fs-headline(5);
-    font-weight: 500;
-
-    @include mq(desktop) {
-        @include fs-headline(6, true);
-    }
-}
-
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);
+    font-weight: 500;
 
     @include mq(tablet) {
         @include fs-headline(6, true);

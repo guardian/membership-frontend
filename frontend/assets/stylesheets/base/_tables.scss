@@ -1,26 +1,16 @@
-$table-breakpoint-importance-1: tablet;
-$table-breakpoint-importance-2: mobile;
-$table-breakpoint-importance-3: 220px;
-
-table {
-    width: 100%;
-}
-
-th,
-td {
-    text-align: left;
-}
+/* ==========================================================================
+   Tables
+   ========================================================================== */
 
 .table {
-    background: $c-neutral8;
     color: $c-neutral1;
+    background-color: $c-neutral8;
     margin-bottom: rem($gs-baseline);
 
     th,
     td {
         @include fs-data(3);
-        line-height: rem(18px);
-        padding: rem(16px) rem(10px) rem(15px);
+        padding: rem($gs-baseline * 1.3) rem($gs-gutter / 2);
         vertical-align: top;
     }
 
@@ -49,7 +39,7 @@ td {
         td,
         thead td {
             @include fs-textSans(4);
-            padding: rem(14px) rem($gs-baseline) rem(13px);
+            padding: rem($gs-baseline);
         }
     }
 }
@@ -66,25 +56,42 @@ td {
     }
 }
 
-.table-column--sub {
-    color: $c-neutral2;
-}
+.table--offer {
 
-.table-column--main {
-    width: 100%;
-}
+    color: inherit;
+    background-color: $white;
 
-.table-row--highlight td {
-    font-weight: bold;
-}
+    th,
+    td,
+    thead td {
+        @include fs-bodyCopy(2);
+        vertical-align: top;
+        padding: rem($gs-baseline / 2);
 
-.table-row--divider td {
-    border-top: 1px dashed $c-neutral1;
-}
+        @include mq(mobileLandscape) {
+            padding: rem($gs-baseline / 2);
+        }
+    }
 
-.table__headline {
-    @include fs-bodyHeading(2);
-    border-top: 1px dotted $c-neutral5;
-    padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
-}
+    th,
+    thead {
+        font-weight: bold;
+    }
 
+    tbody td {
+        padding-bottom: rem($gs-baseline * 2);
+    }
+
+    td {
+        border-right: 1px solid  $c-neutral7;
+    }
+    td:last-child {
+        border-right: 0 none;
+    }
+
+    th,
+    thead td {
+        color: $white;
+        background-color: $c-neutral2;
+    }
+}

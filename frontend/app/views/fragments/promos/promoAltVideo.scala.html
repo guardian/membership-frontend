@@ -1,0 +1,26 @@
+@(
+    title: String,
+    videoUrl: String,
+    toneClassOpt: Option[String] = None
+)(content: Html)
+
+<div class="promo-alt">
+    <div class="promo-alt__panel @toneClassOpt.mkString(" ")">
+        <div class="promo-alt__header">
+            <h2 class="promo-alt__title h-promo">
+                @fragments.inlineIcon("video", classes=List("icon-inline--scale"))
+                @title
+            </h2>
+        </div>
+        <div class="promo-alt__media">
+            <div class="responsive-video responsive-video--gu">
+                <iframe class="responsive-video__iframe"  src="@videoUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="promo-alt__description">
+        @content
+    </div>
+</div>
+
+
