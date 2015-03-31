@@ -37,6 +37,14 @@ trait Info extends Controller {
         )
       ),
       ResponsiveImageGroup(
+        name=Some("founding-members"),
+        altText=Some("Founding members: join us at the start"),
+        availableImages=ResponsiveImageGenerator(
+          id="bb922fe62efbe24af2df336dd2b621c5799246b4/0_0_1140_683",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
         name=Some("patrons"),
         altText=Some("Become a Patron and support the Guardian's future"),
         availableImages=ResponsiveImageGenerator(
