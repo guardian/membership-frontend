@@ -11,6 +11,8 @@
                     <ns2:Id>2c92c0f847cdc31e0147cf2111ba6173</ns2:Id>
                     <ns2:Version>1</ns2:Version>
                     <ns2:CASSubscriberID__c>12345</ns2:CASSubscriberID__c>
+                    <ns2:ContractAcceptanceDate>2015-10-01T07:10:45.000-08:00</ns2:ContractAcceptanceDate>
+                    <ns2:TermStartDate>2015-04-01T00:00:00</ns2:TermStartDate>
                 </ns1:records>
                 <ns1:records xsi:type="ns2:Subscription"
                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -18,12 +20,16 @@
                     <ns2:Id>2c92c0f847cdc31e0147cf243a166af0</ns2:Id>
                     <ns2:Version>3</ns2:Version>
                     <ns2:CASSubscriberID__c>GA090909</ns2:CASSubscriberID__c>
+                    <ns2:ContractAcceptanceDate>2015-10-01T07:10:45.000-08:00</ns2:ContractAcceptanceDate>
+                    <ns2:TermStartDate>2015-04-01T00:00:00</ns2:TermStartDate>
                 </ns1:records>
                 <ns1:records xsi:type="ns2:Subscription"
                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                              xmlns:ns2="http://object.api.zuora.com/">
                     <ns2:Id>2c92c0f847cdc31e0147cf24396f6ae1</ns2:Id>
                     <ns2:Version>2</ns2:Version>
+                    <ns2:ContractAcceptanceDate>2015-10-01T07:10:45.000-08:00</ns2:ContractAcceptanceDate>
+                    <ns2:TermStartDate>2015-04-01T00:00:00</ns2:TermStartDate>
                 </ns1:records>
                 <ns1:size>3</ns1:size>
             </ns1:result>
