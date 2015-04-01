@@ -1,17 +1,16 @@
+import configuration.Config
+import controllers.Cached
+import filters.{AddEC2InstanceHeader, CheckCacheHeadersFilter, Gzipper}
+import monitoring.SentryLogging
 import play.api.Application
 import play.api.mvc.Results.{InternalServerError, NotFound}
 import play.api.mvc.{RequestHeader, Result, WithFilters}
 import play.filters.csrf._
-
-import configuration.Config
-import controllers.Cached
-import filters.{CheckCacheHeadersFilter, Gzipper}
-import monitoring.SentryLogging
 import services._
 
 import scala.concurrent.Future
 
-object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper) {
+object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper, AddEC2InstanceHeader) {
   override def onStart(app: Application) {
     SentryLogging.init()
 
