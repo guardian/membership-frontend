@@ -11,7 +11,7 @@ case class PageInfo(
 )
 
 object PageInfo {
-  val defaultImage = Config.membershipUrl + Asset.at("images/mem-promo.jpg")
+  val defaultImage = Config.membershipUrl + Asset.at("images/common/mem-promo.jpg")
 
   // url has the domain prepended in templates
   val default = PageInfo(
