@@ -6,7 +6,7 @@ import com.gu.membership.stripe.Stripe
 import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
-import model.{ProductRatePlan, TierPlan}
+import model.{MembershipSummary, ProductRatePlan, TierPlan}
 import org.joda.time.DateTime
 import services.zuora._
 
@@ -162,9 +162,41 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield PaymentSummary(invoiceItems)
   }
 
-  def getPaymentSummaryWithFreeStartingPeriod(subscriptionId: String, paymentDelay: Period): Future[Seq[PreviewInvoiceItem]] = {
-    for (result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionId, paymentDelay)))
-    yield result.invoiceItems
+  def getMembershipSubscriptionSummary(memberId: MemberId, subscriberOfferDelayPeriod: Period): Future[MembershipSummary] = {
+
+    //todo using casId is probably not a good idea - instead check number contract acceptance date or number of invoices
+    def futureFreeStartingPeriodOffer(memberId: MemberId) =
+      for (subscription <- getLatestSubscription(memberId))
+        yield subscription.casId.isDefined
+
+    def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId, subscriberOfferDelayPeriod: Period) = {
+      val subscriptionStatusFuture = getSubscriptionStatus(memberId)
+      for {
+        subscriptionStatus <- subscriptionStatusFuture
+        subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
+        latestSubscription <- getLatestSubscription(memberId)
+        result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionStatus.current, subscriberOfferDelayPeriod))
+      } yield {
+        if(result.invoiceItems.isEmpty) throw SubscriptionServiceError("Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
+        val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
+
+        MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
+          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, initialFreePeriodOffer = true )
+
+      }
+    }
+
+    def getPaymentSummaryForMembershipsNoFreePeriod(memberId: MemberId) = {
+      for {
+        paymentSummary <- getPaymentSummary(memberId)
+
+      } yield MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
+        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+    }
+    for {
+      freeStartingPeriodOffer <- futureFreeStartingPeriodOffer(memberId)
+      summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId, subscriberOfferDelayPeriod) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
+    } yield summary
   }
 
   def getSubscriptionsByCasId(casId: String): Future[Seq[Subscription]] =

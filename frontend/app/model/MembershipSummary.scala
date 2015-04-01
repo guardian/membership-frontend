@@ -3,12 +3,17 @@ package model
 import org.joda.time.DateTime
 
 case class MembershipSummary(startDate: DateTime,
-                             endDateForFirstPayment: DateTime,
+                             firstPaymentEndDate: DateTime,
                              amountPaidToday: Float,
                              planAmount: Float,
-                             nextPaymentPrice: Option[Float],
-                             nextPaymentDate: DateTime) {
+                             nextPaymentPrice: Float,
+                             nextPaymentDate: DateTime,
+                             initialFreePeriodOffer: Boolean) {
 
-  val annual = endDateForFirstPayment.plusDays(1) == startDate.plusYears(1)
+
+  val annual = {
+    if (initialFreePeriodOffer) nextPaymentPrice % planAmount != 0
+    else firstPaymentEndDate.plusDays(1) == startDate.plusYears(1)
+  }
 
 }

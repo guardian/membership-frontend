@@ -1,6 +1,6 @@
 @(
     member: com.gu.membership.salesforce.Member,
-    membershipSummaryOpt: Option[model.MembershipSummary],
+    summary: model.MembershipSummary,
     cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
     eventDetailsOpt: Option[(model.RichEvent.RichEvent, String)],
     contentOpt: Option[model.MembersOnlyContent],
@@ -53,7 +53,6 @@
                         <th role="rowheader">Tier</th>
                         <td id="qa-joiner-summary-tier">@member.tier</td>
                     </tr>
-                    @membershipSummaryOpt.map { summary =>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
                         <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
@@ -71,14 +70,13 @@
                     <tr role="row">
                         <th role="rowheader">Next payment</th>
                         <td id="qa-joiner-summary-next">
-                        @if(summary.nextPaymentPrice.isDefined) {
-                            @summary.nextPaymentPrice.get.pretty (@summary.nextPaymentDate.pretty)
+                        @if(summary.initialFreePeriodOffer) {
+                            @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
                         } else {
                             @summary.nextPaymentDate.pretty
                         }
                         </td>
                     </tr>
-                    }
                     @for(card <- cardOpt) {
 
                     <tr role="row">
@@ -146,6 +144,6 @@
 
     @fragments.analytics.videoCampaignPHD.thankyouPage(
         member.regNumber.fold("free")(regNumber => regNumber),
-        membershipSummaryOpt.fold("free")( summary => "%.2f".format(summary.amountPaidToday))
+        cardOpt.fold("free")( card => "%.2f".format(summary.amountPaidToday))
     )
 }

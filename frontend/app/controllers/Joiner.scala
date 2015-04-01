@@ -12,7 +12,6 @@ import configuration.{Config, CopyConfig}
 import forms.MemberForm._
 import model.RichEvent._
 import model._
-import org.joda.time
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -211,37 +210,6 @@ trait Joiner extends Controller with ActivityTracking {
       Future.sequence(optFuture.toSeq).map(_.headOption)
     }
 
-    def futureFreeStartingPeriodOffer =
-      for (subscription <- request.touchpointBackend.subscriptionService.getLatestSubscription(request.member))
-      yield subscription.casId.isDefined
-
-
-    def getPaymentSummaryForMembershipsWithFreePeriod = {
-      val subscriptionStatusFuture = request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
-
-      for {
-        subscriptionStatus <- subscriptionStatusFuture
-        subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-        latestSubscription <- request.touchpointBackend.subscriptionService.getLatestSubscription(request.member)
-        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummaryWithFreeStartingPeriod(subscriptionStatus.current, subscriberOfferDelayPeriod)
-      } yield {
-        val firstPreviewItem = paymentSummary.sortBy(_.serviceStartDate).headOption
-
-        firstPreviewItem.map { firstPreviewInvoice =>
-          MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
-            subscriptionDetails.planAmount, Some(firstPreviewInvoice.price), firstPreviewInvoice.serviceStartDate)
-        }
-      }
-    }
-
-    def getPaymentSummaryForMembershipsNoFreePeriod = {
-      for {
-        paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
-
-      } yield Some(MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
-        paymentSummary.totalPrice, paymentSummary.current.price, None, paymentSummary.current.nextPaymentDate))
-    }
-
     val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
       contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
     }.getOrElse(Future.successful(None))
@@ -249,13 +217,12 @@ trait Joiner extends Controller with ActivityTracking {
     for {
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
-      freeStartingPeriodOffer <- futureFreeStartingPeriodOffer
-      summary <- if(freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod else getPaymentSummaryForMembershipsNoFreePeriod
+      summary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member, subscriberOfferDelayPeriod)
       contentOpt <- futureContentOpt.recover { case _ => None }
     } yield Ok(views.html.joiner.thankyou(
         request.member,
-        summary, 
-        customerOpt.map(_.card), 
+        summary,
+        customerOpt.map(_.card),
         eventDetailsOpt,
         contentOpt,
         upgrade
