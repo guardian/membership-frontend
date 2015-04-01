@@ -152,7 +152,7 @@ object Faq {
       "cancel-trial"
     ),
     Item("I'm a subscriber and I'm also a member, will I get this offer too?",
-      Html(s"Yes, you may be entitled to receive this offer, please call customer services team on 0330 333 6898 or email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a>"),
+      Html(s"Yes, you may be entitled to receive this offer, please call customer services team on 0330 333 6898 or email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a>"),
       "existing-subscriber-member"
     ),
     Item("How much does membership cost normally?",
@@ -184,7 +184,7 @@ object Faq {
       "privacy"
     ),
     Item("I have a question",
-      Html(s"Please email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "questions"
     )
   )
