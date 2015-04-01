@@ -19,7 +19,7 @@ trait EmailService extends LazyLogging {
     c
   }
 
-  def sendFeedback(feedback: FeedbackForm, userOpt: Option[IdMinimalUser]) = {
+  def sendFeedback(feedback: FeedbackForm, userOpt: Option[IdMinimalUser], uaOpt: Option[String]) = {
     logger.info(s"Sending feedback for ${feedback.name} - Identity $userOpt")
     val to = new Destination().withToAddresses(feedbackAddress)
     val subjectContent = new Content("Membership feedback")
@@ -32,7 +32,8 @@ trait EmailService extends LazyLogging {
         <br />
         Name: ${feedback.name}<br />
         Email address: ${feedback.email}<br />
-        Identity user: ${userOpt.mkString}
+        Identity user: ${userOpt.mkString}<br />
+        User agent: ${uaOpt.mkString}
       """.stripMargin
 
     val message = new Message(subjectContent, new Body().withHtml(new Content(body)))
