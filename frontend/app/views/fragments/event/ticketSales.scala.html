@@ -13,7 +13,7 @@
     Html(s"<time class='qa-event-detail-sales-end' datetime='$endSalesDate'>${endSalesDate.pretty(needToDisplayTimes || endSalesDate.isContemporary())}</time>")
 }
 
-<div class="ticket-sales" itemprops="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+<div class="ticket-sales">
     <span class="ticket-sales__header">@if(ticketing.salesDates.anyoneCanBuyTicket) {Tickets on sale now} else {Ticket release dates}</span>
     @if(ticketing.salesDates.anyoneCanBuyTicket) {
         <button class="ticket-sales__toggle u-button-reset js-toggle"
