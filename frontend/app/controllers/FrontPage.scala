@@ -9,45 +9,52 @@ trait FrontPage extends Controller {
 
     val slideShowImages = Seq(
       ResponsiveImageGroup(
+        altText=Some("RIP Rock and Roll? (Guardian Live event): Emmy the Great"),
+        availableImages=ResponsiveImageGenerator(
+          id="3d2be6485a6b8f5948ba39519ceb0f76007ae8d8/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("A Life in Music - George Clinton (Guardian Live event)"),
+        availableImages=ResponsiveImageGenerator(
+          id="234dff81b39968199f501f4108189efab263a668/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Guardian Live with Russell Brand"),
+        availableImages=ResponsiveImageGenerator(
+          id="ecd5ccb67c093394c51f3db6779b044e3056f50c/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("A Life in Politics - Ken Clarke (Guardian Live event)"),
+        availableImages=ResponsiveImageGenerator(
+          id="192469f1bbd69247b066a202defb23ee166ede4d/0_0_2279_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
         altText=Some("Guardian Live event: Pussy Riot - art, sex and disobedience"),
         availableImages=ResponsiveImageGenerator(
           id="eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
+          sizes=List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
-        altText=Some("Guardian Live with Russell Brand"),
+        altText=Some("A Life in Music - George Clinton (Guardian Live event)"),
         availableImages=ResponsiveImageGenerator(
-          id="da867c363957d748bd04cfd9d4890033203a58c6/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
+          id="eccf14ef0f9f4b672b3a7cc594676aa498827f4a/0_0_2280_1368",
+          sizes=List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
-        altText=Some("A life in music: Jimmy Page"),
+        altText=Some("Behind the Headlines - What's all the fuss about feminism? (Guardian Live event): Bonnie Greer"),
         availableImages=ResponsiveImageGenerator(
-          id="733834b0b9f84e4367cf676919008bfd88007f25/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        altText=Some("Guardian Live with Russell Brand"),
-        availableImages=ResponsiveImageGenerator(
-          id="e736acb945406974844bea77ca49b2c1e450013e/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        altText=Some("Observer Ideas - Stories that inspire: Tinie Tempah"),
-        availableImages=ResponsiveImageGenerator(
-          id="1e687530a52ef14cd9c1eacb1e8757600c382f86/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        altText=Some("Guardian Live event: Vivienne Westwood"),
-        availableImages=ResponsiveImageGenerator(
-          id="85d46476d07fb744327c60a4c5117a7ddc2796d0/0_0_2279_1368",
-          sizes=List(2000, 1000, 500)
+          id="99c490b1a0863b3d30718e9985693a3ddcc4dc75/0_0_2280_1368",
+          sizes=List(1000, 500)
         )
       )
     )
