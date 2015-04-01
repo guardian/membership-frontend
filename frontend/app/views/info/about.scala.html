@@ -12,7 +12,6 @@
                 <div class="text-feature">
                     <p>Guardian Members are changing the idea of what a news organisation does today.</p>
                     <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
-                    <p>Join before the end of March 31st to become a Founding Member and the price you pay will not rise.</p>
                 </div>
                 <div class="action-group">
                     <a class="action" href="@routes.Joiner.tierList">Join today</a>
@@ -61,25 +60,10 @@
         </div>
     }
 
-    @* ===== Founding Members ===== *@
-    @for(img <- pageImages.find(_.name.contains("founding-members"))) {
-        <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Founding members: join us at the start", img=img) {
-                <blockquote class="blockquote blockquote--feature">
-                    If you read the Guardian, join the Guardian. Support fearless, open, independent journalism.
-                    <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
-                </blockquote>
-                <p class="text-feature">
-                    Join before the end of March 31st to become a Founding Member and the price you pay will not rise.</p>
-                <a class="action" href="@routes.Joiner.tierList" id="qa-join">Join today</a>
-            }
-        </div>
-    }
-
     @for(img <- pageImages.find(_.name.contains("midland-goods-shed"))) {
         @* ===== Big ideas ===== *@
-        <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("A home for big ideas"), img=img, toneClass = Some("tone-guardian-live")) {
+        <div class="page-slice l-constrained">
+        @fragments.promos.promoPrimary("A home for big ideas", img=img, toneClass = Some("tone-guardian-live")) {
             <div class="text-feature">
                 <p>In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross to create a new kind of civic space.</p>
                 <p>The building will be a hub for big ideas and stimulating conversations. It will host events,
@@ -100,7 +84,7 @@
     @* ===== Become a Patron ===== *@
     @for(img <- pageImages.find(_.name.contains("patrons"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Become a Patron and support the Guardian's future", img=img, toneClass=Some("tone-trans-brand-dark")) {
+            @fragments.promos.promoSecondary(title=Html("Become a Patron and support the Guardian's future"), img=img, toneClass=Some("tone-trans-brand-dark")) {
                 <blockquote class="blockquote blockquote--feature">
                     The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.
                     <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
