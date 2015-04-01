@@ -1,17 +1,20 @@
 package filters
 
-import com.amazonaws.internal.EC2MetadataClient
+import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.ws.WS
 import play.api.mvc._
 
 import scala.concurrent.Future
 
 object AddEC2InstanceHeader extends Filter {
 
-  val instanceIdF = Future { new EC2MetadataClient().readResource("instance-id") }.recover { case _ => "n/a" }
+  // http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
+  lazy val instanceIdOptF = WS.url("http://169.254.169.254/latest/meta-data/instance-id").get().map(resp => Some(resp.body).filter(_.nonEmpty)).recover { case _ => None }
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = for {
     result <- nextFilter(requestHeader)
-    instanceId <- instanceIdF
-  } yield result.withHeaders("X-EC2-instance-id" -> instanceId)
+    instanceIdOpt <- instanceIdOptF
+  } yield instanceIdOpt.fold(result)(instanceId => result.withHeaders("X-EC2-instance-id" -> instanceId))
+
 }
