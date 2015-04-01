@@ -252,7 +252,7 @@ module.exports = function (grunt) {
 
         karma: {
             options: {
-                reporters: isDev ? ['dots'] : ['progress'],
+                reporters: isDev ? ['dots', 'coverage'] : ['progress'],
                 singleRun: singleRun
             },
 
