@@ -167,9 +167,9 @@ class ZuoraDeserializerTest extends Specification {
 
       subscriptions.size mustEqual 3
 
-      subscriptions(0) mustEqual Subscription("2c92c0f847cdc31e0147cf2111ba6173", 1)
-      subscriptions(1) mustEqual Subscription("2c92c0f847cdc31e0147cf243a166af0", 3)
-      subscriptions(2) mustEqual Subscription("2c92c0f847cdc31e0147cf24396f6ae1", 2)
+      subscriptions(0) mustEqual Subscription("2c92c0f847cdc31e0147cf2111ba6173", 1, Some("12345"), new DateTime("2015-04-01T00:00:00"), new DateTime("2015-10-01T07:10:45.000-08:00"))
+      subscriptions(1) mustEqual Subscription("2c92c0f847cdc31e0147cf243a166af0", 3, Some("GA090909"),  new DateTime("2015-04-01T00:00:00"), new DateTime("2015-10-01T07:10:45.000-08:00"))
+      subscriptions(2) mustEqual Subscription("2c92c0f847cdc31e0147cf24396f6ae1", 2, None,  new DateTime("2015-04-01T00:00:00"), new DateTime("2015-10-01T07:10:45.000-08:00"))
     }
 
     "extract an InvoiceItem" in {
