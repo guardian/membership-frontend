@@ -18,7 +18,19 @@ import scala.concurrent.Future
 
 trait CommonActions {
 
-  val NoCacheAction = resultModifier(NoCache(_))
+  val AddUserInfoToResponse = new ActionBuilder[Request] {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+      block(request).map { result =>
+        (for (user <- AuthenticationService.authenticatedUserFor(request)) yield {
+          result.withHeaders(
+            "X-Gu-Identity-Id" -> user.id,
+            "X-Gu-Membership-Test-User" -> user.isTestUser.toString)
+        }).getOrElse(result)
+      }
+    }
+  }
+
+  val NoCacheAction = resultModifier(NoCache(_)) andThen AddUserInfoToResponse
 
   val CachedAction = resultModifier(Cached(_))
 
