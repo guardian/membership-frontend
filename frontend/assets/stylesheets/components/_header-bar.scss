@@ -32,17 +32,19 @@
     }
     .header-bar__logo {
         float: right;
-        height: rem(44px);
-        background-position: right;
-        background-size: contain;
-        background-repeat: no-repeat;
         margin-bottom: rem($gs-gutter / 2);
 
         @include mq(tablet) {
             position: absolute;
             right: rem($gs-gutter);
             bottom: rem($gs-baseline);
-            height: rem(87px);
             margin-bottom: 0;
+        }
+    }
+    .header-bar__logo__img {
+        height: rem(44px);
+
+        @include mq(tablet) {
+            height: rem(87px);
         }
     }
