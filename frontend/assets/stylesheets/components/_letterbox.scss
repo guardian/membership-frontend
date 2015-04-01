@@ -33,14 +33,15 @@
 
     @include mq(desktop) {
         padding-left: 30%;
-        padding-bottom: rem($gs-gutter * 2);
+        padding-top: rem(gs-height(3));
+        padding-bottom: rem($gs-gutter);
     }
 }
 
 .letterbox__title {
     @include f-headline;
     font-weight: 500;
-    max-width: 65%;
+    max-width: 8em;
 
     /**
      * Scalable font-size.
