@@ -1,17 +1,16 @@
 package services
 
-import scala.util.{Success, Failure, Try}
-
+import com.amazonaws.regions.{Region, Regions}
+import com.typesafe.scalalogging.LazyLogging
+import model.IdMinimalUser
 import com.amazonaws.services.simpleemail._
 import com.amazonaws.services.simpleemail.model._
-import com.amazonaws.regions.{Region, Regions}
-
-import play.api.Logger
-
 import configuration.Config
 import forms.MemberForm.FeedbackForm
 
-trait EmailService {
+import scala.util.{Failure, Success, Try}
+
+trait EmailService extends LazyLogging {
   val feedbackAddress: String
 
   val client = {
@@ -20,7 +19,8 @@ trait EmailService {
     c
   }
 
-  def sendFeedback(feedback: FeedbackForm) = {
+  def sendFeedback(feedback: FeedbackForm, userOpt: Option[IdMinimalUser]) = {
+    logger.info(s"Sending feedback for ${feedback.name} - Identity $userOpt")
     val to = new Destination().withToAddresses(feedbackAddress)
     val subjectContent = new Content("Membership feedback")
 
@@ -31,18 +31,18 @@ trait EmailService {
         Comments: ${feedback.feedback}<br />
         <br />
         Name: ${feedback.name}<br />
-        Email address: ${feedback.email}
+        Email address: ${feedback.email}<br />
+        Identity user: ${userOpt.mkString}
       """.stripMargin
 
-    val bodyContent = new Body().withHtml(new Content(body))
-    val message = new Message(subjectContent, bodyContent)
+    val message = new Message(subjectContent, new Body().withHtml(new Content(body)))
     val email = new SendEmailRequest(feedbackAddress, to, message)
 
     Try {
       client.sendEmail(email)
     } match {
       case Success(details) => //all good
-      case Failure(error) => Logger.error(s"Failed to send feedback, got ${error.getMessage}")
+      case Failure(error) => logger.error(s"Failed to send feedback, got ${error.getMessage}")
     }
   }
 }

@@ -4,7 +4,7 @@ import configuration.CopyConfig
 import forms.MemberForm._
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
 import play.api.mvc.Controller
-import services.EmailService
+import services.{AuthenticationService, EmailService}
 import views.support.Asset
 import scala.concurrent.Future
 
@@ -187,14 +187,19 @@ trait Info extends Controller {
   }
 
   def submitFeedback = NoCacheAction.async { implicit request =>
+
+    val userOpt = AuthenticationService.authenticatedUserFor(request)
+
+    def sendFeedback(formData: FeedbackForm) = {
+      EmailService.sendFeedback(formData, userOpt)
+
+      Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
+    }
+
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
-  private def sendFeedback(formData: FeedbackForm) = {
-    EmailService.sendFeedback(formData)
 
-    Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
-  }
 }
 
 object Info extends Info
