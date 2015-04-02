@@ -18,13 +18,14 @@
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
     <div class="stat-item__second copy" itemprop="location" itemscope itemtype="http://schema.org/Place">
-        @if(event.venue.name) {@event.venue.name}@if(event.venue.address){, }
+        @if(event.venue.name) {<span itemprop="name">@event.venue.name</span>}@if(event.venue.address){, }
         @for(location <- event.venue.address) {
-            @location.city @location.postal_code
+            <span itemprop="address">@location.city @location.postal_code</span>
         }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
             <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink"
+                   itemprop="hasMap"
                    data-metric-trigger="click"
                    data-metric-category="events"
                    data-metric-action="map">Google map</a>

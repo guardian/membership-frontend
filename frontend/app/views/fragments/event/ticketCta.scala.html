@@ -3,7 +3,7 @@
 @import model.RichEvent._
 
 <a class="js-ticket-cta action @extraClasses.mkString(" ")"
-   href="/event/@event.id/buy"
+   href="@routes.Event.buy(event.id)"
    data-metric-trigger="click"
    data-metric-category="events"
    data-metric-action="book-tickets:@event.metadata.identifier.toLowerCase"
