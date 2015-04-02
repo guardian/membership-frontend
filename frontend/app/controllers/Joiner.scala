@@ -7,24 +7,23 @@ import actions._
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
-import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
+import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
-import controllers.Testing.AuthorisedTester
 import forms.MemberForm.{JoinForm, friendJoinForm, paidMemberJoinForm, staffJoinForm}
 import model.RichEvent._
 import model._
+import play.api.data.Form
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services._
-import services.GuardianContentService
+import services.{GuardianContentService, _}
 import services.EventbriteService._
+import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 
 import scala.concurrent.Future
-import tracking.{EventData, EventActivity, MemberData, ActivityTracking}
 
-trait Joiner extends Controller with ActivityTracking {
+trait Joiner extends Controller with ActivityTracking with LazyLogging {
   val JoinReferrer = "join-referrer"
 
   val contentApiService = GuardianContentService
@@ -106,12 +105,12 @@ trait Joiner extends Controller with ActivityTracking {
   }
 
   def joinFriend() = AuthenticatedNonMemberAction.async { implicit request =>
-    friendJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+    friendJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
       makeMember(Tier.Friend, Redirect(routes.Joiner.thankyou(Tier.Friend))) )
   }
 
   def joinStaff() = AuthenticatedNonMemberAction.async { implicit request =>
-    staffJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+    staffJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
         makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
@@ -132,9 +131,17 @@ trait Joiner extends Controller with ActivityTracking {
     }
   }
 
+  def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
+
   def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(_ => Future.successful(BadRequest),
+    paidMemberJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
+  }
+
+  def redirectToUnsupportedBrowserInfo(form: Form[_])(implicit req: RequestHeader): Future[Result] = {
+    logger.error(s"Server-side form errors on joining indicates a Javascript problem: ${req.headers.get(USER_AGENT)}")
+    logger.debug(s"Server-side form errors : ${form.errors}")
+    Future.successful(Redirect(routes.Joiner.unsupportedBrowser()))
   }
 
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
