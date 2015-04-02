@@ -68,7 +68,7 @@
 
                 <div class="credit-card-container">
                     <i class="credit-card--input-visualisation sprite-card sprite-card--unknown js-credit-card-image"></i>
-                    <input type="tel"
+                    <input type="text" pattern="[0-9]*"
                            size="20"
                            data-stripe="number"
                            class="input-text credit-card-input js-credit-card-number"
@@ -85,7 +85,7 @@
             <div class="form-field">
 
                 <label class="label" for="cc-cvc"><span>Security code</span></label>
-                <input type="tel"
+                <input type="text" pattern="[0-9]*"
                        size="4"
                        data-stripe="cvc"
                        class="input-text input-text--small js-credit-card-cvc"
