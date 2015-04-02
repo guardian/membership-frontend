@@ -181,9 +181,10 @@ trait Info extends Controller {
   def submitFeedback = NoCacheAction.async { implicit request =>
 
     val userOpt = AuthenticationService.authenticatedUserFor(request)
-
+    val uaOpt = request.headers.get(USER_AGENT)
+    
     def sendFeedback(formData: FeedbackForm) = {
-      EmailService.sendFeedback(formData, userOpt)
+      EmailService.sendFeedback(formData, userOpt, uaOpt)
 
       Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
     }
