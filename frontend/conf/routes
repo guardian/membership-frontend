@@ -32,6 +32,8 @@ GET            /join/:tier/thankyou               controllers.Joiner.thankyou(ti
 POST           /join/staff/update-email           controllers.Joiner.updateEmailStaff
 GET            /choose-tier                       controllers.Joiner.tierChooser
 
+GET            /join/unsupported-browser          controllers.Joiner.unsupportedBrowser
+
 # Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
