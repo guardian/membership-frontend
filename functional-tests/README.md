@@ -4,8 +4,19 @@
 
 1. You will need to install [ChromeDriver](https://code.google.com/p/selenium/wiki/ChromeDriver) to run the tests. If you are a Mac and using homebrew you can run `brew install chromedriver`.
 2. In `~/.gu/identity-api.properties` you will need to disable rate limiting with `rate-limiting-switch=false`
-3. You will need to create a config file in `funcitonal-tests/local.conf` with the the template below.
+3. You will need to create a config file in `functional-tests/local.conf` with the the template below.
 4. In `functional-tests` you can then run `sbt test` to start the tests
+
+## Running Tagged Tests
+
+To run a tagged set of tests, e.g., only tests related to event detail pages, you need to run the following commands:
+
+1. `sbt` to enter SBT console
+2. `test-only -- -n TAG_NAME` where `TAG_NAME` is the tag you want to run e.g., `EventListTest`
+
+### Available tags
+
+The full list of available tags can be found in [Tags.scala](src/main/scala/com.gu.membership/tags/Tags.scala)
 
 ### local.conf
 
