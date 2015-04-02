@@ -28,13 +28,7 @@ body:after {
 html {
     overflow-y: scroll;
     font-family: $f-serif-text;
-
-    // Set baseline font size to 10px
-    // This is used as a baseline for rem (root ems) values
-    // Calc needed for IE11 to do the math properly
-    // See http://bit.ly/1g4X0bX — thanks @7studio and @dawitti
-    font-size: -webkit-calc(1em * .625);
-    font-size: calc(1em * .625);
+    font-size: 10px;
 }
 
 body {
