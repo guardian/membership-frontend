@@ -6,16 +6,17 @@
 @import views.support.Prices._
 @import configuration.{Config, Videos}
 
-@main("Subscribers") {
+@main("Exclusive offer for subscribers") {
     @defining(Benefits.details(Tier.Partner)) { benefits =>
         <main role="main">
 
             @for(img <- pageImages.find(_.name.contains("intro"))) {
                 <div class="page-slice page-slice--slim l-constrained">
-                    @fragments.promos.letterbox(img=img, titleOpt=Some("6 months free membership"))
+                    @fragments.promos.letterbox(img=img, titleOpt=Some("Exclusive offer for subscribers"))
                 </div>
             }
 
+            @* ===== Intro ===== *@
             <section class="page-slice l-inset l-constrained">
                 <div class="page-section-spread">
                     <div class="page-section-spread__content">
@@ -28,28 +29,19 @@
                 </div>
             </section>
 
+            @* ===== Pay nothing for 6 months ===== *@
             <section class="page-slice tone-tint l-inset l-constrained">
                 <div class="page-section-spread">
                     <div class="page-section-spread__lead-in">
-                        <div class="roundel-group roundel-group--snap u-cf">
-                            <div class="roundel-group__title">
-                                <h2 class="h-promo">Exclusive offer for subscribers</h2>
-                            </div>
-                            <div class="roundel-group__roundel">
-                                <span class="roundel">
-                                    <span class="roundel__title">
-                                        Offer ends 31st May 2015
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
+                        <h2 class="h-promo">Pay nothing for 6 months</h2>
                     </div>
                     <div class="page-section-spread__content">
-                        @fragments.pricing.offerTable(Tier.Partner)
-                        <div class="copy">
+                        <div class="copy text-feature">
                             <ul>
-                                <li>You can cancel online at any time in the first 6 months.</li>
-                                <li>There is no obligation to continue Membership after the free 6 month period.</li>
+                                <li>50% saving on standard monthly or annual payment</li>
+                                <li>You can cancel online at any time in the first 6 months</li>
+                                <li>There is no obligation to continue Membership after the free 6 month period</li>
+                                <li>Offer ends 31st May 2015</li>
                             </ul>
                         </div>
                         <a class="action" href="@routes.Joiner.enterDetails(Tier.Partner)">Join today for free</a>
@@ -113,7 +105,7 @@
                 </div>
             </section>
 
-
+            @* ===== Questions ===== *@
             <section class="page-slice l-inset l-constrained">
                 <div class="page-section-spread">
                     <div class="page-section-spread__lead-in">

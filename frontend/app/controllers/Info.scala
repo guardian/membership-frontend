@@ -2,10 +2,9 @@ package controllers
 
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup, FlashMessage, PageInfo}
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService}
-import views.support.Asset
 import scala.concurrent.Future
 
 trait Info extends Controller {
@@ -160,17 +159,15 @@ trait Info extends Controller {
         altText=Some("Guardian Live Audience"),
         availableImages=ResponsiveImageGenerator(
           id="38dafd8e470b0d7b3399034f0ccbcce63a0dff25/0_0_1140_684",
-          sizes=List(1000,500)
+          sizes=List(1000, 500)
         )
       ),
       ResponsiveImageGroup(
         name=Some("guardian-live"),
         altText=Some("Guardian Live"),
-        availableImages=Seq(
-          ResponsiveImage(
-            path=Asset.at("images/tmp/guardian_live800.jpg"),
-            width=800
-          )
+        availableImages=ResponsiveImageGenerator(
+          id="9fa0dfc49eb89ec70efe163755564bf0f632fabf/0_0_2279_1368",
+          sizes=List(1000, 500)
         )
       )
     )
@@ -182,7 +179,7 @@ trait Info extends Controller {
 
     val userOpt = AuthenticationService.authenticatedUserFor(request)
     val uaOpt = request.headers.get(USER_AGENT)
-    
+
     def sendFeedback(formData: FeedbackForm) = {
       EmailService.sendFeedback(formData, userOpt, uaOpt)
 
