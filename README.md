@@ -112,24 +112,32 @@ project identity
 idrun
 ```
 
-## To run frontend tests
+## To cliend-side unit tests
+
+**Note these commands should be run from inside the `frontend/` directory**
 
 ```
-karma start
+grunt karma --dev
 ```
+
+### Test coverage
+
+Run with `--dev` flag to generate test coverage. Coverage report can be found in `frontend/test/js/coverage/`.
 
 # Grunt Tasks
+
+**Note these commands should be run from inside the `frontend/` directory**
 
 ## Watch and compile front-end files
 
 ```
-grunt watch
+grunt watch --dev
 ```
 
 ## Compile front-end files
 
 ```
-grunt compile
+grunt compile --dev
 ```
 
 # Client-side Principles
@@ -207,7 +215,6 @@ Show any new dependencies for the project
 Upgrade a project's package.json
 
 `$ npm-check-updates -u`
-
 
 ## Troubleshooting
 
