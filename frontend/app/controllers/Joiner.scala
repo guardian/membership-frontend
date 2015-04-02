@@ -4,6 +4,7 @@ import actions.Functions._
 import actions._
 import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
+import com.gu.cas.CAS.CASSuccess
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -18,6 +19,7 @@ import play.api.mvc._
 import services._
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
+import configuration.Email
 
 import scala.concurrent.Future
 
@@ -145,13 +147,13 @@ trait Joiner extends Controller with ActivityTracking {
         case paidMemberJoinForm: PaidMemberJoinForm => {
           paidMemberJoinForm.casId map { casId =>
             for {
-              validSubscriber <- casService.isValidSubscriber(casId, formData.deliveryAddress.postCode)
+              casResult <- casService.check(casId, Some(formData.deliveryAddress.postCode), Some(formData.name.last))
               casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
             } yield {
-              if(validSubscriber && casIdNotUsed.isEmpty) {
-                Right(Some(subscriberOfferDelayPeriod))
+              casResult match {
+                case success: CASSuccess if new DateTime(success.expiryDate).isAfterNow && casIdNotUsed.isEmpty => Right(Some(subscriberOfferDelayPeriod))
+                case _ => Left(s"Subscriber details invalid. Please contact ${Email.membershipSupport} for further assistance.")
               }
-              else Left("Subscription ID invalid messaging")
             }
           }
         }.getOrElse(Future.successful(Right(None)))

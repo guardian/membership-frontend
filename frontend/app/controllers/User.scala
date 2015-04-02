@@ -1,9 +1,10 @@
 package controllers
 
+import com.gu.cas.CAS.{CASResult, CASSuccess, CASError}
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import configuration.Email
 import model.PaidTiers
-import org.joda.time.Instant
+import org.joda.time.{DateTime, Instant}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -66,19 +67,24 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
-    def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
+  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: Option[String]) = AjaxAuthenticatedAction.async { implicit request =>
+     def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
       Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
     }
 
-    for {
-      validSubscriber <- casService.isValidSubscriber(id, postcode)
+     for {
+      casResult <- casService.check(id, postcode, lastName)
       casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
     }
     yield {
-      if(!validSubscriber) Ok(json(id, false, Some(s"Subscriber details invalid. Please contact ${Email.membershipSupport} for further assistance.")))
-      else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Subscriber account has been used on the Membership offer. Please contact ${Email.membershipSupport} for further assistance.")))
-      else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
+      casResult match {
+        case success: CASSuccess => {
+          if (new DateTime(success.expiryDate).isBeforeNow()) Ok(json(id, false, Some("Subscription has expired.")))
+          else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Subscriber account has been used on the Membership offer. Please contact ${Email.membershipSupport} for further assistance.")))
+          else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
+        }
+        case _ => Ok(json(id, false, Some(s"Subscriber details invalid. Please contact ${Email.membershipSupport} for further assistance.")))
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
     var SUBSCRIBER_ID_INPUT_ELEM = document.querySelector('.js-subscriber-id-input');
     var SUBSCRIBER_ID_SUBMIT_ELEM = document.querySelector('.js-subscriber-id-submit');
     var POSTCODE_ELEM = document.querySelector('.js-postcode');
+    var LAST_NAME_ELEM = document.querySelector('.js-name-last');
     var SUBMIT_INPUT_ELEM = document.querySelector('.js-submit-input');
     var HIDDEN_SUBSCRIBER_INPUT_ELEM = document.querySelector('.js-hidden-subscriber-input');
 
@@ -16,10 +17,11 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                 event.preventDefault();
 
                 var subscriberId = SUBSCRIBER_ID_INPUT_ELEM.value,
-                    postcode = POSTCODE_ELEM.value;
+                    postcode = POSTCODE_ELEM.value,
+                    lastName = LAST_NAME_ELEM.value;
 
                 ajax({
-                    url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo lastname
+                    url: '/user/check-subscriber?id='+ subscriberId + buildQueryString(postcode, lastName)
                 }).then(function(response) {
                     if(response.valid) {
                         handleSuccess(response);
@@ -29,6 +31,17 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                 }).fail(handleError);
             });
         }
+    }
+
+    function buildQueryString(postcode, lastName) {
+        var identifierQueryString = '';
+        if(postcode) {
+            identifierQueryString += '&postcode=' + postcode;
+        }
+        if(lastName) {
+            identifierQueryString += '&lastName=' + lastName;
+        }
+        return identifierQueryString;
     }
 
     function handleSuccess(response) {

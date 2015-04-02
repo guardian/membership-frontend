@@ -99,7 +99,7 @@ GET            /assets/*assetFile                 controllers.CachedAssets.at(pa
 
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
-GET            /user/subscriber/details           controllers.User.subscriberDetails(id: String, postcode: String)
+GET            /user/check-subscriber             controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: Option[String])
 
 # Vanity URLS
 GET            /founder                           controllers.VanityUrl.redirect
