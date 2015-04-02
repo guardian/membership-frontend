@@ -1,8 +1,8 @@
 package com.gu.membership.pages
 
-import org.openqa.selenium.interactions.Actions
+import com.gu.automation.support.Config
 import org.openqa.selenium.support.ui.{ExpectedConditions, WebDriverWait}
-import org.openqa.selenium.{By, JavascriptExecutor, WebDriver}
+import org.openqa.selenium.{By, WebDriver}
 
 /**
  * Created by jao on 16/06/2014.
@@ -49,14 +49,11 @@ class RegisterPage(driver: WebDriver) extends BasePage(driver) {
   }
 
   def clickSubmit: CheckEmailPage = {
-    try {
-      closeBetaButton.click()
-      new Actions(driver).moveToElement(submitButton).perform
-      submitButton.click()
-    } catch {
-      case _ : Throwable => ; driver.asInstanceOf[JavascriptExecutor].executeScript("document.forms[0].submit()")
+    submitButton.click()
+    if (Config().getUserValue("browser").equals("phantomjs")) {
+      // phantomjs breaks if this wait is not present, but other browsers don't need it
+      new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".submit-input")))
     }
-    new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".submit-input")))
     new CheckEmailPage(driver)
   }
 }
