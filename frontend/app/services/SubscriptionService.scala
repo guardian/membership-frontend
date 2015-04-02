@@ -164,10 +164,9 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
   def getMembershipSubscriptionSummary(memberId: MemberId, subscriberOfferDelayPeriod: Period): Future[MembershipSummary] = {
 
-    //todo using casId is probably not a good idea - instead check number contract acceptance date or number of invoices
     def futureFreeStartingPeriodOffer(memberId: MemberId) =
       for (subscription <- getLatestSubscription(memberId))
-        yield subscription.casId.isDefined
+        yield subscription.contractAcceptanceDate.isAfterNow
 
     def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId, subscriberOfferDelayPeriod: Period) = {
       val subscriptionStatusFuture = getSubscriptionStatus(memberId)
