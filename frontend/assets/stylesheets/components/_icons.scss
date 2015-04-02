@@ -78,6 +78,15 @@
    height: 36px;
 }
 
+.icon-inline--scale {
+    width: .75em;
+    height: .75em;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+    margin-right: rem($gs-baseline / 4);
+}
+
 .icon-inline--top {
     vertical-align: top;
 }
@@ -138,4 +147,9 @@
 .icon-holder--neutral {
     color: $c-neutral1;
     border-color: $c-neutral1;
+}
+
+.icon-holder--dark {
+    color: $mem-brandBlueDark;
+    border-color: $mem-brandBlueDark;
 }

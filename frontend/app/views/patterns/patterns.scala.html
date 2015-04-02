@@ -158,7 +158,6 @@
             @fragments.actionIcon("plus", leftIcon=true)
             <span class="action__label js-toggle-label">Show more</span>
         </button></p>
-        <p><a class="action-proceed" href="#">Proceed</a></p>
         <p><button class="action action--booking">Booking Action</button></p>
         <div class="l-inset tone-guardian-live">
             <button class="action action--external u-no-margin">External Action</button>
@@ -262,15 +261,17 @@
 
     @pattern("Header Bar - Guardian Live", "Header bar with guardian live tone applied") {
         @fragments.event.headerBar(
-            "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            "guardian-live"
+            title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+            toneClassOpt=Some("tone-trans-guardian-live"),
+            logoOpt=Some("images/logos/guardian-live.svg")
         )
     }
 
     @pattern("Header Bar - Masterclasses", "Header bar with masterclasses tone applied") {
         @fragments.event.headerBar(
-            "Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-            "masterclasses"
+            title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
+            toneClassOpt=Some("tone-trans-masterclasses"),
+            logoOpt=Some("images/logos/guardian-masterclasses.svg")
         )
     }
 
@@ -307,14 +308,6 @@
                 <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
             }
         </div>
-    }
-
-    @pattern("Promo - Image", "Image with a letter box crop and call out") {
-        @fragments.promos.letterbox(
-            "images/offer/subscriptions/audience-1140.jpg",
-            "Guardian Live Audience",
-            Some("Call out text inserted here"),
-            Seq("tone-trans-brand"))
     }
 
     @pattern("Offer - Option", "Image with a letter box crop and call out") {
@@ -367,7 +360,7 @@
         @fragments.event.itemSnapshot(eventPortfolio.orderedEvents.head)
     }
 
-    @pattern("Event – Stats", "Key stats for an event (location and time), used in Event Snapshot.") {
+    @pattern("Event – Stats", "Key stats for an event") {
         @fragments.event.stats(eventPortfolio.orderedEvents.head)
     }
 

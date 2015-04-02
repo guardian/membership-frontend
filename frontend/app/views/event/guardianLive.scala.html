@@ -3,8 +3,9 @@
 @main("Events", pageInfo=pageInfo) {
     <main role="main" class="l-constrained">
         @fragments.event.headerBar(
-            "Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            "guardian-live"
+            title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+            toneClassOpt=Some("tone-trans-guardian-live"),
+            logoOpt=Some("images/logos/guardian-live.svg")
         )
 
         @views.html.event.list(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)

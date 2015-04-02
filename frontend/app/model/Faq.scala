@@ -1,6 +1,6 @@
 package model
 
-import configuration.Config
+import configuration.{Config, Email}
 import play.twirl.api.Html
 
 object Faq {
@@ -27,7 +27,7 @@ object Faq {
       Html("Your Guardian Staff Membership will last for a long as you are a permanent member of staff")
     ),
     Item("I've got an additional question that's not listed here",
-      Html(s"Please email <a href='mailto:${Config.membershipSupportStaffEmail}'>${Config.membershipSupportStaffEmail}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
+      Html(s"Please email <a href='mailto:${Email.staffMembership}'>${Email.staffMembership}</a> with your question, use Guardian Staff Partners as the Subject. We will do our best to get back to you within 24 hours.")
     )
   )
 
@@ -113,7 +113,7 @@ object Faq {
       "wheelchair-access-for-venue"
     ),
     Item("I've got a question",
-      Html(s"Please email <a href='mailto:${Config.membershipSupport}'>${Config.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "have-a-question"
     ),
     Item("What are Guardian Masterclasses?",
@@ -143,6 +143,49 @@ object Faq {
     Item("Where can I get more information on Guardian Masterclasses?",
       Html("More frequently asked questions are available <a href='http://www.theguardian.com/guardian-masterclasses/faqs'>here</a>"),
       "masterclasses-information"
+    )
+  )
+
+  val subscribers = List(
+    Item("Can I cancel membership during my trial?",
+      Html("Yes, There is no obligation to continue to a paid Membership after your free 6 months and you can cancel at any time during the trial period."),
+      "cancel-trial"
+    ),
+    Item("I'm a subscriber and I'm also a member, will I get this offer too?",
+      Html(s"Yes, you may be entitled to receive this offer, please call customer services team on 0330 333 6898 or email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a>"),
+      "existing-subscriber-member"
+    ),
+    Item("How much does membership cost normally?",
+      Html("The Friend tier of Guardian Membership is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free when compared to the monthly price."),
+      "normal-cost"
+    ),
+    Item("I don’t have an email address, can I still join?",
+      Html("No, you need an email address in order to join Membership. Online registration allows you to access benefits, book tickets and receive regular Membership updates."),
+      "no-email"
+    ),
+    Item("What if my subscription ends during my free Membership trial? ",
+      Html("Your Partner Membership will be unaffected by any changes made to your current subscription."),
+      "subscription-ends"
+    ),
+    Item("Can I join Membership over the phone?",
+      Html("No, In order to receive the benefits of Membership you need to complete online registration. However, our support team are available to talk you through the steps. Please c​all 0330 333 6898 f​rom 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      "phone-joining"
+    ),
+    Item("I don’t live in London - can I still be a member?",
+      Html("Yes, Guardian Membership is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
+      "outside-london"
+    ),
+    Item("I don’t live in the UK - can I still be a member?",
+      Html("Yes, Guardian Membership is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
+      "outside-uk"
+    ),
+    Item("How do I know you are protecting my personal information?",
+      Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our <a href='http://www.theguardian.com/help/privacy-policy'>privacy policy</a>.​"),
+      "privacy"
+    ),
+    Item("I have a question",
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      "questions"
     )
   )
 

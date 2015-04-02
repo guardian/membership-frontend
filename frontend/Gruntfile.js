@@ -252,7 +252,7 @@ module.exports = function (grunt) {
 
         karma: {
             options: {
-                reporters: isDev ? ['dots'] : ['progress'],
+                reporters: isDev ? ['dots', 'coverage'] : ['progress'],
                 singleRun: singleRun
             },
 
@@ -317,9 +317,6 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         shell: {
-            svgencode: {
-                command: 'find <%= dirs.assets.images %>/svgs -name \\*.svg | python svgencode.py icon > <%= dirs.assets.stylesheets %>/icons.scss'
-            },
             /**
              * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
              */
@@ -405,7 +402,6 @@ module.exports = function (grunt) {
             'svgSprite',
             'copy:images',
             'imagemin',
-            'shell:svgencode',
             'sass:compile',
             'postcss'
         ]);

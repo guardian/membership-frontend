@@ -1,0 +1,130 @@
+@(pageImages: Seq[model.ResponsiveImageGroup])
+
+@import model.Faq
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
+@import views.support.Prices._
+@import configuration.{Config, Videos}
+
+@main("Subscribers") {
+    @defining(Benefits.details(Tier.Partner)) { benefits =>
+        <main role="main">
+
+            @for(img <- pageImages.find(_.name.contains("intro"))) {
+                <div class="page-slice page-slice--slim l-constrained">
+                    @fragments.promos.letterbox(img=img, titleOpt=Some("6 months free membership"))
+                </div>
+            }
+
+            <section class="page-slice l-inset l-constrained">
+                <div class="page-section-spread">
+                    <div class="page-section-spread__content">
+                        <p class="text-feature">
+                            As a valued subscriber we’d like to invite you to become a
+                            Partner of the Guardian and enjoy your initial 6 months for free.
+                        </p>
+                        <a class="action" href="#whats-included">What’s included</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-slice tone-tint l-inset l-constrained">
+                <div class="page-section-spread">
+                    <div class="page-section-spread__lead-in">
+                        <div class="roundel-group roundel-group--snap u-cf">
+                            <div class="roundel-group__title">
+                                <h2 class="h-promo">Exclusive offer for subscribers</h2>
+                            </div>
+                            <div class="roundel-group__roundel">
+                                <span class="roundel">
+                                    <span class="roundel__title">
+                                        Offer ends 31st May 2015
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-section-spread__content">
+                        @fragments.pricing.offerTable(Tier.Partner)
+                        <div class="copy">
+                            <ul>
+                                <li>You can cancel online at any time in the first 6 months.</li>
+                                <li>There is no obligation to continue Membership after the free 6 month period.</li>
+                            </ul>
+                        </div>
+                        <a class="action" href="@routes.Joiner.enterDetails(Tier.Partner)">Join today for free</a>
+                    </div>
+                </div>
+            </section>
+
+            @* ===== Become a Member ===== *@
+            @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
+                <div class="page-slice page-slice--slim l-constrained">
+                    @fragments.promos.promoAltVideo(
+                        title="“If you read the Guardian, join the Guardian”",
+                        videoUrl=Videos.whatIsMembership,
+                        toneClassOpt=Some("tone-brand")
+                    ) {
+                        <p class="text-feature">
+                            Guardian Members are changing the idea of what a news organisation does today,
+                            playing a vital role in the influential community of readers, contributors
+                            and journalists that is the Guardian.
+                        </p>
+                    }
+                </div>
+            }
+
+            @* ===== Guardian Live ===== *@
+            @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
+                <div class="page-slice page-slice--slim l-constrained">
+                    @fragments.promos.promoAlt(
+                        title="Experience the Guardian brought to life",
+                        img=img,
+                        toneClassOpt=Some("tone-guardian-live")
+                    ) {
+                        <p class="text-feature">
+                            Get even closer to the Guardian’s award-winning journalism through
+                            events, meet-ups and courses. We introduce you to some of the world’s
+                            most influential thinkers. Not only our speakers, but the community of
+                            members around you.
+                        </p>
+                    }
+                </div>
+            }
+
+            @* ===== What's Included ===== *@
+            <section class="page-slice tone-tint l-inset l-constrained" id="whats-included">
+                <div class="page-section-spread">
+                    <div class="page-section-spread__lead-in">
+                        <h2 class="h-promo">What's included</h2>
+                    </div>
+                    <div class="page-section-spread__content">
+                        <ul class="grid grid--3up">
+                        @for(benefit <- benefits.list){
+                            <li class="grid__item">
+                                <div class="u-divider-dotted">@fragments.tier.benefitItem(benefit)</div>
+                            </li>
+                        }
+                        </ul>
+
+                        <p>Join the Guardian. Support open, independent journalism and experience it brought to life.</p>
+                        <a class="action" href="@routes.Joiner.enterDetails(Tier.Partner)">Join today for free</a>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="page-slice l-inset l-constrained">
+                <div class="page-section-spread">
+                    <div class="page-section-spread__lead-in">
+                        <h2 class="h-promo">Questions</h2>
+                    </div>
+                    <div class="page-section-spread__content">
+                        @fragments.faq.answers(Faq.subscribers)
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    }
+}

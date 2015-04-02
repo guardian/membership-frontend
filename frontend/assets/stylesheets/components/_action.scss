@@ -2,6 +2,9 @@
    Actions
    ========================================================================== */
 
+/* Action Group
+   ========================================================================== */
+
 /**
  * Used to group a colleciton of icons,
  * adds appropriate spacing between actions.
@@ -14,28 +17,27 @@
     margin-bottom: rem($gs-gutter / 2);
 }
 
-%action {
-    @include fs-textSans(4);
-    font-weight: bold;
-    text-decoration: none;
-    -moz-osx-font-smoothing: antialiased;
-    -webkit-font-smoothing: antialiased;
-    display: inline-block;
-    cursor: pointer;
-    border: 0;
-    text-align: left;
-    padding: rem(8px) rem($gs-gutter);
-    @include border-radius(50%);
-    vertical-align: bottom;
-    outline: none;
-}
+/* Action
+   ========================================================================== */
 
 .action {
-    @extend %action;
+
+    @include font-smoothing();
+    @include fs-textSans(4);
+
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+    display: inline-block;
+    vertical-align: bottom;
+    outline: none;
+
     color: $white;
     background-color: $c-button;
-    text-decoration: none;
+    padding: rem(8px) rem($gs-gutter);
     border: 1px solid $c-button;
+    @include border-radius(50%);
 
     &:focus,
     &:active,
@@ -46,9 +48,19 @@
         text-decoration: none;
     }
 
+    /**
+     * TODO: Temporary inlining to help with removal of old icon sprite
+     * This should move to being an inline SVG. Requires a template refactor to get there.
+     */
     &:after {
-        @extend .icon-arrow-right-white;
         content: '';
+
+        display: inline-block;
+        background-repeat: no-repeat;
+        width: 20px;
+        height: 18px;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDIwIDE3Ljg5NSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAgMTcuODk1Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjAgOS4zNTJsLTkuMDg0IDguNTQzLS44Ni0uODEgNi41NDItNy4zMWgtMTYuNTk4di0xLjY1NWgxNi41OThsLTYuNTQyLTcuMzEuODYtLjgxIDkuMDg0IDguNTA4di44NDR6Ii8+PC9zdmc+);
+
         float: right;
         margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
@@ -69,23 +81,6 @@
 
 }
 
-// TODO: Specificy issues
-// this variant moves the arrow to the other side
-// and hides the one on the right
-// Only used on change tier / downgrade
-.action.action--arrow-left {
-    &:before {
-        @extend .icon-arrow-left-white;
-        content: '';
-        float: left;
-        margin: rem(2px) rem(18px) 0 0;
-    }
-    &:after {
-        display: none;
-    }
-}
-
-
 /* Action Modifiers
    ========================================================================== */
 
@@ -93,7 +88,6 @@
  * Secondary modifier
  */
 .action--secondary {
-   @extend %action;
 
    color: $c-button;
    background-color: transparent;
@@ -213,28 +207,4 @@
     color: $white;
     background-color: $black;
     border-color: $black;
-}
-
-
-/* Actions - Proceed
-   ========================================================================== */
-
-/**
- * Circular button on event listings
- * TODO: Replace w/ miniminal-button and icon-holder
- */
-.action-proceed {
-    @include image-replacement();
-    width: rem(36px);
-    height: rem(36px);
-    padding: 0 rem(8px) 0 0;
-    background-color: transparent;
-    @extend .icon-arrow-right-blue;
-    background-position: center center;
-    @include border-radius(50px);
-    border: 1px solid $c-button;
-
-    &:focus {
-        outline: 0;
-    }
 }

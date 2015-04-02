@@ -20,9 +20,13 @@ define(function() {
         LOADER_ELEM.textContent = msg;
     };
 
-    var disableSubmitButton = function (isDisabled) {
+    var disableSubmitButton = function (shouldDisable) {
         var submitEl = document.querySelector(SUBMIT_SELECTOR);
-        submitEl.setAttribute('disabled', !!isDisabled);
+        if(shouldDisable) {
+            submitEl.setAttribute('disabled', true);
+        } else {
+            submitEl.removeAttribute('disabled');
+        }
     };
 
     return {

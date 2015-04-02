@@ -18,7 +18,11 @@
             }
             <div class="event-item__footer">
                 @fragments.pricing.priceInfoEvent(event)
-                <span class="action-proceed event-item__action"></span>
+                <span class="event-item__action">
+                    <span class="icon-holder icon-holder--large icon-holder--dark">
+                        @fragments.inlineIcon("arrow-right")
+                    </span>
+                </span>
             </div>
         </div>
     </div>

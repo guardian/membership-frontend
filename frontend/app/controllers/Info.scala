@@ -2,9 +2,10 @@ package controllers
 
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, FlashMessage, PageInfo}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
 import play.api.mvc.Controller
-import services.EmailService
+import services.{AuthenticationService, EmailService}
+import views.support.Asset
 import scala.concurrent.Future
 
 trait Info extends Controller {
@@ -33,14 +34,6 @@ trait Info extends Controller {
         altText=Some("Guardian Live: Experience the Guardian brought to life"),
         availableImages=ResponsiveImageGenerator(
           id="76ef58a05920591099012edb80e7415379392a4c/0_0_1140_684",
-          sizes=List(1000,500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("founding-members"),
-        altText=Some("Founding members: join us at the start"),
-        availableImages=ResponsiveImageGenerator(
-          id="bb922fe62efbe24af2df336dd2b621c5799246b4/0_0_1140_683",
           sizes=List(1000,500)
         )
       ),
@@ -159,15 +152,47 @@ trait Info extends Controller {
     Ok(views.html.info.patron(pageInfo, pageImages))
   }
 
+  def subscriberOffer = GoogleAuthenticatedStaffAction { implicit request =>
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("intro"),
+        altText=Some("Guardian Live Audience"),
+        availableImages=ResponsiveImageGenerator(
+          id="38dafd8e470b0d7b3399034f0ccbcce63a0dff25/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("guardian-live"),
+        altText=Some("Guardian Live"),
+        availableImages=Seq(
+          ResponsiveImage(
+            path=Asset.at("images/tmp/guardian_live800.jpg"),
+            width=800
+          )
+        )
+      )
+    )
+
+    Ok(views.html.info.subscriberOffer(pageImages))
+  }
+
   def submitFeedback = NoCacheAction.async { implicit request =>
+
+    val userOpt = AuthenticationService.authenticatedUserFor(request)
+    val uaOpt = request.headers.get(USER_AGENT)
+    
+    def sendFeedback(formData: FeedbackForm) = {
+      EmailService.sendFeedback(formData, userOpt, uaOpt)
+
+      Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
+    }
+
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
-  private def sendFeedback(formData: FeedbackForm) = {
-    EmailService.sendFeedback(formData)
 
-    Future.successful(Redirect(routes.Info.feedback()).flashing("msg" -> "Thank you for contacting us"))
-  }
 }
 
 object Info extends Info
