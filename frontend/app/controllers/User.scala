@@ -1,6 +1,7 @@
 package controllers
 
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
+import configuration.Email
 import model.PaidTiers
 import org.joda.time.Instant
 import org.joda.time.format.ISODateTimeFormat
@@ -66,13 +67,18 @@ trait User extends Controller {
   )
 
   def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
+    def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
+      Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
+    }
+
     for {
       validSubscriber <- casService.isValidSubscriber(id, postcode)
       casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
     }
     yield {
-      if(validSubscriber && casIdNotUsed.isEmpty) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
-      else Ok(Json.obj("subscriber-id" -> id, "valid" -> false))
+      if(!validSubscriber) Ok(json(id, false, Some(s"Subscriber details invalid. Please contact ${Email.membershipSupport} for further assistance.")))
+      else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Subscriber account has been used on the Membership offer. Please contact ${Email.membershipSupport} for further assistance.")))
+      else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
     }
   }
 }

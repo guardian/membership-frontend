@@ -12,6 +12,7 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
     function init() {
         if (SUBSCRIBER_ID_INPUT_ELEM && SUBSCRIBER_ID_SUBMIT_ELEM) {
             bean.on(SUBSCRIBER_ID_SUBMIT_ELEM, 'click', function(event) {
+
                 event.preventDefault();
 
                 var subscriberId = SUBSCRIBER_ID_INPUT_ELEM.value,
@@ -21,16 +22,16 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                     url: '/user/subscriber/details?id='+ subscriberId + '&postcode=' + postcode //todo lastname
                 }).then(function(response) {
                     if(response.valid) {
-                        handleSuccess();
+                        handleSuccess(response);
                     } else {
-                        handleError();
+                        handleError(response);
                     }
                 }).fail(handleError);
             });
         }
     }
 
-    function handleSuccess() {
+    function handleSuccess(response) {
         /**
          * Disable subscriber number fields
          */
@@ -59,12 +60,18 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
          * Update the subscriberOffer hidden input to true
          */
         HIDDEN_SUBSCRIBER_INPUT_ELEM.setAttribute('value', true);
+
+        display.toggleErrorState({
+            isValid: response.valid,
+            elem: SUBSCRIBER_ID_INPUT_ELEM
+        });
     }
 
-    function handleError() {
+    function handleError(response) {
         display.toggleErrorState({
-            isValid: false,
-            elem: SUBSCRIBER_ID_INPUT_ELEM
+            isValid: response.valid,
+            elem: SUBSCRIBER_ID_INPUT_ELEM,
+            msg: response.msg
         });
     }
 
