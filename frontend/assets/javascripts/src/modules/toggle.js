@@ -9,6 +9,9 @@
 //     * data-toggle-label is optional.
 //     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
 
+/**
+ * TODO: Use pure vanlilla JS for entire module
+ */
 define(['$', 'bean'], function ($, bean) {
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',
@@ -17,14 +20,17 @@ define(['$', 'bean'], function ($, bean) {
         TOGGLE_DATA_LABEL = 'toggle-label',
         TOGGLE_DATA_ICON = 'toggle-icon',
         TOGGLE_CLASS = 'is-toggled',
-        ELEMENTS_TO_TOGGLE = '[data-toggle-hidden]';
+        ELEMENTS_TO_TOGGLE = '[data-toggle-hidden]',
+        HIDDEN_CLASS = 'is-hidden';
 
     var toggleElm = function($elem) {
         return function (e) {
             e.preventDefault();
             var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
+            var toggleElm = $(document.getElementById(toggleElmId));
 
-            $(document.getElementById(toggleElmId)).toggle().toggleClass(TOGGLE_CLASS);
+            toggleElm.toggleClass(HIDDEN_CLASS);
+            toggleElm.toggleClass(TOGGLE_CLASS);
             $elem.toggleClass(TOGGLE_CLASS);
 
             toggleIcon($elem);
@@ -52,7 +58,11 @@ define(['$', 'bean'], function ($, bean) {
 
     var hideToggleElements = function() {
         var toggleContainers = document.querySelectorAll(ELEMENTS_TO_TOGGLE);
-        $(toggleContainers).hide();
+        if(toggleContainers.length) {
+            [].forEach.call(toggleContainers, function(el) {
+                el.classList.add(HIDDEN_CLASS);
+            });
+        }
     };
 
     var bindToggles = function() {

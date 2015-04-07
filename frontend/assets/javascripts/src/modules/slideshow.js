@@ -36,8 +36,10 @@ define(function() {
         if (slideshows.length) {
             [].forEach.call(slideshows, function(el) {
                 var items = el.querySelectorAll(SLIDESHOW_CHILDREN);
-                setCurrentItem(items, 0);
-                cycleItems(items, el.getAttribute('data-slideshow-duration') || 5000);
+                if(items.length) {
+                    setCurrentItem(items, 0);
+                    cycleItems(items, el.getAttribute('data-slideshow-duration') || 5000);
+                }
             }, false);
         }
     }
