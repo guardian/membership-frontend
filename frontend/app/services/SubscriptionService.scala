@@ -192,6 +192,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       } yield MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
         paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
     }
+
     for {
       freeStartingPeriodOffer <- futureFreeStartingPeriodOffer(memberId)
       summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId, subscriberOfferDelayPeriod) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
