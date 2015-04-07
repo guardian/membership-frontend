@@ -47,9 +47,9 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
 
       val partnerTicketSale = datesByTier(Partner).toDateTime
       dateMustBeToStartOfDay(partnerTicketSale) must be_==(true)
-
-      val friendTicketSale = datesByTier(Friend).toDateTime
-      dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
+//
+//      val friendTicketSale = datesByTier(Friend).toDateTime
+//      dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
     }
 
     "give set advance tickets to be available a specific time if sale dates between tiers is less than a day" in {
