@@ -20,7 +20,6 @@ define([
             guardian.analyticsEnabled = false;
         }
 
-        guardian.analyticsEnabled = true;
         if (guardian.analyticsEnabled) {
             ophanAnalytics.init();
             omnitureAnalytics.init();
