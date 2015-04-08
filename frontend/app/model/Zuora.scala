@@ -252,7 +252,7 @@ object ZuoraDeserializer {
       new DateTime(result("EffectiveStartDate")), result("Price").toFloat)
   }
 
-  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "CASSubscriberID__c", "TermStartDate", "ContractAcceptanceDate")) { result =>
+  implicit val subscriptionReader = ZuoraQueryReader("Subscription", Seq("Id", "Version", "TermStartDate", "ContractAcceptanceDate")) { result =>
     Subscription(result("Id"), result("Version").toInt, new DateTime(result("TermStartDate")), new DateTime(result("ContractAcceptanceDate")))
   }
 }
