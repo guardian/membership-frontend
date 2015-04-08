@@ -172,12 +172,12 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
  * call with preview can be used - this works for the first case too.
  *
  */
-case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDelay: Period) extends ZuoraAction[AmendResult] {
+case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDate: DateTime) extends ZuoraAction[AmendResult] {
 
 
   val now = DateTime.now
   val effectiveDate = formatDateTime(now)
-  val contractAcceptanceDate = formatDateTime(now + paymentDelay)
+  val contractAcceptanceDate = formatDateTime(paymentDate)
 
   val body = {
     <ns1:amend>

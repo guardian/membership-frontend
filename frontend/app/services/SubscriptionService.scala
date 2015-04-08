@@ -162,19 +162,19 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield PaymentSummary(invoiceItems)
   }
 
-  def getMembershipSubscriptionSummary(memberId: MemberId, subscriberOfferDelayPeriod: Period): Future[MembershipSummary] = {
+  def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {
 
     def futureFreeStartingPeriodOffer(memberId: MemberId) =
       for (subscription <- getLatestSubscription(memberId))
         yield subscription.contractAcceptanceDate.isAfterNow
 
-    def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId, subscriberOfferDelayPeriod: Period) = {
+    def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId) = {
       val subscriptionStatusFuture = getSubscriptionStatus(memberId)
       for {
         subscriptionStatus <- subscriptionStatusFuture
         subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
         latestSubscription <- getLatestSubscription(memberId)
-        result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionStatus.current, subscriberOfferDelayPeriod))
+        result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionStatus.current, latestSubscription.contractAcceptanceDate))
       } yield {
         if(result.invoiceItems.isEmpty) throw SubscriptionServiceError("Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
         val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
@@ -195,7 +195,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
     for {
       freeStartingPeriodOffer <- futureFreeStartingPeriodOffer(memberId)
-      summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId, subscriberOfferDelayPeriod) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
+      summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
     } yield summary
   }
 
