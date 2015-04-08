@@ -12,24 +12,38 @@
 
 # Membership Frontend
 
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [Setup](#setup)
+3. [Run](#run)
+4. [Tests](#tests)
+5. [Client-side Builds](#cs-builds)
+6. [Development Principles](#dev-principles)
+7. [Pattern Library](#pattern-library)
+8. [Deployment](#deployment)
+9. [Test Users](#test-users)
+10. [Security](#security)
+11. [Troubleshooting](#troubleshooting)
+
+<a name="getting-started">
 ## Getting Started
 
 To get started working on Membership you will need to complete the following steps:
 
 1. Work through the **General Setup** instructions for this project
 2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
-3. Start up Membership by running the commands in the **Run** section of this README
+3. Start up Membership by running the commands in the [Run](#run) section of this README
 
-### Working on client-side features
+### Client-side feature development
 
-If you are doing clien-side work on Membership you should also make yourself familar with the following:
+If you are doing client-side work on Membership you should also make yourself familar with the following:
 
 - Look over the [pattern library](https://membership.theguardian.com/patterns) to get an understanding of the design language of the site.
 - Read through [FRONTEND.md](docs/FRONTEND.md) to get a high-level understanding of how our client-side code is structured.
 
-
+<a name="setup">
 ## General Setup
-
 
 1. Go to project root
 1. If you don't have `bower`, `grunt`, or `sass`, run `./setup-tools.sh` to install them globally on your system.
@@ -70,6 +84,7 @@ package for your version of Ubuntu is old, you'll [probably](http://askubuntu.co
 want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
 which includes both Node.js and NPM.
 
+<a name="run">
 ## Run
 
 The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
@@ -94,9 +109,7 @@ Run through the set up instructions; once complete you will need to run:
 
 **theguardian.com frontend repo**: [https://github.com/guardian/frontend](https://github.com/guardian/frontend)
 
-Run through the set up instructions - note you need to make sure that your Frontend is
-set up to point at your _local_ Identity, not the `CODE` Identity, which means adding
-this to your `frontend.properties`:
+Run through the set up instructions - note you need to make sure that your Frontend is set up to point at your _local_ Identity, not the `CODE` Identity, which means adding this to your `frontend.properties`:
 
 ```
 id.apiRoot=https://idapi.thegulocal.com
@@ -112,7 +125,16 @@ project identity
 idrun
 ```
 
-## To cliend-side unit tests
+<a name="tests">
+## Tests
+
+<a name="tests-scala">
+### Running Scala unit tests
+
+To run Scala unit tests run `sbt test` from the root of the project.
+
+<a name="tests-js">
+### Running JavaScript unit tests
 
 **Note these commands should be run from inside the `frontend/` directory**
 
@@ -120,52 +142,48 @@ idrun
 grunt karma --dev
 ```
 
-### Test coverage
+#### Test coverage
 
 Run with `--dev` flag to generate test coverage. Coverage report can be found in `frontend/test/js/coverage/`.
 
-# Grunt Tasks
+<a name="tests-functional">
+### Running functional tests
 
-**Note these commands should be run from inside the `frontend/` directory**
+See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
 
-## Watch and compile front-end files
+<a name="cs-builds">
+## Client-side Builds
+
+Client-side build are handled using Grunt. **Note these commands should be run from inside the `frontend/` directory**
+
+### Watch and compile front-end files
 
 ```
 grunt watch --dev
 ```
 
-## Compile front-end files
+### Compile front-end files
 
 ```
 grunt compile --dev
 ```
 
-# Client-side Principles
+<a name="dev-principles">
+## Development Principles
+
+### Client-side Principles
 
 See [FRONTEND.md](FRONTEND.md) for high-level client-side principles for Membership.
 
-# Pattern Library
+<a name="pattern-library">
+## Pattern Library
 
 A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns)
 
 When building new components break them down into fragments and include them in the pattern library.
 
-# Updating AMIs
-
-We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html. To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
-
-## Building
-
-To add your requirements to the new AMI, you should update `provisioning.json`. This will probably involve editing the `provisioners` section, but more information can be found in the [packer docs](http://www.packer.io/docs). Once you are ready, run the following:
-```
-packer build provisioning.json
-```
-This will take several minutes to build the new AMI. Once complete, you should see something like:
-```
-eu-west-1: ami-xxxxxxxx
-```
-
-## Deploying
+<a name="deployment">
+## Deployment
 
 1. Turn off continuous deployment in RiffRaff
 1. Update the CloudFormation parameter `ImageId` <b>(make a note of the current value first)</b>
@@ -176,14 +194,31 @@ eu-west-1: ami-xxxxxxxx
 1. Decrease autoscale group size by 1
 1. Re-enable continous deployment
 
+### Updating AMIs
 
-# Test Users
+We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html. To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
+
+#### Building
+
+To add your requirements to the new AMI, you should update `provisioning.json`. This will probably involve editing the `provisioners` section, but more information can be found in the [packer docs](http://www.packer.io/docs). Once you are ready, run the following:
+```
+packer build provisioning.json
+```
+This will take several minutes to build the new AMI. Once complete, you should see something like:
+```
+eu-west-1: ami-xxxxxxxx
+```
+
+<a name="test-users">
+## Test Users
 
 See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
 Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
+<a name="security">
+## Security
 
-# Committing config credentials
+### Committing config credentials
 
 For the Membership project, we put both `DEV` and `PROD` credentials in `membership-keys.conf` files in the private S3 bucket `membership-private`, and if private credentials need adding or updating, they need to be updated there in S3.
 
@@ -202,20 +237,7 @@ For a reminder on why we do this, here's @tackley on the subject:
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
 
-## Package.json
-
-Once in a while it is worth updating the package.json dependencies for our build tasks
-
-You can use [`npm-check-updates`](https://www.npmjs.com/package/npm-check-updates)
-
-Show any new dependencies for the project
-
-`$ npm-check-updates`
-
-Upgrade a project's package.json
-
-`$ npm-check-updates -u`
-
+<a name="troubleshooting">
 ## Troubleshooting
 
 See [Troubleshooting.md](docs/Troubleshooting.md) for information on common problems and how to fix them.

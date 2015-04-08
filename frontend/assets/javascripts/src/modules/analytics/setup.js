@@ -3,13 +3,11 @@ define([
     'src/utils/cookie',
     'src/modules/analytics/ga',
     'src/modules/analytics/omniture',
-    'src/modules/analytics/userzoom',
     'src/modules/analytics/crazyegg'
 ], function (
     cookie,
     googleAnalytics,
     omnitureAnalytics,
-    userzoom,
     crazyegg
 ) {
 
@@ -26,7 +24,6 @@ define([
             googleAnalytics.init();
 
             if(!guardian.isDev) {
-                userzoom.load();
                 crazyegg.load();
             }
 
