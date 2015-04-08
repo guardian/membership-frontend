@@ -33,34 +33,6 @@ printf "\n\r\n\r====================================\n\r\n\r"
 npm install
 
 #####################################################
-# Install Bower JS modules
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower JS modules in assets/javascripts ..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-pushd assets/javascripts
-rm -rf lib/bower-components
-bower install
-
-popd
-
-#####################################################
-# Install Bower SASS modules
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower SASS modules in assets/stylesheets ..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-pushd assets/stylesheets
-rm -rf components/bower-components
-bower install
-
-popd
-
-#####################################################
 # Compile clientside assets
 #####################################################
 

@@ -23,8 +23,6 @@ tmp
 
 */public/javascripts
 */public/stylesheets
-*/assets/stylesheets/components/bower-components/
-*/assets/javascripts/lib/bower-components/
 
 frontend/conf/keys.conf
 frontend/conf/assets.map
