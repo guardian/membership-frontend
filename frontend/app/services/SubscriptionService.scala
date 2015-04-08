@@ -6,7 +6,7 @@ import com.gu.membership.stripe.Stripe
 import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
-import model.{ProductRatePlan, TierPlan}
+import model.{MembershipSummary, ProductRatePlan, TierPlan}
 import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -80,10 +80,17 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   private def getAccount(memberId: MemberId): Future[Account] =
     zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
 
-  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+  //TODO before we do subs we need to filter by rate plans membership knows about
+  def getSubscriptions(memberId: MemberId): Future[Seq[Subscription]] = {
     for {
       account <- getAccount(memberId)
       subscriptions <- zuora.query[Subscription](s"AccountId='${account.id}'")
+    } yield subscriptions
+  }
+
+  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
+    for {
+      subscriptions <- getSubscriptions(memberId)
 
       if subscriptions.size > 0
 
@@ -98,6 +105,11 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
           SubscriptionStatus(amendment.subscriptionId, Some(latestSubscriptionId), Some(amendment.amendType))
         }
     }
+  }
+
+  def getLatestSubscription(memberId: MemberId): Future[Subscription] = {
+    for (subscriptions <- getSubscriptions(memberId))
+    yield sortSubscriptions(subscriptions).last
   }
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
@@ -131,5 +143,42 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       subscription <- getSubscriptionStatus(memberId)
       invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
     } yield PaymentSummary(invoiceItems)
+  }
+
+  def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {
+
+    def futureFreeStartingPeriodOffer(memberId: MemberId) =
+      for (subscription <- getLatestSubscription(memberId))
+      yield subscription.contractAcceptanceDate.isAfterNow
+
+    def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId) = {
+      val subscriptionStatusFuture = getSubscriptionStatus(memberId)
+      for {
+        subscriptionStatus <- subscriptionStatusFuture
+        subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
+        latestSubscription <- getLatestSubscription(memberId)
+        result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionStatus.current, latestSubscription.contractAcceptanceDate))
+      } yield {
+        if(result.invoiceItems.isEmpty) throw SubscriptionServiceError("Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
+        val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
+
+        MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
+          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, initialFreePeriodOffer = true )
+
+      }
+    }
+
+    def getPaymentSummaryForMembershipsNoFreePeriod(memberId: MemberId) = {
+      for {
+        paymentSummary <- getPaymentSummary(memberId)
+
+      } yield MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
+        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+    }
+
+    for {
+      freeStartingPeriodOffer <- futureFreeStartingPeriodOffer(memberId)
+      summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
+    } yield summary
   }
 }
