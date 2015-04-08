@@ -1,7 +1,6 @@
+import com.gu.membership.tags._
 
 class MembershipEventTests extends BaseMembershipTest {
-
-  info("Tests for sprint 1 of the Membership project")
 
   feature("See event list") {
 
@@ -10,7 +9,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I want to see a list of events
        */
-      scenarioWeb("1. Logged in user sees event list") {
+      scenarioWeb("1. Logged in user sees event list", EventListTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -23,7 +22,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("2. Non logged in user sees event list") {
+      scenarioWeb("2. Non logged in user sees event list", EventListTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmNotLoggedIn
@@ -43,7 +42,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I want to see the details of an event
        */
-      scenarioWeb("3. Logged in user sees details for an event") {
+      scenarioWeb("3. Logged in user sees details for an event", EventDetailTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -56,7 +55,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("4. Non logged in user sees details for an event") {
+      scenarioWeb("4. Non logged in user sees details for an event", EventDetailTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmNotLoggedIn
@@ -69,7 +68,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("5. Event details are the same as on the event provider") {
+      scenarioWeb("5. Event details are the same as on the event provider", EventDetailTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
@@ -89,7 +88,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I need to be logged in
        */
-      scenarioWeb("6. Logged in user can purchase a ticket") {
+      scenarioWeb("6. Logged in user can purchase a ticket", EventTicketPurchase) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
