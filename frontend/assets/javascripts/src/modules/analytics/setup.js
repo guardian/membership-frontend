@@ -2,11 +2,13 @@
 define([
     'src/utils/cookie',
     'src/modules/analytics/ga',
+    'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/crazyegg'
 ], function (
     cookie,
     googleAnalytics,
+    ophanAnalytics,
     omnitureAnalytics,
     crazyegg
 ) {
@@ -18,8 +20,9 @@ define([
             guardian.analyticsEnabled = false;
         }
 
+        guardian.analyticsEnabled = true;
         if (guardian.analyticsEnabled) {
-            require('ophan/membership', function () {});
+            ophanAnalytics.init();
             omnitureAnalytics.init();
             googleAnalytics.init();
 
