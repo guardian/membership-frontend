@@ -8,6 +8,8 @@ import model.EventbriteTestObjects._
 import org.specs2.mutable.Specification
 import org.specs2.time.NoTimeConversions
 import utils.Resource
+import org.joda.time.DateTimeZone.UTC
+import org.joda.time.Instant
 
 class TicketSaleDatesTest extends Specification with NoTimeConversions {
 
@@ -45,11 +47,11 @@ class TicketSaleDatesTest extends Specification with NoTimeConversions {
 
       datesByTier(Patron) must be_==(saleStart)
 
-      // val partnerTicketSale = datesByTier(Partner).toDateTime
-      // dateMustBeToStartOfDay(partnerTicketSale) must be_==(true)
-//
-//      val friendTicketSale = datesByTier(Friend).toDateTime
-//      dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
+      val partnerTicketSale = datesByTier(Partner).toDateTime(UTC)
+      dateMustBeToStartOfDay(partnerTicketSale) must be_==(true)
+
+      val friendTicketSale = datesByTier(Friend).toDateTime(UTC)
+      dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
     }
 
     "give set advance tickets to be available a specific time if sale dates between tiers is less than a day" in {
