@@ -162,12 +162,12 @@ trait Event extends Controller with ActivityTracking {
   // log a conversion if the user came from a membership event page
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
+    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
+    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
+    event.service.wsMetrics.put("user-returned-to-thankyou-page-no-cookie", 1)
     request.cookies.get(eventCookie(event)).foreach { _ =>
-      val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
-      trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
       event.service.wsMetrics.put("user-returned-to-thankyou-page", 1)
     }
-    event.service.wsMetrics.put("user-returned-to-thankyou-page-no-cookie", 1)
   }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
