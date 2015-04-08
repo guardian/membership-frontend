@@ -1,0 +1,14 @@
+{
+  "name": "zxcvbn",
+  "main": "zxcvbn.js",
+  "homepage": "https://github.com/lowe/zxcvbn",
+  "_release": "063315ee64",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "063315ee6400116dacbd244f1dc98a54e0c53aec"
+  },
+  "_source": "git://github.com/lowe/zxcvbn.git",
+  "_target": "*",
+  "_originalSource": "zxcvbn"
+}

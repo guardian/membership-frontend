@@ -30,12 +30,4 @@ bundle install --binstubs dev/gems/bin --path dev/gems
 npm cache clean
 npm install
 
-pushd $JS_DIR
-bower install
-popd
-
-pushd $SCSS_DIR
-bower install
-popd
-
 grunt "$@"
