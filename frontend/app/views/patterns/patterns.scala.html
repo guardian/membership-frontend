@@ -299,8 +299,8 @@
         <div class="page-slice page-slice--slim l-constrained">
             @fragments.promos.promoVideoSecondary(
                 Html("If you believe in Guardian journalism, become a Guardian Member"),
-                videoUrl = Videos.whatIsMembership,
-                toneClass = Some("tone-trans-brand-dark")) {
+                video=Videos.whatIsMembership,
+                toneClass=Some("tone-trans-brand-dark")) {
                 <div class="text-feature">
                     <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
                     <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
@@ -310,12 +310,8 @@
         </div>
     }
 
-    @pattern("Offer - Option", "Image with a letter box crop and call out") {
-        @fragments.offer.option(
-            "Pay annually",
-            s"Pay nothing for 6 months then pay £00",
-            s"£00.00/year"
-        )
+    @pattern("Video Player", "Video with poster image overlay") {
+        @fragments.media.videoPlayer(Videos.whatIsMembership)
     }
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {

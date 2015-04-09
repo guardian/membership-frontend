@@ -9,14 +9,15 @@ require([
     'src/modules/sticky',
     'src/modules/navigation',
     'src/modules/UserDetails',
+    'src/modules/videoOverlay',
     'src/modules/events/eventPriceEnhance',
-    'src/modules/patterns',
     'src/modules/modal',
     'src/modules/form',
     'src/modules/form/processSubmit',
-    'src/modules/metrics',
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
+    'src/modules/metrics',
+    'src/modules/patterns',
     // Add new dependencies ABOVE this
     'raven',
     'modernizr'
@@ -31,14 +32,15 @@ require([
     sticky,
     navigation,
     UserDetails,
+    videoOverlay,
     eventPriceEnhance,
     modal,
-    patterns,
     processSubmit,
     form,
-    metrics,
     identityPopup,
-    identityPopupDetails
+    identityPopupDetails,
+    metrics,
+    patterns
 ) {
     'use strict';
 
@@ -62,6 +64,7 @@ require([
     identityPopupDetails.init();
     navigation.init();
     (new UserDetails()).init();
+    videoOverlay.init();
 
     // Events
     cta.init();
@@ -75,10 +78,10 @@ require([
     // Modal
     modal.init();
 
-    // Pattern library
-    patterns.init();
-
     // Metrics
     metrics.init();
+
+    // Pattern library
+    patterns.init();
 
 });

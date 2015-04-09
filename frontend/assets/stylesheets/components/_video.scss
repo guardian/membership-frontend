@@ -1,23 +1,69 @@
 /* ==========================================================================
-   Responsive Video
+   Video Player
    ========================================================================== */
-/**
- * Example usage:
- * <div class="responsive-video">
- *     <iframe class="responsive-video__iframe"></iframe>
- * </div>
- **/
-.responsive-video {
+
+.video-player {
     position: relative;
     padding-bottom: 56.25%;
-    padding-top: rem(35px);
     height: 0;
     overflow: hidden;
 }
-.responsive-video__iframe {
+.video-player__iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 0;
+}
+.video-player__overlay {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: 1s opacity ease 300ms;
+}
+.video-player__overlay__action {
+    display: block;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 2;
+}
+.video-player.is-playing {
+    .video-player__iframe {
+        opacity: 1;
+    }
+    .video-player__overlay {
+        opacity: 0;
+    }
+}
+
+.playback {
+    color: $white;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 100%;
+    border: 0 none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    width: 90px;
+    height: 90px;
+    position: relative;
+    transition: background-color .5s ease;
+}
+.playback__icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translateX(-40%) translateY(-50%);
+    width: 32px; height: 32px;
+}
+
+.playback:hover,
+.video-player__overlay:hover .playback {
+    background-color: $mem-brandBlue;
 }
