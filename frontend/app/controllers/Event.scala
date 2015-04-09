@@ -155,7 +155,7 @@ trait Event extends Controller with ActivityTracking {
           val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
           track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
         Found(event.url ? ("discount" -> discountOpt.map(_.code)))
-          .withCookies(Cookie(eventCookie(event), ""))
+          .withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
 
