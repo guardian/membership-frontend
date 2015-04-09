@@ -67,7 +67,7 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: Option[String]) = AjaxAuthenticatedAction.async { implicit request =>
+  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: String) = AjaxAuthenticatedAction.async { implicit request =>
      def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
       Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
     }

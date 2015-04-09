@@ -158,7 +158,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         case paidMemberJoinForm: PaidMemberJoinForm => {
           paidMemberJoinForm.casId map { casId =>
             for {
-              casResult <- casService.check(casId, Some(formData.deliveryAddress.postCode), Some(formData.name.last))
+              casResult <- casService.check(casId, Some(formData.deliveryAddress.postCode), formData.name.last)
               casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(casId)
             } yield {
               casResult match {
