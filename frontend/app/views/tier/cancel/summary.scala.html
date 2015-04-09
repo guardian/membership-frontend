@@ -1,4 +1,4 @@
-@(subscriptionDetailsOpt: Option[model.Zuora.SubscriptionDetails])
+@(subscriptionDetailsOpt: Option[model.Zuora.SubscriptionDetails], currentTierOpt: Option[com.gu.membership.salesforce.Tier])
 
 @import configuration.Config
 @import views.support.Dates._
@@ -16,7 +16,7 @@
             <div class="page-section__content">
 
                 @for(subscriptionDetails <- subscriptionDetailsOpt) {
-                    @fragments.tier.summary(subscriptionDetails)
+                    @fragments.tier.summary(subscriptionDetails, currentTierOpt)
                 }
 
                 @if(subscriptionDetailsOpt.isEmpty) {

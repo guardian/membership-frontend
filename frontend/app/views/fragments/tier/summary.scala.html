@@ -1,16 +1,18 @@
-@(currentSubscription: model.Zuora.SubscriptionDetails)
+@(currentSubscription: model.Zuora.SubscriptionDetails, currentTierOpt: Option[com.gu.membership.salesforce.Tier])
 
 @import views.support.Dates._
 @import views.support.Prices._
 
 <table class="table table--striped" role="grid">
     <tr role="row">
-        <th role="rowheader">
-            Tier
-        </th>
-        <td id="qa-tier-summary-tier">
-            @currentSubscription.planName
-        </td>
+        @for(currentTier <- currentTierOpt) {
+            <th role="rowheader">
+                Tier
+            </th>
+            <td id="qa-tier-summary-tier">
+                @currentTier.name
+            </td>
+        }
     </tr>
     <tr role="row">
         <th role="rowheader">
