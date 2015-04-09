@@ -186,7 +186,7 @@ trait Event extends Controller with ActivityTracking {
     EventbriteService.getEvent(id).map { event =>
       // only log a conversion if the user came from a membership event page
       request.cookies.get(eventCookie(event)).foreach { _ =>
-        trackConversionToThankyou(request, event, None, None, true)
+        trackConversionToThankyou(request, event, None, None)
       }
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
