@@ -147,8 +147,6 @@ object Config {
 
   val stage = config.getString("stage")
 
-  val ophanJsUrl = config.getString("ophan.js.url")
-
   val googleAuthConfig = {
     val con = config.getConfig("google.oauth")
     GoogleAuthConfig(
