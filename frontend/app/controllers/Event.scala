@@ -155,19 +155,14 @@ trait Event extends Controller with ActivityTracking {
           val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
           track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
         Found(event.url ? ("discount" -> discountOpt.map(_.code)))
-          .withCookies(Cookie(eventCookie(event), ""))
+          .withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
 
-  // log a conversion if the user came from a membership event page
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
     val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
-    event.service.wsMetrics.put("user-returned-to-thankyou-page-no-cookie", 1)
-    request.cookies.get(eventCookie(event)).foreach { _ =>
-      event.service.wsMetrics.put("user-returned-to-thankyou-page", 1)
-    }
   }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
@@ -189,7 +184,10 @@ trait Event extends Controller with ActivityTracking {
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
     EventbriteService.getEvent(id).map { event =>
-      trackConversionToThankyou(request, event, None, None)
+      // only log a conversion if the user came from a membership event page
+      request.cookies.get(eventCookie(event)).foreach { _ =>
+        trackConversionToThankyou(request, event, None, None)
+      }
       NoContent.discardingCookies(DiscardingCookie(eventCookie(event)))
     }.getOrElse(NotFound)
   }
