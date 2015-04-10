@@ -54,11 +54,15 @@ trait GuardianContentService extends GuardianContent {
 
   private def membersOnly: Future[Seq[Content]] = membersOnlyContentQuery(1).map(_.results)
 
+  private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results)
+
   def masterclassContent(eventId: String): Option[MasterclassData] = masterclassContentTask.get().find(mc => mc.eventId.equals(eventId))
 
   def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
   def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
+
+  def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
 
   val masterclassContentTask = ScheduledTask[Seq[MasterclassData]]("GuardianContentService - Masterclass content", Nil, 2.seconds, 2.minutes)(masterclasses)
 
@@ -66,10 +70,13 @@ trait GuardianContentService extends GuardianContent {
 
   val membersOnlyContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(membersOnly)
 
+  val membershipFrontContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content from Membership front", Nil, 1.second, 2.minutes)(membershipFront)
+
   def start() {
     masterclassContentTask.start()
     membersOnlyContentTask.start()
     contentTask.start()
+    membershipFrontContentTask.start()
   }
 
 }
@@ -117,6 +124,20 @@ trait GuardianContent {
       .page(page)
       .tag("tone/extraoffers")
     //todo: filter response for member access flag
+    client.getResponse(itemQuery).andThen {
+      case Failure(GuardianContentApiError(status, message)) =>
+        logAndRecordError(status)
+    }
+  }
+
+  def membershipFrontContentQuery(page: Int): Future[ItemResponse] = {
+    val itemQuery = ItemQuery("/membership")
+      .showFields("all")
+      .showElements("all")
+      .pageSize(50)
+      .page(page)
+      .tag("type/article")
+
     client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
         logAndRecordError(status)

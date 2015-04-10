@@ -2,18 +2,18 @@ package services
 
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.EventGroup
+import model.{TicketSaleDates, EventGroup}
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
 import monitoring.EventbriteMetrics
+import org.joda.time.{Interval, Period, DateTime}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.ScheduledTask
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -73,6 +73,11 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def getBookableEvent(id: String): Option[RichEvent] = events.find(_.id == id)
   def getEvent(id: String): Option[RichEvent] = (events ++ eventsArchive).find(_.id == id)
+
+  def getEventsByIds(ids: Seq[String]): Seq[RichEvent] = events.filter(e => ids.contains(e.event.id))
+  def getLimitedAvailability: Seq[RichEvent] = events.filter(_.event.isLimitedAvailability)
+  def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
+  def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
     val uri = s"events/${event.id}/access_codes"
