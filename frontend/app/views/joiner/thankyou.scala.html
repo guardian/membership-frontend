@@ -62,21 +62,30 @@
                         <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
                     </tr>
                     <tr role="row">
+                        <th role="rowheader">Next payment</th>
+                        <td id="qa-joiner-summary-next">
+                            @if(summary.initialFreePeriodOffer) {
+                            @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
+                            } else {
+                            @summary.nextPaymentDate.pretty
+                            }
+                        </td>
+                    </tr>
+                    <tr role="row">
                         <th role="rowheader">
                             @if(summary.annual) { Annual } else { Monthly } payment
                         </th>
                         <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
                     </tr>
-                    <tr role="row">
-                        <th role="rowheader">Next payment</th>
-                        <td id="qa-joiner-summary-next">
-                        @if(summary.initialFreePeriodOffer) {
-                            @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
-                        } else {
-                            @summary.nextPaymentDate.pretty
-                        }
-                        </td>
-                    </tr>
+                    @if(summary.annual && summary.initialFreePeriodOffer) {
+                        <tr role="row">
+                            <th role="rowheader">
+                                Next Annual payment
+                            </th>
+                            <td id="qa-joiner-summary-annual-date">@summary.renewalDate.pretty</td>
+                        </tr>
+                    }
+
                     @for(card <- cardOpt) {
 
                     <tr role="row">
