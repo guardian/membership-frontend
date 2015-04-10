@@ -8,6 +8,7 @@ case class MembershipSummary(startDate: DateTime,
                              planAmount: Float,
                              nextPaymentPrice: Float,
                              nextPaymentDate: DateTime,
+                             renewalDate: DateTime,
                              initialFreePeriodOffer: Boolean) {
 
 

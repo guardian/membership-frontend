@@ -163,7 +163,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
 
         MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
-          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, initialFreePeriodOffer = true )
+          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, firstPreviewInvoice.renewalDate, initialFreePeriodOffer = true )
 
       }
     }
@@ -173,7 +173,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         paymentSummary <- getPaymentSummary(memberId)
 
       } yield MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
-        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
     }
 
     for {
