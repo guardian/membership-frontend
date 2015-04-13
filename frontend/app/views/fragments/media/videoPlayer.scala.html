@@ -1,0 +1,18 @@
+@(video: model.Video)
+
+<div class="video-player js-video">
+    <iframe class="video-player__iframe js-video__iframe"  src="@video.srcUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+    @for(posterImage <- video.posterImage) {
+        <div class="video-player__overlay js-video__overlay">
+            <div class="video-player__overlay__image">
+                <img src="@posterImage.defaultImage" srcset="@posterImage.srcset" sizes="100vw" alt="@posterImage.altText" class="responsive-img" />
+            </div>
+            <div class="video-player__overlay__action">
+                <span class="playback">
+                    @fragments.inlineIcon("play", List("playback__icon"))
+                    <span class="u-h">Play video</span>
+                </span>
+            </div>
+        </div>
+    }
+</div>
