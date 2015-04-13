@@ -1,5 +1,5 @@
 User-agent: *
 Disallow: /patterns
-Disallow: /whatson
+Disallow: /whats-on
 
 Allow: /

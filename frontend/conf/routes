@@ -54,7 +54,7 @@ POST           /subscription/update-card          controllers.Subscription.updat
 OPTIONS        /subscription/update-card          controllers.Subscription.updateCardPreflight
 
 # Events
-GET            /whatson                           controllers.Event.whatsOn
+GET            /whats-on                          controllers.Event.whatsOn
 GET            /events                            controllers.Event.list
 GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
 GET            /masterclasses                     controllers.Event.masterclasses

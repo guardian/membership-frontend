@@ -5,68 +5,32 @@
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">Trending</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-            @for(event <- eventPortfolio.trending.take(4)) {
-                <li class="grid__item">
-                @fragments.event.item(event)
-                </li>
-            }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.trending, 4)
         </section>
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">This week</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-                @for(event <- eventPortfolio.thisWeek.take(4)) {
-                    <li class="grid__item">
-                        @fragments.event.item(event)
-                    </li>
-                }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.thisWeek, 4)
         </section>
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">Next Week</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-            @for(event <- eventPortfolio.nextWeek.take(4)) {
-                <li class="grid__item">
-                @fragments.event.item(event)
-                </li>
-            }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.nextWeek, 4)
         </section>
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">What's Hot</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-                @for(event <- eventPortfolio.topSelling.take(4)) {
-                    <li class="grid__item">
-                        @fragments.event.item(event)
-                    </li>
-                }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.topSelling, 4)
         </section>
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">Just Added</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-                @for(event <- eventPortfolio.recentlyCreated.take(4)) {
-                    <li class="grid__item">
-                        @fragments.event.item(event)
-                    </li>
-                }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.recentlyCreated, 4)
         </section>
 
         <section class="page-slice l-inset">
             <h3 class="h-section h-section--lead">Available to Members</h3>
-            <ul class="grid grid--4up grid--bordered grid--single-row">
-            @for(event <- eventPortfolio.partnersOnly.take(4)) {
-                <li class="grid__item">
-                @fragments.event.item(event)
-                </li>
-            }
-            </ul>
+            @fragments.event.eventCollection(eventPortfolio.partnersOnly, 4)
         </section>
 
         <section class="page-slice l-inset">
@@ -101,13 +65,13 @@
 
         </section>
 
-        @eventPortfolio.programmingPartnerEvents.map { programmingPartnerEvents =>
+        @for(eventGroup <- eventPortfolio.programmingPartnerEvents) {
             <section class="page-slice l-inset">
                 <h3 class="h-section h-section--lead">Events and courses from institutions we admire</h3>
                 <ul class="grid grid--2up grid--bordered">
-                    @for(event <- programmingPartnerEvents.events.take(4)) {
+                    @for(event <- eventGroup.events.take(4)) {
                         <li class="grid__item">
-                        @fragments.event.itemMinimal(event, isCard=true)
+                            @fragments.event.itemMinimal(event, isCard=true)
                         </li>
                     }
                 </ul>
