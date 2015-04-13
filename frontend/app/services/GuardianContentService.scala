@@ -132,11 +132,10 @@ trait GuardianContent {
 
   def membershipFrontContentQuery(page: Int): Future[ItemResponse] = {
     val itemQuery = ItemQuery("/membership")
-      .showFields("all")
-      .showElements("all")
-      .pageSize(50)
-      .page(page)
+      .showElements("image")
       .tag("type/article")
+      .pageSize(20)
+      .page(page)
 
     client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
