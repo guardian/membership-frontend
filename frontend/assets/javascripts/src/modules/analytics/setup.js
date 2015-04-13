@@ -4,12 +4,14 @@ define([
     'src/modules/analytics/ga',
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
+    'src/modules/analytics/krux',
     'src/modules/analytics/crazyegg'
 ], function (
     cookie,
     googleAnalytics,
     ophanAnalytics,
     omnitureAnalytics,
+    krux,
     crazyegg
 ) {
 
@@ -19,6 +21,8 @@ define([
         if (cookie.getCookie(ANALYTICS_OFF_KEY)) {
             guardian.analyticsEnabled = false;
         }
+
+        krux.load();
 
         if (guardian.analyticsEnabled) {
             ophanAnalytics.init();
