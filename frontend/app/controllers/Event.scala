@@ -10,13 +10,18 @@ import configuration.{Config, CopyConfig, Links}
 import model.Eventbrite.{EBOrder, EBEvent}
 import model.RichEvent._
 import model.{IdMinimalUser, EventPortfolio, Eventbrite, PageInfo}
+import org.joda.time.Instant
+import org.joda.time.format.ISODateTimeFormat
+import play.api.libs.Jsonp
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json.JsValueWrapper
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, LocalEventService, MemberService}
 import services.EventbriteService._
 import com.github.nscala_time.time.Imports._
 import tracking._
 import scala.concurrent.Future
+import play.api.libs.json._
 
 trait Event extends Controller with ActivityTracking {
 
@@ -54,6 +59,46 @@ trait Event extends Controller with ActivityTracking {
     }
 
     eventOpt.getOrElse(Redirect(Links.membershipFront))
+  }
+
+  case class EmbedData(title: String,
+                       image: Option[String],
+                       venue: Option[String],
+                       location: Option[String],
+                       price: Option[String],
+                       identifier: String,
+                       start: String,
+                       end: String)
+  case class EmbedResponse(status: String, result: Option[EmbedData])
+
+  implicit val writesEmbedData = Json.writes[EmbedData]
+  implicit val writesResponse = Json.writes[EmbedResponse]
+
+  /*
+   * This endpoint is hit by Composer when embedding Membership events.
+   * Changes here will need to be reflected in the flexible-content repo.
+   * Note that Composer will index this data, which is in turn indexed by CAPI.
+   * (eg. updates to event details will not be reflected post-embed)
+   */
+  def embedData(slug: String, callback: String) = CachedAction { implicit request =>
+  val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+
+    val eventDataOpt = for {
+      id <- EBEvent.slugToId(slug)
+      event <- EventbriteService.getEvent(id)
+    } yield EmbedData(
+      title = event.name.text,
+      image = event.socialImgUrl,
+      venue = event.venue.name,
+      location = event.venue.addressLine,
+      price = event.internalTicketing.map(_.primaryTicket.priceText),
+      identifier = event.metadata.identifier,
+      start = event.start.toString(standardFormat),
+      end = event.end.toString(standardFormat)
+    )
+
+    val json = Json.toJson(EmbedResponse(eventDataOpt.fold("error")(_ => "success"), eventDataOpt))
+    Ok(Jsonp(callback, json))
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
