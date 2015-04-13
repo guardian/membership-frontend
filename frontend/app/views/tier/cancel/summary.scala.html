@@ -10,6 +10,8 @@
         @for(subscriptionDetails <- subscriptionDetailsOpt) {
             @subscriptionDetails.chargedThroughDate.map { endDate =>
                 @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.pretty))
+            }.getOrElse {
+                @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + subscriptionDetails.contractAcceptanceDate.pretty))
             }
         }
         <section class="page-section page-section--bordered">
