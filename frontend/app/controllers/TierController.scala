@@ -24,16 +24,18 @@ trait DowngradeTier {
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
       cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user)
-    } yield Redirect("/tier/change/friend/summary")
+    } yield Redirect(routes.TierController.downgradeToFriendSummary)
   }
 
   def downgradeToFriendSummary() = PaidMemberAction.async { implicit request =>
     val subscriptionService = request.touchpointBackend.subscriptionService
+    val currentTier = request.member.tier
+    val futureTierName = "Friend"
     for {
       subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
       currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
-    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription))
+    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName))
   }
 }
 
@@ -147,7 +149,10 @@ trait CancelTier {
     for {
       memberOpt <- request.touchpointBackend.memberRepository.get(request.user.id)
       subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
-    } yield Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption))
+    } yield {
+      val currentTierOpt = memberOpt.map(_.tier)
+      Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption, currentTierOpt))
+    }
   }
 }
 
