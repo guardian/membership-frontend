@@ -64,6 +64,11 @@ form {
 .fieldset__note {
     @include fs-textSans(2);
     color: $c-neutral2;
+    margin-top: rem($gs-baseline / 2);
+  
+    p {
+      margin-bottom: 0;
+    }
 }
 
 .fieldset__fields {

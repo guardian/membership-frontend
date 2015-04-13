@@ -83,6 +83,18 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
             elem: SUBSCRIBER_ID_INPUT_ELEM,
             msg: response.msg
         });
+
+        display.toggleErrorState({
+            isValid: POSTCODE_ELEM.value !== '',
+            elem: POSTCODE_ELEM,
+            msg: 'Please provide your Postcode'
+        });
+
+        display.toggleErrorState({
+            isValid: LAST_NAME_ELEM.value !== '',
+            elem: LAST_NAME_ELEM,
+            msg: 'Please provide your last name'
+        });
     }
 
     return {
