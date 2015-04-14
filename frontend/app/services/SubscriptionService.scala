@@ -3,6 +3,7 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
+import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
@@ -11,6 +12,7 @@ import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Success
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -74,7 +76,7 @@ trait AmendSubscription {
   }
 }
 
-class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription {
+class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription with LazyLogging {
   import services.SubscriptionServiceHelpers._
 
   private def getAccount(memberId: MemberId): Future[Account] =
@@ -151,7 +153,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       for (subscription <- getLatestSubscription(memberId))
       yield subscription.contractAcceptanceDate.isAfterNow
 
-    def getPaymentSummaryForMembershipsWithFreePeriod(memberId: MemberId) = {
+    def getSummaryViaSubscriptionAmend(memberId: MemberId) = {
       val subscriptionStatusFuture = getSubscriptionStatus(memberId)
       for {
         subscriptionStatus <- subscriptionStatusFuture
@@ -164,21 +166,34 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
         MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
           subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, firstPreviewInvoice.renewalDate, initialFreePeriodOffer = true )
-
       }
     }
 
-    def getPaymentSummaryForMembershipsNoFreePeriod(memberId: MemberId) = {
-      for {
-        paymentSummary <- getPaymentSummary(memberId)
-
-      } yield MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
-        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+    def checkSummariesViaSubsAmendMatches(summaryViaInvoice: MembershipSummary) {
+      getSummaryViaSubscriptionAmend(memberId).onComplete {
+        case Success(summaryViaSubscriptionAmend) =>
+          logger.info(s"summaryViaInvoice:           $summaryViaInvoice")
+          logger.info(s"summaryViaSubscriptionAmend: $summaryViaSubscriptionAmend")
+          if (summaryViaInvoice!=summaryViaSubscriptionAmend)
+            logger.error(s"Summaries for $memberId differ: via-invoice: $summaryViaInvoice via-amend: $summaryViaSubscriptionAmend")
+        case e => logger.error(s"via-invoice for $memberId crashed", e)
+      }
     }
+
+    def getSummaryViaInvoice(memberId: MemberId) = for (paymentSummary <- getPaymentSummary(memberId)) yield {
+      val summaryViaInvoice = MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
+        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+
+      checkSummariesViaSubsAmendMatches(summaryViaInvoice)
+
+      summaryViaInvoice
+    }
+
+    val summaryViaSubscriptionAmendF = getSummaryViaSubscriptionAmend(memberId)
 
     for {
       freeStartingPeriodOffer <- futureFreeStartingPeriodOffer(memberId)
-      summary <- if (freeStartingPeriodOffer) getPaymentSummaryForMembershipsWithFreePeriod(memberId) else getPaymentSummaryForMembershipsNoFreePeriod(memberId)
+      summary <- if (freeStartingPeriodOffer) summaryViaSubscriptionAmendF else getSummaryViaInvoice(memberId)
     } yield summary
   }
 }
