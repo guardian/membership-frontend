@@ -190,7 +190,7 @@ object Eventbrite {
     }
 
     val limitedAvailabilityText = "Last tickets remaining"
-    val isLimitedAvailability = internalTicketing.exists(_.ticketsNotSold <= 15)
+    val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
     val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
 
     val isSoldOut = internalTicketing.exists(_.isSoldOut)

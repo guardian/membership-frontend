@@ -1,6 +1,6 @@
 @(
     title: Html,
-    videoUrl: String,
+    video: model.Video,
     toneClass: Option[String] = None
 )(content: Html)
 
@@ -10,9 +10,7 @@
             <h2 class="promo-secondary__title h-promo">@title</h2>
         </div>
         <div class="promo-secondary__video">
-            <div class="responsive-video">
-                <iframe class="responsive-video__iframe" width="715" height="429" src="@videoUrl" frameborder="0" allowfullscreen></iframe>
-            </div>
+            @fragments.media.videoPlayer(video)
         </div>
     </div>
     <div class="promo-secondary__description">

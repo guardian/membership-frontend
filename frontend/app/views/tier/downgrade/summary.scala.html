@@ -1,10 +1,15 @@
-@(currentSubscription: model.Zuora.SubscriptionDetails, futureSubscription: model.Zuora.SubscriptionDetails)
+@(
+    currentSubscription: model.Zuora.SubscriptionDetails,
+    futureSubscription: model.Zuora.SubscriptionDetails,
+    currentTier: com.gu.membership.salesforce.Tier,
+    futureTierName: String
+)
 
 @import configuration.Config
 @import views.support.Dates._
 @import views.support.Prices._
 
-@main("Change Tier Summary | " + futureSubscription.planName + " from " + currentSubscription.planName) {
+@main("Change Tier Summary | " + futureTierName + " from " + currentTier.name) {
 
     <main role="main" class="page-content l-constrained">
 
@@ -15,7 +20,7 @@
                 <h2 class="page-section__headline">Current Membership summary</h2>
             </div>
             <div class="page-section__content">
-                @fragments.tier.summary(currentSubscription)
+                @fragments.tier.summary(currentSubscription, Some(currentTier))
             </div>
         </section>
 
@@ -30,7 +35,7 @@
                             Tier
                         </th>
                         <td id="qa-downgrade-summary-tier">
-                            Friend
+                            @futureTierName
                         </td>
                     </tr>
                     <tr role="row">
