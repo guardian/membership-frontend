@@ -3,25 +3,25 @@ package controllers
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
-import com.gu.membership.salesforce.{MemberId, Member, Tier}
+import com.github.nscala_time.time.Imports._
+import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.dsl._
-import configuration.{Config, CopyConfig, Links}
-import model.Eventbrite.{EBOrder, EBEvent}
+import configuration.{CopyConfig, Links}
+import model.EmbedSerializer._
+import model.Eventbrite.{EBEvent, EBOrder}
 import model.RichEvent._
-import model.{IdMinimalUser, EventPortfolio, Eventbrite, PageInfo}
-import org.joda.time.Instant
+import model.{EmbedData, EmbedResponse, EventPortfolio, Eventbrite, PageInfo}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.Jsonp
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json.JsValueWrapper
-import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, MasterclassEventService, LocalEventService, MemberService}
-import services.EventbriteService._
-import com.github.nscala_time.time.Imports._
-import tracking._
-import scala.concurrent.Future
 import play.api.libs.json._
+import play.api.mvc._
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
+import services.EventbriteService._
+import tracking._
+
+import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
 
