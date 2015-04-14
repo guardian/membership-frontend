@@ -14,3 +14,13 @@ case class EventPortfolio(
   lazy val heroOpt = orderedEvents.headOption
   lazy val priority = orderedEvents.drop(1)
 }
+
+case class EventCollections(
+    trending: Seq[RichEvent],
+    topSelling: Seq[RichEvent],
+    thisWeek: Seq[RichEvent],
+    nextWeek: Seq[RichEvent],
+    recentlyCreated: Seq[RichEvent],
+    partnersOnly: Seq[RichEvent],
+    programmingPartnerEvents: Option[EventGroup]
+)
