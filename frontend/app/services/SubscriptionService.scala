@@ -165,14 +165,14 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         assert(result.invoiceItems.nonEmpty, "Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
         val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
 
-        MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
-          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, firstPreviewInvoice.renewalDate, initialFreePeriodOffer = true )
+        MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, None,
+          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, firstPreviewInvoice.renewalDate )
       }
     }
 
     def getSummaryViaInvoice(memberId: MemberId) = for (paymentSummary <- getPaymentSummary(memberId)) yield {
       MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
-        paymentSummary.totalPrice, paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate, initialFreePeriodOffer = false)
+        Some(paymentSummary.totalPrice), paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate)
     }
 
     val summaryViaSubscriptionAmendF = getSummaryViaSubscriptionAmend(memberId)
