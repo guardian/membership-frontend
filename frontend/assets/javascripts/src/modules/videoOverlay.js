@@ -2,7 +2,7 @@
 /**
  * Play video when clicking on a video overlay image
  */
-define(['src/utils/loadJS'], function (loadJS) {
+define(function() {
 
     var SELECTOR_PLAYER = '.js-video';
     var SELECTOR_PLAYER_IFRAME = '.js-video__iframe';
@@ -29,26 +29,39 @@ define(['src/utils/loadJS'], function (loadJS) {
             var playerApi;
 
             if(playerIframe && playerOverlay) {
-                playerApi = new YT.Player(playerIframe);
-                playerOverlay.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    if(!iOSDevice()) {
-                        playerApi.playVideo();
+                playerApi = new YT.Player(playerIframe, {
+                    events: {
+                        'onReady': function() {
+                            playerReady(player, playerApi, playerOverlay);
+                        }
                     }
-                    player.classList.add(CLASSNAME_IS_PLAYING);
-                    setTimeout(function() {
-                        playerOverlay.parentNode.removeChild(playerOverlay);
-                    }, 2000);
                 });
             }
-
         });
     };
 
+    function playerReady(player, playerApi, playerOverlay) {
+        playerOverlay.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            if(!iOSDevice()) {
+                try {
+                    playerApi.playVideo();
+                } catch(e) {}
+            }
+            player.classList.add(CLASSNAME_IS_PLAYING);
+            setTimeout(function() {
+                var parentNode = playerOverlay.parentNode;
+                if (parentNode) {
+                    parentNode.removeChild(playerOverlay);
+                }
+            }, 2000);
+        });
+    }
+
     function init() {
         if (playerEls.length) {
-            loadJS('//www.youtube.com/iframe_api');
+            require(['js!//www.youtube.com/iframe_api?noext']);
         }
     }
 
