@@ -21,7 +21,7 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                     lastName = LAST_NAME_ELEM.value;
 
                 ajax({
-                    url: '/user/check-subscriber?id='+ subscriberId + buildQueryString(postcode, lastName)
+                    url: '/user/check-subscriber?id='+ subscriberId + '&lastName=' + lastName + buildQueryString(postcode)
                 }).then(function(response) {
                     if(response.valid) {
                         handleSuccess(response);
@@ -33,13 +33,10 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
         }
     }
 
-    function buildQueryString(postcode, lastName) {
+    function buildQueryString(postcode) {
         var identifierQueryString = '';
         if(postcode) {
             identifierQueryString += '&postcode=' + postcode;
-        }
-        if(lastName) {
-            identifierQueryString += '&lastName=' + lastName;
         }
         return identifierQueryString;
     }
@@ -85,6 +82,18 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
             isValid: response.valid,
             elem: SUBSCRIBER_ID_INPUT_ELEM,
             msg: response.msg
+        });
+
+        display.toggleErrorState({
+            isValid: POSTCODE_ELEM.value !== '',
+            elem: POSTCODE_ELEM,
+            msg: 'Please provide your Postcode'
+        });
+
+        display.toggleErrorState({
+            isValid: LAST_NAME_ELEM.value !== '',
+            elem: LAST_NAME_ELEM,
+            msg: 'Please provide your last name'
         });
     }
 

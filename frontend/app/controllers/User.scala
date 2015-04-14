@@ -67,7 +67,7 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: Option[String]) = AjaxAuthenticatedAction.async { implicit request =>
+  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: String) = AjaxAuthenticatedAction.async { implicit request =>
      def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
       Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
     }
@@ -79,11 +79,11 @@ trait User extends Controller {
     yield {
       casResult match {
         case success: CASSuccess => {
-          if (new DateTime(success.expiryDate).isBeforeNow()) Ok(json(id, false, Some("Subscription has expired.")))
-          else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Subscriber account has been used on the Membership offer. Please contact ${Email.membershipSupport} for further assistance.")))
+          if (new DateTime(success.expiryDate).isBeforeNow()) Ok(json(id, false, Some("Sorry, your subscription has expired.")))
+          else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Sorry, the subscriber account number entered has already been used to redeem this offer.")))
           else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
         }
-        case _ => Ok(json(id, false, Some(s"Subscriber details invalid. Please contact ${Email.membershipSupport} for further assistance.")))
+        case _ => Ok(json(id, false, Some(s"To redeem this offer we need more information to validate your subscriber account number.  Please review the additional information required and try again.")))
       }
     }
   }

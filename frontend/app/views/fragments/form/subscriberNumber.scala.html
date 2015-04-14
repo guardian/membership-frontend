@@ -1,8 +1,15 @@
+@import configuration.Email
+
 <fieldset class="fieldset">
 
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Subscribers pay nothing for 6 months</h2>
-        <div class="fieldset__note">To validate your subscriber account please also provide a postcode in the Delivery address</div>
+        <div class="fieldset__note">
+            <p>Need help redeeming this offer?</p>
+            <p>Email @Email.membershipSupport</p>
+            <p>Call 0330 333 6898</p>
+            <p>(Lines open 08:00 to 17:30 Mon - Fri, 08.30 to 12.30 weekends)</p>
+        </div>
     </div>
 
 
@@ -16,7 +23,7 @@
                    value=""
                    class="input-text js-subscriber-id-input" />
             <button class="action js-subscriber-id-submit l-pad-vertical"> Apply discount </button>
-            @fragments.form.errorMessage("There has been an error supplying your subscriber ID.")
+            @fragments.form.errorMessage("There was an error applying your discount, please try again.")
         </div>
     </div>
 
