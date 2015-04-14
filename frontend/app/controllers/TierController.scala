@@ -44,27 +44,26 @@ trait UpgradeTier {
 
   def upgrade(tier: Tier) = MemberAction.async { implicit request =>
 
-    def performUpgrade(subscription: SubscriptionDetails): Future[Result] = {
-      val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-
-      val futurePaidPreviewOpt = request.member match {
-        case paidMember: PaidMember =>
-          val previewUpgradeSubscriptionFuture = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
-          val stripeCustomerFuture = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
-          for {
-            preview <- previewUpgradeSubscriptionFuture
-            customer <- stripeCustomerFuture
-          } yield Some(PaidPreview(customer.card, preview))
-        case _: FreeMember => Future.successful(None)
-      }
-      val identityDetailsFuture = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
+    def previewUpgrade(subscription: SubscriptionDetails): Future[Result] = {
       if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
       else {
+        val futurePaidPreviewOpt = request.member match {
+          case paidMember: PaidMember =>
+            val previewUpgradeSubscriptionFuture = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
+            val stripeCustomerFuture = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+            for {
+              preview <- previewUpgradeSubscriptionFuture
+              customer <- stripeCustomerFuture
+            } yield Some(PaidPreview(customer.card, preview))
+          case _: FreeMember => Future.successful(None)
+        }
 
+        val identityDetailsFuture = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
         for {
           paidPreviewOpt <- futurePaidPreviewOpt
           user <- identityDetailsFuture
         } yield {
+          val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
           request.member match {
@@ -89,7 +88,7 @@ trait UpgradeTier {
     if (request.member.tier < tier) {
       for {
         subscription <- currentSubscription
-        result <- performUpgrade(subscription)
+        result <- previewUpgrade(subscription)
       } yield result
     }
     else Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
