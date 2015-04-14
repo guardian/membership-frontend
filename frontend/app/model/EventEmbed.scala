@@ -21,5 +21,8 @@ case class EmbedResponse(status: String, result: Option[EmbedData])
 object EmbedSerializer {
   implicit val writesEmbedData = Json.writes[EmbedData]
   implicit val writesResponse = Json.writes[EmbedResponse]
-}
 
+  def eventToJson(embedData: Option[EmbedData]) = {
+    Json.toJson(EmbedResponse(embedData.fold("error")(_ => "success"), embedData))
+  }
+}

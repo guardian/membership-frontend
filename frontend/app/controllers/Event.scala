@@ -84,8 +84,7 @@ trait Event extends Controller with ActivityTracking {
       end = event.end.toString(standardFormat)
     )
 
-    val json = Json.toJson(EmbedResponse(eventDataOpt.fold("error")(_ => "success"), eventDataOpt))
-    Ok(Jsonp(callback, json))
+    Ok(Jsonp(callback, eventToJson(eventDataOpt)))
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
