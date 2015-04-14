@@ -150,6 +150,6 @@
     @fragments.analytics.membershipJoinerConversion()
     @fragments.analytics.videoCampaignPHD.thankyouPage(
         member.regNumber.fold("free")(regNumber => regNumber),
-        cardOpt.fold("free")( card => "%.2f".format(summary.amountPaidToday))
+        summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
     )
 }
