@@ -68,7 +68,7 @@ trait Event extends Controller with ActivityTracking {
    * (eg. updates to event details will not be reflected post-embed)
    */
   def embedData(slug: String, callback: String) = CachedAction { implicit request =>
-  val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+    val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
 
     val eventDataOpt = for {
       id <- EBEvent.slugToId(slug)
