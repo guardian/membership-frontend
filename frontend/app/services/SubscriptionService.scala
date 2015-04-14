@@ -132,4 +132,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
     } yield PaymentSummary(invoiceItems)
   }
+
+  def getSubscriptionsByCasId(casId: String): Future[Seq[Subscription]] =  zuora.query[Subscription](s"CASSubscriberID__c='$casId'")
 }
