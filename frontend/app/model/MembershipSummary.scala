@@ -8,12 +8,10 @@ case class MembershipSummary(startDate: DateTime,
                              planAmount: Float,
                              nextPaymentPrice: Float,
                              nextPaymentDate: DateTime,
+                             renewalDate: DateTime,
                              initialFreePeriodOffer: Boolean) {
 
 
-  val annual = {
-    if (initialFreePeriodOffer) nextPaymentPrice % planAmount != 0
-    else firstPaymentEndDate.plusDays(1) == startDate.plusYears(1)
-  }
+  val annual = startDate.plusYears(1) == renewalDate
 
 }
