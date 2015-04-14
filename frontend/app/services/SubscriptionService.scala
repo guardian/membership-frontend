@@ -108,10 +108,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     }
   }
 
-  def getLatestSubscription(memberId: MemberId): Future[Subscription] = {
-    for (subscriptions <- getSubscriptions(memberId))
-    yield sortSubscriptions(subscriptions).last
-  }
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
@@ -148,7 +144,10 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
   def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {
 
-    val latestSubF = getLatestSubscription(memberId)
+    val latestSubF = {
+      for (subscriptions <- getSubscriptions(memberId))
+      yield sortSubscriptions(subscriptions).last
+    }
 
     def hasUserBeenInvoiced(memberId: MemberId) =
       for (subscription <- latestSubF)
