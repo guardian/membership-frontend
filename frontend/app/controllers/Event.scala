@@ -61,19 +61,6 @@ trait Event extends Controller with ActivityTracking {
     eventOpt.getOrElse(Redirect(Links.membershipFront))
   }
 
-  case class EmbedData(title: String,
-                       image: Option[String],
-                       venue: Option[String],
-                       location: Option[String],
-                       price: Option[String],
-                       identifier: String,
-                       start: String,
-                       end: String)
-  case class EmbedResponse(status: String, result: Option[EmbedData])
-
-  implicit val writesEmbedData = Json.writes[EmbedData]
-  implicit val writesResponse = Json.writes[EmbedResponse]
-
   /*
    * This endpoint is hit by Composer when embedding Membership events.
    * Changes here will need to be reflected in the flexible-content repo.
