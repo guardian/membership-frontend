@@ -43,11 +43,6 @@ object Config {
   def eventImageUrlPath(id: String): String =
     config.getString("membership.event.images.url") + id
 
-  val eventImageWidths = config.getList("membership.event.images.widths").unwrapped
-  val eventImageRatios = config.getList("membership.event.images.ratios").unwrapped
-  val homeImageWidths = config.getList("membership.home.images.widths").unwrapped
-  val homeImageRatios = config.getList("membership.home.images.ratios").unwrapped
-
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
@@ -125,10 +120,10 @@ object Config {
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
       productRatePlans = Map(
-          FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
-          StaffPlan -> backendConf.getString(s"zuora.api.staff")
-        ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
-      )
+        FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
+        StaffPlan -> backendConf.getString(s"zuora.api.staff")
+      ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
+    )
 
     TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
   }
