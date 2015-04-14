@@ -159,7 +159,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         latestSubscription <- getLatestSubscription(memberId)
         result <- zuora.request(SubscriptionDetailsViaAmend(subscriptionStatus.current, latestSubscription.contractAcceptanceDate))
       } yield {
-        if(result.invoiceItems.isEmpty) throw SubscriptionServiceError("Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
+        assert(result.invoiceItems.isEmpty, "Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
         val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
 
         MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, 0f,
