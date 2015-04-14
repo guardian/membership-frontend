@@ -58,6 +58,7 @@ object Config {
   val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
   val eventbriteWaitlistUrl = config.getString("eventbrite.waitlist.url")
+  val eventbriteLimitedAvailabilityCutoff = config.getInt("eventbrite.limitedAvailabilityCutoff")
 
   def eventbriteWaitlistUrl(event: EBEvent): String =
     eventbriteWaitlistUrl ? ("eid" -> event.id) & ("tid" -> 0)
