@@ -63,6 +63,7 @@ GET            /masterclasses/:tag                controllers.Event.masterclasse
 GET            /masterclasses/:tag/:subTag        controllers.Event.masterclassesByTag(tag, subTag)
 
 GET            /event/:id                         controllers.Event.details(id)
+GET            /event/:id/embed                   controllers.Event.embedData(id, callback: String)
 GET            /event/:id/buy                     controllers.Event.buy(id)
 GET            /event/:id/thankyou                controllers.Event.thankyou(id, oid: Option[String])
 GET            /event/:id/thankyou/pixel          controllers.Event.thankyouPixel(id)
