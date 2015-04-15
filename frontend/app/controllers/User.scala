@@ -1,16 +1,17 @@
 package controllers
 
+import actions._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import model.PaidTiers
-import org.joda.time.{DateTime, Instant}
 import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.{DateTime, Instant}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 import play.api.mvc.{Controller, Cookie}
 import services.CASService
 import utils.GuMemCookie
-import actions._
 
 import scala.concurrent.Future
 
@@ -66,24 +67,26 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: String) = AjaxAuthenticatedAction.async { implicit request =>
-    def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
-      Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
-    }
+  case class SubCheck(valid: Boolean, msg: Option[String] = None)
+  object SubCheck { implicit val writesSubscriberResult = Json.writes[SubCheck] }
 
+  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: String) = AjaxAuthenticatedAction.async { implicit request =>
+    val existingSubsWithCasIdF = request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
     for {
       casResult <- casService.check(id, postcode, lastName)
-      casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
-    }
-    yield {
-      casResult match {
-        case success: CASSuccess => {
-          if (new DateTime(success.expiryDate).isBeforeNow()) Ok(json(id, false, Some("Sorry, your subscription has expired.")))
-          else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Sorry, the subscriber account number entered has already been used to redeem this offer.")))
-          else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
-        }
-        case _ => Ok(json(id, false, Some(s"To redeem this offer we need more information to validate your subscriber account number.  Please review the additional information required and try again.")))
+      existingSubsWithCasId <- existingSubsWithCasIdF
+    } yield {
+      val subCheck = casResult match {
+        case casSuccess: CASSuccess =>
+          if (new DateTime(casSuccess.expiryDate).isBeforeNow()) SubCheck(false, Some("Sorry, your subscription has expired."))
+          else if (existingSubsWithCasId.nonEmpty) SubCheck(false, Some(s"Sorry, the subscriber account number entered has already been used to redeem this offer."))
+          else SubCheck(true)
+        case _ => SubCheck(false, Some(s"To redeem this offer we need more information to validate your subscriber account number.  Please review the additional information required and try again."))
       }
+      if (!subCheck.valid) {
+        logger.warn(s"sub user=${request.user.id} sub-id=$id cas=$casResult existing-subs=$existingSubsWithCasId $subCheck")
+      }
+      Ok(toJson(subCheck))
     }
   }
 }
