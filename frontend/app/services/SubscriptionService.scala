@@ -58,13 +58,10 @@ trait AmendSubscription {
   def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
 
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
-    //otherwise if the customer acceptance date is in the future then that should be passed else pass the current time
-    def effectiveFrom(subscriptionDetails: SubscriptionDetails) = {
-      subscriptionDetails.chargedThroughDate.getOrElse {
-          if(subscriptionDetails.contractAcceptanceDate.isAfterNow) subscriptionDetails.contractAcceptanceDate
-          else DateTime.now()
-      }
-    }
+    //otherwise use customer acceptance date (which should be in the future)
+    def effectiveFrom(subscriptionDetails: SubscriptionDetails) = subscriptionDetails.chargedThroughDate.getOrElse(subscriptionDetails.contractAcceptanceDate)
+
+
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
