@@ -1,11 +1,12 @@
 package services.zuora
 
+import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.zuora.Address
 import forms.MemberForm.NameForm
 import model.Zuora._
-import org.joda.time.DateTime
+import org.joda.time.{Period, DateTime}
 import services.zuora.ZuoraServiceHelpers._
 
 import scala.xml.{Elem, Null}
@@ -88,10 +89,12 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address) extends ZuoraAction[SubscribeResult] {
+                     address: Address, paymentDelay: Option[Period]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
-    val now = formatDateTime(DateTime.now)
+    val now = DateTime.now
+    val effectiveDate = formatDateTime(now)
+    val contractAcceptanceDate = paymentDelay.map(delay => formatDateTime(now + delay)).getOrElse(effectiveDate)
 
     val payment = customerOpt.map { customer =>
       <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
@@ -138,11 +141,11 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
         <ns1:SubscriptionData>
           <ns1:Subscription xsi:type="ns2:Subscription">
             <ns2:AutoRenew>true</ns2:AutoRenew>
-            <ns2:ContractEffectiveDate>{now}</ns2:ContractEffectiveDate>
-            <ns2:ContractAcceptanceDate>{now}</ns2:ContractAcceptanceDate>
+            <ns2:ContractEffectiveDate>{effectiveDate}</ns2:ContractEffectiveDate>
+            <ns2:ContractAcceptanceDate>{contractAcceptanceDate}</ns2:ContractAcceptanceDate>
             <ns2:InitialTerm>12</ns2:InitialTerm>
             <ns2:RenewalTerm>12</ns2:RenewalTerm>
-            <ns2:TermStartDate>{now}</ns2:TermStartDate>
+            <ns2:TermStartDate>{effectiveDate}</ns2:TermStartDate>
             <ns2:TermType>TERMED</ns2:TermType>
           </ns1:Subscription>
           <ns1:RatePlanData>
