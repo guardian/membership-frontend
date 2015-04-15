@@ -89,12 +89,16 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
 }
 
 case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address, paymentDelay: Option[Period]) extends ZuoraAction[SubscribeResult] {
+                     address: Address, paymentDelay: Option[Period], casIdOpt: Option[String]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
     val effectiveDate = formatDateTime(now)
     val contractAcceptanceDate = paymentDelay.map(delay => formatDateTime(now + delay)).getOrElse(effectiveDate)
+
+    val casId = casIdOpt.map { id =>
+      <ns2:CASSubscriberID__c>{id}</ns2:CASSubscriberID__c>
+    }.getOrElse(Null)
 
     val payment = customerOpt.map { customer =>
       <ns1:PaymentMethod xsi:type="ns2:PaymentMethod">
@@ -147,6 +151,7 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
             <ns2:RenewalTerm>12</ns2:RenewalTerm>
             <ns2:TermStartDate>{effectiveDate}</ns2:TermStartDate>
             <ns2:TermType>TERMED</ns2:TermType>
+            {casId}
           </ns1:Subscription>
           <ns1:RatePlanData>
             <ns1:RatePlan xsi:type="ns2:RatePlan">

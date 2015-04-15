@@ -78,7 +78,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, paymentDelay: Option[Period] = None): Future[MemberId] = {
+  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, paymentDelay: Option[Period] = None, casId: Option[String] = None): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
@@ -95,7 +95,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         customerOpt <- futureCustomerOpt
         userData = initialData(fullUser, formData)
         memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
-        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, paymentDelay)
+        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, paymentDelay, casId)
 
         // Set some fields once subscription has been successful
         updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))
