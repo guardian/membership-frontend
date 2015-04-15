@@ -64,9 +64,9 @@
                     <tr role="row">
                         <th role="rowheader">Next payment</th>
                         <td id="qa-joiner-summary-next">
-                            @summary.nextPaymentPrice.pretty @if(summary.initialFreePeriodOffer) {
-                                (@summary.nextPaymentDate.pretty)
-                            }
+                            @if(summary.initialFreePeriodOffer) {
+                                @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
+                            } else { @summary.nextPaymentDate.pretty }
                         </td>
                     </tr>
                     <tr role="row">
