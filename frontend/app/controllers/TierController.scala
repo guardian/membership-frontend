@@ -47,29 +47,26 @@ trait UpgradeTier {
     def previewUpgrade(subscription: SubscriptionDetails): Future[Result] = {
       if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
       else {
-        val futurePaidPreviewOpt = request.member match {
+        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request)).map(_.privateFields)
+
+        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
+
+        request.member match {
           case paidMember: PaidMember =>
-            val previewUpgradeSubscriptionFuture = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
-            val stripeCustomerFuture = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
+            val stripeCustomerF = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+
             for {
-              preview <- previewUpgradeSubscriptionFuture
-              customer <- stripeCustomerFuture
-            } yield Some(PaidPreview(customer.card, preview))
-          case _: FreeMember => Future.successful(None)
-        }
+              preview <- previewUpgradeSubscriptionF
+              customer <- stripeCustomerF
+              privateFields <- identityUserFieldsF
+            } yield {
+              val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
 
-        val identityDetailsFuture = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request))
-        for {
-          paidPreviewOpt <- futurePaidPreviewOpt
-          user <- identityDetailsFuture
-        } yield {
-          val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
-
-          val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          request.member match {
-            case paidMember: PaidMember => Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt, subscription, flashMsgOpt))
-            case _ => Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, user.privateFields, pageInfo, paidPreviewOpt))
-          }
+              Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt))
+            }
+          case _ =>
+            for (privateFields <- identityUserFieldsF) yield Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, privateFields, pageInfo))
         }
       }
     }
