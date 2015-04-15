@@ -1,8 +1,11 @@
 package views.support
 
-import play.api.libs.json.{JsObject, Json}
 
-import scala.collection.mutable.{Map => MutableMap}
+import com.amazonaws.util.IOUtils
+import play.api.Play
+import play.api.Play.current
+import play.api.libs.json.{JsObject, Json}
+import play.twirl.api.Html
 import scala.io.Source
 
 object Asset {
@@ -13,4 +16,12 @@ object Asset {
   }
 
   def at(path: String): String = "/assets/" + map.getOrElse(path, path)
+  def pathAt(path: String): String = "public/" + map.getOrElse(path, path)
+
+  def inlineResource(path: String): Option[String] = {
+    val resource = Play.resourceAsStream(pathAt(path))
+    resource.map(file => IOUtils.toString(file))
+  }
+
+  def inlineSvg(name: String): Option[Html] = inlineResource("images/inline-svgs/" + name + ".svg").map(Html(_))
 }

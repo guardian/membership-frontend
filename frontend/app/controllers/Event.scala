@@ -15,6 +15,7 @@ import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo, _}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.Jsonp
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
 import services.EventbriteService._
@@ -84,6 +85,22 @@ trait Event extends Controller with ActivityTracking {
     )
 
     Ok(Jsonp(callback, eventToJson(eventDataOpt)))
+  }
+
+  /**
+   * This endpoint is hit by .com to enhance an embedded event.
+   */
+  def embedCard(slug: String) = AjaxCachedAction { implicit request =>
+    val eventOpt = for {
+      id <- EBEvent.slugToId(slug)
+      event <- EventbriteService.getEvent(id)
+    } yield event
+    
+    Ok(eventOpt.fold {
+      Json.obj("status" -> "error")
+    } { event =>
+      Json.obj("status" -> "success", "html" -> views.html.embeds.eventCard(event).toString())
+    })
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
