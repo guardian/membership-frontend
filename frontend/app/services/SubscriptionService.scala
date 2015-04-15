@@ -3,11 +3,13 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
+import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.{ProductRatePlan, TierPlan}
 import org.joda.time.DateTime
+import model.{MembershipSummary, ProductRatePlan, TierPlan}
 import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -83,7 +85,7 @@ trait AmendSubscription {
   }
 }
 
-class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription {
+class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription with LazyLogging {
   import services.SubscriptionServiceHelpers._
 
   private def getAccount(memberId: MemberId): Future[Account] =
@@ -102,6 +104,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
     for {
       subscriptions <- getSubscriptions(memberId)
+    
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
@@ -116,6 +119,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         }
     }
   }
+
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
@@ -149,5 +153,45 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       subscription <- getSubscriptionStatus(memberId)
       invoiceItems <- zuora.query[InvoiceItem](s"SubscriptionId='${subscription.current}'")
     } yield PaymentSummary(invoiceItems)
+  }
+
+  def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {
+
+    val latestSubF = {
+      for (subscriptions <- getSubscriptions(memberId))
+      yield sortSubscriptions(subscriptions).last
+    }
+
+    def hasUserBeenInvoiced(memberId: MemberId) =
+      for (subscription <- latestSubF)
+      yield subscription.contractAcceptanceDate.isAfterNow
+
+    def getSummaryViaSubscriptionAmend(memberId: MemberId) = {
+      for {
+        latestSubscription <- latestSubF
+        subscriptionDetailsF = getSubscriptionDetails(latestSubscription.id)
+        result <- zuora.request(SubscriptionDetailsViaAmend(latestSubscription.id, latestSubscription.contractAcceptanceDate))
+        subscriptionDetails <- subscriptionDetailsF
+      } yield {
+        logger.info(s"result from amend query: $result")
+        assert(result.invoiceItems.nonEmpty, "Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")
+        val firstPreviewInvoice = result.invoiceItems.sortBy(_.serviceStartDate).head
+
+        MembershipSummary(latestSubscription.termStartDate, firstPreviewInvoice.serviceEndDate, None,
+          subscriptionDetails.planAmount, firstPreviewInvoice.price, firstPreviewInvoice.serviceStartDate, firstPreviewInvoice.renewalDate )
+      }
+    }
+
+    def getSummaryViaInvoice(memberId: MemberId) = for (paymentSummary <- getPaymentSummary(memberId)) yield {
+      MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
+        Some(paymentSummary.totalPrice), paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate)
+    }
+
+    val summaryViaSubscriptionAmendF = getSummaryViaSubscriptionAmend(memberId)
+
+    for {
+      userInvoiced <- hasUserBeenInvoiced(memberId)
+      summary <- if (userInvoiced) summaryViaSubscriptionAmendF else getSummaryViaInvoice(memberId)
+    } yield summary
   }
 }

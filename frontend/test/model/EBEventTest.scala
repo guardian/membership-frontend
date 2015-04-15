@@ -20,6 +20,7 @@ class EBEventTest extends PlaySpecification {
   val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
   val soldOutEvent = ebResponse.data.find(_.id == "12238163677").get
   val startedEvent = ebResponse.data.find(_.id == "12972720757").get
+  val limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get
 
   val ticketedEvent = ebLiveEvent;
 
@@ -40,6 +41,13 @@ class EBEventTest extends PlaySpecification {
     }
     "should display sold out text" in {
       soldOutEvent.statusText mustEqual("Sold out")
+    }
+    "not be limited availability when sold out" in {
+      limitedAvailabilityEvent.isSoldOut mustEqual(false)
+      soldOutEvent.isLimitedAvailability mustEqual(false)
+    }
+    "should be flagged as limited availability when limited tickets available" in {
+      limitedAvailabilityEvent.isLimitedAvailability mustEqual(true)
     }
     "should display draft status in event" in {
       ebDraftEvent.statusText mustEqual("Preview of Draft Event")

@@ -24,7 +24,7 @@ object Cached {
     val now = DateTime.now
     val staleWhileRevalidateSeconds = max(maxAge / 10, 1)
     result.withHeaders(
-      "Cache-Control" -> s"max-age=$maxAge, stale-while-revalidate=$staleWhileRevalidateSeconds, stale-if-error=$tenDaysInSeconds",
+      "Cache-Control" -> s"public, max-age=$maxAge, stale-while-revalidate=$staleWhileRevalidateSeconds, stale-if-error=$tenDaysInSeconds",
       "Expires" -> toHttpDateTimeString(now + maxAge.seconds),
       "Date" -> toHttpDateTimeString(now)
     )

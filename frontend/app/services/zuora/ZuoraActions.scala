@@ -156,6 +156,44 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
   }
 }
 
+/**
+ * A hack to get when a subscription charge dates will be effective. While it's possible to get this data from an
+ * Invoice of a subscription that charges the user immediately (e.g. annual partner sign up), it's not possible to get this for data
+ * for subscriptions that charge in the future (subs offer that charges 6 months in). To achieve the latter an amend
+ * call with preview can be used - this works for the first case too.
+ *
+ */
+case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDate: DateTime) extends ZuoraAction[AmendResult] {
+
+
+  val now = DateTime.now
+  val contractAcceptanceDate = formatDateTime(paymentDate)
+
+  val body = {
+    <ns1:amend>
+      <ns1:requests>
+        <ns1:Amendments>
+          <ns2:ContractEffectiveDate>{contractAcceptanceDate}</ns2:ContractEffectiveDate>
+          <ns2:EffectiveDate>{contractAcceptanceDate}</ns2:EffectiveDate>
+          <ns2:CustomerAcceptanceDate>{contractAcceptanceDate}</ns2:CustomerAcceptanceDate>
+          <ns2:Name>GetSubscriptionDetailsViaAmend</ns2:Name>
+          <ns2:Status>Completed</ns2:Status>
+          <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+          <ns2:Type>TermsAndConditions</ns2:Type>
+        </ns1:Amendments>
+        <ns1:AmendOptions>
+          <ns1:GenerateInvoice>False</ns1:GenerateInvoice>
+          <ns1:ProcessPayments>False</ns1:ProcessPayments>
+        </ns1:AmendOptions>
+        <ns1:PreviewOptions>
+          <ns1:EnablePreviewMode>True</ns1:EnablePreviewMode>
+          <ns1:PreviewThroughTermEnd>True</ns1:PreviewThroughTermEnd>
+        </ns1:PreviewOptions>
+      </ns1:requests>
+    </ns1:amend>
+  }
+}
+
 case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime)
   extends ZuoraAction[AmendResult] {
 

@@ -192,7 +192,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     }.getOrElse(Future.successful(None))
 
     for {
-      paymentSummary <- request.touchpointBackend.subscriptionService.getPaymentSummary(request.member)
+      paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
       customerOpt <- futureCustomerOpt
       eventDetailsOpt <- futureEventDetailsOpt
       contentOpt <- futureContentOpt.recover { case _ => None }
