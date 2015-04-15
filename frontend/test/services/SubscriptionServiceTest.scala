@@ -11,7 +11,7 @@ class SubscriptionServiceTest extends Specification {
       val endDate = new DateTime(2014, 11, 7, 10, 0)
 
       val subscriptionDetails = SubscriptionDetails(
-        Subscription("some id", 1, Some("casID"), startDate, startDate),
+        Subscription("some id", 1, startDate, startDate),
         RatePlan("RatePlanId", "Product name - annual"),
         RatePlanCharge("RatePlanChargeId", Some(endDate), startDate, 12.0f)
       )
