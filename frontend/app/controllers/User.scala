@@ -1,14 +1,17 @@
 package controllers
 
+import com.gu.cas.CAS.{CASResult, CASSuccess, CASError}
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
+import configuration.Email
 import model.PaidTiers
-import org.joda.time.Instant
+import org.joda.time.{DateTime, Instant}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc.{Controller, Cookie}
 import services.CASService
 import utils.GuMemCookie
+import actions._
 
 import scala.concurrent.Future
 
@@ -41,8 +44,8 @@ trait User extends Controller {
     } yield Json.obj(
       "optIn" -> !subscriptionStatus.cancelled,
       "subscription" -> (cardDetails ++ Json.obj(
-        "start" -> subscriptionDetails.startDate,
-        "end" -> subscriptionDetails.endDate,
+        "start" -> subscriptionDetails.effectiveStartDate,
+        "end" -> subscriptionDetails.chargedThroughDate,
         "cancelledAt" -> subscriptionStatus.future.isDefined,
         "plan" -> Json.obj(
           "name" -> subscriptionDetails.planName,
@@ -64,11 +67,24 @@ trait User extends Controller {
     "joinDate" -> member.joinDate
   )
 
-  //todo subscriber ID not been used
-  def subscriberDetails(id: String, postcode: String) = AjaxAuthenticatedAction.async { implicit request =>
-    for (validSubscriber <- casService.isValidSubscriber(id, postcode)) yield {
-      if(validSubscriber) Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
-      else Ok(Json.obj("subscriber-id" -> id, "valid" -> false))
+  def checkSubscriberDetails(id: String, postcode: Option[String], lastName: String) = AjaxAuthenticatedAction.async { implicit request =>
+     def json(id: String, isValid: Boolean, errorMsg: Option[String]) = {
+      Json.obj("subscriber-id" -> id, "valid" -> isValid) ++ errorMsg.map(msg => Json.obj("msg" -> msg)).getOrElse(Json.obj())
+    }
+
+     for {
+      casResult <- casService.check(id, postcode, lastName)
+      casIdNotUsed <- request.touchpointBackend.subscriptionService.getSubscriptionsByCasId(id)
+    }
+    yield {
+      casResult match {
+        case success: CASSuccess => {
+          if (new DateTime(success.expiryDate).isBeforeNow()) Ok(json(id, false, Some("Sorry, your subscription has expired.")))
+          else if(casIdNotUsed.nonEmpty) Ok(json(id, false, Some(s"Sorry, the subscriber account number entered has already been used to redeem this offer.")))
+          else Ok(Json.obj("subscriber-id" -> id, "valid" -> true))
+        }
+        case _ => Ok(json(id, false, Some(s"To redeem this offer we need more information to validate your subscriber account number.  Please review the additional information required and try again.")))
+      }
     }
   }
 }

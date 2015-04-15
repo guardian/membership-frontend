@@ -37,7 +37,7 @@ object MemberForm {
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
                                 billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
-                                password: Option[String]) extends JoinForm {
+                                password: Option[String], casId: Option[String], subscriberOffer: Boolean) extends JoinForm {
     val plan = PaidTierPlan(tier, payment.annual)
   }
 
@@ -83,7 +83,7 @@ object MemberForm {
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "type" -> nonEmptyText.transform[Boolean](_ == "annual", x => if (x) "annual" else "month"),
+    "type" -> nonEmptyText.transform[Boolean]((b => b == "annual" || b == "subscriberOfferAnnual"), x => if (x) "annual" else "month"),
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
@@ -121,7 +121,9 @@ object MemberForm {
       "deliveryAddress" -> paidAddressMapping,
       "billingAddress" -> optional(paidAddressMapping),
       "marketingChoices" -> marketingChoicesMapping,
-      "password" -> optional(nonEmptyText)
+      "password" -> optional(nonEmptyText),
+      "casId" -> optional(nonEmptyText),
+      "subscriberOffer" -> default(boolean, false)
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 
