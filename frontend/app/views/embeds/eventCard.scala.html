@@ -10,7 +10,7 @@
     </style>
 }
 <figure class="membership-event" itemscope itemtype="http://schema.org/Event">
-    <a href="@{Config.membershipUrl}@{routes.Event.buy(event.id)}" class="membership-event__link">
+    <a href="@event.memUrl" class="membership-event__link">
         <div class="membership-event__header">
             <div class="membership-event__icon">
                 @for(icon <- Asset.inlineSvg("g-mark")) {
@@ -44,7 +44,7 @@
         </div>
     </a>
     <div class="membership-event__action">
-        <a href="@{Config.membershipUrl}@{routes.Event.buy(event.id)}" class="membership-event__button" itemprop="url">
+        <a href="@event.memUrl" class="membership-event__button" itemprop="url">
             Book Now
             @for(icon <- Asset.inlineSvg("arrow-right")) {
                 @icon
