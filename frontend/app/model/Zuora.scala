@@ -61,7 +61,7 @@ object Zuora {
 
     val inFreePeriodOffer = chargedThroughDate.isEmpty && contractAcceptanceDate.isAfterNow
 
-    val annual = chargedThroughDate == effectiveStartDate.plusYears(1)
+    val annual = chargedThroughDate.getOrElse(contractAcceptanceDate) == effectiveStartDate.plusYears(1)
     val paymentPeriodLabel = if (annual) "year" else "month"
   }
 
