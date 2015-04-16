@@ -20,15 +20,24 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
                     postcode = POSTCODE_ELEM.value,
                     lastName = LAST_NAME_ELEM.value;
 
-                ajax({
-                    url: '/user/check-subscriber?id='+ subscriberId + '&lastName=' + lastName + buildQueryString(postcode)
-                }).then(function(response) {
-                    if(response.valid) {
-                        handleSuccess(response);
-                    } else {
-                        handleError(response);
-                    }
-                }).fail(handleError);
+
+                if(subscriberId !== '') {
+                    ajax({
+                        url: '/user/check-subscriber?id=' + subscriberId + '&lastName=' + lastName + buildQueryString(postcode)
+                    }).then(function (response) {
+                        if (response.valid) {
+                            handleSuccess(response);
+                        } else {
+                            handleError(response);
+                        }
+                    }).fail(handleError);
+                } else {
+                    display.toggleErrorState({
+                        isValid: false,
+                        elem: SUBSCRIBER_ID_INPUT_ELEM,
+                        msg: 'Please provide your subscriber ID'
+                    });
+                }
             });
         }
     }
