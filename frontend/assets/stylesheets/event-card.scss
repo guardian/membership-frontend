@@ -9,94 +9,92 @@
    ========================================================================== */
 
 .membership-event {
-    margin: ($gs-gutter / 4) 0;
     background-color: $c-neutral7;
-    max-width: 320px;
-    min-width: 140px;
-}
-.membership__hidden {
-    @include u-h;
-}
-.membership-event__header,
-.membership-event__body,
-.membership-event__action {
-    padding: $gs-gutter / 4;
-    padding-bottom: $gs-gutter / 2;
-}
-.membership-event__action {
-    padding-top: 0;
-}
-.membership-event__header {
-    color: $white;
-    background-color: tone('live');
-}
-.membership-event__icon {
-    width: 36px;
-    height: 36px;
-    svg {
-        fill: currentColor;
+
+    .membership__hidden {
+        @include u-h;
     }
-}
-.membership-event__brand {
-    @include fs-header(2);
-    font-weight: bold;
-    text-transform: lowercase;
-    margin: 0;
-}
-.membership-event__media img {
-    width: 100%;
-}
-.membership-event__title {
-    @include fs-headline(2);
-    font-weight: 500;
-    margin: 0 0 $gs-gutter / 4;
-}
-.membership-event__meta {
-    @include fs-data(2);
-    color: lighten($c-neutral1, 10%);
-}
-.membership-event__button {
-
-    @include fs-data(2);
-    font-weight: bold;
-
-    cursor: pointer;
-    text-decoration: none;
-    text-align: left;
-    display: inline-block;
-    vertical-align: bottom;
-    outline: none;
-
-    color: $white;
-    background-color: tone('live');
-    padding: ($gs-baseline / 3) ($gs-gutter / 2);
-    border-radius: 15px;
-
-    &:focus,
-    &:active,
-    &:hover {
+    .membership-event__header,
+    .membership-event__body,
+    .membership-event__action {
+        padding: $gs-gutter / 4;
+        padding-bottom: $gs-gutter / 2;
+    }
+    .membership-event__action {
+        padding-top: 0;
+    }
+    .membership-event__header {
         color: $white;
-        background-color: darken(tone('live'), 10%);
+        background-color: tone('live');
+    }
+    .membership-event__icon {
+        width: 36px;
+        height: 36px;
+        svg {
+            fill: currentColor;
+        }
+    }
+    .membership-event__brand {
+        @include fs-header(2);
+        font-weight: bold;
+        text-transform: lowercase;
+        margin: 0;
+    }
+    .membership-event__media img {
+        width: 100%;
+    }
+    .membership-event__title {
+        @include fs-headline(2);
+        font-weight: 500;
+        margin: 0 0 $gs-gutter / 4;
+    }
+    .membership-event__meta {
+        @include fs-data(2);
+        color: lighten($c-neutral1, 10%);
+    }
+    .membership-event__button {
+
+        @include fs-data(2);
+        font-weight: bold;
+
+        cursor: pointer;
         text-decoration: none;
-    }
-
-    svg {
+        text-align: left;
         display: inline-block;
-        vertical-align: middle;
-        fill: currentColor;
-        width: 15px;
-        height: 15px;
-        position: relative;
-        right: -3px;
+        vertical-align: bottom;
+        outline: none;
+
+        color: $white;
+        background-color: tone('live');
+        padding: ($gs-baseline / 3) ($gs-gutter / 2);
+        border-radius: 15px;
+
+        &:focus,
+        &:active,
+        &:hover {
+            color: $white;
+            background-color: darken(tone('live'), 10%);
+            text-decoration: none;
+        }
+
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+            fill: currentColor;
+            width: 15px;
+            height: 15px;
+            position: relative;
+            right: -3px;
+        }
+
     }
+    .membership-event__link {
+        text-decoration: none;
 
-}
-.membership-event__link {
-    text-decoration: none;
-
-    &:hover {
-        .membership-event__title {
-            text-decoration: underline;
+        &:hover {
+            .membership-event__title {
+                text-decoration: underline;
+            }
         }
     }
 }
