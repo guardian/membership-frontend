@@ -140,7 +140,21 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.allPublic.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
-  val corsAllowOrigin: Set[String] = config.getString("cors.allow.origin").split(",").toSet
+  val corsAllowOrigin = Set(
+    // identity
+    "https://profile.thegulocal.com",
+    "https://profile.code.dev-theguardian.com",
+    "https://profile.theguardian.com",
+    // theguardian.com
+    "http://www.thegulocal.com",
+    "http://www.theguardian.com",
+    // composer
+    "https://composer.gutools.co.uk",
+    "https://composer.code.dev-gutools.co.uk",
+    "https://composer.qa.dev-gutools.co.uk",
+    "https://composer.release.dev-gutools.co.uk",
+    "https://composer.local.dev-gutools.co.uk"
+  )
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
 
