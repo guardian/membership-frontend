@@ -7,8 +7,11 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader("Sorry to see you go…", subscriptionDetailsOpt.map("You will continue to receive all the great Membership benefits until " + _.endDate.pretty))
-
+        @for(subscriptionDetails <- subscriptionDetailsOpt) {
+            @subscriptionDetails.chargedThroughDate.map { endDate =>
+                @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.pretty))
+            }
+        }
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
                 <h2 class="page-section__headline">Current Membership summary</h2>

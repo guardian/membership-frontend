@@ -7,6 +7,8 @@ import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
 import model.Zuora._
 import model.ZuoraDeserializer._
+import model.{ProductRatePlan, TierPlan}
+import org.joda.time.DateTime
 import model.{MembershipSummary, ProductRatePlan, TierPlan}
 import services.zuora._
 
@@ -26,7 +28,7 @@ object SubscriptionServiceHelpers {
   def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
 
   def sortPreviewInvoiceItems(items: Seq[PreviewInvoiceItem]) = items.sortBy(_.price)
-  
+
   def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
@@ -49,18 +51,26 @@ trait AmendSubscription {
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
-        cancelDate = if (instant) DateTime.now else subscriptionDetails.endDate
+        cancelDate = if (instant) DateTime.now else subscriptionDetails.chargedThroughDate.getOrElse(DateTime.now())
         result <- zuora.request(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
       } yield result
     }
   }
 
   def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+
+    //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
+    //otherwise use customer acceptance date (which should be in the future)
+    def effectiveFrom(subscriptionDetails: SubscriptionDetails) = subscriptionDetails.chargedThroughDate.getOrElse(subscriptionDetails.contractAcceptanceDate)
+
+
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
+        dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
+
         result <- zuora.request(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
-          tierPlanRateIds(newTierPlan), subscriptionDetails.endDate))
+          tierPlanRateIds(newTierPlan), dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
   }
@@ -89,10 +99,12 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield subscriptions
   }
 
+  def getSubscription(subscriptionId: String): Future[Subscription] = zuora.queryOne[Subscription](s"Id='$subscriptionId'")
+
   def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
     for {
       subscriptions <- getSubscriptions(memberId)
-
+    
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
@@ -111,9 +123,10 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
+      subscription <- getSubscription(subscriptionId)
       ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
       ratePlanCharge <- zuora.queryOne[RatePlanCharge](s"RatePlanId='${ratePlan.id}'")
-    } yield SubscriptionDetails(ratePlan, ratePlanCharge)
+    } yield SubscriptionDetails(subscription, ratePlan, ratePlanCharge)
   }
 
   def getCurrentSubscriptionDetails(memberId: MemberId): Future[SubscriptionDetails] = {
