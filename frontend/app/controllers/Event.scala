@@ -66,7 +66,7 @@ trait Event extends Controller with ActivityTracking {
    * Note that Composer will index this data, which is in turn indexed by CAPI.
    * (eg. updates to event details will not be reflected post-embed)
    */
-  def embedData(slug: String, callback: String) = CachedAction { implicit request =>
+  def embedData(slug: String) = Cors.andThen(CachedAction) { implicit request =>
     val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
 
     val eventDataOpt = for {
@@ -83,7 +83,7 @@ trait Event extends Controller with ActivityTracking {
       end = event.end.toString(standardFormat)
     )
 
-    Ok(Jsonp(callback, eventToJson(eventDataOpt)))
+    Ok(eventToJson(eventDataOpt))
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {
