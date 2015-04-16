@@ -148,13 +148,15 @@ object Config {
 
   val stage = config.getString("stage")
 
+  val GuardianGoogleAppsDomain = "guardian.co.uk"
+
   val googleAuthConfig = {
     val con = config.getConfig("google.oauth")
     GoogleAuthConfig(
       con.getString("client.id"),
       con.getString("client.secret"),
       con.getString("callback"),
-      Some("guardian.co.uk")        // Google App domain to restrict login
+      Some(GuardianGoogleAppsDomain)        // Google App domain to restrict login
     )
   }
 
@@ -163,12 +165,12 @@ object Config {
     GoogleGroupConfig(
       con.getString("client.username"),
       con.getString("client.password"),
-      "guardian.co.uk",
+      GuardianGoogleAppsDomain,
       ""
     )
   }
 
-  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
+  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianGoogleAppsDomain").toSet
 
   val contentApiKey = config.getString("content.api.key")
 
