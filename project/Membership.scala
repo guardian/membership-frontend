@@ -37,6 +37,7 @@ trait Membership {
     sources in (Compile,doc) := Seq.empty,
     publishArtifact in (Compile, packageDoc) := false,
     parallelExecution in Global := false,
+    updateOptions := updateOptions.value.withCachedResolution(true),
     javaOptions in Test += "-Dconfig.resource=dev.conf"
   ) ++ buildInfoPlugin
 

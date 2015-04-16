@@ -33,6 +33,9 @@ object Dates {
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
 
+  def prettyShortDateWithTimeAndDayName(dt: DateTime): String =
+    dt.toString("EE d MMMMM") + ", " + prettyTime(dt)
+
   def prettyDateAndDayName(dt: DateTime): String =
     dt.toString("EE ") + prettyDate(dt)
 
