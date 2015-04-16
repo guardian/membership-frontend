@@ -13,7 +13,6 @@ import model.Eventbrite.{EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
 import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo, _}
 import org.joda.time.format.ISODateTimeFormat
-import play.api.libs.Jsonp
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -67,7 +66,7 @@ trait Event extends Controller with ActivityTracking {
    * Note that Composer will index this data, which is in turn indexed by CAPI.
    * (eg. updates to event details will not be reflected post-embed)
    */
-  def embedData(slug: String, callback: String) = CachedAction { implicit request =>
+  def embedData(slug: String) = Cors.andThen(CachedAction) { implicit request =>
     val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
 
     val eventDataOpt = for {
@@ -84,7 +83,7 @@ trait Event extends Controller with ActivityTracking {
       end = event.end.toString(standardFormat)
     )
 
-    Ok(Jsonp(callback, eventToJson(eventDataOpt)))
+    Ok(eventToJson(eventDataOpt))
   }
 
   /**
