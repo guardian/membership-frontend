@@ -1,0 +1,54 @@
+@(event: model.RichEvent.RichEvent)
+
+@import configuration.Config
+@import views.support.Asset
+@import views.support.Dates.prettyShortDateWithTimeAndDayName
+
+@for(embedCss <- Asset.inlineResource("stylesheets/event-card.css")) {
+    <style>
+        @Html(embedCss)
+    </style>
+}
+<figure class="membership-event" itemscope itemtype="http://schema.org/Event">
+    <a href="@event.memUrl" class="membership-event__link">
+        <div class="membership-event__header">
+            <div class="membership-event__icon">
+                @for(icon <- Asset.inlineSvg("g-mark")) {
+                    @icon
+                }
+            </div>
+            <h4 class="membership-event__brand">
+                <span class="membership__hidden">The Guardian</span> Live
+            </h4>
+        </div>
+        @for(img <- event.imgOpt) {
+            <div class="membership-event__media">
+                <img src="@img.defaultImage" alt="@img.altText" itemprop="image">
+            </div>
+        }
+        <div class="membership-event__body">
+            <h3 class="membership-event__title" itemprop="name">@event.name.text</h3>
+            <div class="membership-event__meta">
+                <div class="membership-event__date">
+                    <time itemprop="startDate" datetime="@event.start">@prettyShortDateWithTimeAndDayName(event.start)</time>
+                </div>
+                @if(event.venue.venueWithCity.nonEmpty) {
+                    <div class="membership-event__location">@event.venue.venueWithCity</div>
+                }
+                @for(ticketing <- event.internalTicketing) {
+                    <div class="membership-event__price">
+                        @ticketing.generalReleaseTicketOpt.map(_.priceText)
+                    </div>
+                }
+            </div>
+        </div>
+    </a>
+    <div class="membership-event__action">
+        <a href="@event.memUrl" class="membership-event__button" itemprop="url">
+            Book Now
+            @for(icon <- Asset.inlineSvg("arrow-right")) {
+                @icon
+            }
+        </a>
+    </div>
+</figure>

@@ -67,6 +67,7 @@ GET            /event/:id/embed                   controllers.Event.embedData(id
 GET            /event/:id/buy                     controllers.Event.buy(id)
 GET            /event/:id/thankyou                controllers.Event.thankyou(id, oid: Option[String])
 GET            /event/:id/thankyou/pixel          controllers.Event.thankyouPixel(id)
+GET            /event/:id/card                    controllers.Event.embedCard(id)
 
 GET            /preview-event/:id                 controllers.Event.preview(id)
 GET            /preview-local/:id                 controllers.Event.previewLocal(id)

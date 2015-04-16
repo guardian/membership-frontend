@@ -59,6 +59,7 @@ object Eventbrite {
 
   case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject {
     lazy val addressLine = address.flatMap(_.asLine)
+    lazy val venueWithCity = Seq(name, address.flatMap(_.city)).flatten.mkString(", ")
 
     lazy val googleMapsLink: Option[String] =
       addressLine.map(al => googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al)))

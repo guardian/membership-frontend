@@ -49,7 +49,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
-                    src: ['style.scss', 'ie9.style.scss', 'tools.style.scss'],
+                    src: ['style.scss', 'ie9.style.scss', 'tools.style.scss', 'event-card.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
                 }],
@@ -156,8 +156,7 @@ module.exports = function (grunt) {
                 cwd: '<%= dirs.assets.images %>',
                 src: [
                     '**',
-                    '!**/svgs/**',
-                    '!**/inline-svgs/**'
+                    '!**/inline-svgs/raw/**'
                 ],
                 dest: '<%= dirs.publicDir.images %>',
                 expand: true
