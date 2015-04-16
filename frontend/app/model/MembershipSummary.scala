@@ -12,6 +12,6 @@ case class MembershipSummary(startDate: DateTime,
 
   val initialFreePeriodOffer = amountPaidToday.isEmpty
 
-  val annual = startDate.plusYears(1) == renewalDate
+  val annual = startDate.plusYears(1).toLocalDate == renewalDate.toLocalDate
 
 }
