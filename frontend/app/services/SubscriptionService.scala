@@ -131,8 +131,8 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield result
   }
 
-  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress))
+  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], paymentDelay: Option[Period], casId: Option[String]): Future[SubscribeResult] = {
+    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, paymentDelay, casId))
   }
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
