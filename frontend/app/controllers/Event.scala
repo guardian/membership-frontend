@@ -13,7 +13,6 @@ import model.Eventbrite.{EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
 import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo, _}
 import org.joda.time.format.ISODateTimeFormat
-import play.api.libs.Jsonp
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
