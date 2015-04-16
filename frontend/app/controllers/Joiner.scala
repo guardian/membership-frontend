@@ -88,7 +88,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         case Tier.Friend => Ok(views.html.joiner.form.address(privateFields, marketingChoices, passwordExists))
         case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
+          val showSubscriberFields = googleAuthUserOpt(request).isDefined && tier == Tier.Partner
+          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo, showSubscriberFields))
       }
 
     }

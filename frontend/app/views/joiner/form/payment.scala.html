@@ -3,7 +3,8 @@
     userFields: model.PrivateFields,
     marketingChoices: model.StatusFields,
     passwordExists: Boolean,
-    pageInfo: model.PageInfo
+    pageInfo: model.PageInfo,
+    showSubscriberFields: Boolean
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
@@ -52,13 +53,13 @@
                     @if(!passwordExists) {
                         @fragments.form.createPassword()
                     }
-                    @if(tier == Tier.Partner) {
+                    @if(showSubscriberFields) {
                         @fragments.form.subscriberNumber()
                      }
                     
                     @fragments.form.paymentOptions(tier)
                     
-                     @if(tier == Tier.Partner) {
+                     @if(showSubscriberFields) {
                          @fragments.form.paymentOptionsForSubscribers()
                      }
 

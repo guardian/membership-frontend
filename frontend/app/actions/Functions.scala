@@ -90,11 +90,13 @@ object Functions extends LazyLogging {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
         //Copy the private helper method in play-googleauth to ensure the user is Google auth'd
         //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
-        val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
+        val userIdentityOpt = googleAuthUserOpt(request).map(IdentityGoogleAuthRequest(_, request))
         userIdentityOpt.toRight(onNonAuthentication(request))
       }
     }
   }
+
+  def googleAuthUserOpt(request: RequestHeader) = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity)
 
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
