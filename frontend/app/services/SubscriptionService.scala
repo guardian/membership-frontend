@@ -181,4 +181,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       summary <- if (userInvoiced) summaryViaSubscriptionAmendF else getSummaryViaInvoice(memberId)
     } yield summary
   }
+
+  def getSubscriptionsByCasId(casId: String): Future[Seq[Subscription]] =  zuora.query[Subscription](s"CASSubscriberID__c='$casId'")
 }
