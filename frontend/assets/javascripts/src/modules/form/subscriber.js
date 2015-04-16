@@ -23,7 +23,7 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
 
                 if(subscriberId !== '') {
                     ajax({
-                        url: '/user/check-subscriber?id=' + subscriberId + '&lastName=' + lastName + buildQueryString(postcode)
+                        url: '/user/check-subscriber?' + buildQueryString(subscriberId, lastName, postcode)
                     }).then(function (response) {
                         if (response.valid) {
                             handleSuccess(response);
@@ -42,8 +42,8 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
         }
     }
 
-    function buildQueryString(postcode) {
-        var identifierQueryString = '';
+    function buildQueryString(subscriberId, lastName, postcode) {
+        var identifierQueryString = 'id=' + subscriberId + '&lastName=' + lastName;
         if(postcode) {
             identifierQueryString += '&postcode=' + postcode;
         }
