@@ -2,7 +2,7 @@
 
 @import model.Benefits
 
-<fieldset class="fieldset">
+<fieldset class="fieldset js-payment-options-container">
 
     <div class="fieldset__heading">
         <h2 class="fieldset__headline">Select payment option</h2>
@@ -11,7 +11,7 @@
 
     <div class="fieldset__fields">
 
-        <div class="form-field js-payment-options-container">
+        <div class="form-field">
 
             <label class="label" for="annual">
                 @Benefits.details(tier).pricing.fold{

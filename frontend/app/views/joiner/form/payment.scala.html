@@ -6,6 +6,7 @@
     pageInfo: model.PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token)
 
+@import com.gu.membership.salesforce.Tier
 @import views.html.helper._
 
 @main("Payment | " + tier, pageInfo=pageInfo) {
@@ -51,8 +52,16 @@
                     @if(!passwordExists) {
                         @fragments.form.createPassword()
                     }
-
+                    @if(tier == Tier.Partner) {
+                        @fragments.form.subscriberNumber()
+                     }
+                    
                     @fragments.form.paymentOptions(tier)
+                    
+                     @if(tier == Tier.Partner) {
+                         @fragments.form.paymentOptionsForSubscribers()
+                     }
+
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         formType = "billingAddress",
