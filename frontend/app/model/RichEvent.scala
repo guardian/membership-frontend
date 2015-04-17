@@ -84,6 +84,7 @@ object RichEvent {
     val event: EBEvent
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
+    val socialHashTag: Option[String]
     val tags: Seq[String]
     val metadata: Metadata
     val contentOpt: Option[Content]
@@ -96,6 +97,7 @@ object RichEvent {
     val imgOpt = image.map(ResponsiveImageGroup(_))
 
     val socialImgUrl = imgOpt.map(_.defaultImage)
+    val socialHashTag = Some("#GuardianLive")
 
     val tags = Nil
 
@@ -122,11 +124,13 @@ object RichEvent {
     val metadata = {
       localMetadata.copy(highlightsOpt = highlight)
     }
+    override val socialHashTag = Some("#GuardianLocal")
   }
 
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
+    val socialHashTag = Some("#GuardianMasterClasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = masterclassMetadata
     val contentOpt = None
