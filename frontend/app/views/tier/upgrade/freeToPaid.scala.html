@@ -2,8 +2,7 @@
     currentTier: com.gu.membership.salesforce.Tier,
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
-    pageInfo: model.PageInfo,
-    paidPreviewOpt: Option[model.Zuora.PaidPreview]
+    pageInfo: model.PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.html.helper._
@@ -36,16 +35,14 @@
                         "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
                         userFields.postcode, userFields.address4, userFields.country
                     )
-                    @if(paidPreviewOpt.isEmpty) {
-                        @fragments.form.paymentOptions(targetTier)
-                    }
+                    @fragments.form.paymentOptions(targetTier)
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
                         userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
                         userFields.billingCountry
                     )
-                    @fragments.form.cardDetail(targetTier, paidPreviewOpt.map(_.card))
+                    @fragments.form.cardDetail(targetTier)
                     @fragments.form.submit("Pay", "now", Some(targetTier))
                 </form>
 

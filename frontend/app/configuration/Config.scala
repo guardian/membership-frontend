@@ -140,7 +140,21 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.allPublic.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
-  val corsAllowOrigin: Set[String] = config.getString("cors.allow.origin").split(",").toSet
+  val corsAllowOrigin = Set(
+    // identity
+    "https://profile.thegulocal.com",
+    "https://profile.code.dev-theguardian.com",
+    "https://profile.theguardian.com",
+    // theguardian.com
+    "http://www.thegulocal.com",
+    "http://www.theguardian.com",
+    // composer
+    "https://composer.gutools.co.uk",
+    "https://composer.code.dev-gutools.co.uk",
+    "https://composer.qa.dev-gutools.co.uk",
+    "https://composer.release.dev-gutools.co.uk",
+    "https://composer.local.dev-gutools.co.uk"
+  )
 
   val discountMultiplier = config.getDouble("event.discountMultiplier")
 
@@ -148,13 +162,15 @@ object Config {
 
   val stage = config.getString("stage")
 
+  val GuardianGoogleAppsDomain = "guardian.co.uk"
+
   val googleAuthConfig = {
     val con = config.getConfig("google.oauth")
     GoogleAuthConfig(
       con.getString("client.id"),
       con.getString("client.secret"),
       con.getString("callback"),
-      Some("guardian.co.uk")        // Google App domain to restrict login
+      Some(GuardianGoogleAppsDomain)        // Google App domain to restrict login
     )
   }
 
@@ -163,7 +179,7 @@ object Config {
     GoogleGroupConfig(
       con.getString("client.username"),
       con.getString("client.password"),
-      "guardian.co.uk",
+      GuardianGoogleAppsDomain,
       ""
     )
   }
@@ -177,7 +193,7 @@ object Config {
     )
   }
 
-  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
+  val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianGoogleAppsDomain").toSet
 
   val contentApiKey = config.getString("content.api.key")
 

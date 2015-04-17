@@ -8,7 +8,7 @@ object Dependencies {
   val identityCookie = "com.gu.identity" %% "identity-cookie" % "3.44"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.60"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.63"
   val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.11"
   val googleApiClient = "com.google.api-client" % "google-api-client" % "1.19.1"
   val googleAdminService = "com.google.apis" % "google-api-services-admin" % "directory_v1-rev32-1.16.0-rc"
