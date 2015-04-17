@@ -1,7 +1,8 @@
 package actions
 
 import actions.Fallbacks._
-import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
+import com.gu.googleauth.UserIdentity
+
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
@@ -13,7 +14,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
-import services.{IdentityApi, AuthenticationService, IdentityService}
+import services.{IdentityApi, AuthenticationService, IdentityService, GoogleDirectoryService}
 
 import scala.concurrent.Future
 
@@ -27,9 +28,6 @@ case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
 object Functions extends LazyLogging {
-
-  lazy val googleGroupChecker = new GoogleGroupChecker(Config.googleGroupCheckerAuthConfig)
-
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
@@ -68,13 +66,14 @@ object Functions extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
-    for (usersGroups <- googleGroupChecker.retrieveGroupsFor(email)) yield {
+    for (usersGroups <- GoogleDirectoryService.retrieveGroupsFor(email)) yield {
       if (includedGroups.intersect(usersGroups).nonEmpty) None else {
         logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
         Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
       }
     }
   }
+
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {

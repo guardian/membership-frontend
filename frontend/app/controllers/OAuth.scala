@@ -1,7 +1,7 @@
 package controllers
 
 import actions.OAuthActions
-import com.gu.googleauth.{GoogleAuth, UserIdentity, GoogleGroupChecker}
+import com.gu.googleauth.{GoogleAuth, UserIdentity}
 import configuration.Config
 import model.FlashMessage
 import play.api.Play.current
