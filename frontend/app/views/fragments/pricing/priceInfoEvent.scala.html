@@ -14,7 +14,7 @@
             <div class="price-info-inline__value">Free</div>
         } else {
             @ticketing.memberDiscountOpt.fold {
-                <div class="price-info-inline__value" itemprop="highPrice">
+                <div class="price-info-inline__value qa-event-detail-price" itemprop="highPrice">
                     @ticketing.generalReleaseTicketOpt.map(_.priceText)
                 </div>
             } { discountTicketing =>
