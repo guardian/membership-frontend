@@ -168,6 +168,15 @@ object Config {
     )
   }
 
+  val googleDirectoryConfig = {
+    val con = config.getConfig("google.directory")
+    GoogleDirectoryConfig(
+      con.getString("service_account.id"),
+      con.getString("service_account.email"),
+      con.getString("service_account.cert")
+    )
+  }
+
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").toSet
 
   val contentApiKey = config.getString("content.api.key")
