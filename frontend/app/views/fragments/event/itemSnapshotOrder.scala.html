@@ -5,9 +5,11 @@
 @import views.support.Prices._
 
 <div class="event-snapshot event-snapshot--wide" itemscope itemtype="http://schema.org/Event">
-    <div class="event-snapshot__media">
-        @fragments.event.image(event)
-    </div>
+    @for(img <- event.imgOpt) {
+        <div class="event-snapshot__media">
+            @fragments.event.image(img)
+        </div>
+    }
     <div class="event-snapshot__content">
         <h2 class="event-snapshot__title">
             @if(event.isSoldOut){

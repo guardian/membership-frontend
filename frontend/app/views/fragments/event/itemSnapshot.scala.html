@@ -1,9 +1,11 @@
 @(event: model.RichEvent.RichEvent, isStacked: Boolean = false)
 
 <div class="event-snapshot@if(isStacked){ event-snapshot--stack}" itemscope itemtype="http://schema.org/Event">
-    <div class="event-snapshot__media">
-        @fragments.event.image(event)
-    </div>
+    @for(img <- event.imgOpt) {
+        <div class="event-snapshot__media">
+            @fragments.event.image(img)
+        </div>
+    }
     <div class="event-snapshot__content">
         <h2 class="event-snapshot__title">
             @if(event.isSoldOut){
