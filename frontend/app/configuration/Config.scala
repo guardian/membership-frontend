@@ -128,8 +128,6 @@ object Config {
     TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
   }
 
-  val twitterUsername = config.getString("twitter.username")
-
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 
   val facebookJoinerConversionTrackingId =

@@ -1,6 +1,6 @@
 @(social: views.support.Social)
 
-@import configuration.Config
+@import configuration.{Social => SocialConfig}
 
 <ul class="social-list">
     <li class="social-list__item">
@@ -30,7 +30,7 @@
     <li class="social-list__item">
         <a class="social-action social-action--twitter"
            target="_blank"
-           href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@Config.twitterUsername"
+           href="https://twitter.com/intent/tweet?text=@social.encodedTwitterMessage&amp;related=@SocialConfig.twitterUsername"
            data-metric-trigger="click"
            data-metric-category="social"
            data-metric-action="twitter"
