@@ -3,6 +3,7 @@
     htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
+@import play.api.libs.json.Json
 
 @import configuration.{Config, Social}
 @import views.support.Asset
@@ -47,6 +48,10 @@
                 ]
             }
         </script>
+
+        @for(schema <- pageInfo.schemaOpt) {
+            @fragments.meta.jsonLd(Json.toJson(schema).toString)
+        }
 
         @fragments.javaScriptFirstSteps(pageInfo)
 

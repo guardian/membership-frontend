@@ -1,4 +1,5 @@
 package model
+
 import views.support.Asset
 import configuration.{Config, CopyConfig}
 
@@ -7,6 +8,7 @@ case class PageInfo(
   url: String,
   description: Option[String],
   image: Option[String] = Some(PageInfo.defaultImage),
+  schemaOpt: Option[EventSchema] = None,
   stripePublicKey: Option[String] = None
 )
 

@@ -190,6 +190,11 @@ object Eventbrite {
       case t: InternalTicketing => t
     }
 
+    val generalReleasePrice = for {
+      ticketing <- internalTicketing
+      ticket <- ticketing.generalReleaseTicketOpt
+    } yield ticket.priceText
+
     val limitedAvailabilityText = "Last tickets remaining"
     val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
     val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
@@ -198,10 +203,17 @@ object Eventbrite {
     val isBookable = status == "live" && !isSoldOut
     val isPastEvent = status != "live" && status != "draft"
 
+    val statusSchema: Option[String] = {
+      if (isPastEvent) None
+      else if (isSoldOut) Some("http://schema.org/OutOfStock")
+      else if(isLimitedAvailability) Some("http://schema.org/LimitedAvailability")
+      else Some("http://schema.org/InStock")
+    }
+
     val statusText =
-      if(isPastEvent) "Past event"
-      else if(isSoldOut) "Sold out"
-      else if(status == "draft") "Preview of Draft Event"
+      if (isPastEvent) "Past event"
+      else if (isSoldOut) "Sold out"
+      else if (status == "draft") "Preview of Draft Event"
       else ""
 
     val providerOpt = for {
@@ -225,6 +237,11 @@ object Eventbrite {
     val slug = slugify(name.text) + "-" + id
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
+
+    val c = Json.obj(
+      "name" -> venue.name.mkString,
+      "address" -> venue.addressLine.mkString
+    )
   }
 
   object EBEvent {

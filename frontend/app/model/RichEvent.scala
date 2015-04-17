@@ -1,7 +1,7 @@
 package model
 
-import com.gu.contentapi.client.model.{Asset, Content}
-import configuration.{Links, Config}
+import com.gu.contentapi.client.model.{Content}
+import configuration.{Links}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
 
@@ -85,6 +85,7 @@ object RichEvent {
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val socialHashTag: Option[String]
+    val schema: EventSchema
     val tags: Seq[String]
     val metadata: Metadata
     val contentOpt: Option[Content]
@@ -93,22 +94,16 @@ object RichEvent {
   }
 
   abstract class LiveEvent(image: Option[GridImage], contentOpt: Option[Content]) extends RichEvent {
-
     val imgOpt = image.map(ResponsiveImageGroup(_))
-
     val socialImgUrl = imgOpt.map(_.defaultImage)
+    val schema = EventSchema.from(this)
     val socialHashTag = Some("#GuardianLive")
-
     val tags = Nil
-
     val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
       Links.membershipFront + "#video")
-
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))
-
     val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
-
     def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
   }
 
@@ -130,6 +125,7 @@ object RichEvent {
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
+    val schema = EventSchema.from(this)
     val socialHashTag = Some("#GuardianMasterclasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = masterclassMetadata
