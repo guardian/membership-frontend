@@ -1,8 +1,7 @@
 @(img: model.ResponsiveImageGroup, sizes: Option[String] = None, lazyLoad: Boolean = true)
 
 <img
-    @if(!lazyLoad){src="@img.defaultImage"}
-    @if(lazyLoad){data-srcset="@img.srcset"} else {srcset="@img.srcset"}
+    @if(lazyLoad){data-srcset="@img.srcset"} else {src="@img.defaultImage" srcset="@img.srcset"}
     sizes="@sizes.getOrElse("100vw")"
     alt="@img.altText"
     class="responsive-img @if(lazyLoad) { js-lazyload} "
