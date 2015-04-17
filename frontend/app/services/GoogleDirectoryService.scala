@@ -19,7 +19,7 @@ case class GoogleDirectoryConfig(
     serviceAccountEmail: String,
     serviceAccountCert: String)
 
-object GoogleAuthService {
+object GoogleDirectoryService {
 
   val transport = new NetHttpTransport()
   val jsonFactory = new JacksonFactory()
