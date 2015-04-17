@@ -130,7 +130,7 @@ object RichEvent {
   case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
-    val socialHashTag = Some("#GuardianMasterClasses")
+    val socialHashTag = Some("#GuardianMasterclasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = masterclassMetadata
     val contentOpt = None
