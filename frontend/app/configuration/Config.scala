@@ -1,5 +1,7 @@
 package configuration
 
+import com.amazonaws.auth.{InstanceProfileCredentialsProvider, AWSCredentialsProviderChain}
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
@@ -189,9 +191,16 @@ object Config {
     GoogleDirectoryConfig(
       con.getString("service_account.id"),
       con.getString("service_account.email"),
-      con.getString("service_account.cert")
+      con.getString("service_account.cert"),
+      "notasecret",
+      "privatekey",
+      "notasecret"
     )
   }
+
+  val awsProfileName = "membership"
+  val awsS3PrivateBucketName = "membership-private"
+  val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
 
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianGoogleAppsDomain").toSet
 
