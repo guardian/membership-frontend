@@ -14,10 +14,7 @@ import scala.concurrent._
 case class GoogleDirectoryConfig(
     serviceAccountId: String,
     serviceAccountEmail: String,
-    serviceAccountCert: String,
-    storePass: String,
-    alias: String,
-    keyPass: String)
+    serviceAccountCert: String)
 
 class GoogleDirectoryService(config: GoogleDirectoryConfig, privateKey: PrivateKey) {
 

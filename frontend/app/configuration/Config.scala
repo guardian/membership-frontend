@@ -191,24 +191,29 @@ object Config {
     GoogleDirectoryConfig(
       con.getString("service_account.id"),
       con.getString("service_account.email"),
-      con.getString("service_account.cert"),
-      "notasecret",
-      "privatekey",
-      "notasecret"
+      con.getString("service_account.cert")
     )
   }
 
+
+
   val awsProfileName = "membership"
   val awsS3PrivateBucketName = "membership-private"
-  val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
-  lazy val s3PrivateKeyService = new S3PrivateKeyService(None, Config.awsS3PrivateBucketName, Config.awsCredentialsProvider)
+
+  lazy val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
+  lazy val s3PrivateKeyService = new S3PrivateKeyService(awsS3PrivateBucketName, awsCredentialsProvider)
+
+  val privateKeyStorePass = "notasecret"
+  val privateKeyAlias = "privatekey"
+  val privateKeyPass = "notasecret"
+
   lazy val privateKey = {
     val conf = Config.googleDirectoryConfig
     s3PrivateKeyService.loadPrivateKey(
       conf.serviceAccountCert,
-      conf.storePass,
-      conf.alias,
-      conf.keyPass
+      privateKeyStorePass,
+      privateKeyAlias,
+      privateKeyPass
     )
   }
 
