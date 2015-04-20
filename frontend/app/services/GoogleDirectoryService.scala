@@ -1,5 +1,7 @@
 package services
 
+import java.security.PrivateKey
+
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
@@ -17,7 +19,7 @@ case class GoogleDirectoryConfig(
     alias: String,
     keyPass: String)
 
-class GoogleDirectoryService(config: GoogleDirectoryConfig, s3BucketService: S3BucketService) {
+class GoogleDirectoryService(config: GoogleDirectoryConfig, privateKey: PrivateKey) {
 
   val transport = new NetHttpTransport()
   val jsonFactory = new JacksonFactory()
@@ -28,14 +30,7 @@ class GoogleDirectoryService(config: GoogleDirectoryConfig, s3BucketService: S3B
     .setServiceAccountId(config.serviceAccountId)
     .setServiceAccountScopes(List(DirectoryScopes.ADMIN_DIRECTORY_GROUP_READONLY).asJavaCollection)
     .setServiceAccountUser(config.serviceAccountEmail)
-    .setServiceAccountPrivateKey(
-      s3BucketService.loadServiceAccountPrivateKeyS3(
-        config.serviceAccountCert,
-        config.storePass,
-        config.alias,
-        config.keyPass
-      )
-    )
+    .setServiceAccountPrivateKey(privateKey)
     .build()
 
   val directory = new Directory.Builder(transport, jsonFactory, null)

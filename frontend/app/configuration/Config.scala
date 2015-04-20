@@ -201,6 +201,17 @@ object Config {
   val awsProfileName = "membership"
   val awsS3PrivateBucketName = "membership-private"
   val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
+  lazy val s3PrivateKeyService = new S3PrivateKeyService(None, Config.awsS3PrivateBucketName, Config.awsCredentialsProvider)
+  lazy val privateKey = {
+    val conf = Config.googleDirectoryConfig
+    s3PrivateKeyService.loadServiceAccountPrivateKeyS3(
+      conf.serviceAccountCert,
+      conf.storePass,
+      conf.alias,
+      conf.keyPass
+    )
+  }
+
 
   val staffAuthorisedEmailGroups = config.getString("staff.authorised.emails.groups").split(",").map(group => s"$group@$GuardianGoogleAppsDomain").toSet
 

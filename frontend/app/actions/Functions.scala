@@ -29,9 +29,6 @@ case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
  */
 object Functions extends LazyLogging {
 
-  val s3BucketService = new S3BucketService(None, Config.awsS3PrivateBucketName, Config.awsCredentialsProvider)
-  val googleDirectoryService = new GoogleDirectoryService(Config.googleDirectoryConfig, s3BucketService)
-
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
@@ -70,6 +67,7 @@ object Functions extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
+    val googleDirectoryService = new GoogleDirectoryService(Config.googleDirectoryConfig, Config.privateKey)
     for (usersGroups <- googleDirectoryService.retrieveGroupsFor(email)) yield {
       if (includedGroups.intersect(usersGroups).nonEmpty) None else {
         logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
