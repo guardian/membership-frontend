@@ -85,8 +85,6 @@ trait CommonActions {
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
 
-  val CorsCachedAction = Cors andThen CachedAction
-
   val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
   val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = createBasicGuMemCookie(_))
