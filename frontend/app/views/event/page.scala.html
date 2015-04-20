@@ -89,12 +89,12 @@
         </div>
     }
 
-    <div class="event-content" itemscope itemtype="http://schema.org/Event">
+    <div class="event-content">
 
         @if(event.metadata.largeImg) {
             @for(img <- event.imgOpt) {
                 <div class="event-content__image">
-                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" itemprop="image" />
+                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
                 </div>
                 @for(imgMetadata <- img.metadata) {
                     <div class="event-image-credit u-event-content-width">
@@ -114,7 +114,7 @@
 
             <div class="event-content__body">
                 @for(description <- event.description) {
-                    <div class="event__description copy qa-event-detail-description" itemprop="description">
+                    <div class="event__description copy qa-event-detail-description">
                         @Html(description.cleanHtml)
                     </div>
                 }

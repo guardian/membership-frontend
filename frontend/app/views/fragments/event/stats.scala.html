@@ -8,7 +8,7 @@
         @fragments.inlineIcon("time", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
     <div class="stat-item__second">
-        <span itemprop="startDate" content="@event.start" class="qa-event-detail-datetime">@prettyDateWithTimeAndDayName(event.start)</span>
+        <span class="qa-event-detail-datetime">@prettyDateWithTimeAndDayName(event.start)</span>
     </div>
 </div>
 
@@ -17,15 +17,14 @@
     <div class="stat-item__first">
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
-    <div class="stat-item__second copy" itemprop="location" itemscope itemtype="http://schema.org/Place">
-        @if(event.venue.name) {<span itemprop="name">@event.venue.name</span>}@if(event.venue.address){, }
+    <div class="stat-item__second copy">
+        @if(event.venue.name) {@event.venue.name}@if(event.venue.address){, }
         @for(location <- event.venue.address) {
-            <span itemprop="address">@location.city @location.postal_code</span>
+            @location.city @location.postal_code
         }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
             <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink"
-                   itemprop="hasMap"
                    data-metric-trigger="click"
                    data-metric-category="events"
                    data-metric-action="map">Google map</a>
