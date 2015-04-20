@@ -1,18 +1,19 @@
 package services
 
 import actions._
-import configuration.Config
-import model.{Destination, EventDestination, MembersOnlyContent, ContentDestination}
 import com.netaporter.uri.dsl._
-import play.api.mvc.Session
-import scala.concurrent.Future
+import configuration.Config
+import model.{ContentDestination, Destination, EventDestination, MembersOnlyContent}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
+import scala.concurrent.Future
 
 trait DestinationService {
 
   val JoinReferrer = "join-referrer"
   val contentApiService: GuardianContentService
+  val memberService: MemberService
+  val eventbriteService: EventbriteCollectiveServices
 
   def returnDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[Destination]] = {
     Future.sequence(Seq(contentDestinationFor(request), eventDestinationFor(request))).map(_.flatten.headOption)
@@ -33,8 +34,8 @@ trait DestinationService {
   def eventDestinationFor(request: AnyMemberTierRequest[_]): Future[Option[EventDestination]] = {
     val optFuture = for {
       eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-      event <- EventbriteService.getBookableEvent(eventId)
-    } yield MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
+      event <- eventbriteService.getBookableEvent(eventId)
+    } yield memberService.createDiscountForMember(request.member, event).map { discountOpt =>
         EventDestination(event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))))
       }
 
@@ -42,7 +43,8 @@ trait DestinationService {
   }
 }
 
-object DestinationService extends DestinationService {
+object DestinationService extends DestinationService  {
   val contentApiService = GuardianContentService
+  val memberService = MemberService
+  val eventbriteService = EventbriteService
 }
-
