@@ -22,7 +22,7 @@ class S3PrivateKeyService(regionOption: Option[Region] = None, bucketName: Strin
     s3File.getObjectContent
   }
 
-  def loadServiceAccountPrivateKeyS3(path: String, storePass: String, alias: String, keyPass: String): PrivateKey  = {
+  def loadPrivateKey(path: String, storePass: String, alias: String, keyPass: String): PrivateKey  = {
     val certInputStream = this.getObjectInputStream(path)
 
     val serviceAccountPrivateKey = SecurityUtils.loadPrivateKeyFromKeyStore(

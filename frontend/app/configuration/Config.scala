@@ -204,7 +204,7 @@ object Config {
   lazy val s3PrivateKeyService = new S3PrivateKeyService(None, Config.awsS3PrivateBucketName, Config.awsCredentialsProvider)
   lazy val privateKey = {
     val conf = Config.googleDirectoryConfig
-    s3PrivateKeyService.loadServiceAccountPrivateKeyS3(
+    s3PrivateKeyService.loadPrivateKey(
       conf.serviceAccountCert,
       conf.storePass,
       conf.alias,
