@@ -238,10 +238,6 @@ object Eventbrite {
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
 
-    val c = Json.obj(
-      "name" -> venue.name.mkString,
-      "address" -> venue.addressLine.mkString
-    )
   }
 
   object EBEvent {
