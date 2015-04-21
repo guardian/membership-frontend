@@ -50,7 +50,9 @@
         </script>
 
         @for(schema <- pageInfo.schemaOpt) {
-            @fragments.meta.jsonLd(Json.toJson(schema).toString)
+            <script type="application/ld+json">
+                @Json.toJson(schema)
+            </script>
         }
 
         @fragments.javaScriptFirstSteps(pageInfo)
