@@ -1,5 +1,3 @@
-
-
 package controllers
 
 import actions.Functions._
@@ -213,36 +211,15 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       case _ => Future.successful(None)
     }
 
-    def futureEventDetailsOpt = {
-      val optFuture = for {
-        eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-        event <- EventbriteService.getBookableEvent(eventId)
-      } yield {
-
-        MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
-          (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
-        }
-
-      }
-
-      Future.sequence(optFuture.toSeq).map(_.headOption)
-    }
-
-    val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
-      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
-    }.getOrElse(Future.successful(None))
-
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
       customerOpt <- futureCustomerOpt
-      eventDetailsOpt <- futureEventDetailsOpt
-      contentOpt <- futureContentOpt.recover { case _ => None }
+      destinationOpt <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
         customerOpt.map(_.card),
-        eventDetailsOpt,
-        contentOpt,
+        destinationOpt,
         upgrade
     )).discardingCookies(DiscardingCookie("GU_MEM"))
   }

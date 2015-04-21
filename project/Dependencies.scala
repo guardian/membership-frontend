@@ -21,10 +21,11 @@ object Dependencies {
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val s3 =  "com.amazonaws" % "aws-java-sdk-s3" % awsClientVersion
+  val scalaTest =  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
   //projects
 
   val frontendDependencies = Seq(identityCookie, googleAdminService, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
-    contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3)
+    contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3, scalaTest)
 
 }

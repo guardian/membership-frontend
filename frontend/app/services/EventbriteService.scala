@@ -188,7 +188,7 @@ object EventbriteServiceHelpers {
   }
 }
 
-object EventbriteService {
+trait EventbriteCollectiveServices {
   val services = Seq(GuardianLiveEventService, LocalEventService, MasterclassEventService)
 
   implicit class RichEventProvider(event: RichEvent) {
@@ -217,3 +217,5 @@ object EventbriteService {
   def getBookableEvent(id: String) = searchServices(_.getBookableEvent(id))
   def getEvent(id: String) = searchServices(_.getEvent(id))
 }
+
+object EventbriteService extends EventbriteCollectiveServices
