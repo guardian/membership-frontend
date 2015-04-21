@@ -199,7 +199,7 @@ object Config {
     )
   }
 
-  val googleDirectoryConfig = {
+  lazy val googleDirectoryConfig = {
     val con = config.getConfig("google.directory")
     GoogleServiceAccount(
       con.getString("service_account.id"),
