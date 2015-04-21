@@ -11,7 +11,7 @@ object Dependencies {
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.63"
-  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.11"
+  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.12-SNAPSHOT"
   val googleAdminService = "com.google.apis" % "google-api-services-admin-directory" % "directory_v1-rev53-1.20.0"
   val contentAPI = "com.gu" %% "content-api-client" % "5.2"
   val playWS = PlayImport.ws

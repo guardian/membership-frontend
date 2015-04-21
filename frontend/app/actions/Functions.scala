@@ -6,6 +6,7 @@ import com.gu.googleauth.UserIdentity
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import com.gu.googleauth.{GoogleGroupChecker, GoogleServiceAccount}
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
@@ -15,6 +16,7 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
 import services._
+
 
 import scala.concurrent.Future
 
@@ -67,7 +69,7 @@ object Functions extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
-    val googleDirectoryService = new GoogleDirectoryService(Config.googleDirectoryConfig, Config.privateKey)
+    val googleDirectoryService = new GoogleGroupChecker(Config.googleDirectoryConfig)
     for (usersGroups <- googleDirectoryService.retrieveGroupsFor(email)) yield {
       if (includedGroups.intersect(usersGroups).nonEmpty) None else {
         logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
