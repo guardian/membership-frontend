@@ -3,20 +3,23 @@ package controllers
 import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
-import com.gu.membership.salesforce.{MemberId, Member, Tier}
+import com.github.nscala_time.time.Imports._
+import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.dsl._
-import configuration.{Config, CopyConfig, Links}
-import model.Eventbrite.{EBOrder, EBEvent}
-import model.RichEvent.RichEvent
-import model.RichEvent._
-import model._
+import configuration.{CopyConfig, Links}
+import model.EmbedSerializer._
+import model.Eventbrite.{EBEvent, EBOrder}
+import model.RichEvent.{RichEvent, _}
+import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo, _}
+import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
 import play.api.mvc._
-import services._
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
 import services.EventbriteService._
-import com.github.nscala_time.time.Imports._
 import tracking._
+
 import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
@@ -55,6 +58,48 @@ trait Event extends Controller with ActivityTracking {
     }
 
     eventOpt.getOrElse(Redirect(Links.membershipFront))
+  }
+
+  /*
+   * This endpoint is hit by Composer when embedding Membership events.
+   * Changes here will need to be reflected in the flexible-content repo.
+   * Note that Composer will index this data, which is in turn indexed by CAPI.
+   * (eg. updates to event details will not be reflected post-embed)
+   */
+  def embedData(slug: String) = Cors.andThen(CachedAction) { implicit request =>
+    val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
+
+    val eventDataOpt = for {
+      id <- EBEvent.slugToId(slug)
+      event <- EventbriteService.getEvent(id)
+    } yield EmbedData(
+      title = event.name.text,
+      image = event.socialImgUrl,
+      venue = event.venue.name,
+      location = event.venue.addressLine,
+      price = event.internalTicketing.map(_.primaryTicket.priceText),
+      identifier = event.metadata.identifier,
+      start = event.start.toString(standardFormat),
+      end = event.end.toString(standardFormat)
+    )
+
+    Ok(eventToJson(eventDataOpt))
+  }
+
+  /**
+   * This endpoint is hit by .com to enhance an embedded event.
+   */
+  def embedCard(slug: String) = CorsPublicCachedAction { implicit request =>
+    val eventOpt = for {
+      id <- EBEvent.slugToId(slug)
+      event <- EventbriteService.getEvent(id)
+    } yield event
+
+    Ok(eventOpt.fold {
+      Json.obj("status" -> "error")
+    } { event =>
+      Json.obj("status" -> "success", "html" -> views.html.embeds.eventCard(event).toString())
+    })
   }
 
   private def eventDetail(event: RichEvent)(implicit request: RequestHeader) = {

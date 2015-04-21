@@ -39,7 +39,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
           agent send {
             oldImageData =>
               val newImageData = oldImageData + (url -> image)
-              logger.info(s"Adding image $url to the event image map")
+              logger.trace(s"Adding image $url to the event image map")
               newImageData
           }
           image

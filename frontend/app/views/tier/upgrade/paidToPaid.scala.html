@@ -3,7 +3,7 @@
     targetTier: com.gu.membership.salesforce.Tier,
     userFields: model.PrivateFields,
     pageInfo: model.PageInfo,
-    paidPreviewOpt: Option[model.Zuora.PaidPreview],
+    paidPreview: model.Zuora.PaidPreview,
     currentSubscription: model.Zuora.SubscriptionDetails,
     flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
@@ -58,7 +58,7 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td id="qa-upgrade-current-start-date">@prettyDate(currentSubscription.startDate)</td>
+                        <td id="qa-upgrade-current-start-date">@prettyDate(currentSubscription.effectiveStartDate)</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly payment</th>
@@ -78,30 +78,28 @@
                 <h2 class="page-section__headline">New tier summary</h2>
             </div>
             <div class="page-section__content">
-                @paidPreviewOpt.map { preview =>
-                    <table class="table table--striped" role="grid">
-                        <tr role="row">
-                            <th role="rowheader">Tier</th>
-                            <td id="qa-upgrade-new-tier">@targetTier</td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">Start date</th>
-                            <td id="qa-upgrade-new-start-date">@prettyDate(new DateTime())</td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">First payment</th>
-                            <td id="qa-upgrade-new-first-payment">@preview.totalPrice.pretty</td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly payment</th>
-                            <td id="qa-upgrade-new-recurring-payment">@preview.futureSubscriptionInvoice.price.pretty</td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">Next payment due</th>
-                            <td id="qa-upgrade-new-date">@prettyDate(preview.futureSubscriptionInvoice.renewalDate)</td>
-                        </tr>
-                    </table>
-                }
+                <table class="table table--striped" role="grid">
+                    <tr role="row">
+                        <th role="rowheader">Tier</th>
+                        <td id="qa-upgrade-new-tier">@targetTier</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">Start date</th>
+                        <td id="qa-upgrade-new-start-date">@prettyDate(new DateTime())</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">First payment</th>
+                        <td id="qa-upgrade-new-first-payment">@paidPreview.totalPrice.pretty</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">@{currentSubscription.paymentPeriodLabel.capitalize}ly payment</th>
+                        <td id="qa-upgrade-new-recurring-payment">@paidPreview.futureSubscriptionInvoice.price.pretty</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">Next payment due</th>
+                        <td id="qa-upgrade-new-date">@prettyDate(paidPreview.futureSubscriptionInvoice.renewalDate)</td>
+                    </tr>
+                </table>
             </div>
         </section>
 
@@ -135,22 +133,17 @@
                 </h2>
             </div>
             <div class="page-section__content">
-                @for(card <- paidPreviewOpt.map(_.card)) {
-                    @fragments.user.cardSummary(card)
-                }
-                @paidPreviewOpt.map { preview =>
-
-                    <p class="text-note">
-                        <strong>First payment:</strong> Your first payment of <strong>@preview.totalPrice.pretty</strong>
-                        will be taken today under the name Guardian Membership.
-                    </p>
-                    <p class="text-note">
-                        <strong>Ongoing payments:</strong> Your card will be charged
-                        <strong>@preview.futureSubscriptionInvoice.price.pretty</strong> every @currentSubscription.paymentPeriodLabel.
-                        Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(preview.futureSubscriptionInvoice.renewalDate)
-                        each @currentSubscription.paymentPeriodLabel.
-                    </p>
-                }
+                @fragments.user.cardSummary(paidPreview.card)
+                <p class="text-note">
+                    <strong>First payment:</strong> Your first payment of <strong>@paidPreview.totalPrice.pretty</strong>
+                    will be taken today under the name Guardian Membership.
+                </p>
+                <p class="text-note">
+                    <strong>Ongoing payments:</strong> Your card will be charged
+                    <strong>@paidPreview.futureSubscriptionInvoice.price.pretty</strong> every @currentSubscription.paymentPeriodLabel.
+                    Payments will taken on or shortly after the @dayInMonthWithSuffixAndMonth(paidPreview.futureSubscriptionInvoice.renewalDate)
+                    each @currentSubscription.paymentPeriodLabel.
+                </p>
 
                 <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
                     @CSRF.formField
@@ -163,13 +156,10 @@
                         </div>
                     </fieldset>
 
-                    @paidPreviewOpt.map { preview =>
-
-                        <div class="actions js-waiting-container">
-                            <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @preview.totalPrice.pretty Now</button>
-                            <div class="loader js-loader"></div>
-                        </div>
-                    }
+                    <div class="actions js-waiting-container">
+                        <button type="submit" class="action js-submit-input" id="qa-upgrade-submit">Pay @paidPreview.totalPrice.pretty Now</button>
+                        <div class="loader js-loader"></div>
+                    </div>
                 </form>
             </div>
         </section>

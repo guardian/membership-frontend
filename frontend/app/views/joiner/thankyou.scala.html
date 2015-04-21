@@ -1,6 +1,6 @@
 @(
     member: com.gu.membership.salesforce.Member,
-    paymentSummary: model.Zuora.PaymentSummary,
+    summary: model.MembershipSummary,
     cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
     returnDestinationOpt: Option[model.Destination],
     upgrade: Boolean
@@ -61,27 +61,41 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
-                        <td id="qa-joiner-summary-start">@paymentSummary.current.serviceStartDate.pretty</td>
+                        <td id="qa-joiner-summary-start">@summary.startDate.pretty</td>
                     </tr>
-                    @for(card <- cardOpt) {
-                        <tr role="row">
-                            <th role="rowheader">Amount paid today</th>
-                            <td id="qa-joiner-summary-today">@paymentSummary.totalPrice.pretty</td>
-                        </tr>
+                    <tr role="row">
+                        <th role="rowheader">Amount paid today</th>
+                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.getOrElse(0f).pretty</td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">Next payment</th>
+                        <td id="qa-joiner-summary-next">
+                            @if(summary.initialFreePeriodOffer) {
+                                @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
+                            } else { @summary.nextPaymentDate.pretty }
+                        </td>
+                    </tr>
+                    <tr role="row">
+                        <th role="rowheader">
+                            @if(summary.annual) { Annual } else { Monthly } payment
+                        </th>
+                        <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
+                    </tr>
+                    @if(summary.annual && summary.initialFreePeriodOffer) {
                         <tr role="row">
                             <th role="rowheader">
-                                @if(paymentSummary.current.annual) { Annual } else { Monthly } payment
+                                Next Annual payment
                             </th>
-                            <td id="qa-joiner-summary-recurring">@paymentSummary.current.price.pretty</td>
+                            <td id="qa-joiner-summary-annual-date">@summary.renewalDate.pretty</td>
                         </tr>
-                        <tr role="row">
-                            <th role="rowheader">Next payment</th>
-                            <td id="qa-joiner-summary-next">@paymentSummary.current.nextPaymentDate.pretty</td>
-                        </tr>
-                        <tr role="row">
-                            <th role="rowheader">Card</th>
-                            <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.last4</td>
-                        </tr>
+                    }
+
+                    @for(card <- cardOpt) {
+
+                    <tr role="row">
+                        <th role="rowheader">Card</th>
+                        <td id="qa-joiner-summary-card">•••• •••• •••• •••• @card.last4</td>
+                    </tr>
                     }
                 </table>
             </div>
@@ -132,6 +146,6 @@
     @fragments.analytics.membershipJoinerConversion()
     @fragments.analytics.videoCampaignPHD.thankyouPage(
         member.regNumber.fold("free")(regNumber => regNumber),
-        cardOpt.fold("free")( card => "%.2f".format(paymentSummary.totalPrice))
+        summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
     )
 }

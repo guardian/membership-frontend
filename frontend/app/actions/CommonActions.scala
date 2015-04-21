@@ -46,6 +46,13 @@ trait CommonActions {
     }
   }
 
+  val CorsPublic = resultModifier { result =>
+    result.withHeaders(
+      ACCESS_CONTROL_ALLOW_ORIGIN -> "*",
+      ACCESS_CONTROL_ALLOW_CREDENTIALS -> "true"
+    )
+  }
+
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
@@ -77,6 +84,8 @@ trait CommonActions {
   val StaffMemberAction = AuthenticatedAction andThen memberRefiner(onNonMember = joinStaffMembership(_))
 
   val PaidMemberAction = MemberAction andThen paidMemberRefiner()
+
+  val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
   val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = createBasicGuMemCookie(_))
 
