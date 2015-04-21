@@ -1,5 +1,3 @@
-
-
 package controllers
 
 import actions.Functions._
@@ -57,10 +55,13 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    val contentReferer = request.headers.get(REFERER)
-    val contentAccess = request.getQueryString("membershipAccess")
+    val contentRefererOpt = request.headers.get(REFERER)
+    val contentAccessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
+    val returnUri = eventOpt.fold(contentRefererOpt.map(_.toString))(_.contentOpt.map(_.webUrl)).map { uri =>
+      routes.Login.chooseSigninOrRegister(uri).toString
+    }.getOrElse(Config.idWebAppSigninUrl(""))
 
-    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, contentAccessOpt, returnUri)).withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
