@@ -4,9 +4,11 @@
 
 <a href="@routes.Event.details(event.slug)" class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
     <meta itemprop="url" content="@event.memUrl">
-    <div class="event-item__media">
-        @fragments.event.image(event, sizes=Some(sizesVal))
-    </div>
+    @for(img <- event.imgOpt) {
+        <div class="event-item__media">
+            @fragments.event.image(img, sizes=Some(sizesVal))
+        </div>
+    }
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)

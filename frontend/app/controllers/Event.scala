@@ -89,12 +89,12 @@ trait Event extends Controller with ActivityTracking {
   /**
    * This endpoint is hit by .com to enhance an embedded event.
    */
-  def embedCard(slug: String) = AjaxCachedAction { implicit request =>
+  def embedCard(slug: String) = CorsPublicCachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
       event <- EventbriteService.getEvent(id)
     } yield event
-    
+
     Ok(eventOpt.fold {
       Json.obj("status" -> "error")
     } { event =>
