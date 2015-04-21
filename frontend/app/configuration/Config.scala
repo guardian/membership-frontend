@@ -120,10 +120,10 @@ object Config {
       username = backendConf.getString("zuora.api.username"),
       password = backendConf.getString("zuora.api.password"),
       productRatePlans = Map(
-          FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
-          StaffPlan -> backendConf.getString(s"zuora.api.staff")
-        ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
-      )
+        FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
+        StaffPlan -> backendConf.getString(s"zuora.api.staff")
+      ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
+    )
 
     TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
   }
