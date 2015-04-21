@@ -48,12 +48,10 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     )
 
     val contentRefererOpt = request.headers.get(REFERER)
-    val contentAccessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
-    val returnUri = eventOpt.fold(contentRefererOpt.map(_.toString))(_.contentOpt.map(_.webUrl)).map { uri =>
-      routes.Login.chooseSigninOrRegister(uri).toString
-    }.getOrElse(Config.idWebAppSigninUrl(""))
+    val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
 
-    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, contentAccessOpt, returnUri)).withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
