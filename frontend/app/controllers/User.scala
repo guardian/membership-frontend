@@ -1,9 +1,10 @@
 package controllers
 
 import actions._
-import com.gu.cas.CAS.CASSuccess
+import com.gu.cas.CAS.{CASError, CASSuccess}
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import model.PaidTiers
+import model.Zuora.SubscriptionDetails
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -22,6 +23,7 @@ trait User extends Controller {
   val casService = CASService
 
   def me = AjaxMemberAction { implicit request =>
+    println("hello")
     val json = basicDetails(request.member)
     Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
   }
@@ -37,6 +39,13 @@ trait User extends Controller {
         Future.successful(Json.obj())
     }
 
+    def endDate(subscriptionDetails: SubscriptionDetails) = {
+      subscriptionDetails.chargedThroughDate.orElse {
+        if (subscriptionDetails.inFreePeriodOffer) Some(subscriptionDetails.contractAcceptanceDate)
+        else None
+      }
+    }
+
     val futurePaymentDetails = for {
       cardDetails <- futureCardDetails
       subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
@@ -45,7 +54,7 @@ trait User extends Controller {
       "optIn" -> !subscriptionStatus.cancelled,
       "subscription" -> (cardDetails ++ Json.obj(
         "start" -> subscriptionDetails.effectiveStartDate,
-        "end" -> subscriptionDetails.chargedThroughDate,
+        "end" -> endDate(subscriptionDetails),
         "cancelledAt" -> subscriptionStatus.future.isDefined,
         "plan" -> Json.obj(
           "name" -> subscriptionDetails.planName,
