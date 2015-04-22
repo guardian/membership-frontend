@@ -23,7 +23,6 @@ trait User extends Controller {
   val casService = CASService
 
   def me = AjaxMemberAction { implicit request =>
-    println("hello")
     val json = basicDetails(request.member)
     Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
   }
