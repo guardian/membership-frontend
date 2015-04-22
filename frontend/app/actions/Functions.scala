@@ -6,6 +6,7 @@ import com.gu.googleauth.UserIdentity
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
+import com.gu.googleauth.{GoogleGroupChecker, GoogleServiceAccount}
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
@@ -14,7 +15,8 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
-import services.{IdentityApi, AuthenticationService, IdentityService, GoogleDirectoryService}
+import services._
+
 
 import scala.concurrent.Future
 
@@ -28,6 +30,7 @@ case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
 object Functions extends LazyLogging {
+
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
@@ -66,7 +69,8 @@ object Functions extends LazyLogging {
   }
 
   def isInAuthorisedGroup(includedGroups: Set[String], errorWhenNotInAcceptedGroups: Html, email: String, request: Request[_]) = {
-    for (usersGroups <- GoogleDirectoryService.retrieveGroupsFor(email)) yield {
+    val googleDirectoryService = new GoogleGroupChecker(Config.googleDirectoryConfig)
+    for (usersGroups <- googleDirectoryService.retrieveGroupsFor(email)) yield {
       if (includedGroups.intersect(usersGroups).nonEmpty) None else {
         logger.info(s"Excluding $email from '${request.path}' - not in accepted groups: $includedGroups")
         Some(unauthorisedStaff(errorWhenNotInAcceptedGroups)(request))
@@ -89,11 +93,13 @@ object Functions extends LazyLogging {
       override def refine[A](request: AuthRequest[A]) = Future.successful {
         //Copy the private helper method in play-googleauth to ensure the user is Google auth'd
         //see https://github.com/guardian/play-googleauth/blob/master/module/src/main/scala/com/gu/googleauth/actions.scala#L59-60
-        val userIdentityOpt = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity).map(IdentityGoogleAuthRequest(_, request))
+        val userIdentityOpt = googleAuthUserOpt(request).map(IdentityGoogleAuthRequest(_, request))
         userIdentityOpt.toRight(onNonAuthentication(request))
       }
     }
   }
+
+  def googleAuthUserOpt(request: RequestHeader) = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity)
 
   def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {

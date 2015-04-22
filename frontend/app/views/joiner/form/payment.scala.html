@@ -3,9 +3,11 @@
     userFields: model.PrivateFields,
     marketingChoices: model.StatusFields,
     passwordExists: Boolean,
-    pageInfo: model.PageInfo
+    pageInfo: model.PageInfo,
+    showSubscriberFields: Boolean
 )(implicit token: play.filters.csrf.CSRF.Token)
 
+@import com.gu.membership.salesforce.Tier
 @import views.html.helper._
 
 @main("Payment | " + tier, pageInfo=pageInfo) {
@@ -51,8 +53,16 @@
                     @if(!passwordExists) {
                         @fragments.form.createPassword()
                     }
-
+                    @if(showSubscriberFields) {
+                        @fragments.form.subscriberNumber()
+                     }
+                    
                     @fragments.form.paymentOptions(tier)
+                    
+                     @if(showSubscriberFields) {
+                         @fragments.form.paymentOptionsForSubscribers()
+                     }
+
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
                         formType = "billingAddress",

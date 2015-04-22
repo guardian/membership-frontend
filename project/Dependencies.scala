@@ -11,8 +11,7 @@ object Dependencies {
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.63"
-  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.1.11"
-  val googleAdminService = "com.google.apis" % "google-api-services-admin-directory" % "directory_v1-rev53-1.20.0"
+  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.2.1"
   val contentAPI = "com.gu" %% "content-api-client" % "5.2"
   val playWS = PlayImport.ws
   val playCache = PlayImport.cache
@@ -25,7 +24,7 @@ object Dependencies {
 
   //projects
 
-  val frontendDependencies = Seq(identityCookie, googleAdminService, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
+  val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
     contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3, scalaTest)
 
 }
