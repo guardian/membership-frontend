@@ -1,0 +1,17 @@
+@(item: model.MembersOnlyContent)
+
+<a class="article-snapshot no-underline" itemscope itemtype="http://schema.org/Article" href="@item.content.webUrl">
+    @for(img <- item.imgOpt) {
+        <div class="article-snapshot__media">
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="25vw" alt="@img.altText" class="responsive-img" itemprop="image" />
+        </div>
+    }
+    <div class="article-snapshot__content">
+        <h2 class="article-snapshot__title no-underline--override">
+            <span itemprop="name">@item.content.webTitle</span>
+        </h2>
+        @for(fields <- item.content.fields) {
+            <p class="article-snapshot__trail hidden-mobile">@Html(fields("trailText"))</p>
+        }
+    </div>
+</a>

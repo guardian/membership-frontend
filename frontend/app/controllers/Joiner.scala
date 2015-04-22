@@ -1,5 +1,3 @@
-
-
 package controllers
 
 import actions.Functions._
@@ -57,10 +55,11 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    val contentReferer = request.headers.get(REFERER)
-    val contentAccess = request.getQueryString("membershipAccess")
+    val contentRefererOpt = request.headers.get(REFERER)
+    val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
 
-    Ok(views.html.joiner.tierChooser(eventOpt, pageInfo)).withSession(request.session.copy(data = request.session.data ++ contentReferer.map(JoinReferrer -> _)))
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
@@ -213,36 +212,15 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       case _ => Future.successful(None)
     }
 
-    def futureEventDetailsOpt = {
-      val optFuture = for {
-        eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
-        event <- EventbriteService.getBookableEvent(eventId)
-      } yield {
-
-        MemberService.createDiscountForMember(request.member, event).map { discountOpt =>
-          (event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))).toString)
-        }
-
-      }
-
-      Future.sequence(optFuture.toSeq).map(_.headOption)
-    }
-
-    val futureContentOpt = request.session.get(JoinReferrer).map { referer =>
-      contentApiService.contentItemQuery(referer.path).map(_.content.map(MembersOnlyContent))
-    }.getOrElse(Future.successful(None))
-
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
       customerOpt <- futureCustomerOpt
-      eventDetailsOpt <- futureEventDetailsOpt
-      contentOpt <- futureContentOpt.recover { case _ => None }
+      destinationOpt <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
         customerOpt.map(_.card),
-        eventDetailsOpt,
-        contentOpt,
+        destinationOpt,
         upgrade
     )).discardingCookies(DiscardingCookie("GU_MEM"))
   }
