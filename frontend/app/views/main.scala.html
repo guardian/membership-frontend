@@ -51,7 +51,7 @@
 
         @for(schema <- pageInfo.schemaOpt) {
             <script type="application/ld+json">
-                @Json.toJson(schema)
+                @Html(Json.toJson(schema).toString)
             </script>
         }
 
