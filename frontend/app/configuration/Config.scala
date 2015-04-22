@@ -1,6 +1,8 @@
 package configuration
 
-import com.gu.googleauth.{GoogleAuthConfig, GoogleGroupConfig}
+import com.amazonaws.auth.{InstanceProfileCredentialsProvider, AWSCredentialsProviderChain}
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.stripe.{StripeCredentials, StripeApiConfig}
@@ -175,22 +177,32 @@ object Config {
     )
   }
 
-  val googleGroupCheckerAuthConfig = {
-    val con = config.getConfig("google.groups")
-    GoogleGroupConfig(
-      con.getString("client.username"),
-      con.getString("client.password"),
-      GuardianGoogleAppsDomain,
-      ""
+  val awsProfileName = "membership"
+  val awsS3PrivateBucketName = "membership-private"
+
+  lazy val awsCredentialsProvider = new AWSCredentialsProviderChain(new ProfileCredentialsProvider(awsProfileName), new InstanceProfileCredentialsProvider())
+  lazy val s3PrivateKeyService = new S3PrivateKeyService(awsS3PrivateBucketName, awsCredentialsProvider)
+
+  val privateKeyStorePass = "notasecret"
+  val privateKeyAlias = "privatekey"
+  val privateKeyPass = "notasecret"
+  val certPath = config.getString("google.directory.service_account.cert")
+
+  lazy val privateKey = {
+    s3PrivateKeyService.loadPrivateKey(
+      certPath,
+      privateKeyStorePass,
+      privateKeyAlias,
+      privateKeyPass
     )
   }
 
-  val googleDirectoryConfig = {
+  lazy val googleDirectoryConfig = {
     val con = config.getConfig("google.directory")
-    GoogleDirectoryConfig(
+    GoogleServiceAccount(
       con.getString("service_account.id"),
-      con.getString("service_account.email"),
-      con.getString("service_account.cert")
+      privateKey,
+      con.getString("service_account.email")
     )
   }
 
