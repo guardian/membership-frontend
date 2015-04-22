@@ -10,6 +10,7 @@
     accessOpt.map {
         case i if i.isMembersOnly => "You need to be a Guardian member to view this page"
         case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to view this page"
+        case _ => "Choose a membership tier to continue"
     }.getOrElse(eventOpt.fold("Choose a membership tier to continue")(_.metadata.chooseTier.sectionTitle))
 }
 
