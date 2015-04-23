@@ -57,8 +57,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
     val contentRefererOpt = request.headers.get(REFERER)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
+    val returnUrl = contentRefererOpt.map(Config.idWebAppSigninUrlExternal(_)).getOrElse(Config.idWebAppSigninUrl(""))
 
-    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt))
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, returnUrl))
       .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
