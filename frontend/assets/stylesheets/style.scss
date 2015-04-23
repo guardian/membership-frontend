@@ -22,9 +22,7 @@
 
 @import 'vars';
 @import 'functions';
-@import 'mixins/mixins-utils';
-@import 'mixins/mixins-layout';
-@import 'mixins/mixins-flexbox';
+@import 'mixins';
 
 /* ==========================================================================
    Base
@@ -42,10 +40,6 @@
 /* ==========================================================================
    Layout
    ========================================================================== */
-
-@include grid-system;
-@include guss-row-utility;
-@include guss-columns-utility;
 
 @import 'layout/layout';
 @import 'layout/footer';

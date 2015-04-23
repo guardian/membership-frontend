@@ -15,12 +15,12 @@ html {
  * @see http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
  */
 body {
-    @include flexbox();
-    @include flex-direction(column);
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
 }
 .container-global {
-    @include flex(1);
+    flex: 1 1 auto;
 }
 
 /* Layout Helpers

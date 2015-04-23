@@ -37,7 +37,7 @@
     background-color: $c-button;
     padding: rem(8px) rem($gs-gutter);
     border: 1px solid $c-button;
-    @include border-radius(50%);
+    @include circular;
 
     &:focus,
     &:active,

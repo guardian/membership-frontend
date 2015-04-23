@@ -1,0 +1,143 @@
+// =============================================================================
+// Layout Mixins
+// =============================================================================
+
+@import 'components/bower-components/sass-mq/mq';
+
+// Guss - https://github.com/guardian/guss
+// =============================================================================
+
+@import 'components/bower-components/guss-rem/rem';
+@import 'components/bower-components/guss-typography/typography';
+@import 'components/bower-components/guss-layout/columns';
+@import 'components/bower-components/guss-layout/row';
+
+// Grid system
+// =============================================================================
+// gs- prefixes stand for Grid System
+
+// Configuration
+$gs-gutter: 20px;
+$gs-baseline: 12px;
+$gs-column-width: 60px;
+$gs-row-height: 36px;
+$gs-max-columns: 16;
+
+// Grid system helpers
+@function gs-span($n-columns) {
+    @return $n-columns * $gs-column-width + $gs-gutter * ($n-columns - 1);
+}
+
+@function gs-height($n-rows) {
+    @return $n-rows * $gs-row-height + $gs-baseline * ($n-rows - 1);
+}
+
+// Side Margins
+// =============================================================================
+// a dynamic mixin so we can reuse these measurements
+// for other properties – the media queries and widths
+// need to match the ones in layout.scss
+
+@mixin side-margins-calc($property) {
+    $offset: ($gs-gutter * 2);
+    @include mq(tablet) {
+        $width: map-get($max-widths, max-tablet);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+    @include mq(mem-full) {
+        $width: map-get($max-widths, max-desktop);
+        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+    }
+}
+
+// Helpers
+// =============================================================================
+
+@mixin vertically-center() {
+    transform: translateY(-50%);
+    top: 50%;
+    margin: 0 auto;
+    display: block;
+}
+
+
+@mixin circular {
+    border-radius: 1000px; // Android 2.3 cannot deal with '50%'
+}
+
+@mixin font-smoothing() {
+    -moz-osx-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+}
+
+@mixin disable-user-select() {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+// Vertical linear gradient with a plain fallback for older browsers
+@mixin simple-gradient($from, $until) {
+    // Fix for browsers not understanding transparent
+    @if $from == transparent {
+        $from: transparentize($until, 1);
+    }
+
+    @if $until == transparent {
+        $until: transparentize($from, 1);
+    }
+    background-color: $from;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($until));
+    background-image: -webkit-linear-gradient($from, $until);
+    background-image: linear-gradient(to bottom, $from, $until);
+}
+
+// Hide content visually, still readable by screen readers
+@mixin u-h {
+    border: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important;
+}
+
+@mixin image-replacement {
+    direction: ltr;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+// Micro clearfix (http://nicolasgallagher.com/micro-clearfix-hack/)
+@mixin clearfix {
+    &:after,
+    &:before {
+        content: '';
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+    @if $old-ie {
+        zoom: 1;
+    }
+}
+
+@mixin radio-circle($colour: $mem-brandBlue) {
+    @include circular;
+    content: ' ';
+    background-color: $colour;
+    width: rem($gs-baseline + 4);
+    height: rem($gs-baseline + 4);
+    display: block;
+    position: absolute;
+    left: rem($gs-baseline);
+    top: rem($gs-gutter + 1);
+}
+

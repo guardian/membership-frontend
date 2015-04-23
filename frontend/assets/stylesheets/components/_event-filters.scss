@@ -90,7 +90,7 @@ $filter-icon-size: 18px;
     left: rem($gs-gutter / 2);
 }
 .filter-search__cross {
-    @include transform(translateY(-55%));
+    transform: translateY(-55%);
     margin: 0; padding: 0;
     right: rem($gs-gutter / 2);
 }
