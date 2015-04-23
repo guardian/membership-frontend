@@ -19,6 +19,7 @@ object EventbriteTestObjects {
     val socialImgUrl = None
     val socialHashTag = None
     val imageMetadata = None
+    val schema = EventSchema.from(this)
     val tags = Nil
     val contentOpt = None
     val pastImageOpt = None

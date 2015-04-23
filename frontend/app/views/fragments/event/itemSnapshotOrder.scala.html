@@ -15,7 +15,7 @@
             @if(event.isSoldOut){
                 <span class="event-status event-status--sold-out">Sold out</span>
             }
-            <span itemprop="name">@event.name.text</span>
+            @event.name.text
         </h2>
         <div class="stats-listing">
             @fragments.event.stats(event)

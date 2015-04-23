@@ -1,10 +1,8 @@
 @(event: model.RichEvent.RichEvent, extraClasses: Seq[String] = Nil)
 
-@import model.RichEvent._
-
 <a class="js-ticket-cta action @extraClasses.mkString(" ")"
    href="@routes.Event.buy(event.id)"
    data-metric-trigger="click"
    data-metric-category="events"
    data-metric-action="book-tickets:@event.metadata.identifier.toLowerCase"
-   itemprop="url">Book tickets</a>
+>Book tickets</a>

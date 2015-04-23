@@ -6,7 +6,7 @@
 @import views.support.Dates._
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = @{
-    Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate' itemprop='availabilityStarts' content='$salesDate'>${salesDate.pretty(needToDisplayTimes)}</time>")
+    Html(s"<time class='js-ticket-sale-start-${tier.slug}' datetime='$salesDate'>${salesDate.pretty(needToDisplayTimes)}</time>")
 }
 
 @ticketEndSaleDate(endSalesDate: Instant, needToDisplayTimes: Boolean) = @{

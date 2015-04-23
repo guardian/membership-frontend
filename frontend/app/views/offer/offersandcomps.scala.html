@@ -16,21 +16,20 @@
                 <ul class="grid grid--bordered grid--3up">
                 @for(memberContent <- membersOnlyContent) {
                     <li class="grid__item">
-                        <a href="@memberContent.content.webUrl" class="article-front" itemscope itemtype="http://schema.org/Event">
-                            <meta itemprop="url" content="@memberContent.content.webUrl">
+                        <a href="@memberContent.content.webUrl" class="article-front">
                             <div class="article-front__media">
                             @for(img <- memberContent.imgOpt) {
                                 <img class="responsive-img"
-                                src="@img.defaultImage"
-                                sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
-                                srcset="@img.srcset"
-                                alt="@img.altText"
-                                itemprop="image"/>
+                                    src="@img.defaultImage"
+                                    sizes="(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"
+                                    srcset="@img.srcset"
+                                    alt="@img.altText"
+                                />
                             }
                             </div>
                             <div class="article-front__content">
                                 <div class="article-front__meta">
-                                    <h4 class="article-front__title" itemprop="name">
+                                    <h4 class="article-front__title">
                                         <span class="link-outbound">
                                         @fragments.inlineIcon("outbound-link", Seq("icon-inline--brand-dark"))
                                             @if(memberContent.tagTitle) {
