@@ -14,6 +14,7 @@ import play.api.Logger
 import services._
 
 import scala.util.Try
+import java.net.URLEncoder
 
 object Config {
   val logger = Logger(this.getClass())
@@ -34,8 +35,15 @@ object Config {
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
-  def idWebAppSigninUrl(uri: String): String =
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
+  def idWebAppSigninUrl(uri: String): String = {
+    val encodedUri = URLEncoder.encode(membershipUrl + uri, "UTF-8")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$encodedUri") ? ("skipConfirmation" -> "true")
+  }
+
+  def idWebAppSigninUrlExternal(uri: String): String = {
+    val encodedUri = URLEncoder.encode(uri, "UTF-8")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$encodedUri") ? ("skipConfirmation" -> "true")
+  }
 
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
