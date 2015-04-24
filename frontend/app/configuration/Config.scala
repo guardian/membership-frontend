@@ -35,13 +35,8 @@ object Config {
 
   val idWebAppUrl = config.getString("identity.webapp.url")
 
-  def idWebAppSigninUrl(uri: String): String = {
+  def idWebAppSigninUrl(uri: String): String =
     (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
-  }
-
-  def idWebAppSigninUrlExternal(uri: String): String = {
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$uri") ? ("skipConfirmation" -> "true")
-  }
 
   def idWebAppRegisterUrl(uri: String): String =
     (idWebAppUrl / "register") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")

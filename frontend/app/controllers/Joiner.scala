@@ -22,7 +22,6 @@ import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 
-
 import scala.concurrent.Future
 
 trait Joiner extends Controller with ActivityTracking with LazyLogging {
@@ -57,7 +56,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
     val contentRefererOpt = request.headers.get(REFERER)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
-    val returnUrl = contentRefererOpt.map(Config.idWebAppSigninUrlExternal(_)).getOrElse(Config.idWebAppSigninUrl(""))
+    val returnUrl = contentRefererOpt.map { referer =>
+      ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> s"$referer") ? ("skipConfirmation" -> "true")).toString
+    }.getOrElse(Config.idWebAppSigninUrl(""))
 
     Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, returnUrl))
       .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
