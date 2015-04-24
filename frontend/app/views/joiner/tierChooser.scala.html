@@ -12,11 +12,9 @@
     accessOpt.map {
         case i if i.isMembersOnly => "You need to be a Guardian member to view this page"
         case i if i.isPaidMembersOnly => "You need to be a Partner or a Patron to view this page"
-        case _ => "Choose a membership tier to continue"
+        case _ => defaultTitle
     }.getOrElse(eventOpt.fold(defaultTitle)(_.metadata.chooseTier.sectionTitle))
 }
-
-<div class="page-section__lead-in">     @fragments.joiner.joinStepCounter(1, 3)      </div>
 
 @main("Join Choose Tier", pageInfo=pageInfo) {
 
