@@ -85,7 +85,6 @@
 
                         {"Fn::Join":["", ["wget -N --directory-prefix=/home/ubuntu/.ssh https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/authorized_keys &"]]},
                         "apt-get -y update",
-                        "apt-get -y install language-pack-en openjdk-7-jre-headless unzip awscli",
                         {"Fn::Join":["", ["echo https://s3-eu-west-1.amazonaws.com/membership-dist/", { "Ref" : "Stack" }, "/", { "Ref" : "Stage" }, "/frontend/app.zip > /etc/gu-artifact-url" ]]},
 
                         "adduser --system --home /membership --disabled-password membership",

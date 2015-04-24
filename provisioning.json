@@ -11,15 +11,18 @@
         "source_ami": "ami-2d96f65a",
         "instance_type": "t2.micro",
         "ssh_username": "ubuntu",
-        "ami_name": "gu-membership-{{isotime \"2006-01-02\"}}"
+        "ami_name": "gu-membership-{{isotime \"2006-01-02 03-04\"}}"
     }],
     "provisioners": [{
         "type": "shell",
         "inline": [
             "sleep 20",
+            "sudo add-apt-repository -y ppa:webupd8team/java",
             "sudo apt-get -y update",
-            "sudo apt-get -y install language-pack-en openjdk-7-jre-headless unzip awscli python-pip",
+            "echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections",
+            "sudo apt-get -y install language-pack-en oracle-java8-installer unzip awscli python-pip",
             "sudo apt-get -y upgrade",
+            "sudo apt-get install oracle-java8-set-default",
             "sudo pip install virtualenv"
         ]
     }]
