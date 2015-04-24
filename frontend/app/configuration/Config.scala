@@ -36,13 +36,11 @@ object Config {
   val idWebAppUrl = config.getString("identity.webapp.url")
 
   def idWebAppSigninUrl(uri: String): String = {
-    val encodedUri = URLEncoder.encode(membershipUrl + uri, "UTF-8")
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$encodedUri") ? ("skipConfirmation" -> "true")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$membershipUrl$uri") ? ("skipConfirmation" -> "true")
   }
 
   def idWebAppSigninUrlExternal(uri: String): String = {
-    val encodedUri = URLEncoder.encode(uri, "UTF-8")
-    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$encodedUri") ? ("skipConfirmation" -> "true")
+    (idWebAppUrl / "signin") ? ("returnUrl" -> s"$uri") ? ("skipConfirmation" -> "true")
   }
 
   def idWebAppRegisterUrl(uri: String): String =
