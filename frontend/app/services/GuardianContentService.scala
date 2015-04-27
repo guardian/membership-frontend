@@ -52,7 +52,7 @@ trait GuardianContentService extends GuardianContent {
     enumerator(Iteratee.consume()).flatMap(_.run)
   }
 
-  private def membersOnly: Future[Seq[Content]] = membersOnlyContentQuery(1).map(_.results)
+  private def offersAndCompetitions: Future[Seq[Content]] = offersAndCompetitionsContentQuery(1).map(_.results)
 
   private def membershipFront: Future[Seq[Content]] = membershipFrontContentQuery(1).map(_.results)
 
@@ -60,7 +60,7 @@ trait GuardianContentService extends GuardianContent {
 
   def content(eventId: String): Option[Content] = contentTask.get().find(c => c.references.map(_.id).contains(s"eventbrite/$eventId"))
 
-  def membersOnlyContent: Seq[Content] = membersOnlyContentTask.get()
+  def offersAndCompetitionsContent: Seq[Content] = offersAndCompetitionsContentTask.get()
 
   def membershipFrontContent: Seq[Content] = membershipFrontContentTask.get()
 
@@ -68,13 +68,13 @@ trait GuardianContentService extends GuardianContent {
 
   val contentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Eventbrite reference", Nil, 1.millis, 2.minutes)(eventbrite)
 
-  val membersOnlyContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(membersOnly)
+  val offersAndCompetitionsContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content with Guardian Members Only", Nil, 1.second, 2.minutes)(offersAndCompetitions)
 
   val membershipFrontContentTask = ScheduledTask[Seq[Content]]("GuardianContentService - Content from Membership front", Nil, 1.second, 2.minutes)(membershipFront)
 
   def start() {
     masterclassContentTask.start()
-    membersOnlyContentTask.start()
+    offersAndCompetitionsContentTask.start()
     contentTask.start()
     membershipFrontContentTask.start()
   }
@@ -115,15 +115,14 @@ trait GuardianContent {
     }
   }
 
-  def membersOnlyContentQuery(page: Int): Future[ItemResponse] = {
-    val itemQuery = ItemQuery("extra")
-      .showFields("all")
-      .showElements("all")
-      .showTags("all")
+  def offersAndCompetitionsContentQuery(page: Int): Future[ItemResponse] = {
+    val itemQuery = ItemQuery("membership")
+      .showElements("image")
+      .showTags("keyword")
       .pageSize(100)
       .page(page)
-      .tag("tone/extraoffers")
-    //todo: filter response for member access flag
+      .tag("membership/membership-offers|membership/membership-competitions")
+
     client.getResponse(itemQuery).andThen {
       case Failure(GuardianContentApiError(status, message)) =>
         logAndRecordError(status)

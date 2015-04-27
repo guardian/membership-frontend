@@ -13,4 +13,4 @@ case class EventDestination(event: RichEvent, iframeUrl: Uri) extends Destinatio
   }
 }
 
-case class ContentDestination(item: MembersOnlyContent) extends Destination
+case class ContentDestination(item: ContentItem) extends Destination
