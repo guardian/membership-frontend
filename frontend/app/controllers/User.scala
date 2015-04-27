@@ -38,6 +38,13 @@ trait User extends Controller {
         Future.successful(Json.obj())
     }
 
+    def endDate(subscriptionDetails: SubscriptionDetails) = {
+      subscriptionDetails.chargedThroughDate.orElse {
+        if (subscriptionDetails.inFreePeriodOffer) Some(subscriptionDetails.contractAcceptanceDate)
+        else None
+      }
+    }
+
     val futurePaymentDetails = for {
       cardDetails <- futureCardDetails
       subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
