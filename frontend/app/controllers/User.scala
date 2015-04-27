@@ -49,6 +49,9 @@ trait User extends Controller {
         "subscription" -> (cardDetails ++ Json.obj(
           "start" -> membershipSummary.startDate,
           "end" -> membershipSummary.nextPaymentDate,
+          "nextPaymentPrice" -> membershipSummary.nextPaymentPrice,
+          "nextPaymentDate" -> membershipSummary.nextPaymentDate,
+          "renewalDate" -> membershipSummary.renewalDate,
           "cancelledAt" -> subscriptionStatus.future.isDefined,
           "plan" -> Json.obj(
             "name" -> subscriptionDetails.planName,
