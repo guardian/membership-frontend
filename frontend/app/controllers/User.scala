@@ -55,7 +55,7 @@ trait User extends Controller {
         "optIn" -> !subscriptionStatus.cancelled,
         "subscription" -> (cardDetails ++ Json.obj(
           "start" -> membershipSummary.startDate,
-          "end" -> membershipSummary.nextPaymentDate,
+          "end" -> endDate(subscriptionDetails),
           "nextPaymentPrice" -> membershipSummary.nextPaymentPrice,
           "nextPaymentDate" -> membershipSummary.nextPaymentDate,
           "renewalDate" -> membershipSummary.renewalDate,
