@@ -49,19 +49,24 @@ trait User extends Controller {
       cardDetails <- futureCardDetails
       subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
       subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-    } yield Json.obj(
-      "optIn" -> !subscriptionStatus.cancelled,
-      "subscription" -> (cardDetails ++ Json.obj(
-        "start" -> subscriptionDetails.effectiveStartDate,
-        "end" -> endDate(subscriptionDetails),
-        "cancelledAt" -> subscriptionStatus.future.isDefined,
-        "plan" -> Json.obj(
-          "name" -> subscriptionDetails.planName,
-          "amount" -> subscriptionDetails.planAmount * 100,
-          "interval" -> (if (subscriptionDetails.annual) "year" else "month")
-        ))
+      membershipSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
+    } yield
+      Json.obj(
+        "optIn" -> !subscriptionStatus.cancelled,
+        "subscription" -> (cardDetails ++ Json.obj(
+          "start" -> membershipSummary.startDate,
+          "end" -> endDate(subscriptionDetails),
+          "nextPaymentPrice" -> membershipSummary.nextPaymentPrice * 100,
+          "nextPaymentDate" -> membershipSummary.nextPaymentDate,
+          "renewalDate" -> membershipSummary.renewalDate,
+          "cancelledAt" -> subscriptionStatus.future.isDefined,
+          "plan" -> Json.obj(
+            "name" -> subscriptionDetails.planName,
+            "amount" -> subscriptionDetails.planAmount * 100,
+            "interval" -> (if (membershipSummary.annual) "year" else "month")
+          ))
+          )
       )
-    )
 
     futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
