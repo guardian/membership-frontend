@@ -186,11 +186,9 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         Some(paymentSummary.totalPrice), paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate)
     }
 
-    val summaryViaSubscriptionAmendF = getSummaryViaSubscriptionAmend(memberId)
-
     for {
       userInvoiced <- hasUserBeenInvoiced(memberId)
-      summary <- if (userInvoiced) summaryViaSubscriptionAmendF else getSummaryViaInvoice(memberId)
+      summary <- if (userInvoiced) getSummaryViaSubscriptionAmend(memberId) else getSummaryViaInvoice(memberId)
     } yield summary
   }
 
