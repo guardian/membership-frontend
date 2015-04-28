@@ -1,4 +1,4 @@
-@(membersOnlyContent: Seq[model.MembersOnlyContent], noResultText: String)
+@(membersOnlyContent: Seq[model.ContentItemOffer], noResultText: String)
 
 @main("Offers & Competitions") {
     <main role="main" class="l-constrained">
@@ -32,8 +32,8 @@
                                     <h4 class="article-front__title">
                                         <span class="link-outbound">
                                         @fragments.inlineIcon("outbound-link", Seq("icon-inline--brand-dark"))
-                                            @if(memberContent.tagTitle) {
-                                                <span class="link-outbound__highlight">@memberContent.tagTitle</span>
+                                            @for(tagTitle <- memberContent.tagTitleOpt) {
+                                                <span class="link-outbound__highlight">@tagTitle.webTitle</span>
                                                 <span class="link-outbound__separator"> / </span>
                                             }
                                             <span>@memberContent.content.webTitle</span>

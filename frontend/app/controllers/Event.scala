@@ -185,7 +185,7 @@ trait Event extends Controller with ActivityTracking {
       programmingPartnerEvents=guLiveEvents.getPartnerEvents
     )
 
-    val latestArticles = GuardianContentService.membershipFrontContent.map(MembersOnlyContent)
+    val latestArticles = GuardianContentService.membershipFrontContent.map(ContentItem)
 
     Ok(views.html.event.whatson(pageInfo, events, latestArticles))
   }

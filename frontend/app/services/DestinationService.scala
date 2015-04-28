@@ -3,7 +3,7 @@ package services
 import actions._
 import com.netaporter.uri.dsl._
 import configuration.Config
-import model.{ContentDestination, Destination, EventDestination, MembersOnlyContent}
+import model.{ContentDestination, Destination, EventDestination, ContentItem}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -23,7 +23,7 @@ trait DestinationService {
     request.session.get(JoinReferrer).map { referer =>
       if(referer.host.contains(Config.guardianHost)) {
         contentApiService.contentItemQuery(referer.path).map { resp =>
-          resp.content.map(MembersOnlyContent).map(ContentDestination(_))
+          resp.content.map(ContentItem).map(ContentDestination(_))
         } recover { case _ => None }
       } else {
         Future.successful(None)
