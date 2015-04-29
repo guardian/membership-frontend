@@ -1,5 +1,6 @@
 package services.zuora
 
+import com.gu.membership.zuora.ZuoraApiConfig
 import com.netaporter.uri.dsl._
 import model.Zuora.{Authentication, ZuoraResult}
 import org.specs2.mutable.Specification

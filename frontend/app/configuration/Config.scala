@@ -1,19 +1,18 @@
 package configuration
 
-import com.amazonaws.auth.{InstanceProfileCredentialsProvider, AWSCredentialsProviderChain}
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.stripe.{StripeCredentials, StripeApiConfig}
+import com.gu.membership.touchpoint.TouchpointBackendConfig
+import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
-import model.{StaffPlan, FriendTierPlan, PaidTierPlan}
 import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
-import services.zuora.ZuoraApiConfig
 import services._
-import com.netaporter.uri.dsl._
+
 import scala.util.Try
 
 object Config {
@@ -70,67 +69,6 @@ object Config {
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
   val facebookAppId = config.getString("facebook.app.id")
-
-  val touchpointDefaultBackend = touchpointBackendConfigFor("default")
-  val touchpointTestBackend = touchpointBackendConfigFor("test")
-
-  def touchpointBackendConfigFor(typ: String) = {
-    val touchpointConfig = config.getConfig("touchpoint.backend")
-    val backendEnvironmentName = touchpointConfig.getString(typ)
-    val environments = touchpointConfig.getConfig("environments")
-
-    val defaultTouchpointBackendConfig = touchpointConfigFor(environments, backendEnvironmentName)
-
-    logger.info(s"TouchPoint config - default-env=$typ config=${defaultTouchpointBackendConfig.hashCode}")
-
-    defaultTouchpointBackendConfig
-  }
-
-  def touchpointConfigFor(environmentsConf: com.typesafe.config.Config, environmentName: String): TouchpointBackendConfig = {
-
-    val backendConf: com.typesafe.config.Config = environmentsConf.getConfig(environmentName)
-
-    val stripeApiConfig = StripeApiConfig(
-      environmentName,
-      config.getString("stripe.api.url"), // stripe url never changes
-      StripeCredentials(
-        secretKey = backendConf.getString("stripe.api.key.secret"),
-        publicKey = backendConf.getString("stripe.api.key.public")
-      )
-    )
-
-    val salesforceConfig = SalesforceConfig(
-      environmentName,
-      consumerKey = backendConf.getString("salesforce.consumer.key"),
-      consumerSecret = backendConf.getString("salesforce.consumer.secret"),
-      apiURL = backendConf.getString("salesforce.api.url"),
-      apiUsername = backendConf.getString("salesforce.api.username"),
-      apiPassword = backendConf.getString("salesforce.api.password"),
-      apiToken = backendConf.getString("salesforce.api.token")
-    )
-
-    def plansForTier(paidTier: Tier) = {
-      def paidTierPlan(annual: Boolean) = {
-        val period = if (annual) "annual" else "monthly"
-        PaidTierPlan(paidTier, annual) -> backendConf.getString(s"zuora.api.${paidTier.slug}.$period")
-      }
-
-      Map(paidTierPlan(false), paidTierPlan(true))
-    }
-
-    val zuoraApiConfig = ZuoraApiConfig(
-      environmentName,
-      backendConf.getString("zuora.api.url"),
-      username = backendConf.getString("zuora.api.username"),
-      password = backendConf.getString("zuora.api.password"),
-      productRatePlans = Map(
-        FriendTierPlan -> backendConf.getString(s"zuora.api.friend"),
-        StaffPlan -> backendConf.getString(s"zuora.api.staff")
-      ) ++ Seq(Tier.Supporter, Tier.Partner, Tier.Patron).map(plansForTier).reduce(_ ++ _)
-    )
-
-    TouchpointBackendConfig(salesforceConfig, stripeApiConfig, zuoraApiConfig)
-  }
 
   val googleAnalyticsTrackingId = config.getString("google.analytics.tracking.id")
 

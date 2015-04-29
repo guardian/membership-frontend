@@ -1,9 +1,8 @@
 package services.zuora
 
 import com.gu.membership.util.Timing
+import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
-import com.netaporter.uri.Uri
-import model.ProductRatePlan
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders._
@@ -33,8 +32,6 @@ object ZuoraServiceHelpers {
   def formatQuery[T <: ZuoraQuery](reader: ZuoraQueryReader[T], where: String) =
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
-
-case class ZuoraApiConfig(envName: String, url: Uri, username: String, password: String, productRatePlans: Map[ProductRatePlan, String])
 
 class ZuoraService(val apiConfig: ZuoraApiConfig) {
   import services.zuora.ZuoraServiceHelpers._
