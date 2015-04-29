@@ -1,14 +1,10 @@
 package forms
 
-import play.api.data.validation.Constraints
-import play.api.data.{Mapping, Form}
+import com.gu.membership.model._
+import com.gu.membership.salesforce.Tier
+import com.gu.membership.zuora.{Address, Countries, Country}
 import play.api.data.Forms._
-
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.zuora.{Address, Country, Countries}
-
-import model._
+import play.api.data.{Form, Mapping}
 
 object MemberForm {
   case class NameForm(first: String, last: String)

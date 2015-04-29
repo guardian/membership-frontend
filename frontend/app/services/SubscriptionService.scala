@@ -1,15 +1,15 @@
 package services
 
 import com.github.nscala_time.time.Imports._
+import com.gu.membership.model._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
+import model.MembershipSummary
 import model.Zuora._
 import model.ZuoraDeserializer._
-import model.{ProductRatePlan, TierPlan}
 import org.joda.time.DateTime
-import model.{MembershipSummary, ProductRatePlan, TierPlan}
 import services.zuora._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -104,7 +104,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = {
     for {
       subscriptions <- getSubscriptions(memberId)
-    
+
       if subscriptions.size > 0
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")

@@ -1,11 +1,13 @@
 package services
 
+import com.gu.membership.model.FriendTierPlan
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.{Stripe, StripeService}
+import com.gu.membership.touchpoint.TouchpointBackendConfig
 import com.gu.monitoring.StatusMetrics
 import configuration.Config
-import model.{FriendTierPlan, IdMinimalUser, TierPlan}
+import model.IdMinimalUser
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
 import services.zuora.ZuoraService
@@ -15,6 +17,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object TouchpointBackend {
+  import TouchpointBackendConfig.BackendType
+
+  def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend =
+    TouchpointBackend(TouchpointBackendConfig.byType(backendType, Config.config))
 
   def apply(touchpointBackendConfig: TouchpointBackendConfig): TouchpointBackend = {
 
@@ -30,8 +36,8 @@ object TouchpointBackend {
     TouchpointBackend(memberRepository, stripeService, zuoraService)
   }
 
-  val Normal = TouchpointBackend(Config.touchpointDefaultBackend)
-  val TestUser = TouchpointBackend(Config.touchpointTestBackend)
+  val Normal = TouchpointBackend(BackendType.Default)
+  val TestUser = TouchpointBackend(BackendType.Testing)
 
   val All = Seq(Normal, TestUser)
 

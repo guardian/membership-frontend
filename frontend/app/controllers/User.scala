@@ -1,9 +1,9 @@
 package controllers
 
 import actions._
-import com.gu.cas.CAS.{CASError, CASSuccess}
+import com.gu.cas.CAS.CASSuccess
+import com.gu.membership.model.PaidTiers
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
-import model.PaidTiers
 import model.Zuora.SubscriptionDetails
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}

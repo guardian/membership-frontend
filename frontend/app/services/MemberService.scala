@@ -1,5 +1,6 @@
 package services
 
+import com.gu.membership.model._
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
