@@ -61,7 +61,7 @@ define([
         } else {
             data = serializer(utilsHelper.toArray(form.elem.elements), { 'payment.token': response.id });
 
-            loader.setProcessingMessage('Making payment...');
+            loader.setProcessingMessage('Checking card details...');
 
             ajax({
                 url: form.elem.action,

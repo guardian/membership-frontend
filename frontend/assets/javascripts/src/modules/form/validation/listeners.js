@@ -28,7 +28,6 @@ define([
      */
     var addSubmitListener = function () {
         bean.on(SUBMIT_ELEM, 'click', function (e) {
-            var processingMessage = 'Processing...';
             e.preventDefault();
 
             form.elems.map(function (elem) {
@@ -36,12 +35,8 @@ define([
             });
 
             if (!form.errs.length) {
-                if (form.hasPayment) {
-                    processingMessage.replace('...', ' payment...');
-                }
-
                 loader.startLoader();
-                loader.setProcessingMessage(processingMessage);
+                loader.setProcessingMessage('Processing...');
                 loader.disableSubmitButton(true);
 
                 if (form.hasPayment) {
