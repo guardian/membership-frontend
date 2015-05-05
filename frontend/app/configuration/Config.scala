@@ -14,6 +14,7 @@ import play.api.Logger
 import services._
 
 import scala.util.Try
+import java.net.URLEncoder
 
 object Config {
   val logger = Logger(this.getClass())
