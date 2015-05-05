@@ -22,18 +22,15 @@ define([
             guardian.analyticsEnabled = false;
         }
 
-        guardian.analyticsEnabled = true;
         if (guardian.analyticsEnabled) {
             ophanAnalytics.init();
             omnitureAnalytics.init();
             googleAnalytics.init();
 
-            krux.load();
-
             if(!guardian.isDev) {
+                krux.load();
                 crazyegg.load();
             }
-
         }
     }
 
