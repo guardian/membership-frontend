@@ -245,7 +245,8 @@ object Eventbrite {
       "birkbeck",
       "idler",
       "csm",
-      "tpg"
+      "tpg",
+      "5x15"
     )
 
     def slugToId(slug: String): Option[String] = "-?(\\d+)$".r.findFirstMatchIn(slug).map(_.group(1))
