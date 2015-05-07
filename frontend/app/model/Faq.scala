@@ -183,10 +183,6 @@ object Faq {
       Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our <a href='http://www.theguardian.com/help/privacy-policy'>privacy policy</a>.​"),
       "privacy"
     ),
-    Item("I have a question",
-      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
-      "questions"
-    ),
     Item("What if I want to become a Patron and not a Partner?",
       Html("If you would like to join as a Patron please follow this link <a href='/patrons'>https://membership.theguardian.com/patrons</a> &ndash; the six months offer is not available on Patronage."),
       "patron-not-partner"
@@ -212,6 +208,10 @@ object Faq {
       <h3>Guardian daily edition and Guardian app</h3>
       <p><strong>Email:</strong> <a href='mailto:guardianukdigital@quadrantsubs.com'>guardianukdigital@quadrantsubs.com</a><br /><strong>Phone:</strong> 0330 333 6767 (option 2 then option 2). Lines are open Monday-Friday 9am-5pm. Calls cost no more than 01 or 02 numbers from landlines or mobiles.</p>"""),
       "who-to-contact"
+    ),
+    Item("I have a question not answered above",
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      "questions"
     )
   )
 
