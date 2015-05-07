@@ -186,6 +186,32 @@ object Faq {
     Item("I have a question",
       Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "questions"
+    ),
+    Item("What if I want to become a Patron and not a Partner?",
+      Html("If you would like to join as a Patron please follow this link <a href='/patrons'>https://membership.theguardian.com/patrons</a> &ndash; the six months offer is not available on Patronage."),
+      "patron-not-partner"
+    ),
+    Item("What if I do not have a Subscriber ID?",
+      Html("You will only have a subscriber ID if you subscribe directly with the Guardian, this offer is not applicable to readers who subscribe to Guardian products through third party suppliers. This includes Apple, Google, or Amazon."),
+      "no-subscriber-id"
+    ),
+    Item("When do I need to take up this offer?",
+      Html("This offer is open until further notice. However, we reserve the right at any time to modify or discontinue, temporarily or permanently, this offer without prior notice."),
+      "when-start-offer"
+    ),
+    Item("Does this affect my subscription to the Guardian?",
+      Html(s"No, this offer does not affect your subscription but if you have any concerns then do <a href='mailto:${Email.membershipSupport}'>get in touch with our membership team</a>."),
+      "affect-subscription"
+    ),
+    Item("I have a query about my subscription. Who do I contact?",
+      Html("""If there is anything you’d like to know about your subscription, please contact us on the numbers below. Please ensure that you quote your Subscriber ID when contacting customer services.
+      <h3>Voucher Subscription</h3>
+      <p><strong>Email:</strong> <a href='mailto:gnmsubs@quadrantsubs.com'>gnmsubs@quadrantsubs.com</a><br /><strong>Phone:</strong> 0330 333 6767 (option 2 then option 2). Lines are open Monday-Friday 9am-5pm. Calls cost no more than 01 or 02 numbers from landlines or mobiles.</p>
+      <h3>Home Delivery Subscription</h3>
+      <p><strong>Email:</strong> <a href='mailto:customerservice@guardiandirectsubs.co.uk'>customerservice@guardiandirectsubs.co.uk</a><br /><strong>Phone:</strong> 0330 333 6767 (option 2 then option 1). Lines are open Monday-Friday 8.00am-5.30pm. Saturday & Sunday 8.30am-12.30pm. Calls cost no more than 01 or 02 numbers from landlines or mobiles.</p>
+      <h3>Guardian daily edition and Guardian app</h3>
+      <p><strong>Email:</strong> <a href='mailto:guardianukdigital@quadrantsubs.com'>guardianukdigital@quadrantsubs.com</a><br /><strong>Phone:</strong> 0330 333 6767 (option 2 then option 2). Lines are open Monday-Friday 9am-5pm. Calls cost no more than 01 or 02 numbers from landlines or mobiles.</p>"""),
+      "who-to-contact"
     )
   )
 
