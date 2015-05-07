@@ -11,8 +11,7 @@ define([
 
     var IS_HIDDEN = 'is-hidden';
     var IS_ACTIVE = 'is-active';
-    var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-toggle');
-    var IDENTITY_MENU_CTA_URL = document.querySelector('.js-identity-menu-url');
+    var IDENTITY_MENU_CTA_ELEM = document.querySelector('.js-identity-menu-cta');
     var IDENTITY_MENU_ELEM = document.querySelector('.js-identity-menu');
     var HTML_ELEM = document.documentElement;
 
@@ -54,11 +53,9 @@ define([
         var windowLocation = window.location;
         var currentUrl = windowLocation.pathname + windowLocation.search;
 
-        if(IDENTITY_MENU_CTA_URL) {
-            IDENTITY_MENU_CTA_URL.setAttribute('href',
-                populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
-            );
-        }
+        IDENTITY_MENU_CTA_ELEM.setAttribute('href',
+            populateReturnUrl(IDENTITY_MENU_CTA_ELEM.getAttribute('href'), currentUrl)
+        );
     }
 
     function populateReturnUrl(href, currentUrl) {

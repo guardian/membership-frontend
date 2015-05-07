@@ -47,25 +47,21 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   }
 
   def tierChooser = NoCacheAction { implicit request =>
-
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
-    val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
-    val contentRefererOpt = request.headers.get(REFERER)
-
-    val signInUrl = contentRefererOpt.map { referer =>
-      ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> referer) ? ("skipConfirmation" -> "true")).toString
-    }.getOrElse(Config.idWebAppSigninUrl(""))
-
     val pageInfo = PageInfo(
-      title=CopyConfig.copyTitleChooseTier,
-      url=request.path,
-      description=Some(CopyConfig.copyDescriptionChooseTier),
-      customSignInUrl=Some(signInUrl)
+      CopyConfig.copyTitleChooseTier,
+      request.path,
+      Some(CopyConfig.copyDescriptionChooseTier)
     )
 
-    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, signInUrl))
-      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    val contentRefererOpt = request.headers.get(REFERER)
+    val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
+    val returnUrl = contentRefererOpt.map { referer =>
+      ((Config.idWebAppUrl / "signin") ? ("returnUrl" -> s"$referer") ? ("skipConfirmation" -> "true")).toString
+    }.getOrElse(Config.idWebAppSigninUrl(""))
 
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, returnUrl))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
