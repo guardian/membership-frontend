@@ -22,6 +22,7 @@ object Nav {
   val navigation = List(
     NavItem("events", "/events", "Events"),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
+    NavItem("offers", "/offers-competitions", "Offers"),
     NavItem("about", "/about", "About membership"),
     NavItem("partrons", "/patrons", "Patrons"),
     NavItem("pricing", "/join", "Pricing"),

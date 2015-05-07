@@ -6,11 +6,6 @@ import services.GuardianContentService
 
 trait OffersAndCompetitions extends Controller {
   def list = CachedAction { implicit request =>
-    /**
-     * Only show items that:
-     * - Don't have the membershipAccess field set
-     * - Have an available image
-     */
     val results = GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer)
       .filter { item =>
         item.content.fields.map(_("membershipAccess")).isEmpty
