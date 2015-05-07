@@ -2,17 +2,10 @@
     pageInfo: model.PageInfo,
     eventOpt: Option[model.RichEvent.RichEvent],
     accessOpt: Option[model.MembershipAccess],
-    signInUrl: String
+    returnUrl: String
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-
-@pageHeaderTitle = @{
-    val default = "Choose a membership tier"
-    accessOpt.fold {
-        eventOpt.fold(default)(_.metadata.chooseTier.title)
-    } { access => default }
-}
 
 @sectionTitle = @{
     val defaultTitle = "Choose a membership tier to continue"
@@ -27,12 +20,12 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeaderTitle, None)
+        @fragments.page.pageHeader(eventOpt.fold("Choose a membership tier")(_.metadata.chooseTier.title))
 
         <section class="page-section page-section--no-padding">
             <div class="page-section__lead-in">
                 @fragments.joiner.joinStepCounter(1, 3)
-                <p class="text-note copy tier-hidden">Already a member? <a href="@signInUrl">Please sign in</a></p>
+                <p class="text-note copy tier-hidden">Already a member? <a href="@returnUrl">Please sign in</a></p>
             </div>
             <div class="page-section__content">
                 <h2 class="h-section h-section--lead">
@@ -61,7 +54,7 @@
                     </ul>
                 }
             </div>
-            @for(event <- eventOpt if accessOpt.isEmpty) {
+            @for(event <- eventOpt) {
                 <div class="page-section__supplementary">
                     <div class="aside aside--section">
                         <h4 class="aside__intro">You're buying tickets for:</h4>

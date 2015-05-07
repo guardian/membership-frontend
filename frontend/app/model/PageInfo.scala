@@ -9,8 +9,7 @@ case class PageInfo(
   description: Option[String],
   image: Option[String] = Some(PageInfo.defaultImage),
   schemaOpt: Option[EventSchema] = None,
-  stripePublicKey: Option[String] = None,
-  customSignInUrl: Option[String] = None
+  stripePublicKey: Option[String] = None
 )
 
 object PageInfo {
@@ -18,8 +17,8 @@ object PageInfo {
 
   // url has the domain prepended in templates
   val default = PageInfo(
-    title=CopyConfig.copyTitleDefault,
-    url="/",
-    description=Some(CopyConfig.copyDescriptionDefault)
+    CopyConfig.copyTitleDefault,
+    "/",
+    Some(CopyConfig.copyDescriptionDefault)
   )
 }

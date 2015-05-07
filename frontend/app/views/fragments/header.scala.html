@@ -9,12 +9,7 @@
             <div class="header__primary">
                 <ul class="nav nav-control u-cf" role="menubar">
                     <li class="nav-control__item">
-                        <a href="@pageInfo.customSignInUrl.getOrElse(Config.idWebAppSigninUrl(""))"
-                           class="control no-underline js-identity-menu-toggle@if(pageInfo.customSignInUrl.isEmpty){ js-identity-menu-url}"
-                           id="qa-identity-control"
-                           title="Your account"
-                           role="menuitem"
-                        >
+                        <a href="@Config.idWebAppSigninUrl("")" role="menuitem" class="control no-underline js-identity-menu-cta" title="Your account" id="qa-identity-control">
                             <span class="control__item">
                                 <span class="control__icon icon-holder icon-holder--large icon-holder--neutral">
                                     @fragments.inlineIcon("user")
