@@ -1,25 +1,24 @@
 @(
     title: String,
-    htmlClass: String = "",
     pageInfo: model.PageInfo = model.PageInfo.default
 )(content: Html)
-@import play.api.libs.json.Json
 
+@import play.api.libs.json.Json
 @import configuration.{Config, Social}
 @import views.support.Asset
 
 <!DOCTYPE html lang="en-GB">
-<html class="js-off id--signed-out @htmlClass">
+<html class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
         <title>@(title + " | " + Config.siteTitle )</title>
 
         @fragments.meta.mobile()
-        <meta name="description"                    content="@pageInfo.description"/>
-        <meta name="rating"                         content="general"/>
-        <meta http-equiv="imagetoolbar"             content="no"/>
-        <meta name="Rating"                         content="general"/>
-        <meta name="Distribution"                   content="Global"/>
+        <meta name="description" content="@pageInfo.description"/>
+        <meta name="rating" content="general"/>
+        <meta http-equiv="imagetoolbar" content="no"/>
+        <meta name="Rating" content="general"/>
+        <meta name="Distribution" content="Global"/>
 
         <meta property="og:title" content="@pageInfo.title | @Config.siteTitle"/>
         <meta property="og:description" content="@pageInfo.description"/>
@@ -83,17 +82,16 @@
     </head>
     <body id="top">
         <a class="u-h skip" href="#container">Skip to main content</a>
-
         <noscript>
             <div class="warning-message copy hidden-print">
-                Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership. <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.
+                Please enable JavaScript &ndash; we use it to enhance behaviour for Guardian Membership.
+                <a href="http://www.enable-javascript.com/">Click here for instructions to do so in your browser</a>.
             </div>
         </noscript>
         <div class="browser-warning warning-message copy hidden-print">
-            You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
+            You are using an <strong>outdated</strong> browser.
+            Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
         </div>
-
-        @* ===== Anything in here will be hidden for old browsers ===== *@
         <div class="container-global">
             @fragments.header(pageInfo)
             <div class="l-side-margins" id="container">
@@ -102,9 +100,7 @@
         </div>
 
         @fragments.footer(pageInfo)
-
         @fragments.javaScriptRequireJS()
-
         @fragments.analytics.googleRemarketing()
     </body>
 </html>
