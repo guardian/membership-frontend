@@ -2,8 +2,7 @@
 
 @sizesVal = @{ if(isCard) "10vw" else "(min-width: 739px) 25vw, (min-width: 479px) 50vw, 100vw"  }
 
-<a href="@routes.Event.details(event.slug)" class="event-item @if(isCard){ event-item--card} else { event-item--minimal}" itemscope itemtype="http://schema.org/Event">
-    <meta itemprop="url" content="@event.memUrl">
+<a href="@routes.Event.details(event.slug)" class="event-item @if(isCard){ event-item--card} else { event-item--minimal}">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             @fragments.event.image(img, sizes=Some(sizesVal))
