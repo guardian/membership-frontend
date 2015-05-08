@@ -76,8 +76,8 @@
         <meta name="msapplication-TileColor" content="#214583">
         <meta name="msapplication-TileImage" content="@Asset.at("images/favicons/windows_tile_144_b.png")">
 
-        @if(Config.stage == "PROD") {
-            <script src="//cdn.optimizely.com/js/2012460034.js" async defer></script>
+        @if(Config.optimizelyEnabled && Config.stageProd) {
+            <script src="https://cdn.optimizely.com/js/2012460034.js" async defer></script>
         }
     </head>
     <body id="top">

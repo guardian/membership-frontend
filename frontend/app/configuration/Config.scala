@@ -81,6 +81,8 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.allPublic.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
+  val optimizelyEnabled = config.getBoolean("optimizely.enabled")
+
   val corsAllowOrigin = Set(
     // identity
     "https://profile.thegulocal.com",
@@ -105,6 +107,7 @@ object Config {
   val roundedDiscountPercentage: Int = math.round((1-discountMultiplier.toFloat)*100)
 
   val stage = config.getString("stage")
+  val stageProd: Boolean = stage == "PROD"
 
   val GuardianGoogleAppsDomain = "guardian.co.uk"
 
