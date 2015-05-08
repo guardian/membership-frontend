@@ -1,8 +1,8 @@
 package controllers
 
-import model.ContentItemOffer
 import play.api.mvc.Controller
 import services.GuardianContentService
+import model.ContentItemOffer
 
 trait OffersAndCompetitions extends Controller {
   def list = CachedAction { implicit request =>
@@ -10,7 +10,7 @@ trait OffersAndCompetitions extends Controller {
       .filter { item =>
         item.content.fields.map(_("membershipAccess")).isEmpty
       }.filter(_.imgOpt.nonEmpty)
-    Ok(views.html.offer.offersandcomps(results, "Sorry, no matching items were found."))
+    Ok(views.html.offer.offersandcomps(results))
   }
 }
 

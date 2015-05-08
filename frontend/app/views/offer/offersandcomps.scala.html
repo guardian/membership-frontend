@@ -1,4 +1,4 @@
-@(membersOnlyContent: Seq[model.ContentItemOffer], noResultText: String)
+@(membersOnlyContent: Seq[model.ContentItemOffer])
 
 @main("Offers & Competitions") {
     <main role="main" class="l-constrained">
@@ -11,7 +11,7 @@
             </div>
             <div class="listing__content">
             @if(membersOnlyContent.isEmpty) {
-                <div class="listing__empty">@noResultText</div>
+                <div class="listing__empty">Sorry, no matching items were found.</div>
             } else {
                 <ul class="grid grid--bordered grid--3up">
                 @for(memberContent <- membersOnlyContent) {
