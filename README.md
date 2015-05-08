@@ -61,11 +61,24 @@ If you are doing client-side work on Membership you should also make yourself fa
     ```
     aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
     ```
-1. In ~/.bash_profile add:
+1. Setup AWS credentials
+
+Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
+
+In `~/.aws/credentials` add the following:
 
 ```
-export AWS_ACCESS_KEY=<access-key-id>
-export AWS_SECRET_KEY=<secret-key>
+[membership]
+aws_access_key_id=[YOUR_AWS_ACCESS_KEY]
+aws_secret_access_key=[YOUR_AWS_SECRET_ACCESS_KEY]
+```
+
+In `~/.aws/config` add the following:
+
+```
+[default]
+output = json
+region = eu-west-1
 ```
 
 ### Ubuntu
