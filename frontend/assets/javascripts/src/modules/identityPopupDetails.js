@@ -8,19 +8,14 @@
 define(['src/utils/user'], function (userUtil) {
 
     var IS_HIDDEN = 'is-hidden';
-    var SIGNED_IN_TEXT = 'You are signed in as';
-    var MENU_TEXT_ELEM = document.querySelector('.js-identity-menu-text');
     var MENU_EDIT_PROFILE_ELEM = document.querySelector('.js-identity-menu-edit-profile');
     var MENU_COMMENT_ACTIVITY_ELEM = document.querySelector('.js-identity-menu-comment-activity');
     var HEADER_JOIN_US_CTA_ELEM = document.querySelector('.js-header-join-us-cta');
 
     function init() {
         var identityUser = userUtil.getUserFromCookie();
-
         if (identityUser) {
-            hideIdentityCtaText();
             appendUserIdToCommentActivityLink(identityUser.id);
-
             userUtil.getMemberDetail(function (memberDetail) {
                 if (memberDetail && memberDetail.tier) {
                     updateEditProfileLink();
@@ -28,13 +23,6 @@ define(['src/utils/user'], function (userUtil) {
             });
         } else {
             showJoinUsCta();
-        }
-    }
-
-    function hideIdentityCtaText() {
-        if(MENU_TEXT_ELEM) {
-            MENU_TEXT_ELEM.textContent = SIGNED_IN_TEXT;
-            MENU_TEXT_ELEM.classList.add('u-h');
         }
     }
 
