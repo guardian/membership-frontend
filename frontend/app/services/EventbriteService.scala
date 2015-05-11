@@ -25,24 +25,10 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val wsUrl = Config.eventbriteApiUrl
   def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
 
-  val expandedFields = Seq(
-    "category",
-    "attendees",
-    "subcategory",
-    "format",
-    "venue",
-    "order",
-    "ticket_classes",
-    "logo",
-    "organizer",
-    "event"
-  )
-  val expandedFieldsString = expandedFields.mkString(",")
-
   def eventsTaskFor(status: String): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, Config.eventbriteRefreshTime.seconds) {
       for {
-        events <- getAll[EBEvent]("users/me/owned_events", List("status" -> status, "expand" -> expandedFieldsString))
+        events <- getAll[EBEvent]("users/me/owned_events", List("status" -> status, "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
       } yield richEvents
     }
@@ -81,7 +67,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   }
 
   def getPreviewEvent(id: String): Future[RichEvent] = for {
-    event <- get[EBEvent](s"events/$id", "expand" -> expandedFieldsString)
+    event <- get[EBEvent](s"events/$id", "expand" -> EBEvent.expansions.mkString(","))
     richEvent <- mkRichEvent(event)
   } yield richEvent
 
@@ -108,7 +94,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     } yield discount
   }
 
-  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> "attendees")
+  def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> EBOrder.expansions.mkString(","))
 }
 
 abstract class LiveService extends EventbriteService {
