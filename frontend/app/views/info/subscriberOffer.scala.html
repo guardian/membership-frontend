@@ -41,7 +41,7 @@
                                 <li>50% saving on standard monthly or annual payment</li>
                                 <li>You can cancel online at any time in the first 6 months</li>
                                 <li>There is no obligation to continue Membership after the free 6 month period</li>
-                                <li>Offer ends 31st May 2015</li>
+                                <li>Start enjoying your free Membership today</li>
                             </ul>
                         </div>
                         <a class="action" href="@routes.Joiner.enterDetails(Tier.Partner)">Join today for free</a>
@@ -53,7 +53,7 @@
             @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
                 <div class="page-slice page-slice--slim l-constrained">
                     @fragments.promos.promoAltVideo(
-                        title="“If you read the Guardian, join the Guardian”",
+                        title="Introducing Guardian Membership",
                         video=Videos.whatIsMembership,
                         toneClassOpt=Some("tone-brand")
                     ) {
@@ -101,6 +101,17 @@
 
                         <p>Join the Guardian. Support open, independent journalism and experience it brought to life.</p>
                         <a class="action" href="@routes.Joiner.enterDetails(Tier.Partner)">Join today for free</a>
+                    </div>
+                </div>
+            </section>
+
+            @* ===== Terms ===== *@
+            <section class="page-slice page-slice--legal l-inset l-constrained">
+                <div class="page-section-spread">
+                    <div class="page-section-spread__lead-in"></div>
+                    <div class="page-section-spread__content text-caption">
+                        <p>Offer available to active subscribers to Voucher, Home Delivery or Digital pack products. 6 months free is available on Partner tier membership only. Eligible Members will pay nothing for their initial 6 months, and then be charged £15 a month if selecting monthly payments, or £67.50 if selecting an annual payment.</p>
+                        <p>Customers must become members by 31 Aug 2015 to be eligible for the offer. Offer subject to availability. GNM reserves the right to withdraw this promotion at any time for reasons beyond their reasonable control.</p>
                     </div>
                 </div>
             </section>
