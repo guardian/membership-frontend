@@ -42,6 +42,12 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
         }
     }
 
+    .page-slice--legal {
+        background-color: $c-neutral1;
+        color: $c-neutral5;
+        padding-bottom: rem($gs-baseline);
+    }
+
 .page-slice--split {
     padding-bottom: 0;
     @include mq(desktop) {
