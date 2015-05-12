@@ -148,7 +148,7 @@ object Faq {
 
   val subscribers = List(
     Item("Can I cancel membership during my trial?",
-      Html("Yes, There is no obligation to continue to a paid Membership after your free 6 months and you can cancel at any time during the trial period."),
+      Html("Yes, there is no obligation to continue to a paid Membership after your free 6 months and you can cancel at any time during the trial period."),
       "cancel-trial"
     ),
     Item("I'm a subscriber and I'm also a member, will I get this offer too?",
@@ -168,7 +168,7 @@ object Faq {
       "subscription-ends"
     ),
     Item("Can I join Membership over the phone?",
-      Html("No, In order to receive the benefits of Membership you need to complete online registration. However, our support team are available to talk you through the steps. Please c​all 0330 333 6898 f​rom 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html("No, in order to receive the benefits of Membership you need to complete online registration. However, our support team are available to talk you through the steps. Please c​all 0330 333 6898 f​rom 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "phone-joining"
     ),
     Item("I don’t live in London - can I still be a member?",
