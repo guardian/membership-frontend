@@ -47,6 +47,7 @@ GET            /staff/event-overview              controllers.Staff.eventOvervie
 GET            /staff/local-overview              controllers.Staff.localOverview
 GET            /staff/masterclass-overview        controllers.Staff.masterclassOverview
 GET            /staff/event-details               controllers.Staff.eventDetails
+GET            /staff/admin                       controllers.Staff.admin
 
 
 # Subscription
