@@ -51,7 +51,7 @@
 
             @* ===== Become a Member ===== *@
             @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
-                <div class="page-slice page-slice--slim l-constrained">
+                <div class="page-slice page-slice--slim l-constrained" id="what-is-membership-video">
                     @fragments.promos.promoAltVideo(
                         title="Introducing Guardian Membership",
                         video=Videos.whatIsMembership,
