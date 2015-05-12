@@ -237,7 +237,6 @@ object Eventbrite {
     val slug = slugify(name.text) + "-" + id
 
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
-
   }
 
   object EBEvent {
@@ -247,6 +246,16 @@ object Eventbrite {
       "csm",
       "tpg",
       "5x15"
+    )
+
+    val expansions = Seq(
+      "category",
+      "subcategory",
+      "format",
+      "venue",
+      "ticket_classes",
+      "logo",
+      "organizer"
     )
 
     def slugToId(slug: String): Option[String] = "-?(\\d+)$".r.findFirstMatchIn(slug).map(_.group(1))
@@ -265,6 +274,10 @@ object Eventbrite {
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
     val ticketCount = attendees.length
     val totalCost = costs.gross.value / 100f
+  }
+
+  object EBOrder {
+    val expansions = Seq("attendees")
   }
 
   case class EBCosts(gross: EBCost) extends EBObject
