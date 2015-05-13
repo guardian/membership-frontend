@@ -2,8 +2,7 @@
 
 @import views.support.Dates._
 
-<a href="@routes.Event.details(event.slug)" class="event-item@if(event.isBookable){ qa-available-event-item}" itemscope itemtype="http://schema.org/Event">
-    <meta itemprop="url" content="@event.memUrl">
+<a href="@routes.Event.details(event.slug)" class="event-item@if(event.isBookable){ qa-available-event-item}">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
@@ -12,8 +11,8 @@
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)
-            <div class="event-item__time" itemprop="startDate" content="@event.start">@event.start.pretty</div>
-            <div class="event-item__location" itemprop="location" itemscope itemtype="http://schema.org/Place">
+            <time="event-item__time" datetime="@event.start">@event.start.pretty</time>
+            <div class="event-item__location">
                 @fragments.event.addressSummary(event)
             </div>
             <div class="event-item__footer">

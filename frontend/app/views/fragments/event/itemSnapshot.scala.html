@@ -1,6 +1,6 @@
 @(event: model.RichEvent.RichEvent, isStacked: Boolean = false)
 
-<div class="event-snapshot@if(isStacked){ event-snapshot--stack}" itemscope itemtype="http://schema.org/Event">
+<div class="event-snapshot@if(isStacked){ event-snapshot--stack}">
     @for(img <- event.imgOpt) {
         <div class="event-snapshot__media">
             @fragments.event.image(img)
@@ -11,7 +11,7 @@
             @if(event.isSoldOut){
                 <span class="event-status event-status--sold-out">Sold out</span>
             }
-            <span itemprop="name">@event.name.text</span>
+            @event.name.text
         </h2>
         <div class="stats-listing">
             @fragments.event.stats(event)

@@ -10,7 +10,7 @@
         @Html(embedCss)
     </style>
 }
-<figure class="membership-event" itemscope itemtype="http://schema.org/Event">
+<figure class="membership-event">
     <a href="@cardUrl" class="membership-event__link">
         <div class="membership-event__header">
             <div class="membership-event__icon">
@@ -24,14 +24,14 @@
         </div>
         @for(img <- event.imgOpt) {
             <div class="membership-event__media">
-                <img src="@img.smallestImage" alt="@img.altText" itemprop="image">
+                <img src="@img.smallestImage" alt="@img.altText">
             </div>
         }
         <div class="membership-event__body">
-            <h3 class="membership-event__title" itemprop="name">@event.name.text</h3>
+            <h3 class="membership-event__title">@event.name.text</h3>
             <div class="membership-event__meta">
                 <div class="membership-event__date">
-                    <time itemprop="startDate" datetime="@event.start">@prettyShortDateWithTimeAndDayName(event.start)</time>
+                    <time datetime="@event.start">@prettyShortDateWithTimeAndDayName(event.start)</time>
                 </div>
                 @if(event.venue.venueWithCity.nonEmpty) {
                     <div class="membership-event__location">@event.venue.venueWithCity</div>
@@ -45,7 +45,7 @@
         </div>
     </a>
     <div class="membership-event__action">
-        <a href="@cardUrl" class="membership-event__button" itemprop="url">
+        <a href="@cardUrl" class="membership-event__button">
             Book Now
             @for(icon <- Asset.inlineSvg("arrow-right")) {
                 @icon
