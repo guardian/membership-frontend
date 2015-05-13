@@ -21,7 +21,7 @@ cssValidateResult=$?
 JS_SRC_PATTERN="\.js$"
 git diff --cached --name-only | if grep "$JS_SRC_PATTERN"
 then
-    grunt jshint
+    grunt jshint jscs
 fi
 jsValidateResult=$?
 
