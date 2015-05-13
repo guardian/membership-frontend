@@ -34,9 +34,9 @@
     width: 250px;
 }
 .global-footer__secondary {
-    @include box-sizing(border-box);
     @include font($f-sans-serif-text, normal, 13, 19);
     color: $c-neutral1;
+    box-sizing: border-box;
     padding-right: rem($gs-gutter / 2);
     padding-left: rem($gs-gutter / 2);
 

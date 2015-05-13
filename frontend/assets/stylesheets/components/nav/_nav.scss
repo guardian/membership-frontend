@@ -314,9 +314,9 @@ $global-nav-height: 36px;
 .nav--columns {
 
     > .nav__item {
-        @include box-sizing(border-box);
         width: 100%;
         display: block;
+        box-sizing: border-box;
 
         @include mq(desktop) {
             border-right: 0;
@@ -370,7 +370,7 @@ $global-nav-height: 36px;
         display: block;
         width: rem(20px);
         margin-top: rem(3px);
-        @include transform-origin(60%);
+        transform-origin: 60%;
         -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
         transition: opacity .1s, transform .1s ease-in;
     }
@@ -378,16 +378,16 @@ $global-nav-height: 36px;
     &.is-active {
         top: 100%;
         i {
-            @include transform-origin(43%);
+            transform-origin: 43%;
 
             &:nth-child(1) {
-                @include transform(translateY(rem(4px)) rotate(45deg));
+                transform: translateY(rem(4px)) rotate(45deg);
             }
             &:nth-child(2) {
                 opacity: 0;
             }
             &:nth-child(3) {
-                @include transform(translateY(rem(-4px)) rotate(-45deg));
+                transform: translateY(rem(-4px)) rotate(-45deg);
             }
         }
     }
