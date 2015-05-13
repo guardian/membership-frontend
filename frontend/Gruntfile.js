@@ -261,7 +261,9 @@ module.exports = function (grunt) {
             }
         },
 
-        // Lint Javascript sources
+        /**
+         * Lint Javascript sources
+         */
         jshint: {
             options: {
                 jshintrc: '../.jshintrc',
@@ -295,19 +297,6 @@ module.exports = function (grunt) {
                         'src/**/*.js'
                     ]
                 }]
-            }
-        },
-
-        // Lint Sass sources
-        scsslint: {
-            allFiles: [
-                '<%= dirs.assets.stylesheets %>/**/*.scss',
-                '!<%= dirs.assets.stylesheets %>/components/bower-components/**/*.scss'
-            ],
-            options: {
-                bundleExec: true,
-                config: '.scss-lint.yml',
-                reporterOutput: null
             }
         },
 
@@ -367,12 +356,12 @@ module.exports = function (grunt) {
 
     });
 
-    /**
-     * Register tasks
-     */
+
     /***********************************************************************
-     * Compile
+     * Compile & Validate
      ***********************************************************************/
+
+    grunt.registerTask('validate', ['jshint', 'jscs']);
 
     grunt.registerTask('compile', function(){
         grunt.task.run([
@@ -392,9 +381,6 @@ module.exports = function (grunt) {
         }
     });
     grunt.registerTask('compile:css', function() {
-        if (!isDev) {
-            grunt.task.run(['scsslint']);
-        }
         grunt.task.run([
             'clean:css',
             'clean:images',
@@ -424,12 +410,7 @@ module.exports = function (grunt) {
      * Test
      ***********************************************************************/
 
-    grunt.registerTask('validate', ['jshint', 'scsslint']);
-
     grunt.registerTask('test', function(){
-        if (!isDev) {
-            grunt.task.run(['validate']);
-        }
         grunt.task.run(['test:unit']);
     });
     grunt.registerTask('test:unit', function() {
