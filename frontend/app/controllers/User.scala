@@ -92,9 +92,9 @@ trait User extends Controller {
       val subCheck = casResult match {
         case casSuccess: CASSuccess =>
           if (new DateTime(casSuccess.expiryDate).isBeforeNow()) SubCheck(false, Some("Sorry, your subscription has expired."))
-          else if (existingSubsWithCasId.nonEmpty) SubCheck(false, Some(s"Sorry, the subscriber account number entered has already been used to redeem this offer."))
+          else if (existingSubsWithCasId.nonEmpty) SubCheck(false, Some(s"Sorry, the Subscriber ID entered has already been used to redeem this offer."))
           else SubCheck(true)
-        case _ => SubCheck(false, Some(s"To redeem this offer we need more information to validate your subscriber account number.  Please review the additional information required and try again."))
+        case _ => SubCheck(false, Some(s"To redeem this offer we need more information to validate your Subscriber ID.  Please review the additional information required and try again."))
       }
       if (!subCheck.valid) {
         logger.warn(s"sub user=${request.user.id} sub-id=$id cas=$casResult existing-subs=$existingSubsWithCasId $subCheck")
