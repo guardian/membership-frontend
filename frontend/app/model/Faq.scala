@@ -171,6 +171,10 @@ object Faq {
       Html("No, in order to receive the benefits of Membership you need to complete online registration. However, our support team are available to talk you through the steps. Please c​all 0330 333 6898 f​rom 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "phone-joining"
     ),
+    Item("Can I pay for Membership by Direct Debit?",
+      Html("It is not currently possible to pay for Membership using Direct Debit, all payments will be set up on continuous Credit Card."),
+      "pay-direct-debit"
+    ),
     Item("I don’t live in London - can I still be a member?",
       Html("Yes, Guardian Membership is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
       "outside-london"
@@ -184,7 +188,7 @@ object Faq {
       "privacy"
     ),
     Item("What if I want to become a Patron and not a Partner?",
-      Html("If you would like to join as a Patron please follow this link <a href='/patrons'>https://membership.theguardian.com/patrons</a> &ndash; the six months offer is not available on Patronage."),
+      Html("If you would like to join as a Patron please follow this link <a href='/patrons'>membership.theguardian.com/patrons</a> &ndash; the six months offer is not available on Patronage."),
       "patron-not-partner"
     ),
     Item("What if I do not have a Subscriber ID?",
