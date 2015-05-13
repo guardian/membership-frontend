@@ -49,7 +49,12 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
-                    src: ['style.scss', 'ie9.style.scss', 'tools.style.scss', 'event-card.scss'],
+                    src: [
+                        'style.scss',
+                        'ie9.style.scss',
+                        'tools.style.scss',
+                        'event-card.scss',
+                        'admin/admin.style.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
                 }],
@@ -113,6 +118,18 @@ module.exports = function (grunt) {
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
                     out: '<%= dirs.publicDir.javascripts %>/tools.js'
+                }
+            },
+            compileAdmin: {
+                options: {
+                    name: 'src/admin/admin',
+                    baseUrl: '<%= dirs.assets.javascripts %>',
+                    findNestedDependencies: false,
+                    wrapShim: true,
+                    optimize: isDev ? 'none' : 'uglify2',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    out: '<%= dirs.publicDir.javascripts %>/admin/admin.js'
                 }
             }
         },
@@ -413,6 +430,7 @@ module.exports = function (grunt) {
             'clean:js',
             'requirejs:compile',
             'requirejs:compileTools',
+            'requirejs:compileAdmin',
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
