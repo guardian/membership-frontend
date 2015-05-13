@@ -1,0 +1,30 @@
+@(
+    title: String,
+    pageInfo: model.PageInfo = model.PageInfo.default
+)(content: Html)
+
+@import configuration.Config
+@import views.support.Asset
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        @fragments.meta.mobile()
+        <title>@(title + " | " + Config.siteTitle)</title>
+
+        <link rel="stylesheet" media="all" href="@Asset.at("stylesheets/admin/admin.css")">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,300,400italic,500,700,300italic,500italic,700italic' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        @content
+    </body>
+    <script>
+        var curl = {
+            apiName: 'require'
+        };
+    </script>
+    <script src='@Asset.at("javascripts/lib/curl/curl.js")'></script>
+    <script src="@Asset.at("javascripts/admin/admin.js")"></script>
+</html>
