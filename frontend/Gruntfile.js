@@ -122,7 +122,7 @@ module.exports = function (grunt) {
             },
             compileAdmin: {
                 options: {
-                    name: 'src/modules/admin/admin',
+                    name: 'src/admin/admin',
                     baseUrl: '<%= dirs.assets.javascripts %>',
                     findNestedDependencies: false,
                     wrapShim: true,
