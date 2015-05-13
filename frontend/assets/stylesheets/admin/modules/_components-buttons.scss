@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.cta {
+    display: inline-block;
+    border: 2px solid #419FB7;
+    margin-bottom: 0.5rem;
+    padding: 7px 15px;
+    border-radius: 6px;
+    background-color: #BCDFE8;
+    text-decoration: none;
+    color: #000000;
+    font-weight: bold;
+    font-size: 11px;
+    box-shadow: 0px 2px 5px #0B5061;
+
+}
+.cta:hover {
+    background-color: #8CC1CF;
+    border-color: #2A8EA8;
+    color: #093B48;
+}
+
+.cta--primary {
+    background-color: #2DAD60;
+    border-color: #4BB977;
+    color: white;
+}
+
+.cta--primary,
+.cta--secondary {
+    box-shadow: 0px 2px 2px #29616F;
+}
+
+.cta--primary:hover {
+    background-color: #53CC83;
+    color: #1D3B0E;
+    border-color: #62DD93;
+}
+
+.cta--secondary {
+    background-color: #E6DC6E;
+    border-color: #F2E98C;
+    color: #1C1E01;
+}
+
+.cta--secondary:hover {
+    background-color: #C8BB26;
+    border-color: #DBCE3B;
+    color: #3D4109;
+}

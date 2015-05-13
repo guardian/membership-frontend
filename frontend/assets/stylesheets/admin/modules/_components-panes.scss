@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.container {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.pane {
+    padding: 20px;
+}
+.pane--nav {
+    width: 220px;
+    padding: 15px 1px 15px 0;
+    flex-shrink: 0;
+    background-color: #143F4C;
+    border-right: 1px solid #204753;
+    z-index: 10;
+}
+.pane--tools {
+    width: 300px;
+    flex-shrink: 0;
+    background-color: #1E697C;
+}
+.pane--main {
+    width: 100%;
+    color: #333;
+    background-color: #f6f6f6;
+
+}
+.pane--main h2 {
+    color: #23697B;
+    border-bottom-color: #87B6C4;
+    font-weight: 800;
+}
