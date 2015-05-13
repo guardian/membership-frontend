@@ -65,13 +65,21 @@ object Eventbrite {
       addressLine.map(al => googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al)))
   }
 
+  def penceToPounds(priceInPence: Double): Float = {
+    priceInPence.round / 100f
+  }
+
   def formatPrice(priceInPence: Double): String = {
     val priceInPounds = priceInPence.round / 100f
-    if (priceInPounds.isWhole) f"£$priceInPounds%.0f" else f"£$priceInPounds%.2f"
+    if (priceInPounds.isWhole) f"$priceInPounds%.0f" else f"$priceInPounds%.2f"
+  }
+
+  def formatPriceWithCurrency(priceInPence: Double): String = {
+    "£" + formatPrice(priceInPence)
   }
 
   case class EBPricing(value: Int) extends EBObject {
-    lazy val formattedPrice = formatPrice(value)
+    lazy val formattedPrice = formatPriceWithCurrency(value)
   }
 
 
@@ -97,8 +105,9 @@ object Eventbrite {
     val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
     val priceInPence = cost.map(_.value).getOrElse(0)
-
+    val priceValue = formatPrice(priceInPence)
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
+    val currencyCode = "GBP"
   }
 
   sealed trait Ticketing
@@ -158,7 +167,7 @@ object Eventbrite {
   case class DiscountBenefitTicketing(generalRelease: EBTicketClass, member: EBTicketClass) {
     val saving = generalRelease.priceInPence - member.priceInPence
 
-    val savingText = formatPrice(saving)
+    val savingText = formatPriceWithCurrency(saving)
 
     val roundedSavingPercentage: Int = math.round(100 * (saving.toFloat / generalRelease.priceInPence))
 
@@ -190,10 +199,10 @@ object Eventbrite {
       case t: InternalTicketing => t
     }
 
-    val generalReleasePrice = for {
+    val generalReleaseTicket = for {
       ticketing <- internalTicketing
       ticket <- ticketing.generalReleaseTicketOpt
-    } yield ticket.priceText
+    } yield ticket
 
     val limitedAvailabilityText = "Last tickets remaining"
     val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
