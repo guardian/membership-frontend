@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Tags
+   tags
    ========================================================================== */
 
 .tag-list {
@@ -10,20 +10,20 @@
     margin-bottom: 5px;
     border-radius: 8px;
     padding: 3px 5px 3px 10px;
-    border: 1px solid #D86B90;
-    background-color: #892F4E;
+    border: 1px solid #d86b90;
+    background-color: #892f4e;
     color: #ffffff;
 }
 .tag-list__remove {
     margin-left: 5px;
-    background-color: #D188A6;
+    background-color: #d188a6;
     border-radius: 100px;
     padding: 0px 3px;
-    color: #92435E;
+    color: #92435e;
     font-size: 10px;
     cursor: pointer;
 }
 .tag-list__remove:hover {
-    color: #892F4E;
-    background-color: #F3DBE3;
+    color: #892f4e;
+    background-color: #f3dbe3;
 }

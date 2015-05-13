@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Navigation
+   navigation
    ========================================================================== */
 
 .nav {
@@ -9,33 +9,33 @@
 .nav__item a {
     display: block;
     padding: 10px;
-    background-color: #0A2C35;
-    color: #BDDFE7;
+    background-color: #0a2c35;
+    color: #bddfe7;
     text-decoration: none;
-    border-bottom: 1px solid #143F4C;
-    border-top: 1px solid #051F25;
+    border-bottom: 1px solid #143f4c;
+    border-top: 1px solid #051f25;
     font-weight: bold;
-    border-left: 6px solid #1F5768;
+    border-left: 6px solid #1f5768;
 
 }
 .nav__item--selected a {
-    border-left-color: #BDDFE7;
-    background-color: #28697A;
-    color: #fff;
+    border-left-color: #bddfe7;
+    background-color: #28697a;
+    color: #ffffff;
 }
 .nav__item a:hover {
-    border-left-color: #80B2BE;
-    background-color: #154E5D;
-    color: #fff;
+    border-left-color: #80b2be;
+    background-color: #154e5d;
+    color: #ffffff;
 }
 .nav__item--selected a:after {
     content: '▶';
     float: right;
-    opacity: 0.5;
+    opacity: .5;
 }
 .nav__item:first-child a {
-    border-top: none;
+    border-top: 0;
 }
 .nav__item:last-child a {
-    border-bottom: none;
+    border-bottom: 0;
 }
