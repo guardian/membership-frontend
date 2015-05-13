@@ -32,7 +32,7 @@
         @if(ticketing.salesDates.anyoneCanBuyTicket) { data-toggle-hidden}
     >
         @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
-            <li class="ticket-sales__item" itemscope itemtype="http://schema.org/Offer">
+            <li class="ticket-sales__item">
                 <span class="ticket-sales__item__label">@(tier + "s")</span>
                 <span class="ticket-sales__item__date">
                     @ticketDateForTier(tier, ticketing.salesDates.datesByTier(tier), ticketing.salesDates.needToDistinguishTimes)

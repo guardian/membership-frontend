@@ -22,6 +22,7 @@ case class OfferSchema(
   url: String,
   category: String,
   price: String,
+  priceCurrency: String,
   availability: Option[String],
   `@type`: String = "Offer"
 )
@@ -49,10 +50,9 @@ object EventSchema {
     }
   }
 
-  // TODO: Generate all offers, not just primary
   private def offerOpt(event: RichEvent): Option[OfferSchema] = {
-    event.generalReleasePrice.map { price =>
-      OfferSchema(event.memUrl, "primary", price, event.statusSchema)
+    event.generalReleaseTicket.map { ticket =>
+      OfferSchema(event.memUrl, "primary", ticket.priceValue, ticket.currencyCode, event.statusSchema)
     }
   }
 
