@@ -27,6 +27,7 @@
         "define"   : false,
         "s"        : false,
         "guardian" : false,
-        "JSON"     : false
+        "JSON"     : false,
+        "Stripe"   : false
     }
 }

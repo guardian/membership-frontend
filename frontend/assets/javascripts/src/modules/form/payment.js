@@ -1,8 +1,7 @@
 define([
-    'stripe',
     'src/modules/form/payment/listeners',
     'src/modules/form/payment/options'
-], function (stripe, listeners, options) {
+], function (listeners, options) {
 
     /**
      * Initialise payment
@@ -12,7 +11,7 @@ define([
      * Setup Card detail options text
      */
     var init = function () {
-        stripe.setPublishableKey(guardian.stripePublicKey);
+        Stripe.setPublishableKey(guardian.stripePublicKey);
         listeners.addPaymentListeners();
         options.init();
     };

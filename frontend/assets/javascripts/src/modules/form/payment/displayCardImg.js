@@ -1,4 +1,4 @@
-define(['stripe'], function (stripe) {
+define(function () {
 
     var CARD_SPRITE_ICON_PREFIX = 'sprite-card--';
     var CREDIT_CARD_IMG_ELEM = document.querySelector('.js-credit-card-image');
@@ -9,7 +9,7 @@ define(['stripe'], function (stripe) {
      * @param cardNumber
      */
     var displayCardImg = function (cardNumber) {
-        var cardType = stripe.cardType(cardNumber).toLowerCase().replace(' ', '-');
+        var cardType = Stripe.cardType(cardNumber).toLowerCase().replace(' ', '-');
 
         CREDIT_CARD_IMG_ELEM.className = CREDIT_CARD_IMG_ELEM.className.replace(regEx, '');
         CREDIT_CARD_IMG_ELEM.classList.add(CARD_SPRITE_ICON_PREFIX + cardType);
