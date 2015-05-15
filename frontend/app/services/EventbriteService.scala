@@ -17,6 +17,8 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -101,6 +103,10 @@ abstract class LiveService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
 
+  def gridImageFromUri(uri: Option[String]) = {
+    uri.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop(_))
+  }
+
   def gridImageFor(event: EBEvent) =
     event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
@@ -117,8 +123,12 @@ object GuardianLiveEventService extends LiveService {
     } yield (ordering.json \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
-    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
+      for {
+        metadataOpt <- EventMetadataService.get(event.id)
+        gridImageOpt <- gridImageFromUri(metadataOpt.flatMap(_.gridUrl).orElse(event.mainImageUrl.map(_.toString)))
+      } yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+  }
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
