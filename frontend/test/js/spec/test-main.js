@@ -24,8 +24,7 @@ requirejs.config({
         'respimage': 'lib/bower-components/respimage/respimage',
         'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
         'raven': 'lib/bower-components/raven-js/dist/raven',
-        'ajax': 'src/utils/ajax',
-        'stripe': 'lib/stripe/stripe.min'
+        'ajax': 'src/utils/ajax'
     },
 
     // ask Require.js to load these files (all our tests)
