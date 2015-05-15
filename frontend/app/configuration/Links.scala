@@ -15,4 +15,5 @@ object Links {
   val membershipBuilding = "http://www.theguardian.com/membership/midland-goods-shed-progress/2014/sep/10/-sp-midland-goods-shed-guardian-events-membership-building-space"
   val membershipBuildingBlog = "http://theguardian.com/membership/midland-goods-shed-progress/"
   val membershipPollyToynbeeArticle = "http://www.theguardian.com/membership/2015/feb/06/polly-toynbee-if-you-read-the-guardian-join-the-guardian"
+  val membershipInvestigativeJournalismArticle = "http://www.theguardian.com/membership/2015/may/15/become-a-guardian-member-and-support-our-investigative-journalism"
 }
