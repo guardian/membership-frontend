@@ -127,7 +127,9 @@ object GuardianLiveEventService extends LiveService {
       for {
         metadataOpt <- EventMetadataService.get(event.id)
         gridImageOpt <- gridImageFromUri(metadataOpt.flatMap(_.gridUrl).orElse(event.mainImageUrl.map(_.toString)))
-      } yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+      } yield {
+        GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+      }
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)

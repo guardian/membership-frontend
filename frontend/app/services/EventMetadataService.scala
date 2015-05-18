@@ -13,7 +13,7 @@ import scala.concurrent.Future
 object EventMetadataService {
 
   // TODO: Environment specific
-  val tableName = "metadata_TEST"
+  val tableName = "DEV_metadata"
 
   val dynamoDbClient: AmazonDynamoDBAsyncClient = {
     new AmazonDynamoDBAsyncClient(Config.awsCredentialsProvider)
@@ -34,7 +34,8 @@ object EventMetadataService {
     dynamoDbClient.getItemFuture(new GetItemRequest()
       .withTableName(tableName)
       .withKey(Map(
-        "event_id" -> new AttributeValue().withS(id)
+        "ticketingProviderId" -> new AttributeValue().withS(id),
+        "ticketingProvider" -> new AttributeValue().withS("eventbrite")
       ).asJava)
     ) map { result =>
       for {
@@ -49,10 +50,10 @@ object EventMetadataService {
     dynamoDbClient.putItemFuture(new PutItemRequest()
       .withTableName(tableName)
       .withItem(Map(
-        "id" -> new AttributeValue().withS(entry.id),
-        "event_id" -> new AttributeValue().withS(entry.eventId),
-        "grid_url" -> new AttributeValue().withS(entry.gridUrl.getOrElse("")
-      )).asJava)
+        "ticketingProvider" -> new AttributeValue().withS(entry.ticketingProvider),
+        "ticketingProviderId" -> new AttributeValue().withS(entry.ticketingProviderId),
+        "gridUrl" -> new AttributeValue().withS(entry.gridUrl.getOrElse(""))
+      ).asJava)
     )
   }
 

@@ -5,8 +5,8 @@ import play.api.libs.json.Json
 import utils.awswrappers.dynamodb._
 
 case class EventMetadata(
-  id: String,
-  eventId: String,
+  ticketingProvider: String,
+  ticketingProviderId: String,
   gridUrl: Option[String]
 )
 
@@ -16,13 +16,12 @@ object EventMetadata {
 
   def fromAttributeValueMap(xs: Map[String, AttributeValue]) = {
     for {
-      id <- xs.getString("id")
-      eventId <- xs.getString("event_id")
-      externallyTicketed <- xs.get("externally_ticketed")
+      ticketingProvider <- xs.getString("ticketingProvider")
+      ticketingProviderId <- xs.getString("ticketingProviderId")
     } yield EventMetadata(
-      id,
-      eventId,
-      xs.getString("grid_url")
+      ticketingProvider,
+      ticketingProviderId,
+      xs.getString("gridUrl")
     )
   }
 }
