@@ -15,7 +15,7 @@ object Testing extends Controller with LazyLogging {
   val AuthorisedTester = GoogleAuthenticatedStaffAction andThen isInAuthorisedGroupGoogleAuthReq(
     Set(
       "membership.dev@guardian.co.uk",
-      "membership.testusers@theguardian.com",
+      "membership.testusers@guardian.co.uk",
       "touchpoint@guardian.co.uk",
       "crm@guardian.co.uk"
     ),
