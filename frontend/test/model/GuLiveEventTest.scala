@@ -19,7 +19,7 @@ class GuLiveEventTest extends PlaySpecification with Mockito {
     "contain metadata and socialUrl for an event image" in {
 
       val image = GridImage(gridResponse.data.exports.get(1).assets, gridResponse.data.metadata)
-      val guEvent = GuLiveEvent(event, Some(image), None)
+      val guEvent = GuLiveEvent(event, Some(image), None, None)
 
       guEvent.imgOpt.flatMap(_.metadata.flatMap(_.description)) mustEqual Some("It's Chris!")
       guEvent.imgOpt.flatMap(_.metadata.map(_.photographer)) mustEqual Some("Joe Bloggs/Guardian Images")

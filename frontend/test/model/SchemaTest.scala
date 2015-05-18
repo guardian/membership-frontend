@@ -11,7 +11,7 @@ class SchemaTest extends PlaySpecification {
 
     "generate JSON-LD schema data for an event" in {
 
-      val event = GuLiveEvent(eventWithName("Test Event"), None, None)
+      val event = GuLiveEvent(eventWithName("Test Event"), None, None, None)
       val json = Json.toJson(event.schema)
 
       (json \ "@context").as[String] === "http://schema.org"
