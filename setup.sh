@@ -4,6 +4,11 @@
 # Set up the Membership application
 #####################################################
 
+echo " ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ";
+echo "||m |||e |||m |||b |||e |||r |||s |||h |||i |||p ||";
+echo "||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||";
+echo "|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|";
+
 # fix the issues with bower installs
 git config --local url."https://".insteadOf git://
 
