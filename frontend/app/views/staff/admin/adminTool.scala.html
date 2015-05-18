@@ -1,10 +1,36 @@
-@(guLiveEvents: lol, localEvents: lol, masterclassEvents: lol)
+@import model.EventsByStatus
+@import model.RichEvent._
+@(guLiveEvents: EventsByStatus, localEvents: EventsByStatus, masterclassEvents: EventsByStatus)
 @import views.support.Asset
 
-@staff.admin.template("EventHawk") {
-    @for(event <- guLiveEvents.events) {
-        @event.name.text
+@eventListItem(event: RichEvent) = {
+    <li class="event-list__item"><a href="eventbrite/@event.id">@event.name.text</a></li>
+}
+
+@listOfEvents(events: Seq[RichEvent], title: String) = {
+    @if(events.length > 0) {
+        <div class="tool-list__pane">
+            <h2>@title events (@events.length items)</h2>
+            <ul class="event-list event-list--scroll">
+                @for(event <- events) {
+                    @eventListItem(event)
+                }
+            </ul>
+        </div>
     }
+}
+
+@tabPane(paneId: String, eventList: EventsByStatus, isActive: Boolean = false) = {
+    <div class="tabs__content@if(isActive){ tabs__content--active}" id="@paneId">
+        <div class="tool-list">
+            @listOfEvents(eventList.live, "Live")
+            @listOfEvents(eventList.draft, "Draft")
+            @listOfEvents(eventList.past, "Past")
+        </div>
+    </div>
+}
+
+@staff.admin.template("EventHawk") {
     <div class="container">
         <div class="pane pane--nav">
             <img src="@Asset.at("images/admin/logo.png")" class="logo" />
@@ -14,114 +40,35 @@
                 <li class="nav__item"><a href="#">Dashboard</a></li>
                 <li class="nav__item"><a href="#">The Grid</a></li>
             </ul>
+
+            <aside class="padded">
+                <h2>Quick links</h2>
+                <ul class="option-list u-list-unstyled">
+                    <li class="option-list__item"><a href="#" class="cta">Create a new event</a></li>
+                    <li class="option-list__item"><a href="#" class="cta">Edit hero events</a></li>
+                    <li class="option-list__item"><a href="#" class="cta">Bulk edit events</a></li>
+                </ul>
+            </aside>
+
             <p class="tagline">For a bird's eye view of events &bull; v0.1</p>
         </div>
 
         <div class="pane pane--tools">
 
-            <div class="tool-list">
+            <h2>Event list</h2>
 
-                <div class="tool-list__pane tool-list__pane--menu">
-                    <h2>Quick links</h2>
-                    <ul class="option-list u-list-unstyled">
-                        <li class="option-list__item"><a href="#" class="cta">Create a new event</a></li>
-                        <li class="option-list__item"><a href="#" class="cta">Edit hero events</a></li>
-                        <li class="option-list__item"><a href="#" class="cta">Bulk edit events</a></li>
-                    </ul>
-                </div>
-                <div class="tool-list__pane">
-                    <h2>Live events</h2>
-                    <ul class="event-list event-list--scroll">
-                        <li class="event-list__item"><a href="#">Between the lines: Irvine Welsh and Jesse Armstrong</a></li>
-                        <li class="event-list__item"><a href="#">What can we do about politics?</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Freeing the Arctic Thirty</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Housing</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Higher education</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Freedom of speech</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Film Show LIVE</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Does Westminster work for us?</a></li>
-                        <li class="event-list__item"><a href="#">The Observer Election Countdown</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Local Birmingham: Artists for Ikon - exhibition tour with Jonathan Watkins, Ikon Director</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Immigration</a></li>
-                        <li class="event-list__item"><a href="#">The Cricket Pitch featuring The Horne Section</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Sketching the Coalition</a></li>
-                        <li class="event-list__item"><a href="#">The Observer Election Countdown</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live Manchester: Discuss - Taxation</a></li>
-                        <li class="event-list__item"><a href="#">Don't Even Think About It - George Monbiot and George Marshall</a></li>
-                        <li class="event-list__item"><a href="#">E.R.L Chapter Three / FUTURO: an experimental experience</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Doc Sundays - We Are Many</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Man Booker International Prize readings</a></li>
-                        <li class="event-list__item"><a href="#">Buying Happiness with Oliver Burkeman, Philippa Perry and more</a></li>
-                        <li class="event-list__item"><a href="#">Hans Ulrich Obrist, Gilbert & George and Charlotte Higgins in conversation</a></li>
-                        <li class="event-list__item"><a href="#">A life in news: Alan Rusbridger</a></li>
-                    </ul>
-                </div>
-                <div class="tool-list__pane">
-                    <h2>Draft events</h2>
-                    <ul class="event-list event-list--scroll">
-                        <li class="event-list__item"><a href="#">Guardian Live: The psychology of terror</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Book Club: Agatha Christie's Death on the Nile</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men Finale</a></li>
-                        <li class="event-list__item"><a href="#">Between the lines: Jeanette Winterson and Helen MacDonald</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: How to be happy and transgender</a></li>
-                        <li class="event-list__item"><a href="#">Jeremy Hutchinson &amp; Alan Rusbridger: The case for liberty</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Book Club with Sarah Waters</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live Manchester: Discuss - Capitalism and communities</a></li>
-                    </ul>
-                </div>
-                <div class="tool-list__pane">
-                    <h2>Past events</h2>
-                    <ul class="event-list event-list--scroll">
-                        <li class="event-list__item"><a href="#">Guardian Live: A night of food and agony with Jay Rayner</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Doc Sundays - The Great Invisible</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Doc Sundays - Vessel</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live Manchester: Discuss - The NHS</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Margaret Atwood</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Book Club: Jonathan Franzen</a></li>
-                        <li class="event-list__item"><a href="#">Architectural free hand sketching weekend course at Central Saint Martins</a></li>
-                        <li class="event-list__item"><a href="#">Idler Academy: Adam Buxton Live</a></li>
-                        <li class="event-list__item"><a href="#">Catharine Edwards talks about Mothers</a></li>
-                        <li class="event-list__item"><a href="#">Murderers and Role-Models: Women and power in ancient Rome</a></li>
-                        <li class="event-list__item"><a href="#">Idler Academy: Dom Joly Live</a></li>
-                        <li class="event-list__item"><a href="#">The Photographers' Gallery: Zanele Muholi in-conversation with Bidisha</a></li>
-                        <li class="event-list__item"><a href="#">The secret life of babies</a></li>
-                        <li class="event-list__item"><a href="#">Wet plate collodion photography weekend course at Central Saint Martins</a></li>
-                        <li class="event-list__item"><a href="#">Creative writing and photography in London weekend course at Central Saint Martins</a></li>
-                        <li class="event-list__item"><a href="#">Idler Academy: The Internet is not the answer – Andrew Keen in conversation with Will Self</a></li>
-                        <li class="event-list__item"><a href="#">Experience design - narrative weekend course at Central Saint Martins</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">The Observer Election Countdown</a></li>
-                        <li class="event-list__item"><a href="#">A circus life for me: Nell Gifford in conversation with John Mitchinson</a></li>
-                        <li class="event-list__item"><a href="#">You talk, they listen: Climate change</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Diversity in the Arts debate with MP Chris Bryant, writer Dreda Say Mitchell, BBC Drama's Ben Stephenson, et al.</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Doc Sundays - Songs for Alexis</a></li>
-                        <li class="event-list__item"><a href="#">Guardian TV Club: Mad Men</a></li>
-                        <li class="event-list__item"><a href="#">Michael Lewis on his book Flash Boys</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Gaming Night: video games, the military and morality</a></li>
-                        <li class="event-list__item"><a href="#">Football Weekly Live</a></li>
-                        <li class="event-list__item"><a href="#">Birkbeck book salon 'Behind the blusher': revisiting Quentin Crisp's Naked Civil Servant</a></li>
-                        <li class="event-list__item"><a href="#">RIP Rock and Roll? Featuring Gruff Rhys live set</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Is big money ruining English football?</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Nick Broomfield on capturing the story of a serial killer</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Doc Sundays - Dreamcatcher</a></li>
-                        <li class="event-list__item"><a href="#">Dior and I - preview screening and director Q&amp;A</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: John Gray and Will Self - is free will an illusion?</a></li>
-                        <li class="event-list__item"><a href="#">Behind the Headlines: What's all the fuss about feminism?</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: A Life in Music - George Clinton</a></li>
-                        <li class="event-list__item"><a href="#">5x15 and the Guardian celebrate exceptional women</a></li>
-                        <li class="event-list__item"><a href="#">Behind the headlines: Syria four years on</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Election 2015 - The Big Health Debate</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Kazuo Ishiguro</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Gaming Night</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: Guy Bourdin - curator talk and private view</a></li>
-                        <li class="event-list__item"><a href="#">Guardian Live: The Edward Snowden story - from inside the Guardian</a></li>
-                    </ul>
-                </div>
+            <ul class="tabs js-tabs" data-tab-pane="events-holder">
+                <li><a href="#eventtab1" class="js-tabs__tab tabs__tab tabs__tab--active">Guardian Live</a></li>
+                <li><a href="#eventtab2" class="js-tabs__tab tabs__tab">Local</a></li>
+                <li><a href="#eventtab3" class="js-tabs__tab tabs__tab">Masterclasses</a></li>
+            </ul>
+
+            <div id="events-holder">
+                @tabPane("eventtab1", guLiveEvents, true)
+                @tabPane("eventtab2", localEvents)
+                @tabPane("eventtab3", masterclassEvents)
             </div>
+
         </div>
 
         <div class="pane pane--main">
