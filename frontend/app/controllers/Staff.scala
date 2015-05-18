@@ -1,5 +1,6 @@
 package controllers
 
+import model.EventsByStatus
 import play.api.mvc.Controller
 import services.{LocalEventService, GuardianLiveEventService, MasterclassEventService}
 import com.github.nscala_time.time.Imports._
@@ -30,16 +31,14 @@ trait Staff extends Controller {
     Ok(views.html.staff.event.details(request.path))
   }
 
-  case class lol(live: Seq[model.RichEvent.RichEvent], draft: Seq[model.RichEvent.RichEvent], past: Seq[model.RichEvent.RichEvent])
-
   def admin = GoogleAuthenticatedStaffAction { implicit request =>
     val guLivePastEvents = guLiveEvents.getEventsArchive.headOption.map(chronologicalSort(_).reverse)
     val localPastEvents = localEvents.getEventsArchive.headOption.map(chronologicalSort(_).reverse)
     val masterclassPastEvents = masterclassEvents.getEventsArchive.headOption.map(chronologicalSort(_).reverse)
 
-    val guLive = lol(guLiveEvents.events, guLiveEvents.eventsDraft, guLivePastEvents)
-    val local = lol(localEvents.events, localEvents.eventsDraft, localPastEvents)
-    val masterclasses = lol(masterclassEvents.events, masterclassEvents.eventsDraft, masterclassPastEvents)
+    val guLive = EventsByStatus(guLiveEvents.events, guLiveEvents.eventsDraft, guLivePastEvents.get)
+    val local = EventsByStatus(localEvents.events, localEvents.eventsDraft, localPastEvents.get)
+    val masterclasses = EventsByStatus(masterclassEvents.events, masterclassEvents.eventsDraft, masterclassPastEvents.get)
 
     Ok(views.html.staff.admin.adminTool(guLive, local, masterclasses))
   }
