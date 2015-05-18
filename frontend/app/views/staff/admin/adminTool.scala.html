@@ -1,8 +1,10 @@
-@(path: String)
-@import configuration.Config
+@(guLiveEvents: lol, localEvents: lol, masterclassEvents: lol)
 @import views.support.Asset
 
-@staff.admin.template("Event Overview") {
+@staff.admin.template("EventHawk") {
+    @for(event <- guLiveEvents.events) {
+        @event.name.text
+    }
     <div class="container">
         <div class="pane pane--nav">
             <img src="@Asset.at("images/admin/logo.png")" class="logo" />
