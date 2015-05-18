@@ -46,7 +46,6 @@ If you are doing client-side work on Membership you should also make yourself fa
 ## General Setup
 
 1. Go to project root
-1. If you don't have `bower`, `grunt`, or `sass`, run `./setup-tools.sh` to install them globally on your system.
 1. Run `./setup.sh` to install project-specific client-side dependencies.
 1. Add the following to your `/etc/hosts`
 

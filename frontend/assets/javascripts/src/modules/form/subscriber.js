@@ -1,4 +1,10 @@
-define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, ajax, display) {
+define([
+    'bean',
+    'ajax',
+    'src/utils/text',
+    'src/modules/form/validation/display'
+], function (bean, ajax, textUtils, display) {
+
     'use strict';
 
     var PAYMENT_OPTIONS_CONTAINER_ELEM = document.querySelector('.js-payment-options-container');
@@ -16,12 +22,11 @@ define(['bean', 'ajax', 'src/modules/form/validation/display'], function (bean, 
 
                 event.preventDefault();
 
-                var subscriberId = SUBSCRIBER_ID_INPUT_ELEM.value,
-                    postcode = POSTCODE_ELEM.value,
+                var subscriberId = textUtils.removeWhitespace(SUBSCRIBER_ID_INPUT_ELEM.value),
+                    postcode = textUtils.trimWhitespace(POSTCODE_ELEM.value),
                     lastName = LAST_NAME_ELEM.value;
 
-
-                if(subscriberId !== '') {
+                if(subscriberId) {
                     ajax({
                         url: '/user/check-subscriber?' + buildQueryString(subscriberId, lastName, postcode)
                     }).then(function (response) {

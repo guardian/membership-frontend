@@ -126,7 +126,7 @@
         }{ destination => @destination match {
                 case eventDestination: model.EventDestination => {
                     @getStarted("Complete your ticket purchase") {
-                        <p>We're currently improving our ticket purchasing system, in the meantime you will have to enter some details again.</p>
+                        <p>You will be redirected to the Eventbrite website to complete your ticket purchase.</p>
                         <iframe src="@eventDestination.iframeUrl" width="100%" height="@eventDestination.iframeHeight" frameborder="0" vspace="0"
                         hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
                     }
