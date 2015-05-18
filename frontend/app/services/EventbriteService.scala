@@ -2,7 +2,7 @@ package services
 
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.{TicketSaleDates, EventGroup}
+import model.{EventMetadata, TicketSaleDates, EventGroup}
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -17,6 +17,8 @@ import utils.ScheduledTask
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import com.netaporter.uri.Uri
+import com.netaporter.uri.dsl._
 
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
@@ -101,6 +103,14 @@ abstract class LiveService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
 
+  def extractGridImage(event: EBEvent, metadataOpt: Option[EventMetadata]) = {
+    gridImageFromUri(metadataOpt.flatMap(_.gridUrl).orElse(event.mainImageUrl.map(_.toString)))
+  }
+
+  def gridImageFromUri(uri: Option[String]) = {
+    uri.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop(_))
+  }
+
   def gridImageFor(event: EBEvent) =
     event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
@@ -117,8 +127,10 @@ object GuardianLiveEventService extends LiveService {
     } yield (ordering.json \ "order").as[Seq[String]]
   }
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = for { gridImageOpt <- gridImageFor(event) }
-    yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = for {
+    metadataOpt <- EventMetadataService.get(event.id)
+    gridImageOpt <- extractGridImage(event, metadataOpt)
+  } yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
   override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
@@ -132,11 +144,13 @@ object GuardianLiveEventService extends LiveService {
 
 object LocalEventService extends LiveService {
   val apiToken = Config.eventbriteLocalApiToken
-  val maxDiscountQuantityAvailable = 2 //TODO are these discounts correct for local?
+  val maxDiscountQuantityAvailable = 2
   val wsMetrics = new EventbriteMetrics("Local")
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
-    yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
+  def mkRichEvent(event: EBEvent): Future[RichEvent] = for {
+    metadataOpt <- EventMetadataService.get(event.id)
+    gridImageOpt <- extractGridImage(event, metadataOpt)
+  } yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
   override def getEvents: Seq[RichEvent] = events

@@ -1,6 +1,8 @@
-@(path: String)
+@(eventOpt: Option[model.RichEvent.RichEvent])(implicit token: play.filters.csrf.CSRF.Token)
+
 @import configuration.Config
 @import views.support.Asset
+@import views.html.helper.CSRF
 
 @staff.admin.template("Event Overview") {
     <div class="container">
@@ -18,15 +20,6 @@
         <div class="pane pane--tools">
 
             <div class="tool-list">
-
-                <div class="tool-list__pane tool-list__pane--menu">
-                    <h2>Quick links</h2>
-                    <ul class="option-list u-list-unstyled">
-                        <li class="option-list__item"><a href="#" class="cta">Create a new event</a></li>
-                        <li class="option-list__item"><a href="#" class="cta">Edit hero events</a></li>
-                        <li class="option-list__item"><a href="#" class="cta">Bulk edit events</a></li>
-                    </ul>
-                </div>
                 <div class="tool-list__pane">
                     <h2>Live events</h2>
                     <ul class="event-list event-list--scroll">
@@ -123,65 +116,21 @@
         </div>
 
         <div class="pane pane--main">
-            <h3>Essentials of pigeon grooming with Will Franklin</h3>
-            <div class="row m-b-l u-margin-bottom">
 
-                <div class="col-md-6">
-                    <h2>Tags</h2>
-                    <ul class="tag-list u-list-unstyled">
-                        <li>Will <span class="tag-list__remove">x</span></li>
-                        <li>Pigeons <span class="tag-list__remove">x</span></li>
-                        <li>Grooming <span class="tag-list__remove">x</span></li>
-                        <li>Self-help <span class="tag-list__remove">x</span></li>
-                        <li>Something else<span class="tag-list__remove">x</span></li>
-                        <li>A tag goes here<span class="tag-list__remove">x</span></li>
-                        <li>This is a long name which will go onto a new line<span class="tag-list__remove">x</span></li>
-                    </ul>
-                    <a href="#" class="cta cta--primary">Add a new tag...</a>
-                </div>
+            @for(event <- eventOpt) {
+                <h3>@event.name.text</h3>
+                <form action="@routes.Staff.adminUpdate(event.id)" method="POST" novalidate>
+                    @CSRF.formField
+                    <input type="hidden" name="ticketingProvider" id="ticketingProvider" value="eventbrite" />
+                    <label for="gridUrl">Grid URL</label>
+                    <input type="text" name="gridUrl" id="gridUrl" />
+                    <input type="submit" value="Save" class="cta" />
+                </form>
+            }
 
-                <div class="col-md-6">
-                    <h2>Event main photo</h2>
-                    <div class="row m-b-l">
-                        <div class="col-md-4">
-                        <img src="@Asset.at("images/admin/pigeon.jpg")" class="photo" />
-                        </div>
-                        <div class="col-md-8">
-                            <label>Caption</label>
-                            <input type="text" />
-                            <label>Photographer</label>
-                            <input type="text" />
-                        </div>
-                    </div>
-                    <div class="row m-b-l">
-                        <div class="col-md-4">
-                            <a href="#" class="cta cta--secondary">Change photo?</a>
-                        </div>
-                        <div class="col-md-8">
-                            <a href="#" class="cta cta--primary">Update caption/photographer</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row m-b-l u-margin-bottom">
-                <div class="col-md-6">
-                    <h2>Partner</h2>
-                    <select>
-                        <option>None</option>
-                        <option>Birkbeck</option>
-                        <option>Central St. Martin's</option>
-                        <option>Idler Academy</option>
-                    </select>
-                    <a href="#" class="cta cta--primary u-margin-right">Save</a>
-                    <a href="#" class="cta cta--secondary">Add a new partner...</a>
-                </div>
-                <div class="col-md-6">
-                    <h2>Custom description</h2>
-                    <textarea rows="10"></textarea>
-                    <a href="#" class="cta cta--primary">Save</a>
-                </div>
-            </div>
+
+
         </div>
 
     </div>
