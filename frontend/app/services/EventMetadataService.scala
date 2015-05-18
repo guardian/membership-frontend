@@ -31,18 +31,24 @@ object EventMetadataService {
   }
 
   def get(id: String): Future[Option[EventMetadata]] = {
-    dynamoDbClient.getItemFuture(new GetItemRequest()
-      .withTableName(tableName)
-      .withKey(Map(
-        "ticketingProviderId" -> new AttributeValue().withS(id),
-        "ticketingProvider" -> new AttributeValue().withS("eventbrite")
-      ).asJava)
-    ) map { result =>
-      for {
-        item <- Option(result.getItem)
-        entry <- EventMetadata.fromAttributeValueMap(item.asScala.toMap)
-      } yield entry
+
+    if (Config.eventMetadataEnabled) {
+      dynamoDbClient.getItemFuture(new GetItemRequest()
+        .withTableName(tableName)
+        .withKey(Map(
+          "ticketingProviderId" -> new AttributeValue().withS(id),
+          "ticketingProvider" -> new AttributeValue().withS("eventbrite")
+        ).asJava)
+      ) map { result =>
+        for {
+          item <- Option(result.getItem)
+          entry <- EventMetadata.fromAttributeValueMap(item.asScala.toMap)
+        } yield entry
+      }
+    } else {
+      Future.successful(None)
     }
+
   }
 
   def create(entry: EventMetadata) = {
