@@ -1,10 +1,12 @@
+@(eventOpt: Option[model.RichEvent.RichEvent], availableEvents: model.GroupedEvents)(implicit token: play.filters.csrf.CSRF.Token)
+
 @import model.EventsByStatus
 @import model.RichEvent._
-@(guLiveEvents: EventsByStatus, localEvents: EventsByStatus, masterclassEvents: EventsByStatus)
 @import views.support.Asset
+@import views.html.helper.CSRF
 
 @eventListItem(event: RichEvent) = {
-    <li class="event-list__item"><a href="eventbrite/@event.id">@event.name.text</a></li>
+    <li class="event-list__item"><a href="@routes.Staff.adminEdit(event.id)">@event.name.text</a></li>
 }
 
 @listOfEvents(events: Seq[RichEvent], title: String) = {
@@ -40,17 +42,6 @@
                 <li class="nav__item"><a href="#">Dashboard</a></li>
                 <li class="nav__item"><a href="#">The Grid</a></li>
             </ul>
-
-            <aside class="padded">
-                <h2>Quick links</h2>
-                <ul class="option-list u-list-unstyled">
-                    <li class="option-list__item"><a href="#" class="cta">Create a new event</a></li>
-                    <li class="option-list__item"><a href="#" class="cta">Edit hero events</a></li>
-                    <li class="option-list__item"><a href="#" class="cta">Bulk edit events</a></li>
-                </ul>
-            </aside>
-
-            <p class="tagline">For a bird's eye view of events &bull; v0.1</p>
         </div>
 
         <div class="pane pane--tools">
@@ -64,73 +55,24 @@
             </ul>
 
             <div id="events-holder">
-                @tabPane("eventtab1", guLiveEvents, true)
-                @tabPane("eventtab2", localEvents)
-                @tabPane("eventtab3", masterclassEvents)
+                @tabPane("eventtab1", availableEvents.guardianLive, true)
+                @tabPane("eventtab2", availableEvents.guardianLocal)
+                @tabPane("eventtab3", availableEvents.masterclasses)
             </div>
 
         </div>
 
         <div class="pane pane--main">
-            <h3>Essentials of pigeon grooming with Will Franklin</h3>
-            <div class="row m-b-l u-margin-bottom">
-
-                <div class="col-md-6">
-                    <h2>Tags</h2>
-                    <ul class="tag-list u-list-unstyled">
-                        <li>Will <span class="tag-list__remove">x</span></li>
-                        <li>Pigeons <span class="tag-list__remove">x</span></li>
-                        <li>Grooming <span class="tag-list__remove">x</span></li>
-                        <li>Self-help <span class="tag-list__remove">x</span></li>
-                        <li>Something else<span class="tag-list__remove">x</span></li>
-                        <li>A tag goes here<span class="tag-list__remove">x</span></li>
-                        <li>This is a long name which will go onto a new line<span class="tag-list__remove">x</span></li>
-                    </ul>
-                    <a href="#" class="cta cta--primary">Add a new tag...</a>
-                </div>
-
-                <div class="col-md-6">
-                    <h2>Event main photo</h2>
-                    <div class="row m-b-l">
-                        <div class="col-md-4">
-                        <img src="@Asset.at("images/admin/pigeon.jpg")" class="photo" />
-                        </div>
-                        <div class="col-md-8">
-                            <label>Caption</label>
-                            <input type="text" />
-                            <label>Photographer</label>
-                            <input type="text" />
-                        </div>
-                    </div>
-                    <div class="row m-b-l">
-                        <div class="col-md-4">
-                            <a href="#" class="cta cta--secondary">Change photo?</a>
-                        </div>
-                        <div class="col-md-8">
-                            <a href="#" class="cta cta--primary">Update caption/photographer</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row m-b-l u-margin-bottom">
-                <div class="col-md-6">
-                    <h2>Partner</h2>
-                    <select>
-                        <option>None</option>
-                        <option>Birkbeck</option>
-                        <option>Central St. Martin's</option>
-                        <option>Idler Academy</option>
-                    </select>
-                    <a href="#" class="cta cta--primary u-margin-right">Save</a>
-                    <a href="#" class="cta cta--secondary">Add a new partner...</a>
-                </div>
-                <div class="col-md-6">
-                    <h2>Custom description</h2>
-                    <textarea rows="10"></textarea>
-                    <a href="#" class="cta cta--primary">Save</a>
-                </div>
-            </div>
+            @for(event <- eventOpt) {
+                <h3>@event.name.text</h3>
+                <form action="@routes.Staff.adminUpdate(event.id)" method="POST" novalidate>
+                    @CSRF.formField
+                    <input type="hidden" name="ticketingProvider" id="ticketingProvider" value="eventbrite" />
+                    <label for="gridUrl">Grid URL</label>
+                    <input type="text" name="gridUrl" id="gridUrl" value="@event.eventMetadata.map(_.gridUrl).getOrElse("")"/>
+                    <input type="submit" value="Save" class="cta" />
+                </form>
+            }
         </div>
 
     </div>

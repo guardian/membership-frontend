@@ -30,3 +30,9 @@ case class EventsByStatus(
     draft: Seq[RichEvent],
     past: Seq[RichEvent]
 )
+
+case class GroupedEvents(
+  guardianLive: EventsByStatus,
+  guardianLocal: EventsByStatus,
+  masterclasses: EventsByStatus
+)
