@@ -32,3 +32,29 @@ var tabSets = document.querySelectorAll('.' + TAB_HOLDER);
         });
     });
 });
+
+
+var SEARCH_FIELD     = 'js-search';
+var SEARCHABLES      = 'js-searchable';
+var SEARCH_DATA_ATTR = 'data-search';
+var CLASS_TO_TOGGLE  = 'hidden';
+
+var searchInput = document.querySelector('.' + SEARCH_FIELD);
+var elements    = document.querySelectorAll('.' + SEARCHABLES);
+
+searchInput.addEventListener('keyup', function() {
+    var searchTerm = searchInput.value;
+    [].forEach.call(elements, function(elm) {
+        if (!searchTerm || searchTerm === '') {
+            elm.classList.remove(CLASS_TO_TOGGLE);
+        } else {
+            var text = elm.getAttribute(SEARCH_DATA_ATTR);
+            var isFound = text.toLowerCase().search(searchTerm);
+            if (isFound !== -1) {
+                elm.classList.remove(CLASS_TO_TOGGLE);
+            } else {
+                elm.classList.add(CLASS_TO_TOGGLE);
+            }
+        }
+    });
+});

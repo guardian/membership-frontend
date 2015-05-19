@@ -6,7 +6,9 @@
 @import views.html.helper.CSRF
 
 @eventListItem(event: RichEvent) = {
-    <li class="event-list__item"><a href="@routes.Staff.adminEdit(event.id)">@event.name.text</a></li>
+    <li class="event-list__item js-searchable" data-search="@event.name.text">
+        <a href="@routes.Staff.adminEdit(event.id)">@event.name.text</a>
+    </li>
 }
 
 @listOfEvents(events: Seq[RichEvent], title: String) = {
@@ -57,7 +59,7 @@
         <div class="pane pane--tools">
 
             <h2>Event list</h2>
-
+            <input type="text" class="search js-search" placeholder="Filter events by name..." />
             <ul class="tabs js-tabs" data-tab-pane="events-holder">
                 <li><a href="#eventtab1" class="js-tabs__tab tabs__tab tabs__tab--active">Guardian Live</a></li>
                 <li><a href="#eventtab2" class="js-tabs__tab tabs__tab">Local</a></li>
