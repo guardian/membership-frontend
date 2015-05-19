@@ -38,3 +38,12 @@
     border-bottom-color: #87b6c4;
     font-weight: 800;
 }
+
+.pane--empty:after {
+    content: "Please select an event from the list on the left.";
+    display: block;
+    text-align: center;
+    margin-top: 45vh;
+    color: #cccccc;
+    font-size: 16px;
+}

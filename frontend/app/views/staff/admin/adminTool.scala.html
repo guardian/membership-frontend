@@ -72,7 +72,7 @@
 
         </div>
 
-        <div class="pane pane--main">
+         <div class="pane pane--main@if(!eventOpt) { pane--empty}">
             @for(event <- eventOpt) {
                 <h3>@event.name.text</h3>
                 <form action="@routes.Staff.adminUpdate(event.id)" method="POST" novalidate>
