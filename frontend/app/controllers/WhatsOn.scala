@@ -17,6 +17,10 @@ trait WhatsOn extends Controller with ActivityTracking {
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
+  private def collectAllEvents = {
+    guLiveEvents.getEvents ++ localEvents.getEvents ++ masterclassEvents.getEvents
+  }
+
   def overview = GoogleAuthenticatedStaffAction { implicit request =>
 
     val pageInfo = PageInfo(
@@ -79,7 +83,8 @@ trait WhatsOn extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    val eventsGroupedByMonth = groupEventsByMonth(guLiveEvents.getEvents)
+
+    val eventsGroupedByMonth = groupEventsByMonth(collectAllEvents)
     Ok(views.html.whatson.calendarGrid(eventsGroupedByMonth, pageInfo))
   }
 }
