@@ -208,3 +208,38 @@
     background-color: $black;
     border-color: $black;
 }
+
+/* ==========================================================================
+   View Switches
+   ========================================================================== */
+
+.view-switch {
+    @include circular();
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 36px; height: 36px;
+    color: $white;
+    background-color: $c-neutral5;
+}
+.view-switch__icon {
+    @include vertically-center();
+    position: relative;
+}
+.view-switch--grid {
+    .view-switch__icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+.view-switch--list {
+    .view-switch__icon {
+        width: 24px;
+        height: 24px
+    }
+}
+.view-switch:hover,
+.view-switch--active {
+    // TODO: Is this in the pallette?
+    background-color: #0272a3;
+}
