@@ -73,7 +73,9 @@ define([
             subscriber.init();
 
             if (form.hasPayment) {
-                payment.init();
+                require('js!stripe').then(function() {
+                    payment.init();
+                });
             }
         }
     };

@@ -1,14 +1,13 @@
 /*global Raven */
 define([
     'ajax',
-    'stripe',
     'src/utils/helper',
     'src/modules/form/helper/formUtil',
     'src/modules/form/helper/serializer',
     'src/modules/form/helper/loader',
     'config/paymentErrorMessages',
     'src/modules/form/validation/display'
-], function (ajax, stripe, utilsHelper, form, serializer, loader, paymentErrorMessages, display) {
+], function (ajax, utilsHelper, form, serializer, loader, paymentErrorMessages, display) {
     'use strict';
 
     var CREDIT_CARD_NUMBER_ELEM = document.querySelector('.js-credit-card-number');
@@ -20,7 +19,7 @@ define([
      * populate the stripe token
      */
     var getStripeToken = function () {
-        stripe.card.createToken({
+        Stripe.card.createToken({
             number: CREDIT_CARD_NUMBER_ELEM.value,
             cvc: CREDIT_CARD_CVC_ELEM.value,
             exp_month: CREDIT_CARD_MONTH_ELEM.value,

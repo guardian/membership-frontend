@@ -1,7 +1,6 @@
 define([
-    'stripe',
     'src/modules/form/validation/display'
-], function (stripe, display) {
+], function (display) {
     'use strict';
 
     /**
@@ -10,7 +9,7 @@ define([
      * @returns {*}
      */
     var validCreditCardNumber = function (cardElem) {
-        return stripe.card.validateCardNumber(cardElem.value);
+        return Stripe.card.validateCardNumber(cardElem.value);
     };
 
     /**
@@ -19,7 +18,7 @@ define([
      * @returns {*}
      */
     var validCVC = function (cvcElem) {
-        return stripe.card.validateCVC(cvcElem.value);
+        return Stripe.card.validateCVC(cvcElem.value);
     };
 
     /**
@@ -35,7 +34,7 @@ define([
 
         // we only want to validate expiry if the year select has a number value i.e not the default value
         if (!isNaN(parseInt(yearElem.value, 10))) {
-            isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+            isValid = Stripe.card.validateExpiry(monthElem.value, yearElem.value);
 
             if (isValid) {
                 // treat month/year inputs as a pair if month validates both month and year are valid so flush errors
@@ -55,7 +54,7 @@ define([
      */
     var validCreditCardYear = function (yearElem) {
         var monthElem = document.querySelector('.js-credit-card-exp-month');
-        var isValid = stripe.card.validateExpiry(monthElem.value, yearElem.value);
+        var isValid = Stripe.card.validateExpiry(monthElem.value, yearElem.value);
 
         if (isValid) {
             // treat month/year inputs as a pair if year validates both year and month are valid so flush errors

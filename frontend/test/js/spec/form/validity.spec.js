@@ -1,7 +1,6 @@
 define([
-    'stripe',
     'src/modules/form/validation/validity'
-], function (stripe, validity) {
+], function (validity) {
 
     var elem = document.createElement('input');
     var pattern = /\s\w+\d{2}/;
@@ -97,18 +96,21 @@ define([
 
             beforeEach(function () {
                 validationProfileElem = elem.cloneNode();
+                window.Stripe = {
+                    card: {
+                        validateCardNumber: function() {}
+                    }
+                };
             });
 
             it('does not exist', function () {
                 validationProfileElem.setAttribute('data-validation', 'notAValidationProfile');
-
                 expect(validity.testValidity(validationProfileElem)).toBe(false);
             });
 
             it('exists', function () {
-                spyOn(stripe.card, 'validateCardNumber').and.returnValue(true);
+                spyOn(Stripe.card, 'validateCardNumber').and.returnValue(true);
                 validationProfileElem.setAttribute('data-validation', 'validCreditCardNumber');
-
                 expect(validity.testValidity(validationProfileElem)).toBe(true);
             });
         });
