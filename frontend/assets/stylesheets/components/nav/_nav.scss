@@ -2,28 +2,10 @@
    Nav object
    ========================================================================== */
 
-/**
- *
- * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
- *
- * The root component nav and >li>a selectors should not be modified directly,
- * instead use modifier classes such as "nav--columns"
- */
-
-@mixin navigation() {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    > li,
-    > li > a {
-        display: inline-block;
-        zoom: 1;
-    }
-}
-
+// TODO: Deprecated, prefer standalone components
+// for navigation rather than sprawling modifiers
 .nav {
-    @include navigation();
+    @include unstyled-list();
 }
 
 /* ==========================================================================
@@ -59,7 +41,7 @@ $global-nav-height: 36px;
 
 .nav--global {
 
-    @include navigation();
+    @include unstyled-list();
 
     @include clearfix();
     clear: both;
@@ -226,7 +208,7 @@ $global-nav-height: 36px;
    ========================================================================== */
 
 .nav-secondary {
-    @include navigation();
+    @include unstyled-list();
     background-color: $c-neutral5;
     position: relative;
 }

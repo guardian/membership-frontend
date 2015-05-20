@@ -87,14 +87,10 @@
     color: $c-neutral2;
 }
 
-
-/* ==========================================================================
-   Event Item (Shallow Modifier)
-   ========================================================================== */
-
+// Event Item (Shallow Modifier)
 .event-item--shallow {
     @include mq(mobileLandscape) {
-        height: rem(310px);
+        height: rem(320px);
     }
 }
 

@@ -141,3 +141,17 @@ $gs-max-columns: 16;
     top: rem($gs-gutter + 1);
 }
 
+/**
+ * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
+ */
+@mixin unstyled-list() {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li,
+    > li > a {
+        display: inline-block;
+        zoom: 1;
+    }
+}

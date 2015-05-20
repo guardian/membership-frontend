@@ -22,10 +22,7 @@
 
         @fragments.page.pageHeader("Calendar", None)
 
-        <div class="l-pad-bottom">
-            <a href="@routes.WhatsOn.calendarGrid" class="view-switch view-switch--grid view-switch--active" aria-title="View events as a grid">
-                @fragments.inlineIcon("grid-view", List("view-switch__icon"))
-            </a>
+        <div class="view-switch-group">
             <a href="#" class="view-switch view-switch--list" aria-title="View events as a list">
                 @fragments.inlineIcon("list-view", List("view-switch__icon"))
             </a>

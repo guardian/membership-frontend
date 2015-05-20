@@ -213,14 +213,29 @@
    View Switches
    ========================================================================== */
 
+.view-switch-group {
+    text-align: right;
+    margin-top: -(rem($gs-gutter));
+    margin-bottom: rem($gs-baseline);
+}
+
 .view-switch {
     @include circular();
     display: inline-block;
     vertical-align: middle;
     padding: 0; margin: 0;
     width: 36px; height: 36px;
+
     color: $white;
-    background-color: $c-neutral5;
+    background-color: $c-button;
+
+    &:focus,
+    &:active,
+    &:hover {
+        color: $white;
+        background-color: darken($c-button, 10%);
+        text-decoration: none;
+    }
 }
 .view-switch__icon {
     @include vertically-center();
@@ -237,9 +252,4 @@
         width: 24px;
         height: 24px
     }
-}
-.view-switch:hover,
-.view-switch--active {
-    // TODO: Is this in the pallette?
-    background-color: #0272a3;
 }
