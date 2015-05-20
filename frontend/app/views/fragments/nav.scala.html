@@ -1,7 +1,8 @@
-@import model.Nav
 @(pageInfo: model.PageInfo)
 
-@import configuration.{Config, Links}
+@import model.Nav
+
+@import configuration.Links
 
 <nav role="navigation" class="nav nav--global nav--global--header js-global-nav">
     <div class="nav__scroll l-constrained">
@@ -12,16 +13,16 @@
                     <span class="u-h">Home</span>
                 </a>
             </li>
-            @for(nav <- Nav.navigation) {
-                <li class="nav__item">
-                    <a href="@nav.href" class="nav__link" id="qa-nav-@nav.id">@nav.title</a>
-                </li>
-                @if(nav.subNav) {
-                    @for(subNav <- nav.subNav) {
-                        <li class="nav__item nav__item--sub">
-                            <a href="@subNav.href" class="nav__link" id="qa-nav-@subNav.id">@subNav.title</a>
-                        </li>
-                    }
+            @for(navItem <- Nav.navigation) {
+                @if(!navItem.isPrivate) {
+                    <li class="nav__item">
+                        <a href="@navItem.href" class="nav__link" id="qa-nav-@navItem.id">@navItem.title</a>
+                    </li>
+                }
+                @for(subNavItem <- navItem.subNav if !subNavItem.isPrivate) {
+                    <li class="nav__item nav__item--sub">
+                        <a href="@subNavItem.href" class="nav__link" id="qa-nav-@subNavItem.id">@subNavItem.title</a>
+                    </li>
                 }
             }
             <li class="nav__item nav__item--right">
@@ -31,28 +32,26 @@
     </div>
 </nav>
 
-@defining(Nav.fetchNav(pageInfo.url)) { subNavForPage =>
-    @subNavForPage.map { navItem =>
-        @if(navItem.subNav) {
-            <nav role="navigation" class="nav nav--global nav--global--header nav--global--subnav js-sub-nav">
-                <div class="nav__scroll nav__scroll--subnav l-constrained">
-                    <ul class="nav__list nav__list--breadcrumbs inline-list">
-                        <li class="nav__item">
-                            <a class="nav__link" href="/">Home</a>
+@defining(Nav.fetchNav(pageInfo.url)) { subNav =>
+    @for(navItem <- subNav if navItem.subNav.nonEmpty) {
+        <nav role="navigation" class="nav-secondary l-side-margins u-hidden-until-tablet">
+            <div class="nav-secondary__inner l-constrained">
+                <ul class="nav-secondary__breadcrumb nav-secondary__list">
+                    <li class="nav-secondary__breadcrumb__item nav-secondary__breadcrumb__trail nav-secondary__item">
+                        <a class="nav-secondary__breadcrumb__link nav-secondary__link" href="/">Home</a>
+                    </li>
+                    <li class="nav-secondary__breadcrumb__item nav-secondary__item">
+                        <a class="nav-secondary__breadcrumb__link nav-secondary__link" href="@navItem.href">@navItem.title</a>
+                    </li>
+                </ul>
+                <ul class="nav-secondary__list">
+                    @for(subNav <- navItem.subNav) {
+                        <li class="nav-secondary__item">
+                            <a href="@subNav.href" class="nav-secondary__link" id="qa-nav-@subNav.id">@subNav.title</a>
                         </li>
-                        <li class="nav__item">
-                            <a class="nav__link" href="@navItem.href">@navItem.title</a>
-                        </li>
-                    </ul>
-                    <ul class="nav__list nav__list--subnav inline-list">
-                        @for(subNav <- navItem.subNav) {
-                            <li class="nav__item">
-                                <a href="@subNav.href" class="nav__link" id="qa-nav-@subNav.id">@subNav.title</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </nav>
-        }
+                    }
+                </ul>
+            </div>
+        </nav>
     }
 }
