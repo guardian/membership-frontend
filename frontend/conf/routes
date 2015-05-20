@@ -55,7 +55,6 @@ POST           /subscription/update-card          controllers.Subscription.updat
 OPTIONS        /subscription/update-card          controllers.Subscription.updateCardPreflight
 
 # Events
-GET            /whats-on                          controllers.Event.whatsOn
 GET            /events                            controllers.Event.list
 GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
 GET            /masterclasses                     controllers.Event.masterclasses
@@ -73,6 +72,10 @@ GET            /event/:id/card                    controllers.Event.embedCard(id
 GET            /preview-event/:id                 controllers.Event.preview(id)
 GET            /preview-local/:id                 controllers.Event.previewLocal(id)
 GET            /preview-masterclass/:id           controllers.Event.previewMasterclass(id)
+
+# What's On
+GET            /whats-on                          controllers.WhatsOn.overview
+GET            /whats-on/calendar                 controllers.WhatsOn.calendarGrid
 
 # Tier
 GET            /tier/change                       controllers.TierController.change

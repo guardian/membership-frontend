@@ -1,6 +1,6 @@
 @(pageInfo: model.PageInfo, eventPortfolio: model.EventCollections, membershipFrontArticles: Seq[model.ContentItem])
 
-@main("Events", pageInfo=pageInfo) {
+@main("What's On", pageInfo=pageInfo) {
     <main role="main" class="l-constrained">
 
         <section class="page-slice l-inset">
@@ -46,11 +46,11 @@
                                         <img src="@img.defaultImage" srcset="@img.srcset" sizes="20vw" alt="@img.altText" class="responsive-img" />
                                     </div>
                                 }
-                                <div class="event-item__content">
-                                    <div class="event-item__meta">
-                                        <h4 class="event-item__title">@article.content.webTitle</h4>
-                                    </div>
+                            <div class="event-item__content">
+                                <div class="event-item__meta">
+                                    <h4 class="event-item__title">@article.content.webTitle</h4>
                                 </div>
+                            </div>
                             </a>
                         </li>
                     }
@@ -58,8 +58,8 @@
                 </li>
                 <li class="grid__item">
                     <h3 class="h-section h-section--lead">Twitter</h3>
-                   <a class="twitter-timeline" href="https://twitter.com/gdnmembership" data-widget-id="586480706009886720">Tweets by @@gdnmembership</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    <a class="twitter-timeline" href="https://twitter.com/gdnmembership" data-widget-id="586480706009886720">Tweets by @@gdnmembership</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                 </li>
             </ul>
 
@@ -69,11 +69,11 @@
             <section class="page-slice l-inset">
                 <h3 class="h-section h-section--lead">Events and courses from institutions we admire</h3>
                 <ul class="grid grid--2up grid--bordered">
-                    @for(event <- eventGroup.events.take(4)) {
-                        <li class="grid__item">
-                            @fragments.event.itemMinimal(event, isCard=true)
-                        </li>
-                    }
+                @for(event <- eventGroup.events.take(4)) {
+                    <li class="grid__item">
+                    @fragments.event.itemMinimal(event, isCard=true)
+                    </li>
+                }
                 </ul>
             </section>
         }
