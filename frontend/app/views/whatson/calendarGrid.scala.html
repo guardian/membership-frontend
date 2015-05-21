@@ -22,9 +22,10 @@
 
         @fragments.page.pageHeader("Calendar", None)
 
-        <div class="view-switch-group">
-            <a href="#" class="view-switch view-switch--list" aria-title="View events as a list">
-                @fragments.inlineIcon("list-view", List("view-switch__icon"))
+        <div class="filter-bar">
+            <a class="action action--no-icon" href="@routes.WhatsOn.calendarList" aria-title="View events as a list" title="View events as a list">
+                @fragments.actionIcon("list-view", leftIcon=true)
+                List view
             </a>
         </div>
 

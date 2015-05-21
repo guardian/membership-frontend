@@ -88,6 +88,18 @@
 /* Date Listing
    ========================================================================== */
 
+.month-header {
+    @include fs-header(3);
+    border-top: 1px solid $c-border-brand;
+    padding-top: rem($gs-baseline / 2);
+    padding-bottom: rem($gs-baseline * 2);
+
+    width:  100%;
+    position: sticky;
+    top: 5px;
+    z-index: 100;
+}
+
 .date-listing {
     @include clearfix;
 }
@@ -109,6 +121,11 @@
 }
 .date-listing__title {
     @include fs-header(3);
+}
+.date-listing__subtitle {
+    @include fs-headline(2);
+    font-weight: normal;
+    color: $c-neutral2;
 }
 
 .date-listing--lead {
