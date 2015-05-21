@@ -30,6 +30,22 @@
             @include fs-headline(7);
         }
     }
+
+    .header-bar__subheading {
+        @include fs-headline(3);
+        padding: rem($gs-gutter / 2) 0 0;
+
+        @include mq(tablet) {
+            // @include fs-headline(4);
+            max-width: rem(gs-span(8));
+            padding-bottom: rem($gs-baseline);
+        }
+
+        @include mq(mem-full) {
+            @include fs-headline(4);
+        }
+    }
+
     .header-bar__logo {
         float: right;
         margin-bottom: rem($gs-gutter / 2);

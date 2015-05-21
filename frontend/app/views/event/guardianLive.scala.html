@@ -3,9 +3,10 @@
 @main("Events", pageInfo=pageInfo) {
     <main role="main" class="l-constrained">
         @fragments.event.headerBar(
-            title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+            title="Events, debates, interviews, film screenings and more",
             toneClassOpt=Some("tone-trans-guardian-live"),
-            logoOpt=Some("images/logos/guardian-live.svg")
+            logoOpt=Some("images/logos/guardian-live.svg"),
+            subheadingOpt=Some("Guardian Partners and Patrons save 50% until 30 June")
         )
 
         @views.html.event.list(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
