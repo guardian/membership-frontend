@@ -3,10 +3,9 @@
 @main("Events", pageInfo=pageInfo) {
     <main role="main" class="l-constrained">
         @fragments.event.headerBar(
-            title="Events, debates, interviews, film screenings and more",
+            title="Events, debates, interviews, film screenings and more<br><strong>Guardian Partners and Patrons save 50% until 30 June</strong>",
             toneClassOpt=Some("tone-trans-guardian-live"),
-            logoOpt=Some("images/logos/guardian-live.svg"),
-            subheadingOpt=Some("Guardian Partners and Patrons save 50% until 30 June")
+            logoOpt=Some("images/logos/guardian-live.svg")
         )
 
         @views.html.event.list(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)

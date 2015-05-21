@@ -1,17 +1,9 @@
-@(
-    title: String,
-    toneClassOpt: Option[String] = None,
-    logoOpt: Option[String]  = None,
-    subheadingOpt: Option[String] = None
-)
+@(title: String, toneClassOpt: Option[String] = None, logoOpt: Option[String]  = None)
 
 @import views.support.Asset
 
 <section class="header-bar @toneClassOpt.mkString("")">
-    <h1 class="header-bar__title">@title</h1>
-    @for(subheading <- subheadingOpt) {
-        <h2 class="header-bar__subheading">@subheading</h2>
-    }
+    <h1 class="header-bar__title">@Html(title)</h1>
     @for(logo <- logoOpt) {
         <i class="header-bar__logo">
             <img class="header-bar__logo__img" src="@Asset.at(logo)">
