@@ -27,7 +27,11 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeaderTitle, None)
+        @if(accessOpt.isEmpty && eventOpt) {
+            @fragments.page.pageHeader(pageHeaderTitle, Some("Partners and Patrons save 50% until 30 June"))
+        } else {
+            @fragments.page.pageHeader(pageHeaderTitle, None)
+        }
 
         <section class="page-section page-section--no-padding">
             <div class="page-section__lead-in">
