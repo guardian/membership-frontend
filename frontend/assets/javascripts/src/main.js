@@ -8,7 +8,7 @@ require([
     'src/modules/toggle',
     'src/modules/sticky',
     'src/modules/navigation',
-    'src/modules/UserDetails',
+    'src/modules/userDetails',
     'src/modules/videoOverlay',
     'src/modules/events/eventPriceEnhance',
     'src/modules/modal',
@@ -31,7 +31,7 @@ require([
     toggle,
     sticky,
     navigation,
-    UserDetails,
+    userDetails,
     videoOverlay,
     eventPriceEnhance,
     modal,
@@ -63,7 +63,7 @@ require([
     identityPopup.init();
     identityPopupDetails.init();
     navigation.init();
-    (new UserDetails()).init();
+    userDetails.init();
     videoOverlay.init();
 
     // Events
