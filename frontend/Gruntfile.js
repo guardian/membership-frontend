@@ -2,6 +2,8 @@
 module.exports = function (grunt) {
     'use strict';
 
+    require('time-grunt')(grunt);
+
     /**
      * Setup
      */
@@ -45,7 +47,15 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         sass: {
-            compile: {
+            options: {
+                outputStyle: 'compressed',
+                sourceMap: isDev,
+                precision: 5,
+                includePaths: [
+                    '<%= dirs.assets.stylesheets %>/components/sass-mq'
+                ]
+            },
+            dist: {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.stylesheets %>',
@@ -57,16 +67,7 @@ module.exports = function (grunt) {
                         'admin/admin.style.scss'],
                     dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
-                }],
-                options: {
-                    style: 'compressed',
-                    sourcemap: isDev ? true : false,
-                    noCache: true,
-                    quiet: isDev ? false : true,
-                    loadPath: [
-                        '<%= dirs.assets.stylesheets %>/components/sass-mq'
-                    ]
-                }
+                }]
             }
         },
 
@@ -403,7 +404,7 @@ module.exports = function (grunt) {
             'svgSprite',
             'copy:images',
             'imagemin',
-            'sass:compile',
+            'sass',
             'postcss'
         ]);
     });

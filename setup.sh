@@ -15,22 +15,6 @@ git config --local url."https://".insteadOf git://
 cd frontend
 
 #####################################################
-# Bundle
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing Ruby gems..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-if hash bundler 2>/dev/null; then
-    bundle install
-else
-    printf "\nYou need to install bundler first:\n"
-    printf "\ngem install bundler. http://bundler.io/\n"
-    exit 1
-fi
-
-#####################################################
 # Install NPM modules
 #####################################################
 
@@ -51,7 +35,7 @@ fi
 #####################################################
 
 printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower JS modules in assets/javascripts ..."
+printf "> Installing Bower JS modules..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
 if hash bower 2>/dev/null; then
@@ -71,7 +55,7 @@ popd
 #####################################################
 
 printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing bower SASS modules in assets/stylesheets ..."
+printf "> Installing Bower SASS modules..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
 pushd assets/stylesheets
