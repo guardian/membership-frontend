@@ -30,9 +30,9 @@ trait WhatsOn extends Controller with ActivityTracking {
     SortedMap(unsortedMap.toSeq :_*)
   }
 
-  private def groupEventsByMonthFormatted(events: Seq[RichEvent], fmt: String): SortedMap[LocalDate, EventGroup] = {
+  private def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
     val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
-      case (monthDate, eventsForMonth) => monthDate -> EventGroup(monthDate.toString(fmt), eventsForMonth)
+      case (monthDate, eventsForMonth) => monthDate -> eventsForMonth
     }
     SortedMap(unsortedMap.toSeq :_*)
   }
@@ -94,7 +94,7 @@ trait WhatsOn extends Controller with ActivityTracking {
       Some(CopyConfig.copyDescriptionEvents)
     )
 
-    val eventsGroupedByMonth = groupEventsByMonthFormatted(collectAllEvents, "MMMMM Y")
+    val eventsGroupedByMonth = groupEventsByMonth(collectAllEvents)
     Ok(views.html.whatson.calendarGrid(eventsGroupedByMonth, pageInfo))
   }
 
