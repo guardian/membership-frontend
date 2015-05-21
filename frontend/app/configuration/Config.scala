@@ -44,9 +44,6 @@ object Config {
   def idWebAppSignOutThenInUrl(uri: String): String =
     (idWebAppUrl / "signout") ? ("returnUrl" -> idWebAppSigninUrl(uri)) ? ("skipConfirmation" -> "true")
 
-  def eventImageUrlPath(id: String): String =
-    config.getString("membership.event.images.url") + id
-
   val idKeys = if (config.getBoolean("identity.production.keys")) new ProductionKeys else new PreProductionKeys
 
   val idApiUrl = config.getString("identity.api.url")
