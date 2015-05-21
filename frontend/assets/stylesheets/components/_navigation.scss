@@ -9,30 +9,6 @@
 }
 
 /* ==========================================================================
-   Nav - Control Navigation
-   ========================================================================== */
-
-.nav-control {
-    @extend .nav;
-
-    > li,
-    > li > a {
-        vertical-align: top;
-    }
-}
-.nav-control__item {
-    margin-right: rem($gs-baseline);
-    position: relative;
-
-    @include mq(tablet) {
-        padding-top: rem(3px);
-    }
-}
-.nav-control__item--last {
-    margin-right: 0;
-}
-
-/* ==========================================================================
    Nav - Global Navigation
    ========================================================================== */
 
@@ -250,6 +226,30 @@ $global-nav-height: 36px;
     display: inline-block;
     vertical-align: middle;
     margin-left: rem($gs-gutter / 2);
+}
+
+/* ==========================================================================
+   Nav - Control Navigation
+   ========================================================================== */
+
+.nav-control {
+    @include unstyled-list();
+
+    > li,
+    > li > a {
+        vertical-align: top;
+    }
+}
+.nav-control__item {
+    margin-right: rem($gs-baseline);
+    position: relative;
+
+    @include mq(tablet) {
+        padding-top: rem(3px);
+    }
+}
+.nav-control__item--last {
+    margin-right: 0;
 }
 
 /* ==========================================================================
