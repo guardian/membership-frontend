@@ -28,30 +28,30 @@
                             </span>
                         </a>
 
-                        <div class="nav-popup nav-popup--profile nav-popup--small is-hidden js-identity-menu">
-                            <nav role="navigation" aria-label="Profile menu">
-                                <ul class="nav nav--columns">
-                                    <li class="nav__item">
-                                        <a href="@Config.idWebAppUrl/user/id/" class="nav__link js-identity-menu-comment-activity">Comment activity</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a class="nav__link js-identity-menu-edit-profile"
-                                           id="qa-identity-nav-edit"
-                                           href="@Config.idWebAppUrl/public/edit"
-                                           data-member-href="@Config.idWebAppUrl/membership/edit">Edit profile</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="@Config.idWebAppUrl/email-prefs" class="nav__link">Email preferences</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="@Config.idWebAppUrl/password/change" class="nav__link">Change password</a>
-                                    </li>
-                                    <li class="nav__item">
-                                        <a href="@Config.idWebAppUrl/signout" class="nav__link">Sign out</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                        @* Identity / Account pop-up *@
+                        <nav role="navigation" class="nav-popup is-hidden js-identity-menu" aria-label="Profile menu">
+                            <ul class="nav-popup__list">
+                                <li class="nav-popup__item">
+                                    <a href="@Config.idWebAppUrl/user/id/" class="nav-popup__link js-identity-menu-comment-activity">Comment activity</a>
+                                </li>
+                                <li class="nav-popup__item">
+                                    <a class="nav-popup__link js-identity-menu-edit-profile"
+                                       id="qa-identity-nav-edit"
+                                       href="@Config.idWebAppUrl/public/edit"
+                                       data-member-href="@Config.idWebAppUrl/membership/edit">Edit profile</a>
+                                </li>
+                                <li class="nav-popup__item">
+                                    <a href="@Config.idWebAppUrl/email-prefs" class="nav-popup__link">Email preferences</a>
+                                </li>
+                                <li class="nav-popup__item">
+                                    <a href="@Config.idWebAppUrl/password/change" class="nav-popup__link">Change password</a>
+                                </li>
+                                <li class="nav-popup__item">
+                                    <a href="@Config.idWebAppUrl/signout" class="nav-popup__link">Sign out</a>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </li>
                     <li class="nav-control__item nav-control__item--last is-hidden js-header-join-us-cta">
                         <a href="@routes.Joiner.tierList" role="menuitem" class="control no-underline hidden-mobile" title="Join us">
