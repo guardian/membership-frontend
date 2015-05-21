@@ -31,9 +31,11 @@ define([
     function init() {
         if (userUtil.isLoggedIn()) {
             $(document.documentElement).removeClass(CLASS_NAMES.signedOut).addClass(CLASS_NAMES.signedIn);
+            populateUserDetails(userUtil.getUserFromCookie());
             userUtil.getMemberDetail(function (memberDetail) {
                 if (memberDetail) {
                     populateUserDetails(memberDetail);
+
                     if (memberDetail.tier) {
                         $(document.documentElement).addClass(CLASS_NAMES.hasTier);
                     }
@@ -43,6 +45,9 @@ define([
     }
 
     return {
-        init: init
+        init: init,
+        _ : {
+            CLASS_NAMES: CLASS_NAMES
+        }
     };
 });

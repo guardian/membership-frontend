@@ -1,10 +1,10 @@
 define([
     '$',
-    'src/modules/UserDetails',
+    'src/modules/userDetails',
     'ajax',
     'src/utils/cookie',
     'src/utils/user'
-], function ($, UserDetails, ajax, cookie, userUtil) {
+], function ($, userDetails, ajax, cookie, userUtil) {
 
     var GU_USER_COOKIE_KEY = 'GU_U',
         GU_U_USER_COOKIE = 'WyIxMjM0NTQzMjIiLCJtYXJjLmhpYmJpbnNAZ3VhcmRpYW4uY28udWsiLCJtYXJjaGliYmlucyIsIjIiLDE0MjA2NDEwMDg2NjcsMCwxNDExMDU1MzU5MDAwLGZhbHNlXQ.MC0CFQCeT6NHbQyTpMoiEXQC3rN1djN-sAIUFMI5ASoIQ06tY1e1zjKWNcg5Hlw',
@@ -34,12 +34,12 @@ define([
 
         var addClasses = function (member) {
                 // This is hardcoded in main.scala.html
-                $(document.documentElement).addClass(UserDetails.prototype.classes.signedOut);
+                $(document.documentElement).addClass(userDetails._.CLASS_NAMES.signedOut);
             },
 
             removeClasses = function () {
-                $(document.documentElement).removeClass(UserDetails.prototype.classes.signedIn);
-                $(document.documentElement).removeClass(UserDetails.prototype.classes.hasTier);
+                $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.signedIn);
+                $(document.documentElement).removeClass(userDetails._.CLASS_NAMES.hasTier);
             };
 
         beforeEach(function () {
@@ -52,29 +52,29 @@ define([
         });
 
         it('Should not add any classes for anonymous users', function () {
-            (new UserDetails()).init();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeFalsy();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.hasTier)).toBeFalsy();
+            userDetails.init();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.signedIn)).toBeFalsy();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.hasTier)).toBeFalsy();
         });
 
         it('Should add signed in class for authenticated users', function () {
             addCookies(true);
-            (new UserDetails()).init();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeTruthy();
+            userDetails.init();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.signedIn)).toBeTruthy();
         });
 
         it('Should add member tier class for authenticated members', function () {
             addCookies(true);
-            (new UserDetails()).init();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeTruthy();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.hasTier)).toBeTruthy();
+            userDetails.init();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.signedIn)).toBeTruthy();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.hasTier)).toBeTruthy();
         });
 
         it('Should not add member tier class for authenticated non-members', function () {
             addCookies(false);
-            (new UserDetails()).init();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.signedIn)).toBeTruthy();
-            expect($(document.documentElement).hasClass(UserDetails.prototype.classes.hasTier)).toBeFalsy();
+            userDetails.init();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.signedIn)).toBeTruthy();
+            expect($(document.documentElement).hasClass(userDetails._.CLASS_NAMES.hasTier)).toBeFalsy();
         });
     });
 
@@ -105,7 +105,7 @@ define([
         });
 
         it('Should not attempt to inject user details for anonymous users', function () {
-            (new UserDetails()).init();
+            userDetails.init();
             expect($('.js-user-displayname').text()).toEqual('');
             expect($('.js-user-firstName').text()).toEqual('');
             expect($('.js-user-tier').text()).toEqual('');
@@ -113,7 +113,7 @@ define([
 
         it('Should inject user details for authenticated users', function () {
             addCookies(false);
-            (new UserDetails()).init();
+            userDetails.init();
             expect($('.js-user-displayname').text()).toEqual('marchibbins');
             expect($('.js-user-firstName').text()).toEqual('');
             expect($('.js-user-tier').text()).toEqual('');
@@ -121,7 +121,7 @@ define([
 
         it('Should inject user details for authenticated members', function () {
             addCookies(true);
-            (new UserDetails()).init();
+            userDetails.init();
             expect($('.js-user-displayname').text()).toEqual('marchibbins');
             expect($('.js-user-firstName').text()).toEqual(memberDetails.firstName);
             expect($('.js-user-tier').text()).toEqual(memberDetails.tier);
