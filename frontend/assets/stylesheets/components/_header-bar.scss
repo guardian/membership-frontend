@@ -36,7 +36,6 @@
         padding: rem($gs-gutter / 2) 0 0;
 
         @include mq(tablet) {
-            // @include fs-headline(4);
             max-width: rem(gs-span(8));
             padding-bottom: rem($gs-baseline);
         }
