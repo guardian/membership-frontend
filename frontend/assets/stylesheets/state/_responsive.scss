@@ -1,6 +1,7 @@
 /* ==========================================================================
    State - Responsive Utilities
    ========================================================================== */
+// TODO: hidden-mobile and hidden-tablet are the same!
 
 .hidden-mobile {
     @include mq($until: tablet) {
@@ -8,18 +9,21 @@
     }
 }
 
-.hidden-mobile-portrait {
+.hidden-mobile-portrait,
+.u-hidden-until-mobileLandscape {
     @include mq($until: mobileLandscape) {
         display: none !important;
     }
 }
 
-.hidden-tablet {
+.hidden-tablet,
+.u-hidden-until-tablet {
     @include mq($until: tablet) {
         display: none !important;
     }
 }
-.hidden-desktop {
+.hidden-desktop,
+.u-hidden-until-desktop {
     @include mq($until: desktop) {
         display: none !important;
     }

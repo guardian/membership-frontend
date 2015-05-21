@@ -2,23 +2,10 @@
    Nav object
    ========================================================================== */
 
-/**
- *
- * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
- *
- * The root component nav and >li>a selectors should not be modified directly,
- * instead use modifier classes such as "nav--columns"
- */
+// TODO: Deprecated, prefer standalone components
+// for navigation rather than sprawling modifiers
 .nav {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    > li,
-    > li > a {
-        display: inline-block;
-        zoom: 1;
-    }
+    @include unstyled-list();
 }
 
 /* ==========================================================================
@@ -54,6 +41,8 @@ $global-nav-height: 36px;
 
 .nav--global {
 
+    @include unstyled-list();
+
     @include clearfix();
     clear: both;
     display: block;
@@ -70,9 +59,7 @@ $global-nav-height: 36px;
 
     @include fs-headline(2);
     font-weight: normal;
-    -moz-osx-font-smoothing: auto;
-    -webkit-font-smoothing: subpixel-antialiased;
-    -webkit-font-feature-settings: "kern" 1;
+    @include font-smoothing();
 
     background-color: darken($mem-brandBlue, 12%);
 
@@ -117,6 +104,7 @@ $global-nav-height: 36px;
 
     .nav__item--sub {
         display: none;
+        padding-left: rem($gs-gutter);
     }
 
     .nav__item--right {
@@ -156,60 +144,6 @@ $global-nav-height: 36px;
     }
 }
 
-.nav--global--subnav {
-    background-color: $c-neutral5;
-    .nav__scroll {
-        background-color: $c-neutral6;
-    }
-}
-
-.nav__list--breadcrumbs,
-.nav__list--subnav {
-
-    .nav__link {
-        padding-top: rem($gs-baseline / 2);
-        padding-bottom: rem($gs-baseline);
-    }
-}
-
-.nav__list--breadcrumbs {
-    border-right: 2px solid $white;
-
-    .nav__link {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: rem($gs-gutter / 2);
-    }
-
-    .nav__item:after {
-        content: "›";
-        display: inline-block;
-        margin-right: rem($gs-gutter / 2);
-        vertical-align: text-bottom;
-    }
-
-    .nav__item:last-child {
-        .nav__link {
-            margin-right: rem($gs-gutter);
-        }
-        &:after {
-            display: none;
-        }
-    }
-}
-
-.nav__list--subnav {
-    padding-left: rem($gs-gutter);
-}
-
-.nav--global.nav--global--subnav.is-active {
-    z-index: 1;
-}
-
-.nav--global--subnav .nav__list {
-    display: table-cell;
-}
-
 @include mq($until: tablet) {
     .nav--global.is-active {
 
@@ -240,10 +174,6 @@ $global-nav-height: 36px;
 
         .nav__item--sub {
             display: block;
-            a {
-                font-weight: 100;
-                padding-left: rem(20px);
-            }
         }
 
         .nav__link {
@@ -271,6 +201,55 @@ $global-nav-height: 36px;
             }
         }
     }
+}
+
+/* ==========================================================================
+   Secondary Navigation
+   ========================================================================== */
+
+.nav-secondary {
+    @include unstyled-list();
+    background-color: $c-neutral5;
+    position: relative;
+}
+.nav-secondary__inner {
+    @include clearfix();
+    padding: 0 rem($gs-gutter);
+}
+.nav-secondary__list,
+.nav-secondary__item {
+    display: block;
+    float: left;
+}
+.nav-secondary__list {
+    margin: 0;
+    overflow: auto;
+    list-style: none;
+}
+.nav-secondary__item {
+    margin-right: rem($gs-gutter / 2);
+}
+.nav-secondary__link {
+    @include fs-headline(2);
+    @include font-smoothing();
+    line-height: 1;
+    font-weight: normal;
+    display: inline-block;
+    vertical-align: middle;
+    text-transform: lowercase;
+    color: $black;
+    padding: rem($gs-gutter / 2) 0;
+}
+.nav-secondary__breadcrumb {
+    border-right: 1px solid $white;
+    margin-right: rem($gs-gutter);
+    padding-right: rem($gs-gutter / 2);
+}
+.nav-secondary__breadcrumb__trail::after {
+    content: "›";
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: rem($gs-gutter / 2);
 }
 
 /* ==========================================================================

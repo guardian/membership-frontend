@@ -84,3 +84,39 @@
         }
     }
 }
+
+/* Date Listing
+   ========================================================================== */
+
+.date-listing {
+    @include clearfix;
+}
+.date-listing__lead-in {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px solid $c-border-brand;
+
+    @include mq(tablet) {
+        width: 15% - $gutter-width-fluid;
+        margin-right: $gutter-width-fluid;
+        float: left;
+    }
+}
+.date-listing__content {
+    @include mq(tablet) {
+        float: left;
+        width: 85%;
+    }
+}
+.date-listing__title {
+    @include fs-header(3);
+}
+
+.date-listing--lead {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px solid $c-border-brand;
+
+    .date-listing__lead-in {
+        border-top: 0 none;
+        padding-top: 0;
+    }
+}

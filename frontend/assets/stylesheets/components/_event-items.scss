@@ -23,18 +23,13 @@
 
     &:hover {
         background-color: $c-neutral5;
-        .event-item__title {
-            text-decoration: underline;
-        }
+
         .event-item__media {
             background-color: $black;
-            img {
-                opacity: .8;
-            }
+            img { opacity: 0.8; }
         }
     }
 }
-
 .event-item__media {
     transition: background-color $transition-duration-medium ease;
 
@@ -90,6 +85,13 @@
 .event-item__price-amount-discount {
     @include fs-data(3);
     color: $c-neutral2;
+}
+
+// Event Item (Shallow Modifier)
+.event-item--shallow {
+    @include mq(mobileLandscape) {
+        height: rem(320px);
+    }
 }
 
 /* ==========================================================================

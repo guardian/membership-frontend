@@ -1,8 +1,8 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, showPrice: Boolean = true)
 
 @import views.support.Dates._
 
-<a href="@routes.Event.details(event.slug)" class="event-item@if(event.isBookable){ qa-available-event-item}">
+<a href="@routes.Event.details(event.slug)" class="event-item@if(!showPrice) { event-item--shallow} @if(event.isBookable){ qa-available-event-item}">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
@@ -11,18 +11,20 @@
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)
-            <time="event-item__time" datetime="@event.start">@event.start.pretty</time>
+            <time class="event-item__time" datetime="@event.start">@event.start.pretty</time>
             <div class="event-item__location">
                 @fragments.event.addressSummary(event)
             </div>
-            <div class="event-item__footer">
-                @fragments.pricing.priceInfoEvent(event)
-                <span class="event-item__action">
-                    <span class="icon-holder icon-holder--large icon-holder--dark">
-                        @fragments.inlineIcon("arrow-right")
+            @if(showPrice) {
+                <div class="event-item__footer">
+                    @fragments.pricing.priceInfoEvent(event)
+                    <span class="event-item__action">
+                        <span class="icon-holder icon-holder--large icon-holder--dark">
+                            @fragments.inlineIcon("arrow-right")
+                        </span>
                     </span>
-                </span>
-            </div>
+                </div>
+            }
         </div>
     </div>
 </a>
