@@ -1,4 +1,4 @@
-@(groupedEvents: scala.collection.SortedMap[org.joda.time.LocalDate, model.EventGroup], pageInfo: model.PageInfo)
+@(groupedEvents: scala.collection.SortedMap[org.joda.time.LocalDate, Seq[model.RichEvent.RichEvent]], pageInfo: model.PageInfo)
 
 @dateGroup(title: String, events: Seq[model.RichEvent.RichEvent], classes: Seq[String] = Nil) = {
     <section class="date-listing @classes.mkString(" ")">
@@ -22,17 +22,18 @@
 
         @fragments.page.pageHeader("Calendar", None)
 
-        <div class="view-switch-group">
-            <a href="#" class="view-switch view-switch--list" aria-title="View events as a list">
-                @fragments.inlineIcon("list-view", List("view-switch__icon"))
+        <div class="filter-bar">
+            <a class="action action--no-icon" href="@routes.WhatsOn.calendarList" aria-title="View events as a list" title="View events as a list">
+                @fragments.actionIcon("list-view", leftIcon=true)
+                List view
             </a>
         </div>
 
         @for(group <- groupedEvents.headOption) {
-            @dateGroup(group._2.sequenceTitle, group._2.events, List("date-listing--lead"))
+            @dateGroup(group._1.toString("MMMMM Y"), group._2, List("date-listing--lead"))
         }
         @for(group <- groupedEvents.drop(1)) {
-            @dateGroup(group._2.sequenceTitle, group._2.events)
+            @dateGroup(group._1.toString("MMMMM Y"), group._2)
         }
 
     </main>

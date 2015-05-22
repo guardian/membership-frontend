@@ -4,7 +4,6 @@ import com.github.nscala_time.time.Imports._
 import configuration.CopyConfig
 import model.RichEvent.RichEvent
 import model.{EventGroup, ContentItem, EventCollections, PageInfo}
-import org.joda.time.DateMidnight
 import play.api.mvc.Controller
 import services._
 import tracking.ActivityTracking
@@ -19,6 +18,23 @@ trait WhatsOn extends Controller with ActivityTracking {
 
   private def collectAllEvents = {
     guLiveEvents.getEvents ++ localEvents.getEvents ++ masterclassEvents.getEvents
+  }
+
+  private def groupEventsByDay(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
+    val unsortedMap = events.groupBy(_.start.toLocalDate)
+    SortedMap(unsortedMap.toSeq :_*)
+  }
+
+  private def groupEventsByDayAndMonth(events: Seq[RichEvent]):  SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
+    val unsortedMap = groupEventsByDay(events).groupBy(_._1.withDayOfMonth(1))
+    SortedMap(unsortedMap.toSeq :_*)
+  }
+
+  private def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
+    val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
+      case (monthDate, eventsForMonth) => monthDate -> eventsForMonth
+    }
+    SortedMap(unsortedMap.toSeq :_*)
   }
 
   def overview = GoogleAuthenticatedStaffAction { implicit request =>
@@ -70,14 +86,8 @@ trait WhatsOn extends Controller with ActivityTracking {
     Ok(views.html.whatson.overview(pageInfo, events, latestArticles))
   }
 
-  private def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, EventGroup] = {
-    val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
-      case (monthDate, eventsForMonth) => monthDate -> EventGroup(monthDate.toString("MMMMM Y"), eventsForMonth)
-    }
-    SortedMap(unsortedMap.toSeq :_*)
-  }
-
   def calendarGrid = GoogleAuthenticatedStaffAction { implicit request =>
+
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
@@ -87,6 +97,19 @@ trait WhatsOn extends Controller with ActivityTracking {
     val eventsGroupedByMonth = groupEventsByMonth(collectAllEvents)
     Ok(views.html.whatson.calendarGrid(eventsGroupedByMonth, pageInfo))
   }
+
+  def calendarList = GoogleAuthenticatedStaffAction { implicit request =>
+
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleEvents,
+      request.path,
+      Some(CopyConfig.copyDescriptionEvents)
+    )
+
+    val eventsGroupedByDayAndMonth = groupEventsByDayAndMonth(collectAllEvents)
+    Ok(views.html.whatson.calendarList(eventsGroupedByDayAndMonth, pageInfo))
+  }
+
 }
 
 object WhatsOn extends WhatsOn {

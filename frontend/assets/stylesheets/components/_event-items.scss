@@ -150,6 +150,58 @@
 }
 
 /* ==========================================================================
+   Event Item (List modifier)
+   ========================================================================== */
+
+.event-item--list {
+
+    display: table;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    margin-bottom: rem($gs-gutter);
+    border-top: 1px solid $c-border-neutral;
+
+    .event-item__media,
+    .event-item__content {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .event-item__content {
+        position: relative;
+        padding: rem($gs-gutter / 4);
+        padding-top: rem(($gs-gutter / 4) - 1px);
+    }
+    .event-item__media {
+        width: $trailblock-img-width;
+        margin-right: rem($gs-baseline);
+    }
+    .event-item__meta {
+        padding: 0;
+        margin-bottom: rem($gs-baseline);
+    }
+    .event-item__title {
+        @include fs-headline(2, true);
+    }
+
+    @include mq(tablet) {
+        .event-item__title {
+            @include fs-headline(3, true);
+        }
+    }
+
+    @include mq($until: tablet) {
+        .event-item__action {
+            display: none;
+        }
+    }
+
+    &:hover, &:hover .event-item__media {
+        background-color: $c-neutral5;
+    }
+}
+
+/* ==========================================================================
    Event Item (Minimal & Card modifier)
    ========================================================================== */
 

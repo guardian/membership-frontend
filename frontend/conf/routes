@@ -76,6 +76,7 @@ GET            /preview-masterclass/:id           controllers.Event.previewMaste
 # What's On
 GET            /whats-on                          controllers.WhatsOn.overview
 GET            /whats-on/calendar                 controllers.WhatsOn.calendarGrid
+GET            /whats-on/calendar/list            controllers.WhatsOn.calendarList
 
 # Tier
 GET            /tier/change                       controllers.TierController.change

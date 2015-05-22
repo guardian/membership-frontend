@@ -1,0 +1,26 @@
+@(event: model.RichEvent.RichEvent)
+
+@import views.support.Dates._
+
+<a href="@routes.Event.details(event.slug)" class="event-item event-item--list @if(event.isBookable){ qa-available-event-item}">
+    @for(img <- event.imgOpt) {
+        <div class="event-item__media">
+            @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
+        </div>
+    }
+    <div class="event-item__content">
+        @fragments.event.itemMetaTitle(event)
+        <div class="event-item__meta">
+            <time class="event-item__time" datetime="@event.start">@event.start.pretty</time>
+            <div class="event-item__location">
+                @fragments.event.addressSummary(event)
+            </div>
+        </div>
+        @fragments.pricing.priceInfoEvent(event)
+        <span class="event-item__action">
+            <span class="icon-holder icon-holder--large icon-holder--fill">
+                @fragments.inlineIcon("arrow-right")
+            </span>
+        </span>
+    </div>
+</a>

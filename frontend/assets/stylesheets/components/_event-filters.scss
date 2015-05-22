@@ -94,3 +94,12 @@ $filter-icon-size: 18px;
     margin: 0; padding: 0;
     right: rem($gs-gutter / 2);
 }
+
+/* Filter Bar
+   ========================================================================== */
+
+.filter-bar {
+    text-align: right;
+    margin-top: -(rem($gs-gutter));
+    margin-bottom: rem($gs-baseline);
+}
