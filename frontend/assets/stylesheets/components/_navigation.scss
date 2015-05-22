@@ -9,30 +9,6 @@
 }
 
 /* ==========================================================================
-   Nav - Control Navigation
-   ========================================================================== */
-
-.nav-control {
-    @extend .nav;
-
-    > li,
-    > li > a {
-        vertical-align: top;
-    }
-}
-.nav-control__item {
-    margin-right: rem($gs-baseline);
-    position: relative;
-
-    @include mq(tablet) {
-        padding-top: rem(3px);
-    }
-}
-.nav-control__item--last {
-    margin-right: 0;
-}
-
-/* ==========================================================================
    Nav - Global Navigation
    ========================================================================== */
 
@@ -253,6 +229,30 @@ $global-nav-height: 36px;
 }
 
 /* ==========================================================================
+   Nav - Control Navigation
+   ========================================================================== */
+
+.nav-control {
+    @include unstyled-list();
+
+    > li,
+    > li > a {
+        vertical-align: top;
+    }
+}
+.nav-control__item {
+    margin-right: rem($gs-baseline);
+    position: relative;
+
+    @include mq(tablet) {
+        padding-top: rem(3px);
+    }
+}
+.nav-control__item--last {
+    margin-right: 0;
+}
+
+/* ==========================================================================
    Nav - Brand Navigation
    ========================================================================== */
 
@@ -287,43 +287,92 @@ $global-nav-height: 36px;
 }
 
 /* ==========================================================================
-   Nav - Columns
+   Nav - Popup
    ========================================================================== */
 
-.nav--columns {
+.nav-popup {
 
-    > .nav__item {
-        width: 100%;
-        display: block;
-        box-sizing: border-box;
+    @include unstyled-list();
 
-        @include mq(desktop) {
-            border-right: 0;
-        }
+    position: absolute;
+    top: 0;
+    z-index: 10;
+
+    clear: both;
+    list-style: none;
+    box-sizing: border-box;
+    margin-bottom: rem(-4px);
+    background-color: $white;
+    padding: 0 rem($gs-gutter / 2);
+
+    top: rem($mobilePopupOffset);
+    min-height: rem(47px);
+    width: rem(175px);
+
+    @include mq(tablet) {
+        position: absolute;
+        top: rem(40px);
+        left: rem(30px);
+        width: rem(220px);
+        border: 1px solid $c-neutral4;
     }
-    .nav__link {
-        @include fs-bodyHeading(1);
-        border-top: 1px solid lighten($mem-brandBlue, 5%);
-        display: block;
-        background-color: transparent;
-        -webkit-font-smoothing: subpixel-antialiased;
+}
+.nav-popup:after {
+    bottom: 100%;
+    left: 10%;
+    border: solid transparent;
+    content: '';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: $white;
+    border-width: rem(6px);
+    margin-left: rem(-6px);
+
+    @include mq(desktop) {
+        left: 18%;
+        border-width: rem($gs-gutter / 2);
+        margin-left: rem(-$gs-gutter / 2);
+    }
+}
+.nav-popup__list {
+    padding-left: 0;
+    padding-right: 0;
+}
+.nav-popup__item {
+    float: none;
+    width: 100%;
+    display: block;
+    border-right: 0;
+    box-sizing: border-box;
+}
+.nav-popup__link {
+
+    @include fs-bodyHeading(1);
+    @include font-smoothing();
+
+    display: block;
+    border-bottom: 1px solid $c-neutral7;
+    text-decoration: none;
+    padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter / 2) 0;
+    }
+
+    &,
+    &:active,
+    &:focus {
+        color: $black;
         text-decoration: none;
-        padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
-
-        &,
-        &:active,
-        &:focus {
-            color: $black;
-            text-decoration: none;
-        }
-        &:hover {
-            text-decoration: underline;
-        }
-
-        @include mq(desktop) {
-            border-top: 0;
-        }
     }
+    &:hover {
+        text-decoration: underline;
+    }
+}
+.nav-popup__item:last-child  .nav-popup__link {
+    border-bottom: 0 none;
 }
 
 /* Mobile Menu (Toggle link)
