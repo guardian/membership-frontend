@@ -9,9 +9,6 @@
 //     * data-toggle-label is optional.
 //     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
 
-/**
- * TODO: Use pure vanlilla JS for entire module
- */
 define(['$', 'bean'], function ($, bean) {
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',
