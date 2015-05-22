@@ -3,7 +3,7 @@
 @import views.support.Asset
 
 <section class="header-bar @toneClassOpt.mkString("")">
-    <h1 class="header-bar__title">@title</h1>
+    <h1 class="header-bar__title">@Html(title)</h1>
     @for(logo <- logoOpt) {
         <i class="header-bar__logo">
             <img class="header-bar__logo__img" src="@Asset.at(logo)">
