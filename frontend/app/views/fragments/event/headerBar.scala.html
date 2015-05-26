@@ -7,9 +7,9 @@
 
 @import views.support.Asset
 
-<section class="header-bar @toneClassOpt.mkString("")">
+<section class="header-bar @toneClassOpt.mkString("")@if(roundel) { header-bar__title--has-roundel}">
     <h1 class="header-bar__title">@Html(title)</h1>
-    @for(r <- roundel) { <h2 class="roundel"><span>@r</span></h2> }
+    @for(r <- roundel) { <h2 class="roundel"><span>@Html(r)</span></h2> }
     @for(logo <- logoOpt) {
         <i class="header-bar__logo">
             <img class="header-bar__logo__img" src="@Asset.at(logo)">
