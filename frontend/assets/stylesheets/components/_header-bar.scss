@@ -63,3 +63,28 @@
             height: rem(87px);
         }
     }
+
+.roundel {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21px;
+    background-color: #D14029;
+    border-radius: 100px;
+    width: 180px;
+    height: 180px;
+    position: absolute;
+    z-index: 100;
+    top: -12px;
+    right: 140px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.roundel span {
+    display: inline-block;
+    text-align: center;
+    padding: 0 15px;
+    position: absolute;
+    top: 50%;
+	transform: translateY(-50%);
+}
