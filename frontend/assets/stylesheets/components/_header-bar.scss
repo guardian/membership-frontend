@@ -29,7 +29,16 @@
         @include mq(mem-full) {
             @include fs-headline(7);
         }
+
+        // can be removed after 30 june
+        .header-bar__title--has-roundel & {
+            @include mq(tablet) {
+                max-width: rem(gs-span(8));
+                margin-right: 290px; // ~ *magic* lol~
+            }
+        }
     }
+
 
     .header-bar__subheading {
         @include fs-headline(3);
@@ -65,26 +74,55 @@
     }
 
 .roundel {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 21px;
     background-color: #D14029;
     border-radius: 100px;
-    width: 180px;
-    height: 180px;
-    position: absolute;
     z-index: 100;
-    top: -12px;
-    right: 140px;
-    display: table-cell;
-    vertical-align: middle;
+    display: table-cell; // kill?
+
+
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    position: absolute;
+    bottom: -80px;
+    width: 130px;
+    height: 130px;
+    font-size: 13px;
+    line-height: 15px;
+    font-family: $f-sans-serif-text;
+
+    @include mq(tablet) {
+        font-family: $f-serif-headline;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 21px;
+        width: 180px;
+        height: 180px;
+        top: -12px;
+        left: auto;
+        right: 100px;
+        vertical-align: middle;
+    }
+
+    @include mq(mem-full) {
+        right: 140px;
+    }
+
+    @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(max-width: 870px) {
+        top: -6px;
+    }
+
 }
 
 .roundel span {
     display: inline-block;
     text-align: center;
-    padding: 0 15px;
+    padding: 0 14px;
     position: absolute;
     top: 50%;
 	transform: translateY(-50%);
+
+    @include mq(tablet) {
+        padding: 0 20px;
+    }
 }

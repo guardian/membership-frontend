@@ -83,6 +83,10 @@
             border-top: 1px solid $c-border-brand;
         }
     }
+
+    @include mq($until: tablet) {
+        padding-top: 70px;
+    }
 }
 
 /* Date Listing
