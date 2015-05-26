@@ -254,7 +254,9 @@ object Eventbrite {
       "idler",
       "csm",
       "tpg",
-      "5x15"
+      "5x15",
+      "moa",
+      "shubbak"
     )
 
     val expansions = Seq(
