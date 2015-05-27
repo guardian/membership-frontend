@@ -77,8 +77,6 @@
     background-color: #D14029;
     border-radius: 100px;
     z-index: 100;
-    display: table-cell; // kill?
-
 
     left: 0;
     right: 0;
@@ -101,13 +99,13 @@
         top: -12px;
         left: auto;
         right: 100px;
-        vertical-align: middle;
     }
 
     @include mq(mem-full) {
         right: 140px;
     }
 
+    // to allow for header text wrapping onto a fourth line
     @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(max-width: 870px) {
         top: -6px;
     }
@@ -117,12 +115,8 @@
 .roundel span {
     display: inline-block;
     text-align: center;
-    padding: 0 14px;
     position: absolute;
     top: 50%;
 	transform: translateY(-50%);
-
-    @include mq(tablet) {
-        padding: 0 20px;
-    }
+    width: 100%;
 }
