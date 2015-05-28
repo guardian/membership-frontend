@@ -75,7 +75,7 @@ module.exports = function (grunt) {
             options: {
                 map: isDev ? true : false,
                 processors: [
-                    require('autoprefixer-core')({browsers: ['> 5%', 'last 2 versions', 'IE 9', 'Safari 6']}).postcss
+                    require('autoprefixer-core')({browsers: ['> 5%', 'last 2 versions', 'IE 9', 'Safari 6']})
                 ]
             },
             dist: { src: '<%= dirs.publicDir.stylesheets %>/*.css' }
