@@ -2,7 +2,8 @@
     eventPortfolio: model.EventPortfolio,
     noResultsMessage: String,
     isFilterable: Boolean = false,
-    showPastEvents: Boolean = false
+    showPastEvents: Boolean = false,
+    hasRoundel: Boolean = false
 )
 
 @import com.gu.membership.salesforce.Tier
@@ -10,7 +11,7 @@
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
-        <section class="listing listing--lead listing--padded">
+        <section class="listing listing--lead listing--padded@if(hasRoundel){ listing--roundel}">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">Featured</h3>
             </div>
