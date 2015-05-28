@@ -29,7 +29,16 @@
         @include mq(mem-full) {
             @include fs-headline(7);
         }
+
+        // can be removed after 30 june
+        .header-bar__title--has-roundel & {
+            @include mq(tablet) {
+                max-width: rem(gs-span(8));
+                margin-right: 290px; // ~ *magic* lol~
+            }
+        }
     }
+
 
     .header-bar__subheading {
         @include fs-headline(3);
@@ -63,3 +72,51 @@
             height: rem(87px);
         }
     }
+
+.roundel {
+    background-color: #D14029;
+    border-radius: 100px;
+    z-index: 100;
+
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    position: absolute;
+    bottom: -80px;
+    width: 130px;
+    height: 130px;
+    font-size: 13px;
+    line-height: 15px;
+    font-family: $f-sans-serif-text;
+
+    @include mq(tablet) {
+        font-family: $f-serif-headline;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 21px;
+        width: 180px;
+        height: 180px;
+        top: -12px;
+        left: auto;
+        right: 100px;
+    }
+
+    @include mq(mem-full) {
+        right: 140px;
+    }
+
+    // to allow for header text wrapping onto a fourth line
+    @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(max-width: 870px) {
+        top: -6px;
+    }
+
+}
+
+.roundel span {
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+	transform: translateY(-50%);
+    width: 100%;
+}

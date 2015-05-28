@@ -83,6 +83,13 @@
             border-top: 1px solid $c-border-brand;
         }
     }
+
+}
+
+.listing--roundel {
+    @include mq($until: tablet) {
+        padding-top: 70px;
+    }
 }
 
 /* Date Listing
