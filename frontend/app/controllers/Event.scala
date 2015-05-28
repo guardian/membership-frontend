@@ -216,9 +216,9 @@ trait Event extends Controller with ActivityTracking {
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- guLiveEvents.getBookableEvent(id)
+        event <- EventbriteService.getEvent(id)
       } yield {
-        guLiveEvents.getOrder(oid).map { order =>
+        event.service.getOrder(oid).map { order =>
           trackConversionToThankyou(request, event, Some(order), Some(request.member))
           Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
         }
