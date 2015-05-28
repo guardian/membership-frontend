@@ -30,8 +30,7 @@
                             @order.ticketCount ticket@if(order.ticketCount > 1){s}
                             @if(order.totalCost > 0) { @order.totalCost.pretty } else { free }
                         </div>
-                        <div class="order-summary__recipient">Sent to <strong>@order.email</strong></div>
-                        <div class="order-summary__reference copy">The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite</div>
+                        <div class="order-summary__reference copy">The order has been saved in <a href="@(Config.eventbriteUrl + "/gettickets")">MyTickets</a> on Eventbrite. We've also sent confirmation to your registered email address.</div>
                         <img class="l-pad-top" src="@Asset.at("images/logos/eventbrite.svg")">
                     </div>
                 </div>
