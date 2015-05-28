@@ -212,20 +212,25 @@ trait Event extends Controller with ActivityTracking {
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
   }
 
-  def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
+  def thankyou(id: String, orderIdOpt: Option[String], sourceOpt: Option[String] = Some("gu-live")) = MemberAction.async { implicit request =>
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- guLiveEvents.getBookableEvent(id)
+        source <- request.flash.get("source")
+        event <- EventbriteService.getEvent(id)
       } yield {
-        guLiveEvents.getOrder(oid).map { order =>
-          trackConversionToThankyou(request, event, Some(order), Some(request.member))
-          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
-        }
+          val eventService = source match {
+            case "gu-local" => localEvents
+            case _ => guLiveEvents
+          }
+          eventService.getOrder(oid).map { order =>
+            trackConversionToThankyou(request, event, Some(order), Some(request.member))
+            Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
+          }
       }
       resultOpt.getOrElse(Future.successful(NotFound))
     } { orderId =>
-      Future.successful(Redirect(routes.Event.thankyou(id, None)).flashing("oid" -> orderId))
+      Future.successful(Redirect(routes.Event.thankyou(id, None, None)).flashing("oid" -> orderId, "source" -> sourceOpt.getOrElse("")))
     }
   }
 
