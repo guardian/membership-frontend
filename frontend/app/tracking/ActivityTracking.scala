@@ -62,7 +62,7 @@ case class MemberData(salesforceContactId: String,
                         marketingChoices: Option[MarketingChoicesForm] = None,
                         city: Option[String] = None,
                         country: Option[String] = None,
-                        request: Option[Request[_]] = None) extends CookieBaker {
+                        request: Option[Request[_]] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -114,7 +114,8 @@ case class MemberData(salesforceContactId: String,
 
   def extractCampaignCode(request: Request[_]): Option[String] = {
     request.cookies.get("s_sess").flatMap{ cookie: Cookie =>
-      decode(cookie.value).get("s_campaign")
+      val cookieVal = UriEncoding.decodePathSegment(cookie.value, "utf-8")
+      "campaign=(.+?);".r.findFirstIn(cookieVal)
     }
   }
 
