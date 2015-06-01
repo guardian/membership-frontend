@@ -64,17 +64,17 @@ case class TouchpointBackend(
     } yield customer.card
   }
 
-  def cancelSubscription(member: Member, user: IdMinimalUser): Future[String] = {
+  def cancelSubscription(member: Member, user: IdMinimalUser, campaignCode: Option[String] = None): Future[String] = {
     for {
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
-      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name)))(user)
+      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name, campaignCode = campaignCode)))(user)
       ""
     }
   }
 
-  def downgradeSubscription(member: Member, user: IdMinimalUser): Future[String] = {
+  def downgradeSubscription(member: Member, user: IdMinimalUser, campaignCode: Option[String] = None): Future[String] = {
     for {
       _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
@@ -86,7 +86,8 @@ case class TouchpointBackend(
             member.salesforceContactId,
             member.identityId,
             member.tier.name,
-            Some(DowngradeAmendment(member.tier)) //getting effective date and subscription annual / month is proving difficult
+            Some(DowngradeAmendment(member.tier)), //getting effective date and subscription annual / month is proving difficult
+            campaignCode=campaignCode
           )))(user)
 
       ""

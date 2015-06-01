@@ -62,7 +62,7 @@ case class MemberData(salesforceContactId: String,
                         marketingChoices: Option[MarketingChoicesForm] = None,
                         city: Option[String] = None,
                         country: Option[String] = None,
-                        request: Option[Request[_]] = None) {
+                        campaignCode: Option[String] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -103,20 +103,13 @@ case class MemberData(salesforceContactId: String,
             tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
           }
         } ++
-        request.map { r =>
-          "campaignCode" -> extractCampaignCode(r)
+        campaignCode.map { code =>
+          "campaignCode" -> code
         }
 
     val memberMap = Map("member" -> ActivityTracking.setSubMap(dataMap))
 
     ActivityTracking.setSubMap(memberMap)
-  }
-
-  def extractCampaignCode(request: Request[_]): Option[String] = {
-    request.cookies.get("s_sess").flatMap{ cookie: Cookie =>
-      val cookieVal = UriEncoding.decodePathSegment(cookie.value, "utf-8")
-      "campaign=(.+?);".r.findFirstIn(cookieVal)
-    }
   }
 
   def truncatePostcode(postcode: String) = {
@@ -226,6 +219,13 @@ trait ActivityTracking {
     emitter.setRequestMethod(RequestMethod.Asynchronous)
     val subject = new Subject
     new Tracker(emitter, subject, "membership", "membership-frontend")
+  }
+
+  def extractCampaignCode(request: Request[_]): Option[String] = {
+    request.cookies.get("s_sess").flatMap{ cookie: Cookie =>
+      val cookieVal = UriEncoding.decodePathSegment(cookie.value, "utf-8")
+      "campaign=(.+?);".r.findFirstIn(cookieVal)
+    }
   }
 }
 
