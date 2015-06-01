@@ -18,7 +18,9 @@ import play.api.Logger
 import play.api.mvc.RequestHeader
 import utils.TestUsers.isTestUser
 
+import play.api.mvc.{RequestHeader, Request}
 import scala.collection.JavaConversions._
+import play.utils.UriEncoding
 
 case class MemberActivity (source: String, member: MemberData) extends TrackerData {
   def toMap: JMap[String, Object] =
@@ -57,7 +59,8 @@ case class MemberData(salesforceContactId: String,
                         subscriptionPaymentAnnual: Option[Boolean] = None,
                         marketingChoices: Option[MarketingChoicesForm] = None,
                         city: Option[String] = None,
-                        country: Option[String] = None) {
+                        country: Option[String] = None,
+                        request: Option[Request[_]] = None) {
 
   val subscriptionPlan = subscriptionPaymentAnnual match {
     case Some(true) =>  Some("annual")
@@ -96,6 +99,14 @@ case class MemberData(salesforceContactId: String,
               "to" -> tierAmend.tierTo.name
             ) ++
             tierAmend.effectiveFromDate.map("startDate" -> _.getMillis)
+          }
+        } ++
+        request.map { r =>
+          "campaignCode" -> r.cookies.get("s_sess").map { cookie =>
+            // eg "%20s_campaign%3Dfoo%3B"
+            val x = UriEncoding.decodePathSegment(cookie.value, "utf-8")
+            println(x)
+            x
           }
         }
 

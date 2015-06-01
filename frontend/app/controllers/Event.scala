@@ -208,7 +208,7 @@ trait Event extends Controller with ActivityTracking {
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
-    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
+    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name, request=Some(request)))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
   }
 
