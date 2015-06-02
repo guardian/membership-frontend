@@ -150,7 +150,7 @@ object Eventbrite {
 
     val salesDates = TicketSaleDates.datesFor(eventTimes, primaryTicket)
 
-    val salesEnd = allTickets.map(_.sales_end).sorted.last
+    val salesEnd = allTickets.map(_.sales_end).max
 
     val isCurrentlyAvailableToPaidMembersOnly =
       generalReleaseTicketOpt.map(!TicketSaleDates.datesFor(eventTimes, _).tierCanBuyTicket(Tier.Friend)).getOrElse(true)
@@ -204,15 +204,20 @@ object Eventbrite {
       ticket <- ticketing.generalReleaseTicketOpt
     } yield ticket
 
-    val hasBookableTicketClasses = ticket_classes.filter(_.sales_end < DateTime.now).nonEmpty
-
     val limitedAvailabilityText = "Last tickets remaining"
     val isLimitedAvailability = internalTicketing.exists(event => event.ticketsNotSold <= Config.eventbriteLimitedAvailabilityCutoff && !event.isSoldOut)
     val ticketsNotSold = internalTicketing.map(_.ticketsNotSold)
     val isSoldOut = internalTicketing.exists(_.isSoldOut)
 
-    val isBookable = !isSoldOut && (status == "live" || hasBookableTicketClasses)
-    val isPastEvent = status == "completed"
+    val isBookable = {
+      val isStartedAndHasBookableTicketClasses = status == "started" && ticket_classes.exists(_.sales_end < DateTime.now)
+      (status == "live" || isStartedAndHasBookableTicketClasses) && !isSoldOut
+    }
+
+    val isPastEvent = {
+      val conditions = Set("ended", "completed")
+      conditions.contains(status)
+    }
 
     val statusSchema: Option[String] = {
       if (isPastEvent) None
