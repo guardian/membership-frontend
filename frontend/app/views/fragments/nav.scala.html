@@ -18,11 +18,11 @@
                     <li class="nav__item">
                         <a href="@navItem.href" class="nav__link" id="qa-nav-@navItem.id">@navItem.title</a>
                     </li>
-                }
-                @for(subNavItem <- navItem.subNav if !subNavItem.isPrivate) {
-                    <li class="nav__item nav__item--sub">
-                        <a href="@subNavItem.href" class="nav__link" id="qa-nav-@subNavItem.id">@subNavItem.title</a>
-                    </li>
+                    @for(subNavItem <- navItem.subNav if !subNavItem.isPrivate) {
+                        <li class="nav__item nav__item--sub">
+                            <a href="@subNavItem.href" class="nav__link" id="qa-nav-@subNavItem.id">@subNavItem.title</a>
+                        </li>
+                    }
                 }
             }
             <li class="nav__item nav__item--right">
