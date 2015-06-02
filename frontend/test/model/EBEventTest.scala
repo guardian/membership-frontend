@@ -20,6 +20,7 @@ class EBEventTest extends PlaySpecification {
   val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
   val soldOutEvent = ebResponse.data.find(_.id == "12238163677").get
   val startedEvent = ebResponse.data.find(_.id == "12972720757").get
+  val completedEvent = ebResponse.data.find(_.id == "13024577863").get
   val limitedAvailabilityEvent = ebResponse.data.find(_.id == "12718560557").get
 
   val ticketedEvent = ebLiveEvent;
@@ -56,7 +57,9 @@ class EBEventTest extends PlaySpecification {
       ebLiveEvent.statusText mustEqual None
     }
     "not be bookable when it has started" in {
-      startedEvent.isBookable mustEqual(false)
+      ebLiveEvent.isBookable mustEqual(true)
+      startedEvent.isBookable mustEqual(true)
+      completedEvent.isBookable mustEqual(false)
     }
     "should display past event text" in {
       startedEvent.statusText mustEqual Some("Past event")
