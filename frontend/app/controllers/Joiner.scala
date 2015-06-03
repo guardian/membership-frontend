@@ -21,6 +21,9 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
+import com.github.nscala_time.time.Imports
+import com.github.nscala_time.time.Imports._
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 

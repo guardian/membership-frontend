@@ -14,6 +14,7 @@ import services.{IdentityApi, IdentityService, MemberService}
 import play.api.mvc.{AnyContent, Result, Controller, DiscardingCookie}
 import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
 import tracking.ActivityTracking
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 

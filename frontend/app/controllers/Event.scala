@@ -19,6 +19,7 @@ import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
 import services.EventbriteService._
 import tracking._
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 
