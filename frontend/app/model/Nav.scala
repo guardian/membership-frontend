@@ -21,7 +21,7 @@ object Nav {
       )
     ),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
-    NavItem("offers", "/offers-competitions", "Offers"),
+    NavItem("competitions", "/offers-competitions", "Competitions"),
     NavItem("about", "/about", "About membership"),
     NavItem("partrons", "/patrons", "Patrons"),
     NavItem("pricing", "/join", "Pricing"),
