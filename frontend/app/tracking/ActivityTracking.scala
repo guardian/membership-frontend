@@ -221,12 +221,6 @@ trait ActivityTracking {
     new Tracker(emitter, subject, "membership", "membership-frontend")
   }
 
-  def extractCampaignCode(request: Request[_]): Option[String] = {
-    request.cookies.get("s_sess").flatMap{ cookie: Cookie =>
-      val cookieVal = UriEncoding.decodePathSegment(cookie.value, "utf-8")
-      "campaign=(.+?);".r.findFirstIn(cookieVal)
-    }
-  }
 }
 
 object ActivityTracking {
