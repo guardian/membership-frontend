@@ -6,7 +6,7 @@
     list-style: none;
     padding-left: 0;
 }
-.nav__item a {
+.nav__item {
     display: block;
     padding: 10px;
     background-color: #0a2c35;
@@ -18,24 +18,24 @@
     border-left: 6px solid #1f5768;
 
 }
-.nav__item--selected a {
+.nav__item--selected {
     border-left-color: #bddfe7;
     background-color: #28697a;
     color: #ffffff;
 }
-.nav__item a:hover {
+.nav__item:hover {
     border-left-color: #80b2be;
     background-color: #154e5d;
     color: #ffffff;
 }
-.nav__item--selected a:after {
+.nav__item--selected:after {
     content: '▶';
     float: right;
     opacity: .5;
 }
-.nav__item:first-child a {
+.nav__item:first-child {
     border-top: 0;
 }
-.nav__item:last-child a {
+.nav__item:last-child {
     border-bottom: 0;
 }

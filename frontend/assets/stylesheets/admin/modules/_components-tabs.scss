@@ -1,0 +1,46 @@
+$activeTabColor: #92D4E5;
+$inactiveTabColor: #318EAA;
+$tabHoverColor: #5EABBE;
+
+.tabs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 20px;
+    border-bottom: 2px solid $activeTabColor;
+    margin-bottom: 5px;
+}
+
+.tabs > li {
+    display: inline-block;
+    margin-right: 3px;
+}
+
+.tabs__tab {
+    display: inline-block;
+    color: $activeTabColor;
+    text-decoration: none;
+    padding: 3px 6px;
+    background-color: $inactiveTabColor;
+
+}
+
+.tabs__tab--active,
+.tabs__tab--active:hover {
+    background-color: $activeTabColor;
+    color: #113F4D;
+    font-weight: bold;
+}
+
+.tabs__tab:not(.tabs__tab--active):hover {
+    background-color: $tabHoverColor;
+    color: #333333;
+}
+
+.tabs__content {
+    display: none;
+}
+
+.tabs__content--active {
+    display: block;
+}

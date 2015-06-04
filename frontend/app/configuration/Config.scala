@@ -67,6 +67,8 @@ object Config {
   def eventbriteWaitlistUrl(event: EBEvent): String =
     eventbriteWaitlistUrl ? ("eid" -> event.id) & ("tid" -> 0)
 
+  val eventMetadataEnabled = config.getBoolean("eventMetadata.enabled")
+
   val eventOrderingJsonUrl = config.getString("event.ordering.json")
 
   val facebookAppId = config.getString("facebook.app.id")

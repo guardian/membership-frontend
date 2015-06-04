@@ -24,3 +24,15 @@ case class EventCollections(
     partnersOnly: Seq[RichEvent],
     programmingPartnerEvents: Option[EventGroup]
 )
+
+case class EventsByStatus(
+    live: Seq[RichEvent],
+    draft: Seq[RichEvent],
+    past: Seq[RichEvent]
+)
+
+case class GroupedEvents(
+  guardianLive: EventsByStatus,
+  guardianLocal: EventsByStatus,
+  masterclasses: EventsByStatus
+)

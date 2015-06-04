@@ -48,7 +48,8 @@ GET            /staff/local-overview              controllers.Staff.localOvervie
 GET            /staff/masterclass-overview        controllers.Staff.masterclassOverview
 GET            /staff/event-details               controllers.Staff.eventDetails
 GET            /staff/admin                       controllers.Staff.admin
-
+GET            /staff/admin/eventbrite/:id        controllers.Staff.adminEdit(id)
+POST           /staff/admin/eventbrite/:id        controllers.Staff.adminUpdate(id)
 
 # Subscription
 POST           /subscription/update-card          controllers.Subscription.updateCard
