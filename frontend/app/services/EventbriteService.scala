@@ -23,7 +23,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val maxDiscountQuantityAvailable: Int
 
   val wsUrl = Config.eventbriteApiUrl
-  def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withQueryString("token" -> apiToken)
+  def wsPreExecute(req: WSRequest): WSRequest = req.withQueryString("token" -> apiToken)
 
   def eventsTaskFor(status: String): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, Config.eventbriteRefreshTime.seconds) {

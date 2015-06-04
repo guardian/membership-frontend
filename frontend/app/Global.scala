@@ -10,7 +10,7 @@ import services._
 
 import scala.concurrent.Future
 
-object Global extends WithFilters(CheckCacheHeadersFilter, CacheSensitiveCSRFFilter(), Gzipper, AddEC2InstanceHeader) {
+object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter(), Gzipper, AddEC2InstanceHeader) {
   override def onStart(app: Application) {
     SentryLogging.init()
 

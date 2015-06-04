@@ -33,6 +33,14 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
 
     val destinationService = DestinationServiceTest
 
+    def createRequestWithSession(newSessions: (String, String)*) = {
+      val testMember = FreeMember("", "", "", Tier.Friend, None, None, "", "", DateTime.now)
+      val fakeRequest = FakeRequest().withSession(newSessions: _*)
+      val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
+      MemberRequest(testMember, new AuthenticatedRequest(minimalUser, fakeRequest))
+
+    }
+
     "should return a content destination url if join-referrer is in the request session" in {
       running(fakeApplicationWithGlobal) {
 
@@ -101,14 +109,6 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
           validDestination must_== (true)
         }
       }
-    }
-
-    def createRequestWithSession(newSessions: (String, String)*) = {
-      val testMember = FreeMember("", "", "", Tier.Friend, None, None, "", "", DateTime.now)
-      val fakeRequest = FakeRequest().withSession(newSessions: _*)
-      val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
-      MemberRequest(testMember, new AuthenticatedRequest(minimalUser, fakeRequest))
-
     }
   }
 }
