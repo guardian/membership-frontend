@@ -58,16 +58,17 @@
     @* ===== Join Today ===== *@
     <div class="page-slice page-slice--split tone-tint l-constrained">
         <div class="page-slice__inner">
-            <h2 class="page-slice__headline">Not ready to become a Patron yet? Join as a Friend or a Partner</h2>
+            <h2 class="page-slice__headline">Not ready to become a Patron yet? Join as a Supporter or a Partner</h2>
             <div class="page-slice__content">
                 <ul class="grid grid--bordered grid--2up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Friend, isReversed=true)
+                        @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
                     </li>
                     <li class="grid__item">
                         @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
                     </li>
                 </ul>
+                @fragments.tier.friendTeaser()
             </div>
         </div>
     </div>
