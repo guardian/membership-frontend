@@ -11,70 +11,70 @@
 
     <main role="main" class="l-constrained">
 
-    @fragments.event.headerBar(
-        title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-        toneClassOpt=Some("tone-trans-masterclasses"),
-        logoOpt=Some("images/logos/guardian-masterclasses.svg")
-    )
+        @fragments.event.headerBar(
+            title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
+            toneClassOpt=Some("tone-trans-masterclasses"),
+            logoOpt=Some("images/logos/guardian-masterclasses.svg")
+        )
 
-    <div class="event-filters">
-        <div class="event-filters__container">
+        <div class="event-filters">
+            <div class="event-filters__container">
 
-            <div class="event-filters__categories">
-                <label class="event-filters__category">
-                    <span class="event-filters__category-label">Show:</span>
-                    <select class="event-filters__category__select select-minimal js-filter-category">
-                        <option value="/masterclasses">All categories</option>
-                        @for(category <- MasterclassEvent.tags) {
-                            <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
+                <div class="event-filters__categories">
+                    <label class="event-filters__category">
+                        <span class="event-filters__category-label">Show:</span>
+                        <select class="event-filters__category__select select-minimal js-filter-category">
+                            <option value="/masterclasses">All categories</option>
+                            @for(category <- MasterclassEvent.tags) {
+                                <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
+                            }
+                        </select>
+                    </label>
+
+                    @MasterclassEvent.tags.filter(_.categoryName == selectedTag).map { category =>
+                        @if(category.subCategories) {
+                            <label class="event-filters__category">
+                                <span class="event-filters__category__label">Subcategory:</span>
+                                <select class="event-filters__category__select select-minimal js-filter-category">
+                                    <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
+                                    @for(subCategory <- category.subCategories) {
+                                        <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
+                                    }
+                                </select>
+                            </label>
                         }
-                    </select>
-                </label>
-
-                @MasterclassEvent.tags.filter(_.categoryName == selectedTag).map { category =>
-                    @if(category.subCategories) {
-                        <label class="event-filters__category">
-                            <span class="event-filters__category__label">Subcategory:</span>
-                            <select class="event-filters__category__select select-minimal js-filter-category">
-                                <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
-                                @for(subCategory <- category.subCategories) {
-                                    <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
-                                }
-                            </select>
-                        </label>
                     }
-                }
 
-                <span class="event-filters__count">
-                    <span class="js-filter-count">@eventPortfolio.normal.length</span> masterclasses
-                    @if(selectedTag.isEmpty) {
-                        <span class="hidden-mobile">in @MasterclassEvent.tags.length categories</span>
-                    }
-                </span>
-            </div>
-            <div class="event-filters__search">
-                <label class="filter-search">
-                    <input type="text"
-                           class="filter-search__input"
-                           id="js-filter"
-                           placeholder="Filter by title"
-                           autocomplete="off"
-                           data-filter-field="title"
-                           data-metric-trigger="keyup"
-                           data-metric-category="filter"
-                           data-metric-action="search"
-                    />
-                    <span class="filter-search__icon">
-                        @fragments.inlineIcon("search")
+                    <span class="event-filters__count">
+                        <span class="js-filter-count">@eventPortfolio.normal.length</span> masterclasses
+                        @if(selectedTag.isEmpty) {
+                            <span class="hidden-mobile">in @MasterclassEvent.tags.length categories</span>
+                        }
                     </span>
-                    <button class="filter-search__cross is-hidden js-filter-clear">@fragments.inlineIcon("filter-clear")</button>
-                </label>
+                </div>
+                <div class="event-filters__search">
+                    <label class="filter-search">
+                        <input type="text"
+                               class="filter-search__input"
+                               id="js-filter"
+                               placeholder="Filter by title"
+                               autocomplete="off"
+                               data-filter-field="title"
+                               data-metric-trigger="keyup"
+                               data-metric-category="filter"
+                               data-metric-action="search"
+                        />
+                        <span class="filter-search__icon">
+                            @fragments.inlineIcon("search")
+                        </span>
+                        <button class="filter-search__cross is-hidden js-filter-clear">@fragments.inlineIcon("filter-clear")</button>
+                    </label>
+                </div>
             </div>
         </div>
-    </div>
 
-    @views.html.event.list(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
-
+        @fragments.event.listing(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
+        @fragments.tier.joinListing()
     </main>
 
 }
