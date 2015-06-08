@@ -29,16 +29,16 @@ module.exports = function (grunt) {
 
         dirs: {
             publicDir: {
-                root:        'public',
+                root: 'public',
                 stylesheets: '<%= dirs.publicDir.root %>/stylesheets',
                 javascripts: '<%= dirs.publicDir.root %>/javascripts',
-                images:      '<%= dirs.publicDir.root %>/images'
+                images: '<%= dirs.publicDir.root %>/images'
             },
             assets: {
-                root:        'assets',
+                root: 'assets',
                 stylesheets: '<%= dirs.assets.root %>/stylesheets',
                 javascripts: '<%= dirs.assets.root %>/javascripts',
-                images:      '<%= dirs.assets.root %>/images'
+                images: '<%= dirs.assets.root %>/images'
             }
         },
 
@@ -181,7 +181,7 @@ module.exports = function (grunt) {
         },
 
         clean: {
-            js : ['<%= dirs.publicDir.javascripts %>'],
+            js: ['<%= dirs.publicDir.javascripts %>'],
             css: ['<%= dirs.publicDir.stylesheets %>'],
             icons: ['<%= dirs.assets.images %>/inline-svgs/*.svg'],
             assetMap: 'conf/assets.map',
@@ -237,17 +237,15 @@ module.exports = function (grunt) {
                 ]
             },
             staticfiles: {
-                files: [
-                    {
-                        src:  [
-                            '<%= dirs.publicDir.stylesheets %>/**/*.css',
-                            '<%= dirs.publicDir.javascripts %>/**/*.js',
-                            '<%= dirs.publicDir.javascripts %>/**/*.map',
-                            '<%= dirs.publicDir.images %>/**/*.*'
-                        ],
-                        dest: '<%= dirs.publicDir.root %>/dist/'
-                    }
-                ]
+                files: [{
+                    src: [
+                        '<%= dirs.publicDir.stylesheets %>/**/*.css',
+                        '<%= dirs.publicDir.javascripts %>/**/*.js',
+                        '<%= dirs.publicDir.javascripts %>/**/*.map',
+                        '<%= dirs.publicDir.images %>/**/*.*'
+                    ],
+                    dest: '<%= dirs.publicDir.root %>/dist/'
+                }]
             }
         },
 
@@ -281,30 +279,11 @@ module.exports = function (grunt) {
         /**
          * Lint Javascript sources
          */
-        jshint: {
+        eslint: {
             options: {
-                jshintrc: '../.jshintrc',
-                reporter: require('jshint-stylish')
+                configFile: '../.eslintrc'
             },
-            self: [
-                'Gruntfile.js'
-            ],
-            common: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= dirs.assets.javascripts %>/',
-                    src: [
-                        'config/**/*.js',
-                        'src/**/*.js'
-                    ]
-                }]
-            }
-        },
-
-        jscs: {
-            options: {
-                config: '../.jscsrc'
-            },
+            self: ['Gruntfile.js'],
             common: {
                 files: [{
                     expand: true,
@@ -354,7 +333,7 @@ module.exports = function (grunt) {
 
         svgstore: {
             options: {
-                prefix : 'icon-',
+                prefix: 'icon-',
                 symbol: true,
                 inheritviewbox: true,
                 cleanup: ['fill'],
@@ -364,7 +343,7 @@ module.exports = function (grunt) {
                     height: 0
                 }
             },
-            icons : {
+            icons: {
                 files: {
                     '<%= dirs.assets.images %>/svg-sprite.svg': ['<%= dirs.assets.images %>/inline-svgs/*.svg']
                 }
@@ -378,7 +357,7 @@ module.exports = function (grunt) {
      * Compile & Validate
      ***********************************************************************/
 
-    grunt.registerTask('validate', ['jshint', 'jscs']);
+    grunt.registerTask('validate', ['eslint']);
 
     grunt.registerTask('compile', function(){
         grunt.task.run([
@@ -410,7 +389,7 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('compile:js', function() {
         if (!isDev) {
-            grunt.task.run(['jshint']);
+            grunt.task.run(['validate']);
         }
         grunt.task.run([
             'clean:js',

@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+
+  "globals"   : {
+    "require": false,
+    "define": false,
+    "s": false,
+    "guardian": false,
+    "JSON": false,
+    "Stripe": false
+  },
+
+  "rules": {
+    "camelcase": false,
+    "strict": false,
+    "curly": [2, "all"],
+    "comma-spacing": false,
+    "eqeqeq": true,
+    "no-shadow": false,
+    "new-cap": true,
+    "no-caller": true,
+    "no-empty": true,
+    "no-new": false,
+    "eol-last": false,
+    "no-trailing-spaces": true,
+    "no-multi-spaces": false,
+    "no-use-before-define": false,
+    "no-unused-vars": true,
+    "quotes": "single",
+    "wrap-iife": true
+  }
+}
