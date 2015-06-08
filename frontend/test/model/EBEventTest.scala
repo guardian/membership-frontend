@@ -40,7 +40,7 @@ class EBEventTest extends PlaySpecification {
       soldOutEvent.isBookable mustEqual(false)
     }
     "should display sold out text" in {
-      soldOutEvent.statusText mustEqual("Sold out")
+      soldOutEvent.statusText mustEqual Some("Sold out")
     }
     "not be limited availability when sold out" in {
       limitedAvailabilityEvent.isSoldOut mustEqual(false)
@@ -50,17 +50,17 @@ class EBEventTest extends PlaySpecification {
       limitedAvailabilityEvent.isLimitedAvailability mustEqual(true)
     }
     "should display draft status in event" in {
-      ebDraftEvent.statusText mustEqual("Preview of Draft Event")
+      ebDraftEvent.statusText mustEqual Some("Preview of Draft Event")
     }
     "should not display event status text" in {
-      ebLiveEvent.statusText mustEqual("")
+      ebLiveEvent.statusText mustEqual None
     }
     "not be bookable when it has started" in {
       startedEvent.isBookable mustEqual(false)
     }
     "should display past event text" in {
-      startedEvent.statusText mustEqual("Past event")
-      ebCompletedEvent.statusText mustEqual("Past event")
+      startedEvent.statusText mustEqual Some("Past event")
+      ebCompletedEvent.statusText mustEqual Some("Past event")
     }
     "not be bookable when it is in draft mode" in {
       ebDraftEvent.isBookable mustEqual(false)
