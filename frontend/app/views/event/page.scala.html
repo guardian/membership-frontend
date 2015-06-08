@@ -74,9 +74,11 @@
     @if(!event.isBookable) {
         <div class="event-extra">
             <div class="event-extra__container l-constrained">
-                <div class="event-extra__item event-extra__status">
-                    @event.statusText
-                </div>
+                @for(statusText <- event.statusText) {
+                    <div class="event-extra__item event-extra__status">
+                        @statusText
+                    </div>
+                }
                 <div class="event-extra__item event-extra__action">
                     @if(event.isPastEvent) {
                         @for(highlight <- event.metadata.highlightsOpt) {
