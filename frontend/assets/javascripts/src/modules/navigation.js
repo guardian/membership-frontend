@@ -1,7 +1,7 @@
 define(['src/utils/user'], function (userUtil) {
 
     var MENU_TOGGLE_SELECTOR = '.js-menu-icon';
-    var NAVIGATION_SELECTOR ='.js-global-nav';
+    var NAVIGATION_SELECTOR = '.js-global-nav';
     var MEMBERS_AREA_SELECTOR = '.js-members-area';
 
     var ACTIVE_CLASS = 'is-active';

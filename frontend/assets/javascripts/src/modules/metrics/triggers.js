@@ -19,8 +19,8 @@ define([
 
     function configureListeners(trackingElems) {
         var TRACKING_EVENTS = {
-            'click' : clickListener,
-            'keyup' : keyupListener
+            'click': clickListener,
+            'keyup': keyupListener
         };
         [].forEach.call(trackingElems, function(elem) {
             var key = elem.getAttribute(METRIC_ATTRS.trigger);
