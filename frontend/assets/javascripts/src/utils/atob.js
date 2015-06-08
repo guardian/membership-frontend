@@ -1,4 +1,4 @@
-/* jshint ignore: start */
+/*eslint-disable */
 define(function () {
     return function AtoB(){
         return window.atob ? function(str){
@@ -33,3 +33,4 @@ define(function () {
         })();
     }
 });
+/*eslint-enable */
