@@ -1,27 +1,20 @@
 package actions
 
 import actions.Fallbacks._
-import com.gu.googleauth.UserIdentity
-
+import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.salesforce.PaidMember
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
-import com.gu.googleauth.{GoogleGroupChecker, GoogleServiceAccount}
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
-import model.IdMinimalUser
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
 import services._
 
-
 import scala.concurrent.Future
-
-case class AuthenticatedException(user: IdMinimalUser, ex: Throwable)
-  extends Exception(s"Error for user ${user.id} - ${ex.getMessage}", ex)
 
 /**
  * These ActionFunctions serve as components that can be composed to build the
@@ -35,15 +28,8 @@ object Functions extends LazyLogging {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
 
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] = {
-    val authenticatedExceptionHandler = new ActionFunction[AuthRequest, AuthRequest] {
-      override def invokeBlock[A](request: AuthRequest[A], block: (AuthRequest[A]) => Future[Result]): Future[Result] =
-        block(request).transform(identity, ex => AuthenticatedException(request.user, ex))
-    }
-
-    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor, onUnauthenticated) andThen authenticatedExceptionHandler
-  }
-
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] =
+    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor(_), onUnauthenticated)
 
   def memberRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =
     new ActionRefiner[AuthRequest, AnyMemberTierRequest] {
