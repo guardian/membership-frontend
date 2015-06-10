@@ -34,20 +34,6 @@
         position: relative;
         min-height: rem(gs-span(1.5));
     }
-    .package-promo__tier__current {
-        @include fs-bodyCopy(1);
-        position: absolute;
-        top: rem(4px); right: rem(4px);
-        @include mq(tablet) {
-            position: static;
-            margin-left: rem(28px);
-            margin-top: -(rem($gs-gutter / 4));
-        }
-        @include mq(desktop) {
-            margin: 0;
-            position: absolute;
-        }
-    }
     .package-promo__tier__pricing {
         position: absolute;
         bottom: rem($gs-baseline / 2);
@@ -144,10 +130,6 @@
     @include mq(desktop) {
         @include package-promo-stacked();
     }
-}
-
-.package-promo--current {
-    background-color: $c-neutral5;
 }
 
 .package-promo--stretch {
@@ -255,9 +237,9 @@
     @include mq($until: desktop) {
         .package-chooser__list {
             display: none;
-            &.is-toggled {
-                display: block;
-            }
+        }
+        .package-chooser__list.is-toggled {
+            display: block !important;
         }
     }
     @include mq(desktop) {

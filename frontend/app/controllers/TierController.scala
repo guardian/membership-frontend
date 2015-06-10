@@ -170,9 +170,10 @@ trait CancelTier {
 }
 
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
-
   def change() = MemberAction { implicit request =>
-    Ok(views.html.tier.change(request.member.tier))
+    val currentTier = request.member.tier
+    val availableTiers = Tier.all.filter(_ != currentTier)
+    Ok(views.html.tier.change(currentTier, availableTiers))
   }
 }
 

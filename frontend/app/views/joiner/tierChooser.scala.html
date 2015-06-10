@@ -42,27 +42,19 @@
                 <h2 class="h-section h-section--lead">
                     @sectionTitle
                 </h2>
-                @if(accessOpt.filter(_.isPaidMembersOnly)) {
-                    <ul class="grid grid--bordered grid--2up-stacked">
-                        <li class="grid__item">
-                            @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
-                        </li>
-                        <li class="grid__item">
-                            @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
-                        </li>
-                    </ul>
-                } else {
-                    <ul class="grid grid--bordered grid--3up-stacked">
-                        <li class="grid__item">
-                            @fragments.tier.packagePromo(Tier.Friend, Some("#package-benefits-friend"))
-                        </li>
-                        <li class="grid__item">
-                            @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
-                        </li>
-                        <li class="grid__item">
-                            @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
-                        </li>
-                    </ul>
+                <ul class="grid grid--bordered grid--3up-stacked">
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Supporter, Some("#package-benefits-supporter"))
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
+                    </li>
+                </ul>
+                @if(!accessOpt.exists(_.isPaidMembersOnly)) {
+                    @fragments.tier.friendTeaser()
                 }
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
@@ -78,8 +70,8 @@
         <section class="page-section">
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
-                <div id="package-benefits-friend">
-                    @fragments.tier.packageStack(Tier.Friend)
+                <div id="package-benefits-supporter">
+                    @fragments.tier.packageStack(Tier.Supporter)
                 </div>
                 <div id="package-benefits-partner">
                     @fragments.tier.packageStack(Tier.Partner)

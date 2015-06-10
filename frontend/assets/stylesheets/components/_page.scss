@@ -50,6 +50,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 
 .page-slice--split {
     padding-bottom: 0;
+
     @include mq(desktop) {
         .page-slice__headline {
             float: left;
@@ -64,7 +65,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     @include mq(mem-full) {
         .page-slice__headline {
             width: rem(gs-span(6));
-            padding-right: rem(gs-span(2));
+            padding-right: rem(gs-span(1));
         }
     }
 }

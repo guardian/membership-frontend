@@ -373,7 +373,7 @@
     }
 
     @pattern("Benefit Item", "Single benefit item") {
-        @fragments.tier.benefitItem(benefit=Benefits.benefitsFilter("book_tickets").head)
+        @fragments.tier.benefitItem(Benefits.allBenefits.head)
     }
 
     @pattern("Tier Trail - Caption", "Tier name with caption") {

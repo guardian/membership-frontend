@@ -6,8 +6,6 @@
     hasRoundel: Boolean = false
 )
 
-@import com.gu.membership.salesforce.Tier
-
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
@@ -106,23 +104,3 @@
     }
 
 </div>
-
-@* ===== Join Today ===== *@
-<section class="listing tone-tint">
-    <div class="listing__lead-in">
-        <h3 class="h-intro">Join membership today</h3>
-    </div>
-    <div class="listing__content">
-        <ul class="grid grid--single-row grid--bordered grid--3up-stacked">
-            <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Friend, isReversed=true)
-            </li>
-            <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
-            </li>
-            <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Patron, isReversed=true)
-            </li>
-        </ul>
-    </div>
-</section>

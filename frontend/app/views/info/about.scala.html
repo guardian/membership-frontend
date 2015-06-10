@@ -1,7 +1,7 @@
 @(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
+@import configuration.{Links, Videos}
 @import com.gu.membership.salesforce.Tier
-@import configuration.{Config, Links, Videos}
 
 @main("About", pageInfo=pageInfo) {
 
@@ -99,9 +99,10 @@
     <div class="page-slice tone-tint l-constrained" id="whats-included">
         <h2 class="page-slice__headline">What's included in Membership</h2>
         <div class="page-slice__content">
-            @fragments.tier.packageFeature(Tier.Friend, isReversed=true)
+            @fragments.tier.packageFeature(Tier.Supporter, isReversed=true)
             @fragments.tier.packageFeature(Tier.Partner, isReversed=true)
             @fragments.tier.packageFeature(Tier.Patron, isReversed=true)
+            @fragments.tier.friendTeaser()
         </div>
     </div>
 

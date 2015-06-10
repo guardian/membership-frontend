@@ -1,6 +1,5 @@
-@(currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(currentTier: com.gu.membership.salesforce.Tier, availableTiers: Seq[com.gu.membership.salesforce.Tier])(implicit token: play.filters.csrf.CSRF.Token)
 
-@import com.gu.membership.salesforce.Tier
 @import configuration.Config
 @import model.Benefits
 
@@ -19,14 +18,14 @@
             </div>
             <div class="page-section__content">
 
-                <h1 class="h-section">Choose the tier you would like to switch to:</h1>
+                <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
 
                 @* Packages *@
                 <ul class="grid grid--bordered grid--stretch grid--3up-stacked">
-                    @for(tier <- Tier.allPublic) {
+                    @for(tier <- availableTiers) {
                         <li class="grid__item">
 
-                            @fragments.tier.packageChanger(tier, currentTier)
+                            @fragments.tier.packageChanger(tier)
 
                             @* Benefits *@
                             <div class="package-chooser">
@@ -45,16 +44,14 @@
                                             <li>@fragments.tier.benefitItem(benefit)</li>
                                         }
                                     </ul>
-                                    @if(tier != currentTier) {
-                                            <a class="action"
-                                               href="@routes.TierController.upgrade(tier)"
-                                               data-metric-trigger="click"
-                                               data-metric-category="changeTier"
-                                               data-metric-action="@tier.toString.toLowerCase()"
-                                            >
-                                                <span class="action__label">Become a @tier</span>
-                                            </a>
-                                        }
+                                    <a class="action"
+                                       href="@routes.TierController.upgrade(tier)"
+                                       data-metric-trigger="click"
+                                       data-metric-category="changeTier"
+                                       data-metric-action="@tier.toString.toLowerCase()"
+                                    >
+                                        <span class="action__label">Become a @tier</span>
+                                    </a>
                                 </div>
                             </div>
 
