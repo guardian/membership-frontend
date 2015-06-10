@@ -3,7 +3,13 @@
 
 <p class="text-trail copy">
     @Benefits.details(Tier.Friend).desc
-    <a href="@routes.Joiner.enterDetails(Tier.Friend)" aria-title="Join as a Friend for free">
+    <a href="@routes.Joiner.enterDetails(Tier.Friend)"
+       aria-title="Join as a Friend for free"
+       data-metric-trigger="click"
+       data-metric-category="join"
+       data-metric-action="friend"
+       data-metric-label="Join for free"
+    >
         Join for free &rarr;
     </a>
 </p>
