@@ -1,11 +1,9 @@
-import sbt._
-import sbt.Keys._
-
-import play._
-import PlayArtifact._
-import sbtbuildinfo.Plugin._
 import Dependencies._
-import PlayImport.PlayKeys._
+import PlayArtifact._
+import play.sbt.PlayScala
+import sbt.Keys._
+import sbt._
+import sbtbuildinfo.Plugin._
 
 trait Membership {
 
@@ -33,6 +31,7 @@ trait Membership {
     resolvers ++= Seq(
       "Guardian Github Releases" at "https://guardian.github.io/maven/repo-releases",
       "Guardian Github Snapshots" at "http://guardian.github.com/maven/repo-snapshots",
+      "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
       Resolver.sonatypeRepo("releases")),
     sources in (Compile,doc) := Seq.empty,
     publishArtifact in (Compile, packageDoc) := false,
@@ -44,7 +43,7 @@ trait Membership {
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)
 
   def app(name: String) = lib(name).settings(playArtifactDistSettings: _*).settings(magentaPackageName := name)
-    .settings(routesImport ++= Seq("controllers.TierBinder._","com.gu.membership.salesforce.Tier"))
+    .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq("controllers.TierBinder._","com.gu.membership.salesforce.Tier"))
 }
 
 object Membership extends Build with Membership {

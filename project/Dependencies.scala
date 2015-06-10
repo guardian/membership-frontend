@@ -1,5 +1,5 @@
 import sbt._
-import play._
+import play.sbt.PlayImport
 
 object Dependencies {
 
@@ -10,9 +10,9 @@ object Dependencies {
   val identityCookie = "com.gu.identity" %% "identity-cookie" % "3.44"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.65"
-  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.2.1"
-  val contentAPI = "com.gu" %% "content-api-client" % "5.2"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.66"
+  val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.3.0"
+  val contentAPI = "com.gu" %% "content-api-client" % "6.4"
   val playWS = PlayImport.ws
   val playCache = PlayImport.cache
   val playFilters = PlayImport.filters
@@ -20,11 +20,13 @@ object Dependencies {
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val s3 =  "com.amazonaws" % "aws-java-sdk-s3" % awsClientVersion
-  val scalaTest =  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M3" % "test"
 
   //projects
 
   val frontendDependencies = Seq(identityCookie, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
-    contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3, scalaTest)
+    contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3,
+    PlayImport.specs2 % "test",
+    scalaTest)
 
 }

@@ -5,13 +5,11 @@ import com.gu.membership.salesforce.Tier.{Friend, Partner, Patron}
 import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects._
-import org.specs2.mutable.Specification
-import org.specs2.time.NoTimeConversions
-import utils.Resource
 import org.joda.time.DateTimeZone.UTC
-import org.joda.time.Instant
+import org.specs2.mutable.Specification
+import utils.Resource
 
-class TicketSaleDatesTest extends Specification with NoTimeConversions {
+class TicketSaleDatesTest extends Specification {
 
   val eventDate = new DateTime(2014, 6, 1, 18, 23)
   val testEventTimes = eventWithName().copy(created = (eventDate - 2.months).toInstant).times

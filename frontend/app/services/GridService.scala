@@ -11,7 +11,7 @@ import model.Grid._
 import model.GridDeserializer._
 import model.RichEvent.GridImage
 import monitoring.GridApiMetrics
-import play.api.libs.ws.WSRequestHolder
+import play.api.libs.ws.WSRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -63,7 +63,7 @@ case class GridService(gridUrl: String) extends WebServiceHelper[GridObject, Err
 
   override val wsUrl: String = Config.gridConfig.apiUrl
 
-  override def wsPreExecute(req: WSRequestHolder): WSRequestHolder = req.withHeaders("X-Gu-Media-Key" -> Config.gridConfig.key)
+  override def wsPreExecute(req: WSRequest): WSRequest = req.withHeaders("X-Gu-Media-Key" -> Config.gridConfig.key)
 
   override val wsMetrics: StatusMetrics = GridApiMetrics
 }
