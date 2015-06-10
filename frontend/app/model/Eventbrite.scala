@@ -227,7 +227,7 @@ object Eventbrite {
 
     val providerOpt = for {
       desc <- description
-      m <- "<!-- provider: (.*?) -->".r.findFirstMatchIn(desc.html)
+      m <- "<!-- provider: (\\S+) -->".r.findFirstMatchIn(desc.html)
       provider = m.group(1)
       if EBEvent.providerWhitelist.contains(provider)
     } yield provider
