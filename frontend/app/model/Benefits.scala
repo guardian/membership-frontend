@@ -84,7 +84,7 @@ object Benefits {
   )
 
   val friendBenefits = Benefits("Benefits", friendBenefitsList,
-    None, "Become a Friend", "Become a friend to book tickets to Guardian Live events and access the Guardian members area.")
+    None, "Become a Friend", "Become a Friend to book tickets to Guardian Live events and access the Guardian members area.")
 
   val supporterBenefits = Benefits("Benefits", supporterBenefitsList,
     Some(Pricing(60, 5)), "Become a Supporter", "Supporters keep our journalism fearless, open and free from interference.")
