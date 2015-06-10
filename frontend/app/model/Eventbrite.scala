@@ -227,7 +227,7 @@ object Eventbrite {
 
     val providerOpt = for {
       desc <- description
-      m <- "<!-- provider: (\\w+) -->".r.findFirstMatchIn(desc.html)
+      m <- "<!-- provider: (.*?) -->".r.findFirstMatchIn(desc.html)
       provider = m.group(1)
       if EBEvent.providerWhitelist.contains(provider)
     } yield provider
@@ -256,7 +256,8 @@ object Eventbrite {
       "tpg",
       "5x15",
       "moa",
-      "shubbak"
+      "shubbak",
+      "british-council"
     )
 
     val expansions = Seq(
