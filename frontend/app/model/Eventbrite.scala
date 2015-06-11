@@ -219,11 +219,12 @@ object Eventbrite {
       else Some("http://schema.org/InStock")
     }
 
-    val statusText =
-      if (isPastEvent) "Past event"
-      else if (isSoldOut) "Sold out"
-      else if (status == "draft") "Preview of Draft Event"
-      else ""
+    val statusText: Option[String] = {
+      if (isPastEvent) Some("Past event")
+      else if (isSoldOut) Some("Sold out")
+      else if (status == "draft") Some("Preview of Draft Event")
+      else None
+    }
 
     val providerOpt = for {
       desc <- description
