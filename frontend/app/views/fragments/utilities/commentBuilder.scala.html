@@ -26,8 +26,8 @@
                 <div>
                     <select id="event-provider" data-tag="provider" class="js-event-provider">
                         <option value="">Choose provider</option>
-                        @for(provider <- EBEvent.providerWhitelist){
-                            <option value="@provider">@provider.capitalize</option>
+                        @for(provider <- EBEvent.availableProviders){
+                            <option value="@provider.id">@provider.title</option>
                         }
                     </select>
                 </div>
