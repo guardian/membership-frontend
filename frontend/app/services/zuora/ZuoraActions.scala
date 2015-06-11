@@ -65,6 +65,7 @@ case class EnablePayment(account: Account, paymentMethod: CreateResult) extends 
         <ns2:Id>{account.id}</ns2:Id>
         <ns2:DefaultPaymentMethodId>{paymentMethod.id}</ns2:DefaultPaymentMethodId>
         <ns2:AutoPay>true</ns2:AutoPay>
+        <ns2:PaymentGateway>Stripe Gateway 1</ns2:PaymentGateway>
       </ns1:zObjects>
     </ns1:update>
 }
@@ -122,6 +123,7 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
           <ns2:Batch>Batch1</ns2:Batch>
           <ns2:CrmId>{memberId.salesforceAccountId}</ns2:CrmId>
           <ns2:sfContactId__c>{memberId.salesforceContactId}</ns2:sfContactId__c>
+          <ns2:PaymentGateway>Stripe Gateway 1</ns2:PaymentGateway>
         </ns1:Account>
         {payment}
         <ns1:BillToContact xsi:type="ns2:Contact">
