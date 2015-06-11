@@ -32,7 +32,11 @@ object Benefits {
     BenefitItem("unique_experiences", "Unique experiences", "Get behind the scenes of our journalism", "benefit-experiences")
   )
 
-  case class Pricing(yearly: Int, monthly: Int) {
+  case class Pricing(
+    yearly: Int,
+    monthly: Int,
+    yearlySavingsNote: Option[String]
+  ) {
     lazy val yearlyMonthlyCost = 12 * monthly
     lazy val yearlySaving = yearlyMonthlyCost - yearly
     lazy val yearlyWith6MonthSaving = yearly / 2f
@@ -83,17 +87,33 @@ object Benefits {
     "video_highlights"
   )
 
-  val friendBenefits = Benefits("Benefits", friendBenefitsList,
-    None, "Become a Friend", "Become a Friend to book tickets to Guardian Live events and access the Guardian members area.")
-
-  val supporterBenefits = Benefits("Benefits", supporterBenefitsList,
-    Some(Pricing(50, 5)), "Become a Supporter", "Supporters keep our journalism fearless, open and free from interference.")
-
-  val partnerBenefits = Benefits("Supporter benefits, plus…", partnerBenefitsList,
-    Some(Pricing(135, 15)), "Become a Partner", "Support the Guardian and experience it brought to life, with early booking and discounted tickets")
-
-  val patronBenefits = Benefits("Partner benefits, plus…", patronBenefitsList,
-    Some(Pricing(540, 60)), "Become a Patron", "Defend the Guardian’s independence and promote the open exchange of ideas, with a backstage pass to the Guardian")
+  val friendBenefits = Benefits("Benefits",
+    friendBenefitsList,
+    None,
+    "Become a Friend",
+    "Become a Friend to book tickets to Guardian Live events and access the Guardian members area."
+  )
+  val supporterBenefits = Benefits(
+    "Benefits",
+    supporterBenefitsList,
+    Some(Pricing(50, 5, Some("1 year membership, 2 months free"))),
+    "Become a Supporter",
+    "Supporters keep our journalism fearless, open and free from interference."
+  )
+  val partnerBenefits = Benefits(
+    "Supporter benefits, plus…",
+    partnerBenefitsList,
+    Some(Pricing(135, 15, Some("1 year membership, 3 months free"))),
+    "Become a Partner",
+    "Support the Guardian and experience it brought to life, with early booking and discounted tickets"
+  )
+  val patronBenefits = Benefits(
+    "Partner benefits, plus…",
+    patronBenefitsList,
+    Some(Pricing(540, 60, Some("1 year membership, 3 months free"))),
+    "Become a Patron",
+    "Defend the Guardian’s independence and promote the open exchange of ideas, with a backstage pass to the Guardian"
+  )
 
   def details(tier: Tier) = tier match {
     case Tier.Friend => friendBenefits
