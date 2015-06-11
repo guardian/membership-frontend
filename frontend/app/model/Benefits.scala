@@ -87,7 +87,7 @@ object Benefits {
     None, "Become a Friend", "Become a Friend to book tickets to Guardian Live events and access the Guardian members area.")
 
   val supporterBenefits = Benefits("Benefits", supporterBenefitsList,
-    Some(Pricing(60, 5)), "Become a Supporter", "Supporters keep our journalism fearless, open and free from interference.")
+    Some(Pricing(50, 5)), "Become a Supporter", "Supporters keep our journalism fearless, open and free from interference.")
 
   val partnerBenefits = Benefits("Supporter benefits, plus…", partnerBenefitsList,
     Some(Pricing(135, 15)), "Become a Partner", "Support the Guardian and experience it brought to life, with early booking and discounted tickets")
