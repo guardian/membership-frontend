@@ -12,6 +12,7 @@ import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.StringUtils._
+import views.support.Asset
 
 import scala.util.{Failure, Success, Try}
 
@@ -229,9 +230,8 @@ object Eventbrite {
     val providerOpt = for {
       desc <- description
       m <- "<!-- provider: (\\S+) -->".r.findFirstMatchIn(desc.html)
-      provider = m.group(1)
-      if EBEvent.providerWhitelist.contains(provider)
-    } yield provider
+      providerOpt <- EBEvent.availableProviders.find(_.id == m.group(1))
+    } yield providerOpt
 
     val mainImageUrl: Option[Uri] = for {
       desc <- description
@@ -249,16 +249,23 @@ object Eventbrite {
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
   }
 
+  case class Provider(
+    id: String,
+    title: String,
+    logoPath: String
+  )
+
   object EBEvent {
-    val providerWhitelist = Seq(
-      "birkbeck",
-      "idler",
-      "csm",
-      "tpg",
-      "5x15",
-      "moa",
-      "shubbak",
-      "british-council"
+
+    val availableProviders = Seq(
+      Provider("birkbeck", "Birkbeck", Asset.at("images/providers/birkbeck.svg")),
+      Provider("idler", "Idler Academy", Asset.at("images/providers/idler.png")),
+      Provider("csm", "Central Saint Martins", Asset.at("images/providers/csm.svg")),
+      Provider("tpg", "The Photographers' Gallery", Asset.at("images/providers/tpg.svg")),
+      Provider("5x15", "5x15", Asset.at("images/providers/5x15.png")),
+      Provider("moa", "Museum of Architecture", Asset.at("images/providers/moa.png")),
+      Provider("shubbak", "Shubbak Festival", Asset.at("images/providers/shubbak.svg")),
+      Provider("british-council", "British Council", Asset.at("images/providers/british-council.svg"))
     )
 
     val expansions = Seq(
