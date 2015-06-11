@@ -28,7 +28,9 @@
                         <div class="pseudo-radio__header">Pay £@pricing.yearly/year</div>
                         @if(pricing.hasYearlySaving) {
                             <p class="pseudo-radio__note">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving per year)</p>
-                            <p class="pseudo-radio__note">1 year membership, 3 months free</p>
+                            @for(yearlySavingsNote <- pricing.yearlySavingsNote) {
+                                <p class="pseudo-radio__note">@yearlySavingsNote</p>
+                            }
                         } else {
                             <p class="pseudo-radio__note">One-off annual payment</p>
                         }
