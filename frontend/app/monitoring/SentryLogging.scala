@@ -12,6 +12,10 @@ import scala.util.{Failure, Success}
 
 object SentryLogging {
 
+  val UserIdentityId = "userIdentityId"
+  val UserGoogleId = "userGoogleId"
+  val AllMDCTags = Seq(UserIdentityId, UserGoogleId)
+
   def init() {
     Config.sentryDsn match {
       case Failure(ex) =>
@@ -28,6 +32,7 @@ object SentryLogging {
         val sentryAppender = new SentryAppender(RavenFactory.ravenInstance(dsn)) {
           addFilter(filter)
           setTags(tagsString)
+          setExtraTags(AllMDCTags.mkString(","))
           setContext(LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext])
         }
         sentryAppender.start()

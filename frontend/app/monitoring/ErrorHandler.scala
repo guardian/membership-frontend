@@ -1,0 +1,38 @@
+package monitoring
+
+import javax.inject._
+
+import com.gu.googleauth.UserIdentity
+import controllers.Cached
+import monitoring.SentryLogging.{UserGoogleId, UserIdentityId}
+import org.slf4j.MDC
+import play.api._
+import play.api.http.DefaultHttpErrorHandler
+import play.api.mvc._
+import play.api.routing.Router
+import services.AuthenticationService
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
+
+class ErrorHandler @Inject() (
+                               env: Environment,
+                               config: Configuration,
+                               sourceMapper: OptionalSourceMapper,
+                               router: Provider[Router]
+                               ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) {
+
+  override def logServerError(request: RequestHeader, usefulException: UsefulException) {
+    try {
+      for (identityUser <- AuthenticationService.authenticatedUserFor(request)) { MDC.put(UserIdentityId, identityUser.id) }
+      for (googleUser <- UserIdentity.fromRequest(request)) { MDC.put(UserGoogleId, googleUser.email.split('@').head) }
+
+      super.logServerError(request, usefulException)
+
+    } finally MDC.clear()
+  }
+
+  override def onClientError(request: RequestHeader, statusCode: Int, message: String = ""): Future[Result] = {
+    super.onClientError(request, statusCode, message).map(Cached(_))
+  }
+}
