@@ -1,10 +1,9 @@
 package utils
 
-import com.gu.identity.testing.usernames.TestUsernames
-
-import configuration.Config
-import model.IdMinimalUser
 import com.github.nscala_time.time.Imports._
+import com.gu.identity.play.{IdMinimalUser, PrivateFields}
+import com.gu.identity.testing.usernames.TestUsernames
+import configuration.Config
 
 object TestUsers {
 
@@ -15,9 +14,6 @@ object TestUsers {
     recency = ValidityPeriod.standardDuration
   )
 
-  def isTestUser(userPrivateFields: model.PrivateFields): Boolean =
-    userPrivateFields.firstName.exists(testUsers.isValid)
-
-  def validate(user: IdMinimalUser): Boolean =
-    user.displayName.exists(dn => TestUsers.testUsers.validate(dn.split(' ')(0)).isDefined)
+  def isTestUser(user: IdMinimalUser): Boolean =
+    user.displayName.flatMap(_.split(' ').headOption).exists(TestUsers.testUsers.isValid)
 }

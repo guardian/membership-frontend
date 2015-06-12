@@ -12,6 +12,7 @@ import play.api.mvc.Results._
 import play.api.mvc._
 import services.AuthenticationService
 import utils.GuMemCookie
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -24,7 +25,7 @@ trait CommonActions {
         (for (user <- AuthenticationService.authenticatedUserFor(request)) yield {
           result.withHeaders(
             "X-Gu-Identity-Id" -> user.id,
-            "X-Gu-Membership-Test-User" -> user.isTestUser.toString)
+            "X-Gu-Membership-Test-User" -> isTestUser(user).toString)
         }).getOrElse(result)
       }
     }

@@ -1,5 +1,6 @@
 package services
 
+import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
@@ -14,7 +15,6 @@ import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.EBCode
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
-import model._
 import monitoring.MemberMetrics
 import org.joda.time.Period
 import play.api.libs.json.Json

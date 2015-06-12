@@ -2,15 +2,17 @@ package controllers
 
 import actions.Functions._
 import actions._
+import com.github.nscala_time.time.Imports
+import com.github.nscala_time.time.Imports._
 import com.gu.cas.CAS.CASSuccess
+import com.gu.identity.play.{StatusFields, IdMinimalUser}
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
-import configuration.{Email, Config, CopyConfig}
+import configuration.{Config, CopyConfig, Email}
 import forms.MemberForm._
-import model.RichEvent._
 import model._
 import play.api.data.Form
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -19,8 +21,6 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
-import com.github.nscala_time.time.Imports
-import com.github.nscala_time.time.Imports._
 
 import scala.concurrent.Future
 
