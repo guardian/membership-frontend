@@ -1,18 +1,16 @@
 package services
 
+import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.UserDeserializer._
-import model.{IdMinimalUser, IdUser}
 import monitoring.IdentityApiMetrics
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.json._
 import play.api.libs.ws.WS
-import play.api.mvc.Results
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

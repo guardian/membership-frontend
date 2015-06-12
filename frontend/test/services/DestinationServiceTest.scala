@@ -1,18 +1,18 @@
 package services
 
-import actions.{AnyMemberTierRequest, MemberRequest}
+import actions.MemberRequest
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.membership.salesforce.{FreeMember, Member, Tier}
+import com.gu.identity.play.IdMinimalUser
+import com.gu.membership.salesforce.{FreeMember, Tier}
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
-import model.{ContentDestination, EventDestination, IdMinimalUser}
+import model.{ContentDestination, EventDestination}
 import org.scalatest.concurrent.ScalaFutures
 import org.specs2.mock.Mockito
-import play.api.{Application, GlobalSettings}
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.Session
 import play.api.test.{FakeApplication, FakeRequest, PlaySpecification}
+import play.api.{Application, GlobalSettings}
 import utils.Resource
 
 import scala.concurrent.Future

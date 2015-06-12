@@ -1,5 +1,6 @@
 package services
 
+import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model.FriendTierPlan
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
@@ -7,11 +8,11 @@ import com.gu.membership.stripe.{Stripe, StripeService}
 import com.gu.membership.touchpoint.TouchpointBackendConfig
 import com.gu.monitoring.StatusMetrics
 import configuration.Config
-import model.IdMinimalUser
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
 import services.zuora.ZuoraService
 import tracking._
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,7 +42,7 @@ object TouchpointBackend {
 
   val All = Seq(Normal, TestUser)
 
-  def forUser(user: IdMinimalUser) = if (user.isTestUser) TestUser else Normal
+  def forUser(user: IdMinimalUser) = if (isTestUser(user)) TestUser else Normal
 }
 
 case class TouchpointBackend(

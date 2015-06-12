@@ -1,7 +1,7 @@
 import com.gu.membership.salesforce.{Member, PaidMember}
 import com.gu.membership.util.Timing
 import com.gu.googleauth
-import model.IdMinimalUser
+import com.gu.identity.play.IdMinimalUser
 import play.api.Logger
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.WrappedRequest

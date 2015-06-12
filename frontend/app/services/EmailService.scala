@@ -2,7 +2,7 @@ package services
 
 import com.amazonaws.regions.{Region, Regions}
 import com.typesafe.scalalogging.LazyLogging
-import model.IdMinimalUser
+import com.gu.identity.play.IdMinimalUser
 import com.amazonaws.services.simpleemail._
 import com.amazonaws.services.simpleemail.model._
 import configuration.Config

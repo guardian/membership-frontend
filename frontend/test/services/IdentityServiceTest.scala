@@ -4,7 +4,7 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.zuora.{Address, Countries}
 import controllers.IdentityRequest
 import forms.MemberForm._
-import model.IdMinimalUser
+import com.gu.identity.play.IdMinimalUser
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}

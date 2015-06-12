@@ -5,12 +5,12 @@ import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import forms.MemberForm._
-import model.Zuora.{SubscriptionDetails, PaidPreview}
-import model.{IdUser, FlashMessage, PageInfo, Zuora}
+import model.Zuora.{PaidPreview, SubscriptionDetails}
+import model.{FlashMessage, PageInfo, Zuora}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, Result, Controller, DiscardingCookie}
-import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
+import play.api.mvc.{Controller, DiscardingCookie, Result}
+import services.{IdentityApi, IdentityService, MemberService}
 
 import scala.concurrent.Future
 

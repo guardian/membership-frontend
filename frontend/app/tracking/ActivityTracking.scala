@@ -3,6 +3,7 @@ package tracking
 import java.util.{List => JList, Map => JMap}
 
 import com.github.t3hnar.bcrypt._
+import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.salesforce.Tier
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
@@ -11,11 +12,11 @@ import configuration.Config
 import controllers.Testing
 import forms.MemberForm.MarketingChoicesForm
 import model.Eventbrite.{EBOrder, EBTicketClass}
-import model.IdMinimalUser
-import model.RichEvent.{LocalEvent, GuLiveEvent, MasterclassEvent, RichEvent}
+import model.RichEvent.{GuLiveEvent, LocalEvent, MasterclassEvent, RichEvent}
 import org.joda.time._
 import play.api.Logger
 import play.api.mvc.RequestHeader
+import utils.TestUsers.isTestUser
 
 import scala.collection.JavaConversions._
 
@@ -191,7 +192,7 @@ trait ActivityTracking {
   }
 
   def track(data: TrackerData)(implicit user: IdMinimalUser) {
-    if (!user.isTestUser) executeTracking(data)
+    if (!isTestUser(user)) executeTracking(data)
   }
 
   private def executeTracking(data: TrackerData) {
