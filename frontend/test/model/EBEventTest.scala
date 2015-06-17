@@ -150,7 +150,8 @@ class EBEventTest extends PlaySpecification {
 
     "be some when there is a valid provider" in {
       val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent]
-      event.providerOpt must beSome("birkbeck")
+      event.providerOpt.map(_.id).get mustEqual "birkbeck"
+      event.providerOpt.map(_.title).get mustEqual "Birkbeck"
     }
 
     "be none when there is an invalid provider" in {

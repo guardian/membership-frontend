@@ -49,13 +49,12 @@
                     }
                 </div>
             }
-            @* if only we had some kind of metadata store to avoid junk like this... *@
-            @if(event.providerOpt.getOrElse(event.metadata.identifier) == "5x15" ||
-                event.providerOpt.getOrElse(event.metadata.identifier) == "moa") {
-                @* temporary hack until we get proper, rich metadata *@
-                <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".png")">
-            } else {
-                <img class="event-header__logo" src="@Asset.at("images/providers/" + event.providerOpt.getOrElse(event.metadata.identifier) + ".svg")">
+            @event.providerOpt.fold {
+                @* If we don't have an external provider, use the default provider logo (e.g., Guardian Live / Local / Masterclasses) *@
+                @* TODO: Model Live / Local / Masterclasses as providers *@
+                <img class="event-header__logo" src="@Asset.at("images/providers/" + event.metadata.identifier + ".svg")" alt=""/>
+            } { provider =>
+                <img class="event-header__logo" src="@provider.logoPath" alt="@provider.title">
             }
         </div>
 
