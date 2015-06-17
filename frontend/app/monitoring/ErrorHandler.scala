@@ -3,11 +3,12 @@ package monitoring
 import javax.inject._
 
 import com.gu.googleauth.UserIdentity
-import controllers.Cached
+import controllers.{Cached, NoCache}
 import monitoring.SentryLogging.{UserGoogleId, UserIdentityId}
 import org.slf4j.MDC
 import play.api._
 import play.api.http.DefaultHttpErrorHandler
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.routing.Router
 import services.AuthenticationService
@@ -35,4 +36,11 @@ class ErrorHandler @Inject() (
   override def onClientError(request: RequestHeader, statusCode: Int, message: String = ""): Future[Result] = {
     super.onClientError(request, statusCode, message).map(Cached(_))
   }
+
+  override protected def onNotFound(request: RequestHeader, message: String): Future[Result] = {
+    Future.successful(Cached(NotFound(views.html.error404())))
+  }
+
+  override protected def onProdServerError(request: RequestHeader, exception: UsefulException): Future[Result] =
+    Future.successful(NoCache(InternalServerError(views.html.error500(exception))))
 }
