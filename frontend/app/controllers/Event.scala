@@ -19,6 +19,7 @@ import play.api.mvc._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
 import services.EventbriteService._
 import tracking._
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 
@@ -199,7 +200,7 @@ trait Event extends Controller with ActivityTracking {
       for {
         discountOpt <- memberService.createDiscountForMember(request.member, event)
       } yield {
-          val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name)
+          val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode=extractCampaignCode(request))
           track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
         Found(event.url ? ("discount" -> discountOpt.map(_.code)))
           .withCookies(Cookie(eventCookie(event), "", Some(3600)))
@@ -208,7 +209,7 @@ trait Event extends Controller with ActivityTracking {
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
-    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name))
+    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name, campaignCode=extractCampaignCode(request)))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
   }
 

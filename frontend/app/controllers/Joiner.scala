@@ -21,6 +21,9 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
+import com.github.nscala_time.time.Imports
+import com.github.nscala_time.time.Imports._
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 
@@ -183,14 +186,14 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       subscriberValidation.fold({ errorString: String =>
         Future.successful(Forbidden)
       },{ paymentDelayOpt: Option[Period] =>
-        MemberService.createMember(request.user, formData, IdentityRequest(request), paymentDelayOpt)
+        MemberService.createMember(request.user, formData, IdentityRequest(request), paymentDelayOpt, extractCampaignCode(request))
           .map { member =>
           for {
             eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
             event <- EventbriteService.getBookableEvent(eventId)
           } {
             event.service.wsMetrics.put(s"join-$tier-event", 1)
-            val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name)
+            val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name, campaignCode=extractCampaignCode(request))
             track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
           }
           result

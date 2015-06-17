@@ -11,10 +11,14 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, DiscardingCookie, Result}
 import services.{IdentityApi, IdentityService, MemberService}
+import play.api.mvc.{AnyContent, Result, Controller, DiscardingCookie}
+import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
+import tracking.ActivityTracking
+import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
 
-trait DowngradeTier {
+trait DowngradeTier extends ActivityTracking {
   self: TierController =>
 
   def downgradeToFriend() = PaidMemberAction { implicit request =>
@@ -23,7 +27,7 @@ trait DowngradeTier {
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
     for {
-      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user)
+      cancelledSubscription <- request.touchpointBackend.downgradeSubscription(request.member, request.user, extractCampaignCode(request))
     } yield Redirect(routes.TierController.downgradeToFriendSummary)
   }
 
@@ -96,7 +100,7 @@ trait UpgradeTier {
     val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
-      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest)
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest, extractCampaignCode(request))
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
@@ -107,7 +111,7 @@ trait UpgradeTier {
       }
 
       def doUpgrade: Future[Result] = {
-        MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest).map {
+        MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest, extractCampaignCode(request)).map {
           _ => Redirect(routes.TierController.upgradeThankyou(tier))
         }
       }
@@ -146,7 +150,7 @@ trait CancelTier {
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
     for {
-      _ <- request.touchpointBackend.cancelSubscription(request.member, request.user)
+      _ <- request.touchpointBackend.cancelSubscription(request.member, request.user, extractCampaignCode(request))
     } yield {
       Redirect("/tier/cancel/summary")
     }

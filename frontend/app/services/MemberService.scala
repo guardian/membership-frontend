@@ -79,7 +79,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest, paymentDelay: Option[Period]): Future[MemberId] = {
+  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest,
+                   paymentDelay: Option[Period], campaignCode: Option[String] = None): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
@@ -109,7 +110,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
         touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
-        trackRegistration(formData, memberId, user)
+        trackRegistration(formData, memberId, user, campaignCode)
         memberId
       }
     }.andThen {
@@ -141,27 +142,28 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   def upgradeFreeSubscription(freeMember: FreeMember, user: IdMinimalUser, newTier: Tier, form: FreeMemberChangeForm,
-                              identityRequest: IdentityRequest): Future[MemberId] = {
+                              identityRequest: IdentityRequest, campaignCode: Option[String]): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
 
     for {
       customer <- touchpointBackend.stripeService.Customer.create(user.id, form.payment.token)
       paymentResult <- touchpointBackend.subscriptionService.createPaymentMethod(freeMember, customer)
-      memberId <- upgradeSubscription(freeMember, user, newTier, Some(form), form.payment.annual, Some(customer), identityRequest)
+      memberId <- upgradeSubscription(freeMember, user, newTier, Some(form), form.payment.annual, Some(customer), identityRequest, campaignCode)
     } yield memberId
   }
 
   def upgradePaidSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier,
-                              identityRequest: IdentityRequest): Future[MemberId] = {
+                              identityRequest: IdentityRequest, campaignCode: Option[String]): Future[MemberId] = {
     for {
       paymentSummary <- TouchpointBackend.forUser(user).subscriptionService.getPaymentSummary(paidMember)
-      memberId <- upgradeSubscription(paidMember, user, newTier, None, paymentSummary.current.annual, None, identityRequest)
+      memberId <- upgradeSubscription(paidMember, user, newTier, None, paymentSummary.current.annual, None, identityRequest, campaignCode)
     } yield memberId
 
   }
 
   private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: Option[MemberChangeForm],
-                                  annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest): Future[MemberId] = {
+                                  annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest,
+                                   campaignCode: Option[String]): Future[MemberId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val newRatePlan = PaidTierPlan(newTier, annual)
 
@@ -184,14 +186,15 @@ trait MemberService extends LazyLogging with ActivityTracking {
             subscriptionPaymentAnnual = Some(annual),
             marketingChoices = None,
             city = form.map(_.deliveryAddress.town),
-            country = form.map(_.deliveryAddress.country.name)
+            country = form.map(_.deliveryAddress.country.name),
+            campaignCode=campaignCode
           )
         ))(user)
       memberId
     }
   }
 
-  private def trackRegistration(formData: JoinForm, member: MemberId, user: IdMinimalUser) {
+  private def trackRegistration(formData: JoinForm, member: MemberId, user: IdMinimalUser, campaignCode: Option[String] = None) {
     val subscriptionPaymentAnnual = formData match {
       case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
       case _ => None
@@ -213,7 +216,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
         subscriptionPaymentAnnual,
         Some(formData.marketingChoices),
         Some(formData.deliveryAddress.town),
-        Some(formData.deliveryAddress.country.name)
+        Some(formData.deliveryAddress.country.name),
+        campaignCode
     )
 
     track(MemberActivity("membershipRegistration", trackingInfo))(user)
