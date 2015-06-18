@@ -29,16 +29,19 @@ define([
      * Queries cookie and user/me for User details.
      */
     function init() {
+        var htmlElement = $('html');
         if (userUtil.isLoggedIn()) {
-            $(document.documentElement).removeClass(CLASS_NAMES.signedOut).addClass(CLASS_NAMES.signedIn);
+            htmlElement
+                .removeClass(CLASS_NAMES.signedOut)
+                .addClass(CLASS_NAMES.signedIn);
+
             populateUserDetails(userUtil.getUserFromCookie());
             userUtil.getMemberDetail(function (memberDetail) {
-                if (memberDetail) {
-                    populateUserDetails(memberDetail);
+                if (!memberDetail) { return false; }
+                populateUserDetails(memberDetail);
 
-                    if (memberDetail.tier) {
-                        $(document.documentElement).addClass(CLASS_NAMES.hasTier);
-                    }
+                if (memberDetail.tier) {
+                    htmlElement.addClass(CLASS_NAMES.hasTier);
                 }
             });
         }
