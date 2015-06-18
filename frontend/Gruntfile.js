@@ -200,21 +200,26 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
-            css: {
+            compileCss: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
-                tasks: ['compile:css'],
-                options: {
-                    spawn: false,
-                    livereload: true
-                }
+                tasks: ['compile:css']
             },
-            js: {
+            compileJs: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
-                tasks: ['compile:js'],
-                options: {
-                    spawn: false,
-                    livereload: true
-                }
+                tasks: ['compile:js']
+            },
+            /**
+             * Only livereload for built assets, not sources.
+             *
+             * Live-reloading on sources causes whole-page-refresh,
+             * rather than desired single-asset refresh.
+             */
+            livereloadCss: {
+                files: [
+                    '<%= dirs.publicDir.stylesheets %>/**/*.css'
+                ],
+                tasks: [],
+                options: { livereload: true }
             }
         },
 
@@ -283,8 +288,7 @@ module.exports = function (grunt) {
             options: {
                 configFile: '../.eslintrc'
             },
-            self: ['Gruntfile.js'],
-            common: {
+            app: {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',
