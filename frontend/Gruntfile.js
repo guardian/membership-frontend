@@ -283,8 +283,7 @@ module.exports = function (grunt) {
             options: {
                 configFile: '../.eslintrc'
             },
-            self: ['Gruntfile.js'],
-            common: {
+            app: {
                 files: [{
                     expand: true,
                     cwd: '<%= dirs.assets.javascripts %>/',

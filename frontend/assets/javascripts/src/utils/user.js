@@ -80,7 +80,7 @@ define([
                 callback(null);
             }
         };
-    })();
+    }());
 
     var hasTier = function(memberDetail) {
         return !!(memberDetail && memberDetail.tier);
