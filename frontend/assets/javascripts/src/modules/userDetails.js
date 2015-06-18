@@ -46,7 +46,7 @@ define([
 
     return {
         init: init,
-        _ : {
+        _: {
             CLASS_NAMES: CLASS_NAMES
         }
     };
