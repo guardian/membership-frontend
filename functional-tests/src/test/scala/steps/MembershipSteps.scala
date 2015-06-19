@@ -15,8 +15,8 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   val validCardNumber = "4242424242424242"
   val cardWithNoFunds = "4000000000000341"
   val secondaryCard   = "5555555555554444"
-  val partnerAnnualPrice = "£136.00"
-  val patronAnnualPrice = "£541.00"
+  val partnerAnnualPrice = "£135.00"
+  val patronAnnualPrice = "£540.00"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)

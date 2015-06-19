@@ -7,7 +7,7 @@ import org.openqa.selenium.{JavascriptExecutor, By, WebDriver}
  */
 class ChooseTierPage(driver: WebDriver) extends BaseMembershipPage(driver) {
 
-  private def friendInput = driver.findElement(By.id("qa-friend"))
+  private def friendInput = driver.findElement(By.cssSelector(".qa-friend-join"))
 
   private def partnerInput = driver.findElement(By.id("qa-partner"))
 

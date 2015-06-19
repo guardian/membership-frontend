@@ -10,7 +10,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
 
   feature("A user can downgrade") {
 
-    scenarioWeb("30. A Partner can downgrade to a Friend", UserChangeTier, OptionalTest) {
+    scenarioWeb("MCT1. A Partner can downgrade to a Friend", UserChangeTier, OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
@@ -23,7 +23,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("31. A Patron can downgrade to a Friend", UserChangeTier, OptionalTest) {
+    scenarioWeb("MCT2. A Patron can downgrade to a Friend", UserChangeTier, OptionalTest) {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAPatron
@@ -39,7 +39,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
 
   feature("A user can upgrade") {
 
-    scenarioWeb("34. A friend can upgrade to a partner", UserChangeTier, OptionalTest) {
+    scenarioWeb("MCT3. A friend can upgrade to a partner", UserChangeTier, CoreTest) {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
@@ -52,7 +52,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
         }
     }
 
-    scenarioWeb("36. A Friend can upgrade to a Patron", UserChangeTier, OptionalTest) {
+    scenarioWeb("MCT4. A Friend can upgrade to a Patron", UserChangeTier, OptionalTest) {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
@@ -66,7 +66,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
     }
   }
 
-  scenarioWeb("37. A Partner can cancel membership", UserChangeTier, OptionalTest) {
+  scenarioWeb("MCT5. A Partner can cancel membership", UserChangeTier, OptionalTest) {
     implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
@@ -79,7 +79,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       }
   }
 
-  scenarioWeb("43. An existing friend cannot become a friend again", UserChangeTier, OptionalTest) {
+  scenarioWeb("MCT6. An existing friend cannot become a friend again", UserChangeTier, OptionalTest) {
     implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAFriend
@@ -92,7 +92,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       }
   }
 
-  scenarioWeb("44. An existing partner cannot become a partner again", UserChangeTier, OptionalTest) {
+  scenarioWeb("MCT7. An existing partner cannot become a partner again", UserChangeTier, OptionalTest) {
     implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
@@ -105,7 +105,7 @@ class MembershipChangeTierTests extends BaseMembershipTest {
       }
   }
 
-  scenarioWeb("45. An existing patron cannot become a patron again", UserChangeTier, OptionalTest) {
+  scenarioWeb("MCT8. An existing patron cannot become a patron again", UserChangeTier, OptionalTest) {
     implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPatron
