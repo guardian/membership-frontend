@@ -1,4 +1,7 @@
+package tests
+
 import com.gu.membership.tags._
+import steps.MembershipSteps
 
 class MembershipEventTests extends BaseMembershipTest {
 
@@ -9,7 +12,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I want to see a list of events
        */
-      scenarioWeb("1. Logged in user sees event list", EventListTest) {
+      scenarioWeb("1. Logged in user sees event list", EventListTest, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -22,7 +25,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("2. Non logged in user sees event list", EventListTest) {
+      scenarioWeb("2. Non logged in user sees event list", EventListTest, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmNotLoggedIn
@@ -42,7 +45,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I want to see the details of an event
        */
-      scenarioWeb("3. Logged in user sees details for an event", EventDetailTest) {
+      scenarioWeb("3. Logged in user sees details for an event", EventDetailTest, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -55,7 +58,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("4. Non logged in user sees details for an event", EventDetailTest) {
+      scenarioWeb("4. Non logged in user sees details for an event", EventDetailTest, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmNotLoggedIn
@@ -68,7 +71,7 @@ class MembershipEventTests extends BaseMembershipTest {
         }
       }
 
-      scenarioWeb("5. Event details are the same as on the event provider", EventDetailTest) {
+      scenarioWeb("5. Event details are the same as on the event provider", EventDetailTest, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
@@ -88,7 +91,7 @@ class MembershipEventTests extends BaseMembershipTest {
        As a user
        I need to be logged in
        */
-      scenarioWeb("6. Logged in user can purchase a ticket", EventTicketPurchase) {
+      scenarioWeb("6. Logged in user can purchase a ticket", EventTicketPurchase, OptionalTest) {
         implicit driver =>
         given {
           MembershipSteps().IAmLoggedInAsAFriend
@@ -102,10 +105,10 @@ class MembershipEventTests extends BaseMembershipTest {
       }
 
       // buy button is disabled for non members
-//    scenarioWeb("7. Non logged in user has to login in order to purchase a ticket") {
+//    scenarioWeb("7. Non logged in user has to login in order to purchase a ticket", OptionalTest) {
 //      implicit driver =>
 //      given {
-//        MembershipSteps().IAmNotLoggedIn
+//        steps.MembershipSteps().IAmNotLoggedIn
 //      }
 //      .when {
 //        _.IClickThePurchaseButton
@@ -115,10 +118,10 @@ class MembershipEventTests extends BaseMembershipTest {
 //      }
 ////    }
 //
-//    scenarioWeb("27. Non-registered user can become a friend and purchase a ticket") {
+//    scenarioWeb("27. Non-registered user can become a friend and purchase a ticket", OptionalTest) {
 //      implicit driver =>
 //      given {
-//        MembershipSteps().IAmNotLoggedIn
+//        steps.MembershipSteps().IAmNotLoggedIn
 //      }
 //      .when {
 //        _.IClickThePurchaseButton
@@ -130,10 +133,10 @@ class MembershipEventTests extends BaseMembershipTest {
 //      }
 //    }
 //
-//    scenarioWeb("38. Non-registered user can become a partner and purchase a ticket") {
+//    scenarioWeb("38. Non-registered user can become a partner and purchase a ticket", OptionalTest) {
 //      implicit driver =>
 //        given {
-//          MembershipSteps().IAmNotLoggedIn
+//          steps.MembershipSteps().IAmNotLoggedIn
 //        }
 //          .when {
 //          _.IClickThePurchaseButton

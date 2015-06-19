@@ -1,8 +1,9 @@
+package tests
+
 import java.util.concurrent.TimeUnit
 
 import com.gu.automation.core.{GivenWhenThen, WebDriverFeatureSpec}
-import com.gu.automation.support.{Browser, TestRetries}
-import com.gu.automation.support.Config
+import com.gu.automation.support.{Browser, Config, TestRetries}
 
 /**
  * Created by jao on 20/06/2014.

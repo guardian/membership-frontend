@@ -1,4 +1,7 @@
+package tests
 
+import com.gu.membership.tags.OptionalTest
+import steps.MembershipSteps
 
 /**
  * Created by jao on 06/06/2014.
@@ -9,7 +12,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
 
   feature("User gets benefits from being a member") {
 
-    scenarioWeb("25. Member gets a discount") { implicit driver =>
+    scenarioWeb("25. Member gets a discount", OptionalTest) { implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
       }
@@ -21,7 +24,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("26. Discount gets compared to non-discounted price") {
+    scenarioWeb("26. Discount gets compared to non-discounted price", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -37,7 +40,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
 
   feature("Membership tab") {
 
-    scenarioWeb("28. Membership tab appears if you are a Partner") {
+    scenarioWeb("28. Membership tab appears if you are a Partner", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -50,7 +53,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("32. Membership tab appears if you are a Patron") {
+    scenarioWeb("32. Membership tab appears if you are a Patron", OptionalTest) {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -63,7 +66,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
         }
     }
 
-    scenarioWeb("33. Membership tab appears if you are a Friend") {
+    scenarioWeb("33. Membership tab appears if you are a Friend", OptionalTest) {
       implicit driver =>
         given {
           MembershipSteps().IAmLoggedIn
@@ -76,7 +79,7 @@ class MembershipBenefitTests extends BaseMembershipTest {
         }
     }
 
-    scenarioWeb("29. Membership tab is an upsell if you are not a member") {
+    scenarioWeb("29. Membership tab is an upsell if you are not a member", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn

@@ -1,4 +1,7 @@
+package tests
 
+import com.gu.membership.tags.OptionalTest
+import steps.MembershipSteps
 
 /**
 * Created by jao on 19/06/2014.
@@ -9,7 +12,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
 
   feature("Manage card payment details") {
 
-    scenarioWeb("39. User can update card details") { implicit driver =>
+    scenarioWeb("39. User can update card details", OptionalTest) { implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
       }
@@ -21,7 +24,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("40. User can't add an incorrect card") { implicit driver =>
+    scenarioWeb("40. User can't add an incorrect card", OptionalTest) { implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
       }
@@ -33,7 +36,7 @@ class MembershipCardDetailsTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("41. User can't add a card with invalid expiry date") {
+    scenarioWeb("41. User can't add a card with invalid expiry date", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedInAsAPartner
