@@ -1,0 +1,169 @@
+/* ==========================================================================
+   Join Challenger
+   ========================================================================== */
+/**
+ * TODO: A/B test challenger for Good Growth test
+ * If the test is successfull these styles should be refactored into more
+ * modular components.
+ */
+
+.page-slice--why-join {
+    background-image: url(/assets/images/join-challenger/join-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: 100%;
+
+    .listing {
+        background-color: transparent;
+    }
+}
+
+.join-text-intro {
+    @include fs-headline(4);
+    color: $mem-brandBlueDark;
+}
+.join-text-intro--block {
+    padding-top: rem($gs-baseline / 2);
+    border-top: 1px solid $c-border-brand;
+    padding-right: rem(gs-span(3));
+}
+
+
+/* What are members
+   ========================================================================== */
+
+.section-what,
+.section-big-ideas {
+    padding-top: rem($gs-gutter);
+    padding-bottom: 0;
+
+    .listing {
+        padding-bottom: 0;
+    }
+}
+
+/* Why Join
+   ========================================================================== */
+
+.why-intro {
+    @include fs-headline(4);
+    color: $mem-brandBlueDark;
+    display: block;
+    width: 33.3%;
+    margin-bottom: rem($gs-gutter * 2);
+}
+
+/* Home for big ideas
+   ========================================================================== */
+
+.big-ideas-intro {
+    border-top: 1px solid $c-border-brand;
+    padding-top: rem($gs-baseline / 2);
+}
+.big-ideas-intro__title {
+    @include fs-header(4);
+    margin: 0 0 rem($gs-baseline) 0;
+}
+.big-ideas-intro__content {
+    @include fs-header(2);
+    font-weight: normal;
+}
+
+/* Become a member
+   ========================================================================== */
+
+$_comparisonWidth: gs-span(6);
+
+.become-intro {
+    @include fs-headline(4);
+    color: $mem-brandBlueDark;
+    display: block;
+    width: 33.3%;
+    margin-bottom: rem($gs-gutter * 2);
+}
+
+
+.comparison-group {
+    margin-bottom: rem($gs-baseline * 2);
+}
+.comparison-group__bookend {
+    @include clearfix();
+    margin-left: rem($_comparisonWidth);
+}
+.comparison-group__bookend__column {
+    float: left;
+    width: 220px;
+    margin-left: $gs-gutter;
+}
+
+.comparison-header {
+    position: relative;
+    border-top: 5px solid;
+    background-color: $white;
+    border-color: $c-neutral4;
+}
+.comparison-header__inner {
+    padding: rem($gs-gutter / 4);
+    padding-bottom: 0;
+}
+.comparison-header__tier__title {
+    padding-bottom: rem($gs-gutter);
+}
+.comparison-header__tier__pricing {
+    border-top: 1px solid $c-neutral4;
+}
+
+.comparison-table {
+    border-bottom: 1px solid $c-neutral4;
+}
+.comparison-table__row {
+    border-top: 1px solid $c-neutral4;
+}
+.comparison-table__description {
+    @include fs-header(2);
+    font-weight: normal;
+    width: rem($_comparisonWidth);
+}
+.comparison-table__tier {
+    text-align: center;
+}
+.comparison-table__tier__inner {
+    display: block;
+    background-color: $white;
+    margin-left: rem($gs-gutter);
+}
+.comparison-table__description__inner,
+.comparison-table__tier__inner {
+    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
+}
+.comparison-group__bookend__trail {
+    clear: both;
+    margin-left: rem($gs-gutter);
+    padding: rem($gs-gutter) 0;
+}
+
+.comparison-action {
+    background-color: $white;
+    padding: rem($gs-gutter) rem($gs-baseline / 2) rem($gs-gutter / 2);
+}
+
+.checkmark,
+.checkmark--true {
+    @include circular();
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 26px; height: 26px;
+    color: $white;
+    background-color: #1f6e04;
+
+    .icon-inline {
+        @include vertically-center();
+        position: relative;
+        width: 14px; height: 14px;
+    }
+}
+.checkmark--false {
+    background-color: $c-neutral4;
+}
+

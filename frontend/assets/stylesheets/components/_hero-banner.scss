@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Hero Banner
+   ========================================================================== */
+
+.hero-banner {
+    color: $white;
+    background-color: $c-neutral1;
+    position: relative;
+    background-image: url(http://lorempixel.com/1920/1080/abstract/6/);
+    background-size: 100%;
+    background-attachment: fixed;
+    will-change: auto;
+
+    @include mq(tablet) {
+        height: 75vh;
+    }
+}
+.hero-banner__content {
+    position: relative;
+    max-width: gs-span(12);
+    min-height: gs-height(6);
+    padding: rem($gs-gutter) 0;
+
+    @include mq(tablet) {
+        padding: 10% 5%;
+        max-width: 45em;
+    }
+}
+.hero-banner__title {
+    @include fs-headline(5);
+    font-weight: 900;
+    margin: 0 0 rem($gs-baseline / 2) 0;
+
+    @include mq(tablet) {
+        font-size: 3.5em;
+        line-height: 1;
+    }
+}
+.hero-banner__description {
+    @include fs-headline(5);
+}
+.hero-banner__action {
+    position: absolute;
+    bottom: 0;
+}

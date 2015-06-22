@@ -287,6 +287,62 @@ $global-nav-height: 36px;
 }
 
 /* ==========================================================================
+   Nav - Sections
+   ========================================================================== */
+
+.nav-sections {
+    @include unstyled-list();
+    overflow: auto;
+    background-color: $mem-brandBlue;
+    position: relative;
+    color: $black;
+}
+.nav-sections.is-sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+    will-change: auto;
+}
+.nav-sections__list,
+.nav-sections__item {
+    display: block;
+    float: left;
+}
+.nav-sections__list {
+    margin: 0;
+    overflow: auto;
+    list-style: none;
+    counter-reset: nav-sections;
+}
+.nav-sections__item {
+    counter-increment: nav-sections;
+}
+.nav-sections__link {
+    @include fs-headline(2);
+    @include font-smoothing();
+    line-height: 1;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    padding: rem($gs-baseline) rem($gs-gutter);
+    min-width: rem(gs-span(3));
+    border-right: 1px solid $white;
+}
+.nav-sections__link::before {
+    color: $white;
+    content: counter(nav-sections) ". ";
+    display: block;
+    margin-bottom: .2em;
+}
+.nav-sections__link:hover {
+    text-decoration: none;
+}
+.nav-sections__link.is-active {
+    background-color: lighten($mem-brandBlue, 10%);
+}
+
+/* ==========================================================================
    Nav - Popup
    ========================================================================== */
 

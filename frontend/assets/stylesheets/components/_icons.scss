@@ -159,3 +159,18 @@
     background-color: $mem-brandBlueDark;
     border-color: $mem-brandBlueDark;
 }
+.icon-holder--fill-live {
+    color: $white;
+    background-color: tone('live');
+    border-color: tone('live');
+}
+.icon-holder--fill-local {
+    color: $white;
+    background-color: tone('local');
+    border-color: tone('local');
+}
+.icon-holder--fill-masterclasses {
+    color: $white;
+    background-color: tone('masterclass');
+    border-color: tone('masterclass');
+}

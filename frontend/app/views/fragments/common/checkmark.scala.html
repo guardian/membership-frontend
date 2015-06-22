@@ -1,0 +1,9 @@
+@(isChecked: Boolean)
+
+<span class="checkmark@if(isChecked){ checkmark--true}else{ checkmark--false}" @if(isChecked){ aria-title="Yes"}else{ aria-title="No"}>
+    @if(isChecked) {
+        @fragments.inlineIcon("tick")
+    } else {
+        @fragments.inlineIcon("cross")
+    }
+</span>
