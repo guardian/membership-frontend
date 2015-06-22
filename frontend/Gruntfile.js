@@ -98,6 +98,7 @@ module.exports = function (grunt) {
                         'respimage': 'lib/bower-components/respimage/respimage',
                         'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
                         'raven': 'lib/bower-components/raven-js/dist/raven',
+                        'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
                         'ajax': 'src/utils/ajax'
                     },
                     findNestedDependencies: false,
