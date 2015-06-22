@@ -6,6 +6,7 @@ import model.{ResponsiveImageGenerator, ResponsiveImageGroup, FlashMessage, Page
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService}
 import scala.concurrent.Future
+import model.Benefits.ComparisonItem
 
 trait Info extends Controller {
 
@@ -62,15 +63,6 @@ trait Info extends Controller {
       )
     )
     Ok(views.html.info.about(pageInfo, pageImages))
-  }
-
-  def feedback = NoCacheAction { implicit request =>
-    val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
-    Ok(views.html.info.feedback(flashMsgOpt))
-  }
-
-  def giftingPlaceholder = NoCacheAction { implicit request =>
-    Ok(views.html.info.giftingPlaceholder())
   }
 
   def supporter = CachedAction { implicit request =>
@@ -175,6 +167,68 @@ trait Info extends Controller {
     Ok(views.html.info.subscriberOffer(pageImages))
   }
 
+  // TODO: CachedAction
+  def joinChallenger =  GoogleAuthenticatedStaffAction { implicit request =>
+
+    val comparisonItems = Seq(
+      ComparisonItem("Support open, independent journalism", true, true),
+      ComparisonItem("Receive regular updates from the membership community", true, true),
+      ComparisonItem("Offers and competitions exclusively for Guardian members", true, true),
+      ComparisonItem("Membership card and annual gift", true, true),
+      ComparisonItem("Book tickets to Guardian Live events", true, true),
+      ComparisonItem("Early ticket booking to Guardian Live Events (before Friends)", true, true),
+      ComparisonItem("Bring a guest to Guardian Live events with the same discount and priority booking advantages", true, true),
+      ComparisonItem("Watch highlights of selected Guardian Live events", true, true),
+      ComparisonItem("20% off Guardian Live tickets", true, true),
+      ComparisonItem("20% off selected Guardian Masterclasses", true, true)
+    )
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("experience"),
+        altText=Some("Guardian Live event: Pussy Riot - art, sex and disobedience"),
+        availableImages=ResponsiveImageGenerator(
+          id="eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("brand-live"),
+        altText=Some("Guardian Live"),
+        availableImages=ResponsiveImageGenerator(
+          id="3d2be6485a6b8f5948ba39519ceb0f76007ae8d8/0_0_2280_1368",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("brand-masterclasses"),
+        altText=Some("Guardian Masterclasses"),
+        availableImages=ResponsiveImageGenerator(
+          id="ae3ad30b485e9651a772e85dd82bae610f57a034/0_0_1140_684",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("space"),
+        altText=Some("A home for big ideas"),
+        availableImages=ResponsiveImageGenerator(
+          id="ed9347da5fc1e55721b243a958d42fca1983d012/0_0_1140_684",
+          sizes=List(500)
+        )
+      )
+    )
+
+    Ok(views.html.info.joinChallenger(
+      pageImages,
+      comparisonItems
+    ))
+  }
+
+  def feedback = NoCacheAction { implicit request =>
+    val flashMsgOpt = request.flash.get("msg").map(FlashMessage.success)
+    Ok(views.html.info.feedback(flashMsgOpt))
+  }
+
   def submitFeedback = NoCacheAction.async { implicit request =>
 
     val userOpt = AuthenticationService.authenticatedUserFor(request)
@@ -189,6 +243,9 @@ trait Info extends Controller {
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
+  def giftingPlaceholder = NoCacheAction { implicit request =>
+    Ok(views.html.info.giftingPlaceholder())
+  }
 
 }
 

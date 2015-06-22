@@ -30,9 +30,10 @@ POST           /join/:tier/enter-details          controllers.Joiner.joinPaid(ti
 GET            /join/staff/thankyou               controllers.Joiner.thankyouStaff
 GET            /join/:tier/thankyou               controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email           controllers.Joiner.updateEmailStaff
+GET            /join/unsupported-browser          controllers.Joiner.unsupportedBrowser
+
 GET            /choose-tier                       controllers.Joiner.tierChooser
 
-GET            /join/unsupported-browser          controllers.Joiner.unsupportedBrowser
 
 # Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String)
@@ -100,6 +101,7 @@ POST           /feedback                          controllers.Info.submitFeedbac
 GET            /about                             controllers.Info.about
 GET            /about/supporter                   controllers.Info.supporter
 GET            /patrons                           controllers.Info.patron
+GET            /join-challenger                   controllers.Info.joinChallenger
 
 # Information - Offers
 GET            /subscriber-offer                  controllers.Info.subscriberOffer
