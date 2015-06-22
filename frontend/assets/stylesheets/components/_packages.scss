@@ -246,3 +246,24 @@
         padding-top: 0;
     }
 }
+
+/* ==========================================================================
+   Package Teaser
+   ========================================================================== */
+
+.package-teaser {
+    border-top: 1px solid $c-neutral5;
+    margin-bottom: rem($gs-gutter);
+}
+.package-teaser__title {
+    @include fs-header(2);
+    font-weight: bold;
+    margin: 0 0 rem($gs-baseline / 4) 0;
+    padding-top: rem($gs-baseline / 2);
+}
+.package-teaser__description {
+    @include fs-headline(2);
+    font-weight: normal;
+    line-height: 1.1;
+    margin-bottom: rem($gs-baseline / 2);
+}
