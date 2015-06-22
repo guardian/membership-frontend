@@ -1,8 +1,10 @@
-@(label: String, href: String)
+@(labelOpt: Option[String], href: String)
 
 <a href="@href" class="action-jump">
     <span class="icon-holder icon-holder--large icon-holder--fill">
        @fragments.inlineIcon("arrow-down")
     </span>
-    <span class="action-jump__label">@label</span>
+    @for(label <- labelOpt) {
+        <span class="action-jump__label">@label</span>
+    }
 </a>

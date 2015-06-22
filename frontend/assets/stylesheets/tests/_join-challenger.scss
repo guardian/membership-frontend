@@ -33,27 +33,20 @@
 
 .hero-banner {
     color: $white;
-    background-color: rgba(0,0,0,0.6);
-    position: relative;
+    background-image: url(/assets/images/join-challenger/event-grid.jpg);
+    background-position: top center;
+    background-repeat: repeat;
+    background-attachment: fixed;
 
-    @include mq(tablet) {
-        height: 60vh;
+    @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(min-height: 640px) {
+        height: 75vh;
     }
 }
-.hero-banner:after {
-    // content: '';
-    // background-image: url(/assets/images/join-challenger/event-grid.jpg);
-    // background-position: top center;
-    // background-repeat: repeat;
-    // position: fixed;
-    // top: 0;
-    // width: 100%;
-    // height: 100%;
-    // z-index: -1;
-    // will-change: transform;
+.hero-banner__inner {
+    background-color: rgba(0,0,0,0.6);
+    height: 100%;
 }
 .hero-banner__content {
-    position: relative;
     max-width: gs-span(12);
     min-height: gs-height(6);
     padding: rem($gs-gutter) 0;
@@ -75,12 +68,11 @@
 }
 .hero-banner__description {
     @include fs-headline(5);
+    margin-bottom: rem($gs-gutter * 3);
 }
 .hero-banner__action {
-    position: absolute;
-    bottom: 0;
+    margin-bottom: rem($gs-gutter);
 }
-
 
 /* What are members & Why Join
    ========================================================================== */

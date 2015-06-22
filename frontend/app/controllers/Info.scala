@@ -170,6 +170,13 @@ trait Info extends Controller {
   // TODO: CachedAction
   def joinChallenger =  GoogleAuthenticatedStaffAction { implicit request =>
 
+    val pageInfo = PageInfo(
+      "Join",
+      request.path,
+      None,
+      hasBackgroundImage = true
+    )
+
     val comparisonItems = Seq(
       ComparisonItem("Priority booking to all Guardian Live and Local events", false, true),
       ComparisonItem("Save 20% on Guardian Live and Local tickets", false, true),
@@ -250,6 +257,7 @@ trait Info extends Controller {
     )
 
     Ok(views.html.info.joinChallenger(
+      pageInfo,
       pageImages,
       comparisonItems
     ))

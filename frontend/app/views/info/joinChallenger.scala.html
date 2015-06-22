@@ -1,4 +1,4 @@
-@(pageImages: Seq[model.ResponsiveImageGroup], comparisonItems: Seq[model.Benefits.ComparisonItem])(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup], comparisonItems: Seq[model.Benefits.ComparisonItem])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Videos
 @import com.gu.membership.salesforce.Tier
@@ -49,20 +49,20 @@
     </div>
 }
 
-@main("Join") {
+@main("Join", pageInfo) {
 
     @* ===== Intro ===== *@
     <div class="hero-banner">
-        <div class="hero-banner__inner l-constrained">
-            <div class="hero-banner__content copy">
-                <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
-                <p class="hero-banner__description">
-                    Support open, independent journalism and experience the Guardian brought to life.
-                </p>
-                <div class="hero-banner__action">
-                    <span class="icon-holder icon-holder--large icon-holder--fill">
-                       @fragments.inlineIcon("arrow-down")
-                    </span>
+        <div class="hero-banner__inner">
+            <div class="l-constrained">
+                <div class="hero-banner__content">
+                    <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
+                    <p class="hero-banner__description">
+                        Support open, independent journalism and experience the Guardian brought to life.
+                    </p>
+                    <div class="hero-banner__action">
+                        @fragments.common.jumpLink(None, "#what-are-members")
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@
         <div class="nav-sections__inner l-constrained">
             <ol class="nav-sections__list" data-gumshoe>
                 <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members">What is Membership?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join">Why Join?</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join">Why join?</a></li>
                 <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member">Become a Member</a></li>
             </ol>
         </div>
@@ -96,7 +96,7 @@
                     Videos.whatIsMembership,
                     "Listen to Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams as they describe Guardian Membership."
                 )
-                @fragments.common.jumpLink("Find out more", "#become-a-member")
+                @fragments.common.jumpLink(Some("More"), "#why-join")
             </div>
         </div>
     </section>
@@ -141,7 +141,7 @@
                     </li>
                 </ul>
 
-                @fragments.common.jumpLink("Find out more", "#become-a-member")
+                @fragments.common.jumpLink(Some("More"), "#big-ideas")
 
                 <div class="join-text-intro join-text-intro--block">
                     <p>Experience the Guardian up close. First hand.</p>
@@ -198,7 +198,7 @@
 
 
     @* ===== A home for big ideas ===== *@
-    <section class="page-slice section-big-ideas">
+    <section class="page-slice section-big-ideas" id="big-ideas">
         <div class="listing listing--basic listing--padded l-constrained">
             <div class="listing__content">
                 <ul class="grid grid--2up">
@@ -223,8 +223,7 @@
                         </div>
                     </li>
                 </ul>
-
-                @fragments.common.jumpLink("Find out more", "#become-a-member")
+                @fragments.common.jumpLink(Some("Find out more"), "#become-a-member")
             </div>
         </div>
     </section>
