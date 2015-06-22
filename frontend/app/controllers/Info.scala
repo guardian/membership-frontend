@@ -174,7 +174,7 @@ trait Info extends Controller {
       "Join",
       request.path,
       None,
-      hasBackgroundImage = true
+      hasBackgroundImage = false
     )
 
     val comparisonItems = Seq(

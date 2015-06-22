@@ -27,9 +27,13 @@
     @include clearfix();
     position: relative;
     background-color: $c-neutral6;
-    padding: rem($gs-gutter / 2) rem($gs-gutter);
+    padding: rem($gs-gutter / 2);
     border-top: 1px solid;
-    height: 30em;
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
+        height: 30em;
+    }
 }
 .brand-panel__title {
     @include fs-header(4);
@@ -44,10 +48,12 @@
     margin-bottom: rem($gs-baseline / 2);
 }
 .brand-panel__media {
-    position: absolute;
-    left: rem($gs-gutter);
-    right: rem($gs-gutter);
-    bottom: rem($gs-baseline * 2);
+    @include mq(tablet) {
+        position: absolute;
+        left: rem($gs-gutter);
+        right: rem($gs-gutter);
+        bottom: rem($gs-baseline * 2);
+    }
 }
 
 /* ==========================================================================
