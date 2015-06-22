@@ -203,11 +203,13 @@ module.exports = function (grunt) {
         watch: {
             compileCss: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
-                tasks: ['compile:css']
+                tasks: ['compile:css'],
+                options: { spawn: false }
             },
             compileJs: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
-                tasks: ['compile:js']
+                tasks: ['compile:js'],
+                options: { spawn: false }
             },
             /**
              * Only livereload for built assets, not sources.
@@ -220,7 +222,7 @@ module.exports = function (grunt) {
                     '<%= dirs.publicDir.stylesheets %>/**/*.css'
                 ],
                 tasks: [],
-                options: { livereload: true }
+                options: { spawn: false, livereload: true }
             }
         },
 
