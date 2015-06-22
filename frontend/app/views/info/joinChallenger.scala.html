@@ -25,6 +25,30 @@
     </div>
 }
 
+@brandPanel(
+    title: String,
+    imageOpt: Option[model.ResponsiveImageGroup],
+    linkHref: String,
+    linkLabel: String,
+    toneSlug: String
+)(description: Html) = {
+    <div class="brand-panel tone-border-@toneSlug">
+        <h3 class="brand-panel__title">@title</h3>
+        <div class="brand-panel__description copy">@description</div>
+        @for(img <- imageOpt) {
+            <div class="brand-panel__media">
+                <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
+                <a class="mini-link" href="@linkHref">
+                    <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-@toneSlug">
+                        @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-@toneSlug"))
+                    </span>
+                    @linkLabel
+                </a>
+            </div>
+        }
+    </div>
+}
+
 @main("Join") {
 
     @* ===== Intro ===== *@
@@ -33,7 +57,7 @@
             <div class="hero-banner__content copy">
                 <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
                 <p class="hero-banner__description">
-                    Support open, independent journalism and experience the Guardian brought to life
+                    Support open, independent journalism and experience the Guardian brought to life.
                 </p>
                 <div class="hero-banner__action">
                     <span class="icon-holder icon-holder--large icon-holder--fill">
@@ -43,12 +67,15 @@
             </div>
         </div>
     </div>
+
+
+    @* ===== Section Navigation ===== *@
     <div class="nav-sections l-side-margins js-sticky" data-gumshoe-header>
         <div class="nav-sections__inner l-constrained">
             <ol class="nav-sections__list" data-gumshoe>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members">What are Members?</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members">What is Membership?</a></li>
                 <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join">Why Join?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member">Become A Member</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member">Become a Member</a></li>
             </ol>
         </div>
     </div>
@@ -58,24 +85,17 @@
     <section class="page-slice section-what" id="what-are-members">
         <div class="listing listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
-                <h3 class="h-intro h-intro--capitalize">What are Members?</h3>
+                <h3 class="h-intro h-intro--capitalize">What is Membership?</h3>
             </div>
             <div class="listing__content">
-                <ul class="grid grid--3up">
-                    <li class="grid__item">
-                        <p class="join-text-intro">
-                            Guardian Members are changing the idea of what a news organisation does today.
-                        </p>
-                    </li>
-                    <li class="grid__item">
-                        <p class="join-text-intro">
-                            Join the influential community of journalists,
-                            readers and contributors that is the Guardian,
-                            and connect to the conversations that matter.
-                        </p>
-                    </li>
-                </ul>
-                @fragments.media.videoPreview(Videos.whatIsMembership, "Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership.")
+                <p class="join-text-intro what-intro">
+                    As a Guardian member, you can contribute to discussions, debates and interviews at our programme of live events,
+                    engage with some of the world’s most talked about thinkers and access an exclusive range of offers and competitions.
+                </p>
+                @fragments.media.videoPreview(
+                    Videos.whatIsMembership,
+                    "Listen to Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams as they describe Guardian Membership."
+                )
                 @fragments.common.jumpLink("Find out more", "#become-a-member")
             </div>
         </div>
@@ -89,29 +109,33 @@
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
             </div>
             <div class="listing__content">
-                <p class="why-intro">
-                    Get closer to the stories that matter and experience the Guardian brought to life
+                <p class="join-text-intro why-intro">
+                    Support fearless journalism and get to the heart of the story.
                 </p>
                 <ul class="grid grid--3up">
                     <li class="grid__item">
                         @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
-                            <p>We'll introduce you to some of the world's most influential thinkers. Not only our speakers, but the community of members around you.</p>
-                        }
-                    </li>
-                    <li class="grid__item">
-                        @fragments.promos.panel("Support the Guardian", pageImages.find(_.name.contains("experience"))) {
                             <p>
-                                Our journalism is for everyone. The Guardian is open, without a paywall,
-                                and we remain true to our 200-year old progressive values.
-                                Become a member to ensure the whole picture is available to everyone.
+                                We’ll introduce you to some of the world's most influential thinkers&mdash;from
+                                our invited guests to the growing community of members around you.
                             </p>
                         }
                     </li>
                     <li class="grid__item">
-                        @fragments.promos.panel("Exclusive content", pageImages.find(_.name.contains("experience"))) {
+                        @fragments.promos.panel("Support the Guardian", pageImages.find(_.name.contains("support"))) {
                             <p>
-                                New offers every week plus exclusive competitions you’ll only find on Guardian Membership.
-                                <a href="@routes.OffersAndCompetitions.list">Offers and competitions</a>
+                                For 200 years, the Guardian has evolved to respond to changing times
+                                without compromising the quality of our journalism.
+                                Our website is open and free. By becoming a member, you’ll ensure the whole picture
+                                remains available to everyone.
+                            </p>
+                        }
+                    </li>
+                    <li class="grid__item">
+                        @fragments.promos.panel("Exclusive content", pageImages.find(_.name.contains("exclusive"))) {
+                            <p>
+                                From live streams of Members’ events, member articles in our monthly Guardian supplement,
+                                to a range of <a href="@routes.OffersAndCompetitions.list">offers, competitions</a> and unique live experiences, there’s something for you in Guardian Membership
                             </p>
                         }
                     </li>
@@ -121,66 +145,50 @@
 
                 <div class="join-text-intro join-text-intro--block">
                     <p>Experience the Guardian up close. First hand.</p>
-                    <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
+                    <p>
+                        Membership breaks down the walls between privilege and influence; between you and the news.
+                        Unedited, uncensored, experience the Guardian for yourself.
+                    </p>
                 </div>
 
                 <ul class="grid grid--3up">
                     <li class="grid__item">
-                        <div class="brand-panel tone-border-guardian-live">
-                            <h3 class="brand-panel__title">Guardian Live</h3>
-                            <div class="brand-panel__description copy">
-                                Guardian Live is a programme of discussions, debates, interviews, keynote speeches created by the Guardian exclusively for Guardian members.
-                            </div>
-                            @for(img <- pageImages.find(_.name.contains("brand-live"))) {
-                                <div class="brand-panel__media">
-                                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
-                                    <a class="mini-link" href="@routes.Event.list">
-                                        <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-live">
-                                            @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-guardian-live"))
-                                        </span>
-                                        All upcoming Live events
-                                    </a>
-                                </div>
-                            }
-                        </div>
+                        @brandPanel(
+                            "Guardian Live",
+                            pageImages.find(_.name.contains("brand-live")),
+                            routes.Event.list.toString,
+                            "All upcoming Live events",
+                            "guardian-live"
+                        ) {
+                            Russell Brand, Vivienne Westwood, Jimmy Page, Naomi Klein.
+                            NHS, terrorism, Europe, climate change; all in conversation with our journalists.
+                            Guardian Live brings the Guardian to life with discussions, debates,
+                            interviews and keynote speeches exclusively for Guardian Members.
+                        }
                     </li>
                     <li class="grid__item">
-                        <div class="brand-panel tone-border-local">
-                            <h3 class="brand-panel__title">Guardian Local</h3>
-                            <div class="brand-panel__description copy">
-                                Guardian local is a programme of specifically selected arts, food and culture events from around the UK
-                            </div>
-                            @for(img <- pageImages.find(_.name.contains("brand-live"))) {
-                                <div class="brand-panel__media">
-                                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
-                                    <a class="mini-link" href="@routes.Event.list">
-                                        <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-local">
-                                        @fragments.inlineIcon("arrow-right", List("inline-icon--small"))
-                                        </span>
-                                        All upcoming Local events
-                                    </a>
-                                </div>
-                            }
-                        </div>
+                        @brandPanel(
+                            "Guardian Local",
+                            pageImages.find(_.name.contains("brand-local")),
+                            routes.Event.list.toString,
+                            "All upcoming Local events",
+                            "local"
+                        ) {
+                            Tasting menus, jazz collectives, world-renowned orchestra&hellip; Guardian Local celebrates the arts,
+                            food and culture we write about with meetups for Members across the country.
+                        }
                     </li>
                     <li class="grid__item">
-                        <div class="brand-panel tone-border-masterclasses">
-                            <h3 class="brand-panel__title">Guardian Masterclasses</h3>
-                            <div class="brand-panel__description copy">
-                                Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons
-                            </div>
-                            @for(img <- pageImages.find(_.name.contains("brand-masterclasses"))) {
-                                <div class="brand-panel__media">
-                                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
-                                    <a class="mini-link" href="@routes.Event.masterclasses">
-                                        <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-masterclasses">
-                                            @fragments.inlineIcon("arrow-right", List("inline-icon--small"))
-                                        </span>
-                                        All upcoming Masterclasses
-                                    </a>
-                                </div>
-                            }
-                        </div>
+                        @brandPanel(
+                            "Guardian Masterclasses",
+                            pageImages.find(_.name.contains("brand-masterclasses")),
+                            routes.Event.masterclasses.toString,
+                            "All upcoming Masterclasses",
+                            "masterclasses"
+                        ) {
+                            Social media, writing a novel, starting a business&hellip;take part in our courses and workshops
+                            taught by award-winning professionals and enjoy member discounts.
+                        }
                     </li>
                 </ul>
 
@@ -203,11 +211,13 @@
                         <div class="big-ideas-intro">
                             <h4 class="big-ideas-intro__title">A home for big ideas</h4>
                             <div class="big-ideas-intro__content copy">
-                                <p>In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross to create a new kind of civic space.</p>
                                 <p>
-                                    The building will be a hub for big ideas and stimulating conversations.
-                                    It will host events, activities and courses from Guardian Live and institutions we admire,
-                                    as well as being the home of Guardian Membership.
+                                    In 2016, the Midland Goods Shed at London’s King’s Cross will reopen to create a new kind of civic space.
+                                </p>
+                                <p>
+                                    As well as being the home of Guardian Membership, the building will be a hub for
+                                    big ideas and stimulating conversations. It will host events, activities and
+                                    courses from Guardian Live and organisations we admire.
                                 </p>
                             </div>
                         </div>
@@ -227,7 +237,7 @@
                 <h3 class="h-intro h-intro--capitalize">Become a Member</h3>
             </div>
             <div class="listing__content">
-                <p class="become-intro">
+                <p class="join-text-intro become-intro">
                     Make the connection.<br/>
                     Become a Guardian Member.
                 </p>
@@ -294,7 +304,7 @@
                     </div>
                 </div>
 
-                @for(image <- pageImages.find(_.name.contains("space"))) {
+                @for(image <- pageImages.find(_.name.contains("patrons"))) {
                     @fragments.promos.promoTertiary(
                         "Become a Patron",
                         "Patrons play a vital role to keep the Guardian fearless, progressive and free from interference",

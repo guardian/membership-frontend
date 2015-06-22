@@ -293,9 +293,9 @@ $global-nav-height: 36px;
 .nav-sections {
     @include unstyled-list();
     overflow: auto;
+    color: $black;
     background-color: $mem-brandBlue;
     position: relative;
-    color: $black;
 }
 .nav-sections.is-sticky {
     position: fixed;
@@ -325,6 +325,7 @@ $global-nav-height: 36px;
     font-weight: bold;
     display: inline-block;
     vertical-align: middle;
+    color: $c-neutral1;
     padding: rem($gs-baseline) rem($gs-gutter);
     min-width: rem(gs-span(3));
     border-right: 1px solid $white;

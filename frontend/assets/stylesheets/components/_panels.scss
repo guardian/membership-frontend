@@ -29,7 +29,7 @@
     background-color: $c-neutral6;
     padding: rem($gs-gutter / 2) rem($gs-gutter);
     border-top: 1px solid;
-    height: 25em;
+    height: 30em;
 }
 .brand-panel__title {
     @include fs-header(4);

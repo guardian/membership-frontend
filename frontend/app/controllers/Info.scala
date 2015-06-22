@@ -171,16 +171,15 @@ trait Info extends Controller {
   def joinChallenger =  GoogleAuthenticatedStaffAction { implicit request =>
 
     val comparisonItems = Seq(
-      ComparisonItem("Support open, independent journalism", true, true),
-      ComparisonItem("Receive regular updates from the membership community", true, true),
-      ComparisonItem("Offers and competitions exclusively for Guardian members", true, true),
+      ComparisonItem("Priority booking to all Guardian Live and Local events", false, true),
+      ComparisonItem("Save 20% on Guardian Live and Local tickets", false, true),
+      ComparisonItem("Bring a guest with the same discount and priority booking privileges", false, true),
+      ComparisonItem("Save 20% on Guardian Masterclasses", false, true),
+      ComparisonItem("Support fearless, open, independent journalism", true, true),
+      ComparisonItem("Regular updates from the membership team", true, true),
+      ComparisonItem("Exclusive offers and competitions", true, true),
       ComparisonItem("Membership card and annual gift", true, true),
-      ComparisonItem("Book tickets to Guardian Live events", true, true),
-      ComparisonItem("Early ticket booking to Guardian Live Events (before Friends)", true, true),
-      ComparisonItem("Bring a guest to Guardian Live events with the same discount and priority booking advantages", true, true),
-      ComparisonItem("Watch highlights of selected Guardian Live events", true, true),
-      ComparisonItem("20% off Guardian Live tickets", true, true),
-      ComparisonItem("20% off selected Guardian Masterclasses", true, true)
+      ComparisonItem("Highlights and live streams of selected Guardian Live events", true, true)
     )
 
     val pageImages = Seq(
@@ -193,10 +192,34 @@ trait Info extends Controller {
         )
       ),
       ResponsiveImageGroup(
+        name=Some("support"),
+        altText=Some("Support the Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("exclusive"),
+        altText=Some("Exclusive content"),
+        availableImages=ResponsiveImageGenerator(
+          id="4bea41f93f7798ada3d572fe07b1e38dacb2a56e/0_0_2000_1200",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
         name=Some("brand-live"),
         altText=Some("Guardian Live"),
         availableImages=ResponsiveImageGenerator(
-          id="3d2be6485a6b8f5948ba39519ceb0f76007ae8d8/0_0_2280_1368",
+          id="ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("brand-local"),
+        altText=Some("Guardian Local"),
+        availableImages=ResponsiveImageGenerator(
+          id="889926d3c2ececf4ffd699f43713264697823251/0_0_2000_1200",
           sizes=List(500)
         )
       ),
@@ -213,6 +236,14 @@ trait Info extends Controller {
         altText=Some("A home for big ideas"),
         availableImages=ResponsiveImageGenerator(
           id="ed9347da5fc1e55721b243a958d42fca1983d012/0_0_1140_684",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("patrons"),
+        altText=Some("Patrons of The Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="36f6cb575029bb59a7ce17666892c96a00e11135/0_0_2000_1200",
           sizes=List(500)
         )
       )
