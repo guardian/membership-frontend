@@ -91,7 +91,7 @@ object Benefits {
     friendBenefitsList,
     None,
     "Become a Friend",
-    "Recieve regular updates from the membership community, book tickets to  Guardian Live events and access the Guardian members area."
+    "Receive regular updates from the membership community, book tickets to Guardian Live events and access the Guardian members area"
   )
   val supporterBenefits = Benefits(
     "Benefits",
