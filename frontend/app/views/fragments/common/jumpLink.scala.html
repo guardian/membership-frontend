@@ -1,0 +1,10 @@
+@(labelOpt: Option[String], href: String)
+
+<a href="@href" class="action-jump">
+    <span class="icon-holder icon-holder--large icon-holder--fill">
+       @fragments.inlineIcon("arrow-down")
+    </span>
+    @for(label <- labelOpt) {
+        <span class="action-jump__label">@label</span>
+    }
+</a>

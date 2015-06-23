@@ -199,6 +199,34 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: 0;
 }
 
+/**
+ * Example usage:
+ * <div class="page-section page-section--bordered">
+ *     <div class="page-section__content">[...]</div>
+ * </div>
+ */
+.page-section--bordered {
+
+    .page-section__lead-in,
+    .page-section__content,
+    .page-section__supplementary {
+        padding-top: rem($gs-baseline / 2);
+    }
+
+    .page-section__lead-in {
+        border-top: 1px solid $mem-brandBlue;
+    }
+
+    @include mq(desktop) {
+        .page-section__lead-in {
+            border-top: none;
+        }
+        .page-section__content {
+            border-top: 1px solid $mem-brandBlue;
+        }
+    }
+}
+
 /* Page Section Spread
    ========================================================================== */
 
@@ -232,36 +260,5 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
         padding-left: 30%;
         width: 85% - $gutter-width-fluid;
         float: left;
-    }
-}
-
-/* Page Section - Bordered (Modifier)
-   ========================================================================== */
-
-/**
- * Example usage:
- * <div class="page-section page-section--bordered">
- *     <div class="page-section__content">[...]</div>
- * </div>
- */
-.page-section--bordered {
-
-    .page-section__lead-in,
-    .page-section__content,
-    .page-section__supplementary {
-        padding-top: rem($gs-baseline / 2);
-    }
-
-    .page-section__lead-in {
-        border-top: 1px solid $mem-brandBlue;
-    }
-
-    @include mq(desktop) {
-        .page-section__lead-in {
-            border-top: none;
-        }
-        .page-section__content {
-            border-top: 1px solid $mem-brandBlue;
-        }
     }
 }

@@ -4,11 +4,12 @@ define(['$', 'src/utils/helper'], function ($, helper) {
         stickyLink = $(sticky.attr('data-sticky-sibling')),
         stickyTop;
 
+
     function checkSiblingHeight() {
         var run = true,
             heightEl, heightSiblingEl;
 
-        if (stickyLink) {
+        if (stickyLink.length) {
             heightEl = helper.getOuterHeight(sticky.get(0));
             heightSiblingEl = helper.getOuterHeight(stickyLink.get(0));
             run = (heightSiblingEl >  heightEl) ? true : false;

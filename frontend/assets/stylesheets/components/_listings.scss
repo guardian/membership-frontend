@@ -45,9 +45,10 @@
     .listing__content {
         padding: 0 rem($gs-gutter / 2);
         @include mq(mem-full) {
-            float: left;
+            float: right;
             width: rem(gs-span(12));
             padding: rem($gs-gutter / 2) 0 0 0;
+            margin-right: rem($gs-gutter);
         }
     }
     .listing__empty,
@@ -84,6 +85,13 @@
         }
     }
 
+}
+
+.listing--basic {
+    border-top: 0 none;
+}
+.listing--transparent {
+    background: transparent;
 }
 
 .listing--roundel {

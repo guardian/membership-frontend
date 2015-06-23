@@ -1,0 +1,26 @@
+@(
+    title: String,
+    description: String,
+    linkText: String,
+    linkHref: String,
+    image: model.ResponsiveImageGroup,
+    toneClass: Option[String] = None
+)
+
+<div class="promo-tertiary @toneClass.mkString(" ")">
+    <div class="promo-tertiary__media">
+        <img src="@image.defaultImage" srcset="@image.srcset" sizes="100vw" alt="@image.altText" class="responsive-img">
+    </div>
+    <div class="promo-tertiary__header">
+        <h2 class="promo-tertiary__title">@title</h2>
+        <div class="promo-tertiary__description">
+            @description
+        </div>
+        <div class="promo-tertiary__action">
+            <a class="action action--external action--no-icon" href="@linkHref">
+                @linkText
+                @fragments.actionIcon("arrow-right")
+            </a>
+        </div>
+    </div>
+</div>

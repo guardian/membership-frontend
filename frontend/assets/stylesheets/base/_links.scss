@@ -34,7 +34,7 @@ a,
 }
 
 .mini-link {
-    @include fs-data(2);
+    @include fs-data(3);
     &:hover {
         text-decoration: none;
     }

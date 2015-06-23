@@ -99,6 +99,7 @@
         top: -12px;
         left: auto;
         right: 100px;
+        z-index: 2;
     }
 
     @include mq(mem-full) {

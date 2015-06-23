@@ -7,6 +7,7 @@ require([
     'src/modules/images',
     'src/modules/toggle',
     'src/modules/sticky',
+    'src/modules/scrollSpy',
     'src/modules/navigation',
     'src/modules/userDetails',
     'src/modules/videoOverlay',
@@ -30,6 +31,7 @@ require([
     images,
     toggle,
     sticky,
+    scrollSpy,
     navigation,
     userDetails,
     videoOverlay,
@@ -60,6 +62,7 @@ require([
     images.init();
     slideshow.init();
     sticky.init();
+    scrollSpy.init();
     identityPopup.init();
     identityPopupDetails.init();
     navigation.init();

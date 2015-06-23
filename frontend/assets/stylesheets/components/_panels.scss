@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Panels
+   ========================================================================== */
+
+/* Panel (Basic)
+   ========================================================================== */
+
+.panel {
+    @include clearfix();
+}
+.panel__media {
+    margin-bottom: rem($gs-baseline / 2);
+}
+.panel__title {
+    @include fs-header(4);
+    margin: 0 0 rem($gs-baseline / 2) 0;
+}
+.panel__description {
+    @include fs-header(2);
+    font-weight: normal;
+}
+
+/* Brand Panel
+   ========================================================================== */
+
+.brand-panel {
+    @include clearfix();
+    position: relative;
+    background-color: $c-neutral6;
+    padding: rem($gs-gutter / 2);
+    border-top: 1px solid;
+
+    @include mq(tablet) {
+        padding: rem($gs-gutter / 2) rem($gs-gutter);
+        height: 30em;
+    }
+}
+.brand-panel__title {
+    @include fs-header(4);
+    margin: 0 0 rem($gs-baseline / 2) 0;
+}
+.brand-panel__description {
+    @include fs-header(2);
+    font-weight: normal;
+    margin-bottom: rem($gs-baseline);
+}
+.brand-panel__image {
+    margin-bottom: rem($gs-baseline / 2);
+}
+.brand-panel__media {
+    @include mq(tablet) {
+        position: absolute;
+        left: rem($gs-gutter);
+        right: rem($gs-gutter);
+        bottom: rem($gs-baseline * 2);
+    }
+}
+
+/* ==========================================================================
+   Asides
+   ========================================================================== */
+
+.aside {
+    border: solid $c-border-brand;
+    border-width: 1px 0 0 0;
+    padding-top: rem($gs-baseline/2);
+    margin-bottom: rem($gs-gutter);
+}
+    .aside__intro {
+        @include fs-header(2);
+        padding-bottom: rem($gs-gutter);
+
+        @include mq(tablet) {
+            @include fs-headline(2);
+        }
+    }
+
+.aside--pull {
+    @include mq(desktop) {
+        margin-top: -(rem($gs-baseline/2));
+    }
+}
+
+.aside--section {
+    border-width: 1px 0 0 0;
+    padding-top: rem($gs-baseline/2);
+
+    @include mq(tablet) {
+        margin-top: rem(45px);
+        padding-top: rem($gs-baseline/2);
+        border-width: 1px 0 0 0;
+    }
+    @include mq(mem-full) {
+        margin-top: 0;
+    }
+}
+
+.aside--panel {
+    border: 0 none;
+    background-color: $c-neutral6;
+    border-radius: rem($gs-baseline / 3);
+    padding: rem($gs-baseline * 2);
+    margin-bottom: rem($gs-baseline * 2);
+}

@@ -10,7 +10,8 @@ case class PageInfo(
   image: Option[String] = Some(PageInfo.defaultImage),
   schemaOpt: Option[EventSchema] = None,
   stripePublicKey: Option[String] = None,
-  customSignInUrl: Option[String] = None
+  customSignInUrl: Option[String] = None,
+  hasBackgroundImage: Boolean = true
 )
 
 object PageInfo {

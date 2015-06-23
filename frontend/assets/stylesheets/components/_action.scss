@@ -194,6 +194,24 @@
     }
 }
 
+/* Action Jump
+   ========================================================================== */
+
+.action-jump {
+    display: block;
+    text-decoration: none;
+    margin-bottom: rem($gs-gutter * 3);
+}
+.action-jump__label {
+    @include fs-data(4);
+    color: $c-neutral2;
+    vertical-align: middle;
+    padding-left: .2em;
+}
+.action-jump:hover {
+    text-decoration: none;
+}
+
 /* Actions - Disabled
    ========================================================================== */
 

@@ -59,7 +59,7 @@
 @import 'components/navigation';
 @import 'components/controls';
 @import 'components/blocks';
-@import 'components/asides';
+@import 'components/panels';
 @import 'components/listings';
 @import 'components/header-bar';
 @import 'components/event-items';
@@ -92,6 +92,12 @@
 // Dev modules:
 // - Pattern library
 @import 'components/patterns';
+
+/* ==========================================================================
+   Tests (A/B tests / temporary styles)
+   ========================================================================== */
+
+@import 'tests/join-challenger';
 
 /* ==========================================================================
    State

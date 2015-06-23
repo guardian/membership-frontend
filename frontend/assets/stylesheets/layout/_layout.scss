@@ -9,6 +9,9 @@ html {
     background-attachment: fixed;
     background-size: cover;
 }
+html.no-background {
+    background-image: none;
+}
 
 /**
  * Use flexbox for sticky footer

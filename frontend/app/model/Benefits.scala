@@ -17,6 +17,12 @@ object Benefits {
 
   case class BenefitItem(identifier: String, title: String, description: String, icon: String)
 
+  case class ComparisonItem(
+    description: String,
+    availableSupporter: Boolean,
+    availablePartner: Boolean
+  )
+
   val allBenefits = Seq(
     BenefitItem("book_tickets", "Book tickets", "Book tickets to Guardian Live events", "benefit-booking"),
     BenefitItem("digital_digest", "Membership email updates", "Receive regular updates from the membership community", "benefit-digest"),

@@ -145,6 +145,70 @@
 }
 
 /* ==========================================================================
+   Promo Tertiary
+   ========================================================================== */
+
+.promo-tertiary {
+    @include clearfix();
+    color: $white;
+    background-color: $mem-brandBlueDark;
+    margin-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        display: table;
+        width: 100%;
+    }
+}
+.promo-tertiary__header,
+.promo-tertiary__media {
+    display: table-cell;
+    vertical-align: top;
+}
+.promo-tertiary__header {
+    min-height: rem(gs-height(2));
+    padding: rem($gs-baseline) rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding-bottom: rem($gs-baseline * 3);
+    }
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+        padding-right: rem($gs-gutter);
+        width: rem(gs-span(6));
+        position: relative;
+    }
+}
+.promo-tertiary__media {
+    display: block;
+    position: relative;
+}
+.promo-tertiary__title {
+    @include fs-header(3);
+    margin-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        @include fs-header(4, true);
+    }
+}
+.promo-tertiary__description {
+    @include fs-header(1);
+    font-weight: normal;
+    margin-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        @include fs-header(2, true);
+    }
+}
+.promo-tertiary__action {
+    @include mq(tablet) {
+        position: absolute;
+        bottom: rem($gs-baseline);
+        left: rem($gs-baseline);
+    }
+}
+
+/* ==========================================================================
    Promo Alt
    ========================================================================== */
 

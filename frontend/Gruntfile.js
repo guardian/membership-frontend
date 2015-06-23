@@ -98,6 +98,7 @@ module.exports = function (grunt) {
                         'respimage': 'lib/bower-components/respimage/respimage',
                         'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
                         'raven': 'lib/bower-components/raven-js/dist/raven',
+                        'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
                         'ajax': 'src/utils/ajax'
                     },
                     findNestedDependencies: false,
@@ -200,21 +201,28 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
-            css: {
+            compileCss: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
                 tasks: ['compile:css'],
-                options: {
-                    spawn: false,
-                    livereload: true
-                }
+                options: { spawn: false }
             },
-            js: {
+            compileJs: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
                 tasks: ['compile:js'],
-                options: {
-                    spawn: false,
-                    livereload: true
-                }
+                options: { spawn: false }
+            },
+            /**
+             * Only livereload for built assets, not sources.
+             *
+             * Live-reloading on sources causes whole-page-refresh,
+             * rather than desired single-asset refresh.
+             */
+            livereloadCss: {
+                files: [
+                    '<%= dirs.publicDir.stylesheets %>/**/*.css'
+                ],
+                tasks: [],
+                options: { spawn: false, livereload: true }
             }
         },
 
