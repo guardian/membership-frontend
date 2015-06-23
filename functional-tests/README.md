@@ -38,7 +38,7 @@ If the trigger is set up correctly then the build will run the tagged tests when
 The full list of available tags can be found in [Tags.scala](src/main/scala/com.gu.membership/tags/Tags.scala)
 
 ### local.conf
-
+```
   "browserEnvironment" : "local"  
   "environment" : "local"  
   "local" : {  
@@ -54,6 +54,7 @@ The full list of available tags can be found in [Tags.scala](src/main/scala/com.
       "identity"       : "https://profile.thegulocal.com/signin?skipConfirmation=true",  
       "browser"        : "chrome"  
   }
+```
 
 ## Sauce Connect
 

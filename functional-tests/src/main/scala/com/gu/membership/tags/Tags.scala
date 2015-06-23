@@ -14,6 +14,15 @@ e.g. scenarioWeb("Example test that is unstable but quick", Small, Unstable)
   tests will also be run
 */
 
+/* CoreTest:
+    + Non-members are up-sold on the identity membership tab (MB6)
+    + A Partner's membership details are displayed on the identity membership tab (MB3)
+    + A logged in user can see the full events list (ME1)
+    + A friend can upgrade to a partner (MCT3)
+    + Non-members are shown the potential membership discount on event prices (MB1)
+
+*/
+
 object EventListTest extends Tag("EventListTest")
 object EventDetailTest extends Tag("EventDetailTest")
 object EventTicketPurchase extends Tag("EventTicketPurchase")
