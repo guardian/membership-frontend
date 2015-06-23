@@ -250,7 +250,7 @@ trait Info extends Controller {
         name=Some("patrons"),
         altText=Some("Patrons of The Guardian"),
         availableImages=ResponsiveImageGenerator(
-          id="36f6cb575029bb59a7ce17666892c96a00e11135/0_0_2000_1200",
+          id="a0b637e4dc13627ead9644f8ec9bd2cc8771f17d/0_0_2000_1200",
           sizes=List(500)
         )
       )
