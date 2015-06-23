@@ -140,11 +140,11 @@ $_comparisonWidth: gs-span(6);
 }
 
 .comparison-group {
-    overflow-x: scroll;
+    overflow: scroll;
     margin-bottom: rem($gs-baseline * 2);
 
     @include mq(tablet) {
-        overflow: none;
+        overflow: auto;
     }
 }
 .comparison-group__bookend {
