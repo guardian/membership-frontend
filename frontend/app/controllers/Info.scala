@@ -7,6 +7,7 @@ import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService}
 import scala.concurrent.Future
 import model.Benefits.ComparisonItem
+import views.support.Asset
 
 trait Info extends Controller {
 
@@ -118,7 +119,7 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("independence"),
         altText=Some("Ensuring our independence"),
-        availableImages=List(ResponsiveImage("/assets/images/temp/katharine-viner.jpg", 1000))
+        availableImages=List(ResponsiveImage(Asset.at("images/temp/katharine-viner.jpg"), 1000))
       ),
       ResponsiveImageGroup(
         name=Some("backstage-pass"),
