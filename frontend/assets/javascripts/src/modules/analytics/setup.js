@@ -5,16 +5,14 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
-    'src/modules/analytics/crazyegg',
-    'src/modules/analytics/optimizely'
+    'src/modules/analytics/crazyegg'
 ], function (
     cookie,
     googleAnalytics,
     ophanAnalytics,
     omnitureAnalytics,
     krux,
-    crazyegg,
-    optimizely
+    crazyegg
 ) {
 
     var ANALYTICS_OFF_KEY = 'ANALYTICS_OFF_KEY';
@@ -23,8 +21,6 @@ define([
         if (cookie.getCookie(ANALYTICS_OFF_KEY)) {
             guardian.analyticsEnabled = false;
         }
-
-        optimizely.init();
 
         if (guardian.analyticsEnabled) {
             ophanAnalytics.init();
