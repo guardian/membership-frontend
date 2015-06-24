@@ -105,14 +105,11 @@
         background-repeat: no-repeat;
         background-position: center bottom;
         background-size: 100%;
+        padding-bottom: 0;
     }
 
     .listing {
         background-color: transparent;
-    }
-
-    @include mq(tablet) {
-        margin-bottom: rem($gs-gutter * 2);
     }
 }
 
