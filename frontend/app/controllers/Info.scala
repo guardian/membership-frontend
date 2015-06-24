@@ -165,8 +165,7 @@ trait Info extends Controller {
     Ok(views.html.info.subscriberOffer(pageImages))
   }
 
-  // TODO: CachedAction
-  def joinChallenger =  GoogleAuthenticatedStaffAction { implicit request =>
+  def joinChallenger =  CachedAction { implicit request =>
 
     val pageInfo = PageInfo(
       "Join",
