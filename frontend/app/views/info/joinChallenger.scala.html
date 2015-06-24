@@ -103,7 +103,7 @@
 
 
     @* ===== Why join ===== *@
-    <section class="page-slice page-slice--why-join u-padding-top" id="why-join">
+    <section class="page-slice section-why u-padding-top" id="why-join">
         <div class="listing listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
@@ -112,7 +112,7 @@
                 <p class="join-text-intro why-intro">
                     Support fearless journalism and get to the heart of the story.
                 </p>
-                <ul class="grid grid--3up">
+                <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
                         @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
                             <p>
@@ -151,7 +151,7 @@
                     </p>
                 </div>
 
-                <ul class="grid grid--3up">
+                <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
                         @brandPanel(
                             "Guardian Live",
@@ -201,7 +201,7 @@
     <section class="page-slice section-big-ideas" id="big-ideas">
         <div class="listing listing--basic listing--padded l-constrained">
             <div class="listing__content">
-                <ul class="grid grid--2up">
+                <ul class="grid grid--2up grid--single-row">
                     <li class="grid__item">
                         @for(img <- pageImages.find(_.name.contains("space"))) {
                             <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
@@ -230,7 +230,7 @@
 
 
     @* ===== Become a member ===== *@
-    <section class="page-slice tone-tint" id="become-a-member">
+    <section class="page-slice section-join tone-tint" id="become-a-member">
         <div class="listing listing--transparent listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Become a Member</h3>

@@ -7,19 +7,6 @@
  * modular components.
  */
 
-.page-slice--why-join {
-    @include mq(tablet) {
-        background-image: url(/assets/images/join-challenger/join-background.jpg);
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        background-size: 100%;
-    }
-
-    .listing {
-        background-color: transparent;
-    }
-}
-
 .join-text-intro {
     @include fs-headline(3);
     color: $mem-brandBlueDark;
@@ -48,10 +35,11 @@
     background-attachment: fixed;
 
     @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(min-height: 640px) {
-        height: 75vh;
+        height: 60vh;
     }
 }
 .hero-banner__inner {
+    position: relative;
     background-color: rgba(0,0,0,0.6);
 
     @include mq(tablet) {
@@ -64,7 +52,9 @@
     padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: 10% 5%;
+        position:  absolute;
+        @include vertically-center();
+        padding: rem($gs-gutter / 2) 5%;
         max-width: 45em;
     }
 }
@@ -80,10 +70,7 @@
 }
 .hero-banner__description {
     @include fs-headline(5);
-    margin-bottom: rem($gs-gutter * 3);
-}
-.hero-banner__action {
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: rem($gs-gutter * 2);
 }
 
 /* What are members & Why Join
@@ -91,7 +78,7 @@
 
 .section-what,
 .section-big-ideas {
-    padding-top: rem($gs-gutter);
+    padding-top: rem($gs-baseline * 2);
     padding-bottom: 0;
 
     .listing {
@@ -106,6 +93,26 @@
     @include mq(tablet) {
         width: 66%;
         margin-bottom: rem($gs-gutter);
+    }
+}
+
+/* Why
+   ========================================================================== */
+
+.section-why {
+    @include mq(tablet) {
+        background-image: url(/assets/images/join-challenger/join-background.jpg);
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100%;
+    }
+
+    .listing {
+        background-color: transparent;
+    }
+
+    @include mq(tablet) {
+        margin-bottom: rem($gs-gutter * 2);
     }
 }
 
@@ -128,6 +135,12 @@
 /* Become a member
    ========================================================================== */
 
+.section-join {
+    @include mq(tablet) {
+        padding-bottom: 0;
+    }
+}
+
 $_comparisonWidth: gs-span(6);
 
 .become-intro {
@@ -141,8 +154,7 @@ $_comparisonWidth: gs-span(6);
 
 .comparison-group {
     overflow: scroll;
-    margin-bottom: rem($gs-baseline * 2);
-
+    margin-bottom: rem($gs-baseline);
     @include mq(tablet) {
         overflow: auto;
     }
@@ -200,7 +212,7 @@ $_comparisonWidth: gs-span(6);
 .comparison-group__bookend__trail {
     clear: both;
     margin-left: rem($gs-gutter);
-    padding: rem($gs-gutter) 0;
+    padding: rem($gs-gutter) 0 0;
 }
 
 .comparison-action {

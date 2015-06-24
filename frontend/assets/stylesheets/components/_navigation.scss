@@ -325,6 +325,7 @@ $global-nav-height: 36px;
     font-weight: bold;
     display: inline-block;
     vertical-align: middle;
+    text-decoration: none;
     color: $c-neutral1;
     padding: rem($gs-baseline) rem($gs-baseline / 2);
 
@@ -336,18 +337,16 @@ $global-nav-height: 36px;
         padding: rem($gs-baseline) rem($gs-gutter);
     }
 }
-.nav-sections__link:hover {
-    text-decoration: none;
-}
+.nav-sections__link:hover,
 .nav-sections__link.is-active {
+    text-decoration: none;
     background-color: lighten($mem-brandBlue, 10%);
 }
 @include mq(tablet) {
     .nav-sections__link::before {
         color: $white;
-        content: counter(nav-sections) ". ";
+        content: counter(nav-sections);
         display: block;
-        margin-bottom: .2em;
     }
 }
 

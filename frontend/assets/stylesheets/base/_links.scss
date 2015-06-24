@@ -35,6 +35,8 @@ a,
 
 .mini-link {
     @include fs-data(3);
+    color: $c-neutral2;
+
     &:hover {
         text-decoration: none;
     }
