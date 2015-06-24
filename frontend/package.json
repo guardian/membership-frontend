@@ -16,6 +16,7 @@
     "grunt-eslint": "^15.0.0",
     "grunt-karma": "~0.11.0",
     "grunt-postcss": "^0.5.1",
+    "grunt-px-to-rem": "^0.4.0",
     "grunt-sass": "^1.0.0",
     "grunt-shell": "~1.1.2",
     "grunt-svgmin": "^2.0.1",
