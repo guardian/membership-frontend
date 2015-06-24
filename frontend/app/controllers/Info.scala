@@ -2,7 +2,7 @@ package controllers
 
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, FlashMessage, PageInfo}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
 import play.api.mvc.Controller
 import services.{AuthenticationService, EmailService}
 import scala.concurrent.Future
@@ -118,18 +118,7 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("independence"),
         altText=Some("Ensuring our independence"),
-        availableImages=ResponsiveImageGenerator(
-          id="e6459f638392c8176e277733f6f0802953100fa4/0_0_1140_683",
-          sizes=List(1000,500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("get-involved"),
-        altText=Some("Choose to get involved"),
-        availableImages=ResponsiveImageGenerator(
-          id="d8f51bea15bf046df4d166cfd60771b9c24a631f/0_0_1140_683",
-          sizes=List(1000,500)
-        )
+        availableImages=List(ResponsiveImage("/assets/images/temp/katharine-viner.jpg", 1000))
       ),
       ResponsiveImageGroup(
         name=Some("backstage-pass"),
@@ -137,6 +126,14 @@ trait Info extends Controller {
         availableImages=ResponsiveImageGenerator(
           id="83afa3867ef76d82c86291f4387b5799c26e07f8/0_0_1140_684",
           sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("get-involved"),
+        altText=Some("Choose to get involved"),
+        availableImages=ResponsiveImageGenerator(
+          id="ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
+          sizes=List(1000,500)
         )
       )
     )
