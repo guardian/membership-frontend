@@ -25,7 +25,7 @@ define([
         smoothScroll.init({
             speed: 500,
             easing: 'easeInQuad',
-            offset: navOffset + 60
+            offset: navOffset + 20
         });
     }
 
