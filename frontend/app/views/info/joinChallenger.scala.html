@@ -61,7 +61,7 @@
                         Support open, independent journalism and experience the Guardian brought to life
                     </p>
                     <div class="hero-banner__action">
-                        @fragments.common.jumpLink(None, "#what-are-members")
+                        @fragments.common.jumpLink(None, "#what-are-members", isBlock=false)
                     </div>
                 </div>
             </div>
@@ -70,12 +70,12 @@
 
 
     @* ===== Section Navigation ===== *@
-    <div class="nav-sections l-side-margins js-sticky" data-gumshoe-header>
+    <div class="nav-sections l-side-margins js-sticky js-section-nav">
         <div class="nav-sections__inner l-constrained">
             <ol class="nav-sections__list" data-gumshoe>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members">What is Membership?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join">Why join?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member">Become a Member</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members" data-scroll>What is Membership?</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join" data-scroll>Why join?</a></li>
+                <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member" data-scroll>Become a Member</a></li>
             </ol>
         </div>
     </div>
