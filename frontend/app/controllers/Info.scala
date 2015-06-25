@@ -77,7 +77,7 @@ trait Info extends Controller {
         name=Some("intro"),
         altText=Some("Introducing Supporter Membership"),
         availableImages=ResponsiveImageGenerator(
-          id="a0e123f3289d26e0cf30153e64b89f4655a7e0d2/0_0_1999_1200",
+          id="f55167b65375c2f078a88d09856bc46670d21f57/0_0_2000_1200",
           sizes=List(1000,500)
         )
       ),
