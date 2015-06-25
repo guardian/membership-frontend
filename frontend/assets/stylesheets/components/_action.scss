@@ -199,19 +199,22 @@
 
 .action-jump {
     display: block;
+}
+.action-jump:link,
+.action-jump:visited,
+.action-jump:hover,
+.action-jump:active {
     text-decoration: none;
 }
 .action-jump:hover .icon-holder {
     background-color: darken($c-button, 10%);
+    border-color: darken($c-button, 10%);
 }
 .action-jump__label {
     @include fs-data(4);
     color: $c-neutral2;
     vertical-align: middle;
     padding-left: .2em;
-}
-.action-jump:hover {
-    text-decoration: none;
 }
 .action-jump--block {
     margin: rem($gs-baseline * 2) 0;

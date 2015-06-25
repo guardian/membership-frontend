@@ -19,6 +19,7 @@
 }
 .nav-sections--sticky {
     @include mq(tablet) {
+        will-change: transform;
         position: absolute;
         top: 0;
         z-index: 1;
@@ -30,7 +31,6 @@
     top: 0;
     width: 100%;
     z-index: 3;
-    will-change: auto;
 }
 .nav-sections__list,
 .nav-sections__item {
@@ -126,7 +126,8 @@
     @include mq(tablet) {
         position:  absolute;
         @include vertically-center();
-        padding: rem($gs-gutter / 2) 5%;
+        padding: rem($gs-gutter / 2) 0;
+        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
         max-width: 45em;
     }
 }
@@ -159,7 +160,10 @@
     }
 }
 .section-what {
-    padding-top: rem(($gs-baseline * 2) + 64px); // magic number, height of sections nav
+    padding-top: 0;
+    @include mq(tablet) {
+        padding-top: rem(($gs-baseline * 2) + 64px); // magic number, height of sections nav
+    }
 }
 
 .what-intro,
