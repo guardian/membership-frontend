@@ -1,3 +1,5 @@
+package steps
+
 import org.scalatest.Matchers._
 
 /**

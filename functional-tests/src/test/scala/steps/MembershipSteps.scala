@@ -1,19 +1,22 @@
-import java.io.FileInputStream
+package steps
+
 import java.text.SimpleDateFormat
-import java.util.{Random, Date, Properties}
+import java.util.Date
 
 import com.gu.automation.support.{Config, TestLogger}
-import com.gu.identity.testing.usernames.{Encoder, TestUsernames}
 import com.gu.membership.pages._
-import org.openqa.selenium.{Cookie, JavascriptExecutor, WebDriver}
+import org.openqa.selenium.WebDriver
 
+/**
+ * Created by spike on 19/06/15.
+ */
 case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   val validCardNumber = "4242424242424242"
   val cardWithNoFunds = "4000000000000341"
   val secondaryCard   = "5555555555554444"
-  val partnerAnnualPrice = "£136.00"
-  val patronAnnualPrice = "£541.00"
+  val partnerAnnualPrice = "£135.00"
+  val patronAnnualPrice = "£540.00"
 
   def IAmLoggedIn = {
     CookieHandler.login(driver)
@@ -468,46 +471,5 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   private def isNotInPast(dateTime: String) = {
     isInFuture(dateTime) || new SimpleDateFormat("d MMMM yyyy").format(new Date()).equals(dateTime)
-  }
-}
-
-object CookieHandler {
-
-  var loginCookie: Option[Cookie] = None
-  var secureCookie: Option[Cookie] = None
-  val surveyCookie = new Cookie("gu.test", "test")
-
-  def login(driver: WebDriver) {
-    driver.get(Config().getUserValue("identityReturn"))
-    disableAnalytics(driver)
-    new LoginPage(driver).clickRegister
-    register(driver)
-  }
-
-  def register(driver: WebDriver) {
-    driver.manage().addCookie(surveyCookie)
-    val propertyName="identity.test.users.secret"
-
-    val file: String = "/etc/gu/membership-keys.conf"
-
-    val prop = new Properties()
-    prop.load(new FileInputStream(file))
-
-    val secret = prop.getProperty(propertyName).replace("\"","")
-
-    val usernames = TestUsernames(Encoder.withSecret(secret))
-
-    val salt: Array[Byte] = new Array[Byte](2)
-
-    new Random().nextBytes(salt)
-    val user = usernames.generate(salt)
-    val password = scala.util.Random.alphanumeric.take(10).mkString
-    val email = user + "@testme.com"
-    new RegisterPage(driver).enterFirstName(user).enterLastName(user).enterEmail(email)
-      .enterPassword(password).enterUserName(user).clickSubmit
-  }
-
-  def disableAnalytics(driver: WebDriver): Unit = {
-    driver.asInstanceOf[JavascriptExecutor].executeScript("document.cookie = \"ANALYTICS_OFF_KEY=1; domain=.thegulocal.com; path=/; secure\"")
   }
 }

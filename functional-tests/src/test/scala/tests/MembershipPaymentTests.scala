@@ -1,4 +1,7 @@
+package tests
 
+import com.gu.membership.tags.{CoreTest, OptionalTest}
+import steps.MembershipSteps
 
 /**
  * Created by jao on 29/05/2014.
@@ -14,7 +17,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
      As a user
      I want to be able to pay a subscription
      */
-    scenarioWeb("9. Non-logged in registered user purchase a subscription") {
+    scenarioWeb("MP1. Non-logged in registered user purchase a subscription", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmNotLoggedIn
@@ -29,7 +32,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("10. Logged in user can purchase a subscription") {
+    scenarioWeb("MP2. Logged in user can purchase a subscription", CoreTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -42,7 +45,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("11. A user who pays should be able to see the payment details") {
+    scenarioWeb("MP3. A user who pays should be able to see the payment details", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -55,7 +58,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("20. User with incorrect card number cannot make a purchase") {
+    scenarioWeb("MP4. User with incorrect card number cannot make a purchase", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -68,7 +71,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("21. User with no funds in account cannot make a purchase") {
+    scenarioWeb("MP5. User with no funds in account cannot make a purchase", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -81,7 +84,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("22. User with incorrect CVC in card cannot make a purchase") {
+    scenarioWeb("MP6. User with incorrect CVC in card cannot make a purchase", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
@@ -94,7 +97,7 @@ class MembershipPaymentTests extends BaseMembershipTest {
       }
     }
 
-    scenarioWeb("24. User with invalid expiry date in card cannot make a purchase") {
+    scenarioWeb("MP7. User with invalid expiry date in card cannot make a purchase", OptionalTest) {
       implicit driver =>
       given {
         MembershipSteps().IAmLoggedIn
