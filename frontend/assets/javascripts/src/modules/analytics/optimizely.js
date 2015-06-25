@@ -21,9 +21,11 @@ define(function() {
          * Run some extras steps if a user is in a specific A/B test
          * bucket/variation for an experiment.
          */
-        var userVariations = window.optimizely.variationMap || false;
-        if (userVariations && userVariations[EXPERIMENT_ID] === VARIATION_INDEX) {
-            variantSteps();
+        if(typeof window.optimizely !== 'undefined') {
+            var userVariations = window.optimizely.variationMap || false;
+            if (userVariations && userVariations[EXPERIMENT_ID] === VARIATION_INDEX) {
+                variantSteps();
+            }
         }
     }
 
