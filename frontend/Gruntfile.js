@@ -99,6 +99,7 @@ module.exports = function (grunt) {
                         'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
                         'raven': 'lib/bower-components/raven-js/dist/raven',
                         'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
+                        'smoothScroll': 'lib/bower-components/smooth-scroll/dist/js/smooth-scroll',
                         'ajax': 'src/utils/ajax'
                     },
                     findNestedDependencies: false,

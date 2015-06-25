@@ -61,36 +61,36 @@
                         Support open, independent journalism and experience the Guardian brought to life
                     </p>
                     <div class="hero-banner__action">
-                        @fragments.common.jumpLink(None, "#what-are-members")
+                        @fragments.common.jumpLink(None, "#what-are-members", isBlock=false)
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    @* ===== Section Navigation ===== *@
-    <div class="nav-sections l-side-margins js-sticky" data-gumshoe-header>
-        <div class="nav-sections__inner l-constrained">
-            <ol class="nav-sections__list" data-gumshoe>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members">What is Membership?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join">Why join?</a></li>
-                <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member">Become a Member</a></li>
-            </ol>
-        </div>
-    </div>
-
-
     @* ===== What are members ===== *@
     <section class="page-slice section-what" id="what-are-members">
+
+        @* ===== Section Navigation ===== *@
+        <div class="nav-sections nav-sections--sticky l-side-margins js-sticky js-section-nav">
+            <div class="nav-sections__inner l-constrained">
+                <ol class="nav-sections__list" data-gumshoe>
+                    <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members" data-scroll>What is Membership?</a></li>
+                    <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join" data-scroll>Why join?</a></li>
+                    <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member" data-scroll>Become a Member</a></li>
+                </ol>
+            </div>
+        </div>
+
         <div class="listing listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">What is Membership?</h3>
             </div>
             <div class="listing__content">
                 <p class="join-text-intro what-intro">
-                    As a Guardian member, you can contribute to discussions, debates and interviews at our programme of live events,
-                    engage with some of the world’s most talked about thinkers and access an exclusive range of offers and competitions.
+                    Members keep Guardian journalism free and fearless. As a member, you’ll get closer to everything we do.
+                    We’ll draw back the curtain on the workings of the world and you’ll meet some of the world’s most admired thinkers,
+                    with a range of live events, local meetups and exclusive content.
                 </p>
                 @fragments.media.videoPreview(
                     Videos.whatIsMembership,
@@ -103,7 +103,7 @@
 
 
     @* ===== Why join ===== *@
-    <section class="page-slice page-slice--why-join u-padding-top" id="why-join">
+    <section class="page-slice section-why u-padding-top" id="why-join">
         <div class="listing listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
@@ -112,15 +112,7 @@
                 <p class="join-text-intro why-intro">
                     Support fearless journalism and get to the heart of the story.
                 </p>
-                <ul class="grid grid--3up">
-                    <li class="grid__item">
-                        @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
-                            <p>
-                                We’ll introduce you to some of the world's most influential thinkers&mdash;from
-                                our invited guests to the growing community of members around you.
-                            </p>
-                        }
-                    </li>
+                <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
                         @fragments.promos.panel("Support the Guardian", pageImages.find(_.name.contains("support"))) {
                             <p>
@@ -132,10 +124,19 @@
                         }
                     </li>
                     <li class="grid__item">
+                        @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
+                            <p>
+                                Unedited, unfiltered, uncensored: experience the Guardian for yourself at events, meetups and classes.
+                                Stretch your mind, learn new skills, and make genuine connections with guest speakers, journalists,
+                                and the growing community of Guardian members.
+                            </p>
+                        }
+                    </li>
+                    <li class="grid__item">
                         @fragments.promos.panel("Exclusive content", pageImages.find(_.name.contains("exclusive"))) {
                             <p>
-                                From live streams of Members’ events, member articles in our monthly Guardian supplement,
-                                to a range of <a href="@routes.OffersAndCompetitions.list">offers, competitions</a> and unique live experiences, there’s something for you in Guardian Membership
+                                From live streams of Members’ events, member articles in our monthly Guardian supplement, to a range
+                                of offers, competitions and discounts at places we love there’s something for you in Guardian Membership.
                             </p>
                         }
                     </li>
@@ -145,13 +146,9 @@
 
                 <div class="join-text-intro join-text-intro--block">
                     <p>Experience the Guardian up close. First hand.</p>
-                    <p>
-                        Membership breaks down the walls between privilege and influence; between you and the news.
-                        Unedited, uncensored, experience the Guardian for yourself.
-                    </p>
                 </div>
 
-                <ul class="grid grid--3up">
+                <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
                         @brandPanel(
                             "Guardian Live",
@@ -201,7 +198,7 @@
     <section class="page-slice section-big-ideas" id="big-ideas">
         <div class="listing listing--basic listing--padded l-constrained">
             <div class="listing__content">
-                <ul class="grid grid--2up">
+                <ul class="grid grid--2up grid--single-row">
                     <li class="grid__item">
                         @for(img <- pageImages.find(_.name.contains("space"))) {
                             <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
@@ -230,7 +227,7 @@
 
 
     @* ===== Become a member ===== *@
-    <section class="page-slice tone-tint" id="become-a-member">
+    <section class="page-slice section-join tone-tint" id="become-a-member">
         <div class="listing listing--transparent listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Become a Member</h3>
@@ -283,7 +280,13 @@
                     <div class="comparison-group__bookend">
                         <div class="comparison-group__bookend__column">
                             <div class="comparison-action">
-                                <a class="action action--no-icon" href="@routes.Joiner.joinPaid(Tier.Partner)">
+                                <a href="@routes.Joiner.joinPaid(Tier.Partner)"
+                                   class="action action--no-icon"
+                                   data-metric-trigger="click"
+                                   data-metric-category="join"
+                                   data-metric-action="friend"
+                                   data-metric-label="Become a Partner"
+                                >
                                     Become a Partner
                                     @fragments.actionIcon("arrow-right")
                                 </a>
@@ -291,7 +294,13 @@
                         </div>
                         <div class="comparison-group__bookend__column">
                             <div class="comparison-action">
-                                <a class="action action--no-icon" href="@routes.Joiner.joinPaid(Tier.Supporter)">
+                                <a href="@routes.Joiner.joinPaid(Tier.Supporter)"
+                                   class="action action--no-icon"
+                                   data-metric-trigger="click"
+                                   data-metric-category="join"
+                                   data-metric-action="friend"
+                                   data-metric-label="Become a Supporter"
+                                >
                                     Become a Supporter
                                     @fragments.actionIcon("arrow-right")
                                 </a>

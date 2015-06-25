@@ -200,7 +200,9 @@
 .action-jump {
     display: block;
     text-decoration: none;
-    margin-bottom: rem($gs-gutter * 3);
+}
+.action-jump:hover .icon-holder {
+    background-color: darken($c-button, 10%);
 }
 .action-jump__label {
     @include fs-data(4);
@@ -210,6 +212,9 @@
 }
 .action-jump:hover {
     text-decoration: none;
+}
+.action-jump--block {
+    margin: rem($gs-baseline * 2) 0;
 }
 
 /* Actions - Disabled

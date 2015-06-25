@@ -7,18 +7,77 @@
  * modular components.
  */
 
-.page-slice--why-join {
+/**
+ * Sections navigation
+ */
+.nav-sections {
+    @include unstyled-list();
+    overflow: auto;
+    color: $black;
+    background-color: $mem-brandBlue;
+    position: relative;
+}
+.nav-sections--sticky {
     @include mq(tablet) {
-        background-image: url(/assets/images/join-challenger/join-background.jpg);
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        background-size: 100%;
-    }
-
-    .listing {
-        background-color: transparent;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        width: 100%;
     }
 }
+.nav-sections.is-sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+    will-change: auto;
+}
+.nav-sections__list,
+.nav-sections__item {
+    display: block;
+    float: left;
+}
+.nav-sections__list {
+    margin: 0;
+    overflow: auto;
+    list-style: none;
+    counter-reset: nav-sections;
+}
+.nav-sections__item {
+    counter-increment: nav-sections;
+}
+.nav-sections__link {
+    @include font-smoothing();
+    @include fs-data(2);
+    line-height: 1;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    color: $c-neutral1;
+    padding: rem($gs-baseline) rem($gs-baseline / 2);
+
+    @include mq(tablet) {
+        min-width: rem(gs-span(3));
+        @include fs-headline(2);
+        font-weight: bold;
+        border-right: 1px solid $white;
+        padding: rem($gs-baseline) rem($gs-gutter);
+    }
+}
+.nav-sections__link:hover,
+.nav-sections__link.is-active {
+    text-decoration: none;
+    background-color: lighten($mem-brandBlue, 10%);
+}
+@include mq(tablet) {
+    .nav-sections__link::before {
+        color: $white;
+        content: counter(nav-sections);
+        display: block;
+    }
+}
+
 
 .join-text-intro {
     @include fs-headline(3);
@@ -48,10 +107,11 @@
     background-attachment: fixed;
 
     @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(min-height: 640px) {
-        height: 75vh;
+        height: 60vh;
     }
 }
 .hero-banner__inner {
+    position: relative;
     background-color: rgba(0,0,0,0.6);
 
     @include mq(tablet) {
@@ -64,7 +124,9 @@
     padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: 10% 5%;
+        position:  absolute;
+        @include vertically-center();
+        padding: rem($gs-gutter / 2) 5%;
         max-width: 45em;
     }
 }
@@ -80,10 +142,7 @@
 }
 .hero-banner__description {
     @include fs-headline(5);
-    margin-bottom: rem($gs-gutter * 3);
-}
-.hero-banner__action {
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: rem($gs-gutter * 2);
 }
 
 /* What are members & Why Join
@@ -91,12 +150,16 @@
 
 .section-what,
 .section-big-ideas {
-    padding-top: rem($gs-gutter);
+    position: relative;
+    padding-top: rem($gs-baseline * 2);
     padding-bottom: 0;
 
     .listing {
         padding-bottom: 0;
     }
+}
+.section-what {
+    padding-top: rem(($gs-baseline * 2) + 64px); // magic number, height of sections nav
 }
 
 .what-intro,
@@ -106,6 +169,23 @@
     @include mq(tablet) {
         width: 66%;
         margin-bottom: rem($gs-gutter);
+    }
+}
+
+/* Why
+   ========================================================================== */
+
+.section-why {
+    @include mq(tablet) {
+        background-image: url(/assets/images/join-challenger/join-background.jpg);
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100%;
+        padding-bottom: 0;
+    }
+
+    .listing {
+        background-color: transparent;
     }
 }
 
@@ -128,6 +208,12 @@
 /* Become a member
    ========================================================================== */
 
+.section-join {
+    @include mq(tablet) {
+        padding-bottom: 0;
+    }
+}
+
 $_comparisonWidth: gs-span(6);
 
 .become-intro {
@@ -141,8 +227,7 @@ $_comparisonWidth: gs-span(6);
 
 .comparison-group {
     overflow: scroll;
-    margin-bottom: rem($gs-baseline * 2);
-
+    margin-bottom: rem($gs-baseline);
     @include mq(tablet) {
         overflow: auto;
     }
@@ -200,7 +285,7 @@ $_comparisonWidth: gs-span(6);
 .comparison-group__bookend__trail {
     clear: both;
     margin-left: rem($gs-gutter);
-    padding: rem($gs-gutter) 0;
+    padding: rem($gs-gutter) 0 0;
 }
 
 .comparison-action {
