@@ -216,7 +216,6 @@ trait ActivityTracking {
 
   private def getTracker: Tracker = {
     val emitter = new Emitter(ActivityTracking.url, HttpMethod.GET)
-    emitter.setRequestMethod(RequestMethod.Asynchronous)
     val subject = new Subject
     new Tracker(emitter, subject, "membership", "membership-frontend")
   }
