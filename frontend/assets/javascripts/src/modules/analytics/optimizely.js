@@ -1,10 +1,6 @@
 define(function() {
 
-    var SETTINGS = {
-        experimentId: 3089970060,
-        conrolId: 3084500052,
-        variationId: 3091240050
-    };
+    var EXPERIMENT_ID = 3089970060;
 
     function variantSteps() {
         var HIDDEN_CLASS = 'u-h';
@@ -20,8 +16,8 @@ define(function() {
     }
 
     function init() {
-        var userVariations = window.optimizely.data.state.variationMap || false;
-        if (userVariations && userVariations[SETTINGS.experimentId] === SETTINGS.variationId) {
+        var userVariations = window.optimizely.variationMap || false;
+        if (userVariations && userVariations[EXPERIMENT_ID] === 1) {
             variantSteps();
         }
     }
