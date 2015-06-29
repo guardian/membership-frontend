@@ -6,7 +6,7 @@
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 
-@main("Event Detail | " + event.name.text, pageInfo=pageInfo) {
+@main(event.name.text, pageInfo=pageInfo) {
 
     @* Event Name *@
     <div class="event-header tone-@event.metadata.identifier">
