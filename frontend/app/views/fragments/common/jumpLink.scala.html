@@ -1,10 +1,15 @@
-@(labelOpt: Option[String], href: String, isBlock: Boolean = true)
+@(label: String, href: String, isReversed: Boolean = false)
 
-<a href="@href" class="action-jump@if(isBlock){ action-jump--block}" data-scroll>
+<a  href="@href"
+    class="action-jump action-jump--block@if(isReversed){ action-jump--reversed}"
+    data-metric-trigger="click"
+    data-metric-category="navigation"
+    data-metric-action="jumpLink"
+    data-metric-label="@label"
+    data-scroll
+>
     <span class="icon-holder icon-holder--large icon-holder--fill">
        @fragments.inlineIcon("arrow-down")
     </span>
-    @for(label <- labelOpt) {
-        <span class="action-jump__label">@label</span>
-    }
+    <span class="action-jump__label">@label</span>
 </a>

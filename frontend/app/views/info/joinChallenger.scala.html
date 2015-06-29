@@ -61,7 +61,7 @@
                         Support open, independent journalism and experience the Guardian brought to life
                     </p>
                     <div class="hero-banner__action">
-                        @fragments.common.jumpLink(None, "#what-are-members", isBlock=false)
+                        @fragments.common.jumpLink("Learn more", "#what-are-members", isReversed=true)
                     </div>
                 </div>
             </div>
@@ -75,16 +75,40 @@
         <div class="nav-sections nav-sections--sticky l-side-margins js-sticky js-section-nav">
             <div class="nav-sections__inner l-constrained">
                 <ol class="nav-sections__list" data-gumshoe>
-                    <li class="nav-sections__item"><a class="nav-sections__link" href="#what-are-members" data-scroll>What is Membership?</a></li>
-                    <li class="nav-sections__item"><a class="nav-sections__link" href="#why-join" data-scroll>Why join?</a></li>
-                    <li class="nav-sections__item"><a class="nav-sections__link" href="#become-a-member" data-scroll>Become a Member</a></li>
+                    <li class="nav-sections__item">
+                        <a  class="nav-sections__link"
+                            href="#what-are-members"
+                            data-metric-trigger="click"
+                            data-metric-category="navigation"
+                            data-metric-action="sections"
+                            data-scroll
+                        >What is membership</a>
+                    </li>
+                    <li class="nav-sections__item">
+                        <a  class="nav-sections__link"
+                            href="#why-join"
+                            data-metric-trigger="click"
+                            data-metric-category="navigation"
+                            data-metric-action="sections"
+                            data-scroll
+                        >Why join</a>
+                    </li>
+                    <li class="nav-sections__item">
+                    <a  class="nav-sections__link"
+                            href="#become-a-member"
+                            data-metric-trigger="click"
+                            data-metric-category="navigation"
+                            data-metric-action="sections"
+                            data-scroll
+                        >Become a member</a>
+                    </li>
                 </ol>
             </div>
         </div>
 
         <div class="listing listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
-                <h3 class="h-intro h-intro--capitalize">What is Membership?</h3>
+                <h3 class="h-intro h-intro--capitalize">What is membership</h3>
             </div>
             <div class="listing__content">
                 <p class="join-text-intro what-intro">
@@ -93,10 +117,10 @@
                     with a range of live events, local meetups and exclusive content.
                 </p>
                 @fragments.media.videoPreview(
-                    Videos.whatIsMembership,
-                    "Listen to Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams as they describe Guardian Membership."
+                    Videos.whatIsMembershipAlt,
+                    "Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership."
                 )
-                @fragments.common.jumpLink(Some("More"), "#why-join")
+                @fragments.common.jumpLink("Benefits of membership", "#why-join")
             </div>
         </div>
     </section>
@@ -142,7 +166,7 @@
                     </li>
                 </ul>
 
-                @fragments.common.jumpLink(Some("More"), "#experience")
+                @fragments.common.jumpLink("Get involved", "#experience")
 
                 <div class="join-text-intro join-text-intro--block" id="experience">
                     <p>Experience the Guardian up close. First hand.</p>
@@ -220,7 +244,7 @@
                         </div>
                     </li>
                 </ul>
-                @fragments.common.jumpLink(Some("More"), "#become-a-member")
+                @fragments.common.jumpLink("Join today", "#become-a-member")
             </div>
         </div>
     </section>
@@ -230,11 +254,11 @@
     <section class="page-slice section-join tone-tint" id="become-a-member">
         <div class="listing listing--transparent listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
-                <h3 class="h-intro h-intro--capitalize">Become a Member</h3>
+                <h3 class="h-intro h-intro--capitalize">Become a member</h3>
             </div>
             <div class="listing__content">
                 <p class="join-text-intro become-intro">
-                    Make the connection.<br/>
+                    Get closer.<br/>
                     Become a Guardian Member.
                 </p>
 

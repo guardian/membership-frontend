@@ -42,6 +42,11 @@
     overflow: auto;
     list-style: none;
     counter-reset: nav-sections;
+
+    @include mq(tablet) {
+        border-left: 1px solid $white;
+        margin-left: rem(gs-span(2.5));
+    }
 }
 .nav-sections__item {
     counter-increment: nav-sections;
@@ -150,7 +155,8 @@
    ========================================================================== */
 
 .section-what,
-.section-big-ideas {
+.section-big-ideas,
+.section-why {
     position: relative;
     padding-top: rem($gs-baseline * 2);
     padding-bottom: 0;
@@ -173,23 +179,6 @@
     @include mq(tablet) {
         width: 66%;
         margin-bottom: rem($gs-gutter);
-    }
-}
-
-/* Why
-   ========================================================================== */
-
-.section-why {
-    @include mq(tablet) {
-        background-image: url(/assets/images/join-challenger/join-background.jpg);
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        background-size: 100%;
-        padding-bottom: 0;
-    }
-
-    .listing {
-        background-color: transparent;
     }
 }
 
