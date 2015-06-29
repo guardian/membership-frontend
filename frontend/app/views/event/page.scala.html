@@ -36,9 +36,16 @@
             </div>
             @for(internalTicketing <- event.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">
-                    <div class="event-ticket__item event-ticket__details">
-                        @fragments.pricing.priceInfoEvent(event, isPrimary=true) <!-- internalTicketing -->
-                    </div>
+                    @*
+                        Special case for Shubbak festival
+                        http://www.eventbrite.co.uk/e/shubbak-a-window-on-contemporary-arab-culture-tickets-17514481285
+                        TODO: Remove after 29th July
+                    *@
+                    @if(event.id != "17514481285") {
+                        <div class="event-ticket__item event-ticket__details">
+                            @fragments.pricing.priceInfoEvent(event, isPrimary=true)
+                        </div>
+                    }
                     @if(event.isBookable) {
                         <div class="event-ticket__item event-ticket__action">
                             @fragments.event.ticketCta(event, List("action--booking", "qa-event-detail-booking-action"))
