@@ -9,10 +9,17 @@ for (var file in window.__karma__.files) {
 }
 
 requirejs.config({
-    // Karma serves files from '/base'
+    /**
+     * Karma serves files from '/base'
+     */
     baseUrl: '/base/assets/javascripts/',
 
-    // Keep these in sync with the paths found in the requireJs paths
+    /**
+     * Keep these in sync with the paths
+     * found in the requirejs Grunt config
+     * in Gruntfile.js
+     */
+    //
     paths: {
         '$': 'src/utils/$',
         'modernizr': 'lib/modernizr',
@@ -24,12 +31,18 @@ requirejs.config({
         'respimage': 'lib/bower-components/respimage/respimage',
         'lazySizes': 'lib/bower-components/lazysizes/lazysizes',
         'raven': 'lib/bower-components/raven-js/dist/raven',
+        'gumshoe': 'lib/bower-components/gumshoe/dist/js/gumshoe',
+        'smoothScroll': 'lib/bower-components/smooth-scroll/dist/js/smooth-scroll',
         'ajax': 'src/utils/ajax'
     },
 
-    // ask Require.js to load these files (all our tests)
+    /**
+     * Ask require.js to load these files (all our tests)
+     */
     deps: tests,
 
-    // start test run, once Require.js is done
+    /**
+     * Start test run, once require.js is done
+     */
     callback: window.__karma__.start
 });
