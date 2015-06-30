@@ -8,7 +8,9 @@
         @fragments.inlineIcon("time", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
     <div class="stat-item__second">
-        <span class="qa-event-detail-datetime">@prettyDateWithTimeAndDayName(event.start)</span>
+        <span class="qa-event-detail-datetime">
+            @dateTimeRange(event.startAndEnd)
+        </span>
     </div>
 </div>
 

@@ -2,6 +2,7 @@ package views.support
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Instant
+import org.joda.time.Interval
 import org.joda.time.format.PeriodFormat
 import play.twirl.api.Html
 
@@ -23,6 +24,10 @@ object Dates {
     lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
     def pretty(includeTime: Boolean): String = if (includeTime) prettyWithTime else pretty
     def isContemporary(threshold: Duration = 24.hours) = new Interval(dt - threshold, dt + threshold).contains(DateTime.now)
+  }
+
+  implicit class RichInterval(interval: Interval) {
+    lazy val isSameDay = interval.start.withTimeAtStartOfDay() == interval.end.withTimeAtStartOfDay()
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
@@ -59,18 +64,30 @@ object Dates {
 
   case class Range(start: String, end: String)
 
-  def dateRange(start: DateTime, end: DateTime): Range = {
-    def dateToks(dt: DateTime) = dt.toString("EEEE d MMMMM YYYY").split(" ").reverse
+  private def multiDateRangeFormatter(interval: Interval, fmt: String): Range = {
+    def dateToks(dt: DateTime) = dt.toString(fmt).split(" ").reverse
+    val startToks = dateToks(interval.start)
+    val endToks = dateToks(interval.end)
+    val newStartToks = (startToks zip endToks).dropWhile { case (a, b) => a == b }.map { case (a, b) => a }
+    Range(newStartToks.reverse.mkString(" "), endToks.reverse.mkString(" "))
+  }
 
-    if (start.withTimeAtStartOfDay() == end.withTimeAtStartOfDay()) {
-      Range(prettyDateWithTimeAndDayName(start), prettyTime(end))
+  def dateRange(interval: Interval): String = {
+    if (interval.isSameDay) {
+      prettyDate(interval.start)
     } else {
-      val startToks = dateToks(start)
-      val endToks = dateToks(end)
-
-      val newStartToks = (startToks zip endToks).dropWhile { case (a, b) => a == b }.map { case (a, b) => a }
-
-      Range(newStartToks.reverse.mkString(" "), endToks.reverse.mkString(" "))
+      val range = multiDateRangeFormatter(interval, "d MMMMM YYYY")
+      range.start + "–" + range.end
     }
   }
+
+  def dateTimeRange(interval: Interval): String = {
+    if (interval.isSameDay) {
+      prettyDateWithTimeAndDayName(interval.start) + "–" + prettyTime(interval.end)
+    } else {
+      val range = multiDateRangeFormatter(interval, "EEEE d MMMMM YYYY")
+      range.start + "–" + range.end
+    }
+  }
+
 }
