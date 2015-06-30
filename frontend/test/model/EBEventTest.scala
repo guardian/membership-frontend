@@ -79,6 +79,9 @@ class EBEventTest extends PlaySpecification {
     "should not return media service url is missing" in {
       nonTicketedEvent.mainImageUrl must beNone
     }
+    "should display venue description" in {
+      ebLiveEvent.venueDescription mustEqual "The Royal Institution, London, W1S 4BS"
+    }
   }
 
   "internal ticketing (tickets sold by us thru eventbrite, rather than external partners)" should {
