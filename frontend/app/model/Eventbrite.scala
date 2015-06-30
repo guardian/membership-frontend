@@ -220,6 +220,12 @@ object Eventbrite {
       else Some("http://schema.org/InStock")
     }
 
+    val venueDescription = List(
+      venue.name,
+      venue.address.flatMap(_.city),
+      venue.address.flatMap(_.postal_code)
+    ).flatten.mkString(", ")
+
     val statusText: Option[String] = {
       if (isPastEvent) Some("Past event")
       else if (isSoldOut) Some("Sold out")

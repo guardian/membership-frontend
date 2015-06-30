@@ -13,7 +13,7 @@
             @fragments.event.itemMetaTitle(event)
             <time class="event-item__time" datetime="@event.start">@event.start.pretty</time>
             <div class="event-item__location">
-                @fragments.event.addressSummary(event)
+                @event.venueDescription
             </div>
             @if(showPrice) {
                 <div class="event-item__footer">

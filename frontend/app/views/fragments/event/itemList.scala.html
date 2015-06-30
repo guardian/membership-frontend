@@ -13,7 +13,7 @@
         <div class="event-item__meta">
             <time class="event-item__time" datetime="@event.start">@event.start.pretty</time>
             <div class="event-item__location">
-                @fragments.event.addressSummary(event)
+                @event.venueDescription
             </div>
         </div>
         @fragments.pricing.priceInfoEvent(event)
