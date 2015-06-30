@@ -1,35 +1,43 @@
 @(event: model.RichEvent.RichEvent, isPrimary: Boolean = false, showLimited: Boolean = false)
 
-@for(ticketing <- event.internalTicketing) {
-    <div class="price-info-inline@if(isPrimary){ price-info-inline--primary}">
 
-        @if(ticketing.isFree) {
-            <div class="price-info-inline__value">Free</div>
-        } else {
-            @ticketing.memberDiscountOpt.fold {
-                <div class="price-info-inline__value qa-event-detail-price">
-                    @ticketing.generalReleaseTicketOpt.map(_.priceText)
-                </div>
-            } { discountTicketing =>
-                <div class="js-event-price">
-                    <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText">
-                    @discountTicketing.generalRelease.cost.get.formattedPrice
+@for(ticketing <- event.internalTicketing) {
+    @*
+        Special case for Shubbak festival
+        http://www.eventbrite.co.uk/e/shubbak-a-window-on-contemporary-arab-culture-tickets-17514481285
+        TODO: Remove after 29th July
+    *@
+    @if(event.id != "17514481285") {
+        <div class="price-info-inline@if(isPrimary){ price-info-inline--primary}">
+
+            @if(ticketing.isFree) {
+                <div class="price-info-inline__value">Free</div>
+            } else {
+                @ticketing.memberDiscountOpt.fold {
+                    <div class="price-info-inline__value qa-event-detail-price">
+                        @ticketing.generalReleaseTicketOpt.map(_.priceText)
                     </div>
-                    <div class="price-info-inline__trail">
-                        <span class="js-event-price-discount qa-event-detail-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText">
-                            Partners/Patrons @discountTicketing.member.priceText
-                        </span>
-                        <span class="js-event-price-saving" data-discount-text="(you save @discountTicketing.savingText)">
-                            (save @discountTicketing.savingText)
-                        </span>
-                    </div>
-                    @if(showLimited && event.isBookable && event.isLimitedAvailability) {
-                        <div class="price-info-inline__trail price-info-inline__limited">
-                            @event.limitedAvailabilityText
+                } { discountTicketing =>
+                    <div class="js-event-price">
+                        <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText">
+                        @discountTicketing.generalRelease.cost.get.formattedPrice
                         </div>
-                    }
-                </div>
+                        <div class="price-info-inline__trail">
+                            <span class="js-event-price-discount qa-event-detail-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText">
+                                Partners/Patrons @discountTicketing.member.priceText
+                            </span>
+                            <span class="js-event-price-saving" data-discount-text="(you save @discountTicketing.savingText)">
+                                (save @discountTicketing.savingText)
+                            </span>
+                        </div>
+                        @if(showLimited && event.isBookable && event.isLimitedAvailability) {
+                            <div class="price-info-inline__trail price-info-inline__limited">
+                                @event.limitedAvailabilityText
+                            </div>
+                        }
+                    </div>
+                }
             }
-        }
-    </div>
+        </div>
+    }
 }
