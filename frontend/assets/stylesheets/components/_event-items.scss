@@ -53,6 +53,7 @@
 }
 .event-item__location {
     color: $c-neutral2;
+    @include fs-data(4);
 }
 .event-item__description {
     @include fs-bodyCopy(1);

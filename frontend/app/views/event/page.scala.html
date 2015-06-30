@@ -31,7 +31,7 @@
                     }
                 </div>
                 <div class="event-details__location qa-event-detail-location">
-                    @fragments.event.addressSummary(event)
+                    @event.venueDescription
                 </div>
             </div>
             @for(internalTicketing <- event.internalTicketing) {
