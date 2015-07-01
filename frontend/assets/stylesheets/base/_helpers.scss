@@ -50,21 +50,21 @@
 .u-anchor {
     @include mq($until: mem-full) {
         position: absolute;
-        right: rem($gs-gutter / 2);
-        top: rem($gs-gutter / 2);
+        right: $gs-gutter / 2;
+        top: $gs-gutter / 2;
     }
 }
 
 .u-divider {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: $gs-baseline / 2;
     border-top: 1px solid $c-border-brand;
 }
 .u-divider-neutral {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: $gs-baseline / 2;
     border-top: 1px solid $c-border-neutral;
 }
 .u-divider-dotted {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: $gs-baseline / 2;
     border-top: 1px dotted $c-neutral3;
 }
 

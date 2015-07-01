@@ -50,10 +50,7 @@ module.exports = function (grunt) {
             options: {
                 outputStyle: 'compressed',
                 sourceMap: isDev,
-                precision: 5,
-                includePaths: [
-                    '<%= dirs.assets.stylesheets %>/components/sass-mq'
-                ]
+                precision: 5
             },
             dist: {
                 files: [{
@@ -64,9 +61,27 @@ module.exports = function (grunt) {
                         'ie9.style.scss',
                         'tools.style.scss',
                         'event-card.scss',
-                        'admin/admin.style.scss'],
+                        'admin/admin.style.scss'
+                    ],
                     dest: '<%= dirs.publicDir.stylesheets %>',
                     ext: '.css'
+                }]
+            }
+        },
+
+        px_to_rem: {
+            dist: {
+                options: {
+                    map: isDev,
+                    base: 16,
+                    fallback: false,
+                    max_decimals: 5
+                },
+                files: [{
+                    expand: true,
+                    cwd: '<%= dirs.publicDir.stylesheets %>',
+                    src: ['*.css'],
+                    dest: '<%= dirs.publicDir.stylesheets %>'
                 }]
             }
         },
@@ -367,6 +382,30 @@ module.exports = function (grunt) {
 
     grunt.registerTask('validate', ['eslint']);
 
+    grunt.registerTask('build:images', ['svgSprite', 'copy:images', 'imagemin']);
+    grunt.registerTask('build:css', ['sass', 'px_to_rem', 'postcss']);
+
+    grunt.registerTask('compile:css', [
+        'clean:css',
+        'clean:images',
+        'build:images',
+        'build:css'
+    ]);
+    grunt.registerTask('compile:js', function() {
+        if (!isDev) {
+            grunt.task.run(['validate']);
+        }
+        grunt.task.run([
+            'clean:js',
+            'requirejs:compile',
+            'requirejs:compileTools',
+            'requirejs:compileAdmin',
+            'copy:polyfills',
+            'copy:curl',
+            'copy:zxcvbn',
+            'copy:omniture'
+        ]);
+    });
     grunt.registerTask('compile', function(){
         grunt.task.run([
             'clean:public',
@@ -383,32 +422,6 @@ module.exports = function (grunt) {
                 'clean:public:prod'
             ]);
         }
-    });
-    grunt.registerTask('compile:css', function() {
-        grunt.task.run([
-            'clean:css',
-            'clean:images',
-            'svgSprite',
-            'copy:images',
-            'imagemin',
-            'sass',
-            'postcss'
-        ]);
-    });
-    grunt.registerTask('compile:js', function() {
-        if (!isDev) {
-            grunt.task.run(['validate']);
-        }
-        grunt.task.run([
-            'clean:js',
-            'requirejs:compile',
-            'requirejs:compileTools',
-            'requirejs:compileAdmin',
-            'copy:polyfills',
-            'copy:curl',
-            'copy:zxcvbn',
-            'copy:omniture'
-        ]);
     });
 
     /***********************************************************************
