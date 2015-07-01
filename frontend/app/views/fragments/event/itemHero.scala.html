@@ -6,7 +6,9 @@
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)
-            <time class="event-item__time" datetime="@event.start">@event.start.pretty</time>
+            <time class="event-item__time" datetime="@event.start">
+                @dateRange(event.startAndEnd)
+            </time>
             <div class="event-item__location">
                 @event.venueDescription
             </div>

@@ -179,19 +179,22 @@ object Eventbrite {
     val fewerMembersTicketsThanGeneralTickets = member.quantity_total < generalRelease.quantity_total
   }
 
-  case class EBEvent(name: EBRichText,
-                     description: Option[EBRichText],
-                     url: String,
-                     id: String,
-                     start: DateTime,
-                     end: DateTime,
-                     created: Instant,
-                     venue: EBVenue,
-                     capacity: Int,
-                     ticket_classes: Seq[EBTicketClass],
-                     status: String) extends EBObject {
+  case class EBEvent(
+    name: EBRichText,
+    description: Option[EBRichText],
+    url: String,
+    id: String,
+    start: DateTime,
+    end: DateTime,
+    created: Instant,
+    venue: EBVenue,
+    capacity: Int,
+    ticket_classes: Seq[EBTicketClass],
+    status: String
+  ) extends EBObject {
 
     val times = EventTimes(created, start)
+    val startAndEnd = new Interval(start, end)
 
     val ticketing: Option[Ticketing] =
       if (description.exists(_.html.contains("<!-- noTicketEvent -->"))) Some(ExternalTicketing) else InternalTicketing.optFrom(this)

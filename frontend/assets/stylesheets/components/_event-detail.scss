@@ -107,13 +107,11 @@
 }
 .event-details__time {
     @include fs-headline(2);
+    white-space: nowrap;
 
     @include mq(tablet) {
         @include fs-headline(4, true);
     }
-}
-.event-details__time__part {
-    white-space: nowrap;
 }
 .event-details__location {
     @include fs-data(4);

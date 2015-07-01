@@ -25,10 +25,7 @@
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
-                    @defining(dateRange(event.start, event.end)) { range =>
-                        <span class="event-details__time__part">@range.start</span>
-                        - <span class="event-details__time__part">@range.end</span>
-                    }
+                    @dateTimeRange(event.startAndEnd)
                 </div>
                 <div class="event-details__location qa-event-detail-location">
                     @event.venueDescription
