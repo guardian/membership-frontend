@@ -196,7 +196,7 @@ object Faq {
       "no-subscriber-id"
     ),
     Item("When do I need to take up this offer?",
-      Html("This offer is open until 5 July 2015. However, we reserve the right at any time to modify or discontinue, temporarily or permanently, this offer without prior notice."),
+      Html("This offer is open until 13 July 2015. However, we reserve the right at any time to modify or discontinue, temporarily or permanently, this offer without prior notice."),
       "when-start-offer"
     ),
     Item("Does this affect my subscription to the Guardian?",
