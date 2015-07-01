@@ -5,10 +5,9 @@
         @fragments.event.headerBar(
             title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
             toneClassOpt=Some("tone-trans-guardian-live"),
-            logoOpt=Some("images/logos/guardian-live.svg"),
-            Some("Partners &amp;<br>Patrons save 50%<br>on all Guardian Live<br>events booked by<br> 30 June")
+            logoOpt=Some("images/logos/guardian-live.svg")
         )
-        @fragments.event.listing(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true, hasRoundel=true)
+        @fragments.event.listing(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
         @fragments.tier.joinListing()
     </main>
 }

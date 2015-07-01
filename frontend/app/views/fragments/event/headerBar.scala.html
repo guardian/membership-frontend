@@ -1,15 +1,13 @@
 @(
     title: String,
     toneClassOpt: Option[String] = None,
-    logoOpt: Option[String] = None,
-    roundel: Option[String] = None
+    logoOpt: Option[String] = None
 )
 
 @import views.support.Asset
 
-<section class="header-bar @toneClassOpt.mkString("")@if(roundel) { header-bar__title--has-roundel}">
-    <h1 class="header-bar__title">@Html(title)</h1>
-    @for(r <- roundel) { <h2 class="roundel"><span>@Html(r)</span></h2> }
+<section class="header-bar @toneClassOpt.mkString("")">
+    <h1 class="header-bar__title">@title</h1>
     @for(logo <- logoOpt) {
         <i class="header-bar__logo">
             <img class="header-bar__logo__img" src="@Asset.at(logo)">

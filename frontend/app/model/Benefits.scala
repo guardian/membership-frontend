@@ -28,7 +28,7 @@ object Benefits {
     BenefitItem("digital_digest", "Membership email updates", "Receive regular updates from the membership community", "benefit-digest"),
     BenefitItem("video_highlights", "Video highlights", "Watch highlights of selected Guardian Live events", "benefit-video"),
     BenefitItem("early_booking", "Early booking", "Early ticket booking on Guardian Live Events (before Friends and Supporters)", "benefit-priority-booking"),
-    BenefitItem("discount", "50% off live events", "50% discount on Guardian Live events until 30 June (usually 20% discount)", "benefit-live-discount"),
+    BenefitItem("discount", "20% off live events", "20% discount on Guardian Live tickets", "benefit-live-discount"),
     BenefitItem("discount_masterclasses", "20% off masterclasses", "20% discount on Guardian Masterclasses", "benefit-masterclasses-discount"),
     BenefitItem("membership_card", "Membership card", "Membership card and annual gift", "benefit-card"),
     BenefitItem("plus_1_guest", "+1 guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "benefit-plus1"),

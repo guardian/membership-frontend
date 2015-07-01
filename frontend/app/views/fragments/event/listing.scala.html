@@ -2,14 +2,13 @@
     eventPortfolio: model.EventPortfolio,
     noResultsMessage: String,
     isFilterable: Boolean = false,
-    showPastEvents: Boolean = false,
-    hasRoundel: Boolean = false
+    showPastEvents: Boolean = false
 )
 
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
-        <section class="listing listing--lead listing--padded@if(hasRoundel){ listing--roundel}">
+        <section class="listing listing--lead listing--padded">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">Featured</h3>
             </div>
