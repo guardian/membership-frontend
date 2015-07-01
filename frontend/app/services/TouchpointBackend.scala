@@ -1,7 +1,7 @@
 package services
 
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.model.FriendTierPlan
+import com.gu.membership.model.{FriendTierPlan, ProductRatePlan}
 import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.{Stripe, StripeService}
@@ -34,7 +34,7 @@ object TouchpointBackend {
 
     val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 
-    TouchpointBackend(memberRepository, stripeService, zuoraService)
+    TouchpointBackend(memberRepository, stripeService, zuoraService, touchpointBackendConfig.productRatePlans)
   }
 
   val Normal = TouchpointBackend(BackendType.Default)
@@ -48,14 +48,15 @@ object TouchpointBackend {
 case class TouchpointBackend(
   memberRepository: FrontendMemberRepository,
   stripeService: StripeService,
-  zuoraService : ZuoraService) extends ActivityTracking {
+  zuoraService : ZuoraService,
+  products:  Map[ProductRatePlan, String]) extends ActivityTracking {
 
   def start() = {
     memberRepository.salesforce.authTask.start()
     zuoraService.start()
   }
 
-  val subscriptionService = new SubscriptionService(zuoraService.apiConfig.productRatePlans, zuoraService)
+  val subscriptionService = new SubscriptionService(products, zuoraService)
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
     for {
