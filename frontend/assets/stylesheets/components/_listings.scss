@@ -94,12 +94,6 @@
     background: transparent;
 }
 
-.listing--roundel {
-    @include mq($until: tablet) {
-        padding-top: 70px;
-    }
-}
-
 /* Date Listing
    ========================================================================== */
 

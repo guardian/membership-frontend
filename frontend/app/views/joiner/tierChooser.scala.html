@@ -27,11 +27,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @if(accessOpt.isEmpty && eventOpt) {
-            @fragments.page.pageHeader(pageHeaderTitle, Some("Partners and Patrons save 50% on Guardian Live events until 30 June"))
-        } else {
-            @fragments.page.pageHeader(pageHeaderTitle, None)
-        }
+        @fragments.page.pageHeader(pageHeaderTitle, None)
 
         <section class="page-section page-section--no-padding">
             <div class="page-section__lead-in">
