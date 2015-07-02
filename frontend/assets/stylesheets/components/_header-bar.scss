@@ -5,46 +5,51 @@
 .header-bar {
     @include clearfix;
     position: relative;
-    padding-left: rem($gs-gutter / 2);
-    padding-right: rem($gs-gutter / 2);
+    padding-left: ($gs-gutter / 2);
+    padding-right: ($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 
     @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + $gs-gutter * 2);
+        padding-left: (gs-span(2) + $gs-gutter * 2);
     }
 }
-    .header-bar__title {
-        @include fs-headline(4);
-        padding: rem($gs-gutter / 2) 0 0;
+.header-bar__title {
+    @include fs-headline(4);
+    padding: ($gs-gutter / 2) 0 0;
 
-        @include mq(tablet) {
-            @include fs-headline(6);
-            max-width: rem(gs-span(8));
-            padding-bottom: rem($gs-baseline);
-        }
-
-        @include mq(mem-full) {
-            @include fs-headline(7);
-        }
+    @include mq(tablet) {
+        @include fs-headline(6, true);
+        max-width: gs-span(8);
+        padding-bottom: $gs-baseline;
     }
-    .header-bar__logo {
-        float: right;
-        margin-bottom: rem($gs-gutter / 2);
 
-        @include mq(tablet) {
-            position: absolute;
-            right: rem($gs-gutter);
-            bottom: rem($gs-baseline);
-            margin-bottom: 0;
-        }
+    @include mq(mem-full) {
+        @include fs-headline(7, true);
     }
-    .header-bar__logo__img {
-        height: rem(44px);
+}
+.header-bar__logo {
+    float: right;
+    margin-bottom: ($gs-gutter / 2);
 
-        @include mq(tablet) {
-            height: rem(87px);
-        }
+    @include mq(tablet) {
+        position: absolute;
+        right: $gs-gutter;
+        bottom: $gs-baseline;
+        margin-bottom: 0;
     }
+}
+/**
+ * Note:
+ * Image heights are
+ * magic numbers.
+ */
+.header-bar__logo__image {
+    height: 44px;
+
+    @include mq(tablet) {
+        height: 87px;
+    }
+}
