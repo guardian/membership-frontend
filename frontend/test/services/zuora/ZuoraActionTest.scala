@@ -49,7 +49,7 @@ class ZuoraActionTest extends Specification {
     }
 
     "not reveal login details in sanitized output" in {
-      val action = Login(ZuoraApiConfig("TEST", "http://example.com" / "test", "secret", "secret", Map.empty))
+      val action = Login(ZuoraApiConfig("TEST", "http://example.com" / "test", "secret", "secret"))
       action.sanitized must not contain "secret"
     }
   }
