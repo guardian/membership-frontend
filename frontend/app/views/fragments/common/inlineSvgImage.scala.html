@@ -1,0 +1,7 @@
+@(svg: model.SVGImage, classes: Seq[String])
+
+@* http://nicolasgallagher.com/canvas-fix-svg-scaling-in-internet-explorer/ *@
+<div class="inline-svg @classes.mkString(" ")" role="img">
+    <canvas class="inline-svg__canvas" height="@svg.height" width="@svg.width" aria-hidden="true"></canvas>
+    <img class="inline-svg__image" src="@svg.src" alt="@svg.label">
+</div>

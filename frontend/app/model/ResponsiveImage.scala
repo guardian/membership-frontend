@@ -1,6 +1,7 @@
 package model
 
 import com.gu.contentapi.client.model.Content
+import views.support.Asset
 import model.RichEvent.GridImage
 
 object ResponsiveImageGenerator {
@@ -51,7 +52,16 @@ case class ResponsiveImageGroup(
   val defaultImage = sortedImages.find(_.width > 300).map(_.path).getOrElse(smallestImage)
 
   val srcset = sortedImages.map { img =>
-    img.path + " " + img.width.toString() + "w"
+    img.path + " " + img.width.toString + "w"
   }.mkString(", ")
 
+}
+
+case class SVGImage(
+  label: String,
+  path: String,
+  width: Int,
+  height: Int
+) {
+  val src = Asset.at(path)
 }

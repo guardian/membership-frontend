@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Images
+   ========================================================================== */
+
 img {
     background-color: transparent;
 }
@@ -21,4 +25,26 @@ img {
 }
 .stamped-image__stamp {
     height: rem($gs-gutter * 2);
+}
+
+/* Inline SVGs
+   http://nicolasgallagher.com/canvas-fix-svg-scaling-in-internet-explorer/
+   ========================================================================== */
+
+.inline-svg {
+    display: inline-block;
+    position: relative;
+    user-select: none;
+}
+.inline-svg__canvas {
+    display: block;
+    height: 100% !important; /* 1 */
+    visibility: hidden;
+}
+.inline-svg__image {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }

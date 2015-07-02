@@ -5,6 +5,7 @@
     selectedSubTag: String = ""
 )
 
+@import model.SVGImage
 @import model.RichEvent.MasterclassEvent
 
 @main("Masterclasses", pageInfo=pageInfo) {
@@ -13,8 +14,12 @@
 
         @fragments.event.headerBar(
             title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-            toneClassOpt=Some("tone-trans-masterclasses"),
-            logoOpt=Some("images/logos/guardian-masterclasses.svg")
+            logo=SVGImage(
+                "Guardian Masterclasses",
+                "images/logos/guardian-masterclasses.svg",
+                width=242, height=88
+            ),
+            classes=List("tone-trans-masterclasses")
         )
 
         <div class="event-filters">
