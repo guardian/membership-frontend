@@ -10,7 +10,6 @@ define([
     function init() {
         require('js!omniture').then(onSuccess, function(err) {
             Raven.captureException(err);
-            Raven.captureMessage('Omniture failed to load');
         });
     }
 
