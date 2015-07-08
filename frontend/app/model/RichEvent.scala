@@ -99,8 +99,8 @@ object RichEvent {
     val schema = EventSchema.from(this)
     val socialHashTag = Some("#GuardianLive")
     val tags = Nil
-    val fallbackHighlightsMetadata = HighlightsMetadata("Watch highlights of past events",
-      Links.membershipFront + "#video")
+    val fallbackHighlightsMetadata = HighlightsMetadata("View highlights of past events",
+      Links.membershipFront + "#recent-events")
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))
     val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
