@@ -1,6 +1,6 @@
 define(function() {
 
-    var EXPERIMENT_ID = 3089970060;
+    var EXPERIMENT_ID = 3171000188;
     var VARIATION_INDEX = 1;
 
     function updateHomeLink() {
