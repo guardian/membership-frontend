@@ -1,16 +1,12 @@
 @(
     title: String,
-    toneClassOpt: Option[String] = None,
-    logoOpt: Option[String] = None
+    logo: model.SVGImage,
+    classes: Seq[String]
 )
 
-@import views.support.Asset
-
-<section class="header-bar @toneClassOpt.mkString("")">
+<section class="header-bar @classes.mkString("")">
     <h1 class="header-bar__title">@title</h1>
-    @for(logo <- logoOpt) {
-        <i class="header-bar__logo">
-            <img class="header-bar__logo__img" src="@Asset.at(logo)">
-        </i>
-    }
+    <div class="header-bar__logo">
+        @fragments.common.inlineSvgImage(logo, List("header-bar__logo__image"))
+    </div>
 </section>
