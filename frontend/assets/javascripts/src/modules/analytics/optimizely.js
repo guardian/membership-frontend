@@ -3,7 +3,14 @@ define(function() {
     var EXPERIMENT_ID = 3089970060;
     var VARIATION_INDEX = 1;
 
-    function variantSteps() {
+    function updateHomeLink() {
+        var homeLink = document.querySelector('.js-nav-link-home');
+        if(homeLink) {
+            homeLink.setAttribute('href', '/join-challenger');
+        }
+    }
+
+    function hideNavItems() {
         var HIDDEN_CLASS = 'u-h';
         var ELS = [
             document.getElementById('qa-nav-about'),
@@ -14,6 +21,11 @@ define(function() {
             if(!el) { return; }
             el.className += ' ' + HIDDEN_CLASS;
         });
+    }
+
+    function variantSteps() {
+        updateHomeLink();
+        hideNavItems();
     }
 
     function init() {
