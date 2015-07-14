@@ -62,8 +62,14 @@ class EBEventTest extends PlaySpecification {
       completedEvent.isBookable mustEqual(false)
     }
     "should display past event text" in {
-      startedEvent.statusText mustEqual Some("Past event")
+      ebLiveEvent.statusText mustEqual None
+      startedEvent.statusText mustEqual None
       ebCompletedEvent.statusText mustEqual Some("Past event")
+    }
+    "should handle multi-day events" in{
+      val multiDayEvent = Resource.getJson("model/eventbrite/event-started-multi-day.json").as[EBEvent]
+      multiDayEvent.statusText mustEqual None
+      multiDayEvent.isBookable mustEqual(true)
     }
     "not be bookable when it is in draft mode" in {
       ebDraftEvent.isBookable mustEqual(false)
