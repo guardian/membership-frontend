@@ -22,13 +22,16 @@ object TicketSaleDates {
   implicit val periodOrdering = Ordering.by[Period, Duration](_.toStandardDuration)
 
   /**
-   * All tiers with event benefits get a 48 hour lead-time
-   * aside from cases where an event has been released with < 48 hours notice
+   * Lead times each tier gets on ticket sales
+   * Partners & Patrons get 48 hours priority booking, all other tiers are general release
+   * only if the event has been releasd with at least 4 days notice.
+   *
+   * Ticket start time in EB --------------------|| general release time ------------------> Event start date
+   * ----- Priority booking ---------------------||---------------------------------------->
+   *                             General Release ||---------------------------------------->
    */
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier, Period]](
-    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 30.minutes),
-    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 4.hours),
-    7.days.standardDuration -> Map(Patron -> 48.hours, Partner -> 48.hours)
+    4.days.standardDuration -> Map(Patron -> 48.hours, Partner -> 48.hours)
   )
 
   def datesFor(eventTimes: EventTimes, tickets: EBTicketClass): TicketSaleDates = {
