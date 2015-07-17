@@ -31,14 +31,18 @@
         id="js-event-ticket-dates-@event.id"
         @if(ticketing.salesDates.anyoneCanBuyTicket) { data-toggle-hidden}
     >
-        @for(tier <- Seq(Tier.Patron, Tier.Partner, Tier.Friend)) {
-            <li class="ticket-sales__item">
-                <span class="ticket-sales__item__label">@(tier + "s")</span>
-                <span class="ticket-sales__item__date">
-                    @ticketDateForTier(tier, ticketing.salesDates.datesByTier(tier), ticketing.salesDates.needToDistinguishTimes)
-                </span>
-            </li>
-        }
+        <li class="ticket-sales__item">
+            <span class="ticket-sales__item__label">Priority booking</span>
+            <span class="ticket-sales__item__date">
+            @ticketDateForTier(Tier.Patron, ticketing.salesDates .datesByTier(Tier.Patron), ticketing.salesDates.needToDistinguishTimes)
+            </span>
+        </li>
+        <li class="ticket-sales__item">
+            <span class="ticket-sales__item__label">General release</span>
+            <span class="ticket-sales__item__date">
+            @ticketDateForTier(Tier.Friend, ticketing.salesDates .datesByTier(Tier.Friend), ticketing.salesDates.needToDistinguishTimes)
+            </span>
+        </li>
     </ul>
     <ul class="ticket-sales__list u-unstyled">
         <li class="ticket-sales__item">
