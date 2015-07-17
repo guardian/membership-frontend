@@ -22,19 +22,13 @@ object TicketSaleDates {
   implicit val periodOrdering = Ordering.by[Period, Duration](_.toStandardDuration)
 
   /**
-   * Lead times each tier gets on ticket sales
-   * ticket start time in EB --------------- general release time (MEM) ----------------- Event start date
-   *  ------------(Patron lead time)-------------||---------------------------------------->
-   *                      ----(Partner lead time)||---------------------------------------->
-   *                                      Friend ||---------------------------------------->
+   * All tiers with event benefits get a 48 hour lead-time
+   * aside from cases where an event has been released with < 48 hours notice
    */
-
   val memberLeadTimeOverGeneralRelease = SortedMap[Duration, Map[Tier, Period]](
-    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 20.minutes),
-    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 2.hours),
-    7.days.standardDuration -> Map(Patron -> 2.days, Partner -> 1.day),
-    2.weeks.standardDuration -> Map(Patron -> 5.days, Partner -> 3.days),
-    6.weeks.standardDuration -> Map(Patron -> 2.weeks, Partner -> 1.week)
+    4.hours.standardDuration -> Map(Patron -> 30.minutes, Partner -> 30.minutes),
+    48.hours.standardDuration -> Map(Patron -> 4.hours, Partner -> 4.hours),
+    7.days.standardDuration -> Map(Patron -> 48.hours, Partner -> 48.hours)
   )
 
   def datesFor(eventTimes: EventTimes, tickets: EBTicketClass): TicketSaleDates = {
@@ -65,8 +59,9 @@ object TicketSaleDates {
   }
 
 
-  private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) =
+  private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) = {
     Seq(effectiveSaleStart, toStartOfDay(tierSaleDate)).max
+  }
 
   private def toStartOfDay(instant: Instant) = instant.toDateTime(UTC).withTimeAtStartOfDay().toInstant
 
