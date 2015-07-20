@@ -1,11 +1,17 @@
-@(event: model.RichEvent.RichEvent, ticketing: model.Eventbrite.InternalTicketing)
+@(ticketing: model.Eventbrite.InternalTicketing)
 
 @import org.joda.time.Instant
 @import com.gu.membership.salesforce.Tier
-@import model.RichEvent._
 @import views.support.Dates._
 
-@salesDatesHidden = @{ if(ticketing.salesDates.anyoneCanBuyTicket) "data-toggle-hidden" else "" }
+@ticketSalesItem(label: String)(content: Html) = {
+    <li class="ticket-sales__item">
+        <span class="ticket-sales__item__label">@label</span>
+        <span class="ticket-sales__item__date">
+            @content
+        </span>
+    </li>
+}
 
 @ticketDateForTier(tier: Tier, salesDate: Instant, needToDisplayTimes: Boolean) = {
     <time class="js-ticket-sale-start-@tier.slug" datetime="@salesDate">
@@ -14,44 +20,19 @@
 }
 
 <div class="ticket-sales">
-    <span class="ticket-sales__header">@if(ticketing.salesDates.anyoneCanBuyTicket) {Tickets on sale now} else {Ticket release dates}</span>
-
-    @if(ticketing.salesDates.anyoneCanBuyTicket) {
-        <button class="ticket-sales__toggle u-button-reset js-toggle"
-                data-toggle-label="Hide"
-                data-toggle="js-event-ticket-dates-@event.id"
-                data-metric-trigger="click"
-                data-metric-category="events"
-                data-metric-action="toggle-release-dates"
-                data-toggle-icon="triangle-up">
-            @fragments.inlineIcon("triangle-down", Seq("u-align-right"))
-            Release dates
-        </button>
-    }
-
-    <ul class="ticket-sales__list u-unstyled" id="js-event-ticket-dates-@event.id" @salesDatesHidden>
-        <li class="ticket-sales__item">
-            <span class="ticket-sales__item__label">Partners & Patrons</span>
-            <span class="ticket-sales__item__date">
-                @ticketDateForTier(Tier.Patron, ticketing.salesDates.datesByTier(Tier.Patron), ticketing.salesDates.needToDistinguishTimes)
-            </span>
-        </li>
-        <li class="ticket-sales__item">
-            <span class="ticket-sales__item__label">General release</span>
-            <span class="ticket-sales__item__date">
-                @ticketDateForTier(Tier.Friend, ticketing.salesDates.datesByTier(Tier.Friend), ticketing.salesDates.needToDistinguishTimes)
-            </span>
-        </li>
-    </ul>
-
+    <span class="ticket-sales__header">Tickets</span>
     <ul class="ticket-sales__list u-unstyled">
-        <li class="ticket-sales__item">
-            <span class="ticket-sales__item__label">Sale ends</span>
-            <span class="ticket-sales__item__date">
-                <time class='qa-event-detail-sales-end' datetime="@ticketing.salesEnd">
-                    @ticketing.salesEnd.prettyWithoutYear(ticketing.salesDates.needToDistinguishTimes || ticketing.salesEnd.isContemporary())
-                </time>
-            </span>
-        </li>
+        @ticketSalesItem("Partners & Patrons") {
+            @ticketDateForTier(Tier.Patron, ticketing.salesDates.datesByTier(Tier.Patron), ticketing.salesDates.needToDistinguishTimes)
+        }
+        @ticketSalesItem("General release") {
+            @ticketDateForTier(Tier.Friend, ticketing.salesDates.datesByTier(Tier.Friend), ticketing.salesDates.needToDistinguishTimes)
+        }
+        @ticketSalesItem("Sale ends") {
+            <time class='qa-event-detail-sales-end' datetime="@ticketing.salesEnd">
+                @ticketing.salesEnd.prettyWithoutYear(ticketing.salesDates.needToDistinguishTimes || ticketing.salesEnd.isContemporary())
+            </time>
+        }
     </ul>
+
 </div>
