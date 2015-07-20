@@ -6,6 +6,7 @@ import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects._
 import org.joda.time.DateTimeZone.UTC
+import org.joda.time.Instant
 import org.specs2.mutable.Specification
 import utils.Resource
 
@@ -27,15 +28,17 @@ class TicketSaleDatesTest extends Specification {
     }
 
     "give patrons and partners advance tickets if there's enough lead time" in {
-      val saleStart = (testEventTimes.start - 7.weeks).toInstant
 
+      val saleStart = (testEventTimes.start - 5.days).toInstant
       val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
+      val priorityBookingPeriod = 48.hours.standardDuration
 
       datesByTier(Patron) must be_==(saleStart)
-      datesByTier(Patron) must be_<=(datesByTier(Partner))
-      datesByTier(Partner) must be_<=(datesByTier(Friend))
+      datesByTier(Partner) must be_==(datesByTier(Partner))
       datesByTier(Friend) must be_<=(testEventTimes.start)
-      (datesByTier(Patron) to datesByTier(Friend)).duration must be_>=(7.days.standardDuration)
+
+      (toStartOfDay(datesByTier(Patron)) to toStartOfDay(datesByTier(Friend))).duration must be >= priorityBookingPeriod
+
     }
 
     "give set advance tickets to be available to start of the day if sale dates between tiers is more than a day" in {
@@ -44,9 +47,7 @@ class TicketSaleDatesTest extends Specification {
       val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
 
       datesByTier(Patron) must be_==(saleStart)
-
-      val partnerTicketSale = datesByTier(Partner).toDateTime(UTC)
-      dateMustBeToStartOfDay(partnerTicketSale) must be_==(true)
+      datesByTier(Partner) must be_==(saleStart)
 
       val friendTicketSale = datesByTier(Friend).toDateTime(UTC)
       dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
@@ -58,9 +59,7 @@ class TicketSaleDatesTest extends Specification {
       val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
 
       datesByTier(Patron) must be_==(saleStart)
-
-      val partnerTicketSale = datesByTier(Partner).toDateTime
-      dateMustBeToStartOfDay(partnerTicketSale) must be_==(false)
+      datesByTier(Partner) must be_==(saleStart)
 
       val friendTicketSale = datesByTier(Friend).toDateTime
       dateMustBeToStartOfDay(friendTicketSale) must be_==(false)
@@ -84,12 +83,19 @@ class TicketSaleDatesTest extends Specification {
         val datesByTier = ticketSaleDates.datesByTier
 
         datesByTier(Patron) must be_==(effectiveStartDate)
-        datesByTier(Patron) must be_<=(datesByTier(Partner))
-        datesByTier(Partner) must be_<=(datesByTier(Friend))
+        datesByTier(Partner) must be_==(effectiveStartDate)
         datesByTier(Friend) must be_<=(event.start)
       }
     }
+
   }
-  private def dateMustBeToStartOfDay(dateTime: DateTime): Boolean =
-    dateTime.getHourOfDay() == 0 && dateTime.getMinuteOfHour() == 0 && dateTime.getSecondOfMinute() == 0
+
+  private def toStartOfDay(instant: Instant) = {
+    instant.toDateTime(UTC).withTimeAtStartOfDay().toInstant
+  }
+
+  private def dateMustBeToStartOfDay(dateTime: DateTime): Boolean = {
+    dateTime.getHourOfDay == 0 && dateTime.getMinuteOfHour == 0 && dateTime.getSecondOfMinute == 0
+  }
+
 }

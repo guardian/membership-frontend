@@ -49,7 +49,7 @@ object Faq {
       "difference-between-tiers"
     ),
     Item("Why do I have to sign in to the Guardian to become a member?",
-      Html("We ask you to sign in so we know who you are and ensure that we apply the correct discounts and privileges when you buy tickets to an event - Partners and Patrons get early booking and 20% discount on tickets to all Guardian Live events."),
+      Html("We ask you to sign in so we know who you are and ensure that we apply the correct discounts and privileges when you buy tickets to an event - Partners and Patrons get priority booking and 20% discount on tickets to all Guardian Live events."),
       "why-sign-in-to-become-a-member"
     ),
     Item("What is Guardian Live?",

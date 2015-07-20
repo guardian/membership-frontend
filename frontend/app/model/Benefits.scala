@@ -27,13 +27,12 @@ object Benefits {
     BenefitItem("book_tickets", "Book tickets", "Book tickets to Guardian Live events", "benefit-booking"),
     BenefitItem("digital_digest", "Membership email updates", "Receive regular updates from the membership community", "benefit-digest"),
     BenefitItem("video_highlights", "Video highlights", "Watch highlights of selected Guardian Live events", "benefit-video"),
-    BenefitItem("early_booking", "Early booking", "Early ticket booking on Guardian Live Events (before Friends and Supporters)", "benefit-priority-booking"),
+    BenefitItem("priority_booking", "Priority booking", "Priority booking on Guardian Live Events (before Friends and Supporters)", "benefit-priority-booking"),
     BenefitItem("discount", "20% off live events", "20% discount on Guardian Live tickets", "benefit-live-discount"),
     BenefitItem("discount_masterclasses", "20% off masterclasses", "20% discount on Guardian Masterclasses", "benefit-masterclasses-discount"),
     BenefitItem("membership_card", "Membership card", "Membership card and annual gift", "benefit-card"),
     BenefitItem("plus_1_guest", "+1 guest", "Bring a guest to Guardian Live with the same discount and priority booking advantages", "benefit-plus1"),
     BenefitItem("live_stream", "Live stream events", "Watch live streams of flagship Guardian Live Membership events", "benefit-stream"),
-    BenefitItem("priority_booking", "Priority booking", "Additional priority ticket booking on Guardian Live Events (before Partners)", "benefit-priority-booking"),
     BenefitItem("complim_items", "Special thank-yous", "The occasional unique gift to thank you for your support", "benefit-gifts"),
     BenefitItem("unique_experiences", "Unique experiences", "Get behind the scenes of our journalism", "benefit-experiences")
   )
@@ -70,28 +69,19 @@ object Benefits {
     "book_tickets"
   )
   val partnerBenefitsList = benefitsFilter(
-    "early_booking",
-    "plus_1_guest",
-    "live_stream",
-    "discount",
-    "discount_masterclasses",
-    "membership_card",
-    "digital_digest",
-    "video_highlights",
-    "book_tickets"
-  )
-  val patronBenefitsList = benefitsFilter(
-    "discount",
-    "discount_masterclasses",
     "priority_booking",
-    "complim_items",
-    "unique_experiences",
     "plus_1_guest",
-    "membership_card",
     "live_stream",
+    "discount",
+    "discount_masterclasses",
+    "membership_card",
     "digital_digest",
     "video_highlights"
   )
+  val patronBenefitsList = benefitsFilter(
+    "complim_items",
+    "unique_experiences"
+  ) ++ partnerBenefitsList
 
   val friendBenefits = Benefits("Benefits",
     friendBenefitsList,
@@ -111,7 +101,7 @@ object Benefits {
     partnerBenefitsList,
     Some(Pricing(135, 15, Some("1 year membership, 3 months free"))),
     "Become a Partner",
-    "Support the Guardian and experience it brought to life, with early booking and discounted tickets"
+    "Support the Guardian and experience it brought to life, with priority booking and discounted tickets"
   )
   val patronBenefits = Benefits(
     "Partner benefits, plus…",

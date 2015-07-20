@@ -21,8 +21,11 @@ object Dates {
 
   implicit class RichInstant(dt: Instant) {
     lazy val pretty = prettyDate(new DateTime(dt))
+    lazy val prettyWithoutYear = prettyDateNoYear(new DateTime(dt))
     lazy val prettyWithTime = prettyDateWithTime(new DateTime(dt))
+    lazy val prettyNoYearWithTime = prettyDateNoYearTime(new DateTime(dt))
     def pretty(includeTime: Boolean): String = if (includeTime) prettyWithTime else pretty
+    def prettyWithoutYear(includeTime: Boolean): String = if (includeTime) prettyNoYearWithTime else prettyWithoutYear
     def isContemporary(threshold: Duration = 24.hours) = new Interval(dt - threshold, dt + threshold).contains(DateTime.now)
   }
 
@@ -31,9 +34,11 @@ object Dates {
   }
 
   def prettyDate(dt: DateTime): String = dt.toString("d MMMMM YYYY")
+  def prettyDateNoYear(dt: DateTime): String = dt.toString("d MMMMM")
   def prettyTime(dt: DateTime): String = dt.toString(if (dt.getMinuteOfHour==0) "h" else "h.mm") + dt.toString("a").toLowerCase
 
   def prettyDateWithTime(dt: DateTime): String = prettyDate(dt) + ", " + prettyTime(dt)
+  def prettyDateNoYearTime(dt: DateTime): String = prettyDateNoYear(dt) + ", " + prettyTime(dt)
 
   def prettyDateWithTimeAndDayName(dt: DateTime): String =
     dt.toString("EEEE ") + prettyDateWithTime(dt)
