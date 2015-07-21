@@ -83,7 +83,7 @@ object RichEvent {
 
   trait RichEvent {
     val event: EBEvent
-    val logo: ProviderLogo
+    val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val socialHashTag: Option[String]
@@ -124,7 +124,7 @@ object RichEvent {
   ) extends LiveEvent(image, contentOpt) {
     val socialHashTag = Some("#GuardianLive")
     val metadata = guLiveMetadata.copy(highlightsOpt = highlight)
-    val logo = ProviderLogo(this)
+    val logoOpt = Some(ProviderLogo(this))
   }
 
   case class LocalEvent(
@@ -134,7 +134,7 @@ object RichEvent {
   ) extends LiveEvent(image, contentOpt) {
     val socialHashTag = Some("#GuardianLocal")
     val metadata = localMetadata.copy(highlightsOpt = highlight)
-    val logo = ProviderLogo(this)
+    val logoOpt = Some(ProviderLogo(this))
   }
 
   case class MasterclassEvent(
@@ -147,7 +147,7 @@ object RichEvent {
     val socialHashTag = Some("#GuardianMasterclasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = masterclassMetadata
-    val logo = ProviderLogo(this)
+    val logoOpt = Some(ProviderLogo(this))
     val contentOpt = None
     val pastImageOpt = None
     def deficientGuardianMembersTickets = false

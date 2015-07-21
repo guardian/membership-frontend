@@ -53,7 +53,9 @@
                     }
                 </div>
             }
-            <img class="event-header__logo" src="@event.logo.path" alt="@event.logo.title">
+            @for(logo <- event.logoOpt) {
+                <img class="event-header__logo" src="@logo.path" alt="@logo.title">
+            }
         </div>
     </div>
 
