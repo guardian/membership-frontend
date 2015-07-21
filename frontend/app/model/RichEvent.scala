@@ -4,6 +4,7 @@ import com.gu.contentapi.client.model.{Content}
 import configuration.{Links}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
+import views.support.Asset
 
 object RichEvent {
   case class Metadata(
@@ -82,6 +83,7 @@ object RichEvent {
 
   trait RichEvent {
     val event: EBEvent
+    val logo: ProviderLogo
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val socialHashTag: Option[String]
@@ -93,42 +95,59 @@ object RichEvent {
     def deficientGuardianMembersTickets: Boolean
   }
 
-  abstract class LiveEvent(image: Option[GridImage], contentOpt: Option[Content]) extends RichEvent {
+  abstract class LiveEvent(
+    image: Option[GridImage],
+    contentOpt: Option[Content]
+  ) extends RichEvent {
     val imgOpt = image.map(ResponsiveImageGroup(_))
     val socialImgUrl = imgOpt.map(_.defaultImage)
+    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
     val schema = EventSchema.from(this)
-    val socialHashTag = Some("#GuardianLive")
     val tags = Nil
+
     val fallbackHighlightsMetadata = HighlightsMetadata("View highlights of past events",
       Links.membershipFront + "#recent-events")
     val highlight = contentOpt.map(c => HighlightsMetadata("Read more about this event", c.webUrl))
       .orElse(Some(fallbackHighlightsMetadata))
-    val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
-    def deficientGuardianMembersTickets = event.internalTicketing.flatMap(_.memberDiscountOpt).exists(_.fewerMembersTicketsThanGeneralTickets)
-  }
 
-  case class GuLiveEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
-    extends LiveEvent(image, contentOpt) {
-    val metadata = {
-      guLiveMetadata.copy(highlightsOpt = highlight)
+    def deficientGuardianMembersTickets = {
+      event.internalTicketing
+        .flatMap(_.memberDiscountOpt)
+        .exists(_.fewerMembersTicketsThanGeneralTickets)
     }
   }
 
-  case class LocalEvent(event: EBEvent, image: Option[GridImage], contentOpt: Option[Content])
-    extends LiveEvent(image, contentOpt) {
-    val metadata = {
-      localMetadata.copy(highlightsOpt = highlight)
-    }
-    override val socialHashTag = Some("#GuardianLocal")
+  case class GuLiveEvent(
+    event: EBEvent,
+    image: Option[GridImage],
+    contentOpt: Option[Content]
+  ) extends LiveEvent(image, contentOpt) {
+    val socialHashTag = Some("#GuardianLive")
+    val metadata = guLiveMetadata.copy(highlightsOpt = highlight)
+    val logo = ProviderLogo(this)
   }
 
-  case class MasterclassEvent(event: EBEvent, data: Option[MasterclassData]) extends RichEvent {
+  case class LocalEvent(
+    event: EBEvent,
+    image: Option[GridImage],
+    contentOpt: Option[Content]
+  ) extends LiveEvent(image, contentOpt) {
+    val socialHashTag = Some("#GuardianLocal")
+    val metadata = localMetadata.copy(highlightsOpt = highlight)
+    val logo = ProviderLogo(this)
+  }
+
+  case class MasterclassEvent(
+    event: EBEvent,
+    data: Option[MasterclassData]
+  ) extends RichEvent {
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
     val schema = EventSchema.from(this)
     val socialHashTag = Some("#GuardianMasterclasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = masterclassMetadata
+    val logo = ProviderLogo(this)
     val contentOpt = None
     val pastImageOpt = None
     def deficientGuardianMembersTickets = false

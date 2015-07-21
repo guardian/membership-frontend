@@ -53,15 +53,8 @@
                     }
                 </div>
             }
-            @event.providerOpt.fold {
-                @* If we don't have an external provider, use the default provider logo (e.g., Guardian Live / Local / Masterclasses) *@
-                @* TODO: Model Live / Local / Masterclasses as providers *@
-                <img class="event-header__logo" src="@Asset.at("images/providers/" + event.metadata.identifier + ".svg")" alt=""/>
-            } { provider =>
-                <img class="event-header__logo" src="@provider.logoPath" alt="@provider.title">
-            }
+            <img class="event-header__logo" src="@event.logo.path" alt="@event.logo.title">
         </div>
-
     </div>
 
     @* Limited availability messaging *@
