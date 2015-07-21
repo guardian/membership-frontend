@@ -15,7 +15,7 @@ object ResponsiveImageGenerator {
 object ResponsiveImageGroup {
   def apply(content: Content): Option[ResponsiveImageGroup] = for {
     elements <- content.elements
-    element <- elements.find(_.relation == "main")
+    element <- elements.find(_.relation == "thumbnail")
   } yield ResponsiveImageGroup(
     altText = element.assets.headOption.flatMap(_.typeData.get("altText")),
     metadata = None,
