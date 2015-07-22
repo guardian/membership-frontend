@@ -14,7 +14,7 @@
             float: left;
             margin-left: $gutter-width-fluid / 4;
             padding-left: $gutter-width-fluid / 4;
-            margin-bottom: rem($baseline);
+            margin-bottom: $baseline;
             width: 50% - ($gutter-width-fluid / 4);
 
             &:nth-of-type(2n+1) { clear: left; }
@@ -63,8 +63,8 @@
 }
 
 .event-detail {
-    margin-bottom: rem(10px);
-    padding: rem(10px);
+    margin-bottom: 10px;
+    padding: 10px;
 }
 
 .event-detail_image {
@@ -89,16 +89,16 @@
         background-color: $white;
         width: 100%;
         background-color: rgba(255, 255, 255, .7);
-        padding: rem(6px);
+        padding: 6px;
     }
 }
 
 .event-sub-detail {
     color: $c-neutral1;
     @include fs-data(2);
-    border-radius: rem(5px);
+    border-radius: 5px;
     background-color: $c-neutral7;
-    padding: rem(2px) rem(4px);
+    padding: 2px 4px;
     transition: background-color $transition-duration-medium ease;
 
     &:hover {
