@@ -3,12 +3,12 @@
    ========================================================================== */
 
 .pattern {
-    margin-top: rem($gs-gutter * 2);
+    margin-top: ($gs-gutter * 2);
 }
     .pattern__header {
-        margin-bottom: rem($gs-gutter);
+        margin-bottom: $gs-gutter;
         border-top: 1px solid $c-neutral6;
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
     }
     .pattern__title {
         @include fs-data(6);
@@ -29,6 +29,6 @@
 }
 
 .pattern-icon-grid > svg {
-    margin-right: rem($gs-gutter / 2);
+    margin-right: ($gs-gutter / 2);
     width: 24px; height: 24px;
 }

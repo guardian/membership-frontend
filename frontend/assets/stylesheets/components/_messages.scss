@@ -1,10 +1,10 @@
 .flash-message {
     @include fs-data(4);
-    margin-top: rem(12px);
-    padding: rem(7px) rem(($gs-baseline / 3) * 2);
+    margin-top: 12px;
+    padding: 7px (($gs-baseline / 3) * 2);
     border-top: 1px solid;
     border-bottom: 1px solid;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
         margin-bottom: 0;

@@ -33,7 +33,7 @@
 .text-note {
     @include fs-data(3);
     color: $c-neutral2;
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: ($gs-baseline / 2);
 }
 
 .text-highlight {
@@ -67,7 +67,7 @@
 .h-section--inline,
 .h-section--lead {
     @include fs-header(2);
-    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
+    padding: ($gs-baseline / 2) 0 $gs-gutter;
     border: solid $c-border-brand;
     border-width: 1px 0 0 0;
 
@@ -83,7 +83,7 @@
     border-width: 0;
 
     @include mq(mem-full) {
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
         border-width: 1px 0 0 0;
     }
 }
@@ -107,13 +107,13 @@
 .h-stack {
     @include fs-headline(2);
     font-weight: 500;
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-baseline);
+    padding-top: ($gs-baseline / 2);
+    margin-bottom: $gs-baseline;
     border-top: 1px solid $c-border-neutral;
 }
 
 .h-aside {
     @include fs-textSans(1);
     border-top: 1px solid $c-neutral7;
-    padding: rem($gs-baseline / 2) 0;
+    padding: ($gs-baseline / 2) 0;
 }

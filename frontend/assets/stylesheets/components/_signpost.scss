@@ -5,7 +5,7 @@
 .signpost {
     @include clearfix;
     position: relative;
-    margin-top: rem($gs-baseline * 1.5);
+    margin-top: ($gs-baseline * 1.5);
     @include mq(tablet) {
         width: 100% + $gutter-width-fluid;
         margin-left: -($gutter-width-fluid);
@@ -13,9 +13,9 @@
 }
 .signpost-item {
     border-top: 1px dotted $c-neutral3;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
     @include mq(tablet) {
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
         width: 50% - $gutter-width-fluid;
         margin-left: $gutter-width-fluid;
         margin-bottom: 0;
@@ -23,11 +23,11 @@
     }
 }
 .signpost-item__title {
-    margin: 0 0 rem($gs-gutter/2) 0;
+    margin: 0 0 ($gs-gutter / 2) 0;
 }
 .signpost-item__description {
     word-wrap: break-word;
     @include mq(tablet) {
-        min-height: rem($gs-gutter * 5);
+        min-height: ($gs-gutter * 5);
     }
 }

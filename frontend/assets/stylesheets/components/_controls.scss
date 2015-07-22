@@ -9,7 +9,7 @@
 .control__item {
     display: table-cell;
     vertical-align: middle;
-    padding-right: rem($gs-gutter / 4);
+    padding-right: ($gs-gutter / 4);
 }
 .control__info {
     @include disable-user-select();
@@ -19,7 +19,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-align: left;
-    max-width: rem($gs-gutter * 10);
+    max-width: ($gs-gutter * 10);
 }
 .control__icon {
     color: $black;

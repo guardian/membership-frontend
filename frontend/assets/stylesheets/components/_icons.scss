@@ -29,16 +29,16 @@
 }
 
 .icon--benefits {
-    background-size: rem($gs-gutter + 5) rem($gs-gutter + 5);
-    width: rem($gs-gutter + 5);
-    height: rem($gs-gutter + 5);
-    margin: 0 rem($gs-gutter) rem(-7px) 0;
+    background-size: ($gs-gutter + 5) ($gs-gutter + 5);
+    width: ($gs-gutter + 5);
+    height: ($gs-gutter + 5);
+    margin: 0 ($gs-gutter) -7px 0;
 }
 
 .icon--info {
-    background-size: rem($gs-gutter) auto;
-    width: rem($gs-gutter);
-    height: rem($gs-gutter);
+    background-size: $gs-gutter auto;
+    width: $gs-gutter;
+    height: $gs-gutter;
 }
 
 .icon--featured {
@@ -84,7 +84,7 @@
     vertical-align: middle;
     position: relative;
     top: -2px;
-    margin-right: rem($gs-baseline / 4);
+    margin-right: ($gs-baseline / 4);
 }
 
 .icon-inline--top {

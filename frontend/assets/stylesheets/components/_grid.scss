@@ -12,10 +12,10 @@
 }
 .grid__item {
     border-color: transparent;
-    margin-bottom: rem($gs-gutter / 2);
+    margin-bottom: ($gs-gutter / 2);
 
     @include mq(mobileLandscape) {
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: $gs-baseline;
     }
 }
 
@@ -59,7 +59,7 @@
             float: left;
             margin-left: $gutter-width-fluid / 2;
             padding-left: $gutter-width-fluid / 2;
-            margin-bottom: rem($gs-baseline);
+            margin-bottom: $gs-baseline;
             width: 50% - ($gutter-width-fluid / 2);
         }
         @include mq(tablet) {
@@ -92,7 +92,7 @@
             border-width: 0 0 0 1px;
             margin-left: $gutter-width-fluid / 2;
             padding-left: $gutter-width-fluid / 2;
-            margin-bottom: rem($gs-baseline);
+            margin-bottom: $gs-baseline;
             width: 50% - ($gutter-width-fluid / 2);
             &:nth-of-type(2n+1) { clear: left; border-left: none; }
         }
@@ -127,7 +127,7 @@
             border-width: 0 0 0 1px;
             margin-left: $gutter-width-fluid / 2;
             padding-left: $gutter-width-fluid / 2;
-            margin-bottom: rem($gs-baseline);
+            margin-bottom: $gs-baseline;
             width: 33.3% - ($gutter-width-fluid / 2);
             &:nth-of-type(3n+1) { clear: left; border-left: none; }
         }

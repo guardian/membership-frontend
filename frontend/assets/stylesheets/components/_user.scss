@@ -5,7 +5,7 @@
 .user-welcome {
     @include clearfix;
     display: table;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
 }
 .user-welcome__image,
 .user-welcome__content {
@@ -16,7 +16,7 @@
     @include circular;
     width: 75px;
     height: 75px;
-    margin-right: rem($gs-gutter/2);
+    margin-right: ($gs-gutter / 2);
 }
 .user-welcome__title {
     margin-bottom: 0;

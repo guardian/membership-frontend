@@ -6,12 +6,12 @@
     @include fs-headline(3);
     color: $c-neutral1;
     background-color: $c-background;
-    padding: rem($gs-gutter / 2);
-    padding-bottom: rem($gs-baseline * 2);
+    padding: ($gs-gutter / 2);
+    padding-bottom: ($gs-baseline * 2);
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter);
-        padding-top: rem($gs-baseline * 1.5);
+        padding: $gs-gutter;
+        padding-top: ($gs-baseline * 1.5);
     }
     @include mq(tablet) {
         @include fs-headline(4);
@@ -29,25 +29,25 @@
         color: $mem-brandBlueDark;
     }
     .block-description__text {
-        margin-bottom: rem($gs-baseline / 2);
+        margin-bottom: ($gs-baseline / 2);
     }
 
 // Blocks description padded (modifier)
 .block-description--padded {
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 3);
+        padding-bottom: ($gs-baseline * 3);
     }
 }
 
 // Blocks description right (modifier)
 .block-description--right {
     @include mq(tablet) {
-        width: rem(gs-span(5));
+        width: gs-span(5);
         float: right;
     }
     @include mq(desktop) {
         width: 50%;
-        min-width: rem(gs-span(5));
+        min-width: gs-span(5);
     }
 }
 
@@ -56,7 +56,7 @@
     @include mq(tablet) {
         z-index: 100;
         position: relative;
-        margin-top: rem(-($gs-baseline * 9));
-        margin-bottom: rem($gs-gutter / 2);
+        margin-top: -($gs-baseline * 9);
+        margin-bottom: ($gs-gutter / 2);
     }
 }

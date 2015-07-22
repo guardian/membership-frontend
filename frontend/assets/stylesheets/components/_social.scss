@@ -7,13 +7,13 @@
     margin: 0;
     list-style: none;
 }
-    .social-list__item {
-        float: left;
-        margin-right: rem($gs-gutter / 4);
-    }
-    .social-list__item:last-child {
-        margin-right: 0;
-    }
+.social-list__item {
+    float: left;
+    margin-right: ($gs-gutter / 4);
+}
+.social-list__item:last-child {
+    margin-right: 0;
+}
 
 /* Social Actions
    ========================================================================== */

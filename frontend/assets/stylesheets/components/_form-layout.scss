@@ -16,18 +16,18 @@
  * typically combined with form-headline and form-intro
  */
 .form-header {
-    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+    padding: ($gs-gutter / 2) 0 ($gs-baseline * 3);
 
     @include mq(tablet) {
-        width: rem(gs-span(9));
+        width: gs-span(9);
         margin: 0 auto;
-        padding-bottom: rem($gs-baseline * 4);
+        padding-bottom: ($gs-baseline * 4);
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(11));
+        width: gs-span(11);
         margin-left: 0;
-        padding-left: rem(gs-span(2) + $gs-gutter);
+        padding-left: (gs-span(2) + $gs-gutter);
     }
 }
 
@@ -79,8 +79,8 @@
     padding: 0;
 
     @include mq(tablet) {
-        padding-top: rem(12px);
-        padding-bottom: rem(12px);
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 
     @include mq(desktop) {
@@ -95,12 +95,12 @@
 .form-section__lead-in {
 
     @include mq(tablet) {
-        width: rem(gs-span(9));
+        width: gs-span(9);
         margin: 0 auto;
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(2));
+        width: gs-span(2);
         position: absolute;
         left: 0;
     }
@@ -108,24 +108,24 @@
 
 .form-section__headline {
     @include fs-header(3);
-    padding-bottom: rem($gs-gutter * 1.6);
+    padding-bottom: ($gs-gutter * 1.6);
 }
 
 .form-section__content {
 
     @include mq(tablet) {
-        width: rem(gs-span(9));
+        width: gs-span(9);
         margin: 0 auto;
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(11));
+        width: gs-span(11);
         float: left;
-        padding-left: rem(gs-span(2) + $gs-gutter);
+        padding-left: (gs-span(2) + $gs-gutter);
     }
 }
 
 .form-detail {
     border-top: 1px solid $mem-brandBlue;
-    padding-top: rem($gs-baseline / 2);
+    padding-top: ($gs-baseline / 2);
 }
