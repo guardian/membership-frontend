@@ -102,7 +102,7 @@ a,
     position: static !important;
     width: 100% !important;
     height: auto !important;
-    padding: rem($gs-gutter/2) 0 !important;
+    padding: ($gs-gutter / 2) 0 !important;
     text-align: center;
     outline: none;
 }

@@ -19,12 +19,12 @@ img {
     position: absolute;
     top: 0; right: 0;
     height: 100%;
-    padding: rem($gs-gutter) rem($gs-gutter / 2);
+    padding: $gs-gutter ($gs-gutter / 2);
     background-image: -webkit-linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, .6) 100%);
     background-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .6) 100%);
 }
 .stamped-image__stamp {
-    height: rem($gs-gutter * 2);
+    height: ($gs-gutter * 2);
 }
 
 /* Inline SVGs

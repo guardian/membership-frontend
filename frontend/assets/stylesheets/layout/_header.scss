@@ -9,9 +9,9 @@
 
     .header__branding {
         @include clearfix();
-        padding-top: rem($gs-gutter / 4);
-        padding-bottom: rem($gs-gutter / 4);
-        height: rem(48px);
+        padding-top: ($gs-gutter / 4);
+        padding-bottom: ($gs-gutter / 4);
+        height: 48px;
 
         @include mq(tablet) {
             height: auto;
@@ -19,31 +19,31 @@
     }
     .header__primary {
         float: left;
-        padding-left: rem($gs-gutter / 2);
+        padding-left: ($gs-gutter / 2);
         padding-right: 0;
         @include mq(mobileLandscape) {
-            padding-right: rem($gs-gutter / 2);
+            padding-right: ($gs-gutter / 2);
         }
     }
 
     .header__secondary {
         float: right;
         width: auto;
-        margin-right: rem($gs-gutter / 2);
+        margin-right: ($gs-gutter / 2);
 
         @include mq(mobile) {
-            margin-right: rem($gs-gutter / 2);
+            margin-right: ($gs-gutter / 2);
         }
     }
     .header__logo {
         clear: right;
         text-align: right;
-        padding-right: rem($gs-gutter / 2);
+        padding-right: ($gs-gutter / 2);
 
         @include mq(tablet) {
             width: 100%;
-            margin-top: -(rem($gs-gutter / 2));
-            margin-bottom: rem($gs-gutter / 4);
+            margin-top: -($gs-gutter / 2);
+            margin-bottom: ($gs-gutter / 4);
         }
     }
     .header__logo__image {
@@ -59,8 +59,8 @@
     }
     @include mq(tablet) {
         .i-logo {
-            margin-top: rem($gs-gutter / 2);
-            margin-bottom: rem($gs-gutter / 2);
+            margin-top: ($gs-gutter / 2);
+            margin-bottom: ($gs-gutter / 2);
         }
     }
 }
