@@ -36,7 +36,7 @@ form {
     border-bottom: 0;
 
     .fieldset__fields {
-        padding-top: rem($gs-gutter / 2);
+        padding-top: ($gs-gutter / 2);
     }
 }
 
@@ -46,11 +46,11 @@ form {
 
 .fieldset__heading {
     vertical-align: top;
-    padding: rem($gs-baseline / 2) rem($gs-baseline) rem($gs-baseline * 2) rem($gs-gutter / 2);
+    padding: ($gs-baseline / 2) $gs-baseline ($gs-baseline * 2) ($gs-gutter / 2);
 
     @include mq(tablet) {
         display: table-cell;
-        padding-right: rem($gs-gutter * 2);
+        padding-right: ($gs-gutter * 2);
         width: gs-span(4) + $gs-gutter;
     }
 }
@@ -64,7 +64,7 @@ form {
 .fieldset__note {
     @include fs-textSans(2);
     color: $c-neutral2;
-    margin-top: rem($gs-baseline / 2);
+    margin-top: ($gs-baseline / 2);
 
     p {
         margin-bottom: 0;
@@ -73,7 +73,7 @@ form {
 
 .fieldset__fields {
     vertical-align: top;
-    padding: rem($gs-gutter / 2) rem($gs-gutter / 2) rem($gs-baseline * 2);
+    padding: ($gs-gutter / 2) ($gs-gutter / 2) ($gs-baseline * 2);
 
     @include mq(tablet) {
         display: table-cell;
@@ -87,7 +87,7 @@ form {
    Form field
    ========================================================================== */
 .form-field {
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 }
 
 .form-field--no-margin {
@@ -110,15 +110,15 @@ form {
 .form-field__error-message {
     @include fs-data(3);
     color: $c-error;
-    margin-top: rem(2px);
-    margin-bottom: rem($gs-baseline / 2);
+    margin-top: 2px;
+    margin-bottom: ($gs-baseline / 2);
 }
 
 .form-note {
     @include fs-textSans(1);
     color: $c-neutral2;
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem(8px);
+    padding-top: ($gs-baseline / 2);
+    margin-bottom: 8px;
 }
 
 .form-note--left {
@@ -130,12 +130,12 @@ form {
 .form-note--right {
     @include mq(mobileLandscape) {
         text-align: right;
-        margin-left: rem($gs-gutter);
+        margin-left: $gs-gutter;
     }
 }
 
 .form-note--underneath {
-    margin-top: rem($gs-baseline / 2);
+    margin-top: ($gs-baseline / 2);
 }
 
 /* ==========================================================================
@@ -157,7 +157,7 @@ form {
     color: $c-body;
     border: 1px solid $c-neutral4;
     @include fs-textSans(5);
-    padding: rem(8px) rem(8px) rem(7px);
+    padding: 8px 8px 7px;
     outline: none;
     width: 100%;
     -webkit-appearance: none;
@@ -167,7 +167,7 @@ form {
     }
 
     @include mq(tablet) {
-        font-size: rem(14px);
+        font-size: 14px;
     }
 }
 
@@ -180,7 +180,7 @@ form {
 }
 
 .input-textarea--long {
-    min-height: rem(($gs-baseline / 3) * 40);
+    min-height: (($gs-baseline / 3) * 40);
 }
 
 .optional-marker {
@@ -189,7 +189,7 @@ form {
         content: '(optional)';
         color: $c-neutral2;
         @include fs-textSans(1);
-        margin-left: rem(4px);
+        margin-left: 4px;
     }
 }
 
@@ -217,7 +217,7 @@ form {
 .pseudo-radio {
     width: 100%;
     border: 1px solid transparent;
-    padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter) rem(36px);
+    padding: $gs-gutter $gs-gutter $gs-gutter 36px;
     position: relative;
 
     &:hover {
@@ -241,7 +241,7 @@ input[type=radio]:checked + .pseudo-radio {
 .pseudo-radio__header {
     @include fs-bodyHeading(2);
     line-height: 1.2;
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: ($gs-baseline / 2);
 }
 .pseudo-radio__note {
     @include fs-textSans(3);
@@ -261,14 +261,14 @@ $card-icon-offset: 1px;
 }
 
 .credit-card {
-    width: rem(54px);
+    width: 54px;
     height: $large-card;
 }
 
 .credit-card--input-visualisation {
     position: absolute;
-    right: rem($card-icon-offset);
-    top: rem($card-icon-offset);
+    right: $card-icon-offset;
+    top: $card-icon-offset;
 }
 
 
@@ -287,7 +287,7 @@ $card-icon-offset: 1px;
 
 .credit-card-input {
     // bit messy but needs to account for outline plus icon offset
-    height: rem($large-card + $card-icon-offset + 2px);
+    height: ($large-card + $card-icon-offset + 2px);
 }
 
 /* ==========================================================================
@@ -302,9 +302,9 @@ $password-strength-score-4: #33a22b;
 
 .password-strength-indicator {
     background-color: $c-neutral5;
-    height: rem(8px);
-    margin-top: rem(4px);
-    margin-bottom: rem($gs-baseline * 2);
+    height: 8px;
+    margin-top: 4px;
+    margin-bottom: ($gs-baseline * 2);
     position: relative;
 
     &:after {
@@ -328,15 +328,15 @@ $password-strength-score-4: #33a22b;
    ========================================================================== */
 .cvc-cta {
     font-family: $f-sans-serif-text;
-    font-size: rem(13px);
-    line-height: rem(16px);
+    font-size: 13px;
+    line-height: 16px;
 }
 
 .cvc {
     font-family: $f-sans-serif-text;
-    padding: rem($gs-baseline / 2) rem($gs-baseline / 2) rem($gs-baseline / 2) 0;
-    font-size: rem(13px);
-    line-height: rem(16px);
+    padding: ($gs-baseline / 2) ($gs-baseline / 2) ($gs-baseline / 2) 0;
+    font-size: 13px;
+    line-height: 16px;
 }
 
 .cvc__image {
@@ -344,12 +344,12 @@ $password-strength-score-4: #33a22b;
 }
 
 .cvc__detail {
-    margin-left: rem(70px);
+    margin-left: 70px;
 }
 
 .cvc__heading {
     font-weight: bold;
     font-family: $f-sans-serif-text;
-    font-size: rem(13px);
-    line-height: rem(16px);
+    font-size: 13px;
+    line-height: 16px;
 }

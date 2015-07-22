@@ -44,35 +44,35 @@ body {
 }
 
 .l-inset {
-    padding: rem($gs-baseline) rem($gs-gutter / 2) rem($gs-baseline * 2);
+    padding: $gs-baseline ($gs-gutter / 2) ($gs-baseline * 2);
 
     @include mq(tablet) {
-        padding-left: rem($gs-gutter);
-        padding-right: rem($gs-gutter);
+        padding-left: ($gs-gutter);
+        padding-right: ($gs-gutter);
     }
 }
 
 .l-pad-vertical {
-    margin-top: rem($gs-baseline);
-    margin-bottom: rem($gs-baseline);
+    margin-top: $gs-baseline;
+    margin-bottom: $gs-baseline;
 }
 
 .l-pad-top {
-    margin-top: rem($gs-baseline / 2);
+    margin-top: ($gs-baseline / 2);
 }
 .l-pad-bottom {
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: ($gs-baseline / 2);
 }
 
 .l-pad-left {
     @include mq(tablet) {
-        padding-left: rem(gs-span(1) + $gs-gutter);
+        padding-left: (gs-span(1) + $gs-gutter);
     }
 }
 
 .l-pad-right {
     @include mq(tablet) {
-        padding-right: rem(gs-span(1) + $gs-gutter);
+        padding-right: (gs-span(1) + $gs-gutter);
     }
 }
 
@@ -112,15 +112,15 @@ body {
 .page-content {
     @include clearfix;
     background-color: $c-background;
-    padding: 0 rem($gs-gutter / 2);
+    padding: 0 ($gs-gutter / 2);
     position: relative;
 
     @include mq(mobileLandscape) {
-        padding: 0 rem($gs-gutter);
+        padding: 0 ($gs-gutter);
     }
 }
 .page-content--padded {
     @include mq(tablet) {
-        padding: 0 rem($gs-gutter * 4) rem($gs-gutter * 8);
+        padding: 0 ($gs-gutter * 4) ($gs-gutter * 8);
     }
 }

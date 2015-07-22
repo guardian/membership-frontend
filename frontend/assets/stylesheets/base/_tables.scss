@@ -5,12 +5,12 @@
 .table {
     color: $c-neutral1;
     background-color: $c-neutral8;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 
     th,
     td {
         @include fs-data(3);
-        padding: rem($gs-baseline * 1.3) rem($gs-gutter / 2);
+        padding: ($gs-baseline * 1.3) ($gs-gutter / 2);
         vertical-align: top;
     }
 
@@ -22,7 +22,7 @@
 
     tbody th {
         @include mq($from: tablet) {
-            width: rem(gs-span(3));
+            width: gs-span(3);
         }
     }
 
@@ -39,7 +39,7 @@
         td,
         thead td {
             @include fs-textSans(4);
-            padding: rem($gs-baseline);
+            padding: $gs-baseline;
         }
     }
 }
