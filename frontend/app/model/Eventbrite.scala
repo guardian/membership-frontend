@@ -265,23 +265,17 @@ object Eventbrite {
     lazy val memUrl = Config.membershipUrl + controllers.routes.Event.details(slug)
   }
 
-  case class Provider(
-    id: String,
-    title: String,
-    logoPath: String
-  )
-
   object EBEvent {
 
     val availableProviders = Seq(
-      Provider("birkbeck", "Birkbeck", Asset.at("images/providers/birkbeck.svg")),
-      Provider("idler", "Idler Academy", Asset.at("images/providers/idler.png")),
-      Provider("csm", "Central Saint Martins", Asset.at("images/providers/csm.svg")),
-      Provider("tpg", "The Photographers' Gallery", Asset.at("images/providers/tpg.svg")),
-      Provider("5x15", "5x15", Asset.at("images/providers/5x15.png")),
-      Provider("moa", "Museum of Architecture", Asset.at("images/providers/moa.png")),
-      Provider("shubbak", "Shubbak Festival", Asset.at("images/providers/shubbak.svg")),
-      Provider("british-council", "British Council", Asset.at("images/providers/british-council.svg"))
+      ProviderLogo("birkbeck", "Birkbeck", Asset.at("images/providers/birkbeck.svg")),
+      ProviderLogo("idler", "Idler Academy", Asset.at("images/providers/idler.png")),
+      ProviderLogo("csm", "Central Saint Martins", Asset.at("images/providers/csm.svg")),
+      ProviderLogo("tpg", "The Photographers' Gallery", Asset.at("images/providers/tpg.svg")),
+      ProviderLogo("5x15", "5x15", Asset.at("images/providers/5x15.png")),
+      ProviderLogo("moa", "Museum of Architecture", Asset.at("images/providers/moa.png")),
+      ProviderLogo("shubbak", "Shubbak Festival", Asset.at("images/providers/shubbak.svg")),
+      ProviderLogo("british-council", "British Council", Asset.at("images/providers/british-council.svg"))
     )
 
     val expansions = Seq(

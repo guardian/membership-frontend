@@ -16,6 +16,7 @@ object EventbriteTestObjects {
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
     val imgOpt = None
+    val logoOpt = None
     val socialImgUrl = None
     val socialHashTag = None
     val imageMetadata = None
