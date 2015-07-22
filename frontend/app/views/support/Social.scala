@@ -17,14 +17,14 @@ object Social {
     emailSubject=event.name.text,
     emailMessage=s"The Guardian is coming to life through Guardian Live events like this one. Shall we go?\n\n${event.name.text}\n${event.memUrl}",
     facebookUrl=event.memUrl,
-    twitterMessage=s"${event.name.text} ${event.memUrl} ${event.socialHashTag.mkString}"
+    twitterMessage=s"${event.name.text} ${event.memUrl} ${event.metadata.socialHashtag.mkString}"
   )
 
   def eventThankyou(event: RichEvent) = Social(
     emailSubject=s"I'm going to ${event.name.text}!",
     emailMessage=s"I've just booked my ticket for ${event.name.text}. Come along too!\n\n${event.memUrl}",
     facebookUrl=event.memUrl,
-    twitterMessage=s"I'm going to: ${event.name.text} ${event.memUrl} ${event.socialHashTag.mkString}"
+    twitterMessage=s"I'm going to: ${event.name.text} ${event.memUrl} ${event.metadata.socialHashtag.mkString}"
   )
 
   val joinThankyou = Social(

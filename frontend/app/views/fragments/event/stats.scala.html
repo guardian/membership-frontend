@@ -33,7 +33,7 @@
 </div>
 
 @* Event ticket sale dates *@
-@if(showTicketSales && event.metadata.preSale) {
+@if(showTicketSales && event.canHavePriorityBooking) {
     @for(ticketing <- event.internalTicketing if event.isBookable) {
         <div class="stat-item">
             <div class="stat-item__first">

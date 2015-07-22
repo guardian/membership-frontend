@@ -1,83 +1,12 @@
 package model
 
-import com.gu.contentapi.client.model.{Content}
-import configuration.{Links}
+import com.gu.contentapi.client.model.Content
+import configuration.Links
+import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
-import views.support.Asset
 
 object RichEvent {
-  case class Metadata(
-    identifier: String,
-    title: String,
-    shortTitle: String,
-    pluralTitle: String,
-    description: Option[String],
-    eventListUrl: String,
-    termsUrl: String,
-    largeImg: Boolean,
-    preSale: Boolean,
-    highlightsOpt: Option[HighlightsMetadata] = None,
-    chooseTier: ChooseTierMetadata
-  )
-
-  case class ChooseTierMetadata(title: String, sectionTitle: String)
-  case class HighlightsMetadata(title: String, url: String)
-
-  val guLiveMetadata = Metadata(
-    identifier="guardian-live",
-    title="Guardian Live events",
-    shortTitle="Events",
-    pluralTitle="Guardian Live events",
-    description=Some("""
-      |Guardian Live is a programme of discussions, debates, interviews, keynote speeches and festivals.
-      |Members can attend events that take the power of open journalism from print and digital into live experiences.
-    """.stripMargin),
-    eventListUrl=controllers.routes.Event.list.url,
-    termsUrl=Links.guardianLiveTerms,
-    largeImg=true,
-    preSale=true,
-    chooseTier=ChooseTierMetadata(
-      "Guardian Live events are exclusively for Guardian members",
-      "Choose a membership tier to continue with your booking"
-    )
-  )
-
-  val masterclassMetadata = Metadata(
-    identifier="masterclasses",
-    title="Guardian Masterclasses",
-    shortTitle="Masterclasses",
-    pluralTitle="Masterclasses",
-    description=Some("""
-      |Guardian Masterclasses offer a broad range of short and long courses across a variety of disciplines from creative writing,
-      | journalism, photography and design, film and digital media, music and cultural appreciation.
-    """.stripMargin),
-    eventListUrl=controllers.routes.Event.masterclasses.url,
-    termsUrl=Links.guardianMasterclassesTerms,
-    largeImg=false,
-    preSale=false,
-    chooseTier=ChooseTierMetadata(
-      "Choose a membership tier to continue with your booking",
-      "Become a Partner or Patron to save 20% on your masterclass"
-    )
-  )
-
-  val localMetadata = Metadata(
-    identifier="local",
-    title="Guardian Local",
-    shortTitle="Events",
-    pluralTitle="Local events",
-    description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
-      "come together and enjoy arts, food and culture from around the UK."),
-    eventListUrl=controllers.routes.Event.list.url,
-    termsUrl=Links.guardianLiveTerms,
-    largeImg=true,
-    preSale=true,
-    chooseTier=ChooseTierMetadata(
-      "Guardian Local events are exclusively for Guardian members",
-      "Choose a membership tier to continue with your booking"
-    )
-  )
 
   case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
 
@@ -86,12 +15,13 @@ object RichEvent {
     val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
-    val socialHashTag: Option[String]
     val schema: EventSchema
     val tags: Seq[String]
     val metadata: Metadata
     val contentOpt: Option[Content]
     val pastImageOpt: Option[ResponsiveImageGroup]
+    val hasLargeImage: Boolean
+    val canHavePriorityBooking: Boolean
     def deficientGuardianMembersTickets: Boolean
   }
 
@@ -99,6 +29,8 @@ object RichEvent {
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends RichEvent {
+    val hasLargeImage = true
+    val canHavePriorityBooking = true
     val imgOpt = image.map(ResponsiveImageGroup(_))
     val socialImgUrl = imgOpt.map(_.defaultImage)
     val pastImageOpt = contentOpt.flatMap(ResponsiveImageGroup(_))
@@ -122,8 +54,7 @@ object RichEvent {
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends LiveEvent(image, contentOpt) {
-    val socialHashTag = Some("#GuardianLive")
-    val metadata = guLiveMetadata.copy(highlightsOpt = highlight)
+    val metadata = EventMetadata.liveMetadata.copy(highlightsOpt = highlight)
     val logoOpt = Some(ProviderLogo(this))
   }
 
@@ -132,8 +63,7 @@ object RichEvent {
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends LiveEvent(image, contentOpt) {
-    val socialHashTag = Some("#GuardianLocal")
-    val metadata = localMetadata.copy(highlightsOpt = highlight)
+    val metadata = EventMetadata.localMetadata.copy(highlightsOpt = highlight)
     val logoOpt = Some(ProviderLogo(this))
   }
 
@@ -141,12 +71,13 @@ object RichEvent {
     event: EBEvent,
     data: Option[MasterclassData]
   ) extends RichEvent {
+    val hasLargeImage = false
+    val canHavePriorityBooking = false
     val imgOpt = data.flatMap(_.images)
     val socialImgUrl = imgOpt.map(_.defaultImage)
     val schema = EventSchema.from(this)
-    val socialHashTag = Some("#GuardianMasterclasses")
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
-    val metadata = masterclassMetadata
+    val metadata = EventMetadata.masterclassMetadata
     val logoOpt = Some(ProviderLogo(this))
     val contentOpt = None
     val pastImageOpt = None
