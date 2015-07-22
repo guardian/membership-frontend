@@ -1,11 +1,14 @@
 /*global zxcvbn */
-define(['bean'], function (bean) {
+define(function () {
     'use strict';
 
-    var STRENGTH_INDICATOR_ELEM = document.querySelector('.js-password-strength-indicator');
-    var PASSWORD_STRENGTH_INPUT_ELEM = document.querySelector('.js-password-strength');
-    var STRENGTH_LABEL_ELEM = document.querySelector('.js-password-strength-label');
-    var config = {
+    var SELECTORS = {
+        strengthIndicator: '.js-password-strength-indicator',
+        strengthInput: '.js-password-strength',
+        strengthLabel: '.js-password-strength-label'
+    };
+    var HIDDEN_CLASS = 'is-hidden';
+    var CONFIG = {
         text: {
             passwordLabel: 'Password strength',
             errorLong: 'Password too long',
@@ -20,47 +23,48 @@ define(['bean'], function (bean) {
         ]
     };
 
-    var init = function() {
-        if (PASSWORD_STRENGTH_INPUT_ELEM) {
-            addListeners();
+    var checkStrength = function(strengthIndicator, strengthInput) {
+        var score = zxcvbn(strengthInput.value).score;
+        var label = CONFIG.text.passwordLabel + ': ' + CONFIG.passwordLabels[score];
+        var strengthLabel = document.querySelector(SELECTORS.strengthLabel);
+
+        if (strengthInput.value.length < strengthInput.getAttribute('minlength')) {
+            label = CONFIG.text.errorShort;
+            score = null;
+        } else if (strengthInput.value.length > strengthInput.getAttribute('maxlength')) {
+            label = CONFIG.text.errorLong;
+            score = null;
+        }
+
+        strengthIndicator.className = strengthIndicator.className.replace(/\bscore-\S+/g, 'score-' + score);
+        if(strengthLabel) {
+            strengthLabel.textContent = label;
         }
     };
 
-    /**
-     * load in zxcvbn lib as it is ~700kb!
-     * setup listener for length check
-     * setup listener for zxcvbn.score check
-     */
-    var addListeners = function () {
-        require(['js!zxcvbn'], function() {
-            STRENGTH_INDICATOR_ELEM.classList.toggle('is-hidden');
-
-            bean.on(PASSWORD_STRENGTH_INPUT_ELEM, 'keyup', function () {
-                checkStrength();
-            });
+    var addListeners = function (strengthIndicator, strengthInput) {
+        strengthIndicator.classList.toggle(HIDDEN_CLASS);
+        strengthInput.addEventListener('keyup', function() {
+            checkStrength(strengthIndicator, strengthInput);
         });
     };
 
     /**
-     * check zxcvbn score and apply relevant className to display strength
+     * Async load in zxcvbn lib as it is ~700kb!
      */
-    var checkStrength = function() {
-        var score = zxcvbn(PASSWORD_STRENGTH_INPUT_ELEM.value).score;
-        var label = config.text.passwordLabel + ': ' + config.passwordLabels[score];
+    var init = function() {
+        var strengthIndicator = document.querySelector(SELECTORS.strengthIndicator);
+        var strengthInput = document.querySelector(SELECTORS.strengthInput);
 
-        if (PASSWORD_STRENGTH_INPUT_ELEM.value.length < PASSWORD_STRENGTH_INPUT_ELEM.getAttribute('minlength')) {
-            label = config.text.errorShort;
-            score = null;
-        } else if (PASSWORD_STRENGTH_INPUT_ELEM.value.length > PASSWORD_STRENGTH_INPUT_ELEM.getAttribute('maxlength')) {
-            label = config.text.errorLong;
-            score = null;
+        if(strengthIndicator && strengthInput) {
+            require(['js!zxcvbn'], function() {
+                addListeners(strengthIndicator, strengthInput);
+            });
         }
-
-        STRENGTH_INDICATOR_ELEM.className = STRENGTH_INDICATOR_ELEM.className.replace(/\bscore-\S+/g, 'score-' + score);
-        STRENGTH_LABEL_ELEM.textContent = label;
     };
 
     return {
         init: init
     };
+
 });
