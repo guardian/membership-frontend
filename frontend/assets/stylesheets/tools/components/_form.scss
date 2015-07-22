@@ -1,9 +1,11 @@
 /* ==========================================================================
    Forms
    ========================================================================== */
+
 /* ==========================================================================
    Form labels and inputs
    ========================================================================== */
+
 .label {
     @include fs-bodyCopy(2);
     color: $c-neutral1;
@@ -19,7 +21,7 @@
     color: $c-neutral1;
     border: 1px solid $c-neutral4;
     @include fs-textSans(5);
-    padding: rem(8px) rem(8px) rem(7px);
+    padding: 8px 8px 7px;
     outline: none;
     width: 100%;
     -webkit-appearance: none;
@@ -32,6 +34,7 @@
 /* ==========================================================================
    Form Fieldset
    ========================================================================== */
+
 .fieldset {
     border: 0;
     padding: 0;
@@ -43,12 +46,12 @@
 
 .fieldset__heading {
     vertical-align: top;
-    padding: rem($baseline / 2) rem($baseline) rem($baseline * 2) rem(10px);
+    padding: ($baseline / 2) $baseline ($baseline * 2) 10px;
 
     @include mq(tablet) {
         display: table-cell;
-        padding-right: rem($gutter * 2);
-        width: rem(300px + $gutter);
+        padding-right: ($gutter * 2);
+        width: (300px + $gutter);
     }
 }
 
@@ -65,11 +68,11 @@
 
 .fieldset__fields {
     vertical-align: top;
-    padding: rem(10px) rem(10px) rem($baseline * 2);
+    padding: 10px 10px ($baseline * 2);
 
     @include mq(tablet) {
         display: table-cell;
-        width: rem(380px);
+        width: 380px;
         padding-left: 0;
     }
 }
@@ -77,25 +80,25 @@
 /* ==========================================================================
    Form field
    ========================================================================== */
+
 .form-field {
-    margin-bottom: rem($baseline);
+    margin-bottom: $baseline;
 }
 
 .form-note {
     @include fs-data(3);
     color: $c-neutral2;
-    padding-top: rem($baseline / 2);
-    margin-bottom: rem(8px);
+    padding-top: ($baseline / 2);
+    margin-bottom: 8px;
 }
-
 
 /* ==========================================================================
    Checkbox
    ========================================================================== */
-.utils-tag-picker {
-    margin-bottom: rem(3px);
-}
 
+.utils-tag-picker {
+    margin-bottom: 3px;
+}
 .sub-cat {
-    margin-left: rem(20px);
+    margin-left: 20px;
 }
