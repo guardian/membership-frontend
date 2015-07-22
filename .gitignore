@@ -4,22 +4,21 @@
 .idea
 .idea_modules
 *.iml
+*.sublime-project
+*.sublime-workspace
+
 node_modules
 npm-debug.log
 app/npm-debug.log
-Gemfile.lock
-
-membership.sublime-project
-membership.sublime-workspace
 
 dev
 dist
 logs
 out
-project/project
-project/target
 target
 tmp
+project/project
+project/target
 
 */public/javascripts
 */public/stylesheets

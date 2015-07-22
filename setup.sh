@@ -58,9 +58,15 @@ printf "\n\r\n\r====================================\n\r\n\r"
 printf "> Installing Bower SASS modules..."
 printf "\n\r\n\r====================================\n\r\n\r"
 
-pushd assets/stylesheets
-rm -rf components/bower-components
-bower install
+if hash bower 2>/dev/null; then
+    pushd assets/stylesheets
+    rm -rf components/bower-components
+    bower install
+else
+    printf "\nYou need to install bower first:\n"
+    printf "\nnpm install -g bower\n"
+    exit 1
+fi
 
 popd
 
