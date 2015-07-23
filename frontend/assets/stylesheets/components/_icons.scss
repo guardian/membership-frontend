@@ -95,10 +95,10 @@
 }
 
 .icon-inline--brand {
-    fill: $mem-brandBlue;
+    fill: $c-brand;
 }
 .icon-inline--brand-dark {
-    fill: $mem-brandBlueDark;
+    fill: $c-brand-dark;
 }
 .icon-inline--neutral {
     fill: $c-neutral2;
@@ -115,7 +115,7 @@
     background-color: transparent;
     border-radius: 1000px;
     border: 1px solid $c-border-brand;
-    color: $mem-brandBlue;
+    color: $c-brand;
 
     .icon-inline {
         @include vertically-center();
@@ -150,14 +150,14 @@
 }
 
 .icon-holder--dark {
-    color: $mem-brandBlueDark;
-    border-color: $mem-brandBlueDark;
+    color: $c-brand-dark;
+    border-color: $c-brand-dark;
 }
 
 .icon-holder--fill {
     color: $white;
-    background-color: $mem-brandBlueDark;
-    border-color: $mem-brandBlueDark;
+    background-color: $c-brand-dark;
+    border-color: $c-brand-dark;
 }
 .icon-holder--fill-guardian-live {
     color: $white;

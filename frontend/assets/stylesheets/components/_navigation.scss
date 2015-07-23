@@ -37,7 +37,7 @@ $global-nav-height: 36px;
     font-weight: normal;
     @include font-smoothing();
 
-    background-color: darken($mem-brandBlue, 12%);
+    background-color: darken($c-brand, 12%);
 
     &::-webkit-scrollbar {
         display: none;
@@ -50,7 +50,7 @@ $global-nav-height: 36px;
         vertical-align: middle;
         height: rem($global-nav-height);
         padding: 0 rem($global-nav-height * 2) 0 rem($gs-gutter / 2);
-        background-color: darken($mem-brandBlue, 10%);
+        background-color: darken($c-brand, 10%);
 
         @include mq(tablet) {
             padding: 0 rem($gs-gutter);
@@ -131,7 +131,7 @@ $global-nav-height: 36px;
         z-index: 2;
         top: 100%;
         width: 100%;
-        background: darken($mem-brandBlue, 10%);
+        background: darken($c-brand, 10%);
 
         .nav__scroll,
         .nav__list,
@@ -155,7 +155,7 @@ $global-nav-height: 36px;
         .nav__link {
             @include fs-bodyHeading(1);
             margin: 0;
-            border-top: 1px solid lighten($mem-brandBlue, 5%);
+            border-top: 1px solid lighten($c-brand, 5%);
             display: block;
             background-color: transparent;
             -webkit-font-smoothing: subpixel-antialiased;
