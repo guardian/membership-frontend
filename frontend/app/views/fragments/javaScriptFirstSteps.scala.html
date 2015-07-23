@@ -47,6 +47,16 @@
             document.documentElement.className += ' js-ancient-browser';
         }
 
+        var supportsSvgClipPath = (function() {
+            var toStringFn = ({}).toString;
+            return !!document.createElementNS &&
+                /SVGClipPath/.test(toStringFn.call(document.createElementNS('http://www.w3.org/2000/svg', 'clipPath')));
+        }());
+
+        if(supportsSvgClipPath) {
+            document.documentElement.className += ' svgclippaths';
+        }
+
         @* Disable lazySizes auto-init so we can control when it runs *@
         window.lazySizesConfig = window.lazySizesConfig || {};
         window.lazySizesConfig.init = false;

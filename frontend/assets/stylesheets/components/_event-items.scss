@@ -32,11 +32,9 @@
 }
 .event-item__media {
     transition: background-color $transition-duration-medium ease;
-
     img {
+        @include no-flicker();
         transition: opacity $transition-duration-medium ease;
-        // Prevent flicker on hover in WebKit
-        -webkit-backface-visibility: hidden;
     }
 }
 .event-item__meta {
@@ -92,6 +90,45 @@
 .event-item--shallow {
     @include mq(mobileLandscape) {
         height: rem(320px);
+    }
+}
+
+.event-item--clippath-0,
+.event-item--clippath-1,
+.event-item--clippath-2 {
+    .event-item__media {
+        .svgclippaths & {
+            position: relative;
+        }
+        .svgclippaths &::after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 0; right: 0;
+            background-color: rgba(255,255,255,0.25);
+        }
+    }
+}
+.event-item--clippath-0 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailA");
+        }
+    }
+}
+.event-item--clippath-1 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailB");
+        }
+    }
+}
+.event-item--clippath-2 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailC");
+        }
     }
 }
 

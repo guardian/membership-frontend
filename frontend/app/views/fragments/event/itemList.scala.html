@@ -1,8 +1,9 @@
 @(event: model.RichEvent.RichEvent)
 
-@import views.support.Dates._
+@import views.support.Dates.dateRange
+@import model.SVG.ClipPath.randomThumbnailIndex
 
-<a href="@routes.Event.details(event.slug)" class="event-item event-item--list @if(event.isBookable){ qa-available-event-item}">
+<a href="@routes.Event.details(event.slug)" class="event-item event-item--clippath-@randomThumbnailIndex.toString event-item--list @if(event.isBookable){ qa-available-event-item}">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))

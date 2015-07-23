@@ -248,20 +248,10 @@
     @include fs-textSans(1);
 }
 
-/* Event Content
+/* Event Image
    ========================================================================== */
-// TODO: Document and refactor
 
-.event-content {
-    padding: 0;
-    background-color: $white;
-
-    @include mq(desktop) {
-        background-color: transparent;
-    }
-}
-
-.event-content__image {
+.event-image {
     margin: 0 auto;
 
     @include mq(mem-full) {
@@ -272,20 +262,7 @@
         width: 100%;
     }
 }
-
-.event__picture-byline {
-    clear: both;
-    @include fs-textSans(1);
-    color: $c-neutral2;
-    margin-bottom: rem($gs-gutter * 2);
-
-    @include mq(mem-full) {
-        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
-        margin-bottom: 0;
-    }
-}
-
-.event-image-credit {
+.event-image__credit {
     background-color: $white;
     padding: rem(5px) rem($gs-gutter / 2) 0;
 
@@ -302,8 +279,7 @@
         padding: rem($gs-baseline) 0 0 rem(gs-span(2) + ($gs-gutter * 2));
     }
 }
-
-.event-image-credit__detail {
+.event-image__credit__detail {
     color: $c-neutral2;
     @include fs-textSans(1);
 
@@ -315,7 +291,51 @@
         width: rem(gs-span(8) - $gs-gutter);
     }
 }
+.event-image--clippath-0,
+.event-image--clippath-1,
+.event-image--clippath-2 {
+    .svgclippaths & {
+        position: relative;
+    }
+    .svgclippaths &::after {
+        content: ' ';
+        display: block;
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        background-color: rgba(255,255,255,0.25);
+    }
+}
+.event-image--clippath-0 {
+    .svgclippaths &::after {
+        clip-path: url("#clipPathThumbnailA");
+    }
+}
+.event-image--clippath-1 {
+    .svgclippaths &::after {
+        clip-path: url("#clipPathThumbnailB");
+    }
+}
+.event-image--clippath-2 {
+    .svgclippaths &::after {
+        clip-path: url("#clipPathThumbnailC");
+    }
+}
 
+
+
+/* Event Content
+   ========================================================================== */
+// TODO: Document and refactor
+
+.event-content {
+    padding: 0;
+    background-color: $white;
+
+    @include mq(desktop) {
+        background-color: transparent;
+    }
+}
 .event-content__container {
     background-color: $white;
     padding: rem($gs-gutter) rem($gs-gutter / 2);

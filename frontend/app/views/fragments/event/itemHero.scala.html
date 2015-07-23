@@ -1,8 +1,9 @@
 @(event: model.RichEvent.RichEvent)
 
-@import views.support.Dates._
+@import views.support.Dates.dateRange
+@import model.SVG.ClipPath.randomThumbnailIndex
 
-<a href="@routes.Event.details(event.slug)" class="event-item event-item--hero@if(event.isBookable){ qa-available-event-item}">
+<a href="@routes.Event.details(event.slug)" class="event-item event-item--clippath-@randomThumbnailIndex.toString event-item--hero@if(event.isBookable){ qa-available-event-item}">
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)

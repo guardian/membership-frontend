@@ -163,3 +163,8 @@ $gs-max-columns: 16;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
 }
+
+@mixin no-flicker() {
+    // Prevent flicker on hover in WebKit
+    -webkit-backface-visibility: hidden;
+}

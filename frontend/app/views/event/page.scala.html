@@ -1,8 +1,8 @@
 @(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
-@import model.RichEvent._
 @import play.twirl.api.Html
-@import views.support.Asset
+@import model.RichEvent._
+@import model.SVG.ClipPath.randomThumbnailIndex
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 
@@ -13,7 +13,7 @@
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header case--lower">
-                    <a href="@event.metadata.eventListUrl" class="minimal-link tone-text-@event.metadata.identifier">@event.metadata.shortTitle</a>
+                    <a href="@event.metadata.eventListUrl" class="minimal-link">@event.metadata.shortTitle</a>
                 </div>
                 <h1 class="event-masthead__name qa-event-detail-name">@event.name.text</h1>
             </div>
@@ -95,22 +95,20 @@
 
     <div class="event-content">
 
-        @if(event.hasLargeImage) {
-            @for(img <- event.imgOpt) {
-                <div class="event-content__image">
-                    <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
-                </div>
-                @for(imgMetadata <- img.metadata) {
-                    <div class="event-image-credit u-event-content-width">
-                        <div class="event-image-credit__detail">
-                            @fragments.inlineIcon("caption-camera")
-                            @for(imgDescription <- imgMetadata.description) {
-                                <span class="u-align-middle">@imgDescription</span>
-                            }
-                            <span class="u-align-middle">Photograph: @imgMetadata.photographer</span>
-                        </div>
+        @for(img <- event.imgOpt if event.metadata.largeImg) {
+            <div class="event-image event-image--clippath-@randomThumbnailIndex.toString">
+                <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
+            </div>
+            @for(imgMetadata <- img.metadata) {
+                <div class="event-image__credit u-event-content-width">
+                    <div class="event-image__credit__detail">
+                        @fragments.inlineIcon("caption-camera")
+                        @for(imgDescription <- imgMetadata.description) {
+                            <span class="u-align-middle">@imgDescription</span>
+                        }
+                        <span class="u-align-middle">Photograph: @imgMetadata.photographer</span>
                     </div>
-                }
+                </div>
             }
         }
 
