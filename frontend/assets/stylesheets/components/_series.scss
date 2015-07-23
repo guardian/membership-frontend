@@ -3,6 +3,9 @@
    ========================================================================== */
 
 .series-detail {
+    background-color: $c-neutral7;
+}
+.series-detail__inner {
     @include clearfix();
     padding: rem($gs-baseline) rem($gs-gutter / 2);
     padding-top: rem($gs-baseline / 2);
@@ -13,23 +16,23 @@
         padding-bottom: rem($gs-baseline * 3);
     }
 }
-    .series-detail__content {
-        @include mq(desktop) {
-            float: left;
-            width: rem(gs-span(10));
-            padding-left: rem(gs-span(2) + $gs-gutter);
-        }
+.series-detail__content {
+    @include mq(desktop) {
+        float: left;
+        width: rem(gs-span(10));
+        padding-left: rem(gs-span(2) + $gs-gutter);
     }
-    .series-detail__logo {
-        max-height: rem(40px);
-        float: right;
-        margin: rem($gs-baseline / 2) 0;
+}
+.series-detail__logo {
+    max-height: rem(40px);
+    float: right;
+    margin: rem($gs-baseline / 2) 0;
 
-        @include mq(desktop) {
-            margin: 0;
-            max-height: rem(60px);
-        }
+    @include mq(desktop) {
+        margin: 0;
+        max-height: rem(60px);
     }
-    .series-detail__title {
-        @include fs-header(3);
-    }
+}
+.series-detail__title {
+    @include fs-header(3);
+}

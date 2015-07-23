@@ -9,7 +9,7 @@
 @main(event.name.text, pageInfo=pageInfo) {
 
     @* Event Name *@
-    <div class="event-header tone-@event.metadata.identifier">
+    <div class="event-header">
         <div class="event-header__container">
             <div class="event-masthead u-cf">
                 <div class="event-masthead__title section-header case--lower">
@@ -21,7 +21,7 @@
     </div>
 
     @* Event Pricing *@
-    <div class="event-header event-header--pricing tone-@event.metadata.identifier tone-accent-@event.metadata.identifier">
+    <div class="event-header event-header--pricing">
         <div class="event-header__container event-header__container--details">
             <div class="event-details">
                 <div class="event-details__time">
@@ -38,7 +38,7 @@
                     </div>
                     @if(event.isBookable) {
                         <div class="event-ticket__item event-ticket__action">
-                            @fragments.event.ticketCta(event, List("action--booking", "qa-event-detail-booking-action"))
+                            @fragments.event.ticketCta(event, List("qa-event-detail-booking-action"))
                         </div>
                         <div class="event-ticket__item event-ticket__terms copy">
                             @fragments.event.terms(event)
@@ -151,8 +151,8 @@
             </div>
         </div>
 
-        @fragments.event.seriesDetails(event)
-
     </div>
+
+    @fragments.event.seriesDetails(event)
 
 }

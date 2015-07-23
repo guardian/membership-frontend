@@ -4,6 +4,7 @@
 
 .event-header {
     @include clearfix;
+    background-color: $c-neutral7;
 }
 .event-header__container {
     background-color: transparent;
@@ -51,6 +52,10 @@
     @include mq(desktop) {
         max-height: none;
     }
+}
+
+.event-header--pricing {
+    background-color: $white;
 }
 
 
