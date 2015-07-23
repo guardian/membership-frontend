@@ -13,7 +13,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
    ========================================================================== */
 
 .page-slice {
-    @include clearfix;
+    overflow: auto;
     background-color: $white;
     padding-bottom: rem($gs-baseline);
 
