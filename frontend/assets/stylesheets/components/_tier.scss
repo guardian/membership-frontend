@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .tier-trail {
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 }
     .tier-trail__name {
         @include fs-header(4);
@@ -25,13 +25,13 @@
     color: $white;
     overflow: auto;
     position: relative;
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
     border-spacing: 0;
     @include mq(mobileLandscape) {
         display: table;
         width: 100%;
-        height: rem($gs-gutter * 4);
-        padding: rem($gs-gutter - 5px) rem($gs-gutter);
+        height: ($gs-gutter * 4);
+        padding: ($gs-gutter - 5px) $gs-gutter;
     }
 }
     .tier-header__title,
@@ -44,10 +44,10 @@
     .tier-header__pricing {
         float: right;
         width: 100%;
-        max-width: rem(gs-span(4) - $gs-gutter);
+        max-width: (gs-span(4) - $gs-gutter);
 
         @include mq(mobileLandscape) {
-            max-width: rem(gs-span(4) - $gs-gutter * 2);
+            max-width: (gs-span(4) - $gs-gutter * 2);
         }
     }
     .tier-header__title {
@@ -79,7 +79,7 @@
  */
 .tier-header--stacked {
 
-    min-height: rem(144px);
+    min-height: 144px;
 
     @include mq($from: tablet, $until: desktop) {
         min-height: 0;
@@ -93,6 +93,6 @@
         }
     }
     .tier-header__pricing {
-        padding-top: rem($gs-gutter * 2);
+        padding-top: ($gs-gutter * 2);
     }
 }

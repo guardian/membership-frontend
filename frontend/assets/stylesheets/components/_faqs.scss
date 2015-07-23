@@ -4,11 +4,11 @@
 
 .faq-list {
     border-top: 1px solid $mem-brandBlue;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 }
 .faq-list__item {
     background-color: $c-neutral8;
-    padding: rem($gs-baseline);
+    padding: $gs-baseline;
     border-bottom: 1px dotted $c-neutral3;
 }
 
@@ -22,14 +22,14 @@
     vertical-align: top;
 }
 .faq-question__icon {
-    width: rem($gs-gutter * 2);
+    width: ($gs-gutter * 2);
 }
 .faq-question__text {
     color: $c-body;
 }
 
 .faq-answer {
-    padding-bottom: rem($gs-gutter);
+    padding-bottom: $gs-gutter;
 }
 .faq-answer__headline {
     @include fs-headline(3);

@@ -7,44 +7,44 @@
 }
 .event-header__container {
     background-color: transparent;
-    padding: rem($gs-baseline / 2) rem($gs-gutter / 2) rem($gs-baseline);
+    padding: ($gs-baseline / 2) ($gs-gutter / 2) $gs-baseline;
     margin: 0 auto;
 
     @include mq(tablet) {
-        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-baseline * 3);
+        padding: ($gs-baseline / 2) $gs-gutter ($gs-baseline * 3);
     }
 
     @include mq(desktop) {
-        width: rem(map-get($max-widths, max-tablet) + $gs-gutter * 2);
+        width: (map-get($max-widths, max-tablet) + $gs-gutter * 2);
     }
 
     @include mq(mem-full) {
-        width: rem(map-get($max-widths, max-desktop) + $gs-gutter * 2);
+        width: (map-get($max-widths, max-desktop) + $gs-gutter * 2);
     }
 }
 .event-header__container--details {
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
     position: relative;
-    min-height: rem(75px);
+    min-height: 75px;
 
     @include mq(tablet) {
-        padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-baseline);
-        min-height: rem(120px);
+        padding: ($gs-baseline / 2) $gs-gutter $gs-baseline;
+        min-height: 120px;
     }
 
     @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+        padding-left: (gs-span(2) + ($gs-gutter * 2));
     }
 }
 .event-header__logo {
     float: right;
-    margin: rem($gs-baseline) 0;
+    margin: $gs-baseline 0;
     max-height: 40px;
 
     @include mq(mobileLandscape) {
         position: absolute;
-        bottom: rem($gs-baseline);
-        right: rem($gs-baseline);
+        bottom: $gs-baseline;
+        right: $gs-baseline;
         margin: 0;
     }
 
@@ -62,13 +62,13 @@
     position: relative;
 
     .event-masthead__name {
-        max-width: rem(gs-span(8));
+        max-width: gs-span(8);
         @include fs-headline(5);
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
 
 
         @include mq(tablet) {
-            padding-top: rem($gs-baseline);
+            padding-top: $gs-baseline;
             @include fs-headline(7);
         }
 
@@ -80,15 +80,15 @@
     .event-masthead__title {
         @include fs-header(1);
         border-bottom: 1px dotted rgba(255, 255, 255, .29);
-        padding-bottom: rem($gs-gutter / 4);
+        padding-bottom: ($gs-gutter / 4);
 
         @include mq(tablet) {
             @include fs-header(3);
         }
 
         @include mq(mem-full) {
-            width: rem(gs-span(2));
-            margin-right: rem($gs-gutter);
+            width: (gs-span(2));
+            margin-right: $gs-gutter;
             border-bottom: 0;
             float: left;
         }
@@ -99,10 +99,10 @@
  * Event details
  */
 .event-details {
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: ($gs-baseline / 2);
 
     @include mq(tablet) {
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: $gs-baseline;
     }
 }
 .event-details__time {
@@ -131,24 +131,24 @@
 }
 .event-extra__container {
     position: relative;
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: rem($gs-baseline) rem($gs-gutter);
+        padding: $gs-baseline $gs-gutter;
     }
 
     @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+        padding-left: (gs-span(2) + ($gs-gutter * 2));
     }
 }
 .event-extra__item {
-    padding-bottom: rem($gs-baseline / 2);
+    padding-bottom: ($gs-baseline / 2);
 
     @include mq(tablet) {
         display: inline-block;
         vertical-align: middle;
         padding-bottom: 0;
-        padding-right: rem($gs-gutter);
+        padding-right: $gs-gutter;
     }
 }
 .event-extra__message {
@@ -176,17 +176,17 @@
     @include mq(tablet) {
         display: table-cell;
         vertical-align: middle;
-        padding-right: rem($gs-gutter);
+        padding-right: $gs-gutter;
     }
 }
 .event-ticket__details {
     @include mq(tablet) {
-        padding-bottom: rem(3px); // Tweak for optical alignment (over actual alignment)
+        padding-bottom: 3px; // Tweak for optical alignment (over actual alignment)
     }
 }
 .event-ticket__action {
-    padding-top: rem($gs-baseline);
-    padding-bottom: rem($gs-baseline);
+    padding-top: $gs-baseline;
+    padding-bottom: $gs-baseline;
 
     @include mq(tablet) {
         padding-top: 0;
@@ -197,7 +197,7 @@
     @include fs-textSans(1);
 
     @include mq(tablet) {
-        max-width: rem(gs-span(4));
+        max-width: gs-span(4);
     }
 }
 .event-ticket__terms a {
@@ -208,7 +208,7 @@
 .event-ticket--aligned {
     padding-top: 0;
     .event-ticket__details {
-        padding-bottom: rem($gs-baseline / 2);
+        padding-bottom: ($gs-baseline / 2);
     }
     @include mq(tablet) {
         .event-ticket__details,
@@ -260,7 +260,7 @@
     margin: 0 auto;
 
     @include mq(mem-full) {
-        width: rem(gs-span(14) + $gs-gutter * 2);
+        width: (gs-span(14) + $gs-gutter * 2);
     }
 
     img {
@@ -272,17 +272,17 @@
     clear: both;
     @include fs-textSans(1);
     color: $c-neutral2;
-    margin-bottom: rem($gs-gutter * 2);
+    margin-bottom: ($gs-gutter * 2);
 
     @include mq(mem-full) {
-        padding: rem(8px) rem($gs-gutter) rem($gs-gutter * 2 - 4) rem(gs-span(2) + $gs-gutter * 2);
+        padding: 8px $gs-gutter ($gs-gutter * 2 - 4) (gs-span(2) + $gs-gutter * 2);
         margin-bottom: 0;
     }
 }
 
 .event-image-credit {
     background-color: $white;
-    padding: rem(5px) rem($gs-gutter / 2) 0;
+    padding: 5px ($gs-gutter / 2) 0;
 
     @include mq(tablet) {
         padding-left: 0;
@@ -290,11 +290,11 @@
     }
 
     @include mq(desktop) {
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 
     @include mq(mem-full) {
-        padding: rem($gs-baseline) 0 0 rem(gs-span(2) + ($gs-gutter * 2));
+        padding: $gs-baseline 0 0 (gs-span(2) + ($gs-gutter * 2));
     }
 }
 
@@ -303,36 +303,36 @@
     @include fs-textSans(1);
 
     @include mq(tablet) {
-        width: rem(gs-span(5) + $gs-gutter * 3);
+        width: (gs-span(5) + $gs-gutter * 3);
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(8) - $gs-gutter);
+        width: (gs-span(8) - $gs-gutter);
     }
 }
 
 .event-content__container {
     background-color: $white;
-    padding: rem($gs-gutter) rem($gs-gutter / 2);
+    padding: $gs-gutter ($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: rem($gs-gutter * 3) 0;
+        padding: ($gs-gutter * 3) 0;
     }
 }
 
 .u-event-content-width,
 .event-content__container {
     @include mq(tablet) {
-        width: rem(gs-span(9) + $gs-gutter * 2);
+        width: (gs-span(9) + $gs-gutter * 2);
         margin: 0 auto;
     }
 
     @include mq(desktop) {
-        width: rem(gs-span(12) + $gs-gutter * 2);
+        width: (gs-span(12) + $gs-gutter * 2);
     }
 
     @include mq(mem-full) {
-        width: rem(gs-span(14) + $gs-gutter * 2);
+        width: (gs-span(14) + $gs-gutter * 2);
     }
 }
 
@@ -341,17 +341,17 @@
 
     @include mq(tablet) {
         float: left;
-        padding: 0 rem($gs-gutter) 0 0;
-        width: rem(gs-span(5) + $gs-gutter * 3);
+        padding: 0 $gs-gutter 0 0;
+        width: (gs-span(5) + $gs-gutter * 3);
     }
 
     @include mq(desktop) {
-        padding: 0 rem($gs-gutter);
-        width: rem(gs-span(8) + $gs-gutter * 2);
+        padding: 0 $gs-gutter;
+        width: (gs-span(8) + $gs-gutter * 2);
     }
 
     @include mq(mem-full) {
-        width: rem(gs-span(10) + $gs-gutter * 2);
+        width: (gs-span(10) + $gs-gutter * 2);
     }
 }
 
@@ -363,11 +363,11 @@
 }
 
 .event__description {
-    margin-bottom: rem($gs-gutter * 2);
+    margin-bottom: ($gs-gutter * 2);
 
     @include mq(mem-full) {
         float: right;
-        width: rem(gs-span(8));
+        width: gs-span(8);
     }
 
     img {
@@ -376,8 +376,8 @@
 }
 
 .event__social {
-    width: rem(gs-span(2));
-    margin-bottom: rem($gs-gutter * 2);
+    width: gs-span(2);
+    margin-bottom: ($gs-gutter * 2);
 
     @include mq(tablet) {
         float: left;
@@ -385,7 +385,7 @@
 }
 
 .event-content__sidebar {
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
 
     @include mq(tablet) {
         float: left;

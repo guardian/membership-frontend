@@ -13,7 +13,7 @@
     background-color: $c-neutral7;
 }
     .package-promo__header {
-        padding: rem($gs-gutter / 4);
+        padding: ($gs-gutter / 4);
     }
     .package-promo__content {
         padding: 0;
@@ -21,22 +21,22 @@
     .package-promo__description {
         display: none;
         @include fs-headline(2);
-        margin-bottom: rem($gs-gutter);
+        margin-bottom: $gs-gutter;
         p { margin-bottom: 0; }
     }
     .package-promo__actions {
         position: absolute;
-        bottom: rem($gs-baseline / 2);
-        right: rem($gs-baseline / 2);
+        bottom: ($gs-baseline / 2);
+        right: ($gs-baseline / 2);
     }
     .package-promo__tier {
         @include clearfix;
         position: relative;
-        min-height: rem(gs-span(1.5));
+        min-height: gs-span(1.5);
     }
     .package-promo__tier__pricing {
         position: absolute;
-        bottom: rem($gs-baseline / 2);
+        bottom: ($gs-baseline / 2);
         border: solid $c-border-neutral;
         border-width: 0;
     }
@@ -52,16 +52,16 @@
     .package-promo__description {
         display: inline-block;
         vertical-align: top;
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: $gs-baseline;
     }
     .package-promo__content {
         margin-left: 35%;
-        padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
+        padding: 0 ($gs-gutter / 4) ($gs-baseline / 2) 0;
     }
     .package-promo__actions {
         position: static;
-        padding-top: rem($gs-gutter / 4);
-        padding-bottom: rem($gs-gutter / 4);
+        padding-top: ($gs-gutter / 4);
+        padding-bottom: ($gs-gutter / 4);
     }
     .package-promo__tier {
         min-height: 0;
@@ -75,22 +75,22 @@
         float: left;
         width: 65%;
         border-width: 0 0 1px 0;
-        margin-top: -(rem($gs-gutter / 4));
+        margin-top: -(($gs-gutter / 4));
     }
 }
 
 @mixin package-promo-stacked() {
     .package-promo__description {
         display: inline-block;
-        min-height: rem($gs-gutter * 6);
+        min-height: ($gs-gutter * 6);
     }
     .package-promo__content {
         margin-left: 0;
-        padding: 0 rem($gs-gutter / 4);
+        padding: 0 ($gs-gutter / 4);
     }
     .package-promo__actions {
         position: static;
-        padding-bottom: rem($gs-baseline);
+        padding-bottom: $gs-baseline;
     }
     .package-promo__tier__title,
     .package-promo__tier__pricing {
@@ -98,12 +98,12 @@
         width: auto;
     }
     .package-promo__tier__title {
-        margin-bottom: rem($gs-gutter * 2);
+        margin-bottom: ($gs-gutter * 2);
     }
     .package-promo__tier__pricing {
         position: static;
         border-width: 1px 0;
-        min-height: rem($gs-gutter * 3);
+        min-height: ($gs-gutter * 3);
     }
 }
 
@@ -119,7 +119,7 @@
 .package-promo--spread {
     @include mq(tablet) {
         @include package-promo-spread();
-        margin-bottom: rem($gs-gutter);
+        margin-bottom: $gs-gutter;
     }
 }
 
@@ -134,13 +134,13 @@
 
 .package-promo--stretch {
     @include mq(desktop) {
-        min-height: rem(300px); // Magic number
+        min-height: 300px; // Magic number
 
         .package-promo__actions {
             padding-bottom: 0;
             position: absolute;
-            left: rem($gs-gutter / 4);
-            bottom: rem($gs-baseline);
+            left: ($gs-gutter / 4);
+            bottom: $gs-baseline;
         }
     }
 }
@@ -157,7 +157,7 @@
 .package-feature {
     @include clearfix;
     position: relative;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
 }
 .package-feature__promo {
     @include mq(tablet) {
@@ -177,13 +177,13 @@
     }
     @include mq(desktop) {
         width: 65%;
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 }
 .package-feature__leadin {
     @include fs-headline(2);
     font-weight: 500;
-    padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
+    padding: ($gs-baseline / 2) 0 $gs-baseline;
 
     @include mq(tablet) {
         border-top: 5px solid;
@@ -198,13 +198,13 @@
 .package-stack {
     @include clearfix;
     border-top: 1px solid $c-border-neutral;
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-gutter);
+    padding-top: ($gs-baseline / 2);
+    margin-bottom: $gs-gutter;
 }
     .package-stack__header {
         border-bottom: 1px dotted $c-border-neutral;
-        padding-bottom: rem($gs-baseline / 2);
-        margin-bottom: rem($gs-baseline / 2);
+        padding-bottom: ($gs-baseline / 2);
+        margin-bottom: ($gs-baseline / 2);
 
         @include mq(tablet) {
             width: 35%;
@@ -213,7 +213,7 @@
         }
     }
     .package-stack__content {
-        margin-left: rem($gs-gutter * 2);
+        margin-left: ($gs-gutter * 2);
 
         @include mq(tablet) {
             width: 65%;
@@ -228,8 +228,8 @@
    ========================================================================== */
 
 .package-chooser {
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-baseline);
+    padding-top: ($gs-baseline / 2);
+    margin-bottom: $gs-baseline;
 
     @include mq($from: tablet, $until: desktop) {
         margin-left: 35%;
@@ -253,16 +253,16 @@
 
 .package-teaser {
     border-top: 1px solid $c-neutral5;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
 }
 .package-teaser__title {
     @include fs-header(2);
     font-weight: bold;
-    margin: 0 0 rem($gs-baseline / 4) 0;
-    padding-top: rem($gs-baseline / 2);
+    margin: 0 0 ($gs-baseline / 4) 0;
+    padding-top: ($gs-baseline / 2);
 }
 .package-teaser__description {
     @include fs-headline(2);
     font-weight: normal;
-    margin-bottom: rem($gs-baseline / 2);
+    margin-bottom: ($gs-baseline / 2);
 }

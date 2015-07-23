@@ -48,12 +48,12 @@ $global-nav-height: 36px;
         white-space: nowrap;
         width: auto;
         vertical-align: middle;
-        height: rem($global-nav-height);
-        padding: 0 rem($global-nav-height * 2) 0 rem($gs-gutter / 2);
+        height: $global-nav-height;
+        padding: 0 ($global-nav-height * 2) 0 ($gs-gutter / 2);
         background-color: darken($mem-brandBlue, 10%);
 
         @include mq(tablet) {
-            padding: 0 rem($gs-gutter);
+            padding: 0 $gs-gutter;
             display: block;
         }
         @include mq(desktop) {
@@ -80,7 +80,7 @@ $global-nav-height: 36px;
 
     .nav__item--sub {
         display: none;
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 
     .nav__item--right {
@@ -91,7 +91,7 @@ $global-nav-height: 36px;
     .nav__link {
         color: $black;
         position: relative;
-        margin: 0 rem($gs-gutter) 0 0;
+        margin: 0 $gs-gutter 0 0;
         padding: 0;
 
         &:focus,
@@ -101,7 +101,7 @@ $global-nav-height: 36px;
 
         @include mq(tablet) {
             display: block;
-            padding: rem(8px) 0 rem(6px);
+            padding: 8px 0 6px;
             &, &:active {
                 text-decoration: none;
                 color: $black;
@@ -126,7 +126,7 @@ $global-nav-height: 36px;
         display: block;
         height: auto;
         padding: 0;
-        padding-top: rem($global-nav-height);
+        padding-top: $global-nav-height;
         position: absolute;
         z-index: 2;
         top: 100%;
@@ -160,7 +160,7 @@ $global-nav-height: 36px;
             background-color: transparent;
             -webkit-font-smoothing: subpixel-antialiased;
             text-decoration: none;
-            padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
+            padding: ($gs-baseline / 2) 0 $gs-baseline $gs-baseline;
 
             &,
             &:active,
@@ -190,7 +190,7 @@ $global-nav-height: 36px;
 }
 .nav-secondary__inner {
     @include clearfix();
-    padding: 0 rem($gs-gutter);
+    padding: 0 $gs-gutter;
 }
 .nav-secondary__list,
 .nav-secondary__item {
@@ -203,7 +203,7 @@ $global-nav-height: 36px;
     list-style: none;
 }
 .nav-secondary__item {
-    margin-right: rem($gs-gutter / 2);
+    margin-right: ($gs-gutter / 2);
 }
 .nav-secondary__link {
     @include fs-headline(2);
@@ -214,18 +214,18 @@ $global-nav-height: 36px;
     vertical-align: middle;
     text-transform: lowercase;
     color: $black;
-    padding: rem($gs-gutter / 2) 0;
+    padding: ($gs-gutter / 2) 0;
 }
 .nav-secondary__breadcrumb {
     border-right: 1px solid $white;
-    margin-right: rem($gs-gutter);
-    padding-right: rem($gs-gutter / 2);
+    margin-right: $gs-gutter;
+    padding-right: ($gs-gutter / 2);
 }
 .nav-secondary__breadcrumb__trail::after {
     content: "›";
     display: inline-block;
     vertical-align: middle;
-    margin-left: rem($gs-gutter / 2);
+    margin-left: ($gs-gutter / 2);
 }
 
 /* ==========================================================================
@@ -241,11 +241,11 @@ $global-nav-height: 36px;
     }
 }
 .nav-control__item {
-    margin-right: rem($gs-baseline);
+    margin-right: $gs-baseline;
     position: relative;
 
     @include mq(tablet) {
-        padding-top: rem(3px);
+        padding-top: 3px;
     }
 }
 .nav-control__item--last {
@@ -258,14 +258,14 @@ $global-nav-height: 36px;
 
 .nav--brand {
     @include fs-bodyHeading(1);
-    padding-top: rem($gs-gutter / 2);
+    padding-top: ($gs-gutter / 2);
     text-align: right;
 
     .nav__link {
         color: $black;
         position: relative;
         display: block;
-        margin-left: rem($gs-gutter);
+        margin-left: $gs-gutter;
         padding: 0;
 
         &:focus,
@@ -301,19 +301,19 @@ $global-nav-height: 36px;
     clear: both;
     list-style: none;
     box-sizing: border-box;
-    margin-bottom: rem(-4px);
+    margin-bottom: -4px;
     background-color: $white;
-    padding: 0 rem($gs-gutter / 2);
+    padding: 0 ($gs-gutter / 2);
 
-    top: rem($mobilePopupOffset);
-    min-height: rem(47px);
-    width: rem(175px);
+    top: $mobilePopupOffset;
+    min-height: 47px;
+    width: 175px;
 
     @include mq(tablet) {
         position: absolute;
-        top: rem(40px);
-        left: rem(30px);
-        width: rem(220px);
+        top: 40px;
+        left: 30px;
+        width: 220px;
         border: 1px solid $c-neutral4;
     }
 }
@@ -327,13 +327,13 @@ $global-nav-height: 36px;
     position: absolute;
     pointer-events: none;
     border-bottom-color: $white;
-    border-width: rem(6px);
-    margin-left: rem(-6px);
+    border-width: 6px;
+    margin-left: -6px;
 
     @include mq(desktop) {
         left: 18%;
-        border-width: rem($gs-gutter / 2);
-        margin-left: rem(-$gs-gutter / 2);
+        border-width: ($gs-gutter / 2);
+        margin-left: (-$gs-gutter / 2);
     }
 }
 .nav-popup__list {
@@ -355,10 +355,10 @@ $global-nav-height: 36px;
     display: block;
     border-bottom: 1px solid $c-neutral7;
     text-decoration: none;
-    padding: rem($gs-baseline / 2) 0 rem($gs-baseline);
+    padding: ($gs-baseline / 2) 0 $gs-baseline;
 
     @include mq(tablet) {
-        padding: rem($gs-gutter / 2) 0;
+        padding: ($gs-gutter / 2) 0;
     }
 
     &,
@@ -386,18 +386,18 @@ $global-nav-height: 36px;
 
     color: $white;
     display: block;
-    height: rem($global-nav-height);
+    height: $global-nav-height;
     border: 0 none;
-    padding: rem(3px) rem(9px) rem(9px);
-    box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
+    padding: 3px 9px 9px;
+    box-shadow: -3px 0 4px 0 rgba(50, 50, 50, .30);
     background-color: lighten($black, 20%);
     text-decoration: none;
 
     i {
-        border-top: rem(2px) solid rgba(255, 255, 255, .9);
+        border-top: 2px solid rgba(255, 255, 255, .9);
         display: block;
-        width: rem(20px);
-        margin-top: rem(3px);
+        width: 20px;
+        margin-top: 3px;
         transform-origin: 60%;
         -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
         transition: opacity .1s, transform .1s ease-in;
@@ -409,13 +409,13 @@ $global-nav-height: 36px;
             transform-origin: 43%;
 
             &:nth-child(1) {
-                transform: translateY(rem(4px)) rotate(45deg);
+                transform: translateY(4px) rotate(45deg);
             }
             &:nth-child(2) {
                 opacity: 0;
             }
             &:nth-child(3) {
-                transform: translateY(rem(-4px)) rotate(-45deg);
+                transform: translateY(-4px) rotate(-45deg);
             }
         }
     }
@@ -423,6 +423,6 @@ $global-nav-height: 36px;
 .mobile-menu__icon {
     display: block;
     text-align: center;
-    height: rem($gs-baseline * 2);
-    padding-top: rem($gs-baseline / 2);
+    height: ($gs-baseline * 2);
+    padding-top: ($gs-baseline / 2);
 }

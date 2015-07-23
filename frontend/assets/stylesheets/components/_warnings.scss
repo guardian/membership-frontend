@@ -4,7 +4,7 @@
 
 .warning-message {
     font-size: 1.4rem;
-    padding: rem($gs-baseline / 2);
+    padding: ($gs-baseline / 2);
     background-color: $c-warning;
     text-align: center;
     opacity: 0.8;

@@ -4,17 +4,17 @@
 
 .event-filters {
     background-color: $white;
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
 
     @include mq(tablet) {
-        padding: rem($gs-gutter);
+        padding: $gs-gutter;
     }
 }
 .event-filters__container {
     @include clearfix;
     @include mq(mem-full) {
         width: 100%;
-        padding-left: rem(gs-span(2) + $gs-gutter);
+        padding-left: (gs-span(2) + $gs-gutter);
     }
 }
 .event-filters__categories {
@@ -26,15 +26,15 @@
 .event-filters__count {
     @include fs-textSans(2);
     display: inline-block;
-    padding: rem($gs-gutter / 4) 0;
+    padding: ($gs-gutter / 4) 0;
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter / 2) 0;
+        padding: ($gs-gutter / 2) 0;
     }
 }
 .event-filters__category {
-    padding-right: rem($gs-gutter);
+    padding-right: $gs-gutter;
     @include mq(desktop) {
-        margin-right: rem($gs-gutter);
+        margin-right: $gs-gutter;
         border-right: 1px solid $c-neutral4;
     }
 }
@@ -66,9 +66,9 @@ $filter-icon-size: 18px;
 }
 .filter-search__input {
     @include fs-textSans(2);
-    padding: rem($gs-gutter / 2) rem($gs-gutter + $filter-icon-size);
+    padding: ($gs-gutter / 2) ($gs-gutter + $filter-icon-size);
     border: 1px solid $c-neutral3;
-    border-radius: 100rem;
+    @include circular();
     width: 100%;
     outline: 0;
 
@@ -81,18 +81,18 @@ $filter-icon-size: 18px;
     position: absolute;
     top: 50%;
     line-height: 1;
-    margin-top: rem(-$filter-icon-size / 2);
+    margin-top: (-$filter-icon-size / 2);
     border: 0;
     color: $c-neutral3;
     background-color: transparent;
 }
 .filter-search__icon {
-    left: rem($gs-gutter / 2);
+    left: ($gs-gutter / 2);
 }
 .filter-search__cross {
     transform: translateY(-55%);
     margin: 0; padding: 0;
-    right: rem($gs-gutter / 2);
+    right: ($gs-gutter / 2);
 }
 
 /* Filter Bar
@@ -100,6 +100,6 @@ $filter-icon-size: 18px;
 
 .filter-bar {
     text-align: right;
-    margin-top: -(rem($gs-gutter));
-    margin-bottom: rem($gs-baseline);
+    margin-top: -($gs-gutter);
+    margin-bottom: $gs-baseline;
 }

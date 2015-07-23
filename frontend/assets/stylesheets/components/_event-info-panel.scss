@@ -6,24 +6,24 @@
     @include clearfix();
     @include fs-textSans(3);
     background-color: $c-neutral7;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 }
 .event-info__inner {
     @include clearfix;
-    padding: rem($gs-gutter / 4);
-    padding-bottom: rem($gs-baseline);
+    padding: ($gs-gutter / 4);
+    padding-bottom: $gs-baseline;
 }
 .event-info__name {
     @include fs-header(2);
-    padding-bottom: rem($gs-baseline * 2);
+    padding-bottom: ($gs-baseline * 2);
 }
 .event-info__first {
     float: left;
-    width: rem($gs-gutter * 2);
+    width: ($gs-gutter * 2);
 }
 .event-info__second {
     float: left;
-    width: rem(240px);
+    width: 240px;
     position: relative;
 }
 .event-info__price {
@@ -37,7 +37,7 @@
 .event-info__terms {
     @include fs-textSans(1);
     display: block;
-    padding-top: rem($gs-baseline/2);
+    padding-top: ($gs-baseline/2);
     color: $c-neutral2;
 
     @include mq(tablet) {
@@ -46,7 +46,7 @@
 
     a {
         text-decoration: none;
-        padding-bottom: rem(2px);
+        padding-bottom: 2px;
     }
 }
 
@@ -65,20 +65,20 @@
 .status-panel {
    color: $white;
    background-color: $c-neutral1;
-   padding: rem($gs-baseline);
+   padding: $gs-baseline;
 }
 .status-panel__header {
    @include fs-header(2);
 }
 .status-panel__content {
-   margin-top: rem($gs-baseline / 2);
+   margin-top: ($gs-baseline / 2);
 }
 
 /* Ticket Sales
    ========================================================================== */
 
 .ticket-sales {
-    margin-top: rem($gs-baseline / 4);
+    margin-top: ($gs-baseline / 4);
     position: relative;
 }
 .ticket-sales__header {

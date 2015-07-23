@@ -14,7 +14,7 @@
 }
 .benefit__icon {
     color: $mem-brandBlue;
-    width: rem($gs-gutter * 2);
+    width: ($gs-gutter * 2);
 }
 .benefit__title {
     @include fs-headline(2);

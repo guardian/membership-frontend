@@ -10,37 +10,37 @@
     @include fs-header(2);
     color: $mem-brandBlueDark;
     border-top: 1px solid $c-border-brand;
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-gutter);
+    padding-top: ($gs-baseline / 2);
+    margin-bottom: $gs-gutter;
 
     @include mq(tablet) {
         @include fs-header(3);
     }
 
     @include mq(desktop) {
-        margin-right: rem($gs-baseline);
+        margin-right: $gs-baseline;
     }
 }
 
 /* Join - Become a member
 ======================================================================= */
 
-$current-indicator: rem(72px);
+$current-indicator: 72px;
 .become-a-member {
    @include mq(tablet) {
-       padding: rem($gs-gutter);
+       padding: $gs-gutter;
    }
 
    @include mq(desktop) {
-       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(2) + $gs-gutter);
+       padding: ($gs-baseline / 2) $gs-gutter $gs-gutter (gs-span(2) + $gs-gutter);
    }
 
    @include mq(mem-full) {
-       padding: rem($gs-baseline / 2) rem($gs-gutter) rem($gs-gutter) rem(gs-span(3) - $gs-gutter);
+       padding: ($gs-baseline / 2) $gs-gutter $gs-gutter (gs-span(3) - $gs-gutter);
    }
 
    .package-list {
-       padding-top: rem($gs-gutter * 2);
+       padding-top: ($gs-gutter * 2);
 
        @include mq(desktop) {
            padding-top: $current-indicator;
@@ -54,14 +54,14 @@ $current-indicator: rem(72px);
 .security-note {
     @include fs-data(3);
     color: $c-neutral2;
-    margin: rem($gs-baseline / 2) 0 rem($gs-baseline) 0;
+    margin: ($gs-baseline / 2) 0 ($gs-baseline) 0;
 }
 
 /* Card Summary
    ========================================================================== */
 
 .card-summary {
-    margin-bottom: rem($gs-baseline * 2);
+    margin-bottom: ($gs-baseline * 2);
 }
 .card-summary__type,
 .card-summary__digits {
@@ -69,7 +69,7 @@ $current-indicator: rem(72px);
     vertical-align: middle;
 }
 .card-summary__type {
-    margin-right: rem($gs-baseline / 2);
+    margin-right: ($gs-baseline / 2);
 }
 .card-summary__digits {
     @include fs-data(5);
@@ -78,7 +78,7 @@ $current-indicator: rem(72px);
     @include fs-data(6);
     display: inline-block;
     content: '•••• •••• •••• ••••';
-    margin-right: rem($gs-baseline / 2);
+    margin-right: ($gs-baseline / 2);
 }
 
 /* Payment Cards Sprite

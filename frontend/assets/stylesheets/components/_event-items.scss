@@ -10,7 +10,7 @@
     display: block;
 
     @include mq(mobileLandscape) {
-        height: rem(400px);
+        height: 400px;
     }
 
     &,
@@ -40,12 +40,12 @@
     }
 }
 .event-item__meta {
-    padding: rem($gs-gutter / 4);
-    padding-top: rem(($gs-gutter / 4) - 1px);
+    padding: ($gs-gutter / 4);
+    padding-top: (($gs-gutter / 4) - 1px);
 }
 .event-item__title {
     @include fs-headline(3);
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
     font-weight: 500;
 }
 .event-item__time {
@@ -57,19 +57,19 @@
 }
 .event-item__description {
     @include fs-bodyCopy(1);
-    padding: rem($gs-baseline) 0 0;
+    padding: $gs-baseline 0 0;
 
     @include mq(desktop) {
         @include fs-headline(2);
-        padding: rem($gs-baseline * 2) 0 0;
+        padding: ($gs-baseline * 2) 0 0;
     }
 }
 .event-item__footer {
     width: 100%;
-    padding-top: rem($gs-gutter / 4);
+    padding-top: ($gs-gutter / 4);
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter / 4);
+        padding: ($gs-gutter / 4);
         position: absolute;
         bottom: 0;
         left: 0;
@@ -77,8 +77,8 @@
 }
 .event-item__action {
     position: absolute;
-    bottom: rem($gs-gutter / 4 + 1px);
-    right: rem(($gs-gutter / 4));
+    bottom: ($gs-gutter / 4 + 1px);
+    right: (($gs-gutter / 4));
 }
 .event-item__price-amount {
     @include fs-header(4);
@@ -91,7 +91,7 @@
 // Event Item (Shallow Modifier)
 .event-item--shallow {
     @include mq(mobileLandscape) {
-        height: rem(320px);
+        height: 320px;
     }
 }
 
@@ -102,7 +102,7 @@
 .event-item--hero {
     width: 100%;
     height: auto;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 
     .event-item__media {
         display: table-header-group;
@@ -160,7 +160,7 @@
     width: 100%;
     height: auto;
     overflow: hidden;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter;
     border-top: 1px solid $c-border-neutral;
 
     .event-item__media,
@@ -170,16 +170,16 @@
     }
     .event-item__content {
         position: relative;
-        padding: rem($gs-gutter / 4);
-        padding-top: rem(($gs-gutter / 4) - 1px);
+        padding: ($gs-gutter / 4);
+        padding-top: (($gs-gutter / 4) - 1px);
     }
     .event-item__media {
         width: $trailblock-img-width;
-        margin-right: rem($gs-baseline);
+        margin-right: $gs-baseline;
     }
     .event-item__meta {
         padding: 0;
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: $gs-baseline;
     }
     .event-item__title {
         @include fs-headline(2, true);
@@ -224,7 +224,7 @@
     }
     .event-item__media {
         width: $trailblock-img-width;
-        margin-right: rem($gs-baseline);
+        margin-right: $gs-baseline;
     }
     .event-item__title {
         @include fs-headline(2);
@@ -234,7 +234,7 @@
 
 .event-item--minimal {
     @include mq(mobileLandscape) {
-        height: rem(280px);
+        height: 280px;
 
         .event-item__media,
         .event-item__content {
@@ -246,7 +246,7 @@
 
 .event-item--card {
     @include mq($from: mobileLandscape, $until: tablet) {
-        height: rem(280px);
+        height: 280px;
 
         .event-item__media,
         .event-item__content {
@@ -264,11 +264,11 @@
 .event-snapshot {
     width: 100%;
     display: table;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
 }
     .event-snapshot__media,
     .event-snapshot__title {
-        margin-bottom: rem($gs-baseline / 2);
+        margin-bottom: ($gs-baseline / 2);
     }
     .event-snapshot__title {
         @include fs-textSans(3);
@@ -276,7 +276,7 @@
 
         @include mq(mobileLandscape) {
             @include fs-header(2);
-            margin-bottom: rem($gs-baseline);
+            margin-bottom: $gs-baseline;
         }
     }
     .event-snapshot__media,
@@ -286,7 +286,7 @@
     }
     .event-snapshot__content {
         border-top: 1px solid $c-border-neutral;
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
 
         @include mq(tablet) {
             border: 0 none;

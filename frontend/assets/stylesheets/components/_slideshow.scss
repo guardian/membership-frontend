@@ -11,10 +11,10 @@ $slideshow-height-desktop: 460px;
     background-color: $c-neutral4;
 
     @include mq(tablet) {
-        min-height: rem($slideshow-height-tablet);
+        min-height: $slideshow-height-tablet;
     }
     @include mq(desktop) {
-        min-height: rem($slideshow-height-desktop);
+        min-height: $slideshow-height-desktop;
     }
 }
 .slideshow__element {
@@ -29,10 +29,10 @@ $slideshow-height-desktop: 460px;
     opacity: 0;
 
     @include mq(tablet) {
-        max-height: rem($slideshow-height-tablet);
+        max-height: $slideshow-height-tablet;
     }
     @include mq(desktop) {
-        max-height: rem($slideshow-height-desktop);
+        max-height: $slideshow-height-desktop;
     }
 
     &.is-current {
@@ -43,7 +43,7 @@ $slideshow-height-desktop: 460px;
 .slideshow__image {
     position: relative;
     @include mq(desktop) {
-        top: rem(-$gs-gutter * 4);
+        top: -($gs-gutter * 4);
     }
 }
 .slideshow__detail {
@@ -52,12 +52,12 @@ $slideshow-height-desktop: 460px;
     bottom: 0;
     z-index: 2;
     color: $white;
-    padding: rem($gs-gutter / 2);
-    padding-top: rem($gs-gutter * 2);
+    padding: ($gs-gutter / 2);
+    padding-top: ($gs-gutter * 2);
     @include simple-gradient(transparent, rgba(0, 0, 0, .8));
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
+        padding: ($gs-gutter * 2) ($gs-gutter) ($gs-baseline * 1.5);
     }
 }
 .slideshow__description {
@@ -66,7 +66,7 @@ $slideshow-height-desktop: 460px;
 
     @include mq(tablet) {
         max-width: 50%;
-        padding-right: rem($gs-gutter);
+        padding-right: ($gs-gutter);
     }
 }
 
@@ -78,7 +78,7 @@ $slideshow-height-desktop: 460px;
     @include fs-textSans(1);
 }
 .progress-indicator__index {
-    width: rem(10px);
+    width: 10px;
     display: inline-block;
 }
 .progress-indicator__count {

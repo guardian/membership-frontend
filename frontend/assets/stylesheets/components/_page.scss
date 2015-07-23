@@ -2,7 +2,7 @@
    Page
    ========================================================================== */
 
-$_page-offset: rem(gs-span(2) + $gs-gutter);
+$_page-offset: (gs-span(2) + $gs-gutter);
 
 /* ==========================================================================
    Brochure Page Layout Components
@@ -15,37 +15,37 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 .page-slice {
     @include clearfix;
     background-color: $white;
-    padding-bottom: rem($gs-baseline);
+    padding-bottom: $gs-baseline;
 
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 3);
+        padding-bottom: ($gs-baseline * 3);
     }
 }
     .page-slice__headline {
         @include fs-headline(4);
-        padding: rem($gs-gutter / 2);
+        padding: ($gs-gutter / 2);
         border-top: 2px solid $c-neutral6;
 
         @include mq(desktop) {
             @include fs-headline(6, true);
-            padding: rem($gs-baseline) rem($gs-gutter);
+            padding: $gs-baseline $gs-gutter;
         }
     }
     .page-slice__content {
-        padding: rem($gs-gutter / 2);
+        padding: ($gs-gutter / 2);
 
         @include mq(tablet) {
-            padding: rem($gs-gutter);
+            padding: $gs-gutter;
         }
         @include mq(mem-full) {
-            padding-left: rem($gs-gutter * 9);
+            padding-left: ($gs-gutter * 9);
         }
     }
 
     .page-slice--legal {
         background-color: $c-neutral1;
         color: $c-neutral5;
-        padding-bottom: rem($gs-baseline);
+        padding-bottom: $gs-baseline;
     }
 
 .page-slice--split {
@@ -54,18 +54,18 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     @include mq(desktop) {
         .page-slice__headline {
             float: left;
-            width: rem(gs-span(4));
+            width: gs-span(4);
         }
         .page-slice__content {
             float: right;
-            width: rem(gs-span(9) - $gs-gutter);
-            padding: rem($gs-gutter);
+            width: (gs-span(9) - $gs-gutter);
+            padding: $gs-gutter;
         }
     }
     @include mq(mem-full) {
         .page-slice__headline {
-            width: rem(gs-span(6));
-            padding-right: rem(gs-span(1));
+            width: gs-span(6);
+            padding-right: gs-span(1);
         }
     }
 }
@@ -86,19 +86,19 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  * typically combined with page-headline and page-intro
  */
 .page-header {
-    max-width: rem(gs-span(8));
-    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 2);
+    max-width: gs-span(8);
+    padding: ($gs-gutter / 2) 0 ($gs-baseline * 2);
 
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 3);
+        padding-bottom: ($gs-baseline * 3);
     }
 
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 4);
+        padding-bottom: ($gs-baseline * 4);
     }
 
     @include mq(mem-full) {
-        margin-right: rem($gs-gutter);
+        margin-right: $gs-gutter;
         margin-left: $_page-offset;
     }
 }
@@ -147,26 +147,26 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
  */
 .page-section {
     @include clearfix;
-    padding-bottom: rem($gs-baseline);
+    padding-bottom: $gs-baseline;
 
     @include mq(desktop) {
         width: auto;
     }
     @include mq(mem-full) {
         position: relative;
-        min-height: rem(gs-height(3));
+        min-height: gs-height(3);
     }
 }
 .page-section__lead-in {
     @include mq(mem-full) {
-        width: rem(gs-span(2));
+        width: gs-span(2);
         position: absolute;
         left: 0;
     }
 }
 .page-section__headline {
     @include fs-header(3);
-    margin-bottom: rem($gs-baseline / 4);
+    margin-bottom: ($gs-baseline / 4);
 }
 .page-section__content {
     @include mq(tablet) {
@@ -176,10 +176,10 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     }
     @include mq(desktop) {
         margin-right: 0;
-        width: rem(gs-span(9));
+        width: gs-span(9);
     }
     @include mq(mem-full) {
-        width: rem(gs-span(11));
+        width: gs-span(11);
         padding-left: $_page-offset;
     }
 }
@@ -191,7 +191,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
         width: 25%;
     }
     @include mq(desktop) {
-        width: rem(gs-span(3));
+        width: gs-span(3);
     }
 }
 
@@ -210,7 +210,7 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     .page-section__lead-in,
     .page-section__content,
     .page-section__supplementary {
-        padding-top: rem($gs-baseline / 2);
+        padding-top: ($gs-baseline / 2);
     }
 
     .page-section__lead-in {
@@ -232,21 +232,21 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 
 .page-section-spread {
     @include clearfix;
-    padding-bottom: rem($gs-baseline);
+    padding-bottom: $gs-baseline;
 
     @include mq(desktop) {
         position: relative;
-        min-height: rem(gs-height(3));
+        min-height: gs-height(3);
     }
 }
 .page-section-spread__lead-in {
-    margin-bottom: rem($gs-baseline * 2);
+    margin-bottom: ($gs-baseline * 2);
 
     @include mq(desktop) {
         position: absolute;
         left: 0;
         margin-bottom: 0;
-        padding-right: rem($gs-gutter);
+        padding-right: $gs-gutter;
         width: 30%;
     }
 }

@@ -19,30 +19,30 @@
  }
 
 .modal-content {
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
     display: table-cell;
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter) rem($gs-gutter) rem($gs-gutter * 1.5) rem($gs-gutter);
+        padding: $gs-gutter $gs-gutter ($gs-gutter * 1.5) $gs-gutter;
     }
 }
 
 .modal-content__header {
     @include fs-headline(3);
     font-weight: bold;
-    padding-bottom: rem($gs-gutter);
+    padding-bottom: $gs-gutter;
 }
 
 .modal-content__text {
-    padding-left: rem($gs-gutter * 1.5);
+    padding-left: ($gs-gutter * 1.5);
 }
 
 .modal__supplementary {
-    padding: rem($gs-baseline - 2) rem($gs-baseline - 2) 0 rem($gs-baseline - 2);
+    padding: ($gs-baseline - 2) ($gs-baseline - 2) 0 ($gs-baseline - 2);
     display: table-cell;
 
     @include mq(mobileLandscape) {
-        padding: rem($gs-baseline - 2) rem($gs-baseline - 2) rem($gs-baseline - 2) 0;
+        padding: ($gs-baseline - 2) ($gs-baseline - 2) ($gs-baseline - 2) 0;
     }
 }
 

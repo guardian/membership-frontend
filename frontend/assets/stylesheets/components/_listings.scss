@@ -4,11 +4,11 @@
 
 .listing-header {
     background-color: $c-background;
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
 
     @include mq(mem-full) {
-        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
-        padding-bottom: rem($gs-gutter * 4);
+        padding-left: (gs-span(2) + ($gs-gutter * 2));
+        padding-bottom: ($gs-gutter * 4);
     }
 }
 
@@ -29,32 +29,32 @@
     position: relative;
     background-color: $white;
     border-top: 1px solid $c-border-brand;
-    padding-bottom: rem($gs-baseline * 2);
+    padding-bottom: ($gs-baseline * 2);
 }
     .listing__lead-in {
-        padding: rem($gs-gutter / 2);
+        padding: ($gs-gutter / 2);
 
         @include mq(mem-full) {
             float: left;
-            width: rem(gs-span(2));
-            padding: rem($gs-baseline / 2) 0 rem($gs-baseline * 3);
-            margin-right: rem($gs-gutter);
-            margin-left: rem($gs-gutter);
+            width: gs-span(2);
+            padding: ($gs-baseline / 2) 0 ($gs-baseline * 3);
+            margin-right: $gs-gutter;
+            margin-left: $gs-gutter;
         }
     }
     .listing__content {
-        padding: 0 rem($gs-gutter / 2);
+        padding: 0 ($gs-gutter / 2);
         @include mq(mem-full) {
             float: right;
-            width: rem(gs-span(12));
-            padding: rem($gs-gutter / 2) 0 0 0;
-            margin-right: rem($gs-gutter);
+            width: gs-span(12);
+            padding: ($gs-gutter / 2) 0 0 0;
+            margin-right: $gs-gutter;
         }
     }
     .listing__empty,
     .listing__no-results {
-        margin-bottom: rem($gs-baseline);
-        margin-left: rem($gs-gutter / 2);
+        margin-bottom: $gs-baseline;
+        margin-left: ($gs-gutter / 2);
 
         @include mq(tablet) {
             margin-left: 0
@@ -75,12 +75,12 @@
 
     .listing__lead-in {
         @include mq(mem-full) {
-            padding-top: rem($gs-baseline);
+            padding-top: $gs-baseline;
         }
     }
     .listing__title {
         @include mq(mem-full) {
-            padding-top: rem($gs-baseline / 2);
+            padding-top: ($gs-baseline / 2);
             border-top: 1px solid $c-border-brand;
         }
     }
@@ -100,8 +100,8 @@
 .month-header {
     @include fs-header(3);
     border-top: 1px solid $c-border-brand;
-    padding-top: rem($gs-baseline / 2);
-    padding-bottom: rem($gs-baseline * 2);
+    padding-top: ($gs-baseline / 2);
+    padding-bottom: ($gs-baseline * 2);
 
     width:  100%;
     position: sticky;
@@ -113,7 +113,7 @@
     @include clearfix;
 }
 .date-listing__lead-in {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: ($gs-baseline / 2);
     border-top: 1px solid $c-border-brand;
 
     @include mq(tablet) {
@@ -138,7 +138,7 @@
 }
 
 .date-listing--lead {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: ($gs-baseline / 2);
     border-top: 1px solid $c-border-brand;
 
     .date-listing__lead-in {

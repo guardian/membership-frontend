@@ -13,8 +13,8 @@
     clear: both;
 }
 .action-group > .action {
-    margin-right: rem($gs-gutter / 2);
-    margin-bottom: rem($gs-gutter / 2);
+    margin-right: ($gs-gutter / 2);
+    margin-bottom: ($gs-gutter / 2);
 }
 
 /* Action
@@ -35,7 +35,7 @@
 
     color: $white;
     background-color: $c-button;
-    padding: rem(8px) rem($gs-gutter);
+    padding: 8px $gs-gutter;
     border: 1px solid $c-button;
     @include circular;
 
@@ -62,7 +62,7 @@
         background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDIwIDE3Ljg5NSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAgMTcuODk1Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjAgOS4zNTJsLTkuMDg0IDguNTQzLS44Ni0uODEgNi41NDItNy4zMWgtMTYuNTk4di0xLjY1NWgxNi41OThsLTYuNTQyLTcuMzEuODYtLjgxIDkuMDg0IDguNTA4di44NDR6Ii8+PC9zdmc+);
 
         float: right;
-        margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
+        margin: 2px (-$gs-gutter / 2) 0 $gs-gutter;
     }
 
     .action__icon {
@@ -70,13 +70,13 @@
     }
     .action__icon--left {
         float: left;
-        margin-left: rem(-$gs-gutter / 2);
-        margin-right: rem($gs-gutter / 2);
+        margin-left: (-$gs-gutter / 2);
+        margin-right: ($gs-gutter / 2);
     }
     .action__icon--right {
         float: right;
-        margin-right: rem(-$gs-gutter / 2);
-        margin-left: rem($gs-gutter / 2);
+        margin-right: (-$gs-gutter / 2);
+        margin-left: ($gs-gutter / 2);
     }
 
 }
@@ -172,8 +172,8 @@
  */
 .action--snap {
     min-width: 0;
-    width: rem(40px);
-    height: rem(40px);
+    width: 40px;
+    height: 40px;
     margin: 0;
     &:after {
         margin-top: 3px;
@@ -184,7 +184,7 @@
     @include mq(tablet) {
         height: auto;
         width: auto;
-        max-width: rem(gs-span(3));
+        max-width: gs-span(3);
         &:after {
             margin-top: 2px;
         }
@@ -217,7 +217,7 @@
     padding-left: .2em;
 }
 .action-jump--block {
-    margin: rem($gs-baseline * 2) 0;
+    margin: ($gs-baseline * 2) 0;
 }
 .action-jump--reversed {
     .action-jump__label {

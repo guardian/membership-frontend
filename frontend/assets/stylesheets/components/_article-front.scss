@@ -31,7 +31,7 @@
         }
     }
     @include mq(mobileLandscape) {
-        height: rem(320px);
+        height: 320px;
     }
 }
 .article-front__content {
@@ -50,11 +50,11 @@
     }
 }
 .article-front__meta {
-    padding: rem($gs-gutter / 4);
-    padding-top: rem(($gs-gutter / 4) - 1px);
+    padding: ($gs-gutter / 4);
+    padding-top: (($gs-gutter / 4) - 1px);
 }
 .article-front__title {
     @include fs-headline(3);
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
     font-weight: 500;
 }

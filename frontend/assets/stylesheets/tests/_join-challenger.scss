@@ -45,7 +45,7 @@
 
     @include mq(tablet) {
         border-left: 1px solid $white;
-        margin-left: rem(gs-span(2.5));
+        margin-left: gs-span(2.5);
     }
 }
 .nav-sections__item {
@@ -60,14 +60,14 @@
     vertical-align: middle;
     text-decoration: none;
     color: $c-neutral1;
-    padding: rem($gs-baseline) rem($gs-baseline / 2);
+    padding: $gs-baseline ($gs-baseline / 2);
 
     @include mq(tablet) {
-        min-width: rem(gs-span(3));
+        min-width: gs-span(3);
         @include fs-headline(2);
         font-weight: bold;
         border-right: 1px solid $white;
-        padding: rem($gs-baseline) rem($gs-gutter);
+        padding: $gs-baseline $gs-gutter;
     }
 }
 .nav-sections__link:hover,
@@ -93,11 +93,11 @@
     }
 }
 .join-text-intro--block {
-    padding-top: rem($gs-baseline / 2);
+    padding-top: ($gs-baseline / 2);
     border-top: 1px solid $c-border-brand;
 
     @include mq(tablet) {
-        padding-right: rem(gs-span(3));
+        padding-right: gs-span(3);
     }
 }
 
@@ -126,20 +126,20 @@
 .hero-banner__content {
     max-width: gs-span(12);
     min-height: gs-height(6);
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
 
     @include mq(tablet) {
         position:  absolute;
         @include vertically-center();
-        padding: rem($gs-gutter / 2) 0;
-        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+        padding: ($gs-gutter / 2) 0;
+        padding-left: (gs-span(2) + ($gs-gutter * 2));
         max-width: 45em;
     }
 }
 .hero-banner__title {
     @include fs-headline(5);
     font-weight: 900;
-    margin: 0 0 rem($gs-baseline / 2) 0;
+    margin: 0 0 ($gs-baseline / 2) 0;
 
     @include mq(tablet) {
         font-size: 3.5em;
@@ -148,7 +148,7 @@
 }
 .hero-banner__description {
     @include fs-headline(5);
-    margin-bottom: rem($gs-gutter * 2);
+    margin-bottom: ($gs-gutter * 2);
 }
 
 /* What are members & Why Join
@@ -158,7 +158,7 @@
 .section-big-ideas,
 .section-why {
     position: relative;
-    padding-top: rem($gs-baseline * 2);
+    padding-top: ($gs-baseline * 2);
     padding-bottom: 0;
 
     .listing {
@@ -168,7 +168,7 @@
 .section-what {
     padding-top: 0;
     @include mq(tablet) {
-        padding-top: rem(($gs-baseline * 2) + 64px); // magic number, height of sections nav
+        padding-top: (($gs-baseline * 2) + 64px); // magic number, height of sections nav
     }
 }
 
@@ -178,7 +178,7 @@
 
     @include mq(tablet) {
         width: 66%;
-        margin-bottom: rem($gs-gutter);
+        margin-bottom: $gs-gutter;
     }
 }
 
@@ -187,11 +187,11 @@
 
 .big-ideas-intro {
     border-top: 1px solid $c-border-brand;
-    padding-top: rem($gs-baseline / 2);
+    padding-top: ($gs-baseline / 2);
 }
 .big-ideas-intro__title {
     @include fs-header(4);
-    margin: 0 0 rem($gs-baseline) 0;
+    margin: 0 0 $gs-baseline 0;
 }
 .big-ideas-intro__content {
     @include fs-header(2);
@@ -214,20 +214,20 @@ $_comparisonWidth: gs-span(6);
 
     @include mq(tablet) {
         width: 33.3%;
-        margin-bottom: rem($gs-gutter);
+        margin-bottom: $gs-gutter;
     }
 }
 
 .comparison-group {
     overflow: scroll;
-    margin-bottom: rem($gs-baseline);
+    margin-bottom: $gs-baseline;
     @include mq(tablet) {
         overflow: auto;
     }
 }
 .comparison-group__bookend {
     @include clearfix();
-    margin-left: rem($_comparisonWidth);
+    margin-left: $_comparisonWidth;
 }
 .comparison-group__bookend__column {
     float: left;
@@ -242,11 +242,11 @@ $_comparisonWidth: gs-span(6);
     border-color: $c-neutral4;
 }
 .comparison-header__inner {
-    padding: rem($gs-gutter / 4);
+    padding: ($gs-gutter / 4);
     padding-bottom: 0;
 }
 .comparison-header__tier__title {
-    padding-bottom: rem($gs-gutter);
+    padding-bottom: $gs-gutter;
 }
 .comparison-header__tier__pricing {
     border-top: 1px solid $c-neutral4;
@@ -261,7 +261,7 @@ $_comparisonWidth: gs-span(6);
 .comparison-table__description {
     @include fs-header(2);
     font-weight: normal;
-    width: rem($_comparisonWidth);
+    width: $_comparisonWidth;
 }
 .comparison-table__tier {
     text-align: center;
@@ -269,21 +269,21 @@ $_comparisonWidth: gs-span(6);
 .comparison-table__tier__inner {
     display: block;
     background-color: $white;
-    margin-left: rem($gs-gutter);
+    margin-left: $gs-gutter;
 }
 .comparison-table__description__inner,
 .comparison-table__tier__inner {
-    padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
+    padding: ($gs-baseline / 2) 0 $gs-gutter;
 }
 .comparison-group__bookend__trail {
     clear: both;
-    margin-left: rem($gs-gutter);
-    padding: rem($gs-gutter) 0 0;
+    margin-left: $gs-gutter;
+    padding: $gs-gutter 0 0;
 }
 
 .comparison-action {
     background-color: $white;
-    padding: rem($gs-gutter) rem($gs-baseline / 2) rem($gs-gutter / 2);
+    padding: $gs-gutter ($gs-baseline / 2) ($gs-gutter / 2);
 }
 
 .checkmark,

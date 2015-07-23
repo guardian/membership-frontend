@@ -44,13 +44,13 @@ $gs-max-columns: 16;
     $offset: ($gs-gutter * 2);
     @include mq(tablet) {
         $width: map-get($max-widths, max-tablet);
-        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
-        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: -webkit-calc((100% - #{($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{($width + $offset)}) / 2);
     }
     @include mq(mem-full) {
         $width: map-get($max-widths, max-desktop);
-        #{$property}: -webkit-calc((100% - #{rem($width + $offset)}) / 2);
-        #{$property}: calc((100% - #{rem($width + $offset)}) / 2);
+        #{$property}: -webkit-calc((100% - #{($width + $offset)}) / 2);
+        #{$property}: calc((100% - #{($width + $offset)}) / 2);
     }
 }
 
@@ -135,12 +135,12 @@ $gs-max-columns: 16;
     @include circular;
     content: ' ';
     background-color: $colour;
-    width: rem($gs-baseline + 4);
-    height: rem($gs-baseline + 4);
+    width: ($gs-baseline + 4);
+    height: ($gs-baseline + 4);
     display: block;
     position: absolute;
-    left: rem($gs-baseline);
-    top: rem($gs-gutter + 1);
+    left: $gs-baseline;
+    top: ($gs-gutter + 1);
 }
 
 /**
