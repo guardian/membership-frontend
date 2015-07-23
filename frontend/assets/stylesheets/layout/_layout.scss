@@ -7,10 +7,6 @@ html {
     min-height: 100%;
     background-color: $c-background;
 }
-// TODO: REMOVE
-html.no-background {
-    background-image: none;
-}
 
 /**
  * Use flexbox for sticky footer

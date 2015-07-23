@@ -234,8 +234,7 @@ trait Info extends Controller {
     val pageInfo = PageInfo(
       "Join",
       request.path,
-      None,
-      hasBackgroundImage = false
+      None
     )
 
     val comparisonItems = Seq(
