@@ -1,9 +1,6 @@
 // =============================================================================
 // Global variables
 // =============================================================================
-// Be careful of Sass variable scope
-// Note: Sass 3.3.0 adds global and local vars
-// http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variables_
 
 // Settings
 // =============================================================================
@@ -25,8 +22,6 @@ $guss-colours: $pasteup-palette;
 // Shorthands
 $white: #ffffff;
 $black: #000000;
-$black-trans: rgba(0, 0, 0, .25);
-$white-trans: rgba(255, 255, 255, .25);
 
 // Neutrals
 $c-neutral1: guss-colour(neutral-1);
@@ -40,7 +35,7 @@ $c-neutral8: guss-colour(neutral-8);
 
 $c-body: $c-neutral1;
 $c-background: $white;
-$c-background-transparent: rgba(51, 51, 51, .05);
+$c-background-transparent: rgba(51, 51, 51, .1);
 $c-link: guss-colour(news-main-1);
 $c-error: guss-colour(error);
 $c-warning: #e9e939;
@@ -48,8 +43,10 @@ $c-warning: #e9e939;
 // (access these through the color($name) function)
 // TODO: Move more colours into palette
 $membership-palette: (
-    brand-main: guss-colour(news-main-2),
-    brand-dark: #197caa
+    brand-main: #bb3a7f,
+    brand-dark: #d43077,
+    brand-supporting-1: #5fd5f2,
+    brand-supporting-2: #fff200
 );
 
 // Buttons
@@ -76,14 +73,40 @@ $c-flash-success-background: #faffe5;
 $c-thirdparty-twitter: #55acee;
 $c-thirdparty-facebook: #3b5998;
 
+/**
+ * Clip paths are used for shape cuts and
+ * overlays throughout the site:
+ *
+ * http://caniuse.com/#feat=css-clip-path
+ * We specifically use CSS shapes for the clip-paths,
+ * ssing SVG clip-paths theoretically has broader support
+ * but is super buggy in Safari so we don't use them.
+ * Point is, assume they are an enhancement.
+ *
+ * Use with clip-path mixin: @include clip-path-shape(name);
+ *
+ */
+$clip-paths: (
+    top-slice: "100% 6%, 100% 100%, 0 100%, 0 0",
+    slideshow: "0 0, 100% 0, 100% 100%, 98% 0, 0 6%",
+    promo: "0 0, 100% 0, 100% 85%, 0 100%",
+    promo-bottom: "0 100%, 100% 100%, 100% 85%, 0 90%",
+    promo-bottom-cut: "100% 0, 100% 90%, 0 100%, 0 0",
+    promo-bottom-deep: "100% 0, 100% 65%, 0 70%, 0 0",
+    promo-bottom-shallow: "100% 0, 100% 85%, 0 90%, 0 0",
+    thumbnail-a: "0 0, 0 100%, 100% 100%, 100% 90%, 10% 100%",
+    thumbnail-b: "90% 100%, 100% 0, 100% 100%, 0 100%, 0 90%",
+    thumbnail-c: "100% 0, 0 0, 100% 10%",
+);
+
 // Tone Colours
 // =============================================================================
 // Usage: tone('live', 'accent')
 //        tone('live') => defaults to 'base' key
 $tones-palette: (
     live: (
-        base: map-get($pasteup-palette, live-main-1),
-        accent: map-get($pasteup-palette, live-main-2)
+        base: color(live-main-1),
+        accent: color(live-main-2)
     ),
     masterclass: (
         base: #ffbb00,
@@ -95,16 +118,16 @@ $tones-palette: (
         contrast: #fdadba
     ),
     friend: (
-        base: $c-neutral3
+        base: color(neutral-3)
     ),
     supporter: (
-        base: $black
+        base: color(brand-supporting-1)
     ),
     partner: (
-        base: map-get($pasteup-palette, news-main-2)
+        base: #ffbb00
     ),
     patron: (
-        base: map-get($pasteup-palette, news-main-1)
+        base: #7d0068
     )
 );
 
@@ -112,28 +135,24 @@ $tones-palette: (
 // =============================================================================
 
 $gutter-width-fluid: 2%;
+$global-toggle-height: 36px;
 $trailblock-img-width: 140px;
-$mobilePopupOffset: 43px;
 
 // Animation Settings
 // =============================================================================
 
-$transition-duration-short: .25s;
 $transition-duration-medium: .5s;
-$transition-duration-long: 1s;
 
 // Guss defaults overrides
 // =============================================================================
 
 $guss-column-rule: none;
-
 @import 'components/bower-components/guss-grid-system/grid-system';
 
 // Breakpoints
 // =============================================================================
-// Name your breakpoints in a way that creates a ubiquitous language
-// across team members. It will improve communication between
-// stakeholders, designers, developers, and testers.
+// Name your breakpoints in a way that creates a
+// ubiquitous language across team members.
 
 $mq-breakpoints: (
     mobile: gs-span(4) + $gs-gutter, // 320px
@@ -141,7 +160,6 @@ $mq-breakpoints: (
     desktop: gs-span(12) + $gs-gutter * 2, // 980px
     mem-full: gs-span(14) + $gs-gutter * 2, // 1140px
     wide: gs-span(16) + $gs-gutter * 2, // 1300px
-
     // Tweakpoints
     mobileLandscape: gs-span(6) + $gs-gutter // 480px
 );
@@ -162,8 +180,7 @@ $f-sans-serif-text: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial
 $f-sans-serif-headline: 'Guardian Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
 
 // Font scale
-// Usage:
-// font-size (px) line-height (px) // level
+// Usage: font-size (px) line-height (px) // level
 $font-scale: (
     header: (
         1: (font-size: 16, line-height: 20),

@@ -157,3 +157,9 @@ $gs-max-columns: 16;
         zoom: 1;
     }
 }
+
+@mixin overflow-scroll-x() {
+    overflow: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}

@@ -93,14 +93,15 @@
             Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
         </div>
         <div class="container-global">
-            @fragments.header(pageInfo)
+            @fragments.global.header(pageInfo)
             <div class="l-side-margins" id="container">
                 @content
             </div>
         </div>
 
-        @fragments.footer(pageInfo)
+        @fragments.global.footer(pageInfo)
         @fragments.javaScriptRequireJS()
         @fragments.analytics.googleRemarketing()
+        <!-- build-commit-id: @app.BuildInfo.gitCommitId -->
     </body>
 </html>

@@ -122,22 +122,6 @@
 }
 
 /**
- * Booking modifier
- *
- * Primary booking link on event pages.
- */
-.action--booking {
-    color: $white;
-    background-color: $black;
-    border: none;
-
-    &:hover {
-        background-color: lighten($black, 15%);
-    }
-}
-
-
-/**
  * External link modifier
  * e.g. "Watch higlights link for past events"
  *
@@ -249,16 +233,4 @@
 .action[disabled]:hover {
     background-color: $c-neutral5;
     border-color: $c-neutral5;
-}
-
-/**
- * Disabled state for booking actions
- */
-.action--booking.is-disabled,
-.action--booking[disabled],
-.action--booking[disabled]:hover {
-    opacity: 0.2;
-    color: $white;
-    background-color: $black;
-    border-color: $black;
 }

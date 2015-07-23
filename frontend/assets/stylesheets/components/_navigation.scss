@@ -1,46 +1,33 @@
 /* ==========================================================================
-   Nav object
+   Navigation
    ========================================================================== */
-
-// TODO: Deprecated, prefer standalone components
-// for navigation rather than sprawling modifiers
-.nav {
-    @include unstyled-list();
-}
-
 /* ==========================================================================
-   Nav - Global Navigation
+   Navigation: Global Navigation
    ========================================================================== */
 
 // Height of toggle link.
-$global-nav-height: 36px;
+$_toggle-height: 36px;
 
-.nav--global {
-
-    @include unstyled-list();
+.global-navigation {
 
     @include clearfix();
+    @include unstyled-list();
+    @include overflow-scroll-x();
+    @include fs-headline(2);
+    @include font-smoothing();
+    font-weight: normal;
     clear: both;
     display: block;
     height: auto;
     padding: 0;
-
-    overflow: hidden;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
-
-    @include mq(desktop) {
-        overflow-x: hidden;
-    }
-
-    @include fs-headline(2);
-    font-weight: normal;
-    @include font-smoothing();
-
-    background-color: darken(color(brand-main), 12%);
+    background-color: transparentize($c-neutral1, .1);
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    @include mq(desktop) {
+        overflow-x: hidden;
     }
 
     .nav__scroll {
@@ -48,12 +35,11 @@ $global-nav-height: 36px;
         white-space: nowrap;
         width: auto;
         vertical-align: middle;
-        height: rem($global-nav-height);
-        padding: 0 rem($global-nav-height * 2) 0 rem($gs-gutter / 2);
-        background-color: darken(color(brand-main), 10%);
+        height: $_toggle-height;
+        padding: 0 ($_toggle-height * 2) 0 ($gs-gutter / 2);
 
         @include mq(tablet) {
-            padding: 0 rem($gs-gutter);
+            padding: 0 $gs-gutter;
             display: block;
         }
         @include mq(desktop) {
@@ -80,7 +66,7 @@ $global-nav-height: 36px;
 
     .nav__item--sub {
         display: none;
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 
     .nav__item--right {
@@ -89,11 +75,14 @@ $global-nav-height: 36px;
         }
     }
     .nav__link {
-        color: $black;
         position: relative;
-        margin: 0 rem($gs-gutter) 0 0;
+        margin: 0 $gs-gutter 0 0;
         padding: 0;
 
+        &, &:active {
+            color: $white;
+            text-decoration: none;
+        }
         &:focus,
         &:active {
             text-decoration: underline;
@@ -101,11 +90,8 @@ $global-nav-height: 36px;
 
         @include mq(tablet) {
             display: block;
-            padding: rem(8px) 0 rem(6px);
-            &, &:active {
-                text-decoration: none;
-                color: $black;
-            }
+            padding: 8px 0 6px;
+
             &:focus,
             &:hover {
                 text-decoration: underline;
@@ -115,72 +101,73 @@ $global-nav-height: 36px;
     .nav__link--last {
         margin-right: 0;
     }
+
     .icon-home {
         vertical-align: top;
     }
-}
 
-@include mq($until: tablet) {
-    .nav--global.is-active {
+    @include mq($until: tablet) {
+        &.is-active {
 
-        display: block;
-        height: auto;
-        padding: 0;
-        padding-top: rem($global-nav-height);
-        position: absolute;
-        z-index: 2;
-        top: 100%;
-        width: 100%;
-        background: darken(color(brand-main), 10%);
-
-        .nav__scroll,
-        .nav__list,
-        .nav__item {
             display: block;
             height: auto;
             padding: 0;
-        }
-
-        .nav__item {
+            padding-top: $_toggle-height;
+            position: absolute;
+            z-index: 2;
+            top: 100%;
             width: 100%;
-        }
-        .nav__item--home {
-            display: none;
-        }
+            background: $c-neutral1;
 
-        .nav__item--sub {
-            display: block;
-        }
+            .nav__scroll,
+            .nav__list,
+            .nav__item {
+                display: block;
+                height: auto;
+                padding: 0;
+            }
 
-        .nav__link {
-            @include fs-bodyHeading(1);
-            margin: 0;
-            border-top: 1px solid lighten(color(brand-main), 5%);
-            display: block;
-            background-color: transparent;
-            -webkit-font-smoothing: subpixel-antialiased;
-            text-decoration: none;
-            padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
+            .nav__item {
+                width: 100%;
+            }
+            .nav__item--home {
+                display: none;
+            }
+            .nav__item--sub {
+                display: block;
+            }
 
-            &,
-            &:active,
-            &:focus {
-                color: $black;
+            .nav__link {
+                @include font-smoothing();
+                @include fs-bodyHeading(1);
+                font-weight: normal;
+                margin: 0;
+                border-top: 1px solid lighten(color(brand-main), 5%);
+                display: block;
                 text-decoration: none;
-            }
-            &:hover {
-                text-decoration: underline;
-            }
+                padding: ($gs-baseline / 2) 0 $gs-baseline $gs-baseline;
+                background-color: transparent;
 
-            @include mq(desktop) {
-                border-top: 0;
+                &,
+                &:active,
+                &:focus {
+                    text-decoration: none;
+                }
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                @include mq(desktop) {
+                    border-top: 0;
+                }
             }
         }
     }
 }
 
 /* ==========================================================================
-   Secondary Navigation
+   Navigation: Secondary Navigation
    ========================================================================== */
 
 .nav-secondary {
@@ -253,41 +240,7 @@ $global-nav-height: 36px;
 }
 
 /* ==========================================================================
-   Nav - Brand Navigation
-   ========================================================================== */
-
-.nav--brand {
-    @include fs-bodyHeading(1);
-    padding-top: rem($gs-gutter / 2);
-    text-align: right;
-
-    .nav__link {
-        color: $black;
-        position: relative;
-        display: block;
-        margin-left: rem($gs-gutter);
-        padding: 0;
-
-        &:focus,
-        &:active {
-            text-decoration: underline;
-        }
-
-        @include mq(desktop) {
-            &:link, &:active {
-                text-decoration: none;
-                color: $black;
-            }
-            &:focus,
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-}
-
-/* ==========================================================================
-   Nav - Popup
+   Navigation: Popup
    ========================================================================== */
 
 .nav-popup {
@@ -295,7 +248,9 @@ $global-nav-height: 36px;
     @include unstyled-list();
 
     position: absolute;
-    top: 0;
+    top: 43px;
+    min-height: 47px;
+    width: 175px;
     z-index: 10;
 
     clear: both;
@@ -305,15 +260,12 @@ $global-nav-height: 36px;
     background-color: $white;
     padding: 0 rem($gs-gutter / 2);
 
-    top: rem($mobilePopupOffset);
-    min-height: rem(47px);
-    width: rem(175px);
 
     @include mq(tablet) {
         position: absolute;
-        top: rem(40px);
-        left: rem(30px);
-        width: rem(220px);
+        top: 40px;
+        left: 30px;
+        width: 220px;
         border: 1px solid $c-neutral4;
     }
 }
@@ -386,7 +338,7 @@ $global-nav-height: 36px;
 
     color: $white;
     display: block;
-    height: rem($global-nav-height);
+    height: rem($_toggle-height);
     border: 0 none;
     padding: rem(3px) rem(9px) rem(9px);
     box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);

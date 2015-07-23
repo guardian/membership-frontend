@@ -1,0 +1,28 @@
+@(pageInfo: model.PageInfo)
+
+@import configuration.Config
+@import views.support.Asset
+
+<header class="global-header hidden-print js-header" role="banner">
+    <div class="global-header__inner">
+        <div class="global-header__branding l-constrained">
+            <div class="global-header__primary">
+                @fragments.global.controlNavigation(pageInfo)
+            </div>
+            @* Branding *@
+            <div class="global-header__logo">
+                <a href="/" class="global-header__logo__link" id="qa-header-logo">
+                    <span class="u-h">@Config.siteTitle</span>
+                    <img src="@Asset.at("images/logos/membership-logo.svg")" alt="@Config.siteTitle" class="global-header__logo__image hidden-mobile">
+                    <img src="@Asset.at("images/logos/membership-logo-small.svg")" alt="@Config.siteTitle" class="global-header__logo__image mobile-only">
+                </a>
+            </div>
+        </div>
+        <button role="menuitem" class="mobile-menu mobile-only js-menu-icon" title="Menu">
+            <span class="mobile-menu__icon">
+                <i></i><i></i><i></i>
+            </span>
+        </button>
+        @fragments.global.navigation(pageInfo)
+    </div>
+</header>

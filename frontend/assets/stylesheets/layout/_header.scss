@@ -2,65 +2,50 @@
    Global Header
    ========================================================================== */
 
-.header {
-    background-color: transparentize(color(brand-main), .1);
+.global-header {
+    background-color: color(brand-main);
     position: relative;
     z-index: 2;
+}
+.global-header__inner {
+    @include brand-background();
+    padding-bottom: $global-toggle-height;
 
-    .header__branding {
-        @include clearfix();
-        padding-top: ($gs-gutter / 4);
-        padding-bottom: ($gs-gutter / 4);
-        height: 48px;
-
-        @include mq(tablet) {
-            height: auto;
-        }
-    }
-    .header__primary {
-        float: left;
-        padding-left: ($gs-gutter / 2);
-        padding-right: 0;
-        @include mq(mobileLandscape) {
-            padding-right: ($gs-gutter / 2);
-        }
-    }
-
-    .header__secondary {
-        float: right;
-        width: auto;
-        margin-right: ($gs-gutter / 2);
-
-        @include mq(mobile) {
-            margin-right: ($gs-gutter / 2);
-        }
-    }
-    .header__logo {
-        clear: right;
-        text-align: right;
-        padding-right: ($gs-gutter / 2);
-
-        @include mq(tablet) {
-            width: 100%;
-            margin-top: -($gs-gutter / 2);
-            margin-bottom: ($gs-gutter / 4);
-        }
-    }
-    .header__logo__image {
-        height: 30px;
-        width: auto;
-
-        @include mq(tablet) {
-            height: 55px;
-        }
-    }
-    .header__logo__link {
-        display: block;
-    }
     @include mq(tablet) {
-        .i-logo {
-            margin-top: ($gs-gutter / 2);
-            margin-bottom: ($gs-gutter / 2);
-        }
+        padding-bottom: 0;
     }
+}
+.global-header__branding {
+    @include clearfix();
+    padding: ($gs-gutter / 4) $gs-gutter;
+    height: 48px;
+
+    @include mq(tablet) {
+        height: auto;
+    }
+}
+.global-header__primary {
+    float: left;
+    padding-left: ($gs-gutter / 2);
+    padding-right: 0;
+
+    @include mq(mobileLandscape) {
+        padding-right: ($gs-gutter / 2);
+    }
+}
+.global-header__logo {
+    float: right;
+    width: auto;
+    margin: ($gs-gutter / 2) 0;
+}
+.global-header__logo__image {
+    height: 50px;
+    width: auto;
+
+    @include mq(tablet) {
+        height: 70px;
+    }
+}
+.global-header__logo__link {
+    display: block;
 }
