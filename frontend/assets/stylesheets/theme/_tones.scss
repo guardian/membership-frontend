@@ -8,17 +8,17 @@
 .tone-brand,
 .tone-trans-brand {
     color: $c-neutral1;
-    background-color: $mem-brandBlue;
+    background-color: $c-brand;
 }
 .tone-trans-brand {
-    background-color: transparentize($mem-brandBlue, .1);
+    background-color: transparentize($c-brand, .1);
 }
 
 /* Dark variant */
 .tone-brand-dark,
 .tone-trans-brand-dark {
     color: $white;
-    background-color: $mem-brandBlueDark;
+    background-color: $c-brand-dark;
     a {
         border-bottom-color: transparentize($white, .5);
     }
@@ -27,7 +27,7 @@
     }
 }
 .tone-trans-brand-dark {
-    background-color: transparentize(darken($mem-brandBlueDark, 10%), .1);
+    background-color: transparentize(darken($c-brand-dark, 10%), .1);
 }
 
 /* Live

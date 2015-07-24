@@ -1,12 +1,11 @@
 // =============================================================================
 // Global variables
 // =============================================================================
-
 // Be careful of Sass variable scope
 // Note: Sass 3.3.0 adds global and local vars
 // http://sass-lang.com/documentation/file.SASS_REFERENCE.html#variables_
 
-// Support
+// Settings
 // =============================================================================
 
 $old-ie: false !default;
@@ -14,117 +13,13 @@ $svg-support: true !default;
 $browser-supports-columns: true !default;
 $browser-supports-flexbox: true !default;
 
-// Layout dimensions
-// =============================================================================
-
-$gutter-width-fluid: 2%;
-$trailblock-img-width: 140px;
-$mobilePopupOffset: 43px;
-
-// Animation Settings
-// =============================================================================
-
-$transition-duration-short: .25s;
-$transition-duration-medium: .5s;
-$transition-duration-long: 1s;
-
-// Guss defaults overrides
-// =============================================================================
-
-$guss-column-rule: none;
-
-@import 'components/bower-components/guss-grid-system/grid-system';
-
-// Breakpoints
-// =============================================================================
-
-// Name your breakpoints in a way that creates a ubiquitous language
-// across team members. It will improve communication between
-// stakeholders, designers, developers, and testers.
-// NB. If these change, please update dfp.js to match
-
-$mq-breakpoints: (
-    mobile: gs-span(4)  + $gs-gutter, // 320px
-    tablet: gs-span(9)  + $gs-gutter*2, // 740px
-    desktop: gs-span(12) + $gs-gutter*2, // 980px
-    mem-full: gs-span(14) + $gs-gutter*2, // 1140px
-    wide: gs-span(16) + $gs-gutter*2, // 1300px
-    // Tweakpoints
-    mobileLandscape: gs-span(6) + $gs-gutter, // 480px
-);
-
-$max-widths: (
-    max-tablet: gs-span(12),
-    max-desktop: gs-span(14),
-    max-wide: gs-span(16),
-);
-
-// Fonts
-// =============================================================================
-
-$f-data: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
-$f-serif-text: 'Guardian Text Egyptian Web', Georgia, serif !default;
-$f-serif-headline: 'Guardian Egyptian Web', Georgia, serif !default;
-$f-sans-serif-text: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
-$f-sans-serif-headline: 'Guardian Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
-
-// Font scale
-// Usage:
-// font-size (px) line-height (px) // level
-$font-scale: (
-    header: (
-        1: (font-size: 16, line-height: 20),
-        2: (font-size: 18, line-height: 22),
-        3: (font-size: 20, line-height: 24),
-        4: (font-size: 22, line-height: 26),
-        5: (font-size: 24, line-height: 28),
-        6: (font-size: 26, line-height: 28),
-    ),
-    headline: (
-        1: (font-size: 14, line-height: 18),
-        2: (font-size: 16, line-height: 20),
-        3: (font-size: 20, line-height: 24),
-        4: (font-size: 24, line-height: 28),
-        5: (font-size: 28, line-height: 32),
-        6: (font-size: 32, line-height: 36),
-        7: (font-size: 36, line-height: 40),
-        8: (font-size: 40, line-height: 44),
-        9: (font-size: 44, line-height: 48),
-    ),
-    bodyHeading: (
-        1: (font-size: 14, line-height: 20),
-        2: (font-size: 16, line-height: 24),
-        3: (font-size: 18, line-height: 28),
-        4: (font-size: 20, line-height: 28),
-    ),
-    bodyCopy: (
-        1: (font-size: 14, line-height: 20),
-        2: (font-size: 16, line-height: 24),
-        3: (font-size: 18, line-height: 28),
-    ),
-    data: (
-        1: (font-size: 11, line-height: 14),
-        2: (font-size: 12, line-height: 14),
-        3: (font-size: 13, line-height: 16),
-        4: (font-size: 14, line-height: 18),
-        5: (font-size: 16, line-height: 20),
-        6: (font-size: 18, line-height: 22),
-    ),
-    textSans: (
-        1: (font-size: 12, line-height: 16),
-        2: (font-size: 13, line-height: 18),
-        3: (font-size: 14, line-height: 20),
-        4: (font-size: 14, line-height: 22),
-        5: (font-size: 16, line-height: 22),
-    )
-) !default;
-
 // Colours
 // =============================================================================
 
 @import 'components/bower-components/guss-colours/_colours.scss';
 @import 'components/bower-components/pasteup-palette/src/_palette';
-@import 'components/bower-components/guss-colours/_colours.helpers.scss';
+
+$guss-colours: $pasteup-palette;
 
 // Shorthands
 $white: #ffffff;
@@ -133,39 +28,37 @@ $black-trans: rgba(0, 0, 0, .25);
 $white-trans: rgba(255, 255, 255, .25);
 
 // Neutrals
-$c-neutral1: map-get($pasteup-palette, neutral-1);
-$c-neutral2: map-get($pasteup-palette, neutral-2);
-$c-neutral3: map-get($pasteup-palette, neutral-3);
-$c-neutral4: map-get($pasteup-palette, neutral-4);
-$c-neutral5: map-get($pasteup-palette, neutral-5);
-$c-neutral6: map-get($pasteup-palette, neutral-6);
-$c-neutral7: map-get($pasteup-palette, neutral-7);
-$c-neutral8: map-get($pasteup-palette, neutral-8);
+$c-neutral1: guss-colour(neutral-1);
+$c-neutral2: guss-colour(neutral-2);
+$c-neutral3: guss-colour(neutral-3);
+$c-neutral4: guss-colour(neutral-4);
+$c-neutral5: guss-colour(neutral-5);
+$c-neutral6: guss-colour(neutral-6);
+$c-neutral7: guss-colour(neutral-7);
+$c-neutral8: guss-colour(neutral-8);
 
 $c-body: $c-neutral1;
 $c-background: $white;
 $c-background-transparent: rgba(51, 51, 51, .05);
-$c-link: map-get($pasteup-palette, news-main-1);
-$c-error: map-get($pasteup-palette, error);
+$c-link: guss-colour(news-main-1);
+$c-error: guss-colour(error);
 $c-warning: #e9e939;
 
-$c-limitedAvailability: #d61d00;
-$c-soldOut: #cc2b12;
-
 // Membership palette
-$mem-brandBlue: map-get($pasteup-palette, news-main-2);
-$mem-brandBlueDark: #197caa;
-
-//Guardian palette
-$guardian-brand: map-get($pasteup-palette, guardian-brand);
+$c-brand: guss-colour(news-main-2);
+$c-brand-dark: #197caa;
 
 // Buttons
-$c-button: $mem-brandBlueDark;
+$c-button: $c-brand-dark;
 $c-button-cancel: #b8b8b8;
 
 // Borders
-$c-border-brand: $mem-brandBlue;
+$c-border-brand: $c-brand;
 $c-border-neutral: $c-neutral3;
+
+// Event Statuses
+$c-limitedAvailability: #d61d00;
+$c-soldOut: #cc2b12;
 
 // Messages
 $c-flash-error: #d61d00;
@@ -211,3 +104,107 @@ $palette-tones: (
         base: map-get($pasteup-palette, news-main-1)
     )
 );
+
+// Layout dimensions
+// =============================================================================
+
+$gutter-width-fluid: 2%;
+$trailblock-img-width: 140px;
+$mobilePopupOffset: 43px;
+
+// Animation Settings
+// =============================================================================
+
+$transition-duration-short: .25s;
+$transition-duration-medium: .5s;
+$transition-duration-long: 1s;
+
+// Guss defaults overrides
+// =============================================================================
+
+$guss-column-rule: none;
+
+@import 'components/bower-components/guss-grid-system/grid-system';
+
+// Breakpoints
+// =============================================================================
+// Name your breakpoints in a way that creates a ubiquitous language
+// across team members. It will improve communication between
+// stakeholders, designers, developers, and testers.
+
+$mq-breakpoints: (
+    mobile: gs-span(4) + $gs-gutter, // 320px
+    tablet: gs-span(9) + $gs-gutter * 2, // 740px
+    desktop: gs-span(12) + $gs-gutter * 2, // 980px
+    mem-full: gs-span(14) + $gs-gutter * 2, // 1140px
+    wide: gs-span(16) + $gs-gutter * 2, // 1300px
+
+    // Tweakpoints
+    mobileLandscape: gs-span(6) + $gs-gutter // 480px
+);
+
+$max-widths: (
+    max-tablet: gs-span(12),
+    max-desktop: gs-span(14),
+    max-wide: gs-span(16)
+);
+
+// Fonts
+// =============================================================================
+
+$f-data: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
+$f-serif-text: 'Guardian Text Egyptian Web', Georgia, serif !default;
+$f-serif-headline: 'Guardian Egyptian Web', Georgia, serif !default;
+$f-sans-serif-text: 'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
+$f-sans-serif-headline: 'Guardian Sans Web', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !default;
+
+// Font scale
+// Usage:
+// font-size (px) line-height (px) // level
+$font-scale: (
+    header: (
+        1: (font-size: 16, line-height: 20),
+        2: (font-size: 18, line-height: 22),
+        3: (font-size: 20, line-height: 24),
+        4: (font-size: 22, line-height: 26),
+        5: (font-size: 24, line-height: 28),
+        6: (font-size: 26, line-height: 28)
+    ),
+    headline: (
+        1: (font-size: 14, line-height: 18),
+        2: (font-size: 16, line-height: 20),
+        3: (font-size: 20, line-height: 24),
+        4: (font-size: 24, line-height: 28),
+        5: (font-size: 28, line-height: 32),
+        6: (font-size: 32, line-height: 36),
+        7: (font-size: 36, line-height: 40),
+        8: (font-size: 40, line-height: 44),
+        9: (font-size: 44, line-height: 48)
+    ),
+    bodyHeading: (
+        1: (font-size: 14, line-height: 20),
+        2: (font-size: 16, line-height: 24),
+        3: (font-size: 18, line-height: 28),
+        4: (font-size: 20, line-height: 28)
+    ),
+    bodyCopy: (
+        1: (font-size: 14, line-height: 20),
+        2: (font-size: 16, line-height: 24),
+        3: (font-size: 18, line-height: 28)
+    ),
+    data: (
+        1: (font-size: 11, line-height: 14),
+        2: (font-size: 12, line-height: 14),
+        3: (font-size: 13, line-height: 16),
+        4: (font-size: 14, line-height: 18),
+        5: (font-size: 16, line-height: 20),
+        6: (font-size: 18, line-height: 22)
+    ),
+    textSans: (
+        1: (font-size: 12, line-height: 16),
+        2: (font-size: 13, line-height: 18),
+        3: (font-size: 14, line-height: 20),
+        4: (font-size: 14, line-height: 22),
+        5: (font-size: 16, line-height: 22)
+    )
+) !default;
