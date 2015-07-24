@@ -16,12 +16,14 @@ object SentryLogging {
   val UserGoogleId = "userGoogleId"
   val AllMDCTags = Seq(UserIdentityId, UserGoogleId)
 
+  val ravenOpt = Config.sentryDsn.map(RavenFactory.ravenInstance).toOption
+
   def init() {
-    Config.sentryDsn match {
-      case Failure(ex) =>
-        play.api.Logger.warn("No Sentry logging configured (OK for dev)", ex)
-      case Success(dsn) =>
-        play.api.Logger.info(s"Initialising Sentry logging for ${dsn.getHost}")
+    ravenOpt match {
+      case None =>
+        play.api.Logger.warn("No Sentry logging configured (OK for dev)")
+      case Some(raven) =>
+        play.api.Logger.info(s"Initialising Sentry logging")
         val buildInfo: Map[String, Any] = app.BuildInfo.toMap
         val tags = Map("stage" -> Config.stage) ++ buildInfo
         val tagsString = tags.map { case (key, value) => s"$key:$value"}.mkString(",")
@@ -29,7 +31,7 @@ object SentryLogging {
         val filter = new ThresholdFilter { setLevel("ERROR") }
         filter.start() // OMG WHY IS THIS NECESSARY LOGBACK?
 
-        val sentryAppender = new SentryAppender(RavenFactory.ravenInstance(dsn)) {
+        val sentryAppender = new SentryAppender(raven) {
           addFilter(filter)
           setTags(tagsString)
           setExtraTags(AllMDCTags.mkString(","))
