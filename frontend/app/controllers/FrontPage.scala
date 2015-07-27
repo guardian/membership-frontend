@@ -1,21 +1,9 @@
 package controllers
 
-import model.Zuora.Feature
-import model.{ResponsiveImageGenerator, ResponsiveImage, ResponsiveImageGroup, Zuora}
-import model.ZuoraDeserializer._
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.zuora.AddSubscriptionProductFeature
-import scala.concurrent.ExecutionContext.Implicits.global
 
 trait FrontPage extends Controller {
-
-  def _index = NoCacheAction.async { implicit req =>
-    val touchPoint = services.TouchpointBackend.TestUser
-    val service = touchPoint.zuoraService
-    for {
-      features <- service.query[Feature]("FeatureCode = 'Events' or FeatureCode = 'Books'")
-    } yield Ok(s"out: $features")
-  }
 
   def index = CachedAction { implicit request =>
 
