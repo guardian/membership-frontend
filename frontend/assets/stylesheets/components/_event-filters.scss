@@ -4,17 +4,19 @@
 
 .event-filters {
     background-color: $white;
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
+    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
-        padding: rem($gs-gutter);
+        padding: ($gs-gutter);
     }
 }
 .event-filters__container {
     @include clearfix;
     @include mq(mem-full) {
         width: 100%;
-        padding-left: rem(gs-span(2) + $gs-gutter);
+        padding-left: gs-span(2.5);
+        padding-right: $gs-gutter;
     }
 }
 .event-filters__categories {
@@ -26,15 +28,15 @@
 .event-filters__count {
     @include fs-textSans(2);
     display: inline-block;
-    padding: rem($gs-gutter / 4) 0;
+    padding: ($gs-gutter / 4) 0;
     @include mq(mobileLandscape) {
-        padding: rem($gs-gutter / 2) 0;
+        padding: ($gs-gutter / 2) 0;
     }
 }
 .event-filters__category {
-    padding-right: rem($gs-gutter);
+    padding-right: ($gs-gutter);
     @include mq(desktop) {
-        margin-right: rem($gs-gutter);
+        margin-right: ($gs-gutter);
         border-right: 1px solid $c-neutral4;
     }
 }

@@ -8,7 +8,7 @@
 <div class="event-blocks">
 
     @if(eventPortfolio.orderedEvents.nonEmpty) {
-        <section class="listing listing--lead listing--padded">
+        <section class="listing listing--lead">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">Featured</h3>
             </div>
@@ -27,7 +27,7 @@
         </section>
     }
 
-    <section class="listing listing--padded">
+    <section class="listing listing--bordered">
         <div class="listing__lead-in">
             <h3 class="listing__title h-intro">What's on</h3>
         </div>
@@ -50,7 +50,7 @@
     </section>
 
     @for(otherEvents <- eventPortfolio.otherEvents) {
-        <section class="listing">
+        <section class="listing listing--bordered">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">
                     @otherEvents.sequenceTitle
@@ -69,7 +69,7 @@
     }
 
     @if(showPastEvents && eventPortfolio.pastEvents) {
-        <section class="listing">
+        <section class="listing listing--bordered">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">Past events</h3>
             </div>
