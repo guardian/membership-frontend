@@ -3,6 +3,7 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.model._
 import com.gu.membership.salesforce.MemberId
+import com.gu.membership.salesforce.Tier.{Partner, Patron}
 import com.gu.membership.stripe.Stripe
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
@@ -145,7 +146,12 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], paymentDelay: Option[Period], casId: Option[String]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, paymentDelay, casId))
+    val allFeatures = joinData.plan match {
+      case PaidTierPlan(Patron, _)=> zuora.featuresTask.get
+      case PaidTierPlan(Partner, _)=> zuora.featuresTask.get.take(1)
+      case _ => Set[Feature]()
+    }
+    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, paymentDelay, casId, allFeatures))
   }
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
