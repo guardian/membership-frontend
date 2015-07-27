@@ -33,7 +33,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-class ZuoraService(val apiConfig: ZuoraApiConfig) {
+class ZuoraService(val apiConfig: ZuoraApiConfig, productFeatures: List[String]) {
   import services.zuora.ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -46,7 +46,22 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
     }
   }
 
-  val authTask = ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes)(request(Login(apiConfig)))
+  val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Set[Feature](), 0.seconds, 1.day) {
+    val whereStatement = productFeatures.map(f => s"FeatureCode = '$f'").mkString(" or ")
+    query[Feature](whereStatement).map(_.toSet)
+  }
+
+  lazy val featuresSchedule = featuresTask.start()
+
+  def authTaskWithCallbacks(callbacks: Seq[() => Unit]) =
+    ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes) {
+      val eventualAuthentication = request(Login(apiConfig))
+      eventualAuthentication.filter(_.token.nonEmpty).foreach(_ => callbacks.foreach(_()))
+      eventualAuthentication
+    }
+
+  val authTask = authTaskWithCallbacks(Seq(() => featuresSchedule))
+
   val pingTask = ScheduledTask(s"Zuora ${apiConfig.envName} ping", DateTime.now, 30.seconds, 30.seconds) {
     request(Query("SELECT Id FROM Product")).map { _ => new DateTime }
   }
