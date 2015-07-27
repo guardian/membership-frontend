@@ -4,7 +4,7 @@
 
 <div class="panel">
     @for(image <- imageOpt) {
-        <div class="panel__media">
+        <div class="panel__media u-thumbnail-clip u-thumbnail-clip--a">
             <img src="@image.defaultImage" srcset="@image.srcset" sizes="33vw" alt="@image.altText" class="responsive-img">
         </div>
     }

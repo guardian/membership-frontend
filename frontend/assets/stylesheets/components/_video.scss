@@ -75,20 +75,11 @@
     @include clearfix();
     clear: both;
     color: $white;
-    background-color: $c-neutral1;
     margin-bottom: rem($gs-gutter);
-}
-.video-preview__header {
-    @include fs-headline(3);
-    min-height: rem(gs-height(2));
-    padding: rem($gs-baseline) rem($gs-gutter / 2);
-    padding-bottom: rem($gs-baseline * 3);
 
     @include mq(tablet) {
-        padding-left: rem($gs-gutter);
-        padding-right: rem($gs-gutter);
-        width: 35%;
-        float: right;
+        display: table;
+        width: 100%;
     }
 }
 .video-preview__video {
@@ -97,6 +88,31 @@
 
     @include mq(tablet) {
         width: 65%;
-        float: left;
+    }
+}
+.video-preview__header {
+    @include fs-headline(3);
+    padding: rem($gs-baseline) rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 3);
+    background-color: $c-brand;
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+        padding-right: rem($gs-gutter);
+
+        .svgclippaths & {
+            position: relative;
+        }
+        .svgclippaths &::after {
+            @include clip-overlay(rgba(0,0,0,0.1));
+            clip-path: url("#clipPathPromoBottom");
+        }
+    }
+}
+.video-preview__header,
+.video-preview__video {
+    @include mq(tablet) {
+        display: table-cell;
+        vertical-align: top;
     }
 }

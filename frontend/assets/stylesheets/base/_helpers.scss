@@ -68,6 +68,57 @@
     border-top: 1px dotted $c-neutral3;
 }
 
+.event-item--clippath-0,
+.event-item--clippath-1,
+.event-item--clippath-2 {
+    .event-item__media {
+
+        .svgclippaths &::after {
+
+        }
+    }
+}
+.event-item--clippath-0 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailA");
+        }
+    }
+}
+.event-item--clippath-1 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailB");
+        }
+    }
+}
+.event-item--clippath-2 {
+    .event-item__media {
+        .svgclippaths &::after {
+            clip-path: url("#clipPathThumbnailC");
+        }
+    }
+}
+
+.svgclippaths {
+    .u-thumbnail-clip {
+        position: relative;
+
+        &::after {
+            @include clip-overlay();
+        }
+    }
+    .u-thumbnail-clip--a::after {
+        clip-path: url("#clipPathThumbnailA");
+    }
+    .u-thumbnail-clip--b::after {
+        clip-path: url("#clipPathThumbnailB");
+    }
+    .u-thumbnail-clip--c::after {
+        clip-path: url("#clipPathThumbnailC");
+    }
+}
+
 .u-button-reset {
     padding: 0;
     border: 0;

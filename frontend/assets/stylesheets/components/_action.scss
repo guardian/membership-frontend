@@ -205,20 +205,10 @@
     padding-left: .2em;
 }
 .action-jump--block {
-    margin: rem($gs-baseline * 2) 0;
-}
-.action-jump--reversed {
-    .action-jump__label {
-        color: $white;
-    }
-    .icon-holder {
-        color: color(brand-dark);
-        background-color: $white;
-        border-color: $white;
-    }
-    &:hover .icon-holder {
-        background-color: darken($white, 15%);
-        border-color: darken($white, 15%);
+    margin: $gs-baseline 0;
+
+    @include mq(tablet) {
+        margin: ($gs-baseline * 2) 0;
     }
 }
 

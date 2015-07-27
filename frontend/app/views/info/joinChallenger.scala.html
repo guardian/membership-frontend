@@ -29,18 +29,17 @@
     title: String,
     imageOpt: Option[model.ResponsiveImageGroup],
     linkHref: String,
-    linkLabel: String,
-    toneSlug: String
+    linkLabel: String
 )(description: Html) = {
-    <div class="brand-panel tone-border-@toneSlug">
+    <div class="brand-panel">
         <h3 class="brand-panel__title">@title</h3>
         <div class="brand-panel__description copy">@description</div>
         @for(img <- imageOpt) {
             <div class="brand-panel__media">
                 <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
                 <a class="mini-link" href="@linkHref">
-                    <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-@toneSlug">
-                        @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-@toneSlug"))
+                    <span class="icon-holder icon-holder--small icon-holder--fill">
+                        @fragments.inlineIcon("arrow-right", List("inline-icon--small"))
                     </span>
                     @linkLabel
                 </a>
@@ -61,7 +60,7 @@
                         Support open, independent journalism and experience the Guardian brought to life
                     </p>
                     <div class="hero-banner__action">
-                        @fragments.common.jumpLink("Learn more", "#what-are-members", isReversed=true)
+                        @fragments.common.jumpLink("Learn more", "#what-are-members")
                     </div>
                 </div>
             </div>
@@ -106,7 +105,7 @@
             </div>
         </div>
 
-        <div class="listing listing--padded l-constrained" id="what-are-members">
+        <div class="listing listing--bordered listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">What is membership</h3>
             </div>
@@ -125,10 +124,9 @@
         </div>
     </section>
 
-
     @* ===== Why join ===== *@
     <section class="page-slice section-why u-padding-top" id="why-join">
-        <div class="listing listing--padded l-constrained">
+        <div class="listing listing--bordered listing--bordered listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
             </div>
@@ -178,8 +176,7 @@
                             "Guardian Live",
                             pageImages.find(_.name.contains("brand-live")),
                             routes.Event.list.toString,
-                            "All upcoming events",
-                            "guardian-live"
+                            "All upcoming events"
                         ) {
                             Russell Brand, Vivienne Westwood, Jimmy Page, Naomi Klein.
                             NHS, terrorism, Europe, climate change; all in conversation with our journalists.
@@ -192,8 +189,7 @@
                             "Guardian Local",
                             pageImages.find(_.name.contains("brand-local")),
                             routes.Event.list.toString,
-                            "All upcoming events",
-                            "local"
+                            "All upcoming events"
                         ) {
                             Tasting menus, jazz collectives, world-renowned orchestra&hellip; Guardian Local celebrates the arts,
                             food and culture we write about with meetups for Members across the country.
@@ -204,8 +200,7 @@
                             "Guardian Masterclasses",
                             pageImages.find(_.name.contains("brand-masterclasses")),
                             routes.Event.masterclasses.toString,
-                            "All upcoming Masterclasses",
-                            "masterclasses"
+                            "All upcoming Masterclasses"
                         ) {
                             Social media, writing a novel, starting a business&hellip;take part in our courses and workshops
                             taught by award-winning professionals and enjoy member discounts.
@@ -217,24 +212,23 @@
         </div>
     </section>
 
-
     @* ===== A home for big ideas ===== *@
     <section class="page-slice section-big-ideas" id="big-ideas">
-        <div class="listing listing--basic listing--padded l-constrained">
+        <div class="listing listing--bordered listing--bordered listing--basic listing--padded l-constrained">
             <div class="listing__content">
                 <ul class="grid grid--2up grid--single-row">
                     <li class="grid__item">
                         @for(img <- pageImages.find(_.name.contains("space"))) {
-                            <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
+                            <div class="u-thumbnail-clip u-thumbnail-clip--a">
+                                <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img">
+                            </div>
                         }
                     </li>
                     <li class="grid__item">
                         <div class="big-ideas-intro">
                             <h4 class="big-ideas-intro__title">A home for big ideas</h4>
                             <div class="big-ideas-intro__content copy">
-                                <p>
-                                    In 2016, the Midland Goods Shed at London’s King’s Cross will reopen to create a new kind of civic space.
-                                </p>
+                                <p>In 2016, the Midland Goods Shed at London’s King’s Cross will reopen to create a new kind of civic space.</p>
                                 <p>
                                     As well as being the home of Guardian Membership, the building will be a hub for
                                     big ideas and stimulating conversations. It will host events, activities and
@@ -248,7 +242,6 @@
             </div>
         </div>
     </section>
-
 
     @* ===== Become a member ===== *@
     <section class="page-slice section-join tone-tint" id="become-a-member">
@@ -342,8 +335,7 @@
                         "Patrons play a vital role to keep the Guardian fearless, progressive and free from interference",
                         "Learn more about Patrons",
                         routes.Info.patron.toString,
-                        image,
-                        Some("tone-patron")
+                        image
                     )
                 }
             </div>

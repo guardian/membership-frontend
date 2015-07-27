@@ -13,8 +13,8 @@
 .nav-sections {
     @include unstyled-list();
     overflow: auto;
-    color: $black;
-    background-color: color(brand-main);
+    color: $white;
+    background-color: $c-neutral1;
     position: relative;
 }
 .nav-sections--sticky {
@@ -43,9 +43,9 @@
     list-style: none;
     counter-reset: nav-sections;
 
-    @include mq(tablet) {
-        border-left: 1px solid $white;
-        margin-left: rem(gs-span(2.5));
+    @include mq(desktop) {
+        border-left: 1px solid $c-neutral2;
+        margin-left: gs-span(2.5);
     }
 }
 .nav-sections__item {
@@ -59,21 +59,21 @@
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    color: $c-neutral1;
-    padding: rem($gs-baseline) rem($gs-baseline / 2);
+    color: $white;
+    padding: $gs-baseline ($gs-baseline / 2);
 
     @include mq(tablet) {
         min-width: rem(gs-span(3));
         @include fs-headline(2);
         font-weight: bold;
-        border-right: 1px solid $white;
-        padding: rem($gs-baseline) rem($gs-gutter);
+        border-right: 1px solid $c-neutral2;
+        padding: ($gs-gutter / 2) $gs-gutter;
     }
 }
 .nav-sections__link:hover,
 .nav-sections__link.is-active {
     text-decoration: none;
-    background-color: lighten(color(brand-main), 10%);
+    background-color: $c-neutral2;
 }
 @include mq(tablet) {
     .nav-sections__link::before {
@@ -86,10 +86,9 @@
 
 .join-text-intro {
     @include fs-headline(3);
-    color: color(brand-dark);
 
     @include mq(tablet) {
-        @include fs-headline(4, true);
+        @include fs-headline(4, $size-only: true);
     }
 }
 .join-text-intro--block {
@@ -110,30 +109,28 @@
     background-position: top center;
     background-repeat: repeat;
     background-attachment: fixed;
-
-    @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(min-height: 640px) {
-        height: 60vh;
-    }
+    height: 60vh;
 }
 .hero-banner__inner {
     position: relative;
-    background-color: rgba(0,0,0,0.6);
-
-    @include mq(tablet) {
-        height: 100%;
-    }
+    background-color: rgba(0,0,0,0.2);
+    height: 100%;
 }
 .hero-banner__content {
-    max-width: gs-span(12);
-    min-height: gs-height(6);
-    padding: rem($gs-gutter / 2);
+    padding: ($gs-gutter / 2);
+    position: absolute;
+    bottom: 0;
+    color: $black;
+    background-color: rgba(255,255,255,0.85);
+
+    @include clip-path('top-slice') {
+        padding-top: $gs-gutter * 2;
+    }
 
     @include mq(tablet) {
-        position:  absolute;
-        @include vertically-center();
-        padding: rem($gs-gutter / 2) 0;
-        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
-        max-width: 45em;
+        max-width: gs-span(10);
+        padding: $gs-gutter ($gs-gutter * 2);
+        padding-left: (gs-span(2) + ($gs-gutter * 2));
     }
 }
 .hero-banner__title {
@@ -142,13 +139,17 @@
     margin: 0 0 rem($gs-baseline / 2) 0;
 
     @include mq(tablet) {
-        font-size: 3.5em;
+        font-size: 3em;
         line-height: 1;
     }
 }
 .hero-banner__description {
-    @include fs-headline(5);
-    margin-bottom: rem($gs-gutter * 2);
+    @include fs-headline(3);
+    margin-bottom: $gs-baseline;
+
+    @include mq(tablet) {
+        @include fs-headline(5, $size-only: true);
+    }
 }
 
 /* What are members & Why Join
@@ -305,4 +306,3 @@ $_comparisonWidth: gs-span(6);
 .checkmark--false {
     background-color: $c-neutral4;
 }
-

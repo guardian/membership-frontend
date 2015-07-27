@@ -3,12 +3,11 @@
     description: String,
     linkText: String,
     linkHref: String,
-    image: model.ResponsiveImageGroup,
-    toneClass: Option[String] = None
+    image: model.ResponsiveImageGroup
 )
 
-<div class="promo-tertiary @toneClass.mkString(" ")">
-    <div class="promo-tertiary__media">
+<div class="promo-tertiary">
+    <div class="promo-tertiary__media u-thumbnail-clip u-thumbnail-clip--c">
         <img src="@image.defaultImage" srcset="@image.srcset" sizes="100vw" alt="@image.altText" class="responsive-img">
     </div>
     <div class="promo-tertiary__header">
