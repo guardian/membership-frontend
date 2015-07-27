@@ -2,7 +2,8 @@ package model
 
 import com.github.nscala_time.time.Imports._
 import model.Eventbrite._
-import model.RichEvent.{ChooseTierMetadata, Metadata, RichEvent}
+import model.RichEvent.RichEvent
+import model.EventMetadata.{ChooseTierMetadata, Metadata}
 import org.joda.time.DateTime
 
 object EventbriteTestObjects {
@@ -18,12 +19,13 @@ object EventbriteTestObjects {
     val imgOpt = None
     val logoOpt = None
     val socialImgUrl = None
-    val socialHashTag = None
     val imageMetadata = None
     val schema = EventSchema.from(this)
     val tags = Nil
     val contentOpt = None
     val pastImageOpt = None
+    val hasLargeImage = true
+    val canHavePriorityBooking = true
 
     val metadata = Metadata(
       identifier="",
@@ -31,10 +33,9 @@ object EventbriteTestObjects {
       shortTitle="",
       pluralTitle="",
       description=None,
+      socialHashtag=None,
       eventListUrl="",
       termsUrl="",
-      largeImg=false,
-      preSale=true,
       highlightsOpt=None,
       chooseTier=ChooseTierMetadata("", "")
     )

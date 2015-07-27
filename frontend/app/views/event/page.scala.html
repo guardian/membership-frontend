@@ -98,7 +98,7 @@
 
     <div class="event-content">
 
-        @if(event.metadata.largeImg) {
+        @if(event.hasLargeImage) {
             @for(img <- event.imgOpt) {
                 <div class="event-content__image">
                     <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
@@ -135,7 +135,7 @@
                 @if(event.isPastEvent) {
                     @fragments.event.relatedEntry(event)
                 }
-                @if(!event.metadata.largeImg) {
+                @if(!event.hasLargeImage) {
                     @for(img <- event.imgOpt) {
                         <img class="responsive-img hidden-mobile" src="@img.defaultImage" />
                     }
