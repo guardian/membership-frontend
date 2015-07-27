@@ -8,8 +8,8 @@
 
 .steps {
     @include fs-header(2);
-    color: color(brand-dark);
-    border-top: 1px solid $c-border-brand;
+    color: $c-body;
+    border-top: 1px solid $c-border-neutral;
     padding-top: rem($gs-baseline / 2);
     margin-bottom: rem($gs-gutter);
 

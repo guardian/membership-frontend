@@ -73,7 +73,7 @@
 .h-section--lead {
     @include fs-header(2);
     padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
-    border: solid $c-border-brand;
+    border: solid $c-border-neutral;
     border-width: 1px 0 0 0;
 
     @include mq(tablet) {

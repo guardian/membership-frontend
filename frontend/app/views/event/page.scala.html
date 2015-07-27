@@ -95,7 +95,7 @@
 
     <div class="event-content">
 
-        @for(img <- event.imgOpt if event.metadata.largeImg) {
+        @for(img <- event.imgOpt if event.hasLargeImage) {
             <div class="event-image event-image--clippath-@randomThumbnailIndex.toString">
                 <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
             </div>

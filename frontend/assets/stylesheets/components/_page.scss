@@ -23,8 +23,8 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
 }
     .page-slice__headline {
         @include fs-headline(4);
+        font-weight: guss-font-weight(medium);
         padding: rem($gs-gutter / 2);
-        border-top: 2px solid $c-neutral6;
 
         @include mq(desktop) {
             @include fs-headline(6, true);

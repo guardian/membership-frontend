@@ -1,6 +1,6 @@
 @(event: model.RichEvent.RichEvent)
 
-<div class="event-info@if(event.isBookable && event.hasLargeImage) { event-info--bordered tone-border-@event.metadata.identifier } @if(!event.isBookable) { event-info--unavailable}">
+<div class="event-info@if(event.isBookable && event.hasLargeImage) { event-info--bordered } @if(!event.isBookable) { event-info--unavailable}">
 
     @if(!event.isBookable) {
         <div class="status-panel">

@@ -1,4 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier, isReversed: Boolean = false)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: com.gu.membership.salesforce.Tier, isReversed: Boolean = false)
 
 @import model.Benefits
 
@@ -12,7 +12,7 @@
         </div>
         <ul class="list-stack list-stack--bordered">
             @for(benefit <- Benefits.detailsLimited(tier)) {
-                <li>@fragments.tier.benefitItem(benefit, iconClasses=List("tone-color-" + tier.slug))</li>
+                <li>@fragments.tier.benefitItem(benefit)</li>
             }
         </ul>
     </div>
