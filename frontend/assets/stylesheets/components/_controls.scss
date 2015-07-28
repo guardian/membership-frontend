@@ -12,7 +12,6 @@
     padding-right: rem($gs-gutter / 4);
 }
 .control__info {
-    @include disable-user-select();
     @include fs-bodyHeading(1);
     color: $black;
     text-overflow: ellipsis;
@@ -20,6 +19,7 @@
     overflow: hidden;
     text-align: left;
     max-width: rem($gs-gutter * 10);
+    user-select: none;
 }
 .control__icon {
     color: $black;

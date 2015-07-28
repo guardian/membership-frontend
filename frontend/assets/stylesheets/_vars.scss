@@ -50,11 +50,19 @@ $membership-palette: (
 );
 
 // Buttons
+<<<<<<< HEAD
 $c-button: color(brand-dark);
 $c-button-cancel: #b8b8b8;
 
 // Borders
 $c-border-brand: color(brand-main);
+=======
+$c-button: #d43077;
+$c-button-cancel: #b8b8b8;
+
+// Borders
+$c-border-brand: #bb3a7f;
+>>>>>>> Redesign: Model brand colours
 $c-border-neutral: $c-neutral3;
 
 // Event Statuses
@@ -135,8 +143,18 @@ $tones-palette: (
 // =============================================================================
 
 $gutter-width-fluid: 2%;
+<<<<<<< HEAD
 $global-toggle-height: 36px;
 $trailblock-img-width: 140px;
+=======
+<<<<<<< HEAD
+$trailblock-img-width: 140px;
+$mobilePopupOffset: 43px;
+=======
+$global-toggle-height: 36px;
+$trailblock-img-width: 140px;
+>>>>>>> 935f80f... Rebrand: Model brand colours
+>>>>>>> Redesign: Model brand colours
 
 // Animation Settings
 // =============================================================================
