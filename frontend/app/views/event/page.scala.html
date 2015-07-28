@@ -1,8 +1,8 @@
 @(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
 
 @import play.twirl.api.Html
+@import scala.util.Random
 @import model.RichEvent._
-@import model.SVG.ClipPath.randomThumbnailIndex
 @import views.support.Dates._
 @import views.support.Social.eventDetail
 
@@ -96,7 +96,7 @@
     <div class="event-content">
 
         @for(img <- event.imgOpt if event.hasLargeImage) {
-            <div class="event-image event-image--clippath-@randomThumbnailIndex.toString">
+            <div class="event-image event-image--clippath-@Random.nextInt(2).toString">
                 <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
             </div>
             @for(imgMetadata <- img.metadata) {

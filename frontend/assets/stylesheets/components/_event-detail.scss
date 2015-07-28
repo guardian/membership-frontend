@@ -294,10 +294,10 @@
 .event-image--clippath-0,
 .event-image--clippath-1,
 .event-image--clippath-2 {
-    .svgclippaths & {
+    .supports-clippath-shapes & {
         position: relative;
     }
-    .svgclippaths &::after {
+    .supports-clippath-shapes &::after {
         content: ' ';
         display: block;
         position: absolute;
@@ -307,18 +307,18 @@
     }
 }
 .event-image--clippath-0 {
-    .svgclippaths &::after {
-        clip-path: url("#clipPathThumbnailA");
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('thumbnail-a');
     }
 }
 .event-image--clippath-1 {
-    .svgclippaths &::after {
-        clip-path: url("#clipPathThumbnailB");
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('thumbnail-b');
     }
 }
 .event-image--clippath-2 {
-    .svgclippaths &::after {
-        clip-path: url("#clipPathThumbnailC");
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('thumbnail-c');
     }
 }
 

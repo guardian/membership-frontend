@@ -99,14 +99,7 @@
     @include mq(tablet) {
         padding-left: rem($gs-gutter);
         padding-right: rem($gs-gutter);
-
-        .svgclippaths & {
-            position: relative;
-        }
-        .svgclippaths &::after {
-            @include clip-overlay(rgba(0,0,0,0.1));
-            clip-path: url("#clipPathPromoBottom");
-        }
+        @include clip-path('promo-bottom-deep');
     }
 }
 .video-preview__header,

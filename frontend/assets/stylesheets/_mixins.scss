@@ -156,6 +156,17 @@ $gs-max-columns: 16;
     -webkit-backface-visibility: hidden;
 }
 
+
+@mixin clip-path-shape($key) {
+    clip-path: polygon(#{map-get($clip-paths, $key)});
+}
+@mixin clip-path($key) {
+    .supports-clippath-shapes & {
+        @include clip-path-shape($key);
+        @content;
+    }
+}
+
 @mixin clip-overlay($background-color: rgba(255,255,255,0.25)) {
     content: ' ';
     display: block;

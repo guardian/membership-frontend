@@ -40,9 +40,9 @@ $slideshow-height-desktop: 460px;
         position: relative;
     }
 
-    .svgclippaths &::after {
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('slideshow');
         @include clip-overlay();
-        clip-path: url("#clipPathSlideshow");
 
         @include mq(tablet) {
             max-height: rem($slideshow-height-tablet);
