@@ -41,30 +41,6 @@ class TicketSaleDatesTest extends Specification {
 
     }
 
-    "give set advance tickets to be available to start of the day if sale dates between tiers is more than a day" in {
-      val saleStart = (testEventTimes.start - 10.days).toInstant
-
-      val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
-
-      datesByTier(Patron) must be_==(saleStart)
-      datesByTier(Partner) must be_==(saleStart)
-
-      val friendTicketSale = datesByTier(Friend).toDateTime(UTC)
-      dateMustBeToStartOfDay(friendTicketSale) must be_==(true)
-    }
-
-    "give set advance tickets to be available a specific time if sale dates between tiers is less than a day" in {
-      val saleStart = (testEventTimes.start - 36.hours).toInstant
-
-      val datesByTier = TicketSaleDates.datesFor(testEventTimes, eventTicketClass.copy(sales_start = Some(saleStart))).datesByTier
-
-      datesByTier(Patron) must be_==(saleStart)
-      datesByTier(Partner) must be_==(saleStart)
-
-      val friendTicketSale = datesByTier(Friend).toDateTime
-      dateMustBeToStartOfDay(friendTicketSale) must be_==(false)
-    }
-
     "not die if sales_start is missing" in {
       val event = Resource.getJson("model/eventbrite/event.long-lead-time.missing-sales-start.json").as[EBEvent]
 
@@ -92,10 +68,6 @@ class TicketSaleDatesTest extends Specification {
 
   private def toStartOfDay(instant: Instant) = {
     instant.toDateTime(UTC).withTimeAtStartOfDay().toInstant
-  }
-
-  private def dateMustBeToStartOfDay(dateTime: DateTime): Boolean = {
-    dateTime.getHourOfDay == 0 && dateTime.getMinuteOfHour == 0 && dateTime.getSecondOfMinute == 0
   }
 
 }
