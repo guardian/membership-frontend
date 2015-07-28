@@ -143,7 +143,6 @@
 
     @fragments.analytics.googleJoinerConversion(member.tier)
     @fragments.analytics.facebookJoinerConversion(member.tier)
-    @fragments.analytics.membershipJoinerConversion()
     @fragments.analytics.videoCampaignPHD.thankyouPage(
         member.regNumber.fold("free")(regNumber => regNumber),
         summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
