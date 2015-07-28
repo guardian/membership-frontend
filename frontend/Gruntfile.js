@@ -104,7 +104,6 @@ module.exports = function (grunt) {
                     // Keep these in sync with the paths found in the karma test-main.js paths
                     paths: {
                         '$': 'src/utils/$',
-                        'modernizr': 'lib/modernizr',
                         'lodash': 'lib/bower-components/lodash-amd/modern',
                         'bean': 'lib/bower-components/bean/bean',
                         'bonzo': 'lib/bower-components/bonzo/bonzo',
