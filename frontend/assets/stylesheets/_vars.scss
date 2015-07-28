@@ -16,6 +16,7 @@ $browser-supports-flexbox: true !default;
 // Colours
 // =============================================================================
 
+@import 'functions';
 @import 'components/bower-components/guss-colours/_colours.scss';
 @import 'components/bower-components/pasteup-palette/src/_palette';
 
@@ -44,16 +45,19 @@ $c-link: guss-colour(news-main-1);
 $c-error: guss-colour(error);
 $c-warning: #e9e939;
 
-// Membership palette
-$c-brand: guss-colour(news-main-2);
-$c-brand-dark: #197caa;
+// (access these through the color($name) function)
+// TODO: Move more colours into palette
+$membership-palette: (
+    brand-main: guss-colour(news-main-2),
+    brand-dark: #197caa
+);
 
 // Buttons
-$c-button: $c-brand-dark;
+$c-button: color(brand-dark);
 $c-button-cancel: #b8b8b8;
 
 // Borders
-$c-border-brand: $c-brand;
+$c-border-brand: color(brand-main);
 $c-border-neutral: $c-neutral3;
 
 // Event Statuses
@@ -74,10 +78,9 @@ $c-thirdparty-facebook: #3b5998;
 
 // Tone Colours
 // =============================================================================
-
 // Usage: tone('live', 'accent')
 //        tone('live') => defaults to 'base' key
-$palette-tones: (
+$tones-palette: (
     live: (
         base: map-get($pasteup-palette, live-main-1),
         accent: map-get($pasteup-palette, live-main-2)

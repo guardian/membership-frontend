@@ -26,7 +26,7 @@
     }
     .block-description__lead {
         font-weight: 500;
-        color: $c-brand-dark;
+        color: color(brand-dark);
     }
     .block-description__text {
         margin-bottom: rem($gs-baseline / 2);

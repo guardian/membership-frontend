@@ -21,7 +21,7 @@
 }
 .promo-primary__header {
     color: $black;
-    background-color: transparentize($c-brand, .1);
+    background-color: transparentize(color(brand-main), .1);
     min-height: rem(gs-height(2));
     padding: rem($gs-baseline) rem($gs-gutter / 2);
     padding-bottom: rem($gs-baseline * 3);
@@ -151,7 +151,7 @@
 .promo-tertiary {
     @include clearfix();
     color: $white;
-    background-color: $c-brand-dark;
+    background-color: color(brand-dark);
     margin-bottom: rem($gs-baseline);
 
     @include mq(tablet) {

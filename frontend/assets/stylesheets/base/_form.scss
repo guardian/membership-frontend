@@ -11,7 +11,7 @@ form {
 
 .form {
     @include mq(desktop) {
-        border-top: 1px solid $c-brand;
+        border-top: 1px solid color(brand-main);
     }
 }
 
@@ -231,7 +231,7 @@ form {
 input[type=radio]:checked + .pseudo-radio {
     border-color: $c-border-brand;
     &:before {
-        background-color: $c-brand;
+        background-color: color(brand-main);
     }
 }
 .pseudo-radio__label {

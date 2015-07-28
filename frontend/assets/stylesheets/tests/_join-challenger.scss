@@ -14,7 +14,7 @@
     @include unstyled-list();
     overflow: auto;
     color: $black;
-    background-color: $c-brand;
+    background-color: color(brand-main);
     position: relative;
 }
 .nav-sections--sticky {
@@ -73,7 +73,7 @@
 .nav-sections__link:hover,
 .nav-sections__link.is-active {
     text-decoration: none;
-    background-color: lighten($c-brand, 10%);
+    background-color: lighten(color(brand-main), 10%);
 }
 @include mq(tablet) {
     .nav-sections__link::before {
@@ -86,7 +86,7 @@
 
 .join-text-intro {
     @include fs-headline(3);
-    color: $c-brand-dark;
+    color: color(brand-dark);
 
     @include mq(tablet) {
         @include fs-headline(4, true);

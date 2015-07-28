@@ -2,6 +2,19 @@
 // Functions
 // =============================================================================
 
+@function color($color) {
+    @if map-has-key($membership-palette, $color) {
+        @return map-get($membership-palette, $color);
+    } @else {
+        @if map-has-key($pasteup-palette, $color) {
+            @return guss-colour($color, $pasteup-palette);
+        } @else {
+            @warn "#{$color} not found in either membership or pasteup palette";
+            @return false;
+        }
+    }
+}
+
 @function tone($group, $key: 'base') {
-    @return map-get(map-get($palette-tones, $group), $key);
+    @return map-get(map-get($tones-palette, $group), $key);
 }

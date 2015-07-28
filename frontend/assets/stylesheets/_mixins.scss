@@ -131,7 +131,7 @@ $gs-max-columns: 16;
     }
 }
 
-@mixin radio-circle($colour: $c-brand) {
+@mixin radio-circle($colour: color(brand-main)) {
     @include circular;
     content: ' ';
     background-color: $colour;
