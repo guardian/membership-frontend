@@ -5,6 +5,7 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
+    'src/modules/analytics/appnexus',
     'src/modules/analytics/crazyegg',
     'src/modules/analytics/optimizely'
 ], function (
@@ -13,6 +14,7 @@ define([
     ophanAnalytics,
     omnitureAnalytics,
     krux,
+    appnexus,
     crazyegg,
     optimizely
 ) {
@@ -31,6 +33,7 @@ define([
 
             if(!guardian.isDev) {
                 krux.load();
+                appnexus.load();
                 crazyegg.load();
                 optimizely.init();
             }
