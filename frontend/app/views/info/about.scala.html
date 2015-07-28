@@ -8,7 +8,7 @@
     @* ===== About Membership ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="About Membership", img=img, isLead=true) {
+            @fragments.promos.promoPrimary(title="About Membership", img=img, isLead=true, toneClass=Some("tone-trans-brand-supporting-1")) {
                 <div class="text-feature">
                     <p>Guardian Members are changing the idea of what a news organisation does today.</p>
                     <p>Join the influential community of journalists, readers and contributors that is the Guardian, and connect to the conversations that matter.</p>
@@ -29,7 +29,8 @@
         @fragments.promos.promoVideoSecondary(
             "If you believe in Guardian journalism, become a Guardian Member",
             video=Videos.whatIsMembership,
-            toneClass=Some("tone-trans-brand-dark")){
+            toneClass=Some("tone-trans-brand-supporting-2")
+        ){
             <div class="text-feature">
                 <p>Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership.</p>
             </div>
@@ -39,7 +40,7 @@
     @* ===== Bring the Guardian to life ===== *@
     @for(img <- pageImages.find(_.name.contains("guardian-live"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Guardian Live: Experience the Guardian brought to life", img=img, stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-guardian-live")) {
+            @fragments.promos.promoPrimary(title="Guardian Live: Experience the Guardian brought to life", img=img, stampImageOpt=Some("images/logos/guardian-live-reversed.svg"), toneClass=Some("tone-trans-brand")) {
                 <div class="text-feature">
                     <p>Book tickets for our programme of discussions, debates, interviews, keynote speeches and festivals.</p>
                 </div>
@@ -51,7 +52,8 @@
     @for(img <- pageImages.find(_.name.contains("masterclasses"))) {
         @* ===== Guardian Masterclasses ===== *@
         <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("Guardian Masterclasses: Learn with the Guardian"), img=img, stampImageOpt = Some("images/logos/guardian-masterclasses-reversed.svg"), toneClass = Some("tone-masterclasses")) {
+        @fragments.promos.promoSecondary(Html("Guardian Masterclasses: Learn with the Guardian"), img=img,
+            stampImageOpt = Some("images/logos/guardian-masterclasses-reversed.svg"), toneClass = Some("tone-trans-brand-supporting-1")) {
             <p class="text-feature">
                 Guardian Masterclasses offer a broad range of short and long courses across a variety of disciplines with a 20% discount for Partners and Patrons.
             </p>
@@ -63,7 +65,7 @@
     @for(img <- pageImages.find(_.name.contains("midland-goods-shed"))) {
         @* ===== Big ideas ===== *@
         <div class="page-slice l-constrained">
-        @fragments.promos.promoPrimary("A home for big ideas", img=img, toneClass = Some("tone-guardian-live")) {
+        @fragments.promos.promoPrimary("A home for big ideas", img=img, toneClass = Some("tone-trans-brand-supporting-2")) {
             <div class="text-feature">
                 <p>In 2016, the Guardian will reopen the Midland Goods Shed at London’s King’s Cross to create a new kind of civic space.</p>
                 <p>The building will be a hub for big ideas and stimulating conversations. It will host events,
@@ -84,7 +86,7 @@
     @* ===== Become a Patron ===== *@
     @for(img <- pageImages.find(_.name.contains("patrons"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoSecondary(title=Html("Become a Patron and support the Guardian's future"), img=img, toneClass=Some("tone-trans-brand-dark")) {
+            @fragments.promos.promoSecondary(title=Html("Become a Patron and support the Guardian's future"), img=img, toneClass=Some("tone-trans-brand-supporting-1")) {
                 <blockquote class="blockquote blockquote--feature">
                     The only relationship our journalists have is with our readers. Membership gives the real possibility of deepening the intense bond between the producers and consumers of the Guardian.
                     <cite class="blockquote__citation">Alan Rusbridger, editor-in-chief of the Guardian</cite>
