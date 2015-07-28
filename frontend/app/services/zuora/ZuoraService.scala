@@ -33,7 +33,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-class ZuoraService(val apiConfig: ZuoraApiConfig, productFeatures: List[String]) {
+class ZuoraService(val apiConfig: ZuoraApiConfig) {
   import services.zuora.ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -47,8 +47,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig, productFeatures: List[String])
   }
 
   val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Set[Feature](), 0.seconds, 1.day) {
-    val whereStatement = productFeatures.map(f => s"FeatureCode = '$f'").mkString(" or ")
-    query[Feature](whereStatement).map(_.toSet)
+    query[Feature]("Status = 'Active'").map(_.toSet)
   }
 
   lazy val featuresSchedule = featuresTask.start()

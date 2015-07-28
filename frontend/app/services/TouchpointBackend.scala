@@ -30,7 +30,7 @@ object TouchpointBackend {
       val service = "Stripe"
     })
 
-    val zuoraService = new ZuoraService(touchpointBackendConfig.zuora, Config.tierFeatures)
+    val zuoraService = new ZuoraService(touchpointBackendConfig.zuora)
 
     val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 

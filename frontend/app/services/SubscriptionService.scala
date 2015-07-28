@@ -7,7 +7,7 @@ import com.gu.membership.salesforce.Tier.{Partner, Patron}
 import com.gu.membership.stripe.Stripe
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
-import model.MembershipSummary
+import model.{FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
@@ -106,7 +106,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     for {
       subscriptions <- getSubscriptions(memberId)
 
-      if subscriptions.size > 0
+      if subscriptions.nonEmpty
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
       amendments <- zuora.query[Amendment](where)
@@ -146,12 +146,19 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   }
 
   def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], paymentDelay: Option[Period], casId: Option[String]): Future[SubscribeResult] = {
-    val allFeatures = joinData.plan match {
-      case PaidTierPlan(Patron, _)=> zuora.featuresTask.get
-      case PaidTierPlan(Partner, _)=> zuora.featuresTask.get.take(1)
+    val allFeatures = zuora.featuresTask.get()
+
+    def featuresByChoice(choice: FeatureChoice) =
+      allFeatures.filter(f => choice.codes.contains(f.code))
+
+    val planFeatures = (joinData.plan, joinData.featureChoice) match {
+      case (PaidTierPlan(_, _), Some(choice))=> featuresByChoice(choice)
       case _ => Set[Feature]()
     }
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, paymentDelay, casId, allFeatures))
+
+    zuora.request(Subscribe(
+      memberId, customerOpt, tierPlanRateIds(joinData.plan),
+      joinData.name, joinData.deliveryAddress, paymentDelay, casId, planFeatures))
   }
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {

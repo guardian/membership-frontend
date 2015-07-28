@@ -115,19 +115,6 @@ case class Subscribe(memberId: MemberId,
       </ns1:PaymentMethod>
     }.getOrElse(Null)
 
-    val addFeatures = if(features.nonEmpty){
-        <ns1:SubscriptionProductFeatureList>
-          {features.map(f =>
-          <ns1:SubscriptionProductFeature xsi:type="ns2:SubscriptionProductFeature">
-            <ns2:FeatureId>
-              {f.id}
-            </ns2:FeatureId>
-          </ns1:SubscriptionProductFeature>
-        )}
-        </ns1:SubscriptionProductFeatureList>
-      } else Null
-
-
     // NOTE: This appears to be white-space senstive in some way. Zuora rejected
     // the XML after Intellij auto-reformatted the code.
     <ns1:subscribe>
@@ -178,7 +165,13 @@ case class Subscribe(memberId: MemberId,
             <ns1:RatePlan xsi:type="ns2:RatePlan">
               <ns2:ProductRatePlanId>{ratePlanId}</ns2:ProductRatePlanId>
             </ns1:RatePlan>
-            {addFeatures}
+            <ns1:SubscriptionProductFeatureList>
+            {features.map(f =>
+            <ns1:SubscriptionProductFeature xsi:type="ns2:SubscriptionProductFeature">
+              <ns2:FeatureId>{f.id}</ns2:FeatureId>
+            </ns1:SubscriptionProductFeature>
+            )}
+            </ns1:SubscriptionProductFeatureList>
           </ns1:RatePlanData>
         </ns1:SubscriptionData>
       </ns1:subscribes>
