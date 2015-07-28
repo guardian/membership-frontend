@@ -120,7 +120,7 @@ trait Event extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclass(EventPortfolio(Nil, masterclassEvents.events, None, None), pageInfo))
+    Ok(views.html.event.masterclass(pageInfo, masterclassEvents.events))
   }
 
   def masterclassesByTag(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
@@ -131,8 +131,8 @@ trait Event extends Controller with ActivityTracking {
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
     Ok(views.html.event.masterclass(
-      EventPortfolio(Nil, masterclassEvents.getTaggedEvents(tag), None, None),
       pageInfo,
+      masterclassEvents.getTaggedEvents(tag),
       MasterclassEvent.decodeTag(rawTag),
       MasterclassEvent.decodeTag(rawSubTag)
     ))

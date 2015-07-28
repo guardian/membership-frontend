@@ -1,6 +1,6 @@
 @(
-    eventPortfolio: model.EventPortfolio,
     pageInfo: model.PageInfo,
+    events: Seq[model.RichEvent.RichEvent],
     selectedTag: String = "",
     selectedSubTag: String = ""
 )
@@ -51,7 +51,7 @@
                     }
 
                     <span class="event-filters__count">
-                        <span class="js-filter-count">@eventPortfolio.normal.length</span> masterclasses
+                        <span class="js-filter-count">@events.length</span> masterclasses
                         @if(selectedTag.isEmpty) {
                             <span class="hidden-mobile">in @MasterclassEvent.tags.length categories</span>
                         }
@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        @fragments.event.listing(eventPortfolio, "Sorry, no matching Masterclasses were found.", isFilterable=true)
+        @fragments.eventListings.listing(events,  "Sorry, no matching Masterclasses were found.", true)
         @fragments.tier.joinListing()
     </main>
 
