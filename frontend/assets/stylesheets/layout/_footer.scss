@@ -16,7 +16,7 @@
     }
 }
 .global-footer__info__inner {
-    padding: ($gs-baseline * 2) 0;
+    padding: ($gs-baseline * 2) ($gs-gutter / 2);
 
     @include mq(tablet) {
         padding: ($gs-baseline * 2) $gs-gutter;
@@ -38,10 +38,10 @@
 }
 .global-brandbar__inner {
    @include clearfix();
-   padding: ($gs-baseline / 2) ($gs-gutter / 4);
+   padding: ($gs-gutter / 2) ($gs-gutter / 4);
 
    @include mq(tablet) {
-       padding: ($gs-baseline / 2) ($gs-gutter / 2) $gs-baseline
+       padding: ($gs-gutter / 2) ($gs-gutter / 2) $gs-baseline
    }
 }
 .global-brandbar__top {
@@ -53,8 +53,12 @@
    width: auto;
 }
 .global-brandbar__logo__image {
-    height: 45px;
     width: auto;
+    height: 35px;
+
+    @include mq(tablet) {
+        height: 45px;
+    }
 }
 
 /**

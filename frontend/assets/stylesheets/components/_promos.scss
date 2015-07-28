@@ -176,9 +176,9 @@
 .promo-tertiary__header {
     min-height: gs-height(2);
     padding: $gs-baseline ($gs-gutter / 2);
+    background-color: $c-neutral1;
 
     @include mq(tablet) {
-        background-color: $c-neutral1;
         padding-left: $gs-gutter;
         padding-right: $gs-gutter;
         padding-bottom: ($gs-baseline * 3);

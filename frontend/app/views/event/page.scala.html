@@ -54,41 +54,37 @@
 
     @* Limited availability messaging *@
     @if(event.isBookable && event.isLimitedAvailability) {
-        <div class="event-extra">
-            <div class="event-extra__container l-constrained">
-                <div class="event-extra__item event-extra__message">@event.limitedAvailabilityText</div>
-            </div>
+        <div class="event-extra l-constrained">
+            <div class="event-extra__item event-extra__message">@event.limitedAvailabilityText</div>
         </div>
     }
 
     @* Sold out & past events *@
     @if(!event.isBookable) {
-        <div class="event-extra">
-            <div class="event-extra__container l-constrained">
-                @for(statusText <- event.statusText) {
-                    <div class="event-extra__item event-extra__status">
-                        @statusText
-                    </div>
-                }
-                <div class="event-extra__item event-extra__action">
-                    @if(event.isPastEvent) {
-                        @for(highlight <- event.metadata.highlightsOpt) {
-                            <a class="action action--external"
-                               href="@highlight.url"
-                               data-metric-trigger="click"
-                               data-metric-category="events"
-                               data-metric-action="highlights"
-                            >
-                                @highlight.title
-                                @fragments.actionIcon("arrow-right")
-                            </a>
-                        }
-                    } else {
-                        @if(event.isSoldOut) {
-                            @fragments.event.waitlist(event)
-                        }
-                    }
+        <div class="event-extra l-constrained">
+            @for(statusText <- event.statusText) {
+                <div class="event-extra__item event-extra__status">
+                    @statusText
                 </div>
+            }
+            <div class="event-extra__item event-extra__action">
+                @if(event.isPastEvent) {
+                    @for(highlight <- event.metadata.highlightsOpt) {
+                        <a class="action action--external"
+                           href="@highlight.url"
+                           data-metric-trigger="click"
+                           data-metric-category="events"
+                           data-metric-action="highlights"
+                        >
+                           @highlight.title
+                           @fragments.actionIcon("arrow-right")
+                        </a>
+                    }
+                } else {
+                    @if(event.isSoldOut) {
+                        @fragments.event.waitlist(event)
+                    }
+                }
             </div>
         </div>
     }

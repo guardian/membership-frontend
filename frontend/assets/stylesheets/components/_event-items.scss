@@ -138,6 +138,12 @@
 
     .event-item__media {
         display: table-header-group;
+
+        @include mq($until: tablet) {
+            .supports-clippath-shapes &::after {
+                display: none;
+            }
+        }
     }
     .event-item__content {
         display: table-footer-group;

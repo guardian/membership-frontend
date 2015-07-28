@@ -35,7 +35,7 @@
 
     color: $white;
     background-color: $c-button;
-    padding: rem(8px) rem($gs-gutter);
+    padding: 6px $gs-gutter;
     border: 1px solid $c-button;
     @include circular;
 

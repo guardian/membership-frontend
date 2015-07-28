@@ -15,8 +15,13 @@ $guss-rem-baseline: 16px;
 // =============================================================================
 
 @mixin brand-background() {
-    background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat top center;
+    background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
+    background-position: 55% center;
     background-size: cover;
+
+    @include mq(mobileLandscape) {
+        background-position: top center;
+    }
 }
 
 // Grid system
