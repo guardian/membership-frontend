@@ -1,7 +1,8 @@
 @(eventPortfolio: model.EventPortfolio, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import model.{SVGImage, Benefits, FlashMessage}
+@import model.{Benefits, FlashMessage}
+@import model.SVG.SVGImage
 @import configuration.Videos
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
