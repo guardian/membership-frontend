@@ -4,6 +4,7 @@
 @import model.FeatureChoice
 @import model.Events
 @import model.BooksAndEvents
+@import configuration.Config
 
 @(tier: Tier)
 
@@ -51,9 +52,10 @@
       case _ =>  {}
   }
 }
-
-@if(Seq(Patron, Partner).contains(tier)) {
-    <fieldset class="fieldset js-feature-choice-container">
+@if(!Config.stageProd) {
+    @if(Seq(Patron, Partner).contains(tier)) {
+        <fieldset class="fieldset js-feature-choice-container">
         @fieldset(tier)
-    </fieldset>
+        </fieldset>
+    }
 }
