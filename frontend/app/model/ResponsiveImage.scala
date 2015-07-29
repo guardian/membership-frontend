@@ -56,12 +56,3 @@ case class ResponsiveImageGroup(
   }.mkString(", ")
 
 }
-
-case class SVGImage(
-  label: String,
-  path: String,
-  width: Int,
-  height: Int
-) {
-  val src = Asset.at(path)
-}
