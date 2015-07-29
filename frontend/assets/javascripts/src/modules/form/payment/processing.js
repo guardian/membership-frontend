@@ -66,8 +66,8 @@ define([
                 url: form.elem.action,
                 method: 'post',
                 data: data,
-                success: function (data) {
-                    window.location.assign(data.redirect);
+                success: function (successData) {
+                    window.location.assign(successData.redirect);
                 },
                 error: function (err) {
                     var paymentErr;
