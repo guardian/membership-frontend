@@ -1,0 +1,27 @@
+@(
+    events: Seq[model.RichEvent.RichEvent],
+    noResultsMessage: String,
+    isFilterable: Boolean
+)
+
+<section class="listing">
+    <div class="listing__lead-in">
+        <h3 class="listing__title h-intro">What's on</h3>
+    </div>
+    <div class="listing__content">
+        @if(events.isEmpty) {
+            <div class="listing__empty">@noResultsMessage</div>
+        } else {
+            @if(isFilterable) {
+                <div class="listing__no-results js-filter-empty">@noResultsMessage</div>
+            }
+            <ul class="grid grid--bordered grid--3up"@if(isFilterable){ id="js-filter-container"}>
+                @for(event <- events) {
+                    <li class="grid__item@if(isFilterable){ js-filter-item}">
+                        @fragments.event.item(event)
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</section>
