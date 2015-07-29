@@ -1,4 +1,5 @@
 define(['src/utils/user'], function (userUtil) {
+    'use strict';
 
     var MENU_TOGGLE_SELECTOR = '.js-menu-icon';
     var NAVIGATION_SELECTOR = '.js-global-nav';

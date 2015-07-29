@@ -4,6 +4,7 @@ define([
     'src/utils/cookie',
     'config/appCredentials'
 ], function(AtoB, ajax, cookie, appCredentials){
+    'use strict';
 
     var MEM_USER_COOKIE_KEY = appCredentials.membership.userCookieKey;
 

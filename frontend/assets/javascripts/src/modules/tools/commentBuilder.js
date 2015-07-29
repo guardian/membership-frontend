@@ -1,4 +1,5 @@
 define(['src/utils/helper'], function (utilsHelper) {
+    'use strict';
 
     var COMMENT_START = '<!--';
     var COMMENT_END = '-->';

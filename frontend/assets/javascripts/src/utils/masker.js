@@ -5,6 +5,8 @@
 *   el.addEventListener('keyup', maskInput('', 4)) // cvc
 */
 define(function () {
+    'use strict';
+
     function maskInput(delim, len) {
         var tokRegex = new RegExp('\\d{1,' + len + '}', 'g');
         var validRegex = new RegExp('\\d|(' + delim + ')|^', 'g');

@@ -1,4 +1,5 @@
 define(function () {
+    'use strict';
 
     var paymentErrMsgs = {
         invalid_request_error: {},

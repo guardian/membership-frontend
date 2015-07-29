@@ -5,7 +5,7 @@ define(['$'], function ($) {
     var UNITED_STATES_STRING = 'united states';
     var CANADA_STRING = 'canada';
     var ZIP_CODE_STRING = 'Zip code';
-    var POST_CODE_STRING  = 'Post code';
+    var POST_CODE_STRING = 'Post code';
     var COUNTY_CONTAINER_SELECTOR = '.js-county-container';
     var POSTCODE_LABEL_SELECTOR = '.js-postcode-label';
 

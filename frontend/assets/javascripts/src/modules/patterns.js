@@ -1,4 +1,5 @@
 define(function() {
+    'use strict';
 
     function buildItems(selector) {
         var items = [];

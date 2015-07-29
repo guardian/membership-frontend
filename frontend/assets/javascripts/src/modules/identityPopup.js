@@ -8,6 +8,7 @@ define([
     'bean',
     'src/utils/user'
 ], function (bean, userUtil) {
+    'use strict';
 
     var IS_HIDDEN = 'is-hidden';
     var IS_ACTIVE = 'is-active';

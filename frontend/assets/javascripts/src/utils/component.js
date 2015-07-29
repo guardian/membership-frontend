@@ -1,4 +1,5 @@
-define(['bean','qwery'], function(bean, qwery) {
+define(['bean', 'qwery'], function(bean, qwery) {
+    'use strict';
 
     var Component = function() {};
 

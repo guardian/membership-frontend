@@ -13,7 +13,6 @@
  *     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
  */
 define(['$', 'bean'], function ($, bean) {
-
     'use strict';
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',

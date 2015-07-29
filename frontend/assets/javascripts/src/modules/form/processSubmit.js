@@ -7,16 +7,17 @@ define([
     'src/utils/helper',
     'src/modules/form/helper/loader'
 ], function (utilsHelper, loader) {
+    'use strict';
 
     var FORM_ELEMENT_SELECTOR = '.js-processing-form';
     var FORM_SUBMIT_ELEMENT_SELECTOR = '.js-processing-form-submit';
 
-    var init = function () {
+    var init = function() {
         var formElements = utilsHelper.toArray(document.querySelectorAll(FORM_ELEMENT_SELECTOR));
 
         if(formElements) {
-            formElements.map(function (formElem) {
-                formElem.addEventListener('submit', function () {
+            formElements.map(function(formElem) {
+                formElem.addEventListener('submit', function() {
                     loader.startLoader();
                     formElem.querySelector(FORM_SUBMIT_ELEMENT_SELECTOR).setAttribute('disabled', 'disabled');
                 }, false);
@@ -24,7 +25,7 @@ define([
         }
     };
 
-    return  {
+    return {
         init: init
     };
 });

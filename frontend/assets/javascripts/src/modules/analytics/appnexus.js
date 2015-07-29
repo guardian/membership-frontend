@@ -1,5 +1,6 @@
 /*global Raven */
 define(function() {
+    'use strict';
 
     var tierMapping = {
         '/join/supporter/thankyou': 568467,

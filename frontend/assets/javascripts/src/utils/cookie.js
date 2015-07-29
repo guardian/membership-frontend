@@ -1,4 +1,5 @@
 define(['src/utils/decodeBase64'], function (decodeBase64) {
+    'use strict';
 
     /*
      Cookie functions originally from http://www.quirksmode.org/js/cookies.html
