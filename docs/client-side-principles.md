@@ -32,7 +32,7 @@ We largely use the following naming conventions in our CSS:
 - We use a version of BEM for components
 - If it is a component in markup then the BEM classes should display this to the reader
 - Componentize markup where possible for reuse, until it feels "right" not too big not too small
-- We use state classes (e.g., `is-toggled`) to style components affecteder by JavaScript
+- We use state classes (e.g., `is-toggled`) to style components affected by JavaScript
 
 ## Helpers
 

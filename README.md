@@ -1,30 +1,20 @@
-```
-                            __                            __
- /'\_/`\                   /\ \                          /\ \      __
-/\      \     __    ___ ___\ \ \____     __   _ __   ____\ \ \___ /\_\  _____
-\ \ \__\ \  /'__`\/' __` __`\ \ '__`\  /'__`\/\`'__\/',__\\ \  _ `\/\ \/\ '__`\
- \ \ \_/\ \/\  __//\ \/\ \/\ \ \ \L\ \/\  __/\ \ \//\__, `\\ \ \ \ \ \ \ \ \L\ \
-  \ \_\\ \_\ \____\ \_\ \_\ \_\ \_,__/\ \____\\ \_\\/\____/ \ \_\ \_\ \_\ \ ,__/
-   \/_/ \/_/\/____/\/_/\/_/\/_/\/___/  \/____/ \/_/ \/___/   \/_/\/_/\/_/\ \ \/
-                                                                          \ \_\
-                                                                           \/_/
-```
-
 # Membership Frontend
+
+Bringing the Guardian to life through live events and meet-ups
+
+https://membership.theguardian.com/
 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-2. [Setup](#setup)
-3. [Run](#run)
-4. [Tests](#tests)
-5. [Client-side Builds](#cs-builds)
-6. [Development Principles](#dev-principles)
-7. [Pattern Library](#pattern-library)
-8. [Building AMIs](#building-amis)
-9. [Test Users](#test-users)
-10. [Security](#security)
-11. [Troubleshooting](#troubleshooting)
+1. [Setup](#setup)
+1. [Run](#run)
+1. [Client-side Development](#cs-development)
+1. [Tests](#tests)
+1. [Building AMIs](#building-amis)
+1. [Test Users](#test-users)
+1. [Security](#security)
+1. [Additional Documentation](#additional)
 
 <a name="getting-started">
 ## Getting Started
@@ -35,34 +25,25 @@ To get started working on Membership you will need to complete the following ste
 2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
 
-### Client-side feature development
-
-If you are doing client-side work on Membership you should also make yourself familar with the following:
-
-- Look over the [pattern library](https://membership.theguardian.com/patterns) to get an understanding of the design language of the site.
-- Read through [FRONTEND.md](docs/FRONTEND.md) to get a high-level understanding of how our client-side code is structured.
-
 <a name="setup">
-## General Setup
+## Setup
 
-1. Go to project root
-1. Run `./setup.sh` to install project-specific client-side dependencies.
-1. Add the following to your `/etc/hosts`
+1. Go to the project root
+1. Run `./setup.sh` to install project-specific client-side dependencies
+1. Add the following to your hosts file in `/etc/hosts`:
 
-   ```
-   127.0.0.1   mem.thegulocal.com
-   ```
+```
+127.0.0.1   mem.thegulocal.com
+```
 
 1. Run `./nginx/setup.sh`
-1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev.
+1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
 
-    If you have the AWS CLI set up you can run
-    ```
-    aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
-    ```
-1. Setup AWS credentials
+```
+aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
+```
 
-Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
+1. Setup AWS credentials. Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
 
 In `~/.aws/credentials` add the following:
 
@@ -163,78 +144,33 @@ Run with `--dev` flag to generate test coverage. Coverage report can be found in
 
 See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
 
-<a name="cs-builds">
-## Client-side Builds
+<a name="cs-development">
+## Client-side Development
 
 Client-side build are handled using Grunt. **Note these commands should be run from inside the `frontend/` directory**
 
-### Watch and compile front-end files
+#### Watch and compile front-end files
 
 ```
 grunt watch --dev
 ```
 
-### Compile front-end files
+#### Compile front-end files
 
 ```
 grunt compile --dev
 ```
 
-<a name="dev-principles">
-## Development Principles
-
 ### Client-side Principles
 
-See [FRONTEND.md](FRONTEND.md) for high-level client-side principles for Membership.
+See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
 
 <a name="pattern-library">
-## Pattern Library
+### Pattern Library
 
 A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns)
 
 When building new components break them down into fragments and include them in the pattern library.
-
-<a name="building-amis">
-### Building AMIs
-
-We use [packer](http://www.packer.io) to create new AMIs, you can download it here: http://www.packer.io/downloads.html.
-If you are on OS X and using Homebrew, you can install Packer by adding the `binary` tap:
-```
-brew tap homebrew/binary
-brew install packer
-```
-
-
-To create an AMI, you must set `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` as described above.
-
-To add your requirements to the new AMI, you should update `provisioning.json`. This will probably involve editing the `provisioners` section, but more information can be found in the [packer docs](http://www.packer.io/docs).
-
-To get the latest list of AMIs you can use the following AWS command:
-```
-aws ec2 describe-images  --owner 099720109477 --region eu-west-1 --filter "Name=architecture,Values=x86_64" --filter "Name=virtualization-type,Values=hvm" | jq '.Images[] | select(contains({RootDeviceType: "ebs"})) | .ImageId + " " + .Name' | grep hvm-ssd/ubuntu-trusty-14.04-amd64-server | sort -r --key 2 | head -6
-```
-
-(Note the example above uses ```ubuntu-trusty-14.04-amd64-server``` but feel free to use a more up to releases.)
-
-Once you are ready, run the following:
-```
-packer build provisioning.json
-```
-This will take several minutes to build the new AMI. Once complete, you should see something like:
-```
-eu-west-1: ami-xxxxxxxx
-```
-
-Use the Deployment steps below to test your new AMI
-
-1. Turn off continuous deployment in RiffRaff
-1. Update the CloudFormation parameter `ImageId` <b>(make a note of the current value first)</b>
-1. Increase the autoscale group size by 1
-1. Test the new box
-1. If it doesn't work, revert the value of `ImageId`
-1. Run a full deploy in RiffRaff
-1. Decrease autoscale group size by 1
-1. Re-enable continous deployment
 
 <a name="test-users">
 ## Test Users
@@ -264,7 +200,11 @@ For a reminder on why we do this, here's @tackley on the subject:
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
 
-<a name="troubleshooting">
-## Troubleshooting
+<a name="additional">
+## Additional Documentation
 
-See [Troubleshooting.md](docs/Troubleshooting.md) for information on common problems and how to fix them.
+Further documentation notes and useful items can be found in [docs](/docs).
+
+- [Troubleshooting](docs/Troubleshooting.md) for information on common problems and how to fix them.
+- [Building AMIs](docs/building-amis.md) for how to update our AMIs
+
