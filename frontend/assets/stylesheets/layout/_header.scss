@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .header {
-    background-color: transparentize($c-brand, .1);
+    background-color: transparentize(color(brand-main), .1);
     position: relative;
     z-index: 2;
 

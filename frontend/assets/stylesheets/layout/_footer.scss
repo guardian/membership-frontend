@@ -12,11 +12,11 @@
 .global-footer__primary {
     position: relative;
     overflow: hidden;
-    background-color: darken($c-brand, 5%);
+    background-color: darken(color(brand-main), 5%);
 }
 .global-footer__brand {
     @include clearfix;
-    background-color: $c-brand;
+    background-color: color(brand-main);
     padding: ($gs-baseline / 2) ($gs-gutter / 4);
 
     @include mq(mobileLandscape) {
