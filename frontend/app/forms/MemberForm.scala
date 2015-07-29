@@ -53,7 +53,6 @@ object MemberForm {
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
-
   implicit val productFeaturesFormatter: Formatter[FeatureChoice] = new Formatter[FeatureChoice] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], FeatureChoice] = {
       val inputVal = data.get(key)

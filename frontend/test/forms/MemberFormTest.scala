@@ -96,7 +96,7 @@ class MemberFormTest extends Specification {
       BooksAndEvents
     )
 
-    "fails when the supplied id does not match" in {
+    "fails when the supplied id does not match any known FeatureChoice id" in {
       productFeaturesFormatter
         .bind(key, Map(key -> "wrong-id")) must beLeft.like {
           case Seq(FormError(_, List(msg), _)) => msg.contains("wrong-id")

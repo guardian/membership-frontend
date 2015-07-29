@@ -48,11 +48,11 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     }
   }
 
-  val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Set[Feature](), 0.seconds, 1.day) {
-    val featuresF = query[Feature]("Status = 'Active'").map(_.toSet)
+  val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Seq[Feature](), 0.seconds, 1.day) {
+    val featuresF = query[Feature]("Status = 'Active'")
 
     featuresF.foreach { features =>
-      val diff = FeatureChoice.codes &~ features.map(_.code)
+      val diff = FeatureChoice.codes &~ features.map(_.code).toSet
       lazy val msg =
         s"""
            |Zuora ${apiConfig.envName} is missing the following product features:

@@ -96,7 +96,7 @@ case class Subscribe(memberId: MemberId,
                      address: Address,
                      paymentDelay: Option[Period],
                      casIdOpt: Option[String],
-                     features: Set[Feature]) extends ZuoraAction[SubscribeResult] {
+                     features: Seq[Feature]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
