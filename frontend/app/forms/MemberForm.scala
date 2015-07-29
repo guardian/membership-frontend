@@ -136,7 +136,7 @@ object MemberForm {
     )(StaffJoinForm.apply)(StaffJoinForm.unapply)
   )
 
-  def paidMemberJoinForm: Form[PaidMemberJoinForm] = Form(
+  val paidMemberJoinForm: Form[PaidMemberJoinForm] = Form(
     mapping(
       "tier" -> nonEmptyText.transform[Tier](Tier.slugMap, _.slug),
       "name" -> nameMapping,

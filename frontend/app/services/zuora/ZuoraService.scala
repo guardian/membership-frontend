@@ -3,6 +3,8 @@ package services.zuora
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
+import com.typesafe.scalalogging.LazyLogging
+import model.FeatureChoice
 import model.Zuora._
 import model.ZuoraDeserializer._
 import model.ZuoraReaders._
@@ -33,7 +35,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-class ZuoraService(val apiConfig: ZuoraApiConfig) {
+class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   import services.zuora.ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -47,7 +49,20 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) {
   }
 
   val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Set[Feature](), 0.seconds, 1.day) {
-    query[Feature]("Status = 'Active'").map(_.toSet)
+    val featuresF = query[Feature]("Status = 'Active'").map(_.toSet)
+
+    featuresF.foreach { features =>
+      val diff = FeatureChoice.codes &~ features.map(_.code)
+      lazy val msg =
+        s"""
+           |Zuora ${apiConfig.envName} is missing the following product features:
+           |${diff.mkString(", ")}. Please update configuration ASAP!"""
+          .stripMargin
+
+      if (diff.nonEmpty) logger.error(msg)
+    }
+
+    featuresF
   }
 
   lazy val featuresSchedule = featuresTask.start()

@@ -21,7 +21,7 @@
           @heading("Select your perks", Some("You can change your mind later on"))
 
           <div class="fieldset__fields">
-          @for(choice <- FeatureChoice.partners) {
+          @for(choice <- FeatureChoice.all) {
                   <div class="form-field">
                       <label class="label" for="@choice.id">
                           <input type="radio"
