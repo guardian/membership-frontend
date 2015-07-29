@@ -10,7 +10,7 @@ object Videos {
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
         availableImages=ResponsiveImageGenerator(
-          id="9c47cb6060bbbd7b5eed5c87fd2bbbdeb1585a11/0_0_2280_1368",
+          id="267569fecb462c61718f7e8cf50a8995ebddee5d/0_0_2280_1368",
           sizes=List(1000, 500)
         )
       )
@@ -22,7 +22,7 @@ object Videos {
       ResponsiveImageGroup(
         altText=Some("What is Guardian Membership?"),
         availableImages=ResponsiveImageGenerator(
-          id="9c47cb6060bbbd7b5eed5c87fd2bbbdeb1585a11/0_0_2280_1368",
+          id="267569fecb462c61718f7e8cf50a8995ebddee5d/0_0_2280_1368",
           sizes=List(1000, 500)
         )
       )
