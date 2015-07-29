@@ -10,7 +10,7 @@ define(function() {
     function load() {
         var tierId = tierMapping[window.location.pathname] || false;
         var scriptUrl;
-
+        // Specific page tracking if we match a given path
         if(tierId) {
             scriptUrl = '//secure.adnxs.com/px?id=' + tierId + '&t=1';
             require('js!' + scriptUrl).then(null, function(err) {
