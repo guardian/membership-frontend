@@ -20,8 +20,7 @@ require([
     'src/modules/metrics',
     'src/modules/patterns',
     // Add new dependencies ABOVE this
-    'raven',
-    'modernizr'
+    'raven'
 ], function(
     ajax,
     analytics,
