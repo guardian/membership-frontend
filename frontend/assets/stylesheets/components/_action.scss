@@ -156,6 +156,10 @@
        background-color: transparent;
    }
 
+   &:after {
+       display: none;
+   }
+
    @include mq(tablet) {
        width: auto;
    }
