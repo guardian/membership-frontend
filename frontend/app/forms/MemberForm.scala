@@ -56,13 +56,14 @@ object MemberForm {
 
   implicit val productFeaturesFormatter: Formatter[FeatureChoice] = new Formatter[FeatureChoice] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], FeatureChoice] = {
-      val inputVal = data.get(key).flatMap(FeatureChoice.fromString)
+      val inputVal = data.get(key)
 
       lazy val errorMsg =
         inputVal.fold("FeatureChoice id not supplied")(id =>
           s"Unknown feature choice id $id")
 
-      inputVal.map(Right(_))
+      inputVal.flatMap(FeatureChoice.fromString)
+        .map(Right(_))
         .getOrElse(Left(Seq(FormError(key, errorMsg))))
     }
 
