@@ -7,7 +7,7 @@ import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.dsl._
-import configuration.{CopyConfig, Links}
+import configuration.CopyConfig
 import model.EmbedSerializer._
 import model.Eventbrite.{EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
@@ -58,7 +58,7 @@ trait Event extends Controller with ActivityTracking {
       }
     }
 
-    eventOpt.getOrElse(Redirect(Links.membershipFront))
+    eventOpt.getOrElse(Redirect(routes.Event.list))
   }
 
   /*
