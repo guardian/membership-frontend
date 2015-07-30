@@ -77,7 +77,11 @@
                                href="@highlight.url"
                                data-metric-trigger="click"
                                data-metric-category="events"
-                               data-metric-action="highlights">@highlight.title</a>
+                               data-metric-action="highlights"
+                            >
+                                @highlight.title
+                                @fragments.actionIcon("arrow-right")
+                            </a>
                         }
                     } else {
                         @if(event.isSoldOut) {
