@@ -1,48 +1,28 @@
-// *** generic toggle button component ***
-//
-// usage:
-//     <button class="js-toggle" data-toggle="js-foo" data-toggle-label="Less foo">
-//         <span class="js-toggle-label">More foo</span>
-//     </button>
-//     <div id="js-foo" data-toggle-hidden>all the foo (initially hidden)</div>
-// notes:
-//     * data-toggle-label is optional.
-//     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
-
+/**
+ * Generic toggle component
+ * Can be used on any element
+ *
+ * Example usage:
+ *     <button class="js-toggle" data-toggle="js-foo" data-toggle-label="Less foo">
+ *         <span class="js-toggle-label">More foo</span>
+ *     </button>
+ *     <div id="js-foo" data-toggle-hidden>all the foo (initially hidden)</div>
+ *
+ *     Notes:
+ *     * data-toggle-label is optional
+ *     * data-toggle-hidden should be added to toggle elements which should be hidden on pageload
+ */
 define(['$', 'bean'], function ($, bean) {
+
+    'use strict';
 
     var TOGGLE_BTN_SELECTOR = '.js-toggle',
         TOGGLE_LABEL_SELECTOR = '.js-toggle-label',
         TOGGLE_DATA_ELM = 'toggle',
         TOGGLE_DATA_LABEL = 'toggle-label',
-        TOGGLE_DATA_ICON = 'toggle-icon',
         TOGGLE_CLASS = 'is-toggled',
         ELEMENTS_TO_TOGGLE = '[data-toggle-hidden]',
         HIDDEN_CLASS = 'is-hidden';
-
-    var toggleElm = function($elem) {
-        return function (e) {
-            e.preventDefault();
-            var toggleElmId = $elem.data(TOGGLE_DATA_ELM);
-            var toggleElm = $(document.getElementById(toggleElmId));
-
-            toggleElm.toggleClass(HIDDEN_CLASS);
-            toggleElm.toggleClass(TOGGLE_CLASS);
-            $elem.toggleClass(TOGGLE_CLASS);
-
-            toggleIcon($elem);
-            toggleLabel($elem);
-        };
-    };
-
-    var toggleIcon = function($elem) {
-        var toggleIcon = $elem.data(TOGGLE_DATA_ICON);
-        var iconRef = $elem[0].querySelector('svg > use');
-        if (toggleIcon && iconRef) {
-            $elem.data(TOGGLE_DATA_ICON, iconRef.getAttribute('xlink:href').replace('#icon-', ''));
-            iconRef.setAttribute('xlink:href', '#icon-' + toggleIcon);
-        }
-    };
 
     var toggleLabel = function($elem) {
         var toggleText = $elem.data(TOGGLE_DATA_LABEL);
@@ -51,6 +31,20 @@ define(['$', 'bean'], function ($, bean) {
             $elem.data(TOGGLE_DATA_LABEL, $elem.text());
             $(labelElem).text(toggleText);
         }
+    };
+
+    var toggleElement = function($elem) {
+        return function (e) {
+            e.preventDefault();
+            var toggleElemId = $elem.data(TOGGLE_DATA_ELM);
+            var toggleElem = $(document.getElementById(toggleElemId));
+
+            toggleElem.toggleClass(HIDDEN_CLASS);
+            toggleElem.toggleClass(TOGGLE_CLASS);
+            $elem.toggleClass(TOGGLE_CLASS);
+
+            toggleLabel($elem);
+        };
     };
 
     var hideToggleElements = function() {
@@ -65,7 +59,7 @@ define(['$', 'bean'], function ($, bean) {
     var bindToggles = function() {
         var $toggles = $(TOGGLE_BTN_SELECTOR);
         $toggles.each(function (elem) {
-            bean.on(elem, 'click', toggleElm($(elem)));
+            bean.on(elem, 'click', toggleElement($(elem)));
         });
     };
 

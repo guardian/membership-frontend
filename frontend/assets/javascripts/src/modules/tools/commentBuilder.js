@@ -41,8 +41,8 @@ define(['src/utils/helper'], function (utilsHelper) {
         tagPickers.forEach(function (elm) {
             elm.addEventListener('change', function () {
                 var selectedTags = utilsHelper.toArray(document.querySelectorAll('.js-tag-picker:checked'));
-                var tags = selectedTags.map(function (elm) {
-                    return elm.getAttribute('data-tag-name');
+                var tags = selectedTags.map(function (tag) {
+                    return tag.getAttribute('data-tag-name');
                 });
                 if (tags.length) {
                     tags = COMMENT_START + ' tags:' + tags.join(',') + ' ' + COMMENT_END;
