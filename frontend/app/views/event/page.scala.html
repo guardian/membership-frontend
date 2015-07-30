@@ -92,7 +92,7 @@
     <div class="event-content">
 
         @for(img <- event.imgOpt if event.hasLargeImage) {
-            <div class="event-image event-image--clippath-@Random.nextInt(2).toString">
+            <div class="event-image event-image--clippath-@Random.nextInt(2)">
                 <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img">
             </div>
             @for(imgMetadata <- img.metadata) {
@@ -128,7 +128,9 @@
                 }
                 @if(!event.hasLargeImage) {
                     @for(img <- event.imgOpt) {
-                        <img class="responsive-img hidden-mobile" src="@img.defaultImage" />
+                        <div class="u-thumbnail-clip u-thumbnail-clip--@Random.nextInt(2)">
+                            <img class="responsive-img hidden-mobile" src="@img.defaultImage" />
+                        </div>
                     }
                 }
                 @if(!event.isPastEvent){

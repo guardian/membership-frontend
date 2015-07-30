@@ -3,7 +3,7 @@
 @import scala.util.Random
 @import views.support.Dates.dateRange
 
-<a href="@routes.Event.details(event.slug)" class="event-item@if(!showPrice) { event-item--shallow} @if(event.isBookable){ qa-available-event-item} event-item--clippath-@Random.nextInt(2).toString">
+<a href="@routes.Event.details(event.slug)" class="event-item@if(!showPrice) { event-item--shallow} @if(event.isBookable){ qa-available-event-item} event-item--clippath-@Random.nextInt(2)">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
             @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))

@@ -5,7 +5,7 @@
     selectedSubTag: String = ""
 )
 
-@import model.SVG.SVGImage
+@import model.SVG.Logos
 @import model.RichEvent.MasterclassEvent
 
 @main("Masterclasses", pageInfo=pageInfo) {
@@ -15,11 +15,7 @@
         <div class="l-constrained">
             @fragments.event.headerBar(
                 title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-                logo=SVGImage(
-                    "Guardian Masterclasses",
-                    "images/providers/masterclasses.svg",
-                    width=242, height=88
-                )
+                logo=Logos.guardianMasterclasses
             )
         </div>
 
@@ -80,7 +76,7 @@
         </div>
 
         <div class="l-constrained">
-            @fragments.eventListings.listing(events,  "Sorry, no matching Masterclasses were found.", true)
+            @fragments.eventListings.listing(events,  "Sorry, no matching Masterclasses were found.", isFilterable=true)
         </div>
     </main>
 

@@ -265,22 +265,14 @@
     @pattern("Header Bar - Guardian Live", "Header bar with guardian live tone applied") {
         @fragments.event.headerBar(
             title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            logo=SVGImage(
-                "Guardian Live",
-                "images/providers/guardian-live.svg",
-                width=62, height=90
-            )
+            logo=model.SVG.Logos.guardianLive
         )
     }
 
     @pattern("Header Bar - Masterclasses", "Header bar with masterclasses tone applied") {
         @fragments.event.headerBar(
             title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-            logo=SVGImage(
-                "Guardian Masterclasses",
-                "images/providers/masterclasses.svg",
-                width=242, height=88
-            )
+            logo=model.SVG.Logos.guardianMasterclasses
         )
     }
 

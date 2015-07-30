@@ -1,7 +1,7 @@
 @(pageInfo: model.PageInfo)
 
 @import configuration.Config
-@import views.support.Asset
+@import model.SVG.Logos
 
 <header class="global-header hidden-print js-header" role="banner">
     <div class="global-header__inner">
@@ -13,7 +13,7 @@
             <div class="global-header__logo">
                 <a href="/" class="global-header__logo__link" id="qa-header-logo">
                     <span class="u-h">@Config.siteTitle</span>
-                    <img src="@Asset.at("images/logos/membership-logo.svg")" alt="@Config.siteTitle" class="global-header__logo__image">
+                    @fragments.common.inlineSvgImage(Logos.membershipLogo, List("global-header__logo__image"))
                 </a>
             </div>
         </div>
