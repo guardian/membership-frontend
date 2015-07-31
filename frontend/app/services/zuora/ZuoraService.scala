@@ -71,7 +71,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
 
   def getAuth = authSupplier.get()
 
-  def authRequest[T <: ZuoraResult](action: => ZuoraAuthAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
+  def authRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
     getAuth.flatMap(auth => request(action, Some(auth)))
   }
 
@@ -94,7 +94,9 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     val url = apiConfig.url.toString()
 
     Timing.record(metrics, action.getClass.getSimpleName) {
-      WS.url(url.toString).post(action.xml(authOpt))
+      WS.url(url.toString)
+        .withHeaders("ContentType" -> "text/plain")
+        .post(action.xml(authOpt))
     }.map { result =>
       metrics.putResponseCode(result.status, "POST")
       reader.read(result.body) match {

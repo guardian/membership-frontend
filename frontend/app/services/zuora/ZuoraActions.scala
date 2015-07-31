@@ -8,19 +8,21 @@ import forms.MemberForm.NameForm
 import model.Zuora._
 import org.joda.time.{DateTime, Period}
 import services.zuora.ZuoraServiceHelpers._
-import scala.xml.transform.{RuleTransformer, RewriteRule}
-import scala.xml.{NodeSeq, Node, Elem, Null}
+
+import scala.xml.{NodeSeq, Elem, Null}
 
 trait ZuoraAction[T <: ZuoraResult] {
   protected val body: Elem
+
   val singleTransaction = false
 
-  def xml(authOpt: Option[Authentication]): NodeSeq = {
+  def xml(authOpt: Option[Authentication]) = {
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
                       xmlns:ns2="http://object.api.zuora.com/">
       <soapenv:Header>
-        { if (singleTransaction) {
+        { sessionHeader(authOpt) }
+        {if (singleTransaction) {
           <ns1:CallOptions>
             <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
           </ns1:CallOptions>
@@ -31,34 +33,16 @@ trait ZuoraAction[T <: ZuoraResult] {
   }
 
   def sanitized = body.toString()
+
+  private def sessionHeader(authOpt: Option[Authentication]):NodeSeq =
+    authOpt.fold(NodeSeq.Empty) { auth =>
+      <ns1:SessionHeader>
+         <ns1:session>{auth.token}</ns1:session>
+      </ns1:SessionHeader>
+    }
 }
 
-trait ZuoraAuthAction[T <: ZuoraResult] extends ZuoraAction[T] {
-  protected val body: Elem
-
-  override def xml(authOpt: Option[Authentication]): NodeSeq = {
-    val envelope = super.xml(None)
-    authOpt.map { auth =>
-      appendAuth(auth, envelope)
-    }.getOrElse(envelope)
-  }
-
-  private def appendAuth(auth: Authentication, envelope: NodeSeq) =
-    new RuleTransformer(new RewriteRule {
-      override def transform(n: Node): NodeSeq = n match {
-        case <soapenv:Header>{ nodes @ _* }</soapenv:Header> =>
-          <soapenv:Header>{sessionHeader(auth) ++ nodes}</soapenv:Header>
-        case other => other
-      }
-    }).transform(envelope)
-
-  private def sessionHeader(auth: Authentication) =
-    <ns1:SessionHeader>
-      <ns1:session>{auth.token}</ns1:session>
-    </ns1:SessionHeader>
-}
-
-case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) extends ZuoraAuthAction[CreateResult] {
+case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
   val body =
     <ns1:create>
       <ns1:zObjects xsi:type="ns2:PaymentMethod">
@@ -70,7 +54,7 @@ case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) exte
     </ns1:create>
 }
 
-case class EnablePayment(account: Account, paymentMethod: CreateResult) extends ZuoraAuthAction[UpdateResult] {
+case class EnablePayment(account: Account, paymentMethod: CreateResult) extends ZuoraAction[UpdateResult] {
   val body =
     <ns1:update>
       <ns1:zObjects xsi:type="ns2:Account">
@@ -92,7 +76,7 @@ case class Login(apiConfig: ZuoraApiConfig) extends ZuoraAction[Authentication] 
   override def sanitized = "<api:login>...</api:login>"
 }
 
-case class Query(query: String) extends ZuoraAuthAction[QueryResult] {
+case class Query(query: String) extends ZuoraAction[QueryResult] {
   val body =
     <ns1:query>
       <ns1:queryString>{query}</ns1:queryString>
@@ -106,7 +90,7 @@ case class Subscribe(memberId: MemberId,
                      address: Address,
                      paymentDelay: Option[Period],
                      casIdOpt: Option[String],
-                     features: Seq[Feature]) extends ZuoraAuthAction[SubscribeResult] {
+                     features: Seq[Feature]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
@@ -196,7 +180,9 @@ case class Subscribe(memberId: MemberId,
  * call with preview can be used - this works for the first case too.
  *
  */
-case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDate: DateTime) extends ZuoraAuthAction[AmendResult] {
+case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDate: DateTime) extends ZuoraAction[AmendResult] {
+
+
   val now = DateTime.now
   val contractAcceptanceDate = formatDateTime(paymentDate)
 
@@ -225,7 +211,9 @@ case class SubscriptionDetailsViaAmend(subscriptionId: String, paymentDate: Date
   }
 }
 
-case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime) extends ZuoraAuthAction[AmendResult] {
+case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, date: DateTime)
+  extends ZuoraAction[AmendResult] {
+
   val body = {
     val dateStr = formatDateTime(date)
 
@@ -252,7 +240,7 @@ case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, da
 }
 
 case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
-                         date: DateTime) extends ZuoraAuthAction[AmendResult] {
+                         date: DateTime) extends ZuoraAction[AmendResult] {
 
   override val singleTransaction = true
 
@@ -303,7 +291,7 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
 }
 
 case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String, preview: Boolean)
-  extends ZuoraAuthAction[AmendResult] {
+  extends ZuoraAction[AmendResult] {
 
   override val singleTransaction = true
 
