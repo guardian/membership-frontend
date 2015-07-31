@@ -1,4 +1,4 @@
-@(eventPortfolio: model.EventPortfolio, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+@(events: Seq[model.RichEvent.RichEvent], pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import model.{Benefits, FlashMessage}
@@ -288,7 +288,7 @@
     }
 
     @pattern("Series Detail") {
-        @fragments.event.seriesDetails(eventPortfolio.orderedEvents.head)
+        @fragments.event.seriesDetails(events.head)
     }
 
     @for(img <- pageImages.find(_.name.contains("sample-1"))) {
@@ -327,12 +327,12 @@
     }
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
-        @fragments.event.itemHero(eventPortfolio.orderedEvents.head)
+        @fragments.event.itemHero(events.head)
     }
 
     @pattern("Event – Full", "A standard event, used in a number of places") {
         <ul class="grid grid--3up">
-            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+            @for(event <- events.slice(0, 3)) {
                 <li class="grid__item">
                     @fragments.event.item(event)
                 </li>
@@ -342,7 +342,7 @@
 
     @pattern("Event – Minimal", "Used currently to list recent past events, where pricing/dates info is redundant") {
         <ul class="grid grid--3up">
-            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+            @for(event <- events.slice(0, 3)) {
                 <li class="grid__item">
                     @fragments.event.itemMinimal(event)
                 </li>
@@ -352,7 +352,7 @@
 
     @pattern("Event – Minimal & Card", "An even more minimal theme which splits the photo and event title") {
         <ul class="grid grid--2up">
-            @for(event <- eventPortfolio.normal.slice(0, 3)) {
+            @for(event <- events.slice(0, 3)) {
                 <li class="grid__item">
                     @fragments.event.itemMinimal(event, isCard=true)
                 </li>
@@ -361,15 +361,15 @@
     }
 
     @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
-        @fragments.event.infoPanel(eventPortfolio.orderedEvents.head)
+        @fragments.event.infoPanel(events.head)
     }
 
     @pattern("Event – Snapshot", "Simple snapshot of event information") {
-        @fragments.event.itemSnapshot(eventPortfolio.orderedEvents.head)
+        @fragments.event.itemSnapshot(events.head)
     }
 
     @pattern("Event – Stats", "Key stats for an event") {
-        @fragments.event.stats(eventPortfolio.orderedEvents.head)
+        @fragments.event.stats(events.head)
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
@@ -381,7 +381,7 @@
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
-        @fragments.pricing.priceInfoEvent(eventPortfolio.normal.head)
+        @fragments.pricing.priceInfoEvent(events.head)
     }
 
     @pattern("Benefit Item", "Single benefit item") {
