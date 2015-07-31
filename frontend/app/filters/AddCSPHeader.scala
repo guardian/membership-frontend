@@ -14,14 +14,21 @@ object AddCSPHeader extends Filter {
     "*.ytimg.com",
     "*.youtube.com",
     "*.google-analytics.com",
+    "*.googleadservices.com",
+    "connect.facebook.net",
     "*.krxd.net",
     "secure.adnxs.com",
+    "*.optimizely.com",
     "script.crazyegg.com"
   ).mkString(" ")
 
   private val frameWhitelist = Seq(
     "js.stripe.com",
-    "*.youtube.com"
+    "*.youtube.com",
+    "*.google.com",
+    "*.google.co.uk",
+    "*.fls.doubleclick.net",
+    "*.g.doubleclick.net"
   ).mkString(" ")
 
   private val imageWhitelist = Seq(
@@ -29,14 +36,21 @@ object AddCSPHeader extends Filter {
     "*.theguardian.com",
     "*.krxd.net",
     "*.google-analytics.com",
+    "*.googleadservices.com",
+    "*.g.doubleclick.net",
     "*.ytimg.com",
     "t.co",
     "*.twitter.com",
+    "*.facebook.com",
     "sb.scorecardresearch.com"
   ).mkString(" ")
 
   private val fontWhitelist = Seq(
     "pasteup.guim.co.uk"
+  ).mkString(" ")
+
+  private val connectWhitelist = Seq(
+    "*.log.optimizely.com"
   ).mkString(" ")
 
   val cspHeaders = "Content-Security-Policy-Report-Only" -> Seq(
@@ -46,6 +60,7 @@ object AddCSPHeader extends Filter {
     "frame-src 'self' " + frameWhitelist,
     "img-src 'self' data: " + imageWhitelist,
     "font-src 'self' " + fontWhitelist,
+    "connect-src 'self' " + connectWhitelist,
     "report-uri /csp-report"
   ).mkString("; ")
 
