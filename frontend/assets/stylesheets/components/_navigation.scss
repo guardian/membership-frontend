@@ -18,10 +18,17 @@
     display: block;
     height: auto;
     padding: 0;
-    background-color: transparentize($c-neutral1, .1);
+    background-color: $c-neutral1;
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    @include mq(tablet) {
+        background-color: transparentize($c-neutral1, .2);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
     }
 
     @include mq(desktop) {

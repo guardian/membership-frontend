@@ -3,12 +3,16 @@
    ========================================================================== */
 
 .global-header {
-    background-color: color(brand-main);
+    background-color: color(brand-supporting-2);
     position: relative;
     z-index: 2;
 }
 .global-header__inner {
     @include brand-background();
+
+    @include mq(tablet) {
+        padding-bottom: $global-toggle-height;
+    }
 }
 .global-header__branding {
     @include clearfix();
