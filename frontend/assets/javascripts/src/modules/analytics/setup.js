@@ -21,6 +21,12 @@ define([
     optimizely
 ) {
 
+    var analyticsEnabled = (
+        guardian.analyticsEnabled &&
+        !navigator.doNotTrack &&
+        !cookie.getCookie('ANALYTICS_OFF_KEY')
+    );
+
     function setupAnalytics() {
         ophan.init();
         omniture.init();
@@ -36,15 +42,12 @@ define([
     }
 
     function init() {
-        if (cookie.getCookie('ANALYTICS_OFF_KEY')) {
-            guardian.analyticsEnabled = false;
-        }
 
-        if (guardian.analyticsEnabled) {
+        if (analyticsEnabled) {
             setupAnalytics();
         }
 
-        if(guardian.analyticsEnabled && !guardian.isDev) {
+        if(analyticsEnabled && !guardian.isDev) {
             setupThirdParties();
         }
     }
