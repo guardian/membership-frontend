@@ -11,7 +11,6 @@ https://membership.theguardian.com/
 1. [Run](#run)
 1. [Client-side Development](#cs-development)
 1. [Tests](#tests)
-1. [Building AMIs](#building-amis)
 1. [Test Users](#test-users)
 1. [Security](#security)
 1. [Additional Documentation](#additional)
