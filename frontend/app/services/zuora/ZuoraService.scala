@@ -20,6 +20,7 @@ import scala.concurrent.duration._
 
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -71,9 +72,8 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
 
   def getAuth = authSupplier.get()
 
-  def authRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
-    getAuth.flatMap(auth => request(action, Some(auth)))
-  }
+  def authRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] =
+    getAuth.flatMap { auth => request(action, Some(auth)) }
 
   def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
     authRequest(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
@@ -94,9 +94,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     val url = apiConfig.url.toString()
 
     Timing.record(metrics, action.getClass.getSimpleName) {
-      WS.url(url.toString)
-        .withHeaders("ContentType" -> "text/plain")
-        .post(action.xml(authOpt))
+      WS.url(url.toString).post(action.xml(authOpt).toString())
     }.map { result =>
       metrics.putResponseCode(result.status, "POST")
       reader.read(result.body) match {
