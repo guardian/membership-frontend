@@ -10,13 +10,18 @@ object AddCSPHeader extends Filter {
   private val scriptWhitelist = Seq(
     "js.stripe.com",
     "*.ophan.co.uk",
+    "*.twitter.com",
+    "*.ytimg.com",
+    "*.youtube.com",
     "*.google-analytics.com",
     "*.krxd.net",
+    "secure.adnxs.com",
     "script.crazyegg.com"
   ).mkString(" ")
 
   private val frameWhitelist = Seq(
-    "js.stripe.com"
+    "js.stripe.com",
+    "*.youtube.com"
   ).mkString(" ")
 
   private val imageWhitelist = Seq(
@@ -24,6 +29,9 @@ object AddCSPHeader extends Filter {
     "*.theguardian.com",
     "*.krxd.net",
     "*.google-analytics.com",
+    "*.ytimg.com",
+    "t.co",
+    "*.twitter.com",
     "sb.scorecardresearch.com"
   ).mkString(" ")
 
