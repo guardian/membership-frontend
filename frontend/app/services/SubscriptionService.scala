@@ -38,7 +38,7 @@ trait AmendSubscription {
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         cancelDate = if (instant) DateTime.now else subscriptionDetails.chargedThroughDate.getOrElse(DateTime.now())
-        result <- zuora.authRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
+        result <- zuora.authenticatedRequest(CancelPlan(subscriptionId, subscriptionDetails.ratePlanId, cancelDate))
       } yield result
     }
   }
@@ -55,7 +55,7 @@ trait AmendSubscription {
         subscriptionDetails <- getSubscriptionDetails(subscriptionId)
         dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
 
-        result <- zuora.authRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
+        result <- zuora.authenticatedRequest(DowngradePlan(subscriptionId, subscriptionDetails.ratePlanId,
           tierPlanRateIds(newTierPlan), dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
@@ -65,7 +65,7 @@ trait AmendSubscription {
     checkForPendingAmendments(memberId) { subscriptionId =>
       for {
         ratePlan <- zuora.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
-        result <- zuora.authRequest(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan), preview))
+        result <- zuora.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan), preview))
       } yield result
     }
   }
@@ -150,8 +150,8 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
       account <- getAccount(memberId)
-      paymentMethod <- zuora.authRequest(CreatePaymentMethod(account, customer))
-      result <- zuora.authRequest(EnablePayment(account, paymentMethod))
+      paymentMethod <- zuora.authenticatedRequest(CreatePaymentMethod(account, customer))
+      result <- zuora.authenticatedRequest(EnablePayment(account, paymentMethod))
     } yield result
   }
 
@@ -163,7 +163,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
 
       zuoraFeatures <- zuora.featuresSupplier.get()
       features = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice)
-      result <- zuora.authRequest(Subscribe(memberId,
+      result <- zuora.authenticatedRequest(Subscribe(memberId,
                                             customerOpt,
                                             tierPlanRateIds(joinData.plan),
                                             joinData.name,
@@ -195,7 +195,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
       for {
         latestSubscription <- latestSubF
         subscriptionDetailsF = getSubscriptionDetails(latestSubscription.id)
-        result <- zuora.authRequest(SubscriptionDetailsViaAmend(latestSubscription.id, latestSubscription.contractAcceptanceDate))
+        result <- zuora.authenticatedRequest(SubscriptionDetailsViaAmend(latestSubscription.id, latestSubscription.contractAcceptanceDate))
         subscriptionDetails <- subscriptionDetailsF
       } yield {
         assert(result.invoiceItems.nonEmpty, "Subscription with delayed payment returning zero invoice items in SubscriptionDetailsViaAmend call")

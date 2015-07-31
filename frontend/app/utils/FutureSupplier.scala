@@ -12,8 +12,8 @@ class FutureSupplier[T](f: => Future[T]) {
     refreshAlteringFuture <- agent.alter { currentRefresh =>
       if (currentRefresh.isCompleted) f else currentRefresh
     }
-    refreshFuture <- refreshAlteringFuture
-  } yield refreshFuture
+    refreshed <- refreshAlteringFuture
+  } yield refreshed
 
   def get(): Future[T] = agent.get()
 }

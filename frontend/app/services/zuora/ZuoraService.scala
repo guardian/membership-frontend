@@ -57,7 +57,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     new FutureSupplier[Seq[Feature]](getFeatures)
 
   val pingSupplier =
-    new FutureSupplier[DateTime](authRequest(
+    new FutureSupplier[DateTime](authenticatedRequest(
       Query("SELECT Id FROM Product")).map { _ => new DateTime })
 
   private val scheduler = Akka.system.scheduler
@@ -72,11 +72,11 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
 
   def getAuth = authSupplier.get()
 
-  def authRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] =
+  def authenticatedRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] =
     getAuth.flatMap { auth => request(action, Some(auth)) }
 
   def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
-    authRequest(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
+    authenticatedRequest(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
   }
 
   def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {
