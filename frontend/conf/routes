@@ -121,3 +121,5 @@ GET            /patterns                          controllers.PatternLibrary.pat
 
 # Offers and Competitions
 GET            /offers-competitions               controllers.OffersAndCompetitions.list
+
+POST           /csp-report                        controllers.Security.cspReport
