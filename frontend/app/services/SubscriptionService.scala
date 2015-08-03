@@ -3,10 +3,11 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.model._
 import com.gu.membership.salesforce.MemberId
+import com.gu.membership.salesforce.Tier.{Partner, Patron}
 import com.gu.membership.stripe.Stripe
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
-import model.MembershipSummary
+import model.{BooksAndEvents, FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
@@ -17,21 +18,6 @@ import scala.concurrent.Future
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
-}
-
-object SubscriptionServiceHelpers {
-  def sortAmendments(subscriptions: Seq[Subscription], amendments: Seq[Amendment]) = {
-    val versions = subscriptions.map { amendment => (amendment.id, amendment.version) }.toMap
-    amendments.sortBy { amendment => versions(amendment.subscriptionId) }
-  }
-
-  def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
-
-  def sortPreviewInvoiceItems(items: Seq[PreviewInvoiceItem]) = items.sortBy(_.price)
-
-  def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
-
-  def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
 }
 
 trait AmendSubscription {
@@ -85,8 +71,34 @@ trait AmendSubscription {
   }
 }
 
+object SubscriptionService {
+  def sortAmendments(subscriptions: Seq[Subscription], amendments: Seq[Amendment]) = {
+    val versions = subscriptions.map { amendment => (amendment.id, amendment.version) }.toMap
+    amendments.sortBy { amendment => versions(amendment.subscriptionId) }
+  }
+
+  def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
+
+  def sortPreviewInvoiceItems(items: Seq[PreviewInvoiceItem]) = items.sortBy(_.price)
+
+  def sortSubscriptions(subscriptions: Seq[Subscription]) = subscriptions.sortBy(_.version)
+
+  def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
+
+  def featuresPerTier(zuoraFeatures: Seq[Feature])(tier: ProductRatePlan, choiceOpt: Option[FeatureChoice]): Seq[Feature] = {
+    def byChoice(choice: FeatureChoice) =
+      zuoraFeatures.filter(f => choice.codes.contains(f.code))
+
+    (tier, choiceOpt) match {
+      case (PaidTierPlan(Patron, _), _) => byChoice(BooksAndEvents)
+      case (PaidTierPlan(Partner, _), Some(choice)) => byChoice(choice).take(1)
+      case _ => Seq[Feature]()
+    }
+  }
+}
+
 class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val zuora: ZuoraService) extends AmendSubscription with LazyLogging {
-  import services.SubscriptionServiceHelpers._
+  import SubscriptionService._
 
   private def getAccount(memberId: MemberId): Future[Account] =
     zuora.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
@@ -105,7 +117,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     for {
       subscriptions <- getSubscriptions(memberId)
 
-      if subscriptions.size > 0
+      if subscriptions.nonEmpty
 
       where = subscriptions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
       amendments <- zuora.query[Amendment](where)
@@ -119,7 +131,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
         }
     }
   }
-
 
   def getSubscriptionDetails(subscriptionId: String): Future[SubscriptionDetails] = {
     for {
@@ -144,8 +155,23 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String], val
     } yield result
   }
 
-  def createSubscription(memberId: MemberId, joinData: JoinForm, customerOpt: Option[Stripe.Customer], paymentDelay: Option[Period], casId: Option[String]): Future[SubscribeResult] = {
-    zuora.request(Subscribe(memberId, customerOpt, tierPlanRateIds(joinData.plan), joinData.name, joinData.deliveryAddress, paymentDelay, casId))
+  def createSubscription(memberId: MemberId,
+                         joinData: JoinForm,
+                         customerOpt: Option[Stripe.Customer],
+                         paymentDelay: Option[Period],
+                         casId: Option[String]): Future[SubscribeResult] = {
+    val features =
+      featuresPerTier(zuora.featuresTask.get())(joinData.plan, joinData.featureChoice)
+
+    zuora.request(
+      Subscribe(memberId,
+                customerOpt,
+                tierPlanRateIds(joinData.plan),
+                joinData.name,
+                joinData.deliveryAddress,
+                paymentDelay,
+                casId,
+                features))
   }
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {

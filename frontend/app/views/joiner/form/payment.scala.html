@@ -56,9 +56,11 @@
                     @if(showSubscriberFields) {
                         @fragments.form.subscriberNumber()
                      }
-                    
+
+                    @fragments.form.featureChoice(tier)
+
                     @fragments.form.paymentOptions(tier)
-                    
+
                      @if(showSubscriberFields) {
                          @fragments.form.paymentOptionsForSubscribers()
                      }

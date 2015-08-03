@@ -1,6 +1,6 @@
 package controllers
 
-import model.{ResponsiveImageGenerator, ResponsiveImage, ResponsiveImageGroup}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 
 trait FrontPage extends Controller {

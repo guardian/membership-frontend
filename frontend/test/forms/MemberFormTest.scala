@@ -1,8 +1,9 @@
 package forms
 
+import model.{Books, BooksAndEvents, FeatureChoice, Events}
 import org.specs2.mutable.Specification
 
-import play.api.data.Form
+import play.api.data.{FormError, Form}
 
 import MemberForm._
 
@@ -86,4 +87,29 @@ class MemberFormTest extends Specification {
       badCountryFriend.hasErrors must beTrue
     }
   }
+
+  "ProductFeatureFormatter" should {
+    val key = "key"
+    val featureChoices: List[FeatureChoice] = List(
+      Events,
+      Books,
+      BooksAndEvents
+    )
+
+    "fails when the supplied id does not match any known FeatureChoice id" in {
+      productFeaturesFormatter
+        .bind(key, Map(key -> "wrong-id")) must beLeft.like {
+          case Seq(FormError(_, List(msg), _)) => msg.contains("wrong-id")
+      }
+    }
+
+    "bind featureChoices from form data" in {
+      val results = featureChoices.map { choice =>
+        productFeaturesFormatter.bind(key, Map(key -> choice.id))
+      }
+
+      results mustEqual featureChoices.map(Right(_))
+    }
+  }
+
 }

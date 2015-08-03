@@ -89,8 +89,14 @@ case class Query(query: String) extends ZuoraAction[QueryResult] {
     </ns1:query>
 }
 
-case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], ratePlanId: String, name: NameForm,
-                     address: Address, paymentDelay: Option[Period], casIdOpt: Option[String]) extends ZuoraAction[SubscribeResult] {
+case class Subscribe(memberId: MemberId,
+                     customerOpt: Option[Stripe.Customer],
+                     ratePlanId: String,
+                     name: NameForm,
+                     address: Address,
+                     paymentDelay: Option[Period],
+                     casIdOpt: Option[String],
+                     features: Seq[Feature]) extends ZuoraAction[SubscribeResult] {
 
   val body = {
     val now = DateTime.now
@@ -159,6 +165,13 @@ case class Subscribe(memberId: MemberId, customerOpt: Option[Stripe.Customer], r
             <ns1:RatePlan xsi:type="ns2:RatePlan">
               <ns2:ProductRatePlanId>{ratePlanId}</ns2:ProductRatePlanId>
             </ns1:RatePlan>
+            <ns1:SubscriptionProductFeatureList>
+            {features.map(f =>
+            <ns1:SubscriptionProductFeature xsi:type="ns2:SubscriptionProductFeature">
+              <ns2:FeatureId>{f.id}</ns2:FeatureId>
+            </ns1:SubscriptionProductFeature>
+            )}
+            </ns1:SubscriptionProductFeatureList>
           </ns1:RatePlanData>
         </ns1:SubscriptionData>
       </ns1:subscribes>
