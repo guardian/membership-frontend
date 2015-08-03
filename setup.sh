@@ -1,98 +1,77 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 
-#####################################################
-# Set up the Membership application
-#####################################################
+installed() {
+    hash "$1" 2>/dev/null
+}
 
-echo " ____ ____ ____ ____ ____ ____ ____ ____ ____ ____ ";
-echo "||m |||e |||m |||b |||e |||r |||s |||h |||i |||p ||";
-echo "||__|||__|||__|||__|||__|||__|||__|||__|||__|||__||";
-echo "|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|/__\|";
+banner() {
+    printf "\n\r\n\r====================================\n\r"
+    printf "${1}"
+    printf "\n\r====================================\n\r\n\r"
+}
+
+banner "Guardian Membership"
+
+install_grunt() {
+    if installed grunt && installed npm; then
+        npm install
+    else
+        EXTRA_STEPS+=("You need to install node to continue https://nodejs.org/")
+        EXTRA_STEPS+=("You need to install grunt-cli first. npm install -g grunt-cli")
+    fi
+}
+
+install_bower() {
+    if installed bower; then
+
+        banner "Installing Bower JS modules"
+        pushd assets/javascripts
+        rm -rf lib/bower-components
+        bower install
+        popd
+
+        banner "Installing Bower CSS modules"
+        pushd assets/stylesheets
+        rm -rf components/bower-components
+        bower install
+        popd
+    else
+        EXTRA_STEPS+=("You need to install bower first. npm install -g bower")
+    fi
+}
+
+install_dependencies() {
+    install_grunt
+    install_bower
+}
+
+compile_assets() {
+    banner "Compiling assets"
+    grunt compile
+    banner "Adding git commit hooks"
+    grunt hookup
+}
+
+report() {
+    if [[ ${#EXTRA_STEPS[@]} -gt 0 ]]; then
+        echo -e
+        echo "Remaining tasks: "
+        for i in "${!EXTRA_STEPS[@]}"; do
+            echo "  $((i+1)). ${EXTRA_STEPS[$i]}"
+        done
+    fi
+}
+
+main() {
+    install_dependencies
+    compile_assets
+    report
+}
 
 # fix the issues with bower installs
 git config --local url."https://".insteadOf git://
 
 cd frontend
 
-#####################################################
-# Install NPM modules
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing NPM modules ..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-if hash grunt 2>/dev/null; then
-    npm install
-else
-    printf "\nYou need to install grunt-cli first:\n"
-    printf "\nnpm install -g grunt-cli\n"
-    exit 1
-fi
-
-#####################################################
-# Install Bower JS modules
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing Bower JS modules..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-if hash bower 2>/dev/null; then
-    pushd assets/javascripts
-    rm -rf lib/bower-components
-    bower install
-else
-    printf "\nYou need to install bower first:\n"
-    printf "\nnpm install -g bower\n"
-    exit 1
-fi
-
-popd
-
-#####################################################
-# Install Bower SASS modules
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Installing Bower SASS modules..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-if hash bower 2>/dev/null; then
-    pushd assets/stylesheets
-    rm -rf components/bower-components
-    bower install
-else
-    printf "\nYou need to install bower first:\n"
-    printf "\nnpm install -g bower\n"
-    exit 1
-fi
-
-popd
-
-#####################################################
-# Compile clientside assets
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Compiling assets ..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-grunt compile
-
-#####################################################
-# Add commit hook
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Adding git commit hook ..."
-printf "\n\r\n\r====================================\n\r\n\r"
-
-grunt hookup
-
-#####################################################
-# Done
-#####################################################
-
-printf "\n\r\n\r====================================\n\r\n\r"
-printf "> Good to go.\n\r\n\r"
+main
