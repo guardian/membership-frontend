@@ -9,41 +9,37 @@ import model.Zuora._
 import org.joda.time.{DateTime, Period}
 import services.zuora.ZuoraServiceHelpers._
 
-import scala.xml.{Elem, Null}
+import scala.xml.{NodeSeq, Elem, Null}
 
 trait ZuoraAction[T <: ZuoraResult] {
   protected val body: Elem
 
-  val authRequired = true
   val singleTransaction = false
 
-  // The .toString is necessary because Zuora doesn't like Content-Type application/xml
-  // which Play automatically adds if you pass it Elems
-  def xml(implicit authentication: Authentication) = {
+  def xml(authOpt: Option[Authentication]) = {
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:api="http://api.zuora.com/"
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://api.zuora.com/"
                       xmlns:ns2="http://object.api.zuora.com/">
       <soapenv:Header>
-        {if (authRequired) {
-        <ns1:SessionHeader>
-          <ns1:session>
-            {authentication.token}
-          </ns1:session>
-        </ns1:SessionHeader>
-      }}
-        {
-        if (singleTransaction) {
+        { sessionHeader(authOpt) }
+        {if (singleTransaction) {
           <ns1:CallOptions>
             <ns1:useSingleTransaction>true</ns1:useSingleTransaction>
           </ns1:CallOptions>
-        }
-        }
+        }}
       </soapenv:Header>
       <soapenv:Body>{body}</soapenv:Body>
-    </soapenv:Envelope>.toString()
+    </soapenv:Envelope>
   }
 
   def sanitized = body.toString()
+
+  private def sessionHeader(authOpt: Option[Authentication]):NodeSeq =
+    authOpt.fold(NodeSeq.Empty) { auth =>
+      <ns1:SessionHeader>
+         <ns1:session>{auth.token}</ns1:session>
+      </ns1:SessionHeader>
+    }
 }
 
 case class CreatePaymentMethod(account: Account, customer: Stripe.Customer) extends ZuoraAction[CreateResult] {
@@ -71,8 +67,6 @@ case class EnablePayment(account: Account, paymentMethod: CreateResult) extends 
 }
 
 case class Login(apiConfig: ZuoraApiConfig) extends ZuoraAction[Authentication] {
-  override val authRequired = false
-
   val body =
     <api:login>
       <api:username>{apiConfig.username}</api:username>

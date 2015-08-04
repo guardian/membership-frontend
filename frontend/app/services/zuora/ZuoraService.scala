@@ -13,12 +13,14 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
 import play.api.Play.current
+import play.api.libs.concurrent.Akka
 import play.api.libs.ws.WS
-import utils.ScheduledTask
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import utils.FutureSupplier
 import scala.concurrent.duration._
+
+import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -36,21 +38,81 @@ object ZuoraServiceHelpers {
 }
 
 class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
-  import services.zuora.ZuoraServiceHelpers._
+  import ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
     val backendEnv = apiConfig.envName
 
     val service = "Zuora"
 
-    def recordError {
+    def recordError() {
       put("error-count", 1)
     }
   }
 
-  val featuresTask = ScheduledTask(s"Zuora ${apiConfig.envName} retrieve features of membership tiers", Seq[Feature](), 0.seconds, 1.day) {
-    val featuresF = query[Feature]("Status = 'Active'")
+  private val authSupplier =
+    new FutureSupplier[Authentication](request(Login(apiConfig)))
 
+  val featuresSupplier =
+    new FutureSupplier[Seq[Feature]](getFeatures)
+
+  val pingSupplier =
+    new FutureSupplier[DateTime](authenticatedRequest(
+      Query("SELECT Id FROM Product")).map { _ => new DateTime })
+
+  private val scheduler = Akka.system.scheduler
+
+  List(
+    (30.minutes, authSupplier),
+    (30.seconds, pingSupplier),
+    (30.minutes, featuresSupplier)
+  ) foreach { case (duration, supplier) =>
+    scheduler.schedule(duration, duration) { supplier.refresh() }
+  }
+
+  def getAuth = authSupplier.get()
+
+  def authenticatedRequest[T <: ZuoraResult](action: => ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] =
+    getAuth.flatMap { auth => request(action, Some(auth)) }
+
+  def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
+    authenticatedRequest(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
+  }
+
+  def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {
+    query(where)(reader).map { results =>
+      if (results.length != 1) {
+        throw new ZuoraServiceError(s"Query '${reader.getClass.getSimpleName} $where' returned ${results.length} results, expected one")
+      }
+      results.head
+    }
+  }
+
+  private def request[T <: ZuoraResult](action: ZuoraAction[T], authOpt: Option[Authentication] = None)
+                                       (implicit reader: ZuoraReader[T]): Future[T] = {
+
+    val url = apiConfig.url.toString()
+
+    Timing.record(metrics, action.getClass.getSimpleName) {
+      WS.url(url.toString).post(action.xml(authOpt).toString())
+    }.map { result =>
+      metrics.putResponseCode(result.status, "POST")
+      reader.read(result.body) match {
+        case Left(error) =>
+          if (error.fatal) {
+            metrics.recordError()
+            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.sanitized}")
+            Logger.error(result.body)
+          }
+          throw error
+
+        case Right(obj) => obj
+      }
+    }
+  }
+
+  private def getFeatures: Future[Seq[Feature]] = {
+    val featuresF = query[Feature]("Status = 'Active'")
     featuresF.foreach { features =>
       val diff = FeatureChoice.codes &~ features.map(_.code).toSet
       lazy val msg =
@@ -63,69 +125,5 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     }
 
     featuresF
-  }
-
-  lazy val featuresSchedule = featuresTask.start()
-
-  def authTaskWithCallbacks(callbacks: Seq[() => Unit]) =
-    ScheduledTask(s"Zuora ${apiConfig.envName} auth", Authentication("", ""), 0.seconds, 30.minutes) {
-      val eventualAuthentication = request(Login(apiConfig))
-      eventualAuthentication.filter(_.token.nonEmpty).foreach(_ => callbacks.foreach(_()))
-      eventualAuthentication
-    }
-
-  val authTask = authTaskWithCallbacks(Seq(() => featuresSchedule))
-
-  val pingTask = ScheduledTask(s"Zuora ${apiConfig.envName} ping", DateTime.now, 30.seconds, 30.seconds) {
-    request(Query("SELECT Id FROM Product")).map { _ => new DateTime }
-  }
-
-  def start() {
-    authTask.start()
-    pingTask.start()
-  }
-
-  implicit def authentication: Authentication = authTask.get()
-
-  def request[T <: ZuoraResult](action: ZuoraAction[T])(implicit reader: ZuoraReader[T]): Future[T] = {
-    val url = if (action.authRequired) authentication.url else apiConfig.url
-
-    if (action.authRequired && authentication.url.length == 0) {
-      metrics.putAuthenticationError
-      throw ZuoraServiceError(s"Can't build authenticated request for ${action.getClass.getSimpleName}, no Zuora authentication")
-    }
-
-    Timing.record(metrics, action.getClass.getSimpleName) {
-      WS.url(url.toString).post(action.xml)
-    }.map { result =>
-      metrics.putResponseCode(result.status, "POST")
-
-      reader.read(result.body) match {
-        case Left(error) =>
-          if (error.fatal) {
-            metrics.recordError
-            Logger.error(s"Zuora action error ${action.getClass.getSimpleName} with status ${result.status} and body ${action.sanitized}")
-            Logger.error(result.body)
-          }
-
-          throw error
-
-        case Right(obj) => obj
-      }
-    }
-  }
-
-  def query[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[Seq[T]] = {
-    request(Query(formatQuery(reader, where))).map { case QueryResult(results) => reader.read(results) }
-  }
-
-  def queryOne[T <: ZuoraQuery](where: String)(implicit reader: ZuoraQueryReader[T]): Future[T] = {
-    query(where)(reader).map { results =>
-      if (results.length != 1) {
-        throw new ZuoraServiceError(s"Query '${reader.getClass.getSimpleName} $where' returned ${results.length} results, expected one")
-      }
-
-      results(0)
-    }
   }
 }
