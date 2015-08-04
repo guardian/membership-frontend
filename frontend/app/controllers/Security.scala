@@ -39,6 +39,8 @@ object Security extends Controller with LazyLogging {
       |Violated Directive: $violatedDirective
       |Referrer: $referrer
       |""".stripMargin
+
+    val directiveTag = violatedDirective.split(" ").head
   }
 
   implicit val reads: Reads[CSPReport] = (
@@ -57,10 +59,13 @@ object Security extends Controller with LazyLogging {
     } {
       _.sendEvent(new EventBuilder()
         .withMessage(report.message)
-        .withLevel(RavenEvent.Level.INFO).build())
+        .withLevel(RavenEvent.Level.INFO)
+        .withTag("CSP Directive", report.directiveTag)
+        .build()
+      )
     }
 
-    Future.successful(Ok)
+    Future.successful(NoContent)
   }
 
 }
