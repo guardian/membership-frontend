@@ -3,6 +3,7 @@ package services
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce.Tier.Partner
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
@@ -13,6 +14,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.EBCode
+import model.{Books, FeatureChoice}
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
 import monitoring.MemberMetrics
@@ -122,14 +124,28 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = (for {
+  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
+    val memberFeatureChoiceF: Future[FeatureChoice] = for {
+      subscription <- TouchpointBackend.TestUser.subscriptionService.getSubscriptions(member)
+      ratePlan <- ???
+      feature <- ???
+    } yield feature
+
+    (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
+      memberFeatureChoice <- memberFeatureChoiceF
     } yield {
-      // Add a "salt" to make access codes different to discount codes
-      val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-      event.service.createOrGetAccessCode(event, code, ticketing.memberBenefitTickets).map(Some(_))
-    }).getOrElse(Future.successful(None))
+        // Add a "salt" to make access codes different to discount codes
+        val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+        val revealedTickets = ticketing.memberBenefitTickets.filter(ticket =>
+          (member.tier, memberFeatureChoice) match {
+            case (Partner, Books) if ticket.free  => false
+            case _ => true
+          })
+        event.service.createOrGetAccessCode(event, code, revealedTickets).map(Some(_))
+      }).getOrElse(Future.successful(None))
+  }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
