@@ -225,7 +225,7 @@ object ZuoraDeserializer {
     }
   }
 
-  implicit val FeatureReader = ZuoraQueryReader("Feature", Seq("Id", "FeatureCode")) { result =>
+  implicit val featureReader = ZuoraQueryReader("Feature", Seq("Id", "FeatureCode")) { result =>
     Feature(result("Id"), result("FeatureCode"))
   }
 
