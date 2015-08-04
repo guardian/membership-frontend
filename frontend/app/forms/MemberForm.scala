@@ -21,25 +21,25 @@ object MemberForm {
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
     val plan: ProductRatePlan
-    val featureChoice: Option[FeatureChoice]
+    val featureChoice: Set[FeatureChoice]
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
     override val plan = FriendTierPlan
-    override val featureChoice = None
+    override val featureChoice = Set.empty[FeatureChoice]
   }
 
   case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
     override val plan = StaffPlan
-    override val featureChoice = None
+    override val featureChoice = Set.empty[FeatureChoice]
   }
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
                                 billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
                                 password: Option[String], casId: Option[String], subscriberOffer: Boolean,
-                                featureChoice: Option[FeatureChoice]) extends JoinForm {
+                                featureChoice: Set[FeatureChoice]) extends JoinForm {
     override val plan = PaidTierPlan(tier, payment.annual)
   }
 
@@ -53,24 +53,17 @@ object MemberForm {
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 
-  implicit val productFeaturesFormatter: Formatter[FeatureChoice] = new Formatter[FeatureChoice] {
-    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], FeatureChoice] = {
-      val inputVal = data.get(key)
-
-      lazy val errorMsg =
-        inputVal.fold("FeatureChoice id not supplied")(id =>
-          s"Unknown feature choice id $id")
-
-      inputVal.flatMap(FeatureChoice.fromString)
-        .map(Right(_))
-        .getOrElse(Left(Seq(FormError(key, errorMsg))))
+  implicit val productFeaturesFormatter: Formatter[Set[FeatureChoice]] = new Formatter[Set[FeatureChoice]] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Set[FeatureChoice]] = {
+      val inputVal = data.getOrElse(key, "")
+      Right(FeatureChoice.fromString(inputVal))
     }
 
-    override def unbind(key: String, feature: FeatureChoice): Map[String, String] =
-      Map(key -> feature.id)
+    override def unbind(key: String, choices: Set[FeatureChoice]): Map[String, String] =
+      Map(key -> choices.mkString(""))
   }
 
-  private val productFeature = of[FeatureChoice] as productFeaturesFormatter
+  private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
   val countryText = nonEmptyText.verifying(Countries.allCodes.contains _)
     .transform[Country](Countries.allCodes.apply, _.alpha2)
@@ -146,7 +139,7 @@ object MemberForm {
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
       "subscriberOffer" -> default(boolean, false),
-      "featureChoice" -> optional(productFeature)
+      "featureChoice" -> productFeature
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 

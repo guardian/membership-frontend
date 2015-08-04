@@ -3,7 +3,7 @@
 @import Tier.Partner
 @import model.FeatureChoice
 @import model.Events
-@import model.BooksAndEvents
+@import model.Books
 @import configuration.Config
 
 @(tier: Tier)
@@ -45,7 +45,7 @@
       case Patron => {
           @heading("Select your perks", Some("As a patron member you are entitled to both Books and Events"))
           <div class="fieldset__fields">
-              <input type="hidden" name="featureChoice" value="@BooksAndEvents.id" />
+              <input type="hidden" name="featureChoice" value="@Books.id@Events.id" />
           </div>
       }
 

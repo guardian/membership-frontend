@@ -61,7 +61,7 @@ class IdentityServiceTest extends Specification with Mockito {
         None,
         None,
         subscriberOffer = false,
-        None
+        Set.empty
       )
 
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)

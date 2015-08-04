@@ -9,19 +9,19 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
 
-case class Test(name: String, result: Future[Boolean])
+case class Test(name: String, result: () => Future[Boolean])
 
 object Healthcheck extends Controller {
   val zuoraService = TouchpointBackend.Normal.zuoraService
 
   val tests = Seq(
-    Test("Events", Future { GuardianLiveEventService.events.nonEmpty }),
-    Test("CloudWatch", Future { CloudWatchHealth.hasPushedMetricSuccessfully }),
-    Test("Zuora", zuoraService.pingSupplier.get().map(t => t > DateTime.now - 2.minutes))
+    Test("Events", () => Future { GuardianLiveEventService.events.nonEmpty }),
+    Test("CloudWatch", () => Future { CloudWatchHealth.hasPushedMetricSuccessfully }),
+    Test("Zuora", () => zuoraService.pingSupplier.get().map(t => t > DateTime.now - 2.minutes))
   )
 
   def healthcheck() = Action.async { req =>
-    Future.sequence(tests.map(_.result)).map { results =>
+    Future.sequence(tests.map(_.result())).map { results =>
       val failedTests =
         results.zip(tests.map(_.name)).filterNot { case (ok, _) => ok }
 

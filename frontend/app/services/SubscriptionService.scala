@@ -7,7 +7,7 @@ import com.gu.membership.salesforce.Tier.{Partner, Patron}
 import com.gu.membership.stripe.Stripe
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
-import model.{BooksAndEvents, FeatureChoice, MembershipSummary}
+import model.{FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
@@ -85,13 +85,13 @@ object SubscriptionService {
 
   def sortAccounts(accounts: Seq[Account]) = accounts.sortBy(_.createdDate)
 
-  def featuresPerTier(zuoraFeatures: Seq[Feature])(tier: ProductRatePlan, choiceOpt: Option[FeatureChoice]): Seq[Feature] = {
-    def byChoice(choice: FeatureChoice) =
-      zuoraFeatures.filter(f => choice.codes.contains(f.code))
+  def featuresPerTier(zuoraFeatures: Seq[Feature])(tier: ProductRatePlan, choice: Set[FeatureChoice]): Seq[Feature] = {
+    def byChoice(choice: Set[FeatureChoice]) =
+      zuoraFeatures.filter(f => choice.map(_.id).contains(f.code))
 
-    (tier, choiceOpt) match {
-      case (PaidTierPlan(Patron, _), _) => byChoice(BooksAndEvents)
-      case (PaidTierPlan(Partner, _), Some(choice)) => byChoice(choice).take(1)
+    tier match {
+      case PaidTierPlan(Patron, _) => byChoice(FeatureChoice.all)
+      case PaidTierPlan(Partner, _) => byChoice(choice).take(1)
       case _ => Seq[Feature]()
     }
   }
