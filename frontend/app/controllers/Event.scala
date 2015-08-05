@@ -197,10 +197,10 @@ trait Event extends Controller with ActivityTracking {
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
-      memberService.createEBCode(request.member, event).map { code =>
+      memberService.createEBCode(request.member, event).map { ebCode =>
         val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
-        Found(event.url ? ("discount" -> code)).withCookies(Cookie(eventCookie(event), "", Some(3600)))
+        Found(event.url ? ("discount" -> ebCode.map(_.code))).withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
 

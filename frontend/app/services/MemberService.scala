@@ -13,7 +13,7 @@ import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.{EBCode, EBTicketClass}
-import model.Events
+import model.FreeEventTickets
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
 import monitoring.MemberMetrics
@@ -128,7 +128,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId,None))
         .subscriptionService.memberTierFeatures(member)
     } yield {
-      val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(Events.id)
+      val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
       event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
     }
 

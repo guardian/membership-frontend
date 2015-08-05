@@ -83,7 +83,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
       val uri = s"events/${event.id}/access_codes"
 
       for {
-        discounts <- getAll[EBAccessCode](uri) if ticketClasses.isEmpty
+        discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
         discount <- discounts.find(_.code == code).fold {
           post[EBAccessCode](uri, Map(
             "access_code.code" -> Seq(code),
