@@ -113,11 +113,11 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     } yield subscriptions
   }
 
-  def memberFeatureChoice(memberId: MemberId): Future[Option[FeatureChoice]] =
+  def memberFeatureChoice(memberId: MemberId): Future[Seq[Feature]] =
     for {
       account <- getAccount(memberId)
       features <- zuoraRestService.productFeaturesByAccount(account.id)
-    } yield FeatureChoice.fromFeatures(features)
+    } yield features
 
   def getSubscription(subscriptionId: String): Future[Subscription] = zuoraSoapService.queryOne[Subscription](s"Id='$subscriptionId'")
 

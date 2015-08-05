@@ -134,8 +134,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
     } yield {
         // Add a "salt" to make access codes different to discount codes
         val revealedTicketsF = memberFeatureChoiceF.map { feature =>
-          ticketing.memberBenefitTickets.filter(ticket => (member.tier, feature) match {
-            case (Partner, Some(Books) | None) if ticket.free && ticket.hidden.getOrElse(false) =>
+          ticketing.memberBenefitTickets.filter(ticket => member.tier match {
+            case Partner if ticket.free && ticket.hidden.getOrElse(false) && !feature.map(_.code).contains("Events") =>
               false
             case _ => true
           })
