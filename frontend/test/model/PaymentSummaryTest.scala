@@ -3,7 +3,7 @@ package model
 import model.Zuora.PaymentSummary
 import model.ZuoraDeserializer._
 import org.specs2.mutable.Specification
-import services.SubscriptionServiceHelpers
+import services.SubscriptionService
 import utils.Resource
 
 class PaymentSummaryTest extends Specification {

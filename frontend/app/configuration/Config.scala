@@ -5,7 +5,6 @@ import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentia
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.touchpoint.TouchpointBackendConfig
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
@@ -13,8 +12,8 @@ import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services._
 
+import scala.collection.JavaConversions._
 import scala.util.Try
-import java.net.URLEncoder
 
 object Config {
   val logger = Logger(this.getClass())
@@ -165,5 +164,4 @@ object Config {
   val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
   val casServiceConfig = config.getString("cas.url")
-
 }

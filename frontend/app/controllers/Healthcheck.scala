@@ -1,31 +1,34 @@
 package controllers
 
+import com.github.nscala_time.time.Imports._
+import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger
 import play.api.mvc.{Action, Controller}
-import services.{TouchpointBackend, GuardianLiveEventService}
-import com.gu.monitoring.CloudWatchHealth
-import com.github.nscala_time.time.Imports._
+import services.{GuardianLiveEventService, TouchpointBackend}
 
-case class Test(name: String, result: () => Boolean)
+case class Test(name: String, ok: () => Boolean)
 
 object Healthcheck extends Controller {
+  val zuoraService = TouchpointBackend.Normal.zuoraService
 
   val tests = Seq(
-    Test("Events", GuardianLiveEventService.events.nonEmpty _),
-    Test("CloudWatch", CloudWatchHealth.hasPushedMetricSuccessfully _),
-    Test("Zuora", () => TouchpointBackend.Normal.zuoraService.pingTask.get() > DateTime.now - 2.minutes)
+    Test("Events", () => GuardianLiveEventService.events.nonEmpty),
+    Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
+    Test("Zuora", () => zuoraService.lastPingTimeWithin(2.minutes))
   )
 
-  def healthcheck() = Action {
-    Cached(1) {
-      val serviceOk = tests.forall { test =>
-        val result = test.result()
-        if (!result) Logger.warn(s"${test.name} test failed, health check will fail")
-        result
-      }
+  def healthcheck() = Action { req =>
+    val failedTests = tests.filterNot(_.ok())
 
-      if (serviceOk) Ok("OK") else ServiceUnavailable("Service Unavailable")
+    Cached(1) {
+      if (failedTests.nonEmpty) {
+        failedTests.foreach { test =>
+          Logger.warn(s"Test ${test.name} failed, health check will fail")
+        }
+        ServiceUnavailable("Service Unavailable")
+      } else {
+        Ok("OK")
+      }
     }
   }
-
 }

@@ -3,8 +3,10 @@ package forms
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.zuora.{Address, Countries, Country}
+import model.FeatureChoice
 import play.api.data.Forms._
-import play.api.data.{Form, Mapping}
+import play.api.data.format.Formatter
+import play.api.data.{Form, FormError, Mapping}
 
 object MemberForm {
   case class NameForm(first: String, last: String)
@@ -19,22 +21,26 @@ object MemberForm {
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
     val plan: ProductRatePlan
+    val featureChoice: Set[FeatureChoice]
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
-                            password: Option[String] ) extends JoinForm {
-    val plan = FriendTierPlan
+                            password: Option[String]) extends JoinForm {
+    override val plan = FriendTierPlan
+    override val featureChoice = Set.empty[FeatureChoice]
   }
 
   case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
-                            password: Option[String] ) extends JoinForm {
-    val plan = StaffPlan
+                            password: Option[String]) extends JoinForm {
+    override val plan = StaffPlan
+    override val featureChoice = Set.empty[FeatureChoice]
   }
 
   case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
                                 billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
-                                password: Option[String], casId: Option[String], subscriberOffer: Boolean) extends JoinForm {
-    val plan = PaidTierPlan(tier, payment.annual)
+                                password: Option[String], casId: Option[String], subscriberOffer: Boolean,
+                                featureChoice: Set[FeatureChoice]) extends JoinForm {
+    override val plan = PaidTierPlan(tier, payment.annual)
   }
 
   trait MemberChangeForm {
@@ -46,6 +52,18 @@ object MemberForm {
   case class FreeMemberChangeForm(payment: PaymentForm, deliveryAddress: Address, billingAddress: Option[Address]) extends MemberChangeForm
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
+
+  implicit val productFeaturesFormatter: Formatter[Set[FeatureChoice]] = new Formatter[Set[FeatureChoice]] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Set[FeatureChoice]] = {
+      val inputVal = data.getOrElse(key, "")
+      Right(FeatureChoice.setFromString(inputVal))
+    }
+
+    override def unbind(key: String, choices: Set[FeatureChoice]): Map[String, String] =
+      Map(key -> FeatureChoice.setToString(choices))
+  }
+
+  private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
 
   val countryText = nonEmptyText.verifying(Countries.allCodes.contains _)
     .transform[Country](Countries.allCodes.apply, _.alpha2)
@@ -79,7 +97,8 @@ object MemberForm {
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "type" -> nonEmptyText.transform[Boolean]((b => b == "annual" || b == "subscriberOfferAnnual"), x => if (x) "annual" else "month"),
+    "type" -> nonEmptyText.transform[Boolean](b =>
+      Seq("annual","subscriberOfferAnnual").contains(b), x => if (x) "annual" else "month"),
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
@@ -119,7 +138,8 @@ object MemberForm {
       "marketingChoices" -> marketingChoicesMapping,
       "password" -> optional(nonEmptyText),
       "casId" -> optional(nonEmptyText),
-      "subscriberOffer" -> default(boolean, false)
+      "subscriberOffer" -> default(boolean, false),
+      "featureChoice" -> productFeature
     )(PaidMemberJoinForm.apply)(PaidMemberJoinForm.unapply)
   )
 

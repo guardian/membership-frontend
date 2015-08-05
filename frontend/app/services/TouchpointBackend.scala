@@ -53,7 +53,6 @@ case class TouchpointBackend(
 
   def start() = {
     memberRepository.salesforce.authTask.start()
-    zuoraService.start()
   }
 
   val subscriptionService = new SubscriptionService(products, zuoraService)

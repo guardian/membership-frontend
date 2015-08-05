@@ -54,13 +54,14 @@ class IdentityServiceTest extends Specification with Mockito {
       val paidForm = PaidMemberJoinForm(
         Tier.Partner,
         NameForm("Joe", "Bloggs"),
-        PaymentForm(true, "token"),
+        PaymentForm(annual = true, "token"),
         Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
         Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK)),
         MarketingChoicesForm(Some(false), Some(false)),
         None,
         None,
-        false
+        subscriberOffer = false,
+        Set.empty
       )
 
       identityService.updateUserFieldsBasedOnJoining(user, paidForm, identityRequest)

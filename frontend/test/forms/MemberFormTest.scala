@@ -1,5 +1,6 @@
 package forms
 
+import model.{FeatureChoice, Books, FreeEventTickets}
 import org.specs2.mutable.Specification
 
 import play.api.data.Form
@@ -84,6 +85,25 @@ class MemberFormTest extends Specification {
 
       val badCountryFriend = friendAddressForm.bind(address("No where", "", "City", "State", "Postcode", "Not a country"))
       badCountryFriend.hasErrors must beTrue
+    }
+  }
+
+  "ProductFeatureFormatter" should {
+    val key = "key"
+
+    "returns an empty set the supplied id does not match any known FeatureChoice id" in {
+      productFeaturesFormatter.bind(key, Map(key -> "wrong-id")) mustEqual Right(Set.empty)
+    }
+
+    "unbinds a set of choices into form data" in {
+      productFeaturesFormatter.unbind(key, FeatureChoice.all) mustEqual Map(key -> "Events:Books")
+      productFeaturesFormatter.unbind(key, Set(Books)) mustEqual Map(key -> "Books")
+    }
+
+    "bind featureChoices from form data" in {
+      productFeaturesFormatter.bind(key, Map(key -> Books.zuoraCode)) mustEqual Right(Set(Books))
+      productFeaturesFormatter.bind(key, Map(key -> FreeEventTickets.zuoraCode)) mustEqual Right(Set(FreeEventTickets))
+      productFeaturesFormatter.bind(key, Map(key -> FeatureChoice.setToString(Set(Books, FreeEventTickets)))) mustEqual Right(Set(FreeEventTickets, Books))
     }
   }
 }
