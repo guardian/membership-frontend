@@ -1,9 +1,9 @@
 package forms
 
-import model.{Books, BooksAndEvents, FeatureChoice, Events}
+import model.{FeatureChoice, Books, FreeEventTickets}
 import org.specs2.mutable.Specification
 
-import play.api.data.{FormError, Form}
+import play.api.data.Form
 
 import MemberForm._
 
@@ -90,26 +90,20 @@ class MemberFormTest extends Specification {
 
   "ProductFeatureFormatter" should {
     val key = "key"
-    val featureChoices: List[FeatureChoice] = List(
-      Events,
-      Books,
-      BooksAndEvents
-    )
 
-    "fails when the supplied id does not match any known FeatureChoice id" in {
-      productFeaturesFormatter
-        .bind(key, Map(key -> "wrong-id")) must beLeft.like {
-          case Seq(FormError(_, List(msg), _)) => msg.contains("wrong-id")
-      }
+    "returns an empty set the supplied id does not match any known FeatureChoice id" in {
+      productFeaturesFormatter.bind(key, Map(key -> "wrong-id")) mustEqual Right(Set.empty)
+    }
+
+    "unbinds a set of choices into form data" in {
+      productFeaturesFormatter.unbind(key, FeatureChoice.all) mustEqual Map(key -> "Events:Books")
+      productFeaturesFormatter.unbind(key, Set(Books)) mustEqual Map(key -> "Books")
     }
 
     "bind featureChoices from form data" in {
-      val results = featureChoices.map { choice =>
-        productFeaturesFormatter.bind(key, Map(key -> choice.id))
-      }
-
-      results mustEqual featureChoices.map(Right(_))
+      productFeaturesFormatter.bind(key, Map(key -> Books.zuoraCode)) mustEqual Right(Set(Books))
+      productFeaturesFormatter.bind(key, Map(key -> FreeEventTickets.zuoraCode)) mustEqual Right(Set(FreeEventTickets))
+      productFeaturesFormatter.bind(key, Map(key -> FeatureChoice.setToString(Set(Books, FreeEventTickets)))) mustEqual Right(Set(FreeEventTickets, Books))
     }
   }
-
 }
