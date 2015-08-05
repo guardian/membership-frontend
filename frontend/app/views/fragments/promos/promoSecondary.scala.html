@@ -1,6 +1,7 @@
 @(
     title: Html,
     img: model.ResponsiveImageGroup,
+    showImageCaption: Boolean = false,
     stampImageOpt: Option[String] = None,
     toneClass: Option[String] = None
 )(content: Html)
@@ -12,12 +13,19 @@
         <div class="promo-secondary__header">
             <h2 class="promo-secondary__title h-promo">@title</h2>
         </div>
-        <div class="promo-secondary__image@if(stampImageOpt){ stamped-image}">
+        <div class="promo-secondary__image@if(stampImageOpt){ stamped-image}@if(showImageCaption) { captioned-image}">
             <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
             @for(url <- stampImageOpt) {
                 <div class="stamped-image__container">
                     <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
                 </div>
+            }
+            @for(caption <- img.altText if showImageCaption) {
+                <figcaption class="captioned-image__detail">
+                    <div class="captioned-image__caption">
+                    @caption
+                    </div>
+                </figcaption>
             }
         </div>
     </div>

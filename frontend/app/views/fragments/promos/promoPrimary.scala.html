@@ -1,6 +1,7 @@
 @(
     title: String,
     img: model.ResponsiveImageGroup,
+    showImageCaption: Boolean = false,
     stampImageOpt: Option[String] = None,
     isLead: Boolean = false,
     toneClass: Option[String] = None
@@ -12,16 +13,23 @@
     <div class="promo-primary__header @toneClass.mkString(" ")">
         <h2 class="promo-primary__title h-promo@if(isLead){ h-promo--primary}">@title</h2>
     </div>
-    <div class="promo-primary__media@if(stampImageOpt){ stamped-image}">
+    <figure class="promo-primary__media@if(stampImageOpt){ stamped-image}@if(showImageCaption) { captioned-image}">
         <div class="promo-primary__image">
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText.getOrElse("")" class="responsive-img" />
         </div>
         @for(url <- stampImageOpt) {
             <div class="stamped-image__container">
                 <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
             </div>
         }
-    </div>
+        @for(caption <- img.altText if showImageCaption) {
+            <figcaption class="captioned-image__detail">
+                <div class="captioned-image__caption">
+                    @caption
+                </div>
+            </figcaption>
+        }
+    </figure>
     <div class="promo-primary__content">
         @content
     </div>
