@@ -67,11 +67,7 @@ trait Info extends Controller {
   }
 
   def supporter = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleSupporters,
-      request.path,
-      Some(CopyConfig.copyDescriptionSupporters)
-    )
+
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("intro"),
@@ -98,7 +94,49 @@ trait Info extends Controller {
         )
       )
     )
-    Ok(views.html.info.supporter(pageInfo, pageImages))
+
+    Ok(views.html.info.supporter(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
+  }
+
+  def supporterUSA = CachedAction { implicit request =>
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("intro"),
+        altText=Some("Michael Brown vigil"),
+        availableImages=ResponsiveImageGenerator(
+          id="0a6d77047c2b5d6f82b6674a3054286e872c9fab/0_331_5760_3457",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("fearless"),
+        altText=Some("The Counted: people killed by police in the United States in 2015"),
+        availableImages=ResponsiveImageGenerator(
+          id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("join"),
+        altText=Some("If you read the Guardian, join the Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="e2e62954254813fd6781952a56f18bf20343ed0a/0_0_2000_1200",
+          sizes=List(1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.info.supporterUSA(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
+
   }
 
   def patron() = CachedAction { implicit request =>
