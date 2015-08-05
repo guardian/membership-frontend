@@ -1,5 +1,6 @@
 package services.zuora
 
+import com.github.nscala_time.time.DurationBuilder
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
@@ -15,12 +16,11 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.ws.WS
-import utils.FutureSupplier
+import utils.{ScheduledTask, FutureSupplier}
 import scala.concurrent.duration._
-
 import play.api.libs.concurrent.Execution.Implicits._
+import com.github.nscala_time.time.JodaImplicits._
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -56,19 +56,22 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   val featuresSupplier =
     new FutureSupplier[Seq[Feature]](getFeatures)
 
-  val pingSupplier =
-    new FutureSupplier[DateTime](authenticatedRequest(
-      Query("SELECT Id FROM Product")).map { _ => new DateTime })
+  val lastPingTime = ScheduledTask[Option[DateTime]]("ZuoraPing", None, 30.seconds, 30.seconds)(
+    authenticatedRequest(Query("SELECT Id FROM Product")).map { _ => Some(new DateTime) }
+  )
+
+  def lastPingTimeWithin(duration: DurationBuilder): Boolean =
+    lastPingTime.get().exists { t => t > new DateTime() - duration}
 
   private val scheduler = Akka.system.scheduler
 
   List(
     (30.minutes, authSupplier),
-    (30.seconds, pingSupplier),
     (30.minutes, featuresSupplier)
   ) foreach { case (duration, supplier) =>
     scheduler.schedule(duration, duration) { supplier.refresh() }
   }
+  lastPingTime.start()
 
   def getAuth = authSupplier.get()
 
