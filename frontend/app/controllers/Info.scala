@@ -123,7 +123,7 @@ trait Info extends Controller {
       ),
       ResponsiveImageGroup(
         name=Some("join"),
-        altText=Some("If you read the Guardian, join the Guardian"),
+        altText=Some("Kath Viner, editor-in-chief of the Guardian"),
         availableImages=ResponsiveImageGenerator(
           id="e2e62954254813fd6781952a56f18bf20343ed0a/0_0_2000_1200",
           sizes=List(1000, 500)

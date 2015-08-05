@@ -62,6 +62,7 @@
         width: rem(gs-span(9) - $gs-gutter);
         float: right;
         position: relative;
+        z-index: 2;
         margin-top: -(rem(gs-height(2)));
         background-color: $white;
         padding: rem($gs-gutter);
