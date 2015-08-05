@@ -52,7 +52,7 @@ object TicketSaleDates {
 
           val memberAdvanceTicketSales = memberTicketAvailabilityTimes.mapValues(maxStartSaleTime(effectiveSaleStart, _))
 
-          TicketSaleDates(toStartOfDay(generalRelease), Some(memberAdvanceTicketSales), needToDistinguishTicketTimes)
+          TicketSaleDates(generalRelease, Some(memberAdvanceTicketSales), needToDistinguishTicketTimes)
 
         }
         else TicketSaleDates(generalRelease, Some(memberTicketAvailabilityTimes), needToDistinguishTicketTimes)
@@ -60,7 +60,6 @@ object TicketSaleDates {
       case None => TicketSaleDates(effectiveSaleStart)
     }
   }
-
 
   private def maxStartSaleTime(effectiveSaleStart: Instant, tierSaleDate:Instant) = {
     Seq(effectiveSaleStart, toStartOfDay(tierSaleDate)).max
