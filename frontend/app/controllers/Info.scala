@@ -107,9 +107,12 @@ trait Info extends Controller {
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("intro"),
-        altText=Some("Michael Brown vigil"),
+        altText=Some("""People take part in a demonstration in Times Square, New York,
+          |following Monday's grand jury decision in the shooting of Michael Brown in
+          |Ferguson, Missouri, November 27, 2014.
+        """.stripMargin),
         availableImages=ResponsiveImageGenerator(
-          id="0a6d77047c2b5d6f82b6674a3054286e872c9fab/0_331_5760_3457",
+          id="8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/293_409_3206_1924",
           sizes=List(1000,500)
         )
       ),
