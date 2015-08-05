@@ -136,8 +136,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
         val revealedTicketsF = memberFeatureChoiceF.map { feature =>
           ticketing.memberBenefitTickets.filter(ticket => (member.tier, feature) match {
             case (Partner, Some(Books) | None) if ticket.free && ticket.hidden.getOrElse(false) =>
-              println(member)
-              println(feature)
               false
             case _ => true
           })

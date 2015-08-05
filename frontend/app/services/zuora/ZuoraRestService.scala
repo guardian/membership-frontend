@@ -48,7 +48,7 @@ class ZuoraRestService(restUrl: String,
    */
   def productFeaturesByAccount(accountKey: String): Future[Seq[Feature]] =
     Timing.record(metrics, "productFeaturesByAccount") {
-      get("/accounts/").map { response =>
+      get(s"subscriptions/accounts/$accountKey").map { response =>
         metrics.putResponseCode(response.code, "GET")
         Try(extractFeatures(response.body().string())) match {
           case Success(x) => x
@@ -58,7 +58,6 @@ class ZuoraRestService(restUrl: String,
         }
       }
     }
-
 }
 
 object ZuoraRestResponseReaders {
@@ -69,10 +68,7 @@ object ZuoraRestResponseReaders {
     )(Feature.apply _)
 
   def extractFeatures(responseBody: String): Seq[Feature] =
-  {
-    println(responseBody)
     (Json.parse(responseBody) \\ "subscriptionProductFeatures")
       .flatMap(_.as[Seq[Feature]])
-  }
 
 }
