@@ -1,6 +1,5 @@
 package services.zuora
 
-import com.github.nscala_time.time.DurationBuilder
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
@@ -11,7 +10,7 @@ import model.ZuoraDeserializer._
 import model.ZuoraReaders._
 import monitoring.TouchpointBackendMetrics
 import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{ReadableDuration, DateTime, DateTimeZone}
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -60,8 +59,8 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     authenticatedRequest(Query("SELECT Id FROM Product")).map { _ => Some(new DateTime) }
   )
 
-  def lastPingTimeWithin(duration: DurationBuilder): Boolean =
-    lastPingTime.get().exists { t => t > new DateTime() - duration}
+  def lastPingTimeWithin(duration: ReadableDuration): Boolean =
+    lastPingTime.get().exists { t => t > DateTime.now - duration}
 
   private val scheduler = Akka.system.scheduler
 

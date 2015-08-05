@@ -56,11 +56,11 @@ object MemberForm {
   implicit val productFeaturesFormatter: Formatter[Set[FeatureChoice]] = new Formatter[Set[FeatureChoice]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Set[FeatureChoice]] = {
       val inputVal = data.getOrElse(key, "")
-      Right(FeatureChoice.fromString(inputVal))
+      Right(FeatureChoice.setFromString(inputVal))
     }
 
     override def unbind(key: String, choices: Set[FeatureChoice]): Map[String, String] =
-      Map(key -> choices.mkString(""))
+      Map(key -> FeatureChoice.setToString(choices))
   }
 
   private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter

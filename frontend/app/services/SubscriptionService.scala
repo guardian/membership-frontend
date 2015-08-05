@@ -87,7 +87,7 @@ object SubscriptionService {
 
   def featuresPerTier(zuoraFeatures: Seq[Feature])(tier: ProductRatePlan, choice: Set[FeatureChoice]): Seq[Feature] = {
     def byChoice(choice: Set[FeatureChoice]) =
-      zuoraFeatures.filter(f => choice.map(_.id).contains(f.code))
+      zuoraFeatures.filter(f => choice.map(_.zuoraCode).contains(f.code))
 
     tier match {
       case PaidTierPlan(Patron, _) => byChoice(FeatureChoice.all)

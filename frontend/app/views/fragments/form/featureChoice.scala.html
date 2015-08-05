@@ -2,7 +2,7 @@
 @import Tier.Patron
 @import Tier.Partner
 @import model.FeatureChoice
-@import model.Events
+@import model.FreeEventTickets
 @import model.Books
 @import configuration.Config
 
@@ -24,13 +24,13 @@
           <div class="fieldset__fields">
           @for(choice <- FeatureChoice.all) {
                   <div class="form-field">
-                      <label class="label" for="@choice.id">
+                      <label class="label" for="@choice.zuoraCode">
                           <input type="radio"
                           class="is-hidden"
                           name="featureChoice"
-                          id="@choice.id"
-                          @if(choice == Events) { checked="checked" }
-                          value="@choice.id"
+                          id="@choice.zuoraCode"
+                          @if(choice == FreeEventTickets) { checked="checked" }
+                          value="@choice.zuoraCode"
                           />
 
                           <div class="pseudo-radio">
@@ -45,7 +45,7 @@
       case Patron => {
           @heading("Select your perks", Some("As a patron member you are entitled to both Books and Events"))
           <div class="fieldset__fields">
-              <input type="hidden" name="featureChoice" value="@Books.id@Events.id" />
+              <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
           </div>
       }
 

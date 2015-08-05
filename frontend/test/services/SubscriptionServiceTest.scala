@@ -3,7 +3,7 @@ package services
 import com.gu.membership.model.{FriendTierPlan, PaidTierPlan}
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.{Friend, Supporter, Partner, Patron}
-import model.{Events, Books}
+import model.{FreeEventTickets, Books}
 import org.specs2.mutable.Specification
 import model.Zuora.{Subscription, RatePlanCharge, RatePlan, SubscriptionDetails}
 import org.joda.time.DateTime
@@ -38,19 +38,19 @@ class SubscriptionServiceTest extends Specification {
     def plan(t: Tier) = PaidTierPlan(t, annual = true)
 
     "return both books and events for patrons" in {
-      features(plan(Patron), Set(Books, Events)) mustEqual List(feature1, feature2)
+      features(plan(Patron), Set(Books, FreeEventTickets)) mustEqual List(feature1, feature2)
       features(plan(Patron), Set()) mustEqual List(feature1, feature2)
     }
 
     "return only one book or event for partner" in {
       features(plan(Partner), Set(Books)) mustEqual List(feature1)
-      features(plan(Partner), Set(Events)) mustEqual List(feature2)
-      features(plan(Partner), Set(Books, Events)).size mustEqual 1
+      features(plan(Partner), Set(FreeEventTickets)) mustEqual List(feature2)
+      features(plan(Partner), Set(Books, FreeEventTickets)).size mustEqual 1
     }
 
     "return no features for supporters or friends" in {
       features(plan(Supporter), Set(Books)) mustEqual List.empty
-      features(FriendTierPlan, Set(Events)) mustEqual List.empty
+      features(FriendTierPlan, Set(FreeEventTickets)) mustEqual List.empty
     }
   }
 }

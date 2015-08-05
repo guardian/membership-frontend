@@ -1,32 +1,35 @@
 package model
 
 trait FeatureChoice {
-  val id: String
+  val zuoraCode: String
   val label: String
 }
 
 object FeatureChoice {
+  val separator = ':'
+
   val all: Set[FeatureChoice] = Set(
-    Events,
+    FreeEventTickets,
     Books
   )
+  val byId = all.map(fc => fc.zuoraCode -> fc).toMap
+  val codes = byId.keySet
 
-  val codes = all.map(_.id)
+  def setToString(choices: Set[FeatureChoice]): String =
+    choices.map(_.zuoraCode).mkString(separator.toString)
 
-  def fromString(id: String): Set[FeatureChoice] = id match {
-    case Books.id => Set(Books)
-    case Events.id => Set(Events)
-    case _ =>
-      if (id == Events.id + Books.id || id == Books.id + Events.id) Set(Books, Events)
-      else Set.empty
+  def setFromString(ids: String): Set[FeatureChoice] = {
+    ids.split(separator)
+      .flatMap(byId.get)
+      .toSet
   }
 }
 
 case object Books extends FeatureChoice {
-  override val id    = "Books"
+  override val zuoraCode = "Books"
   override val label = "4 free books"
 }
-case object Events extends FeatureChoice {
-  override val id    = "Events"
+case object FreeEventTickets extends FeatureChoice {
+  override val zuoraCode = "Events"
   override val label = "6 free events"
 }
