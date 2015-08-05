@@ -125,25 +125,29 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    val memberFeatureChoiceF: Future[FeatureChoice] = for {
-      subscription <- TouchpointBackend.TestUser.subscriptionService.getSubscriptions(member)
-      ratePlan <- ???
-      feature <- ???
-    } yield feature
+    val memberFeatureChoiceF = TouchpointBackend.forUser(IdMinimalUser(member.identityId,None))
+      .subscriptionService.memberFeatureChoice(member)
 
     (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
-      memberFeatureChoice <- memberFeatureChoiceF
     } yield {
         // Add a "salt" to make access codes different to discount codes
-        val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-        val revealedTickets = ticketing.memberBenefitTickets.filter(ticket =>
-          (member.tier, memberFeatureChoice) match {
-            case (Partner, Books) if ticket.free  => false
+        val revealedTicketsF = memberFeatureChoiceF.map { feature =>
+          ticketing.memberBenefitTickets.filter(ticket => (member.tier, feature) match {
+            case (Partner, Some(Books) | None) if ticket.free && ticket.hidden.getOrElse(false) =>
+              println(member)
+              println(feature)
+              false
             case _ => true
           })
-        event.service.createOrGetAccessCode(event, code, revealedTickets).map(Some(_))
+        }
+        val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+        revealedTicketsF.flatMap { revealedTickets =>
+          if (revealedTickets.nonEmpty)
+            event.service.createOrGetAccessCode(event, code, revealedTickets).map(Some(_))
+          else Future.successful(None)
+        }
       }).getOrElse(Future.successful(None))
   }
 

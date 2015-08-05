@@ -12,7 +12,7 @@ import scala.concurrent.Future
 case class Test(name: String, result: Future[Boolean])
 
 object Healthcheck extends Controller {
-  val zuoraService = TouchpointBackend.Normal.zuoraService
+  val zuoraService = TouchpointBackend.Normal.zuoraSoapService
 
   val tests = Seq(
     Test("Events", Future { GuardianLiveEventService.events.nonEmpty }),

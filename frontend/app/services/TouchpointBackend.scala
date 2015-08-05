@@ -10,7 +10,7 @@ import com.gu.monitoring.StatusMetrics
 import configuration.Config
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
-import services.zuora.ZuoraService
+import services.zuora.{ZuoraRestService, ZuoraSoapService}
 import tracking._
 import utils.TestUsers.isTestUser
 
@@ -18,23 +18,37 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object TouchpointBackend {
+
   import TouchpointBackendConfig.BackendType
 
-  def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend =
-    TouchpointBackend(TouchpointBackendConfig.byType(backendType, Config.config))
+  implicit class TouchpointBackendConfigLike(tbc: TouchpointBackendConfig) {
+    def zuoraRestUrl(config: com.typesafe.config.Config) =
+      config.getString(s"touchpoint.backend.environments.${tbc.zuora.envName}.zuora.api.restUrl")
+  }
 
-  def apply(touchpointBackendConfig: TouchpointBackendConfig): TouchpointBackend = {
+  def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
+    val touchpointBackendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
 
     val stripeService = new StripeService(touchpointBackendConfig.stripe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = touchpointBackendConfig.stripe.envName
       val service = "Stripe"
     })
 
-    val zuoraService = new ZuoraService(touchpointBackendConfig.zuora)
+    val zuoraSoapService = new ZuoraSoapService(touchpointBackendConfig.zuora)
+    val zuoraRestService = new ZuoraRestService(
+      restUrl = touchpointBackendConfig.zuoraRestUrl(Config.config),
+      username = touchpointBackendConfig.zuora.username,
+      password = touchpointBackendConfig.zuora.password,
+      environment = touchpointBackendConfig.zuora.envName
+    )
 
     val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 
-    TouchpointBackend(memberRepository, stripeService, zuoraService, touchpointBackendConfig.productRatePlans)
+    TouchpointBackend(memberRepository,
+      stripeService,
+      zuoraSoapService,
+      zuoraRestService,
+      touchpointBackendConfig.productRatePlans)
   }
 
   val Normal = TouchpointBackend(BackendType.Default)
@@ -45,17 +59,17 @@ object TouchpointBackend {
   def forUser(user: IdMinimalUser) = if (isTestUser(user)) TestUser else Normal
 }
 
-case class TouchpointBackend(
-  memberRepository: FrontendMemberRepository,
-  stripeService: StripeService,
-  zuoraService : ZuoraService,
-  products:  Map[ProductRatePlan, String]) extends ActivityTracking {
+case class TouchpointBackend(memberRepository: FrontendMemberRepository,
+                             stripeService: StripeService,
+                             zuoraSoapService: ZuoraSoapService,
+                             zuoraRestService: ZuoraRestService,
+                             products: Map[ProductRatePlan, String]) extends ActivityTracking {
 
   def start() = {
     memberRepository.salesforce.authTask.start()
   }
 
-  val subscriptionService = new SubscriptionService(products, zuoraService)
+  val subscriptionService = new SubscriptionService(products, zuoraSoapService, zuoraRestService)
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
     for {
@@ -87,7 +101,7 @@ case class TouchpointBackend(
             member.identityId,
             member.tier.name,
             Some(DowngradeAmendment(member.tier)), //getting effective date and subscription annual / month is proving difficult
-            campaignCode=campaignCode
+            campaignCode = campaignCode
           )))(user)
 
       ""

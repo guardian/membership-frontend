@@ -37,7 +37,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
+class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   import ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {

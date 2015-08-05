@@ -1,5 +1,7 @@
 package model
 
+import model.Zuora.Feature
+
 trait FeatureChoice {
   val id: String
   val label: String
@@ -21,6 +23,16 @@ object FeatureChoice {
     case Events.id => Some(Events)
     case BooksAndEvents.id => Some(BooksAndEvents)
     case _ => None
+  }
+
+  def fromFeatures(features:Seq[Feature]): Option[FeatureChoice] = {
+    val choices = features.map(f => FeatureChoice.fromString(f.code)).flatten
+
+    if (choices.contains(Books) && choices.contains(Events)) {
+      Some(BooksAndEvents)
+    } else {
+      choices.headOption
+    }
   }
 }
 
