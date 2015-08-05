@@ -102,6 +102,7 @@ object Eventbrite {
     val isHidden = hidden.contains(true)
 
     val isMemberBenefit = isHidden && name.toLowerCase.startsWith("guardian member")
+    val isComplimentary = isHidden && free && name.toLowerCase.startsWith("member's free ticket")
 
     val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
@@ -121,9 +122,10 @@ object Eventbrite {
 
       val generalReleaseTicketOpt = allTickets.find(!_.isHidden)
       val memberBenefitTickets = allTickets.filter(_.isMemberBenefit)
+      val complimentaryTickets = allTickets.filter(_.isComplimentary)
 
       for (primaryTicket <- (generalReleaseTicketOpt ++ memberBenefitTickets).headOption) yield {
-        InternalTicketing(event.times, primaryTicket, memberBenefitTickets, allTickets, event.capacity)
+        InternalTicketing(event.times, primaryTicket, memberBenefitTickets, complimentaryTickets, allTickets, event.capacity)
       }
     }
   }
@@ -132,6 +134,7 @@ object Eventbrite {
     eventTimes: EventTimes,
     primaryTicket: EBTicketClass,
     memberBenefitTickets: Seq[EBTicketClass],
+    complimentaryTickets: Seq[EBTicketClass],
     allTickets: Seq[EBTicketClass],
     capacity: Int) extends Ticketing {
 

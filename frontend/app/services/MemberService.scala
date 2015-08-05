@@ -3,7 +3,6 @@ package services
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Member.Keys
-import com.gu.membership.salesforce.Tier.Partner
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
@@ -13,8 +12,8 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.EBCode
-import model.{Books, FeatureChoice}
+import model.Eventbrite.{EBCode, EBTicketClass}
+import model.Events
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
 import monitoring.MemberMetrics
@@ -124,30 +123,28 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    val memberFeatureChoiceF = TouchpointBackend.forUser(IdMinimalUser(member.identityId,None))
-      .subscriptionService.memberFeatureChoice(member)
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] =
+    for {
+      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId,None))
+        .subscriptionService.memberTierFeatures(member)
+    } yield {
+      val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(Events.id)
+      event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
+    }
 
+  def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] =
     (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
-    } yield {
-        // Add a "salt" to make access codes different to discount codes
-        val revealedTicketsF = memberFeatureChoiceF.map { feature =>
-          ticketing.memberBenefitTickets.filter(ticket => member.tier match {
-            case Partner if ticket.free && ticket.hidden.getOrElse(false) && !feature.map(_.code).contains("Events") =>
-              false
-            case _ => true
-          })
-        }
-        val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-        revealedTicketsF.flatMap { revealedTickets =>
-          if (revealedTickets.nonEmpty)
-            event.service.createOrGetAccessCode(event, code, revealedTickets).map(Some(_))
-          else Future.successful(None)
-        }
-      }).getOrElse(Future.successful(None))
-  }
+    } yield ticketing.memberBenefitTickets)
+    .getOrElse(Seq[EBTicketClass]())
+
+  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] =
+    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
+      val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
+      val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
+      event.service.createOrGetAccessCode(event, code, unlockedTickets)
+    }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
