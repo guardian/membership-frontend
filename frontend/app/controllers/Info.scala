@@ -151,7 +151,7 @@ trait Info extends Controller {
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("intro"),
-        altText=Some("Patrons of the Guardian"),
+        altText=Some("Katharine Viner, editor-in-chief of the Guardian"),
         availableImages=ResponsiveImageGenerator(
           id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
           sizes=List(1000,500)
@@ -160,7 +160,10 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("independence"),
         altText=Some("Ensuring our independence"),
-        availableImages=List(ResponsiveImage(Asset.at("images/temp/katharine-viner.jpg"), 1000))
+        availableImages=ResponsiveImageGenerator(
+          id="a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
+          sizes=List(1000,500)
+        )
       ),
       ResponsiveImageGroup(
         name=Some("backstage-pass"),
