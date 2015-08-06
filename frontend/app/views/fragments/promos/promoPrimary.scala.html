@@ -9,26 +9,31 @@
 
 @import views.support.Asset
 
+@imageExtraClasses = {
+    @if(stampImageOpt.nonEmpty){ stamped-image}
+    @if(showImageCaption) { captioned-image}
+}
+
 <div class="promo-primary@if(isLead){ promo-primary--lead}">
     <div class="promo-primary__header @toneClass.mkString(" ")">
         <h2 class="promo-primary__title h-promo@if(isLead){ h-promo--primary}">@title</h2>
     </div>
-    <figure class="promo-primary__media@if(stampImageOpt){ stamped-image}@if(showImageCaption) { captioned-image}">
-        <div class="promo-primary__image">
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadata.map(_.description).orElse(img.altText).getOrElse("")" class="responsive-img" />
+    <figure class="promo-primary__media">
+        <div class="promo-primary__image @imageExtraClasses">
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
         </div>
         @for(url <- stampImageOpt) {
             <div class="stamped-image__container">
                 <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
             </div>
         }
-        @for(metadata <- img.metadata if metadata.description.nonEmpty && showImageCaption) {
+        @for(description <- img.metadata.map(_.description) if showImageCaption) {
             <figcaption class="captioned-image__detail">
                 <div class="captioned-image__caption">
-                    @for(byline <- metadata.byline) {
+                    @for(byline <- img.metadata.map(_.byline)) {
                         <div class="captioned-image__byline">@byline</div>
                     }
-                    @metadata.description.get
+                    @description
                 </div>
             </figcaption>
         }

@@ -55,4 +55,6 @@ case class ResponsiveImageGroup(
     img.path + " " + img.width.toString + "w"
   }.mkString(", ")
 
+  val metadataAltText = metadata.fold(altText)(_.description)
+
 }
