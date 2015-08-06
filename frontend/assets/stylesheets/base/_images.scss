@@ -29,6 +29,7 @@ figure {
     padding: rem($gs-gutter / 2);
     padding-top: rem($gs-gutter * 2);
     background-image: linear-gradient(to top, rgba(0,0,0,0.75), transparent 90%);
+    color: $white;
 
     @include mq(mobileLandscape) {
         padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
@@ -36,7 +37,7 @@ figure {
 }
 .captioned-image__caption {
     @include mq(tablet) {
-        max-width: 35em;
+        max-width: 27em;
         padding-right: rem($gs-gutter);
     }
 }
