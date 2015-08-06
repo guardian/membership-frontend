@@ -25,13 +25,10 @@
                     <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
                 </div>
             }
-            @for(description <- img.metadata.map(_.description) if showImageCaption) {
+            @for(metadata <- img.metadata if showImageCaption) {
                 <figcaption class="captioned-image__detail">
                     <div class="captioned-image__caption">
-                        @for(byline <- img.metadata.map(_.byline)) {
-                            <div class="captioned-image__byline">@byline</div>
-                        }
-                        @description
+                        @fragments.media.imageCaption(metadata)
                     </div>
                 </figcaption>
             }

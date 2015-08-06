@@ -119,11 +119,9 @@ trait Info extends Controller {
       ResponsiveImageGroup(
         name=Some("intro"),
         metadata=Some(Grid.Metadata(
-          description = Some("""|People take part in a demonstration in Times Square, New York,
-          |following Monday's grand jury decision in the shooting of Michael Brown in
-          |Ferguson, Missouri, November 27, 2014.""".stripMargin),
+          description = Some("People take part in a demonstration in Times Square, New York, November 27, 2014."),
           byline = None,
-          credit = None
+          credit = Some("Carlo Allegri/REUTERS")
         )),
         availableImages=ResponsiveImageGenerator(
           id="8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/293_409_3206_1924",

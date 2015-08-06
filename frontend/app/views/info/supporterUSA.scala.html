@@ -9,7 +9,7 @@
     @* ===== About Supporters ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Become a Guardian Supporter", img=img, isLead=true) {
+            @fragments.promos.promoPrimary(title="Become a Guardian Supporter", img=img, showImageCaption=true, isLead=true) {
                 <div class="text-feature">
                     <p>Supporters keep our journalism fearless, open and free from&nbsp;interference.</p>
                 </div>

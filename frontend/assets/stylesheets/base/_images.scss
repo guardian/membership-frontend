@@ -35,15 +35,12 @@ figure {
     }
 }
 .captioned-image__caption {
-    @include fs-textSans(1);
-    font-weight: normal;
-    color: $white;
-
     @include mq(tablet) {
         max-width: 35em;
         padding-right: rem($gs-gutter);
     }
 }
+
 /* Stamped Image
    ========================================================================== */
 
