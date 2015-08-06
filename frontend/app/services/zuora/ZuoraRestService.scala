@@ -2,6 +2,7 @@ package services.zuora
 
 import com.gu.lib.okhttpscala._
 import com.gu.membership.util.Timing
+import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request.Builder
@@ -16,17 +17,14 @@ import play.api.libs.functional.syntax._
 
 import scala.util.{Failure, Success, Try}
 
-class ZuoraRestService(restUrl: String,
-                       username: String,
-                       password: String,
-                       environment: String) {
+class ZuoraRestService(config: ZuoraApiConfig) {
 
   import ZuoraRestResponseReaders._
 
   private val client = new OkHttpClient
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
-    val backendEnv = environment
+    val backendEnv = config.envName
     val service = "ZuoraRestClient"
 
     def recordError() {
@@ -35,10 +33,10 @@ class ZuoraRestService(restUrl: String,
   }
 
   private def get(uri: String) = client.execute(new Builder()
-    .addHeader("apiAccessKeyId", username)
-    .addHeader("apiSecretAccessKey", password)
+    .addHeader("apiAccessKeyId", config.username)
+    .addHeader("apiSecretAccessKey", config.password)
     .addHeader("Accept", "application/json")
-    .url(s"$restUrl/$uri")
+    .url(s"${config.url}/$uri")
     .get().build())
 
   /**

@@ -7,6 +7,7 @@ import com.gu.membership.salesforce._
 import com.gu.membership.stripe.{Stripe, StripeService}
 import com.gu.membership.touchpoint.TouchpointBackendConfig
 import com.gu.monitoring.StatusMetrics
+import com.netaporter.uri.Uri
 import configuration.Config
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
@@ -35,20 +36,12 @@ object TouchpointBackend {
     })
 
     val zuoraSoapService = new ZuoraSoapService(touchpointBackendConfig.zuora)
-    val zuoraRestService = new ZuoraRestService(
-      restUrl = touchpointBackendConfig.zuoraRestUrl(Config.config),
-      username = touchpointBackendConfig.zuora.username,
-      password = touchpointBackendConfig.zuora.password,
-      environment = touchpointBackendConfig.zuora.envName
-    )
+    val zuoraRestService = new ZuoraRestService(touchpointBackendConfig
+      .zuora.copy(url = Uri(touchpointBackendConfig.zuoraRestUrl(Config.config))))
 
     val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 
-    TouchpointBackend(memberRepository,
-      stripeService,
-      zuoraSoapService,
-      zuoraRestService,
-      touchpointBackendConfig.productRatePlans)
+    TouchpointBackend(memberRepository, stripeService, zuoraSoapService, zuoraRestService, touchpointBackendConfig.productRatePlans)
   }
 
   val Normal = TouchpointBackend(BackendType.Default)
