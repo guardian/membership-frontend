@@ -12,10 +12,10 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.{EBCode, EBTicketClass}
+import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.FreeEventTickets
 import model.RichEvent._
-import model.Zuora.PreviewInvoiceItem
+import model.Zuora.{CreateResult, PreviewInvoiceItem}
 import monitoring.MemberMetrics
 import org.joda.time.Period
 import play.api.libs.json.Json
@@ -23,7 +23,8 @@ import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
 import utils.TestUsers.isTestUser
-
+import zuora.CreateFreeEventUsage
+import model.ZuoraDeserializer.createResultReader
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -125,15 +126,24 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+
+  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder): Future[CreateResult] = {
+    val tp = TouchpointBackend.forUser(member)
     for {
-      memberTierFeatures <- TouchpointBackend.forUser(member)
-        .subscriptionService.memberTierFeatures(member)
+      account <- tp.subscriptionService.getAccount(member)
+      subscriptions <- tp.subscriptionService.getSubscriptions(member)
+      description = s"event-id:${event.id};order-id:${order.id}"
+      action = CreateFreeEventUsage(account.id, description, subscriptions.headOption.map(_.id))
+      result <- tp.zuoraSoapService.authenticatedRequest(action)
+    } yield result
+  }
+
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = for {
+      memberTierFeatures <- TouchpointBackend.forUser(member).subscriptionService.memberTierFeatures(member)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
       event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
     }
-  }
 
   def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {
