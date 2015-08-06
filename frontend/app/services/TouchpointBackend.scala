@@ -22,14 +22,17 @@ object TouchpointBackend {
 
   import TouchpointBackendConfig.BackendType
 
-  implicit class TouchpointBackendConfigLike(tbc: TouchpointBackendConfig) {
-    def zuoraRestUrl(config: com.typesafe.config.Config) =
-      config.getString(s"touchpoint.backend.environments.${tbc.zuora.envName}.zuora.api.restUrl")
+  implicit class TouchpointBackendConfigLike(config: TouchpointBackendConfig) {
+    val zuoraRestUrl: com.typesafe.config.Config => String =
+      _.getString(s"touchpoint.backend.environments.${config.zuora.envName}.zuora.api.restUrl")
   }
 
   def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
     val touchpointBackendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
+    TouchpointBackend(touchpointBackendConfig)
+  }
 
+  def apply(touchpointBackendConfig: TouchpointBackendConfig): TouchpointBackend = {
     val stripeService = new StripeService(touchpointBackendConfig.stripe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = touchpointBackendConfig.stripe.envName
       val service = "Stripe"

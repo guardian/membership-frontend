@@ -40,7 +40,7 @@ class ZuoraRestService(config: ZuoraApiConfig) {
     .get().build())
 
   /**
-   * @see https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Accounts/2_Get_account_basics
+   * @see https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Subscriptions/4_Get_subscriptions_by_account
    * @param accountKey Account number or account ID
    * @return
    */
