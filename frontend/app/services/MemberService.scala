@@ -12,16 +12,18 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.{EBCode, EBTicketClass}
+import model.Eventbrite.{EBAccessCode, EBCode, EBOrder, EBTicketClass}
 import model.FreeEventTickets
 import model.RichEvent._
-import model.Zuora.PreviewInvoiceItem
+import model.Zuora.{CreateResult, PreviewInvoiceItem}
+import model.ZuoraDeserializer.createResultReader
 import monitoring.MemberMetrics
 import org.joda.time.Period
 import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
+import zuora.CreateFreeEventUsage
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -123,15 +125,24 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+
+  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder): Future[CreateResult] = {
+    val tp = touchpointForMember(member)
     for {
-      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
-        .subscriptionService.memberTierFeatures(member)
+      account <- tp.subscriptionService.getAccount(member)
+      subscriptions <- tp.subscriptionService.getSubscriptions(member)
+      description = s"event-id:${event.id};order-id:${order.id}"
+      action = CreateFreeEventUsage(account.id, description, subscriptions.headOption.map(_.id))
+      result <- tp.zuoraSoapService.authenticatedRequest(action)
+    } yield result
+  }
+
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = for {
+      memberTierFeatures <- touchpointForMember(member).subscriptionService.memberTierFeatures(member)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
       event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
     }
-  }
 
   def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {
@@ -141,11 +152,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] =
+  def createEBCode(member: Member, event: RichEvent): Future[Option[EBAccessCode]] =
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
+        .map(_.map(_.copy(isComplimentary = complimentaryTickets.nonEmpty)))
     }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
@@ -177,6 +189,9 @@ trait MemberService extends LazyLogging with ActivityTracking {
     } yield memberId
 
   }
+
+  private def touchpointForMember(member: Member): TouchpointBackend =
+    TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
 
   private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: Option[MemberChangeForm],
                                   annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest,
