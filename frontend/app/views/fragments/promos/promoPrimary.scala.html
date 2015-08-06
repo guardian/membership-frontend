@@ -15,17 +15,20 @@
     </div>
     <figure class="promo-primary__media@if(stampImageOpt){ stamped-image}@if(showImageCaption) { captioned-image}">
         <div class="promo-primary__image">
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText.getOrElse("")" class="responsive-img" />
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadata.map(_.description).orElse(img.altText).getOrElse("")" class="responsive-img" />
         </div>
         @for(url <- stampImageOpt) {
             <div class="stamped-image__container">
                 <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
             </div>
         }
-        @for(caption <- img.altText if showImageCaption) {
+        @for(metadata <- img.metadata if metadata.description.nonEmpty && showImageCaption) {
             <figcaption class="captioned-image__detail">
                 <div class="captioned-image__caption">
-                    @caption
+                    @for(byline <- metadata.byline) {
+                        <div class="captioned-image__byline">@byline</div>
+                    }
+                    @metadata.description.get
                 </div>
             </figcaption>
         }

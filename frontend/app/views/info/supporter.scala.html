@@ -47,12 +47,11 @@
     }
 
     @* ===== Join The Guardian and support The Guardian ===== *@
-    @for(img <- pageImages.find(_.name.contains("polly-toynbee"))) {
+    @for(img <- pageImages.find(_.name.contains("join"))) {
         <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, toneClass=Some("tone-trans-brand-dark")) {
+        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, showImageCaption=true, toneClass=Some("tone-trans-brand-dark")) {
             <blockquote class="blockquote blockquote--feature">
                 You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
-                <cite class="blockquote__citation">Polly Toynbee, Guardian columnist</cite>
             </blockquote>
         }
         </div>

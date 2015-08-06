@@ -28,7 +28,7 @@ figure {
     z-index: 2;
     padding: rem($gs-gutter / 2);
     padding-top: rem($gs-gutter * 2);
-    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .8));
+    background-image: linear-gradient(to top, rgba(0,0,0,0.75), transparent 90%);
 
     @include mq(mobileLandscape) {
         padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);

@@ -41,7 +41,7 @@ case class ResponsiveImage(path: String, width: Int)
 
 case class ResponsiveImageGroup(
   name: Option[String] = None,
-  altText: Option[String],
+  altText: Option[String] = None,
   metadata: Option[Grid.Metadata] = None,
   availableImages: Seq[ResponsiveImage]
 ) {
