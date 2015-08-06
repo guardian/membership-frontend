@@ -1,0 +1,15 @@
+@(metadata: model.Grid.Metadata)
+
+@for(description <- metadata.description) {
+    <div class="text-caption">
+        @for(byline <- metadata.byline) {
+            <div class="text-caption__byline">@byline</div>
+        }
+        <span class="text-caption__description">
+            @description
+        </span>
+        @for(credit <- metadata.credit) {
+            <span class="text-caption__credit">Photograph: @credit</span>
+        }
+    </div>
+}

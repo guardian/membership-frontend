@@ -5,12 +5,45 @@
 img {
     background-color: transparent;
 }
+figure {
+    margin: 0;
+}
 
 .responsive-img {
     display: block;
     height: auto;
     width: 100%;
 }
+
+/* Captioned Image
+   ========================================================================== */
+
+.captioned-image {
+    position: relative;
+}
+.captioned-image__detail {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    padding: rem($gs-gutter / 2);
+    padding-top: rem($gs-gutter * 2);
+    background-image: linear-gradient(to top, rgba(0,0,0,0.75), transparent 90%);
+    color: $white;
+
+    @include mq(mobileLandscape) {
+        padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
+    }
+}
+.captioned-image__caption {
+    @include mq(tablet) {
+        max-width: 27em;
+        padding-right: rem($gs-gutter);
+    }
+}
+
+/* Stamped Image
+   ========================================================================== */
 
 .stamped-image {
     position: relative;

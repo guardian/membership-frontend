@@ -40,6 +40,11 @@
     color: color(brand-dark);
 }
 
+.text-caption {
+    @include fs-textSans(1);
+    font-weight: normal;
+}
+
 /* Text Helpers - Case
    ========================================================================== */
 

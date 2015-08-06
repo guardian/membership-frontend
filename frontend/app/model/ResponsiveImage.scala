@@ -41,7 +41,7 @@ case class ResponsiveImage(path: String, width: Int)
 
 case class ResponsiveImageGroup(
   name: Option[String] = None,
-  altText: Option[String],
+  altText: Option[String] = None,
   metadata: Option[Grid.Metadata] = None,
   availableImages: Seq[ResponsiveImage]
 ) {
@@ -54,5 +54,7 @@ case class ResponsiveImageGroup(
   val srcset = sortedImages.map { img =>
     img.path + " " + img.width.toString + "w"
   }.mkString(", ")
+
+  val metadataAltText = metadata.fold(altText)(_.description)
 
 }

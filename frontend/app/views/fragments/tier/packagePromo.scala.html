@@ -8,14 +8,16 @@
 
 @import model.Benefits
 
+@actionAttrs = {
+    href="@routes.Joiner.enterDetails(tier)"
+    data-metric-trigger="click"
+    data-metric-category="join"
+    data-metric-action="@tier.toString.toLowerCase"
+}
+
 <div class="package-promo@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--enhanced") tone-border-@tier.slug">
     <div class="package-promo__header">
-        <a class="no-underline minimal-link"
-           href="@routes.Joiner.enterDetails(tier)"
-           data-metric-trigger="click"
-           data-metric-category="join"
-           data-metric-action="@tier.toString.toLowerCase()"
-        >
+        <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(tier, showCaption=false)
@@ -36,13 +38,7 @@
             </div>
         }
         <div class="package-promo__actions">
-            <a
-                class="action action--snap u-no-bottom-margin qa-package-@tier.toString.toLowerCase()"
-                href="@routes.Joiner.enterDetails(tier)"
-                data-metric-trigger="click"
-                data-metric-category="join"
-                data-metric-action="@tier.toString.toLowerCase()"
-            >
+            <a class="action action--snap u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
                     Become a @tier
                 </span>
