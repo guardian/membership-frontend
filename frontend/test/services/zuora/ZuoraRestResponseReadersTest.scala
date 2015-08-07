@@ -3,7 +3,7 @@ package services.zuora
 import model.Zuora.Feature
 import org.specs2.mutable.Specification
 
-class ZuoraRestResponseReadersSpec extends Specification {
+class ZuoraRestResponseReadersTest extends Specification {
   "extractFeatures" should {
 
     "correctly parse subscriptions" in {
