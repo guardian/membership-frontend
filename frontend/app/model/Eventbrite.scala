@@ -102,7 +102,7 @@ object Eventbrite {
     val isHidden = hidden.contains(true)
 
     val isMemberBenefit = isHidden && name.toLowerCase.startsWith("guardian member")
-    val isComplimentary = isHidden && free && name.toLowerCase.startsWith("member's free ticket")
+    val isComplimentary = isHidden && free && name.toLowerCase.startsWith("member's ticket at no extra cost")
 
     val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
