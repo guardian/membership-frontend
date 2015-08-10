@@ -20,6 +20,7 @@ define(['$', 'bean'], function ($, bean) {
         TOGGLE_LABEL_SELECTOR = '.js-toggle-label',
         TOGGLE_DATA_ELM = 'toggle',
         TOGGLE_DATA_LABEL = 'toggle-label',
+        TOGGLE_DATA_ICON = 'toggle-icon',
         TOGGLE_CLASS = 'is-toggled',
         ELEMENTS_TO_TOGGLE = '[data-toggle-hidden]',
         HIDDEN_CLASS = 'is-hidden';
@@ -33,6 +34,15 @@ define(['$', 'bean'], function ($, bean) {
         }
     };
 
+    var toggleIcon = function($elem) {
+        var iconName = $elem.data(TOGGLE_DATA_ICON);
+        var iconRef = $elem[0].querySelector('svg > use');
+        if (iconName && iconRef) {
+            $elem.data(TOGGLE_DATA_ICON, iconRef.getAttribute('xlink:href').replace('#icon-', ''));
+            iconRef.setAttribute('xlink:href', '#icon-' + iconName);
+        }
+    };
+
     var toggleElement = function($elem) {
         return function (e) {
             e.preventDefault();
@@ -43,6 +53,7 @@ define(['$', 'bean'], function ($, bean) {
             toggleElem.toggleClass(TOGGLE_CLASS);
             $elem.toggleClass(TOGGLE_CLASS);
 
+            toggleIcon($elem);
             toggleLabel($elem);
         };
     };

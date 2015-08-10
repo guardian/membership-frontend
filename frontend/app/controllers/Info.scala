@@ -1,13 +1,12 @@
 package controllers
 
+import play.api.mvc.Controller
+import scala.concurrent.Future
 import configuration.CopyConfig
 import forms.MemberForm._
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, ResponsiveImage, FlashMessage, PageInfo}
-import play.api.mvc.Controller
-import services.{AuthenticationService, EmailService}
-import scala.concurrent.Future
+import model._
 import model.Benefits.ComparisonItem
-import views.support.Asset
+import services.{AuthenticationService, EmailService}
 
 trait Info extends Controller {
 
@@ -67,15 +66,15 @@ trait Info extends Controller {
   }
 
   def supporter = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleSupporters,
-      request.path,
-      Some(CopyConfig.copyDescriptionSupporters)
-    )
+
     val pageImages = Seq(
       ResponsiveImageGroup(
         name=Some("intro"),
-        altText=Some("Introducing Supporter Membership"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Katharine Viner and Alan Rusbridger"),
+          byline = None,
+          credit = None
+        )),
         availableImages=ResponsiveImageGenerator(
           id="f55167b65375c2f078a88d09856bc46670d21f57/0_0_2000_1200",
           sizes=List(1000,500)
@@ -83,22 +82,84 @@ trait Info extends Controller {
       ),
       ResponsiveImageGroup(
         name=Some("fearless"),
-        altText=Some("Fearless, progressive and free from interference"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Reviewing designs on wall - Supporter"),
+          byline = None,
+          credit = None
+        )),
         availableImages=ResponsiveImageGenerator(
           id="8cc033c84791f1583fc52f337d3c6c3ffb368f8e/0_0_1999_1200",
           sizes=List(1000,500)
         )
       ),
       ResponsiveImageGroup(
-        name=Some("polly-toynbee"),
-        altText=Some("If you read the Guardian, join the Guardian"),
+        name=Some("join"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Polly Toynbee, Guardian columnist"),
+          byline = None,
+          credit = None
+        )),
         availableImages=ResponsiveImageGenerator(
           id="17a31ff294d3c77274091c5e078713fc06ef5cd2/0_0_1999_1200",
           sizes=List(1000, 500)
         )
       )
     )
-    Ok(views.html.info.supporter(pageInfo, pageImages))
+
+    Ok(views.html.info.supporter(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
+  }
+
+  def supporterUSA = CachedAction { implicit request =>
+
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("intro"),
+        metadata=Some(Grid.Metadata(
+          description = Some("People take part in a demonstration in Times Square, New York, November 27, 2014."),
+          byline = None,
+          credit = Some("Carlo Allegri/REUTERS")
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="8eea3b3bd80eb2f8826b1cef75799d27a11e56e5/293_409_3206_1924",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("fearless"),
+        metadata=Some(Grid.Metadata(
+          description = Some("The Counted: people killed by police in the United States in 2015"),
+          byline = Some("The Guardian US"),
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="201ae0837f996f47b75395046bdbc30aea587443/0_0_1140_684",
+          sizes=List(1000,500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("join"),
+        metadata=Some(Grid.Metadata(
+          description = Some("Katharine Viner, editor-in-chief of the Guardian"),
+          byline = None,
+          credit = None
+        )),
+        availableImages=ResponsiveImageGenerator(
+          id="e2e62954254813fd6781952a56f18bf20343ed0a/0_0_2000_1200",
+          sizes=List(1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.info.supporterUSA(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
+
   }
 
   def patron() = CachedAction { implicit request =>
@@ -118,8 +179,11 @@ trait Info extends Controller {
       ),
       ResponsiveImageGroup(
         name=Some("independence"),
-        altText=Some("Ensuring our independence"),
-        availableImages=List(ResponsiveImage(Asset.at("images/temp/katharine-viner.jpg"), 1000))
+        altText=Some("Katharine Viner, editor-in-chief of the Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
+          sizes=List(1000,500)
+        )
       ),
       ResponsiveImageGroup(
         name=Some("backstage-pass"),

@@ -59,15 +59,16 @@
     padding: rem($gs-gutter / 2);
 
     @include mq(tablet) {
+        padding: $gs-gutter;
+    }
+
+    @include mq(desktop) {
         width: rem(gs-span(9) - $gs-gutter);
         float: right;
         position: relative;
-        margin-top: -(rem(gs-height(2)));
+        z-index: 2;
+        margin-top: -(gs-height(2) + $gs-gutter);
         background-color: $white;
-        padding: rem($gs-gutter);
-    }
-    @include mq(desktop) {
-        margin-top: -(rem(gs-height(2) + $gs-gutter));
         padding-bottom: 0;
     }
 }

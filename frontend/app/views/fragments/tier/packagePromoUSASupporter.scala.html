@@ -1,0 +1,57 @@
+@(isReversed: Boolean)
+
+@import model.Benefits
+@import views.support.Prices._
+@import com.gu.membership.salesforce.Tier
+
+@actionAttrs = {
+    href="@routes.Joiner.enterDetails(Tier.Supporter)"
+    data-metric-trigger="click"
+    data-metric-category="join"
+    data-metric-action="@Tier.Supporter.toString.toLowerCase"
+}
+
+<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@Tier.Supporter">
+    <div class="package-promo__header">
+        <a class="no-underline minimal-link" @actionAttrs>
+            <div class="package-promo__tier">
+                <div class="package-promo__tier__title">
+                    @fragments.tier.tierTrail(Tier.Supporter, showCaption=false)
+                </div>
+                <div class="package-promo__tier__pricing">
+
+                @defining(Benefits.details(Tier.Supporter)) { benefits =>
+                    <div class="price-info">
+                        @benefits.pricing.map { pricing =>
+                            <div class="price-info__item price-info__item--split">
+                                <div class="price-info__detail">
+                                    <strong class="price-info__value">@pricing.yearly.pretty</strong>
+                                    <span class="price-info__date">/year</span>
+                                </div>
+                                <div class="price-info__saving">about $80/year</div>
+                            </div>
+                            <div class="price-info__item price-info__item--split price-info__item--last">
+                                <div class="price-info__detail price-info__detail--right">
+                                    <strong class="price-info__value">@pricing.monthly.pretty</strong>
+                                    <span class="price-info__date">/month</span>
+                                </div>
+                                <div class="price-info__saving">about $8/month</div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="package-promo__content">
+        <div class="package-promo__actions">
+            <a class="action action--snap u-no-bottom-margin qa-package-@Tier.Supporter.toString.toLowerCase" @actionAttrs>
+                <span class="action__label">
+                    Become a Supporter
+                </span>
+            </a>
+        </div>
+    </div>
+</div>

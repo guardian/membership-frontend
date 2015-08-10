@@ -1,23 +1,36 @@
 @(
     title: Html,
     img: model.ResponsiveImageGroup,
+    showImageCaption: Boolean = false,
     stampImageOpt: Option[String] = None,
     toneClass: Option[String] = None
 )(content: Html)
 
 @import views.support.Asset
 
+@imageExtraClasses = {
+    @if(stampImageOpt.nonEmpty){ stamped-image}
+    @if(showImageCaption) { captioned-image}
+}
+
 <div class="promo-secondary">
     <div class="promo-secondary__media @toneClass.mkString(" ")">
         <div class="promo-secondary__header">
             <h2 class="promo-secondary__title h-promo">@title</h2>
         </div>
-        <div class="promo-secondary__image@if(stampImageOpt){ stamped-image}">
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.altText" class="responsive-img" />
+        <div class="promo-secondary__image @imageExtraClasses">
+            <img src="@img.defaultImage" srcset="@img.srcset" sizes="100vw" alt="@img.metadataAltText.getOrElse("")" class="responsive-img" />
             @for(url <- stampImageOpt) {
                 <div class="stamped-image__container">
                     <img src="@Asset.at(url)" alt="" class="stamped-image__stamp">
                 </div>
+            }
+            @for(metadata <- img.metadata if showImageCaption) {
+                <figcaption class="captioned-image__detail">
+                    <div class="captioned-image__caption">
+                        @fragments.media.imageCaption(metadata)
+                    </div>
+                </figcaption>
             }
         </div>
     </div>
