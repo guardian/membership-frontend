@@ -9,7 +9,7 @@ import services.{GuardianLiveEventService, TouchpointBackend}
 case class Test(name: String, ok: () => Boolean)
 
 object Healthcheck extends Controller {
-  val zuoraService = TouchpointBackend.Normal.zuoraService
+  val zuoraService = TouchpointBackend.Normal.zuoraSoapService
 
   val tests = Seq(
     Test("Events", () => GuardianLiveEventService.events.nonEmpty),
