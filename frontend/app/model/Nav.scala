@@ -10,6 +10,8 @@ object Nav {
     subNav: Seq[NavItem] = Nil
   )
 
+  case class NavAnchor(href: String, title: String)
+
   def fetchNav(url: String) =
     navigation.find(navItem => url.contains(navItem.href))
 

@@ -2,6 +2,7 @@
 
 @import configuration.Videos
 @import com.gu.membership.salesforce.Tier
+@import model.Nav.NavAnchor
 
 @comparisonHeader(tier: com.gu.membership.salesforce.Tier) = {
     <div class="comparison-header tone-border-@tier.slug">
@@ -72,39 +73,11 @@
     <section class="page-slice section-what" id="what-are-members">
 
         @* ===== Section Navigation ===== *@
-        <div class="nav-sections nav-sections--sticky l-side-margins js-sticky js-section-nav">
-            <div class="nav-sections__inner l-constrained">
-                <ol class="nav-sections__list" data-gumshoe>
-                    <li class="nav-sections__item">
-                        <a  class="nav-sections__link"
-                            href="#what-are-members"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >What is membership</a>
-                    </li>
-                    <li class="nav-sections__item">
-                        <a  class="nav-sections__link"
-                            href="#why-join"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >Why join</a>
-                    </li>
-                    <li class="nav-sections__item">
-                    <a  class="nav-sections__link"
-                            href="#become-a-member"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >Become a member</a>
-                    </li>
-                </ol>
-            </div>
-        </div>
+        @fragments.page.navSections(Seq(
+            NavAnchor("#what-are-members", "What is membership"),
+            NavAnchor("#why-join", "Why join"),
+            NavAnchor("#become-a-member", "Become a member")
+        ))
 
         <div class="listing listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
@@ -257,84 +230,25 @@
                 <h3 class="h-intro h-intro--capitalize">Become a member</h3>
             </div>
             <div class="listing__content">
-                <p class="join-text-intro become-intro">
+                <h4 class="join-text-intro become-intro">
                     Get closer.<br/>
                     Become a Guardian Member.
-                </p>
+                </h4>
 
-                <div class="comparison-group">
-                    <div class="comparison-group__bookend">
-                        <div class="comparison-group__bookend__column">
-                            @comparisonHeader(Tier.Partner)
-                        </div>
-                        <div class="comparison-group__bookend__column">
-                            @comparisonHeader(Tier.Supporter)
-                        </div>
-                    </div>
-                    <div class="comparison-group__table">
-                        <table class="comparison-table">
-                            <thead class="u-h">
-                                <th>Description</th>
-                                <th>Partner</th>
-                                <th>Supporter</th>
-                            </thead>
-                            <tbody class="comparison-table__body">
-                                @for(comparisonItem <- comparisonItems) {
-                                    <tr class="comparison-table__row">
-                                        <td class="comparison-table__description">
-                                            <div class="comparison-table__description">
-                                                @comparisonItem.description
-                                            </div>
-                                        </td>
-                                        <td class="comparison-table__tier">
-                                            <div class="comparison-table__tier__inner">
-                                                @fragments.common.checkmark(comparisonItem.availablePartner)
-                                            </div>
-                                        </td>
-                                        <td class="comparison-table__tier">
-                                            <div class="comparison-table__tier__inner">
-                                                @fragments.common.checkmark(comparisonItem.availableSupporter)
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="comparison-group__bookend">
-                        <div class="comparison-group__bookend__column">
-                            <div class="comparison-action">
-                                <a href="@routes.Joiner.joinPaid(Tier.Partner)"
-                                   class="action action--no-icon"
-                                   data-metric-trigger="click"
-                                   data-metric-category="join"
-                                   data-metric-action="friend"
-                                   data-metric-label="Become a Partner"
-                                >
-                                    Become a Partner
-                                    @fragments.actionIcon("arrow-right")
-                                </a>
-                            </div>
-                        </div>
-                        <div class="comparison-group__bookend__column">
-                            <div class="comparison-action">
-                                <a href="@routes.Joiner.joinPaid(Tier.Supporter)"
-                                   class="action action--no-icon"
-                                   data-metric-trigger="click"
-                                   data-metric-category="join"
-                                   data-metric-action="friend"
-                                   data-metric-label="Become a Supporter"
-                                >
-                                    Become a Supporter
-                                    @fragments.actionIcon("arrow-right")
-                                </a>
-                            </div>
-                        </div>
-                        <div class="comparison-group__bookend__trail">
-                            @fragments.tier.friendTeaser()
-                        </div>
-                    </div>
-                </div>
+                @fragments.tier.comparisonTable(comparisonItems)
+
+
+                <h4 class="join-text-intro">Choose your membership</h4>
+
+                <ul class="grid grid--2up-stacked">
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Partner, showDescription=false, isReversed=true)
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true)
+                    </li>
+                </ul>
+                @fragments.tier.friendTeaser()
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {
                     @fragments.promos.promoTertiary(

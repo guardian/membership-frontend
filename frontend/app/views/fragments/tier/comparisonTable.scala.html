@@ -1,0 +1,42 @@
+@(comparisonItems: Seq[model.Benefits.ComparisonItem])
+
+@import com.gu.membership.salesforce.Tier
+
+<table class="comparison-table">
+    <thead>
+        <tr>
+            <th class="u-h">Description</th>
+            <th class="comparison-table__header">
+                <div class="comparison-table__header__name tone-border-partner">
+                @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
+                </div>
+            </th>
+            <th class="comparison-table__header">
+                <div class="comparison-table__header__name tone-border-supporter">
+                @fragments.tier.tierTrail(Tier.Supporter, showCaption=false)
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody class="comparison-table__body">
+    @for(comparisonItem <- comparisonItems) {
+        <tr class="comparison-table__row">
+            <td class="comparison-table__description">
+                <div class="comparison-table__description_inner">
+                @comparisonItem.description
+                </div>
+            </td>
+            <td class="comparison-table__tier">
+                <div class="comparison-table__tier__inner">
+                @fragments.common.checkmark(comparisonItem.availablePartner)
+                </div>
+            </td>
+            <td class="comparison-table__tier">
+                <div class="comparison-table__tier__inner">
+                @fragments.common.checkmark(comparisonItem.availableSupporter)
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
