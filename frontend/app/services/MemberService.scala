@@ -123,21 +123,23 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] =
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
     for {
-      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId,None))
+      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
         .subscriptionService.memberTierFeatures(member)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
       event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
     }
+  }
 
-  def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] =
+  def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
     } yield ticketing.memberBenefitTickets)
-    .getOrElse(Seq[EBTicketClass]())
+      .getOrElse(Seq[EBTicketClass]())
+  }
 
   def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] =
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
