@@ -222,7 +222,7 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
-          val count = memberService.complimentaryTicketsUsed(event, order)
+          val count = memberService.countComplimentaryTicketsUsed(event, order)
           if (count > 0) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
