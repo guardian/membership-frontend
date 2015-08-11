@@ -197,7 +197,6 @@ trait Event extends Controller with ActivityTracking {
     event.internalTicketing.exists(_.salesDates.tierCanBuyTicket(tier))
 
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
-  private val isComplimentaryKey = "is-complimentary-ticket"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
@@ -213,7 +212,7 @@ trait Event extends Controller with ActivityTracking {
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
     val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name, campaignCode=extractCampaignCode(request)))
-    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
+    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
@@ -223,14 +222,14 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
+          val count = memberService.complimentaryTicketsUsed(event, order)
+          if (count > 0) {
+            memberService.recordFreeEventUsage(request.member, event, order, count)
+          }
+
           trackConversionToThankyou(request, event, Some(order), Some(request.member))
 
-          request.session.get(isComplimentaryKey) foreach ( _ =>
-            memberService.recordFreeEventUsage(request.member, event, order)
-          )
-
           Ok(views.html.event.thankyou(event, order))
-            .removingFromSession(isComplimentaryKey)
             .discardingCookies(DiscardingCookie(eventCookie(event)))
         }
       }
