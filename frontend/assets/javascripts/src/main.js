@@ -1,8 +1,7 @@
 require([
     'ajax',
     'src/modules/analytics/setup',
-    'src/modules/events/cta',
-    'src/modules/events/filter',
+    'src/modules/welcome',
     'src/modules/slideshow',
     'src/modules/images',
     'src/modules/toggle',
@@ -11,8 +10,10 @@ require([
     'src/modules/navigation',
     'src/modules/userDetails',
     'src/modules/videoOverlay',
-    'src/modules/events/eventPriceEnhance',
     'src/modules/modal',
+    'src/modules/events/cta',
+    'src/modules/events/filter',
+    'src/modules/events/eventPriceEnhance',
     'src/modules/form',
     'src/modules/form/processSubmit',
     'src/modules/identityPopup',
@@ -24,8 +25,7 @@ require([
 ], function(
     ajax,
     analytics,
-    cta,
-    filter,
+    welcome,
     slideshow,
     images,
     toggle,
@@ -34,8 +34,10 @@ require([
     navigation,
     userDetails,
     videoOverlay,
-    eventPriceEnhance,
     modal,
+    cta,
+    filter,
+    eventPriceEnhance,
     processSubmit,
     form,
     identityPopup,
@@ -57,9 +59,10 @@ require([
     analytics.init();
 
     // Global
-    toggle.init();
-    images.init();
+    welcome.init();
     slideshow.init();
+    images.init();
+    toggle.init();
     sticky.init();
     sectionNav.init();
     identityPopup.init();
@@ -67,6 +70,7 @@ require([
     navigation.init();
     userDetails.init();
     videoOverlay.init();
+    modal.init();
 
     // Events
     cta.init();
@@ -76,9 +80,6 @@ require([
     // Forms
     form.init();
     processSubmit.init();
-
-    // Modal
-    modal.init();
 
     // Metrics
     metrics.init();
