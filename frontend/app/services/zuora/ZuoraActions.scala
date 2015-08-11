@@ -353,8 +353,8 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
   }
 }
 
-case class CreateFreeEventUsage(accountId: String, description: String, subscriptionId: Option[String]) extends ZuoraAction[CreateResult] {
-  val uom = "Each"
+case class CreateFreeEventUsage(accountId: String, description: String, quantity: Int, subscriptionId: Option[String]) extends ZuoraAction[CreateResult] {
+  val uom = "Events"
   val startDateTime = formatDateTime(DateTime.now)
   private val subscriptionEl: NodeSeq =
     subscriptionId.fold(NodeSeq.Empty){ id =>
@@ -366,10 +366,11 @@ case class CreateFreeEventUsage(accountId: String, description: String, subscrip
       <ns1:zObjects xsi:type="ns2:Usage">
         <ns2:AccountId>{accountId}</ns2:AccountId>
         {subscriptionEl}
-        <ns2:Quantity>1</ns2:Quantity>
+        <ns2:Quantity>{quantity}</ns2:Quantity>
         <ns2:StartDateTime>{startDateTime}</ns2:StartDateTime>
-        <ns2:Description>Events/{description}</ns2:Description>
+        <ns2:Description>{description}</ns2:Description>
         <ns2:UOM>{uom}</ns2:UOM>
       </ns1:zObjects>
     </ns1:create>
 }
+

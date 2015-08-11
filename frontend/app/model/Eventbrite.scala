@@ -317,7 +317,7 @@ object Eventbrite {
 
   case class EBCost(value: Int) extends EBObject
 
-  case class EBAttendee(quantity: Int) extends EBObject
+  case class EBAttendee(quantity: Int, ticket_class_id: String) extends EBObject
 }
 
 object EventbriteDeserializer {

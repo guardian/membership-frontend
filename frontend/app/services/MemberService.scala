@@ -125,14 +125,20 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
+  def complimentaryTicketsUsed(event: RichEvent, order: EBOrder): Int = {
+    val complimentaryTicketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
+    order.attendees.foldLeft(0) { (count, attendee) =>
+      if (complimentaryTicketIds.contains(attendee.ticket_class_id)) attendee.quantity else 0
+    }
+  }
 
-  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder): Future[CreateResult] = {
+  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val tp = touchpointForMember(member)
     for {
       account <- tp.subscriptionService.getAccount(member)
       subscriptions <- tp.subscriptionService.getSubscriptions(member)
       description = s"event-id:${event.id};order-id:${order.id}"
-      action = CreateFreeEventUsage(account.id, description, subscriptions.headOption.map(_.id))
+      action = CreateFreeEventUsage(account.id, description, quantity, subscriptions.headOption.map(_.id))
       result <- tp.zuoraSoapService.authenticatedRequest(action)
     } yield result
   }
