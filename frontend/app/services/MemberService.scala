@@ -125,10 +125,10 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def complimentaryTicketsUsed(event: RichEvent, order: EBOrder): Int = {
-    val complimentaryTicketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
+  def countComplimentaryTicketsUsed(event: RichEvent, order: EBOrder): Int = {
+    val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
     order.attendees.foldLeft(0) { (count, attendee) =>
-      if (complimentaryTicketIds.contains(attendee.ticket_class_id)) attendee.quantity else 0
+      if (ticketIds.contains(attendee.ticket_class_id)) attendee.quantity else 0
     }
   }
 
