@@ -343,10 +343,6 @@ trait Info extends Controller {
     feedbackForm.bindFromRequest.fold(_ => Future.successful(BadRequest), sendFeedback)
   }
 
-  def giftingPlaceholder = NoCacheAction { implicit request =>
-    Ok(views.html.info.giftingPlaceholder())
-  }
-
 }
 
 object Info extends Info
