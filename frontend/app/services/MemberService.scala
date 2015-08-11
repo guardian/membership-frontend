@@ -163,7 +163,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
-        .map(_.map(_.copy(isComplimentary = complimentaryTickets.nonEmpty)))
     }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {

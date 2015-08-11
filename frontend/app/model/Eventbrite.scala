@@ -301,7 +301,7 @@ object Eventbrite {
 
   case class EBDiscount(code: String, quantity_available: Int, quantity_sold: Int) extends EBCode
 
-  case class EBAccessCode(code: String, quantity_available: Int, isComplimentary: Boolean = false) extends EBCode
+  case class EBAccessCode(code: String, quantity_available: Int) extends EBCode
 
   //https://developer.eventbrite.com/docs/order-object/
   case class EBOrder(id: String, first_name: String, email: String, costs: EBCosts, attendees: Seq[EBAttendee]) extends EBObject {
@@ -317,7 +317,7 @@ object Eventbrite {
 
   case class EBCost(value: Int) extends EBObject
 
-  case class EBAttendee(quantity: Int, ticket_class_id: String) extends EBObject
+  case class EBAttendee(quantity: Int, ticket_class_id: Int) extends EBObject
 }
 
 object EventbriteDeserializer {
@@ -361,10 +361,7 @@ object EventbriteDeserializer {
   implicit val ebTicketsReads = Json.reads[EBTicketClass]
   implicit val ebEventReads = Json.reads[EBEvent]
   implicit val ebDiscountReads = Json.reads[EBDiscount]
-  implicit val ebAccessCodeReads: Reads[EBAccessCode] = (
-    (JsPath \ "code").read[String] and
-    (JsPath \ "quantity_available").read[Int]
-  )(EBAccessCode.apply(_: String, _: Int, isComplimentary = false))
+  implicit val ebAccessCodeReads = Json.reads[EBAccessCode]
 
   implicit val ebPaginationReads = Json.reads[EBPagination]
   implicit val ebEventsReads = ebResponseReads[EBEvent]("events")
