@@ -2,7 +2,6 @@ package services
 
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.Zuora.CreateResult
 import model.{TicketSaleDates, EventGroup}
 import model.Eventbrite._
 import model.EventbriteDeserializer._

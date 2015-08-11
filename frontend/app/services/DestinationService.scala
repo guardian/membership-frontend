@@ -36,7 +36,6 @@ trait DestinationService {
       eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
       event <- eventbriteService.getBookableEvent(eventId)
     } yield memberService.createEBCode(request.member, event).map { discountOpt =>
-
       EventDestination(event, (Config.eventbriteApiIframeUrl ? ("eid" -> event.id) & ("discount" -> discountOpt.map(_.code))))
     }
 
