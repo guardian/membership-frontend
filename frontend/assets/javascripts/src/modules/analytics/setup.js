@@ -20,6 +20,7 @@ define([
     crazyegg,
     optimizely
 ) {
+    'use strict';
 
     var analyticsEnabled = (
         guardian.analyticsEnabled &&

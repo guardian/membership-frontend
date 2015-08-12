@@ -1,4 +1,5 @@
 define(['src/utils/atob'], function (AtoB) {
+    'use strict';
 
     return function(str) {
         /* global escape: true */

@@ -3,6 +3,7 @@ define([
     'smoothScroll',
     'src/utils/helper'
 ], function (gumshoe, smoothScroll, helper) {
+    'use strict';
 
     var SELECTORS = {
         sectionNav: '.js-section-nav'

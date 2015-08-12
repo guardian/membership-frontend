@@ -1,4 +1,5 @@
 define(['lodash/object/extend'], function (extend) {
+    'use strict';
 
     /**
      * serialize form elements

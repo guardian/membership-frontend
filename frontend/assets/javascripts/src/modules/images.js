@@ -1,4 +1,5 @@
 define(['respimage', 'lazySizes'], function(respimage, lazySizes) {
+    'use strict';
 
     var LAZYLOAD_CLASS = 'js-lazyload';
 

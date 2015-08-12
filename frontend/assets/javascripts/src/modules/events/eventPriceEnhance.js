@@ -1,4 +1,5 @@
 define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
+    'use strict';
 
     var selectors = {
         EVENT_CONTAINER: '.js-event-price',

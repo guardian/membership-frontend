@@ -1,5 +1,7 @@
 /*eslint-disable */
 define(function () {
+    'use strict';
+
     return function AtoB(){
         return window.atob ? function(str){
             return window.atob(str);

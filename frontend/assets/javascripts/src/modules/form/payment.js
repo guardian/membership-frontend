@@ -2,6 +2,7 @@ define([
     'src/modules/form/payment/listeners',
     'src/modules/form/payment/options'
 ], function (listeners, options) {
+    'use strict';
 
     /**
      * Initialise payment

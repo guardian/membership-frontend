@@ -2,6 +2,7 @@ define([
     '$',
     'src/utils/user'
 ], function($, userUtil) {
+    'use strict';
 
     var CTA_ELEM = '.js-ticket-cta';
     var CTA_ACTIONS = {

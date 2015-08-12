@@ -1,5 +1,6 @@
 /*global Raven */
 define(function() {
+    'use strict';
 
     var KRUX_ID = 'JglooLwn';
 
