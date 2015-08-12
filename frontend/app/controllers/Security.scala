@@ -33,10 +33,11 @@ object Security extends Controller with LazyLogging {
     referrer: Option[String]
   ) {
     val message = s"""
-      |CSP warning:
-      |Document URI: $documentUri
-      |Blocked URI: $blockedUri
+      |CSP Blocked URI: $blockedUri
+      |
+      |
       |Violated Directive: $violatedDirective
+      |Document URI: $documentUri
       |Referrer: $referrer
       |""".stripMargin
 
@@ -57,19 +58,14 @@ object Security extends Controller with LazyLogging {
     SentryLogging.ravenOpt.fold {
       logger.error(report.message)
     } { raven =>
-      if(report.message.nonEmpty) {
 
-        val eventBuilder = new EventBuilder()
-          .withMessage(report.message)
-          .withLevel(RavenEvent.Level.INFO)
-          .withTag("CSP Directive", report.directiveTag)
+      val eventBuilder = new EventBuilder()
+        .withChecksumFor(report.blockedUri)
+        .withMessage(report.message)
+        .withLevel(RavenEvent.Level.INFO)
+        .withTag("CSP Directive", report.directiveTag)
 
-        for(ua <- request.headers.get(USER_AGENT)) {
-          eventBuilder.withTag("CSP User Agent", ua)
-        }
-
-        raven.sendEvent(eventBuilder.build())
-      }
+      raven.sendEvent(eventBuilder.build())
     }
 
     Future.successful(NoContent)
