@@ -200,10 +200,11 @@ trait Event extends Controller with ActivityTracking {
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
 
       memberService.createEBCode(request.member, event).map { code =>
-        val eventUrl = code.fold(Uri(event.url))(c => event.url ? ("discount" -> c.code))
+        val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
         val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
+
         Found(eventUrl)
           .withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
