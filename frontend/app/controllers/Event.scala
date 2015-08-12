@@ -143,21 +143,23 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def list = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    val pastEvents = (guLiveEvents.getEventsArchive ++ localEvents.getEventsArchive).headOption
-      .map(chronologicalSort(_).reverse)
+
+    val archivedEvents =
+      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        pastEvents,
+        chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
       ),
-      pageInfo))
+      PageInfo(
+        CopyConfig.copyTitleEvents,
+        request.path,
+        Some(CopyConfig.copyDescriptionEvents)
+      ))
+    )
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -171,7 +173,7 @@ trait Event extends Controller with ActivityTracking {
       EventPortfolio(
         Seq.empty,
         chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag)),
-        None,
+        Seq.empty,
         None
       ),
       pageInfo))
