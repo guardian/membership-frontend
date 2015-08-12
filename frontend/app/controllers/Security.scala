@@ -56,13 +56,20 @@ object Security extends Controller with LazyLogging {
 
     SentryLogging.ravenOpt.fold {
       logger.error(report.message)
-    } {
-      _.sendEvent(new EventBuilder()
-        .withMessage(report.message)
-        .withLevel(RavenEvent.Level.INFO)
-        .withTag("CSP Directive", report.directiveTag)
-        .build()
-      )
+    } { raven =>
+      if(report.message.nonEmpty) {
+
+        val eventBuilder = new EventBuilder()
+          .withMessage(report.message)
+          .withLevel(RavenEvent.Level.INFO)
+          .withTag("CSP Directive", report.directiveTag)
+
+        for(ua <- request.headers.get(USER_AGENT)) {
+          eventBuilder.withTag("CSP User Agent", ua)
+        }
+
+        raven.sendEvent(eventBuilder.build())
+      }
     }
 
     Future.successful(NoContent)
