@@ -33,6 +33,7 @@ object Zuora {
                             price: Float) extends ZuoraQuery
   case class Subscription(id: String, version: Int, termStartDate: DateTime, contractAcceptanceDate: DateTime) extends ZuoraQuery
   case class Feature(id: String, code: String) extends ZuoraQuery
+  case class Usage(description: String) extends ZuoraQuery
 
   trait Error extends Throwable {
     val code: String
@@ -223,6 +224,10 @@ object ZuoraDeserializer {
     } else {
       Left(InternalError("QUERY_ERROR", "The query was not complete (we don't support iterating query results)"))
     }
+  }
+
+  implicit val usageReader = ZuoraQueryReader("Usage", Seq("Description")) { result =>
+    Usage(result("Description"))
   }
 
   implicit val featureReader = ZuoraQueryReader("Feature", Seq("Id", "FeatureCode")) { result =>

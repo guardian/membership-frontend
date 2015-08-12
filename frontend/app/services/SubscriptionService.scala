@@ -12,6 +12,7 @@ import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
 import services.zuora._
+import ZuoraServiceHelpers.formatDateTime
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -153,6 +154,17 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
       subscriptionStatus <- getSubscriptionStatus(memberId)
       subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.current)
     } yield subscriptionDetails
+  }
+
+  def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = (for {
+      subscriptions <- getSubscriptions(memberId)
+      details <- getSubscriptionDetails(subscriptions.head.id) if subscriptions.nonEmpty
+      startDate = formatDateTime(details.contractAcceptanceDate)
+      endDate = formatDateTime(details.effectiveStartDate + 1.year)
+      whereClause = s"StartDateTime >= '$startDate' AND StartDateTime <= '$endDate' AND SubscriptionID = '${subscriptions.head.id}'"
+      result <- zuoraSoapService.query[Usage](whereClause)
+  } yield result.size) recover {
+      case _: NoSuchElementException => 0
   }
 
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = {

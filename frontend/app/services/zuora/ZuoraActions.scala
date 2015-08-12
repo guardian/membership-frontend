@@ -5,6 +5,7 @@ import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.zuora.{Address, ZuoraApiConfig}
 import forms.MemberForm.NameForm
+import model.FreeEventTickets
 import model.Zuora._
 import org.joda.time.{DateTime, Period}
 import services.zuora.ZuoraServiceHelpers._
@@ -364,7 +365,7 @@ case class CreateFreeEventUsage(accountId: String, description: String, quantity
         <ns2:Quantity>{quantity}</ns2:Quantity>
         <ns2:StartDateTime>{startDateTime}</ns2:StartDateTime>
         <ns2:Description>{description}</ns2:Description>
-        <ns2:UOM>{uom}</ns2:UOM>
+        <ns2:UOM>{FreeEventTickets.uom}</ns2:UOM>
       </ns1:zObjects>
     </ns1:create>
 }

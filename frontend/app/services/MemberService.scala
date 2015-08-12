@@ -125,7 +125,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def countComplimentaryTicketsUsed(event: RichEvent, order: EBOrder): Int = {
+  def countComplimentaryTicketsInOrder(event: RichEvent, order: EBOrder): Int = {
     val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
     order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
   }
@@ -141,12 +141,20 @@ trait MemberService extends LazyLogging with ActivityTracking {
     } yield result
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = for {
-      memberTierFeatures <- touchpointForMember(member).subscriptionService.memberTierFeatures(member)
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+    val service = touchpointForMember(member).subscriptionService
+    for {
+      memberTierFeatures <- service.memberTierFeatures(member)
+      ticketsUsed <- service.getUsageCountWithinTerm(member, FreeEventTickets.uom)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
-      event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
+      val allowanceNotExceeded = ticketsUsed < FreeEventTickets.allowance
+
+      event.internalTicketing.map(_.complimentaryTickets).filter { ticket =>
+        memberWithEventsFeature && allowanceNotExceeded
+      }.getOrElse(Nil)
     }
+  }
 
   def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {

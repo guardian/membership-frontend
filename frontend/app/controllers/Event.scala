@@ -223,7 +223,7 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
-          val count = memberService.countComplimentaryTicketsUsed(event, order)
+          val count = memberService.countComplimentaryTicketsInOrder(event, order)
           if (count > 0) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
@@ -257,7 +257,6 @@ trait Event extends Controller with ActivityTracking {
   def previewLocal(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
     EventbriteService.getPreviewLocalEvent(id).map(eventDetail)
   }
-
 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
    EventbriteService.getPreviewMasterclass(id).map(eventDetail)

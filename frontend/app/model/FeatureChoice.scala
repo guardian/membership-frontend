@@ -32,4 +32,6 @@ case object Books extends FeatureChoice {
 case object FreeEventTickets extends FeatureChoice {
   override val zuoraCode = "Events"
   override val label = "6 free events"
+  val allowance = 6
+  val uom = "Events"
 }
