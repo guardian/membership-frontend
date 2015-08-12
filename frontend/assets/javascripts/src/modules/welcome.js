@@ -1,4 +1,5 @@
 define(['src/utils/user'], function(userUtil) {
+    'use strict';
 
     var urlMappings = {
         '/': '/welcome'
