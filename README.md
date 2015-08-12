@@ -7,6 +7,7 @@ https://membership.theguardian.com/
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
+1. [NGinx](#nginx)
 1. [Setup](#setup)
 1. [Run](#run)
 1. [Client-side Development](#cs-development)
@@ -24,22 +25,47 @@ To get started working on Membership you will need to complete the following ste
 2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
 
+
+<a name="nginx">
+## NGinx
+
+To run standalone you can use the default nginx installation as follows:
+
+Install nginx:
+
+Linux: `sudo apt-get install nginx`
+Mac OSX: `brew install nginx`
+
+Make sure you have a sites-enabled folder under your nginx home. This should be
+
+Linux: `/etc/nginx/sites-enabled`
+Mac OSX: `~/Developers/etc/nginx/sites-enabled` or `/usr/local/etc/nginx/`
+Make sure your nginx.conf (found in your nginx home) contains the following line in the `http{...}` block: `include sites-enabled/*`;
+
+Run:
+
+`./nginx/setup.sh`
+
+
 <a name="setup">
 ## Setup
 
 1. Go to the project root
 1. Run `./setup.sh` to install project-specific client-side dependencies
+1. Change the ownership of the 'gu' directory under 'etc' to current user.
+   `sudo -i chown -R {username} /etc/gu`
 1. Add the following to your hosts file in `/etc/hosts`:
 
 ```
 127.0.0.1   mem.thegulocal.com
+127.0.0.1   profile.thegulocal.com
 ```
 
-1. Run `./nginx/setup.sh`
+1. Inside `membership-frontend` run `./nginx/setup.sh`
 1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
 
 ```
-aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu
+aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
 ```
 
 1. Setup AWS credentials. Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
@@ -48,8 +74,10 @@ In `~/.aws/credentials` add the following:
 
 ```
 [membership]
-aws_access_key_id=[YOUR_AWS_ACCESS_KEY]
-aws_secret_access_key=[YOUR_AWS_SECRET_ACCESS_KEY]
+aws_access_key_id = [YOUR_AWS_ACCESS_KEY]
+aws_secret_access_key = [YOUR_AWS_SECRET_ACCESS_KEY]
+region = eu-west-1
+
 ```
 
 In `~/.aws/config` add the following:
@@ -65,7 +93,7 @@ region = eu-west-1
 In an ideal world, your Ubuntu package install would be:
 
 ```
-$ sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
+sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
 ```
 
 #### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
@@ -101,14 +129,18 @@ Run through the set up instructions; once complete you will need to run:
 
 **theguardian.com frontend repo**: [https://github.com/guardian/frontend](https://github.com/guardian/frontend)
 
-Run through the set up instructions - note you need to make sure that your Frontend is set up to point at your _local_ Identity, not the `CODE` Identity, which means adding this to your `frontend.properties`:
+Run through the set up instructions - download `frontend` and make sure that your `frontend` project is set up to point at your _local_ Identity, not the `CODE` Identity, which means adding this to your `frontend.properties`:
+
+ `vi ~/.gu/frontend.properties`
+
+Add the below to frontend.properties
 
 ```
 id.apiRoot=https://idapi.thegulocal.com
 id.apiClientToken=frontend-dev-client-token
 ```
 
-Once complete you will need to run:
+Once complete you will need to run the following instructions on the `frontend` project
 
 ```
 nginx/setup.sh
