@@ -7,6 +7,7 @@ https://membership.theguardian.com/
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
+1. [NGinx](#nginx)
 1. [Setup](#setup)
 1. [Run](#run)
 1. [Client-side Development](#cs-development)
@@ -23,6 +24,27 @@ To get started working on Membership you will need to complete the following ste
 1. Work through the **General Setup** instructions for this project
 2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
+
+
+<a name="nginx">
+## NGinx
+
+To run standalone you can use the default nginx installation as follows:
+
+Install nginx:
+
+Linux: `sudo apt-get install nginx`
+Mac OSX: `brew install nginx`
+Make sure you have a sites-enabled folder under your nginx home. This should be
+
+Linux: `/etc/nginx/sites-enabled`
+Mac OSX: `~/Developers/etc/nginx/sites-enabled` or `/usr/local/etc/nginx/`
+Make sure your nginx.conf (found in your nginx home) contains the following line in the `http{...}` block: `include sites-enabled/*`;
+
+Run:
+
+`./nginx/setup.sh`
+
 
 <a name="setup">
 ## Setup
