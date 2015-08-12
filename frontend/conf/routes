@@ -8,17 +8,14 @@ GET            /favicon.ico                       controllers.CacheBustedAssets.
 
 # Home page
 GET            /                                  controllers.FrontPage.index
+GET            /welcome                           controllers.FrontPage.welcome
 
-# Healthcheck
+# System
 GET            /healthcheck                       controllers.Healthcheck.healthcheck
-
 GET            /test-users                        controllers.Testing.testUser
 GET            /analytics-off                     controllers.Testing.analyticsOff
 
-GET            /staff/unauthorised                controllers.StaffAuth.unauthorised
-
 # Join
-GET            /join                              controllers.Joiner.tierList
 GET            /join/staff                        controllers.Joiner.staff
 GET            /join/staff/enter-details          controllers.Joiner.enterStaffDetails
 GET            /join/:tier/enter-details          controllers.Joiner.enterDetails(tier: Tier)
@@ -32,11 +29,11 @@ GET            /join/unsupported-browser          controllers.Joiner.unsupported
 
 GET            /choose-tier                       controllers.Joiner.tierChooser
 
-
 # Normal user signin:
 GET            /signin                            controllers.Login.chooseSigninOrRegister(returnUrl: String)
 
 # Staff signin (note, done by OAuth, in addition to regular signin)
+GET            /staff/unauthorised                controllers.StaffAuth.unauthorised
 GET            /staff/login                       controllers.OAuth.login
 GET            /staff/loginAction                 controllers.OAuth.loginAction
 GET            /oauth2callback                    controllers.OAuth.oauth2Callback
@@ -47,7 +44,6 @@ GET            /staff/local-overview              controllers.Staff.localOvervie
 GET            /staff/masterclass-overview        controllers.Staff.masterclassOverview
 GET            /staff/event-details               controllers.Staff.eventDetails
 GET            /staff/admin                       controllers.Staff.admin
-
 
 # Subscription
 POST           /subscription/update-card          controllers.Subscription.updateCard
@@ -93,32 +89,33 @@ POST           /tier/change/:tier                 controllers.TierController.upg
 GET            /tier/change/:tier/summary         controllers.TierController.upgradeThankyou(tier: Tier)
 
 # Information
-
-GET            /about                             controllers.Info.about
-GET            /about/supporter                   controllers.Info.supporter
-GET            /us/supporter                      controllers.Info.supporterUSA
 GET            /patrons                           controllers.Info.patron
+GET            /supporter                         controllers.Info.supporter
+GET            /us/supporter                      controllers.Info.supporterUSA
 GET            /help                              controllers.Info.help
 GET            /feedback                          controllers.Info.feedback
 POST           /feedback                          controllers.Info.submitFeedback
-GET            /join-challenger                   controllers.Info.joinChallenger
+GET            /offers-competitions               controllers.OffersAndCompetitions.list
+
+# Styleguide
+GET            /patterns                          controllers.PatternLibrary.patterns
+
 
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
 GET            /user/check-subscriber             controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: String)
 
+# CSP
+POST           /csp-report                        controllers.Security.cspReport
+
 # Vanity URLS
 GET            /founder                           controllers.VanityUrl.redirect
 
-# Styleguide
-GET            /patterns                          controllers.PatternLibrary.patterns
-
-# Offers and Competitions
-GET            /offers-competitions               controllers.OffersAndCompetitions.list
-
-POST           /csp-report                        controllers.Security.cspReport
-
 # Redirects
+GET            /about                             controllers.Redirects.homepageRedirect
+GET            /about/supporter                   controllers.Redirects.supporterRedirect
+GET            /join-challenger                   controllers.Redirects.homepageRedirect
+GET            /join                              controllers.Redirects.homepageRedirect
 GET            /subscriber-offer                  controllers.Redirects.homepageRedirect
 
 # Map static resources from the /public folder to the /assets URL path
