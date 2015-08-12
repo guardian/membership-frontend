@@ -10,10 +10,11 @@ object Nav {
     subNav: Seq[NavItem] = Nil
   )
 
-  def fetchNav(url: String) =
-    navigation.find(navItem => url.contains(navItem.href))
+  def fetchNav(navigationList: Seq[NavItem], url: String) = {
+    navigationList.find(navItem => url.contains(navItem.href))
+  }
 
-  val navigation = List(
+  val primaryNavigation = List(
     NavItem("events", "/events", "Events"),
     NavItem("masterclasses", "/masterclasses", "Masterclasses"),
     NavItem("competitions", "/offers-competitions", "Competitions"),
