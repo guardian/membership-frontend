@@ -353,19 +353,14 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
   }
 }
 
-case class CreateFreeEventUsage(accountId: String, description: String, quantity: Int, subscriptionId: Option[String]) extends ZuoraAction[CreateResult] {
+case class CreateFreeEventUsage(accountId: String, description: String, quantity: Int, subscriptionId: String) extends ZuoraAction[CreateResult] {
   val uom = "Events"
   val startDateTime = formatDateTime(DateTime.now)
-  private val subscriptionEl: NodeSeq =
-    subscriptionId.fold(NodeSeq.Empty){ id =>
-      <ns2:SubscriptionId>{id}</ns2:SubscriptionId>
-    }
-
   override protected val body: Elem =
       <ns1:create>
       <ns1:zObjects xsi:type="ns2:Usage">
         <ns2:AccountId>{accountId}</ns2:AccountId>
-        {subscriptionEl}
+        <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
         <ns2:Quantity>{quantity}</ns2:Quantity>
         <ns2:StartDateTime>{startDateTime}</ns2:StartDateTime>
         <ns2:Description>{description}</ns2:Description>
