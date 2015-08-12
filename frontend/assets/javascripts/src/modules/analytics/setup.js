@@ -6,9 +6,7 @@ define([
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
     'src/modules/analytics/appnexus',
-    'src/modules/analytics/twitter',
-    'src/modules/analytics/crazyegg',
-    'src/modules/analytics/optimizely'
+    'src/modules/analytics/twitter'
 ], function (
     cookie,
     ga,
@@ -16,9 +14,7 @@ define([
     omniture,
     krux,
     appnexus,
-    twitter,
-    crazyegg,
-    optimizely
+    twitter
 ) {
     'use strict';
 
@@ -38,8 +34,6 @@ define([
         krux.load();
         appnexus.load();
         twitter.load();
-        crazyegg.load();
-        optimizely.init();
     }
 
     function init() {

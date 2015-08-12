@@ -11,7 +11,7 @@
 }
     .tier-trail__name {
         @include fs-header(4);
-        font-weight: 500;
+        font-weight: guss-font-weight(bold);
     }
     .tier-trail__caption {
         @include fs-data(4);

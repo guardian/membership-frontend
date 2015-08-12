@@ -29,8 +29,8 @@ object Social {
 
   val joinThankyou = Social(
     emailSubject="I'm the newest Guardian member",
-    emailMessage=s"I'm the newest Guardian member ${Config.membershipUrl}${controllers.routes.Info.about()}",
-    facebookUrl=Config.membershipUrl + controllers.routes.Info.about(),
-    twitterMessage=s"I'm the newest Guardian member ${Config.membershipUrl}${controllers.routes.Info.about()} ${SocialConfig.twitterHashtag}"
+    emailMessage=s"I'm the newest Guardian member ${Config.membershipUrl}",
+    facebookUrl=Config.membershipUrl,
+    twitterMessage=s"I'm the newest Guardian member ${Config.membershipUrl} ${SocialConfig.twitterHashtag}"
   )
 }

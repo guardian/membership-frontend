@@ -79,16 +79,16 @@
     margin-bottom: rem($gs-gutter);
 }
 .video-preview__header {
-    @include fs-headline(3);
+    @include fs-headline(2);
     min-height: rem(gs-height(2));
-    padding: rem($gs-baseline) rem($gs-gutter / 2);
-    padding-bottom: rem($gs-baseline * 3);
+    padding: ($gs-gutter / 2);
+    padding-bottom: $gs-baseline * 2;
 
     @include mq(tablet) {
-        padding-left: rem($gs-gutter);
-        padding-right: rem($gs-gutter);
-        width: 35%;
+        @include fs-headline(3, $size-only: true);
+        padding: $gs-baseline $gs-gutter ($gs-baseline * 3);
         float: right;
+        width: 35%;
     }
 }
 .video-preview__video {

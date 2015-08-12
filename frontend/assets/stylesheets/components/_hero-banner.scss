@@ -1,3 +1,53 @@
 /* ==========================================================================
    Hero Banner
    ========================================================================== */
+/**
+ * Requires background image to be set on
+ * hero-banner element in the template
+ * See index.scala.html
+ */
+.hero-banner {
+    color: $white;
+    background-position: top center;
+    background-repeat: repeat;
+    background-attachment: fixed;
+
+    @media screen and (min-width: map-get($mq-breakpoints, tablet)) and(min-height: 640px) {
+        height: 60vh;
+    }
+}
+.hero-banner__inner {
+    position: relative;
+    background-color: rgba(0,0,0,0.6);
+
+    @include mq(tablet) {
+        height: 100%;
+    }
+}
+.hero-banner__content {
+    max-width: gs-span(12);
+    min-height: gs-height(6);
+    padding: rem($gs-gutter / 2);
+
+    @include mq(tablet) {
+        position:  absolute;
+        @include vertically-center();
+        padding: rem($gs-gutter / 2) 0;
+        padding-left: rem(gs-span(2) + ($gs-gutter * 2));
+        max-width: 45em;
+    }
+}
+.hero-banner__title {
+    @include fs-headline(5);
+    font-weight: 900;
+    margin: 0 0 rem($gs-baseline / 2) 0;
+
+    @include mq(tablet) {
+        font-size: 3.5em;
+        line-height: 1;
+    }
+}
+.hero-banner__description {
+    @include fs-headline(5);
+    margin-bottom: rem($gs-gutter * 2);
+}
