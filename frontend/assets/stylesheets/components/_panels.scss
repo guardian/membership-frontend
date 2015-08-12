@@ -16,8 +16,12 @@
     margin: 0 0 rem($gs-baseline / 2) 0;
 }
 .panel__description {
-    @include fs-header(2);
+    @include fs-header(1);
     font-weight: normal;
+
+    @include mq(tablet) {
+        @include fs-header(2, $size-only: true);
+    }
 }
 
 /* Brand Panel
@@ -40,9 +44,13 @@
     margin: 0 0 rem($gs-baseline / 2) 0;
 }
 .brand-panel__description {
-    @include fs-header(2);
+    @include fs-header(1);
     font-weight: normal;
     margin-bottom: rem($gs-baseline);
+
+    @include mq(tablet) {
+        @include fs-header(2, $size-only: true);
+    }
 }
 .brand-panel__image {
     margin-bottom: rem($gs-baseline / 2);
@@ -53,6 +61,26 @@
         left: rem($gs-gutter);
         right: rem($gs-gutter);
         bottom: rem($gs-baseline * 2);
+    }
+}
+
+/* Venue Panel
+   ========================================================================== */
+
+.venue-panel {
+    border-top: 1px solid $c-border-brand;
+    padding-top: rem($gs-baseline / 2);
+}
+.venue-panel__title {
+    @include fs-header(4);
+    margin: 0 0 rem($gs-baseline) 0;
+}
+.venue-panel__content {
+    @include fs-header(1);
+    font-weight: normal;
+
+    @include mq(tablet) {
+        @include fs-header(2, $size-only: true);
     }
 }
 

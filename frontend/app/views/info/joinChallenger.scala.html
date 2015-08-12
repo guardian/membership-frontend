@@ -1,58 +1,17 @@
-@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup], comparisonItems: Seq[model.Benefits.ComparisonItem])(implicit token: play.filters.csrf.CSRF.Token)
+@(
+    pageInfo: model.PageInfo,
+    pageImages: Seq[model.ResponsiveImageGroup],
+    comparisonItems: Seq[model.Benefits.ComparisonItem]
+)
 
-@import configuration.Videos
 @import com.gu.membership.salesforce.Tier
-
-@comparisonHeader(tier: com.gu.membership.salesforce.Tier) = {
-    <div class="comparison-header tone-border-@tier.slug">
-        <div class="comparison-header__inner">
-            <a class="no-underline minimal-link"
-               href="@routes.Joiner.enterDetails(tier)"
-               data-metric-trigger="click"
-               data-metric-category="join"
-               data-metric-action="@tier.toString.toLowerCase()"
-            >
-                <div class="comparison-header__tier">
-                    <div class="comparison-header__tier__title">
-                        @fragments.tier.tierTrail(tier, showCaption=false)
-                    </div>
-                    <div class="comparison-header__tier__pricing">
-                        @fragments.pricing.priceInfo(tier, canFlex=false)
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-}
-
-@brandPanel(
-    title: String,
-    imageOpt: Option[model.ResponsiveImageGroup],
-    linkHref: String,
-    linkLabel: String,
-    toneSlug: String
-)(description: Html) = {
-    <div class="brand-panel tone-border-@toneSlug">
-        <h3 class="brand-panel__title">@title</h3>
-        <div class="brand-panel__description copy">@description</div>
-        @for(img <- imageOpt) {
-            <div class="brand-panel__media">
-                <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
-                <a class="mini-link" href="@linkHref">
-                    <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-@toneSlug">
-                        @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-@toneSlug"))
-                    </span>
-                    @linkLabel
-                </a>
-            </div>
-        }
-    </div>
-}
+@import model.Nav.NavAnchor
+@import views.support.Asset
 
 @main("Join", pageInfo) {
 
     @* ===== Intro ===== *@
-    <div class="hero-banner">
+    <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/event-grid.jpg"))">
         <div class="hero-banner__inner">
             <div class="l-constrained">
                 <div class="hero-banner__content">
@@ -69,55 +28,27 @@
     </div>
 
     @* ===== What are members ===== *@
-    <section class="page-slice section-what" id="what-are-members">
+    <section class="page-slice page-slice--listing u-sticky-offset" id="what-are-members">
 
         @* ===== Section Navigation ===== *@
-        <div class="nav-sections nav-sections--sticky l-side-margins js-sticky js-section-nav">
-            <div class="nav-sections__inner l-constrained">
-                <ol class="nav-sections__list" data-gumshoe>
-                    <li class="nav-sections__item">
-                        <a  class="nav-sections__link"
-                            href="#what-are-members"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >What is membership</a>
-                    </li>
-                    <li class="nav-sections__item">
-                        <a  class="nav-sections__link"
-                            href="#why-join"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >Why join</a>
-                    </li>
-                    <li class="nav-sections__item">
-                    <a  class="nav-sections__link"
-                            href="#become-a-member"
-                            data-metric-trigger="click"
-                            data-metric-category="navigation"
-                            data-metric-action="sections"
-                            data-scroll
-                        >Become a member</a>
-                    </li>
-                </ol>
-            </div>
-        </div>
+        @fragments.page.navSections(Seq(
+            NavAnchor("#what-are-members", "What is membership"),
+            NavAnchor("#why-join", "Why join"),
+            NavAnchor("#become-a-member", "Become a member")
+        ))
 
         <div class="listing listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">What is membership</h3>
             </div>
             <div class="listing__content">
-                <p class="join-text-intro what-intro">
+                <p class="text-section-intro u-capped-two-thirds">
                     Members keep Guardian journalism free and fearless. As a member, you’ll get closer to everything we do.
                     We’ll draw back the curtain on the workings of the world and you’ll meet some of the world’s most admired thinkers,
                     with a range of live events, local meetups and exclusive content.
                 </p>
                 @fragments.media.videoPreview(
-                    Videos.whatIsMembershipAlt,
+                    configuration.Videos.whatIsMembershipAlt,
                     "Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams introduce Guardian Membership."
                 )
                 @fragments.common.jumpLink("Benefits of membership", "#why-join")
@@ -127,89 +58,89 @@
 
 
     @* ===== Why join ===== *@
-    <section class="page-slice section-why u-padding-top" id="why-join">
+    <section class="page-slice page-slice--listing u-padding-top" id="why-join">
         <div class="listing listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
             </div>
             <div class="listing__content">
-                <p class="join-text-intro why-intro">
+                <p class="text-section-intro u-capped-two-thirds">
                     Support fearless journalism and get to the heart of the story.
                 </p>
                 <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
-                        @fragments.promos.panel("Support the Guardian", pageImages.find(_.name.contains("support"))) {
-                            <p>
-                                For 200 years, the Guardian has evolved to respond to changing times
-                                without compromising the quality of our journalism.
-                                Our website is open and free. By becoming a member, you’ll ensure the whole picture
-                                remains available to everyone.
-                            </p>
-                        }
+                    @fragments.promos.panel("Support the Guardian", pageImages.find(_.name.contains("support"))) {
+                        <p>
+                            For 200 years, the Guardian has evolved to respond to changing times
+                            without compromising the quality of our journalism.
+                            Our website is open and free. By becoming a member, you’ll ensure the whole picture
+                            remains available to everyone.
+                        </p>
+                    }
                     </li>
                     <li class="grid__item">
-                        @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
-                            <p>
-                                Unedited, unfiltered, uncensored: experience the Guardian for yourself at events, meetups and classes.
-                                Stretch your mind, learn new skills, and make genuine connections with guest speakers, journalists,
-                                and the growing community of Guardian members.
-                            </p>
-                        }
+                    @fragments.promos.panel("Experience the Guardian", pageImages.find(_.name.contains("experience"))) {
+                        <p>
+                            Unedited, unfiltered, uncensored: experience the Guardian for yourself at events, meetups and classes.
+                            Stretch your mind, learn new skills, and make genuine connections with guest speakers, journalists,
+                            and the growing community of Guardian members.
+                        </p>
+                    }
                     </li>
                     <li class="grid__item">
-                        @fragments.promos.panel("Exclusive content", pageImages.find(_.name.contains("exclusive"))) {
-                            <p>
-                                From live streams of Members’ events, member articles in our monthly Guardian supplement, to a range
-                                of offers, competitions and discounts at places we love there’s something for you in Guardian Membership.
-                            </p>
-                        }
+                    @fragments.promos.panel("Exclusive content", pageImages.find(_.name.contains("exclusive"))) {
+                        <p>
+                            From live streams of Members’ events, member articles in our monthly Guardian supplement, to a range
+                            of offers, competitions and discounts at places we love there’s something for you in Guardian Membership.
+                        </p>
+                    }
                     </li>
                 </ul>
 
                 @fragments.common.jumpLink("Get involved", "#experience")
 
-                <div class="join-text-intro join-text-intro--block" id="experience">
+                <div class="text-section-intro" id="experience">
                     <p>Experience the Guardian up close. First hand.</p>
                 </div>
 
                 <ul class="grid grid--3up grid--single-row">
                     <li class="grid__item">
-                        @brandPanel(
-                            "Guardian Live",
-                            pageImages.find(_.name.contains("brand-live")),
-                            routes.Event.list.toString,
-                            "All upcoming events",
-                            "guardian-live"
-                        ) {
-                            Russell Brand, Vivienne Westwood, Jimmy Page, Naomi Klein.
-                            NHS, terrorism, Europe, climate change; all in conversation with our journalists.
-                            Guardian Live brings the Guardian to life with discussions, debates,
-                            interviews and keynote speeches exclusively for Guardian Members.
-                        }
+                    @fragments.promos.brandPanel(
+                        "Guardian Live",
+                        pageImages.find(_.name.contains("brand-live")),
+                        routes.Event.list.toString,
+                        "All upcoming events",
+                        "guardian-live"
+                    ) {
+                        Russell Brand, Vivienne Westwood, Jimmy Page, Naomi Klein.
+                        NHS, terrorism, Europe, climate change; all in conversation with our journalists.
+                        Guardian Live brings the Guardian to life with discussions, debates,
+                        interviews and keynote speeches exclusively for Guardian Members.
+                    }
                     </li>
                     <li class="grid__item">
-                        @brandPanel(
-                            "Guardian Local",
-                            pageImages.find(_.name.contains("brand-local")),
-                            routes.Event.list.toString,
-                            "All upcoming events",
-                            "local"
-                        ) {
-                            Tasting menus, jazz collectives, world-renowned orchestra&hellip; Guardian Local celebrates the arts,
-                            food and culture we write about with meetups for Members across the country.
-                        }
+                    @fragments.promos.brandPanel(
+                        "Guardian Local",
+                        pageImages.find(_.name.contains("brand-local")),
+                        routes.Event.list.toString,
+                        "All upcoming events",
+                        "local"
+                    ) {
+                        Tasting menus, jazz collectives, world-renowned orchestra&hellip; Guardian Local celebrates the arts,
+                        food and culture we write about with meetups for Members across the country.
+                    }
                     </li>
                     <li class="grid__item">
-                        @brandPanel(
-                            "Guardian Masterclasses",
-                            pageImages.find(_.name.contains("brand-masterclasses")),
-                            routes.Event.masterclasses.toString,
-                            "All upcoming Masterclasses",
-                            "masterclasses"
-                        ) {
-                            Social media, writing a novel, starting a business&hellip;take part in our courses and workshops
-                            taught by award-winning professionals and enjoy member discounts.
-                        }
+                    @fragments.promos.brandPanel(
+                        "Guardian Masterclasses",
+                        pageImages.find(_.name.contains("brand-masterclasses")),
+                        routes.Event.masterclasses.toString,
+                        "All upcoming Masterclasses",
+                        "masterclasses"
+                    ) {
+                        Social media, writing a novel, starting a business&hellip;take part in our courses and workshops
+                        taught by award-winning professionals and enjoy member discounts.
+                    }
                     </li>
                 </ul>
 
@@ -219,121 +150,64 @@
 
 
     @* ===== A home for big ideas ===== *@
-    <section class="page-slice section-big-ideas" id="big-ideas">
+    <section class="page-slice page-slice--listing" id="big-ideas">
+
         <div class="listing listing--basic listing--padded l-constrained">
             <div class="listing__content">
                 <ul class="grid grid--2up grid--single-row">
                     <li class="grid__item">
-                        @for(img <- pageImages.find(_.name.contains("space"))) {
-                            <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
-                        }
+                    @for(img <- pageImages.find(_.name.contains("space"))) {
+                        <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
+                    }
                     </li>
                     <li class="grid__item">
-                        <div class="big-ideas-intro">
-                            <h4 class="big-ideas-intro__title">A home for big ideas</h4>
-                            <div class="big-ideas-intro__content copy">
-                                <p>
-                                    In 2016, the Midland Goods Shed at London’s King’s Cross will reopen to create a new kind of civic space.
-                                </p>
-                                <p>
-                                    As well as being the home of Guardian Membership, the building will be a hub for
-                                    big ideas and stimulating conversations. It will host events, activities and
-                                    courses from Guardian Live and organisations we admire.
-                                </p>
-                            </div>
-                        </div>
+                        @fragments.promos.venuePanel("A home for big ideas") {
+                            <p>
+                                In 2016, the Midland Goods Shed at London’s King’s Cross
+                                will reopen to create a new kind of civic space.
+                            </p>
+                            <p>
+                                As well as being the home of Guardian Membership, the building will be a hub for
+                                big ideas and stimulating conversations. It will host events, activities and
+                                courses from Guardian Live and organisations we admire.
+                            </p>
+                        }
                     </li>
                 </ul>
                 @fragments.common.jumpLink("Join today", "#become-a-member")
             </div>
         </div>
+
     </section>
 
 
     @* ===== Become a member ===== *@
-    <section class="page-slice section-join tone-tint" id="become-a-member">
+    <section class="page-slice tone-tint" id="become-a-member">
         <div class="listing listing--transparent listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Become a member</h3>
             </div>
             <div class="listing__content">
-                <p class="join-text-intro become-intro">
+                <h4 class="text-section-intro u-capped-one-third">
                     Get closer.<br/>
                     Become a Guardian Member.
-                </p>
+                </h4>
 
-                <div class="comparison-group">
-                    <div class="comparison-group__bookend">
-                        <div class="comparison-group__bookend__column">
-                            @comparisonHeader(Tier.Partner)
-                        </div>
-                        <div class="comparison-group__bookend__column">
-                            @comparisonHeader(Tier.Supporter)
-                        </div>
-                    </div>
-                    <div class="comparison-group__table">
-                        <table class="comparison-table">
-                            <thead class="u-h">
-                                <th>Description</th>
-                                <th>Partner</th>
-                                <th>Supporter</th>
-                            </thead>
-                            <tbody class="comparison-table__body">
-                                @for(comparisonItem <- comparisonItems) {
-                                    <tr class="comparison-table__row">
-                                        <td class="comparison-table__description">
-                                            <div class="comparison-table__description">
-                                                @comparisonItem.description
-                                            </div>
-                                        </td>
-                                        <td class="comparison-table__tier">
-                                            <div class="comparison-table__tier__inner">
-                                                @fragments.common.checkmark(comparisonItem.availablePartner)
-                                            </div>
-                                        </td>
-                                        <td class="comparison-table__tier">
-                                            <div class="comparison-table__tier__inner">
-                                                @fragments.common.checkmark(comparisonItem.availableSupporter)
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="comparison-group__bookend">
-                        <div class="comparison-group__bookend__column">
-                            <div class="comparison-action">
-                                <a href="@routes.Joiner.joinPaid(Tier.Partner)"
-                                   class="action action--no-icon"
-                                   data-metric-trigger="click"
-                                   data-metric-category="join"
-                                   data-metric-action="friend"
-                                   data-metric-label="Become a Partner"
-                                >
-                                    Become a Partner
-                                    @fragments.actionIcon("arrow-right")
-                                </a>
-                            </div>
-                        </div>
-                        <div class="comparison-group__bookend__column">
-                            <div class="comparison-action">
-                                <a href="@routes.Joiner.joinPaid(Tier.Supporter)"
-                                   class="action action--no-icon"
-                                   data-metric-trigger="click"
-                                   data-metric-category="join"
-                                   data-metric-action="friend"
-                                   data-metric-label="Become a Supporter"
-                                >
-                                    Become a Supporter
-                                    @fragments.actionIcon("arrow-right")
-                                </a>
-                            </div>
-                        </div>
-                        <div class="comparison-group__bookend__trail">
-                            @fragments.tier.friendTeaser()
-                        </div>
-                    </div>
+                @fragments.tier.comparisonTable(comparisonItems)
+
+                <h4 class="text-section-intro">Choose your membership</h4>
+
+                <ul class="grid grid--2up-stacked">
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Partner, showDescription=false, isReversed=true)
+                    </li>
+                    <li class="grid__item">
+                        @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true)
+                    </li>
+                </ul>
+
+                <div class="u-capped-half-wide">
+                    @fragments.tier.friendTeaser()
                 </div>
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {

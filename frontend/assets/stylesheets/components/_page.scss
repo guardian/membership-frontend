@@ -74,6 +74,15 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding-bottom: 0;
 }
 
+.page-slice--listing {
+    position: relative;
+    padding-bottom: $gs-baseline * 2;
+
+    .listing {
+        padding-bottom: 0;
+    }
+}
+
 /* ==========================================================================
    Functional Page Layout Components
    ========================================================================== */
