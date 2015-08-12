@@ -35,6 +35,7 @@ Install nginx:
 
 Linux: `sudo apt-get install nginx`
 Mac OSX: `brew install nginx`
+
 Make sure you have a sites-enabled folder under your nginx home. This should be
 
 Linux: `/etc/nginx/sites-enabled`
@@ -52,14 +53,15 @@ Run:
 1. Go to the project root
 1. Run `./setup.sh` to install project-specific client-side dependencies
 1. Change the ownership of the 'gu' directory under 'etc' to current user.
-   `$ sudo -i chown -R {username} /etc/gu`
+   `sudo -i chown -R {username} /etc/gu`
 1. Add the following to your hosts file in `/etc/hosts`:
 
 ```
 127.0.0.1   mem.thegulocal.com
+127.0.0.1   profile.thegulocal.com
 ```
 
-1. Run `membership-frontend$ ./nginx/setup.sh`
+1. Inside `membership-frontend` run `./nginx/setup.sh`
 1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
 
 ```
@@ -91,7 +93,7 @@ region = eu-west-1
 In an ideal world, your Ubuntu package install would be:
 
 ```
-$ sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
+sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
 ```
 
 #### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
@@ -129,10 +131,9 @@ Run through the set up instructions; once complete you will need to run:
 
 Run through the set up instructions - download `frontend` and make sure that your `frontend` project is set up to point at your _local_ Identity, not the `CODE` Identity, which means adding this to your `frontend.properties`:
 
- `$ cd ~/.gu`
- `.gu$ vi frontend.properties`
+ `vi ~/.gu/frontend.properties`
 
-Add the below
+Add the below to frontend.properties
 
 ```
 id.apiRoot=https://idapi.thegulocal.com
