@@ -143,11 +143,15 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def list = CachedAction { implicit request =>
+
+    val archivedEvents =
+      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        chronologicalSort(guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten).reverse,
+        chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
       ),
       PageInfo(

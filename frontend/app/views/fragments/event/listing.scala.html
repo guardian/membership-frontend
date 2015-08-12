@@ -75,7 +75,7 @@
             </div>
             <div class="listing__content">
                 <ul class="grid grid--bordered grid--4up">
-                    @for(event <- eventPortfolio.pastEvents.slice(0, 4)) {
+                    @for(event <- eventPortfolio.pastEvents.take(4)) {
                         <li class="grid__item">
                             @fragments.event.itemMinimal(event, isCard=false)
                         </li>
