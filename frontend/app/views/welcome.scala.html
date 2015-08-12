@@ -1,0 +1,74 @@
+@(pageImages: Seq[model.ResponsiveImageGroup])
+
+@import configuration.Links
+@import views.support.Asset
+
+@featurePanel(imgSrc: String, description: String, anchorHref: String) = {
+    <div class="feature-panel">
+        <a class="feature-panel__cta" href="@anchorHref">
+            <div class="feature-panel__media">
+                <img src="@imgSrc" alt="@description" class="responsive-img" />
+            </div>
+            <h3 class="feature-panel__description">
+                @Html(description)
+            </h3>
+        </a>
+    </div>
+}
+
+@main("Home Page") {
+
+    <main role="main" class="l-constrained">
+
+        @* ===== Slideshow ===== *@
+        <section class="slideshow js-slideshow" data-slideshow-duration="6000">
+        @for(imgGroup <- pageImages) {
+            @fragments.media.slideshowItem(imgGroup, imgGroup.altText)
+        }
+        </section>
+
+        @* ===== Introduction ===== *@
+        <section class="block-description block-description--padded block-description--right block-description--pull">
+            <p class="block-description__lead">Hello <span class="js-user-firstName"></span></p>
+            <p class="block-description__text">Welcome back to Guardian Membership</p>
+        </section>
+
+        @* ===== Feature panels ===== *@
+        <section class="page-content">
+            <div class="section-features">
+                <ul class="grid grid--bordered grid--4up">
+                    <li class="grid__item">
+                        @featurePanel(
+                            Asset.at("images/promo/promo-events.jpg").toString,
+                            "Browse our events programme and book tickets now",
+                            routes.Event.list.toString
+                        )
+                    </li>
+                    <li class="grid__item">
+                        @featurePanel(
+                            Asset.at("images/promo/promo-masterclasses.jpg").toString,
+                            "Learn something new with Guardian Masterclasses",
+                            routes.Event.masterclasses.toString
+                        )
+                    </li>
+                    <li class="grid__item">
+                        @featurePanel(
+                            Asset.at("images/promo/promo-members.png").toString,
+                            "Visit our members area on theguardian.com",
+                            Links.membershipFront
+                        )
+                    </li>
+                    <li class="grid__item">
+                        @featurePanel(
+                            Asset.at("images/promo/promo-space.jpg").toString,
+                            "Transforming the Midland Goods Shed into a new space for debate, culture and curiosity",
+                            Links.membershipBuilding
+                        )
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+}
