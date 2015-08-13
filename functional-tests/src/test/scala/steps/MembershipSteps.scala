@@ -157,7 +157,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
 
   def IGoToBecomeAPartner = {
     driver.get(Config().getTestBaseUrl())
-    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
+    new LandingPage(driver).clickBecomeAPartner
     this
   }
 
@@ -179,7 +179,7 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IClickOnThePurchaseSubscriptionCTA = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPartner
+    new LandingPage(driver).clickBecomeAPartner
     this
   }
 
@@ -290,13 +290,13 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def IBecomeAPatron = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAPatron
+    new LandingPage(driver).clickLearnPatron.clickJoinButton
     ICanPurchaseASubscription
     this
   }
 
   def IBecomeAFriend = {
-    new LandingPage(driver).clickJoinButton.clickBecomeAFriend.enterPostCode("N19GU").clickJoinNow
+    new LandingPage(driver).clickBecomeAFriend.enterPostCode("N19GU").clickJoinNow
     this
   }
 
@@ -423,17 +423,17 @@ case class MembershipSteps(implicit driver: WebDriver, logger: TestLogger) {
   }
 
   def ICantBecomeAPatronAgain = {
-    new EventsListPage(driver).clickPricing.clickBecomeAPatron
+    new LandingPage(driver).clickLearnPatron.clickJoinButton
     Assert.assert(new UnavailableTierPage(driver).getHeader, "Unavailable Tier", "A Friend can't become a Friend twice")
   }
 
   def ICantBecomeAPartnerAgain = {
-    new EventsListPage(driver).clickPricing.clickBecomeAPartner
+    new LandingPage(driver).clickBecomeAPartner
     Assert.assert(new UnavailableTierPage(driver).getHeader, "Unavailable Tier", "A Friend can't become a Friend twice")
   }
 
   def ICantBecomeAFriendAgain = {
-    new EventsListPage(driver).clickLogo.clickPricing.clickBecomeAFriend
+    new LandingPage(driver).clickBecomeAFriend
     Assert.assert(new ChangeTierPage(driver).isPageLoaded, true, "A Friend can't become a Friend twice")
   }
 

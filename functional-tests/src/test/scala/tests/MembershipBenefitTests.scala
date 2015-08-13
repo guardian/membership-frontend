@@ -3,9 +3,6 @@ package tests
 import com.gu.membership.tags.{CoreTest, OptionalTest}
 import steps.MembershipSteps
 
-/**
- * Created by jao on 06/06/2014.
- */
 class MembershipBenefitTests extends BaseMembershipTest {
 
   info("Tests for Membership benefits")
