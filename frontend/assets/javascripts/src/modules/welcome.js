@@ -7,8 +7,12 @@ define(['src/utils/user'], function(userUtil) {
 
     function init() {
         var redirectUrl = urlMappings[window.location.pathname] || false;
-        if (redirectUrl && userUtil.isLoggedIn()) {
-            window.location.href = redirectUrl;
+        if (redirectUrl) {
+            userUtil.getMemberDetail(function (memberDetail) {
+                if (userUtil.hasTier(memberDetail)) {
+                    window.location.href = redirectUrl;
+                }
+            });
         }
     }
 
