@@ -63,7 +63,7 @@ object Security extends Controller with LazyLogging {
         .withChecksumFor(report.blockedUri)
         .withMessage(report.message)
         .withLevel(RavenEvent.Level.INFO)
-        .withTag("CSP Directive", report.directiveTag)
+        .withTag("CSPDIRECTIVE", report.directiveTag)
 
       raven.sendEvent(eventBuilder.build())
     }
