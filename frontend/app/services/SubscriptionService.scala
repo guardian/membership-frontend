@@ -114,7 +114,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     } yield subscriptions
   }
 
-  def memberTierFeatures(memberId: MemberId): Future[Seq[Feature]] =
+  def memberTierFeatures(memberId: MemberId): Future[Seq[Rest.Feature]] =
     for {
       account <- getAccount(memberId)
       features <- zuoraRestService.productFeaturesByAccount(account.id)

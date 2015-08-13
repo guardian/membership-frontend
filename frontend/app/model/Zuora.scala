@@ -44,6 +44,41 @@ object Zuora {
     override def getMessage: String = s"$code: $message"
   }
 
+  object Rest {
+    sealed trait Response[+T] {
+      def isSuccess: Boolean
+    }
+    case class Success[T](value: T) extends Response[T] {
+      override def isSuccess = true
+    }
+    case class Error(code: String, message: String)
+    case class Failure(processId: String, reasons: Seq[Error]) extends Response[Nothing] {
+      override def isSuccess = false
+    }
+
+    sealed trait SubscriptionStatus
+    object Draft extends SubscriptionStatus
+    object PendingActivation extends SubscriptionStatus
+    object PendingAcceptance extends SubscriptionStatus
+    object Active extends SubscriptionStatus
+    object Cancelled extends SubscriptionStatus
+    object Expired extends SubscriptionStatus
+
+    case class Subscription(id: String,
+                            subscriptionNumber: String,
+                            accountId: String,
+                            termStartDate: DateTime,
+                            termEndDate: DateTime,
+                            contractEffectiveDate: DateTime,
+                            ratePlans: Seq[Rest.RatePlan],
+                            status: SubscriptionStatus) {
+      val isActive: Boolean = status == Active
+    }
+
+    case class Feature(id: String, featureCode: String)
+    case class RatePlan(subscriptionProductFeatures: List[Rest.Feature])
+  }
+
   case class FaultError(code: String, message: String) extends Error
   case class ResultError(code: String, message: String) extends Error {
     override val fatal = {
