@@ -80,14 +80,6 @@ region = eu-west-1
 
 ```
 
-In `~/.aws/config` add the following:
-
-```
-[default]
-output = json
-region = eu-west-1
-```
-
 ### Ubuntu
 
 In an ideal world, your Ubuntu package install would be:
