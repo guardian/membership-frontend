@@ -1,9 +1,12 @@
 @import com.gu.membership.salesforce.Tier
-@import Tier.{Partner, Patron}
-@import actions.AuthRequest
-@import model.{FeatureChoice, FreeEventTickets}
-@import utils.TestUsers.isTestUser
-@(tier: Tier)(implicit request: AuthRequest[_])
+@import Tier.Patron
+@import Tier.Partner
+@import model.FeatureChoice
+@import model.FreeEventTickets
+@import model.Books
+@import configuration.Config
+
+@(tier: Tier)
 
 
 @heading(headline: String, note: Option[String] = None) = {
@@ -49,7 +52,7 @@
       case _ =>  {}
   }
 }
-@if(isTestUser(request.user)) {
+@if(!Config.stageProd) {
     @if(Seq(Patron, Partner).contains(tier)) {
         <fieldset class="fieldset js-feature-choice-container">
         @fieldset(tier)

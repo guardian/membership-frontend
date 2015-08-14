@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
-import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -142,17 +141,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Member, user: IdMinimalUser, event: RichEvent): Future[Option[EBCode]] = {
-    val complimentaryTicketF =
-      if (isTestUser(user)) retrieveComplimentaryTickets(member, event)
-      else Future.successful(Nil)
-
-    complimentaryTicketF.flatMap { complimentaryTickets =>
+  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] =
+    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
     }
-  }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
