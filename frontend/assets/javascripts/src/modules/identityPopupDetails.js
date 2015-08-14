@@ -6,6 +6,7 @@
  * Controls the "Join Us" cta visibility
  */
 define(['src/utils/user'], function (userUtil) {
+    'use strict';
 
     var MENU_EDIT_PROFILE_ELEM = document.querySelector('.js-identity-menu-edit-profile');
     var MENU_COMMENT_ACTIVITY_ELEM = document.querySelector('.js-identity-menu-comment-activity');

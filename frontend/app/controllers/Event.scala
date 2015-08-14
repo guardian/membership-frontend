@@ -143,21 +143,23 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def list = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    val pastEvents = (guLiveEvents.getEventsArchive ++ localEvents.getEventsArchive).headOption
-      .map(chronologicalSort(_).reverse)
+
+    val archivedEvents =
+      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        pastEvents,
+        chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
       ),
-      pageInfo))
+      PageInfo(
+        CopyConfig.copyTitleEvents,
+        request.path,
+        Some(CopyConfig.copyDescriptionEvents)
+      ))
+    )
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -171,7 +173,7 @@ trait Event extends Controller with ActivityTracking {
       EventPortfolio(
         Seq.empty,
         chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag)),
-        None,
+        Seq.empty,
         None
       ),
       pageInfo))
@@ -197,13 +199,10 @@ trait Event extends Controller with ActivityTracking {
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
-      for {
-        discountOpt <- memberService.createDiscountForMember(request.member, event)
-      } yield {
-          val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode=extractCampaignCode(request))
-          track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
-        Found(event.url ? ("discount" -> discountOpt.map(_.code)))
-          .withCookies(Cookie(eventCookie(event), "", Some(3600)))
+      memberService.createEBCode(request.member, request.user, event).map { ebCode =>
+        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
+        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
+        Found(event.url ? ("discount" -> ebCode.map(_.code))).withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
 

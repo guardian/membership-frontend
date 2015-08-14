@@ -2,6 +2,7 @@ define([
     '$',
     'src/utils/user'
 ], function ($, userUtil) {
+    'use strict';
 
     var AVAILABLE_DETAILS = ['displayname', 'firstName', 'tier'];
     var CLASS_NAMES = {

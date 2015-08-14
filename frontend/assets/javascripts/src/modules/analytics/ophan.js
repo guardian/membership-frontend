@@ -1,5 +1,6 @@
 /*global Raven */
 define(function() {
+    'use strict';
 
     function init() {
         var ophanUrl = '//j.ophan.co.uk/ophan.membership.js';

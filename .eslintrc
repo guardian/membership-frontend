@@ -15,17 +15,12 @@
 
   "rules": {
     "camelcase": 0,
-    "strict": 0,
     "curly": [2, "all"],
-    "comma-spacing": 0,
-    "eqeqeq": 0,
     "new-cap": 2,
     "no-caller": 2,
     "no-empty": 0,
     "no-new": 0,
-    "eol-last": 0,
     "no-trailing-spaces": 2,
-    "no-multi-spaces": 0,
     "no-use-before-define": 0,
     "no-unused-vars": 2,
     "quotes": [2, "single"],

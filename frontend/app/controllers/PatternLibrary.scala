@@ -28,12 +28,7 @@ trait PatternLibrary extends Controller {
 
   def patterns = NoCacheAction { implicit request =>
     Ok(views.html.patterns.patterns(
-      EventPortfolio(
-        guLiveEvents.getFeaturedEvents,
-        guLiveEvents.getEvents,
-        guLiveEvents.getEventsArchive,
-        guLiveEvents.getPartnerEvents
-      ),
+      guLiveEvents.getEvents,
       pageImages
     ))
   }

@@ -2,6 +2,7 @@
 define([
     'src/utils/user'
 ], function (user) {
+    'use strict';
 
     var GU_ID_STRING = 'GUID';
     var NONE_STRING = 'none';

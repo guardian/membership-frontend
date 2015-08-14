@@ -68,34 +68,31 @@
         </section>
     }
 
-    @if(showPastEvents && eventPortfolio.pastEvents) {
+    @if(showPastEvents && eventPortfolio.pastEvents.nonEmpty) {
         <section class="listing listing--bordered">
+        <section class="listing">
             <div class="listing__lead-in">
                 <h3 class="listing__title h-intro">Past events</h3>
             </div>
             <div class="listing__content">
-                @if(eventPortfolio.normal.isEmpty) {
-                    <div class="listing__empty">@noResultsMessage</div>
-                } else {
-                    <ul class="grid grid--bordered grid--4up">
-                        @for(event <- eventPortfolio.pastEvents.get.slice(0, 4)) {
-                            <li class="grid__item">
-                                @fragments.event.itemMinimal(event)
-                            </li>
-                        }
-                    </ul>
-                    <ul class="grid grid--bordered grid--2up" id="js-toggle-past-events" data-toggle-hidden>
-                        @for(event <- eventPortfolio.pastEvents.get.slice(4, 26)) {
-                            <li class="grid__item">
-                                @fragments.event.itemMinimal(event, isCard=true)
-                            </li>
-                        }
-                    </ul>
-                    <button class="action action--secondary u-no-margin js-toggle" data-toggle="js-toggle-past-events" data-toggle-label="Less" data-toggle-icon="minus">
-                        @fragments.actionIcon("plus", leftIcon=true)
-                        <span class="action__label js-toggle-label">More past events</span>
-                    </button>
-                }
+                <ul class="grid grid--bordered grid--4up">
+                    @for(event <- eventPortfolio.pastEvents.take(4)) {
+                        <li class="grid__item">
+                            @fragments.event.itemMinimal(event, isCard=false)
+                        </li>
+                    }
+                </ul>
+                <ul class="grid grid--bordered grid--2up" id="js-toggle-past-events" data-toggle-hidden>
+                    @for(event <- eventPortfolio.pastEvents.slice(4, 36)) {
+                        <li class="grid__item">
+                            @fragments.event.itemMinimal(event, isCard=true)
+                        </li>
+                    }
+                </ul>
+                <button class="action action--secondary u-no-margin js-toggle" data-toggle="js-toggle-past-events" data-toggle-label="Less" data-toggle-icon="minus">
+                    @fragments.actionIcon("plus", leftIcon=true)
+                    <span class="action__label js-toggle-label">More past events</span>
+                </button>
             </div>
         </section>
     }

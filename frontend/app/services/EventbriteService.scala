@@ -79,20 +79,20 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
   def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
 
-  def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[EBAccessCode] = {
-    val uri = s"events/${event.id}/access_codes"
+  def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
+      val uri = s"events/${event.id}/access_codes"
 
-    for {
-      discounts <- getAll[EBAccessCode](uri)
-      discount <- discounts.find(_.code == code).fold {
-        post[EBAccessCode](uri, Map(
-          "access_code.code" -> Seq(code),
-          "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
-          "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
-        ))
-      }(Future.successful)
-    } yield discount
-  }
+      for {
+        discounts <- getAll[EBAccessCode](uri) if ticketClasses.nonEmpty
+        discount <- discounts.find(_.code == code).fold {
+          post[EBAccessCode](uri, Map(
+            "access_code.code" -> Seq(code),
+            "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
+            "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
+          ))
+        }(Future.successful)
+      } yield Some(discount)
+  } recover { case _: NoSuchElementException => None }
 
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> EBOrder.expansions.mkString(","))
 }

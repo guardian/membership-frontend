@@ -9,8 +9,6 @@ GET            /favicon.ico                       controllers.CacheBustedAssets.
 # Home page
 GET            /                                  controllers.FrontPage.index
 
-GET            /gifting                           controllers.Info.giftingPlaceholder
-
 # Healthcheck
 GET            /healthcheck                       controllers.Healthcheck.healthcheck
 

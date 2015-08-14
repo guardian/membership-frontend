@@ -2,6 +2,7 @@ define([
     'lodash/function/debounce',
     'src/modules/metrics/logger'
 ], function (debounce, logMetric) {
+    'use strict';
 
     var METRIC_ATTRS = {
         'trigger': 'data-metric-trigger',

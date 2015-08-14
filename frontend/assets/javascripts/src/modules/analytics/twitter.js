@@ -1,5 +1,6 @@
 /*global Raven, twttr */
 define(function() {
+    'use strict';
 
     var tierMapping = {
         '/join/friend/thankyou': 'l6gt9',

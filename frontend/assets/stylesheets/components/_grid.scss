@@ -117,12 +117,12 @@
    ========================================================================== */
 
 .grid--3up-stacked {
-    @include mq(desktop) {
+    @include mq(tablet) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
     }
     .grid__item {
-        @include mq(desktop) {
+        @include mq(tablet) {
             float: left;
             border-style: solid;
             border-width: 0 0 0 1px;

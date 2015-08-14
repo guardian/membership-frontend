@@ -3,6 +3,7 @@ define([
     'src/modules/metrics/logger',
     'src/modules/form/helper/formUtil'
 ], function (bean, logMetric, formUtil) {
+    'use strict';
 
     /**
      * Successful submission: Form was submitted without errors

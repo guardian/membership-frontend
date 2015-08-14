@@ -1,15 +1,16 @@
 define(['$'], function ($) {
+    'use strict';
 
-    var FILTER_INPUT    = document.getElementById('js-filter');
-    var FILTER_PARENT   = document.getElementById('js-filter-container');
+    var FILTER_INPUT = document.getElementById('js-filter');
+    var FILTER_PARENT = document.getElementById('js-filter-container');
     var FILTER_CATEGORY = $('.js-filter-category');
-    var FILTER_ITEMS    = $('.js-filter-item');
-    var FILTER_CLEAR    = $('.js-filter-clear');
-    var FILTER_COUNT    = $('.js-filter-count');
-    var FILTER_EMPTY    = $('.js-filter-empty');
-    var THROTTLE        = 300;
-    var HIDDEN_CLASS    = 'is-hidden';
-    var SHOWN_CLASS     = 'is-shown';
+    var FILTER_ITEMS = $('.js-filter-item');
+    var FILTER_CLEAR = $('.js-filter-clear');
+    var FILTER_COUNT = $('.js-filter-count');
+    var FILTER_EMPTY = $('.js-filter-empty');
+    var THROTTLE = 300;
+    var HIDDEN_CLASS = 'is-hidden';
+    var SHOWN_CLASS = 'is-shown';
 
     var currentTimeout;
 

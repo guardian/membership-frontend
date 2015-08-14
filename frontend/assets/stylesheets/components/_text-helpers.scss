@@ -45,6 +45,16 @@
     font-weight: normal;
 }
 
+.text-section-intro {
+    @include fs-headline(3);
+    color: color(brand-dark);
+    margin-bottom: $gs-baseline;
+
+    @include mq(tablet) {
+        @include fs-headline(4, $size-only: true);
+    }
+}
+
 /* Text Helpers - Case
    ========================================================================== */
 

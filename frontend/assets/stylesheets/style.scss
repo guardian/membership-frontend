@@ -80,6 +80,7 @@
 @import 'components/loader';
 @import 'components/social';
 @import 'components/signpost';
+@import 'components/hero-banner';
 @import 'components/slideshow';
 @import 'components/promos';
 @import 'components/features';
@@ -91,12 +92,6 @@
 // Dev modules:
 // - Pattern library
 @import 'components/patterns';
-
-/* ==========================================================================
-   Tests (A/B tests / temporary styles)
-   ========================================================================== */
-
-@import 'tests/join-challenger';
 
 /* ==========================================================================
    State

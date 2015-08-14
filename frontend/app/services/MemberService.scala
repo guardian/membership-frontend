@@ -12,7 +12,8 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.EBCode
+import model.Eventbrite.{EBCode, EBTicketClass}
+import model.FreeEventTickets
 import model.RichEvent._
 import model.Zuora.PreviewInvoiceItem
 import monitoring.MemberMetrics
@@ -21,6 +22,7 @@ import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -122,14 +124,35 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def createDiscountForMember(member: Member, event: RichEvent): Future[Option[EBCode]] = (for {
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+    for {
+      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
+        .subscriptionService.memberTierFeatures(member)
+    } yield {
+      val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
+      event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
+    }
+  }
+
+  def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
+    (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
-    } yield {
-      // Add a "salt" to make access codes different to discount codes
+    } yield ticketing.memberBenefitTickets)
+      .getOrElse(Seq[EBTicketClass]())
+  }
+
+  def createEBCode(member: Member, user: IdMinimalUser, event: RichEvent): Future[Option[EBCode]] = {
+    val complimentaryTicketF =
+      if (isTestUser(user)) retrieveComplimentaryTickets(member, event)
+      else Future.successful(Nil)
+
+    complimentaryTicketF.flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
-      event.service.createOrGetAccessCode(event, code, ticketing.memberBenefitTickets).map(Some(_))
-    }).getOrElse(Future.successful(None))
+      val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
+      event.service.createOrGetAccessCode(event, code, unlockedTickets)
+    }
+  }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)

@@ -172,3 +172,26 @@
     background-color: tone('masterclass');
     border-color: tone('masterclass');
 }
+
+/* Checkmarks
+   ========================================================================== */
+
+.checkmark,
+.checkmark--true {
+    @include circular();
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0; margin: 0;
+    width: 24px; height: 24px;
+    color: $white;
+    background-color: #1f6e04;
+
+    .icon-inline {
+        @include vertically-center();
+        position: relative;
+        width: 14px; height: 14px;
+    }
+}
+.checkmark--false {
+    background-color: $c-neutral4;
+}

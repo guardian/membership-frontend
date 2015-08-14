@@ -376,3 +376,97 @@
     height: ($gs-baseline * 2);
     padding-top: ($gs-baseline / 2);
 }
+
+/* Nav Sections
+   ========================================================================== */
+
+.nav-sections {
+    @include unstyled-list();
+    overflow: auto;
+    color: $black;
+    background-color: color(brand-main);
+    position: relative;
+}
+.nav-sections--sticky {
+    @include mq(tablet) {
+        will-change: transform;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        width: 100%;
+    }
+}
+.nav-sections.is-sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+}
+.nav-sections__list,
+.nav-sections__item {
+    display: block;
+    float: left;
+}
+.nav-sections__list {
+    margin: 0;
+    width: 100%;
+    overflow: auto;
+    list-style: none;
+    counter-reset: nav-sections;
+
+    @include mq(mem-full) {
+        border-left: 1px solid $white;
+        margin-left: gs-span(2.5);
+    }
+}
+.nav-sections__item,
+.nav-sections__link {
+    @include mq($until: tablet) {
+        height: 50px;
+    }
+}
+.nav-sections__item {
+    counter-increment: nav-sections;
+
+    @include mq($until: tablet) {
+        width: 33.3%;
+    }
+}
+.nav-sections__link {
+    @include font-smoothing();
+    @include fs-data(4);
+    display: inline-block;
+    vertical-align: middle;
+    text-decoration: none;
+    color: $c-neutral1;
+    padding: ($gs-baseline / 2) ($gs-gutter / 2);
+    border-right: 1px solid $white;
+
+    @include mq($until: tablet) {
+        width: 100%;
+    }
+
+    @include mq(tablet) {
+        @include fs-headline(2);
+        font-weight: bold;
+        min-width: rem(gs-span(3));
+        padding: $gs-baseline $gs-gutter;
+    }
+}
+.nav-sections__link:hover,
+.nav-sections__link.is-active {
+    text-decoration: none;
+    background-color: lighten(color(brand-main), 10%);
+}
+@include mq($until: tablet) {
+    .nav-sections__item:last-child .nav-sections__link {
+        border-right: none;
+    }
+}
+@include mq(tablet) {
+    .nav-sections__link::before {
+        color: $white;
+        content: counter(nav-sections);
+        display: block;
+    }
+}

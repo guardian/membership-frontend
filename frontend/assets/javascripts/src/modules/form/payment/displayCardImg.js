@@ -1,4 +1,5 @@
 define(function () {
+    'use strict';
 
     var CARD_SPRITE_ICON_PREFIX = 'sprite-card--';
     var CREDIT_CARD_IMG_ELEM = document.querySelector('.js-credit-card-image');

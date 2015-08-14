@@ -36,7 +36,7 @@ object ZuoraServiceHelpers {
     s"SELECT ${reader.fields.mkString(",")} FROM ${reader.table} WHERE $where"
 }
 
-class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
+class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   import ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -96,7 +96,7 @@ class ZuoraService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     val url = apiConfig.url.toString()
 
     Timing.record(metrics, action.getClass.getSimpleName) {
-      WS.url(url.toString).post(action.xml(authOpt).toString())
+      WS.url(url).post(action.xml(authOpt).toString())
     }.map { result =>
       metrics.putResponseCode(result.status, "POST")
       reader.read(result.body) match {

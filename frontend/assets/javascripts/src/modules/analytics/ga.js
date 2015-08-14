@@ -1,4 +1,6 @@
 define(function() {
+    'use strict';
+
     return {
         init: function() {
             /* Google analytics snippet */

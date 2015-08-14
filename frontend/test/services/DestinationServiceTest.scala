@@ -69,7 +69,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        destinationService.memberService.createDiscountForMember(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        destinationService.memberService.createEBCode(request.member, request.user, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test
         val futureResult = destinationService.eventDestinationFor(request)
@@ -93,7 +93,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
         //mock the Eventbrite response and discount creation
         val event = TestRichEvent(eventWithName().copy(id = "0123456"))
         destinationService.eventbriteService.getBookableEvent("0123456") returns Some(event)
-        destinationService.memberService.createDiscountForMember(request.member, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
+        destinationService.memberService.createEBCode(request.member, request.user, event) returns Future.successful(Some(EBAccessCode("some-discount-code", 2)))
 
         //call the method under test with the request
         val futureResult = destinationService.returnDestinationFor(request)
