@@ -157,12 +157,12 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
   }
 
   def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = (for {
-      subscriptions <- getSubscriptions(memberId)
-      details <- getSubscriptionDetails(subscriptions.head.id) if subscriptions.nonEmpty
-      startDate = formatDateTime(details.contractAcceptanceDate)
-      endDate = formatDateTime(details.effectiveStartDate + 1.year)
-      whereClause = s"StartDateTime >= '$startDate' AND StartDateTime <= '$endDate' AND SubscriptionID = '${subscriptions.head.id}'"
-      result <- zuoraSoapService.query[Usage](whereClause)
+    account <- getAccount(memberId)
+    subscriptions <- zuoraRestService.subscriptionsByAccount(account.id)
+    subscription = subscriptions.head if subscriptions.nonEmpty
+    startDate = formatDateTime(subscription.termStartDate)
+    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscriptions.head.id}'"
+    result <- zuoraSoapService.query[Usage](whereClause)
   } yield result.size) recover {
       case _: NoSuchElementException => 0
   }
