@@ -1,4 +1,3 @@
-@import actions.AuthRequest
 @(
     tier: com.gu.membership.salesforce.Tier,
     userFields: com.gu.identity.play.PrivateFields,
@@ -6,7 +5,7 @@
     passwordExists: Boolean,
     pageInfo: model.PageInfo,
     showSubscriberFields: Boolean
-)(implicit token: play.filters.csrf.CSRF.Token, request: AuthRequest[_])
+)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
 @import views.html.helper._
