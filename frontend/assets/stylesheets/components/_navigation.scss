@@ -384,7 +384,7 @@
     @include unstyled-list();
     overflow: auto;
     color: $black;
-    background-color: color(brand-main);
+    background-color: $c-neutral1;
     position: relative;
 }
 .nav-sections--sticky {
@@ -415,7 +415,7 @@
     counter-reset: nav-sections;
 
     @include mq(mem-full) {
-        border-left: 1px solid $white;
+        border-left: 1px solid $c-neutral2;
         margin-left: gs-span(2.5);
     }
 }
@@ -438,9 +438,9 @@
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    color: $c-neutral1;
     padding: ($gs-baseline / 2) ($gs-gutter / 2);
-    border-right: 1px solid $white;
+    color: $white;
+    border-right: 1px solid $c-neutral2;
 
     @include mq($until: tablet) {
         width: 100%;
@@ -456,7 +456,7 @@
 .nav-sections__link:hover,
 .nav-sections__link.is-active {
     text-decoration: none;
-    background-color: lighten(color(brand-main), 10%);
+    background-color: $c-neutral2;
 }
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {

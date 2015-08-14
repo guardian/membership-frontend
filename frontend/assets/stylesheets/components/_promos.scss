@@ -155,7 +155,6 @@
 .promo-tertiary {
     @include clearfix();
     color: $white;
-    background-color: color(brand-dark);
 
     @include mq(tablet) {
         display: table;

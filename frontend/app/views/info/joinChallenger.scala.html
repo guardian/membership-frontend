@@ -20,7 +20,7 @@
                         Support open, independent journalism and experience the Guardian brought to life
                     </p>
                     <div class="hero-banner__action">
-                        @fragments.common.jumpLink("Learn more", "#what-are-members", isReversed=true)
+                        @fragments.common.jumpLink("Learn more", "#what-are-members")
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             NavAnchor("#become-a-member", "Become a member")
         ))
 
-        <div class="listing listing--padded l-constrained" id="what-are-members">
+        <div class="listing listing--bordered listing--padded l-constrained" id="what-are-members">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">What is membership</h3>
             </div>
@@ -59,7 +59,7 @@
 
     @* ===== Why join ===== *@
     <section class="page-slice page-slice--listing u-padding-top" id="why-join">
-        <div class="listing listing--padded l-constrained">
+        <div class="listing listing--bordered listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro h-intro--capitalize">Why join</h3>
             </div>
@@ -156,9 +156,11 @@
             <div class="listing__content">
                 <ul class="grid grid--2up grid--single-row">
                     <li class="grid__item">
-                    @for(img <- pageImages.find(_.name.contains("space"))) {
-                        <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
-                    }
+                        @for(img <- pageImages.find(_.name.contains("space"))) {
+                            <div class="u-thumbnail-clip u-thumbnail-clip--a">
+                                <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
+                            </div>
+                        }
                     </li>
                     <li class="grid__item">
                         @fragments.promos.venuePanel("A home for big ideas") {
@@ -216,8 +218,7 @@
                         "Patrons play a vital role to keep the Guardian fearless, progressive and free from interference",
                         "Learn more about Patrons",
                         routes.Info.patron.toString,
-                        image,
-                        Some("tone-patron")
+                        image
                     )
                 }
             </div>
