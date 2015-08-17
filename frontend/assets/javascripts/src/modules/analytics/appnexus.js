@@ -8,7 +8,7 @@ define(function() {
         '/join/patron/thankyou': 568469
     };
 
-    function load() {
+    function init() {
         var tierId = tierMapping[window.location.pathname] || false;
         var scriptUrl;
         // Specific page tracking if we match a given path
@@ -21,6 +21,6 @@ define(function() {
     }
 
     return {
-        load: load
+        init: init
     };
 });
