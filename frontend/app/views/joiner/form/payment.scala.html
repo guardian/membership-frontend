@@ -1,3 +1,7 @@
+@import com.gu.membership.salesforce.Tier
+@import actions.AuthRequest
+@import views.html.helper._
+
 @(
     tier: com.gu.membership.salesforce.Tier,
     userFields: com.gu.identity.play.PrivateFields,
@@ -5,10 +9,7 @@
     passwordExists: Boolean,
     pageInfo: model.PageInfo,
     showSubscriberFields: Boolean
-)(implicit token: play.filters.csrf.CSRF.Token)
-
-@import com.gu.membership.salesforce.Tier
-@import views.html.helper._
+)(implicit token: play.filters.csrf.CSRF.Token, request: AuthRequest[_])
 
 @main("Payment | " + tier, pageInfo=pageInfo) {
 

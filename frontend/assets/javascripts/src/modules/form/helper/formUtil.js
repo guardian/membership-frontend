@@ -1,6 +1,7 @@
 define([
     'src/utils/helper'
 ], function (utilsHelper) {
+    'use strict';
 
     /**
      * Filter only the elements that require validation, 'input', 'textarea', 'select' input elements that are

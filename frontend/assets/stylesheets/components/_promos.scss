@@ -153,7 +153,6 @@
     @include clearfix();
     color: $white;
     background-color: color(brand-dark);
-    margin-bottom: rem($gs-baseline);
 
     @include mq(tablet) {
         display: table;

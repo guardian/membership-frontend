@@ -3,6 +3,7 @@ define([
     'src/utils/masker',
     'src/modules/form/payment/displayCardImg'
 ], function (bean, masker, displayCardImg) {
+    'use strict';
 
     var CREDIT_CARD_NUMBER_ELEM = document.querySelector('.js-credit-card-number');
 

@@ -1,5 +1,6 @@
 /*global Raven, twttr */
 define(function() {
+    'use strict';
 
     var tierMapping = {
         '/join/friend/thankyou': 'l6gt9',
@@ -8,7 +9,7 @@ define(function() {
         '/join/patron/thankyou': 'l6gtc'
     };
 
-    function load() {
+    function init() {
         var scriptUrl = '//platform.twitter.com/oct.js';
         var tierId = tierMapping[window.location.pathname] || false;
         require('js!' + scriptUrl).then(function() {
@@ -24,6 +25,6 @@ define(function() {
     }
 
     return {
-        load: load
+        init: init
     };
 });

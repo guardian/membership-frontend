@@ -3,6 +3,7 @@
  * Play video when clicking on a video overlay image
  */
 define(function() {
+    'use strict';
 
     var SELECTOR_PLAYER = '.js-video';
     var SELECTOR_PLAYER_IFRAME = '.js-video__iframe';

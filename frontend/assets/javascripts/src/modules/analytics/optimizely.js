@@ -1,4 +1,5 @@
 define(function() {
+    'use strict';
 
     var EXPERIMENT_ID = 3267360204;
     var VARIATION_INDEX = 1;

@@ -1,4 +1,5 @@
 define(function() {
+    'use strict';
 
     var SLIDESHOW_CONTAINER = '.js-slideshow',
         SLIDESHOW_CHILDREN = '.js-slideshow-item',

@@ -18,6 +18,34 @@
 .u-fullwidth {
     width: 100%;
 }
+.u-capped-half {
+    display: block;
+
+    @include mq(tablet) {
+        width: 50% - ($gutter-width-fluid / 2);
+    }
+}
+.u-capped-half-wide {
+    @include mq(mem-full) {
+        width: 50% - ($gutter-width-fluid / 2);
+    }
+}
+.u-capped-one-third {
+    display: block;
+
+    @include mq(tablet) {
+        width: 33.3%;
+        // margin-bottom: rem($gs-gutter);
+    }
+}
+.u-capped-two-thirds {
+    display: block;
+
+    @include mq(tablet) {
+        width: 66%;
+        // margin-bottom: rem($gs-gutter);
+    }
+}
 
 .u-align-left {
     float: left;
@@ -52,6 +80,14 @@
         position: absolute;
         right: $gs-gutter / 2;
         top: $gs-gutter / 2;
+    }
+}
+
+.u-sticky-offset {
+    padding-top: 0;
+
+    @include mq(tablet) {
+        padding-top: rem(($gs-baseline * 2) + 64px); // magic number, height of sections nav
     }
 }
 

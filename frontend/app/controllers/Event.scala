@@ -21,6 +21,7 @@ import services.{EventbriteService, GuardianLiveEventService, LocalEventService,
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.Future
 
@@ -144,21 +145,23 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def list = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    val pastEvents = (guLiveEvents.getEventsArchive ++ localEvents.getEventsArchive).headOption
-      .map(chronologicalSort(_).reverse)
+
+    val archivedEvents =
+      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+
     Ok(views.html.event.guardianLive(
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        pastEvents,
+        chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
       ),
-      pageInfo))
+      PageInfo(
+        CopyConfig.copyTitleEvents,
+        request.path,
+        Some(CopyConfig.copyDescriptionEvents)
+      ))
+    )
   }
 
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
@@ -172,7 +175,7 @@ trait Event extends Controller with ActivityTracking {
       EventPortfolio(
         Seq.empty,
         chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag)),
-        None,
+        Seq.empty,
         None
       ),
       pageInfo))
@@ -224,7 +227,7 @@ trait Event extends Controller with ActivityTracking {
       } yield {
         event.service.getOrder(oid).map { order =>
           val count = memberService.countComplimentaryTicketsInOrder(event, order)
-          if (count > 0) {
+          if (count > 0 && isTestUser(request.user)) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
 
