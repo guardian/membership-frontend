@@ -22,6 +22,7 @@ import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -157,6 +158,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
     }
+  }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
