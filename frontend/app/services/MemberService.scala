@@ -22,6 +22,7 @@ import play.api.libs.json.Json
 import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -54,6 +55,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging with ActivityTracking {
+
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
@@ -125,7 +127,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
     for {
-      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
+      memberTierFeatures <- TouchpointBackend.forUser(member)
         .subscriptionService.memberTierFeatures(member)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
@@ -141,12 +143,19 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] =
-    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
+  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] = {
+    val complimentaryTicketF =
+      if (isTestUser(member)) retrieveComplimentaryTickets(member, event)
+      else {
+        Future.successful(Nil)
+      }
+
+    complimentaryTicketF.flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)
     }
+  }
 
   def previewUpgradeSubscription(paidMember: PaidMember, user: IdMinimalUser, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
