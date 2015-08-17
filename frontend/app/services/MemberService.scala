@@ -27,7 +27,6 @@ import utils.TestUsers.isTestUser
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.implicitConversions
 import scala.util.{Failure, Success}
 
 case class MemberServiceError(s: String) extends Throwable {
@@ -56,8 +55,6 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging with ActivityTracking {
-  implicit def memberToIdMinimalUser(member: Member): IdMinimalUser =
-    IdMinimalUser(member.identityId, member.firstName)
 
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
