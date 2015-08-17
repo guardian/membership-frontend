@@ -21,6 +21,7 @@ import services.{EventbriteService, GuardianLiveEventService, LocalEventService,
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.Future
 
@@ -224,7 +225,7 @@ trait Event extends Controller with ActivityTracking {
       } yield {
         event.service.getOrder(oid).map { order =>
           val count = memberService.countComplimentaryTicketsUsed(event, order)
-          if (count > 0) {
+          if (count > 0 && isTestUser(request.user)) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
 
