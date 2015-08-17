@@ -48,11 +48,7 @@ class ZuoraRestService(config: ZuoraApiConfig) {
     }
 
   def productFeaturesByAccount(accountKey: String): Future[Seq[Rest.Feature]] =
-    subscriptionsByAccount(accountKey).map {
-      case (subscription :: _) =>
-        subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
-      case _ => Nil
-    }
+    subscriptionsByAccount(accountKey).map(productFeatures)
 
   private def get(uri: String): Future[Response] = client.execute(new Builder()
     .addHeader("apiAccessKeyId", config.username)
