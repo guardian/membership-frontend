@@ -1,0 +1,13 @@
+@(quoteText: String, citation: String, cutout: String)
+
+<aside class="promo-quote">
+    <div class="promo-quote__body">
+        <div class="promo-quote__text">
+            <blockquote class="blockquote blockquote--feature">
+                @quoteText
+                <cite class="blockquote__citation">@citation</cite>
+            </blockquote>
+        </div>
+        <img src="@cutout" alt="@citation" class="promo-quote__cutout">
+    </div>
+</aside>

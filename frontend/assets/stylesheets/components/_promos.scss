@@ -284,3 +284,47 @@
         padding-left: 30%;
     }
 }
+
+/* ==========================================================================
+   Promos: Quote
+   ========================================================================== */
+
+.promo-quote {
+    margin-bottom: $gs-baseline * 3;
+}
+.promo-quote__body {
+    @include clearfix();
+    background-color: color(neutral-7);
+    padding: $gs-baseline ($gs-gutter / 2) 0;
+
+    @include mq(phablet) {
+        position: relative;
+        padding: $gs-baseline $gs-gutter 0;
+        min-height: gs-height(5) + $gs-baseline;
+    }
+
+    @include mq(desktop) {
+        padding: $gs-baseline 0;
+    }
+}
+.promo-quote__text {
+    @include mq(phablet) {
+        max-width: 70%;
+    }
+    @include mq(desktop) {
+        padding-left: $gs-gutter * 4;
+    }
+}
+.promo-quote__cutout {
+    height: gs-height(4);
+    float: right;
+    clear: both;
+
+    @include mq(phablet) {
+        height: gs-height(5);
+        float: none;
+        position: absolute;
+        right: $gs-gutter * 2;
+        bottom: 0;
+    }
+}
