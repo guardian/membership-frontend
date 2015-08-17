@@ -47,13 +47,22 @@ object Zuora {
   object Rest {
     sealed trait Response[+T] {
       def isSuccess: Boolean
+      def get: T
+      def toOption: Option[T]
     }
+
     case class Success[T](value: T) extends Response[T] {
       override def isSuccess = true
+      override def get = value
+      override def toOption = Some(value)
     }
+
     case class Error(code: String, message: String)
+
     case class Failure(processId: String, reasons: Seq[Error]) extends Response[Nothing] {
       override def isSuccess = false
+      override def get = sys.error("Zuora.Rest.Failure.get called")
+      override def toOption = None
     }
 
     sealed trait SubscriptionStatus

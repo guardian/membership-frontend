@@ -54,7 +54,6 @@ class ZuoraRestService(config: ZuoraApiConfig) {
       case _ => Nil
     }
 
-
   private def get(uri: String): Future[Response] = client.execute(new Builder()
     .addHeader("apiAccessKeyId", config.username)
     .addHeader("apiSecretAccessKey", config.password)
@@ -72,6 +71,13 @@ object ZuoraRestResponseReaders {
     if (isSuccess) Rest.Success(json.as[T]) else json.as[Rest.Failure]
   }
 
+  def productFeatures(subscriptions: List[Rest.Subscription]): Seq[Rest.Feature] =
+    subscriptions match {
+      case (subscription :: _) =>
+        subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
+      case _ => Nil
+    }
+
   implicit val subscriptionStatus = new Reads[Rest.SubscriptionStatus] {
     import Rest._
     override def reads(v: JsValue): JsResult[SubscriptionStatus] = v match {
@@ -84,7 +90,6 @@ object ZuoraRestResponseReaders {
       case other => JsError(s"Cannot parse a Rest.SubscriptionStatus from object $other")
     }
   }
-
 
   implicit val errorMsgReads: Reads[Rest.Error] = Json.reads[Rest.Error]
   implicit val failureReads: Reads[Rest.Failure] = (

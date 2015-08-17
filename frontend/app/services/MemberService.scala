@@ -217,9 +217,6 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   }
 
-  private def touchpointForMember(member: Member): TouchpointBackend =
-    TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
-
   private def upgradeSubscription(member: Member, user: IdMinimalUser, newTier: Tier, form: Option[MemberChangeForm],
                                   annual: Boolean, customerOpt: Option[Customer], identityRequest: IdentityRequest,
                                    campaignCode: Option[String]): Future[MemberId] = {

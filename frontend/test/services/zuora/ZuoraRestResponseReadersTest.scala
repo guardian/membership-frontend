@@ -1,7 +1,6 @@
 package services.zuora
 
-import model.Zuora.{RatePlan, Feature, Rest}
-import net.liftweb.json.JsonAST.{JObject, JValue}
+import model.Zuora.Rest
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
 import play.api.libs.json._
@@ -57,32 +56,28 @@ class ZuoraRestResponseReadersTest extends Specification {
         case _ => ko
       }
     }
+
     "parse a list of subscriptions" in {
       val json = success(Json.obj("subscriptions" -> JsArray(List(subscription("id")))))
 
-      parseResponse[List[Rest.Subscription]](json) match {
-        case Rest.Success(Rest.Subscription("id",
-                                            "subscription-num",
-                                            "account-id",
-                                            _:DateTime,
-                                            _:DateTime,
-                                            _:DateTime,
-                                            Rest.RatePlan(Nil) :: Nil,
-                                            Rest.Active) :: Nil) => ok
-        case other =>
-          ko
-      }
+      parseResponse[List[Rest.Subscription]](json).get mustEqual List(
+        Rest.Subscription("id",
+                          "subscription-num",
+                          "account-id",
+                          DateTime.parse("2013-02-01"),
+                          DateTime.parse("2014-02-01"),
+                          DateTime.parse("2013-02-01"),
+                          Rest.RatePlan(Nil) :: Nil,
+                          Rest.Active))
     }
 
-    "parse a list of subscription with product features" in {
+    "parse a list of subscriptions with product features" in {
       val json = success(Json.obj("subscriptions" -> JsArray(List(subscription("id", List(feature("events")))))))
+      val subscriptions = parseResponse[List[Rest.Subscription]](json).get
 
-      parseResponse[List[Rest.Subscription]](json) match {
-        case Rest.Success(List(Rest.Subscription(_, _, _, _, _, _, List(Rest.RatePlan(List(Rest.Feature(_, "events")))), _))) =>
-          ok
-        case _ =>
-          ko
-      }
+      productFeatures(subscriptions) mustEqual List(
+        Rest.Feature("id-events", "events")
+      )
     }
   }
 }

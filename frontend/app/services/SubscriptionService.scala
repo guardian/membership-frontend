@@ -161,7 +161,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     subscriptions <- zuoraRestService.subscriptionsByAccount(account.id)
     subscription = subscriptions.head if subscriptions.nonEmpty
     startDate = formatDateTime(subscription.termStartDate)
-    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscriptions.head.id}'"
+    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscription.id}'"
     result <- zuoraSoapService.query[Usage](whereClause)
   } yield result.size) recover {
       case _: NoSuchElementException => 0
