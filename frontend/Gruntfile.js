@@ -219,25 +219,10 @@ module.exports = function (grunt) {
             compileCss: {
                 files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
                 tasks: ['compile:css'],
-                options: { spawn: false }
             },
             compileJs: {
                 files: ['<%= dirs.assets.javascripts %>/**/*.js'],
                 tasks: ['compile:js'],
-                options: { spawn: false }
-            },
-            /**
-             * Only livereload for built assets, not sources.
-             *
-             * Live-reloading on sources causes whole-page-refresh,
-             * rather than desired single-asset refresh.
-             */
-            livereloadCss: {
-                files: [
-                    '<%= dirs.publicDir.stylesheets %>/**/*.css'
-                ],
-                tasks: [],
-                options: { spawn: false, livereload: true }
             }
         },
 
