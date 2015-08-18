@@ -4,6 +4,7 @@
 @import model.{Benefits, FlashMessage}
 @import model.SVG.SVGImage
 @import configuration.Videos
+@import views.support.Asset
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -309,6 +310,20 @@
                 <a class="action u-no-top-margin" href="@routes.Joiner.tierList">Join today</a>
             }
         </div>
+    }
+
+    @pattern("Promo - Quote") {
+        @fragments.promos.promoQuote(
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                With Guardian Membership we have a profound opportunity to
+                defend the Guardian's independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
     }
 
     @pattern("Video Player", "Video with poster image overlay") {

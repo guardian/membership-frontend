@@ -5,8 +5,9 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
-    'src/modules/analytics/appnexus',
     'src/modules/analytics/twitter',
+    'src/modules/analytics/facebook',
+    'src/modules/analytics/appnexus',
     'src/modules/analytics/crazyegg',
     'src/modules/analytics/optimizely'
 ], function (
@@ -15,8 +16,9 @@ define([
     ophan,
     omniture,
     krux,
-    appnexus,
     twitter,
+    facebook,
+    appnexus,
     crazyegg,
     optimizely
 ) {
@@ -35,10 +37,11 @@ define([
     }
 
     function setupThirdParties() {
-        krux.load();
-        appnexus.load();
-        twitter.load();
-        crazyegg.load();
+        krux.init();
+        twitter.init();
+        facebook.init();
+        appnexus.init();
+        crazyegg.init();
         optimizely.init();
     }
 

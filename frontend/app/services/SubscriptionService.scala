@@ -102,7 +102,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
                           val zuoraRestService: ZuoraRestService) extends AmendSubscription with LazyLogging {
   import SubscriptionService._
 
-  private def getAccount(memberId: MemberId): Future[Account] =
+  def getAccount(memberId: MemberId): Future[Account] =
     zuoraSoapService.query[Account](s"crmId='${memberId.salesforceAccountId}'").map(sortAccounts(_).last)
 
   //TODO before we do subs we need to filter by rate plans membership knows about

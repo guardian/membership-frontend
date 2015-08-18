@@ -6,20 +6,22 @@ import actions.Functions._
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.util.Timing
+import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import model.EmbedSerializer._
 import model.Eventbrite.{EBEvent, EBOrder}
 import model.RichEvent.{RichEvent, _}
-import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo, _}
+import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService, _}
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
+import utils.TestUsers.isTestUser
 
 import scala.concurrent.Future
 
@@ -199,17 +201,20 @@ trait Event extends Controller with ActivityTracking {
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
-      memberService.createEBCode(request.member, request.user, event).map { ebCode =>
+      memberService.createEBCode(request.member, event).map { ebCode =>
+        val eventUrl = ebCode.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
         val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
-        Found(event.url ? ("discount" -> ebCode.map(_.code))).withCookies(Cookie(eventCookie(event), "", Some(3600)))
+
+        Found(eventUrl)
+          .withCookies(Cookie(eventCookie(event), "", Some(3600)))
       }
     }
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
                                         member: Option[Member]) {
     val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name, campaignCode=extractCampaignCode(request)))
-    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData(_))))(request)
+    trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 
   def thankyou(id: String, orderIdOpt: Option[String]) = MemberAction.async { implicit request =>
@@ -219,8 +224,15 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
+          val count = memberService.countComplimentaryTicketsUsed(event, order)
+          if (count > 0 && isTestUser(request.user)) {
+            memberService.recordFreeEventUsage(request.member, event, order, count)
+          }
+
           trackConversionToThankyou(request, event, Some(order), Some(request.member))
-          Ok(views.html.event.thankyou(event, order)).discardingCookies(DiscardingCookie(eventCookie(event)))
+
+          Ok(views.html.event.thankyou(event, order))
+            .discardingCookies(DiscardingCookie(eventCookie(event)))
         }
       }
       resultOpt.getOrElse(Future.successful(NotFound))

@@ -12,10 +12,10 @@ import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.{EBCode, EBTicketClass}
+import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.FreeEventTickets
 import model.RichEvent._
-import model.Zuora.PreviewInvoiceItem
+import model.Zuora.{CreateResult, PreviewInvoiceItem}
 import monitoring.MemberMetrics
 import org.joda.time.Period
 import play.api.libs.json.Json
@@ -23,7 +23,8 @@ import services.EventbriteService._
 import tracking._
 import utils.ScheduledTask
 import utils.TestUsers.isTestUser
-
+import zuora.CreateFreeEventUsage
+import model.ZuoraDeserializer.createResultReader
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -55,6 +56,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
 }
 
 trait MemberService extends LazyLogging with ActivityTracking {
+
   def initialData(user: IdUser, formData: JoinForm) = {
     Seq(Json.obj(
       Keys.EMAIL -> user.primaryEmailAddress,
@@ -124,15 +126,28 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+  def countComplimentaryTicketsUsed(event: RichEvent, order: EBOrder): Int = {
+    val ticketIds = event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil).map(_.id)
+    order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
+  }
+
+  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+    val tp = TouchpointBackend.forUser(member)
     for {
-      memberTierFeatures <- TouchpointBackend.forUser(IdMinimalUser(member.identityId, None))
-        .subscriptionService.memberTierFeatures(member)
+      account <- tp.subscriptionService.getAccount(member)
+      subscriptions <- tp.subscriptionService.getSubscriptions(member)
+      description = s"event-id:${event.id};order-id:${order.id}"
+      action = CreateFreeEventUsage(account.id, description, quantity, subscriptions.head.id)
+      result <- tp.zuoraSoapService.authenticatedRequest(action)
+    } yield result
+  }
+
+  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = for {
+      memberTierFeatures <- TouchpointBackend.forUser(member).subscriptionService.memberTierFeatures(member)
     } yield {
       val memberWithEventsFeature = memberTierFeatures.map(_.code).contains(FreeEventTickets.zuoraCode)
       event.internalTicketing.map(_.complimentaryTickets).filter(ticket => memberWithEventsFeature).getOrElse(Nil)
     }
-  }
 
   def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {
@@ -142,10 +157,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Member, user: IdMinimalUser, event: RichEvent): Future[Option[EBCode]] = {
+  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] = {
     val complimentaryTicketF =
-      if (isTestUser(user)) retrieveComplimentaryTickets(member, event)
-      else Future.successful(Nil)
+      if (isTestUser(member)) retrieveComplimentaryTickets(member, event)
+      else {
+        Future.successful(Nil)
+      }
 
     complimentaryTicketF.flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")

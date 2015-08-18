@@ -1,7 +1,9 @@
 @import com.gu.membership.salesforce.Tier
-@import Tier.{Partner, Patron}
+@import Tier.Patron
+@import Tier.Partner
+@import model.FeatureChoice
+@import model.FreeEventTickets
 @import actions.AuthRequest
-@import model.{FeatureChoice, FreeEventTickets}
 @import utils.TestUsers.isTestUser
 @(tier: Tier)(implicit request: AuthRequest[_])
 

@@ -161,7 +161,8 @@ $mq-breakpoints: (
     mem-full: gs-span(14) + $gs-gutter * 2, // 1140px
     wide: gs-span(16) + $gs-gutter * 2, // 1300px
     // Tweakpoints
-    mobileLandscape: gs-span(6) + $gs-gutter // 480px
+    mobileLandscape: gs-span(6) + $gs-gutter, // 480px
+    phablet: gs-span(8)  + $gs-gutter * 2 // 660px
 );
 
 $max-widths: (
