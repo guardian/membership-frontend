@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc.Controller
+import views.support.Asset
 import scala.concurrent.Future
 import configuration.CopyConfig
 import forms.MemberForm._
@@ -179,11 +180,17 @@ trait Info extends Controller {
       ),
       ResponsiveImageGroup(
         name=Some("independence"),
-        altText=Some("Katharine Viner, editor-in-chief of the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="a4856412e2bef82e6d1d4ce5220fe2391e3f5ca5/0_0_2000_1200",
-          sizes=List(1000,500)
-        )
+        metadata=Some(Grid.Metadata(
+          description = Some("""|People from all walks of life gather in Westminster
+            | on 17 June, in London, England, to demand the parliament backs
+            | action on climate change""".stripMargin),
+          byline = None,
+          credit = Some("John Phillips/Getty Images")
+        )),
+        availableImages=Seq(ResponsiveImage(
+          Asset.at("images/temp/patrons-independence.jpg"),
+          1000
+        ))
       ),
       ResponsiveImageGroup(
         name=Some("backstage-pass"),

@@ -20,7 +20,7 @@
     @* ===== Ensuring our independence ===== *@
     @for(img <- pageImages.find(_.name.contains("independence"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Ensuring our independence", img=img, toneClass=Some("tone-trans-brand-dark")) {
+            @fragments.promos.promoPrimary(title="Ensuring our independence", img=img, showImageCaption=true, toneClass=Some("tone-trans-brand-dark")) {
                 <div class="text-feature">
                     <p>The Guardian has no proprietor. Our editor has total independence.</p>
                     <p>The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>
