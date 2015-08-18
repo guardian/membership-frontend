@@ -6,6 +6,7 @@ import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{OkHttpClient, Response}
+import com.typesafe.scalalogging.LazyLogging
 import model.Zuora.{Feature, Rest}
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.concurrent.Execution.Implicits._
@@ -15,7 +16,7 @@ import play.api.libs.json._
 
 import scala.concurrent.Future
 
-class ZuoraRestService(config: ZuoraApiConfig) {
+class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
 
   import ZuoraRestResponseReaders._
 
@@ -41,8 +42,10 @@ class ZuoraRestService(config: ZuoraApiConfig) {
         metrics.putResponseCode(response.code, "GET")
         parseResponse[List[Rest.Subscription]](response) match {
           case Rest.Success(subcriptions) => subcriptions
-          case Rest.Failure(_, errors) =>
+          case Rest.Failure(_, errors) => {
+            logger.error(s"Cannot find any subscriptions for account id: $accountKey")
             Nil
+          }
         }
       }
     }
