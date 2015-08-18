@@ -325,12 +325,16 @@
 
     @pattern("Promo - Quote") {
         @fragments.promos.promoQuote(
-            """|With Guardian Membership we have a profound opportunity to
-               | defend the Guardian's independent journalism and collaborate
-               | together on a better, more informed future.""".stripMargin,
-            "Katharine Viner, editor-in-chief of the Guardian",
-            Asset.at("images/common/katharine-viner-cutout.png")
-        )
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                With Guardian Membership we have a profound opportunity to
+                defend the Guardian's independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
     }
 
     @pattern("Video Player", "Video with poster image overlay") {

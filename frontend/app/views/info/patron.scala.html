@@ -1,6 +1,7 @@
 @(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
+@import views.support.Asset
 
 @main("Patrons", pageInfo=pageInfo) {
 
@@ -19,8 +20,11 @@
 
     @* ===== Ensuring our independence ===== *@
     @for(img <- pageImages.find(_.name.contains("independence"))) {
-        <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Ensuring our independence", img=img, toneClass=Some("tone-trans-brand-dark")) {
+        <div class="page-slice page-slice--padded l-constrained">
+            @fragments.promos.promoQuote(
+                Asset.at("images/common/katharine-viner-cutout.png"),
+                "Katharine Viner, editor-in-chief of the Guardian"
+            ) {
                 <div class="text-feature">
                     <p>The Guardian has no proprietor. Our editor has total independence.</p>
                     <p>The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>

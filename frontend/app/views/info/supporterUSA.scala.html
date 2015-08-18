@@ -50,12 +50,16 @@
     @* ===== Join The Guardian and support The Guardian ===== *@
     <div class="page-slice page-slice--padded l-constrained">
         @fragments.promos.promoQuote(
-            """|With Guardian Membership we have a profound opportunity to
-               | defend the Guardian's independent journalism and collaborate
-               | together on a better, more informed future.""".stripMargin,
-            "Katharine Viner, editor-in-chief of the Guardian",
-            Asset.at("images/common/katharine-viner-cutout.png")
-        )
+            Asset.at("images/common/katharine-viner-cutout.png"),
+            "Katharine Viner, editor-in-chief of the Guardian"
+        ) {
+            <blockquote class="blockquote blockquote--feature">
+                With Guardian Membership we have a profound opportunity to
+                defend the Guardian's independent journalism and collaborate
+                together on a better, more informed future.
+                <cite class="blockquote__citation">Katharine Viner, editor-in-chief of the Guardian</cite>
+            </blockquote>
+        }
     </div>
 
     @* ===== Join Today ===== *@
