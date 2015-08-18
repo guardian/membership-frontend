@@ -79,7 +79,7 @@ trait Info extends Controller {
           credit = Some("John Phillips/Getty Images")
         )),
         availableImages=Seq(ResponsiveImage(
-          Asset.at("images/temp/patrons-independence.jpg"),
+          Asset.at("images/temp/supporter-intro.jpg"),
           1000
         ))
       ),
