@@ -2,25 +2,25 @@ package services
 
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.{TicketSaleDates, EventGroup}
+import model.EventGroup
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
 import monitoring.EventbriteMetrics
-import org.joda.time.{Interval, Period, DateTime}
+import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.ScheduledTask
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
 trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val apiToken: String
-  val maxDiscountQuantityAvailable: Int
 
   val wsUrl = Config.eventbriteApiUrl
   def wsPreExecute(req: WSRequest): WSRequest = req.withQueryString("token" -> apiToken)
@@ -87,7 +87,6 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
         discount <- discounts.find(_.code == code).fold {
           post[EBAccessCode](uri, Map(
             "access_code.code" -> Seq(code),
-            "access_code.quantity_available" -> Seq(maxDiscountQuantityAvailable.toString),
             "access_code.ticket_ids" -> Seq(ticketClasses.map(_.id).mkString(","))
           ))
         }(Future.successful)
