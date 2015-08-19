@@ -1,6 +1,6 @@
 package model
 
-import configuration.Config.zuoraFreeEventsTicketAllowance
+import configuration.Config.zuoraFreeEventTicketsAllowance
 
 trait FeatureChoice {
   val zuoraCode: String
@@ -32,7 +32,7 @@ case object Books extends FeatureChoice {
   override val label = "4 free books"
 }
 case object FreeEventTickets extends FeatureChoice {
-  val allowance = zuoraFreeEventsTicketAllowance
+  val allowance = zuoraFreeEventTicketsAllowance
   override val zuoraCode = "Events"
   override val label = s"$allowance free events"
   val uom = "Events"

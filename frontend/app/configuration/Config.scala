@@ -164,5 +164,5 @@ object Config {
   val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
   val casServiceConfig = config.getString("cas.url")
-  val zuoraFreeEventsTicketAllowance = config.getInt("zuora.free-events-ticket-allowance")
+  val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
 }
