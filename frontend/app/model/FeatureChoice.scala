@@ -35,5 +35,5 @@ case object FreeEventTickets extends FeatureChoice {
   val allowance = zuoraFreeEventTicketsAllowance
   override val zuoraCode = "Events"
   override val label = s"$allowance free events"
-  val uom = "Events"
+  val unitOfMeasure = "Events"
 }
