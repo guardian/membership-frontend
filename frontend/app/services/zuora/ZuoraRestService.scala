@@ -7,7 +7,7 @@ import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{OkHttpClient, Response}
 import com.typesafe.scalalogging.LazyLogging
-import model.Zuora.{Feature, Rest}
+import model.Zuora.Rest
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._

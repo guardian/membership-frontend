@@ -66,12 +66,12 @@ object Zuora {
     }
 
     sealed trait SubscriptionStatus
-    object Draft extends SubscriptionStatus
-    object PendingActivation extends SubscriptionStatus
-    object PendingAcceptance extends SubscriptionStatus
-    object Active extends SubscriptionStatus
-    object Cancelled extends SubscriptionStatus
-    object Expired extends SubscriptionStatus
+    case object Draft extends SubscriptionStatus
+    case object PendingActivation extends SubscriptionStatus
+    case object PendingAcceptance extends SubscriptionStatus
+    case object Active extends SubscriptionStatus
+    case object Cancelled extends SubscriptionStatus
+    case object Expired extends SubscriptionStatus
 
     case class Subscription(id: String,
                             subscriptionNumber: String,
