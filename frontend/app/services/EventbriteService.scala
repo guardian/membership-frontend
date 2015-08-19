@@ -107,6 +107,12 @@ abstract class LiveService extends EventbriteService {
 
 object GuardianLiveEventService extends LiveService {
   val apiToken = Config.eventbriteApiToken
+  // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
+  // maximum 2 discounted tickets and 1 complimentary ticket.
+  // The maxDiscountQuantityAvailable value is used to set the Access code 'quantity_available' attribute (i.e. the
+  // maximum number of tickets that can be purchased with a given code).
+  //
+  // see https://www.eventbrite.com/developer/v3/formats/event/#ebapi-access-code
   val maxDiscountQuantityAvailable = 3
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
