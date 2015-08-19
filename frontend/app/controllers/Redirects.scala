@@ -4,10 +4,7 @@ import play.api.mvc.Controller
 
 trait Redirects extends Controller {
 
-  // Subscriber Offer
-  def subscriberOffer = CachedAction {
-    MovedPermanently("/")
-  }
+  def homepageRedirect = CachedAction(MovedPermanently("/"))
 
 }
 

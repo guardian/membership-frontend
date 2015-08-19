@@ -119,7 +119,7 @@ GET            /offers-competitions               controllers.OffersAndCompetiti
 POST           /csp-report                        controllers.Security.cspReport
 
 # Redirects
-GET            /subscriber-offer                  controllers.Redirects.subscriberOffer
+GET            /subscriber-offer                  controllers.Redirects.homepageRedirect
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)
