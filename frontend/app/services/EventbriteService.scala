@@ -107,7 +107,7 @@ abstract class LiveService extends EventbriteService {
 
 object GuardianLiveEventService extends LiveService {
   val apiToken = Config.eventbriteApiToken
-  val maxDiscountQuantityAvailable = 2
+  val maxDiscountQuantityAvailable = 3
   val wsMetrics = new EventbriteMetrics("Guardian Live")
 
   val refreshTimePriorityEvents = new FiniteDuration(Config.eventbriteRefreshTimeForPriorityEvents, SECONDS)
