@@ -15,8 +15,8 @@ module.exports = function(config) {
         {pattern: 'assets/javascripts/config/**/*.js', included: false},
         {pattern: 'assets/javascripts/src/**/*.js', included: false},
         {pattern: 'assets/javascripts/lib/**/*.js', included: false},
-        {pattern: 'test/js/spec/**/*.spec.js', included: false},
-        'test/js/spec/test-main.js'
+        {pattern: 'assets/javascripts/tests/spec/**/*.spec.js', included: false},
+        'assets/javascripts/tests/spec/test-main.js'
     ],
 
 
@@ -34,7 +34,7 @@ module.exports = function(config) {
 
     coverageReporter: {
         type : 'html',
-        dir : 'test/js/coverage/'
+        dir : 'assets/javascripts/tests/coverage/'
     },
 
     // test results reporter to use
