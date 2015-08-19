@@ -28,7 +28,7 @@ project/target
 frontend/conf/keys.conf
 frontend/conf/assets.map
 
+frontend/assets/javascripts/tests/coverage/
 frontend/assets/images/inline-svgs/*.svg
 frontend/assets/images/svg-sprite.svg
 frontend/public/
-frontend/test/js/coverage/

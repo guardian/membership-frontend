@@ -103,12 +103,6 @@ GET            /feedback                          controllers.Info.feedback
 POST           /feedback                          controllers.Info.submitFeedback
 GET            /join-challenger                   controllers.Info.joinChallenger
 
-# Information - Offers
-GET            /subscriber-offer                  controllers.Info.subscriberOffer
-
-# Map static resources from the /public folder to the /assets URL path
-GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)
-
 GET            /user/me                           controllers.User.me
 GET            /user/me/details                   controllers.User.meDetails
 GET            /user/check-subscriber             controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: String)
@@ -123,3 +117,9 @@ GET            /patterns                          controllers.PatternLibrary.pat
 GET            /offers-competitions               controllers.OffersAndCompetitions.list
 
 POST           /csp-report                        controllers.Security.cspReport
+
+# Redirects
+GET            /subscriber-offer                  controllers.Redirects.homepageRedirect
+
+# Map static resources from the /public folder to the /assets URL path
+GET            /assets/*assetFile                 controllers.CachedAssets.at(path="/public", assetFile)

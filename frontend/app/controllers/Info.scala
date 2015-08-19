@@ -208,30 +208,6 @@ trait Info extends Controller {
     Ok(views.html.info.patron(pageInfo, pageImages))
   }
 
-  def subscriberOffer = CachedAction { implicit request =>
-
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("intro"),
-        altText=Some("Guardian Live Audience"),
-        availableImages=ResponsiveImageGenerator(
-          id="38dafd8e470b0d7b3399034f0ccbcce63a0dff25/0_0_1140_684",
-          sizes=List(1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("guardian-live"),
-        altText=Some("Guardian Live"),
-        availableImages=ResponsiveImageGenerator(
-          id="9fa0dfc49eb89ec70efe163755564bf0f632fabf/0_0_2279_1368",
-          sizes=List(1000, 500)
-        )
-      )
-    )
-
-    Ok(views.html.info.subscriberOffer(pageImages))
-  }
-
   def joinChallenger =  CachedAction { implicit request =>
 
     val pageInfo = PageInfo(
