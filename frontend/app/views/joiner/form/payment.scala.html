@@ -7,9 +7,10 @@
     userFields: com.gu.identity.play.PrivateFields,
     marketingChoices: com.gu.identity.play.StatusFields,
     passwordExists: Boolean,
-    pageInfo: model.PageInfo,
-    showSubscriberFields: Boolean
+    pageInfo: model.PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token, request: AuthRequest[_])
+
+@import views.html.helper._
 
 @main("Payment | " + tier, pageInfo=pageInfo) {
 
@@ -54,17 +55,10 @@
                     @if(!passwordExists) {
                         @fragments.form.createPassword()
                     }
-                    @if(showSubscriberFields) {
-                        @fragments.form.subscriberNumber()
-                     }
 
                     @fragments.form.featureChoice(tier)
 
                     @fragments.form.paymentOptions(tier)
-
-                     @if(showSubscriberFields) {
-                         @fragments.form.paymentOptionsForSubscribers()
-                     }
 
                     @fragments.form.billingAddress("Billing address")
                     @fragments.form.addressDetail(
