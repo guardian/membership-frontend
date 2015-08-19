@@ -63,7 +63,7 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
 
 object ZuoraRestResponseReaders {
   def parseResponse[T : Reads](resp: Response): Rest.Response[T] =
-    parseResponse[T](Json.parse(resp.body().toString))
+    parseResponse[T](Json.parse(resp.body().string()))
 
   def parseResponse[T : Reads](json: JsValue): Rest.Response[T] = {
     val isSuccess = (json \ "success").as[Boolean]
