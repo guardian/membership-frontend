@@ -3,6 +3,7 @@
     description: String,
     linkText: String,
     linkHref: String,
+    linkId: String,
     image: model.ResponsiveImageGroup,
     toneClass: Option[String] = None
 )
@@ -17,7 +18,7 @@
             @description
         </div>
         <div class="promo-tertiary__action">
-            <a class="action action--external" href="@linkHref">
+            <a class="action action--external" href="@linkHref" id="@linkId">
                 @linkText
                 @fragments.actionIcon("arrow-right")
             </a>

@@ -3,9 +3,6 @@ package com.gu.membership.pages
 import org.openqa.selenium.support.ui.{ExpectedConditions, WebDriverWait}
 import org.openqa.selenium.{By, WebDriver}
 
-/**
- * Created by jao on 07/07/2014.
- */
 class BaseMembershipPage(driver: WebDriver) extends BasePage(driver) {
 
   private def accountControlLink = driver.findElement(By.id("qa-identity-control"))

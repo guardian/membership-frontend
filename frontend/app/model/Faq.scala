@@ -1,6 +1,7 @@
 package model
 
 import configuration.{Config, Email}
+import controllers.routes
 import play.twirl.api.Html
 
 object Faq {
@@ -45,7 +46,7 @@ object Faq {
       "how-much-does-it-cost"
     ),
     Item("What is the difference between a Friend, a Partner and a Patron?",
-      Html("You can read a full description of each membership tier <a href='join'>here</a>."),
+      Html(s"You can read a <a href='${routes.Joiner.tierChooser}'>full description of each membership tier here</a>."),
       "difference-between-tiers"
     ),
     Item("Why do I have to sign in to the Guardian to become a member?",

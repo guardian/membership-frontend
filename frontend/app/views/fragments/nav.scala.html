@@ -13,7 +13,7 @@
                     <span class="u-h">Home</span>
                 </a>
             </li>
-            @for(navItem <- Nav.navigation) {
+            @for(navItem <- Nav.primaryNavigation) {
                 @if(!navItem.isPrivate) {
                     <li class="nav__item">
                         <a href="@navItem.href" class="nav__link" id="qa-nav-@navItem.id">@navItem.title</a>
@@ -32,7 +32,7 @@
     </div>
 </nav>
 
-@defining(Nav.fetchNav(pageInfo.url)) { subNav =>
+@defining(Nav.fetchNav(Nav.primaryNavigation, pageInfo.url)) { subNav =>
     @for(navItem <- subNav if navItem.subNav.nonEmpty) {
         <nav role="navigation" class="nav-secondary l-side-margins u-hidden-until-tablet">
             <div class="nav-secondary__inner l-constrained">

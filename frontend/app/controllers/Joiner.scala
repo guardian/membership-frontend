@@ -40,15 +40,6 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
-  def tierList = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleJoin,
-      request.path,
-      Some(CopyConfig.copyDescriptionJoin)
-    )
-    Ok(views.html.joiner.tierList(pageInfo))
-  }
-
   def tierChooser = NoCacheAction { implicit request =>
 
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
