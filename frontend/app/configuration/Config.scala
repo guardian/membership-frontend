@@ -102,6 +102,7 @@ object Config {
 
   val stage = config.getString("stage")
   val stageProd: Boolean = stage == "PROD"
+  val stageDev: Boolean = stage == "DEV"
 
   val GuardianGoogleAppsDomain = "guardian.co.uk"
 

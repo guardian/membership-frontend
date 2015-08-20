@@ -51,7 +51,8 @@
       case _ =>  {}
   }
 }
-@if(isTestUser(request.user)) {
+
+@if(isTestUser(request.user) || Config.stageDev) {
     @if(Seq(Patron, Partner).contains(tier)) {
         <fieldset class="fieldset js-feature-choice-container">
         @fieldset(tier)
