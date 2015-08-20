@@ -15,7 +15,7 @@ object Faq {
     Item("Can I use social sign in/registration?",
       Html("No, you must have a Guardian account using your work email address.")
     ),
-    Item("I've already joined Guardian Membership as a friend, can I upgrade?",
+    Item("I've already joined Guardian Members as a friend, can I upgrade?",
       Html("No, sorry you can't upgrade, you need to cancel your friend membership first.")
     ),
     Item("How do I cancel my friend membership?",
@@ -33,16 +33,16 @@ object Faq {
   )
 
   val help = List(
-    Item("What is Guardian Membership?",
-      Html("Guardian Membership is for you if you share our belief that the open exchange of information, ideas and opinions can change the world for the better. By signing up and paying your subscription (at Partner and Patron level), you are helping bring these words to life by supporting open and independent journalism. In return, you get access to events and experiences that are only available to members."),
+    Item("What is Guardian Members?",
+      Html("Guardian Members is for you if you share our belief that the open exchange of information, ideas and opinions can change the world for the better. By signing up and paying your subscription (at Partner and Patron level), you are helping bring these words to life by supporting open and independent journalism. In return, you get access to events and experiences that are only available to members."),
       "what-is-membership"
     ),
     Item("Why should I join?",
-      Html("Membership has a lot to offer, and by joining in this beta phase, you can help build and shape Guardian Membership into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Membership and paying your subscription is a great way to do it."),
+      Html("Membership has a lot to offer, and by joining in this beta phase, you can help build and shape Guardian Members into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Members and paying your subscription is a great way to do it."),
       "why-join"
     ),
     Item("How much does membership cost?",
-      Html("The Friend tier of Guardian Membership is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free."),
+      Html("The Friend tier of Guardian Members is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free."),
       "how-much-does-it-cost"
     ),
     Item("What is the difference between a Friend, a Partner and a Patron?",
@@ -82,11 +82,11 @@ object Faq {
       "under-18"
     ),
     Item("I don’t live in London - can I still be a member?",
-      Html("Yes, Guardian Membership is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
+      Html("Yes, Guardian Members is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
       "do-not-live-in-london"
     ),
     Item("I don’t live in the UK - can I still be a member?",
-      Html("Yes, Guardian Membership is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
+      Html("Yes, Guardian Members is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
       "do-not-live-in-uk"
     ),
     Item("What happens if I want to change my membership tier?",
@@ -114,7 +114,7 @@ object Faq {
       "wheelchair-access-for-venue"
     ),
     Item("I've got a question",
-      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "have-a-question"
     ),
     Item("What are Guardian Masterclasses?",
@@ -157,7 +157,7 @@ object Faq {
       "existing-subscriber-member"
     ),
     Item("How much does membership cost normally?",
-      Html("The Friend tier of Guardian Membership is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free when compared to the monthly price."),
+      Html("The Friend tier of Guardian Members is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free when compared to the monthly price."),
       "normal-cost"
     ),
     Item("I don’t have an email address, can I still join?",
@@ -177,11 +177,11 @@ object Faq {
       "pay-direct-debit"
     ),
     Item("I don’t live in London - can I still be a member?",
-      Html("Yes, Guardian Membership is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
+      Html("Yes, Guardian Members is open to everyone. Guardian Live events at launch will be taking place in London, Edinburgh, Manchester and Bristol, and we have plans to run future events across the UK."),
       "outside-london"
     ),
     Item("I don’t live in the UK - can I still be a member?",
-      Html("Yes, Guardian Membership is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
+      Html("Yes, Guardian Members is open to anyone living anywhere in the world. And although our home is London, we will be extending membership and staging events for members in the USA and Australia."),
       "outside-uk"
     ),
     Item("How do I know you are protecting my personal information?",
@@ -215,7 +215,7 @@ object Faq {
       "who-to-contact"
     ),
     Item("I have a question not answered above",
-      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Membership customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
+      Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends."),
       "questions"
     )
   )
