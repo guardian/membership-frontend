@@ -1,6 +1,6 @@
 package services.zuora
 
-import model.Zuora.Rest
+import Rest._
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
 import play.api.libs.json._
