@@ -7,11 +7,13 @@
 @currentTierDetails = {
     <h3 class="h-stack">This is what you'll be giving up</h3>
     @fragments.tier.tierTrail(currentTier, showCaption=false)
-    <ul class="list-stack">
-        @for(benefit <- Benefits.details(currentTier).list) {
-            <li>@fragments.tier.benefitItem(benefit)</li>
-        }
-    </ul>
+    <div class="copy">
+        <ul>
+            @for(benefit <- Benefits.details(currentTier).list) {
+                <li>@benefit.title</li>
+            }
+        </ul>
+    </div>
 }
 
 @downgradeDetails = {
@@ -21,11 +23,13 @@
     </form>
     <h3 class="h-stack">Why not stay as a Friend</h3>
     @fragments.tier.tierTrail(Tier.Friend, showCaption=false)
-    <ul class="list-stack">
-        @for(benefit <- Benefits.details(Tier.Friend).list) {
-            <li>@fragments.tier.benefitItem(benefit)</li>
-        }
-    </ul>
+    <div class="copy">
+        <ul>
+            @for(benefit <- Benefits.details(Tier.Friend).list) {
+                <li>@benefit.title</li>
+            }
+        </ul>
+    </div>
 }
 
 @main("Cancel Tier") {

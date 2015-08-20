@@ -8,8 +8,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader("Are you sure?",
-            Some("You will no longer receive all the great benefits"))
+        @fragments.page.pageHeader("Are you sure?", Some("You will no longer receive all the great benefits"))
 
         <section class="page-section">
             <div class="page-section__content">
@@ -21,11 +20,13 @@
                         </a>
                         <h3 class="h-stack">This is what you'll be giving up</h3>
                         @fragments.tier.tierTrail(currentTier, showCaption=false)
-                        <ul class="list-stack">
+                        <div class="copy">
+                            <ul>
                             @for(benefit <- Benefits.details(currentTier).list) {
-                                <li>@fragments.tier.benefitItem(benefit)</li>
+                                <li>@benefit.title</li>
                             }
-                        </ul>
+                            </ul>
+                        </div>
                     </li>
                     <li class="grid__item">
                         <form action="@routes.TierController.upgrade(Tier.Friend)" method="POST" class="u-cf">
@@ -34,11 +35,13 @@
                         </form>
                         <h3 class="h-stack">Why not stay as a Friend</h3>
                         @fragments.tier.tierTrail(Tier.Friend, showCaption=false)
-                        <ul class="list-stack">
+                        <div class="copy">
+                            <ul>
                             @for(benefit <- Benefits.details(Tier.Friend).list) {
-                                <li>@fragments.tier.benefitItem(benefit)</li>
+                                <li>@benefit.title</li>
                             }
-                        </ul>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
             </div>
