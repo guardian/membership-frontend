@@ -21,22 +21,6 @@
     color: $c-neutral1;
     background-color: transparentize(color(brand-supporting-2), .1);
 }
-
-.tone-brand-dark,
-.tone-trans-brand-dark {
-    color: $white;
-    background-color: color(brand-dark);
-    a {
-        border-bottom-color: transparentize($white, .5);
-    }
-    a:hover {
-        border-bottom-color: $white;
-    }
-}
-.tone-trans-brand-dark {
-    background-color: transparentize(color(brand-dark), .1);
-}
-
 .tone-trans-black {
     color: $white;
     background-color: transparentize($c-neutral1, .1);

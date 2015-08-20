@@ -40,17 +40,20 @@ $c-link: guss-colour(news-main-1);
 $c-error: guss-colour(error);
 $c-warning: #e9e939;
 
-// (access these through the color($name) function)
-// TODO: Move more colours into palette
+/**
+ * Access palette
+ * access these through the color($name) function
+ *
+ * TODO: Move more colours into palette
+ */
 $membership-palette: (
     brand-main: #bb3a7f,
-    brand-dark: #d43077,
     brand-supporting-1: #5fd5f2,
     brand-supporting-2: #fff200
 );
 
 // Buttons
-$c-button: color(brand-dark);
+$c-button: color(brand-main);
 $c-button-cancel: #b8b8b8;
 
 // Borders

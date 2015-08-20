@@ -62,7 +62,6 @@
    vertical-align: middle;
    fill: currentColor;
 }
-
 .icon-inline--small {
    width: 13px;
    height: 13px;
@@ -75,7 +74,6 @@
    width: 36px;
    height: 36px;
 }
-
 .icon-inline--scale {
     width: .75em;
     height: .75em;
@@ -84,19 +82,14 @@
     top: -2px;
     margin-right: rem($gs-baseline / 4);
 }
-
 .icon-inline--top {
     vertical-align: top;
 }
 .icon-inline--bottom {
     vertical-align: bottom;
 }
-
 .icon-inline--brand {
     fill: color(brand-main);
-}
-.icon-inline--brand-dark {
-    fill: color(brand-dark);
 }
 .icon-inline--neutral {
     fill: $c-neutral2;
@@ -121,7 +114,6 @@
         width: 16px; height: 16px;
     }
 }
-
 .icon-holder--large {
     width: 36px;
     height: 36px;
@@ -131,7 +123,6 @@
         height: 20px;
     }
 }
-
 .icon-holder--small {
     width: 20px;
     height: 20px;
@@ -141,21 +132,14 @@
         height: 12px;
     }
 }
-
 .icon-holder--neutral {
     color: $c-neutral1;
     border-color: $c-neutral1;
 }
-
-.icon-holder--dark {
-    color: color(brand-dark);
-    border-color: color(brand-dark);
-}
-
 .icon-holder--fill {
     color: $white;
-    background-color: color(brand-dark);
-    border-color: color(brand-dark);
+    background-color: color(brand-main);
+    border-color: color(brand-main);
 }
 .icon-holder--fill-guardian-live {
     color: $white;

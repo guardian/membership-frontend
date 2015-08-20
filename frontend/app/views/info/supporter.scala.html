@@ -23,7 +23,7 @@
         @fragments.promos.promoVideoSecondary(
             "Support open, independent journalism",
             video=Videos.supporters,
-            toneClass=Some("tone-trans-brand-dark")){
+            toneClass=Some("tone-trans-brand")){
             <div class="text-feature">
                 <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
             </div>
@@ -49,7 +49,7 @@
     @* ===== Join The Guardian and support The Guardian ===== *@
     @for(img <- pageImages.find(_.name.contains("join"))) {
         <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, showImageCaption=true, toneClass=Some("tone-trans-brand-dark")) {
+        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, showImageCaption=true, toneClass=Some("tone-trans-brand")) {
             <blockquote class="blockquote blockquote--feature">
                 You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
             </blockquote>
