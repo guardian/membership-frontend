@@ -2,28 +2,8 @@
    Payment
    ========================================================================== */
 
-/* ==========================================================================
-   Steps
-   ========================================================================== */
-
-.steps {
-    @include fs-header(2);
-    color: $c-body;
-    border-top: 1px solid $c-border-neutral;
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-gutter);
-
-    @include mq(tablet) {
-        @include fs-header(3);
-    }
-
-    @include mq(desktop) {
-        margin-right: rem($gs-baseline);
-    }
-}
-
 /* Join - Become a member
-======================================================================= */
+   ========================================================================== */
 
 $current-indicator: rem(72px);
 .become-a-member {

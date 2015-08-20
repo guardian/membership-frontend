@@ -29,10 +29,6 @@
 
         <section class="form-section">
 
-            <div class="form-section__lead-in">
-                @fragments.joiner.joinStepCounter(3, 3)
-            </div>
-
             <div class="form-section__content">
                 <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="form js-form" novalidate>
                     @CSRF.formField

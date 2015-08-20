@@ -11,7 +11,7 @@
 <html class="js-off id--signed-out">
     <head>
         <meta charset="utf-8">
-        <title>@(title + " | " + Config.siteTitle )</title>
+        <title>@if(title.isEmpty){ @Config.siteTitle } else { @(s"$title | ${Config.siteTitle}") }</title>
 
         @fragments.meta.mobile()
         <meta name="description" content="@pageInfo.description"/>

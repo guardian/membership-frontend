@@ -3,7 +3,6 @@
  * Controls the identity icon found in the header cta text "Sign in" or "You are signed in as"
  * Appends the user id to the comment activity link when there is a user
  * Updates the edit profile link when there is a user with a membership tier to the membership edit profile link
- * Controls the "Join Us" cta visibility
  */
 define(['src/utils/user'], function (userUtil) {
     'use strict';
