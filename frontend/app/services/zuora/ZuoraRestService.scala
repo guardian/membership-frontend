@@ -31,6 +31,8 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
   }
 
   /**
+   * Fetch all subscriptions associated to a given account id
+   *
    * @see https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Subscriptions/4_Get_subscriptions_by_account
    * @param accountKey Account number or account ID
    * @return
@@ -40,7 +42,7 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
       get(s"subscriptions/accounts/$accountKey").map { response =>
         metrics.putResponseCode(response.code, "GET")
         parseResponse[List[Rest.Subscription]](response) match {
-          case Rest.Success(subcriptions) => subcriptions
+          case Rest.Success(subscriptions) => subscriptions
           case Rest.Failure(_, errors) => {
             logger.error(s"Cannot find any subscriptions for account id: $accountKey")
             Nil
