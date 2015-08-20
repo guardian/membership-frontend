@@ -1,6 +1,5 @@
 package services.zuora
 
-import Rest._
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
 import play.api.libs.json._
@@ -75,7 +74,7 @@ class ZuoraRestResponseReadersTest extends Specification {
       val json = success(Json.obj("subscriptions" -> JsArray(List(subscription("id", List(feature("events")))))))
       val subscriptions = parseResponse[List[Rest.Subscription]](json).get
 
-      productFeatures(subscriptions) mustEqual List(
+      productFeatures(subscriptions.head) mustEqual List(
         Rest.Feature("id-events", "events")
       )
     }

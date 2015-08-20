@@ -156,16 +156,13 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     } yield subscriptionDetails
   }
 
-  def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = (for {
+  def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = for {
     account <- getAccount(memberId)
-    subscriptions <- zuoraRestService.subscriptionsByAccount(account.id)
-    subscription = subscriptions.head if subscriptions.nonEmpty
+    subscription <- zuoraRestService.lastSubscriptionByAccount(account.id)
     startDate = formatDateTime(subscription.termStartDate)
     whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscription.id}'"
     result <- zuoraSoapService.query[Usage](whereClause)
-  } yield result.size) recover {
-      case _: NoSuchElementException => 0
-  }
+  } yield result.size
 
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = {
     for {

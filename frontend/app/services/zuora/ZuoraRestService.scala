@@ -1,5 +1,7 @@
 package services.zuora
 
+import java.util.NoSuchElementException
+
 import com.gu.lib.okhttpscala._
 import com.gu.membership.util.Timing
 import com.gu.membership.zuora.ZuoraApiConfig
@@ -51,8 +53,18 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
       }
     }
 
+  def lastSubscriptionByAccount(accountKey: String): Future[Rest.Subscription] =
+    subscriptionsByAccount(accountKey).map { subscriptions =>
+      if (subscriptions.nonEmpty) subscriptions.head
+      else {
+        throw new scala.NoSuchElementException(s"Cannot find a subscription for account id $accountKey")
+      }
+    }
+
   def productFeaturesByAccount(accountKey: String): Future[Seq[Rest.Feature]] =
-    subscriptionsByAccount(accountKey).map(productFeatures)
+    lastSubscriptionByAccount(accountKey).map(productFeatures) recover {
+      case e: NoSuchElementException => Nil
+    }
 
   private def get(uri: String): Future[Response] = client.execute(new Builder()
     .addHeader("apiAccessKeyId", config.username)
@@ -71,12 +83,8 @@ object ZuoraRestResponseReaders {
     if (isSuccess) Rest.Success(json.as[T]) else json.as[Rest.Failure]
   }
 
-  def productFeatures(subscriptions: List[Rest.Subscription]): Seq[Rest.Feature] =
-    subscriptions match {
-      case (subscription :: _) =>
-        subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
-      case _ => Nil
-    }
+  def productFeatures(subscription: Rest.Subscription): Seq[Rest.Feature] =
+     subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
 
   implicit val subscriptionStatus = new Reads[Rest.SubscriptionStatus] {
     import Rest._
