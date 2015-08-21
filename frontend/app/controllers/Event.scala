@@ -201,9 +201,11 @@ trait Event extends Controller with ActivityTracking {
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
     Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
-      memberService.createEBCode(request.member, event).map { ebCode =>
-        val eventUrl = ebCode.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
+
+      memberService.createEBCode(request.member, event).map { code =>
+        val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
         val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
+
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
 
         Found(eventUrl)
@@ -224,7 +226,7 @@ trait Event extends Controller with ActivityTracking {
         event <- EventbriteService.getEvent(id)
       } yield {
         event.service.getOrder(oid).map { order =>
-          val count = memberService.countComplimentaryTicketsUsed(event, order)
+          val count = memberService.countComplimentaryTicketsInOrder(event, order)
           if (count > 0 && isTestUser(request.user)) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
           }
@@ -258,7 +260,6 @@ trait Event extends Controller with ActivityTracking {
   def previewLocal(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
     EventbriteService.getPreviewLocalEvent(id).map(eventDetail)
   }
-
 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
    EventbriteService.getPreviewMasterclass(id).map(eventDetail)
