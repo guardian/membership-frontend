@@ -13,6 +13,7 @@
 //     http://dbushell.com/2012/04/18/scoping-typography-css/
 //     http://anthonyshort.me/global-typographic-styles-suck/
 
+// TODO: Add s-prose class
 .copy {
 
     > p,
@@ -56,15 +57,7 @@
     }
 
     a {
-        color: guss-colour(guardian-brand);
-        text-decoration: none;
-        border-bottom: 1px solid $c-neutral3;
-
-        &:hover,
-        &:focus {
-            text-decoration: none;
-            border-color: $c-neutral2;
-        }
+        @include text-link();
     }
 
     li > ol,

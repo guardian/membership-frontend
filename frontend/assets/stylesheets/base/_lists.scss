@@ -13,7 +13,9 @@ ul {
 }
 
 // Remove margin and bullets from lists.
+// TODO: Single class, remove placeholder, move to utilities
 .u-unstyled,
+.u-unstyled-list,
 %u-unstyled {
     margin: 0;
     list-style: none;
