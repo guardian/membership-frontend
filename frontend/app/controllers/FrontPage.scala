@@ -1,10 +1,8 @@
 package controllers
 
-import configuration.CopyConfig
-import model.{EventBrandCollection, Grid, PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
-import model.Benefits.ComparisonItem
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 import play.api.mvc.Controller
+import model.{EventBrandCollection, Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
 trait FrontPage extends Controller {
 
@@ -24,12 +22,6 @@ trait FrontPage extends Controller {
       ComparisonItem("Exclusive offers and competitions", true, true),
       ComparisonItem("Membership card and annual gift", true, true),
       ComparisonItem("Highlights and live streams of selected Guardian Live events", true, true)
-    )
-
-    val eventCollections = EventBrandCollection(
-      liveEvents.getSortedByCreationDate.take(3),
-      localEvents.getSortedByCreationDate.take(3),
-      masterclassEvents.getSortedByCreationDate.take(3)
     )
 
     val midlandGoodsShedImages = Seq(
@@ -102,30 +94,6 @@ trait FrontPage extends Controller {
     )
 
     val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("experience"),
-        altText=Some("Guardian Live event: Pussy Riot - art, sex and disobedience"),
-        availableImages=ResponsiveImageGenerator(
-          id="eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("support"),
-        altText=Some("Support the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("exclusive"),
-        altText=Some("Exclusive content"),
-        availableImages=ResponsiveImageGenerator(
-          id="4bea41f93f7798ada3d572fe07b1e38dacb2a56e/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
       ResponsiveImageGroup(
         name=Some("patrons"),
         altText=Some("Patrons of The Guardian"),
