@@ -71,6 +71,28 @@
 }
 
 /* ==========================================================================
+   Slideshow: Events
+   ========================================================================== */
+
+.slideshow--events {
+    .slideshow__title {
+        @include fs-header(2);
+        margin: ($gs-baseline / 3) ($gs-gutter / 4);
+
+        @include mq(tablet) {
+            height: gs-height(2.5);
+        }
+    }
+    .slideshow__footer {
+        margin: 0;
+        padding: ($gs-baseline / 2) ($gs-gutter / 4);
+    }
+    .slideshow__footer__item {
+        vertical-align: middle;
+    }
+}
+
+/* ==========================================================================
    Slideshow: Featured
    ========================================================================== */
 
