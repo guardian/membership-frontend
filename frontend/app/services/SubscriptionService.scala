@@ -160,9 +160,9 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     account <- getAccount(memberId)
     subscription <- zuoraRestService.lastSubscriptionByAccount(account.id)
     startDate = formatDateTime(subscription.termStartDate)
-    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscription.id}'"
-    result <- zuoraSoapService.query[Usage](whereClause)
-  } yield result.size
+    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscription.id}' AND UOM = '$unitOfMeasure'"
+    usages <- zuoraSoapService.query[Usage](whereClause)
+  } yield usages.size
 
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = {
     for {
