@@ -82,7 +82,7 @@
 @mixin package-promo-stacked() {
     .package-promo__description {
         display: inline-block;
-        min-height: rem($gs-gutter * 9);
+        min-height: rem($gs-gutter * 8);
     }
     .package-promo__content {
         margin-left: 0;
