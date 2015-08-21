@@ -2,12 +2,11 @@
    Base
    ========================================================================== */
 
-*,
-*:before,
-*:after {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
+html {
     box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 
 body:after {
@@ -36,6 +35,23 @@ body {
     line-height: 1.4;
 }
 
+/*  =========================================================================
+    Embedded content
+    http://developers.whatwg.org/embedded-content-1
+    ========================================================================= */
+
+img {
+    background-color: transparent;
+}
+figure {
+    margin: 0;
+}
+
+/*  =========================================================================
+    Text-level semantics
+    http://developers.whatwg.org/text-level-semantics.html
+    ========================================================================= */
+
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
@@ -43,6 +59,16 @@ h1, h2, h3, h4, h5, h6 {
 p {
     margin-top: 0;
     margin-bottom: $gs-baseline * 1.3333;
+}
+
+dt {
+    font-weight: bold;
+}
+
+menu,
+ol,
+ul {
+    padding: 0;
 }
 
 table {

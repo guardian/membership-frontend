@@ -1,75 +1,40 @@
 /* ==========================================================================
-   Text Helpers
-   ========================================================================== */
-
-/* Text Helpers - Copy
+   Objects: Text
    ========================================================================== */
 
 .text-body {
     @include fs-bodyCopy(2);
     font-weight: normal;
 }
-
-.text-caption {
-    @include fs-textSans(2);
-}
-
 .text-feature {
     @include fs-headline(3);
-
-    @include mq(tablet) {
-        @include fs-headline(4, true);
-    }
-}
-
-.text-lead {
-    @include fs-header(3);
-}
-
-.text-trail {
-    @include fs-headline(2);
-}
-
-.text-note {
-    @include fs-data(3);
-    color: $c-neutral2;
-    margin-bottom: rem($gs-baseline / 2);
-}
-
-.text-highlight {
-    color: color(brand-main);
-}
-
-.text-caption {
-    @include fs-textSans(1);
-    font-weight: normal;
-}
-
-.text-section-intro {
-    @include fs-headline(3);
-    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
         @include fs-headline(4, $size-only: true);
     }
 }
-
-.text-link {
-    @include text-link();
+.text-lead {
+    @include fs-header(3);
+}
+.text-trail {
+    @include fs-headline(2);
+}
+.text-intro {
+    @include fs-headline(3);
+    margin-bottom: $gs-gutter;
+}
+.text-note {
+    @include fs-data(3);
+    color: $c-neutral2;
+    margin-bottom: rem($gs-baseline / 2);
+}
+.text-caption {
+    @include fs-textSans(1);
+    font-weight: normal;
 }
 
-/* Text Helpers - Case
-   ========================================================================== */
-
-.case--lower {
-    text-transform: lowercase;
-}
-
-.case--capitalize {
-    text-transform: capitalize;
-}
-
-/* Text Helpers - Headings
+/* ==========================================================================
+   Objects: Headings
    ========================================================================== */
 
 .h-intro {
@@ -90,7 +55,7 @@
     border-width: 1px 0 0 0;
 
     @include mq(tablet) {
-        font-size: get-font-size(header, 3);
+        @include fs-header(3, $size-only: true );
     }
 }
 .h-section--inline {
@@ -104,6 +69,21 @@
         padding-top: rem($gs-baseline / 2);
         border-width: 1px 0 0 0;
     }
+}
+
+.h-brand {
+    @include fs-header(3);
+    color: color(brand-main);
+    margin-bottom: $gs-baseline / 4;
+
+    @include mq(tablet) {
+        @include fs-header(3, $size-only: true);
+    }
+}
+.h-brand--section {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: $gs-baseline / 2;
+    margin-bottom: $gs-baseline;
 }
 
 .h-promo,
