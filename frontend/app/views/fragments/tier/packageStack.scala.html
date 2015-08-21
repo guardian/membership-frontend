@@ -6,10 +6,10 @@
     <div class="package-stack__header">
         @fragments.tier.tierTrail(tier)
     </div>
-    <div class="package-stack__content">
-        <ul class="list-stack">
+    <div class="package-stack__content copy">
+        <ul>
             @for(benefit <- Benefits.detailsLimited(tier)) {
-                <li>@fragments.tier.benefitItem(benefit)</li>
+                <li>@benefit.title</li>
             }
         </ul>
     </div>

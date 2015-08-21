@@ -115,11 +115,11 @@
             <div class="page-section__lead-in">
                 <h2 class="page-section__headline">Benefits</h2>
             </div>
-            <div class="page-section__content">
-                <ul class="grid grid--3up">
+            <div class="page-section__content copy">
+                <ul>
                     @for(benefit <- Benefits.details(Tier.Partner).list) {
-                        <li class="grid__item">
-                            @fragments.tier.benefitItem(benefit=benefit)
+                        <li>
+                            @benefit.title
                         </li>
                     }
                 </ul>

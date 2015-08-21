@@ -7,9 +7,7 @@ define([
     'src/modules/analytics/krux',
     'src/modules/analytics/twitter',
     'src/modules/analytics/facebook',
-    'src/modules/analytics/appnexus',
-    'src/modules/analytics/crazyegg',
-    'src/modules/analytics/optimizely'
+    'src/modules/analytics/appnexus'
 ], function (
     cookie,
     ga,
@@ -18,9 +16,7 @@ define([
     krux,
     twitter,
     facebook,
-    appnexus,
-    crazyegg,
-    optimizely
+    appnexus
 ) {
     'use strict';
 
@@ -41,8 +37,6 @@ define([
         twitter.init();
         facebook.init();
         appnexus.init();
-        crazyegg.init();
-        optimizely.init();
     }
 
     function init() {

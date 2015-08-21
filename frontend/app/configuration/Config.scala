@@ -77,8 +77,6 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.all.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
-  val optimizelyEnabled = config.getBoolean("optimizely.enabled")
-
   val corsAllowOrigin = Set(
     // identity
     "https://profile.thegulocal.com",
@@ -164,4 +162,5 @@ object Config {
   val bcryptPepper = config.getString("activity.tracking.bcrypt.pepper")
 
   val casServiceConfig = config.getString("cas.url")
+  val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
 }

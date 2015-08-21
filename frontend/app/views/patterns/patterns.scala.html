@@ -388,10 +388,6 @@
         @fragments.pricing.priceInfoEvent(events.head)
     }
 
-    @pattern("Benefit Item", "Single benefit item") {
-        @fragments.tier.benefitItem(Benefits.allBenefits.head)
-    }
-
     @pattern("Tier Trail - Caption", "Tier name with caption") {
         @fragments.tier.tierTrail(Tier.Partner)
     }
@@ -412,10 +408,6 @@
                 @fragments.tier.packagePromo(Tier.Patron)
             </li>
         </ul>
-    }
-
-    @pattern("Package - Feature") {
-        @fragments.tier.packageFeature(Tier.Patron)
     }
 
     @pattern("Package - Stack") {

@@ -21,43 +21,20 @@
                 <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
 
                 @* Packages *@
-                <ul class="grid grid--bordered grid--stretch grid--3up-stacked">
+                <ul class="grid grid--bordered grid--3up-stacked">
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
-
                             @fragments.tier.packageChanger(tier)
-
-                            @* Benefits *@
-                            <div class="package-chooser">
-                                <a class="mini-link until-desktop js-toggle" data-toggle="toggle-benefit-@tier.toString.toLowerCase" data-toggle-label="Hide what's included" data-toggle-icon="arrow-up">
-                                    <span class="toggle-link__icon icon-holder icon-holder--small">
-                                        @fragments.inlineIcon("arrow-down", List("inline-icon--small"))
-                                    </span>
-                                    <span class="js-toggle-label">Show what's included</span>
-                                </a>
-                                <div class="package-chooser__list" id="toggle-benefit-@tier.toString.toLowerCase">
-                                    <ul class="list-stack">
-                                        <li class="list-stack__title">
-                                            What's included
-                                        </li>
-                                        @for(benefit <- Benefits.details(tier).list) {
-                                            <li>@fragments.tier.benefitItem(benefit)</li>
-                                        }
-                                    </ul>
-                                    <a class="action"
-                                       href="@routes.TierController.upgrade(tier)"
-                                       data-metric-trigger="click"
-                                       data-metric-category="changeTier"
-                                       data-metric-action="@tier.toString.toLowerCase()"
-                                    >
-                                        <span class="action__label">Become a @tier</span>
-                                    </a>
-                                </div>
-                            </div>
-
                         </li>
                     }
                 </ul>
+
+                <h3 class="h-section">What's included</h3>
+                @for(tier <- availableTiers) {
+                    <div id="package-benefits-@tier.name.toLowerCase">
+                        @fragments.tier.packageStack(tier)
+                    </div>
+                }
 
                 @* Help & cancellation links *@
                 <ul class="inline-list inline-list--bordered copy">
