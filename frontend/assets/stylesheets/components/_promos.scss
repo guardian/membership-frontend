@@ -29,6 +29,7 @@
 
     @include mq(tablet) {
         position: absolute;
+        top: -1px;
         z-index: 1; left: 0;
         padding: $gs-baseline $gs-gutter;
         padding-bottom: ($gs-baseline * 4);
@@ -65,6 +66,7 @@
         width: (gs-span(9) - $gs-gutter);
         float: right;
         position: relative;
+        z-index: 2;
         margin-top: -(gs-height(2) + $gs-gutter);
         background-color: $white;
         padding: $gs-gutter;

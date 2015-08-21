@@ -25,6 +25,10 @@
     color: $white;
     background-color: transparentize($c-neutral1, .1);
 }
+.tone-trans-white {
+    color: $c-neutral1;
+    background-color: transparentize($white, .1);
+}
 
 /* Live
    ========================================================================== */
