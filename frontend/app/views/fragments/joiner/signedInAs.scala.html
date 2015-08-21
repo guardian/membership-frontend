@@ -1,7 +1,10 @@
 @(returnUri: String)
 
-@import configuration.Config
+@import configuration.Config.idWebAppSignOutThenInUrl
 
-<p class="copy">
-    You're signed in as <strong class="js-user-displayname"></strong>. <a href="@Config.idWebAppSignOutThenInUrl(returnUri)">Sign in with another account</a>.
+<p class="text-note">
+    You're signed in as <strong class="js-user-displayname"></strong>.
+</p>
+<p class="text-note">
+    <a href="@idWebAppSignOutThenInUrl(returnUri)" class="text-link">Sign Out</a>
 </p>
