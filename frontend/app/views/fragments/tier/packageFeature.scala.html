@@ -6,13 +6,13 @@
     <div class="package-feature__promo">
         @fragments.tier.packagePromo(tier, isReversed=isReversed, modifierClass=Some("package-promo--simple"))
     </div>
-    <div class="package-feature__benefits">
+    <div class="package-feature__benefits copy">
         <div class="package-feature__leadin tone-border-@tier.slug">
             @Benefits.details(tier).leadin
         </div>
-        <ul class="list-stack list-stack--bordered">
+        <ul>
             @for(benefit <- Benefits.detailsLimited(tier)) {
-                <li>@fragments.tier.benefitItem(benefit, iconClasses=List("tone-color-" + tier.slug))</li>
+                <li>@benefit.title</li>
             }
         </ul>
     </div>

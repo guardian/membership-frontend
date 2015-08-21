@@ -63,23 +63,10 @@
     </div>
 
     @* ===== Join Today ===== *@
-    <div class="page-slice page-slice--split tone-tint l-constrained">
-        <div class="page-slice__inner">
-            <h2 class="page-slice__headline">What's included</h2>
-            <div class="page-slice__content">
-                <ul class="grid grid--2up">
-                    @for(benefit <- Benefits.details(Tier.Supporter).list) {
-                        <li class="grid__item">
-                        @fragments.tier.benefitItem(
-                            benefit=benefit,
-                            iconClasses=Seq("tone-color-supporter"),
-                            componentClasses=Seq("u-divider-dotted")
-                        )
-                        </li>
-                    }
-                </ul>
-                @fragments.tier.packagePromoUSASupporter(isReversed=true)
-            </div>
+    <div class="page-slice tone-tint l-constrained" id="whats-included">
+        <h2 class="page-slice__headline">What's included</h2>
+        <div class="page-slice__content">
+        @fragments.tier.packageFeature(Tier.Supporter, isReversed=true)
         </div>
     </div>
 
