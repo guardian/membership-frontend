@@ -147,22 +147,3 @@
         }
     }
 }
-
-.grid--4up-stacked {
-    @include mq(tablet) {
-        width: 100% + $gutter-width-fluid;
-        margin-left: -$gutter-width-fluid;
-    }
-    .grid__item {
-        @include mq(tablet) {
-            float: left;
-            border-style: solid;
-            border-width: 0 0 0 1px;
-            margin-left: $gutter-width-fluid / 2;
-            padding-left: $gutter-width-fluid / 2;
-            margin-bottom: rem($gs-baseline);
-            width: 25% - ($gutter-width-fluid / 2);
-            &:nth-of-type(4n+1) { clear: left; border-left: none; }
-        }
-    }
-}

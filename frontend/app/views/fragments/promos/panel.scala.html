@@ -1,13 +1,18 @@
-@(title: String, imageOpt: Option[model.ResponsiveImageGroup])(content: Html)
+@(
+    title: String,
+    description: String,
+    link: String,
+    imageUrl: String
+)
 
 @import views.support.Asset
 
-<div class="panel">
-    @for(image <- imageOpt) {
-        <div class="panel__media u-thumbnail-clip u-thumbnail-clip--a">
-            <img src="@image.defaultImage" srcset="@image.srcset" sizes="33vw" alt="@image.altText" class="responsive-img">
-        </div>
-    }
+<a class="panel block-link no-underline" href="@link">
+    <div class="panel__media u-thumbnail-clip u-thumbnail-clip--a">
+        <img src="@imageUrl" alt="@title" class="responsive-img">
+    </div>
     <h3 class="panel__title">@title</h3>
-    <div class="panel__description copy">@content</div>
-</div>
+    <div class="panel__description copy">
+        <p>@description</p>
+    </div>
+</a>
