@@ -12,6 +12,10 @@
     background-repeat: repeat;
     background-attachment: fixed;
     height: 60vh;
+
+    @include mq(tablet) {
+        background-size: 68%;
+    }
 }
 .hero-banner__inner {
     position: relative;

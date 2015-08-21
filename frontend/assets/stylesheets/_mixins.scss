@@ -11,15 +11,6 @@ $guss-rem-baseline: 16px;
 @import 'components/bower-components/guss-layout/columns';
 @import 'components/bower-components/guss-layout/row';
 
-// Colour
-// =============================================================================
-
-@mixin brand-background() {
-    background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
-    background-position: top center;
-    background-size: cover;
-}
-
 // Grid system
 // =============================================================================
 // gs- prefixes stand for Grid System

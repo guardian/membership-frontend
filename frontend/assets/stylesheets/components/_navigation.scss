@@ -12,7 +12,7 @@
     @include overflow-scroll-x();
     @include fs-headline(2);
     @include font-smoothing();
-    font-weight: normal;
+    font-weight: guss-font-weight(medium);
 
     clear: both;
     display: block;
@@ -25,7 +25,7 @@
     }
 
     @include mq(tablet) {
-        background-color: transparentize($c-neutral1, .2);
+        background-color: transparent;
         position: absolute;
         bottom: 0;
         width: 100%;

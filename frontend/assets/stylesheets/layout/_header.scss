@@ -8,10 +8,12 @@
     z-index: 2;
 }
 .global-header__inner {
-    @include brand-background();
+    background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
+    background-position: 45% 50%;
 
     @include mq(tablet) {
         padding-bottom: $global-toggle-height;
+        background-position: 50% 0%;
     }
 }
 .global-header__branding {

@@ -34,7 +34,16 @@
    ========================================================================== */
 
 .global-brandbar {
-   @include brand-background();
+    background: color(brand-main) url(/assets/images/common/bg-brandbar.png) no-repeat;
+    background-position: 65% 100%;
+
+    @include mq(phablet) {
+        background-position: 60% 100%;
+    }
+    @include mq(tablet) {
+        padding-bottom: $global-toggle-height;
+        background-position: top center;
+    }
 }
 .global-brandbar__inner {
    @include clearfix();
