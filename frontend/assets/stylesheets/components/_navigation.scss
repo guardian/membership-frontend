@@ -454,8 +454,10 @@
     }
 }
 .nav-sections__link:hover,
+.nav-sections__link:active,
 .nav-sections__link.is-active {
     text-decoration: none;
+    color: $white;
     background-color: $c-neutral2;
 }
 @include mq($until: tablet) {
