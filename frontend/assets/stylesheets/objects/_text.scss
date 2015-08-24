@@ -33,17 +33,41 @@
     font-weight: normal;
 }
 
+.o-counter {
+    font-weight: bold;
+    color: $c-neutral3;
+
+    &:after {
+        content: ' / ';
+        color: $c-neutral4;
+    }
+}
+
 /* ==========================================================================
    Objects: Headings
    ========================================================================== */
 
 .h-intro {
-    @include fs-header(4);
-    text-transform: lowercase;
+    @include fs-header(3);
     margin-bottom: 0;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
 }
-.h-intro--capitalize {
-    text-transform: none;
+.h-intro--brand {
+    @include fs-header(3);
+    color: color(brand-main);
+    margin-bottom: $gs-baseline / 4;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
+}
+.h-intro--section {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: $gs-baseline / 2;
+    margin-bottom: $gs-baseline;
 }
 
 .h-section,
@@ -71,21 +95,6 @@
     }
 }
 
-.h-brand {
-    @include fs-header(3);
-    color: color(brand-main);
-    margin-bottom: $gs-baseline / 4;
-
-    @include mq(tablet) {
-        @include fs-header(3, $size-only: true);
-    }
-}
-.h-brand--section {
-    border-top: 1px solid $c-border-neutral;
-    padding-top: $gs-baseline / 2;
-    margin-bottom: $gs-baseline;
-}
-
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);
@@ -95,7 +104,6 @@
         @include fs-headline(6, true);
     }
 }
-
 .h-promo--primary {
     @include mq(tablet) {
         @include fs-headline(7, true);
