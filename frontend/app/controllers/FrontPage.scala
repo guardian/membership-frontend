@@ -178,7 +178,6 @@ trait FrontPage extends Controller {
         )
       )
     )
-
     Ok(views.html.welcome(slideShowImages))
   }
 }

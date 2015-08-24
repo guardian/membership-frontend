@@ -19,6 +19,7 @@
 .text-trail {
     @include fs-headline(2);
 }
+
 .text-intro {
     @include fs-headline(2);
     margin-bottom: $gs-gutter;
