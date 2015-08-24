@@ -36,7 +36,7 @@
         @include mq(mem-full) {
             float: left;
             width: rem(gs-span(2));
-            padding: rem($gs-baseline / 2) 0 rem($gs-baseline * 3);
+            padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
             margin-right: rem($gs-gutter);
             margin-left: rem($gs-gutter);
         }
@@ -92,9 +92,6 @@
 
 .listing--basic {
     border-top: 0 none;
-}
-.listing--transparent {
-    background: transparent;
 }
 
 /* Date Listing

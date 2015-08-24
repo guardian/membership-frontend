@@ -1,57 +1,26 @@
 package controllers
 
-import play.api.mvc.Controller
 import configuration.CopyConfig
-import model.Benefits.ComparisonItem
-import model.{PageInfo, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
+import model.{EventBrandCollection, PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
+import play.api.mvc.Controller
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
 trait FrontPage extends Controller {
 
+  val liveEvents: EventbriteService
+  val localEvents: EventbriteService
+  val masterclassEvents: EventbriteService
+
+
   def index =  CachedAction { implicit request =>
 
-    val pageInfo = PageInfo(
-      title=CopyConfig.copyTitleDefault,
-      url="/",
-      description=Some(CopyConfig.copyDescriptionDefault)
-    )
-
-    val comparisonItems = Seq(
-      ComparisonItem("Priority booking to all Guardian Live and Local events", false, true),
-      ComparisonItem("Save 20% on Guardian Live and Local tickets", false, true),
-      ComparisonItem("Bring a guest with the same discount and priority booking privileges", false, true),
-      ComparisonItem("Save 20% on Guardian Masterclasses", false, true),
-      ComparisonItem("Support fearless, open, independent journalism", true, true),
-      ComparisonItem("Regular updates from the membership team", true, true),
-      ComparisonItem("Exclusive offers and competitions", true, true),
-      ComparisonItem("Membership card and annual gift", true, true),
-      ComparisonItem("Highlights and live streams of selected Guardian Live events", true, true)
+    val eventCollections = EventBrandCollection(
+      liveEvents.getSortedByCreationDate.take(3),
+      localEvents.getSortedByCreationDate.take(3),
+      masterclassEvents.getSortedByCreationDate.take(3)
     )
 
     val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("brand-live"),
-        altText=Some("Guardian Live"),
-        availableImages=ResponsiveImageGenerator(
-          id="ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("brand-local"),
-        altText=Some("Guardian Local"),
-        availableImages=ResponsiveImageGenerator(
-          id="889926d3c2ececf4ffd699f43713264697823251/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("brand-masterclasses"),
-        altText=Some("Guardian Masterclasses"),
-        availableImages=ResponsiveImageGenerator(
-          id="ae3ad30b485e9651a772e85dd82bae610f57a034/0_0_1140_684",
-          sizes=List(500)
-        )
-      ),
       ResponsiveImageGroup(
         name=Some("space"),
         altText=Some("A home for big ideas"),
@@ -70,7 +39,40 @@ trait FrontPage extends Controller {
       )
     )
 
-    Ok(views.html.index(pageInfo, pageImages, comparisonItems))
+    val goodsShedImages = Seq(
+      ResponsiveImageGroup(
+        altText=Some("RIP Rock and Roll? (Guardian Live event): Emmy the Great"),
+        availableImages=ResponsiveImageGenerator(
+          id="3d2be6485a6b8f5948ba39519ceb0f76007ae8d8/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("A Life in Music - George Clinton (Guardian Live event)"),
+        availableImages=ResponsiveImageGenerator(
+          id="234dff81b39968199f501f4108189efab263a668/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Guardian Live with Russell Brand"),
+        availableImages=ResponsiveImageGenerator(
+          id="ecd5ccb67c093394c51f3db6779b044e3056f50c/0_0_2280_1368",
+          sizes=List(1000, 500)
+        )
+      )
+    )
+
+    Ok(views.html.index(
+      PageInfo(
+        title=CopyConfig.copyTitleDefault,
+        url="/",
+        description=Some(CopyConfig.copyDescriptionDefault)
+      ),
+      pageImages,
+      goodsShedImages,
+      eventCollections
+    ))
   }
 
   def welcome = CachedAction { implicit request =>
@@ -130,4 +132,8 @@ trait FrontPage extends Controller {
   }
 }
 
-object FrontPage extends FrontPage
+object FrontPage extends FrontPage {
+  val liveEvents = GuardianLiveEventService
+  val localEvents = LocalEventService
+  val masterclassEvents = MasterclassEventService
+}
