@@ -82,7 +82,7 @@
 @mixin package-promo-stacked() {
     .package-promo__description {
         display: inline-block;
-        min-height: rem($gs-gutter * 8);
+        min-height: rem($gs-gutter * 10);
     }
     .package-promo__content {
         margin-left: 0;
@@ -148,8 +148,7 @@
 .package-promo--lead {
     @include mq(desktop) {
         .package-promo__description {
-            @include fs-headline(3);
-            min-height: ($gs-gutter * 7);
+            min-height: ($gs-gutter * 5);
         }
     }
 }

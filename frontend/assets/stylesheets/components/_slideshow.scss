@@ -23,6 +23,7 @@
     &.is-current {
         opacity: 1;
         position: relative;
+        z-index: 2;
     }
 
     .supports-clippath-shapes &::after {
@@ -52,9 +53,6 @@
    ========================================================================== */
 
 .slideshow--events {
-    // TODO: color palette?
-    background-color: #acd8f0;
-
     .slideshow__title {
         @include fs-header(2);
         margin: ($gs-baseline / 3) ($gs-gutter / 4);
@@ -68,7 +66,7 @@
         padding: ($gs-baseline / 2) ($gs-gutter / 4);
     }
     .slideshow__footer__item {
-        vertical-align: bottom;
+        vertical-align: middle;
     }
 }
 
@@ -151,12 +149,25 @@ $_slideshow-fefature-height-desktop: 460px;
 .progress-indicator {
     font-size: 0;
 }
-.progress-indicator__separator,
 .progress-indicator__index,
+.progress-indicator__separator,
 .progress-indicator__count {
     @include fs-data(3);
 }
 .progress-indicator__index {
     width: $gs-gutter / 2;
     display: inline-block;
+}
+
+.progress-indicator--text {
+    color: $c-neutral1;
+
+    .progress-indicator__index,
+    .progress-indicator__separator,
+    .progress-indicator__count {
+        @include fs-data(5);
+    }
+    .progress-indicator__count {
+        color: $c-neutral2;
+    }
 }

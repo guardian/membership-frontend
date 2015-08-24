@@ -120,12 +120,6 @@
         width: 16px; height: 16px;
     }
 }
-.icon-holder--action:hover,
-.icon-holder--action:active,
-.icon-holder--action:focus {
-    color: $c-neutral1;
-    border-color: $c-neutral1;
-}
 .icon-holder--large {
     width: 36px;
     height: 36px;
@@ -167,6 +161,15 @@
     color: $white;
     background-color: tone('masterclass');
     border-color: tone('masterclass');
+}
+.icon-holder--control {
+    color: $c-neutral1;
+    border-color: $c-neutral2;
+}
+.icon-holder--control:hover,
+.icon-holder--control:active,
+.icon-holder--control:focus {
+    border-color: $c-neutral1;
 }
 
 /* Checkmarks

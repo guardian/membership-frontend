@@ -31,15 +31,18 @@
     @include clearfix();
     position: relative;
     background-color: $c-neutral6;
-    border-top: 1px solid $c-border-neutral;
+    border-top: 1px solid color(brand-supporting-1);
     margin-bottom: $gs-baseline / 2;
 }
 .brand-panel__header {
-    padding: ($gs-gutter / 4);
+    padding: $gs-gutter / 4;
 
     @include mq(tablet) {
         height: 140px;
     }
+}
+.brand-panel__media {
+    background-color: color(brand-supporting-1);
 }
 .brand-panel__title {
     @include fs-header(4);

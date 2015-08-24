@@ -1,7 +1,7 @@
 package controllers
 
 import configuration.CopyConfig
-import model.{EventBrandCollection, PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
+import model.{EventBrandCollection, PageInfo, ResponsiveImage, ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
@@ -36,29 +36,13 @@ trait FrontPage extends Controller {
           id="a0b637e4dc13627ead9644f8ec9bd2cc8771f17d/0_0_2000_1200",
           sizes=List(500)
         )
-      )
-    )
-
-    val goodsShedImages = Seq(
-      ResponsiveImageGroup(
-        altText=Some("RIP Rock and Roll? (Guardian Live event): Emmy the Great"),
-        availableImages=ResponsiveImageGenerator(
-          id="3d2be6485a6b8f5948ba39519ceb0f76007ae8d8/0_0_2280_1368",
-          sizes=List(1000, 500)
-        )
       ),
       ResponsiveImageGroup(
-        altText=Some("A Life in Music - George Clinton (Guardian Live event)"),
+        name=Some("space"),
+        altText=Some("A home for big ideas"),
         availableImages=ResponsiveImageGenerator(
-          id="234dff81b39968199f501f4108189efab263a668/0_0_2280_1368",
-          sizes=List(1000, 500)
-        )
-      ),
-      ResponsiveImageGroup(
-        altText=Some("Guardian Live with Russell Brand"),
-        availableImages=ResponsiveImageGenerator(
-          id="ecd5ccb67c093394c51f3db6779b044e3056f50c/0_0_2280_1368",
-          sizes=List(1000, 500)
+          id="ed9347da5fc1e55721b243a958d42fca1983d012/0_0_1140_684",
+          sizes=List(500)
         )
       )
     )
@@ -70,7 +54,6 @@ trait FrontPage extends Controller {
         description=Some(CopyConfig.copyDescriptionDefault)
       ),
       pageImages,
-      goodsShedImages,
       eventCollections
     ))
   }
@@ -127,7 +110,6 @@ trait FrontPage extends Controller {
         )
       )
     )
-
     Ok(views.html.welcome(slideShowImages))
   }
 }
