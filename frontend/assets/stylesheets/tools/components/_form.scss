@@ -27,7 +27,7 @@
     -webkit-appearance: none;
 
     &:focus {
-        border-color: $c-brand;
+        border-color: color(brand-main);
     }
 }
 

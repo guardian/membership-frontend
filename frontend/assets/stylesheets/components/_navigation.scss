@@ -1,46 +1,38 @@
 /* ==========================================================================
-   Nav object
+   Navigation
    ========================================================================== */
-
-// TODO: Deprecated, prefer standalone components
-// for navigation rather than sprawling modifiers
-.nav {
-    @include unstyled-list();
-}
-
 /* ==========================================================================
-   Nav - Global Navigation
+   Navigation: Global Navigation
    ========================================================================== */
 
-// Height of toggle link.
-$global-nav-height: 36px;
-
-.nav--global {
-
-    @include unstyled-list();
+.global-navigation {
 
     @include clearfix();
+    @include unstyled-list();
+    @include overflow-scroll-x();
+    @include fs-headline(2);
+    @include font-smoothing();
+    font-weight: guss-font-weight(medium);
+
     clear: both;
     display: block;
     height: auto;
     padding: 0;
-
-    overflow: hidden;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
-
-    @include mq(desktop) {
-        overflow-x: hidden;
-    }
-
-    @include fs-headline(2);
-    font-weight: normal;
-    @include font-smoothing();
-
-    background-color: darken(color(brand-main), 12%);
+    background-color: $c-neutral1;
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    @include mq(tablet) {
+        background-color: transparent;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    @include mq(desktop) {
+        overflow-x: hidden;
     }
 
     .nav__scroll {
@@ -48,12 +40,11 @@ $global-nav-height: 36px;
         white-space: nowrap;
         width: auto;
         vertical-align: middle;
-        height: rem($global-nav-height);
-        padding: 0 rem($global-nav-height * 2) 0 rem($gs-gutter / 2);
-        background-color: darken(color(brand-main), 10%);
+        height: $global-toggle-height;
+        padding: 0 ($global-toggle-height * 2) 0 ($gs-gutter / 2);
 
         @include mq(tablet) {
-            padding: 0 rem($gs-gutter);
+            padding: 0 $gs-gutter;
             display: block;
         }
         @include mq(desktop) {
@@ -80,7 +71,7 @@ $global-nav-height: 36px;
 
     .nav__item--sub {
         display: none;
-        padding-left: rem($gs-gutter);
+        padding-left: $gs-gutter;
     }
 
     .nav__item--right {
@@ -89,11 +80,14 @@ $global-nav-height: 36px;
         }
     }
     .nav__link {
-        color: $black;
         position: relative;
-        margin: 0 rem($gs-gutter) 0 0;
+        margin: 0 $gs-gutter 0 0;
         padding: 0;
 
+        &, &:active {
+            color: $white;
+            text-decoration: none;
+        }
         &:focus,
         &:active {
             text-decoration: underline;
@@ -101,11 +95,8 @@ $global-nav-height: 36px;
 
         @include mq(tablet) {
             display: block;
-            padding: rem(8px) 0 rem(6px);
-            &, &:active {
-                text-decoration: none;
-                color: $black;
-            }
+            padding: 8px 0 6px;
+
             &:focus,
             &:hover {
                 text-decoration: underline;
@@ -115,72 +106,73 @@ $global-nav-height: 36px;
     .nav__link--last {
         margin-right: 0;
     }
+
     .icon-home {
         vertical-align: top;
     }
-}
 
-@include mq($until: tablet) {
-    .nav--global.is-active {
+    @include mq($until: tablet) {
+        &.is-active {
 
-        display: block;
-        height: auto;
-        padding: 0;
-        padding-top: rem($global-nav-height);
-        position: absolute;
-        z-index: 2;
-        top: 100%;
-        width: 100%;
-        background: darken(color(brand-main), 10%);
-
-        .nav__scroll,
-        .nav__list,
-        .nav__item {
             display: block;
             height: auto;
             padding: 0;
-        }
-
-        .nav__item {
+            padding-top: $global-toggle-height;
+            position: absolute;
+            z-index: 2;
+            top: 100%;
             width: 100%;
-        }
-        .nav__item--home {
-            display: none;
-        }
+            background: $c-neutral1;
 
-        .nav__item--sub {
-            display: block;
-        }
+            .nav__scroll,
+            .nav__list,
+            .nav__item {
+                display: block;
+                height: auto;
+                padding: 0;
+            }
 
-        .nav__link {
-            @include fs-bodyHeading(1);
-            margin: 0;
-            border-top: 1px solid lighten(color(brand-main), 5%);
-            display: block;
-            background-color: transparent;
-            -webkit-font-smoothing: subpixel-antialiased;
-            text-decoration: none;
-            padding: rem($gs-baseline / 2) 0 rem($gs-baseline) rem($gs-baseline);
+            .nav__item {
+                width: 100%;
+            }
+            .nav__item--home {
+                display: none;
+            }
+            .nav__item--sub {
+                display: block;
+            }
 
-            &,
-            &:active,
-            &:focus {
-                color: $black;
+            .nav__link {
+                @include font-smoothing();
+                @include fs-bodyHeading(1);
+                font-weight: normal;
+                margin: 0;
+                border-top: 1px solid lighten(color(brand-main), 5%);
+                display: block;
                 text-decoration: none;
-            }
-            &:hover {
-                text-decoration: underline;
-            }
+                padding: ($gs-baseline / 2) 0 $gs-baseline $gs-baseline;
+                background-color: transparent;
 
-            @include mq(desktop) {
-                border-top: 0;
+                &,
+                &:active,
+                &:focus {
+                    text-decoration: none;
+                }
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                @include mq(desktop) {
+                    border-top: 0;
+                }
             }
         }
     }
 }
 
 /* ==========================================================================
-   Secondary Navigation
+   Navigation: Secondary Navigation
    ========================================================================== */
 
 .nav-secondary {
@@ -229,7 +221,7 @@ $global-nav-height: 36px;
 }
 
 /* ==========================================================================
-   Nav - Control Navigation
+   Navigation: Control Navigation
    ========================================================================== */
 
 .nav-control {
@@ -243,51 +235,13 @@ $global-nav-height: 36px;
 .nav-control__item {
     margin-right: rem($gs-baseline);
     position: relative;
-
-    @include mq(tablet) {
-        padding-top: rem(3px);
-    }
 }
 .nav-control__item--last {
     margin-right: 0;
 }
 
 /* ==========================================================================
-   Nav - Brand Navigation
-   ========================================================================== */
-
-.nav--brand {
-    @include fs-bodyHeading(1);
-    padding-top: rem($gs-gutter / 2);
-    text-align: right;
-
-    .nav__link {
-        color: $black;
-        position: relative;
-        display: block;
-        margin-left: rem($gs-gutter);
-        padding: 0;
-
-        &:focus,
-        &:active {
-            text-decoration: underline;
-        }
-
-        @include mq(desktop) {
-            &:link, &:active {
-                text-decoration: none;
-                color: $black;
-            }
-            &:focus,
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-}
-
-/* ==========================================================================
-   Nav - Popup
+   Navigation: Popup
    ========================================================================== */
 
 .nav-popup {
@@ -295,7 +249,9 @@ $global-nav-height: 36px;
     @include unstyled-list();
 
     position: absolute;
-    top: 0;
+    top: 43px;
+    min-height: 47px;
+    width: 175px;
     z-index: 10;
 
     clear: both;
@@ -305,15 +261,12 @@ $global-nav-height: 36px;
     background-color: $white;
     padding: 0 rem($gs-gutter / 2);
 
-    top: rem($mobilePopupOffset);
-    min-height: rem(47px);
-    width: rem(175px);
 
     @include mq(tablet) {
         position: absolute;
-        top: rem(40px);
-        left: rem(30px);
-        width: rem(220px);
+        top: 40px;
+        left: 30px;
+        width: 220px;
         border: 1px solid $c-neutral4;
     }
 }
@@ -383,23 +336,20 @@ $global-nav-height: 36px;
     position: absolute;
     right: 0;
     z-index: 3;
-
-    color: $white;
     display: block;
-    height: rem($global-nav-height);
+    height: $global-toggle-height;
     border: 0 none;
-    padding: rem(3px) rem(9px) rem(9px);
-    box-shadow: rem(-3px) 0 rem(4px) 0 rgba(50, 50, 50, .30);
-    background-color: lighten($black, 20%);
+    padding: 3px 9px 9px;
     text-decoration: none;
+    color: $white;
+    background-color: $black;
 
     i {
-        border-top: rem(2px) solid rgba(255, 255, 255, .9);
+        border-top: 2px solid rgba(255, 255, 255, .9);
         display: block;
-        width: rem(20px);
-        margin-top: rem(3px);
+        width: 20px;
+        margin-top: 3px;
         transform-origin: 60%;
-        -webkit-transition: opacity .1s, -webkit-transform .1s ease-in;
         transition: opacity .1s, transform .1s ease-in;
     }
 
@@ -423,8 +373,8 @@ $global-nav-height: 36px;
 .mobile-menu__icon {
     display: block;
     text-align: center;
-    height: rem($gs-baseline * 2);
-    padding-top: rem($gs-baseline / 2);
+    height: ($gs-baseline * 2);
+    padding-top: ($gs-baseline / 2);
 }
 
 /* Nav Sections
@@ -434,7 +384,7 @@ $global-nav-height: 36px;
     @include unstyled-list();
     overflow: auto;
     color: $black;
-    background-color: color(brand-main);
+    background-color: $c-neutral1;
     position: relative;
 }
 .nav-sections--sticky {
@@ -462,21 +412,17 @@ $global-nav-height: 36px;
     width: 100%;
     overflow: auto;
     list-style: none;
-    counter-reset: nav-sections;
 
     @include mq(mem-full) {
-        border-left: 1px solid $white;
+        border-left: 1px solid $c-neutral2;
         margin-left: gs-span(2.5);
     }
 }
 .nav-sections__item,
 .nav-sections__link {
-    @include mq($until: tablet) {
-        height: 50px;
-    }
+    height: 70px;
 }
 .nav-sections__item {
-    counter-increment: nav-sections;
 
     @include mq($until: tablet) {
         width: 33.3%;
@@ -488,9 +434,9 @@ $global-nav-height: 36px;
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    color: $c-neutral1;
     padding: ($gs-baseline / 2) ($gs-gutter / 2);
-    border-right: 1px solid $white;
+    color: $white;
+    border-right: 1px solid $c-neutral2;
 
     @include mq($until: tablet) {
         width: 100%;
@@ -499,24 +445,18 @@ $global-nav-height: 36px;
     @include mq(tablet) {
         @include fs-headline(2);
         font-weight: bold;
-        min-width: rem(gs-span(3));
+        width: gs-span(3);
+
         padding: $gs-baseline $gs-gutter;
     }
 }
 .nav-sections__link:hover,
 .nav-sections__link.is-active {
     text-decoration: none;
-    background-color: lighten(color(brand-main), 10%);
+    background-color: $c-neutral2;
 }
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {
         border-right: none;
-    }
-}
-@include mq(tablet) {
-    .nav-sections__link::before {
-        color: $white;
-        content: counter(nav-sections);
-        display: block;
     }
 }

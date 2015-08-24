@@ -5,29 +5,29 @@
 /* Brand
    ========================================================================== */
 
-.tone-brand,
-.tone-trans-brand {
-    color: $c-neutral1;
+.tone-brand {
+    color: $white;
     background-color: color(brand-main);
 }
 .tone-trans-brand {
+    color: $white;
     background-color: transparentize(color(brand-main), .1);
 }
-
-/* Dark variant */
-.tone-brand-dark,
-.tone-trans-brand-dark {
-    color: $white;
-    background-color: color(brand-dark);
-    a {
-        border-bottom-color: transparentize($white, .5);
-    }
-    a:hover {
-        border-bottom-color: $white;
-    }
+.tone-trans-brand-supporting-1 {
+    color: $c-neutral1;
+    background-color: transparentize(color(brand-supporting-1), .1);
 }
-.tone-trans-brand-dark {
-    background-color: transparentize(darken(color(brand-dark), 10%), .1);
+.tone-trans-brand-supporting-2 {
+    color: $c-neutral1;
+    background-color: transparentize(color(brand-supporting-2), .1);
+}
+.tone-trans-black {
+    color: $white;
+    background-color: transparentize($c-neutral1, .1);
+}
+.tone-trans-white {
+    color: $c-neutral1;
+    background-color: transparentize($white, .1);
 }
 
 /* Live
@@ -139,6 +139,9 @@
     color: $white;
     background-color: tone('friend');
 }
+.tone-trans-friend {
+     background-color: transparentize(tone('friend'), .1);
+}
 .tone-color-friend {
     color: tone('friend');
 }
@@ -151,6 +154,9 @@
 
 .tone-partner {
     background-color: tone('partner');
+}
+.tone-trans-partner {
+     background-color: transparentize(tone('partner'), .1);
 }
 .tone-color-partner {
     color: tone('partner');
@@ -165,6 +171,9 @@
 .tone-patron {
     background-color: tone('patron');
 }
+.tone-trans-patron {
+     background-color: transparentize(tone('patron'), .1);
+}
 .tone-color-patron {
     color: tone('patron');
 }
@@ -177,6 +186,9 @@
 
 .tone-supporter {
     background-color: tone('supporter');
+}
+.tone-trans-supporter {
+     background-color: transparentize(tone('supporter'), .1);
 }
 .tone-color-supporter {
     color: tone('supporter');

@@ -1,0 +1,36 @@
+@(images: Seq[model.ResponsiveImageGroup], classes: Seq[String] = Seq.empty)
+
+<div class="slideshow @classes.mkString(" ") js-slideshow">
+    <div class="slideshow__container">
+        @for(img <- images) {
+            <figure class="slideshow__element js-slideshow-item">
+                <img class="responsive-img slideshow__image"
+                     src="@img.defaultImage"
+                     srcset="@img.srcset"
+                     alt="@img.altText"
+                     sizes="100vw"/>
+            </figure>
+        }
+    </div>
+    <div class="slideshow__footer">
+        <div class="slideshow__footer__item slideshow__footer__meta">
+            <div class="progress-indicator progress-indicator--text">
+                <span class="progress-indicator__index js-slideshow-position"></span>
+                <span class="progress-indicator__separator">/ </span>
+                <span class="progress-indicator__count js-slideshow-total"></span>
+            </div>
+        </div>
+        <div class="slideshow__footer__item slideshow__footer__controls">
+            <button class="u-button-reset js-slideshow-prev" aria-label="Previous">
+                <span class="icon-holder icon-holder--control icon-holder--large">
+                    @fragments.inlineIcon("chevron-left")
+                </span>
+            </button>
+            <button class="u-button-reset js-slideshow-next" aria-label="Next">
+                <span class="icon-holder icon-holder--control icon-holder--large">
+                    @fragments.inlineIcon("chevron-right")
+                </span>
+            </button>
+        </div>
+    </div>
+</div>

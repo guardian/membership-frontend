@@ -1,10 +1,11 @@
 @(video: model.Video, description: String)
 
 <div class="video-preview">
-    <div class="video-preview__header">
-        @description
-    </div>
     <div class="video-preview__video">
         @fragments.media.videoPlayer(video)
+    </div>
+    <div class="video-preview__header">
+        @fragments.inlineIcon("video", List("icon-inline--scale"))
+        @description
     </div>
 </div>

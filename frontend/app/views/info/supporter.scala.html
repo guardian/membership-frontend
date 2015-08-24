@@ -9,7 +9,7 @@
     @* ===== About Supporters ===== *@
     @for(img <- pageImages.find(_.name.contains("intro"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Introducing Supporter Membership", img=img, showImageCaption=true, isLead=true) {
+            @fragments.promos.promoPrimary(title="Introducing Supporter Membership", img=img, showImageCaption=true, isLead=true, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
                     <p>Supporters keep our journalism fearless, open and free from interference. For £5 a month.</p>
                 </div>
@@ -23,7 +23,7 @@
         @fragments.promos.promoVideoSecondary(
             "Support open, independent journalism",
             video=Videos.supporters,
-            toneClass=Some("tone-trans-brand-dark")){
+            toneClass=Some("tone-trans-brand-supporting-2")){
             <div class="text-feature">
                 <p>Watch Guardian journalists explain why the Guardian’s unique approach to journalism is worth defending.</p>
             </div>
@@ -33,7 +33,7 @@
     @* ===== Ensuring our independence ===== *@
     @for(img <- pageImages.find(_.name.contains("fearless"))) {
         <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title="Fearless, progressive and free from interference", img=img) {
+            @fragments.promos.promoPrimary(title="Fearless, progressive and free from interference", img=img, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
                     <p>The Guardian publishes the stories that others keep hidden.</p>
                     <p>We have become the most read, serious English-language newspaper in the world, visited by 120 million unique browsers each month. Our journalism is for everyone. The Guardian is open, without a paywall, and we remain true to our 200-year old progressive values.</p>
@@ -49,7 +49,7 @@
     @* ===== Join The Guardian and support The Guardian ===== *@
     @for(img <- pageImages.find(_.name.contains("join"))) {
         <div class="page-slice page-slice--slim l-constrained">
-        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, showImageCaption=true, toneClass=Some("tone-trans-brand-dark")) {
+        @fragments.promos.promoSecondary(Html("If you read the Guardian, join the Guardian"), img=img, showImageCaption=true, toneClass=Some("tone-trans-brand-supporting-1")) {
             <blockquote class="blockquote blockquote--feature">
                 You matter to us not just for your support, but because we gain from your insight too. Through the conversations we are having with members, we can challenge conventional wisdoms together.
             </blockquote>
@@ -58,10 +58,12 @@
     }
 
     @* ===== Join Today ===== *@
-    <div class="page-slice tone-tint l-constrained" id="whats-included">
-        <h2 class="page-slice__headline">What's included</h2>
-        <div class="page-slice__content">
-            @fragments.tier.packageFeature(Tier.Supporter, isReversed=true)
+    <div class="page-slice tone-tint" id="whats-included">
+        <div class="l-constrained">
+            <h2 class="page-slice__headline">What's included</h2>
+            <div class="page-slice__content">
+                @fragments.tier.packageFeature(Tier.Supporter, isReversed=true)
+            </div>
         </div>
     </div>
 

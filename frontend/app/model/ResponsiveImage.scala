@@ -2,7 +2,7 @@ package model
 
 import com.gu.contentapi.client.model.Content
 import views.support.Asset
-import model.RichEvent.GridImage
+import model.RichEvent.{RichEvent, GridImage}
 
 object ResponsiveImageGenerator {
   def apply(id: String, sizes: Seq[Int]): Seq[ResponsiveImage] = {
@@ -45,7 +45,6 @@ case class ResponsiveImageGroup(
   metadata: Option[Grid.Metadata] = None,
   availableImages: Seq[ResponsiveImage]
 ) {
-
   private val sortedImages = availableImages.sortBy(_.width)
 
   val smallestImage = sortedImages.head.path
@@ -56,5 +55,6 @@ case class ResponsiveImageGroup(
   }.mkString(", ")
 
   val metadataAltText = metadata.fold(altText)(_.description)
-
 }
+
+case class SlideShowCollection(name: String, images: Seq[ResponsiveImageGroup])

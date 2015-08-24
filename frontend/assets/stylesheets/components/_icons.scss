@@ -56,28 +56,30 @@
    ========================================================================== */
 
 .icon-inline {
-   width: 16px;
-   height: 16px;
-   display: inline-block;
-   vertical-align: middle;
-   fill: currentColor;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
 }
-
 .icon-inline--small {
-   width: 13px;
-   height: 13px;
+    width: 13px;
+    height: 13px;
 }
-
 .icon-inline--medium {
-   width: 24px;
-   height: 24px;
+    width: 22px;
+    height: 22px;
 }
-
 .icon-inline--large {
-   width: 36px;
-   height: 36px;
+    width: 36px;
+    height: 36px;
 }
-
+.icon-inline--badge {
+    width: 50px;
+    height: 18px;
+    margin-right: 2px;
+    vertical-align: text-bottom;
+}
 .icon-inline--scale {
     width: .75em;
     height: .75em;
@@ -86,19 +88,14 @@
     top: -2px;
     margin-right: rem($gs-baseline / 4);
 }
-
 .icon-inline--top {
     vertical-align: top;
 }
 .icon-inline--bottom {
     vertical-align: bottom;
 }
-
 .icon-inline--brand {
     fill: color(brand-main);
-}
-.icon-inline--brand-dark {
-    fill: color(brand-dark);
 }
 .icon-inline--neutral {
     fill: $c-neutral2;
@@ -123,7 +120,6 @@
         width: 16px; height: 16px;
     }
 }
-
 .icon-holder--large {
     width: 36px;
     height: 36px;
@@ -133,7 +129,6 @@
         height: 20px;
     }
 }
-
 .icon-holder--small {
     width: 20px;
     height: 20px;
@@ -143,21 +138,14 @@
         height: 12px;
     }
 }
-
 .icon-holder--neutral {
     color: $c-neutral1;
     border-color: $c-neutral1;
 }
-
-.icon-holder--dark {
-    color: color(brand-dark);
-    border-color: color(brand-dark);
-}
-
 .icon-holder--fill {
     color: $white;
-    background-color: color(brand-dark);
-    border-color: color(brand-dark);
+    background-color: color(brand-main);
+    border-color: color(brand-main);
 }
 .icon-holder--fill-guardian-live {
     color: $white;
@@ -173,6 +161,15 @@
     color: $white;
     background-color: tone('masterclass');
     border-color: tone('masterclass');
+}
+.icon-holder--control {
+    color: $c-neutral1;
+    border-color: $c-neutral2;
+}
+.icon-holder--control:hover,
+.icon-holder--control:active,
+.icon-holder--control:focus {
+    border-color: $c-neutral1;
 }
 
 /* Checkmarks

@@ -2,20 +2,12 @@
    Slideshow
    ========================================================================== */
 
-$slideshow-height-tablet: 440px;
-$slideshow-height-desktop: 460px;
-
 .slideshow {
     position: relative;
+}
+.slideshow__container {
+    position: relative;
     overflow: hidden;
-    background-color: $c-neutral4;
-
-    @include mq(tablet) {
-        min-height: rem($slideshow-height-tablet);
-    }
-    @include mq(desktop) {
-        min-height: rem($slideshow-height-desktop);
-    }
 }
 .slideshow__element {
     margin: 0;
@@ -25,62 +17,157 @@ $slideshow-height-desktop: 460px;
     top: 0;
     left: 0;
     z-index: 1;
-    transition: opacity .5s ease-in;
+    transition: opacity 300ms ease-in;
     opacity: 0;
-
-    @include mq(tablet) {
-        max-height: rem($slideshow-height-tablet);
-    }
-    @include mq(desktop) {
-        max-height: rem($slideshow-height-desktop);
-    }
 
     &.is-current {
         opacity: 1;
         position: relative;
+        z-index: 2;
+    }
+
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('slideshow');
+        @include clip-overlay();
     }
 }
+.slideshow__element
 .slideshow__image {
     position: relative;
-    @include mq(desktop) {
-        top: rem(-$gs-gutter * 4);
-    }
 }
-.slideshow__detail {
+.slideshow__footer {
+    margin: $gs-baseline 0;
+    display: table;
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    z-index: 2;
-    color: $white;
-    padding: rem($gs-gutter / 2);
-    padding-top: rem($gs-gutter * 2);
-    @include simple-gradient(transparent, rgba(0, 0, 0, .8));
+}
+.slideshow__footer__item {
+    display: table-cell;
+    vertical-align: middle;
+}
+.slideshow__footer__controls {
+    text-align: right;
+}
 
-    @include mq(mobileLandscape) {
-        padding: rem($gs-gutter * 2) rem($gs-gutter) rem($gs-baseline * 1.5);
+/* ==========================================================================
+   Slideshow: Events
+   ========================================================================== */
+
+.slideshow--events {
+    .slideshow__title {
+        @include fs-header(2);
+        margin: ($gs-baseline / 3) ($gs-gutter / 4);
+
+        @include mq(tablet) {
+            height: gs-height(2.5);
+        }
+    }
+    .slideshow__footer {
+        margin: 0;
+        padding: ($gs-baseline / 2) ($gs-gutter / 4);
+    }
+    .slideshow__footer__item {
+        vertical-align: middle;
     }
 }
-.slideshow__description {
-    @include fs-textSans(1);
-    font-weight: normal;
 
+/* ==========================================================================
+   Slideshow: Featured
+   ========================================================================== */
+
+$_slideshow-fefature-height-tablet: 440px;
+$_slideshow-fefature-height-desktop: 460px;
+
+.slideshow--featured {
     @include mq(tablet) {
-        max-width: 50%;
-        padding-right: rem($gs-gutter);
+        min-height: rem($_slideshow-fefature-height-tablet);
+    }
+    @include mq(desktop) {
+        min-height: rem($_slideshow-fefature-height-desktop);
+    }
+
+    .slideshow__container {
+        background-color: $c-neutral4;
+    }
+
+    .slideshow__element,
+    .supports-clippath-shapes & .slideshow__element::after {
+        @include mq(tablet) {
+            max-height: rem($_slideshow-fefature-height-tablet);
+        }
+        @include mq(desktop) {
+            max-height: rem($_slideshow-fefature-height-desktop);
+        }
+    }
+
+    .slideshow__element
+    .slideshow__image {
+        position: relative;
+
+        @include mq(desktop) {
+            top: (-$gs-gutter * 4);
+        }
+    }
+
+    .slideshow__detail,
+    .slideshow__indicator {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        z-index: 2;
+        color: $white;
+        padding: $gs-gutter / 2;
+        padding-top: $gs-gutter * 2;
+        padding-left: $gs-gutter * 3;
+
+        @include mq(mobileLandscape) {
+            padding: ($gs-gutter * 2) $gs-gutter;
+            padding-bottom: $gs-baseline * 1.5;
+        }
+    }
+    .slideshow__detail {
+        background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .8));
+
+        @include mq(mobileLandscape) {
+            padding-left: $gs-gutter * 3;
+        }
+    }
+    .slideshow__description {
+        @include fs-data(3);
+        font-weight: normal;
+
+        @include mq(tablet) {
+            max-width: 50%;
+            padding-right: rem($gs-gutter);
+        }
     }
 }
+
+/* ==========================================================================
+   Slideshow: Progress
+   ========================================================================== */
 
 .progress-indicator {
     font-size: 0;
 }
+.progress-indicator__index,
 .progress-indicator__separator,
-.progress-indicator__index {
-    @include fs-textSans(1);
+.progress-indicator__count {
+    @include fs-data(3);
 }
 .progress-indicator__index {
-    width: rem(10px);
+    width: $gs-gutter / 2;
     display: inline-block;
 }
-.progress-indicator__count {
-    @include fs-textSans(1);
+
+.progress-indicator--text {
+    color: $c-neutral1;
+
+    .progress-indicator__index,
+    .progress-indicator__separator,
+    .progress-indicator__count {
+        @include fs-data(5);
+    }
+    .progress-indicator__count {
+        color: $c-neutral2;
+    }
 }

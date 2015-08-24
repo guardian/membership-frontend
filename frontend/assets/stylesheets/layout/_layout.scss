@@ -5,12 +5,7 @@
 html {
     position: relative;
     min-height: 100%;
-    background: $c-background url(/assets/images/common/bg-texture.jpg) repeat-y center;
-    background-attachment: fixed;
-    background-size: cover;
-}
-html.no-background {
-    background-image: none;
+    background-color: $c-background;
 }
 
 /**

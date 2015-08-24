@@ -1,6 +1,10 @@
 @(pageInfo: model.PageInfo)
+
 @import configuration.Config
+@import model.SVG.Logos
 @import views.support.Asset
+
+@import play.api.libs.json.Json
 
 @* Critical scripts that should execute as soon as possible, preventing layout thrashing *@
 
@@ -47,6 +51,32 @@
             document.documentElement.className += ' js-ancient-browser';
         }
 
+        var areClipPathShapesSupported = (function () {
+            var base = 'clipPath',
+                prefixes = [ 'webkit', 'moz', 'ms', 'o' ],
+                properties = [ base ],
+                testElement = document.createElement( 'testelement' ),
+                attribute = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+            for ( var i = 0, l = prefixes.length; i < l; i++ ) {
+                var prefixedProperty = prefixes[i] + base.charAt( 0 ).toUpperCase() + base.slice( 1 );
+                properties.push( prefixedProperty );
+            }
+            for ( var i = 0, l = properties.length; i < l; i++ ) {
+                var property = properties[i];
+                if ( testElement.style[property] === '' ) {
+                    testElement.style[property] = attribute;
+                    if ( testElement.style[property] !== '' ) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }());
+
+        if(areClipPathShapesSupported) {
+            document.documentElement.className += ' supports-clippath-shapes';
+        }
+
         @* Disable lazySizes auto-init so we can control when it runs *@
         window.lazySizesConfig = window.lazySizesConfig || {};
         window.lazySizesConfig.init = false;
@@ -85,6 +115,7 @@
                 localStorage.setItem(prefix + '.' + guardian.membership.buildNumber, data);
             } catch(e) {}
         }
+
         /**
          * Insert SVG sprite into document
          */

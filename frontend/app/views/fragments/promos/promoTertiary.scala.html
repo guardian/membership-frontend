@@ -1,27 +1,35 @@
 @(
     title: String,
     description: String,
-    linkText: String,
-    linkHref: String,
-    linkId: String,
-    image: model.ResponsiveImageGroup,
-    toneClass: Option[String] = None
+    images: Seq[model.ResponsiveImageGroup],
+    linkOpt: Option[views.support.Links.BasicLink]
 )
 
-<div class="promo-tertiary @toneClass.mkString(" ")">
-    <div class="promo-tertiary__media">
-        <img src="@image.defaultImage" srcset="@image.srcset" sizes="100vw" alt="@image.altText" class="responsive-img">
-    </div>
-    <div class="promo-tertiary__header">
+<div class="promo-tertiary">
+    <div class="promo-tertiary__header tone-brand">
         <h2 class="promo-tertiary__title">@title</h2>
         <div class="promo-tertiary__description">
             @description
         </div>
-        <div class="promo-tertiary__action">
-            <a class="action action--external" href="@linkHref" id="@linkId">
-                @linkText
-                @fragments.actionIcon("arrow-right")
-            </a>
-        </div>
+        @for(link <- linkOpt) {
+            <div class="promo-tertiary__action">
+                <a class="action action--external" href="@link.href" @link.idOpt.map(id => s"id='$id'")>
+                    @link.title
+                    @fragments.actionIcon("arrow-right")
+                </a>
+            </div>
+        }
     </div>
+    @if(images.length.equals(1)) {
+        <div class="promo-tertiary__media u-thumbnail-clip u-thumbnail-clip--c">
+            <img class="responsive-img" alt="@images.head.altText"
+                 src="@images.head.defaultImage"
+                 srcset="@images.head.srcset"
+                 sizes="100vw">
+        </div>
+    } else {
+        <div class="promo-tertiary__media">
+            @fragments.media.slideshowMinimal(images)
+        </div>
+    }
 </div>

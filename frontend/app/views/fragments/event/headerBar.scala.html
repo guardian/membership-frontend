@@ -1,10 +1,6 @@
-@(
-    title: String,
-    logo: model.SVG.SVGImage,
-    classes: Seq[String]
-)
+@(title: String, logo: model.SVG.SVGImage)
 
-<section class="header-bar @classes.mkString("")">
+<section class="header-bar">
     <h1 class="header-bar__title">@title</h1>
     <div class="header-bar__logo">
         @fragments.common.inlineSvgImage(logo, List("header-bar__logo__image"))

@@ -1,85 +1,78 @@
 /* ==========================================================================
-   Text Helpers
-   ========================================================================== */
-
-/* Text Helpers - Copy
+   Objects: Text
    ========================================================================== */
 
 .text-body {
     @include fs-bodyCopy(2);
     font-weight: normal;
 }
-
-.text-caption {
-    @include fs-textSans(2);
-}
-
 .text-feature {
     @include fs-headline(3);
-
-    @include mq(tablet) {
-        @include fs-headline(4, true);
-    }
-}
-
-.text-lead {
-    @include fs-header(3);
-}
-
-.text-trail {
-    @include fs-headline(2);
-}
-
-.text-note {
-    @include fs-data(3);
-    color: $c-neutral2;
-    margin-bottom: rem($gs-baseline / 2);
-}
-
-.text-highlight {
-    color: color(brand-dark);
-}
-
-.text-caption {
-    @include fs-textSans(1);
-    font-weight: normal;
-}
-
-.text-section-intro {
-    @include fs-headline(3);
-    color: color(brand-dark);
-    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
         @include fs-headline(4, $size-only: true);
     }
 }
-
-.text-link {
-    @include text-link();
+.text-lead {
+    @include fs-header(3);
+}
+.text-trail {
+    @include fs-headline(2);
 }
 
-/* Text Helpers - Case
-   ========================================================================== */
+.text-intro {
+    @include fs-headline(2);
+    margin-bottom: $gs-gutter;
 
-.case--lower {
-    text-transform: lowercase;
+    @include mq(phablet) {
+        @include fs-headline(3, $size-only: true);
+    }
+}
+.text-note {
+    @include fs-data(3);
+    color: $c-neutral2;
+    margin-bottom: rem($gs-baseline / 2);
+}
+.text-caption {
+    @include fs-textSans(1);
+    font-weight: normal;
 }
 
-.case--capitalize {
-    text-transform: capitalize;
+.o-counter {
+    font-weight: bold;
+    color: $c-neutral3;
+
+    &:after {
+        content: ' / ';
+        color: $c-neutral4;
+    }
 }
 
-/* Text Helpers - Headings
+/* ==========================================================================
+   Objects: Headings
    ========================================================================== */
 
 .h-intro {
-    @include fs-header(4);
-    text-transform: lowercase;
+    @include fs-header(3);
     margin-bottom: 0;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
 }
-.h-intro--capitalize {
-    text-transform: none;
+.h-intro--brand {
+    @include fs-header(3);
+    color: color(brand-main);
+    margin-bottom: $gs-baseline / 4;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
+}
+.h-intro--section {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: $gs-baseline / 2;
+    margin-bottom: $gs-baseline;
 }
 
 .h-section,
@@ -87,11 +80,11 @@
 .h-section--lead {
     @include fs-header(2);
     padding: rem($gs-baseline / 2) 0 rem($gs-gutter);
-    border: solid $c-border-brand;
+    border: solid $c-border-neutral;
     border-width: 1px 0 0 0;
 
     @include mq(tablet) {
-        font-size: get-font-size(header, 3);
+        @include fs-header(3, $size-only: true );
     }
 }
 .h-section--inline {
@@ -116,7 +109,6 @@
         @include fs-headline(6, true);
     }
 }
-
 .h-promo--primary {
     @include mq(tablet) {
         @include fs-headline(7, true);

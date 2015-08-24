@@ -25,17 +25,11 @@
         width: 50% - ($gutter-width-fluid / 2);
     }
 }
-.u-capped-half-wide {
-    @include mq(mem-full) {
-        width: 50% - ($gutter-width-fluid / 2);
-    }
-}
 .u-capped-one-third {
     display: block;
 
     @include mq(tablet) {
         width: 33.3%;
-        // margin-bottom: rem($gs-gutter);
     }
 }
 .u-capped-two-thirds {
@@ -43,7 +37,6 @@
 
     @include mq(tablet) {
         width: 66%;
-        // margin-bottom: rem($gs-gutter);
     }
 }
 
@@ -75,8 +68,23 @@
     margin-bottom: 0 !important;
 }
 
+.u-margin-top {
+    margin-top: $gs-baseline !important;
+}
+.u-margin-bottom {
+    margin-bottom: $gs-baseline !important;
+}
+
 .u-underline {
     text-decoration: underline;
+}
+
+// Remove margin and bullets from lists.
+// TODO: Single class
+.u-unstyled,
+.u-unstyled-list {
+    margin: 0;
+    list-style: none;
 }
 
 .u-anchor {
@@ -118,4 +126,34 @@
 .u-parentheses {
     &:before { content: '('; }
     &:after { content: ')'; }
+}
+
+.supports-clippath-shapes {
+    .u-thumbnail-clip {
+        position: relative;
+
+        &::after {
+            @include clip-overlay();
+        }
+    }
+    .u-thumbnail-clip--a::after,
+    .u-thumbnail-clip--0::after {
+        @include clip-path-shape('thumbnail-a');
+    }
+    .u-thumbnail-clip--b::after,
+    .u-thumbnail-clip--1::after {
+        @include clip-path-shape('thumbnail-b');
+    }
+    .u-thumbnail-clip--c::after,
+    .u-thumbnail-clip--2::after {
+        @include clip-path-shape('thumbnail-c');
+    }
+}
+
+
+.case--lower {
+    text-transform: lowercase;
+}
+.case--capitalize {
+    text-transform: capitalize;
 }

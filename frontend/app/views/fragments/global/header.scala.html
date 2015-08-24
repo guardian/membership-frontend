@@ -1,0 +1,22 @@
+@(pageInfo: model.PageInfo)
+
+@import configuration.Config
+@import model.SVG.Logos
+
+<header class="global-header hidden-print js-header" role="banner">
+    <div class="global-header__inner">
+        <div class="global-header__branding l-constrained">
+            <div class="global-header__primary">
+                @fragments.global.controlNavigation(pageInfo)
+            </div>
+            @* Branding *@
+            <div class="global-header__logo">
+                <a href="/" class="global-header__logo__link" id="qa-header-logo">
+                    <span class="u-h">@Config.siteTitle</span>
+                    @fragments.common.inlineSvgImage(Logos.membersLogo, List("global-header__logo__image js-logo"))
+                </a>
+            </div>
+        </div>
+    </div>
+    @fragments.global.navigation(pageInfo)
+</header>

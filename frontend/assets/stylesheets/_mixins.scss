@@ -1,14 +1,11 @@
 // =============================================================================
-// Layout Mixins
+// Mixins
 // =============================================================================
 
 @import 'components/bower-components/sass-mq/mq';
 
 // Guss - https://github.com/guardian/guss
-// =============================================================================
-
 $guss-rem-baseline: 16px;
-
 @import 'components/bower-components/guss-rem/rem';
 @import 'components/bower-components/guss-typography/typography';
 @import 'components/bower-components/guss-layout/columns';
@@ -18,18 +15,15 @@ $guss-rem-baseline: 16px;
 // =============================================================================
 // gs- prefixes stand for Grid System
 
-// Configuration
 $gs-gutter: 20px;
 $gs-baseline: 12px;
 $gs-column-width: 60px;
 $gs-row-height: 36px;
 $gs-max-columns: 16;
 
-// Grid system helpers
 @function gs-span($n-columns) {
     @return $n-columns * $gs-column-width + $gs-gutter * ($n-columns - 1);
 }
-
 @function gs-height($n-rows) {
     @return $n-rows * $gs-row-height + $gs-baseline * ($n-rows - 1);
 }
@@ -64,7 +58,6 @@ $gs-max-columns: 16;
     display: block;
 }
 
-
 @mixin circular {
     border-radius: 1000px; // Android 2.3 cannot deal with '50%'
 }
@@ -72,29 +65,6 @@ $gs-max-columns: 16;
 @mixin font-smoothing() {
     -moz-osx-font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
-}
-
-@mixin disable-user-select() {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-// Vertical linear gradient with a plain fallback for older browsers
-@mixin simple-gradient($from, $until) {
-    // Fix for browsers not understanding transparent
-    @if $from == transparent {
-        $from: transparentize($until, 1);
-    }
-
-    @if $until == transparent {
-        $until: transparentize($from, 1);
-    }
-    background-color: $from;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($until));
-    background-image: -webkit-linear-gradient($from, $until);
-    background-image: linear-gradient(to bottom, $from, $until);
 }
 
 // Hide content visually, still readable by screen readers
@@ -116,7 +86,6 @@ $gs-max-columns: 16;
     overflow: hidden;
 }
 
-// Micro clearfix (http://nicolasgallagher.com/micro-clearfix-hack/)
 @mixin clearfix {
     &:after,
     &:before {
@@ -125,9 +94,6 @@ $gs-max-columns: 16;
     }
     &:after {
         clear: both;
-    }
-    @if $old-ie {
-        zoom: 1;
     }
 }
 
@@ -143,9 +109,6 @@ $gs-max-columns: 16;
     top: $gs-baseline;
 }
 
-/**
- * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
- */
 @mixin unstyled-list() {
     list-style: none;
     margin: 0;
@@ -158,6 +121,37 @@ $gs-max-columns: 16;
     }
 }
 
+@mixin overflow-scroll-x() {
+    overflow: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+@mixin no-flicker() {
+    // Prevent flicker on hover in WebKit
+    -webkit-backface-visibility: hidden;
+}
+
+
+@mixin clip-path-shape($key) {
+    clip-path: polygon(#{map-get($clip-paths, $key)});
+}
+@mixin clip-path($key) {
+    .supports-clippath-shapes & {
+        @include clip-path-shape($key);
+        @content;
+    }
+}
+
+@mixin clip-overlay($background-color: rgba(255,255,255,0.25)) {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background-color: $background-color;
+}
+
 @mixin text-link() {
     color: guss-colour(guardian-brand);
     text-decoration: none;
@@ -168,5 +162,14 @@ $gs-max-columns: 16;
         text-decoration: none;
         border-color: $c-neutral2;
     }
+}
 
+@mixin bulleted-list() {
+    list-style: none;
+    margin-left: $gs-gutter;
+
+    > li {
+        list-style-position: outside;
+        list-style-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxMiAxMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgNi44NTdjMCAxLjA4OS0uMjY4IDIuMDkzLS44MDUgMy4wMTEtLjUzNy45MTktMS4yNjUgMS42NDctMi4xODQgMi4xODQtLjkxOS41MzctMS45MjMuODA2LTMuMDExLjgwNS0xLjA4OC0uMDAxLTIuMDkyLS4yNjktMy4wMTEtLjgwNXMtMS42NDctMS4yNjQtMi4xODQtMi4xODRjLS41MzctLjkyLS44MDUtMS45MjQtLjgwNS0zLjAxMSAwLTEuMDg3LjI2OC0yLjA5MS44MDUtMy4wMTEuNTM3LS45MiAxLjI2NS0xLjY0OCAyLjE4NC0yLjE4NC45MTktLjUzNiAxLjkyMy0uODA0IDMuMDExLS44MDUgMS4wODgtLjAwMSAyLjA5Mi4yNjggMy4wMTEuODA1czEuNjQ3IDEuMjY1IDIuMTg0IDIuMTg0Yy41MzcuOTE5LjgwNSAxLjkyMi44MDUgMy4wMTF6IiBmaWxsPSIjQkRCREJEIi8+PC9zdmc+);
+    }
 }
