@@ -4,8 +4,8 @@
     comparisonItems: Seq[model.Benefits.ComparisonItem]
 )
 
-@import com.gu.membership.salesforce.Tier
-@import views.support.NavAnchor
+@import com.gu.membership.salesforce.Tier.{Supporter, Partner}
+@import views.support.Links.BasicLink
 @import views.support.Asset
 
 @main("", pageInfo) {
@@ -32,9 +32,9 @@
 
         @* ===== Section Navigation ===== *@
         @fragments.page.navSections(Seq(
-            NavAnchor("#what-are-members", "What is membership"),
-            NavAnchor("#why-join", "Why join"),
-            NavAnchor("#become-a-member", "Become a member")
+            BasicLink("#introducing-members", "Introducing Guardian Members"),
+            BasicLink("#why-join", "Why join"),
+            BasicLink("#join-now", "Join now")
         ))
 
         <div class="listing listing--bordered listing--padded l-constrained" id="what-are-members">
