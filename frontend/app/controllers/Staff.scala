@@ -23,10 +23,6 @@ trait Staff extends Controller {
   def eventDetails = GoogleAuthenticatedStaffAction { implicit request =>
     Ok(views.html.staff.event.details(request.path))
   }
-
-  def admin = GoogleAuthenticatedStaffAction { implicit request =>
-    Ok(views.html.staff.admin.adminTool(request.path))
-  }
 }
 
 object Staff extends Staff
