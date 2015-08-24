@@ -159,7 +159,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       usageCount <- ticketsUsed
     } yield {
       val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
-      val allowanceNotExceeded = usageCount <= FreeEventTickets.allowance
+      val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
 
       if (hasComplimentaryTickets && allowanceNotExceeded)
         event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
