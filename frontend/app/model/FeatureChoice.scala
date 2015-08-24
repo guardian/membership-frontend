@@ -30,18 +30,18 @@ case object Books extends FeatureChoice {
   override val zuoraCode = "Books"
   override val label = "4 books"
   override val description = """
-    |Get six Guardian Live tickets to use throughout the year.
-    |Use one ticket per event at the event of your choosing.
+    |We send you 4 carefully selected Guardian published books throughout the year.
+    |The exact book remains a mystery until it lands on the doorstep.
   """.stripMargin
 }
 
 case object FreeEventTickets extends FeatureChoice {
   val allowance = zuoraFreeEventTicketsAllowance
+  val unitOfMeasure = "Events"
   override val zuoraCode = "Events"
   override val label = s"$allowance tickets"
-  override val description = """
-    |We send you 4 carefully selected Guardian published books throughout the year.
-    |The exact book remains a mystery until it lands on the doorstep.
+  override val description = s"""
+    |Get $allowance Guardian Live tickets to use throughout the year.
+    |Use one ticket per event at the event of your choosing.
   """.stripMargin
-  val unitOfMeasure = "Events"
 }
