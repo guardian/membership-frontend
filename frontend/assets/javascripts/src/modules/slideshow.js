@@ -1,48 +1,88 @@
 define(function() {
     'use strict';
 
-    var SLIDESHOW_CONTAINER = '.js-slideshow',
-        SLIDESHOW_CHILDREN = '.js-slideshow-item',
-        SLIDESHOW_POSITION = '.js-slideshow-position',
-        SLIDESHOW_TOTAL = '.js-slideshow-total',
-        CURRENT_CLASS = 'is-current';
+    var SLIDESHOW_CONTAINER = '.js-slideshow';
+    var SLIDESHOW_CHILDREN = '.js-slideshow-item';
+    var SLIDESHOW_POSITION = '.js-slideshow-position';
+    var SLIDESHOW_TOTAL = '.js-slideshow-total';
+    var SLIDESHOW_NEXT = '.js-slideshow-next';
+    var SLIDESHOW_PREV = '.js-slideshow-prev';
+    var CURRENT_CLASS = 'is-current';
+    var CURRENT_ATTR = 'data-slideshow-current';
+    var AUTOPLAY_ATTR = 'data-slideshow-autoplay';
+    var AUTOPLAY_DURATION_ATTR = 'data-slideshow-duration';
 
-    function setCurrentItem( items, index) {
+    function getCurrentIndex(slideshow) {
+        return parseInt(slideshow.getAttribute(CURRENT_ATTR), 10) || 0;
+    }
+
+    function setCurrentIndex(slideshow, index) {
+        slideshow.setAttribute(CURRENT_ATTR, index);
+    }
+
+    function setCurrentItem(slideshow, items, index) {
+        setCurrentIndex(slideshow, index);
         [].forEach.call(items, function(item) {
             item.classList.remove(CURRENT_CLASS);
         }, false);
         items[index].classList.add(CURRENT_CLASS);
-        updateProgress(items, index);
+        updateProgress(slideshow, items, index);
     }
 
-    function cycleItems(items, speed) {
-        var currentIndex = 0;
+    function cycleItems(slideshow, items) {
         setInterval(function() {
-            ++currentIndex;
-            currentIndex = (currentIndex >= items.length) ? 0 : currentIndex;
-            setCurrentItem(items, currentIndex);
-        }, speed);
+            var currentIndex = getCurrentIndex(slideshow);
+            var maxIndex = items.length - 1;
+            var nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
+            setCurrentItem(slideshow, items, nextIndex);
+        }, slideshow.getAttribute(AUTOPLAY_DURATION_ATTR) || 6000);
     }
 
-    function updateProgress(items, index) {
-        var item = items[index],
-            positionEl = item.querySelector(SLIDESHOW_POSITION),
-            totalEl = item.querySelector(SLIDESHOW_TOTAL);
+    function updateProgress(slideshow, items, index) {
+        var positionEl = slideshow.querySelector(SLIDESHOW_POSITION);
+        var totalEl = slideshow.querySelector(SLIDESHOW_TOTAL);
+
         positionEl.innerHTML = index + 1;
         totalEl.innerHTML = items.length;
     }
 
+    function controlBehaviour(controlEl, slideshow, items, controlFn) {
+        if(!controlEl) { return; }
+        var maxIndex = items.length - 1;
+
+        controlEl.addEventListener('click', function(e) {
+            e.preventDefault();
+            var currentIndex = getCurrentIndex(slideshow);
+            var nextIndex = controlFn.call(null, currentIndex, maxIndex);
+            setCurrentItem(slideshow, items, nextIndex);
+        });
+    }
+
+    function controlItems(slideshow, items) {
+        var next = slideshow.querySelector(SLIDESHOW_NEXT);
+        var prev = slideshow.querySelector(SLIDESHOW_PREV);
+
+        controlBehaviour(next, slideshow, items, function(currentIndex, maxIndex) {
+            return (currentIndex < maxIndex) ? currentIndex + 1 : 0;
+        });
+        controlBehaviour(prev, slideshow, items, function(currentIndex, maxIndex) {
+            return (currentIndex > 0) ? currentIndex - 1 : maxIndex;
+        });
+    }
+
     function init() {
         var slideshows = document.querySelectorAll(SLIDESHOW_CONTAINER);
-        if (slideshows.length) {
-            [].forEach.call(slideshows, function(el) {
-                var items = el.querySelectorAll(SLIDESHOW_CHILDREN);
-                if(items.length) {
-                    setCurrentItem(items, 0);
-                    cycleItems(items, el.getAttribute('data-slideshow-duration') || 5000);
-                }
-            }, false);
-        }
+        if (!slideshows.length) { return; }
+        [].forEach.call(slideshows, function(slideshow) {
+            var items = slideshow.querySelectorAll(SLIDESHOW_CHILDREN);
+            if(!items.length) { return; }
+            setCurrentItem(slideshow, items, 0);
+            if(slideshow.getAttribute(AUTOPLAY_ATTR) || false) {
+                cycleItems(slideshow, items);
+            } else {
+                controlItems(slideshow, items);
+            }
+        }, false);
     }
 
     return {

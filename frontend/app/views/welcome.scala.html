@@ -21,11 +21,7 @@
     <main role="main" class="l-constrained">
 
         @* ===== Slideshow ===== *@
-        <section class="slideshow js-slideshow" data-slideshow-duration="6000">
-        @for(imgGroup <- pageImages) {
-            @fragments.media.slideshowItem(imgGroup, imgGroup.altText)
-        }
-        </section>
+        @fragments.media.slideshowFeatured(pageImages)
 
         @* ===== Introduction ===== *@
         <section class="block-description block-description--padded block-description--right block-description--pull">

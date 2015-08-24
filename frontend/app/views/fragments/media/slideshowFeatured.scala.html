@@ -1,0 +1,24 @@
+@(images: Seq[model.ResponsiveImageGroup])
+
+<div class="slideshow slideshow--featured js-slideshow" data-slideshow-autoplay="true">
+    <div class="slideshow__container">
+        @for(img <- images) {
+            <figure class="slideshow__element js-slideshow-item">
+                <img class="responsive-img slideshow__image js-lazyload"
+                     alt="@img.metadataAltText"
+                     data-srcset="@img.srcset"
+                     sizes="100vw">
+                <figcaption class="slideshow__detail">
+                    <div class="slideshow__description">@img.metadataAltText</div>
+                </figcaption>
+            </figure>
+        }
+    </div>
+    <div class="slideshow__indicator">
+        <div class="progress-indicator">
+            <span class="progress-indicator__index js-slideshow-position"></span>
+            <span class="progress-indicator__separator">/ </span>
+            <span class="progress-indicator__count js-slideshow-total"></span>
+        </div>
+    </div>
+</div>

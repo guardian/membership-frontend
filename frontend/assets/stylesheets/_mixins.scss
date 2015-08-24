@@ -67,22 +67,6 @@ $gs-max-columns: 16;
     -webkit-font-smoothing: antialiased;
 }
 
-// Vertical linear gradient with a plain fallback for older browsers
-@mixin simple-gradient($from, $until) {
-    // Fix for browsers not understanding transparent
-    @if $from == transparent {
-        $from: transparentize($until, 1);
-    }
-
-    @if $until == transparent {
-        $until: transparentize($from, 1);
-    }
-    background-color: $from;
-    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($until));
-    background-image: -webkit-linear-gradient($from, $until);
-    background-image: linear-gradient(to bottom, $from, $until);
-}
-
 // Hide content visually, still readable by screen readers
 @mixin u-h {
     border: 0 !important;
