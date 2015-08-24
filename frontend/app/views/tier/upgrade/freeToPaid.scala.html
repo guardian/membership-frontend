@@ -10,45 +10,58 @@
 @main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
 
     <main role="main" class="page-content l-constrained">
+        <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
+          class="js-form" data-change-to-tier="@targetTier">
+            @CSRF.formField
 
-        <section class="page-header">
-            <h1 class="page-headline">Address & billing</h1>
-            @fragments.joiner.signedInAs(routes.TierController.upgradeConfirm(targetTier).url)
-        </section>
+            <section class="page-header">
+                <h1 class="page-headline">Address &amp; billing</h1>
+            </section>
 
-        <section class="form-section form-section--no-padding">
-            <div class="form-section__content">
-            @fragments.form.errorMessageDisplay()
-            </div>
-        </section>
+            <section class="form-section form-section--no-padding">
+                <div class="form-section__content">
+                @fragments.form.errorMessageDisplay()
+                </div>
+            </section>
 
-        <section class="form-section">
+            <section class="form-section">
 
-            <div class="form-section__content">
+                <div class="form-section__lead-in sign-in-required">
+                    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(targetTier).url)
+                </div>
 
-                <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
-                      class="form js-form" data-change-to-tier="@targetTier">
-                    @CSRF.formField
-                    @fragments.form.addressDetail(
-                        "Delivery address",
-                        "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
-                        "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
-                        userFields.postcode, userFields.address4, userFields.country
-                    )
-                    @fragments.form.paymentOptions(targetTier)
-                    @fragments.form.billingAddress("Billing address")
-                    @fragments.form.addressDetail(
-                        "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
-                        userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
-                        userFields.billingCountry
-                    )
-                    @fragments.form.cardDetail(targetTier)
+                <div class="form-section__content">
+
+                    <div class="form-group">
+                        @fragments.form.benefitsFieldset(targetTier)
+                    </div>
+
+                    <div class="form-group">
+                        <h2 class="form-group__title">Address</h2>
+                        @fragments.form.addressDetail(
+                            "Delivery address",
+                            "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
+                            "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
+                            userFields.postcode, userFields.address4, userFields.country
+                        )
+                    </div>
+
+                    <div class="form-group">
+                        <h2 class="form-group__title">Billing</h2>
+                        @fragments.form.paymentOptions(targetTier)
+                        @fragments.form.billingAddress("Billing address")
+                        @fragments.form.addressDetail(
+                            "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
+                            userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
+                            userFields.billingCountry
+                        )
+                        @fragments.form.cardDetail(targetTier)
+                    </div>
+
                     @fragments.form.submit("Pay", "now", Some(targetTier))
-                </form>
 
-            </div>
-
-        </section>
-
+                </div>
+            </section>
+        </form>
     </main>
 }

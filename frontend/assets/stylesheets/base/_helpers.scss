@@ -75,6 +75,10 @@
     margin-bottom: 0 !important;
 }
 
+.u-underline {
+    text-decoration: underline;
+}
+
 .u-anchor {
     @include mq($until: mem-full) {
         position: absolute;

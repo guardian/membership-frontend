@@ -1,39 +1,79 @@
-/* Base form styles
-   ========================================================================== */
-
 /* ==========================================================================
-   Form
+   Forms
    ========================================================================== */
 
 form {
     margin-bottom: 0;
 }
 
-.form {
-    @include mq(desktop) {
-        border-top: 1px solid color(brand-main);
-    }
-}
+/* ==========================================================================
+   Forms: Groups
+   ========================================================================== */
 
-.form--top-border {
-    border-top: 1px solid $c-neutral3;
+.form-group {
+    border-bottom: 1px solid $c-neutral3;
+    margin-bottom: $gs-gutter;
+}
+.form-group--last {
+    margin-bottom: 0;
+}
+.form-group__title {
+    @include fs-headline(4);
+    margin-bottom: $gs-baseline;
 }
 
 /* ==========================================================================
-   Form Fieldset
+   Forms: Fieldset
    ========================================================================== */
+
 .fieldset {
     border: 0;
     padding: 0;
     margin: 0;
-    border-bottom: 1px solid $c-neutral3;
     display: table;
     background-color: $c-neutral8;
+    border-top: 1px solid $c-neutral3;
+}
+.fieldset__heading {
+    vertical-align: top;
+    padding: ($gs-baseline / 2) $gs-baseline;
+    padding-left: ($gs-gutter / 2);
+
+    @include mq(tablet) {
+        display: table-cell;
+        padding-right: ($gs-gutter * 2);
+        padding-bottom: ($gs-baseline * 2);
+        width: gs-span(4) + $gs-gutter;
+    }
+}
+.fieldset__headline {
+    @include fs-header(3);
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: ($gs-baseline / 2);
+}
+.fieldset__note {
+    @include fs-textSans(2);
+    color: $c-neutral2;
+    p {
+        margin-bottom: 0;
+    }
+}
+.fieldset__fields {
+    vertical-align: top;
+    padding: ($gs-gutter / 2);
+    padding-bottom: $gs-baseline;
+
+    @include mq(tablet) {
+        display: table-cell;
+        width: gs-span(5);
+        padding-left: 0;
+    }
 }
 
 .fieldset--simple {
     background-color: transparent;
-    border-bottom: 0;
+    border-top: none;
 
     .fieldset__fields {
         padding-top: ($gs-gutter / 2);
@@ -44,48 +84,10 @@ form {
     background-color: transparent;
 }
 
-.fieldset__heading {
-    vertical-align: top;
-    padding: ($gs-baseline / 2) $gs-baseline ($gs-baseline * 2) ($gs-gutter / 2);
-
-    @include mq(tablet) {
-        display: table-cell;
-        padding-right: ($gs-gutter * 2);
-        width: gs-span(4) + $gs-gutter;
-    }
-}
-
-.fieldset__headline {
-    @include fs-header(3);
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.fieldset__note {
-    @include fs-textSans(2);
-    color: $c-neutral2;
-    margin-top: ($gs-baseline / 2);
-
-    p {
-        margin-bottom: 0;
-    }
-}
-
-.fieldset__fields {
-    vertical-align: top;
-    padding: ($gs-gutter / 2) ($gs-gutter / 2) ($gs-baseline * 2);
-
-    @include mq(tablet) {
-        display: table-cell;
-        width: gs-span(5);
-        padding-left: 0;
-    }
-}
-
-
 /* ==========================================================================
-   Form field
+   Forms: Fields
    ========================================================================== */
+
 .form-field {
     margin-bottom: $gs-baseline;
 }
@@ -139,8 +141,9 @@ form {
 }
 
 /* ==========================================================================
-   Form labels and inputs
+   Forms: Labels & Inputs
    ========================================================================== */
+
 .label {
     @include fs-bodyCopy(2);
     color: $c-neutral1;
@@ -193,11 +196,12 @@ form {
     }
 }
 
-// width needed for iphone so select doesn't exceed screen width
+/**
+ * Width needed for iphone so select doesn't exceed screen width
+ */
 .select {
     width: 100%;
 }
-
 .select-minimal {
     border: 0;
     outline: 0;
@@ -205,6 +209,7 @@ form {
     font-weight: bold;
 }
 
+// TODO: Remove / too tightly scoped
 .ts-and-cs {
     @include fs-textSans(3);
     color: $c-neutral2;
@@ -216,12 +221,13 @@ form {
 
 .pseudo-radio {
     width: 100%;
-    border: 1px solid transparent;
-    padding: $gs-gutter $gs-gutter $gs-gutter 36px;
     position: relative;
+    border: 1px solid transparent;
+    padding: $gs-baseline $gs-gutter;
+    padding-left: $gs-baseline * 3;
 
     &:hover {
-        border: 1px solid $c-neutral2;
+        border-color: $c-neutral2;
     }
 
     &:before {
@@ -248,6 +254,27 @@ input[type=radio]:checked + .pseudo-radio {
     margin-bottom: 0;
 }
 
+/**
+ * Fake version of radio controls
+ * Used on Patron account creation to
+ * show the available options event though
+ * they are not selectable (you get both).
+ * This is a really awkward name,
+ */
+.pseudo-radio-faker {
+    margin-bottom: $gs-baseline;
+}
+.pseudo-radio-faker__header {
+    @include fs-bodyHeading(2);
+    line-height: 1.2;
+    margin-bottom: ($gs-baseline / 2);
+}
+.pseudo-radio-faker__note {
+    @include fs-textSans(3);
+    margin-bottom: 0;
+}
+
+// TODO: Move to forms-payment sub-module
 /* ==========================================================================
    Payment credit card types
    ========================================================================== */
@@ -351,6 +378,7 @@ $password-strength-score-4: #33a22b;
 /* ==========================================================================
    Cvc toggle
    ========================================================================== */
+
 .cvc-cta {
     font-family: $f-sans-serif-text;
     font-size: 13px;

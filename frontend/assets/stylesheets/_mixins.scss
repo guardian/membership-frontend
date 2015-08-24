@@ -117,12 +117,12 @@ $gs-max-columns: 16;
     @include circular;
     content: ' ';
     background-color: $colour;
-    width: rem($gs-baseline + 4);
-    height: rem($gs-baseline + 4);
+    width: 16px;
+    height: 16px;
     display: block;
     position: absolute;
-    left: rem($gs-baseline);
-    top: rem($gs-gutter + 1);
+    left: $gs-baseline;
+    top: $gs-baseline;
 }
 
 @mixin unstyled-list() {
@@ -166,4 +166,16 @@ $gs-max-columns: 16;
     top: 0; bottom: 0;
     left: 0; right: 0;
     background-color: $background-color;
+}
+
+@mixin text-link() {
+    color: guss-colour(guardian-brand);
+    text-decoration: none;
+    border-bottom: 1px solid $c-neutral3;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        border-color: $c-neutral2;
+    }
 }
