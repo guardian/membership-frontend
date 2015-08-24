@@ -4,7 +4,7 @@
     <div class="slideshow__container">
         @for(event <- events if event.imgOpt.nonEmpty) {
             <figure class="slideshow__element js-slideshow-item">
-                <a href="@event.detailsUrl" class="no-underline">
+                <a href="@event.detailsUrl" class="minimal-link no-underline">
                     <img class="responsive-img slideshow__image"
                          src="@event.imgOpt.map(_.defaultImage)"
                          alt="@event.imgOpt.map(_.metadataAltText)"
@@ -19,7 +19,7 @@
     </div>
     <div class="slideshow__footer">
         <div class="slideshow__footer__item slideshow__footer__meta">
-            <div class="progress-indicator">
+            <div class="progress-indicator progress-indicator--text">
                 <span class="progress-indicator__index js-slideshow-position"></span>
                 <span class="progress-indicator__separator">/ </span>
                 <span class="progress-indicator__count js-slideshow-total"></span>
@@ -27,12 +27,12 @@
         </div>
         <div class="slideshow__footer__item slideshow__footer__controls">
             <button class="u-button-reset js-slideshow-prev" aria-label="Previous">
-                <span class="icon-holder icon-holder--action icon-holder--large">
+                <span class="icon-holder icon-holder--control icon-holder--large">
                 @fragments.inlineIcon("chevron-left")
                 </span>
             </button>
             <button class="u-button-reset js-slideshow-next" aria-label="Next">
-                <span class="icon-holder icon-holder--action icon-holder--large">
+                <span class="icon-holder icon-holder--control icon-holder--large">
                 @fragments.inlineIcon("chevron-right")
                 </span>
             </button>

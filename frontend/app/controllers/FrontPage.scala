@@ -1,11 +1,7 @@
 package controllers
 
+import model.{EventBrandCollection, Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import configuration.CopyConfig
-import model.{EventBrandCollection, PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
-import model.Grid
-import model.Grid._
-import model.Benefits.ComparisonItem
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
 trait FrontPage extends Controller {
@@ -190,7 +186,6 @@ trait FrontPage extends Controller {
         )
       )
     )
-
     Ok(views.html.welcome(slideShowImages))
   }
 }
