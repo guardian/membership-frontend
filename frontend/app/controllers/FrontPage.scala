@@ -12,16 +12,10 @@ trait FrontPage extends Controller {
 
   def index =  CachedAction { implicit request =>
 
-    val comparisonItems = Seq(
-      ComparisonItem("Priority booking to all Guardian Live and Local events", false, true),
-      ComparisonItem("Save 20% on Guardian Live and Local tickets", false, true),
-      ComparisonItem("Bring a guest with the same discount and priority booking privileges", false, true),
-      ComparisonItem("Save 20% on Guardian Masterclasses", false, true),
-      ComparisonItem("Support fearless, open, independent journalism", true, true),
-      ComparisonItem("Regular updates from the membership team", true, true),
-      ComparisonItem("Exclusive offers and competitions", true, true),
-      ComparisonItem("Membership card and annual gift", true, true),
-      ComparisonItem("Highlights and live streams of selected Guardian Live events", true, true)
+    val eventCollections = EventBrandCollection(
+      liveEvents.getSortedByCreationDate.take(3),
+      localEvents.getSortedByCreationDate.take(3),
+      masterclassEvents.getSortedByCreationDate.take(3)
     )
 
     val midlandGoodsShedImages = Seq(
@@ -107,7 +101,6 @@ trait FrontPage extends Controller {
     Ok(views.html.index(
       pageImages,
       midlandGoodsShedImages,
-      comparisonItems,
       eventCollections
     ))
   }

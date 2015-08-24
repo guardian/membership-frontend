@@ -1,7 +1,6 @@
 @(
     pageImages: Seq[model.ResponsiveImageGroup],
     midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
-    comparisonItems: Seq[model.Benefits.ComparisonItem],
     eventCollection: model.EventBrandCollection
 )
 
@@ -207,21 +206,18 @@
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
 
-                @fragments.tier.comparisonTable(comparisonItems)
-
-                <h4 class="h-intro h-intro--brand u-margin-bottom">Choose your membership</h4>
-
                 <ul class="grid grid--2up-stacked">
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner, showDescription=false, isReversed=true)
-                    </li>
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true)
-                    </li>
+                    @for(tier <- Seq(Supporter, Partner)) {
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(tier, extraClasses=List("package-promo--lead"))
+                        </li>
+                    }
                 </ul>
+                @fragments.common.jumpLink("Compare member levels", "#compare-membership")
 
-                <div class="u-capped-half-wide">
-                    @fragments.tier.friendTeaser()
+                <div id="compare-membership">
+                    <h4 class="h-intro h-intro--brand">What's Included</h4>
+                    @fragments.tier.comparisonTable()
                 </div>
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {
