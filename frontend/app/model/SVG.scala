@@ -1,6 +1,8 @@
 package model
 
 import views.support.Asset
+import play.api.libs.json._
+import scala.util.Random
 
 object SVG {
 
@@ -13,12 +15,24 @@ object SVG {
     val src = Asset.at(path)
   }
 
+  implicit val imageWrites = new Writes[SVGImage] {
+    def writes(image: SVGImage) = Json.obj(
+      "label" -> image.label,
+      "src" -> image.src,
+      "width" -> image.width,
+      "height" -> image.height
+    )
+  }
+
   object Logos {
-    val membershipLogo = SVGImage(
+
+    val membersLogos = for(index <- 1 to 2) yield SVGImage(
       "Guardian Membership",
-      "images/logos/membership-logo.svg",
+      s"images/logos/brand/guardian-members-$index.svg",
       width=240, height=83
     )
+    def membersLogoRandom = Random.shuffle(membersLogos.toList).head
+
     val guardianLive = SVGImage(
       "Guardian Live",
       "images/providers/guardian-live.svg",

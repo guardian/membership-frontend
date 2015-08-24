@@ -1,6 +1,10 @@
 @(pageInfo: model.PageInfo)
+
 @import configuration.Config
+@import model.SVG.Logos
 @import views.support.Asset
+
+@import play.api.libs.json.Json
 
 @* Critical scripts that should execute as soon as possible, preventing layout thrashing *@
 
@@ -27,6 +31,7 @@
             buildNumber: '@app.BuildInfo.buildNumber',
             svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },
+        availableLogos: @Html(Json.toJson(Logos.membersLogos).toString),
         googleAnalytics: {
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
@@ -133,7 +138,28 @@
             }
         }
 
+        /**
+         * Logo changed in head to avoid flashing
+         */
+        function randomLogo() {
+            var logoElems = document.querySelectorAll('.js-logo img');
+            var canRun = (
+                typeof guardian !== 'undefined' &&
+                guardian.availableLogos.length &&
+                logoElems.length
+            );
+            if(!canRun) {
+                return;
+            }
+            var logos = guardian.availableLogos;
+            var randomLogo = logos[Math.floor(Math.random()*logos.length)];
+            [].forEach.call(logoElems, function(logoElem) {
+                logoElem.src = randomLogo.src;
+            });
+        }
+
         if (isModern) {
+            randomLogo();
             loadSvgIcons();
         }
     })(guardian.isModernBrowser);
