@@ -1,0 +1,65 @@
+@(tier: com.gu.membership.salesforce.Tier)(implicit request: actions.AuthRequest[_])
+
+@import com.gu.membership.salesforce.Tier.{Partner, Patron}
+@import model.FeatureChoice
+@import model.FreeEventTickets
+@import utils.TestUsers.isTestUser
+@import configuration.Config
+
+@partnerChoice() = {
+    <fieldset class="fieldset js-feature-choice-container">
+        <div class="fieldset__heading">
+            <h3 class="fieldset__headline">Select benefit option</h3>
+        </div>
+        <div class="fieldset__fields">
+            <div class="form-field">
+                @for(choice <- FeatureChoice.all) {
+                    <label class="label" for="@choice.zuoraCode">
+                        <input type="radio" class="u-h" name="featureChoice"
+                            id="@choice.zuoraCode"
+                            @if(choice == FreeEventTickets) { checked="checked" }
+                            value="@choice.zuoraCode"
+                        />
+                        <div class="pseudo-radio">
+                            <div class="pseudo-radio__header">@choice.label</div>
+                            <div class="pseudo-radio__note">
+                              @choice.description
+                            </div>
+                        </div>
+                    </label>
+                }
+            </div>
+        </div>
+    </fieldset>
+}
+
+@patronChoice() = {
+    <fieldset class="fieldset">
+        <div class="fieldset__heading">
+            <h3 class="fieldset__headline">Your benefits</h3>
+        </div>
+        <div class="fieldset__fields">
+            @for(choice <- FeatureChoice.all) {
+                <div class="pseudo-radio-faker">
+                    <div class="pseudo-radio-faker__header">@choice.label</div>
+                    <div class="pseudo-radio-faker__note">
+                      @choice.description
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+}
+
+@if(isTestUser(request.user) || Config.stageDev) {
+    @tier match {
+        case Partner => {
+            @partnerChoice()
+        }
+        case Patron => {
+            <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
+            @patronChoice()
+        }
+        case _ =>  {}
+    }
+}

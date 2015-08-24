@@ -445,63 +445,6 @@
         @fragments.faq.answers(model.Faq.staff.take(4))
     }
 
-    @pattern("Form - Payment", "An example of the payment form") {
-        <main role="main" class="page-content">
-
-            <section class="form-header">
-                <h1 class="form-headline">Address & billing</h1>
-                @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Tier.Partner).url)
-            </section>
-
-            <section class="form-section form-section--no-padding">
-                <div class="form-section__content">
-                @fragments.form.errorMessageDisplay()
-                </div>
-            </section>
-
-            <section class="form-section">
-
-                <div class="form-section__content">
-                    <form action="" method="POST" id="payment-form" class="form js-form" noValidate>
-                        @fragments.form.nameDetail(None, None)
-                        @fragments.form.addressDetail(
-                            heading = "Delivery address",
-                            note = "Once you've joined Guardian Membership we'll send you a welcome pack in the post.",
-                            formType = "deliveryAddress",
-                            addressRequired = true,
-                            address1 = None,
-                            address2 = None,
-                            town = None,
-                            postcode = None,
-                            county = None,
-                            userCountry = None
-                        )
-                        @fragments.form.createPassword()
-
-                        @fragments.form.paymentOptions(Tier.Partner)
-                        @fragments.form.billingAddress("Billing address")
-                        @fragments.form.addressDetail(
-                            formType = "billingAddress",
-                            addressRequired = true,
-                            address1 = None,
-                            address2 = None,
-                            town = None,
-                            postcode = None,
-                            county = None,
-                            userCountry = None
-                        )
-                        @fragments.form.cardDetail(Tier.Partner)
-                        @fragments.form.errorMessageDisplay()
-                        @fragments.form.submit("Pay", "now", Some(Tier.Partner))
-                    </form>
-
-                </div>
-
-            </section>
-
-        </main>
-    }
-
     </main>
 
 }
