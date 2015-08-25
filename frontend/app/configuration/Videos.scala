@@ -23,7 +23,7 @@ object Videos {
     srcUrl="//www.youtube.com/embed/z_IFkfuEuz0?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
-        altText=Some("What is Guardian Membership?"),
+        altText=Some("What is Guardian Members?"),
         availableImages=videoPlaceholder
       )
     )
