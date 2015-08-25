@@ -177,7 +177,7 @@ $gs-max-columns: 16;
     &:focus {
         text-decoration: none;
         border-color: $c-neutral2;
-
+    }
 }
 @mixin bulleted-list() {
     list-style: none;
