@@ -9,12 +9,6 @@ trait FrontPage extends Controller {
 
   def index =  CachedAction { implicit request =>
 
-    val pageInfo = PageInfo(
-      title=CopyConfig.copyTitleDefault,
-      url="/",
-      description=Some(CopyConfig.copyDescriptionDefault)
-    )
-
     val comparisonItems = Seq(
       ComparisonItem("Priority booking to all Guardian Live and Local events", false, true),
       ComparisonItem("Save 20% on Guardian Live and Local tickets", false, true),
@@ -94,7 +88,56 @@ trait FrontPage extends Controller {
       )
     )
 
-    Ok(views.html.index(pageInfo, pageImages, comparisonItems))
+    val midlandGoodsShedImages = Seq(
+      ResponsiveImageGroup(
+        altText=Some("Midland Goods Shed and East handyside Canopy at King's Cross"),
+        availableImages=ResponsiveImageGenerator(
+          id="ae8a3ef9e568fbc5df4ceab27bf6cd0847fe3f06/0_357_8688_5213",
+          sizes=List(500, 140)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Construction work in the East handyside Canopy at King's Cross"),
+        availableImages=ResponsiveImageGenerator(
+          id="51963d023d9fa7885cad228d663104e4d04dc8b2/0_334_4998_2999",
+          sizes=List(500, 140)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Midland Goods Shed, King's Cross. Guardian Forum Event."),
+        availableImages=ResponsiveImageGenerator(
+          id="6adbea0e05e56945a77894aca7eb9c363789567e/27_438_4933_2961",
+          sizes=List(500, 140)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("The renovation of the Midland Goods Shed Office and East Handyside Canopy, King's Cross"),
+        availableImages=ResponsiveImageGenerator(
+          id="81b36e7a40d74ff3c95c664c3b89d49914471e95/0_0_5000_2999",
+          sizes=List(500, 140)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Midland Goods Shed, King's Cross"),
+        availableImages=ResponsiveImageGenerator(
+          id="84081e14d97e33ad65d026233cdb87d4c3723d6a/206_0_4793_2875",
+          sizes=List(500, 140)
+        )
+      ),
+      ResponsiveImageGroup(
+        altText=Some("Midland Goods Shed, King's Cross"),
+        availableImages=ResponsiveImageGenerator(
+          id="d19c696109fd8d0be40bb8a89917555a4d7f852d/0_80_1754_1052",
+          sizes=List(500, 140)
+        )
+      )
+    )
+
+    Ok(views.html.index(
+      pageImages,
+      midlandGoodsShedImages,
+      comparisonItems
+    ))
   }
 
   def welcome = CachedAction { implicit request =>
