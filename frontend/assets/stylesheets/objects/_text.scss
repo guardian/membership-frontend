@@ -32,6 +32,14 @@
     @include fs-textSans(1);
     font-weight: normal;
 }
+.text-section-intro {
+    @include fs-headline(3);
+    margin-bottom: $gs-baseline;
+
+    @include mq(tablet) {
+        @include fs-headline(4, $size-only: true);
+    }
+}
 
 /* ==========================================================================
    Objects: Headings
