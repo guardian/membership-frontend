@@ -14,11 +14,7 @@
     </div>
     <div class="slideshow__footer">
         <div class="slideshow__footer__item slideshow__footer__meta">
-            <div class="progress-indicator progress-indicator--text">
-                <span class="progress-indicator__index js-slideshow-position"></span>
-                <span class="progress-indicator__separator">/ </span>
-                <span class="progress-indicator__count js-slideshow-total"></span>
-            </div>
+            @fragments.media.slideshowProgress()
         </div>
         <div class="slideshow__footer__item slideshow__footer__controls">
             <button class="u-button-reset js-slideshow-prev" aria-label="Previous">
