@@ -28,10 +28,6 @@
     color: $c-neutral2;
     margin-bottom: rem($gs-baseline / 2);
 }
-.text-caption {
-    @include fs-textSans(1);
-    font-weight: normal;
-}
 .text-section-intro {
     @include fs-headline(3);
     margin-bottom: $gs-baseline;

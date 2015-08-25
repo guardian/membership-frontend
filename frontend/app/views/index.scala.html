@@ -1,14 +1,14 @@
 @(
-    pageInfo: model.PageInfo,
     pageImages: Seq[model.ResponsiveImageGroup],
+    midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
     comparisonItems: Seq[model.Benefits.ComparisonItem]
 )
 
 @import com.gu.membership.salesforce.Tier
-@import views.support.NavAnchor
+@import views.support.Links.BasicLink
 @import views.support.Asset
 
-@main("", pageInfo) {
+@main("") {
 
     @* ===== Intro ===== *@
     <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/event-grid.jpg"))">
@@ -33,9 +33,9 @@
 
         @* ===== Section Navigation ===== *@
         @fragments.page.navSections(Seq(
-            NavAnchor("#what-are-members", "What is membership"),
-            NavAnchor("#why-join", "Why join"),
-            NavAnchor("#become-a-member", "Become a member")
+            BasicLink("#what-are-members", "What is membership"),
+            BasicLink("#why-join", "Why join"),
+            BasicLink("#become-a-member", "Become a member")
         ))
 
         <div class="listing listing--bordered listing--padded l-constrained" id="what-are-members">
@@ -145,44 +145,25 @@
                     </li>
                 </ul>
 
-            </div>
-        </div>
-    </section>
+                @fragments.common.jumpLink("A home for Guardian Members", "#big-ideas")
 
+                @* ===== A home for big ideas ===== *@
+                <div id="big-ideas">
+                    @fragments.promos.promoTertiary(
+                        "A home for Guardian members",
+                        """In 2016, the Guardian is opening the Midland Goods Shed at
+                            | King’s Cross as a new civic space. It features a bar and restaurant,
+                            | and will host events, festivals and courses from the Guardian and
+                            | other organisations we admire.""".stripMargin,
+                        midlandGoodsShedImages,
+                        None
+                    )
+                </div>
 
-    @* ===== A home for big ideas ===== *@
-    <section class="page-slice page-slice--listing" id="big-ideas">
-
-        <div class="listing listing--basic listing--padded l-constrained">
-            <div class="listing__content">
-                <ul class="grid grid--2up grid--single-row">
-                    <li class="grid__item">
-                        @for(img <- pageImages.find(_.name.contains("space"))) {
-                            <div class="u-thumbnail-clip u-thumbnail-clip--a">
-                                <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="responsive-img" />
-                            </div>
-                        }
-                    </li>
-                    <li class="grid__item">
-                        @fragments.promos.venuePanel("A home for big ideas") {
-                            <p>
-                                In 2016, the Midland Goods Shed at London’s King’s Cross
-                                will reopen to create a new kind of civic space.
-                            </p>
-                            <p>
-                                As well as being the home of Guardian Members, the building will be a hub for
-                                big ideas and stimulating conversations. It will host events, activities and
-                                courses from Guardian Live and organisations we admire.
-                            </p>
-                        }
-                    </li>
-                </ul>
                 @fragments.common.jumpLink("Join today", "#become-a-member")
             </div>
         </div>
-
     </section>
-
 
     @* ===== Become a member ===== *@
     <section class="page-slice tone-tint" id="become-a-member">
@@ -217,11 +198,8 @@
                     @fragments.promos.promoTertiary(
                         "Become a Patron",
                         "Patrons play a vital role to keep the Guardian fearless, progressive and free from interference",
-                        "Learn more about Patrons",
-                        routes.Info.patron.toString,
-                        "qa-learn-patron",
-                        image,
-                        Some("tone-patron")
+                        Seq(image),
+                        Some(BasicLink(routes.Info.patron.url, "Learn more about Patrons", Some("qa-learn-patron")))
                     )
                 }
             </div>

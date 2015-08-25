@@ -155,23 +155,13 @@
    ========================================================================== */
 
 .promo-tertiary {
-    @include clearfix();
-    color: $white;
-
-    @include mq(tablet) {
-        display: table;
-        width: 100%;
-    }
+    overflow: auto;
+    clear: both;
 }
 .promo-tertiary__media {
-    display: block;
-    position: relative;
-}
-.promo-tertiary__header,
-.promo-tertiary__media {
     @include mq(tablet) {
-        display: table-cell;
-        vertical-align: top;
+        float: left;
+        width: 50% + ($gutter-width-fluid / 2);
     }
 }
 .promo-tertiary__header {
@@ -182,27 +172,29 @@
     @include mq(tablet) {
         padding-left: $gs-gutter;
         padding-right: $gs-gutter;
-        padding-bottom: ($gs-baseline * 3);
-        width: gs-span(6);
+        padding-bottom: $gs-gutter * 5;
+        width: 50% - ($gutter-width-fluid / 2);
+        float: right;
         position: relative;
+        left: -1px;
+
         @include clip-path('promo-bottom-shallow');
     }
 }
 .promo-tertiary__title {
     @include fs-header(3);
-    margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
-        @include fs-header(4, true);
+        @include fs-header(4, $size-only: true);
     }
 }
 .promo-tertiary__description {
-    @include fs-header(1);
+    @include fs-header(2);
     font-weight: normal;
     margin-bottom: $gs-baseline;
 
     @include mq(tablet) {
-        @include fs-header(2, true);
+        @include fs-header(3, $size-only: true);
     }
 }
 

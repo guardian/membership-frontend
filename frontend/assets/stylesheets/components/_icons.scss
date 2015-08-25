@@ -56,23 +56,23 @@
    ========================================================================== */
 
 .icon-inline {
-   width: 16px;
-   height: 16px;
-   display: inline-block;
-   vertical-align: middle;
-   fill: currentColor;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
 }
 .icon-inline--small {
-   width: 13px;
-   height: 13px;
+    width: 13px;
+    height: 13px;
 }
 .icon-inline--medium {
-   width: 22px;
-   height: 22px;
+    width: 22px;
+    height: 22px;
 }
 .icon-inline--large {
-   width: 36px;
-   height: 36px;
+    width: 36px;
+    height: 36px;
 }
 .icon-inline--scale {
     width: .75em;
@@ -155,6 +155,15 @@
     color: $white;
     background-color: tone('masterclass');
     border-color: tone('masterclass');
+}
+.icon-holder--control {
+    color: $c-neutral1;
+    border-color: $c-neutral2;
+}
+.icon-holder--control:hover,
+.icon-holder--control:active,
+.icon-holder--control:focus {
+    border-color: $c-neutral1;
 }
 
 /* Checkmarks
