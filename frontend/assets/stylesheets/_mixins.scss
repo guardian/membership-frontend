@@ -179,3 +179,12 @@ $gs-max-columns: 16;
         border-color: $c-neutral2;
     }
 }
+@mixin bulleted-list() {
+    list-style: none;
+    margin-left: $gs-gutter;
+
+    > li {
+        list-style-position: outside;
+        list-style-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxMiAxMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgNi44NTdjMCAxLjA4OS0uMjY4IDIuMDkzLS44MDUgMy4wMTEtLjUzNy45MTktMS4yNjUgMS42NDctMi4xODQgMi4xODQtLjkxOS41MzctMS45MjMuODA2LTMuMDExLjgwNS0xLjA4OC0uMDAxLTIuMDkyLS4yNjktMy4wMTEtLjgwNXMtMS42NDctMS4yNjQtMi4xODQtMi4xODRjLS41MzctLjkyLS44MDUtMS45MjQtLjgwNS0zLjAxMSAwLTEuMDg3LjI2OC0yLjA5MS44MDUtMy4wMTEuNTM3LS45MiAxLjI2NS0xLjY0OCAyLjE4NC0yLjE4NC45MTktLjUzNiAxLjkyMy0uODA0IDMuMDExLS44MDUgMS4wODgtLjAwMSAyLjA5Mi4yNjggMy4wMTEuODA1czEuNjQ3IDEuMjY1IDIuMTg0IDIuMTg0Yy41MzcuOTE5LjgwNSAxLjkyMi44MDUgMy4wMTF6IiBmaWxsPSIjQkRCREJEIi8+PC9zdmc+);
+    }
+}

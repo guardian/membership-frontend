@@ -79,6 +79,14 @@
     text-decoration: underline;
 }
 
+// Remove margin and bullets from lists.
+// TODO: Single class
+.u-unstyled,
+.u-unstyled-list {
+    margin: 0;
+    list-style: none;
+}
+
 .u-anchor {
     @include mq($until: mem-full) {
         position: absolute;
@@ -140,4 +148,12 @@
     .u-thumbnail-clip--2::after {
         @include clip-path-shape('thumbnail-c');
     }
+}
+
+
+.case--lower {
+    text-transform: lowercase;
+}
+.case--capitalize {
+    text-transform: capitalize;
 }

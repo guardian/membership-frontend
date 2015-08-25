@@ -52,6 +52,8 @@
         }
     }
     .nav__list {
+        margin: 0;
+        list-style: none;
         display: table-row;
 
         @include mq(desktop) {
