@@ -9,10 +9,10 @@
 }
 .global-header__inner {
     background: color(brand-main) url(/assets/images/common/bg-masthead.png) no-repeat;
-    background-position: 45% 50%;
+    background-position: 45% 60%;
 
     @include mq(tablet) {
-        padding-bottom: $global-toggle-height;
+        padding-bottom: $gs-gutter;
         background-position: 50% 0%;
     }
 }
@@ -32,14 +32,24 @@
 .global-header__logo {
     float: right;
     width: auto;
+
+    @include mq(tablet) {
+        margin-right: -20px;
+    }
 }
 .global-header__logo__image {
     width: auto;
     height: 50px;
 
     @include mq(tablet) {
-        height: 70px;
+        height: 90px;
     }
+}
+.js-on .global-header__logo__image img {
+    visibility: hidden;
+}
+.global-header__logo__image img.is-loaded {
+    visibility: visible;
 }
 .global-header__logo__link {
     display: block;

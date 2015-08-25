@@ -26,17 +26,20 @@ object SVG {
 
   object Logos {
 
-    val membersLogo = SVGImage(
+    val membersLogos = for(index <- 1 to 4) yield SVGImage(
       "Guardian Membership",
-      "images/logos/brand/guardian-members-1.svg",
-      width=240, height=83
+      s"images/logos/brand/guardian-members-$index.svg",
+      width=300, height=90
     )
+
+    val membersLogoRandom = Random.shuffle(membersLogos.toList).head
 
     val guardianLive = SVGImage(
       "Guardian Live",
       "images/providers/guardian-live.svg",
       width=62, height=90
     )
+
     val guardianMasterclasses = SVGImage(
       "Guardian Masterclasses",
       "images/providers/masterclasses.svg",

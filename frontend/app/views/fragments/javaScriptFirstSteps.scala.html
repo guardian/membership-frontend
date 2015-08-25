@@ -31,6 +31,7 @@
             buildNumber: '@app.BuildInfo.buildNumber',
             svgSprite: "@Asset.at("images/svg-sprite.svg")"
         },
+        availableLogos: @Html(Json.toJson(Logos.membersLogos).toString),
         googleAnalytics: {
             trackingId: '@Config.googleAnalyticsTrackingId',
             cookieDomain: @if(Config.stage == "PROD") { 'auto' } else { 'none' }
@@ -138,7 +139,36 @@
             }
         }
 
+        function ready(fn) {
+            if (document.readyState != 'loading'){
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+
+        function randomLogo() {
+            var logoElems = document.querySelectorAll('.js-logo img');
+            var canRun = (
+                typeof window.guardian !== 'undefined' &&
+                guardian.availableLogos.length &&
+                logoElems.length
+            );
+            if(!canRun) {
+                return;
+            }
+            var logos = guardian.availableLogos;
+            var randomLogo = logos[Math.floor(Math.random()*logos.length)];
+            [].forEach.call(logoElems, function(logoElem) {
+                logoElem.addEventListener('load', function() {
+                    logoElem.className += ' is-loaded';
+                });
+                logoElem.src = randomLogo.src;
+            });
+        }
+
         if (isModern) {
+            ready(randomLogo);
             loadSvgIcons();
         }
     })(guardian.isModernBrowser);
