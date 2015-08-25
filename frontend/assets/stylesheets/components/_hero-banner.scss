@@ -8,13 +8,18 @@
  */
 .hero-banner {
     color: $white;
+    height: 60vh;
     background-position: top center;
     background-repeat: repeat;
     background-attachment: fixed;
-    height: 60vh;
+    background-size: 100%;
+
+    @include mq(phablet) {
+        background-size: 80%;
+    }
 
     @include mq(tablet) {
-        background-size: 68%;
+        background-size: 70%;
     }
 }
 .hero-banner__inner {
@@ -34,19 +39,19 @@
     }
 
     @include mq(tablet) {
-        max-width: gs-span(10);
+        max-width: gs-span(12);
         padding: $gs-gutter ($gs-gutter * 2);
         padding-left: (gs-span(2) + ($gs-gutter * 2));
     }
 }
 .hero-banner__title {
     @include fs-headline(5);
-    font-weight: 900;
-    margin: 0 0 ($gs-baseline / 2) 0;
+    font-weight: guss-font-weight(ultrablack);
 
     @include mq(tablet) {
-        font-size: 3em;
+        @include fs-headline(8, $size-only: true);
         line-height: 1;
+        padding-top: $gs-baseline * 2;
     }
 }
 .hero-banner__description {

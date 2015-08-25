@@ -384,7 +384,7 @@
 
 .nav-sections {
     @include unstyled-list();
-    overflow: auto;
+    overflow: hidden;
     color: $black;
     background-color: $c-neutral1;
     position: relative;

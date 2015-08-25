@@ -48,7 +48,7 @@ $c-warning: #e9e939;
  */
 $membership-palette: (
     brand-main: #bb3a7f,
-    brand-supporting-1: #5fd5f2,
+    brand-supporting-1: #aad7f0,
     brand-supporting-2: #fff200
 );
 
@@ -90,7 +90,7 @@ $c-thirdparty-facebook: #3b5998;
  *
  */
 $clip-paths: (
-    top-slice: "100% 6%, 100% 100%, 0 100%, 0 0",
+    top-slice: "100% 0, 100% 100%, 0 100%, 0 10%",
     slideshow: "0 0, 100% 0, 100% 100%, 98% 0, 0 6%",
     promo: "0 0, 100% 0, 100% 85%, 0 100%",
     promo-bottom: "0 100%, 100% 100%, 100% 85%, 0 90%",
