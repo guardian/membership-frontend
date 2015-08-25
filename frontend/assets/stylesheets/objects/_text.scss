@@ -1,4 +1,4 @@
-/* ==========================================================================
+h/* ==========================================================================
    Objects: Text
    ========================================================================== */
 
@@ -20,20 +20,26 @@
     @include fs-headline(2);
 }
 .text-intro {
-    @include fs-headline(3);
+    @include fs-headline(2);
     margin-bottom: $gs-gutter;
+
+    @include mq(phablet) {
+        @include fs-headline(3, $size-only: true);
+    }
 }
 .text-note {
     @include fs-data(3);
     color: $c-neutral2;
     margin-bottom: rem($gs-baseline / 2);
 }
-.text-section-intro {
-    @include fs-headline(3);
-    margin-bottom: $gs-baseline;
 
-    @include mq(tablet) {
-        @include fs-headline(4, $size-only: true);
+.o-counter {
+    font-weight: bold;
+    color: $c-neutral3;
+
+    &:after {
+        content: ' / ';
+        color: $c-neutral4;
     }
 }
 
@@ -42,12 +48,26 @@
    ========================================================================== */
 
 .h-intro {
-    @include fs-header(4);
-    text-transform: lowercase;
+    @include fs-header(3);
     margin-bottom: 0;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
 }
-.h-intro--capitalize {
-    text-transform: none;
+.h-intro--brand {
+    @include fs-header(3);
+    color: color(brand-main);
+    margin-bottom: $gs-baseline / 4;
+
+    @include mq(tablet) {
+        @include fs-header(4, $size-only: true);
+    }
+}
+.h-intro--section {
+    border-top: 1px solid $c-border-neutral;
+    padding-top: $gs-baseline / 2;
+    margin-bottom: $gs-baseline;
 }
 
 .h-section,

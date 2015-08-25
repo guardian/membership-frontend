@@ -3,15 +3,18 @@
 <div class="nav-sections nav-sections--sticky l-side-margins js-sticky js-section-nav">
     <div class="nav-sections__inner l-constrained">
         <ol class="nav-sections__list" data-gumshoe>
-            @for(navItem <- navItems) {
+            @for((navItem, index) <- navItems.view.zipWithIndex) {
                 <li class="nav-sections__item">
                     <a  class="nav-sections__link"
-                    href="@navItem.href"
-                    data-metric-trigger="click"
-                    data-metric-category="navigation"
-                    data-metric-action="sections"
-                    data-scroll
-                    >@navItem.title</a>
+                        href="@navItem.href"
+                        data-metric-trigger="click"
+                        data-metric-category="navigation"
+                        data-metric-action="sections"
+                        data-scroll
+                    >
+                        <span class="o-counter">@(index + 1)</span>
+                        @navItem.title
+                    </a>
                 </li>
             }
         </ol>
