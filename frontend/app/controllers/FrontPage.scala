@@ -12,8 +12,7 @@ trait FrontPage extends Controller {
     val pageInfo = PageInfo(
       title=CopyConfig.copyTitleDefault,
       url="/",
-      description=Some(CopyConfig.copyDescriptionDefault),
-      hasBackgroundImage = false
+      description=Some(CopyConfig.copyDescriptionDefault)
     )
 
     val comparisonItems = Seq(

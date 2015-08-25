@@ -75,20 +75,11 @@
     @include clearfix();
     clear: both;
     color: $white;
-    background-color: $c-neutral1;
     margin-bottom: rem($gs-gutter);
-}
-.video-preview__header {
-    @include fs-headline(2);
-    min-height: rem(gs-height(2));
-    padding: ($gs-gutter / 2);
-    padding-bottom: $gs-baseline * 2;
 
     @include mq(tablet) {
-        @include fs-headline(3, $size-only: true);
-        padding: $gs-baseline $gs-gutter ($gs-baseline * 3);
-        float: right;
-        width: 35%;
+        display: table;
+        width: 100%;
     }
 }
 .video-preview__video {
@@ -97,6 +88,24 @@
 
     @include mq(tablet) {
         width: 65%;
-        float: left;
+    }
+}
+.video-preview__header {
+    @include fs-headline(3);
+    padding: rem($gs-baseline) rem($gs-gutter / 2);
+    padding-bottom: rem($gs-baseline * 3);
+    background-color: color(brand-main);
+
+    @include mq(tablet) {
+        padding-left: rem($gs-gutter);
+        padding-right: rem($gs-gutter);
+        @include clip-path('promo-bottom-deep');
+    }
+}
+.video-preview__header,
+.video-preview__video {
+    @include mq(tablet) {
+        display: table-cell;
+        vertical-align: top;
     }
 }

@@ -1,7 +1,7 @@
-@(label: String, href: String, isReversed: Boolean = false)
+@(label: String, href: String)
 
 <a  href="@href"
-    class="action-jump action-jump--block@if(isReversed){ action-jump--reversed}"
+    class="action-jump action-jump--block"
     data-metric-trigger="click"
     data-metric-category="navigation"
     data-metric-action="jumpLink"

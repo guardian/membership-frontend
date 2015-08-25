@@ -1,21 +1,23 @@
 @import com.gu.membership.salesforce.Tier
 
-<section class="listing tone-tint">
-    <div class="listing__lead-in">
-        <h3 class="h-intro">Join membership today</h3>
-    </div>
-    <div class="listing__content">
-        <ul class="grid grid--bordered grid--3up-stacked">
-            <li class="grid__item">
-            @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
-            </li>
-            <li class="grid__item">
-            @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
-            </li>
-            <li class="grid__item">
-            @fragments.tier.packagePromo(Tier.Patron, isReversed=true)
-            </li>
-        </ul>
-        @fragments.tier.friendTeaser()
+<section class="listing listing--basic tone-tint">
+    <div class="l-constrained">
+        <div class="listing__lead-in">
+            <h3 class="h-intro">Join membership today</h3>
+        </div>
+        <div class="listing__content">
+            <ul class="grid grid--bordered grid--3up-stacked">
+                <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
+                </li>
+                <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
+                </li>
+                <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Patron, isReversed=true)
+                </li>
+            </ul>
+            @fragments.tier.friendTeaser()
+        </div>
     </div>
 </section>

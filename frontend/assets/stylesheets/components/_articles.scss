@@ -40,6 +40,74 @@
 }
 
 /* ==========================================================================
+   Articles: Front
+   See /offers-competitions
+   ========================================================================== */
+
+
+.article-front {
+    @include clearfix;
+    background-color: $c-neutral7;
+    transition: background-color $transition-duration-medium ease;
+    position: relative;
+    display: block;
+    height: auto;
+
+    &,
+    &:active,
+    &:hover,
+    &:focus {
+        color: $black;
+        text-decoration: none;
+    }
+
+    &:hover {
+        background-color: $c-neutral5;
+
+        .article-front__media {
+            background-color: $black;
+            img {
+                opacity: .8;
+            }
+        }
+    }
+    @include mq(mobileLandscape) {
+        height: rem(320px);
+    }
+}
+.article-front__content {
+    @include mq(mobileLandscape) {
+        height: 100%;
+    }
+}
+.article-front__media {
+    background-color: $c-neutral4;
+    transition: background-color $transition-duration-medium ease;
+
+    img {
+        transition: opacity $transition-duration-medium ease;
+        @include no-flicker();
+    }
+
+    .supports-clippath-shapes & {
+        position: relative;
+    }
+    .supports-clippath-shapes &::after {
+        @include clip-overlay();
+        @include clip-path-shape('thumbnail-a');
+    }
+}
+.article-front__meta {
+    padding: rem($gs-gutter / 4);
+    padding-top: rem(($gs-gutter / 4) - 1px);
+}
+.article-front__title {
+    @include fs-headline(3);
+    margin-bottom: rem($gs-baseline);
+    font-weight: 500;
+}
+
+/* ==========================================================================
    Related Content
    ========================================================================== */
 

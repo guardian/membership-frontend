@@ -1,14 +1,11 @@
 // =============================================================================
-// Layout Mixins
+// Mixins
 // =============================================================================
 
 @import 'components/bower-components/sass-mq/mq';
 
 // Guss - https://github.com/guardian/guss
-// =============================================================================
-
 $guss-rem-baseline: 16px;
-
 @import 'components/bower-components/guss-rem/rem';
 @import 'components/bower-components/guss-typography/typography';
 @import 'components/bower-components/guss-layout/columns';
@@ -18,18 +15,15 @@ $guss-rem-baseline: 16px;
 // =============================================================================
 // gs- prefixes stand for Grid System
 
-// Configuration
 $gs-gutter: 20px;
 $gs-baseline: 12px;
 $gs-column-width: 60px;
 $gs-row-height: 36px;
 $gs-max-columns: 16;
 
-// Grid system helpers
 @function gs-span($n-columns) {
     @return $n-columns * $gs-column-width + $gs-gutter * ($n-columns - 1);
 }
-
 @function gs-height($n-rows) {
     @return $n-rows * $gs-row-height + $gs-baseline * ($n-rows - 1);
 }
@@ -64,7 +58,6 @@ $gs-max-columns: 16;
     display: block;
 }
 
-
 @mixin circular {
     border-radius: 1000px; // Android 2.3 cannot deal with '50%'
 }
@@ -72,13 +65,6 @@ $gs-max-columns: 16;
 @mixin font-smoothing() {
     -moz-osx-font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
-}
-
-@mixin disable-user-select() {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 // Vertical linear gradient with a plain fallback for older browsers
@@ -116,7 +102,6 @@ $gs-max-columns: 16;
     overflow: hidden;
 }
 
-// Micro clearfix (http://nicolasgallagher.com/micro-clearfix-hack/)
 @mixin clearfix {
     &:after,
     &:before {
@@ -125,9 +110,6 @@ $gs-max-columns: 16;
     }
     &:after {
         clear: both;
-    }
-    @if $old-ie {
-        zoom: 1;
     }
 }
 
@@ -143,9 +125,6 @@ $gs-max-columns: 16;
     top: $gs-baseline;
 }
 
-/**
- * Nav abstraction as per: csswizardry.com/2011/09/the-nav-abstraction
- */
 @mixin unstyled-list() {
     list-style: none;
     margin: 0;
@@ -158,6 +137,37 @@ $gs-max-columns: 16;
     }
 }
 
+@mixin overflow-scroll-x() {
+    overflow: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+@mixin no-flicker() {
+    // Prevent flicker on hover in WebKit
+    -webkit-backface-visibility: hidden;
+}
+
+
+@mixin clip-path-shape($key) {
+    clip-path: polygon(#{map-get($clip-paths, $key)});
+}
+@mixin clip-path($key) {
+    .supports-clippath-shapes & {
+        @include clip-path-shape($key);
+        @content;
+    }
+}
+
+@mixin clip-overlay($background-color: rgba(255,255,255,0.25)) {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background-color: $background-color;
+}
+
 @mixin text-link() {
     color: guss-colour(guardian-brand);
     text-decoration: none;
@@ -168,5 +178,4 @@ $gs-max-columns: 16;
         text-decoration: none;
         border-color: $c-neutral2;
     }
-
 }

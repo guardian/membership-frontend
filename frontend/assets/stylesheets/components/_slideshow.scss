@@ -39,7 +39,20 @@ $slideshow-height-desktop: 460px;
         opacity: 1;
         position: relative;
     }
+
+    .supports-clippath-shapes &::after {
+        @include clip-path-shape('slideshow');
+        @include clip-overlay();
+
+        @include mq(tablet) {
+            max-height: rem($slideshow-height-tablet);
+        }
+        @include mq(desktop) {
+            max-height: rem($slideshow-height-desktop);
+        }
+    }
 }
+.slideshow__element
 .slideshow__image {
     position: relative;
     @include mq(desktop) {

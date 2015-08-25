@@ -28,7 +28,6 @@
     clear: both;
     position: relative;
     background-color: $white;
-    border-top: 1px solid $c-border-brand;
     padding-bottom: rem($gs-baseline * 2);
 }
     .listing__lead-in {
@@ -67,6 +66,10 @@
         }
     }
 
+.listing--bordered {
+    border-top: 1px solid $c-border-neutral;
+}
+
 /**
  * Page listing - Lead
  */
@@ -81,7 +84,7 @@
     .listing__title {
         @include mq(mem-full) {
             padding-top: rem($gs-baseline / 2);
-            border-top: 1px solid $c-border-brand;
+            border-top: 1px solid $c-border-neutral;
         }
     }
 

@@ -36,7 +36,7 @@
     position: relative;
     background-color: $c-neutral6;
     padding: rem($gs-gutter / 2);
-    border-top: 1px solid;
+    border-top: 1px solid $c-border-brand;
 
     @include mq(desktop) {
         padding: rem($gs-gutter / 2) rem($gs-gutter);

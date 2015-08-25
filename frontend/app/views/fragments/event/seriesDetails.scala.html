@@ -2,9 +2,9 @@
 
 @import views.support.Asset
 
-@if(event.providerOpt.isEmpty) {
-    @for(description <- event.metadata.description) {
-        <div class="series-detail l-constrained tone-@event.metadata.identifier">
+@for(description <- event.metadata.description if event.providerOpt.isEmpty) {
+    <div class="series-detail">
+        <div class="series-detail__inner l-constrained">
             <div class="series-detail__content">
                 <h3 class="series-detail__title">
                     About @event.metadata.title
@@ -15,5 +15,5 @@
             </div>
             <img class="series-detail__logo" src="@Asset.at("images/providers/" + event.metadata.identifier + ".svg")">
         </div>
-    }
+    </div>
 }

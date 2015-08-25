@@ -119,3 +119,25 @@
     &:before { content: '('; }
     &:after { content: ')'; }
 }
+
+.supports-clippath-shapes {
+    .u-thumbnail-clip {
+        position: relative;
+
+        &::after {
+            @include clip-overlay();
+        }
+    }
+    .u-thumbnail-clip--a::after,
+    .u-thumbnail-clip--0::after {
+        @include clip-path-shape('thumbnail-a');
+    }
+    .u-thumbnail-clip--b::after,
+    .u-thumbnail-clip--1::after {
+        @include clip-path-shape('thumbnail-b');
+    }
+    .u-thumbnail-clip--c::after,
+    .u-thumbnail-clip--2::after {
+        @include clip-path-shape('thumbnail-c');
+    }
+}

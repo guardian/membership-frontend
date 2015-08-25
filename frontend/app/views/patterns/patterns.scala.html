@@ -160,7 +160,6 @@
             @fragments.actionIcon("plus", leftIcon=true)
             <span class="action__label js-toggle-label">Show more</span>
         </button></p>
-        <p><button class="action action--booking">Booking Action</button></p>
         <div class="l-inset tone-guardian-live">
             <button class="action action--external">
                 External Action
@@ -267,24 +266,14 @@
     @pattern("Header Bar - Guardian Live", "Header bar with guardian live tone applied") {
         @fragments.event.headerBar(
             title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            logo=SVGImage(
-                "Guardian Live",
-                "images/logos/guardian-live.svg",
-                width=62, height=90
-            ),
-            classes=List("tone-trans-guardian-live")
+            logo=model.SVG.Logos.guardianLive
         )
     }
 
     @pattern("Header Bar - Masterclasses", "Header bar with masterclasses tone applied") {
         @fragments.event.headerBar(
             title="Courses and workshops taught by award-winning professionals, with discounts for Partners and Patrons",
-            logo=SVGImage(
-                "Guardian Masterclasses",
-                "images/logos/guardian-masterclasses.svg",
-                width=242, height=88
-            ),
-            classes=List("tone-trans-masterclasses")
+            logo=model.SVG.Logos.guardianMasterclasses
         )
     }
 
@@ -302,7 +291,7 @@
 
     @for(img <- pageImages.find(_.name.contains("sample-2"))) {
         @pattern("Promo - Secondary") {
-            @fragments.promos.promoSecondary(Html("Secondary Promo"), img=img, toneClass=Some("tone-brand-dark")) {
+            @fragments.promos.promoSecondary(Html("Secondary Promo"), img=img, toneClass=Some("tone-brand")) {
                 <p class="text-feature">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, error hic temporibus. Aliquam nemo delectus possimus repudiandae ut, aut fugit. Pariatur dolorem, explicabo, ducimus deserunt perspiciatis voluptates commodi debitis exercitationem.</p>
             }
         }
@@ -313,7 +302,7 @@
             @fragments.promos.promoVideoSecondary(
                 "If you believe in Guardian journalism, become a Guardian Member",
                 video=Videos.whatIsMembership,
-                toneClass=Some("tone-trans-brand-dark")) {
+                toneClass=Some("tone-trans-brand")) {
                 <div class="text-feature">
                     <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
                     <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>

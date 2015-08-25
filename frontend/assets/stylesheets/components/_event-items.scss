@@ -32,11 +32,9 @@
 }
 .event-item__media {
     transition: background-color $transition-duration-medium ease;
-
     img {
+        @include no-flicker();
         transition: opacity $transition-duration-medium ease;
-        // Prevent flicker on hover in WebKit
-        -webkit-backface-visibility: hidden;
     }
 }
 .event-item__meta {
@@ -95,6 +93,40 @@
     }
 }
 
+.event-item--clippath-0,
+.event-item--clippath-1,
+.event-item--clippath-2 {
+    .event-item__media {
+        .supports-clippath-shapes & {
+            position: relative;
+        }
+        .supports-clippath-shapes &::after {
+            @include clip-overlay();
+        }
+    }
+}
+.event-item--clippath-0 {
+    .event-item__media {
+        .supports-clippath-shapes &::after {
+            @include clip-path-shape('thumbnail-a');
+        }
+    }
+}
+.event-item--clippath-1 {
+    .event-item__media {
+        .supports-clippath-shapes &::after {
+            @include clip-path-shape('thumbnail-b');
+        }
+    }
+}
+.event-item--clippath-2 {
+    .event-item__media {
+        .supports-clippath-shapes &::after {
+            @include clip-path-shape('thumbnail-c');
+        }
+    }
+}
+
 /* ==========================================================================
    Event item (Hero modifier)
    ========================================================================== */
@@ -106,6 +138,12 @@
 
     .event-item__media {
         display: table-header-group;
+
+        @include mq($until: tablet) {
+            .supports-clippath-shapes &::after {
+                display: none;
+            }
+        }
     }
     .event-item__content {
         display: table-footer-group;

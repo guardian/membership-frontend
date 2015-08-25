@@ -1,19 +1,15 @@
 @(eventPortfolio: model.EventPortfolio, pageInfo: model.PageInfo)
 
-@import model.SVG.SVGImage
+@import model.SVG.Logos
 
 @main("Events", pageInfo=pageInfo) {
     <main role="main" class="l-constrained">
         @fragments.event.headerBar(
             title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            logo=SVGImage(
-                "Guardian Live",
-                "images/logos/guardian-live.svg",
-                width=62, height=90
-            ),
-            classes=List("tone-trans-guardian-live")
+            logo=Logos.guardianLive
         )
         @fragments.event.listing(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
-        @fragments.tier.joinListing()
     </main>
+
+    @fragments.tier.joinListing()
 }

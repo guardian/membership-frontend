@@ -8,11 +8,11 @@
     toneClass: Option[String] = None
 )
 
-<div class="promo-tertiary @toneClass.mkString(" ")">
-    <div class="promo-tertiary__media">
+<div class="promo-tertiary">
+    <div class="promo-tertiary__media u-thumbnail-clip u-thumbnail-clip--c">
         <img src="@image.defaultImage" srcset="@image.srcset" sizes="100vw" alt="@image.altText" class="responsive-img">
     </div>
-    <div class="promo-tertiary__header">
+    <div class="promo-tertiary__header @toneClass.mkString("")">
         <h2 class="promo-tertiary__title">@title</h2>
         <div class="promo-tertiary__description">
             @description
