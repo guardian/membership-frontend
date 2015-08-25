@@ -8,9 +8,14 @@
                      alt="@img.metadataAltText"
                      data-srcset="@img.srcset"
                      sizes="100vw">
-                <figcaption class="slideshow__detail">
-                    <div class="slideshow__description">@img.metadataAltText</div>
-                </figcaption>
+
+                @for(metadata <- img.metadata) {
+                    <figcaption class="slideshow__detail">
+                        <div class="slideshow__caption">
+                            @fragments.media.imageCaption(metadata, isBlock=true)
+                        </div>
+                    </figcaption>
+                }
             </figure>
         }
     </div>

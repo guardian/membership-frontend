@@ -8,8 +8,19 @@
     width: 100%;
 }
 
-/* Captioned Image
+/* ==========================================================================
+   Images: Captions
    ========================================================================== */
+
+.o-caption {
+    @include fs-textSans(1);
+    font-weight: normal;
+}
+.o-caption--block {
+    .o-caption__credit {
+        display: block;
+    }
+}
 
 .captioned-image {
     position: relative;
@@ -35,7 +46,8 @@
     }
 }
 
-/* Stamped Image
+/* ==========================================================================
+   Images: Stamped Image
    ========================================================================== */
 
 .stamped-image {
@@ -53,7 +65,8 @@
     height: ($gs-gutter * 2);
 }
 
-/* Inline SVGs
+/* ==========================================================================
+   Images: Inline SVGS
    http://nicolasgallagher.com/canvas-fix-svg-scaling-in-internet-explorer/
    ========================================================================== */
 

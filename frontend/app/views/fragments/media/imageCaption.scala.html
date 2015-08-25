@@ -1,15 +1,15 @@
-@(metadata: model.Grid.Metadata)
+@(metadata: model.Grid.Metadata, isBlock: Boolean = false)
 
 @for(description <- metadata.description) {
-    <div class="text-caption">
+    <div class="o-caption@if(isBlock){ o-caption--block}">
         @for(byline <- metadata.byline) {
-            <div class="text-caption__byline">@byline</div>
+            <div class="o-caption__byline">@byline</div>
         }
-        <span class="text-caption__description">
+        <span class="o-caption__description">
             @description
         </span>
         @for(credit <- metadata.credit) {
-            <span class="text-caption__credit">Photograph: @credit</span>
+            <span class="o-caption__credit">Photograph: @credit</span>
         }
     </div>
 }
