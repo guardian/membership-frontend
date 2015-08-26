@@ -143,7 +143,7 @@ object GuardianLiveEventService extends LiveService {
 
 object LocalEventService extends LiveService {
   val apiToken = Config.eventbriteLocalApiToken
-  val maxDiscountQuantityAvailable = 3
+  val maxDiscountQuantityAvailable = 2
   val wsMetrics = new EventbriteMetrics("Local")
 
   def mkRichEvent(event: EBEvent): Future[RichEvent] =  for { gridImageOpt <- gridImageFor(event) }
