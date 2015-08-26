@@ -5,6 +5,7 @@ import com.gu.membership.zuora.{Address, Countries}
 import controllers.IdentityRequest
 import forms.MemberForm._
 import com.gu.identity.play.IdMinimalUser
+import model.FeatureChoice
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsObject, Json}
@@ -78,7 +79,8 @@ class IdentityServiceTest extends Specification with Mockito {
     val paidMemberChangeForm = FreeMemberChangeForm(
       PaymentForm(true, "token"),
       Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
-      Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK))
+      Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK)),
+      FeatureChoice.all
     )
 
     identityService.updateUserFieldsBasedOnUpgrade(user, paidMemberChangeForm, identityRequest)

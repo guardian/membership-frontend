@@ -5,7 +5,7 @@ import com.gu.membership.salesforce.MemberId
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.zuora.{Address, ZuoraApiConfig}
 import forms.MemberForm.NameForm
-import model.FreeEventTickets
+import model.{FeatureChoice, FreeEventTickets}
 import model.Zuora._
 import org.joda.time.{DateTime, Period}
 import services.zuora.ZuoraServiceHelpers._
@@ -291,14 +291,16 @@ case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String,
   }
 }
 
-case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String, preview: Boolean)
-  extends ZuoraAction[AmendResult] {
+case class UpgradePlan(subscriptionId: String,
+                       subscriptionRatePlanId: String,
+                       newRatePlanId: String,
+                       preview: Boolean,
+                       features: Seq[Feature]) extends ZuoraAction[AmendResult] {
 
   override val singleTransaction = true
 
   val body = {
     val dateStr = formatDateTime(DateTime.now)
-
     <ns1:amend>
       <ns1:requests>
         <ns1:Amendments>
@@ -333,6 +335,13 @@ case class UpgradePlan(subscriptionId: String, subscriptionRatePlanId: String, n
             <ns1:RatePlan>
               <ns2:ProductRatePlanId>{newRatePlanId}</ns2:ProductRatePlanId>
             </ns1:RatePlan>
+            <ns1:SubscriptionProductFeatureList>
+            {features.map(f =>
+              <ns1:SubscriptionProductFeature xsi:type="ns2:SubscriptionProductFeature">
+                <ns2:FeatureId>{f.id}</ns2:FeatureId>
+              </ns1:SubscriptionProductFeature>
+            )}
+            </ns1:SubscriptionProductFeatureList>
           </ns2:RatePlanData>
           <ns2:Status>Completed</ns2:Status>
           <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
