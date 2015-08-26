@@ -414,7 +414,6 @@
     width: 100%;
     overflow: auto;
     list-style: none;
-    counter-reset: nav-sections;
 
     @include mq(mem-full) {
         border-left: 1px solid $c-neutral2;
@@ -423,12 +422,9 @@
 }
 .nav-sections__item,
 .nav-sections__link {
-    @include mq($until: tablet) {
-        height: 50px;
-    }
+    height: 70px;
 }
 .nav-sections__item {
-    counter-increment: nav-sections;
 
     @include mq($until: tablet) {
         width: 33.3%;
@@ -451,7 +447,8 @@
     @include mq(tablet) {
         @include fs-headline(2);
         font-weight: bold;
-        min-width: rem(gs-span(3));
+        width: gs-span(3);
+
         padding: $gs-baseline $gs-gutter;
     }
 }
@@ -465,12 +462,5 @@
 @include mq($until: tablet) {
     .nav-sections__item:last-child .nav-sections__link {
         border-right: none;
-    }
-}
-@include mq(tablet) {
-    .nav-sections__link::before {
-        color: $white;
-        content: counter(nav-sections);
-        display: block;
     }
 }
