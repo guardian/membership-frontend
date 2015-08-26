@@ -8,6 +8,7 @@
 .slideshow__container {
     position: relative;
     overflow: hidden;
+    z-index: 0;
 }
 .slideshow__element {
     margin: 0;
