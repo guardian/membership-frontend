@@ -58,7 +58,7 @@ trait UpgradeTier {
 
         memberRequest.member match {
           case paidMember: PaidMember =>
-            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, memberRequest.user, tier)
+            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, tier)
             val stripeCustomerF = memberRequest.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
 
             for {
@@ -103,7 +103,7 @@ trait UpgradeTier {
     val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
-      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest, extractCampaignCode(request), form.featureChoice)
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, tier, form, identityRequest, extractCampaignCode(request))
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
@@ -114,7 +114,7 @@ trait UpgradeTier {
       }
 
       def doUpgrade: Future[Result] = {
-        MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest, extractCampaignCode(request), form.featureChoice).map {
+        MemberService.upgradePaidSubscription(paidMember, tier, identityRequest, extractCampaignCode(request), form).map {
           _ => Redirect(routes.TierController.upgradeThankyou(tier))
         }
       }

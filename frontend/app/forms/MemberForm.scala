@@ -43,16 +43,23 @@ object MemberForm {
     override val plan = PaidTierPlan(tier, payment.annual)
   }
 
+  case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
+
   trait MemberChangeForm {
-    val deliveryAddress: Address
-    val billingAddress: Option[Address]
+    val featureChoice: Set[FeatureChoice]
+    val addressDetails: Option[AddressDetails]
   }
 
-  case class PaidMemberChangeForm(password: String, featureChoice: Set[FeatureChoice])
+  case class PaidMemberChangeForm(password: String, featureChoice: Set[FeatureChoice]) extends MemberChangeForm {
+    val addressDetails = None
+  }
+
   case class FreeMemberChangeForm(payment: PaymentForm,
                                   deliveryAddress: Address,
                                   billingAddress: Option[Address],
-                                  featureChoice: Set[FeatureChoice]) extends MemberChangeForm
+                                  featureChoice: Set[FeatureChoice]) extends MemberChangeForm {
+    val addressDetails = Some(AddressDetails(deliveryAddress, billingAddress))
+  }
 
   case class FeedbackForm(category: String, page: String, feedback: String, name: String, email: String)
 

@@ -43,7 +43,7 @@ case class IdentityService(identityApi: IdentityApi) {
     ) ++ deliveryAddress(formData.deliveryAddress) ++ billingDetails
 
     val json = Json.obj("privateFields" -> fields)
-    postFields(json, user, identityRequest)
+    postFields(json, user.id, identityRequest)
   }
 
   def updateUserPassword(password: String, identityRequest: IdentityRequest, userId: String) {
@@ -51,16 +51,16 @@ case class IdentityService(identityApi: IdentityApi) {
     identityApi.post("/user/password", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user-password")
   }
 
-  def updateUserFieldsBasedOnUpgrade(user: IdMinimalUser, formData: MemberChangeForm, identityRequest: IdentityRequest) {
-    val billingAddressForm = formData.billingAddress.getOrElse(formData.deliveryAddress)
-    val fields = deliveryAddress(formData.deliveryAddress) ++ billingAddress(billingAddressForm)
+  def updateUserFieldsBasedOnUpgrade(userId: String, addressDetails: AddressDetails, identityRequest: IdentityRequest) {
+    val billingAddressForm = addressDetails.billingAddress.getOrElse(addressDetails.deliveryAddress)
+    val fields = deliveryAddress(addressDetails.deliveryAddress) ++ billingAddress(billingAddressForm)
     val json = Json.obj("privateFields" -> fields)
-    postFields(json, user, identityRequest)
+    postFields(json, userId, identityRequest)
   }
 
   def updateEmail(user: IdMinimalUser, email: String, identityRequest: IdentityRequest) = {
     val json = Json.obj("primaryEmailAddress" -> email)
-    postFields(json, user, identityRequest)
+    postFields(json, user.id, identityRequest)
   }
 
   def reauthUser(email: String, password: String, identityRequest: IdentityRequest) = {
@@ -69,9 +69,9 @@ case class IdentityService(identityApi: IdentityApi) {
 
   }
 
-  private def postFields(json: JsObject, user: IdMinimalUser, identityRequest: IdentityRequest) = {
-    Logger.info(s"Posting updated information to Identity for user :${user.id}")
-    identityApi.post(s"user/${user.id}", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user")
+  private def postFields(json: JsObject, userId: String, identityRequest: IdentityRequest) = {
+    Logger.info(s"Posting updated information to Identity for user :$userId")
+    identityApi.post(s"user/$userId", Some(json), identityRequest.headers, identityRequest.trackingParameters, "update-user")
   }
 
   private def deliveryAddress(addressForm: Address): JsObject = {
