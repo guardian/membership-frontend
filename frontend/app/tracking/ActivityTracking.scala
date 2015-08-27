@@ -4,7 +4,7 @@ import java.util.{List => JList, Map => JMap}
 
 import com.github.t3hnar.bcrypt._
 import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{Member, Tier}
 import com.snowplowanalytics.snowplow.tracker.core.emitter.{HttpMethod, RequestMethod}
 import com.snowplowanalytics.snowplow.tracker.emitter.Emitter
 import com.snowplowanalytics.snowplow.tracker.{Subject, Tracker}
@@ -199,8 +199,12 @@ trait ActivityTracking {
     if (!analyticsOff) executeTracking(data)
   }
 
-  def track(data: TrackerData)(implicit user: IdMinimalUser) {
+  def track(data: TrackerData, user: IdMinimalUser) {
     if (!isTestUser(user)) executeTracking(data)
+  }
+
+  def track(data: TrackerData, member: Member) {
+    if (!isTestUser(member)) executeTracking(data)
   }
 
   private def executeTracking(data: TrackerData) {

@@ -277,7 +277,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         campaignCode
     )
 
-    track(MemberActivity("membershipRegistration", trackingInfo))(user)
+    track(MemberActivity("membershipRegistration", trackingInfo), user)
   }
 }
 

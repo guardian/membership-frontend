@@ -82,7 +82,7 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
       subscription <- subscriptionService.cancelSubscription(member, member.tier == Tier.Friend)
     } yield {
       memberRepository.metrics.putCancel(member.tier)
-      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name, campaignCode = campaignCode)))(user)
+      track(MemberActivity("cancelMembership", MemberData(member.salesforceContactId, member.identityId, member.tier.name, campaignCode = campaignCode)), user)
       ""
     }
   }
@@ -101,7 +101,8 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
             member.tier.name,
             Some(DowngradeAmendment(member.tier)), //getting effective date and subscription annual / month is proving difficult
             campaignCode = campaignCode
-          )))(user)
+          )),
+        user)
 
       ""
     }

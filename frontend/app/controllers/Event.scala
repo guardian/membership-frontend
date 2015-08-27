@@ -206,7 +206,7 @@ trait Event extends Controller with ActivityTracking {
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
         val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
 
-        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)))(request.user)
+        track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 
         Found(eventUrl)
           .withCookies(Cookie(eventCookie(event), "", Some(3600)))
