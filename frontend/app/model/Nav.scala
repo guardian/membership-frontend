@@ -1,6 +1,7 @@
 package model
 
 import configuration.Links
+import controllers.routes
 
 object Nav {
 
@@ -25,9 +26,9 @@ object Nav {
   )
 
   val footerNavigation = List(
-    NavItem("help", controllers.Info.help.toString, "Help"),
+    NavItem("help", routes.Info.help().toString, "Help"),
     NavItem("contact", Links.membershipContact, "Contact us"),
-    NavItem("feedback", controllers.Info.feedback.toString, "Feedback"),
+    NavItem("feedback", routes.Info.feedback().toString, "Feedback"),
     NavItem("terms", Links.membershipTerms, "Terms & conditions"),
     NavItem("privacy", Links.guardianPrivacyPolicy, "Privacy policy"),
     NavItem("cookies", Links.guardianCookiePolicy, "Cookie policy")
