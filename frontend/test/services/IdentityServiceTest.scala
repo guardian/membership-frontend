@@ -76,17 +76,14 @@ class IdentityServiceTest extends Specification with Mockito {
     val identityAPI = mock[IdentityApi]
 
     val identityService = new IdentityService(identityAPI)
-    val paidMemberChangeForm = FreeMemberChangeForm(
-      PaymentForm(true, "token"),
+    val addressDetails = AddressDetails(
       Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
-      Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK)),
-      FeatureChoice.all
+      Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK))
     )
 
-    identityService.updateUserFieldsBasedOnUpgrade(user, paidMemberChangeForm, identityRequest)
+    identityService.updateUserFieldsBasedOnUpgrade(user.id, addressDetails, identityRequest)
 
     val expectedJson = Resource.getJson(s"model/identity/update-upgrade.json").as[JsObject]
     there was one(identityAPI).post("user/4444", Some(expectedJson), headers, trackingParameters, "update-user")
-
   }
 }
