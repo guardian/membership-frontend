@@ -184,7 +184,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
           } {
             event.service.wsMetrics.put(s"join-$tier-event", 1)
             val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name, campaignCode=extractCampaignCode(request))
-            track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)))(request.user)
+            track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), request.user)
           }
           result
         }.recover {

@@ -15,6 +15,7 @@ import play.api.mvc.{AnyContent, Result, Controller, DiscardingCookie}
 import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
 import tracking.ActivityTracking
 import utils.CampaignCode.extractCampaignCode
+import play.filters.csrf.CSRF.Token.getToken
 
 import scala.concurrent.Future
 
@@ -46,39 +47,41 @@ trait DowngradeTier extends ActivityTracking {
 trait UpgradeTier {
   self: TierController =>
 
-  def upgrade(tier: Tier) = MemberAction.async { implicit request =>
+  def upgrade(tier: Tier) = MemberAction.async { implicit memberRequest =>
 
     def previewUpgrade(subscription: SubscriptionDetails): Future[Result] = {
-      if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
+      if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(memberRequest.member.tier, tier)))
       else {
-        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(request.user, IdentityRequest(request)).map(_.privateFields)
+        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields)
 
-        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
+        val pageInfo = PageInfo.default.copy(stripePublicKey = Some(memberRequest.touchpointBackend.stripeService.publicKey))
 
-        request.member match {
+        memberRequest.member match {
           case paidMember: PaidMember =>
-            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, request.user, tier)
-            val stripeCustomerF = request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, tier)
+            val stripeCustomerF = memberRequest.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
 
             for {
               preview <- previewUpgradeSubscriptionF
               customer <- stripeCustomerF
               privateFields <- identityUserFieldsF
             } yield {
-              val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
+              val flashMsgOpt = memberRequest.flash.get("error").map(FlashMessage.error)
 
-              Ok(views.html.tier.upgrade.paidToPaid(request.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt))
+              Ok(views.html.tier.upgrade.paidToPaid(memberRequest.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt)(getToken, memberRequest.request))
             }
           case _ =>
-            for (privateFields <- identityUserFieldsF) yield Ok(views.html.tier.upgrade.freeToPaid(request.member.tier, tier, privateFields, pageInfo))
+            for (privateFields <- identityUserFieldsF) yield {
+              Ok(views.html.tier.upgrade.freeToPaid(memberRequest.member.tier, tier, privateFields, pageInfo)(getToken, memberRequest.request))
+            }
         }
       }
     }
 
     def currentSubscription = {
-      val subscriptionService = request.touchpointBackend.subscriptionService
+      val subscriptionService = memberRequest.touchpointBackend.subscriptionService
 
-      val subscriptionStatusFuture = subscriptionService.getSubscriptionStatus(request.member)
+      val subscriptionStatusFuture = subscriptionService.getSubscriptionStatus(memberRequest.member)
       for {
         subscriptionStatus <- subscriptionStatusFuture
         currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
@@ -86,13 +89,13 @@ trait UpgradeTier {
     }
 
 
-    if (request.member.tier < tier) {
+    if (memberRequest.member.tier < tier) {
       for {
         subscription <- currentSubscription
         result <- previewUpgrade(subscription)
       } yield result
     }
-    else Future.successful(Ok(views.html.tier.upgrade.unavailable(request.member.tier, tier)))
+    else Future.successful(Ok(views.html.tier.upgrade.unavailable(memberRequest.member.tier, tier)))
 
   }
 
@@ -100,7 +103,7 @@ trait UpgradeTier {
     val identityRequest = IdentityRequest(request)
 
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
-      memberId <- MemberService.upgradeFreeSubscription(freeMember, request.user, tier, form, identityRequest, extractCampaignCode(request))
+      memberId <- MemberService.upgradeFreeSubscription(freeMember, tier, form, identityRequest, extractCampaignCode(request))
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
     def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
@@ -111,7 +114,7 @@ trait UpgradeTier {
       }
 
       def doUpgrade: Future[Result] = {
-        MemberService.upgradePaidSubscription(paidMember, request.user, tier, identityRequest, extractCampaignCode(request)).map {
+        MemberService.upgradePaidSubscription(paidMember, tier, identityRequest, extractCampaignCode(request), form).map {
           _ => Redirect(routes.TierController.upgradeThankyou(tier))
         }
       }

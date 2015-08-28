@@ -28,7 +28,7 @@ package object actions {
       }
     }
 
-  case class MemberRequest[A, +M <: Member](val member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+  case class MemberRequest[A, +M <: Member](member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user
 
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
