@@ -13,7 +13,6 @@ object Global extends WithFilters(CheckCacheHeadersFilter, CSRFFilter(), Gzipper
     LocalEventService.start()
     MasterclassEventService.start()
 
-    TouchpointBackend.All.foreach(_.start())
     GuardianContentService.start()
   }
 }

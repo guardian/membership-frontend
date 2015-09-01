@@ -64,10 +64,6 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
                              zuoraRestService: ZuoraRestService,
                              products: Map[ProductRatePlan, String]) extends ActivityTracking {
 
-  def start() = {
-    memberRepository.salesforce.authTask.start()
-  }
-
   val subscriptionService = new SubscriptionService(products, zuoraSoapService, zuoraRestService)
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
