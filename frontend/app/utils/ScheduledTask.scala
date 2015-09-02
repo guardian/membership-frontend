@@ -1,5 +1,7 @@
 package utils
 
+import java.util.concurrent.TimeoutException
+
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,11 +25,20 @@ trait ScheduledTask[T] {
   def refresh(): Future[T]
 
   def start() {
-    Logger.debug(s"Starting $name scheduled task")
+    Logger.debug(s"Starting $name scheduled task with an initial delay of ${initialDelay} interval ${interval}")
     system.scheduler.schedule(initialDelay, interval) {
       agent.sendOff { _ =>
         Logger.debug(s"Refreshing $name scheduled task")
-        Await.result(refresh(), 25.seconds)
+        try {
+          Await.result(refresh(), 25.seconds)
+        }
+        catch {
+          case ex : TimeoutException => {
+            Logger.error(s"Scheduled task ${name} timed out after 25 seconds")
+            throw ex
+          }
+
+        }
       }
     }
   }
