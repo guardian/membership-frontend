@@ -2,6 +2,7 @@ package model
 
 import com.gu.contentapi.client.model.Content
 import configuration.Links
+import controllers.routes
 import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
@@ -12,6 +13,7 @@ object RichEvent {
 
   trait RichEvent {
     val event: EBEvent
+    val detailsUrl: String
     val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[model.ResponsiveImageGroup]
     val socialImgUrl: Option[String]
@@ -29,6 +31,7 @@ object RichEvent {
     image: Option[GridImage],
     contentOpt: Option[Content]
   ) extends RichEvent {
+    val detailsUrl = routes.Event.details(event.slug).url
     val hasLargeImage = true
     val canHavePriorityBooking = true
     val imgOpt = image.map(ResponsiveImageGroup(_))
@@ -71,6 +74,7 @@ object RichEvent {
     event: EBEvent,
     data: Option[MasterclassData]
   ) extends RichEvent {
+    val detailsUrl = routes.Event.details(event.slug).url
     val hasLargeImage = false
     val canHavePriorityBooking = false
     val imgOpt = data.flatMap(_.images)

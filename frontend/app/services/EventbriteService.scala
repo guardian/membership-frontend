@@ -1,5 +1,6 @@
 package services
 
+import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
 import model.EventGroup
@@ -78,6 +79,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getEventsByIds(ids: Seq[String]): Seq[RichEvent] = events.filter(e => ids.contains(e.event.id))
   def getLimitedAvailability: Seq[RichEvent] = events.filter(_.event.isLimitedAvailability)
   def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
+  def getSortedByCreationDate: Seq[RichEvent] = events.sortBy(_.created.toDateTime).reverse
   def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
