@@ -2,14 +2,16 @@
 
 @import model.Benefits
 
+@actionAttrs = {
+    href="@routes.TierController.upgrade(tier)"
+    data-metric-trigger="click"
+    data-metric-category="changeTier"
+    data-metric-action="@tier.toString.toLowerCase"
+}
+
 <div class="package-promo package-promo--stretch package-promo--enhanced tone-border-@tier.toString.toLowerCase">
     <div class="package-promo__header">
-        <a class="no-underline minimal-link"
-           href="@routes.TierController.upgrade(tier)"
-           data-metric-trigger="click"
-           data-metric-category="changeTier"
-           data-metric-action="@tier.toString.toLowerCase"
-        >
+        <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(tier, showCaption=false)
@@ -22,16 +24,19 @@
     </div>
     <div class="package-promo__content">
         <div class="package-promo__description copy hidden-tablet">
-            <p>@Benefits.details(tier).desc</p>
+            <ul class="o-bulleted-list">
+                @for(highlight <- Benefits.details(tier).highlights) {
+                    <li>
+                        @if(highlight.isNew) {
+                            <strong>New</strong>
+                        }
+                        @highlight.description
+                    </li>
+                }
+            </ul>
         </div>
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin"
-               id="qa-change-tier-@tier.slug"
-               href="@routes.TierController.upgrade(tier)"
-               data-metric-trigger="click"
-               data-metric-category="changeTier"
-               data-metric-action="@tier.toString.toLowerCase"
-            >
+            <a class="action action--snap u-no-bottom-margin" id="qa-change-tier-@tier.slug" @actionAttrs>
                 <span class="action__label">Become a @tier</span>
             </a>
         </div>
