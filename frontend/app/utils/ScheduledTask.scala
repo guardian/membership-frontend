@@ -37,7 +37,6 @@ trait ScheduledTask[T] {
             Logger.error(s"Scheduled task ${name} timed out after 25 seconds")
             throw ex
           }
-
         }
       }
     }
