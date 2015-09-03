@@ -1,42 +1,87 @@
-@(comparisonItems: Seq[model.Benefits.ComparisonItem])
+@()
 
 @import com.gu.membership.salesforce.Tier
+@import com.gu.membership.salesforce.Tier.{Partner, Supporter}
+@import model.Benefits
+@import model.Benefits.BenefitItem
 
-<table class="comparison-table">
-    <thead>
-        <tr>
-            <th class="u-h">Description</th>
-            <th class="comparison-table__header">
-                <div class="comparison-table__header__name tone-border-partner">
-                @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
-                </div>
-            </th>
-            <th class="comparison-table__header">
-                <div class="comparison-table__header__name tone-border-supporter">
-                @fragments.tier.tierTrail(Tier.Supporter, showCaption=false)
-                </div>
-            </th>
-        </tr>
-    </thead>
-    <tbody class="comparison-table__body">
-    @for(comparisonItem <- comparisonItems) {
-        <tr class="comparison-table__row">
-            <td class="comparison-table__description">
-                <div class="comparison-table__description__inner">
-                @comparisonItem.description
-                </div>
-            </td>
-            <td class="comparison-table__tier">
-                <div class="comparison-table__tier__inner">
-                @fragments.common.checkmark(comparisonItem.availablePartner)
-                </div>
-            </td>
-            <td class="comparison-table__tier">
-                <div class="comparison-table__tier__inner">
-                @fragments.common.checkmark(comparisonItem.availableSupporter)
-                </div>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+@comparisonHeader(tier: Tier) = {
+    <div class="comparison-table__tier">
+        <div class="comparison-table__tier__name tone-border-@tier.name.toLowerCase">
+        @fragments.tier.tierTrail(tier, showCaption = false)
+        </div>
+    </div>
+}
+
+@comparisonDetails(benefits: Seq[BenefitItem]) = {
+    <div class="comparison-table__description">
+        <div class="comparison-table__description__inner">
+            <ul class="o-bulleted-list">
+            @for(benefit <- benefits) {
+                <li>
+                    @if(benefit.isNew) {
+                        @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
+                    }
+                    @benefit.title
+                </li>
+            }
+            </ul>
+        </div>
+    </div>
+}
+
+@comparisonCheckmark(checkmark: Boolean) = {
+    <div class="comparison-table__checkmark">
+        <div class="comparison-table__checkmark__inner">
+        @fragments.common.checkmark(checkmark)
+        </div>
+    </div>
+}
+
+@comparisonPricing(tier: Tier) = {
+    <div class="comparison-table__trail">
+        <div class="comparison-table__trail__inner">
+            <div class="comparison-table__trail__pricing">
+            @fragments.pricing.priceInfo(tier, canFlex=false)
+            </div>
+            <div class="comparison-table__trail__action">
+                <a class="action action--snap u-no-bottom-margin qa-comparison-@tier.toString.toLowerCase"
+                href="@routes.Joiner.enterDetails(tier)"
+                data-metric-trigger="click"
+                data-metric-category="join"
+                data-metric-action="@tier.toString.toLowerCase"
+                >
+                    <span class="action__label">
+                        Become a @tier
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="comparison-table">
+    <div class="comparison-table__header">
+        @comparisonHeader(Supporter)
+        @comparisonHeader(Partner)
+    </div>
+    <div class="comparison-table__body">
+        <div class="comparison-table__row">
+            @comparisonDetails(Benefits.comparisonBasicList)
+            @comparisonCheckmark(checkmark = true)
+            @comparisonCheckmark(checkmark = true)
+        </div>
+        <div class="comparison-table__row">
+            @comparisonDetails(Benefits.comparisonHiglightsList)
+            @comparisonCheckmark(checkmark = false)
+            @comparisonCheckmark(checkmark = true)
+        </div>
+    </div>
+    <div class="comparison-table__footer">
+        @comparisonPricing(Supporter)
+        @comparisonPricing(Partner)
+    </div>
+    <div class="comparison-table__extra">
+    @fragments.tier.friendTeaser()
+    </div>
+</div>

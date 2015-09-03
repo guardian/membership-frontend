@@ -95,21 +95,6 @@
     }
 }
 
-.h-brand {
-    @include fs-header(3);
-    color: color(brand-main);
-    margin-bottom: $gs-baseline / 4;
-
-    @include mq(tablet) {
-        @include fs-header(3, $size-only: true);
-    }
-}
-.h-brand--section {
-    border-top: 1px solid $c-border-neutral;
-    padding-top: $gs-baseline / 2;
-    margin-bottom: $gs-baseline;
-}
-
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);

@@ -4,6 +4,8 @@
 
 .o-bulleted-list {
     @include bulleted-list();
+    margin-top: 0;
+    margin-bottom: $gs-baseline;
 }
 
 // List of inline items

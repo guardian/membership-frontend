@@ -19,9 +19,9 @@
         padding: 0;
     }
     .package-promo__description {
-        display: none;
         @include fs-headline(2);
         margin-bottom: rem($gs-gutter);
+        display: none;
         p { margin-bottom: 0; }
     }
     .package-promo__actions {
@@ -82,7 +82,7 @@
 @mixin package-promo-stacked() {
     .package-promo__description {
         display: inline-block;
-        min-height: rem($gs-gutter * 8);
+        min-height: rem($gs-gutter * 10);
     }
     .package-promo__content {
         margin-left: 0;
@@ -145,13 +145,21 @@
     }
 }
 
+.package-promo--lead {
+    @include mq(desktop) {
+        .package-promo__description {
+            min-height: ($gs-gutter * 5);
+        }
+    }
+}
+
 .package-promo--reversed {
     background-color: $white;
 }
 
 /* ==========================================================================
    Package Feature
-   - Package features grid (See /about)
+   - Package features grid (See /supporter)
    ========================================================================== */
 
 .package-feature {
@@ -221,31 +229,6 @@
             margin-left: 0;
         }
     }
-
-/* ==========================================================================
-   Package Chooser
-   - Package benefits toggle (See /tier/change)
-   ========================================================================== */
-
-.package-chooser {
-    padding-top: rem($gs-baseline / 2);
-    margin-bottom: rem($gs-baseline);
-
-    @include mq($from: tablet, $until: desktop) {
-        margin-left: 35%;
-    }
-    @include mq($until: desktop) {
-        .package-chooser__list {
-            display: none;
-        }
-        .package-chooser__list.is-toggled {
-            display: block !important;
-        }
-    }
-    @include mq(desktop) {
-        padding-top: 0;
-    }
-}
 
 /* ==========================================================================
    Package Teaser
