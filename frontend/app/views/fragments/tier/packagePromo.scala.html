@@ -3,6 +3,7 @@
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
+    extraClasses: Seq[String] = Seq.empty,
     isReversed: Boolean = false
 )
 
@@ -15,7 +16,7 @@
     data-metric-action="@tier.toString.toLowerCase"
 }
 
-<div class="package-promo@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--enhanced") tone-border-@tier.slug">
+<div class="package-promo@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--enhanced") @extraClasses.mkString("") tone-border-@tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
@@ -31,7 +32,16 @@
     <div class="package-promo__content">
         @if(showDescription) {
             <div class="package-promo__description copy">
-                <p>@Benefits.details(tier).desc</p>
+                <ul class="o-bulleted-list">
+                    @for(highlight <- Benefits.details(tier).highlights) {
+                        <li>
+                            @if(highlight.isNew) {
+                                @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
+                            }
+                            @highlight.description
+                        </li>
+                    }
+                </ul>
                 @if(descriptionAnchor) {
                     <p class="o-caption tablet-only"><a href="@descriptionAnchor">What's included</a></p>
                 }
