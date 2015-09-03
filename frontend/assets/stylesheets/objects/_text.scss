@@ -1,4 +1,4 @@
-h/* ==========================================================================
+/* ==========================================================================
    Objects: Text
    ========================================================================== */
 
@@ -19,6 +19,7 @@ h/* ==========================================================================
 .text-trail {
     @include fs-headline(2);
 }
+
 .text-intro {
     @include fs-headline(2);
     margin-bottom: $gs-gutter;
@@ -31,6 +32,16 @@ h/* ==========================================================================
     @include fs-data(3);
     color: $c-neutral2;
     margin-bottom: rem($gs-baseline / 2);
+}
+
+.o-counter {
+    font-weight: bold;
+    color: $c-neutral3;
+
+    &:after {
+        content: ' / ';
+        color: $c-neutral4;
+    }
 }
 
 .o-counter {
@@ -95,21 +106,6 @@ h/* ==========================================================================
     }
 }
 
-.h-brand {
-    @include fs-header(3);
-    color: color(brand-main);
-    margin-bottom: $gs-baseline / 4;
-
-    @include mq(tablet) {
-        @include fs-header(3, $size-only: true);
-    }
-}
-.h-brand--section {
-    border-top: 1px solid $c-border-neutral;
-    padding-top: $gs-baseline / 2;
-    margin-bottom: $gs-baseline;
-}
-
 .h-promo,
 .h-promo--primary {
     @include fs-headline(4);
@@ -119,7 +115,6 @@ h/* ==========================================================================
         @include fs-headline(6, true);
     }
 }
-
 .h-promo--primary {
     @include mq(tablet) {
         @include fs-headline(7, true);

@@ -16,6 +16,7 @@ object EventbriteTestObjects {
   def eventTicketClass = EBTicketClass("", "", false, 0, 0, None, None, eventTime.toInstant, None, None)
 
   case class TestRichEvent(event: EBEvent) extends RichEvent {
+    val detailsUrl = ""
     val imgOpt = None
     val logoOpt = None
     val socialImgUrl = None
