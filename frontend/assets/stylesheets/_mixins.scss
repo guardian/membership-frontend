@@ -163,7 +163,6 @@ $gs-max-columns: 16;
         border-color: $c-neutral2;
     }
 }
-
 @mixin bulleted-list() {
     list-style: none;
     margin-left: $gs-gutter;

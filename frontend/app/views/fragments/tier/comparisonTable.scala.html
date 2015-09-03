@@ -6,15 +6,15 @@
 @import model.Benefits.BenefitItem
 
 @comparisonHeader(tier: Tier) = {
-    <th class="comparison-table__header">
-        <div class="comparison-table__header__name tone-border-@tier.name.toLowerCase">
+    <div class="comparison-table__tier">
+        <div class="comparison-table__tier__name tone-border-@tier.name.toLowerCase">
         @fragments.tier.tierTrail(tier, showCaption = false)
         </div>
-    </th>
+    </div>
 }
 
 @comparisonDetails(benefits: Seq[BenefitItem]) = {
-    <td class="comparison-table__description">
+    <div class="comparison-table__description">
         <div class="comparison-table__description__inner">
             <ul class="o-bulleted-list">
             @for(benefit <- benefits) {
@@ -27,19 +27,19 @@
             }
             </ul>
         </div>
-    </td>
+    </div>
 }
 
 @comparisonCheckmark(checkmark: Boolean) = {
-    <td class="comparison-table__tier">
-        <div class="comparison-table__tier__inner">
+    <div class="comparison-table__checkmark">
+        <div class="comparison-table__checkmark__inner">
         @fragments.common.checkmark(checkmark)
         </div>
-    </td>
+    </div>
 }
 
 @comparisonPricing(tier: Tier) = {
-    <td class="comparison-table__trail">
+    <div class="comparison-table__trail">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__pricing">
                 @fragments.pricing.priceInfo(tier, canFlex=false)
@@ -57,40 +57,30 @@
                 </a>
             </div>
         </div>
-    </td>
+    </div>
 }
+
 <div class="comparison-table">
-    <table>
-        <thead>
-            <tr>
-                <th class="u-h">Description</th>
-                @comparisonHeader(Supporter)
-                @comparisonHeader(Partner)
-            </tr>
-        </thead>
-        <tbody class="comparison-table__body">
-
-            <tr class="comparison-table__row">
-                @comparisonDetails(Benefits.comparisonBasicList)
-                @comparisonCheckmark(checkmark = true)
-                @comparisonCheckmark(checkmark = true)
-            </tr>
-
-            <tr class="comparison-table__row">
-                @comparisonDetails(Benefits.comparisonHiglightsList)
-                @comparisonCheckmark(checkmark = false)
-                @comparisonCheckmark(checkmark = true)
-            </tr>
-
-        </tbody>
-        <tfoot class="comparison-table__footer">
-            <tr>
-                <td>&nbsp;</td>
-                @comparisonPricing(Supporter)
-                @comparisonPricing(Partner)
-            </tr>
-        </tfoot>
-    </table>
+    <div class="comparison-table__header">
+        @comparisonHeader(Supporter)
+        @comparisonHeader(Partner)
+    </div>
+    <div class="comparison-table__body">
+        <div class="comparison-table__row">
+            @comparisonDetails(Benefits.comparisonBasicList)
+            @comparisonCheckmark(checkmark = true)
+            @comparisonCheckmark(checkmark = true)
+        </div>
+        <div class="comparison-table__row">
+            @comparisonDetails(Benefits.comparisonHiglightsList)
+            @comparisonCheckmark(checkmark = false)
+            @comparisonCheckmark(checkmark = true)
+        </div>
+    </div>
+    <div class="comparison-table__footer">
+        @comparisonPricing(Supporter)
+        @comparisonPricing(Partner)
+    </div>
     <div class="comparison-table__extra">
         @fragments.tier.friendTeaser()
     </div>

@@ -3,6 +3,7 @@
    ========================================================================== */
 
 $_table-tier-height: 150px;
+$_table-gutter: $gs-gutter / 2;
 
 .comparison-table {
     margin-bottom: $gs-baseline * 3;
@@ -11,65 +12,87 @@ $_table-tier-height: 150px;
         margin-top: -($gs-gutter * 2);
     }
 }
+
+/**
+ * Header
+ */
+.comparison-table__header {
+    @include clearfix();
+    padding-left: 60%;
+
+    @include mq(desktop) {
+        padding-left: 50%;
+    }
+}
+.comparison-table__tier {
+    width: 50%;
+    float: left;
+    text-align: center;
+    position: relative;
+    border-left: $_table-gutter solid $white;
+}
+.comparison-table__tier__name {
+    display: block;
+    background-color: $c-neutral7;
+    height: $_table-tier-height + $gs-gutter;
+    border-top: 5px solid;
+
+    @include mq(desktop) {
+        height: auto;
+        padding: ($gs-baseline / 2);
+    }
+
+    .tier-trail {
+        @include mq($until:desktop) {
+            transform: rotate(-90deg) translate(50%, -50px);
+            display: block;
+            width: $_table-tier-height;
+            margin: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    }
+}
+
+/**
+ * Body
+ */
 .comparison-table__row {
+    @include clearfix();
     border-top: 1px solid $c-neutral4;
 }
+.comparison-table__description,
+.comparison-table__checkmark {
+    float: left;
+}
+
 .comparison-table__description {
-    @include fs-header(1);
-    font-weight: normal;
+    @include fs-data(3);
+    width: 60%;
+
+    @include mq(desktop) {
+        @include fs-header(1);
+        font-weight: normal;
+        width: 50%;
+    }
 }
 .comparison-table__description__inner {
     padding: ($gs-baseline / 2) ($gs-baseline / 2) 0;
 }
-.comparison-table__header {
-    width: gs-span(1);
+.comparison-table__checkmark {
+    text-align: center;
     position: relative;
-
-    @include mq(mobileLandscape) {
-        text-align: center;
-    }
-}
-.comparison-table__header__name,
-.comparison-table__tier__inner,
-.comparison-table__trail__inner {
-    display: block;
-    background-color: $c-neutral7;
-    margin-left: 3px;
-
-    @include mq(tablet) {
-        width: gs-span(3) + ($gs-gutter / 4);
-        margin-left: $gs-gutter;
-    }
+    border-left: $_table-gutter solid $white;
+    height: 120px;
+    width: 20%;
 
     @include mq(desktop) {
-        width: gs-span(3);
+        width: 25%;
     }
 }
-.comparison-table__header__name {
-    height: $_table-tier-height + $gs-gutter;
-    border-top: 5px solid;
-
-    @include mq(tablet) {
-        height: 100%;
-        padding: ($gs-baseline / 2);
-    }
-}
-.comparison-table__header__name .tier-trail {
-    @include mq($until:tablet) {
-        transform: rotate(-90deg) translate(50%, -43px);
-        display: block;
-        width: $_table-tier-height;
-        margin: 0;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-    }
-}
-.comparison-table__tier {
-    text-align: center;
-    position: relative
-}
-.comparison-table__tier__inner {
+.comparison-table__checkmark__inner {
+    background-color: $c-neutral7;
     padding: ($gs-baseline / 2);
     padding-bottom: $gs-gutter * 2;
     position: absolute;
@@ -84,13 +107,34 @@ $_table-tier-height: 150px;
         margin-left: -12px;
     }
 
-    @include mq(tablet) {
+    @include mq(desktop) {
         padding: ($gs-baseline / 2);
         padding-bottom: $gs-gutter;
     }
 }
+
+
+/**
+ * Footer
+ */
+.comparison-table__footer {
+    @include clearfix();
+    border-top: 1px solid $c-neutral4;
+    padding-left: 50%;
+
+    @include mq($until: desktop) {
+        display: none;
+
+    }
+}
+.comparison-table__trail {
+    width: 50%;
+    float: left;
+}
 .comparison-table__trail__inner {
+    background-color: $c-neutral7;
     padding: ($gs-baseline / 2);
+    border-left: $_table-gutter solid $white;
 }
 .comparison-table__trail__pricing {
     padding-bottom: $gs-baseline;
@@ -100,19 +144,17 @@ $_table-tier-height: 150px;
     margin: $gs-baseline 0;
 }
 
-.comparison-table__footer {
-    border-top: 1px solid $c-neutral4;
 
-    @include mq($until: tablet) {
-        display: none;
-    }
-}
+/**
+ * Extra
+ */
 .comparison-table__extra {
     margin: $gs-gutter 0;
 
-    @include mq($from: tablet) {
+    @include mq($from: desktop) {
         clear: both;
         float: right;
-        width: gs-span(6);
+        width: 50%;
+        padding-left: $_table-gutter;
     }
 }
