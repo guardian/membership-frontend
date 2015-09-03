@@ -5,6 +5,7 @@ import com.amazonaws.auth.{AWSCredentialsProviderChain, InstanceProfileCredentia
 import com.gu.googleauth.{GoogleAuthConfig, GoogleServiceAccount}
 import com.gu.identity.cookie.{PreProductionKeys, ProductionKeys}
 import com.gu.membership.salesforce.Tier
+import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import com.typesafe.config.ConfigFactory
 import model.Eventbrite.EBEvent
@@ -29,6 +30,8 @@ object Config {
   val guardianHost = config.getString("guardian.host")
 
   val membershipUrl = config.getString("membership.url")
+  val membershipHost = Uri.parse(Config.membershipUrl).host.get
+
   val membershipFeedback = config.getString("membership.feedback")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
