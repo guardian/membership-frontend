@@ -23,7 +23,7 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
 import services.EventbriteService._
-import _root_.services.zuora.CreateFreeEventUsage
+import zuora.CreateFreeEventUsage
 import tracking._
 import utils.TestUsers.isTestUser
 
@@ -139,7 +139,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
     for {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
       description = s"event-id:${event.id};order-id:${order.id}"
-      action = CreateFreeEventUsage(account.id, description, quantity, subscription.id)
+      _ = logger.info(s"Recording a complimentary event ticket usage for account ${account.id}, subscription: ${subscription.subscriptionNumber}, details: $description")
+      action = CreateFreeEventUsage(account.id, description, quantity, subscription.subscriptionNumber)
       result <- tp.zuoraSoapService.authenticatedRequest(action)
     } yield result
   }
