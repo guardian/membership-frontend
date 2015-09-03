@@ -12,7 +12,6 @@ import net.kencochrane.raven.dsn.Dsn
 import play.api.Logger
 import services._
 
-import scala.collection.JavaConversions._
 import scala.util.Try
 
 object Config {
@@ -76,6 +75,7 @@ object Config {
 
   val googleAdwordsJoinerConversionLabel =
     Tier.all.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
+
 
   val corsAllowOrigin = Set(
     // identity

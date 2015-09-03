@@ -24,13 +24,13 @@ trait ScheduledTask[T] {
 
   def refresh(): Future[T]
 
-  def start() {
-    Logger.debug(s"Starting $name scheduled task with an initial delay of ${initialDelay} interval ${interval}")
+  def start(timeout : FiniteDuration = 25.seconds) {
+    Logger.info(s"Starting $name scheduled task with an initial delay of ${initialDelay} interval ${interval} and a timeout of ${timeout}")
     system.scheduler.schedule(initialDelay, interval) {
       agent.sendOff { _ =>
-        Logger.debug(s"Refreshing $name scheduled task")
+        Logger.info(s"Refreshing $name scheduled task")
         try {
-          Await.result(refresh(), 25.seconds)
+          Await.result(refresh(), timeout)
         }
         catch {
           case ex : TimeoutException => {
