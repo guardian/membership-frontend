@@ -61,7 +61,7 @@ object Rest {
   }
 
   case class Feature(id: String, featureCode: String)
-  case class RatePlan(id: String, productId: String, productName: String, subscriptionProductFeatures: List[Rest.Feature], ratePlanCharges: List[RatePlanCharge]) {
+  case class RatePlan(id: String, productId: String, productRatePlanId: String, productName: String, subscriptionProductFeatures: List[Rest.Feature], ratePlanCharges: List[RatePlanCharge]) {
     def isWhitelisted(productIds: Set[String]): Boolean = productIds.contains(productId)
   }
   case class RatePlanCharge(name: String, id: String)
