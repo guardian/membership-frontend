@@ -210,7 +210,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
 
     def hasUserBeenInvoiced(memberId: MemberId) =
       for (subscription <- latestSubF)
-      yield subscription.contractAcceptanceDate.isAfterNow
+      yield subscription.contractAcceptanceDate.isBeforeNow
 
     def getSummaryViaSubscriptionAmend(memberId: MemberId) = {
       for {
@@ -234,7 +234,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
 
     for {
       userInvoiced <- hasUserBeenInvoiced(memberId)
-      summary <- if (userInvoiced) getSummaryViaSubscriptionAmend(memberId) else getSummaryViaInvoice(memberId)
+      summary <- if (userInvoiced) getSummaryViaInvoice(memberId) else getSummaryViaSubscriptionAmend(memberId)
     } yield summary
   }
 
