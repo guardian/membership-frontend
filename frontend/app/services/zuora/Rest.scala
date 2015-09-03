@@ -34,7 +34,7 @@ object Rest {
   /*
    * Zuora product catalogue entry: https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Catalog
    */
-  case class ProductCatalog(products: List[Product]) {
+  case class ProductCatalog(products: Seq[Product]) {
     def productsOfType(t: String): Seq[Product] = products.filter(_.`ProductType__c` == t)
     def productIdsOfType(t: String): Set[String] = productsOfType(t).map(_.id).toSet
   }
