@@ -24,3 +24,9 @@ case class EventCollections(
     partnersOnly: Seq[RichEvent],
     programmingPartnerEvents: Option[EventGroup]
 )
+
+case class EventBrandCollection(
+  live: Seq[RichEvent],
+  local: Seq[RichEvent],
+  masterclasses: Seq[RichEvent]
+)

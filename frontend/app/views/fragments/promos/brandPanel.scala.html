@@ -1,23 +1,27 @@
 @(
     title: String,
-    imageOpt: Option[model.ResponsiveImageGroup],
-    linkHref: String,
-    linkLabel: String,
-    toneSlug: String
-)(description: Html)
+    description: String,
+    events: Seq[model.RichEvent.RichEvent],
+    extraLinkOpt: Option[views.support.Links.BasicLink]
+)
 
-<div class="brand-panel tone-border-@toneSlug">
-    <h3 class="brand-panel__title">@title</h3>
-    <div class="brand-panel__description copy">@description</div>
-    @for(img <- imageOpt) {
+<div class="brand-panel">
+    <div class="brand-panel__header">
+        <h3 class="brand-panel__title">@title</h3>
+        <div class="brand-panel__description copy">@description</div>
+    </div>
+    @if(events.nonEmpty) {
         <div class="brand-panel__media">
-            <img src="@img.defaultImage" srcset="@img.srcset" sizes="33vw" alt="@img.altText" class="brand-panel__image responsive-img" />
-            <a class="mini-link" href="@linkHref">
-                <span class="icon-holder icon-holder--small icon-holder--fill icon-holder--fill-@toneSlug">
-                @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-@toneSlug"))
-                </span>
-                @linkLabel
-            </a>
+            @fragments.media.slideshowEvents(events)
         </div>
     }
 </div>
+
+@for(extraLink <- extraLinkOpt) {
+    <a class="mini-link" href="@extraLink.href">
+        <span class="icon-holder icon-holder--small icon-holder--fill">
+            @fragments.inlineIcon("arrow-right", List("inline-icon--small tone-fill-@toneSlug"))
+        </span>
+        @extraLink.title
+    </a>
+}

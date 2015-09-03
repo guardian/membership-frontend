@@ -1,13 +1,16 @@
 package controllers
 
 import configuration.CopyConfig
-import model.{PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
+import model.{EventBrandCollection, Grid, PageInfo, ResponsiveImageGenerator, ResponsiveImageGroup}
 import model.Benefits.ComparisonItem
-import model.Grid
-import model.Grid._
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 import play.api.mvc.Controller
 
 trait FrontPage extends Controller {
+
+  val liveEvents: EventbriteService
+  val localEvents: EventbriteService
+  val masterclassEvents: EventbriteService
 
   def index =  CachedAction { implicit request =>
 
@@ -23,71 +26,10 @@ trait FrontPage extends Controller {
       ComparisonItem("Highlights and live streams of selected Guardian Live events", true, true)
     )
 
-    val pageImages = Seq(
-      ResponsiveImageGroup(
-        name=Some("experience"),
-        altText=Some("Guardian Live event: Pussy Riot - art, sex and disobedience"),
-        availableImages=ResponsiveImageGenerator(
-          id="eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("support"),
-        altText=Some("Support the Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("exclusive"),
-        altText=Some("Exclusive content"),
-        availableImages=ResponsiveImageGenerator(
-          id="4bea41f93f7798ada3d572fe07b1e38dacb2a56e/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("brand-live"),
-        altText=Some("Guardian Live"),
-        availableImages=ResponsiveImageGenerator(
-          id="ed27aaf7623aebc5c8c6d6c8340f247ef7b78ab0/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("brand-local"),
-        altText=Some("Guardian Local"),
-        availableImages=ResponsiveImageGenerator(
-          id="889926d3c2ececf4ffd699f43713264697823251/0_0_2000_1200",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("brand-masterclasses"),
-        altText=Some("Guardian Masterclasses"),
-        availableImages=ResponsiveImageGenerator(
-          id="ae3ad30b485e9651a772e85dd82bae610f57a034/0_0_1140_684",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("space"),
-        altText=Some("A home for big ideas"),
-        availableImages=ResponsiveImageGenerator(
-          id="ed9347da5fc1e55721b243a958d42fca1983d012/0_0_1140_684",
-          sizes=List(500)
-        )
-      ),
-      ResponsiveImageGroup(
-        name=Some("patrons"),
-        altText=Some("Patrons of The Guardian"),
-        availableImages=ResponsiveImageGenerator(
-          id="a0b637e4dc13627ead9644f8ec9bd2cc8771f17d/0_0_2000_1200",
-          sizes=List(500)
-        )
-      )
+    val eventCollections = EventBrandCollection(
+      liveEvents.getSortedByCreationDate.take(3),
+      localEvents.getSortedByCreationDate.take(3),
+      masterclassEvents.getSortedByCreationDate.take(3)
     )
 
     val midlandGoodsShedImages = Seq(
@@ -159,10 +101,46 @@ trait FrontPage extends Controller {
       )
     )
 
+    val pageImages = Seq(
+      ResponsiveImageGroup(
+        name=Some("experience"),
+        altText=Some("Guardian Live event: Pussy Riot - art, sex and disobedience"),
+        availableImages=ResponsiveImageGenerator(
+          id="eab86e9c81414932e0d50a1cd609dccfc20ca5d2/0_0_2279_1368",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("support"),
+        altText=Some("Support the Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="8caacf301dd036a2bbb1b458cf68b637d3c55e48/0_0_1140_683",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("exclusive"),
+        altText=Some("Exclusive content"),
+        availableImages=ResponsiveImageGenerator(
+          id="4bea41f93f7798ada3d572fe07b1e38dacb2a56e/0_0_2000_1200",
+          sizes=List(500)
+        )
+      ),
+      ResponsiveImageGroup(
+        name=Some("patrons"),
+        altText=Some("Patrons of The Guardian"),
+        availableImages=ResponsiveImageGenerator(
+          id="a0b637e4dc13627ead9644f8ec9bd2cc8771f17d/0_0_2000_1200",
+          sizes=List(500)
+        )
+      )
+    )
+
     Ok(views.html.index(
       pageImages,
       midlandGoodsShedImages,
-      comparisonItems
+      comparisonItems,
+      eventCollections
     ))
   }
 
@@ -244,4 +222,8 @@ trait FrontPage extends Controller {
   }
 }
 
-object FrontPage extends FrontPage
+object FrontPage extends FrontPage {
+  val liveEvents = GuardianLiveEventService
+  val localEvents = LocalEventService
+  val masterclassEvents = MasterclassEventService
+}
