@@ -148,19 +148,21 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
     val tp = TouchpointBackend.forUser(member)
-    val memberTierFeatures = tp.subscriptionService.memberTierFeatures(member)
-    val ticketsUsed = tp.subscriptionService.getUsageCountWithinTerm(member, FreeEventTickets.unitOfMeasure)
+    Timing.record(tp.memberRepository.metrics, "retrieveComplimentaryTickets") {
+      val memberTierFeatures = tp.subscriptionService.memberTierFeatures(member)
+      val ticketsUsed = tp.subscriptionService.getUsageCountWithinTerm(member, FreeEventTickets.unitOfMeasure)
 
-    for {
-      features <- memberTierFeatures
-      usageCount <- ticketsUsed
-    } yield {
-      val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
-      val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
+      for {
+        features <- memberTierFeatures
+        usageCount <- ticketsUsed
+      } yield {
+        val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
+        val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
 
-      if (hasComplimentaryTickets && allowanceNotExceeded)
-        event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
-      else Nil
+        if (hasComplimentaryTickets && allowanceNotExceeded)
+          event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
+        else Nil
+      }
     }
   }
 
