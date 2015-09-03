@@ -30,7 +30,6 @@ trait Event extends Controller with ActivityTracking {
   val guLiveEvents: EventbriteService
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
-
   val memberService: MemberService
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {

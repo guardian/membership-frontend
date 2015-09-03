@@ -26,25 +26,25 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   val wsUrl = Config.eventbriteApiUrl
   def wsPreExecute(req: WSRequest): WSRequest = req.withQueryString("token" -> apiToken)
 
-  def eventsTaskFor(status: String): ScheduledTask[Seq[RichEvent]] =
-    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, Config.eventbriteRefreshTime.seconds) {
+  def eventsTaskFor(status: String, refreshTime : FiniteDuration): ScheduledTask[Seq[RichEvent]] =
+    ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, refreshTime) {
       for {
         events <- getAll[EBEvent]("users/me/owned_events", List("status" -> status, "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
       } yield richEvents
     }
 
-  lazy val eventsTask = eventsTaskFor("live")
+  lazy val eventsTask = eventsTaskFor("live", Config.eventbriteRefreshTime.seconds)
 
-  lazy val draftEventsTask =  eventsTaskFor("draft")
+  lazy val draftEventsTask =  eventsTaskFor("draft", Config.eventbriteRefreshTimeForArchivedEvents.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended")
+  lazy val archivedEventsTask = eventsTaskFor("ended", Config.eventbriteRefreshTimeForDraftEvents.seconds)
 
   def start() {
     Logger.info("Starting EventbriteService background tasks")
-    eventsTask.start()
-    draftEventsTask.start()
-    archivedEventsTask.start()
+    eventsTask.start(60.seconds)
+    draftEventsTask.start(60.seconds)
+    archivedEventsTask.start(60.seconds)
   }
 
   def events: Seq[RichEvent] = eventsTask.get()
