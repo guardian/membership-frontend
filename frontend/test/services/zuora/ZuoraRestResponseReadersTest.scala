@@ -19,6 +19,7 @@ class ZuoraRestResponseReadersTest extends Specification {
       }
     )
 
+
   def subscription(id: String, features: List[JsObject] = Nil): JsObject =
     Json.obj(
       "termStartDate" -> "2013-02-01",
@@ -30,7 +31,12 @@ class ZuoraRestResponseReadersTest extends Specification {
       "initialTerm" -> 12,
       "id" -> id,
       "ratePlans" -> JsArray(List(
-        Json.obj("subscriptionProductFeatures" -> features)
+        Json.obj(
+          "id" -> "Rate Plan Id",
+          "productId" -> "Product Id",
+          "productName" -> "Product Name",
+          "ratePlanCharges" -> JsArray(Nil),
+          "subscriptionProductFeatures" -> features)
       ))
     )
 
@@ -66,7 +72,7 @@ class ZuoraRestResponseReadersTest extends Specification {
                           DateTime.parse("2013-02-01"),
                           DateTime.parse("2014-02-01"),
                           DateTime.parse("2013-02-01"),
-                          Rest.RatePlan(Nil) :: Nil,
+                          Rest.RatePlan("Rate Plan Id", "Product Id", "Product Name", Nil, Nil) :: Nil,
                           Rest.Active))
     }
 

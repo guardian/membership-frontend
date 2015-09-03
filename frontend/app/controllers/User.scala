@@ -59,7 +59,7 @@ trait User extends Controller {
           "nextPaymentPrice" -> membershipSummary.nextPaymentPrice * 100,
           "nextPaymentDate" -> membershipSummary.nextPaymentDate,
           "renewalDate" -> membershipSummary.renewalDate,
-          "cancelledAt" -> subscriptionStatus.future.isDefined,
+          "cancelledAt" -> subscriptionStatus.futureIdOpt.isDefined,
           "plan" -> Json.obj(
             "name" -> subscriptionDetails.planName,
             "amount" -> subscriptionDetails.planAmount * 100,
