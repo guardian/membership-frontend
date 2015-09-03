@@ -55,9 +55,9 @@ object Zuora {
   }
   case class InternalError(code: String, message: String) extends Error
 
-  case class SubscriptionStatus(current: Subscription, future: Option[Subscription], amendType: Option[String]) {
-    val currentId = current.id
-    val futureIdOpt = future.map(_.id)
+  case class SubscriptionStatus(currentVersion: Subscription, futureVersionOpt: Option[Subscription], amendType: Option[String]) {
+    val currentVersionId = currentVersion.id
+    val futureVersionIdOpt = futureVersionOpt.map(_.id)
     val cancelled = amendType.contains("Cancellation")
   }
 
