@@ -1,7 +1,10 @@
 package filters
 
 
+import com.netaporter.uri.Uri
 import configuration.Config
+import play.api.http.Status.FOUND
+import play.api.mvc.Results.Redirect
 import play.api.mvc._
 
 import scala.concurrent.Future
@@ -9,12 +12,9 @@ import scala.concurrent.Future
 object RedirectMembersFilter extends Filter {
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
-    val host: String = requestHeader.host.toLowerCase()
-    if (host.contains("members.")) {
-      Future.successful(Results.Redirect(s"${Config.membershipUrl}${requestHeader.uri}", 302));
-    }
-    else {
-      nextFilter(requestHeader);
-    }
+    if (requestHeader.host.toLowerCase.startsWith("members.")) {
+      val requestUri = Uri.parse(requestHeader.uri)
+      Future.successful(Redirect(requestUri.withScheme("https").withHost(Config.membershipHost).toString, FOUND))
+    } else nextFilter(requestHeader)
   }
 }
