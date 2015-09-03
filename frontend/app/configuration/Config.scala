@@ -55,8 +55,6 @@ object Config {
   val eventbriteLocalApiToken = config.getString("eventbrite.local.api.token")
   val eventbriteApiIframeUrl = config.getString("eventbrite.api.iframe-url")
   val eventbriteRefreshTime = config.getInt("eventbrite.api.refresh-time-seconds")
-  val eventbriteRefreshTimeForArchivedEvents = config.getInt("eventbrite.api.refresh-time-archived-events-seconds")
-  val eventbriteRefreshTimeForDraftEvents = config.getInt("eventbrite.api.refresh-time-draft-events-seconds")
   val eventbriteRefreshTimeForPriorityEvents = config.getInt("eventbrite.api.refresh-time-priority-events-seconds")
   val eventbriteWaitlistUrl = config.getString("eventbrite.waitlist.url")
   val eventbriteLimitedAvailabilityCutoff = config.getInt("eventbrite.limitedAvailabilityCutoff")

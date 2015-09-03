@@ -36,9 +36,9 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   lazy val eventsTask = eventsTaskFor("live", Config.eventbriteRefreshTime.seconds)
 
-  lazy val draftEventsTask =  eventsTaskFor("draft", Config.eventbriteRefreshTimeForArchivedEvents.seconds)
+  lazy val draftEventsTask =  eventsTaskFor("draft", Config.eventbriteRefreshTime.seconds)
 
-  lazy val archivedEventsTask = eventsTaskFor("ended", Config.eventbriteRefreshTimeForDraftEvents.seconds)
+  lazy val archivedEventsTask = eventsTaskFor("ended", 2.hours) // we keep archived events so as to not break old urls
 
   def start() {
     Logger.info("Starting EventbriteService background tasks")
