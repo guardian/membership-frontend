@@ -78,8 +78,8 @@ trait AmendSubscription {
 
 object SubscriptionService {
   def sortAmendments(subscriptions: Seq[Subscription], amendments: Seq[Amendment]) = {
-    val versions = subscriptions.map { amendment => (amendment.id, amendment.version) }.toMap
-    amendments.sortBy { amendment => versions(amendment.subscriptionId) }
+    val versionsById = subscriptions.map { sub => (sub.id, sub.version) }.toMap
+    amendments.sortBy { amendment => versionsById(amendment.subscriptionId) }
   }
 
   def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
