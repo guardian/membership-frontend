@@ -133,8 +133,9 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
       .flatMap(_.subscriptionProductFeatures)
 
   /**
-   * @return the current subscription version of the user, and the future subscription version, if
-   *         they have a pending downgrade.
+   * @return the current and the future subscription version of the user if
+   *         they have a pending amendment (Currently this is the case only of downgrades, as upgrades
+   *         are effective immediately)
    */
   def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = for {
     (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
