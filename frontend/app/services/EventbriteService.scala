@@ -2,18 +2,19 @@ package services
 
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.{TicketSaleDates, EventGroup}
+import model.EventGroup
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
 import monitoring.EventbriteMetrics
-import org.joda.time.{Interval, Period, DateTime}
+import org.joda.time.{DateTime, Interval}
 import play.api.Logger
 import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.ScheduledTask
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
