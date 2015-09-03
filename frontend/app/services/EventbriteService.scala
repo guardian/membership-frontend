@@ -28,7 +28,6 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def eventsTaskFor(status: String): ScheduledTask[Seq[RichEvent]] =
     ScheduledTask[Seq[RichEvent]](s"Eventbrite $status events", Nil, 1.second, Config.eventbriteRefreshTime.seconds) {
-     Logger.info(s"Revalidating the EventbriteService cached events for ${status}")
       for {
         events <- getAll[EBEvent]("users/me/owned_events", List("status" -> status, "expand" -> EBEvent.expansions.mkString(",")))
         richEvents <- Future.traverse(events)(mkRichEvent)
