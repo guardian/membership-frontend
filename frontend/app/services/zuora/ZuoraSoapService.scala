@@ -1,6 +1,7 @@
 package services.zuora
 
-import com.gu.membership.util.Timing
+import com.github.nscala_time.time.JodaImplicits._
+import com.gu.membership.util.{FutureSupplier, Timing}
 import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.typesafe.scalalogging.LazyLogging
@@ -10,16 +11,16 @@ import model.ZuoraDeserializer._
 import model.ZuoraReaders._
 import monitoring.TouchpointBackendMetrics
 import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{ReadableDuration, DateTime, DateTimeZone}
+import org.joda.time.{DateTime, DateTimeZone, ReadableDuration}
 import play.api.Logger
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
-import play.api.libs.ws.WS
-import utils.{ScheduledTask, FutureSupplier}
-import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
-import com.github.nscala_time.time.JodaImplicits._
+import play.api.libs.ws.WS
+import utils.ScheduledTask
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 case class ZuoraServiceError(s: String) extends Throwable {
   override def getMessage: String = s

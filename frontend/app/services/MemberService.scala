@@ -6,31 +6,27 @@ import com.gu.membership.salesforce.Member.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
-import com.gu.membership.util.Timing
-import com.gu.membership.zuora.Address
+import com.gu.membership.util.{FutureSupplier, Timing}
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
 import model.Benefits.DiscountTicketTiers
-import model.Eventbrite.{EBAccessCode, EBCode, EBOrder, EBTicketClass}
-import model.{FeatureChoice, FreeEventTickets}
+import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
+import model.FreeEventTickets
 import model.RichEvent._
 import model.Zuora.{CreateResult, PreviewInvoiceItem}
 import model.ZuoraDeserializer.createResultReader
-import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
-import model.RichEvent._
-import model.Zuora.{CreateResult, PreviewInvoiceItem}
 import monitoring.MemberMetrics
 import org.joda.time.Period
+import play.api.Play.current
+import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
 import services.EventbriteService._
+import _root_.services.zuora.CreateFreeEventUsage
 import tracking._
-import utils.ScheduledTask
-import zuora.CreateFreeEventUsage
-
 import utils.TestUsers.isTestUser
-import zuora.CreateFreeEventUsage
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -55,9 +51,10 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
     val stage = Config.stage
     val application = "Frontend"
 
-    val authTask = ScheduledTask("", Authentication("", ""), 0.seconds, 30.minutes)(getAuthentication)
+    override val authSupplier: FutureSupplier[Authentication] = new FutureSupplier[Authentication](getAuthentication)
 
-    def authentication: Authentication = authTask.get()
+    private val actorSystem = Akka.system
+    actorSystem.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
   }
 }
 
