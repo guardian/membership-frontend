@@ -28,11 +28,26 @@ $gs-max-columns: 16;
     @return $n-rows * $gs-row-height + $gs-baseline * ($n-rows - 1);
 }
 
+// Constrain Layout
+// =============================================================================
+// A mixin so we can reuse these measurements for other properties.
+// The media queries and widths need to match the ones in side-margins-calc()
+
+@mixin constrain-layout($offset: $gs-gutter * 2) {
+    margin: 0 auto;
+
+    @include mq(tablet) {
+        max-width: map-get($max-widths, max-tablet) + $offset;
+    }
+    @include mq(mem-full) {
+        max-width: map-get($max-widths, max-desktop) + $offset;
+    }
+}
+
 // Side Margins
 // =============================================================================
-// a dynamic mixin so we can reuse these measurements
-// for other properties – the media queries and widths
-// need to match the ones in layout.scss
+// A mixin so we can reuse these measurements for other properties.
+// The media queries and widths need to match the ones in constrain-layout()
 
 @mixin side-margins-calc($property) {
     $offset: ($gs-gutter * 2);
@@ -163,6 +178,7 @@ $gs-max-columns: 16;
         border-color: $c-neutral2;
     }
 }
+
 @mixin bulleted-list() {
     list-style: none;
     margin-left: $gs-gutter;

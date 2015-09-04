@@ -4,9 +4,8 @@
  *
  * SETTINGS & TOOLS
  * Vars.................Variables and settings
- * Function.............Sass functions
- * Mixins...............Sass mixins
- * Extends..............Placeholder classes used only for @extend
+ * Mixins...............Site specific mixins
+ * Webfonts.............Load webfonts mixins early for use in other modules
  *
  * BASE.................Global / element level rules
  * LAYOUT...............Layout rules. Layout helpers, global header / footer etc.
@@ -17,7 +16,7 @@
  */
 
 // =============================================================================
-// Settings & Tooks
+// Settings & Tools
 // =============================================================================
 
 @import 'vars';

@@ -24,18 +24,8 @@ body {
 /* Layout Helpers
    ========================================================================== */
 
-// Constrained layout helper
-// Breakpoints are mirrored in mixins/_mixins-layout.scss
 .l-constrained {
-    $offset: ($gs-gutter * 2);
-    margin: 0 auto;
-
-    @include mq(tablet) {
-        max-width: map-get($max-widths, max-tablet) + $offset;
-    }
-    @include mq(mem-full) {
-        max-width: map-get($max-widths, max-desktop) + $offset;
-    }
+    @include constrain-layout();
 }
 
 .l-inset {
@@ -99,8 +89,8 @@ body {
    ========================================================================== */
 
 .page-container {
-    @extend .l-constrained;
-    @include clearfix;
+    @include constrain-layout();
+    @include clearfix();
     position: relative;
 }
 
