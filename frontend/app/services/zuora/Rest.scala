@@ -39,8 +39,11 @@ object Rest {
     def productIdsOfType(t: String): Set[String] = productsOfType(t).map(_.id).toSet
   }
 
-  case class ProductRatePlan(id: String, name: String, isActive: Boolean, billingPeriod: String)
-  case class Product(id: String, name: String, `ProductType__c`: String, `Tier__c`: String, ratePlans: Seq[ProductRatePlan])
+  case class ProductRatePlans(id: String, name: String, status: String)  {
+    def isActive: Boolean = status.toLowerCase == "active"
+  }
+
+  case class Product(id: String, name: String, `ProductType__c`: String, `Tier__c`: Option[String], productRatePlans: Option[Seq[ProductRatePlans]])
 
   case class Subscription(id: String,
                           subscriptionNumber: String,

@@ -17,6 +17,7 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.ws.WS
+import services.zuora.Rest.ProductRatePlans
 import utils.ScheduledTask
 
 import scala.concurrent.Future
@@ -38,6 +39,7 @@ object ZuoraServiceHelpers {
 }
 
 class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
+
   import ZuoraServiceHelpers._
 
   val metrics = new TouchpointBackendMetrics with StatusMetrics with AuthenticationMetrics {
@@ -61,7 +63,7 @@ class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   )
 
   def lastPingTimeWithin(duration: ReadableDuration): Boolean =
-    lastPingTime.get().exists { t => t > DateTime.now - duration}
+    lastPingTime.get().exists { t => t > DateTime.now - duration }
 
   private val scheduler = Akka.system.scheduler
 
@@ -69,7 +71,7 @@ class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     (30.minutes, authSupplier),
     (30.minutes, featuresSupplier)
   ) foreach { case (duration, supplier) =>
-    scheduler.schedule(duration, duration) { supplier.refresh() }
+    scheduler.schedule(duration, duration) {supplier.refresh()}
   }
   lastPingTime.start()
 
@@ -114,6 +116,11 @@ class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
     }
   }
 
+  /*  private def getBillingInfoForProducRatePlans(productRatePlans: Seq[ProductRatePlan]) = {
+        val activeProductRatePlans: Seq[ProductRatePlan] = productRatePlans.filter(_.isActive)
+  }*/
+
+
   private def getFeatures: Future[Seq[Feature]] = {
     val featuresF = query[Feature]("Status = 'Active'")
     featuresF.foreach { features =>
@@ -121,7 +128,7 @@ class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
       lazy val msg =
         s"""
            |Zuora ${apiConfig.envName} is missing the following product features:
-           |${diff.mkString(", ")}. Please update configuration ASAP!"""
+                                        |${diff.mkString(", ")}. Please update configuration ASAP!"""
           .stripMargin
 
       if (diff.nonEmpty) logger.error(msg)
