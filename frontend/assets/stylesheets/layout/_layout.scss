@@ -28,39 +28,6 @@ body {
     @include constrain-layout();
 }
 
-.l-inset {
-    padding: $gs-baseline ($gs-gutter / 2) ($gs-baseline * 2);
-
-    @include mq(tablet) {
-        padding-left: ($gs-gutter);
-        padding-right: ($gs-gutter);
-    }
-}
-
-.l-pad-vertical {
-    margin-top: $gs-baseline;
-    margin-bottom: $gs-baseline;
-}
-
-.l-pad-top {
-    margin-top: ($gs-baseline / 2);
-}
-.l-pad-bottom {
-    margin-bottom: ($gs-baseline / 2);
-}
-
-.l-pad-left {
-    @include mq(tablet) {
-        padding-left: (gs-span(1) + $gs-gutter);
-    }
-}
-
-.l-pad-right {
-    @include mq(tablet) {
-        padding-right: (gs-span(1) + $gs-gutter);
-    }
-}
-
 /* Side Margins
    ========================================================================== */
 
