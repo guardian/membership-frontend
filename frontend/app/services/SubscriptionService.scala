@@ -80,9 +80,36 @@ trait AmendSubscription {
 }
 
 object SubscriptionService {
+  /**
+   * A Zuora subscription may have many versions as it is amended, some of which can be in the future (ie. downgrading
+   * from a paid tier - because we don't refund that user, the downgrade is instead set to the point in the future when
+   * their paid period ends).
+   *
+   * The Zuora API does not explicitly tell you what the *current* subscription version is. You have to work it out,
+   * by looking at the 'amendments', finding the first amendment that has yet occurred. That amendment will give you the
+   * id of the subscription it modified - and THAT will be the *current* subscription version.
+   */
+  def findCurrentSubscriptionStatus(subscriptionVersions: Seq[Subscription], amendments: Seq[Amendment]): SubscriptionStatus = {
+    val firstAmendmentWhichHasNotYetOccurredOpt = // this amendment *will have modified the current subscription*
+      sortAmendments(subscriptionVersions, amendments).find(_.contractEffectiveDate.isAfterNow)
+
+    val latestSubVersion = subscriptionVersions.maxBy(_.version)
+
+    firstAmendmentWhichHasNotYetOccurredOpt.fold(SubscriptionStatus(latestSubVersion, None, None)) { amendmentOfCurrentSub =>
+      val currentSubId = amendmentOfCurrentSub.subscriptionId
+      val currentSubVersion = subscriptionVersions.find(_.id == currentSubId).get
+      SubscriptionStatus(currentSubVersion, Some(latestSubVersion), Some(amendmentOfCurrentSub.amendType))
+    }
+  }
+
+  /**
+   * @param subscriptions
+   * @param amendments which are returned by the Zurora API in an unpredictable order
+   * @return amendments which are sorted by the subscription version number they point to (the sub they amended)
+   */
   def sortAmendments(subscriptions: Seq[Subscription], amendments: Seq[Amendment]) = {
-    val versionsById = subscriptions.map { sub => (sub.id, sub.version) }.toMap
-    amendments.sortBy { amendment => versionsById(amendment.subscriptionId) }
+    val versionsNumberBySubVersionId = subscriptions.map { sub => (sub.id, sub.version) }.toMap
+    amendments.sortBy { amendment => versionsNumberBySubVersionId(amendment.subscriptionId) }
   }
 
   def sortInvoiceItems(items: Seq[InvoiceItem]) = items.sortBy(_.chargeNumber)
@@ -142,18 +169,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     subscriptionVersions <- subscriptionVersions(subscription.subscriptionNumber)
     where = subscriptionVersions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
     amendments <- zuoraSoapService.query[Amendment](where)
-  } yield {
-      val latestSubscription = subscriptionVersions.maxBy(_.version)
-      sortAmendments(subscriptionVersions, amendments)
-        .find(_.contractEffectiveDate.isAfterNow)
-        .fold(SubscriptionStatus(latestSubscription, None, None)) { futureAmendment =>
-          if (subscription.id != latestSubscription.id) {
-            logger.error(s"current subscription id ${subscription.id} is different than latest subscription version ${latestSubscription.id}")
-          }
-          val amendedSubscription = subscriptionVersions.find(_.id == futureAmendment.subscriptionId).get
-          SubscriptionStatus(amendedSubscription, Some(latestSubscription), Some(futureAmendment.amendType))
-      }
-    }
+  } yield findCurrentSubscriptionStatus(subscriptionVersions, amendments)
 
   def getSubscriptionDetails(subscription: Subscription): Future[SubscriptionDetails] = for {
     ratePlan <- zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='${subscription.id}'")
