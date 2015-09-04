@@ -19,25 +19,6 @@ class SubscriptionServiceHelpersTest extends Specification {
       sortedAmendments(1).id mustEqual "2c92c0f847cdc31e0147cf2439b76ae6"
     }
 
-    "sort subscriptions by version" in {
-      val subscriptions = subscriptionReader.read(query("model/zuora/subscriptions.xml"))
-
-      val sortedSubscriptions = SubscriptionService.sortSubscriptions(subscriptions)
-
-      sortedSubscriptions(0).id mustEqual "2c92c0f847cdc31e0147cf2111ba6173"
-      sortedSubscriptions(1).id mustEqual "2c92c0f847cdc31e0147cf24396f6ae1"
-      sortedSubscriptions(2).id mustEqual "2c92c0f847cdc31e0147cf243a166af0"
-    }
-
-    "sort accounts by created date" in {
-      val accounts = accountReader.read(query("model/zuora/accounts.xml"))
-
-      val sortedAccounts = SubscriptionService.sortAccounts(accounts)
-
-      sortedAccounts(0).id mustEqual "2c92c0f9483f301e01485efe9af6743e"
-      sortedAccounts(1).id mustEqual "2c92c0f8483f1ca401485f0168f1614c"
-    }
-
     "sort invoice items by charge number ascending" in {
       val invoiceItems = invoiceItemReader.read(query("model/zuora/invoice-result.xml"))
 
