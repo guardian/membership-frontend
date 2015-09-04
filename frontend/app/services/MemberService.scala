@@ -22,7 +22,7 @@ import org.joda.time.Period
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
-import services.EventbriteService._
+import EventbriteService._
 import zuora.CreateFreeEventUsage
 import tracking._
 import utils.TestUsers.isTestUser
@@ -157,6 +157,9 @@ trait MemberService extends LazyLogging with ActivityTracking {
       } yield {
         val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
         val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
+        logger.info(
+          s"User ${member.identityId} has used $usageCount tickets" ++
+            s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
         if (hasComplimentaryTickets && allowanceNotExceeded)
           event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
