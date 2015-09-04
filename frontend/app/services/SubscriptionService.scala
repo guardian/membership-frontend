@@ -184,7 +184,7 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
   def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = for {
     (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
     startDate = formatDateTime(subscription.termStartDate)
-    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionID = '${subscription.id}' AND UOM = '$unitOfMeasure'"
+    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionNumber = '${subscription.subscriptionNumber}' AND UOM = '$unitOfMeasure'"
     usages <- zuoraSoapService.query[Usage](whereClause)
   } yield usages.size
 

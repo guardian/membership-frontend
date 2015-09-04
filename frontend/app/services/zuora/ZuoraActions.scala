@@ -363,13 +363,13 @@ case class UpgradePlan(subscriptionId: String,
   }
 }
 
-case class CreateFreeEventUsage(accountId: String, description: String, quantity: Int, subscriptionId: String) extends ZuoraAction[CreateResult] {
+case class CreateFreeEventUsage(accountId: String, description: String, quantity: Int, subscriptionNumber: String) extends ZuoraAction[CreateResult] {
   val startDateTime = formatDateTime(DateTime.now)
   override protected val body: Elem =
       <ns1:create>
       <ns1:zObjects xsi:type="ns2:Usage">
         <ns2:AccountId>{accountId}</ns2:AccountId>
-        <ns2:SubscriptionId>{subscriptionId}</ns2:SubscriptionId>
+        <ns2:SubscriptionNumber>{subscriptionNumber}</ns2:SubscriptionNumber>
         <ns2:Quantity>{quantity}</ns2:Quantity>
         <ns2:StartDateTime>{startDateTime}</ns2:StartDateTime>
         <ns2:Description>{description}</ns2:Description>
