@@ -1,7 +1,6 @@
 {
   "name": "membership",
   "private": true,
-  "version": "0.0.0",
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
     "bower": "^1.4.1",
