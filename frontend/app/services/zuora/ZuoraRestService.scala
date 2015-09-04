@@ -14,8 +14,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import services.SubscriptionServiceError
-import services.zuora.Rest
-import services.zuora.Rest.{ProductRatePlan, ProductCatalog}
+import services.zuora.Rest.{ProductCatalog, ProductRatePlans}
 
 import scala.concurrent.Future
 
@@ -86,22 +85,25 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
     .addHeader("Accept", "application/json")
     .url(s"${config.url}/$uri")
     .get().build())
+
 }
 
 object ZuoraRestResponseReaders {
-  def parseResponse[T : Reads](resp: Response): Rest.Response[T] =
+  def parseResponse[T: Reads](resp: Response): Rest.Response[T] =
     parseResponse[T](Json.parse(resp.body().string()))
 
-  def parseResponse[T : Reads](json: JsValue): Rest.Response[T] = {
+  def parseResponse[T: Reads](json: JsValue): Rest.Response[T] = {
     val isSuccess = (json \ "success").as[Boolean]
     if (isSuccess) Rest.Success(json.as[T]) else json.as[Rest.Failure]
   }
 
   def productFeatures(subscription: Rest.Subscription): Seq[Rest.Feature] =
-     subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
+    subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
 
   implicit val subscriptionStatus = new Reads[Rest.SubscriptionStatus] {
+
     import Rest._
+
     override def reads(v: JsValue): JsResult[SubscriptionStatus] = v match {
       case JsString("Draft") => JsSuccess(Draft)
       case JsString("PendingActivation") => JsSuccess(PendingActivation)
@@ -116,13 +118,13 @@ object ZuoraRestResponseReaders {
   implicit val errorMsgReads: Reads[Rest.Error] = Json.reads[Rest.Error]
   implicit val failureReads: Reads[Rest.Failure] = (
     (JsPath \ "processId").read[String] and
-    (JsPath \ "reasons").read[List[Rest.Error]]
-  )(Rest.Failure.apply _)
+      (JsPath \ "reasons").read[List[Rest.Error]]
+    )(Rest.Failure.apply _)
 
+  implicit val productRatePlan: Reads[ProductRatePlans] = Json.reads[Rest.ProductRatePlans]
   implicit val productReads: Reads[Rest.Product] = Json.reads[Rest.Product]
   implicit val catalogReads: Reads[Rest.ProductCatalog] = Json.reads[Rest.ProductCatalog]
   implicit val featureReads: Reads[Rest.Feature] = Json.reads[Rest.Feature]
-  implicit val productRatePlan: Reads[ProductRatePlan] = Json.reads[Rest.ProductRatePlan]
 
   implicit val subscriptionListReads: Reads[List[Rest.Subscription]] = for {
     subscriptionArray <- (JsPath \ "subscriptions").read[JsArray]
