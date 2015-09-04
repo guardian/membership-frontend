@@ -48,7 +48,7 @@ trait User extends Controller {
     val futurePaymentDetails = for {
       cardDetails <- futureCardDetails
       subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
-      subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+      subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
       membershipSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
     } yield
       Json.obj(
@@ -59,7 +59,7 @@ trait User extends Controller {
           "nextPaymentPrice" -> membershipSummary.nextPaymentPrice * 100,
           "nextPaymentDate" -> membershipSummary.nextPaymentDate,
           "renewalDate" -> membershipSummary.renewalDate,
-          "cancelledAt" -> subscriptionStatus.future.isDefined,
+          "cancelledAt" -> subscriptionStatus.futureVersionIdOpt.isDefined,
           "plan" -> Json.obj(
             "name" -> subscriptionDetails.planName,
             "amount" -> subscriptionDetails.planAmount * 100,

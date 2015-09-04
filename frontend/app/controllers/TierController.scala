@@ -38,8 +38,8 @@ trait DowngradeTier extends ActivityTracking {
     val futureTierName = "Friend"
     for {
       subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
-      currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
-      futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.future.get)
+      currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
+      futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.futureVersionOpt.get)
     } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName))
   }
 }
@@ -84,7 +84,7 @@ trait UpgradeTier {
       val subscriptionStatusFuture = subscriptionService.getSubscriptionStatus(memberRequest.member)
       for {
         subscriptionStatus <- subscriptionStatusFuture
-        currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.current)
+        currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
       } yield currentSubscription
     }
 

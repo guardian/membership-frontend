@@ -31,6 +31,16 @@ object Rest {
   case object Cancelled extends SubscriptionStatus
   case object Expired extends SubscriptionStatus
 
+  /*
+   * Zuora product catalogue entry: https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Catalog
+   */
+  case class ProductCatalog(products: Seq[Product]) {
+    def productsOfType(t: String): Seq[Product] = products.filter(_.`ProductType__c` == t)
+    def productIdsOfType(t: String): Set[String] = productsOfType(t).map(_.id).toSet
+  }
+
+  case class Product(id: String, name: String, `ProductType__c`: String)
+
   case class Subscription(id: String,
                           subscriptionNumber: String,
                           accountId: String,
@@ -39,9 +49,20 @@ object Rest {
                           contractEffectiveDate: DateTime,
                           ratePlans: Seq[Rest.RatePlan],
                           status: SubscriptionStatus) {
+
     val isActive: Boolean = status == Active
+
+
+    def hasWhitelistedProduct(productIds: Set[String]): Boolean =
+      latestWhiteListedRatePlan(productIds).isDefined
+
+    def latestWhiteListedRatePlan(productIds: Set[String]): Option[RatePlan] =
+      ratePlans.find(_.isWhitelisted(productIds))
   }
 
   case class Feature(id: String, featureCode: String)
-  case class RatePlan(subscriptionProductFeatures: List[Rest.Feature])
+  case class RatePlan(id: String, productId: String, productName: String, subscriptionProductFeatures: List[Rest.Feature], ratePlanCharges: List[RatePlanCharge]) {
+    def isWhitelisted(productIds: Set[String]): Boolean = productIds.contains(productId)
+  }
+  case class RatePlanCharge(name: String, id: String)
 }

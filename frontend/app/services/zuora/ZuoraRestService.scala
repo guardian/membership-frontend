@@ -1,9 +1,8 @@
 package services.zuora
 
-import java.util.NoSuchElementException
-
+import com.github.nscala_time.time.OrderingImplicits.DateTimeOrdering
 import com.gu.lib.okhttpscala._
-import com.gu.membership.util.Timing
+import com.gu.membership.util.{FutureSupplier, Timing}
 import com.gu.membership.zuora.ZuoraApiConfig
 import com.gu.monitoring.{AuthenticationMetrics, StatusMetrics}
 import com.squareup.okhttp.Request.Builder
@@ -14,6 +13,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
+import services.SubscriptionServiceError
+import services.zuora.Rest.ProductCatalog
 
 import scala.concurrent.Future
 
@@ -32,12 +33,16 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
     }
   }
 
+  val productCatalogSupplier = new FutureSupplier[ProductCatalog](productCatalog)
+
+  def subscriptionsByAccounts(accountKeys: Set[String]): Future[Seq[Rest.Subscription]] =
+    Future.reduce(accountKeys.map(subscriptionsByAccount))(_ ++ _)
+
   /**
    * Fetch all subscriptions associated to a given account id
    *
    * @see https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Subscriptions/4_Get_subscriptions_by_account
    * @param accountKey Account number or account ID
-   * @return
    */
   def subscriptionsByAccount(accountKey: String): Future[List[Rest.Subscription]] =
     Timing.record(metrics, "subscriptionsByAccount") {
@@ -46,25 +51,31 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
         parseResponse[List[Rest.Subscription]](response) match {
           case Rest.Success(subscriptions) => subscriptions
           case Rest.Failure(_, errors) => {
-            logger.error(s"Cannot find any subscriptions for account id: $accountKey")
+            logger.error(s"Cannot find any subscriptions for account id: $accountKey (errors: $errors)")
             Nil
           }
         }
       }
     }
 
-  def lastSubscriptionByAccount(accountKey: String): Future[Rest.Subscription] =
-    subscriptionsByAccount(accountKey).map { subscriptions =>
-      if (subscriptions.nonEmpty) subscriptions.head
-      else {
-        throw new scala.NoSuchElementException(s"Cannot find a subscription for account id $accountKey")
-      }
+  def productCatalog(): Future[ProductCatalog] = Timing.record(metrics, "catalog") {
+    get("catalog/products").map { response =>
+      metrics.putResponseCode(response.code, "GET")
+      parseResponse[ProductCatalog](response).get
     }
+  }
 
-  def productFeaturesByAccount(accountKey: String): Future[Seq[Rest.Feature]] =
-    lastSubscriptionByAccount(accountKey).map(productFeatures) recover {
-      case e: NoSuchElementException => Nil
-    }
+  def lastSubscriptionWithProductOfTypeOpt(prodType: String, accountIds: Set[String]): Future[Option[Rest.Subscription]] = for {
+    catalog <- productCatalogSupplier.get()
+    subscriptions <- subscriptionsByAccounts(accountIds)
+  } yield subscriptions.filter(
+      _.hasWhitelistedProduct(catalog.productIdsOfType(prodType))
+    ).sortBy(_.termStartDate).lastOption
+
+  def lastSubscriptionWithProductOfType(prodType: String, accountIds: Set[String]): Future[Rest.Subscription] =
+    lastSubscriptionWithProductOfTypeOpt(prodType, accountIds).map(_.getOrElse {
+      throw new SubscriptionServiceError(s"Cannot find a membership subscription for account ids $accountIds")
+    })
 
   private def get(uri: String): Future[Response] = client.execute(new Builder()
     .addHeader("apiAccessKeyId", config.username)
@@ -105,6 +116,8 @@ object ZuoraRestResponseReaders {
     (JsPath \ "reasons").read[List[Rest.Error]]
   )(Rest.Failure.apply _)
 
+  implicit val productReads = Json.reads[Rest.Product]
+  implicit val catalogReads: Reads[Rest.ProductCatalog] = Json.reads[Rest.ProductCatalog]
   implicit val featureReads: Reads[Rest.Feature] = Json.reads[Rest.Feature]
 
   implicit val subscriptionListReads: Reads[List[Rest.Subscription]] = for {
@@ -112,7 +125,7 @@ object ZuoraRestResponseReaders {
     subscriptions = subscriptionArray.value.map(_.as[Rest.Subscription]).toList
   } yield subscriptions
 
+  implicit val ratePlanChargeReader: Reads[Rest.RatePlanCharge] = Json.reads[Rest.RatePlanCharge]
   implicit val ratePlanReader: Reads[Rest.RatePlan] = Json.reads[Rest.RatePlan]
-
   implicit val subscriptionReads: Reads[Rest.Subscription] = Json.reads[Rest.Subscription]
 }
