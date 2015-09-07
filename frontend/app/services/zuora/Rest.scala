@@ -49,6 +49,7 @@ object Rest {
                      `ProductType__c`: String,
                      `Tier__c`: Option[String],
                      productRatePlans: Seq[ProductRatePlan]) {
+    lazy val activeRatePlans = productRatePlans.filter(_.isActive)
   }
 
   case class Subscription(id: String,

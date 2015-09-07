@@ -12,6 +12,7 @@ import model.{FreeEventTickets, FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
+import services.zuora.Rest.ProductRatePlanCharge
 import services.zuora._
 import ZuoraServiceHelpers.formatDateTime
 
@@ -136,23 +137,25 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
                           val zuoraRestService: ZuoraRestService) extends AmendSubscription with LazyLogging {
 
   import SubscriptionService._
-  val MembershipProductType = "Membership"
+  val membershipProductType = "Membership"
+  val productRatePlanChargeModel = "FlatFee"
 
-  val tierPlanRateIds: ProductRatePlan => Future[String] = productRatePlan => for {
-    products <- membershipProducts
-  } yield {
-      products.find(_.name == productRatePlan.salesforceTier).map { product =>
-        productRatePlan match {
-          case FriendTierPlan =>
-          case StaffPlan =>
+  val tierPlanRateIds: ProductRatePlan => Future[String] = productRatePlan =>
+    membershipProducts.map { products =>
+      val zuoraRatePlanId = for {
+        product <- products.find(_.name == productRatePlan.salesforceTier)
+        zuoraRatePlan <- productRatePlan match {
+          case FriendTierPlan | StaffPlan => product.activeRatePlans.headOption
           case paidTierPlan: PaidTierPlan =>
-        }
-      }
+            val charge = ProductRatePlanCharge(productRatePlanChargeModel, Some(paidTierPlan.billingPeriod))
+            product.activeRatePlans.find(_.productRatePlanCharges.contains(charge))
+        } if zuoraRatePlan.isActive
+      } yield zuoraRatePlan.id
 
-      ???
+      zuoraRatePlanId.getOrElse(throw new RuntimeException(s"Rate plan id could not be found for $productRatePlan"))
     }
 
-  def membershipProducts = zuoraRestService.productCatalogSupplier.get().map(_.productsOfType(MembershipProductType))
+  def membershipProducts = zuoraRestService.productCatalogSupplier.get().map(_.productsOfType(membershipProductType))
 
   private def subscriptionVersions(subscriptionNumber: String): Future[Seq[Subscription]] = for {
     subscriptions <- zuoraSoapService.query[Subscription](s"Name = '$subscriptionNumber'")
@@ -161,7 +164,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   def accountWithLatestMembershipSubscription(member: MemberId): Future[(Account, Rest.Subscription)] = for {
     accounts <- zuoraSoapService.query[Account](s"crmId='${member.salesforceAccountId}'")
     accountAndSubscriptionOpts <- Future.traverse(accounts){ account =>
-      zuoraRestService.lastSubscriptionWithProductOfTypeOpt(MembershipProductType, Set(account.id)).map(account -> _)}
+      zuoraRestService.lastSubscriptionWithProductOfTypeOpt(membershipProductType, Set(account.id)).map(account -> _)}
   } yield {
       accountAndSubscriptionOpts.collect { case (account, Some(subscription)) =>
         account -> subscription
