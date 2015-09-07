@@ -179,7 +179,7 @@ trait FrontPage extends Controller {
       )
     )
 
-    Ok(views.html.welcome(slideShowImages))
+    Ok(views.html.welcome(PageInfo("Welcome", request.path, None), slideShowImages))
   }
 }
 
