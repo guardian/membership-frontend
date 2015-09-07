@@ -91,13 +91,13 @@
 // =============================================================================
 
 @import 'scopes/prose';
-@import 'scopes/tones';
 
 // =============================================================================
 // Utilities
 // =============================================================================
 
 @import 'utilities/util-common';
+@import 'utilities/util-tones';
 @import 'utilities/util-layout';
 @import 'utilities/util-user';
 @import 'utilities/util-visibility';
