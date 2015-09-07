@@ -14,8 +14,8 @@ $browser-supports-flexbox: true !default;
 // =============================================================================
 
 @import 'functions';
-@import 'components/bower-components/guss-colours/_colours.scss';
-@import 'components/bower-components/pasteup-palette/src/_palette';
+@import 'bower_components/guss-colours/_colours.scss';
+@import 'bower_components/pasteup-palette/src/_palette';
 
 $guss-colours: $pasteup-palette;
 
@@ -150,7 +150,7 @@ $transition-duration-medium: .5s;
 // =============================================================================
 
 $guss-column-rule: none;
-@import 'components/bower-components/guss-grid-system/grid-system';
+@import 'bower_components/guss-grid-system/grid-system';
 
 // Breakpoints
 // =============================================================================

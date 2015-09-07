@@ -2,14 +2,14 @@
 // Mixins
 // =============================================================================
 
-@import 'components/bower-components/sass-mq/mq';
+@import 'bower_components/sass-mq/mq';
 
 // Guss - https://github.com/guardian/guss
 $guss-rem-baseline: 16px;
-@import 'components/bower-components/guss-rem/rem';
-@import 'components/bower-components/guss-typography/typography';
-@import 'components/bower-components/guss-layout/columns';
-@import 'components/bower-components/guss-layout/row';
+@import 'bower_components/guss-rem/rem';
+@import 'bower_components/guss-typography/typography';
+@import 'bower_components/guss-layout/columns';
+@import 'bower_components/guss-layout/row';
 
 // Grid system
 // =============================================================================
