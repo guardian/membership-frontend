@@ -6,6 +6,9 @@ import model.RichEvent.RichEvent
 
 case class Social(emailSubject: String, emailMessage: String, facebookUrl: String, twitterMessage: String) {
   def encode(str: String) = URLEncoder.encode(str, "UTF-8")
+  def encodeEmail(str: String) = URLEncoder.encode(str, "UTF-8").replaceAll("\\+", "%20")
+  val encodedEmailSubject = encodeEmail(emailSubject)
+  val encodedEmailMessage = encodeEmail(emailMessage)
   val encodedFacebookUrl = encode(facebookUrl)
   val encodedTwitterMessage = encode(twitterMessage)
 }
