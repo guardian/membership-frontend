@@ -14,7 +14,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import services.SubscriptionServiceError
-import services.zuora.Rest.{ProductCatalog, ProductRatePlans}
+import services.zuora.Rest.{ProductRatePlanCharge, ProductCatalog, ProductRatePlan}
 
 import scala.concurrent.Future
 
@@ -58,12 +58,10 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
       }
     }
 
-  def productCatalog(): Future[ProductCatalog] = Timing.record(metrics, "catalog") {
+  def productCatalog: Future[ProductCatalog] = Timing.record(metrics, "catalog") {
     get("catalog/products").map { response =>
       metrics.putResponseCode(response.code, "GET")
-      val catalog: ProductCatalog = parseResponse[ProductCatalog](response).get
-      println(catalog)
-      catalog
+      parseResponse[ProductCatalog](response).get
     }
   }
 
@@ -121,7 +119,8 @@ object ZuoraRestResponseReaders {
       (JsPath \ "reasons").read[List[Rest.Error]]
     )(Rest.Failure.apply _)
 
-  implicit val productRatePlan: Reads[ProductRatePlans] = Json.reads[Rest.ProductRatePlans]
+  implicit val productRatePlanChargeReads: Reads[ProductRatePlanCharge] = Json.reads[Rest.ProductRatePlanCharge]
+  implicit val productRatePlanReads: Reads[ProductRatePlan] = Json.reads[Rest.ProductRatePlan]
   implicit val productReads: Reads[Rest.Product] = Json.reads[Rest.Product]
   implicit val catalogReads: Reads[Rest.ProductCatalog] = Json.reads[Rest.ProductCatalog]
   implicit val featureReads: Reads[Rest.Feature] = Json.reads[Rest.Feature]

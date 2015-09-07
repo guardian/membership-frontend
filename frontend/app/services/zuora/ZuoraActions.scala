@@ -240,7 +240,9 @@ case class CancelPlan(subscriptionId: String, subscriptionRatePlanId: String, da
   }
 }
 
-case class DowngradePlan(subscriptionId: String, subscriptionRatePlanId: String, newRatePlanId: String,
+case class DowngradePlan(subscriptionId: String,
+                         subscriptionRatePlanId: String,
+                         newRatePlanId: String,
                          date: DateTime) extends ZuoraAction[AmendResult] {
 
   override val singleTransaction = true
