@@ -24,47 +24,33 @@
 @import 'webfonts';
 
 // =============================================================================
-// Webfonts
-// =============================================================================
-
-@import 'webfonts';
-
-// =============================================================================
 // Base
 // =============================================================================
 
 @import 'base/normalize';
 @import 'base/base';
-@import 'base/links';
-@import 'base/form';
-@import 'base/tables';
-
-// =============================================================================
-// Layout
-// =============================================================================
-
-@import 'layout/layout';
-@import 'layout/footer';
-@import 'layout/header';
 
 // =============================================================================
 // Objects
 // =============================================================================
 
 @import 'objects/text';
+@import 'objects/grid';
+@import 'objects/icons';
+@import 'objects/links';
 @import 'objects/images';
 @import 'objects/lists';
+@import 'objects/tables';
 
 // =============================================================================
 // Components
 // =============================================================================
 
-@import 'components/icons';
-@import 'components/grid';
-@import 'components/from-content-api';
+@import 'components/global-header';
+@import 'components/global-footer';
 @import 'components/action';
 @import 'components/page';
-@import 'components/form-layout';
+@import 'components/forms';
 @import 'components/navigation';
 @import 'components/controls';
 @import 'components/blocks';
@@ -101,6 +87,13 @@
 @import 'components/patterns';
 
 // =============================================================================
+// Scopes
+// =============================================================================
+
+@import 'scopes/prose';
+@import 'scopes/tones';
+
+// =============================================================================
 // Utilities
 // =============================================================================
 
@@ -110,14 +103,7 @@
 @import 'utilities/util-visibility';
 
 // =============================================================================
-// Theme
-// =============================================================================
-
-@import 'theme/tones';
-
-// =============================================================================
-// Pring
-// Inlined to minimise no. requests
+// Print (inlined to minimise requests)
 // =============================================================================
 
 @import 'print';
