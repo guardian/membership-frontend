@@ -5,6 +5,26 @@
 $_page-offset: rem(gs-span(2) + $gs-gutter);
 
 /* ==========================================================================
+   Page: Global Page Content
+   ========================================================================== */
+
+.page-content {
+    @include clearfix;
+    background-color: $c-background;
+    padding: 0 ($gs-gutter / 2);
+    position: relative;
+
+    @include mq(mobileLandscape) {
+        padding: 0 ($gs-gutter);
+    }
+}
+.page-content--padded {
+    @include mq(tablet) {
+        padding: 0 ($gs-gutter * 4) ($gs-gutter * 8);
+    }
+}
+
+/* ==========================================================================
    Brochure Page Layout Components
    ========================================================================== */
 

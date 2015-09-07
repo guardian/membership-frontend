@@ -3,6 +3,62 @@
    ========================================================================== */
 
 /**
+ * Layout constraints
+ */
+
+// TODO: Replace l- with u- prefix
+.l-constrained {
+    @include constrain-layout();
+}
+
+// TODO: Replace l- with u- prefix
+.l-side-margins {
+    &:before,
+    &:after {
+        background: $c-background-transparent;
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        height: 100%;
+        width: 0;
+        @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
+.u-fullwidth {
+    width: 100%;
+}
+.u-capped-half {
+    display: block;
+
+    @include mq(tablet) {
+        width: 50% - ($gutter-width-fluid / 2);
+    }
+}
+.u-capped-one-third {
+    display: block;
+
+    @include mq(tablet) {
+        width: 33.3%;
+    }
+}
+.u-capped-two-thirds {
+    display: block;
+
+    @include mq(tablet) {
+        width: 66%;
+    }
+}
+
+
+/**
  * Aligment
  */
 .u-align-left {
@@ -66,32 +122,4 @@
 }
 .u-no-bottom-margin {
     margin-bottom: 0 !important;
-}
-
-/**
- * Layout constraints
- */
-.u-fullwidth {
-    width: 100%;
-}
-.u-capped-half {
-    display: block;
-
-    @include mq(tablet) {
-        width: 50% - ($gutter-width-fluid / 2);
-    }
-}
-.u-capped-one-third {
-    display: block;
-
-    @include mq(tablet) {
-        width: 33.3%;
-    }
-}
-.u-capped-two-thirds {
-    display: block;
-
-    @include mq(tablet) {
-        width: 66%;
-    }
 }
