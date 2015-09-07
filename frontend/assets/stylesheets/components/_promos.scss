@@ -7,9 +7,18 @@
     clear: both;
     overflow: hidden;
 }
+.promo-primary__title,
+.promo-secondary__title {
+    @include fs-headline(4);
+    font-weight: 500;
+
+    @include mq(tablet) {
+        @include fs-headline(6, $size-only: true);
+    }
+}
 
 /* ==========================================================================
-   Promo Primary
+   Promos: Primary
    ========================================================================== */
 
 .promo-primary {
@@ -78,6 +87,11 @@
  * Promo primary lead (modifier)
  */
 .promo-primary--lead {
+    .promo-primary__title {
+        @include mq(tablet) {
+            @include fs-headline(7, true);
+        }
+    }
     .promo-primary__header {
         @include mq(tablet) {
             top: 30%;
@@ -89,7 +103,7 @@
 }
 
 /* ==========================================================================
-   Promo Secondary
+   Promos: Secondary
    ========================================================================== */
 
 .promo-secondary {
@@ -151,7 +165,7 @@
 }
 
 /* ==========================================================================
-   Promo Tertiary
+   Promos: Tertiary
    ========================================================================== */
 
 .promo-tertiary {
