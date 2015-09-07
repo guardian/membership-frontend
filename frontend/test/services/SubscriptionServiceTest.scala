@@ -5,7 +5,7 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.{Friend, Supporter, Partner, Patron}
 import model.{FreeEventTickets, Books}
 import org.specs2.mutable.Specification
-import model.Zuora.{Subscription, RatePlanCharge, RatePlan, SubscriptionDetails}
+import model.Zuora._
 import org.joda.time.DateTime
 
 class SubscriptionServiceTest extends Specification {
@@ -52,5 +52,34 @@ class SubscriptionServiceTest extends Specification {
       features(plan(Supporter), Set(Books)) mustEqual List.empty
       features(FriendTierPlan, Set(FreeEventTickets)) mustEqual List.empty
     }
+  }
+
+  "findCurrentSubscriptionStatus" in {
+    import SubscriptionService.findCurrentSubscriptionStatus
+
+    val now = DateTime.now()
+    def version(v: Int): Subscription = Subscription(v.toString, v, now, now )
+    def amend(v: Int, contractEffectiveDate: DateTime): Amendment =
+      Amendment(v.toString, "TEST", contractEffectiveDate, v.toString)
+
+    "returns the latest subscription when no future amendments exists" in {
+      findCurrentSubscriptionStatus(
+        Seq(version(1), version(2)),
+        Nil
+      ).currentVersion mustEqual version(2)
+
+      findCurrentSubscriptionStatus(
+        Seq(version(1),version(2)),
+        Seq(amend(1, now))
+      ).currentVersion mustEqual version(2)
+    }
+    "returns the latest subscription when future amendments exists" in {
+      findCurrentSubscriptionStatus(
+        Seq(version(1),version(2)),
+        Seq(amend(1, now.plusMonths(1)))
+      ).currentVersion mustEqual version(1)
+
+    }
+
   }
 }
