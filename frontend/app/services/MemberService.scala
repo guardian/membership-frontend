@@ -179,13 +179,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    val complimentaryTicketF =
-      if (isTestUser(member)) retrieveComplimentaryTickets(member, event)
-      else {
-        Future.successful(Nil)
-      }
-
-    complimentaryTicketF.flatMap { complimentaryTickets =>
+    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)

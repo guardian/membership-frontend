@@ -52,7 +52,6 @@ object Rest {
 
     val isActive: Boolean = status == Active
 
-
     def hasWhitelistedProduct(productIds: Set[String]): Boolean =
       latestWhiteListedRatePlan(productIds).isDefined
 
