@@ -58,9 +58,9 @@ trait AmendSubscription {
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
         dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
-
+        subscriptionRatePlanId <- tierPlanRateIds(newTierPlan)
         result <- zuoraSoapService.authenticatedRequest(DowngradePlan(currentSubscriptionVersion.id, subscriptionDetails.ratePlanId,
-          tierPlanRateIds(newTierPlan), dateToMakeDowngradeEffectiveFrom))
+          subscriptionRatePlanId, dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
   }
@@ -74,7 +74,8 @@ trait AmendSubscription {
         zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
         ratePlan <- zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
         choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice)
-        result <- zuoraSoapService.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, tierPlanRateIds(newTierPlan), preview, choice))
+        subscriptionRatePlanId <- tierPlanRateIds(newTierPlan)
+        result <- zuoraSoapService.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, subscriptionRatePlanId, preview, choice))
       } yield result
     }
   }
@@ -131,12 +132,27 @@ object SubscriptionService {
   }
 }
 
-class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
-                          val zuoraSoapService: ZuoraSoapService,
+class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
                           val zuoraRestService: ZuoraRestService) extends AmendSubscription with LazyLogging {
 
   import SubscriptionService._
   val MembershipProductType = "Membership"
+
+  val tierPlanRateIds: ProductRatePlan => Future[String] = productRatePlan => for {
+    products <- membershipProducts
+  } yield {
+      products.find(_.name == productRatePlan.salesforceTier).map { product =>
+        productRatePlan match {
+          case FriendTierPlan =>
+          case StaffPlan =>
+          case paidTierPlan: PaidTierPlan =>
+        }
+      }
+
+      ???
+    }
+
+  def membershipProducts = zuoraRestService.productCatalogSupplier.get().map(_.productsOfType(MembershipProductType))
 
   private def subscriptionVersions(subscriptionNumber: String): Future[Seq[Subscription]] = for {
     subscriptions <- zuoraSoapService.query[Subscription](s"Name = '$subscriptionNumber'")
@@ -165,6 +181,13 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
       }
     }
   }
+
+  def memberTierFeatures(memberId: MemberId): Future[Seq[Rest.Feature]] = for {
+    (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
+    productIds  <- membershipProducts.map(_.map(_.id).toSet)
+  } yield subscription
+      .latestWhiteListedRatePlan(productIds).toSeq
+      .flatMap(_.subscriptionProductFeatures)
 
   /**
    * @return the current and the future subscription version of the user if
@@ -226,9 +249,10 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
 
       zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
       features = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice)
+      ratePlanId <- tierPlanRateIds(joinData.plan)
       result <- zuoraSoapService.authenticatedRequest(Subscribe(memberId,
                                                       customerOpt,
-                                                      tierPlanRateIds(joinData.plan),
+                                                      ratePlanId,
                                                       joinData.name,
                                                       joinData.deliveryAddress,
                                                       paymentDelay,

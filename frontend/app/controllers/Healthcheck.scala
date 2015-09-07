@@ -9,24 +9,24 @@ import services.{GuardianLiveEventService, TouchpointBackend}
 case class Test(name: String, ok: () => Boolean)
 
 object Healthcheck extends Controller {
-  val zuoraService = TouchpointBackend.Normal.zuoraSoapService
+  val zuoraSoapService = TouchpointBackend.Normal.zuoraSoapService
 
-  val tests = Seq(
+  val tests = Seq (
     Test("Events", () => GuardianLiveEventService.events.nonEmpty),
     Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    Test("Zuora", () => zuoraService.lastPingTimeWithin(2.minutes))
+    Test("Zuora", () => zuoraSoapService.lastPingTimeWithin(2.minutes))
   )
 
   def healthcheck() = Action { req =>
     val failedTests = tests.filterNot(_.ok())
 
     Cached(1) {
-      if (failedTests.nonEmpty) {
-        failedTests.foreach { test =>
-          Logger.warn(s"Test ${test.name} failed, health check will fail")
-        }
+    if (failedTests.nonEmpty) {
+      failedTests.foreach { test =>
+        Logger.warn(s"Test ${test.name} failed, health check will fail")
+      }
         ServiceUnavailable("Service Unavailable")
-      } else {
+    } else {
         Ok("OK")
       }
     }

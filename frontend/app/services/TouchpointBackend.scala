@@ -45,7 +45,7 @@ object TouchpointBackend {
 
     val memberRepository = new FrontendMemberRepository(touchpointBackendConfig.salesforce)
 
-    TouchpointBackend(memberRepository, stripeService, zuoraSoapService, zuoraRestService, touchpointBackendConfig.productRatePlans)
+    TouchpointBackend(memberRepository, stripeService, zuoraSoapService, zuoraRestService)
   }
 
   val Normal = TouchpointBackend(BackendType.Default)
@@ -61,10 +61,9 @@ object TouchpointBackend {
 case class TouchpointBackend(memberRepository: FrontendMemberRepository,
                              stripeService: StripeService,
                              zuoraSoapService: ZuoraSoapService,
-                             zuoraRestService: ZuoraRestService,
-                             products: Map[ProductRatePlan, String]) extends ActivityTracking {
+                             zuoraRestService: ZuoraRestService) extends ActivityTracking {
 
-  val subscriptionService = new SubscriptionService(products, zuoraSoapService, zuoraRestService)
+  val subscriptionService = new SubscriptionService(zuoraSoapService, zuoraRestService)
 
   def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
     for {
