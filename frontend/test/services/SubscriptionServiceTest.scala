@@ -58,7 +58,7 @@ class SubscriptionServiceTest extends Specification {
     import SubscriptionService.findCurrentSubscriptionStatus
 
     val now = DateTime.now()
-    def version(v: Int): Subscription = Subscription(v.toString, v, now, now )
+    def version(v: Int): Subscription = Subscription(v.toString, v, now, now)
     def amend(v: Int, contractEffectiveDate: DateTime): Amendment =
       Amendment(v.toString, "TEST", contractEffectiveDate, v.toString)
 
@@ -78,8 +78,6 @@ class SubscriptionServiceTest extends Specification {
         Seq(version(1),version(2)),
         Seq(amend(1, now.plusMonths(1)))
       ).currentVersion mustEqual version(1)
-
     }
-
   }
 }
