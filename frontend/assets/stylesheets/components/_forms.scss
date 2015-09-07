@@ -2,8 +2,136 @@
    Forms
    ========================================================================== */
 
-form {
-    margin-bottom: 0;
+/* ==========================================================================
+   Forms: Layout Components
+   ========================================================================== */
+
+/* Form Header
+   ========================================================================== */
+
+/** Example usage:
+*   <section class="form-header">
+*       <h1 class="form-headline"></h1>
+*       <p class="form-intro"></p>
+*   </section>
+*/
+/**
+ * Form header is the container,
+ * typically combined with form-headline and form-intro
+ */
+.form-header {
+    padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 3);
+
+    @include mq(tablet) {
+        width: rem(gs-span(9));
+        margin: 0 auto;
+        padding-bottom: rem($gs-baseline * 4);
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(11));
+        margin-left: 0;
+        padding-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+
+/**
+ * Main page headline for functional form pages
+ */
+.form-headline {
+    @include fs-headline(5);
+
+    @include mq(desktop) {
+        @include fs-headline(7);
+    }
+}
+
+/**
+ * Optional page intro for functional pages
+ */
+.form-intro {
+    color: $c-neutral2;
+    @include fs-headline(2);
+
+    @include mq(tablet) {
+        @include fs-headline(3);
+    }
+}
+
+/* Form Section
+   ========================================================================== */
+
+/**
+ * Example usage:
+ *  <div class="form-section">
+ *      <div class="form-section__leadin">
+ *          <h2 class="form-section__headline">Headline</h2>
+ *      </div>
+        <div class="form-section__content">
+     *      <fieldset class="fieldset">
+     *          <div class="fieldset__heading">
+     *              <h2 class="fieldset__headline">Headline</h2>
+     *          </div>
+     *          <div class="fieldset__fields"></div>
+     *      </fieldset>
+        </div>
+ *  </div>
+ */
+.form-section {
+    @include clearfix;
+    position: relative;
+    padding: 0;
+
+    @include mq(tablet) {
+        padding-top: rem(12px);
+        padding-bottom: rem(12px);
+    }
+
+    @include mq(desktop) {
+        width: auto;
+    }
+}
+
+.form-section--no-padding {
+    padding: 0;
+}
+
+.form-section__lead-in {
+
+    @include mq(tablet) {
+        width: rem(gs-span(9));
+        margin: 0 auto;
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(2));
+        position: absolute;
+        left: 0;
+    }
+}
+
+.form-section__headline {
+    @include fs-header(3);
+    padding-bottom: rem($gs-gutter * 1.6);
+}
+
+.form-section__content {
+
+    @include mq(tablet) {
+        width: rem(gs-span(9));
+        margin: 0 auto;
+    }
+
+    @include mq(desktop) {
+        width: rem(gs-span(11));
+        float: left;
+        padding-left: rem(gs-span(2) + $gs-gutter);
+    }
+}
+
+.form-detail {
+    border-top: 1px solid color(brand-main);
+    padding-top: rem($gs-baseline / 2);
 }
 
 /* ==========================================================================
