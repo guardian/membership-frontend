@@ -5,7 +5,7 @@ define(['src/modules/identityPopup'], function (identityPopup) {
     describe('Identity Popup Tests', function () {
 
         it('returnUrl populated with currentUrl', function () {
-            var currentUrl = '/join';
+            var currentUrl = '/choose-tier';
 
             expect(identityPopup.populateReturnUrl(HREF, currentUrl)).toBe(
                 'https://profile.thegulocal.com/signin?returnUrl=https://mem.thegulocal.com' + currentUrl + '&skipConfirmation=true'
@@ -13,7 +13,7 @@ define(['src/modules/identityPopup'], function (identityPopup) {
         });
 
         it('returnUrl populated with currentUrl that contains parameters', function () {
-            var currentUrl = '/join?param1=1&param2=2';
+            var currentUrl = '/choose-tier?param1=1&param2=2';
 
             expect(identityPopup.populateReturnUrl(HREF, currentUrl)).toBe(
                 'https://profile.thegulocal.com/signin?returnUrl=https://mem.thegulocal.com' + currentUrl + '&skipConfirmation=true'
