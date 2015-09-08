@@ -3,13 +3,10 @@
 
 @main("Help") {
     <main role="main" class="page-content l-constrained">
-        @fragments.page.pageHeader("FAQ", Some("Common questions about Guardian Members"))
+        @fragments.page.pageHeader("Frequently asked questions", Some("Common questions about Guardian Members"))
         <section class="page-section">
             <div class="page-section__content">
-                @fragments.faq.questions(Faq.help)
-                <section class="section-faq-anwsers u-pad-right">
-                    @fragments.faq.answers(Faq.help)
-                </section>
+                @fragments.common.faqs(Faq.help)
             </div>
             <div class="page-section__supplementary">
                 <aside class="aside copy" role="complementary">

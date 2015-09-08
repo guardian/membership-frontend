@@ -421,16 +421,8 @@
         @fragments.notifications.flashMessage(FlashMessage.error("An error Message!"))
     }
 
-    @pattern("FAQ - Questions", "Fragment for FAQ questions with internal link") {
-        @fragments.faq.questions(model.Faq.help.take(4))
-    }
-
-    @pattern("FAQ - Answers", "Fragment for FAQ answers with matching internal link id") {
-        @fragments.faq.answers(model.Faq.help.take(4))
-    }
-
-    @pattern("FAQ - Answers without internal link", "Fragment for FAQ answers without link. This is used where the length of questions does not warrant the use of internal links") {
-        @fragments.faq.answers(model.Faq.staff.take(4))
+    @pattern("FAQ - Answers", "FAQ answers") {
+        @fragments.common.faqs(model.Faq.help.take(4))
     }
 
     </main>
