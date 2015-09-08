@@ -3,7 +3,6 @@
 @import com.gu.membership.salesforce.Tier.{Partner, Patron}
 @import model.FeatureChoice
 @import model.FreeEventTickets
-@import utils.TestUsers.isTestUser
 @import configuration.Config
 
 @partnerChoice() = {
@@ -51,15 +50,13 @@
     </fieldset>
 }
 
-@if(isTestUser(request.user) || Config.stageDev) {
-    @tier match {
-        case Partner => {
-            @partnerChoice()
-        }
-        case Patron => {
-            <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
-            @patronChoice()
-        }
-        case _ =>  {}
+@tier match {
+    case Partner => {
+        @partnerChoice()
     }
+    case Patron => {
+        <input type="hidden" name="featureChoice" value="@FeatureChoice.setToString(FeatureChoice.all)" />
+        @patronChoice()
+    }
+    case _ =>  {}
 }
