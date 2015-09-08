@@ -140,7 +140,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   val membershipProductType = "Membership"
   val productRatePlanChargeModel = "FlatFee"
 
-  val tierPlanRateId: ProductRatePlan => Future[String] = productRatePlan =>
+  def tierPlanRateId(productRatePlan: ProductRatePlan): Future[String] =
     membershipProducts.map { products =>
       val zuoraRatePlanId = for {
         product <- products.find(_.`Tier__c`.contains(productRatePlan.salesforceTier))
