@@ -51,13 +51,12 @@ object Healthcheck extends Controller {
     Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     Test("ZuoraPing", () => ZuoraPing.ping)) ++
     productRatePlanTiers.map(tier => TestCase(s"ZuoraCatalog: $tier", () =>
-      subscriptionService.tierPlanRateIds(tier).map(_ => true)))
+      subscriptionService.tierPlanRateId(tier).map(_ => true)))
 
-  def updateHealthCheck() = {
+  def updateHealthCheck() =
     Future.sequence(tests.map(_.ok()))
       .map { results => health send results.forall(r => r) }
       .recover { case _ => health send false }
-  }
 
   Akka.system.scheduler.schedule(initialDelay = 0.minutes, interval = 1.minute)(updateHealthCheck())
 
