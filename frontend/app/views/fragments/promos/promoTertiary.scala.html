@@ -13,7 +13,7 @@
         </div>
         @for(link <- linkOpt) {
             <div class="promo-tertiary__action">
-                <a class="action action--external" href="@link.href" @link.idOpt.map(id => s"id='$id'")>
+                <a class="action action--external" href="@link.href" @link.idOpt.map{ id => id="@id" }>
                     @link.title
                     @fragments.actionIcon("arrow-right")
                 </a>

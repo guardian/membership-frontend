@@ -28,7 +28,7 @@ object Zuora {
     // TODO: is there a better way?
     val annual = nextPaymentDate == serviceStartDate.plusYears(1)
   }
-  case class RatePlan(id: String, name: String) extends ZuoraQuery
+  case class RatePlan(id: String, name: String, productRatePlanId: String) extends ZuoraQuery
   case class RatePlanCharge(id: String, chargedThroughDate: Option[DateTime], effectiveStartDate: DateTime,
                             price: Float) extends ZuoraQuery
   case class Subscription(id: String, version: Int, termStartDate: DateTime, contractAcceptanceDate: DateTime) extends ZuoraQuery
@@ -262,8 +262,8 @@ object ZuoraDeserializer {
       result("ProductName"))
   }
 
-  implicit val ratePlanReader = ZuoraQueryReader("RatePlan", Seq("Id", "Name")) { result =>
-    RatePlan(result("Id"), result("Name"))
+  implicit val ratePlanReader = ZuoraQueryReader("RatePlan", Seq("Id", "Name", "ProductRatePlanId")) { result =>
+    RatePlan(result("Id"), result("Name"), result("ProductRatePlanId"))
   }
 
   implicit val ratePlanChargeReader = ZuoraQueryReader("RatePlanCharge", Seq("Id", "ChargedThroughDate", "EffectiveStartDate", "Price")) { result =>

@@ -3,31 +3,25 @@
  * CONTENTS
  *
  * SETTINGS & TOOLS
- * Vars.................Variables and settings
- * Function.............Sass functions
- * Mixins...............Sass mixins
- * Extends..............Placeholder classes used only for @extend
+ * Vars.................Variables and settings.
+ * Mixins...............Site specific mixins.
+ * Webfonts.............Load webfonts mixins early for use in other modules.
  *
- * BASE.................Global / element level rules
- * LAYOUT...............Layout rules. Layout helpers, global header / footer etc.
- * MODULE...............Individual components. One file per component,
- *                      The majority of all styles should be modules.
- * THEME................Theme style overrides / Tone colours.
- * STATE................Styles which augment & overrides all other styles
+ * BASE.................Global / element level rules.
+ * OBJECTS..............Low level object styles (more abstract that components).
+ * COMPONENTS...........Individual components. One file per component or topic.
+ *                      The majority of all styles should be components.
+ * SCOPES...............Scoped styling contexts. Notably text from Content API.
+ * UTILITIES............Single use helper classes. Keep these to a minimum.
+ * PRINT................Print media. Inlined to minimise requests.
  */
 
 // =============================================================================
-// Settings & Tooks
+// Settings & Tools
 // =============================================================================
 
 @import 'vars';
 @import 'mixins';
-@import 'webfonts';
-
-// =============================================================================
-// Webfonts
-// =============================================================================
-
 @import 'webfonts';
 
 // =============================================================================
@@ -36,36 +30,28 @@
 
 @import 'base/normalize';
 @import 'base/base';
-@import 'base/links';
-@import 'base/form';
-@import 'base/tables';
-
-// =============================================================================
-// Layout
-// =============================================================================
-
-@import 'layout/layout';
-@import 'layout/footer';
-@import 'layout/header';
 
 // =============================================================================
 // Objects
 // =============================================================================
 
 @import 'objects/text';
+@import 'objects/grid';
+@import 'objects/icons';
+@import 'objects/links';
 @import 'objects/images';
 @import 'objects/lists';
+@import 'objects/tables';
 
 // =============================================================================
 // Components
 // =============================================================================
 
-@import 'components/icons';
-@import 'components/grid';
-@import 'components/from-content-api';
+@import 'components/global-header';
+@import 'components/global-footer';
 @import 'components/action';
 @import 'components/page';
-@import 'components/form-layout';
+@import 'components/forms';
 @import 'components/navigation';
 @import 'components/controls';
 @import 'components/blocks';
@@ -78,6 +64,7 @@
 @import 'components/event-info-panel';
 @import 'components/articles';
 @import 'components/series';
+@import 'components/comparison-table';
 @import 'components/benefits';
 @import 'components/payment';
 @import 'components/packages';
@@ -101,22 +88,23 @@
 @import 'components/patterns';
 
 // =============================================================================
+// Scopes
+// =============================================================================
+
+@import 'scopes/prose';
+
+// =============================================================================
 // Utilities
 // =============================================================================
 
 @import 'utilities/util-common';
+@import 'utilities/util-tones';
+@import 'utilities/util-layout';
 @import 'utilities/util-user';
 @import 'utilities/util-visibility';
 
 // =============================================================================
-// Theme
-// =============================================================================
-
-@import 'theme/tones';
-
-// =============================================================================
-// Pring
-// Inlined to minimise no. requests
+// Print
 // =============================================================================
 
 @import 'print';

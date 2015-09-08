@@ -1,6 +1,6 @@
 /* ==========================================================================
+   Scopes: Prose
    Opt-in typographic styles
-   From Content API
    ========================================================================== */
 // These are for styling HTML that we get from external sources
 // and may contain more specific selectors than we would usually like.
@@ -13,8 +13,8 @@
 //     http://dbushell.com/2012/04/18/scoping-typography-css/
 //     http://anthonyshort.me/global-typographic-styles-suck/
 
-// TODO: Add s-prose class
-.copy {
+.copy,
+.s-prose {
 
     > p,
     ul,

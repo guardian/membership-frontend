@@ -35,6 +35,7 @@ class ZuoraRestResponseReadersTest extends Specification {
           "id" -> "Rate Plan Id",
           "productId" -> "Product Id",
           "productName" -> "Product Name",
+          "productRatePlanId" -> "Product Rate Plan Id",
           "ratePlanCharges" -> JsArray(Nil),
           "subscriptionProductFeatures" -> features)
       ))
@@ -72,7 +73,7 @@ class ZuoraRestResponseReadersTest extends Specification {
                           DateTime.parse("2013-02-01"),
                           DateTime.parse("2014-02-01"),
                           DateTime.parse("2013-02-01"),
-                          Rest.RatePlan("Rate Plan Id", "Product Id", "Product Name", Nil, Nil) :: Nil,
+                          Rest.RatePlan("Rate Plan Id", "Product Id", "Product Rate Plan Id", "Product Name", Nil, Nil) :: Nil,
                           Rest.Active))
     }
 

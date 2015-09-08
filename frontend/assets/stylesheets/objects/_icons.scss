@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Icons
+   Objects: Icons
    ========================================================================== */
 
 .icon {
@@ -60,6 +60,12 @@
 .icon-inline--large {
     width: 36px;
     height: 36px;
+}
+.icon-inline--badge {
+    width: 50px;
+    height: 18px;
+    margin-right: 2px;
+    vertical-align: text-bottom;
 }
 .icon-inline--scale {
     width: .75em;

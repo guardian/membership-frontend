@@ -1,17 +1,16 @@
 @(
     pageImages: Seq[model.ResponsiveImageGroup],
     midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
-    comparisonItems: Seq[model.Benefits.ComparisonItem],
     eventCollection: model.EventBrandCollection
 )
 
 @import com.gu.membership.salesforce.Tier
+@import com.gu.membership.salesforce.Tier.{Supporter, Partner}
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
 @main("") {
 
-    @* ===== Intro ===== *@
     <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/event-grid.jpg"))">
         <div class="hero-banner__inner">
             <div class="l-constrained">
@@ -187,7 +186,7 @@
                     )
                 </div>
 
-                @fragments.common.jumpLink("Join today", "#become-a-member")
+                @fragments.common.jumpLink("Join today", "#join-now")
             </div>
         </div>
     </section>
@@ -195,8 +194,8 @@
     @* =========================================== *@
     @* 3. Join Now                                 *@
     @* =========================================== *@
-    <section class="page-slice page-slice--listing tone-tint u-padding-top" id="join-now">
-        <div class="listing listing--transparent listing--bordered listing--padded l-constrained">
+    <section class="page-slice page-slice--listing u-padding-top" id="join-now">
+        <div class="listing listing--bordered listing--padded l-constrained">
             <div class="listing__lead-in">
                 <h3 class="h-intro">
                     <span class="o-counter">3</span>
@@ -206,21 +205,18 @@
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
 
-                @fragments.tier.comparisonTable(comparisonItems)
-
-                <h4 class="h-intro h-intro--brand u-margin-bottom">Choose your membership</h4>
-
                 <ul class="grid grid--2up-stacked">
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner, showDescription=false, isReversed=true)
-                    </li>
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Supporter, showDescription=false, isReversed=true)
-                    </li>
+                    @for(tier <- Seq(Supporter, Partner)) {
+                        <li class="grid__item">
+                            @fragments.tier.packagePromo(tier, extraClasses=List("package-promo--lead"))
+                        </li>
+                    }
                 </ul>
+                @fragments.common.jumpLink("Compare member levels", "#compare-membership")
 
-                <div class="u-capped-half-wide">
-                    @fragments.tier.friendTeaser()
+                <div id="compare-membership">
+                    <h4 class="h-intro h-intro--brand">What's Included</h4>
+                    @fragments.tier.comparisonTable()
                 </div>
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {

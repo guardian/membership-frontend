@@ -1,0 +1,115 @@
+/* ==========================================================================
+   Utilities: Layout
+   ========================================================================== */
+
+/**
+ * Layout constraints
+ */
+
+// TODO: Replace l- with u- prefix
+.l-constrained {
+    @include constrain-layout();
+}
+
+// TODO: Replace l- with u- prefix
+.l-side-margins {
+    &:before,
+    &:after {
+        background: $c-background-transparent;
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        height: 100%;
+        width: 0;
+        @include side-margins-calc('width');
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
+.u-fullwidth {
+    width: 100%;
+}
+.u-capped-half {
+    display: block;
+
+    @include mq(tablet) {
+        width: 50% - ($gutter-width-fluid / 2);
+    }
+}
+.u-capped-one-third {
+    display: block;
+
+    @include mq(tablet) {
+        width: 33.3%;
+    }
+}
+.u-capped-two-thirds {
+    display: block;
+
+    @include mq(tablet) {
+        width: 66%;
+    }
+}
+
+
+/**
+ * Aligment
+ */
+.u-align-left {
+    float: left;
+}
+.u-align-right {
+    float: right;
+}
+.u-align-middle {
+    vertical-align: middle;
+}
+
+/**
+ * Spacing
+ */
+.u-margin-top {
+    margin-top: ($gs-baseline / 2) !important;
+}
+.u-margin-bottom {
+    margin-bottom: ($gs-baseline / 2) !important;
+}
+.u-margin-vertical {
+    margin-top: $gs-baseline !important;
+    margin-bottom: $gs-baseline !important;
+}
+.u-inset {
+    padding: $gs-baseline ($gs-gutter / 2) ($gs-baseline * 2);
+
+    @include mq(tablet) {
+        padding-left: ($gs-gutter);
+        padding-right: ($gs-gutter);
+    }
+}
+
+/**
+ * Margin resets
+ */
+.u-no-margin {
+    margin: 0 !important;
+}
+.u-no-horizontal-margin {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.u-no-vertical-margin {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.u-no-top-margin {
+    margin-top: 0 !important;
+}
+.u-no-bottom-margin {
+    margin-bottom: 0 !important;
+}

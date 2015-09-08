@@ -22,8 +22,8 @@ import org.joda.time.Period
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
-import services.EventbriteService._
-import _root_.services.zuora.CreateFreeEventUsage
+import EventbriteService._
+import zuora.CreateFreeEventUsage
 import tracking._
 import utils.TestUsers.isTestUser
 
@@ -139,9 +139,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
     for {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
       description = s"event-id:${event.id};order-id:${order.id}"
-      action = CreateFreeEventUsage(account.id, description, quantity, subscription.id)
+      action = CreateFreeEventUsage(account.id, description, quantity, subscription.subscriptionNumber)
       result <- tp.zuoraSoapService.authenticatedRequest(action)
-    } yield result
+    } yield {
+      logger.info(s"Recorded a complimentary event ticket usage for account ${account.id}, subscription: ${subscription.subscriptionNumber}, details: $description")
+      result
+    }
   }
 
   def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
@@ -156,6 +159,9 @@ trait MemberService extends LazyLogging with ActivityTracking {
       } yield {
         val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
         val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
+        logger.info(
+          s"User ${member.identityId} has used $usageCount tickets" ++
+            s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")
 
         if (hasComplimentaryTickets && allowanceNotExceeded)
           event.internalTicketing.map(_.complimentaryTickets).getOrElse(Nil)
@@ -173,13 +179,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] = {
-    val complimentaryTicketF =
-      if (isTestUser(member)) retrieveComplimentaryTickets(member, event)
-      else {
-        Future.successful(Nil)
-      }
-
-    complimentaryTicketF.flatMap { complimentaryTickets =>
+    retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
       event.service.createOrGetAccessCode(event, code, unlockedTickets)

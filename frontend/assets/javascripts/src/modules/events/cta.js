@@ -9,7 +9,7 @@ define([
         join: {
             id: 'join',
             label: 'Become a member',
-            href: '/join'
+            href: '/choose-tier'
         },
         upgrade: {
             id: 'upgrade',

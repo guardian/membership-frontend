@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+.table {
+    color: $c-neutral1;
+    background-color: $c-neutral8;
+    margin-bottom: $gs-baseline;
+
+    th,
+    td {
+        @include fs-data(3);
+        padding: ($gs-baseline * 1.3) ($gs-gutter / 2);
+        vertical-align: top;
+    }
+
+    th,
+    thead td {
+        color: $c-neutral1;
+        font-weight: 800;
+    }
+
+    tbody th {
+        @include mq($from: tablet) {
+            width: gs-span(3);
+        }
+    }
+
+    td {
+        border-top: 1px solid darken($c-neutral8, 4%);
+    }
+
+    abbr {
+        border-bottom: 1px dotted $c-neutral8;
+    }
+
+    @include mq($from: desktop) {
+        th,
+        td,
+        thead td {
+            @include fs-textSans(4);
+            padding: $gs-baseline;
+        }
+    }
+}
+
+.table--striped {
+    th,
+    td {
+        border-top: 0;
+    }
+
+    tr:nth-child(even) > th,
+    tr:nth-child(even) > td {
+        background-color: darken($c-neutral8, 4%);
+    }
+}

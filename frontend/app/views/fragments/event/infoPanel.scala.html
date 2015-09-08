@@ -26,7 +26,7 @@
          @for(ticketing <- event.internalTicketing) {
             @fragments.pricing.priceInfoEvent(event, showLimited=true)
             @if(event.isBookable) {
-                <div class="l-pad-vertical">
+                <div class="u-margin-vertical">
                     @fragments.event.ticketCta(event)
                 </div>
                 <div class="event-info__terms copy">
