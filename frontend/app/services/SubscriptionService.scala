@@ -149,7 +149,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
           case paidTierPlan: PaidTierPlan =>
             val charge = ProductRatePlanCharge(productRatePlanChargeModel, Some(paidTierPlan.billingPeriod))
             product.activeRatePlans.find(_.productRatePlanCharges.contains(charge))
-        } if zuoraRatePlan.isActive
+        }
       } yield zuoraRatePlan.id
 
       zuoraRatePlanId.getOrElse(throw new RuntimeException(s"Rate plan id could not be found for $productRatePlan"))
