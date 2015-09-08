@@ -2,11 +2,12 @@ package services
 
 import com.gu.membership.model.{FriendTierPlan, PaidTierPlan}
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Friend, Supporter, Partner, Patron}
+import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
 import model.{FreeEventTickets, Books}
 import org.specs2.mutable.Specification
-import model.Zuora.{Subscription, RatePlanCharge, RatePlan, SubscriptionDetails}
+import model.Zuora._
 import org.joda.time.DateTime
+import com.github.nscala_time.time.Imports._
 
 class SubscriptionServiceTest extends Specification {
   "SubscriptionService" should {
@@ -16,7 +17,7 @@ class SubscriptionServiceTest extends Specification {
 
       val subscriptionDetails = SubscriptionDetails(
         Subscription("some id", 1, startDate, startDate),
-        RatePlan("RatePlanId", "Product name - annual"),
+        RatePlan("RatePlanId", "Product name - annual", "productRatePlanId"),
         RatePlanCharge("RatePlanChargeId", Some(endDate), startDate, 12.0f)
       )
 
@@ -51,6 +52,33 @@ class SubscriptionServiceTest extends Specification {
     "return no features for supporters or friends" in {
       features(plan(Supporter), Set(Books)) mustEqual List.empty
       features(FriendTierPlan, Set(FreeEventTickets)) mustEqual List.empty
+    }
+  }
+
+  "findCurrentSubscriptionStatus" in {
+    import SubscriptionService.findCurrentSubscriptionStatus
+
+    val now = DateTime.now()
+    def version(v: Int): Subscription = Subscription(v.toString, v, now, now)
+    def amend(v: Int, contractEffectiveDate: DateTime): Amendment =
+      Amendment(v.toString, "TEST", contractEffectiveDate, v.toString)
+
+    "returns the latest subscription when no future amendments exists" in {
+      findCurrentSubscriptionStatus(
+        Seq(version(1), version(2)),
+        Nil
+      ).currentVersion mustEqual version(2)
+
+      findCurrentSubscriptionStatus(
+        Seq(version(1),version(2)),
+        Seq(amend(1, now - 1.minutes))
+      ).currentVersion mustEqual version(2)
+    }
+    "returns the latest subscription when future amendments exists" in {
+      findCurrentSubscriptionStatus(
+        Seq(version(1),version(2)),
+        Seq(amend(1, now + 1.month))
+      ).currentVersion mustEqual version(1)
     }
   }
 }

@@ -5,6 +5,7 @@ import com.gu.membership.model._
 import com.gu.membership.salesforce.MemberId
 import com.gu.membership.salesforce.Tier.{Partner, Patron}
 import com.gu.membership.stripe.Stripe
+import com.gu.membership.util.Timing
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
 import model.{FeatureChoice, MembershipSummary}
@@ -154,27 +155,50 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
 
   def memberTierFeatures(memberId: MemberId): Future[Seq[Rest.Feature]] = for {
     (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
-    catalog  <- zuoraRestService.productCatalogSupplier.get
-  } yield subscription
-      .latestWhiteListedRatePlan(catalog.productIdsOfType(MembershipProductType)).toSeq
-      .flatMap(_.subscriptionProductFeatures)
+    ratePlanOpt <- currentRatePlan(subscription)
+  } yield {
+      val features = ratePlanOpt.toSeq.flatMap(_.subscriptionProductFeatures)
+      logger.debug(
+        s"Checking product features for member ${memberId.salesforceAccountId}." ++
+        s" Current product ${ratePlanOpt.map(_.productName)}, features: ${features.map(_.featureCode)}")
+      features
+    }
+
+  def currentRatePlan(subscription: Rest.Subscription): Future[Option[Rest.RatePlan]] = subscription.ratePlans match {
+    case onlyRatePlan :: Nil => Future.successful(Some(onlyRatePlan))
+    case multipleRatePlans => Timing.record(zuoraSoapService.metrics, "currentRatePlan-for-multipleRatePlans") {
+      for {
+        subscriptionStatus <- getSubscriptionStatus(subscription)
+        currentRatePlan <- getRatePlan(subscriptionStatus.currentVersion)
+      } yield {
+        logger.debug(s"Current ratePlan: $currentRatePlan, subscriptionStatus: $subscriptionStatus, multipleRatePlans: $multipleRatePlans")
+        multipleRatePlans.find(_.productRatePlanId == currentRatePlan.productRatePlanId)
+      }
+    }
+  }
 
   /**
    * @return the current and the future subscription version of the user if
    *         they have a pending amendment (Currently this is the case only of downgrades, as upgrades
    *         are effective immediately)
    */
-  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] = for {
-    (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
+  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] =
+    accountWithLatestMembershipSubscription(memberId).flatMap(accountWithSub =>
+      getSubscriptionStatus(accountWithSub._2))
+
+  def getSubscriptionStatus(subscription: Rest.Subscription): Future[SubscriptionStatus] = for {
     subscriptionVersions <- subscriptionVersions(subscription.subscriptionNumber)
     where = subscriptionVersions.map { sub => s"SubscriptionId='${sub.id}'" }.mkString(" OR ")
     amendments <- zuoraSoapService.query[Amendment](where)
   } yield findCurrentSubscriptionStatus(subscriptionVersions, amendments)
 
   def getSubscriptionDetails(subscription: Subscription): Future[SubscriptionDetails] = for {
-    ratePlan <- zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='${subscription.id}'")
+    ratePlan <- getRatePlan(subscription)
     ratePlanCharge <- zuoraSoapService.queryOne[RatePlanCharge](s"RatePlanId='${ratePlan.id}'")
   } yield SubscriptionDetails(subscription, ratePlan, ratePlanCharge)
+
+  def getRatePlan(subscription: Subscription): Future[RatePlan] =
+    zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='${subscription.id}'")
 
   def getCurrentSubscriptionDetails(memberId: MemberId): Future[SubscriptionDetails] = for {
     subscriptionStatus <- getSubscriptionStatus(memberId)

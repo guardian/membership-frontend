@@ -8,6 +8,7 @@
                 <ns1:records xsi:type="ns2:RatePlan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://object.api.zuora.com/">
                     <ns2:Id>2c92c0f94878e828014879176ff831c4</ns2:Id>
                     <ns2:Name>Partner - annual</ns2:Name>
+                    <ns2:ProductRatePlanId>ProductRatePlanId</ns2:ProductRatePlanId>
                 </ns1:records>
                 <ns1:size>1</ns1:size>
             </ns1:result>

@@ -150,7 +150,7 @@ class ZuoraDeserializerTest extends Specification {
 
       ratePlans.size mustEqual 1
 
-      ratePlans(0) mustEqual RatePlan("2c92c0f94878e828014879176ff831c4", "Partner - annual")
+      ratePlans(0) mustEqual RatePlan("2c92c0f94878e828014879176ff831c4","Partner - annual", "ProductRatePlanId")
     }
 
     "extract a RatePlanCharge" in {
