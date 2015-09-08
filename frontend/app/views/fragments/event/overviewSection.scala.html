@@ -62,6 +62,11 @@
                                 @eventTrait("Not Sold though Eventbrite", "noteworthy")
                             }
                             case ticketing: InternalTicketing => {
+
+                                @if(!ticketing.hasFreeMembersTickets && event.isInstanceOf[GuLiveEvent]) {
+                                    @eventTrait("No Free Members Ticket", "important")
+                                }
+
                                 @if(ticketing.isFree) {
                                     @eventTrait("Free Event", "moderate")
                                 }
