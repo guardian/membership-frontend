@@ -2,11 +2,12 @@ package services
 
 import com.gu.membership.model.{FriendTierPlan, PaidTierPlan}
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Friend, Supporter, Partner, Patron}
+import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
 import model.{FreeEventTickets, Books}
 import org.specs2.mutable.Specification
 import model.Zuora._
 import org.joda.time.DateTime
+import com.github.nscala_time.time.Imports._
 
 class SubscriptionServiceTest extends Specification {
   "SubscriptionService" should {
@@ -70,13 +71,13 @@ class SubscriptionServiceTest extends Specification {
 
       findCurrentSubscriptionStatus(
         Seq(version(1),version(2)),
-        Seq(amend(1, now))
+        Seq(amend(1, now - 1.minutes))
       ).currentVersion mustEqual version(2)
     }
     "returns the latest subscription when future amendments exists" in {
       findCurrentSubscriptionStatus(
         Seq(version(1),version(2)),
-        Seq(amend(1, now.plusMonths(1)))
+        Seq(amend(1, now + 1.month))
       ).currentVersion mustEqual version(1)
     }
   }
