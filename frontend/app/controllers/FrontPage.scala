@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.Controller
-import model.{EventBrandCollection, Grid, ResponsiveImageGenerator, ResponsiveImageGroup}
+import model._
 import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
 trait FrontPage extends Controller {
