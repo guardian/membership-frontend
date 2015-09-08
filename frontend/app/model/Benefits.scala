@@ -2,6 +2,7 @@ package model
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.{Partner, Patron}
+import configuration.Config.zuoraFreeEventTicketsAllowance
 
 object Benefits {
 
@@ -28,6 +29,8 @@ object Benefits {
     BenefitItem("email_updates", "Regular events email"),
     BenefitItem("offers_competitions", "Offers and competitions"),
     BenefitItem("priority_booking", "48hrs priority booking"),
+    BenefitItem("books_or_tickets", s"$zuoraFreeEventTicketsAllowance tickets or 4 books", isNew = true),
+    BenefitItem("books_and_tickets", s"$zuoraFreeEventTicketsAllowance tickets and 4 books", isNew = true),
     BenefitItem("discount", "20% discount for you and a guest"),
     BenefitItem("unique_experiences", "Exclusive behind-the-scenes functions")
   )
@@ -75,6 +78,7 @@ object Benefits {
     "email_updates"
   )
   val partnerBenefitsList = benefitsFilter(
+    "books_or_tickets",
     "priority_booking",
     "discount",
     "welcome_pack",
@@ -83,6 +87,7 @@ object Benefits {
     "email_updates"
   )
   val patronBenefitsList = benefitsFilter(
+    "books_and_tickets",
     "unique_experiences",
     "priority_booking",
     "discount",
@@ -101,6 +106,7 @@ object Benefits {
   )
 
   val comparisonHiglightsList = benefitsFilter(
+    "books_or_tickets",
     "priority_booking",
     "discount",
     "unique_experiences"
@@ -109,14 +115,15 @@ object Benefits {
   def details(tier: Tier) = tier match {
     case Tier.Friend => Benefits(Tier.Friend, "Benefits", List(
       BenefitHighlight("""Receive regular updates from the membership community,
-                         | book tickets to Guardian Live events and access the Guardian members area""".stripMargin)
+        | book tickets to Guardian Live events and access the Guardian members area""".stripMargin)
     ))
     case Tier.Supporter => Benefits(Tier.Supporter, "Benefits", List(
       BenefitHighlight("Support our journalism and keep theguardian.com free of charge"),
       BenefitHighlight("Get access to tickets and to the live broadcast of events")
     ))
     case Tier.Partner => Benefits(Tier.Partner, "Supporter benefits, plus…", List(
-      BenefitHighlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses")
+      BenefitHighlight("Get priority booking and 20% discount on Guardian Live, Guardian Local and most Guardian Masterclasses"),
+      BenefitHighlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true)
     ))
     case Tier.Patron => Benefits(Tier.Patron, "Partner benefits, plus…", List(
       BenefitHighlight("Show deep support for keeping the Guardian free, open and independent."),
