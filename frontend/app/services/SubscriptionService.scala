@@ -8,7 +8,7 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.util.Timing
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
-import model.{FeatureChoice, MembershipSummary}
+import model.{FreeEventTickets, FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
@@ -153,17 +153,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
         s"Cannot find a membership subscription for account ids ${accounts.map(_.id)}"))
     }
 
-  def memberTierFeatures(memberId: MemberId): Future[Seq[Rest.Feature]] = for {
-    (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
-    ratePlanOpt <- currentRatePlan(subscription)
-  } yield {
-      val features = ratePlanOpt.toSeq.flatMap(_.subscriptionProductFeatures)
-      logger.debug(
-        s"Checking product features for member ${memberId.salesforceAccountId}." ++
-        s" Current product ${ratePlanOpt.map(_.productName)}, features: ${features.map(_.featureCode)}")
-      features
-    }
-
   def currentRatePlan(subscription: Rest.Subscription): Future[Option[Rest.RatePlan]] = subscription.ratePlans match {
     case onlyRatePlan :: Nil => Future.successful(Some(onlyRatePlan))
     case multipleRatePlans => Timing.record(zuoraSoapService.metrics, "currentRatePlan-for-multipleRatePlans") {
@@ -205,12 +194,20 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
     subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
   } yield subscriptionDetails
 
-  def getUsageCountWithinTerm(memberId: MemberId, unitOfMeasure: String): Future[Int] = for {
-    (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
-    startDate = formatDateTime(subscription.termStartDate)
-    whereClause = s"StartDateTime >= '$startDate' AND SubscriptionNumber = '${subscription.subscriptionNumber}' AND UOM = '$unitOfMeasure'"
-    usages <- zuoraSoapService.query[Usage](whereClause)
-  } yield usages.size
+  /*
+   * If the member is entitled to complimentary tickets return its Zuora account's corresponding usage records count.
+   * Returns none otherwise
+   */
+  def getUsageCountWithinTerm(subscription: Rest.Subscription, unitOfMeasure: String): Future[Option[Int]] = {
+    val hasComplimentaryTicketsF = hasComplimentaryTickets(subscription)
+    val startDate = formatDateTime(subscription.termStartDate)
+    val whereClause = s"StartDateTime >= '$startDate' AND SubscriptionNumber = '${subscription.subscriptionNumber}' AND UOM = '$unitOfMeasure'"
+    val usageCountF = zuoraSoapService.query[Usage](whereClause).map(_.size)
+    for {
+      hasComplimentaryTickets <- hasComplimentaryTicketsF
+      usageCount <- usageCountF
+    } yield if (!hasComplimentaryTickets) None else Some(usageCount)
+  }
 
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = for {
     (account, _) <- accountWithLatestMembershipSubscription(memberId)
@@ -279,4 +276,18 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
   }
 
   def getSubscriptionsByCasId(casId: String): Future[Seq[Subscription]] =  zuoraSoapService.query[Subscription](s"CASSubscriberID__c='$casId'")
+
+  private def hasComplimentaryTickets(subscription: Rest.Subscription): Future[Boolean] = for {
+    features <- memberTierFeatures(subscription)
+  } yield features.exists(_.featureCode == FreeEventTickets.zuoraCode)
+
+  private def memberTierFeatures(subscription: Rest.Subscription): Future[Seq[Rest.Feature]] = for {
+    ratePlanOpt <- currentRatePlan(subscription)
+  } yield {
+      val features = ratePlanOpt.toSeq.flatMap(_.subscriptionProductFeatures)
+      logger.debug(
+        s"Checking product features for for subscription ${subscription.subscriptionNumber}." ++
+          s" Current product ${ratePlanOpt.map(_.productName)}, features: ${features.map(_.featureCode)}")
+      features
+    }
 }
