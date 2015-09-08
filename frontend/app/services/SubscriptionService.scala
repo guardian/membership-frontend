@@ -199,14 +199,17 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
    * Returns none otherwise
    */
   def getUsageCountWithinTerm(subscription: Rest.Subscription, unitOfMeasure: String): Future[Option[Int]] = {
-    val hasComplimentaryTicketsF = hasComplimentaryTickets(subscription)
+    val featuresF = memberTierFeatures(subscription)
     val startDate = formatDateTime(subscription.termStartDate)
     val whereClause = s"StartDateTime >= '$startDate' AND SubscriptionNumber = '${subscription.subscriptionNumber}' AND UOM = '$unitOfMeasure'"
     val usageCountF = zuoraSoapService.query[Usage](whereClause).map(_.size)
     for {
-      hasComplimentaryTickets <- hasComplimentaryTicketsF
+      features <- featuresF
       usageCount <- usageCountF
-    } yield if (!hasComplimentaryTickets) None else Some(usageCount)
+    } yield {
+      val hasComplimentaryTickets = features.exists(_.featureCode == FreeEventTickets.zuoraCode)
+      if (!hasComplimentaryTickets) None else Some(usageCount)
+    }
   }
 
   def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = for {
@@ -276,10 +279,6 @@ class SubscriptionService(val tierPlanRateIds: Map[ProductRatePlan, String],
   }
 
   def getSubscriptionsByCasId(casId: String): Future[Seq[Subscription]] =  zuoraSoapService.query[Subscription](s"CASSubscriberID__c='$casId'")
-
-  private def hasComplimentaryTickets(subscription: Rest.Subscription): Future[Boolean] = for {
-    features <- memberTierFeatures(subscription)
-  } yield features.exists(_.featureCode == FreeEventTickets.zuoraCode)
 
   private def memberTierFeatures(subscription: Rest.Subscription): Future[Seq[Rest.Feature]] = for {
     ratePlanOpt <- currentRatePlan(subscription)
