@@ -150,7 +150,7 @@ object Eventbrite {
 
     val isSoldOut = allTickets.forall(_.isSoldOut) || ticketsSold >= capacity
 
-    val noFreeMembers = !allTickets.exists(_.isComplimentary)
+    val hasFreeMembersTickets = allTickets.exists(_.isComplimentary)
 
     val isFree = primaryTicket.free
 
