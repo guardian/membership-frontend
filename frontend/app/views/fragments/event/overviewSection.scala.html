@@ -64,7 +64,7 @@
                             case ticketing: InternalTicketing => {
 
                                 @if(!ticketing.hasFreeMembersTickets && event.isInstanceOf[GuLiveEvent]) {
-                                    @eventTrait("No Free Members Ticket", "important")
+                                    @eventTrait("Member's ticket", "important")
                                 }
 
                                 @if(ticketing.isFree) {
