@@ -115,7 +115,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   val tierPlanRateIds: ProductRatePlan => Future[String] = productRatePlan =>
     membershipProducts.map { products =>
       val zuoraRatePlanId = for {
-        product <- products.find(_.name == productRatePlan.salesforceTier)
+        product <- products.find(_.`Tier__c`.contains(productRatePlan.salesforceTier))
         zuoraRatePlan <- productRatePlan match {
           case FriendTierPlan | StaffPlan => product.activeRatePlans.headOption
           case paidTierPlan: PaidTierPlan =>
