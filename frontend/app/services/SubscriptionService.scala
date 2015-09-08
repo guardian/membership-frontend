@@ -59,7 +59,7 @@ trait AmendSubscription {
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
         dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
-        subscriptionRatePlanId <- tierPlanRateIds(newTierPlan)
+        subscriptionRatePlanId <- tierPlanRateId(newTierPlan)
         result <- zuoraSoapService.authenticatedRequest(DowngradePlan(currentSubscriptionVersion.id, subscriptionDetails.ratePlanId,
           subscriptionRatePlanId, dateToMakeDowngradeEffectiveFrom))
       } yield result
@@ -75,7 +75,7 @@ trait AmendSubscription {
         zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
         ratePlan <- zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
         choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice)
-        subscriptionRatePlanId <- tierPlanRateIds(newTierPlan)
+        subscriptionRatePlanId <- tierPlanRateId(newTierPlan)
         result <- zuoraSoapService.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, subscriptionRatePlanId, preview, choice))
       } yield result
     }
@@ -140,7 +140,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   val membershipProductType = "Membership"
   val productRatePlanChargeModel = "FlatFee"
 
-  val tierPlanRateIds: ProductRatePlan => Future[String] = productRatePlan =>
+  val tierPlanRateId: ProductRatePlan => Future[String] = productRatePlan =>
     membershipProducts.map { products =>
       val zuoraRatePlanId = for {
         product <- products.find(_.`Tier__c`.contains(productRatePlan.salesforceTier))
@@ -252,7 +252,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
 
       zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
       features = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice)
-      ratePlanId <- tierPlanRateIds(joinData.plan)
+      ratePlanId <- tierPlanRateId(joinData.plan)
       result <- zuoraSoapService.authenticatedRequest(Subscribe(memberId,
                                                       customerOpt,
                                                       ratePlanId,
