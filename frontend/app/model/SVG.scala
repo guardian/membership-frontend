@@ -32,7 +32,8 @@ object SVG {
       width=300, height=90
     )
 
-    val membersLogoRandom = Random.shuffle(membersLogos.toList).head
+    def getRandomLogo = Random.shuffle(membersLogos.toList).head
+    val membersLogo = getRandomLogo
 
     val guardianLive = SVGImage(
       "Guardian Live",
