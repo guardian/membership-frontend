@@ -1,31 +1,24 @@
 package controllers
 
-import akka.agent.Agent
 import com.gu.membership.model.{FriendTierPlan, PaidTierPlan, StaffPlan}
 import com.gu.membership.salesforce.Tier.{Partner, Patron, Supporter}
 import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger
-import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Action, Controller}
 import services.{GuardianLiveEventService, TouchpointBackend}
-import play.api.Play.current
 
-import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.util.{Try, Failure, Success}
 
-case class TestCase(name: String, exec: () => Future[Boolean]) {
+case class Test(name: String, exec: () => Boolean) {
   def failedTest() = Logger.warn(s"Test $name failed, health check will fail")
 
   def ok() = {
-    val result = exec()
-    result.map(passed => if (!passed) failedTest())
-    result.onFailure { case _ => failedTest() }
-    result
+    val passed = exec()
+    if (!passed) Logger.warn(s"Test $name failed, health check will fail")
+    passed
   }
-}
-
-object Test {
-  def apply(name: String, ok: () => Boolean) = TestCase(name, () => Future(ok()))
 }
 
 object ZuoraPing {
@@ -37,33 +30,28 @@ object ZuoraPing {
 object Healthcheck extends Controller {
   import scala.concurrent.duration._
 
+  val zuoraSoapService = TouchpointBackend.Normal.zuoraSoapService
   val subscriptionService = TouchpointBackend.Normal.subscriptionService
-
-  private val health = Agent(false)
 
   val productRatePlanTiers = List(FriendTierPlan, StaffPlan,
     PaidTierPlan(Supporter, true), PaidTierPlan(Supporter, false),
     PaidTierPlan(Partner, true), PaidTierPlan(Partner, false),
     PaidTierPlan(Patron, true), PaidTierPlan(Patron, false))
 
-  val tests:Seq[TestCase] = Seq(
+  def tests = Seq(
     Test("Events", () => GuardianLiveEventService.events.nonEmpty),
     Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     Test("ZuoraPing", () => ZuoraPing.ping)) ++
-    productRatePlanTiers.map(tier => TestCase(s"ZuoraCatalog: $tier", () =>
-      subscriptionService.tierRatePlanId(tier).map(_ => true)))
-
-  def updateHealthCheck() =
-    Future.sequence(tests.map(_.ok()))
-      .map { results => health send results.forall(r => r) }
-      .recover { case _ => health send false }
-
-  Akka.system.scheduler.schedule(initialDelay = 0.minutes, interval = 1.minute)(updateHealthCheck())
+    productRatePlanTiers.map(tier => Test(s"ZuoraCatalog: $tier", () =>
+      Try(Await.result(subscriptionService.tierRatePlanId(tier).map(_ => true), 10 millis)) match {
+        case Success(passed) => passed
+        case Failure(e) => false
+      }))
 
   def healthcheck() = Action {
     Cached(1) {
-      updateHealthCheck()
-      if (health.get()) Ok("OK")
+      val healthy = tests.forall(_.ok())
+      if (healthy) Ok("OK")
       else ServiceUnavailable("Service Unavailable")
     }
   }
