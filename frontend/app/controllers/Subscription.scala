@@ -29,7 +29,10 @@ trait Subscription extends Controller {
       (_, subscription) <- request.touchpointBackend.subscriptionService.accountWithLatestMembershipSubscription(request.member)
       ticketsUsedCount <- request.touchpointBackend.subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
     } yield {
-      Ok(Json.obj("ticketsLeft" -> ticketsUsedCount.map(FreeEventTickets.allowance - _)))
+      Ok(Json.obj(
+        "totalAllocation" -> FreeEventTickets.allowance,
+        "remainingAllocation" -> ticketsUsedCount.map(FreeEventTickets.allowance - _)
+      ))
     }
   }
 
