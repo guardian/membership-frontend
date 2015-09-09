@@ -95,34 +95,12 @@
     }
 }
 
-.h-promo,
-.h-promo--primary {
-    @include fs-headline(4);
-    font-weight: 500;
-
-    @include mq(tablet) {
-        @include fs-headline(6, true);
-    }
-}
-
-.h-promo--primary {
-    @include mq(tablet) {
-        @include fs-headline(7, true);
-    }
-}
-
 .h-stack {
     @include fs-headline(2);
     font-weight: 500;
     padding-top: rem($gs-baseline / 2);
     margin-bottom: rem($gs-baseline);
     border-top: 1px solid $c-border-neutral;
-}
-
-.h-aside {
-    @include fs-textSans(1);
-    border-top: 1px solid $c-neutral7;
-    padding: rem($gs-baseline / 2) 0;
 }
 
 /* ==========================================================================

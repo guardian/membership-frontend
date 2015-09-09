@@ -404,6 +404,11 @@
         float: left;
     }
 }
+.event__social__title {
+    @include fs-textSans(1);
+    border-top: 1px solid $c-neutral7;
+    padding: rem($gs-baseline / 2) 0;
+}
 
 .event-content__sidebar {
     margin-bottom: rem($gs-gutter);
