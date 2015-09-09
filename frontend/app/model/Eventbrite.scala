@@ -102,7 +102,7 @@ object Eventbrite {
     val isHidden = hidden.contains(true)
 
     val isMemberBenefit = isHidden && name.toLowerCase.startsWith("guardian member")
-    val isComplimentary = isHidden && free && name.toLowerCase.startsWith("member's ticket at no extra cost")
+    val isComplimentary = isHidden && name.toLowerCase.startsWith("member's ticket at no extra cost")
 
     val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
@@ -150,8 +150,6 @@ object Eventbrite {
 
     val isSoldOut = allTickets.forall(_.isSoldOut) || ticketsSold >= capacity
 
-    val hasFreeMembersTickets = allTickets.exists(_.isComplimentary)
-
     val isFree = primaryTicket.free
 
     val salesDates = TicketSaleDates.datesFor(eventTimes, primaryTicket)
@@ -168,6 +166,7 @@ object Eventbrite {
 
     val isPossiblyMissingDiscount = !isFree && memberDiscountOpt.isEmpty
 
+    val isPossiblyMissingComplimentaryTicket = !isFree && !complimentaryTickets.exists(_.free)
   }
 
   case class DiscountBenefitTicketing(generalRelease: EBTicketClass, member: EBTicketClass) {
