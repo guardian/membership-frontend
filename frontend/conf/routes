@@ -47,7 +47,7 @@ GET            /staff/event-details               controllers.Staff.eventDetails
 # Subscription
 POST           /subscription/update-card          controllers.Subscription.updateCard
 OPTIONS        /subscription/update-card          controllers.Subscription.updateCardPreflight
-GET            /subscription/tickets-left         controllers.Subscription.ticketsLeft
+GET            /subscription/remaining-tickets    controllers.Subscription.remainingTickets
 
 # Events
 GET            /events                            controllers.Event.list
