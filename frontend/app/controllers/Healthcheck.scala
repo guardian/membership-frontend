@@ -51,7 +51,7 @@ object Healthcheck extends Controller {
     Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     Test("ZuoraPing", () => ZuoraPing.ping)) ++
     productRatePlanTiers.map(tier => TestCase(s"ZuoraCatalog: $tier", () =>
-      subscriptionService.tierPlanRateId(tier).map(_ => true)))
+      subscriptionService.tierRatePlanId(tier).map(_ => true)))
 
   def updateHealthCheck() =
     Future.sequence(tests.map(_.ok()))
