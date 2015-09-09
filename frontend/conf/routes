@@ -4,6 +4,7 @@
 
 GET            /robots.txt                        controllers.CachedAssets.at(path="/public", file="robots.txt")
 GET            /humans.txt                        controllers.CachedAssets.at(path="/public", file="humans.txt")
+GET            /dynamic-logo.svg                  controllers.CachedAssets.dynamicLogo
 GET            /favicon.ico                       controllers.CacheBustedAssets.at(path="images/favicons/32x32.ico")
 
 # Home page
