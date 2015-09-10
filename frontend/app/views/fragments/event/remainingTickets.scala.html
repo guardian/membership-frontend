@@ -1,0 +1,6 @@
+@(mode: String, classes: Seq[String] = Seq.empty)
+
+<div class="status-bar status-bar--listing js-remaining-tickets @classes.mkString(" ")" data-mode="@mode">
+    @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--offset"))
+    <span class="js-remaining-tickets__text"></span>
+</div>

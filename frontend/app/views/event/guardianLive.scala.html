@@ -8,10 +8,7 @@
             title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
             logo=Logos.guardianLive
         )
-        <div class="status-bar status-bar--listing js-remaining-tickets">
-            @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--offset"))
-            <span class="js-remaining-tickets__text"></span>
-        </div>
+        @fragments.event.remainingTickets("listing", Seq.empty)
         @fragments.event.listing(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
     </main>
 

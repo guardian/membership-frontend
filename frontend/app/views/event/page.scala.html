@@ -52,11 +52,8 @@
         </div>
     </div>
 
-    @if(event.isBookable) {
-        <div class="status-bar status-bar--listing l-constrained js-remaining-tickets">
-            @fragments.inlineIcon("tickets", List("icon-inline--medium", "icon-inline--offset"))
-            <span class="js-remaining-tickets__text"></span>
-        </div>
+    @if(event.isBookable && event.isInstanceOf[GuLiveEvent]) {
+        @fragments.event.remainingTickets("event", List("l-constrained"))
     }
 
     @* Limited availability messaging *@
