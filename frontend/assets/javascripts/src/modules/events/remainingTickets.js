@@ -1,40 +1,59 @@
 define(['$', 'ajax', 'src/utils/user'], function ($, ajax, userUtil) {
     'use strict';
 
-    var SELECTOR = '.js-remaining-tickets';
+    var ELEM_SELECTOR = '.js-remaining-tickets';
+    var ELEM_TEXT_SELECTOR = '.js-remaining-tickets__text';
     var ACTIVE_CLASS = 'is-active';
 
-    function getTicketsRemaining(elem, textElem) {
-        ajax({
-            url: '/subscription/remaining-tickets',
-            type: 'json'
-        }).then(function(data) {
+    function setMessage(props, elem) {
 
-            var total = data.totalAllocation;
-            var remaining = data.remainingAllocation;
+        var textElem = $(ELEM_TEXT_SELECTOR, elem);
 
-            if (remaining > 0) {
-                textElem.html([
-                    '<strong>' + remaining + '</strong>',
-                    'of',
-                    '<strong>' + total + '</strong>',
-                    'allocated member tickets remaining.',
-                    'You can use these for any Guardian Live event.'
-                ].join(' '));
-                elem.addClass(ACTIVE_CLASS);
-            }
-        });
+        var newUserMessageParts = [
+            'You can use one of your',
+            '<strong>' + props.total + '</strong>',
+            'allocated member tickets',
+            ((props.mode === 'event') ? 'for this event' : 'for any Guardian Live event')
+        ];
+
+        var returningUserMessageParts = [
+            'You have',
+            '<strong>' + props.remaining + '</strong>',
+            'of',
+            '<strong>' + props.total + '</strong>',
+            'allocated member tickets remaining.',
+            ((props.mode === 'event') ? null : 'You can use these for any Guardian Live event.')
+        ];
+
+        var messageParts = (props.remaining === props.total) ? newUserMessageParts : returningUserMessageParts;
+
+        if(textElem.length && messageParts.length) {
+            textElem.html(messageParts.join(' '));
+            elem.addClass(ACTIVE_CLASS);
+        }
     }
 
     function init() {
-        var elem = $(SELECTOR);
-        var textElem = $('.js-remaining-tickets__text');
+        var elem = $(ELEM_SELECTOR);
         if(!elem.length) {
             return;
         }
+
         userUtil.getMemberDetail(function (memberDetail, hasTier) {
             if (hasTier) {
-                getTicketsRemaining(elem, textElem);
+                ajax({
+                    url: '/subscription/remaining-tickets',
+                    type: 'json'
+                }).then(function(data) {
+                    var props = {
+                        mode: elem.data('mode'),
+                        total: data.totalAllocation,
+                        remaining: data.remainingAllocation
+                    };
+                    if (props.remaining > 0) {
+                        setMessage(props, elem);
+                    }
+                });
             }
         });
     }
