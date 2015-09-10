@@ -3,16 +3,16 @@ package services
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.model._
 import com.gu.membership.salesforce.MemberId
-import com.gu.membership.salesforce.Tier.{Partner, Patron}
+import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
 import com.gu.membership.stripe.Stripe
-import com.gu.membership.util.Timing
+import com.gu.membership.util.{FutureSupplier, Timing}
 import com.typesafe.scalalogging.LazyLogging
 import forms.MemberForm.JoinForm
 import model.{FreeEventTickets, FeatureChoice, MembershipSummary}
 import model.Zuora._
 import model.ZuoraDeserializer._
 import org.joda.time.DateTime
-import services.zuora.Rest.{Product, ProductRatePlanCharge}
+import services.zuora.Rest.{ProductCatalog, Product, ProductRatePlanCharge}
 import services.zuora._
 import ZuoraServiceHelpers.formatDateTime
 
@@ -140,13 +140,25 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   val membershipProductType = "Membership"
   val productRatePlanChargeModel = "FlatFee"
 
+  val productRatePlanTiers = List(FriendTierPlan, StaffPlan,
+    PaidTierPlan(Supporter, true), PaidTierPlan(Supporter, false),
+    PaidTierPlan(Partner, true), PaidTierPlan(Partner, false),
+    PaidTierPlan(Patron, true), PaidTierPlan(Patron, false))
+
   def membershipProducts = zuoraRestService.productCatalogSupplier.get().map(_.productsOfType(membershipProductType))
+
+  val productRatePlanIdSupplier = new FutureSupplier[Map[ProductRatePlan, String]](
+    for {
+      membershipProductCatalog <- membershipProducts
+    } yield (for {
+      productPlan <- productRatePlanTiers
+    } yield productPlan -> extractRatePlanIdFromCatalog(productPlan, membershipProductCatalog)).toMap
+  )
 
   def tierRatePlanId(productRatePlan: ProductRatePlan): Future[String] =
     membershipProducts.map(extractRatePlanIdFromCatalog(productRatePlan))
 
-  protected def extractRatePlanIdFromCatalog(productRatePlan: ProductRatePlan): (Seq[Product]) => String = {
-    products =>
+  protected def extractRatePlanIdFromCatalog(productRatePlan: ProductRatePlan, products: Seq[Product]): String = {
       val zuoraRatePlanId = for {
         product <- products.find(_.`Tier__c`.contains(productRatePlan.salesforceTier))
         zuoraRatePlan <- productRatePlan match {
@@ -255,10 +267,10 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
 
       zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
       features = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice)
-      ratePlanId <- tierRatePlanId(joinData.plan)
+      productRatePlanIds <- productRatePlanIdSupplier.get() tierRatePlanId(joinData.plan)
       result <- zuoraSoapService.authenticatedRequest(Subscribe(memberId,
                                                       customerOpt,
-                                                      ratePlanId,
+                                                      productRatePlanIds(),
                                                       joinData.name,
                                                       joinData.deliveryAddress,
                                                       paymentDelay,
