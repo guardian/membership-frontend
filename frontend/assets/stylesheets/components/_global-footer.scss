@@ -70,23 +70,6 @@
     }
 }
 
-/**
- * Back to top
- */
-.to-top {
-    display: table;
-}
-.to-top__item {
-    display: table-cell;
-    vertical-align: middle;
-}
-.to-top__label {
-    @include fs-bodyHeading(1);
-    color: $black;
-    padding-left: ($gs-gutter / 4);
-    text-transform: lowercase;
-}
-
 /* Footer - Colophon
    ========================================================================== */
 

@@ -13,10 +13,6 @@ a,
     &:focus {
         text-decoration: underline;
     }
-    &:active {
-        color: $c-link;
-        text-decoration: none;
-    }
 }
 
 // transforms buttons into link-like elements
@@ -26,7 +22,6 @@ a,
     background: none;
     border: 0;
     outline: none;
-    -webkit-font-smoothing: antialiased;
 }
 
 .minimal-link {
@@ -45,6 +40,7 @@ a,
 .no-underline {
     cursor: pointer;
     text-decoration: none;
+
     &:hover,
     &:focus,
     &:active {

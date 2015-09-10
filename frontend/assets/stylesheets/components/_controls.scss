@@ -1,7 +1,9 @@
 /* ==========================================================================
    Controls
    ========================================================================== */
-.control {
+
+.control,
+.control:active {
     color: $black;
     display: table;
     width: 100%;
@@ -23,20 +25,16 @@
 }
 .control__icon {
     color: $black;
+    border-color: rgba(0,0,0,0.3);
 }
 
-/**
- * Control, hover & active state
- */
 .control:hover,
+.control:active,
 .control.is-active {
-    color: $white;
-
     .control__icon {
-        border-color: $white;
+        border-color: color(neutral-1);
     }
-    .control__info,
-    .control__icon {
-        color: $white;
+    .control__info {
+        text-decoration: underline;
     }
 }
