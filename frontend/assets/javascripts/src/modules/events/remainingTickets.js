@@ -13,7 +13,7 @@ define(['$', 'ajax', 'src/utils/user'], function ($, ajax, userUtil) {
             'You can use one of your',
             '<strong>' + props.total + '</strong>',
             'allocated member tickets',
-            ((props.mode === 'event') ? 'for this event' : 'for any Guardian Live event')
+            ((props.mode === 'event') ? 'for this event.' : 'for any Guardian Live event.')
         ];
 
         var returningUserMessageParts = [
@@ -22,7 +22,7 @@ define(['$', 'ajax', 'src/utils/user'], function ($, ajax, userUtil) {
             'of',
             '<strong>' + props.total + '</strong>',
             'allocated member tickets remaining.',
-            ((props.mode === 'event') ? null : 'You can use these for any Guardian Live event.')
+            ((props.mode === 'event') ? 'You can use one for this event.' : 'You can use these for any Guardian Live event.')
         ];
 
         var messageParts = (props.remaining === props.total) ? newUserMessageParts : returningUserMessageParts;
