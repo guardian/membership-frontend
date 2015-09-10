@@ -38,7 +38,7 @@ object Faq {
       Html("Guardian Members is for you if you share our belief that the open exchange of information, ideas and opinions can change the world for the better. By signing up and paying your subscription (at Partner and Patron level), you are helping bring these words to life by supporting open and independent journalism. In return, you get access to events and experiences that are only available to members.")
     ),
     Item("Why should I join?",
-      Html("Membership has a lot to offer, and by joining in this beta phase, you can help build and shape Guardian Members into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Members and paying your subscription is a great way to do it.")
+      Html("Membership has a lot to offer and by joining us you can help build and shape Guardian Members into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Members and paying your subscription is a great way to do it.")
     ),
     Item("How much does membership cost?",
       Html("The Friend tier of Guardian Members is free. Partners pay £15 per month or £135 per year if you pay in one go. For Patrons, the cost is £60 per month or £540 per year. If you choose the annual payment you get 3 months free.")
@@ -98,14 +98,11 @@ object Faq {
     Item("What happens if I want to cancel my membership?",
       Html("You can cancel your membership by following the instructions on this <a href='tier/cancel'>page</a>. Your membership will run until the end of your current payment term.")
     ),
-    Item("I've got feedback about membership",
-      Html("Please fill in the feedback form on the site <a href='feedback'>here</a>.")
-    ),
     Item("How do I know you are protecting my personal information?",
-      Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in our privacy policy <a href='http://www.theguardian.com/help/privacy-policy'>here</a>.")
+      Html("We will never use your information for any purpose without your permission. You can read more about our approach to data security in <a href='http://www.theguardian.com/help/privacy-policy'>our privacy policy</a>.")
     ),
     Item("What are the terms and conditions of membership?",
-      Html("You can read the full set of terms and conditions <a href='http://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions'>here</a>.")
+      Html("<a href='http://www.theguardian.com/info/2014/sep/09/guardian-membership-terms-and-conditions'>Read the full set of terms and conditions here.</a>")
     ),
     Item("How can I find out about disabled/wheelchair access for the venue?",
       Html("We only run events at venues that are accessible by wheelchair. You can tell us that you require accessibility information on the ticket booking form and we will contact you to go over the access route before the event.")
@@ -114,7 +111,10 @@ object Faq {
       Html(s"Please email <a href='mailto:${Email.membershipSupport}'>${Email.membershipSupport}</a> with your question. We will do our best to get back to you within 24 hours. Alternatively, you can call the Guardian Members customer services team on 0330 333 6898 from 8am to 5.30pm Monday to Friday and 8.30am to 12.30pm at weekends.")
     ),
     Item("What are Guardian Masterclasses?",
-      Html("Guardian Masterclasses match our readers’ interests with a wide range of courses and workshops, harnessing the expertise and specialisms of award-winning Guardian professionals and leading figures from the creative and digital industries.")
+      Html("""
+          | Guardian Masterclasses match our readers’ interests with a wide range of courses and workshops, harnessing the expertise and specialisms of award-winning Guardian professionals and leading figures from the creative and digital industries.
+          | <a href='http://www.theguardian.com/guardian-masterclasses/faqs'>More frequently asked questions are available here</a>
+        """.stripMargin)
     ),
     Item("Can I book a Guardian Masterclass course without becoming a member?",
       Html("Yes, Guardian Masterclasses are available to everyone from the <a href='http://www.theguardian.com/guardian-masterclasses'>masterclasses website</a>. However, only Partners and Patrons of the Guardian can enjoy 20% off. In order to receive this discount Masterclasses must be booked through the <a href='https://membership.theguardian.com/masterclasses'>Membership Masterclasses listings page</a>.")
@@ -126,13 +126,18 @@ object Faq {
       Html("Our <a href='https://membership.theguardian.com/masterclasses'>Masterclasses listings page</a> is updated regularly and when you join membership you will receive a weekly email newsletter containing information about upcoming courses.")
     ),
     Item("Where do Guardian Masterclasses take place?",
-      Html("Our Masterclasses are held in the meeting rooms and conference spaces of the Guardian's head quarters in King's Cross, London. <a href='http://www.theguardian.com/guardian-masterclasses/how-to-find-us?guni=Article:in%20body%20link'>Click here</a> for maps to help you find your way to the Guardian offices, and find your way around inside. We also host Masterclasses in other venues in London and beyond.")
+      Html("Our Masterclasses are held in the meeting rooms and conference spaces of the Guardian's head quarters in King's Cross, London. <a href='http://www.theguardian.com/guardian-masterclasses/how-to-find-us?guni=Article:in%20body%20link'>View our maps to help you find your way to the Guardian offices, and find your way around inside.</a> We also host Masterclasses in other venues in London and beyond.")
     ),
     Item("What is the Guardian Masterclasses refund policy?",
-      Html("You may cancel a Guardian Masterclass if your notification is received by the Masterclasses team a minimum of 14 days prior to the start of the Guardian Masterclass. Provided the Masterclasses team has received your notice of cancellation within this time frame (and acknowledged your notice), Masterclasses will refund any fees received from you less the deposit where applicable. Please ensure the Masterclasses team has acknowledged your notice of cancellation. We will not be able to refund you where we did not receive your notice 14 days before the start of the Guardian Masterclass (regardless of when you sent it). Our tickets are not transferable to other courses or dates. The masterclass team contact details are available <a href='http://www.theguardian.com/guardian-masterclasses/about-masterclasses'>here</a>")
-    ),
-    Item("Where can I get more information on Guardian Masterclasses?",
-      Html("More frequently asked questions are available <a href='http://www.theguardian.com/guardian-masterclasses/faqs'>here</a>")
+      Html("""
+          | You may cancel a Guardian Masterclass if your notification is received by the Masterclasses team a minimum of
+          | 14 days prior to the start of the Guardian Masterclass. Provided the Masterclasses team has received your notice
+          | of cancellation within this time frame (and acknowledged your notice), Masterclasses will refund any fees received
+          | from you less the deposit where applicable. Please ensure the Masterclasses team has acknowledged your notice of
+          | cancellation. We will not be able to refund you where we did not receive your notice 14 days before the start of
+          | the Guardian Masterclass (regardless of when you sent it). Our tickets are not transferable to other courses or dates.
+          | <a href='http://www.theguardian.com/guardian-masterclasses/about-masterclasses'>Find out how to contact the masterclass team here.</a>
+        """.stripMargin)
     )
   )
 }
