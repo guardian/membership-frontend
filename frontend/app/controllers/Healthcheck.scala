@@ -12,8 +12,6 @@ import scala.concurrent.Await
 import scala.util.{Try, Failure, Success}
 
 case class Test(name: String, exec: () => Boolean) {
-  def failedTest() = Logger.warn(s"Test $name failed, health check will fail")
-
   def ok() = {
     val passed = exec()
     if (!passed) Logger.warn(s"Test $name failed, health check will fail")
