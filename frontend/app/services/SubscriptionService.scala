@@ -150,10 +150,9 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   val productRatePlanIdSupplier = new FutureSupplier[Map[ProductRatePlan, String]](
     for {
       membershipProductCatalog <- membershipProducts
-    } yield (for {
-      productPlan <- productRatePlanTiers
-    } yield productPlan -> extractRatePlanIdFromCatalog(productPlan, membershipProductCatalog)).toMap
+    } yield productRatePlanTiers.map(plan => plan -> extractRatePlanIdFromCatalog(plan, membershipProductCatalog)).toMap
   )
+
 
   protected def extractRatePlanIdFromCatalog(productRatePlan: ProductRatePlan, products: Seq[Product]): String = {
       val zuoraRatePlanId = for {
