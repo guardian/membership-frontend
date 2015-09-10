@@ -18,7 +18,7 @@
     display: block;
     height: auto;
     padding: 0;
-    background-color: $c-neutral1;
+    background-color: color(neutral-1);
 
     &::-webkit-scrollbar {
         display: none;
@@ -35,139 +35,134 @@
         overflow-x: hidden;
     }
 
-    .nav__scroll {
-        display: table;
-        white-space: nowrap;
-        width: auto;
-        vertical-align: middle;
-        height: $global-toggle-height;
-        padding: 0 ($global-toggle-height * 2) 0 ($gs-gutter / 2);
-
-        @include mq(tablet) {
-            padding: 0 $gs-gutter;
-            display: block;
-        }
-        @include mq(desktop) {
-            width: 100%;
-        }
-    }
-    .nav__list {
-        margin: 0;
-        list-style: none;
-        display: table-row;
-
-        @include mq(desktop) {
-            display: block;
-        }
-    }
-    .nav__item {
-        display: table-cell;
-        vertical-align: middle;
-        text-transform: lowercase;
-
-        @include mq(desktop) {
-            display: block;
-            float: left;
-        }
-    }
-
-    .nav__item--sub {
-        display: none;
-        padding-left: $gs-gutter;
-    }
-
-    .nav__item--right {
-        @include mq(desktop) {
-            float: right;
-        }
-    }
-    .nav__link {
-        position: relative;
-        margin: 0 $gs-gutter 0 0;
-        padding: 0;
-
-        &, &:active {
-            color: $white;
-            text-decoration: none;
-        }
-        &:focus,
-        &:active {
-            text-decoration: underline;
-        }
-
-        @include mq(tablet) {
-            display: block;
-            padding: 8px 0 6px;
-
-            &:focus,
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-    .nav__link--last {
-        margin-right: 0;
-    }
-
     .icon-home {
         vertical-align: top;
     }
 
-    @include mq($until: tablet) {
-        &.is-active {
 
+}
+.global-navigation__scroll {
+    display: table;
+    white-space: nowrap;
+    width: auto;
+    vertical-align: middle;
+    height: $global-toggle-height;
+    padding: 0 ($global-toggle-height * 2) 0 ($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: 0 $gs-gutter;
+        display: block;
+    }
+    @include mq(desktop) {
+        width: 100%;
+    }
+}
+.global-navigation__list {
+    margin: 0;
+    list-style: none;
+    display: table-row;
+
+    @include mq(desktop) {
+        display: block;
+    }
+}
+.global-navigation__item {
+    display: table-cell;
+    vertical-align: middle;
+    text-transform: lowercase;
+
+    @include mq(desktop) {
+        display: block;
+        float: left;
+    }
+}
+.global-navigation__item--sub {
+    display: none;
+    padding-left: $gs-gutter;
+}
+.global-navigation__item--right {
+    @include mq(desktop) {
+        float: right;
+    }
+}
+.global-navigation__link {
+    position: relative;
+    margin: 0 $gs-gutter 0 0;
+    padding: 0;
+
+    &, &:active {
+        color: $white;
+        text-decoration: none;
+    }
+    &:focus,
+    &:active {
+        text-decoration: underline;
+    }
+
+    @include mq(tablet) {
+        display: block;
+        padding: 8px 0 6px;
+
+        &:focus,
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.global-navigation__link--last {
+    margin-right: 0;
+}
+
+@include mq($until: tablet) {
+    .global-navigation.is-active {
+
+        display: block;
+        height: auto;
+        padding: 0;
+        padding-top: $global-toggle-height;
+        position: absolute;
+        z-index: 2;
+        top: 100%;
+        width: 100%;
+        background: color(neutral-1);
+
+        .global-navigation__scroll,
+        .global-navigation__list,
+        .global-navigation__item {
             display: block;
             height: auto;
             padding: 0;
-            padding-top: $global-toggle-height;
-            position: absolute;
-            z-index: 2;
-            top: 100%;
+        }
+
+        .global-navigation__item {
             width: 100%;
-            background: $c-neutral1;
+        }
+        .global-navigation__item--home {
+            display: none;
+        }
+        .global-navigation__item--sub {
+            display: block;
+        }
 
-            .nav__scroll,
-            .nav__list,
-            .nav__item {
-                display: block;
-                height: auto;
-                padding: 0;
-            }
+        .global-navigation__link {
+            @include font-smoothing();
+            @include fs-bodyHeading(1);
+            font-weight: normal;
+            display: block;
+            background-color: transparent;
+            border-bottom: 1px solid lighten(color(neutral-1), 10%);
+            text-decoration: none;
+            padding: ($gs-baseline / 2) 0 $gs-baseline $gs-baseline;
+            margin: 0;
 
-            .nav__item {
-                width: 100%;
-            }
-            .nav__item--home {
-                display: none;
-            }
-            .nav__item--sub {
-                display: block;
-            }
-
-            .nav__link {
-                @include font-smoothing();
-                @include fs-bodyHeading(1);
-                font-weight: normal;
-                margin: 0;
-                border-top: 1px solid lighten(color(brand-main), 5%);
-                display: block;
+            &,
+            &:active,
+            &:focus {
                 text-decoration: none;
-                padding: ($gs-baseline / 2) 0 $gs-baseline $gs-baseline;
-                background-color: transparent;
+            }
 
-                &,
-                &:active,
-                &:focus {
-                    text-decoration: none;
-                }
-
-                &:hover {
-                    text-decoration: underline;
-                }
-
-                @include mq(desktop) {
-                    border-top: 0;
-                }
+            &:hover {
+                text-decoration: underline;
             }
         }
     }
@@ -179,7 +174,7 @@
 
 .nav-secondary {
     @include unstyled-list();
-    background-color: $c-neutral5;
+    background-color: color(neutral-7);
     position: relative;
 }
 .nav-secondary__inner {
@@ -386,7 +381,7 @@
     @include unstyled-list();
     overflow: hidden;
     color: $black;
-    background-color: $c-neutral1;
+    background-color: color(neutral-1);
     position: relative;
 }
 .nav-sections--sticky {
