@@ -59,9 +59,9 @@ trait AmendSubscription {
       for {
         subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
         dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
-        subscriptionRatePlanId <- tierRatePlanId(newTierPlan)
+        productRatePlanIds <- productRatePlanIdSupplier.get()
         result <- zuoraSoapService.authenticatedRequest(DowngradePlan(currentSubscriptionVersion.id, subscriptionDetails.ratePlanId,
-          subscriptionRatePlanId, dateToMakeDowngradeEffectiveFrom))
+          productRatePlanIds(newTierPlan), dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
   }
@@ -75,8 +75,8 @@ trait AmendSubscription {
         zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
         ratePlan <- zuoraSoapService.queryOne[RatePlan](s"SubscriptionId='$subscriptionId'")
         choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice)
-        subscriptionRatePlanId <- tierRatePlanId(newTierPlan)
-        result <- zuoraSoapService.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, subscriptionRatePlanId, preview, choice))
+        productRatePlanIds <- productRatePlanIdSupplier.get()
+        result <- zuoraSoapService.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, productRatePlanIds(newTierPlan), preview, choice))
       } yield result
     }
   }
@@ -154,9 +154,6 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
       productPlan <- productRatePlanTiers
     } yield productPlan -> extractRatePlanIdFromCatalog(productPlan, membershipProductCatalog)).toMap
   )
-
-  def tierRatePlanId(productRatePlan: ProductRatePlan): Future[String] =
-    membershipProducts.map(extractRatePlanIdFromCatalog(productRatePlan, membershipProducts.))
 
   protected def extractRatePlanIdFromCatalog(productRatePlan: ProductRatePlan, products: Seq[Product]): String = {
       val zuoraRatePlanId = for {
@@ -270,7 +267,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
       productRatePlanIds <- productRatePlanIdSupplier.get()
       result <- zuoraSoapService.authenticatedRequest(Subscribe(memberId,
                                                       customerOpt,
-                                                      productRatePlanIds.get(joinData.plan).get,
+                                                      productRatePlanIds(joinData.plan),
                                                       joinData.name,
                                                       joinData.deliveryAddress,
                                                       paymentDelay,
