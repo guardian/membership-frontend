@@ -52,6 +52,10 @@
         </div>
     </div>
 
+    @if(event.isBookable && event.isInstanceOf[GuLiveEvent]) {
+        @fragments.event.remainingTickets("event", List("l-constrained"))
+    }
+
     @* Limited availability messaging *@
     @if(event.isBookable && event.isLimitedAvailability) {
         <div class="event-extra l-constrained">

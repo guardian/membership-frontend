@@ -1,3 +1,32 @@
+/* ==========================================================================
+   Messages
+   ========================================================================== */
+
+/* ==========================================================================
+   Message: Status Bar
+   ========================================================================== */
+
+.status-bar {
+    @include fs-data(4);
+    color: color(neutral-2);
+    background-color: color(neutral-5);
+    padding: ($gs-baseline / 2) $gs-gutter;
+    opacity: 0;
+    transition: opacity .5s ease;
+}
+.status-bar.is-active {
+    opacity: 1;
+}
+.status-bar--listing {
+    @include mq(desktop) {
+        padding-left: gs-span(2.5);
+    }
+}
+
+/* ==========================================================================
+   Messages: Flash message
+   ========================================================================== */
+
 .flash-message {
     @include fs-data(4);
     margin-top: rem(12px);

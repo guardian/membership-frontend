@@ -51,9 +51,15 @@ define([
                 callback.apply(this, args);
             });
         };
+        var hasTier = function(memberDetail) {
+            return !!(memberDetail && memberDetail.tier);
+        };
 
         return function (callback, overRideCallbacks) {
-            // for testing purposes to mimic a reload of the javascript and hence a clearing of the callbacks array
+            /**
+             * For testing purposes to mimic a reload of the javascript
+             * and hence a clearing of the callbacks array
+             */
             callbacks = overRideCallbacks || callbacks;
 
             var membershipUser;
@@ -62,7 +68,7 @@ define([
             if (identityUser) {
                 membershipUser = cookie.getDecodedCookie(MEM_USER_COOKIE_KEY);
                 if ((membershipUser && membershipUser.userId) === identityUser.id) {
-                    callback(membershipUser);
+                    callback(membershipUser, hasTier(membershipUser));
                 } else {
                     callbacks.push(callback);
 
@@ -71,7 +77,7 @@ define([
                             url: '/user/me',
                             method: 'get',
                             success: function (resp) {
-                                invokeCallbacks([resp]);
+                                invokeCallbacks([resp, hasTier(resp)]);
                                 pendingXHR = null;
                             }
                         });
@@ -83,13 +89,8 @@ define([
         };
     }());
 
-    var hasTier = function(memberDetail) {
-        return !!(memberDetail && memberDetail.tier);
-    };
-
     return {
         isLoggedIn: isLoggedIn,
-        hasTier: hasTier,
         getUserFromCookie: getUserFromCookie,
         getMemberDetail: getMemberDetail,
         idCookieAdapter: idCookieAdapter
