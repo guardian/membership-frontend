@@ -156,7 +156,7 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
   )
 
   def tierRatePlanId(productRatePlan: ProductRatePlan): Future[String] =
-    membershipProducts.map(extractRatePlanIdFromCatalog(productRatePlan))
+    membershipProducts.map(extractRatePlanIdFromCatalog(productRatePlan, membershipProducts.))
 
   protected def extractRatePlanIdFromCatalog(productRatePlan: ProductRatePlan, products: Seq[Product]): String = {
       val zuoraRatePlanId = for {
@@ -267,10 +267,10 @@ class SubscriptionService(val zuoraSoapService: ZuoraSoapService,
 
       zuoraFeatures <- zuoraSoapService.featuresSupplier.get()
       features = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice)
-      productRatePlanIds <- productRatePlanIdSupplier.get() tierRatePlanId(joinData.plan)
+      productRatePlanIds <- productRatePlanIdSupplier.get()
       result <- zuoraSoapService.authenticatedRequest(Subscribe(memberId,
                                                       customerOpt,
-                                                      productRatePlanIds(),
+                                                      productRatePlanIds.get(joinData.plan).get,
                                                       joinData.name,
                                                       joinData.deliveryAddress,
                                                       paymentDelay,
