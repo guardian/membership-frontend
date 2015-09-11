@@ -1,12 +1,12 @@
-@(event: model.RichEvent.RichEvent, pageInfo: model.PageInfo)
+@(pageInfo: model.PageInfo, event: model.RichEvent.RichEvent)
 
 @import play.twirl.api.Html
 @import scala.util.Random
 @import model.RichEvent._
 @import views.support.Dates._
-@import views.support.Social.eventDetail
+@import views.support.Social
 
-@main(event.name.text, pageInfo=pageInfo) {
+@main(pageInfo.title, pageInfo=pageInfo) {
 
     @* Event Name *@
     <div class="event-header">
@@ -122,7 +122,7 @@
                 }
                 <div class="event__social">
                     <h5 class="event__social__title hidden-mobile">Share this</h5>
-                    @fragments.social(eventDetail(event))
+                    @fragments.social(Social.eventDetail(event))
                 </div>
             </div>
 

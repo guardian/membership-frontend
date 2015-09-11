@@ -7,37 +7,23 @@
             <p class="date-listing__subtitle">@date.toString("EEEE")</p>
         </div>
         <div class="date-listing__content">
-            <ul class="u-unstyled">
-            @for(event <- events) {
-                <li>
-                    @fragments.event.itemList(event)
-                </li>
-            }
-            </ul>
+            <div class="o-flexgrid">
+                @for(event <- events) {
+                    @fragments.event.itemList(event, List("o-flexgrid__item"))
+                }
+            </div>
         </div>
     </section>
 }
 
-@main("Calendar | List View | What's On", pageInfo) {
-
-    <main role="main" class="page-content l-constrained">
-
-        @fragments.page.pageHeader("Calendar", None)
-
-        <div class="filter-bar">
-            <a class="action action--no-icon" href="@routes.WhatsOn.calendarGrid" aria-title="View events as a grid" title="View events as a grid">
-                @fragments.actionIcon("grid-view", leftIcon=true)
-                Grid view
-            </a>
-        </div>
-
+@main(pageInfo.title, pageInfo) {
+    <main class="page-content l-constrained">
+        @fragments.page.pageHeader("Past Events", None)
         @for((month, monthGroup) <- groupedEvents.list) {
             <h2 class="month-header">@month.toString("MMMM Y")</h2>
             @for((day, dayGroup) <- monthGroup) {
                 @dateListing(day, dayGroup)
             }
         }
-
     </main>
-
 }

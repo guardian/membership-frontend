@@ -1,27 +1,18 @@
-@(event: model.RichEvent.RichEvent)
+@(event: model.RichEvent.RichEvent, classes: Seq[String] = Seq.empty)
 
-@import scala.util.Random
-@import views.support.Dates.dateRange
-
-<a href="@routes.Event.details(event.slug)" class="event-item event-item--clippath-@Random.nextInt(2).toString event-item--list @if(event.isBookable){ qa-available-event-item}">
+<a href="@routes.Event.details(event.slug)"
+   class="event-item event-item--list @if(event.isBookable){ qa-available-event-item} @classes.mkString(" ")">
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
-            @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
+            <img src="@img.smallestImage" alt="@img.altText" class="responsive-img">
         </div>
     }
     <div class="event-item__content">
         @fragments.event.itemMetaTitle(event)
         <div class="event-item__meta">
-            <time class="event-item__time" datetime="@event.start">
-                @dateRange(event.startAndEnd)
-            </time>
-            <div class="event-item__location">
-                @event.venueDescription
+             <div class="event-item__location">
+                @event.venueShortDescription
             </div>
         </div>
-        @fragments.pricing.priceInfoEvent(event)
-        <span class="event-item__action">
-            @fragments.inlineIcon("arrow-circle", List("icon-inline--brand", "icon-inline--large"))
-        </span>
     </div>
 </a>

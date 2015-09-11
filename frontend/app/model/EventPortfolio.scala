@@ -1,6 +1,8 @@
 package model
 
 import model.RichEvent.RichEvent
+import scala.collection.SortedMap
+import org.joda.time.LocalDate
 
 // used for arbitrary groupings of events with custom titles
 case class EventGroup(sequenceTitle: String, events: Seq[RichEvent])
@@ -29,4 +31,8 @@ case class EventBrandCollection(
   live: Seq[RichEvent],
   local: Seq[RichEvent],
   masterclasses: Seq[RichEvent]
+)
+
+case class CalendarMonthDayGroup(
+  list: SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]]
 )

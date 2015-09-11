@@ -102,13 +102,17 @@
 .month-header {
     @include fs-header(3);
     border-top: 1px solid $c-border-brand;
-    padding-top: rem($gs-baseline / 2);
-    padding-bottom: rem($gs-baseline * 2);
+    padding: ($gs-baseline / 2) 0;
+    background-color: $white;
 
     width:  100%;
     position: sticky;
-    top: 5px;
-    z-index: 100;
+    z-index: 1;
+    top: 0;
+
+    @include mq(tablet) {
+        padding-bottom: $gs-baseline * 2;
+    }
 }
 
 .date-listing {
@@ -116,7 +120,7 @@
 }
 .date-listing__lead-in {
     padding-top: rem($gs-baseline / 2);
-    border-top: 1px solid $c-border-brand;
+    border-top: 1px solid $c-border-neutral;
 
     @include mq(tablet) {
         width: 15% - $gutter-width-fluid;
@@ -130,13 +134,18 @@
         width: 85%;
     }
 }
-.date-listing__title {
-    @include fs-header(3);
+.date-listing__title,
+.date-listing__subtitle {
+    @include fs-header(2);
+    font-weight: normal;
+    display: inline-block;
+
+    @include mq(tablet) {
+        display: block;
+    }
 }
 .date-listing__subtitle {
-    @include fs-headline(2);
-    font-weight: normal;
-    color: $c-neutral2;
+    color: color(neutral-2);
 }
 
 .date-listing--lead {

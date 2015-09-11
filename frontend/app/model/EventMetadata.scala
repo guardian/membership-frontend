@@ -30,7 +30,7 @@ object EventMetadata {
       |Members can attend events that take the power of open journalism from print and digital into live experiences.
     """.stripMargin),
     socialHashtag=Some("#GuardianLive"),
-    eventListUrl=controllers.routes.Event.list.url,
+    eventListUrl=controllers.routes.Event.eventsList.url,
     termsUrl=Links.guardianLiveTerms,
     chooseTier=ChooseTierMetadata(
       "Guardian Live events are exclusively for Guardian members",
@@ -46,7 +46,7 @@ object EventMetadata {
     description=Some("Guardian Local is a programme of events, specially selected to give our members the chance to " +
       "come together and enjoy arts, food and culture from around the UK."),
     socialHashtag=Some("#GuardianLocal"),
-    eventListUrl=controllers.routes.Event.list.url,
+    eventListUrl=controllers.routes.Event.eventsList.url,
     termsUrl=Links.guardianLiveTerms,
     chooseTier=ChooseTierMetadata(
       "Guardian Local events are exclusively for Guardian members",
@@ -64,7 +64,7 @@ object EventMetadata {
       | journalism, photography and design, film and digital media, music and cultural appreciation.
     """.stripMargin),
     socialHashtag=Some("#GuardianMasterclasses"),
-    eventListUrl=controllers.routes.Event.masterclasses.url,
+    eventListUrl=controllers.routes.Event.masterclassesList.url,
     termsUrl=Links.guardianMasterclassesTerms,
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
