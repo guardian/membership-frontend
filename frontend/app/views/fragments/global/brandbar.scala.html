@@ -6,11 +6,16 @@
 <div class="global-brandbar">
     <div class="global-brandbar__inner l-constrained">
         <div class="global-brandbar__top">
-            <a class="to-top" href="#top">
-                <span class="to-top__item icon-holder icon-holder--large icon-holder--neutral">
-                    @fragments.inlineIcon("arrow-up")
+            @* Back to top *@
+            <a class="control" href="#top">
+                <span class="control__item">
+                    <span class="control__icon icon-holder icon-holder--large">
+                        @fragments.inlineIcon("arrow-up")
+                    </span>
                 </span>
-                <span class="to-top__item to-top__label">Back to top</span>
+                <span class="control__item">
+                    <span class="control__info">back to top</span>
+                </span>
             </a>
         </div>
         <a href="/" class="global-brandbar__logo">
