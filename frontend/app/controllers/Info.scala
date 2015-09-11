@@ -6,7 +6,7 @@ import scala.concurrent.Future
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
-import services.{AuthenticationService, EmailService}
+import services.{GuardianContentService, AuthenticationService, EmailService}
 
 trait Info extends Controller {
 
@@ -150,6 +150,14 @@ trait Info extends Controller {
       )
     )
     Ok(views.html.info.patron(pageInfo, pageImages))
+  }
+
+  def offersAndCompetitions = CachedAction { implicit request =>
+    val results = GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer)
+      .filter(_.content.fields.map(_("membershipAccess")).isEmpty)
+      .filter(!_.content.webTitle.startsWith("EXPIRED"))
+      .filter(_.imgOpt.nonEmpty)
+    Ok(views.html.info.offersAndCompetitions(results))
   }
 
   def help = CachedAction { implicit request =>

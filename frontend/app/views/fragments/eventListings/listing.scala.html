@@ -1,10 +1,11 @@
 @(
     events: Seq[model.RichEvent.RichEvent],
     noResultsMessage: String,
-    isFilterable: Boolean
+    isLead: Boolean = false,
+    isFilterable: Boolean = false
 )
 
-<section class="listing">
+<section class="listing@if(isLead){ listing--lead}">
     <div class="listing__lead-in">
         <h3 class="listing__title h-intro">What's on</h3>
     </div>
