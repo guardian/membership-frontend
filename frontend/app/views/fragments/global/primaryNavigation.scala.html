@@ -1,0 +1,36 @@
+@(pageInfo: model.PageInfo)
+
+@import model.Nav
+@import configuration.Links
+
+<button role="menuitem" class="mobile-menu mobile-only js-menu-icon" title="Menu">
+    <span class="mobile-menu__icon">
+        <i></i><i></i><i></i>
+    </span>
+</button>
+
+<nav role="navigation" class="global-navigation js-global-nav">
+    <div class="global-navigation__scroll l-constrained">
+        <ul class="global-navigation__list">
+            <li class="global-navigation__item global-navigation__item--home">
+                <a href="/" class="global-navigation__link js-nav-link-home">
+                    @fragments.inlineIcon("home")
+                    <span class="u-h">Home</span>
+                </a>
+            </li>
+            @for(navItem <- Nav.primaryNavigation if !navItem.isPrivate) {
+                <li class="global-navigation__item">
+                    <a href="@navItem.href" class="global-navigation__link" id="qa-nav-@navItem.id">@navItem.title</a>
+                </li>
+                @for(subNavItem <- navItem.subNav if !subNavItem.isPrivate) {
+                    <li class="global-navigation__item global-navigation__item--sub">
+                        <a href="@subNavItem.href" class="global-navigation__link" id="qa-nav-@subNavItem.id">@subNavItem.title</a>
+                    </li>
+                }
+            }
+            <li class="global-navigation__item global-navigation__item--right">
+                <a href="@Links.membershipFront" class="global-navigation__link global-navigation__link--last js-members-area is-hidden">Members' Area</a>
+            </li>
+        </ul>
+    </div>
+</nav>
