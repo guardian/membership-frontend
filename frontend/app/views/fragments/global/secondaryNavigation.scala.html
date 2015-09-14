@@ -1,0 +1,27 @@
+@(pageInfo: model.PageInfo)
+
+@import model.Nav
+
+@defining(Nav.fetchNav(Nav.primaryNavigation, pageInfo.url)) { subNav =>
+    @for(navItem <- subNav if navItem.subNav.nonEmpty) {
+        <nav class="nav-secondary">
+            <div class="nav-secondary__inner l-constrained">
+                <ul class="nav-secondary__breadcrumb nav-secondary__list">
+                    <li class="nav-secondary__breadcrumb__item nav-secondary__breadcrumb__trail nav-secondary__item">
+                        <a class="nav-secondary__breadcrumb__link nav-secondary__link" href="/">Home</a>
+                    </li>
+                    <li class="nav-secondary__breadcrumb__item nav-secondary__item">
+                        <a class="nav-secondary__breadcrumb__link nav-secondary__link" href="@navItem.href">@navItem.title</a>
+                    </li>
+                </ul>
+                <ul class="nav-secondary__list">
+                    @for(subNav <- navItem.subNav) {
+                        <li class="nav-secondary__item">
+                            <a href="@subNav.href" class="nav-secondary__link" id="qa-nav-@subNav.id">@subNav.title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    }
+}

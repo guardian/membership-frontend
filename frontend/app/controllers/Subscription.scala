@@ -2,11 +2,13 @@ package controllers
 
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
+import model.FreeEventTickets
 import play.api.data.Forms._
 import play.api.data._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.MemberService
 
 import scala.concurrent.Future
 
@@ -20,6 +22,18 @@ trait Subscription extends Controller {
       ).recover {
         case error: Stripe.Error => Forbidden(Json.toJson(error))
       }
+  }
+
+  def remainingTickets() = AjaxPaidMemberAction.async { implicit request =>
+    for {
+      (_, subscription) <- request.touchpointBackend.subscriptionService.accountWithLatestMembershipSubscription(request.member)
+      ticketsUsedCount <- request.touchpointBackend.subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
+    } yield {
+      Ok(Json.obj(
+        "totalAllocation" -> FreeEventTickets.allowance,
+        "remainingAllocation" -> ticketsUsedCount.map(FreeEventTickets.allowance - _)
+      ))
+    }
   }
 
   def updateCardPreflight() = Cors.andThen(CachedAction) { Ok.withHeaders(ACCESS_CONTROL_ALLOW_HEADERS -> "Csrf-Token") }

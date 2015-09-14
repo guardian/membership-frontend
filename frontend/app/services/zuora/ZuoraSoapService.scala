@@ -57,7 +57,7 @@ class ZuoraSoapService(val apiConfig: ZuoraApiConfig) extends LazyLogging {
   val featuresSupplier =
     new FutureSupplier[Seq[Feature]](getFeatures)
 
-  val lastPingTime = ScheduledTask[Option[DateTime]]("ZuoraPing", None, 30.seconds, 30.seconds)(
+  val lastPingTime = ScheduledTask[Option[DateTime]]("ZuoraPing", None, 0.seconds, 30.seconds)(
     authenticatedRequest(Query("SELECT Id FROM Product")).map { _ => Some(new DateTime) }
   )
 

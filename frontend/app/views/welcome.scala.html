@@ -1,4 +1,4 @@
-@(pageImages: Seq[model.ResponsiveImageGroup])
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])
 
 @import configuration.Links
 @import views.support.Asset
@@ -16,7 +16,7 @@
     </div>
 }
 
-@main("Home Page") {
+@main(pageInfo.title, pageInfo=pageInfo) {
 
     <main role="main" class="l-constrained">
 

@@ -25,7 +25,6 @@ import play.api.libs.json.Json
 import EventbriteService._
 import zuora.CreateFreeEventUsage
 import tracking._
-import utils.TestUsers.isTestUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -150,15 +149,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
   def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
     val tp = TouchpointBackend.forUser(member)
     Timing.record(tp.memberRepository.metrics, "retrieveComplimentaryTickets") {
-      val memberTierFeatures = tp.subscriptionService.memberTierFeatures(member)
-      val ticketsUsed = tp.subscriptionService.getUsageCountWithinTerm(member, FreeEventTickets.unitOfMeasure)
-
       for {
-        features <- memberTierFeatures
-        usageCount <- ticketsUsed
+        (_, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
+        usageCount <- tp.subscriptionService.getUsageCountWithinTerm(subscription, FreeEventTickets.unitOfMeasure)
       } yield {
-        val hasComplimentaryTickets = features.map(_.featureCode).contains(FreeEventTickets.zuoraCode)
-        val allowanceNotExceeded = usageCount < FreeEventTickets.allowance
+        val hasComplimentaryTickets = usageCount.isDefined
+        val allowanceNotExceeded = usageCount.exists(_ < FreeEventTickets.allowance)
         logger.info(
           s"User ${member.identityId} has used $usageCount tickets" ++
             s"(allowance not exceeded: $allowanceNotExceeded, is entitled: $hasComplimentaryTickets)")

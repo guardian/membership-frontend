@@ -13,6 +13,7 @@ require([
     'src/modules/modal',
     'src/modules/events/cta',
     'src/modules/events/filter',
+    'src/modules/events/remainingTickets',
     'src/modules/events/eventPriceEnhance',
     'src/modules/form',
     'src/modules/form/processSubmit',
@@ -37,6 +38,7 @@ require([
     modal,
     cta,
     filter,
+    remainingTickets,
     eventPriceEnhance,
     processSubmit,
     form,
@@ -75,6 +77,7 @@ require([
     // Events
     cta.init();
     filter.init();
+    remainingTickets.init();
     eventPriceEnhance.init();
 
     // Forms

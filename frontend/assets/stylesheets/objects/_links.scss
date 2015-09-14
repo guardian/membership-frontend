@@ -5,17 +5,12 @@
 a,
 .fake-link {
     overflow: hidden;
-    color: $c-link;
     cursor: pointer;
     text-decoration: none;
 
     &:hover,
     &:focus {
         text-decoration: underline;
-    }
-    &:active {
-        color: $c-link;
-        text-decoration: none;
     }
 }
 
@@ -26,7 +21,6 @@ a,
     background: none;
     border: 0;
     outline: none;
-    -webkit-font-smoothing: antialiased;
 }
 
 .minimal-link {
@@ -45,6 +39,7 @@ a,
 .no-underline {
     cursor: pointer;
     text-decoration: none;
+
     &:hover,
     &:focus,
     &:active {
