@@ -50,12 +50,13 @@ OPTIONS        /subscription/update-card          controllers.Subscription.updat
 GET            /subscription/remaining-tickets    controllers.Subscription.remainingTickets
 
 # Events
-GET            /events                            controllers.Event.list
-GET            /events/:tag                       controllers.Event.listFilteredBy(tag)
-GET            /masterclasses                     controllers.Event.masterclasses
-GET            /masterclasses/all                 controllers.Event.masterclasses
-GET            /masterclasses/:tag                controllers.Event.masterclassesByTag(tag, subTag = "")
-GET            /masterclasses/:tag/:subTag        controllers.Event.masterclassesByTag(tag, subTag)
+GET            /events                            controllers.Event.eventsList
+GET            /events/archive                    controllers.Event.eventsListArchive
+GET            /events/:tag                       controllers.Event.eventsListFilteredBy(tag)
+GET            /masterclasses                     controllers.Event.masterclassesList
+GET            /masterclasses/all                 controllers.Event.masterclassesList
+GET            /masterclasses/:tag                controllers.Event.masterclassesListFilteredBy(tag, subTag = "")
+GET            /masterclasses/:tag/:subTag        controllers.Event.masterclassesListFilteredBy(tag, subTag)
 
 GET            /event/:id                         controllers.Event.details(id)
 GET            /event/:id/embed                   controllers.Event.embedData(id)

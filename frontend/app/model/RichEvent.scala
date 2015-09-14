@@ -1,5 +1,6 @@
 package model
 
+import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.model.Content
 import configuration.Links
 import controllers.routes
@@ -7,7 +8,26 @@ import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.EBEvent
 import services.MasterclassData
 
+import scala.collection.immutable.SortedMap
+
 object RichEvent {
+
+  def groupEventsByDay(events: Seq[RichEvent])(implicit chronologicalOrdering: Ordering[LocalDate]): SortedMap[LocalDate, Seq[RichEvent]] = {
+    val unsortedMap = events.groupBy(_.start.toLocalDate)
+    SortedMap(unsortedMap.toSeq :_*)(chronologicalOrdering)
+  }
+
+  def groupEventsByDayAndMonth(events: Seq[RichEvent])(implicit chronologicalOrdering: Ordering[LocalDate]):  SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
+    val unsortedMap = groupEventsByDay(events)(chronologicalOrdering).groupBy(_._1.withDayOfMonth(1))
+    SortedMap(unsortedMap.toSeq :_*)(chronologicalOrdering)
+  }
+
+  def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
+    val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
+      case (monthDate, eventsForMonth) => monthDate -> eventsForMonth
+    }
+    SortedMap(unsortedMap.toSeq :_*)
+  }
 
   case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
 

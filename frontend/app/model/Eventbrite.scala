@@ -234,6 +234,11 @@ object Eventbrite {
       else Some("http://schema.org/InStock")
     }
 
+    val venueShortDescription = List(
+      venue.name,
+      venue.address.flatMap(_.city)
+    ).flatten.mkString(", ")
+
     val venueDescription = List(
       venue.name,
       venue.address.flatMap(_.city),

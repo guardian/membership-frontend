@@ -11,8 +11,9 @@ import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import model.EmbedSerializer._
 import model.Eventbrite.{EBEvent, EBOrder}
+import model.RichEvent.RichEvent
 import model.RichEvent.{RichEvent, _}
-import model.{EmbedData, EventPortfolio, Eventbrite, PageInfo}
+import model._
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
@@ -21,7 +22,6 @@ import services.{EventbriteService, GuardianLiveEventService, LocalEventService,
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
-
 import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
@@ -58,7 +58,7 @@ trait Event extends Controller with ActivityTracking {
       }
     }
 
-    eventOpt.getOrElse(Redirect(routes.Event.list))
+    eventOpt.getOrElse(Redirect(routes.Event.eventsList))
   }
 
   /*
@@ -111,72 +111,83 @@ trait Event extends Controller with ActivityTracking {
       event.socialImgUrl,
       Some(event.schema)
     )
-    Ok(views.html.event.page(event, pageInfo))
-  }
-
-  def masterclasses = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
-    )
-    Ok(views.html.event.masterclass(pageInfo, masterclassEvents.events))
-  }
-
-  def masterclassesByTag(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
-    val tag = MasterclassEvent.decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
-    )
-    Ok(views.html.event.masterclass(
-      pageInfo,
-      masterclassEvents.getTaggedEvents(tag),
-      MasterclassEvent.decodeTag(rawTag),
-      MasterclassEvent.decodeTag(rawSubTag)
-    ))
+    Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
   private def chronologicalSort(events: Seq[model.RichEvent.RichEvent]) = {
     events.sortWith(_.event.start < _.event.start)
   }
 
-  def list = CachedAction { implicit request =>
+  private def archivedEvents = {
+    guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+  }
 
-    val archivedEvents =
-      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
-
-    Ok(views.html.event.guardianLive(
+  def eventsList = CachedAction { implicit request =>
+    Ok(views.html.event.eventsList(
+      PageInfo(
+        CopyConfig.copyTitleEvents,
+        request.path,
+        Some(CopyConfig.copyDescriptionEvents)
+      ),
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
         chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
         chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
-      ),
-      PageInfo(
-        CopyConfig.copyTitleEvents,
-        request.path,
-        Some(CopyConfig.copyDescriptionEvents)
       ))
     )
   }
 
-  def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
+  def eventsListArchive = GoogleAuthenticatedStaffAction { implicit request =>
+    val eventsArchive = {
+      CalendarMonthDayGroup(RichEvent.groupEventsByDayAndMonth(archivedEvents)(implicitly[Ordering[LocalDate]].reverse))
+    }
+    Ok(views.html.event.eventsListArchive(
+      PageInfo("Archive | Events", request.path, None),
+      eventsArchive
+    ))
+
+  }
+
+  def eventsListFilteredBy(urlTagText: String) = CachedAction { implicit request =>
     val tag = urlTagText.replace('-', ' ')
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    Ok(views.html.event.guardianLive(
+    Ok(views.html.event.eventsList(
+      PageInfo(
+        CopyConfig.copyTitleEvents,
+        request.path,
+        Some(CopyConfig.copyDescriptionEvents)
+      ),
       EventPortfolio(
         Seq.empty,
         chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag)),
         Seq.empty,
         None
-      ),
-      pageInfo))
+      ))
+    )
+  }
+
+  def masterclassesList = CachedAction { implicit request =>
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleMasterclasses,
+      request.path,
+      Some(CopyConfig.copyDescriptionMasterclasses)
+    )
+    Ok(views.html.event.masterclassesList(pageInfo, masterclassEvents.events))
+  }
+
+  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
+    val tag = MasterclassEvent.decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleMasterclasses,
+      request.path,
+      Some(CopyConfig.copyDescriptionMasterclasses)
+    )
+    Ok(views.html.event.masterclassesList(
+      pageInfo,
+      masterclassEvents.getTaggedEvents(tag),
+      MasterclassEvent.decodeTag(rawTag),
+      MasterclassEvent.decodeTag(rawSubTag)
+    ))
   }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>

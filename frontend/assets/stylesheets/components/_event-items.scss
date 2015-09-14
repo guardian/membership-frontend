@@ -193,12 +193,9 @@
    ========================================================================== */
 
 .event-item--list {
-
-    display: table;
-    width: 100%;
     height: auto;
     overflow: hidden;
-    margin-bottom: rem($gs-gutter);
+    margin-bottom: $gs-gutter / 2;
     border-top: 1px solid $c-border-neutral;
 
     .event-item__media,
@@ -208,24 +205,22 @@
     }
     .event-item__content {
         position: relative;
-        padding: rem($gs-gutter / 4);
-        padding-top: rem(($gs-gutter / 4) - 1px);
+        padding: (($gs-gutter / 4) - 1px) ($gs-gutter / 2) ($gs-gutter / 4) ;
     }
     .event-item__media {
         width: $trailblock-img-width;
-        margin-right: rem($gs-baseline);
+        margin-right: $gs-baseline;
     }
     .event-item__meta {
         padding: 0;
-        margin-bottom: rem($gs-baseline);
+        margin-bottom: $gs-baseline;
     }
     .event-item__title {
-        @include fs-headline(2, true);
-    }
+        @include fs-headline(1, $size-only: true);
 
-    @include mq(tablet) {
-        .event-item__title {
-            @include fs-headline(3, true);
+        @include mq(tablet) {
+            @include fs-headline(2, $size-only: true);
+            max-width: 30em;
         }
     }
 
