@@ -133,6 +133,20 @@ trait Event extends Controller with ActivityTracking {
     ))
   }
 
+  def listArchive = CachedAction { implicit request =>
+    val archivedEvents =
+      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
+
+    val calendarArchive =
+      CalendarMonthDayGroup(RichEvent.groupEventsByDayAndMonth(archivedEvents)(implicitly[Ordering[LocalDate]].reverse))
+
+    Ok(views.html.event.eventsListArchive(
+      PageInfo("Archive | Events", request.path, None),
+      calendarArchive
+    ))
+
+  }
+
   def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
     val tag = urlTagText.replace('-', ' ')
     val events = chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag))

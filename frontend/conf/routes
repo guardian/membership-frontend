@@ -52,6 +52,7 @@ GET            /subscription/remaining-tickets        controllers.Subscription.r
 # Events
 GET            /events                                controllers.Event.list
 GET            /events/:tag                           controllers.Event.listFilteredBy(tag)
+GET            /events/archive                        controllers.Event.listArchive
 GET            /masterclasses                         controllers.Event.masterclassesList
 GET            /masterclasses/all                     controllers.Event.masterclassesList
 GET            /masterclasses/:tag                    controllers.Event.masterclassesListFilteredBy(tag, subTag = "")

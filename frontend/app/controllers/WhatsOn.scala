@@ -2,13 +2,10 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import configuration.CopyConfig
-import model.RichEvent.RichEvent
-import model.{EventGroup, ContentItem, EventCollections, PageInfo}
+import model._
 import play.api.mvc.Controller
 import services._
 import tracking.ActivityTracking
-
-import scala.collection.immutable.SortedMap
 
 trait WhatsOn extends Controller with ActivityTracking {
 
@@ -70,27 +67,23 @@ trait WhatsOn extends Controller with ActivityTracking {
   }
 
   def calendarGrid = GoogleAuthenticatedStaffAction { implicit request =>
-
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-
-    val eventsGroupedByMonth = groupEventsByMonth(collectAllEvents)
+    val eventsGroupedByMonth = RichEvent.groupEventsByMonth(collectAllEvents)
     Ok(views.html.whatson.calendarGrid(eventsGroupedByMonth, pageInfo))
   }
 
   def calendarList = GoogleAuthenticatedStaffAction { implicit request =>
-
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-
-    val eventsGroupedByDayAndMonth = groupEventsByDayAndMonth(collectAllEvents)
-    Ok(views.html.whatson.calendarList(eventsGroupedByDayAndMonth, pageInfo))
+    val events = CalendarMonthDayGroup(RichEvent.groupEventsByDayAndMonth(collectAllEvents))
+    Ok(views.html.whatson.calendarList(pageInfo, events))
   }
 
 }
