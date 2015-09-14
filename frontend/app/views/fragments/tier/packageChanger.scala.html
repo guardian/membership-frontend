@@ -28,7 +28,7 @@
                 @for(highlight <- Benefits.details(tier).highlights) {
                     <li>
                         @if(highlight.isNew) {
-                            <strong>New</strong>
+                            @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
                         }
                         @highlight.description
                     </li>
