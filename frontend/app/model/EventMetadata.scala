@@ -64,7 +64,7 @@ object EventMetadata {
       | journalism, photography and design, film and digital media, music and cultural appreciation.
     """.stripMargin),
     socialHashtag=Some("#GuardianMasterclasses"),
-    eventListUrl=controllers.routes.Event.masterclasses.url,
+    eventListUrl=controllers.routes.Event.masterclassesList.url,
     termsUrl=Links.guardianMasterclassesTerms,
     chooseTier=ChooseTierMetadata(
       "Choose a membership tier to continue with your booking",
