@@ -1,15 +1,9 @@
 package controllers
 
-import com.gu.membership.model.{ProductRatePlan, FriendTierPlan, PaidTierPlan, StaffPlan}
-import com.gu.membership.salesforce.Tier.{Partner, Patron, Supporter}
 import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Action, Controller}
 import services.{GuardianLiveEventService, TouchpointBackend}
-
-import scala.concurrent.Await
-import scala.util.{Try, Failure, Success}
 
 case class Test(name: String, exec: () => Boolean) {
   def ok() = {
@@ -26,7 +20,6 @@ object ZuoraPing {
 }
 
 object Healthcheck extends Controller {
-  import scala.concurrent.duration._
 
   val zuoraSoapService = TouchpointBackend.Normal.zuoraSoapService
   val subscriptionService = TouchpointBackend.Normal.subscriptionService
