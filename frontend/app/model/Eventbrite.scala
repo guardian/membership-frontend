@@ -46,24 +46,28 @@ object Eventbrite {
     lazy val blurb = truncateToWordBoundary(text, 120)
   }
 
-  case class EBAddress(address_1: Option[String],
-                       address_2: Option[String],
-                       city: Option[String],
-                       region: Option[String],
-                       postal_code: Option[String],
-                       country: Option[String]) extends EBObject {
-
+  case class EBAddress(
+    address_1: Option[String],
+    address_2: Option[String],
+    city: Option[String],
+    region: Option[String],
+    postal_code: Option[String],
+    country: Option[String]
+  ) extends EBObject {
     lazy val toSeq: Seq[String] = Seq(address_1, address_2, city, region, postal_code).flatten
-
-    lazy val asLine: Option[String] = if (toSeq.isEmpty) None else Some(toSeq.mkString(", "))
+    lazy val asLine = seqToLine(toSeq)
   }
 
-  case class EBVenue(address: Option[EBAddress], name: Option[String]) extends EBObject {
+  case class EBVenue(
+    address: Option[EBAddress],
+    name: Option[String]
+  ) extends EBObject {
     lazy val addressLine = address.flatMap(_.asLine)
-    lazy val venueWithCity = Seq(name, address.flatMap(_.city)).flatten.mkString(", ")
-
-    lazy val googleMapsLink: Option[String] =
+    lazy val addressShortLine = seqToLine(Seq(name, address.flatMap(_.city)).flatten)
+    lazy val addressDefaultLine = seqToLine(Seq(name, address.flatMap(_.city), address.flatMap(_.postal_code)).flatten)
+    lazy val googleMapsLink: Option[String] = {
       addressLine.map(al => googleMapsUri ? ("q" -> (name.map(_ + ", ").mkString + al)))
+    }
   }
 
   def penceToPounds(priceInPence: Double): Float = {
@@ -82,7 +86,6 @@ object Eventbrite {
   case class EBPricing(value: Int) extends EBObject {
     lazy val formattedPrice = formatPriceWithCurrency(value)
   }
-
 
   case class EventTimes(created: Instant, start: DateTime)
 
@@ -233,12 +236,6 @@ object Eventbrite {
       else if(isLimitedAvailability) Some("http://schema.org/LimitedAvailability")
       else Some("http://schema.org/InStock")
     }
-
-    val venueDescription = List(
-      venue.name,
-      venue.address.flatMap(_.city),
-      venue.address.flatMap(_.postal_code)
-    ).flatten.mkString(", ")
 
     val statusText: Option[String] = {
       if (isPastEvent) Some("Past event")

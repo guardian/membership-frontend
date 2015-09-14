@@ -27,9 +27,11 @@
                 <div class="event-details__time">
                     @dateTimeRange(event.startAndEnd)
                 </div>
-                <div class="event-details__location qa-event-detail-location">
-                    @event.venueDescription
-                </div>
+                @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+                    <div class="event-details__location qa-event-detail-location">
+                        @addressDefaultLine
+                    </div>
+                }
             </div>
             @for(internalTicketing <- event.internalTicketing) {
                 <div class="event-ticket@if(internalTicketing.isFree) { event-ticket--free} u-cf">

@@ -20,7 +20,9 @@
         @fragments.inlineIcon("location", List("icon-inline--medium", "icon-inline--top", "icon-inline--neutral"))
     </div>
     <div class="stat-item__second copy">
-        @event.venueDescription
+        @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+            @addressDefaultLine
+        }
         @for(googleMapsLink <- event.venue.googleMapsLink) {
             <div class="stat-item__supplementary copy">
                 <a href="@googleMapsLink"

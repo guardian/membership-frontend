@@ -175,7 +175,6 @@ trait Event extends Controller with ActivityTracking {
     ))
   }
 
-
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>
       event match {
