@@ -20,23 +20,6 @@ trait WhatsOn extends Controller with ActivityTracking {
     guLiveEvents.getEvents ++ localEvents.getEvents ++ masterclassEvents.getEvents
   }
 
-  private def groupEventsByDay(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    val unsortedMap = events.groupBy(_.start.toLocalDate)
-    SortedMap(unsortedMap.toSeq :_*)
-  }
-
-  private def groupEventsByDayAndMonth(events: Seq[RichEvent]):  SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
-    val unsortedMap = groupEventsByDay(events).groupBy(_._1.withDayOfMonth(1))
-    SortedMap(unsortedMap.toSeq :_*)
-  }
-
-  private def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
-      case (monthDate, eventsForMonth) => monthDate -> eventsForMonth
-    }
-    SortedMap(unsortedMap.toSeq :_*)
-  }
-
   def overview = GoogleAuthenticatedStaffAction { implicit request =>
 
     val pageInfo = PageInfo(

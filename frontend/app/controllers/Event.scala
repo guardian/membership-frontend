@@ -21,6 +21,7 @@ import services.{EventbriteService, GuardianLiveEventService, LocalEventService,
 import services.EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
+
 import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
@@ -113,12 +114,7 @@ trait Event extends Controller with ActivityTracking {
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
-  private def chronologicalSort(events: Seq[model.RichEvent.RichEvent]) = {
-    events.sortWith(_.event.start < _.event.start)
-  }
-
   def list = CachedAction { implicit request =>
-
     val archivedEvents =
       guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
 
@@ -130,8 +126,8 @@ trait Event extends Controller with ActivityTracking {
       ),
       EventPortfolio(
         guLiveEvents.getFeaturedEvents,
-        chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        chronologicalSort(archivedEvents).reverse,
+        RichEvent.chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
+        RichEvent.chronologicalSort(archivedEvents).reverse,
         guLiveEvents.getPartnerEvents
       )
     ))
