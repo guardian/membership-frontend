@@ -13,12 +13,23 @@ define(function() {
         var scriptUrl = '//platform.twitter.com/oct.js';
         var tierId = tierMapping[window.location.pathname] || false;
         require('js!' + scriptUrl).then(function() {
-            // Default tracking for all pageviews
+
+            if(typeof twttr === 'undefined') {
+                return;
+            }
+
+            /**
+             * Default tracking for all pageviews
+             */
             twttr.conversion.trackPid('l6gt8', { tw_sale_amount: 0, tw_order_quantity: 0 });
-            // Specific page tracking if we match a given path
+
+            /**
+             * Specific page tracking if we match a given path
+             */
             if(tierId) {
                 twttr.conversion.trackPid(tierId, { tw_sale_amount: 0, tw_order_quantity: 0 });
             }
+
         }, function(err) {
             Raven.captureException(err);
         });
