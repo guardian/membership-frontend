@@ -33,7 +33,7 @@ install_bower() {
 
         banner "Installing Bower CSS modules"
         pushd assets/stylesheets
-        rm -rf components/bower-components
+        rm -rf bower_components
         bower install
         popd
     else
