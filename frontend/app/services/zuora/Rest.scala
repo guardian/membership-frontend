@@ -35,7 +35,7 @@ object Rest {
    * Zuora product catalogue entry: https://knowledgecenter.zuora.com/BC_Developers/REST_API/B_REST_API_reference/Catalog
    */
   case class ProductCatalog(products: Seq[Product]) {
-    def productsOfType(t: String): Seq[Product] = products.filter(_.`ProductType__c` == t)
+    def productsOfType(t: String): Seq[Product] = products.filter(_.`ProductType__c` == Some(t))
     def productIdsOfType(t: String): Set[String] = productsOfType(t).map(_.id).toSet
   }
 
@@ -46,7 +46,7 @@ object Rest {
   }
   case class Product(id: String,
                      name: String,
-                     `ProductType__c`: String,
+                     `ProductType__c`: Option[String],
                      `Tier__c`: Option[String],
                      productRatePlans: Seq[ProductRatePlan]) {
     lazy val activeRatePlans = productRatePlans.filter(_.isActive)
