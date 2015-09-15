@@ -113,14 +113,21 @@ trait IdentityApi {
   def get(endpoint: String, headers:List[(String, String)], parameters: List[(String, String)]) : Future[Option[IdUser]] = {
     Timing.record(IdentityApiMetrics, "get-user") {
       val url = s"${Config.idApiUrl}/$endpoint"
-      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get().map { response =>
-        recordAndLogResponse(response.status, "GET user", endpoint)
-        val jsResult = (response.json \ "user").validate[IdUser]
-        if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
-        jsResult.asOpt
-      }.recover {
-        case _ => None
-      }
+      WS.url(url).withHeaders(headers: _*).withQueryString(parameters: _*).withRequestTimeout(1000).get()
+        .recover { case e =>
+          Logger.error("Failure trying to retrieve user data", e)
+          throw e
+        }
+        .map { response =>
+          recordAndLogResponse(response.status, "GET user", endpoint)
+          val jsResult = (response.json \ "user").validate[IdUser]
+          if (jsResult.isError) Logger.error(s"Id Api response on $url : $jsResult")
+          jsResult.asOpt
+        }
+        .recover { case e =>
+          Logger.error("Failure trying to deserialise user data", e)
+          None
+        }
     }
   }
 
