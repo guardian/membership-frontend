@@ -27,6 +27,10 @@ define([
      * if the form does not have payment capabilities then just submit the form
      */
     var addSubmitListener = function () {
+        if(!SUBMIT_ELEM) {
+            return;
+        }
+
         bean.on(SUBMIT_ELEM, 'click', function (e) {
             e.preventDefault();
 

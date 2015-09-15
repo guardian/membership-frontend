@@ -74,20 +74,27 @@ define([
 
     function init() {
         var formAction;
+
         if (window.ga && formUtil) {
+
             formAction = formUtil.elem.getAttribute('action');
+
             bean.on(window, 'beforeunload.formMetrics', function() {
                 recordAbandonedForm(formAction);
             });
-            bean.on(formUtil.elem.querySelector('[type="submit"]'), 'click', function() {
-                // Unbind `beforeunload` listener as form submission counts as `beforeunload`
-                bean.off(window, 'beforeunload.formMetrics');
-                if (formUtil.errs.length) {
-                    recordFormWithErrors(formAction);
-                } else {
-                    recordFormSuccess(formAction);
-                }
-            });
+
+            var formSubmit = formUtil.elem.querySelector('[type="submit"]');
+            if(formSubmit) {
+                bean.on(formSubmit, 'click', function() {
+                    // Unbind `beforeunload` listener as form submission counts as `beforeunload`
+                    bean.off(window, 'beforeunload.formMetrics');
+                    if (formUtil.errs.length) {
+                        recordFormWithErrors(formAction);
+                    } else {
+                        recordFormSuccess(formAction);
+                    }
+                });
+            }
         }
     }
 

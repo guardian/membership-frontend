@@ -395,7 +395,7 @@
         @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
-    @pattern("Package - Promo") {
+    @pattern("Package: Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
                 @fragments.tier.packagePromo(Tier.Friend)
@@ -409,20 +409,26 @@
         </ul>
     }
 
-    @pattern("Package - Stack") {
+    @pattern("Package: Stack") {
         @fragments.tier.packageStack(Tier.Partner)
     }
 
-    @pattern("Flash Message - Success") {
+    @pattern("Flash Message: Success") {
         @fragments.notifications.flashMessage(FlashMessage.success("A successful Message!"))
     }
 
-    @pattern("Flash Message - Failure") {
+    @pattern("Flash Message: Failure") {
         @fragments.notifications.flashMessage(FlashMessage.error("An error Message!"))
     }
 
-    @pattern("FAQ - Answers", "FAQ answers") {
+    @pattern("FAQ", "FAQ answers") {
         @fragments.common.faqs(model.Faq.help.take(4))
+    }
+
+    @pattern("Forms: Create password") {
+        <form action="" class="js-form">
+            @fragments.form.createPassword()
+        </form>
     }
 
     </main>

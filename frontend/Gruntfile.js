@@ -161,7 +161,7 @@ module.exports = function (grunt) {
                 flatten: true
             },
             zxcvbn: {
-                src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/zxcvbn.js',
+                src: '<%= dirs.assets.javascripts %>/lib/bower-components/zxcvbn/dist/zxcvbn.js',
                 dest: '<%= dirs.publicDir.javascripts %>/lib/zxcvbn/',
                 expand: true,
                 flatten: true
