@@ -59,7 +59,7 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
     }
 
   def productCatalog: Future[ProductCatalog] = Timing.record(metrics, "catalog") {
-    get("catalog/products").map { response =>
+    get("catalog/products?pageSize=40").map { response =>
       metrics.putResponseCode(response.code, "GET")
       parseResponse[ProductCatalog](response).get
     }
