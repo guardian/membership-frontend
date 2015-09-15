@@ -9,6 +9,7 @@ import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{OkHttpClient, Response}
 import com.typesafe.scalalogging.LazyLogging
 import monitoring.TouchpointBackendMetrics
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
@@ -61,7 +62,11 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
   def productCatalog: Future[ProductCatalog] = Timing.record(metrics, "catalog") {
     get("catalog/products?pageSize=40").map { response =>
       metrics.putResponseCode(response.code, "GET")
-      parseResponse[ProductCatalog](response).get
+      val productCatalog = parseResponse[ProductCatalog](response).get
+      val productsSize = productCatalog.products.size
+      if (productsSize > 30)
+        Logger.error(s"Product Catalog reaching the Upper Limit of 40 : Current Size : $productsSize Zuora Pagination: https://knowledgecenter.zuora.com/BC_Developers/REST_API/A_REST_basics#Pagination")
+      productCatalog
     }
   }
 
