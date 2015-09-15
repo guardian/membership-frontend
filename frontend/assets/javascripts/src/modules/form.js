@@ -65,6 +65,7 @@ define([
     'use strict';
 
     var init = function () {
+
         if (form) {
             validation.init();
             address.init();
