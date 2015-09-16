@@ -17,21 +17,16 @@ object RichEvent {
     events.sortWith(_.event.start < _.event.start)
   }
 
-  def groupEventsByDay(events: Seq[RichEvent])(implicit chronologicalOrdering: Ordering[LocalDate]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    val unsortedMap = events.groupBy(_.start.toLocalDate)
-    SortedMap(unsortedMap.toSeq :_*)(chronologicalOrdering)
+  def groupEventsByDay(events: Seq[RichEvent])(implicit ordering: Ordering[LocalDate]): SortedMap[LocalDate, Seq[RichEvent]] = {
+    SortedMap(events.groupBy(_.start.toLocalDate).toSeq :_*)(ordering)
   }
 
-  def groupEventsByDayAndMonth(events: Seq[RichEvent])(implicit chronologicalOrdering: Ordering[LocalDate]):  SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
-    val unsortedMap = groupEventsByDay(events)(chronologicalOrdering).groupBy(_._1.withDayOfMonth(1))
-    SortedMap(unsortedMap.toSeq :_*)(chronologicalOrdering)
+  def groupEventsByDayAndMonth(events: Seq[RichEvent])(implicit ordering: Ordering[LocalDate]): SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]] = {
+    SortedMap(groupEventsByDay(events)(ordering).groupBy(_._1.withDayOfMonth(1)).toSeq :_*)(ordering)
   }
 
   def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
-    val unsortedMap = events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).map {
-      case (monthDate, eventsForMonth) => monthDate -> eventsForMonth
-    }
-    SortedMap(unsortedMap.toSeq :_*)
+    SortedMap(events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).toSeq :_*)
   }
 
   case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)
