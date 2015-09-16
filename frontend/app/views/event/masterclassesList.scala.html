@@ -1,12 +1,12 @@
 @(
     pageInfo: model.PageInfo,
-    events: Seq[model.RichEvent.RichEvent],
+    eventGroup: model.RichEvent.EventGroup,
     selectedTag: String = "",
     selectedSubTag: String = ""
 )
 
 @import model.SVG.Logos
-@import model.RichEvent.MasterclassEvent
+@import model.RichEvent.MasterclassEvent._
 
 @main("Masterclasses", pageInfo=pageInfo) {
 
@@ -27,20 +27,20 @@
                         <span class="event-filters__category-label">Show:</span>
                         <select class="event-filters__category__select select-minimal js-filter-category">
                             <option value="/masterclasses">All categories</option>
-                            @for(category <- MasterclassEvent.tags) {
-                                <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
+                            @for(category <- tags) {
+                                <option value="/masterclasses/@encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
                             }
                         </select>
                     </label>
 
-                    @MasterclassEvent.tags.filter(_.categoryName == selectedTag).map { category =>
+                    @tags.filter(_.categoryName == selectedTag).map { category =>
                         @if(category.subCategories) {
                             <label class="event-filters__category">
                                 <span class="event-filters__category__label">Subcategory:</span>
                                 <select class="event-filters__category__select select-minimal js-filter-category">
-                                    <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)">All</option>
+                                    <option value="/masterclasses/@encodeTag(category.categoryName)">All</option>
                                     @for(subCategory <- category.subCategories) {
-                                        <option value="/masterclasses/@MasterclassEvent.encodeTag(category.categoryName)/@MasterclassEvent.encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
+                                        <option value="/masterclasses/@encodeTag(category.categoryName)/@encodeTag(subCategory)" @if(subCategory == selectedSubTag){ selected}>@subCategory</option>
                                     }
                                 </select>
                             </label>
@@ -48,9 +48,9 @@
                     }
 
                     <span class="event-filters__count">
-                        <span class="js-filter-count">@events.length</span> masterclasses
+                        <span class="js-filter-count">@eventGroup.events.length</span> masterclasses
                         @if(selectedTag.isEmpty) {
-                            <span class="hidden-mobile">in @MasterclassEvent.tags.length categories</span>
+                            <span class="hidden-mobile">in @tags.length categories</span>
                         }
                     </span>
                 </div>
@@ -76,12 +76,7 @@
         </div>
 
         <div class="l-constrained">
-            @fragments.eventListings.listing(
-                events,
-                "Sorry, no matching Masterclasses were found.",
-                isLead=true,
-                isFilterable=true
-            )
+            @fragments.eventListings.listing(eventGroup, "Sorry, no matching Masterclasses were found.", isLead=true, isFilterable=true)
         </div>
 
     </main>
