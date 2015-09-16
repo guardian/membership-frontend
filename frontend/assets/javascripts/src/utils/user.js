@@ -84,7 +84,7 @@ define([
                     }
                 }
             } else {
-                callback(null);
+                callback(null, false);
             }
         };
     }());

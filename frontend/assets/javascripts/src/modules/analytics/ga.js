@@ -1,6 +1,11 @@
 /* global ga: true */
-define(function() {
+define(['src/utils/user'], function(user) {
     'use strict';
+
+    var dimensions = {
+        signedIn: 'dimension1',
+        member: 'dimension2'
+    };
 
     function init() {
         /*eslint-disable */
@@ -9,6 +14,8 @@ define(function() {
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         /*eslint-enable */
+
+        var isLoggedIn = user.isLoggedIn();
 
         ga('create', guardian.googleAnalytics.trackingId, {
             'allowLinker': true,
@@ -24,7 +31,16 @@ define(function() {
          */
         ga('require', 'linkid', 'linkid.js');
 
-        ga('send', 'pageview');
+
+        if(isLoggedIn) {
+            ga('set', dimensions.signedIn, isLoggedIn);
+            user.getMemberDetail(function(memberDetail, hasTier) {
+                ga('set', dimensions.member, hasTier);
+                ga('send', 'pageview');
+            });
+        } else {
+            ga('send', 'pageview');
+        }
     }
 
     return {
