@@ -15,9 +15,11 @@
             <time class="event-item__time" datetime="@event.start">
                 @dateRange(event.startAndEnd)
             </time>
-            <div class="event-item__location">
-                @event.venueDescription
-            </div>
+            @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+                <div class="event-item__location">
+                    @addressDefaultLine
+                </div>
+            }
             @if(showPrice) {
                 <div class="event-item__footer">
                     @fragments.pricing.priceInfoEvent(event)

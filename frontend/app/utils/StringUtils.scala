@@ -4,6 +4,10 @@ import java.text.Normalizer
 
 object StringUtils {
 
+  def seqToLine(seq: Seq[String], separator: String = ", ") = {
+    if (seq.isEmpty) None else Some(seq.mkString(separator))
+  }
+
   def truncateToWordBoundary(text: String, length: Int) = {
     if (text.length <= length) text
     else {

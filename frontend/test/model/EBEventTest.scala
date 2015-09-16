@@ -89,7 +89,7 @@ class EBEventTest extends PlaySpecification {
       nonTicketedEvent.mainImageUrl must beNone
     }
     "should display venue description" in {
-      ebLiveEvent.venueDescription mustEqual "The Royal Institution, London, W1S 4BS"
+      ebLiveEvent.venue.addressDefaultLine.get mustEqual "The Royal Institution, London, W1S 4BS"
     }
   }
 
