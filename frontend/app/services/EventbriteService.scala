@@ -3,7 +3,6 @@ package services
 import com.github.nscala_time.time.OrderingImplicits._
 import com.gu.membership.util.WebServiceHelper
 import configuration.Config
-import model.EventGroup
 import model.Eventbrite._
 import model.EventbriteDeserializer._
 import model.RichEvent._
@@ -56,7 +55,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getFeaturedEvents: Seq[RichEvent]
   def getEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
-  def getPartnerEvents: Option[EventGroup]
+  def getPartnerEvents: Seq[RichEvent]
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
 
   private def getAll[T](url: String, params: Seq[(String, String)] = Seq.empty)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
@@ -130,14 +129,9 @@ object GuardianLiveEventService extends LiveService {
     yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
-  override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents.map(_.events).getOrElse(Nil))
+  override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents)
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-  override def getPartnerEvents: Option[EventGroup] = {
-    events.filter(_.providerOpt.isDefined) match {
-      case s if s.nonEmpty => Some(EventGroup("Programming partner events", s))
-      case _ => None
-    }
-  }
+  override def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
   override def start() {
     super.start()
     eventsOrderingTask.start()
@@ -155,7 +149,8 @@ object LocalEventService extends LiveService {
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
   override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-  override def getPartnerEvents: Option[EventGroup] = None
+  override def getPartnerEvents: Seq[RichEvent] = Seq.empty
+
   override def start() {
     super.start()
   }
@@ -191,7 +186,7 @@ object MasterclassEventService extends EventbriteService {
   override def getFeaturedEvents: Seq[RichEvent] = Nil
   override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
-  override def getPartnerEvents: Option[EventGroup] = None
+  override def getPartnerEvents: Seq[RichEvent] = Seq.empty
 }
 
 object EventbriteServiceHelpers {

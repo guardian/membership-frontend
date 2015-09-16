@@ -1,6 +1,6 @@
 package controllers
 
-import model.{ResponsiveImageGenerator, ResponsiveImageGroup, EventPortfolio}
+import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{GuardianLiveEventService, EventbriteService}
 
