@@ -9,12 +9,13 @@ import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{OkHttpClient, Response}
 import com.typesafe.scalalogging.LazyLogging
 import monitoring.TouchpointBackendMetrics
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import services.SubscriptionServiceError
-import services.zuora.Rest.ProductCatalog
+import services.zuora.Rest.{ProductRatePlanCharge, ProductCatalog, ProductRatePlan}
 
 import scala.concurrent.Future
 
@@ -58,10 +59,14 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
       }
     }
 
-  def productCatalog(): Future[ProductCatalog] = Timing.record(metrics, "catalog") {
-    get("catalog/products").map { response =>
+  def productCatalog: Future[ProductCatalog] = Timing.record(metrics, "catalog") {
+    get("catalog/products?pageSize=40").map { response =>
       metrics.putResponseCode(response.code, "GET")
-      parseResponse[ProductCatalog](response).get
+      val productCatalog = parseResponse[ProductCatalog](response).get
+      val productsSize = productCatalog.products.size
+      if (productsSize > 30)
+        Logger.error(s"Product Catalog reaching the Upper Limit of 40 : Current Size : $productsSize Zuora Pagination: https://knowledgecenter.zuora.com/BC_Developers/REST_API/A_REST_basics#Pagination")
+      productCatalog
     }
   }
 
@@ -83,22 +88,25 @@ class ZuoraRestService(config: ZuoraApiConfig) extends LazyLogging {
     .addHeader("Accept", "application/json")
     .url(s"${config.url}/$uri")
     .get().build())
+
 }
 
 object ZuoraRestResponseReaders {
-  def parseResponse[T : Reads](resp: Response): Rest.Response[T] =
+  def parseResponse[T: Reads](resp: Response): Rest.Response[T] =
     parseResponse[T](Json.parse(resp.body().string()))
 
-  def parseResponse[T : Reads](json: JsValue): Rest.Response[T] = {
+  def parseResponse[T: Reads](json: JsValue): Rest.Response[T] = {
     val isSuccess = (json \ "success").as[Boolean]
     if (isSuccess) Rest.Success(json.as[T]) else json.as[Rest.Failure]
   }
 
   def productFeatures(subscription: Rest.Subscription): Seq[Rest.Feature] =
-     subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
+    subscription.ratePlans.headOption.map(_.subscriptionProductFeatures).getOrElse(Nil)
 
   implicit val subscriptionStatus = new Reads[Rest.SubscriptionStatus] {
+
     import Rest._
+
     override def reads(v: JsValue): JsResult[SubscriptionStatus] = v match {
       case JsString("Draft") => JsSuccess(Draft)
       case JsString("PendingActivation") => JsSuccess(PendingActivation)
@@ -113,10 +121,12 @@ object ZuoraRestResponseReaders {
   implicit val errorMsgReads: Reads[Rest.Error] = Json.reads[Rest.Error]
   implicit val failureReads: Reads[Rest.Failure] = (
     (JsPath \ "processId").read[String] and
-    (JsPath \ "reasons").read[List[Rest.Error]]
-  )(Rest.Failure.apply _)
+      (JsPath \ "reasons").read[List[Rest.Error]]
+    )(Rest.Failure.apply _)
 
-  implicit val productReads = Json.reads[Rest.Product]
+  implicit val productRatePlanChargeReads: Reads[ProductRatePlanCharge] = Json.reads[Rest.ProductRatePlanCharge]
+  implicit val productRatePlanReads: Reads[ProductRatePlan] = Json.reads[Rest.ProductRatePlan]
+  implicit val productReads: Reads[Rest.Product] = Json.reads[Rest.Product]
   implicit val catalogReads: Reads[Rest.ProductCatalog] = Json.reads[Rest.ProductCatalog]
   implicit val featureReads: Reads[Rest.Feature] = Json.reads[Rest.Feature]
 
