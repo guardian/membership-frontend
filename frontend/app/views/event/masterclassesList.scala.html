@@ -76,8 +76,14 @@
         </div>
 
         <div class="l-constrained">
-            @fragments.eventListings.listing(events,  "Sorry, no matching Masterclasses were found.", isFilterable=true)
+            @fragments.eventListings.listing(
+                events,
+                "Sorry, no matching Masterclasses were found.",
+                isLead=true,
+                isFilterable=true
+            )
         </div>
+
     </main>
 
     @fragments.tier.joinListing()

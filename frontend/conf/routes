@@ -96,7 +96,7 @@ GET            /us/supporter                          controllers.Info.supporter
 GET            /help                                  controllers.Info.help
 GET            /feedback                              controllers.Info.feedback
 POST           /feedback                              controllers.Info.submitFeedback
-GET            /offers-competitions                   controllers.OffersAndCompetitions.list
+GET            /offers-competitions                   controllers.Info.offersAndCompetitions
 
 # Styleguide
 GET            /patterns                              controllers.PatternLibrary.patterns
