@@ -5,14 +5,15 @@ import com.gu.membership.salesforce.Tier
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
 import configuration.Config
-import org.joda.time.Instant
+import org.joda.time.{PeriodType, Instant}
 import org.joda.time.format.ISODateTimeFormat
 import play.api.Logger
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.StringUtils._
-import views.support.Asset
+import views.support.Dates.YearMonthDayHours
+import views.support.{Dates, Asset}
 
 import scala.util.{Failure, Success, Try}
 
@@ -104,6 +105,8 @@ object Eventbrite {
                            hidden: Option[Boolean]) extends EBObject {
     val isHidden = hidden.contains(true)
 
+    val isGuestList = isHidden && name.toLowerCase.contains("guestlist")
+
     val isMemberBenefit = isHidden && name.toLowerCase.startsWith("guardian member")
     val isComplimentary = isHidden && name.toLowerCase.startsWith("member's ticket at no extra cost")
 
@@ -170,6 +173,9 @@ object Eventbrite {
     val isPossiblyMissingDiscount = !isFree && memberDiscountOpt.isEmpty
 
     val isPossiblyMissingComplimentaryTicket = !isFree && !complimentaryTickets.exists(_.free)
+
+    val ticketsEndingSaleBeforeEvent =
+      allTickets.filter(!_.isGuestList).groupBy(t => new Duration(t.sales_end, eventTimes.start).toPeriod().normalizedStandard(YearMonthDayHours)).filterKeys(_.standardDuration > 2.hours)
   }
 
   case class DiscountBenefitTicketing(generalRelease: EBTicketClass, member: EBTicketClass) {

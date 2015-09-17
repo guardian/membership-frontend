@@ -1,7 +1,9 @@
+@import org.joda.time.format.PeriodFormat
 @(title: String, events: Seq[model.RichEvent.RichEvent])
 @import configuration.Config
 @import model.Eventbrite.{ExternalTicketing, InternalTicketing}
 @import model.RichEvent.{LocalEvent, GuLiveEvent, MasterclassEvent}
+@import views.support.Dates._
 
 @eventTrait(text: String, identifier: String = "") = {
     <li class="event-trait@if(identifier){ @(s"event-trait--$identifier")}">
@@ -69,6 +71,10 @@
 
                                 @if(ticketing.isPossiblyMissingDiscount) {
                                     @eventTrait("Missing Discount", "important")
+                                }
+
+                                @for((earlyEnd, tickets) <- ticketing.ticketsEndingSaleBeforeEvent) {
+                                    @eventTrait(s"Ticket sales end ${earlyEnd.toString(PeriodFormat.getDefault())} before event start: ${tickets.map(_.name).mkString(", ")}", "important")
                                 }
 
                                 @if(ticketing.isFree) {
