@@ -13,6 +13,20 @@ import scala.collection.immutable.SortedMap
 
 object RichEvent {
 
+  // Used for arbitrary groupings of events with custom titles
+  case class EventGroup(sequenceTitle: String, events: Seq[RichEvent])
+
+  case class EventBrandCollection(
+    live: Seq[RichEvent],
+    local: Seq[RichEvent],
+    masterclasses: Seq[RichEvent]
+  )
+
+  case class CalendarMonthDayGroup(
+    title: String,
+    list: SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]]
+  )
+
   def chronologicalSort(events: Seq[RichEvent]) = {
     events.sortWith(_.event.start < _.event.start)
   }

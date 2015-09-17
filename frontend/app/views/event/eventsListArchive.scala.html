@@ -1,4 +1,4 @@
-@(pageInfo: model.PageInfo, groupedEvents: model.CalendarMonthDayGroup)
+@(pageInfo: model.PageInfo, groupedEvents: model.RichEvent.CalendarMonthDayGroup)
 
 @dateListing(date: org.joda.time.LocalDate, events: Seq[model.RichEvent.RichEvent], classes: Seq[String] = Nil) = {
     <section class="date-listing @classes.mkString(" ")">
@@ -18,7 +18,7 @@
 
 @main(pageInfo.title, pageInfo) {
     <main class="page-content l-constrained">
-        @fragments.page.pageHeader("Past Events", None)
+        @fragments.page.pageHeader(groupedEvents.title, None)
         @for((month, monthGroup) <- groupedEvents.list) {
             <h2 class="month-header">@month.toString("MMMM Y")</h2>
             @for((day, dayGroup) <- monthGroup) {

@@ -69,22 +69,14 @@ GET            /preview-event/:id                     controllers.Event.preview(
 GET            /preview-local/:id                     controllers.Event.previewLocal(id)
 GET            /preview-masterclass/:id               controllers.Event.previewMasterclass(id)
 
-# What's On
-GET            /whats-on                              controllers.WhatsOn.overview
-GET            /whats-on/calendar                     controllers.WhatsOn.calendarGrid
-GET            /whats-on/calendar/list                controllers.WhatsOn.calendarList
-
 # Tier
 GET            /tier/change                           controllers.TierController.change
-
 GET            /tier/cancel                           controllers.TierController.cancelTier
 POST           /tier/cancel/confirm                   controllers.TierController.cancelTierConfirm
 GET            /tier/cancel/summary                   controllers.TierController.cancelTierSummary
-
 GET            /tier/change/friend                    controllers.TierController.downgradeToFriend
 POST           /tier/change/friend                    controllers.TierController.downgradeToFriendConfirm
 GET            /tier/change/friend/summary            controllers.TierController.downgradeToFriendSummary
-
 GET            /tier/change/:tier                     controllers.TierController.upgrade(tier: Tier)
 POST           /tier/change/:tier                     controllers.TierController.upgradeConfirm(tier: Tier)
 GET            /tier/change/:tier/summary             controllers.TierController.upgradeThankyou(tier: Tier)
@@ -101,7 +93,7 @@ GET            /offers-competitions                   controllers.Info.offersAnd
 # Styleguide
 GET            /patterns                              controllers.PatternLibrary.patterns
 
-
+# User
 GET            /user/me                               controllers.User.me
 GET            /user/me/details                       controllers.User.meDetails
 GET            /user/check-subscriber                 controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: String)
@@ -115,6 +107,10 @@ GET            /about/supporter                       controllers.Redirects.supp
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
 GET            /join                                  controllers.Redirects.homepageRedirect
 GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
+
+# Test URLs (Temporary, Google Authed)
+GET            /whats-on/calendar                     controllers.WhatsOn.calendarGrid
+GET            /whats-on/calendar/list                controllers.WhatsOn.calendarList
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)

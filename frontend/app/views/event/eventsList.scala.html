@@ -1,4 +1,9 @@
-@(pageInfo: model.PageInfo, eventPortfolio: model.EventPortfolio)
+@(
+    pageInfo: model.PageInfo,
+    events: model.RichEvent.EventGroup,
+    featuredEventsOpt: Option[model.RichEvent.EventGroup],
+    partnerEventsOpt: Option[model.RichEvent.EventGroup]
+)
 
 @import model.SVG.Logos
 
@@ -9,7 +14,16 @@
             logo=Logos.guardianLive
         )
         @fragments.event.remainingTickets("listing", Seq.empty)
-        @fragments.event.listing(eventPortfolio, "Sorry, no matching events were found.", showPastEvents=true)
+
+        @for(featuredEvents <- featuredEventsOpt if featuredEvents.events.nonEmpty) {
+            @fragments.eventListings.features(featuredEvents)
+        }
+
+        @fragments.eventListings.listing(events, "Sorry, no matching events were found.", isLead=false, isFilterable=false)
+
+        @for(partnerEvents <- partnerEventsOpt if partnerEvents.events.nonEmpty) {
+            @fragments.eventListings.listing(partnerEvents, "Sorry, no matching events were found.", isLead=false, isFilterable=false)
+        }
     </main>
 
     @fragments.tier.joinListing()

@@ -1,4 +1,4 @@
-@(pageInfo: model.PageInfo, groupedEvents: model.CalendarMonthDayGroup)
+@(pageInfo: model.PageInfo, groupedEvents: model.RichEvent.CalendarMonthDayGroup)
 
 @dateListing(date: org.joda.time.LocalDate, events: Seq[model.RichEvent.RichEvent], classes: Seq[String] = Nil) = {
     <section class="date-listing @classes.mkString(" ")">

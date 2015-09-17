@@ -11,6 +11,7 @@ import com.netaporter.uri.dsl._
 import configuration.CopyConfig
 import model.EmbedSerializer._
 import model.Eventbrite.{EBEvent, EBOrder}
+import model.RichEvent.MasterclassEvent._
 import model.RichEvent.{RichEvent, _}
 import model._
 import org.joda.time.format.ISODateTimeFormat
@@ -115,22 +116,19 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def list = CachedAction { implicit request =>
-    val archivedEvents =
-      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
-
+    val pageInfo = PageInfo(
+      CopyConfig.copyTitleEvents,
+      request.path,
+      Some(CopyConfig.copyDescriptionEvents)
+    )
+    val events = chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents)
     Ok(views.html.event.eventsList(
-      PageInfo(
-        CopyConfig.copyTitleEvents,
-        request.path,
-        Some(CopyConfig.copyDescriptionEvents)
-      ),
-      EventPortfolio(
-        guLiveEvents.getFeaturedEvents,
-        RichEvent.chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents),
-        RichEvent.chronologicalSort(archivedEvents).reverse,
-        guLiveEvents.getPartnerEvents
-      )
+      pageInfo,
+      EventGroup("What's on", events),
+      Some(EventGroup("Featured", guLiveEvents.getFeaturedEvents)),
+      Some(EventGroup("Programming partner events", guLiveEvents.getPartnerEvents))
     ))
+
   }
 
   def listArchive = CachedAction { implicit request =>
@@ -138,10 +136,10 @@ trait Event extends Controller with ActivityTracking {
       guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
 
     val calendarArchive =
-      CalendarMonthDayGroup(RichEvent.groupEventsByDayAndMonth(archivedEvents)(implicitly[Ordering[LocalDate]].reverse))
+      CalendarMonthDayGroup("Archive", groupEventsByDayAndMonth(archivedEvents)(implicitly[Ordering[LocalDate]].reverse))
 
     Ok(views.html.event.eventsListArchive(
-      PageInfo("Archive | Events", request.path, None),
+      PageInfo(s"${calendarArchive.title} | Events", request.path, None),
       calendarArchive
     ))
 
@@ -155,10 +153,7 @@ trait Event extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    Ok(views.html.event.eventsList(
-      pageInfo,
-      EventPortfolio(Seq.empty, events, Seq.empty, None)
-    ))
+    Ok(views.html.event.eventsList(pageInfo, EventGroup("What's on", events), None, None))
   }
 
   def masterclassesList = CachedAction { implicit request =>
@@ -167,22 +162,19 @@ trait Event extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclassesList(pageInfo, masterclassEvents.events))
+    val eventGroup = EventGroup("What's on", masterclassEvents.events)
+    Ok(views.html.event.masterclassesList(pageInfo, eventGroup))
   }
 
   def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
-    val tag = MasterclassEvent.decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
     val pageInfo = PageInfo(
       CopyConfig.copyTitleMasterclasses,
       request.path,
       Some(CopyConfig.copyDescriptionMasterclasses)
     )
-    Ok(views.html.event.masterclassesList(
-      pageInfo,
-      masterclassEvents.getTaggedEvents(tag),
-      MasterclassEvent.decodeTag(rawTag),
-      MasterclassEvent.decodeTag(rawSubTag)
-    ))
+    val tag = decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
+    val eventGroup = EventGroup("What's on", masterclassEvents.getTaggedEvents(tag))
+    Ok(views.html.event.masterclassesList(pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
   }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>

@@ -1,23 +1,23 @@
 @(
-    events: Seq[model.RichEvent.RichEvent],
+    eventGroup: model.RichEvent.EventGroup,
     noResultsMessage: String,
     isLead: Boolean = false,
     isFilterable: Boolean = false
 )
 
-<section class="listing@if(isLead){ listing--lead}">
+<section class="listing listing--bordered @if(isLead){listing--lead}">
     <div class="listing__lead-in">
-        <h3 class="listing__title h-intro">What's on</h3>
+        <h3 class="listing__title h-intro">@eventGroup.sequenceTitle</h3>
     </div>
     <div class="listing__content">
-        @if(events.isEmpty) {
+        @if(eventGroup.events.isEmpty) {
             <div class="listing__empty">@noResultsMessage</div>
         } else {
             @if(isFilterable) {
                 <div class="listing__no-results js-filter-empty">@noResultsMessage</div>
             }
             <ul class="grid grid--bordered grid--3up"@if(isFilterable){ id="js-filter-container"}>
-                @for(event <- events) {
+                @for(event <- eventGroup.events) {
                     <li class="grid__item@if(isFilterable){ js-filter-item}">
                         @fragments.event.item(event)
                     </li>
