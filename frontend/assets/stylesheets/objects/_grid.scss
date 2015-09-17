@@ -153,16 +153,18 @@
    Grid: Flex Grid
    ========================================================================== */
 
-@include mq(tablet) {
-    .o-flexgrid {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .o-flexgrid__item {
-        flex: 1 0 calc(50% - 10px);
-        min-width: calc(50% - 10px);
-    }
-    .o-flexgrid__item:nth-child(even) {
-        margin-left: $gs-gutter / 2;
+@if ($browser-supports-flexbox) {
+    @include mq(tablet) {
+        .o-flexgrid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .o-flexgrid__item {
+            flex: 1 0 calc(50% - 10px);
+            min-width: calc(50% - 10px);
+        }
+        .o-flexgrid__item:nth-child(even) {
+            margin-left: $gs-gutter / 2;
+        }
     }
 }
