@@ -2,21 +2,19 @@ package model
 
 import com.netaporter.uri.Uri
 import model.Eventbrite._
+import model.EventbriteDeserializer._
 import play.api.test.PlaySpecification
-import org.joda.time.{ Instant, DateTime }
 import utils.Resource
-import EventbriteDeserializer._
 
 class EBEventTest extends PlaySpecification {
-
   val event = Resource.getJson("model/eventbrite/owned-events.2014-10-24.PROD.page-1.json")
   val ebResponse = event.as[EBResponse[EBEvent]]
+  // val ebSoldOutEvent = ebResponse.data.find(_.id == "13043179501").get
+  // val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
+  val ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get
+  val ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get
   val ebCompletedEvent = ebResponse.data.find(_.id == "13125971133").get
   val ebCancelledEvent = ebResponse.data.find(_.id == "13087550215").get
-  // val ebSoldOutEvent = ebResponse.data.find(_.id == "13043179501").get
-  val ebLiveEvent = ebResponse.data.find(_.id == "12104040511").get
-  // val ebLiveEventTicketsNotOnSale = ebResponse.data.find(_.id == "11583080305").get
-  val ebDraftEvent = ebResponse.data.find(_.id == "13607066101").get
   val nonTicketedEvent = ebResponse.data.find(_.id == "13602460325").get
   val soldOutEvent = ebResponse.data.find(_.id == "12238163677").get
   val startedEvent = ebResponse.data.find(_.id == "12972720757").get
