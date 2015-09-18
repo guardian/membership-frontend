@@ -431,7 +431,7 @@
     display: inline-block;
     vertical-align: middle;
     text-decoration: none;
-    padding: ($gs-baseline / 2) ($gs-gutter / 2);
+    padding: ($gs-baseline / 2);
     color: $white;
     border-right: 1px solid $c-neutral2;
 
@@ -443,7 +443,6 @@
         @include fs-headline(2);
         font-weight: bold;
         width: gs-span(3);
-
         padding: $gs-baseline $gs-gutter;
     }
 }
