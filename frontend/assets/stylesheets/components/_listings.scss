@@ -67,12 +67,17 @@
     }
 
 
-/**
- * Page listing - Lead
- */
+.listing--transparent {
+    background-color: transparent;
+}
+.listing--bordered {
+    border-top: 1px solid $c-border-neutral;
+}
+.listing--basic,
 .listing--lead {
     border-top: 0 none;
-
+}
+.listing--lead {
     .listing__lead-in {
         @include mq(mem-full) {
             padding-top: rem($gs-baseline);
@@ -84,16 +89,6 @@
             border-top: 1px solid $c-border-neutral;
         }
     }
-
-}
-.listing--transparent {
-    background-color: transparent;
-}
-.listing--bordered {
-    border-top: 1px solid $c-border-neutral;
-}
-.listing--basic {
-    border-top: 0 none;
 }
 
 /* Date Listing

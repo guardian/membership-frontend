@@ -15,9 +15,9 @@
             <time class="event-item__time" datetime="@event.start">
                 @dateRange(event.startAndEnd)
             </time>
-            @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+            @for(addressShortLine <- event.venue.addressShortLine) {
                 <div class="event-item__location">
-                    @addressDefaultLine
+                    @addressShortLine
                 </div>
             }
             @if(showPrice) {

@@ -8,6 +8,7 @@ import model.EventMetadata.{HighlightsMetadata, Metadata}
 import model.Eventbrite.EBEvent
 import org.joda.time.LocalDate
 import services.MasterclassData
+import utils.StringUtils._
 
 import scala.collection.immutable.SortedMap
 
@@ -27,6 +28,10 @@ object RichEvent {
     list: SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]]
   )
 
+  case class FilterItem(name: String, count: Int) {
+    var slug = slugify(name)
+  }
+
   def chronologicalSort(events: Seq[RichEvent]) = {
     events.sortWith(_.event.start < _.event.start)
   }
@@ -41,6 +46,11 @@ object RichEvent {
 
   def groupEventsByMonth(events: Seq[RichEvent]): SortedMap[LocalDate, Seq[RichEvent]] = {
     SortedMap(events.groupBy(_.start.toLocalDate.withDayOfMonth(1)).toSeq :_*)
+  }
+
+  def getCitiesWithCount(events: Seq[RichEvent]): Seq[(String, Int)] = {
+    val cities = events.map(_.venue.address.flatMap(_.city)).flatten
+    cities.groupBy(identity).mapValues(_.size).toSeq.sortBy{ case (name, size) => name }
   }
 
   case class GridImage(assets: List[Grid.Asset], metadata: Grid.Metadata)

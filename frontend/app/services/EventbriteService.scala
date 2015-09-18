@@ -14,6 +14,7 @@ import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
 import utils.ScheduledTask
+import utils.StringUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -53,10 +54,9 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
-  def getEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
-  def getPartnerEvents: Seq[RichEvent]
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
+
 
   private def getAll[T](url: String, params: Seq[(String, String)] = Seq.empty)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     def getPage(page: Int) = get[EBResponse[T]](url, Seq("page" -> page.toString) ++ params:_*)
@@ -80,6 +80,8 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getRecentlyCreated(start: DateTime): Seq[RichEvent] = events.filter(_.created.isAfter(start))
   def getSortedByCreationDate: Seq[RichEvent] = events.sortBy(_.created.toDateTime)(Ordering[DateTime].reverse)
   def getEventsBetween(interval: Interval): Seq[RichEvent] = events.filter(event => interval.contains(event.start))
+
+  def getEventsByLocation(slug: String): Seq[RichEvent] = events.filter(_.venue.address.flatMap(_.city).exists(c => slugify(c) == slug))
 
   def createOrGetAccessCode(event: RichEvent, code: String, ticketClasses: Seq[EBTicketClass]): Future[Option[EBAccessCode]] = {
       val uri = s"events/${event.id}/access_codes"
@@ -129,9 +131,7 @@ object GuardianLiveEventService extends LiveService {
     yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
-  override def getEvents: Seq[RichEvent] = events.diff(getFeaturedEvents ++ getPartnerEvents)
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-  override def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
   override def start() {
     super.start()
     eventsOrderingTask.start()
@@ -147,9 +147,7 @@ object LocalEventService extends LiveService {
     yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
-  override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
-  override def getPartnerEvents: Seq[RichEvent] = Seq.empty
 
   override def start() {
     super.start()
@@ -184,9 +182,7 @@ object MasterclassEventService extends EventbriteService {
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil
-  override def getEvents: Seq[RichEvent] = events
   override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.tags.contains(tag.toLowerCase))
-  override def getPartnerEvents: Seq[RichEvent] = Seq.empty
 }
 
 object EventbriteServiceHelpers {
