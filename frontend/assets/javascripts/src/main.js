@@ -1,5 +1,6 @@
 require([
     'ajax',
+    'src/modules/raven',
     'src/modules/analytics/setup',
     'src/modules/welcome',
     'src/modules/slideshow',
@@ -20,11 +21,10 @@ require([
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
     'src/modules/metrics',
-    'src/modules/patterns',
-    // Add new dependencies ABOVE this
-    'raven'
+    'src/modules/patterns'
 ], function(
     ajax,
+    raven,
     analytics,
     welcome,
     slideshow,
@@ -49,14 +49,8 @@ require([
 ) {
     'use strict';
 
-    /*global Raven */
-    // set up Raven, which speaks to Sentry to track errors
-    Raven.config('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912', {
-        whitelistUrls: ['membership.theguardian.com/assets/'],
-        tags: { build_number: guardian.membership.buildNumber }
-    }).install();
-
     ajax.init({page: {ajaxUrl: ''}});
+    raven.init('https://e159339ea7504924ac248ba52242db96@app.getsentry.com/29912');
 
     analytics.init();
 
