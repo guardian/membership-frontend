@@ -7,6 +7,10 @@ import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
 import com.gu.membership.util.{FutureSupplier, Timing}
+import com.gu.membership.zuora.soap.actions.Actions.CreateFreeEventUsage
+import com.gu.membership.zuora.soap.models.PreviewInvoiceItem
+import com.gu.membership.zuora.soap.Readers._
+import com.gu.membership.zuora.soap.models.Result.CreateResult
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
 import controllers.IdentityRequest
@@ -15,17 +19,13 @@ import model.Benefits.DiscountTicketTiers
 import model.Eventbrite.{EBCode, EBOrder, EBTicketClass}
 import model.FreeEventTickets
 import model.RichEvent._
-import model.Zuora.{CreateResult, PreviewInvoiceItem}
-import model.ZuoraDeserializer.createResultReader
 import monitoring.MemberMetrics
 import org.joda.time.Period
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
-import EventbriteService._
-import zuora.CreateFreeEventUsage
+import services.EventbriteService._
 import tracking._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -139,7 +139,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
       description = s"event-id:${event.id};order-id:${order.id}"
       action = CreateFreeEventUsage(account.id, description, quantity, subscription.subscriptionNumber)
-      result <- tp.zuoraSoapService.authenticatedRequest(action)
+      result <- tp.zuoraSoapClient.authenticatedRequest(action)
     } yield {
       logger.info(s"Recorded a complimentary event ticket usage for account ${account.id}, subscription: ${subscription.subscriptionNumber}, details: $description")
       result

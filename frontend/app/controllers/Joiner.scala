@@ -5,10 +5,11 @@ import actions._
 import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 import com.gu.cas.CAS.CASSuccess
-import com.gu.identity.play.{StatusFields, IdMinimalUser}
+import com.gu.identity.play.{IdMinimalUser, StatusFields}
 import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
+import com.gu.membership.zuora.soap.models.errors.ResultError
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig, Email}
@@ -21,8 +22,6 @@ import play.api.mvc._
 import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
-import com.github.nscala_time.time.Imports
-import com.github.nscala_time.time.Imports._
 import utils.CampaignCode.extractCampaignCode
 
 import scala.concurrent.Future
@@ -189,7 +188,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
           result
         }.recover {
           case error: Stripe.Error => Forbidden(Json.toJson(error))
-          case error: Zuora.ResultError => Forbidden
+	  case error: ResultError => Forbidden
           case error: ScalaforceError => Forbidden
           case error: MemberServiceError => Forbidden
         }
