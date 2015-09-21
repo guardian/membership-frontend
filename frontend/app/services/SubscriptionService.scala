@@ -10,8 +10,8 @@ import com.gu.membership.zuora.soap.actions.Actions._
 import com.gu.membership.zuora.soap.actions.subscribe.Subscribe
 import com.gu.membership.zuora.soap._
 import com.gu.membership.zuora.{soap, rest}
-import com.gu.membership.zuora.soap.models.Result._
-import com.gu.membership.zuora.soap.models.Query._
+import com.gu.membership.zuora.soap.models.Results._
+import com.gu.membership.zuora.soap.models.Queries._
 import com.gu.membership.zuora.soap.actions.subscribe
 import com.gu.membership.zuora.soap.models._
 
@@ -187,7 +187,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
    */
   def getUsageCountWithinTerm(subscription: rest.Subscription, unitOfMeasure: String): Future[Option[Int]] = {
     val featuresF = memberTierFeatures(subscription)
-    val startDate = ServiceHelpers.formatDateTime(subscription.termStartDate)
+    val startDate = DateTimeHelpers.formatDateTime(subscription.termStartDate)
 
     val usageCountF = zuoraSoapClient.query[Usage](AndFilter(("StartDateTime", startDate),
 							     ("SubscriptionNumber", subscription.subscriptionNumber),
@@ -217,7 +217,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
       productRatePlanIds <- productRatePlanIdSupplier.get()
       featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)
       account = subscribe.Account.stripe(memberId, customerOpt.isDefined)
-      paymentMethod = customerOpt.map(subscribe.CreditCardReferenceTansaction)
+      paymentMethod = customerOpt.map(subscribe.CreditCardReferenceTransaction)
       action = Subscribe(account = account,
 			 paymentMethodOpt = paymentMethod,
 			 ratePlanId = productRatePlanIds(joinData.plan),
