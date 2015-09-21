@@ -331,13 +331,7 @@
         @fragments.media.videoPlayer(Videos.whatIsMembership)
     }
 
-    @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
-        @for(event <- events.headOption) {
-            @fragments.event.itemHero(event)
-        }
-    }
-
-    @pattern("Event – Full", "A standard event, used in a number of places") {
+    @pattern("Event Item") {
         <ul class="grid grid--3up">
             @for(event <- events.take(3)) {
                 <li class="grid__item">
@@ -345,6 +339,12 @@
                 </li>
             }
         </ul>
+    }
+
+    @pattern("Event Item: Featured", "Used to highlight a single event at the top of the /events listing") {
+        @for(event <- events.headOption) {
+            @fragments.event.item(event, isFeatured=true)
+        }
     }
 
     @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
