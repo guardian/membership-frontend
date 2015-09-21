@@ -28,7 +28,7 @@
     clear: both;
     position: relative;
     background-color: $white;
-    padding-bottom: rem($gs-baseline * 2);
+    padding-bottom: $gs-baseline * 2;
 }
     .listing__lead-in {
         padding: rem($gs-gutter / 2);
@@ -78,6 +78,8 @@
     border-top: 0 none;
 }
 .listing--lead {
+    padding-bottom: 0;
+
     .listing__lead-in {
         @include mq(mem-full) {
             padding-top: rem($gs-baseline);

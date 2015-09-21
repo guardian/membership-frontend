@@ -179,7 +179,11 @@
 }
 .nav-secondary__inner {
     @include clearfix();
-    padding: 0 rem($gs-gutter);
+    padding: 0 ($gs-gutter / 2);
+
+    @include mq(tablet) {
+        padding: 0 $gs-gutter;
+    }
 }
 .nav-secondary__list,
 .nav-secondary__item {

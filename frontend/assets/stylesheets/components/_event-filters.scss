@@ -4,20 +4,17 @@
 
 .event-filters {
     background-color: $white;
-    padding: ($gs-gutter / 2);
-
-    @include mq(tablet) {
-        padding: ($gs-gutter / 2) ($gs-gutter);
-    }
 }
+
 .event-filters__container {
     @include clearfix;
+    padding: ($gs-gutter / 2);
+
     @include mq(mem-full) {
-        width: 100%;
         padding-left: gs-span(2.5);
-        padding-right: $gs-gutter;
     }
 }
+
 .event-filters__items {
     @include mq(desktop) {
         float: left;
