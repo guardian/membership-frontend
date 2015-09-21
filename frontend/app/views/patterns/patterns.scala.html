@@ -343,26 +343,6 @@
         </ul>
     }
 
-    @pattern("Event – Minimal", "Used currently to list recent past events, where pricing/dates info is redundant") {
-        <ul class="grid grid--3up">
-            @for(event <- events.slice(0, 3)) {
-                <li class="grid__item">
-                    @fragments.event.itemMinimal(event)
-                </li>
-            }
-        </ul>
-    }
-
-    @pattern("Event – Minimal & Card", "An even more minimal theme which splits the photo and event title") {
-        <ul class="grid grid--2up">
-            @for(event <- events.slice(0, 3)) {
-                <li class="grid__item">
-                    @fragments.event.itemMinimal(event, isCard=true)
-                </li>
-            }
-        </ul>
-    }
-
     @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
         @fragments.event.infoPanel(events.head)
     }
