@@ -10,16 +10,19 @@
     @include fs-data(4);
     color: color(neutral-2);
     background-color: color(neutral-5);
-    padding: ($gs-baseline / 2) $gs-gutter;
-    opacity: 0;
-    transition: opacity .5s ease;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 1.5s ease-in;
+}
+.status-bar__inner {
+    margin: ($gs-baseline / 2) $gs-gutter;
 }
 .status-bar.is-active {
-    opacity: 1;
+    max-height: 100px;
 }
-.status-bar--listing {
+.status-bar--listing .status-bar__inner {
     @include mq(desktop) {
-        padding-left: gs-span(2.5);
+        margin-left: gs-span(2.5);
     }
 }
 
