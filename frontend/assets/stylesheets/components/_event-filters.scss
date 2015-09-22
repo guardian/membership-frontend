@@ -3,21 +3,26 @@
    ========================================================================== */
 
 .event-filters {
-    background-color: $white;
+    background-color: $c-neutral7;
+    margin-bottom: $gs-gutter / 2;
 }
-
 .event-filters__container {
-    @include clearfix;
-    padding: ($gs-gutter / 2);
+    @include clearfix();
+    padding: $gs-gutter / 2;
 
     @include mq(mem-full) {
         padding-left: gs-span(2.5);
+        padding-right: $gs-gutter;
     }
 }
-
 .event-filters__items {
-    @include mq(desktop) {
-        float: left;
+    float: left;
+}
+.event-filters__switch {
+    float: right;
+
+    @include mq(tablet) {
+        padding-top: $gs-gutter / 4;
     }
 }
 .event-filters__item,
@@ -25,28 +30,34 @@
     @include fs-textSans(2);
     display: inline-block;
     padding: ($gs-gutter / 4) 0;
-    @include mq(mobileLandscape) {
+
+    @include mq(tablet) {
         padding: ($gs-gutter / 2) 0;
     }
 }
 .event-filters__item {
-    padding-right: ($gs-gutter);
-    @include mq(desktop) {
-        margin-right: ($gs-gutter);
+    padding-right: $gs-gutter / 2;
+
+    @include mq(tablet) {
         border-right: 1px solid $c-neutral4;
+        margin-right: $gs-gutter / 2;
     }
 }
 .event-filters__count {
     color: $c-neutral2;
     white-space: nowrap;
-    float: right;
+    display: none;
+
+    @include mq(tablet) {
+        display: inline-block;
+    }
 }
 .event-filters__search {
     position: relative;
     overflow: hidden;
-    clear: right;
+    clear: both;
 
-    @include mq(desktop) {
+    @include mq(tablet) {
         width: auto;
         display: block;
         float: right;
@@ -54,7 +65,8 @@
     }
 }
 
-/* Filter Search
+/* ==========================================================================
+   Event Filters: Live search
    ========================================================================== */
 
 $filter-icon-size: 18px;
@@ -79,7 +91,7 @@ $filter-icon-size: 18px;
     position: absolute;
     top: 50%;
     line-height: 1;
-    margin-top: rem(-$filter-icon-size / 2);
+    margin-top: -($filter-icon-size / 2);
     border: 0;
     color: $c-neutral3;
     background-color: transparent;
@@ -90,14 +102,5 @@ $filter-icon-size: 18px;
 .filter-search__cross {
     transform: translateY(-55%);
     margin: 0; padding: 0;
-    right: rem($gs-gutter / 2);
-}
-
-/* Filter Bar
-   ========================================================================== */
-
-.filter-bar {
-    text-align: right;
-    margin-top: -(rem($gs-gutter));
-    margin-bottom: rem($gs-baseline);
+    right: $gs-gutter / 2;
 }

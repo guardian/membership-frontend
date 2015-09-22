@@ -28,6 +28,9 @@ trait WhatsOn extends Controller with ActivityTracking {
     guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
   }
 
+  private def locationFilterItems = {
+    getCitiesWithCount(allEvents).map(FilterItem.tupled)
+  }
 
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -35,31 +38,33 @@ trait WhatsOn extends Controller with ActivityTracking {
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
 
+    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
     val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
     val partnerEvents =  EventGroup("Programming partner events", guLiveEvents.getPartnerEvents)
     val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
-
-    val locationFitlers = getCitiesWithCount(allEvents).map(FilterItem.tupled)
 
     Ok(views.html.event.eventsList(
       pageInfo,
       events,
       featuredEvents,
       partnerEvents,
-      locationFitlers,
+      locationFilterItems,
       locationOpt
     ))
   }
 
-  def calendar = GoogleAuthenticatedStaffAction { implicit request =>
+  def calendar = CachedAction { implicit request =>
+    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
+
     val calendarEvents =
-      CalendarMonthDayGroup("Calendar", groupEventsByDayAndMonth(allEvents))
+      CalendarMonthDayGroup("Calendar", groupEventsByDayAndMonth(locationOpt.fold(allEvents)(allEventsByLocation)))
 
     Ok(views.html.event.calendar(
       PageInfo(s"${calendarEvents.title} | Events", request.path, None),
-      calendarEvents
+      calendarEvents,
+      locationFilterItems,
+      locationOpt
     ))
   }
 

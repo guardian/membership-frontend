@@ -27,10 +27,14 @@
                 title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
                 logo=Logos.guardianLive
             )
-            @fragments.event.remainingTickets("listing", Seq.empty)
         </div>
 
-        @fragments.eventListings.eventsFilters(locations, events.events.length, selectedLocation)
+        @fragments.eventListings.eventsFilters(
+            events.events.length,
+            locations,
+            selectedLocation,
+            Some(routes.WhatsOn.calendar.url)
+        )
 
         <div class="l-constrained">
             @if(selectedLocation.isEmpty) {

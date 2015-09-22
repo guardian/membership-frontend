@@ -1,0 +1,35 @@
+@(
+    pageInfo: model.PageInfo,
+    groupEvents: model.RichEvent.CalendarMonthDayGroup,
+    locations: Seq[model.RichEvent.FilterItem],
+    selectedLocation: Option[String]
+)
+
+@import model.SVG.Logos
+
+@main(pageInfo.title, pageInfo) {
+    <main>
+        <div class="l-constrained">
+            @fragments.event.headerBar(
+                title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+                logo=Logos.guardianLive
+            )
+        </div>
+
+        @fragments.eventListings.eventsFilters(
+            groupEvents.length,
+            locations,
+            selectedLocation,
+            Some(routes.WhatsOn.list.url)
+        )
+
+        <div class="page-content l-constrained">
+            @for((month, monthGroup) <- groupEvents.list) {
+                <h2 class="month-header">@month.toString("MMMM Y")</h2>
+                @for((day, dayGroup) <- monthGroup) {
+                    @fragments.eventListings.dateListing(day, dayGroup)
+                }
+            }
+        </div>
+    </main>
+}
