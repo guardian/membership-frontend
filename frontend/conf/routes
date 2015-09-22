@@ -49,14 +49,16 @@ POST           /subscription/update-card              controllers.Subscription.u
 OPTIONS        /subscription/update-card              controllers.Subscription.updateCardPreflight
 GET            /subscription/remaining-tickets        controllers.Subscription.remainingTickets
 
-# Events
-GET            /events                                controllers.Event.list
-GET            /events/archive                        controllers.Event.listArchive
-GET            /masterclasses                         controllers.Event.masterclassesList
-GET            /masterclasses/all                     controllers.Event.masterclassesList
-GET            /masterclasses/:tag                    controllers.Event.masterclassesListFilteredBy(tag, subTag = "")
-GET            /masterclasses/:tag/:subTag            controllers.Event.masterclassesListFilteredBy(tag, subTag)
+# What's On
+GET            /events                                controllers.WhatsOn.list
+GET            /events/archive                        controllers.WhatsOn.listArchive
+GET            /events/calendar                       controllers.WhatsOn.calendar
+GET            /masterclasses                         controllers.WhatsOn.masterclassesList
+GET            /masterclasses/all                     controllers.WhatsOn.masterclassesList
+GET            /masterclasses/:tag                    controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag = "")
+GET            /masterclasses/:tag/:subTag            controllers.WhatsOn.masterclassesListFilteredBy(tag, subTag)
 
+# Event Details
 GET            /event/:id                             controllers.Event.details(id)
 GET            /event/:id/embed                       controllers.Event.embedData(id)
 GET            /event/:id/buy                         controllers.Event.buy(id)
@@ -98,18 +100,15 @@ GET            /user/me/details                       controllers.User.meDetails
 GET            /user/check-subscriber                 controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: String)
 
 # Vanity URLS
-GET            /founder                               controllers.VanityUrl.redirect
+GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
 
 # Redirects
 GET            /about                                 controllers.Redirects.homepageRedirect
 GET            /about/supporter                       controllers.Redirects.supporterRedirect
+GET            /founder                               controllers.VanityUrl.redirect
 GET            /join-challenger                       controllers.Redirects.homepageRedirect
 GET            /join                                  controllers.Redirects.homepageRedirect
-GET            /subscriber-offer                      controllers.Redirects.homepageRedirect
 
-# Test URLs (Temporary, Google Authed)
-GET            /whats-on/calendar                     controllers.WhatsOn.calendarGrid
-GET            /whats-on/calendar/list                controllers.WhatsOn.calendarList
 
 # Map static resources from the /public folder to the /assets URL path
 GET            /assets/*assetFile                     controllers.CachedAssets.at(path="/public", assetFile)
