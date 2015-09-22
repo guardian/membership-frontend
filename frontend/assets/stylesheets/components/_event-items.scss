@@ -235,64 +235,11 @@
     }
 }
 
-/* ==========================================================================
-   Event Item (Minimal & Card modifier)
-   ========================================================================== */
-
-.event-item--minimal,
-.event-item--card {
-    .event-item__title {
-        @include fs-headline(2);
-        font-weight: 500;
-    }
-    display: table;
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-
-    .event-item__media,
-    .event-item__content {
-        display: table-cell;
-        vertical-align: top;
-    }
-    .event-item__media {
-        width: $trailblock-img-width;
-        margin-right: rem($gs-baseline);
-    }
-    .event-item__title {
-        @include fs-headline(2);
-        font-weight: 500;
-    }
-}
-
-.event-item--minimal {
-    @include mq(mobileLandscape) {
-        height: rem(280px);
-
-        .event-item__media,
-        .event-item__content {
-            display: block;
-            width: 100%
-        }
-    }
-}
-
-.event-item--card {
-    @include mq($from: mobileLandscape, $until: tablet) {
-        height: rem(280px);
-
-        .event-item__media,
-        .event-item__content {
-            display: block;
-            width: 100%
-        }
-    }
-}
 
 /* ==========================================================================
    Event Snapshot
+   Event summary w/location and timing details (e.g. /choose-tier)
    ========================================================================== */
-// Event summary w/location and timing details (e.g. /choose-tier)
 
 .event-snapshot {
     width: 100%;
