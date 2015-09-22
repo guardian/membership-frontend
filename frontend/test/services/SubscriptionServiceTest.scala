@@ -3,7 +3,7 @@ package services
 import com.gu.membership.model.{FriendTierPlan, PaidTierPlan}
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
-import com.gu.membership.zuora.soap.models.Query._
+import com.gu.membership.zuora.soap.models.Queries._
 import com.gu.membership.zuora.soap.models._
 import model.{FreeEventTickets, Books}
 import org.specs2.mutable.Specification
@@ -17,9 +17,17 @@ class SubscriptionServiceTest extends Specification {
       val endDate = new DateTime(2014, 11, 7, 10, 0)
 
       val subscriptionDetails = SubscriptionDetails(
-        Subscription("some id", "name", "accountId", 1, startDate, startDate,startDate,Some(startDate)),
+        Subscription(
+          id = "some id",
+          name = "name",
+          accountId = "accountId",
+          version = 1,
+          termStartDate = startDate,
+          termEndDate = startDate,
+          contractAcceptanceDate = startDate,
+          activationDate = Some(startDate)),
         RatePlan("RatePlanId", "Product name - annual", "productRatePlanId"),
-        RatePlanCharge("RatePlanChargeId", Some(endDate), startDate,None, None,None, 12.0f)
+        RatePlanCharge("RatePlanChargeId", Some(endDate), startDate, None, None, None, 12.0f)
       )
 
       subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, startDate, startDate, Some(endDate), "RatePlanId")
@@ -30,9 +38,9 @@ class SubscriptionServiceTest extends Specification {
   "featuresPerTier" should {
     import SubscriptionService.featuresPerTier
 
-    val feature1 = Feature(id="1", code="Books")
-    val feature2 = Feature(id="2", code="Events")
-    val feature3 = Feature(id="3", code="OtherFeature")
+    val feature1 = Feature(id = "1", code = "Books")
+    val feature2 = Feature(id = "2", code = "Events")
+    val feature3 = Feature(id = "3", code = "OtherFeature")
 
     val features = featuresPerTier(Seq(feature1, feature2, feature3)) _
 
@@ -59,7 +67,16 @@ class SubscriptionServiceTest extends Specification {
     import SubscriptionService.findCurrentSubscriptionStatus
 
     val now = DateTime.now()
-    def version(v: Int): Subscription = Subscription(v.toString, "name", "accountId", v, now, now,now, Some(now))
+    def version(v: Int): Subscription = Subscription(
+      id=v.toString,
+      name="name",
+      accountId="accountId",
+      version=v,
+      termStartDate=now,
+      termEndDate=now,
+      contractAcceptanceDate=now,
+      activationDate=Some(now))
+
     def amend(v: Int, contractEffectiveDate: DateTime): Amendment =
       Amendment(v.toString, "TEST", contractEffectiveDate, v.toString)
 
@@ -70,13 +87,13 @@ class SubscriptionServiceTest extends Specification {
       ).currentVersion mustEqual version(2)
 
       findCurrentSubscriptionStatus(
-        Seq(version(1),version(2)),
+        Seq(version(1), version(2)),
         Seq(amend(1, now - 1.minutes))
       ).currentVersion mustEqual version(2)
     }
     "returns the latest subscription when future amendments exists" in {
       findCurrentSubscriptionStatus(
-        Seq(version(1),version(2)),
+        Seq(version(1), version(2)),
         Seq(amend(1, now + 1.month))
       ).currentVersion mustEqual version(1)
     }
