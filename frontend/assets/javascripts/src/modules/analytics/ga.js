@@ -32,13 +32,15 @@ define(['src/utils/user'], function(user) {
         ga('require', 'linkid', 'linkid.js');
 
 
+        ga('set', dimensions.signedIn, isLoggedIn.toString());
+
         if(isLoggedIn) {
-            ga('set', dimensions.signedIn, isLoggedIn);
             user.getMemberDetail(function(memberDetail, hasTier) {
-                ga('set', dimensions.member, hasTier);
+                ga('set', dimensions.member, hasTier.toString());
                 ga('send', 'pageview');
             });
         } else {
+            ga('set', dimensions.member, 'false');
             ga('send', 'pageview');
         }
     }
