@@ -44,7 +44,7 @@ object Eventbrite {
       mcPattern.replaceAllIn(clean, "")
     }
 
-    lazy val blurb = truncateToWordBoundary(text, 120)
+    lazy val blurb = firstSentenceOrTruncate(text, 120)
   }
 
   case class EBAddress(

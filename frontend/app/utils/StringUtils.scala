@@ -8,11 +8,14 @@ object StringUtils {
     if (seq.isEmpty) None else Some(seq.mkString(separator))
   }
 
-  def truncateToWordBoundary(text: String, length: Int) = {
-    if (text.length <= length) text
-    else {
-      val index = text.lastIndexWhere(_.isSpaceChar, length + 1)
-      text.take(if (index>= 0) index else length) + " …"
+  def firstSentenceOrTruncate(text: String, length: Int) = {
+    if (text.length <= length) text else {
+      val sentences = text.split("\\.").toSeq
+      val firstOption = if (sentences.length > 1) sentences.headOption else None
+      firstOption.getOrElse {
+        val index = text.lastIndexWhere(_.isSpaceChar, length + 1)
+        text.take(if (index>= 0) index else length) + "…"
+      }
     }
   }
 
