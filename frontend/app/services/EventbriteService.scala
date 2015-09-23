@@ -56,7 +56,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getFeaturedEvents: Seq[RichEvent]
   def getTaggedEvents(tag: String): Seq[RichEvent]
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
-
+  def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
 
   private def getAll[T](url: String, params: Seq[(String, String)] = Seq.empty)(implicit reads: Reads[EBResponse[T]]): Future[Seq[T]] = {
     def getPage(page: Int) = get[EBResponse[T]](url, Seq("page" -> page.toString) ++ params:_*)

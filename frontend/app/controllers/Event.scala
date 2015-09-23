@@ -115,6 +115,13 @@ trait Event extends Controller with ActivityTracking {
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
+  def allEvents = {
+    guLiveEvents.events ++ localEvents.events
+  }
+
+  def allEventsByLocation(location: String) = {
+    guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
+  }
 
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
@@ -124,20 +131,17 @@ trait Event extends Controller with ActivityTracking {
     )
     val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
 
-    def allEventsByLocation(location: String) = {
-      guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
-    }
-
-    val availableEvents = guLiveEvents.events ++ localEvents.events
     val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
-    val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(availableEvents)(allEventsByLocation)))
+    val partnerEvents =  EventGroup("Programming partner events", guLiveEvents.getPartnerEvents)
+    val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
 
-    val locationFitlers = getCitiesWithCount(availableEvents).map { case (name, count) => FilterItem(name, count) }
+    val locationFitlers = getCitiesWithCount(allEvents).map(FilterItem.tupled)
 
     Ok(views.html.event.eventsList(
       pageInfo,
       events,
       featuredEvents,
+      partnerEvents,
       locationFitlers,
       locationOpt
     ))
