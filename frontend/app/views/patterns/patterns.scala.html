@@ -296,21 +296,6 @@
         }
     }
 
-    @pattern("Promo - Video") {
-        <div class="page-slice page-slice--slim l-constrained">
-            @fragments.promos.promoVideoSecondary(
-                "If you believe in Guardian journalism, become a Guardian Member",
-                video=Videos.whatIsMembership,
-                toneClass=Some("tone-trans-brand")) {
-                <div class="text-feature">
-                    <p> Alan Rusbridger, Polly Toynbee, Jonathan Freedland, Owen Jones and Zoe Williams talk about why readers play such an important part of the Guardian.</p>
-                    <p>Sign up as a member, you’ll be supporting free, independent journalism and helping us create original, compelling stories.</p>
-                </div>
-                <a class="action u-no-top-margin" href="#">Join today</a>
-            }
-        </div>
-    }
-
     @pattern("Promo - Quote") {
         @fragments.promos.promoQuote(
             Asset.at("images/common/katharine-viner-cutout.png"),

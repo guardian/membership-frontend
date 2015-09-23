@@ -11,16 +11,7 @@ object Videos {
   )
 
   val whatIsMembership = Video(
-    srcUrl="//www.youtube.com/embed/7JnYthFvYEk?enablejsapi=1&wmode=transparent",
-    posterImage=Some(
-      ResponsiveImageGroup(
-        altText=Some("If you read the Guardian, join the Guardian"),
-        availableImages=videoPlaceholder
-      )
-    )
-  )
-  val whatIsMembershipAlt = Video(
-    srcUrl="//www.youtube.com/embed/z_IFkfuEuz0?enablejsapi=1&wmode=transparent",
+    srcUrl="//www.youtube.com/embed/oRowh6Nzt4c?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("What is Guardian Members?"),
@@ -28,6 +19,7 @@ object Videos {
       )
     )
   )
+
   val supporters = Video(
     srcUrl="//www.youtube.com/embed/pIg3BCr1mwY?enablejsapi=1&wmode=transparent",
     posterImage=Some(
