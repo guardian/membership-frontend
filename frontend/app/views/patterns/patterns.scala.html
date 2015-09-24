@@ -277,7 +277,9 @@
     }
 
     @pattern("Series Detail") {
-        @fragments.event.seriesDetails(events.head)
+        @for(event <- events.headOption) {
+            @fragments.event.seriesDetails(event)
+        }
     }
 
     @for(img <- pageImages.find(_.name.contains("sample-1"))) {
@@ -330,12 +332,14 @@
     }
 
     @pattern("Event – Hero", "Used to highlight a single event at the top of the /events listing") {
-        @fragments.event.itemHero(events.head)
+        @for(event <- events.headOption) {
+            @fragments.event.itemHero(event)
+        }
     }
 
     @pattern("Event – Full", "A standard event, used in a number of places") {
         <ul class="grid grid--3up">
-            @for(event <- events.slice(0, 3)) {
+            @for(event <- events.take(3)) {
                 <li class="grid__item">
                     @fragments.event.item(event)
                 </li>
@@ -344,15 +348,21 @@
     }
 
     @pattern("Event – Info Panel", "Panel shown in the sidebar on event detail pages") {
-        @fragments.event.infoPanel(events.head)
+        @for(event <- events.headOption) {
+            @fragments.event.infoPanel(event)
+        }
     }
 
     @pattern("Event – Snapshot", "Simple snapshot of event information") {
-        @fragments.event.itemSnapshot(events.head)
+        @for(event <- events.headOption) {
+            @fragments.event.itemSnapshot(event)
+        }
     }
 
     @pattern("Event – Stats", "Key stats for an event") {
-        @fragments.event.stats(events.head)
+        @for(event <- events.headOption) {
+            @fragments.event.stats(event)
+        }
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
@@ -364,7 +374,9 @@
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
-        @fragments.pricing.priceInfoEvent(events.head)
+        @for(event <- events.headOption) {
+            @fragments.pricing.priceInfoEvent(event)
+        }
     }
 
     @pattern("Tier Trail - Caption", "Tier name with caption") {
