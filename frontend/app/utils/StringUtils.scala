@@ -8,14 +8,12 @@ object StringUtils {
     if (seq.isEmpty) None else Some(seq.mkString(separator))
   }
 
-  def firstSentenceOrTruncate(text: String, length: Int) = {
-    if (text.length <= length) text else {
-      val sentences = text.split("\\.").toSeq
-      val firstOption = if (sentences.length > 1) sentences.headOption else None
-      firstOption.getOrElse {
+  def firstSentenceOrTruncate(text: String, length: Int) = if (text.length <= length) text else {
+    text.split("\\.").toList match {
+      case firstSentence :: secondSentence :: anythingElse => firstSentence
+      case _ =>
         val index = text.lastIndexWhere(_.isSpaceChar, length + 1)
-        text.take(if (index>= 0) index else length) + "…"
-      }
+        text.take(if (index >= 0) index else length) + "…"
     }
   }
 
