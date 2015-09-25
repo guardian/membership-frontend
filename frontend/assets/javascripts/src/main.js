@@ -13,9 +13,10 @@ require([
     'src/modules/videoOverlay',
     'src/modules/modal',
     'src/modules/events/cta',
-    'src/modules/events/filter',
     'src/modules/events/remainingTickets',
     'src/modules/events/eventPriceEnhance',
+    'src/modules/filterFacets',
+    'src/modules/filterLiveSearch',
     'src/modules/form',
     'src/modules/form/processSubmit',
     'src/modules/identityPopup',
@@ -37,11 +38,12 @@ require([
     videoOverlay,
     modal,
     cta,
-    filter,
     remainingTickets,
     eventPriceEnhance,
-    processSubmit,
+    filterFacets,
+    filterLiveSearch,
     form,
+    processSubmit,
     identityPopup,
     identityPopupDetails,
     metrics,
@@ -70,9 +72,12 @@ require([
 
     // Events
     cta.init();
-    filter.init();
     remainingTickets.init();
     eventPriceEnhance.init();
+
+    // Filtering
+    filterFacets.init();
+    filterLiveSearch.init();
 
     // Forms
     form.init();

@@ -21,11 +21,10 @@
 
         <div class="event-filters tone-tint">
             <div class="event-filters__container l-constrained">
-
-                <div class="event-filters__categories">
-                    <label class="event-filters__category">
-                        <span class="event-filters__category-label">Show:</span>
-                        <select class="event-filters__category__select select-minimal js-filter-category">
+                <div class="event-filters__items">
+                    <label class="event-filters__item">
+                        Show:
+                        <select class="select-minimal js-facet-category">
                             <option value="/masterclasses">All categories</option>
                             @for(category <- tags) {
                                 <option value="/masterclasses/@encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
@@ -35,8 +34,8 @@
 
                     @tags.filter(_.categoryName == selectedTag).map { category =>
                         @if(category.subCategories) {
-                            <label class="event-filters__category">
-                                <span class="event-filters__category__label">Subcategory:</span>
+                            <label class="event-filters__item">
+                                Subcategory:
                                 <select class="event-filters__category__select select-minimal js-filter-category">
                                     <option value="/masterclasses/@encodeTag(category.categoryName)">All</option>
                                     @for(subCategory <- category.subCategories) {
@@ -56,9 +55,8 @@
                 </div>
                 <div class="event-filters__search">
                     <label class="filter-search">
-                        <input type="text"
+                        <input type="text" id="js-filter"
                                class="filter-search__input"
-                               id="js-filter"
                                placeholder="Filter by title"
                                autocomplete="off"
                                data-filter-field="title"
@@ -76,7 +74,7 @@
         </div>
 
         <div class="l-constrained">
-            @fragments.eventListings.listing(eventGroup, "Sorry, no matching Masterclasses were found.", isLead=true, isFilterable=true)
+            @fragments.eventListings.listing(eventGroup, Some("Sorry, no matching Masterclasses were found."), isLead=true, isFilterable=true)
         </div>
 
     </main>

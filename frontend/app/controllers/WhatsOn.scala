@@ -15,7 +15,7 @@ trait WhatsOn extends Controller with ActivityTracking {
   val masterclassEvents: EventbriteService
 
   private def collectAllEvents = {
-    guLiveEvents.getEvents ++ localEvents.getEvents ++ masterclassEvents.getEvents
+    guLiveEvents.events ++ localEvents.events ++ masterclassEvents.events
   }
 
   def calendarGrid = GoogleAuthenticatedStaffAction { implicit request =>

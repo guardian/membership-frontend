@@ -1,33 +1,49 @@
-@(event: model.RichEvent.RichEvent, showPrice: Boolean = true)
+@(event: model.RichEvent.RichEvent, isFeatured: Boolean = false)
 
 @import scala.util.Random
 @import views.support.Dates.dateRange
+@import views.support.RenderClasses
 
-<a href="@routes.Event.details(event.slug)" class="event-item@if(!showPrice) { event-item--shallow} @if(event.isBookable){ qa-available-event-item} event-item--clippath-@Random.nextInt(2)">
+@itemMedia(sizes: Option[String]) = {
     @for(img <- event.imgOpt) {
         <div class="event-item__media">
-            @fragments.event.image(img, sizes=Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 100vw"))
+            @fragments.event.image(img, sizes, !isFeatured)
         </div>
     }
+}
+
+@itemContent = {
     <div class="event-item__content">
         <div class="event-item__meta">
             @fragments.event.itemMetaTitle(event)
             <time class="event-item__time" datetime="@event.start">
                 @dateRange(event.startAndEnd)
             </time>
-            @for(addressDefaultLine <- event.venue.addressDefaultLine) {
+            @for(addressShortLine <- event.venue.addressShortLine) {
                 <div class="event-item__location">
-                    @addressDefaultLine
+                    @addressShortLine
                 </div>
             }
-            @if(showPrice) {
-                <div class="event-item__footer">
-                    @fragments.pricing.priceInfoEvent(event)
-                    <span class="event-item__action">
-                        @fragments.inlineIcon("arrow-circle", List("icon-inline--brand", "icon-inline--large"))
-                    </span>
+            @for(desc <- event.description if isFeatured) {
+                <div class="event-item__description">
+                    @desc.blurb
                 </div>
             }
         </div>
     </div>
+}
+
+<a href="@routes.Event.details(event.slug).url" class="@RenderClasses(Map(
+    ("event-item", true),
+    ("event-item--hero", isFeatured),
+    ("qa-available-event-item", event.isBookable),
+    (s"event-item--clippath-${Random.nextInt(2)}", true)
+))">
+    @if(isFeatured) {
+        @itemContent
+        @itemMedia(Some("(min-width: 739px) 33.3vw, 100vw"))
+    } else {
+        @itemMedia(Some("(min-width: 739px) 33.3vw, (min-width: 479px) 50vw, 20vw"))
+        @itemContent
+    }
 </a>

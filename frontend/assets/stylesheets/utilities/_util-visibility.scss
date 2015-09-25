@@ -1,8 +1,12 @@
 /* ==========================================================================
    State - Responsive Utilities
    ========================================================================== */
-// TODO: hidden-mobile and hidden-tablet are the same!
 
+ .js-on .u-hidden-js {
+    display: none !important;
+ }
+
+// TODO: hidden-mobile and hidden-tablet are the same!
 .hidden-mobile {
     @include mq($until: tablet) {
         display: none !important;

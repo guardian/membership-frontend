@@ -3,7 +3,6 @@ define(['$'], function ($) {
 
     var FILTER_INPUT = document.getElementById('js-filter');
     var FILTER_PARENT = document.getElementById('js-filter-container');
-    var FILTER_CATEGORY = $('.js-filter-category');
     var FILTER_ITEMS = $('.js-filter-item');
     var FILTER_CLEAR = $('.js-filter-clear');
     var FILTER_COUNT = $('.js-filter-count');
@@ -105,12 +104,6 @@ define(['$'], function ($) {
     function init() {
         if(FILTER_INPUT) {
             FILTER_INPUT.addEventListener('keyup', filterList);
-            FILTER_CATEGORY.each(function (elem) {
-                elem.addEventListener('change', function() {
-                    var url = elem.options[elem.selectedIndex].value;
-                    window.location.href = url;
-                });
-            });
             FILTER_CLEAR[0].addEventListener('click', function(event) {
                 event.preventDefault();
                 FILTER_INPUT.value = '';

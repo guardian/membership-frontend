@@ -1,29 +1,48 @@
 @(
     pageInfo: model.PageInfo,
     events: model.RichEvent.EventGroup,
-    featuredEventsOpt: Option[model.RichEvent.EventGroup],
-    partnerEventsOpt: Option[model.RichEvent.EventGroup]
+    featuredEvents: model.RichEvent.EventGroup,
+    partnerEvents: model.RichEvent.EventGroup,
+    locations: Seq[model.RichEvent.FilterItem],
+    selectedLocation: Option[String]
 )
 
 @import model.SVG.Logos
 
+@eventsToShow = @{
+    /**
+     * - If no location is set exclude featured and partner events from the main listing.
+     * - If the user has an active filter, display all expected events in the main listing.
+     *   Featured + partner containers are no longer shown.
+     */
+    if(selectedLocation.isEmpty) {
+        events.copy(events = events.events.diff(featuredEvents.events ++ partnerEvents.events))
+    } else events
+}
+
 @main("Events", pageInfo=pageInfo) {
-    <main role="main" class="l-constrained">
-        @fragments.event.headerBar(
-            title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
-            logo=Logos.guardianLive
-        )
-        @fragments.event.remainingTickets("listing", Seq.empty)
+    <main>
+        <div class="l-constrained">
+            @fragments.event.headerBar(
+                title="Events, discussions, debates, interviews, keynote speeches and festivals exclusively for Guardian Members",
+                logo=Logos.guardianLive
+            )
+            @fragments.event.remainingTickets("listing", Seq.empty)
+        </div>
 
-        @for(featuredEvents <- featuredEventsOpt if featuredEvents.events.nonEmpty) {
-            @fragments.eventListings.features(featuredEvents)
-        }
+        @fragments.eventListings.eventsFilters(locations, events.events.length, selectedLocation)
 
-        @fragments.eventListings.listing(events, "Sorry, no matching events were found.", isLead=false, isFilterable=false)
+        <div class="l-constrained">
+            @if(selectedLocation.isEmpty) {
+                @fragments.eventListings.features(featuredEvents)
+            }
 
-        @for(partnerEvents <- partnerEventsOpt if partnerEvents.events.nonEmpty) {
-            @fragments.eventListings.listing(partnerEvents, "Sorry, no matching events were found.", isLead=false, isFilterable=false)
-        }
+            @fragments.eventListings.listing(eventsToShow, Some("Sorry, no matching events were found."), isLead=true, isFilterable=false)
+
+            @if(selectedLocation.isEmpty) {
+                @fragments.eventListings.listing(partnerEvents, None)
+            }
+        </div>
     </main>
 
     @fragments.tier.joinListing()

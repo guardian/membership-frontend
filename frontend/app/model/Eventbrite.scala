@@ -256,6 +256,8 @@ object Eventbrite {
       providerOpt <- EBEvent.availableProviders.find(_.id == m.group(1))
     } yield providerOpt
 
+    val isPartnerEvent = providerOpt.isDefined
+
     val mainImageUrl: Option[Uri] = for {
       desc <- description
       m <- """\smain-image:\s*(.*?)\s""".r.findFirstMatchIn(desc.html)

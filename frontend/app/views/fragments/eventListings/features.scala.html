@@ -1,19 +1,21 @@
 @(eventGroup: model.RichEvent.EventGroup)
 
-<section class="listing listing--lead">
-    <div class="listing__lead-in">
-        <h3 class="listing__title h-intro">@eventGroup.sequenceTitle</h3>
-    </div>
-    <div class="listing__content">
-        @for(heroEvent <- eventGroup.events.headOption) {
-            @fragments.event.itemHero(heroEvent)
-        }
-        <ul class="grid grid--3up grid--bordered grid--single-row">
-            @for(event <- eventGroup.events.drop(1)) {
-                <li class="grid__item">
-                    @fragments.event.item(event)
-                </li>
+@if(eventGroup.events.nonEmpty) {
+    <section class="listing listing--lead">
+        <div class="listing__lead-in">
+            <h3 class="listing__title h-intro">@eventGroup.sequenceTitle</h3>
+        </div>
+        <div class="listing__content">
+            @for(event <- eventGroup.events.headOption) {
+                @fragments.event.item(event, isFeatured=true)
             }
-        </ul>
-    </div>
-</section>
+            <ul class="grid grid--3up grid--bordered grid--single-row">
+                @for(event <- eventGroup.events.drop(1)) {
+                    <li class="grid__item">
+                        @fragments.event.item(event)
+                    </li>
+                }
+            </ul>
+        </div>
+    </section>
+}

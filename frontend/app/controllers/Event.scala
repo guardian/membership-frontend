@@ -115,20 +115,36 @@ trait Event extends Controller with ActivityTracking {
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
+  def allEvents = {
+    guLiveEvents.events ++ localEvents.events
+  }
+
+  def allEventsByLocation(location: String) = {
+    guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
+  }
+
   def list = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitleEvents,
       request.path,
       Some(CopyConfig.copyDescriptionEvents)
     )
-    val events = chronologicalSort(guLiveEvents.getEvents ++ localEvents.getEvents)
+    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
+
+    val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
+    val partnerEvents =  EventGroup("Programming partner events", guLiveEvents.getPartnerEvents)
+    val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
+
+    val locationFitlers = getCitiesWithCount(allEvents).map(FilterItem.tupled)
+
     Ok(views.html.event.eventsList(
       pageInfo,
-      EventGroup("What's on", events),
-      Some(EventGroup("Featured", guLiveEvents.getFeaturedEvents)),
-      Some(EventGroup("Programming partner events", guLiveEvents.getPartnerEvents))
+      events,
+      featuredEvents,
+      partnerEvents,
+      locationFitlers,
+      locationOpt
     ))
-
   }
 
   def listArchive = CachedAction { implicit request =>
@@ -143,17 +159,6 @@ trait Event extends Controller with ActivityTracking {
       calendarArchive
     ))
 
-  }
-
-  def listFilteredBy(urlTagText: String) = CachedAction { implicit request =>
-    val tag = urlTagText.replace('-', ' ')
-    val events = chronologicalSort(guLiveEvents.getTaggedEvents(tag) ++ localEvents.getTaggedEvents(tag))
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    Ok(views.html.event.eventsList(pageInfo, EventGroup("What's on", events), None, None))
   }
 
   def masterclassesList = CachedAction { implicit request =>

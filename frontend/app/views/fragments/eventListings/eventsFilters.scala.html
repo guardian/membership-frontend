@@ -1,0 +1,30 @@
+@(locations: Seq[model.RichEvent.FilterItem], totalItems: Int, currentSelection: Option[String])
+
+<div class="event-filters tone-tint">
+    <div class="event-filters__container l-constrained">
+        <div class="event-filters__items">
+            <form action="" method="get" id="js-filter-form">
+                <label class="event-filters__item">
+                            Show:
+                    <select name="location" class="select-minimal js-facet">
+                        <option value="">All cities</option>
+                        @for(location <- locations if location.count > 0) {
+                            <option value="@location.slug" @if(currentSelection.contains(location.slug)) { selected}>
+                            @location.name.capitalize
+                            (@location.count)
+                            </option>
+                        }
+                    </select>
+                </label>
+                <span class="event-filters__count">
+                    <span class="js-filter-count">@totalItems</span>
+                    @if(totalItems > 1) { events } else { event }
+                    @if(currentSelection.isEmpty) {
+                        <span class="hidden-mobile">in @locations.length cities</span>
+                    }
+                </span>
+                <input type="submit" value="Filter" class="action action--primary u-hidden-js">
+            </form>
+        </div>
+    </div>
+</div>
