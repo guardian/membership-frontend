@@ -273,31 +273,28 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     checkForPendingAmendments(memberId) { subscriptionStatus =>
       val currentSubscriptionVersion = subscriptionStatus.currentVersion
       for {
-	subscriptionDetails <- getSubscriptionDetails(currentSubscriptionVersion)
-	cancelDate = if (instant) DateTime.now else subscriptionDetails.chargedThroughDate.getOrElse(DateTime.now())
-	result <- zuoraSoapClient.authenticatedRequest(CancelPlan(currentSubscriptionVersion.id, subscriptionDetails.ratePlanId, cancelDate))
+        subscriptionDetails <- getSubscriptionDetails(currentSubscriptionVersion)
+        cancelDate = if (instant) DateTime.now else subscriptionDetails.chargedThroughDate.getOrElse(DateTime.now)
+        result <- zuoraSoapClient.authenticatedRequest(CancelPlan(currentSubscriptionVersion.id, subscriptionDetails.ratePlanId, cancelDate))
       } yield result
     }
   }
 
   def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
-
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(subscriptionDetails: SubscriptionDetails) = subscriptionDetails.chargedThroughDate.getOrElse(subscriptionDetails.contractAcceptanceDate)
 
-
     checkForPendingAmendments(memberId) { subscriptionStatus =>
       val currentSubscriptionVersion = subscriptionStatus.currentVersion
       for {
-	subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
-	dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
-
-	productRatePlanIds <- productRatePlanIdSupplier.get()
-	result <- zuoraSoapClient.authenticatedRequest(DowngradePlan(currentSubscriptionVersion.id,
-								     subscriptionDetails.ratePlanId,
-								     productRatePlanIds(newTierPlan),
-								     dateToMakeDowngradeEffectiveFrom))
+        subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
+        dateToMakeDowngradeEffectiveFrom = effectiveFrom(subscriptionDetails)
+        productRatePlanIds <- productRatePlanIdSupplier.get()
+        result <- zuoraSoapClient.authenticatedRequest(DowngradePlan(currentSubscriptionVersion.id,
+          subscriptionDetails.ratePlanId,
+          productRatePlanIds(newTierPlan),
+          dateToMakeDowngradeEffectiveFrom))
       } yield result
     }
   }
@@ -308,23 +305,20 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     checkForPendingAmendments(memberId) { subscriptionStatus =>
       val subscriptionId = subscriptionStatus.currentVersionId
       for {
-	zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
-	ratePlan <- zuoraSoapClient.queryOne[RatePlan](SimpleFilter("SubscriptionId", subscriptionId))
-	productRatePlanIds <- productRatePlanIdSupplier.get()
-	choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice).map(_.id)
-	result <- zuoraSoapClient.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, productRatePlanIds(newTierPlan), preview, choice))
+        zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
+        ratePlan <- zuoraSoapClient.queryOne[RatePlan](SimpleFilter("SubscriptionId", subscriptionId))
+        productRatePlanIds <- productRatePlanIdSupplier.get()
+        choice = featuresPerTier(zuoraFeatures)(newTierPlan, featureChoice).map(_.id)
+        result <- zuoraSoapClient.authenticatedRequest(UpgradePlan(subscriptionId, ratePlan.id, productRatePlanIds(newTierPlan), preview, choice))
       } yield result
     }
   }
 
-
   private def checkForPendingAmendments(memberId: MemberId)(fn: SubscriptionStatus => Future[AmendResult]): Future[AmendResult] = {
     getSubscriptionStatus(memberId).flatMap { subscriptionStatus =>
       if (subscriptionStatus.futureVersionIdOpt.isEmpty) {
-	fn(subscriptionStatus)
-      } else {
-	throw SubscriptionServiceError("Cannot amend subscription, amendments are already pending")
-      }
+        fn(subscriptionStatus)
+      } else throw SubscriptionServiceError("Cannot amend subscription, amendments are already pending")
     }
   }
 
