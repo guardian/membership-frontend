@@ -5,35 +5,32 @@ import model.{Video, ResponsiveImageGroup, ResponsiveImageGenerator}
 
 object Videos {
 
-  private val videoPlaceholder = ResponsiveImageGenerator(
-    id="267569fecb462c61718f7e8cf50a8995ebddee5d/0_0_2280_1368",
+  private val whatIsMembershipPlaceholder = ResponsiveImageGenerator(
+    id="0f0b186b9acd3c32ae47e445e07fe5b128250d7f/0_0_1800_1080",
     sizes=List(1000, 500)
   )
 
   val whatIsMembership = Video(
-    srcUrl="//www.youtube.com/embed/7JnYthFvYEk?enablejsapi=1&wmode=transparent",
-    posterImage=Some(
-      ResponsiveImageGroup(
-        altText=Some("If you read the Guardian, join the Guardian"),
-        availableImages=videoPlaceholder
-      )
-    )
-  )
-  val whatIsMembershipAlt = Video(
-    srcUrl="//www.youtube.com/embed/z_IFkfuEuz0?enablejsapi=1&wmode=transparent",
+    srcUrl="//www.youtube.com/embed/oRowh6Nzt4c?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("What is Guardian Members?"),
-        availableImages=videoPlaceholder
+        availableImages=whatIsMembershipPlaceholder
       )
     )
   )
+
+  private val supportersPlaceholder = ResponsiveImageGenerator(
+    id="267569fecb462c61718f7e8cf50a8995ebddee5d/0_0_2280_1368",
+    sizes=List(1000, 500)
+  )
+
   val supporters = Video(
     srcUrl="//www.youtube.com/embed/pIg3BCr1mwY?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
-        availableImages=videoPlaceholder
+        availableImages=supportersPlaceholder
       )
     )
   )
