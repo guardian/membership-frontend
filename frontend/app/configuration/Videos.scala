@@ -6,7 +6,6 @@ import model.{Video, ResponsiveImageGroup, ResponsiveImageGenerator}
 object Videos {
 
   private val whatIsMembershipPlaceholder = ResponsiveImageGenerator(
-    // ff2fdc0b1cd540445ab0c57b3efe8f08eba2e213
     id="0f0b186b9acd3c32ae47e445e07fe5b128250d7f/0_0_1800_1080",
     sizes=List(1000, 500)
   )
