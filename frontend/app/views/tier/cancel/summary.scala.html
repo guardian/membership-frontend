@@ -1,7 +1,8 @@
-@(subscriptionDetailsOpt: Option[model.Zuora.SubscriptionDetails], currentTierOpt: Option[com.gu.membership.salesforce.Tier])
-
 @import configuration.Config
 @import views.support.Dates._
+@import com.gu.membership.zuora.soap.models.SubscriptionDetails
+
+@(subscriptionDetailsOpt: Option[SubscriptionDetails], currentTierOpt: Option[com.gu.membership.salesforce.Tier])
 
 @main("Cancel Tier summary") {
 

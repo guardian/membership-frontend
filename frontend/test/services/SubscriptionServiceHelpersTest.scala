@@ -2,7 +2,7 @@ package services
 
 import org.specs2.mutable.Specification
 import utils.Resource
-import model.ZuoraDeserializer._
+import com.gu.membership.zuora.soap.Readers._
 
 class SubscriptionServiceHelpersTest extends Specification {
 

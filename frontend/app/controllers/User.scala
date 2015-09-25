@@ -4,7 +4,7 @@ import actions._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.membership.model.PaidTiers
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
-import model.Zuora.SubscriptionDetails
+import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

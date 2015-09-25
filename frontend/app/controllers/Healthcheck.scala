@@ -1,9 +1,11 @@
+
 package controllers
 
 import com.gu.monitoring.CloudWatchHealth
 import play.api.Logger
 import play.api.mvc.{Action, Controller}
 import services.{GuardianLiveEventService, TouchpointBackend}
+import com.github.nscala_time.time.Imports._
 
 case class Test(name: String, exec: () => Boolean) {
   def ok() = {
@@ -13,24 +15,16 @@ case class Test(name: String, exec: () => Boolean) {
   }
 }
 
-object ZuoraPing {
-  import com.github.nscala_time.time.Imports._
-  val zuoraSoapService = TouchpointBackend.Normal.zuoraSoapService
-  def ping = zuoraSoapService.lastPingTimeWithin(2.minutes)
-}
-
 object Healthcheck extends Controller {
-
-  val zuoraSoapService = TouchpointBackend.Normal.zuoraSoapService
+  val zuoraSoapClient = TouchpointBackend.Normal.zuoraSoapClient
   val subscriptionService = TouchpointBackend.Normal.subscriptionService
 
   def tests = Seq(
     Test("Events", () => GuardianLiveEventService.events.nonEmpty),
     Test("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
-    Test("ZuoraPing", () => ZuoraPing.ping),
+    Test("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
     Test("ZuoraProductRatePlans", () => subscriptionService.productRatePlanIdSupplier.get().value.exists(_.isSuccess))
   )
-
 
   def healthcheck() = Action {
     Cached(1) {

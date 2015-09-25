@@ -1,14 +1,15 @@
+@import com.gu.membership.salesforce.Tier
+@import com.gu.membership.zuora.soap.models.SubscriptionDetails
+@import views.support.Prices._
+@import views.support.Dates._
+@import configuration.Config.idWebAppUrl
+
 @(
-    currentSubscription: model.Zuora.SubscriptionDetails,
-    futureSubscription: model.Zuora.SubscriptionDetails,
-    currentTier: com.gu.membership.salesforce.Tier,
+    currentSubscription: SubscriptionDetails,
+    futureSubscription: SubscriptionDetails,
+    currentTier: Tier,
     futureTierName: String
 )
-
-@import configuration.Config
-@import views.support.Dates._
-@import views.support.Prices._
-
 @main("Change Tier Summary | " + futureTierName + " from " + currentTier.name) {
 
     <main role="main" class="page-content l-constrained">
@@ -58,7 +59,7 @@
                     </tr>
                 </table>
 
-                <a href="@Config.idWebAppUrl/membership/edit" class="action u-align-right" id="qa-downgrade-profile-link">My profile</a>
+		<a href="@idWebAppUrl/membership/edit" class="action u-align-right" id="qa-downgrade-profile-link">My profile</a>
             </div>
         </section>
 
