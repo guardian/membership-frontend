@@ -24,7 +24,7 @@
                 <div class="event-filters__items">
                     <label class="event-filters__item">
                         Show:
-                        <select class="select-minimal js-filter-category">
+                        <select class="select-minimal js-facet-category">
                             <option value="/masterclasses">All categories</option>
                             @for(category <- tags) {
                                 <option value="/masterclasses/@encodeTag(category.categoryName)" @if(category.categoryName == selectedTag){ selected}>@category.categoryName</option>
