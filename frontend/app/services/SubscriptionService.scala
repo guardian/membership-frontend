@@ -212,25 +212,20 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
                          customerOpt: Option[Stripe.Customer],
                          paymentDelay: Option[Period],
                          casId: Option[String]): Future[SubscribeResult] = for {
-
-      zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
-      productRatePlanIds <- productRatePlanIdSupplier.get()
-      featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)
-      account = subscribe.Account.stripe(memberId, customerOpt.isDefined)
-      paymentMethod = customerOpt.map(subscribe.CreditCardReferenceTransaction)
-      action = Subscribe(account = account,
-			 paymentMethodOpt = paymentMethod,
-			 ratePlanId = productRatePlanIds(joinData.plan),
-			 firstName=joinData.name.first,
-			 lastName=joinData.name.last,
-			 address=joinData.deliveryAddress,
-			 casIdOpt = casId,
-			 paymentDelay = paymentDelay,
-			 ipAddressOpt = None,
-			 featureIds = featureIds)
-
-      result <- zuoraSoapClient.authenticatedRequest(action)
-    } yield result
+    zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
+    productRatePlanIds <- productRatePlanIdSupplier.get()
+    result <- zuoraSoapClient.authenticatedRequest(Subscribe(
+      account = subscribe.Account.stripe(memberId, customerOpt.isDefined),
+      paymentMethodOpt = customerOpt.map(subscribe.CreditCardReferenceTransaction),
+      ratePlanId = productRatePlanIds(joinData.plan),
+      firstName=joinData.name.first,
+      lastName=joinData.name.last,
+      address=joinData.deliveryAddress,
+      casIdOpt = casId,
+      paymentDelay = paymentDelay,
+      ipAddressOpt = None,
+      featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)))
+  } yield result
 
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
     for {
