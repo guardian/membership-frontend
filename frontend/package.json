@@ -1,10 +1,20 @@
 {
   "name": "membership",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "scripts": {
+    "bowerJs": "cd assets/javascripts && rimraf lib/bower-components &&  bower install",
+    "bowerCss": "cd assets/stylesheets && rimraf bower_components &&  bower install",
+    "bowerSetup": "npm run bowerJs && npm run bowerCss",
+    "copyHooks": "cp  -f ../git-hooks/pre-commit ../.git/hooks/",
+    "setup": "npm run bowerSetup && npm run compile --dev && npm run copyHooks",
+    "compile": "echo 'compiling assets' && grunt compile",
+    "watch": "grunt watch --dev",
+    "test": "grunt karma"
+  },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",
-    "bower": "^1.4.1",
+    "bower": "^1.5.3",
     "grunt": "^0.4.5",
     "grunt-asset-hash": "^0.1.6",
     "grunt-cli": "^0.1.13",
@@ -18,12 +28,10 @@
     "grunt-postcss": "^0.5.1",
     "grunt-px-to-rem": "^0.4.0",
     "grunt-sass": "^1.0.0",
-    "grunt-shell": "~1.1.2",
     "grunt-svgmin": "^2.0.1",
     "grunt-svgstore": "^0.5.0",
     "karma": "~0.12.36",
     "karma-chrome-launcher": "^0.1.12",
-    "karma-coverage": "^0.4.2",
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-requirejs": "~0.2.2",
@@ -31,6 +39,7 @@
     "mkdirp": "^0.5.1",
     "phantomjs": "~1.9.17",
     "requirejs": "^2.1.18",
+    "rimraf": "^2.4.3",
     "time-grunt": "^1.2.1"
   }
 }

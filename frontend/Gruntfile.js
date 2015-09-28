@@ -188,12 +188,6 @@ module.exports = function (grunt) {
             css: ['<%= dirs.publicDir.stylesheets %>'],
             icons: ['<%= dirs.assets.images %>/inline-svgs/*.svg'],
             assetMap: 'conf/assets.map',
-            hooks: {
-                src: ['../.git/hooks/pre-commit'],
-                options: {
-                    force: true // or we can't delete outside cwd
-                }
-            },
             images: ['<%= dirs.publicDir.images %>'],
             dist: ['<%= dirs.publicDir.root %>/dist/']
         },
@@ -261,10 +255,9 @@ module.exports = function (grunt) {
 
         karma: {
             options: {
-                reporters: isDev ? ['dots', 'coverage'] : ['progress'],
+                reporters: ['progress'],
                 singleRun: singleRun
             },
-
             unit: {
                 configFile: 'karma.conf.js',
                 browsers: ['PhantomJS']
@@ -291,22 +284,8 @@ module.exports = function (grunt) {
         },
 
         /***********************************************************************
-         * Shell
+         * Icons
          ***********************************************************************/
-
-        shell: {
-            /**
-             * Using this task to copy hooks, as Grunt's own copy task doesn't preserve permissions
-             */
-            copyHooks: {
-                command: 'cp ../git-hooks/pre-commit ../.git/hooks/',
-                options: {
-                    stdout: true,
-                    stderr: true,
-                    failOnError: true
-                }
-            }
-        },
 
         svgmin: {
             options: {
@@ -428,6 +407,4 @@ module.exports = function (grunt) {
         'clean:css',
         'clean:images'
     ]);
-    grunt.registerTask('hookup', ['clean:hooks'], ['shell:copyHooks']);
-
 };
