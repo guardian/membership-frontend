@@ -9,8 +9,10 @@
     "copyHooks": "cp  -f ../git-hooks/pre-commit ../.git/hooks/",
     "setup": "npm run bowerSetup && npm run compile --dev && npm run copyHooks",
     "compile": "echo 'compiling assets' && grunt compile",
+    "compileCss": "grunt compile:css --dev",
+    "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
-    "test": "grunt karma"
+    "test": "grunt validate && grunt karma"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",

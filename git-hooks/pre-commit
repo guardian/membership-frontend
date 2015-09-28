@@ -13,7 +13,7 @@ cd frontend
 CSS_SRC_PATTERN="\.scss"
 git diff --cached --name-only | if grep "$CSS_SRC_PATTERN"
 then
-    grunt compile:css
+    npm run compileCss
 fi
 cssValidateResult=$?
 
@@ -21,14 +21,14 @@ cssValidateResult=$?
 JS_SRC_PATTERN="\.js$"
 git diff --cached --name-only | if grep "$JS_SRC_PATTERN"
 then
-    grunt validate
+    npm test
 fi
 jsValidateResult=$?
 
 # Test JS CHANGE TO RIGHT PATTERN
 git diff --cached --name-only | if grep "[^/]\+/\(app/assets/javascripts\|test/js/spec\).*$JS_SRC_PATTERN"
 then
-    grunt test:unit
+    npm test
 fi
 jsTestResult=$?
 
