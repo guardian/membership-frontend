@@ -54,7 +54,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
 
   def mkRichEvent(event: EBEvent): Future[RichEvent]
   def getFeaturedEvents: Seq[RichEvent]
-  def getTaggedEvents(tag: String): Seq[RichEvent]
+  def getTaggedEvents(tag: String): Seq[RichEvent] = Seq.empty
   def getEventsArchive: Option[Seq[RichEvent]] = Some(eventsArchive)
   def getPartnerEvents: Seq[RichEvent] = events.filter(_.providerOpt.isDefined)
 
@@ -131,7 +131,6 @@ object GuardianLiveEventService extends LiveService {
     yield GuLiveEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(eventsOrderingTask.get(), events)
-  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
   override def start() {
     super.start()
     eventsOrderingTask.start()
@@ -147,7 +146,6 @@ object LocalEventService extends LiveService {
     yield LocalEvent(event, gridImageOpt, contentApiService.content(event.id))
 
   override def getFeaturedEvents: Seq[RichEvent] = EventbriteServiceHelpers.getFeaturedEvents(Nil, events)
-  override def getTaggedEvents(tag: String): Seq[RichEvent] = events.filter(_.name.text.toLowerCase.contains(tag))
 
   override def start() {
     super.start()
