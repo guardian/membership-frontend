@@ -9,19 +9,19 @@ trait Staff extends Controller {
   val masterclassEvents = MasterclassEventService
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview.guLive(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))
+     Ok(views.html.eventOverview.live(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))
   }
 
-  def localOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview.local(localEvents.events, localEvents.eventsDraft, request.path))
+  def eventOverviewLocal = GoogleAuthenticatedStaffAction { implicit request =>
+     Ok(views.html.eventOverview.local(localEvents.events, localEvents.eventsDraft, request.path))
   }
 
-  def masterclassOverview = GoogleAuthenticatedStaffAction { implicit request =>
-     Ok(views.html.staff.eventOverview.masterclass(masterclassEvents.events, masterclassEvents.eventsDraft, request.path))
+  def eventOverviewMasterclasses = GoogleAuthenticatedStaffAction { implicit request =>
+     Ok(views.html.eventOverview.masterclasses(masterclassEvents.events, masterclassEvents.eventsDraft, request.path))
   }
 
-  def eventDetails = GoogleAuthenticatedStaffAction { implicit request =>
-    Ok(views.html.staff.event.details(request.path))
+  def eventOverviewDetails = GoogleAuthenticatedStaffAction { implicit request =>
+    Ok(views.html.eventOverview.details(request.path))
   }
 }
 
