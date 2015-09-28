@@ -1,22 +1,18 @@
 # Membership Frontend
 
-Bringing the Guardian to life through live events and meet-ups
-
-https://membership.theguardian.com/
+[https://membership.theguardian.com/](https://membership.theguardian.com/). Bringing the Guardian to life through live events and meet-ups. 
 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-1. [NGinx](#nginx)
 1. [Setup](#setup)
 1. [Run](#run)
-1. [Client-side Development](#cs-development)
 1. [Tests](#tests)
 1. [Test Users](#test-users)
 1. [Security](#security)
 1. [Additional Documentation](#additional)
 
-<a name="getting-started">
+<a name="getting-started"></a>
 ## Getting Started
 
 To get started working on Membership you will need to complete the following steps:
@@ -25,50 +21,99 @@ To get started working on Membership you will need to complete the following ste
 2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
 
+<a name="setup"></a>
+## Setup
 
-<a name="nginx">
-## NGinx
+### Requirements
+
+We require the following to be installed:
+
+- `Java 8`
+- `Node (with npm)`
+- `NGINX`
+
+### Install client-side dependencies
+
+```
+cd frontend/
+npm install
+npm run setup
+```
+
+A good way to check everything is setup correctly is to run the tests
+
+```
+npm test
+```
+
+For development you'll also need the following commands:
+
+**Compile assets**
+
+```
+npm run compile
+```
+
+**Watch files for changes**
+
+```
+npm run watch
+```
+
+*Note:* We use `grunt` and `bower` behind the scenes but provide [facades for common tasks](https://bocoup.com/weblog/a-facade-for-tooling-with-npm-scripts/) to make setup easier and reduce the number of tools needed for most developers. If you want to work with the full set of build tools install `grunt-cli` and run `grunt --help` to see the list of available tasks.
+
+**Client-side Principles**: See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
+
+**Pattern Library**: A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
+
+### Setup NGINX
 
 To run standalone you can use the default nginx installation as follows:
 
 Install nginx:
 
-Linux: `sudo apt-get install nginx`
-Mac OSX: `brew install nginx`
+- Linux: `sudo apt-get install nginx`
+- Mac OSX: `brew install nginx`
 
-Make sure you have a sites-enabled folder under your nginx home. This should be
+Make sure you have a `sites-enabled/` folder under your nginx home. This varies depending on your setup but should be under:
 
-Linux: `/etc/nginx/sites-enabled`
-Mac OSX: `~/Developers/etc/nginx/sites-enabled` or `/usr/local/etc/nginx/`
-Make sure your nginx.conf (found in your nginx home) contains the following line in the `http{...}` block: `include sites-enabled/*`;
+- Linux: `/etc/nginx/sites-enabled`
+- Mac OSX: `/usr/local/etc/nginx/sites-enabled`
 
-Run:
+Make sure your `nginx.conf` (found in your nginx home) contains the following line in the `http{...}` block:
 
-`./nginx/setup.sh`
+```
+include sites-enabled/*
+```
 
+If you want an automated setup run:
 
-<a name="setup">
-## Setup
+```
+./nginx/setup.sh`
+```
 
-1. Go to the project root
-1. Run `./setup.sh` to install project-specific client-side dependencies
-1. Change the ownership of the 'gu' directory under 'etc' to current user.
-   `sudo -i chown -R {username} /etc/gu`
-1. Add the following to your hosts file in `/etc/hosts`:
+Or follow the steps in that file.
+
+### Update your hosts file
+
+Add the following to your hosts file in `/etc/hosts`:
 
 ```
 127.0.0.1   mem.thegulocal.com
 127.0.0.1   profile.thegulocal.com
 ```
 
-1. Inside `membership-frontend` run `./nginx/setup.sh`
-1. Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
+### Download private keys
+
+Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
 
 ```
 aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
 ```
 
-1. Setup AWS credentials. Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
+### Setup AWS credentials
+
+Setup AWS credentials. Ask your teammate to create an account for you and securely send you the access key. For security, you must enable [MFA](http://aws.amazon.com/iam/details/mfa/).
 
 In `~/.aws/credentials` add the following:
 
@@ -80,12 +125,12 @@ region = eu-west-1
 
 ```
 
-### Ubuntu
+### Ubuntu setup
 
 In an ideal world, your Ubuntu package install would be:
 
 ```
-sudo apt-get install nginx openjdk-7-jdk ruby ruby-dev nodejs npm
+sudo apt-get install nginx openjdk-7-jdk nodejs npm
 ```
 
 #### [Node](http://nodejs.org/) & [NPM](https://github.com/npm/npm/releases)
@@ -96,7 +141,7 @@ package for your version of Ubuntu is old, you'll [probably](http://askubuntu.co
 want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
 which includes both Node.js and NPM.
 
-<a name="run">
+<a name="run"></a>
 ## Run
 
 The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
@@ -141,67 +186,31 @@ project identity
 idrun
 ```
 
-<a name="tests">
+<a name="tests"></a>
 ## Tests
 
-<a name="tests-scala">
 ### Running Scala unit tests
 
 To run Scala unit tests run `sbt test` from the root of the project.
 
-<a name="tests-js">
 ### Running JavaScript unit tests
 
-**Note these commands should be run from inside the `frontend/` directory**
-
 ```
-grunt karma --dev
+cd frontend/
+npm test
 ```
 
-#### Test coverage
-
-Run with `--dev` flag to generate test coverage. Coverage report can be found in `frontend/test/js/coverage/`.
-
-<a name="tests-functional">
 ### Running functional tests
 
 See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
 
-<a name="cs-development">
-## Client-side Development
-
-Client-side build are handled using Grunt. **Note these commands should be run from inside the `frontend/` directory**
-
-#### Watch and compile front-end files
-
-```
-grunt watch --dev
-```
-
-#### Compile front-end files
-
-```
-grunt compile --dev
-```
-
-### Client-side Principles
-
-See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
-
-<a name="pattern-library">
-### Pattern Library
-
-A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns)
-
-When building new components break them down into fragments and include them in the pattern library.
-
-<a name="test-users">
+<a name="test-users"></a>
 ## Test Users
 
 See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
 Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
-<a name="security">
+<a name="security"></a>
 ## Security
 
 ### Committing config credentials
@@ -223,7 +232,7 @@ For a reminder on why we do this, here's @tackley on the subject:
 
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
 
-<a name="additional">
+<a name="additional"></a>
 ## Additional Documentation
 
 Further documentation notes and useful items can be found in [docs](/docs).
