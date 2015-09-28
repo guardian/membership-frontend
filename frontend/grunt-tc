@@ -11,6 +11,5 @@ set -o errexit
 
 npm cache clean
 npm install
-npm run bowerSetup
 
 ./node_modules/.bin/grunt "$@"

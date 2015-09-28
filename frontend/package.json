@@ -7,12 +7,13 @@
     "bowerCss": "cd assets/stylesheets && rimraf bower_components &&  bower install",
     "bowerSetup": "npm run bowerJs && npm run bowerCss",
     "copyHooks": "cp  -f ../git-hooks/pre-commit ../.git/hooks/",
-    "setup": "npm run bowerSetup && npm run compile --dev && npm run copyHooks",
+    "devSetup": "npm run compile --dev && npm run copyHooks",
     "compile": "echo 'compiling assets' && grunt compile",
     "compileCss": "grunt compile:css --dev",
     "compileJs": "grunt compile:js --dev",
     "watch": "grunt watch --dev",
-    "test": "grunt validate && grunt karma"
+    "test": "grunt validate && grunt karma",
+    "postinstall": "npm run bowerSetup"
   },
   "devDependencies": {
     "autoprefixer-core": "^5.2.0",

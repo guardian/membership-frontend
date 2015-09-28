@@ -1,6 +1,6 @@
 # Membership Frontend
 
-[https://membership.theguardian.com/](https://membership.theguardian.com/). Bringing the Guardian to life through live events and meet-ups. 
+[https://membership.theguardian.com/](https://membership.theguardian.com/). Bringing the Guardian to life through live events and meet-ups.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ We require the following to be installed:
 ```
 cd frontend/
 npm install
-npm run setup
+npm run devSetup
 ```
 
 A good way to check everything is setup correctly is to run the tests
