@@ -1,4 +1,4 @@
-/*global Raven */
+/*global Raven, Stripe */
 define([
     'ajax',
     'src/utils/helper',

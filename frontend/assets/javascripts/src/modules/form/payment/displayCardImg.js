@@ -1,3 +1,4 @@
+/*global Stripe*/
 define(function () {
     'use strict';
 

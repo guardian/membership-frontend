@@ -1,3 +1,4 @@
+/*global Stripe*/
 define([
     'src/modules/form/payment/listeners',
     'src/modules/form/payment/options'

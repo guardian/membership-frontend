@@ -13,7 +13,7 @@
     "grunt-contrib-imagemin": "^0.9.4",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-eslint": "^15.0.0",
+    "grunt-eslint": "^17.2.0",
     "grunt-karma": "~0.11.0",
     "grunt-postcss": "^0.5.1",
     "grunt-px-to-rem": "^0.4.0",

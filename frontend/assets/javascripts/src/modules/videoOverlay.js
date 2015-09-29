@@ -1,7 +1,4 @@
-/* global YT: true */
-/**
- * Play video when clicking on a video overlay image
- */
+/* global Raven, YT */
 define(function() {
     'use strict';
 
@@ -48,7 +45,9 @@ define(function() {
             if(!iOSDevice()) {
                 try {
                     playerApi.playVideo();
-                } catch(e) {}
+                } catch(e) {
+                    Raven.captureException(e, {tags: { level: 'info' }});
+                }
             }
             player.classList.add(CLASSNAME_IS_PLAYING);
             setTimeout(function() {

@@ -1,4 +1,4 @@
-/* global fbq, _fbq */
+/* global fbq */
 /* eslint-disable no-unused-vars, no-underscore-dangle */
 define(['lodash/collection/forEach'], function(forEach) {
     'use strict';
