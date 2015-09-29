@@ -1,0 +1,15 @@
+@(date: org.joda.time.LocalDate, events: Seq[model.RichEvent.RichEvent])
+
+<section class="date-listing">
+    <div class="date-listing__lead-in">
+        <h3 class="date-listing__title">@date.toString("d")</h3>
+        <p class="date-listing__subtitle">@date.toString("EEEE")</p>
+    </div>
+    <div class="date-listing__content">
+        <div class="o-flexgrid">
+        @for(event <- events) {
+            @fragments.event.itemList(event, List("o-flexgrid__item"))
+        }
+        </div>
+    </div>
+</section>

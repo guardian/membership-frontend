@@ -196,11 +196,10 @@
     list-style: none;
 }
 .nav-secondary__item {
-    margin-right: rem($gs-gutter / 2);
+    margin-right: $gs-gutter;
 }
 .nav-secondary__link {
     @include fs-headline(2);
-    @include font-smoothing();
     line-height: 1;
     font-weight: normal;
     display: inline-block;
@@ -213,6 +212,9 @@
     border-right: 1px solid $white;
     margin-right: rem($gs-gutter);
     padding-right: rem($gs-gutter / 2);
+}
+.nav-secondary__breadcrumb__item {
+    margin-right: $gs-gutter / 2;
 }
 .nav-secondary__breadcrumb__trail::after {
     content: "›";

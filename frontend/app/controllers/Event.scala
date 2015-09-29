@@ -59,7 +59,7 @@ trait Event extends Controller with ActivityTracking {
       }
     }
 
-    eventOpt.getOrElse(Redirect(routes.Event.list))
+    eventOpt.getOrElse(Redirect(routes.WhatsOn.list))
   }
 
   /*
@@ -115,72 +115,6 @@ trait Event extends Controller with ActivityTracking {
     Ok(views.html.event.eventDetail(pageInfo, event))
   }
 
-  def allEvents = {
-    guLiveEvents.events ++ localEvents.events
-  }
-
-  def allEventsByLocation(location: String) = {
-    guLiveEvents.getEventsByLocation(location) ++ localEvents.getEventsByLocation(location)
-  }
-
-  def list = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleEvents,
-      request.path,
-      Some(CopyConfig.copyDescriptionEvents)
-    )
-    val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
-
-    val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
-    val partnerEvents =  EventGroup("Programming partner events", guLiveEvents.getPartnerEvents)
-    val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
-
-    val locationFitlers = getCitiesWithCount(allEvents).map(FilterItem.tupled)
-
-    Ok(views.html.event.eventsList(
-      pageInfo,
-      events,
-      featuredEvents,
-      partnerEvents,
-      locationFitlers,
-      locationOpt
-    ))
-  }
-
-  def listArchive = CachedAction { implicit request =>
-    val archivedEvents =
-      guLiveEvents.getEventsArchive.toList.flatten ++ localEvents.getEventsArchive.toList.flatten
-
-    val calendarArchive =
-      CalendarMonthDayGroup("Archive", groupEventsByDayAndMonth(archivedEvents)(implicitly[Ordering[LocalDate]].reverse))
-
-    Ok(views.html.event.eventsListArchive(
-      PageInfo(s"${calendarArchive.title} | Events", request.path, None),
-      calendarArchive
-    ))
-
-  }
-
-  def masterclassesList = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
-    )
-    val eventGroup = EventGroup("What's on", masterclassEvents.events)
-    Ok(views.html.event.masterclassesList(pageInfo, eventGroup))
-  }
-
-  def masterclassesListFilteredBy(rawTag: String, rawSubTag: String = "") = CachedAction { implicit request =>
-    val pageInfo = PageInfo(
-      CopyConfig.copyTitleMasterclasses,
-      request.path,
-      Some(CopyConfig.copyDescriptionMasterclasses)
-    )
-    val tag = decodeTag( if(rawSubTag.nonEmpty) rawSubTag else rawTag )
-    val eventGroup = EventGroup("What's on", masterclassEvents.getTaggedEvents(tag))
-    Ok(views.html.event.masterclassesList(pageInfo, eventGroup, decodeTag(rawTag), decodeTag(rawSubTag)))
-  }
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
     EventbriteService.getEvent(id).map { event =>

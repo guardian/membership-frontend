@@ -1,6 +1,6 @@
-@(title: String, introOpt: Option[String] = None)
+@(title: String, introOpt: Option[String] = None, classes: Seq[String] = Seq.empty)
 
-<section class="page-header">
+<section class="page-header @classes.mkString(" ")">
     <h1 class="page-headline">@Html(title)</h1>
     @for(intro <- introOpt) {
         <p class="page-intro">@Html(intro)</p>

@@ -124,16 +124,17 @@ $_page-offset: rem(gs-span(2) + $gs-gutter);
     padding: rem($gs-gutter / 2) 0 rem($gs-baseline * 2);
 
     @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 3);
-    }
-
-    @include mq(tablet) {
-        padding-bottom: rem($gs-baseline * 4);
+        padding-bottom: $gs-baseline * 4;
     }
 
     @include mq(mem-full) {
         margin-right: rem($gs-gutter);
         margin-left: $_page-offset;
+    }
+}
+.page-header--slim {
+    @include mq(tablet) {
+        padding-bottom: $gs-baseline;
     }
 }
 

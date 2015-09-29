@@ -1,0 +1,21 @@
+@(linkTo: String)
+
+@action = @{
+    linkTo match {
+        case link if link.equals(routes.WhatsOn.list.url) => Some(("Grid view", "View events as a grid", "grid-view"))
+        case link if link.equals(routes.WhatsOn.calendar.url) => Some(("List view", "View events as a list", "list-view"))
+        case _ => None
+    }
+}
+
+@for((label, title, icon) <- action) {
+    <a class="action action--slim"
+       href="@linkTo" aria-title="@title" title="@title"
+       data-metric-trigger="click"
+       data-metric-category="events"
+       data-metric-action="toggle view"
+    >
+        @fragments.actionIcon(icon, leftIcon=true)
+        @label
+    </a>
+}

@@ -82,6 +82,24 @@
 
 }
 
+.action--slim {
+    padding: 3px ($gs-gutter / 2);
+
+    &:after {
+        content: none;
+        display: none;
+    }
+
+    .action__icon--left {
+        margin-left: 0;
+        margin-right: 5px;
+    }
+    .action__icon--right {
+        margin-right: 0;
+        margin-left: 5px;
+    }
+}
+
 /**
  * TODO: Remove background image from base icon and use inlined icon sprites
  */

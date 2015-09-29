@@ -26,7 +26,9 @@ object RichEvent {
   case class CalendarMonthDayGroup(
     title: String,
     list: SortedMap[LocalDate, SortedMap[LocalDate, Seq[RichEvent]]]
-  )
+  ) {
+    val length = list.flatMap(_._2).flatMap(_._2).toSeq.length
+  }
 
   case class FilterItem(name: String, count: Int) {
     var slug = slugify(name)
