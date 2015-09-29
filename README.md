@@ -89,7 +89,7 @@ include sites-enabled/*
 If you want an automated setup run:
 
 ```
-./nginx/setup.sh`
+./nginx/setup.sh
 ```
 
 Or follow the steps in that file.
