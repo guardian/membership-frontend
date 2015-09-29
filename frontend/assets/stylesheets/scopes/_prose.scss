@@ -70,11 +70,9 @@
     }
 
     ol {
+        list-style: none;
+        margin-left: $gs-gutter;
         counter-reset: li;
-    }
-    ol > ol,
-    ol > ul {
-        margin-left: ($gs-gutter * 2);
     }
     ol > li {
         list-style-position: outside;
@@ -84,10 +82,10 @@
         content: counter(li)'.';
         counter-increment: li;
         @include fs-header(1);
-        margin-right: ($gs-baseline / 2);
+        margin-right: $gs-baseline / 2;
 
         @include mq(tablet) {
-            @include fs-header(2, true);
+            @include fs-header(2, $size-only: true);
         }
     }
 
