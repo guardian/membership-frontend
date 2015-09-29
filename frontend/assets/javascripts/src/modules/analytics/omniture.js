@@ -1,4 +1,4 @@
-/*global Raven */
+/*global Raven, s_gi */
 define([
     'src/utils/user'
 ], function (user) {
@@ -9,15 +9,13 @@ define([
     var MEMBERSHIP_STRING = 'Membership';
 
     function init() {
-        require('js!omniture').then(onSuccess, function(err) {
-            Raven.captureException(err);
+        require('js!omniture').then(onSuccess, function(e) {
+            Raven.captureException(e, {tags: { level: 'info' }});
         });
     }
 
     function onSuccess() {
-        /*global s_gi: true */
         var s = s_gi('guardiangu-network');
-        var s_code;
         var identityUser = user.getUserFromCookie();
         var identityId = identityUser && identityUser.id;
         var referrerArray = document.referrer.split('/');
@@ -35,17 +33,17 @@ define([
         s.eVar5 = NONE_STRING;
 
         user.getMemberDetail(function (memberDetail) {
+            var tier;
             if (memberDetail) {
-                var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
+                tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
                 if (tier) {
                     s.eVar5 = tier;
                 }
             }
             s.prop2 = GU_ID_STRING + ':' + (identityId ? identityId : NONE_STRING);
-            s_code = s.t();
+            var s_code = s && s.t();
 
             if (s_code) {
-                /*jslint evil: true */
                 document.write(s_code);
             }
         });
