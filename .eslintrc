@@ -1,29 +1,17 @@
 {
-  "env": {
-    "browser": true,
-    "node": true
-  },
-
-  "globals"   : {
-    "require": false,
-    "define": false,
-    "s": false,
-    "guardian": false,
-    "JSON": false,
-    "Stripe": false
-  },
-
-  "rules": {
-    "camelcase": 0,
-    "curly": [2, "all"],
-    "new-cap": 2,
-    "no-caller": 2,
-    "no-empty": 0,
-    "no-new": 0,
-    "no-trailing-spaces": 2,
-    "no-use-before-define": 0,
-    "no-unused-vars": 2,
-    "quotes": [2, "single"],
-    "wrap-iife": 2
-  }
+    "extends": "eslint:recommended",
+    "env": {
+        "amd": true,
+        "browser": true,
+        "node": true
+    },
+    "globals"   : {
+        "guardian": true
+    },
+    "rules": {
+        "curly": [2, "all"],
+        "no-trailing-spaces": 2,
+        "quotes": [2, "single"],
+        "wrap-iife": 2
+    }
 }

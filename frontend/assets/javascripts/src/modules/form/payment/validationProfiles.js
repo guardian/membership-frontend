@@ -1,3 +1,4 @@
+/*global Stripe*/
 define([
     'src/modules/form/validation/display'
 ], function (display) {
