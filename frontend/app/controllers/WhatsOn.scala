@@ -41,14 +41,12 @@ trait WhatsOn extends Controller with ActivityTracking {
 
     val locationOpt = request.getQueryString("location").filter(_.trim.nonEmpty)
     val featuredEvents = EventGroup("Featured", guLiveEvents.getFeaturedEvents)
-    val partnerEvents =  EventGroup("Programming partner events", guLiveEvents.getPartnerEvents)
     val events = EventGroup("What's on", chronologicalSort(locationOpt.fold(allEvents)(allEventsByLocation)))
 
     Ok(views.html.event.eventsList(
       pageInfo,
       events,
       featuredEvents,
-      partnerEvents,
       locationFilterItems,
       locationOpt
     ))

@@ -2,7 +2,6 @@
     pageInfo: model.PageInfo,
     events: model.RichEvent.EventGroup,
     featuredEvents: model.RichEvent.EventGroup,
-    partnerEvents: model.RichEvent.EventGroup,
     locations: Seq[model.RichEvent.FilterItem],
     selectedLocation: Option[String]
 )
@@ -11,12 +10,12 @@
 
 @eventsToShow = @{
     /**
-     * - If no location is set exclude featured and partner events from the main listing.
+     * - If no location is set exclude featured events from the main listing.
      * - If the user has an active filter, display all expected events in the main listing.
-     *   Featured + partner containers are no longer shown.
+     *   Featured container is no longer shown.
      */
     if(selectedLocation.isEmpty) {
-        events.copy(events = events.events.diff(featuredEvents.events ++ partnerEvents.events))
+        events.copy(events = events.events.diff(featuredEvents.events))
     } else events
 }
 
@@ -42,10 +41,6 @@
             }
 
             @fragments.eventListings.listing(eventsToShow, Some("Sorry, no matching events were found."), isLead=true, isFilterable=false)
-
-            @if(selectedLocation.isEmpty) {
-                @fragments.eventListings.listing(partnerEvents, None)
-            }
         </div>
     </main>
 
