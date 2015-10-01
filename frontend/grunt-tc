@@ -5,23 +5,11 @@ set -o nounset
 set -o errexit
 
 ################################################################################
-#
-# Build the static asset files for the project - files will now be found in Public folder
-#
+# Build the static asset files for the project
+# Files will now be found in Public folder
 ################################################################################
-
-JS_DIR=assets/javascripts
-SCSS_DIR=assets/stylesheets
 
 npm cache clean
 npm install
 
-pushd $JS_DIR
-bower install
-popd
-
-pushd $SCSS_DIR
-bower install
-popd
-
-grunt "$@"
+./node_modules/.bin/grunt "$@"
