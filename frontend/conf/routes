@@ -40,9 +40,9 @@ GET            /oauth2callback                        controllers.OAuth.oauth2Ca
 
 # Staff event page to show discounted events
 GET            /staff/event-overview                  controllers.Staff.eventOverview
-GET            /staff/local-overview                  controllers.Staff.localOverview
-GET            /staff/masterclass-overview            controllers.Staff.masterclassOverview
-GET            /staff/event-details                   controllers.Staff.eventDetails
+GET            /staff/event-overview/local            controllers.Staff.eventOverviewLocal
+GET            /staff/event-overview/masterclasses    controllers.Staff.eventOverviewMasterclasses
+GET            /staff/event-overview/details          controllers.Staff.eventOverviewDetails
 
 # Subscription
 POST           /subscription/update-card              controllers.Subscription.updateCard

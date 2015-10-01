@@ -1,0 +1,16 @@
+@(path: String)
+
+<nav>
+    <ul class="menu">
+        @for((href, text) <- Seq((routes.Staff.eventOverview, "Guardian Live"),
+            (routes.Staff.eventOverviewLocal, "Guardian Local"),
+            (routes.Staff.eventOverviewMasterclasses, "Guardian Masterclasses"),
+            (routes.Staff.eventOverviewDetails, "Event Details"))) {
+
+            <li class="menu__tabs@if(path == href.toString) { menu-highlight}">
+                <a href="@href" class="menu__link">@text</a>
+            </li>
+        }
+    </ul>
+    <div class="menu-separator"></div>
+</nav>
