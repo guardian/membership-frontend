@@ -59,6 +59,8 @@
                    name="@(formType).lineOne"
                    value="@address1"
                    id="address-line-one-@(formType)"
+                   @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 2 *@
+                   maxlength="126"
                    class="input-text js-address-line-one"
                    @if(addressRequired == true){required aria-required="true"} />
             @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} first line")
@@ -70,6 +72,8 @@
                    name="@(formType).lineTwo"
                    value="@address2"
                    id="address-line-two-@(formType)"
+                   @* Salesforce accepts up to 255 chars but this field gets concatenated with address line 1 *@
+                   maxlength="126"
                    class="input-text js-address-line-two"/>
         </div>
 
@@ -79,6 +83,7 @@
                    name="@(formType).town"
                    value="@town"
                    id="town-@(formType)"
+                   maxlength="40"
                    class="input-text js-town"
                    @if(addressRequired == true){required aria-required="true"} />
             @fragments.form.errorMessage(s"Please enter your ${heading.toLowerCase()} town")
@@ -94,6 +99,8 @@
                        name="@(formType).countyOrState"
                        value="@county"
                        id="county-or-state-@(formType)"
+                       @* This length is limited by Zuora. Salesforce accepts up to 40 chars *@
+                       maxlength="32"
                        class="input-text js-county-or-state"/>
             </div>
         </div>
@@ -104,7 +111,7 @@
                    name="@(formType).postCode"
                    value="@postcode"
                    id="postCode-@(formType)"
-                   maxlength="20"
+                   maxlength="10"
                    class="input-text js-postcode"
                    required
                    aria-required="true"/>

@@ -188,7 +188,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
           result
         }.recover {
           case error: Stripe.Error => Forbidden(Json.toJson(error))
-	  case error: ResultError => Forbidden
+      	  case error: ResultError => Forbidden
           case error: ScalaforceError => Forbidden
           case error: MemberServiceError => Forbidden
         }
