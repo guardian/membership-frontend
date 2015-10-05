@@ -18,6 +18,13 @@
             <input type="text"
                    name="name.first"
                    id="name-first"
+                   @*
+                   * Zuora's PaymentMethod request imposes this size limit.
+                   * Although in membership we don't send the name because it's a credit card payment,
+                   * in subscriptions we do because it's a direct debit. So for consistency the
+                   * same size limit is imposed here.
+                   *@
+                   maxlength="30"
                    value="@firstName"
                    class="input-text js-name-first"
                    required
@@ -30,6 +37,7 @@
             <input type="text"
                    name="name.last"
                    id="name-last"
+                   maxlength="50"
                    value="@lastName"
                    class="input-text js-name-last"
                    required
