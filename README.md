@@ -12,7 +12,6 @@
 1. [Security](#security)
 1. [Additional Documentation](#additional)
 
-<a name="getting-started"></a>
 ## Getting Started
 
 To get started working on Membership you will need to complete the following steps:
@@ -22,7 +21,6 @@ To get started working on Membership you will need to complete the following ste
 3. **Optional:** If you need to have a local instance of the Identity API, follow the instructions in [Running Identity API locally](#running-identity-api-locally)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
 
-<a name="setup"></a>
 ## Setup
 
 ### Requirements
@@ -142,7 +140,6 @@ package for your version of Ubuntu is old, you'll [probably](http://askubuntu.co
 want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
 which includes both Node.js and NPM.
 
-<a name="run"></a>
 ## Run
 
 The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
@@ -154,7 +151,6 @@ The app normally runs on port `9100`. You can run the following commands to star
 
 
 
-<a name="tests"></a>
 ## Tests
 
 ### Running Scala unit tests
@@ -172,13 +168,11 @@ npm test
 
 See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
 
-<a name="test-users"></a>
 ## Test Users
 
 [See here](https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users) for details of how we do test users.
 Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
-<a name="security"></a>
 ## Security
 
 ### Committing config credentials
