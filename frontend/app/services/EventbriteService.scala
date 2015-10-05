@@ -101,7 +101,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
   def getOrder(id: String): Future[EBOrder] = get[EBOrder](s"orders/$id", "expand" -> EBOrder.expansions.mkString(","))
 }
 
-abstract class LiveService extends EventbriteService {
+abstract class EventService extends EventbriteService {
   val gridService = GridService(Config.gridConfig.url)
   val contentApiService = GuardianContentService
 
@@ -109,7 +109,7 @@ abstract class LiveService extends EventbriteService {
     event.mainImageUrl.fold[Future[Option[GridImage]]](Future.successful(None))(gridService.getRequestedCrop)
 }
 
-object GuardianLiveEventService extends LiveService {
+object GuardianLiveEventService extends EventService {
   val apiToken = Config.eventbriteApiToken
   // For partner/patrons with free event tickets benefits, we generate a discount code which unlocks a combination of
   // maximum 2 discounted tickets and 1 complimentary ticket.
@@ -137,7 +137,7 @@ object GuardianLiveEventService extends LiveService {
   }
 }
 
-object LocalEventService extends LiveService {
+object LocalEventService extends EventService {
   val apiToken = Config.eventbriteLocalApiToken
   val maxDiscountQuantityAvailable = 2
   val wsMetrics = new EventbriteMetrics("Local")
@@ -161,7 +161,7 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-object MasterclassEventService extends EventbriteService {
+object MasterclassEventService extends EventService {
   import MasterclassEventsProvider._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
@@ -169,14 +169,13 @@ object MasterclassEventService extends EventbriteService {
 
   val wsMetrics = new EventbriteMetrics("Masterclasses")
 
-  val contentApiService = GuardianContentService
-
   override def events: Seq[RichEvent] = super.events.filter(MasterclassesWithAvailableMemberDiscounts)
 
-  def mkRichEvent(event: EBEvent): Future[RichEvent] = {
+  def mkRichEvent(event: EBEvent): Future[RichEvent] =  {
     val masterclassData = contentApiService.masterclassContent(event.id)
-    //todo change this to have link to weburl
-    Future.successful(MasterclassEvent(event, masterclassData))
+    for {
+      gridImageOpt <- gridImageFor(event)
+    } yield MasterclassEvent(event, masterclassData, gridImageOpt)
   }
 
   override def getFeaturedEvents: Seq[RichEvent] = Nil

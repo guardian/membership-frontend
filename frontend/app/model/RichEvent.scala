@@ -118,12 +118,13 @@ object RichEvent {
 
   case class MasterclassEvent(
     event: EBEvent,
-    data: Option[MasterclassData]
+    data: Option[MasterclassData],
+    image: Option[GridImage]
   ) extends RichEvent {
     val detailsUrl = routes.Event.details(event.slug).url
     val hasLargeImage = false
     val canHavePriorityBooking = false
-    val imgOpt = data.flatMap(_.images)
+    val imgOpt = image.map(ResponsiveImageGroup(_)).orElse(data.flatMap(_.images))
     val socialImgUrl = imgOpt.map(_.defaultImage)
     val schema = EventSchema.from(this)
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
