@@ -16,7 +16,7 @@
 
 To get started working on Membership you will need to complete the following steps:
 
-1. Work through the [Setup](#Setup) instructions for this project
+1. Work through the [Setup](#setup) instructions for this project
 2. Work through the setup instructions for the [theguardian.com](https://github.com/guardian/frontend) and its subproject [Identity](https://github.com/guardian/frontend/tree/master/identity). This provides a frontend for sign-up and registration.
 3. **Optional:** If you need to have a local instance of the Identity API, follow the instructions in [Running Identity API locally](#running-identity-api-locally)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
