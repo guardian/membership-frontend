@@ -5,18 +5,14 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
-    'src/modules/analytics/twitter',
-    'src/modules/analytics/facebook',
-    'src/modules/analytics/appnexus'
+    'src/modules/analytics/facebook'
 ], function (
     cookie,
     ga,
     ophan,
     omniture,
     krux,
-    twitter,
-    facebook,
-    appnexus
+    facebook
 ) {
     'use strict';
 
@@ -34,9 +30,7 @@ define([
 
     function setupThirdParties() {
         krux.init();
-        twitter.init();
         facebook.init();
-        appnexus.init();
     }
 
     function init() {
