@@ -4,8 +4,7 @@
     eventCollection: model.RichEvent.EventBrandCollection
 )
 
-@import com.gu.membership.salesforce.Tier
-@import com.gu.membership.salesforce.Tier.{Supporter, Partner}
+@import com.gu.membership.salesforce.Tier._
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
@@ -206,7 +205,7 @@
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
 
                 <ul class="grid grid--2up-stacked">
-                    @for(tier <- Seq(Supporter, Partner)) {
+                    @for(tier <- Seq(Supporter, Partner, Patron)) {
                         <li class="grid__item">
                             @fragments.tier.packagePromo(tier, extraClasses=List("package-promo--lead"))
                         </li>
