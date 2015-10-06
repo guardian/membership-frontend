@@ -13,7 +13,7 @@ class MasterclassEventsProviderTest extends Specification {
     "only show masterclasses which have discount tickets available for members" in {
       val response = Resource.getJson("model/eventbrite/events-with-member-tickets.json").as[EBResponse[EBEvent]]
 
-      val events = response.data.map { event => MasterclassEvent(event, None) }
+      val events = response.data.map { event => MasterclassEvent(event, None, None) }
 
       val availableEvents = events.filter(MasterclassesWithAvailableMemberDiscounts)
 

@@ -37,14 +37,14 @@ class MasterclassEventTest extends Specification {
   "MasterclassEvent" should {
     "extract tags when they are present" in {
       val event = Resource.getJson("model/eventbrite/event-with-tag.json").as[EBEvent]
-      val mcEvent = MasterclassEvent(event, None)
+      val mcEvent = MasterclassEvent(event, None, None)
 
       mcEvent.tags mustEqual Seq("writing", "creative writing", "genre writing")
     }
 
     "return an empty list when tags are not present" in {
       val event = Resource.getJson("model/eventbrite/event-without-tag.json").as[EBEvent]
-      val mcEvent = MasterclassEvent(event, None)
+      val mcEvent = MasterclassEvent(event, None, None)
 
       mcEvent.tags mustEqual Nil
     }
