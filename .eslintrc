@@ -12,6 +12,7 @@
         "curly": [2, "all"],
         "no-trailing-spaces": 2,
         "quotes": [2, "single"],
-        "wrap-iife": 2
+        "wrap-iife": 2,
+        "no-console": 1
     }
 }
