@@ -109,14 +109,15 @@ which includes both Node.js and NPM.
 
 ## Run
 
-The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
+Start the app as follows:
 
 ```
- nginx/setup.sh
 ./start-frontend.sh
 ```
 
+This will start the Play application, which usually listens on port `9100`. Making a request to `localhost:9100` should give you the homepage.
 
+To make the site reachable as `mem.thegulocal.com` (necessary for register/sign-in functionality) you then need to make sure NGINX is configured and running as described in [`/nginx/README.md`](./nginx/README.md).
 
 ## Tests
 
