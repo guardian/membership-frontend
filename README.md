@@ -13,16 +13,15 @@
 1. [Security](#security)
 1. [Additional Documentation](#additional)
 
-<a name="getting-started"></a>
 ## Getting Started
 
 To get started working on Membership you will need to complete the following steps:
 
-1. Work through the **General Setup** instructions for this project
-2. Work through the setup instructions for [Identity](https://github.com/guardian/identity) and [theguardian.com](https://github.com/guardian/identity)
+1. Work through the [Setup](#setup) instructions for this project
+2. Work through the setup instructions for the [theguardian.com](https://github.com/guardian/frontend) and its subproject [Identity](https://github.com/guardian/frontend/tree/master/identity). This provides a frontend for sign-up and registration.
+3. **Optional:** If you need to have a local instance of the Identity API, follow the instructions in [Running Identity API locally](#running-identity-api-locally)
 3. Start up Membership by running the commands in the [Run](#run) section of this README
 
-<a name="setup"></a>
 ## Setup
 
 ### Requirements
@@ -65,52 +64,11 @@ npm run watch
 
 **Client-side Principles**: See [client-side-principles.md](docs/client-side-principles.md) for high-level client-side principles for Membership.
 
-**Pattern Library**: A library of common patterns used accross the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
+**Pattern Library**: A library of common patterns used across the membership site is available at [membership.theguardian.com/patterns](https://membership.theguardian.com/patterns).
 
 ### Setup NGINX
 
-To run standalone you can use the default nginx installation as follows:
-
-Install nginx:
-
-- Linux: `sudo apt-get install nginx`
-- Mac OSX: `brew install nginx`
-
-Make sure you have a `sites-enabled/` folder under your nginx home. This varies depending on your setup but should be under:
-
-- Linux: `/etc/nginx/sites-enabled`
-- Mac OSX: `/usr/local/etc/nginx/sites-enabled`
-
-Make sure your `nginx.conf` (found in your nginx home) contains the following line in the `http{...}` block:
-
-```
-include sites-enabled/*
-```
-
-If you want an automated setup run:
-
-```
-./nginx/setup.sh
-```
-
-Or follow the steps in that file.
-
-### Update your hosts file
-
-Add the following to your hosts file in `/etc/hosts`:
-
-```
-127.0.0.1   mem.thegulocal.com
-127.0.0.1   profile.thegulocal.com
-```
-
-### Download private keys
-
-Download our private keys from the `membership-private` S3 bucket. You will need an AWS account so ask another dev. If you have the AWS CLI set up you can run:
-
-```
-aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
-```
+Follow the instructions in [`/nginx/README.md`](./nginx/README.md) in this project.
 
 ### Setup AWS credentials
 
@@ -124,6 +82,14 @@ aws_access_key_id = [YOUR_AWS_ACCESS_KEY]
 aws_secret_access_key = [YOUR_AWS_SECRET_ACCESS_KEY]
 region = eu-west-1
 
+```
+
+### Download private keys
+
+Download our private keys from the `membership-private` S3 bucket. If you have the AWS CLI set up you can run:
+
+```
+aws s3 cp s3://membership-private/DEV/membership-keys.conf /etc/gu --profile membership
 ```
 
 ### Ubuntu setup
@@ -142,52 +108,18 @@ package for your version of Ubuntu is old, you'll [probably](http://askubuntu.co
 want to install [chris-lea's PPA](https://launchpad.net/~chris-lea/+archive/node.js),
 which includes both Node.js and NPM.
 
-<a name="run"></a>
 ## Run
 
-The app normally runs on port `9100`. You can run the following commands to start the app (separate console windows)
+Start the app as follows:
 
 ```
- nginx/setup.sh
 ./start-frontend.sh
 ```
 
-### Run membership locally with Identity on theguardian.com
+This will start the Play application, which usually listens on port `9100`. Making a request to `localhost:9100` should give you the homepage.
 
-To be able to go through the registration flow locally you will need to have the Identity API and Identity project in theguardian.com running.
+To make the site reachable as `mem.thegulocal.com` (necessary for register/sign-in functionality) you then need to make sure NGINX is configured and running as described in [`/nginx/README.md`](./nginx/README.md).
 
-**Identity repo**: [https://github.com/guardian/identity](https://github.com/guardian/identity)
-
-Run through the set up instructions; once complete you will need to run:
-
-```
- nginx/setup.sh
- ./start-api.sh
-```
-
-**theguardian.com frontend repo**: [https://github.com/guardian/frontend](https://github.com/guardian/frontend)
-
-Run through the set up instructions - download `frontend` and make sure that your `frontend` project is set up to point at your _local_ Identity, not the `CODE` Identity, which means adding this to your `frontend.properties`:
-
- `vi ~/.gu/frontend.properties`
-
-Add the below to frontend.properties
-
-```
-id.apiRoot=https://idapi.thegulocal.com
-id.apiClientToken=frontend-dev-client-token
-```
-
-Once complete you will need to run the following instructions on the `frontend` project
-
-```
-nginx/setup.sh
-./sbt
-project identity
-idrun
-```
-
-<a name="tests"></a>
 ## Tests
 
 ### Running Scala unit tests
@@ -206,7 +138,6 @@ npm test
 See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
 
 
-<a name="deployment"></a>
 ## Deployment
 
 We use continuous deployment of the `master` branch to Production (https://membership.theguardian.com/).
@@ -214,13 +145,11 @@ See [fix-a-failed-deploy.md](https://github.com/guardian/deploy/blob/master/mage
 for what to do if a deploy goes bad.
 
 
-<a name="test-users"></a>
 ## Test Users
 
-See https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users for details of how we do test users.
+[See here](https://sites.google.com/a/guardian.co.uk/guardan-identity/identity/test-users) for details of how we do test users.
 Note that we read the shared secret for these from the `identity.test.users.secret` property in `membership-keys.conf`.
 
-<a name="security"></a>
 ## Security
 
 ### Committing config credentials
@@ -243,6 +172,36 @@ For a reminder on why we do this, here's @tackley on the subject:
 >For other credentials, either use websys's puppet based config distribution (for websys managed machines) or put them in a configuration store such as DynamoDB or a private S3 bucket.
 
 <a name="additional"></a>
+
+## Running Identity API locally
+
+By default the Identity frontend in theguardian.com (which handles sign-in and registration) will talk to a staging instance of the Identity API called `CODE`. If you need a local instance of the Identity API, follow the instructions below.
+
+**Identity repo**: [https://github.com/guardian/identity](https://github.com/guardian/identity)
+
+Run through the set up instructions; once complete you will need to run:
+
+```
+ nginx/setup.sh
+ ./start-api.sh
+```
+
+Then point your `frontend` project at your _local_ Identity, not the `CODE` Identity, which means modifying your `~/.gu/frontend.properties` as follows:
+
+```
+id.apiRoot=https://idapi.thegulocal.com
+id.apiClientToken=frontend-dev-client-token
+```
+
+Once complete you will need to run the following instructions on the `frontend` project
+
+```
+nginx/setup.sh
+./sbt
+project identity
+idrun
+```
+
 ## Additional Documentation
 
 Further documentation notes and useful items can be found in [docs](/docs).
