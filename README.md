@@ -8,6 +8,7 @@
 1. [Setup](#setup)
 1. [Run](#run)
 1. [Tests](#tests)
+1. [Deployment](#deployment)
 1. [Test Users](#test-users)
 1. [Security](#security)
 1. [Additional Documentation](#additional)
@@ -203,6 +204,15 @@ npm test
 ### Running functional tests
 
 See [README.md](functional-tests/README.md) for details on how to run Membership functional tests.
+
+
+<a name="deployment"></a>
+## Deployment
+
+We use continuous deployment of the `master` branch to Production (https://membership.theguardian.com/).
+See [fix-a-failed-deploy.md](https://github.com/guardian/deploy/blob/master/magenta-lib/docs/magenta-lib/howto/fix-a-failed-deploy.md)
+for what to do if a deploy goes bad.
+
 
 <a name="test-users"></a>
 ## Test Users
