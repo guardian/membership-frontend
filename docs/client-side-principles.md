@@ -205,9 +205,9 @@ We use [Autoprefixer](https://github.com/postcss/autoprefixer) for vendor prefix
 <a name="reading"></a>
 ## Further reading
 
-- CSS Guidelines: [http://cssguidelin.es/]()
-- MindBEMding – getting your head ’round BEM syntax: [http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/]()
-- Objects in space: [https://medium.com/objects-in-space/objects-in-space-f6f404727]()
-- CSS for grownups: [https://www.youtube.com/watch?v=ZpFdyfs03Ug]()
-- ITCSS talk: [https://www.youtube.com/watch?v=1OKZOV-iLj4&hd=1]()
-- SMACSS: [https://smacss.com/]()
+- CSS Guidelines: http://cssguidelin.es/
+- MindBEMding – getting your head ’round BEM syntax: http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/
+- Objects in space: https://medium.com/objects-in-space/objects-in-space-f6f404727
+- CSS for grownups: https://www.youtube.com/watch?v=ZpFdyfs03Ug
+- ITCSS talk: https://www.youtube.com/watch?v=1OKZOV-iLj4&hd=1
+- SMACSS: https://smacss.com/
