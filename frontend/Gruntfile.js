@@ -197,13 +197,9 @@ module.exports = function (grunt) {
          ***********************************************************************/
 
         watch: {
-            compileCss: {
-                files: ['<%= dirs.assets.stylesheets %>/**/*.scss'],
-                tasks: ['compile:css'],
-            },
-            compileJs: {
-                files: ['<%= dirs.assets.javascripts %>/**/*.js'],
-                tasks: ['compile:js'],
+            compile: {
+                files: ['<%= dirs.assets.stylesheets %>/**/*.scss', '<%= dirs.assets.javascripts %>/**/*.js'],
+                tasks: ['compile']
             }
         },
 
