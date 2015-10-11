@@ -204,10 +204,10 @@
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
 
-                <ul class="grid grid--2up-stacked">
+                <ul class="grid">
                     @for(tier <- Seq(Supporter, Partner, Patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(tier, extraClasses=List("package-promo--lead"))
+                            @fragments.tier.packagePromo(tier, modifierClass=Some("package-promo--no-cols"))
                         </li>
                     }
                 </ul>

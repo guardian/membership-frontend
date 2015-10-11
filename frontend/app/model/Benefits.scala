@@ -29,9 +29,11 @@ object Benefits {
     BenefitItem("email_updates", "Regular events email"),
     BenefitItem("offers_competitions", "Offers and competitions"),
     BenefitItem("priority_booking", "48hrs priority booking"),
+    BenefitItem("no_booking_fees", "No booking fees"),
     BenefitItem("books_or_tickets", s"$zuoraFreeEventTicketsAllowance tickets or 4 books", isNew = true),
-    BenefitItem("books_and_tickets", s"$zuoraFreeEventTicketsAllowance tickets and 4 books", isNew = true),
-    BenefitItem("discount", "20% discount for you and a guest"),
+    BenefitItem("books_and_tickets", s"Both $zuoraFreeEventTicketsAllowance tickets and 4 books", isNew = true),
+    BenefitItem("discount", "20% discount"),
+    BenefitItem("guest", "Bring a guest"),
     BenefitItem("unique_experiences", "Exclusive behind-the-scenes functions")
   )
 
@@ -80,7 +82,9 @@ object Benefits {
   val partnerBenefitsList = benefitsFilter(
     "books_or_tickets",
     "priority_booking",
+    "no_booking_fees",
     "discount",
+    "guest",
     "welcome_pack",
     "live_stream",
     "offers_competitions",
@@ -90,26 +94,13 @@ object Benefits {
     "books_and_tickets",
     "unique_experiences",
     "priority_booking",
+    "no_booking_fees",
     "discount",
+    "guest",
     "welcome_pack",
     "live_stream",
     "offers_competitions",
     "email_updates"
-  )
-
-  val comparisonBasicList = benefitsFilter(
-    "welcome_pack",
-    "live_stream",
-    "access_tickets",
-    "offers_competitions",
-    "email_updates"
-  )
-
-  val comparisonHiglightsList = benefitsFilter(
-    "books_or_tickets",
-    "priority_booking",
-    "discount",
-    "unique_experiences"
   )
 
   def details(tier: Tier) = tier match {

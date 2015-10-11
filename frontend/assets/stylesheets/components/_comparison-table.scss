@@ -2,6 +2,10 @@
    Comparison Table
    ========================================================================== */
 
+$_description-col-width: 32%;
+$_tiers-col-width: 100% - $_description-col-width;
+$_num-tiers: 3;
+$_tier-col-width: 100% / $_num-tiers;
 $_table-tier-height: 150px;
 $_table-gutter: $gs-gutter / 2;
 
@@ -21,11 +25,11 @@ $_table-gutter: $gs-gutter / 2;
     padding-left: 60%;
 
     @include mq(desktop) {
-        padding-left: 50%;
+        padding-left: $_description-col-width;
     }
 }
 .comparison-table__tier {
-    width: 50%;
+    width: $_tier-col-width;
     float: left;
     text-align: center;
     position: relative;
@@ -74,22 +78,26 @@ $_table-gutter: $gs-gutter / 2;
     @include mq(desktop) {
         @include fs-header(1);
         font-weight: normal;
-        width: 50%;
+        width: $_description-col-width;
     }
 }
 .comparison-table__description__inner {
     padding: ($gs-baseline / 2) ($gs-baseline / 2) 0;
+}
+.comparison-table__checkmarks {
+    float: right;
+    width: 40%;
+
+    @include mq(desktop) {
+        width: $_tiers-col-width;
+    }
 }
 .comparison-table__checkmark {
     text-align: center;
     position: relative;
     border-left: $_table-gutter solid $white;
     height: 120px;
-    width: 20%;
-
-    @include mq(desktop) {
-        width: 25%;
-    }
+    width: $_tier-col-width;
 }
 .comparison-table__checkmark__inner {
     background-color: $c-neutral7;
@@ -120,15 +128,14 @@ $_table-gutter: $gs-gutter / 2;
 .comparison-table__footer {
     @include clearfix();
     border-top: 1px solid $c-neutral4;
-    padding-left: 50%;
+    padding-left: $_description-col-width;
 
     @include mq($until: desktop) {
         display: none;
-
     }
 }
 .comparison-table__trail {
-    width: 50%;
+    width: $_tier-col-width;
     float: left;
 }
 .comparison-table__trail__inner {
@@ -154,7 +161,7 @@ $_table-gutter: $gs-gutter / 2;
     @include mq($from: desktop) {
         clear: both;
         float: right;
-        width: 50%;
+        width: $_tiers-col-width;
         padding-left: $_table-gutter;
     }
 }

@@ -1,7 +1,7 @@
 @()
 
 @import com.gu.membership.salesforce.Tier
-@import com.gu.membership.salesforce.Tier.{Partner, Supporter}
+@import com.gu.membership.salesforce.Tier._
 @import model.Benefits
 @import model.Benefits.BenefitItem
 
@@ -52,7 +52,7 @@
                 data-metric-action="@tier.toString.toLowerCase"
                 >
                     <span class="action__label">
-                        Become a @tier
+                        Join now
                     </span>
                 </a>
             </div>
@@ -64,22 +64,38 @@
     <div class="comparison-table__header">
         @comparisonHeader(Supporter)
         @comparisonHeader(Partner)
+        @comparisonHeader(Patron)
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">
-            @comparisonDetails(Benefits.comparisonBasicList)
-            @comparisonCheckmark(checkmark = true)
-            @comparisonCheckmark(checkmark = true)
+            @comparisonDetails(Benefits.detailsLimited(Tier.Supporter))
+            <div class="comparison-table__checkmarks">
+                @comparisonCheckmark(checkmark = true)
+                @comparisonCheckmark(checkmark = true)
+                @comparisonCheckmark(checkmark = true)
+            </div>
         </div>
         <div class="comparison-table__row">
-            @comparisonDetails(Benefits.comparisonHiglightsList)
-            @comparisonCheckmark(checkmark = false)
-            @comparisonCheckmark(checkmark = true)
+            @comparisonDetails(Benefits.detailsLimited(Tier.Partner))
+            <div class="comparison-table__checkmarks">
+                @comparisonCheckmark(checkmark = false)
+                @comparisonCheckmark(checkmark = true)
+                @comparisonCheckmark(checkmark = true)
+            </div>
+        </div>
+        <div class="comparison-table__row">
+            @comparisonDetails(Benefits.detailsLimited(Tier.Patron))
+            <div class="comparison-table__checkmarks">
+                @comparisonCheckmark(checkmark = false)
+                @comparisonCheckmark(checkmark = false)
+                @comparisonCheckmark(checkmark = true)
+            </div>
         </div>
     </div>
     <div class="comparison-table__footer">
         @comparisonPricing(Supporter)
         @comparisonPricing(Partner)
+        @comparisonPricing(Patron)
     </div>
     <div class="comparison-table__extra">
     @fragments.tier.friendTeaser()
