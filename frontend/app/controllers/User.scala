@@ -7,11 +7,12 @@ import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 import play.api.mvc.{Controller, Cookie}
-import services.CASService
+import services.{MembersDataAPI, CASService}
 import utils.GuMemCookie
 
 import scala.concurrent.Future
@@ -24,6 +25,7 @@ trait User extends Controller {
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
+    request.idCookies.foreach(MembersDataAPI.Service.check(request.member))
     Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
   }
 
@@ -97,7 +99,7 @@ trait User extends Controller {
         case _ => SubCheck(false, Some(s"To redeem this offer we need more information to validate your Subscriber ID.  Please review the additional information required and try again."))
       }
       if (!subCheck.valid) {
-        logger.warn(s"sub user=${request.user.id} sub-id=$id cas=$casResult existing-subs=$existingSubsWithCasId $subCheck")
+        Logger.warn(s"sub user=${request.user.id} sub-id=$id cas=$casResult existing-subs=$existingSubsWithCasId $subCheck")
       }
       Ok(toJson(subCheck))
     }
