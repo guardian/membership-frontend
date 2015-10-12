@@ -100,7 +100,7 @@
     }
 }
 
-/* Grid 3up
+/* Grid 3up (Cols per row: 3 on desktop > 2 on tablet > 1 on mobile)
    ========================================================================== */
 
 .grid--3up {
@@ -113,10 +113,31 @@
     }
 }
 
-/* 3up Stacked (3 > 1)
+/* 3up Stacked (Cols per row: 3 on larger viewport > 1 on smaller)
    ========================================================================== */
 
+// 3 on desktop > 1 on tablet > 1 on mobile
 .grid--3up-stacked {
+    @include mq(desktop) {
+        width: 100% + $gutter-width-fluid;
+        margin-left: -$gutter-width-fluid;
+    }
+    .grid__item {
+        @include mq(desktop) {
+            float: left;
+            border-style: solid;
+            border-width: 0 0 0 1px;
+            margin-left: $gutter-width-fluid / 2;
+            padding-left: $gutter-width-fluid / 2;
+            margin-bottom: rem($gs-baseline);
+            width: 33.3% - ($gutter-width-fluid / 2);
+            &:nth-of-type(3n+1) { clear: left; border-left: none; }
+        }
+    }
+}
+
+// 3 on desktop > 3 on tablet > 1 on mobile
+.grid--3up-stacked-mobile {
     @include mq(tablet) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
