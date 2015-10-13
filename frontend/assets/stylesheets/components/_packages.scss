@@ -122,7 +122,6 @@ $_package-promo__actions_height: 117px;
 
 // This is basically the old mobile view. No description
 .package-promo--minimal {
-    @include clearfix();
     position: relative;
     border-top: 5px solid;
     background-color: $c-neutral7;
@@ -161,19 +160,15 @@ $_package-promo__actions_height: 117px;
             display: inline-block;
             vertical-align: top;
             margin-bottom: rem($gs-baseline);
-            float: left;
-            width: 65%;
-            padding-right: 7%;
         }
         .package-promo__content {
+            margin-left: 35%;
             padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
         }
         .package-promo__actions {
             position: static;
             padding-top: rem($gs-gutter / 4);
             padding-bottom: rem($gs-gutter / 4);
-            float: left;
-            width: 35%;
         }
         .package-promo__tier {
             min-height: 0;
@@ -192,9 +187,6 @@ $_package-promo__actions_height: 117px;
         margin-bottom: rem($gs-gutter);
     }
 }
-
-
-
 
 
 
@@ -255,19 +247,46 @@ $_package-promo__actions_height: 117px;
         display: inline-block;
         vertical-align: top;
         margin-bottom: rem($gs-baseline);
-        float: left;
-        width: 65%;
-        padding-right: 7%;
     }
     .package-promo__content {
+        margin-left: 35%;
         padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
     }
     .package-promo__actions {
         position: static;
         padding-top: rem($gs-gutter / 4);
         padding-bottom: rem($gs-gutter / 4);
+    }
+    .package-promo__tier {
+        min-height: 0;
+    }
+    .package-promo__tier__title {
         float: left;
         width: 35%;
+    }
+    .package-promo__tier__pricing {
+        position: static;
+        float: left;
+        width: 65%;
+        border-width: 0 0 1px 0;
+        margin-top: -(rem($gs-gutter / 4));
+    }
+}
+
+@mixin package-promo-spread() {
+    .package-promo__description {
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: rem($gs-baseline);
+    }
+    .package-promo__content {
+        margin-left: 35%;
+        padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
+    }
+    .package-promo__actions {
+        position: static;
+        padding-top: rem($gs-gutter / 4);
+        padding-bottom: rem($gs-gutter / 4);
     }
     .package-promo__tier {
         min-height: 0;
