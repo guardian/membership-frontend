@@ -132,12 +132,6 @@ $_package-promo__actions_height: 117px;
     .package-promo__content {
         padding: 0;
     }
-    .package-promo__description {
-        @include fs-headline(2);
-        margin-bottom: rem($gs-gutter);
-        display: none;
-        p { margin-bottom: 0; }
-    }
     .package-promo__actions {
         position: absolute;
         bottom: rem($gs-baseline / 2);
