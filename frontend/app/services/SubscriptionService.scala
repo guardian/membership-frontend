@@ -53,6 +53,20 @@ object SubscriptionService {
   }
 
   /**
+   * Given an array of subscription invoice items
+   * return only items corresponding to the last invoice
+   * @param items The incoming list of items with many invoices
+   */
+  def latestInvoiceItems(items: Seq[InvoiceItem]): Seq[InvoiceItem] = {
+    if(items.isEmpty)
+      items
+    else {
+      val temp = items.sortBy(_.serviceStartDate)
+      temp.filter(_.id == temp.last.id)
+    }
+  }
+
+  /**
    * @param subscriptions
    * @param amendments which are returned by the Zurora API in an unpredictable order
    * @return amendments which are sorted by the subscription version number they point to (the sub they amended)
@@ -230,8 +244,9 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
   def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
     for {
       subscription <- getSubscriptionStatus(memberId)
-      invoiceItems <- zuoraSoapClient.query[InvoiceItem](SimpleFilter("SubscriptionId", subscription.currentVersionId))
-    } yield PaymentSummary(invoiceItems)
+      invoiceItems <- zuoraSoapClient.query[InvoiceItem](SimpleFilter("SubscriptionNumber", subscription.currentVersion.name))
+      filteredInvoices = latestInvoiceItems(invoiceItems)
+    } yield PaymentSummary(filteredInvoices)
   }
 
   def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {

@@ -21,7 +21,7 @@ object Dependencies {
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val s3 =  "com.amazonaws" % "aws-java-sdk-s3" % awsClientVersion
-  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M3" % "test"
+  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
 
   //projects
 
