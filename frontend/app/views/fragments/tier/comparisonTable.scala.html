@@ -10,6 +10,9 @@
         <div class="comparison-table__tier__name tone-border-@tier.name.toLowerCase">
         @fragments.tier.tierTrail(tier, showCaption = false)
         </div>
+        <div class="comparison-table__tier__pricing">
+        @fragments.pricing.priceInfo(tier, canFlex=false)
+        </div>
     </div>
 }
 
@@ -41,11 +44,8 @@
 @comparisonPricing(tier: Tier) = {
     <div class="comparison-table__trail">
         <div class="comparison-table__trail__inner">
-            <div class="comparison-table__trail__pricing">
-            @fragments.pricing.priceInfo(tier, canFlex=false)
-            </div>
             <div class="comparison-table__trail__action">
-                <a class="action action--snap u-no-bottom-margin qa-comparison-@tier.toString.toLowerCase"
+                <a class="action action--snap-tablet u-no-bottom-margin qa-comparison-@tier.toString.toLowerCase"
                 href="@routes.Joiner.enterDetails(tier)"
                 data-metric-trigger="click"
                 data-metric-category="join"

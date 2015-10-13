@@ -7,11 +7,92 @@
    - Main package panel used across the site
    ========================================================================== */
 
-.package-promo {
+@mixin package-promo-base() {
+    border-top: 5px solid;
+    background-color: $c-neutral7;
+    padding: rem($gs-gutter / 4);
+
+    .package-promo__header {
+        margin-bottom: rem($gs-gutter / 2);
+    }
+    .package-promo__content {
+        padding: 0;
+    }
+    .package-promo__description {
+        @include fs-headline(2);
+        margin-bottom: rem($gs-gutter / 2);
+        p { margin-bottom: 0; }
+    }
+    .package-promo__actions {
+        margin: rem($gs-gutter / 2) 0;
+    }
+    .package-promo__actions__pricing {
+        //position: absolute;
+        //bottom: rem($gs-baseline / 2);
+        margin-bottom: rem($gs-gutter);
+        border-top: 1px solid lighten($c-border-neutral, 10%);
+    }
+    .package-promo__tier {
+        @include clearfix;
+        //position: relative;
+        //min-height: rem(gs-span(1.5));
+    }
+}
+
+// Title, description, price, button simply stacked vertically
+@mixin package-promo-narrow() {
+    @include package-promo-base();
+}
+
+// Price & button pulled off to the right
+@mixin package-promo-wide() {
+    @include package-promo-base();
+    @include clearfix();
+
+    .package-promo__description {
+        padding-right: 10%;
+        float: left;
+        width: 72%;
+    }
+
+    .package-promo__actions {
+        margin-top: 0;
+        float: right;
+        width: 28%;
+    }
+}
+
+.package-promo--default {
+    @include mq($from: mobile, $until: tablet) {
+        @include package-promo-narrow();
+    }
+    @include mq($from: tablet, $until: desktop) {
+        @include package-promo-wide();
+    }
+    @include mq($from: desktop) {
+        @include package-promo-narrow();
+    }
+}
+
+.package-promo--homepage {
+    @include mq($from: mobile, $until: tablet) {
+        @include package-promo-narrow();
+    }
+    @include mq($from: tablet, $until: desktop) {
+        @include package-promo-wide();
+    }
+    @include mq($from: desktop) {
+        @include package-promo-wide();
+    }
+}
+
+// This is basically the old mobile view. No description
+.package-promo--minimal {
+    @include clearfix();
     position: relative;
     border-top: 5px solid;
     background-color: $c-neutral7;
-}
+
     .package-promo__header {
         padding: rem($gs-gutter / 4);
     }
@@ -41,6 +122,93 @@
         border-width: 0;
     }
 
+    @include mq(tablet) {
+        .package-promo__description {
+            display: inline-block;
+            vertical-align: top;
+            margin-bottom: rem($gs-baseline);
+            float: left;
+            width: 65%;
+            padding-right: 7%;
+        }
+        .package-promo__content {
+            padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
+        }
+        .package-promo__actions {
+            position: static;
+            padding-top: rem($gs-gutter / 4);
+            padding-bottom: rem($gs-gutter / 4);
+            float: left;
+            width: 35%;
+        }
+        .package-promo__tier {
+            min-height: 0;
+        }
+        .package-promo__tier__title {
+            float: left;
+            width: 35%;
+        }
+        .package-promo__tier__pricing {
+            position: static;
+            float: left;
+            width: 65%;
+            border-width: 0 0 1px 0;
+            margin-top: -(rem($gs-gutter / 4));
+        }
+        margin-bottom: rem($gs-gutter);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.old-package-promo {
+    @include clearfix();
+    position: relative;
+    border-top: 5px solid;
+    background-color: $c-neutral7;
+}
+    .old-package-promo__header {
+        padding: rem($gs-gutter / 4);
+    }
+    .old-package-promo__content {
+        padding: 0;
+    }
+    .old-package-promo__description {
+        @include fs-headline(2);
+        margin-bottom: rem($gs-gutter);
+        display: none;
+        p { margin-bottom: 0; }
+    }
+    .old-package-promo__actions {
+        position: absolute;
+        bottom: rem($gs-baseline / 2);
+        right: rem($gs-baseline / 2);
+    }
+    .old-package-promo__tier {
+        @include clearfix;
+        position: relative;
+        min-height: rem(gs-span(1.5));
+    }
+    .old-package-promo__tier__pricing {
+        position: absolute;
+        bottom: rem($gs-baseline / 2);
+        border: solid $c-border-neutral;
+        border-width: 0;
+    }
+
+
+
 /**
  * Mixins are used here because we need
  * variants of the package promo which
@@ -53,15 +221,19 @@
         display: inline-block;
         vertical-align: top;
         margin-bottom: rem($gs-baseline);
+        float: left;
+        width: 65%;
+        padding-right: 7%;
     }
     .package-promo__content {
-        margin-left: 35%;
         padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
     }
     .package-promo__actions {
         position: static;
         padding-top: rem($gs-gutter / 4);
         padding-bottom: rem($gs-gutter / 4);
+        float: left;
+        width: 35%;
     }
     .package-promo__tier {
         min-height: 0;

@@ -2,7 +2,7 @@
    Comparison Table
    ========================================================================== */
 
-$_description-col-width: 32%;
+$_description-col-width: 29%;
 $_tiers-col-width: 100% - $_description-col-width;
 $_num-tiers: 3;
 $_tier-col-width: 100% / $_num-tiers;
@@ -56,6 +56,16 @@ $_table-gutter: $gs-gutter / 2;
             bottom: 0;
             left: 0;
         }
+    }
+}
+.comparison-table__tier__pricing {
+    background-color: $c-neutral7;
+    padding-left: ($gs-baseline / 2);
+    padding-bottom: $gs-baseline;
+    border-top: 1px solid $c-neutral4;
+
+    @include mq($until: desktop) {
+        display: none;
     }
 }
 
@@ -128,24 +138,20 @@ $_table-gutter: $gs-gutter / 2;
 .comparison-table__footer {
     @include clearfix();
     border-top: 1px solid $c-neutral4;
-    padding-left: $_description-col-width;
+    padding-left: 60%;
 
-    @include mq($until: desktop) {
-        display: none;
+    @include mq(desktop) {
+        padding-left: $_description-col-width;
     }
 }
 .comparison-table__trail {
-    width: $_tier-col-width;
     float: left;
+    width: $_tier-col-width;
 }
 .comparison-table__trail__inner {
     background-color: $c-neutral7;
     padding: ($gs-baseline / 2);
     border-left: $_table-gutter solid $white;
-}
-.comparison-table__trail__pricing {
-    padding-bottom: $gs-baseline;
-    border-bottom: 1px solid $c-neutral4;
 }
 .comparison-table__trail__action {
     margin: $gs-baseline 0;
