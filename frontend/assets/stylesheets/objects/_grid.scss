@@ -82,6 +82,17 @@
 }
 
 .grid--2up-stacked {
+    &.grid--equal-heights {
+        @include mq(desktop) {
+            display: flex;
+        }
+        .grid__item {
+            @include mq(desktop) {
+                display: flex;
+            }
+        }
+    }
+
     @include mq(desktop) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
@@ -118,6 +129,17 @@
 
 // 3 on desktop > 1 on tablet > 1 on mobile
 .grid--3up-stacked {
+    &.grid--equal-heights {
+        @include mq(desktop) {
+            display: flex;
+        }
+        .grid__item {
+            @include mq(desktop) {
+                display: flex;
+            }
+        }
+    }
+
     @include mq(desktop) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
@@ -136,8 +158,21 @@
     }
 }
 
+
 // 3 on desktop > 3 on tablet > 1 on mobile
+// TODO: use mixin and just pass different breakpoint as a variable, rather than duplicating
 .grid--3up-stacked-mobile {
+    &.grid--equal-heights {
+        @include mq(tablet) {
+            display: flex;
+        }
+        .grid__item {
+            @include mq(tablet) {
+                display: flex;
+            }
+        }
+    }
+
     @include mq(tablet) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;

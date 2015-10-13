@@ -21,7 +21,7 @@
                 <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
 
                 @* Packages *@
-                <ul class="grid grid--bordered grid--3up-stacked">
+                <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
                             @fragments.tier.packageChanger(tier)

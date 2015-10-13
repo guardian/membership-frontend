@@ -7,6 +7,9 @@
    - Main package panel used across the site
    ========================================================================== */
 
+// This is the height of the actions block that contains the price & call-to-action button
+$_package-promo__actions_height: 117px;
+
 @mixin package-promo-base() {
     border-top: 5px solid;
     background-color: $c-neutral7;
@@ -27,41 +30,69 @@
         margin: rem($gs-gutter / 2) 0;
     }
     .package-promo__actions__pricing {
-        //position: absolute;
-        //bottom: rem($gs-baseline / 2);
         margin-bottom: rem($gs-gutter);
         border-top: 1px solid lighten($c-border-neutral, 10%);
     }
     .package-promo__tier {
         @include clearfix;
-        //position: relative;
-        //min-height: rem(gs-span(1.5));
     }
 }
 
 // Title, description, price, button simply stacked vertically
 @mixin package-promo-narrow() {
     @include package-promo-base();
+
+    // To ensure whitespace appears after the description in equal-height columns
+    @include mq(desktop) {
+        position: relative;
+
+        .package-promo__description {
+            // Make space for this absolutely positioned element
+            padding-bottom: $_package-promo__actions_height;
+        }
+
+        .package-promo__actions {
+            position: absolute;
+            bottom: 0;
+            left: $gs-gutter / 4;
+            right: $gs-gutter / 4;
+        }
+    }
 }
 
 // Price & button pulled off to the right
 @mixin package-promo-wide() {
     @include package-promo-base();
-    @include clearfix();
 
-    .package-promo__description {
-        padding-right: 10%;
-        float: left;
-        width: 72%;
-    }
+    .package-promo__content {
+        display: table;
+        padding-bottom: $gs-gutter / 2;
+        .package-promo__description {
+            padding-right: $gs-gutter * 4;
+            display: table-cell;
+            vertical-align: top;
+            width: 100%;
 
-    .package-promo__actions {
-        margin-top: 0;
-        float: right;
-        width: 28%;
+            @include mq(desktop) {
+                width: 50%;
+            }
+        }
+
+        .package-promo__actions {
+            margin-top: 0;
+            display: table-cell;
+            vertical-align: top;
+            width: 30%;
+            min-width: 205px;
+
+            @include mq(desktop) {
+                width: 30%;
+            }
+        }
     }
 }
 
+// Narrow -> wide -> narrow
 .package-promo--default {
     @include mq($from: mobile, $until: tablet) {
         @include package-promo-narrow();
@@ -74,14 +105,17 @@
     }
 }
 
+// Narrow -> narrow -> narrow
+.package-promo--always-narrow {
+    @include package-promo-narrow();
+}
+
+// Narrow -> wide -> wide
 .package-promo--homepage {
     @include mq($from: mobile, $until: tablet) {
         @include package-promo-narrow();
     }
-    @include mq($from: tablet, $until: desktop) {
-        @include package-promo-wide();
-    }
-    @include mq($from: desktop) {
+    @include mq($from: tablet) {
         @include package-promo-wide();
     }
 }

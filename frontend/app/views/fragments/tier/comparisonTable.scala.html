@@ -45,7 +45,7 @@
     <div class="comparison-table__trail">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
-                <a class="action action--snap-tablet u-no-bottom-margin qa-comparison-@tier.toString.toLowerCase"
+                <a class="action action--no-icon qa-comparison-@tier.toString.toLowerCase"
                 href="@routes.Joiner.enterDetails(tier)"
                 data-metric-trigger="click"
                 data-metric-category="join"
@@ -54,6 +54,7 @@
                     <span class="action__label">
                         Join now
                     </span>
+                    @fragments.actionIcon("arrow-right")
                 </a>
             </div>
         </div>

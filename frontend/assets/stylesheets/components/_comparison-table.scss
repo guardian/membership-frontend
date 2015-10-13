@@ -154,7 +154,33 @@ $_table-gutter: $gs-gutter / 2;
     border-left: $_table-gutter solid $white;
 }
 .comparison-table__trail__action {
+    text-align: center;
     margin: $gs-baseline 0;
+
+    @include mq($until: desktop) {
+        .action {
+            @include circular();
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0; margin: 0;
+            width: 30px; height: 30px;
+
+            @include mq(tablet) {
+                width: 50px; height: 50px;
+            }
+
+            .action__icon {
+                @include vertically-center();
+                position: relative;
+                width: 14px; height: 14px;
+                float: none;
+            }
+
+            .action__label {
+                display: none;
+            }
+        }
+    }
 }
 
 

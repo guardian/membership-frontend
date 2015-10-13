@@ -21,7 +21,7 @@
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(tier, showCaption=false)
+                @fragments.tier.tierTrail(tier, showCaption=false)
                 </div>
             </div>
         </a>
@@ -48,10 +48,11 @@
             <div class="package-promo__actions__pricing">
                @fragments.pricing.priceInfo(tier, canFlex=false)
             </div>
-            <a class="action u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
                     Become a @tier
                 </span>
+                @fragments.actionIcon("arrow-right")
             </a>
         </div>
     </div>
