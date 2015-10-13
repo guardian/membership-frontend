@@ -81,6 +81,7 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.all.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
+  val optimizelyEnabled = config.getBoolean("optimizely.enabled")
 
   val corsAllowOrigin = Set(
     // identity
