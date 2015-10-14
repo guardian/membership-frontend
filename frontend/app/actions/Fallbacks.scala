@@ -10,6 +10,9 @@ object Fallbacks {
 
   def changeTier(implicit req: RequestHeader) = redirectTo(controllers.routes.TierController.change())
 
+  def memberHome(implicit request: RequestHeader) =
+    redirectTo(controllers.routes.FrontPage.welcome)
+
   def tierChangeEnterDetails(tier: Tier)(implicit req: RequestHeader) =
     redirectTo(controllers.routes.TierController.upgrade(tier))
 

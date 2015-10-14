@@ -2,7 +2,7 @@ package actions
 
 import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
-import com.gu.membership.salesforce.PaidMember
+import com.gu.membership.salesforce.{PaidMember, Tier}
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
 import com.typesafe.scalalogging.LazyLogging
@@ -38,8 +38,13 @@ object Functions extends LazyLogging {
       }
     }
 
-  def onlyNonMemberFilter(onPaidMember: RequestHeader => Result = changeTier(_)) = new ActionFilter[AuthRequest] {
-    override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(_ => onPaidMember(request)))
+  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: AnyMemberTierRequest[_]): Result = {
+    val selectedTierWouldBeUpgrade = selectedTier > req.member.tier
+    if (selectedTierWouldBeUpgrade) tierChangeEnterDetails(selectedTier)(req) else memberHome(req)
+  }
+
+  def onlyNonMemberFilter(onMember: AnyMemberTierRequest[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
+    override def filter[A](request: AuthRequest[A]) = request.forMemberOpt(_.map(member => onMember(MemberRequest(member, request))))
   }
 
   def isInAuthorisedGroupGoogleAuthReq(includedGroups: Set[String],
