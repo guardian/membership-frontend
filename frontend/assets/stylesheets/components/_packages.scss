@@ -31,7 +31,7 @@ $_package-promo__actions_height: 117px;
     }
     .package-promo__actions__pricing {
         margin-bottom: rem($gs-gutter);
-        border-top: 1px solid lighten($c-border-neutral, 10%);
+        border-top: 1px solid $c-border-neutral;
     }
     .package-promo__tier {
         @include clearfix;

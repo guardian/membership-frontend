@@ -21,6 +21,7 @@ require([
     'src/modules/form/processSubmit',
     'src/modules/identityPopup',
     'src/modules/identityPopupDetails',
+    'src/modules/comparisonTable',
     'src/modules/metrics',
     'src/modules/patterns'
 ], function(
@@ -46,6 +47,7 @@ require([
     processSubmit,
     identityPopup,
     identityPopupDetails,
+    comparisonTable,
     metrics,
     patterns
 ) {
@@ -69,6 +71,7 @@ require([
     userDetails.init();
     videoOverlay.init();
     modal.init();
+    comparisonTable.init();
 
     // Events
     cta.init();

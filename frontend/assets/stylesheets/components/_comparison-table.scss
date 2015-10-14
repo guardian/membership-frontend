@@ -9,11 +9,55 @@ $_tier-col-width: 100% / $_num-tiers;
 $_table-tier-height: 150px;
 $_table-gutter: $gs-gutter / 2;
 
+$_border-color: $c-neutral3;
+$_background-color: $c-neutral7;
+
 .comparison-table {
     margin-bottom: $gs-baseline * 3;
 
     @include mq(mobileLandscape) {
         margin-top: -($gs-gutter * 2);
+    }
+}
+// Because there is no one container for clickable parts of the table,
+// we have to use this helper class to identify them
+.comparison-table--clickable {
+    .comparison-table__checkmark__inner,
+    .comparison-table__tier__name,
+    .comparison-table__tier__pricing,
+    .comparison-table__trail__inner {
+        transition: background-color 0.3s ease;
+    }
+    cursor: pointer;
+
+    &.is-active {
+        .comparison-table__checkmark__inner,
+        .comparison-table__tier__name,
+        .comparison-table__tier__pricing,
+        .comparison-table__trail__inner {
+            background-color: $c-neutral5;
+        }
+        .comparison-table__trail__action {
+            visibility: visible;
+        }
+    }
+    &:not(.is-active) {
+        .comparison-table__checkmark__inner,
+        .comparison-table__tier__name,
+        .comparison-table__tier__pricing,
+        .comparison-table__trail__inner {
+            opacity: 0.9;
+        }
+    }
+
+    &.is-hover {
+        .comparison-table__checkmark__inner,
+        .comparison-table__tier__name,
+        .comparison-table__tier__pricing,
+        .comparison-table__trail__inner {
+            background-color: $c-neutral5;
+            opacity: 1;
+        }
     }
 }
 
@@ -37,7 +81,7 @@ $_table-gutter: $gs-gutter / 2;
 }
 .comparison-table__tier__name {
     display: block;
-    background-color: $c-neutral7;
+    background-color: $_background-color;
     height: $_table-tier-height + $gs-gutter;
     border-top: 5px solid;
 
@@ -59,10 +103,10 @@ $_table-gutter: $gs-gutter / 2;
     }
 }
 .comparison-table__tier__pricing {
-    background-color: $c-neutral7;
+    background-color: $_background-color;
     padding-left: ($gs-baseline / 2);
     padding-bottom: $gs-baseline;
-    border-top: 1px solid $c-neutral4;
+    border-top: 1px solid $_border-color;
 
     @include mq($until: desktop) {
         display: none;
@@ -74,7 +118,7 @@ $_table-gutter: $gs-gutter / 2;
  */
 .comparison-table__row {
     @include clearfix();
-    border-top: 1px solid $c-neutral4;
+    border-top: 1px solid $_border-color;
 }
 .comparison-table__description,
 .comparison-table__checkmark {
@@ -110,7 +154,7 @@ $_table-gutter: $gs-gutter / 2;
     width: $_tier-col-width;
 }
 .comparison-table__checkmark__inner {
-    background-color: $c-neutral7;
+    background-color: $_background-color;
     padding: ($gs-baseline / 2);
     padding-bottom: $gs-gutter * 2;
     position: absolute;
@@ -137,7 +181,7 @@ $_table-gutter: $gs-gutter / 2;
  */
 .comparison-table__footer {
     @include clearfix();
-    border-top: 1px solid $c-neutral4;
+    border-top: 1px solid $_border-color;
     padding-left: 60%;
 
     @include mq(desktop) {
@@ -149,11 +193,12 @@ $_table-gutter: $gs-gutter / 2;
     width: $_tier-col-width;
 }
 .comparison-table__trail__inner {
-    background-color: $c-neutral7;
+    background-color: $_background-color;
     padding: ($gs-baseline / 2);
     border-left: $_table-gutter solid $white;
 }
 .comparison-table__trail__action {
+    visibility: hidden;
     text-align: center;
     margin: $gs-baseline 0;
 
