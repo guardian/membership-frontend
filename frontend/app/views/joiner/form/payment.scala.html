@@ -12,7 +12,6 @@
 @main(s"Become a ${tier.name.capitalize}", pageInfo=pageInfo) {
 
     <main class="page-content l-constrained">
-        <h2></h2>
         <form action="@routes.Joiner.joinPaid(tier)" method="POST" id="payment-form" class="js-form" novalidate>
             @CSRF.formField
             <input type="hidden" name="tier" value="@tier.slug"/>
@@ -29,7 +28,6 @@
             </section>
 
             <section class="form-section">
-
                 <div class="form-section__lead-in sign-in-required">
                     @fragments.joiner.signedInAs(routes.Joiner.enterDetails(tier).url)
                 </div>
