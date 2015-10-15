@@ -77,7 +77,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     }
   }
 
-  def enterDetails(tier: Tier) = AuthenticatedNonMemberWithKnownTierChangeAction(tier).async { implicit request =>
+  def enterDetails(tier: Tier) = (AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
     } yield {
