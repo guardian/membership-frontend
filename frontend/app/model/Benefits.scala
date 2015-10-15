@@ -43,8 +43,8 @@ object Benefits {
     val pricing = tier match {
       case Tier.Friend => None
       case Tier.Supporter => Option(Pricing(50, 5, Option("1 year membership, 2 months free")))
-      case Tier.Partner => Option(Pricing(135, 15, Option("1 year membership, 3 months free")))
-      case Tier.Patron => Option(Pricing(540, 60, Option("1 year membership, 3 months free")))
+      case Tier.Partner => Option(Pricing(135, 15, Option("1 year membership, 3 months free (end 31 Oct)")))
+      case Tier.Patron => Option(Pricing(540, 60, Option("1 year membership, 3 months free  (end 31 Oct)")))
       case _ => None
     }
     val list = tier match {
