@@ -20,14 +20,14 @@ define([
     }
 
     function addClassToTier(clazz, tier) {
-        var tierElems = COMPARISON_TABLE.querySelectorAll('.comparison-table--clickable[data-tier="'+tier+'"]');
+        var tierElems = COMPARISON_TABLE.querySelectorAll('.js-clickable[data-tier="'+tier+'"]');
         for (var i = 0; i < tierElems.length; i++) {
             tierElems[i].classList.add(clazz);
         }
     }
 
     function addHoverListeners() {
-        $('.comparison-table--clickable').each(function(elem) {
+        $('.js-clickable').each(function(elem) {
             bean.on(elem, 'mouseenter', function(e) {
                 var elem = e.srcElement;
                 var tier = $(elem).data('tier');
@@ -48,11 +48,11 @@ define([
     }
 
     function addClickListeners() {
-        bean.on(COMPARISON_TABLE, 'click', '.comparison-table--clickable', function(e) {
+        bean.on(COMPARISON_TABLE, 'click', '.js-clickable', function(e) {
             var tier = $(e.currentTarget).data('tier');
             addClassToTier(ACTIVE_CLASS, tier);
 
-            var otherElems = COMPARISON_TABLE.querySelectorAll('.comparison-table--clickable:not([data-tier="'+tier+'"])');
+            var otherElems = COMPARISON_TABLE.querySelectorAll('.js-clickable:not([data-tier="'+tier+'"])');
             for (var i = 0; i < otherElems.length; i++) {
                 otherElems[i].classList.remove(ACTIVE_CLASS);
             }

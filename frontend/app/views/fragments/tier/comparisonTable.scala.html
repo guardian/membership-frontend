@@ -6,7 +6,7 @@
 @import model.Benefits.BenefitItem
 
 @comparisonHeader(tier: Tier, isActive: Boolean = false) = {
-    <div class="comparison-table__tier comparison-table--clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
+    <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
         <div class="comparison-table__tier__name tone-border-@tier.name.toLowerCase" data-tier="@tier.name.toLowerCase">
         @fragments.tier.tierTrail(tier, showCaption = false)
         </div>
@@ -34,7 +34,7 @@
 }
 
 @comparisonCheckmark(tier: Tier, checkmark: Boolean, isActive: Boolean = false) = {
-    <div class="comparison-table__checkmark comparison-table--clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
+    <div class="comparison-table__checkmark js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
         <div class="comparison-table__checkmark__inner">
         @fragments.common.checkmark(checkmark)
         </div>
@@ -42,7 +42,7 @@
 }
 
 @comparisonPricing(tier: Tier, isActive: Boolean = false) = {
-    <div class="comparison-table__trail comparison-table--clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
+    <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
                 <a class="action action--no-icon qa-comparison-@tier.toString.toLowerCase"

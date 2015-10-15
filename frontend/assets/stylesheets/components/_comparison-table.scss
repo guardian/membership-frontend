@@ -19,47 +19,34 @@ $_background-color: $c-neutral7;
         margin-top: -($gs-gutter * 2);
     }
 }
-// Because there is no one container for clickable parts of the table,
-// we have to use this helper class to identify them
-.comparison-table--clickable {
-    .comparison-table__checkmark__inner,
-    .comparison-table__tier__name,
-    .comparison-table__tier__pricing,
-    .comparison-table__trail__inner {
-        transition: background-color 0.3s ease;
-    }
+
+// Highlight hovered and active tiers
+// Because the table isn't structured in columns, we have no one container
+// for the parts of the table which should change color on hover and click.
+// Hence this rule is a bit more complicated than it should be.
+.comparison-table__checkmark__inner,
+.comparison-table__tier__name,
+.comparison-table__tier__pricing,
+.comparison-table__trail__inner {
+    transition: background-color 0.3s ease;
     cursor: pointer;
+    opacity: 0.9;
 
-    &.is-active {
-        .comparison-table__checkmark__inner,
-        .comparison-table__tier__name,
-        .comparison-table__tier__pricing,
-        .comparison-table__trail__inner {
-            background-color: $c-neutral5;
-        }
-        .comparison-table__trail__action {
-            visibility: visible;
-        }
-    }
-    &:not(.is-active) {
-        .comparison-table__checkmark__inner,
-        .comparison-table__tier__name,
-        .comparison-table__tier__pricing,
-        .comparison-table__trail__inner {
-            opacity: 0.9;
-        }
+    .is-active & {
+        background-color: $c-neutral5;
     }
 
-    &.is-hover {
-        .comparison-table__checkmark__inner,
-        .comparison-table__tier__name,
-        .comparison-table__tier__pricing,
-        .comparison-table__trail__inner {
-            background-color: $c-neutral5;
-            opacity: 1;
-        }
+    .is-hover & {
+        background-color: $c-neutral5;
+        opacity: 1;
     }
 }
+.comparison-table__trail__action {
+    .is-active & {
+        visibility: visible;
+    }
+}
+
 
 /**
  * Header
