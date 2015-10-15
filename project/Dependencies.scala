@@ -11,7 +11,7 @@ object Dependencies {
   val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.4"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
-  val membershipCommon = "com.gu" %% "membership-common" % "0.88"
+  val membershipCommon = "com.gu" %% "membership-common" % "0.91"
   val playGoogleAuth = "com.gu" %% "play-googleauth" % "0.3.0"
   val contentAPI = "com.gu" %% "content-api-client" % "6.4"
   val playWS = PlayImport.ws
@@ -21,7 +21,7 @@ object Dependencies {
   val snowPlow = "com.snowplowanalytics" % "snowplow-java-tracker" % "0.5.2-SNAPSHOT"
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val s3 =  "com.amazonaws" % "aws-java-sdk-s3" % awsClientVersion
-  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M3" % "test"
+  val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
 
   //projects
 
