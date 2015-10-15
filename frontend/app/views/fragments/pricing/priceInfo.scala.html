@@ -18,7 +18,11 @@
                 <span class="price-info__date">/year</span>
             </div>
             @if(pricing.hasYearlySaving) {
-                <div class="price-info__saving">Save @pricing.yearlySaving.pretty/year</div>
+                @if(pricing.hasOverride){
+                    <div class="price-info__saving">@pricing.yearlySavingsOverride</div>
+                } else{
+                    <div class="price-info__saving">Save @pricing.yearlySaving.pretty/year</div>
+                }
             }
         </div>
         <div class="price-info__item price-info__item--split price-info__item--last">

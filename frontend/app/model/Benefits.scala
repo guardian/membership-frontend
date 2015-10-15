@@ -11,8 +11,12 @@ object Benefits {
   case class Pricing(
     yearly: Int,
     monthly: Int,
-    yearlySavingsNote: Option[String]
+    yearlySavingsNote: Option[String],
+    yearlySavingsOverride: Option[String] = None,
+    hideYearlySaving: Boolean = false
   ) {
+    val hasOverride = yearlySavingsOverride.isDefined
+
     lazy val yearlyMonthlyCost = 12 * monthly
     lazy val yearlySaving = yearlyMonthlyCost - yearly
     lazy val yearlyWith6MonthSaving = yearly / 2f
@@ -38,13 +42,14 @@ object Benefits {
   case class Benefits(
     tier: Tier,
     leadin: String,
-    highlights: Seq[BenefitHighlight]
+    highlights: Seq[BenefitHighlight],
+    altSavingMessage : Option[String] = None
   ) {
     val pricing = tier match {
       case Tier.Friend => None
       case Tier.Supporter => Option(Pricing(50, 5, Option("1 year membership, 2 months free")))
-      case Tier.Partner => Option(Pricing(135, 15, Option("1 year membership, 3 months free (end 31 Oct)")))
-      case Tier.Patron => Option(Pricing(540, 60, Option("1 year membership, 3 months free  (end 31 Oct)")))
+      case Tier.Partner => Option(Pricing(135, 15, Option("1 year membership, 3 months free (ends 31 Oct)"), Some("3 months free")))
+      case Tier.Patron => Option(Pricing(540, 60, Option("1 year membership, 3 months free  (ends 31 Oct)"), Some("3 months free")))
       case _ => None
     }
     val list = tier match {
