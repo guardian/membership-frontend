@@ -12,15 +12,8 @@
     background-position: top center;
     background-repeat: repeat;
     background-attachment: fixed;
-    background-size: 100%;
+    background-size: 100% auto;
 
-    @include mq(phablet) {
-        background-size: 80%;
-    }
-
-    @include mq(tablet) {
-        background-size: 70%;
-    }
 }
 .hero-banner__inner {
     position: relative;
@@ -45,11 +38,11 @@
     }
 }
 .hero-banner__title {
-    @include fs-headline(5);
+    @include fs-headline(4);
     font-weight: guss-font-weight(ultrablack);
 
     @include mq(tablet) {
-        @include fs-headline(8, $size-only: true);
+        @include fs-headline(7, $size-only: true);
         line-height: 1;
         padding-top: $gs-baseline * 2;
     }
@@ -62,3 +55,4 @@
         @include fs-headline(5, $size-only: true);
     }
 }
+
