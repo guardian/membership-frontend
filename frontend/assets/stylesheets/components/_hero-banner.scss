@@ -12,11 +12,7 @@
     background-position: top center;
     background-repeat: repeat;
     background-attachment: fixed;
-    background-size: 200% auto;
-
-    @include mq(phablet) {
-        background-size: 140% auto;
-    }
+    background-size: 160% auto;
 
     @include mq(tablet) {
         background-size: 100% auto;
