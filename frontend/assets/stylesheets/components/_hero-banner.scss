@@ -12,8 +12,11 @@
     background-position: top center;
     background-repeat: repeat;
     background-attachment: fixed;
-    background-size: 100% auto;
+    background-size: 160% auto;
 
+    @include mq(tablet) {
+        background-size: 100% auto;
+    }
 }
 .hero-banner__inner {
     position: relative;

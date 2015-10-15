@@ -27,7 +27,11 @@
                     <div class="pseudo-radio">
                         <div class="pseudo-radio__header">Pay £@pricing.yearly/year</div>
                         @if(pricing.hasYearlySaving) {
-                            <p class="pseudo-radio__note">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving per year)</p>
+                            <p class="pseudo-radio__note">£@pricing.yearly one off annual payment
+                                @if(!pricing.hideYearlySaving) {
+                                    (save £@pricing.yearlySaving per year)
+                                }
+                            </p>
                             @for(yearlySavingsNote <- pricing.yearlySavingsNote) {
                                 <p class="pseudo-radio__note">@yearlySavingsNote</p>
                             }
