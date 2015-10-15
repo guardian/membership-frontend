@@ -101,26 +101,28 @@ class SubscriptionServiceTest extends Specification {
   }
 
 
-  "filterOutItemsFromPreviousSubscriptionVersions" should {
+  "latestInvoiceItems" should {
 
     import SubscriptionService.latestInvoiceItems
     val formatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
     val april = formatter.parseDateTime("2015-04-01 09:00:00")
     val may = formatter.parseDateTime("2015-05-01 09:00:00")
 
-    def invoiceItem(id: String, start: DateTime) = InvoiceItem(id, 1.2f, start, start.withFieldAdded(DurationFieldType.months(), 1), "1", "item")
+    def invoiceItem(subscriptionId: String, start: DateTime) =
+      InvoiceItem("item-id", 1.2f, start,
+                  start.withFieldAdded(DurationFieldType.months(), 1),
+                  "1", "item", subscriptionId)
 
     "return an empty list when given an empty list" in {
       latestInvoiceItems(Seq()) mustEqual Seq()
     }
 
-    "return all those items when given many items with the same id" in {
+    "return all those items when given many items with the same subscriptionId" in {
       val items = Seq(invoiceItem("a", april), invoiceItem("a", april), invoiceItem("a", april))
       latestInvoiceItems(items) mustEqual items
     }
 
-    "return things with the same id as the newest item given items with differing ids" in {
-
+    "return items with the same subscriptionId as the newest item when given items with differing subscription ids" in {
       "items in date order" in {
         val items = Seq(invoiceItem("a", april), invoiceItem("b", may))
         latestInvoiceItems(items) mustEqual Seq(invoiceItem("b", may))

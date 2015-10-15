@@ -53,16 +53,15 @@ object SubscriptionService {
   }
 
   /**
-   * Given an array of subscription invoice items
-   * return only items corresponding to the last invoice
-   * @param items The incoming list of items with many invoices
+   * Given an array of subscription invoice items, return only items corresponding to the last invoice
+   * @param items The incoming list of items with many invoices, potentially associated to multiple subscription versions
    */
   def latestInvoiceItems(items: Seq[InvoiceItem]): Seq[InvoiceItem] = {
     if(items.isEmpty)
       items
     else {
-      val temp = items.sortBy(_.serviceStartDate)
-      temp.filter(_.id == temp.last.id)
+      val sortedItems = items.sortBy(_.serviceStartDate)
+      sortedItems.filter(_.subscriptionId == sortedItems.last.subscriptionId)
     }
   }
 
