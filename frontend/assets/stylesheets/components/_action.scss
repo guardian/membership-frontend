@@ -206,30 +206,6 @@
     }
 }
 
-.action--snap-tablet {
-    min-width: 0;
-    width: rem(40px);
-    height: rem(40px);
-    margin: 0;
-    &:after {
-        margin-top: 3px;
-    }
-    .action__label {
-        display: none;
-    }
-    @include mq(desktop) {
-        height: auto;
-        width: auto;
-        max-width: rem(gs-span(3));
-        &:after {
-            margin-top: 2px;
-        }
-        .action__label {
-            display: inline-block;
-        }
-    }
-}
-
 /* Action Jump
    ========================================================================== */
 
