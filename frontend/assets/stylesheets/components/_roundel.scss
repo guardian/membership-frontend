@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Roundel
+   ========================================================================== */
+
+.roundel {
+    position:relative;
+}
+.roundel__container {
+    @include circular();
+    position: absolute;
+    z-index: 2;
+    right:0;
+    text-align: center;
+    background: #4bc6df;
+    width:140px;
+    height:140px;
+    padding: 44px 17px;
+    margin:6px 20px;
+
+
+    @include mq(desktop) {
+        width:200px;
+        height:200px;
+        padding: 68px 22px;
+        margin:20px 20px;
+    }
+}
+
+.roundel__title {
+    @include fs-headline(1);
+    font-weight: guss-font-weight(ultrablack);
+
+    @include mq(desktop) {
+        @include fs-headline(3);
+        font-weight: guss-font-weight(ultrablack);
+    }
+}
+
+.roundel__description {
+    font-size: 12px;
+
+    @include mq(desktop) {
+        font-size: 13px;
+        @include fs-headline(1);
+    }
+}
+
