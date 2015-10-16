@@ -1,18 +1,14 @@
-import com.gu.membership.salesforce.{Member, PaidMember}
-import com.gu.membership.util.Timing
 import com.gu.googleauth
 import com.gu.identity.play.IdMinimalUser
-import play.api.Logger
+import com.gu.membership.salesforce.{Member, PaidMember}
+import com.gu.membership.util.Timing
 import play.api.mvc.Security.AuthenticatedRequest
-import play.api.mvc.WrappedRequest
+import play.api.mvc.{Cookie, WrappedRequest}
 import services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 package object actions {
-
-  val logger = Logger(this.getClass())
-
   type AuthRequest[A] = AuthenticatedRequest[A, IdMinimalUser]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
@@ -31,6 +27,11 @@ package object actions {
   case class MemberRequest[A, +M <: Member](member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user
 
+    def idCookies: Option[Seq[Cookie]] = for {
+      guu <- request.cookies.get("GU_U")
+      scguu <- request.cookies.get("SC_GU_U")
+    } yield Seq(guu, scguu)
+
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
   }
 
@@ -38,7 +39,7 @@ package object actions {
 
   type PaidMemberRequest[A] = MemberRequest[A, PaidMember]
 
-  case class IdentityGoogleAuthRequest[A](val googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+  case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val identityUser = request.user
   }
 }

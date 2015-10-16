@@ -14,6 +14,7 @@
                     <ns2:ServiceStartDate>2015-02-02T00:00:00.000-08:00</ns2:ServiceStartDate>
                     <ns2:TaxAmount>90</ns2:TaxAmount>
                     <ns2:ProductName>Patron</ns2:ProductName>
+                    <ns2:SubscriptionId>subscription-id-1</ns2:SubscriptionId>
                 </ns1:records>
                 <ns1:records xmlns:ns2="http://object.api.zuora.com/"
                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:InvoiceItem">
@@ -24,6 +25,7 @@
                     <ns2:ServiceStartDate>2015-02-02T00:00:00.000-08:00</ns2:ServiceStartDate>
                     <ns2:TaxAmount>-22.5</ns2:TaxAmount>
                     <ns2:ProductName>Partner</ns2:ProductName>
+                    <ns2:SubscriptionId>subscription-id-2</ns2:SubscriptionId>
                 </ns1:records>
                 <ns1:size>2</ns1:size>
             </ns1:result>
