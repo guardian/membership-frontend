@@ -34,6 +34,7 @@ $_background-color: $c-neutral7;
 
     .is-active & {
         background-color: $c-neutral5;
+        opacity: 1;
     }
 
     .is-hover & {
