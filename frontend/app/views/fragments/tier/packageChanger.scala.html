@@ -9,21 +9,18 @@
     data-metric-action="@tier.toString.toLowerCase"
 }
 
-<div class="package-promo package-promo--stretch package-promo--enhanced tone-border-@tier.toString.toLowerCase">
+<div class="package-promo--default tone-border-@tier.toString.toLowerCase">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
                     @fragments.tier.tierTrail(tier, showCaption=false)
                 </div>
-                <div class="package-promo__tier__pricing">
-                    @fragments.pricing.priceInfo(tier, canFlex=false)
-                </div>
             </div>
         </a>
     </div>
     <div class="package-promo__content">
-        <div class="package-promo__description copy hidden-tablet">
+        <div class="package-promo__description copy">
             <ul class="o-bulleted-list">
                 @for(highlight <- Benefits.details(tier).highlights) {
                     <li>
@@ -36,7 +33,10 @@
             </ul>
         </div>
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin" id="qa-change-tier-@tier.slug" @actionAttrs>
+            <div class="package-promo__actions__pricing">
+            @fragments.pricing.priceInfo(tier, canFlex=false)
+            </div>
+            <a class="action u-no-bottom-margin" id="qa-change-tier-@tier.slug" @actionAttrs>
                 <span class="action__label">Become a @tier</span>
             </a>
         </div>

@@ -66,6 +66,11 @@
         margin: rem(2px) rem(-$gs-gutter / 2) 0 rem($gs-gutter);
     }
 
+    .action__label {
+        display: block;
+        float: left;
+    }
+
     .action__icon {
         width: 21px; height: 21px;
     }

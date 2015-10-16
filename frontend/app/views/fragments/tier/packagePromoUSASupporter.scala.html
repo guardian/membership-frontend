@@ -11,7 +11,7 @@
     data-metric-action="@Tier.Supporter.toString.toLowerCase"
 }
 
-<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@Tier.Supporter">
+<div class="@if(isReversed){ package-promo--reversed} package-promo--minimal tone-border-@Tier.Supporter">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">

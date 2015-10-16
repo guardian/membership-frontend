@@ -4,8 +4,7 @@
     eventCollection: model.RichEvent.EventBrandCollection
 )
 
-@import com.gu.membership.salesforce.Tier
-@import com.gu.membership.salesforce.Tier.{Supporter, Partner}
+@import com.gu.membership.salesforce.Tier._
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
@@ -22,7 +21,6 @@
     <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/clinton-background.jpg"))">
         <div class="hero-banner__inner">
             <div class="l-constrained">
-
                 <div class="hero-banner__content">
                     <h1 class="hero-banner__title">Become a Guardian&nbsp;Member</h1>
                     <p class="hero-banner__description">
@@ -151,7 +149,7 @@
                         </ul>
                     </div>
 
-                    <ul class="grid grid--3up-stacked grid--single-row">
+                    <ul class="grid grid--3up-stacked-mobile grid--single-row">
                         <li class="grid__item">
                             @fragments.promos.brandPanel(
                                 "Guardian Live",
@@ -214,10 +212,10 @@
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
                 <p>Join as an annual Partner or Patron Member by <br/> 31 October 2015 and get 3 months free</p>
-                <ul class="grid grid--2up-stacked">
-                    @for(tier <- Seq(Supporter, Partner)) {
+                <ul class="grid">
+                    @for(tier <- Seq(Supporter, Partner, Patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(tier, extraClasses=List("package-promo--lead"))
+                            @fragments.tier.packagePromo(tier, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>

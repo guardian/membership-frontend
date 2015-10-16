@@ -19,6 +19,19 @@
     }
 }
 
+@mixin grid-equal-heights($breakpoint: desktop) {
+    @if ($browser-supports-flexbox) {
+        @include mq($breakpoint) {
+            display: flex;
+        }
+        .grid__item {
+            @include mq($breakpoint) {
+                display: flex;
+            }
+        }
+    }
+}
+
 // Drop bottom margins if we know we only
 // have a single row of grid items.
 .grid--single-row {
@@ -74,6 +87,10 @@
    ========================================================================== */
 
 .grid--2up {
+    &.grid--equal-heights {
+        @include grid-equal-heights(tablet);
+    }
+
     .grid__item {
         @include mq(tablet) {
             &:nth-of-type(2n+1) { clear: left; border-left: none; }
@@ -82,6 +99,10 @@
 }
 
 .grid--2up-stacked {
+    &.grid--equal-heights {
+        @include grid-equal-heights(desktop);
+    }
+
     @include mq(desktop) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
@@ -100,10 +121,14 @@
     }
 }
 
-/* Grid 3up
+/* Grid 3up (Cols per row: 3 on desktop > 2 on tablet > 1 on mobile)
    ========================================================================== */
 
 .grid--3up {
+    &.grid--equal-heights {
+        @include grid-equal-heights(tablet);
+    }
+
     .grid__item {
         @include mq(tablet) {
             width: 33.3% - ($gutter-width-fluid / 2);
@@ -113,16 +138,20 @@
     }
 }
 
-/* 3up Stacked (3 > 1)
+/* 3up Stacked (Cols per row: 3 on larger viewport > 1 on smaller)
    ========================================================================== */
 
-.grid--3up-stacked {
-    @include mq(tablet) {
+@mixin grid-3up-stacked($breakpoint) {
+    &.grid--equal-heights {
+        @include grid-equal-heights($breakpoint);
+    }
+
+    @include mq($breakpoint) {
         width: 100% + $gutter-width-fluid;
         margin-left: -$gutter-width-fluid;
     }
     .grid__item {
-        @include mq(tablet) {
+        @include mq($breakpoint) {
             float: left;
             border-style: solid;
             border-width: 0 0 0 1px;
@@ -132,7 +161,18 @@
             width: 33.3% - ($gutter-width-fluid / 2);
             &:nth-of-type(3n+1) { clear: left; border-left: none; }
         }
-    }
+    }    
+}
+
+// 3 on desktop > 1 on tablet > 1 on mobile
+.grid--3up-stacked {
+    @include grid-3up-stacked(desktop);
+}
+
+
+// 3 on desktop > 3 on tablet > 1 on mobile
+.grid--3up-stacked-mobile {
+    @include grid-3up-stacked(tablet);
 }
 
 /* Grid 4up

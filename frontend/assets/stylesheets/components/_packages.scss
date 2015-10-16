@@ -7,22 +7,130 @@
    - Main package panel used across the site
    ========================================================================== */
 
-.package-promo {
-    position: relative;
+// This is the height of the actions block that contains the price & call-to-action button
+$_package-promo__actions_height: 117px;
+
+@mixin package-promo-base() {
     border-top: 5px solid;
     background-color: $c-neutral7;
-}
+    padding: rem($gs-gutter / 4);
+
     .package-promo__header {
-        padding: rem($gs-gutter / 4);
+        margin-bottom: rem($gs-gutter / 2);
     }
     .package-promo__content {
         padding: 0;
     }
     .package-promo__description {
         @include fs-headline(2);
-        margin-bottom: rem($gs-gutter);
-        display: none;
+        margin-bottom: rem($gs-gutter / 2);
         p { margin-bottom: 0; }
+    }
+    .package-promo__actions {
+        margin: rem($gs-gutter / 2) 0;
+    }
+    .package-promo__actions__pricing {
+        margin-bottom: rem($gs-gutter);
+        border-top: 1px solid $c-border-neutral;
+    }
+    .package-promo__tier {
+        @include clearfix;
+    }
+}
+
+// Title, description, price, button simply stacked vertically
+@mixin package-promo-narrow() {
+    @include package-promo-base();
+
+    // To ensure whitespace appears after the description in equal-height columns
+    @include mq(desktop) {
+        position: relative;
+
+        .package-promo__description {
+            // Make space for this absolutely positioned element
+            padding-bottom: $_package-promo__actions_height;
+        }
+
+        .package-promo__actions {
+            position: absolute;
+            bottom: 0;
+            left: $gs-gutter / 4;
+            right: $gs-gutter / 4;
+        }
+    }
+}
+
+// Price & button pulled off to the right
+@mixin package-promo-wide() {
+    @include package-promo-base();
+
+    .package-promo__content {
+        display: table;
+        padding-bottom: $gs-gutter / 2;
+        .package-promo__description {
+            padding-right: $gs-gutter * 4;
+            display: table-cell;
+            vertical-align: top;
+            width: 100%;
+
+            @include mq(desktop) {
+                width: 50%;
+            }
+        }
+
+        .package-promo__actions {
+            margin-top: 0;
+            display: table-cell;
+            vertical-align: top;
+            width: 30%;
+            min-width: 205px;
+
+            @include mq(desktop) {
+                width: 30%;
+            }
+        }
+    }
+}
+
+// Narrow -> wide -> narrow
+.package-promo--default {
+    @include mq($from: mobile, $until: tablet) {
+        @include package-promo-narrow();
+    }
+    @include mq($from: tablet, $until: desktop) {
+        @include package-promo-wide();
+    }
+    @include mq($from: desktop) {
+        @include package-promo-narrow();
+    }
+}
+
+// Narrow -> narrow -> narrow
+.package-promo--always-narrow {
+    @include package-promo-narrow();
+}
+
+// Narrow -> wide -> wide
+.package-promo--homepage {
+    @include mq($from: mobile, $until: tablet) {
+        @include package-promo-narrow();
+    }
+    @include mq($from: tablet) {
+        @include package-promo-wide();
+    }
+}
+
+// This is basically the old mobile view. No description
+.package-promo--minimal {
+    position: relative;
+    border-top: 5px solid;
+    background-color: $c-neutral7;
+
+    .package-promo__header {
+        padding: rem($gs-gutter / 4);
+    }
+    .package-promo__content {
+        padding: 0;
     }
     .package-promo__actions {
         position: absolute;
@@ -41,115 +149,36 @@
         border-width: 0;
     }
 
-/**
- * Mixins are used here because we need
- * variants of the package promo which
- * react to different breakpoints.
- *
- * Element queries would solve this…
- */
-@mixin package-promo-spread() {
-    .package-promo__description {
-        display: inline-block;
-        vertical-align: top;
-        margin-bottom: rem($gs-baseline);
-    }
-    .package-promo__content {
-        margin-left: 35%;
-        padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
-    }
-    .package-promo__actions {
-        position: static;
-        padding-top: rem($gs-gutter / 4);
-        padding-bottom: rem($gs-gutter / 4);
-    }
-    .package-promo__tier {
-        min-height: 0;
-    }
-    .package-promo__tier__title {
-        float: left;
-        width: 35%;
-    }
-    .package-promo__tier__pricing {
-        position: static;
-        float: left;
-        width: 65%;
-        border-width: 0 0 1px 0;
-        margin-top: -(rem($gs-gutter / 4));
-    }
-}
-
-@mixin package-promo-stacked() {
-    .package-promo__description {
-        display: inline-block;
-        min-height: rem($gs-gutter * 10);
-    }
-    .package-promo__content {
-        margin-left: 0;
-        padding: 0 rem($gs-gutter / 4);
-    }
-    .package-promo__actions {
-        position: static;
-        padding-bottom: rem($gs-baseline);
-    }
-    .package-promo__tier__title,
-    .package-promo__tier__pricing {
-        float: none;
-        width: auto;
-    }
-    .package-promo__tier__title {
-        margin-bottom: rem($gs-gutter * 2);
-    }
-    .package-promo__tier__pricing {
-        position: static;
-        border-width: 1px 0;
-        min-height: rem($gs-gutter * 3);
-    }
-}
-
-.package-promo--simple {
     @include mq(tablet) {
-        @include package-promo-stacked();
         .package-promo__description {
+            display: inline-block;
+            vertical-align: top;
+            margin-bottom: rem($gs-baseline);
+        }
+        .package-promo__content {
+            margin-left: 35%;
+            padding: 0 rem($gs-gutter / 4) rem($gs-baseline / 2) 0;
+        }
+        .package-promo__actions {
+            position: static;
+            padding-top: rem($gs-gutter / 4);
+            padding-bottom: rem($gs-gutter / 4);
+        }
+        .package-promo__tier {
             min-height: 0;
         }
-    }
-}
-
-.package-promo--spread {
-    @include mq(tablet) {
-        @include package-promo-spread();
+        .package-promo__tier__title {
+            float: left;
+            width: 35%;
+        }
+        .package-promo__tier__pricing {
+            position: static;
+            float: left;
+            width: 65%;
+            border-width: 0 0 1px 0;
+            margin-top: -(rem($gs-gutter / 4));
+        }
         margin-bottom: rem($gs-gutter);
-    }
-}
-
-.package-promo--enhanced {
-    @include mq(tablet) {
-        @include package-promo-spread();
-    }
-    @include mq(desktop) {
-        @include package-promo-stacked();
-    }
-}
-
-.package-promo--stretch {
-    @include mq(desktop) {
-        min-height: rem(300px); // Magic number
-
-        .package-promo__actions {
-            padding-bottom: 0;
-            position: absolute;
-            left: rem($gs-gutter / 4);
-            bottom: rem($gs-baseline);
-        }
-    }
-}
-
-.package-promo--lead {
-    @include mq(desktop) {
-        .package-promo__description {
-            min-height: ($gs-gutter * 5);
-        }
     }
 }
 
