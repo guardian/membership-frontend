@@ -1,61 +1,50 @@
-/**
- * This file:
- * Controls the listeners for the identity icon menu found in the header
- * Controls the html document listener to close the identity icon menu
- * Sets the identity icon returnUrl when a user needs to sign in (controlled via JavaScript for caching reasons)
- */
 define([
     '$',
     'bean'
 ], function ($, bean) {
     'use strict';
 
+    var COMPARISON_TABLE_SELECTOR = '.comparison-table';
+    var COMPARISON_TABLE = document.querySelector(COMPARISON_TABLE_SELECTOR);
+
     var HOVER_CLASS = 'is-hover';
     var ACTIVE_CLASS = 'is-active';
-    var COMPARISON_TABLE = document.querySelector('.comparison-table');
+    var HOVERED = COMPARISON_TABLE_SELECTOR + ' .is-hover';
+    var CLICKABLE = COMPARISON_TABLE_SELECTOR + ' .js-clickable';
 
     function init() {
         addHoverListeners();
         addClickListeners();
     }
 
-    function addClassToTier(clazz, tier) {
-        var tierElems = COMPARISON_TABLE.querySelectorAll('.js-clickable[data-tier="'+tier+'"]');
-        for (var i = 0; i < tierElems.length; i++) {
-            tierElems[i].classList.add(clazz);
-        }
+    function tierSelector(tier) {
+        return '[data-tier="'+tier+'"]';
     }
 
+    // We have to do this in JavaScript rather than using a CSS :hover class
+    // because we have no single container which holds a tier column.
+    // Instead they are split between rows, so we use data-tier to group them together.
     function addHoverListeners() {
-        $('.js-clickable').each(function(elem) {
-            bean.on(elem, 'mouseenter', function(e) {
-                var elem = e.srcElement;
-                var tier = $(elem).data('tier');
-                while (!tier) {
-                    elem = elem.parentElement;
-                    tier = $(elem).data('tier');
-                }
+        bean.on(COMPARISON_TABLE, 'mouseenter', CLICKABLE, function(e) {
+            var tier = $(e.currentTarget).data('tier');
+            var $elemsInThisTier = $(CLICKABLE + tierSelector(tier));
 
-                addClassToTier(HOVER_CLASS, tier);
-            });
-            bean.on(elem, 'mouseleave', function() {
-                var hoveredElems = COMPARISON_TABLE.querySelectorAll('.is-hover');
-                for (var i = 0; i < hoveredElems.length; i++) {
-                    hoveredElems[i].classList.remove('is-hover');
-                }
-            });
+            $elemsInThisTier.addClass(HOVER_CLASS);
+        });
+
+        bean.on(COMPARISON_TABLE, 'mouseleave', CLICKABLE, function() {
+            $(HOVERED).removeClass(HOVER_CLASS);
         });
     }
 
     function addClickListeners() {
-        bean.on(COMPARISON_TABLE, 'click', '.js-clickable', function(e) {
+        bean.on(COMPARISON_TABLE, 'click', CLICKABLE, function(e) {
             var tier = $(e.currentTarget).data('tier');
-            addClassToTier(ACTIVE_CLASS, tier);
+            var $elemsInThisTier = $(CLICKABLE + tierSelector(tier));
+            var $elemsInOtherTiers = $(CLICKABLE+':not('+tierSelector(tier)+')');
 
-            var otherElems = COMPARISON_TABLE.querySelectorAll('.js-clickable:not([data-tier="'+tier+'"])');
-            for (var i = 0; i < otherElems.length; i++) {
-                otherElems[i].classList.remove(ACTIVE_CLASS);
-            }
+            $elemsInThisTier.addClass(ACTIVE_CLASS);
+            $elemsInOtherTiers.removeClass(ACTIVE_CLASS);
         });
     }
 
