@@ -32,6 +32,8 @@ object Config {
   val membershipUrl = config.getString("membership.url")
   val membershipHost = Uri.parse(Config.membershipUrl).host.get
 
+  val membersDataAPIUrl = config.getString("members-data-api.url")
+
   val membershipFeedback = config.getString("membership.feedback")
 
   val idWebAppUrl = config.getString("identity.webapp.url")
@@ -79,6 +81,7 @@ object Config {
   val googleAdwordsJoinerConversionLabel =
     Tier.all.map { tier => tier -> config.getString(s"google.adwords.joiner.conversion.${tier.slug}") }.toMap
 
+  val optimizelyEnabled = config.getBoolean("optimizely.enabled")
 
   val corsAllowOrigin = Set(
     // identity

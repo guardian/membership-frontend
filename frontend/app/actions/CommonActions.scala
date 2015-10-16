@@ -58,8 +58,6 @@ trait CommonActions {
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
 
-  def AuthenticatedNonMemberWithKnownTierChangeAction(tier: Tier) = AuthenticatedAction andThen onlyNonMemberFilter(onPaidMember = result => tierChangeEnterDetails(tier)(result))
-
   val GoogleAuthAction: ActionBuilder[GoogleAuthRequest] = OAuthActions.AuthAction
 
   val GoogleAuthenticatedStaffAction = NoCacheAction andThen GoogleAuthAction

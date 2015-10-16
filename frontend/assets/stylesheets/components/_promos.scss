@@ -227,11 +227,12 @@
     @include mq(phablet) {
         position: relative;
         padding: $gs-baseline $gs-gutter 0;
-        min-height: gs-height(5) + $gs-baseline;
+        min-height: gs-height(4) + $gs-baseline;
     }
 
     @include mq(desktop) {
         padding: $gs-baseline 0;
+        min-height: gs-height(5) + $gs-baseline;
     }
 }
 .promo-quote__text {
@@ -248,10 +249,13 @@
     clear: both;
 
     @include mq(phablet) {
-        height: gs-height(5);
         float: none;
         position: absolute;
-        right: $gs-gutter * 2;
+        right: $gs-gutter;
         bottom: 0;
+    }
+
+    @include mq(desktop) {
+        height: gs-height(5);
     }
 }
