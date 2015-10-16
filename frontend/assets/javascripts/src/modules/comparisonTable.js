@@ -13,6 +13,10 @@ define([
     var CLICKABLE = COMPARISON_TABLE_SELECTOR + ' .js-clickable';
 
     function init() {
+        if (!COMPARISON_TABLE) {
+            return;
+        }
+
         addHoverListeners();
         addClickListeners();
     }
