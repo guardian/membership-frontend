@@ -5,11 +5,6 @@ Twitter: @rtyley
 From: Blyth, England
 Location: London, England
 
-Client-side Developer: David Rapson
-Twitter: @davidrapson
-From: Birmingham, England
-Location: London, England
-
 /* ALUMNI */
 
 Senior Developer: Chris Finch
@@ -27,3 +22,7 @@ Client-side Engineer: Matt Andrews
 Twitter: @mattpointblank
 From: Birkenhead, England
 Location: London, England
+
+Client-side Developer: David Rapson
+Twitter: @davidrapson
+From: Birmingham, England
