@@ -20,7 +20,7 @@
         <form action="@routes.TierController.upgrade(targetTier)" method="POST" class="js-form" id="payment-form">
             @CSRF.formField
 
-            @fragments.page.pageHeader("Great, glad to see you've decided to become a " + targetTier)
+            @fragments.page.pageHeader("Great, glad to see you've decided to become a " + targetTier, Some("Join as an annual Partner or Patron Member by 31 October and get 3 months free"))
 
             @for(flashMsg <- flashMessage) {
                 <section class="page-section page-section--no-padding">
