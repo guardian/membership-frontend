@@ -28,18 +28,20 @@ $_background-color: $c-neutral7;
 .comparison-table__tier__name,
 .comparison-table__tier__pricing,
 .comparison-table__trail__inner {
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    opacity: 0.9;
+    @include mq(desktop) {
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        opacity: 0.9;
 
-    .is-active & {
-        background-color: $c-neutral5;
-        opacity: 1;
-    }
+        .is-active & {
+            background-color: $c-neutral5;
+            opacity: 1;
+        }
 
-    .is-hover & {
-        background-color: $c-neutral5;
-        opacity: 1;
+        .is-hover & {
+            background-color: $c-neutral5;
+            opacity: 1;
+        }
     }
 }
 .comparison-table__trail__action {
@@ -187,7 +189,9 @@ $_background-color: $c-neutral7;
     border-left: $_table-gutter solid $white;
 }
 .comparison-table__trail__action {
-    visibility: hidden;
+    @include mq(desktop) {
+        visibility: hidden;
+    }
     text-align: center;
     margin: $gs-baseline 0;
 
