@@ -45,8 +45,7 @@ $_background-color: $c-neutral7;
     }
 }
 .comparison-table__trail__action {
-    .is-active &,
-    .is-hover & {
+    .is-active & {
         visibility: visible;
     }
 }
