@@ -2,7 +2,6 @@ package controllers
 
 import actions._
 import com.gu.cas.CAS.CASSuccess
-import com.gu.membership.model.PaidTiers
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import org.joda.time.format.ISODateTimeFormat
@@ -78,7 +77,7 @@ trait User extends Controller {
     "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
     "tier" -> member.tier.name,
-    "isPaidTier" -> PaidTiers.isPaid(member.tier),
+    "isPaidTier" -> member.tier.isPaid,
     "joinDate" -> member.joinDate
   )
 

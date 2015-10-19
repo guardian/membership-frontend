@@ -125,6 +125,7 @@ object Benefits {
       BenefitHighlight("Show deep support for keeping the Guardian free, open and independent."),
       BenefitHighlight("Get invited to a small number of exclusive, behind-the-scenes functions")
     ))
+    case Tier.Staff => Benefits(Tier.Staff, "Staff benefits", Nil)
   }
 
   def detailsLimited(tier: Tier) = tier match {
@@ -132,6 +133,7 @@ object Benefits {
     case Tier.Supporter => supporterBenefitsList
     case Tier.Partner => uniqueBenefits(partnerBenefitsList, supporterBenefitsList)
     case Tier.Patron => uniqueBenefits(patronBenefitsList, partnerBenefitsList)
+    case Tier.Staff => uniqueBenefits(partnerBenefitsList, supporterBenefitsList).filterNot(_.identifier == "books_or_tickets")
   }
 
 }

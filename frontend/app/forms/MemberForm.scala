@@ -20,7 +20,7 @@ object MemberForm {
     val deliveryAddress: Address
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
-    val plan: ProductRatePlan
+    val plan: TierPlan
     val featureChoice: Set[FeatureChoice]
   }
 

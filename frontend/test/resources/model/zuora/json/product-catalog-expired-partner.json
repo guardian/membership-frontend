@@ -1,0 +1,1172 @@
+{
+  "products": [
+    {
+      "id": "2c92c0f94ff8c09f014ff960a8cf6f12",
+      "sku": "SKU-00000027",
+      "name": "Shelf Improvement",
+      "description": "Shelf Improvement is a new book subscription service from the Guardian that aims to improve the literary lives of book lovers. \\n\\nThe exact book remains a mystery until it lands on the doorstep, so it is the perfect way to encounter totally fresh voices and vistas.\\n",
+      "ProductType__c": "Shelf Improvement",
+      "ProductEnabled__c": "False",
+      "Entitlements__c": null,
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": "False",
+      "Tier__c": null,
+      "ProductLevel__c": null,
+      "productRatePlans": [
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ab690d8e",
+          "status": "Active",
+          "name": "Hardback - Mixed - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b0e97045",
+              "name": "Hardback - Mixed - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP210/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ab430d89",
+          "status": "Active",
+          "name": "Paperback - Mixed - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b081703f",
+              "name": "Paperback - Mixed - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP65/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ac8d0d9d",
+          "status": "Active",
+          "name": "Paperback - Fiction - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b1cb7057",
+              "name": "Paperback - Fiction - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP110/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960aca90da2",
+          "status": "Active",
+          "name": "Paperback - Non Fiction - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b22a705d",
+              "name": "Paperback - Non Fiction - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP70/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960acc50da7",
+          "status": "Active",
+          "name": "Hardback - Non Fiction - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b2857063",
+              "name": "Hardback - Non Fiction - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP120/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960acdc0dac",
+          "status": "Active",
+          "name": "Paperback - Non Fiction - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b2db7069",
+              "name": "Paperback - Non Fiction - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP130/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ad080db1",
+          "status": "Active",
+          "name": "Hardback - Mixed - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b325706f",
+              "name": "Hardback - Mixed - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP115/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ad2b0db6",
+          "status": "Active",
+          "name": "Hardback - Fiction - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b3a37075",
+              "name": "Hardback - Fiction - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP110/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ad760dbb",
+          "status": "Active",
+          "name": "Paperback - Fiction - 6 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "6",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b42a707b",
+              "name": "Paperback - Fiction - 6 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP60/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Semi_Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960aae50d84",
+          "status": "Active",
+          "name": "Paperback - Mixed - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960af447039",
+              "name": "Paperback - Mixed - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP115/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ac6e0d98",
+          "status": "Active",
+          "name": "Hardback - Non Fiction - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b17c7051",
+              "name": "Hardback - Non Fiction - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP220/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94ff8c0a0014ff960ac480d93",
+          "status": "Active",
+          "name": "Hardback  Fiction - 12 Months",
+          "description": "",
+          "effectiveStartDate": "2015-01-07",
+          "effectiveEndDate": "2099-01-07",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": "12",
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84ff8a033014ff960b13c704b",
+              "name": "Hardback - Fiction - 12 Months",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "AUD0/Each",
+                "EUR0/Each",
+                "GBP200/Each",
+                "USD0/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": null
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    },
+    {
+      "id": "2c92c0f948f36bd90148f4c271591289",
+      "sku": "SKU-00000007",
+      "name": "Patron",
+      "description": "This is the description of the patron membership.",
+      "ProductType__c": "Membership",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": "Events:PATRON",
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": null,
+      "Tier__c": "Patron",
+      "ProductLevel__c": "300",
+      "productRatePlans": [
+        {
+          "id": "2c92c0f84c510081014c568daa112d2a",
+          "status": "Active",
+          "name": "Non Founder Patron - annual",
+          "description": "",
+          "effectiveStartDate": "2014-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c510081014c568daa6f2d2c",
+              "name": "Non Founder Patron - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP540"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f848f362750148f4c2724679d3",
+          "status": "Expired",
+          "name": "Patron - annual",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-03-31",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f848f3624f0148f4c2739579ba",
+              "name": "Patron Membership - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP540"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94c510a0d014c569070792fa7",
+          "status": "Active",
+          "name": "Non Founder Patron - monthly",
+          "description": "",
+          "effectiveStartDate": "2015-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f94c510a0d014c5690708b2fa9",
+              "name": "Non Founder Patron - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP60"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f848f362750148f4c2726079d5",
+          "status": "Expired",
+          "name": "Patron - monthly",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-03-25",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f848f3624f0148f4c273d879c0",
+              "name": "Patron Membership - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP60"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": [
+        {
+          "id": "2c92c0f94ed8d0d7014ede8e6b0743e9",
+          "name": "Books",
+          "code": "Books",
+          "status": "Active",
+          "description": ""
+        },
+        {
+          "id": "2c92c0f94ed8d0d7014ede8e6b0943ea",
+          "name": "Events",
+          "code": "Events",
+          "status": "Active",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "2c92c0f84b786da2014b91b3ef267801",
+      "sku": "ABC-00000005",
+      "name": "Digital Pack1",
+      "description": "The Guardian & Observer Digital Pack gives you 7-day access to the Guardian & Observer daily edition for iPad, Android tablet and Kindle Fire as well as premium tier access to the iOS and Android live news apps.",
+      "ProductType__c": "Digital Pack",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": null,
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": "False",
+      "Tier__c": null,
+      "ProductLevel__c": null,
+      "productRatePlans": [
+        {
+          "id": "2c92c0f94c08722d014c08c329ff145d",
+          "status": "Expired",
+          "name": "Digital",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2015-04-11",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c086562014c08c7c45269a6",
+              "name": "Digital",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP10"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "EU VAT Rate Table",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84e2efd07014e440647377727",
+          "status": "Active",
+          "name": "Digital Pack Monthly",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84e2efd07014e4406474c7729",
+              "name": "Digital Pack Monthly",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "GBP11.99/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "EU VAT Rate Table",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84e2efd45014e44031e682dcc",
+          "status": "Active",
+          "name": "Digital Pack Quarterly",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84e2efd45014e44031ef32dce",
+              "name": "Digital Pack Quarterly",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "GBP35/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Quarter",
+              "taxable": true,
+              "taxCode": "EU VAT Rate Table",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94e2f0c34014e4401d3b25f81",
+          "status": "Active",
+          "name": "Digital Pack Annual",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f94e2f0c34014e4401d4b85f85",
+              "name": "Digital Pack Annual",
+              "type": "Recurring",
+              "model": "PerUnit",
+              "pricingSummary": [
+                "GBP140/Each"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "EU VAT Rate Table",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    },
+    {
+      "id": "2c92c0f84f2ac59d014f2c8f0f853d09",
+      "sku": "ABC-00000015",
+      "name": "Digital Pack",
+      "description": "The Guardian & Observer Digital Pack gives you 7-day access to the Guardian & Observer daily edition for iPad, Android tablet and Kindle Fire as well as premium tier access to the iOS and Android live news apps.",
+      "ProductType__c": "Digital Pack",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": null,
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": "False",
+      "Tier__c": null,
+      "ProductLevel__c": null,
+      "productRatePlans": [
+        {
+          "id": "2c92c0f84f2ac59d014f2c94aea9199e",
+          "status": "Active",
+          "name": "Digital Pack Annual",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84f2ac5a3014f2c95aa692773",
+              "name": "Digital Pack Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP140"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94f2acf76014f2c92b5791f0f",
+          "status": "Active",
+          "name": "Digital Pack Quarterly",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84f2ac5a3014f2c94139623e7",
+              "name": "Digital Pack Quarterly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP35"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Quarter",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94f2acf73014f2c908f671591",
+          "status": "Active",
+          "name": "Digital Pack Monthly",
+          "description": "",
+          "effectiveStartDate": "2015-03-11",
+          "effectiveEndDate": "2020-03-12",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f94f2acf73014f2c91940a166d",
+              "name": "Digital Pack Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP11.99"
+              ],
+              "billingDay": "SubscriptionStartDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    },
+    {
+      "id": "2c92c0f948f36bd90148f4c27175128d",
+      "sku": "SKU-00000006",
+      "name": "Partner",
+      "description": "This is the description of the partner membership.",
+      "ProductType__c": "Membership",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": "Events:PARTNER",
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": null,
+      "Tier__c": "Partner",
+      "ProductLevel__c": "200",
+      "productRatePlans": [
+        {
+          "id": "2c92c0f848f362750148f4c2728379d9",
+          "status": "Expired",
+          "name": "Partner - annual",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-06-25",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f848f3624f0148f4c2743f79cc",
+              "name": "Partner Membership - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP135"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94d2ccdf3014d2daec1687520",
+          "status": "Active",
+          "name": "100% Discount for 6 Months",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f94d2ccde0014d2daf52a40ca2",
+              "name": "100% Discount for 6 Months",
+              "type": "Recurring",
+              "model": "DiscountPercentage",
+              "pricingSummary": [
+                "100%  discount"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": false,
+              "taxCode": null,
+              "taxMode": "TaxExclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f848f362750148f4c2729379db",
+          "status": "Expired",
+          "name": "Partner - monthly",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-05-25",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f848f3624f0148f4c2746b79d2",
+              "name": "Partner Membership - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP15"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84c510081014c569327003593",
+          "status": "Active",
+          "name": "Non Founder Partner - annual",
+          "description": "",
+          "effectiveStartDate": "2015-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c510081014c569327593595",
+              "name": "Non Founder Partner Membership - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP135"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84c510073014c56948fbe6894",
+          "status": "Expired",
+          "name": "Non Founder Partner - monthly",
+          "description": "",
+          "effectiveStartDate": "2015-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c510073014c56948fcf6896",
+              "name": "Non Founder Partner Membership - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP15"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": [
+        {
+          "id": "2c92c0f94ed8d0d7014ede8df89142f5",
+          "name": "Events",
+          "code": "Events",
+          "status": "Active",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "2c92c0f84bbfeca5014bc0c5a793241d",
+      "sku": "ABC-00000008",
+      "name": "Supporter",
+      "description": "This is the description of the supporter membership.",
+      "ProductType__c": "Membership",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": "Events:SUPPORTER",
+      "AcquisitionProfile__c": "Paid",
+      "SuspensionAllowed__c": null,
+      "Tier__c": "Supporter",
+      "ProductLevel__c": "200",
+      "productRatePlans": [
+        {
+          "id": "2c92c0f84bbfeca5014bc0c5a83f241f",
+          "status": "Expired",
+          "name": "Supporter - annual",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-03-25",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84bbfeca5014bc0c5a8772421",
+              "name": "Supporter Membership - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP50"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84bbfeca5014bc0c5a9a12427",
+          "status": "Expired",
+          "name": "Supporter - monthly",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2015-03-25",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84bbfeca5014bc0c5a9b42429",
+              "name": "Supporter Membership - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP5"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84c5100b6014c569b83b33ebd",
+          "status": "Active",
+          "name": "Non Founder Supporter - annual",
+          "description": "",
+          "effectiveStartDate": "2015-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c5100b6014c569b83c23ebf",
+              "name": "Non Founder Supporter - Annual",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP50"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f84c5100b6014c569ad3a23d10",
+          "status": "Active",
+          "name": "Non Founder Supporter - monthly",
+          "description": "",
+          "effectiveStartDate": "2015-03-26",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84c5100b6014c569ad4b53d28",
+              "name": "Non Founder Supporter - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP5"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    },
+    {
+      "id": "2c92c0f948f36bd90148f4c2716c128b",
+      "sku": "SKU-00000005",
+      "name": "Friend",
+      "description": "",
+      "ProductType__c": "Membership",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": "Events:FRIENDS",
+      "AcquisitionProfile__c": "Free",
+      "SuspensionAllowed__c": null,
+      "Tier__c": "Friend",
+      "ProductLevel__c": "100",
+      "productRatePlans": [
+        {
+          "id": "2c92c0f848f362750148f4c2727379d7",
+          "status": "Active",
+          "name": "Friend",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f848f3624f0148f4c2741079c6",
+              "name": "Friends Membership",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP0"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Annual",
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        },
+        {
+          "id": "2c92c0f94cc6ea05014cdb4b1d1f037d",
+          "status": "Active",
+          "name": "Non-Founder Friend",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": null,
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f84cc6d9e5014cdb4c48b02d83",
+              "name": "Friends Membership",
+              "type": "OneTime",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP0"
+              ],
+              "billingDay": null,
+              "billingPeriod": null,
+              "taxable": true,
+              "taxCode": "Global Tax",
+              "taxMode": "TaxInclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    },
+    {
+      "id": "2c92c0f949f126b80149f1d3967419a7",
+      "sku": "SKU-00000012",
+      "name": "Staff Membership",
+      "description": "",
+      "ProductType__c": "Membership",
+      "ProductEnabled__c": "True",
+      "Entitlements__c": "Events:PARTNER",
+      "AcquisitionProfile__c": "Staff",
+      "SuspensionAllowed__c": null,
+      "Tier__c": "Staff",
+      "ProductLevel__c": "200",
+      "productRatePlans": [
+        {
+          "id": "2c92c0f849f118740149f1d61ad07723",
+          "status": "Active",
+          "name": "Staff - monthly",
+          "description": "",
+          "effectiveStartDate": "2014-01-01",
+          "effectiveEndDate": "2099-01-01",
+          "RatePlanType__c": "Base",
+          "DefaultTerm__c": null,
+          "TermType__c": "EVERGREEN",
+          "PromotionCode__c": null,
+          "productRatePlanCharges": [
+            {
+              "id": "2c92c0f949f126b80149f1d85edd2c2e",
+              "name": "Staff Membership - Monthly",
+              "type": "Recurring",
+              "model": "FlatFee",
+              "pricingSummary": [
+                "GBP0"
+              ],
+              "billingDay": "ChargeTriggerDay",
+              "billingPeriod": "Month",
+              "taxable": false,
+              "taxCode": "",
+              "taxMode": "TaxExclusive"
+            }
+          ]
+        }
+      ],
+      "productFeatures": []
+    }
+  ],
+  "success": true
+}

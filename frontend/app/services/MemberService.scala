@@ -76,7 +76,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     ).collect { case (k, Some(v)) => Json.obj(k -> v) }
   }.reduce(_ ++ _)
 
-  def memberData(plan: ProductRatePlan, customerOpt: Option[Stripe.Customer]) = Json.obj(
+  def memberData(plan: TierPlan, customerOpt: Option[Stripe.Customer]) = Json.obj(
     Keys.TIER -> plan.salesforceTier
   ) ++ customerOpt.map { customer =>
     Json.obj(
@@ -96,7 +96,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
         case _ => Future.successful(None)
       }
 
-      formData.password.map(identityService.updateUserPassword(_, identityRequest, user.id))
+      formData.password.foreach(identityService.updateUserPassword(_, identityRequest, user.id))
 
       val casId = formData match {
         case paidMemberJoinForm: PaidMemberJoinForm => paidMemberJoinForm.casId
