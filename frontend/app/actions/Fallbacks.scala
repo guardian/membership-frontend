@@ -29,7 +29,7 @@ object Fallbacks {
       "errorTemplate" -> errorTemplate.toString
     )
 
-  def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL)
+  def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL(secure = true))
 }
 
 
