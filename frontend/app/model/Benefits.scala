@@ -1,12 +1,12 @@
 package model
 
 import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Partner, Patron}
+import com.gu.membership.salesforce.Tier.{Partner, Patron, Staff}
 import configuration.Config.zuoraFreeEventTicketsAllowance
 
 object Benefits {
 
-  val DiscountTicketTiers = Set[Tier](Partner, Patron)
+  val DiscountTicketTiers = Set[Tier](Staff, Partner, Patron)
 
   case class Pricing(
     yearly: Int,
