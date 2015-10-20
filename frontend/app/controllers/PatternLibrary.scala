@@ -2,7 +2,8 @@ package controllers
 
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.{GuardianLiveEventService, EventbriteService}
+import services.{TouchpointBackend, GuardianLiveEventService, EventbriteService}
+import play.api.libs.concurrent.Execution.Implicits._
 
 trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteService
@@ -26,8 +27,9 @@ trait PatternLibrary extends Controller {
     )
   )
 
-  def patterns = NoCacheAction { implicit request =>
+  def patterns = NoCachePricingAction { implicit request =>
     Ok(views.html.patterns.patterns(
+      request.pricing,
       guLiveEvents.events,
       pageImages
     ))

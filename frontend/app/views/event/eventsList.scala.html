@@ -1,4 +1,5 @@
 @(
+    pricing: model.TierPricing,
     pageInfo: model.PageInfo,
     events: model.RichEvent.EventGroup,
     featuredEvents: model.RichEvent.EventGroup,
@@ -44,5 +45,5 @@
         </div>
     </main>
 
-    @fragments.tier.joinListing()
+    @fragments.tier.joinListing(pricing)
 }

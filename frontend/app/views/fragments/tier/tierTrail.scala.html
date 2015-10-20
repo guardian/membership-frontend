@@ -1,18 +1,17 @@
 @(
-    tier: com.gu.membership.salesforce.Tier,
+    benefits: model.Benefits,
     showCaption: Boolean = true
 )
 
-@import model.Benefits
 
 <div class="tier-trail">
     <h3 class="tier-trail__name">
-        @fragments.inlineIcon("g-mark", List("icon-inline--medium", "tone-fill-" + tier.slug))
-        @tier
+        @fragments.inlineIcon("g-mark", List("icon-inline--medium", "tone-fill-" + benefits.tier.slug))
+        @benefits.tier
     </h3>
     @if(showCaption) {
         <div class="tier-trail__caption">
-            @Benefits.details(tier).leadin
+            @benefits.leadin
         </div>
     }
 </div>

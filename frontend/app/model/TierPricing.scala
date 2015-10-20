@@ -8,9 +8,6 @@ import com.gu.membership.zuora.rest.{Currency, GBP}
 import Function.const
 
 case class TierPricing(catalog: rest.ProductCatalog) {
-  //NOTE: Stub implementation of model.Benefits case class.
-  // This will be replaced with model.Benefits in a later pull request.
-  case class Benefits(tier: Tier, pricing: Option[Pricing])
 
   type ErrorReport = Map[Tier, List[String]]
 

@@ -1,39 +1,35 @@
-@(
-    tier: com.gu.membership.salesforce.Tier,
-    showDescription: Boolean = true,
-    descriptionAnchor: Option[String] = None,
-    modifierClass: Option[String] = None,
-    extraClasses: Seq[String] = Seq.empty,
-    isReversed: Boolean = false
-    )
-
-@import model.Benefits
+@(benefits: model.Benefits,
+  showDescription: Boolean = true,
+  descriptionAnchor: Option[String] = None,
+  modifierClass: Option[String] = None,
+  extraClasses: Seq[String] = Seq.empty,
+  isReversed: Boolean = false)
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(tier)"
+    href="@routes.Joiner.enterDetails(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.toString.toLowerCase"
 }
 
-<div class="package-promo--minimal tone-border-@tier.slug">
+<div class="package-promo--minimal tone-border-@benefits.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                @fragments.tier.tierTrail(tier, showCaption=false)
+                @fragments.tier.tierTrail(benefits, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
-                @fragments.pricing.priceInfo(tier, canFlex=false)
+                @fragments.pricing.priceInfo(benefits, canFlex=false)
                 </div>
             </div>
         </a>
     </div>
     <div class="package-promo__content">
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
+            <a class="action action--snap u-no-bottom-margin qa-package-@benefits.tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
-                    Become a @tier
+                    Become a @benefits.tier
                 </span>
             </a>
         </div>

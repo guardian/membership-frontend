@@ -1,22 +1,23 @@
-@()
-
 @import com.gu.membership.salesforce.Tier
 @import com.gu.membership.salesforce.Tier._
-@import model.Benefits
-@import model.Benefits.BenefitItem
+@import model.TierPricing
 
-@comparisonHeader(tier: Tier, isActive: Boolean = false) = {
-    <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
-        <div class="comparison-table__tier__name tone-border-@tier.name.toLowerCase" data-tier="@tier.name.toLowerCase">
-        @fragments.tier.tierTrail(tier, showCaption = false)
+@(pricing: TierPricing)
+
+@import model.Benefits
+
+@comparisonHeader(benefits: Benefits, isActive: Boolean = false) = {
+    <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.name.toLowerCase">
+        <div class="comparison-table__tier__name tone-border-@benefits.tier.name.toLowerCase" data-tier="@benefits.tier.name.toLowerCase">
+        @fragments.tier.tierTrail(benefits, showCaption = false)
         </div>
-        <div class="comparison-table__tier__pricing" data-tier="@tier.name.toLowerCase">
-        @fragments.pricing.priceInfo(tier, canFlex=false)
+        <div class="comparison-table__tier__pricing" data-tier="@benefits.tier.name.toLowerCase">
+        @fragments.pricing.priceInfo(benefits, canFlex=false)
         </div>
     </div>
 }
 
-@comparisonDetails(benefits: Seq[BenefitItem]) = {
+@comparisonDetails(benefits: Seq[Benefits.Item]) = {
     <div class="comparison-table__description">
         <div class="comparison-table__description__inner">
             <ul class="o-bulleted-list">
@@ -41,15 +42,15 @@
     </div>
 }
 
-@comparisonPricing(tier: Tier, isActive: Boolean = false) = {
-    <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
+@comparisonPricing(benefits: Benefits, isActive: Boolean = false) = {
+    <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.name.toLowerCase">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
-                <a class="action action--no-icon qa-comparison-@tier.toString.toLowerCase"
-                href="@routes.Joiner.enterDetails(tier)"
-                data-metric-trigger="click"
-                data-metric-category="join"
-                data-metric-action="@tier.toString.toLowerCase"
+                <a class="action action--no-icon qa-comparison-@benefits.tier.toString.toLowerCase"
+                    href="@routes.Joiner.enterDetails(benefits.tier)"
+                    data-metric-trigger="click"
+                    data-metric-category="join"
+                    data-metric-action="@benefits.tier.toString.toLowerCase"
                 >
                     <span class="action__label">
                         Join now
@@ -63,13 +64,13 @@
 
 <div class="comparison-table">
     <div class="comparison-table__header">
-        @comparisonHeader(Supporter)
-        @comparisonHeader(Partner, isActive = true)
-        @comparisonHeader(Patron)
+        @comparisonHeader(pricing.supporterBenefits)
+        @comparisonHeader(pricing.partnerBenefits, isActive = true)
+        @comparisonHeader(pricing.patronBenefits)
     </div>
     <div class="comparison-table__body">
         <div class="comparison-table__row">
-            @comparisonDetails(Benefits.detailsLimited(Tier.Supporter))
+            @comparisonDetails(pricing.supporterBenefits.detailsLimited)
             <div class="comparison-table__checkmarks">
                 @comparisonCheckmark(Supporter, checkmark = true)
                 @comparisonCheckmark(Partner, checkmark = true, isActive = true)
@@ -77,15 +78,15 @@
             </div>
         </div>
         <div class="comparison-table__row">
-            @comparisonDetails(Benefits.detailsLimited(Tier.Partner))
+            @comparisonDetails(pricing.partnerBenefits.detailsLimited)
             <div class="comparison-table__checkmarks">
-                @comparisonCheckmark(Supporter, checkmark = false)
-                @comparisonCheckmark(Partner, checkmark = true, isActive = true)
-                @comparisonCheckmark(Patron, checkmark = true)
+                    @comparisonCheckmark(Supporter, checkmark = false)
+                    @comparisonCheckmark(Partner, checkmark = true, isActive = true)
+                    @comparisonCheckmark(Patron, checkmark = true)
+                </div>
             </div>
-        </div>
-        <div class="comparison-table__row">
-            @comparisonDetails(Benefits.detailsLimited(Tier.Patron))
+            <div class="comparison-table__row">
+            @comparisonDetails(pricing.patronBenefits.detailsLimited)
             <div class="comparison-table__checkmarks">
                 @comparisonCheckmark(Supporter, checkmark = false)
                 @comparisonCheckmark(Partner, checkmark = false, isActive = true)
@@ -94,11 +95,11 @@
         </div>
     </div>
     <div class="comparison-table__footer">
-        @comparisonPricing(Supporter)
-        @comparisonPricing(Partner, isActive = true)
-        @comparisonPricing(Patron)
+        @comparisonPricing(pricing.supporterBenefits)
+        @comparisonPricing(pricing.partnerBenefits, isActive = true)
+        @comparisonPricing(pricing.patronBenefits)
     </div>
     <div class="comparison-table__extra">
-    @fragments.tier.friendTeaser()
-    </div>
+    @fragments.tier.friendTeaser(pricing)
+</div>
 </div>

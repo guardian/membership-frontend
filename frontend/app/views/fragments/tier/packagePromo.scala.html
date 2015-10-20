@@ -1,5 +1,5 @@
 @(
-    tier: com.gu.membership.salesforce.Tier,
+    benefits: model.Benefits,
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
@@ -7,21 +7,19 @@
     isReversed: Boolean = false
 )
 
-@import model.Benefits
-
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(tier)"
+    href="@routes.Joiner.enterDetails(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.toString.toLowerCase"
 }
 
-<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@tier.slug">
+<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@benefits.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                @fragments.tier.tierTrail(tier, showCaption=false)
+                    @fragments.tier.tierTrail(benefits, showCaption=false)
                 </div>
             </div>
         </a>
@@ -30,7 +28,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- Benefits.details(tier).highlights) {
+                    @for(highlight <- benefits.highlights) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -46,11 +44,11 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @fragments.pricing.priceInfo(tier, canFlex=false)
+               @fragments.pricing.priceInfo(benefits, canFlex=false)
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@benefits.tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
-                    Become a @tier
+                    Become a @benefits.tier
                 </span>
                 @fragments.actionIcon("arrow-right")
             </a>

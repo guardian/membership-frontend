@@ -1,7 +1,8 @@
-@(currentTier: com.gu.membership.salesforce.Tier, availableTiers: Seq[com.gu.membership.salesforce.Tier])(implicit token: play.filters.csrf.CSRF.Token)
+@(pricing: model.TierPricing,
+  currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import configuration.Config
-@import model.Benefits
+@import com.gu.membership.salesforce.Tier
 
 @main("Change Tier") {
 
@@ -16,6 +17,7 @@
                     <span class="action__label">Edit profile</span>
                 </a>
             </div>
+            @defining(Tier.allPublic.filterNot(_ == currentTier)) { availableTiers =>
             <div class="page-section__content">
 
                 <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
@@ -24,7 +26,7 @@
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
-                            @fragments.tier.packageChanger(tier)
+                           @fragments.tier.packageChanger(pricing.benefits(tier))
                         </li>
                     }
                 </ul>
@@ -32,7 +34,7 @@
                 <h3 class="h-section">What's included</h3>
                 @for(tier <- availableTiers) {
                     <div id="package-benefits-@tier.name.toLowerCase">
-                        @fragments.tier.packageStack(tier)
+                        @fragments.tier.packageStack(pricing.benefits(tier))
                     </div>
                 }
 
@@ -41,8 +43,8 @@
                     <li class="o-inline-list__item"><a href="@routes.Info.help">Help</a></li>
                     <li class="o-inline-list__item"><a href="@routes.TierController.cancelTier" id="qa-cancel-membership">Cancel Guardian membership</a></li>
                 </ul>
-
             </div>
+            }
         </section>
 
   </main>

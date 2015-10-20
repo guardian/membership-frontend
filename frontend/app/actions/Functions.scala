@@ -38,6 +38,13 @@ object Functions extends LazyLogging {
       }
     }
 
+  val tierPricingRefiner = new ActionRefiner[Request, RequestWithPricing] {
+    override protected def refine[A](request: Request[A]): Future[Either[Result, RequestWithPricing[A]]] =
+      TouchpointBackend.Normal.subscriptionService.tierPricing.map  { pricing =>
+        Right(new RequestWithPricing(request, pricing))
+      }
+  }
+
   def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: AnyMemberTierRequest[_]): Result = {
     val selectedTierWouldBeUpgrade = selectedTier > req.member.tier
     if (selectedTierWouldBeUpgrade) tierChangeEnterDetails(selectedTier)(req) else memberHome(req)

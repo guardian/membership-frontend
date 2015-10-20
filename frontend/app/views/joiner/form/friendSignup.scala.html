@@ -1,4 +1,5 @@
 @(
+    pricing: model.TierPricing,
     userFields: com.gu.identity.play.PrivateFields,
     marketingChoices: com.gu.identity.play.StatusFields,
     passwordExists: Boolean
@@ -33,7 +34,7 @@
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(Friend)
+                        @fragments.form.benefitsFieldset(pricing.friendBenefits)
                     </div>
 
                     <div class="form-group">

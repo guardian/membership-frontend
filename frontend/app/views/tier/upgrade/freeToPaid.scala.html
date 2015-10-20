@@ -1,18 +1,19 @@
-@(
-    currentTier: com.gu.membership.salesforce.Tier,
-    targetTier: com.gu.membership.salesforce.Tier,
-    userFields: com.gu.identity.play.PrivateFields,
-    pageInfo: model.PageInfo
+@(pricing: model.TierPricing,
+  currentTier: com.gu.membership.salesforce.Tier,
+  targetTier: com.gu.membership.salesforce.Tier,
+  userFields: com.gu.identity.play.PrivateFields,
+  pageInfo: model.PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @import views.html.helper._
 
 @main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
+    @defining(pricing.friendBenefits) { targetBenefits =>
 
-    <main role="main" class="page-content l-constrained">
-        <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
-          class="js-form" data-change-to-tier="@targetTier">
-            @CSRF.formField
+        <main role="main" class="page-content l-constrained">
+            <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
+            class="js-form" data-change-to-tier="@targetTier">
+                @CSRF.formField
 
             <section class="page-header">
                 <h1 class="page-headline">Become a @targetTier.name.capitalize</h1>
@@ -28,13 +29,13 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(targetTier).url)
+                @fragments.joiner.signedInAs(routes.Joiner.enterDetails(targetTier).url)
                 </div>
 
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(targetTier)
+                        @fragments.form.benefitsFieldset(targetBenefits)
                         @fragments.form.featureChoiceFieldset(targetTier)
                     </div>
 
@@ -50,20 +51,21 @@
 
                     <div class="form-group">
                         <h2 class="form-group__title">Billing</h2>
-                        @fragments.form.paymentOptions(targetTier)
+                        @fragments.form.paymentOptions(targetBenefits)
                         @fragments.form.billingAddress("Billing address")
                         @fragments.form.addressDetail(
                             "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
                             userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
                             userFields.billingCountry
                         )
-                        @fragments.form.cardDetail(targetTier)
+                        @fragments.form.cardDetail(targetBenefits)
                     </div>
 
-                    @fragments.form.submit("Pay", "now", Some(targetTier))
+                    @fragments.form.submit("Pay", "now", Some(targetBenefits))
 
                 </div>
             </section>
-        </form>
-    </main>
+            </form>
+        </main>
+    }
 }

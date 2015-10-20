@@ -1,20 +1,18 @@
-@(tier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
-
-@import model.Benefits
+@(benefits: model.Benefits)(implicit token: play.filters.csrf.CSRF.Token)
 
 @actionAttrs = {
-    href="@routes.TierController.upgrade(tier)"
+    href="@routes.TierController.upgrade(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="changeTier"
-    data-metric-action="@tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.toString.toLowerCase"
 }
 
-<div class="package-promo--default tone-border-@tier.toString.toLowerCase">
+<div class="package-promo--default tone-border-@benefits.tier.toString.toLowerCase">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(tier, showCaption=false)
+                    @fragments.tier.tierTrail(benefits, showCaption=false)
                 </div>
             </div>
         </a>
@@ -22,7 +20,7 @@
     <div class="package-promo__content">
         <div class="package-promo__description copy">
             <ul class="o-bulleted-list">
-                @for(highlight <- Benefits.details(tier).highlights) {
+                @for(highlight <- benefits.highlights) {
                     <li>
                         @if(highlight.isNew) {
                             @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -34,10 +32,10 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-            @fragments.pricing.priceInfo(tier, canFlex=false)
+            @fragments.pricing.priceInfo(benefits, canFlex=false)
             </div>
-            <a class="action u-no-bottom-margin" id="qa-change-tier-@tier.slug" @actionAttrs>
-                <span class="action__label">Become a @tier</span>
+            <a class="action u-no-bottom-margin" id="qa-change-tier-@benefits.tier.slug" @actionAttrs>
+                <span class="action__label">Become a @benefits.tier</span>
             </a>
         </div>
     </div>

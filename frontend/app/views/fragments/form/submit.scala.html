@@ -1,13 +1,12 @@
 @(
     ctaTextPrepend: String,
     ctaTextAppend: String = "",
-    tier: Option[com.gu.membership.salesforce.Tier] = None,
+    benefitsOpt: Option[model.Benefits] = None,
     membershipTermsAndConditions: Boolean = true,
     isSlim: Boolean = false
 )
 
-@import configuration.{Config, Links}
-@import model.Benefits
+@import configuration.Links
 
 <fieldset class="fieldset fieldset--simple">
     <div class="fieldset__heading"></div>
@@ -23,9 +22,9 @@
 
         <div class="actions">
             <button type="submit" class="action js-submit-input">
-            @Html(tier.fold(ctaTextPrepend)(tier =>
+            @Html(benefitsOpt.fold(ctaTextPrepend)( benefits =>
                 ctaTextPrepend + " £<span class=\"js-submit-price-option\">" +
-                    Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
+                    benefits.pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
             ))
             </button>
             <div class="loader js-loader"></div>
