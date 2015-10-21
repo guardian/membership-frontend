@@ -1,4 +1,4 @@
-define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
+define(['$', 'bonzo', 'src/utils/user', 'lodash/collection/contains'], function ($, bonzo, userUtil, contains) {
     'use strict';
 
     var selectors = {
@@ -17,9 +17,9 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
     };
 
     var enhanceWithTier = function (memberDetail) {
-        var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
+        var tier = memberDetail && memberDetail.tier;
 
-        if (tier && (tier === 'staff' || tier === 'partner' || tier === 'patron')) {
+        if (tier && contains(memberDetail.discountTicketTiers, tier)) {
             events.each(function(el) {
                 updateEventPricing(el);
             });
