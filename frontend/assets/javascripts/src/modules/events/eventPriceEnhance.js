@@ -18,7 +18,8 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
 
     var enhanceWithTier = function (memberDetail) {
         var tier = memberDetail && (memberDetail.tier && memberDetail.tier.toLowerCase());
-        if (tier && (tier === 'partner' || tier === 'patron')) {
+
+        if (tier && (tier === 'staff' || tier === 'partner' || tier === 'patron')) {
             events.each(function(el) {
                 updateEventPricing(el);
             });
