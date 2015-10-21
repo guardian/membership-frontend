@@ -80,9 +80,10 @@ trait User extends Controller {
     "tier" -> member.tier.name,
     "isPaidTier" -> member.tier.isPaid,
     "joinDate" -> member.joinDate,
-    "benefits" -> Json.obj {
-      "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(member.tier)
-    }
+    "benefits" -> Json.obj(
+      "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(member.tier),
+      "complimentaryEventTickets" -> Benefits.ComplimenataryTicketTiers.contains(member.tier)
+    )
   )
 
   case class SubCheck(valid: Boolean, msg: Option[String] = None)
