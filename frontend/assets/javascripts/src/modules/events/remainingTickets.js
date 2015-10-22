@@ -1,9 +1,8 @@
 define([
     '$',
     'ajax',
-    'lodash/collection/contains',
     'src/utils/user'
-], function ($, ajax, contains, userUtil) {
+], function ($, ajax, userUtil) {
     'use strict';
 
     var ELEM_SELECTOR = '.js-remaining-tickets';
@@ -45,7 +44,7 @@ define([
         }
 
         userUtil.getMemberDetail(function (memberDetail, hasTier) {
-            if (hasTier && contains(['Partner', 'Patron'], memberDetail.tier)) {
+            if (hasTier && memberDetail.benefits && memberDetail.benefits.complimentaryEventTickets) {
                 ajax({
                     url: '/subscription/remaining-tickets',
                     type: 'json'

@@ -7,6 +7,7 @@ import configuration.Config.zuoraFreeEventTicketsAllowance
 object Benefits {
 
   val DiscountTicketTiers = Set[Tier](Staff, Partner, Patron)
+  val ComplimenataryTicketTiers = Set[Tier](Partner, Patron)
 
   case class Pricing(
     yearly: Int,
