@@ -20,12 +20,12 @@ object Videos {
   )
 
   private val supportersPlaceholder = ResponsiveImageGenerator(
-    id="267569fecb462c61718f7e8cf50a8995ebddee5d/0_0_2280_1368",
+    id="9dc72e35ca1a38f6c02933d48f12de863739ad60/125_0_1873_1124",
     sizes=List(1000, 500)
   )
 
   val supporters = Video(
-    srcUrl="//www.youtube.com/embed/pIg3BCr1mwY?enablejsapi=1&wmode=transparent",
+    srcUrl="//www.youtube.com/embed/rBnvGHEyATc?enablejsapi=1&wmode=transparent",
     posterImage=Some(
       ResponsiveImageGroup(
         altText=Some("If you read the Guardian, join the Guardian"),
