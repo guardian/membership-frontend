@@ -11,7 +11,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 trait Info extends Controller {
 
-  def supporter = NoCacheAction.async { implicit request =>
+  def supporter = CachedAction.async { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
