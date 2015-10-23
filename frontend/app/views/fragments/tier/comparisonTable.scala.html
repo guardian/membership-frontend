@@ -46,11 +46,11 @@
     <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.slug">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
-                <a class="action action--no-icon qa-comparison-@benefits.tier.toString.toLowerCase"
+                <a class="action action--no-icon qa-comparison-@benefits.tier.slug"
                     href="@routes.Joiner.enterDetails(benefits.tier)"
                     data-metric-trigger="click"
                     data-metric-category="join"
-                    data-metric-action="@benefits.tier.toString.toLowerCase"
+                    data-metric-action="@benefits.tier.slug"
                 >
                     <span class="action__label">
                         Join now

@@ -6,10 +6,10 @@
     href="@routes.TierController.upgrade(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="changeTier"
-    data-metric-action="@benefits.tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.slug"
 }
 
-<div class="package-promo--default tone-border-@benefits.tier.toString.toLowerCase">
+<div class="package-promo--default tone-border-@benefits.tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">

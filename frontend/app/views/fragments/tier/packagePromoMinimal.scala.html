@@ -9,7 +9,7 @@
     href="@routes.Joiner.enterDetails(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@benefits.tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.slug"
 }
 
 <div class="package-promo--minimal tone-border-@benefits.tier.slug">
@@ -27,7 +27,7 @@
     </div>
     <div class="package-promo__content">
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@benefits.tier.toString.toLowerCase" @actionAttrs>
+            <a class="action action--snap u-no-bottom-margin qa-package-@benefits.tier.slug" @actionAttrs>
                 <span class="action__label">
                     Become a @benefits.tier.name
                 </span>

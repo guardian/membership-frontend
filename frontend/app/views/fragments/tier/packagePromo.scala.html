@@ -13,7 +13,7 @@
     href="@routes.Joiner.enterDetails(benefits.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@benefits.tier.toString.toLowerCase"
+    data-metric-action="@benefits.tier.slug"
 }
 
 <div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@benefits.tier.slug">
@@ -48,7 +48,7 @@
             <div class="package-promo__actions__pricing">
                @fragments.pricing.priceInfo(benefits, canFlex=false)
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@benefits.tier.toString.toLowerCase" @actionAttrs>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@benefits.tier.slug" @actionAttrs>
                 <span class="action__label">
                     Become a @benefits.tier.name
                 </span>
