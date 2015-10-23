@@ -16,6 +16,7 @@ trait WhatsOn extends Controller with ActivityTracking {
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
+  // This can be deleted once all these events have completed
   val hiddenEvents = Set(
     "18862189316",
     "18882535171",
