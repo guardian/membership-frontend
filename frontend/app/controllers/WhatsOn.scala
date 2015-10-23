@@ -16,8 +16,16 @@ trait WhatsOn extends Controller with ActivityTracking {
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
+  val hiddenEvents = Set(
+    "18862189316",
+    "18882535171",
+    "18882579303",
+    "18882595351",
+    "18882606384"
+  )
+
   private def allEvents = {
-    guLiveEvents.events ++ localEvents.events
+    guLiveEvents.events.filterNot(e => hiddenEvents.contains(e.id)) ++ localEvents.events
   }
 
   private def allEventsByLocation(location: String) = {
