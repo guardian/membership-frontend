@@ -11,7 +11,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 trait Info extends Controller {
 
-  def supporter = CachedPricingAction { implicit request =>
+  def supporter = NoCacheAction.async { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -54,15 +54,17 @@ trait Info extends Controller {
       )
     )
 
-      Ok(views.html.info.supporter(request.pricing,
-                                   PageInfo(CopyConfig.copyTitleSupporters,
-                                     request.path,
-                                     Some(CopyConfig.copyDescriptionSupporters)
-                                   ),
-                                   pageImages))
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+      Ok(views.html.info.supporter(pricing,
+        PageInfo(CopyConfig.copyTitleSupporters,
+          request.path,
+          Some(CopyConfig.copyDescriptionSupporters)
+        ),
+        pageImages))
+    }
   }
 
-  def supporterUSA = CachedPricingAction { implicit request =>
+  def supporterUSA = CachedAction.async { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -104,13 +106,14 @@ trait Info extends Controller {
     )
 
 
-    Ok(views.html.info.supporterUSA(
-      request.pricing,
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+      Ok(views.html.info.supporterUSA(pricing,
       PageInfo(CopyConfig.copyTitleSupporters, request.path, Some(CopyConfig.copyDescriptionSupporters)),
       pageImages))
+    }
   }
 
-  def patron() = CachedPricingAction { implicit request =>
+  def patron() = CachedAction.async { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitlePatrons,
       request.path,
@@ -151,15 +154,19 @@ trait Info extends Controller {
       )
     )
 
-    Ok(views.html.info.patron(request.pricing, pageInfo, pageImages))
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+      Ok(views.html.info.patron(pricing, pageInfo, pageImages))
+    }
   }
 
-  def offersAndCompetitions = CachedPricingAction { implicit request =>
+  def offersAndCompetitions = CachedAction.async { implicit request =>
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.map(_("membershipAccess")).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
 
-     Ok(views.html.info.offersAndCompetitions(request.pricing, results))
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+      Ok(views.html.info.offersAndCompetitions(pricing, results))
+    }
   }
 
   def help = CachedAction { implicit request =>

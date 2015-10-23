@@ -5,6 +5,7 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
 import com.gu.membership.zuora.rest
 import com.gu.membership.zuora.rest.{Currency, GBP}
+import services.TouchpointBackend
 import Function.const
 
 case class TierPricing(catalog: rest.ProductCatalog) {

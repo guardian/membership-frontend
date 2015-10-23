@@ -39,7 +39,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
-  def tierChooser = NoCachePricingAction { implicit request =>
+  def tierChooser = NoCacheAction.async { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
     val contentRefererOpt = request.headers.get(REFERER)
@@ -55,16 +55,17 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       customSignInUrl=Some(signInUrl)
     )
 
-    Ok(views.html.joiner.tierChooser(request.pricing, pageInfo, eventOpt, accessOpt, signInUrl))
-      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
-
+    TouchpointBackend.Normal.tierPricing.map(pricing =>
+      Ok(views.html.joiner.tierChooser(pricing, pageInfo, eventOpt, accessOpt, signInUrl))
+        .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+    )
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
     //TODO: support test-users
-    val pricingF = TouchpointBackend.Normal.subscriptionService.tierPricing
+    val pricingF = TouchpointBackend.Normal.tierPricing
     userSignedIn match {
       case Some(user) => for {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))

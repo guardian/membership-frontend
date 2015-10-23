@@ -12,7 +12,7 @@ trait FrontPage extends Controller {
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
-  def index =  CachedPricingAction { implicit request =>
+  def index = CachedAction.async { implicit request =>
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -100,11 +100,12 @@ trait FrontPage extends Controller {
       )
     )
 
-
-    Ok(views.html.index(request.pricing,
-                        pageImages,
-                        midlandGoodsShedImages,
-                        eventCollections))
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+          Ok(views.html.index(pricing,
+                              pageImages,
+                              midlandGoodsShedImages,
+                              eventCollections))
+    }
   }
 
   def welcome = CachedAction { implicit request =>

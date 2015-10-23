@@ -54,10 +54,6 @@ trait CommonActions {
     )
   }
 
-  val CachedPricingAction = CachedAction andThen tierPricingRefiner
-
-  val NoCachePricingAction = NoCacheAction andThen tierPricingRefiner
-
   val AuthenticatedAction = NoCacheAction andThen authenticated()
 
   val AuthenticatedNonMemberAction = AuthenticatedAction andThen onlyNonMemberFilter()
