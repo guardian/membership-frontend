@@ -1,7 +1,7 @@
 @(pricing: model.TierPricing, currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier.Friend
-@import model.Benefits
+@import views.support.Copy._
 @import views.html.helper._
 
 @currentTierDetails = {

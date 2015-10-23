@@ -7,11 +7,11 @@
 @import model.Benefits
 
 @comparisonHeader(benefits: Benefits, isActive: Boolean = false) = {
-    <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.name.toLowerCase">
-        <div class="comparison-table__tier__name tone-border-@benefits.tier.name.toLowerCase" data-tier="@benefits.tier.name.toLowerCase">
+    <div class="comparison-table__tier js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.slug">
+        <div class="comparison-table__tier__name tone-border-@benefits.tier.slug" data-tier="@benefits.tier.slug">
         @fragments.tier.tierTrail(benefits, showCaption = false)
         </div>
-        <div class="comparison-table__tier__pricing" data-tier="@benefits.tier.name.toLowerCase">
+        <div class="comparison-table__tier__pricing" data-tier="@benefits.tier.slug">
         @fragments.pricing.priceInfo(benefits, canFlex=false)
         </div>
     </div>
@@ -35,7 +35,7 @@
 }
 
 @comparisonCheckmark(tier: Tier, checkmark: Boolean, isActive: Boolean = false) = {
-    <div class="comparison-table__checkmark js-clickable@if(isActive){ is-active}" data-tier="@tier.name.toLowerCase">
+    <div class="comparison-table__checkmark js-clickable@if(isActive){ is-active}" data-tier="@tier.slug">
         <div class="comparison-table__checkmark__inner">
         @fragments.common.checkmark(checkmark)
         </div>
@@ -43,7 +43,7 @@
 }
 
 @comparisonPricing(benefits: Benefits, isActive: Boolean = false) = {
-    <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.name.toLowerCase">
+    <div class="comparison-table__trail js-clickable@if(isActive){ is-active}" data-tier="@benefits.tier.slug">
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
                 <a class="action action--no-icon qa-comparison-@benefits.tier.toString.toLowerCase"

@@ -11,11 +11,11 @@ case class TierPricing(catalog: rest.ProductCatalog) {
 
   type ErrorReport = Map[Tier, List[String]]
 
-  lazy val patronBenefits = benefits(Patron)
-  lazy val partnerBenefits = benefits(Partner)
-  lazy val supporterBenefits = benefits(Supporter)
-  lazy val friendBenefits = benefits(Friend)
-  lazy val staffBenefits = benefits(Staff)
+  lazy val patronBenefits:Benefits = benefits(Patron)
+  lazy val partnerBenefits:Benefits = benefits(Partner)
+  lazy val supporterBenefits:Benefits = benefits(Supporter)
+  lazy val friendBenefits: Benefits = benefits(Friend)
+  lazy val staffBenefits:Benefits = benefits(Staff)
 
   def byTier: Either[ErrorReport, Map[Tier, Pricing]] = {
     val ePricingByTier = Tier.allPublic.filter(_.isPaid).map { t => t -> forTier(t) }.toMap

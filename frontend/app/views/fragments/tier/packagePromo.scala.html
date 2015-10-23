@@ -1,3 +1,5 @@
+@import views.support.Copy._
+
 @(
     benefits: model.Benefits,
     showDescription: Boolean = true,
@@ -48,7 +50,7 @@
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@benefits.tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
-                    Become a @benefits.tier
+                    Become a @benefits.tier.name
                 </span>
                 @fragments.actionIcon("arrow-right")
             </a>

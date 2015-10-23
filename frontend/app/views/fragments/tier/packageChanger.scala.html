@@ -1,3 +1,5 @@
+@import views.support.Copy._
+
 @(benefits: model.Benefits)(implicit token: play.filters.csrf.CSRF.Token)
 
 @actionAttrs = {
@@ -35,7 +37,7 @@
             @fragments.pricing.priceInfo(benefits, canFlex=false)
             </div>
             <a class="action u-no-bottom-margin" id="qa-change-tier-@benefits.tier.slug" @actionAttrs>
-                <span class="action__label">Become a @benefits.tier</span>
+                <span class="action__label">Become a @benefits.tier.name</span>
             </a>
         </div>
     </div>

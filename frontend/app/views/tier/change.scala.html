@@ -33,7 +33,7 @@
 
                 <h3 class="h-section">What's included</h3>
                 @for(tier <- availableTiers) {
-                    <div id="package-benefits-@tier.name.toLowerCase">
+                    <div id="package-benefits-@tier.slug">
                         @fragments.tier.packageStack(pricing.benefits(tier))
                     </div>
                 }
