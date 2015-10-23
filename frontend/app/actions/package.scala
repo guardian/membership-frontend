@@ -44,9 +44,6 @@ package object actions {
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
   }
 
- class RequestWithPricing[A](val request: Request[A],
-                             val pricing: TierPricing) extends WrappedRequest[A](request)
-
   type AnyMemberTierRequest[A] = MemberRequest[A, Member]
 
   type PaidMemberRequest[A] = MemberRequest[A, PaidMember]
