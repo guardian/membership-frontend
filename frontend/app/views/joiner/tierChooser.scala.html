@@ -1,11 +1,9 @@
-@(
-    pageInfo: model.PageInfo,
-    eventOpt: Option[model.RichEvent.RichEvent],
-    accessOpt: Option[model.MembershipAccess],
-    signInUrl: String
+@(pricing: model.TierPricing,
+  pageInfo: model.PageInfo,
+  eventOpt: Option[model.RichEvent.RichEvent],
+  accessOpt: Option[model.MembershipAccess],
+  signInUrl: String
 )(implicit token: play.filters.csrf.CSRF.Token)
-
-@import com.gu.membership.salesforce.Tier
 
 @pageHeaderTitle = @{
     val default = "Choose a membership tier"
@@ -39,17 +37,17 @@
                 </h2>
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Supporter, Some("#package-benefits-supporter"))
+                        @fragments.tier.packagePromo(pricing.supporterBenefits, Some("#package-benefits-supporter"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner, Some("#package-benefits-partner"))
+                        @fragments.tier.packagePromo(pricing.partnerBenefits, Some("#package-benefits-partner"))
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Patron, Some("#package-benefits-patron"))
+                        @fragments.tier.packagePromo(pricing.patronBenefits, Some("#package-benefits-patron"))
                     </li>
                 </ul>
                 @if(!accessOpt.exists(_.isPaidMembersOnly)) {
-                    @fragments.tier.friendTeaser()
+                    @fragments.tier.friendTeaser(pricing)
                 }
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
@@ -66,13 +64,13 @@
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
                 <div id="package-benefits-supporter">
-                    @fragments.tier.packageStack(Tier.Supporter)
+                    @fragments.tier.packageStack(pricing.supporterBenefits)
                 </div>
                 <div id="package-benefits-partner">
-                    @fragments.tier.packageStack(Tier.Partner)
+                    @fragments.tier.packageStack(pricing.partnerBenefits)
                 </div>
                 <div id="package-benefits-patron">
-                    @fragments.tier.packageStack(Tier.Patron)
+                    @fragments.tier.packageStack(pricing.patronBenefits)
                 </div>
             </div>
         </section>

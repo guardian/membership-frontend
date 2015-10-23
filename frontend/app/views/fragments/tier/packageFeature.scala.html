@@ -1,17 +1,16 @@
-@(tier: com.gu.membership.salesforce.Tier, isReversed: Boolean = false)
-
-@import model.Benefits
+@import views.support.Copy._
+@(benefit: model.Benefits, isReversed: Boolean = false)
 
 <div class="package-feature">
     <div class="package-feature__promo">
-        @fragments.tier.packagePromo(tier, isReversed=isReversed, modifierClass=Some("package-promo--always-narrow"))
+        @fragments.tier.packagePromo(benefit, isReversed=isReversed, modifierClass=Some("package-promo--simple"))
     </div>
     <div class="package-feature__benefits copy">
-        <div class="package-feature__leadin tone-border-@tier.slug">
-            @Benefits.details(tier).leadin
+        <div class="package-feature__leadin tone-border-@benefit.tier.slug">
+            @benefit.leadin
         </div>
         <ul>
-            @for(benefit <- Benefits.detailsLimited(tier)) {
+            @for(benefit <- benefit.detailsLimited) {
                 <li>@benefit.title</li>
             }
         </ul>

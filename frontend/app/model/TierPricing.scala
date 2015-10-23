@@ -5,20 +5,18 @@ import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
 import com.gu.membership.zuora.rest
 import com.gu.membership.zuora.rest.{Currency, GBP}
+import services.TouchpointBackend
 import Function.const
 
 case class TierPricing(catalog: rest.ProductCatalog) {
-  //NOTE: Stub implementation of model.Benefits case class.
-  // This will be replaced with model.Benefits in a later pull request.
-  case class Benefits(tier: Tier, pricing: Option[Pricing])
 
   type ErrorReport = Map[Tier, List[String]]
 
-  lazy val patronBenefits = benefits(Patron)
-  lazy val partnerBenefits = benefits(Partner)
-  lazy val supporterBenefits = benefits(Supporter)
-  lazy val friendBenefits = benefits(Friend)
-  lazy val staffBenefits = benefits(Staff)
+  lazy val patronBenefits:Benefits = benefits(Patron)
+  lazy val partnerBenefits:Benefits = benefits(Partner)
+  lazy val supporterBenefits:Benefits = benefits(Supporter)
+  lazy val friendBenefits: Benefits = benefits(Friend)
+  lazy val staffBenefits:Benefits = benefits(Staff)
 
   def byTier: Either[ErrorReport, Map[Tier, Pricing]] = {
     val ePricingByTier = Tier.allPublic.filter(_.isPaid).map { t => t -> forTier(t) }.toMap

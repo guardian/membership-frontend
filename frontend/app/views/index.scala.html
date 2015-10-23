@@ -1,10 +1,10 @@
 @(
-    pageImages: Seq[model.ResponsiveImageGroup],
-    midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
-    eventCollection: model.RichEvent.EventBrandCollection
+  tierPricing: model.TierPricing,
+  pageImages: Seq[model.ResponsiveImageGroup],
+  midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
+  eventCollection: model.RichEvent.EventBrandCollection
 )
 
-@import com.gu.membership.salesforce.Tier._
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
@@ -149,7 +149,7 @@
                         </ul>
                     </div>
 
-                    <ul class="grid grid--3up-stacked-mobile grid--single-row">
+                    <ul class="grid grid--3up-stacked grid--single-row">
                         <li class="grid__item">
                             @fragments.promos.brandPanel(
                                 "Guardian Live",
@@ -213,9 +213,9 @@
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
                 <p>Join as an annual Partner or Patron Member by <br/> 31 October 2015 and get 3 months free</p>
                 <ul class="grid">
-                    @for(tier <- Seq(Supporter, Partner, Patron)) {
+                    @for(benefits <- Seq(tierPricing.supporterBenefits, tierPricing.partnerBenefits, tierPricing.patronBenefits)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(tier, modifierClass=Some("package-promo--homepage"))
+                            @fragments.tier.packagePromo(benefits, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>
@@ -223,7 +223,7 @@
 
                 <div id="compare-membership">
                     <h4 class="h-intro h-intro--brand">What's included</h4>
-                    @fragments.tier.comparisonTable()
+                    @fragments.tier.comparisonTable(tierPricing)
                 </div>
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {

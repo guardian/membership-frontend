@@ -1,8 +1,8 @@
-@(
-    pageInfo: model.PageInfo,
-    eventGroup: model.RichEvent.EventGroup,
-    selectedTag: String = "",
-    selectedSubTag: String = ""
+@(pricing: model.TierPricing,
+  pageInfo: model.PageInfo,
+  eventGroup: model.RichEvent.EventGroup,
+  selectedTag: String = "",
+  selectedSubTag: String = ""
 )
 
 @import model.SVG.Logos
@@ -79,5 +79,5 @@
 
     </main>
 
-    @fragments.tier.joinListing()
+    @fragments.tier.joinListing(pricing)
 }
