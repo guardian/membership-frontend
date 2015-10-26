@@ -48,7 +48,6 @@ class RegistrationUriTest extends Specification {
   private def assertCodeFor(code: String, path: String, referrer: String) =  {
     val request = new RequestBuilder().path(path).header("referer", referrer).build()._underlyingHeader()
     val regUri: String = RegistrationUri.parse(request)
-    println(regUri)
     regUri.contains(code) mustEqual(true)
   }
 
