@@ -19,14 +19,16 @@ object RegistrationUri {
   private def extractCampaignCode(referer: String, path: String) = {
     val refererUrl = Uri.parse(referer)
 
-
-//    println(controllers.routes.Joiner.tierChooser())
+    val supporter =  controllers.routes.Info.supporter().toString()
+    val supporterUS =  controllers.routes.Info.supporterUSA().toString()
+    val competitions =   controllers.routes.Info.offersAndCompetitions().toString()
+    val events =   controllers.routes.WhatsOn.list().toString()
 
     val campaignReferer = refererUrl.path match {
-      case "/supporter" => "SUPUK"
-      case "/us/supporter" => "SUPUS"
-      case "/offers-competitions" => "COMP"
-      case "/events" => "EVT"
+      case `supporter` => "SUPUK"
+      case `supporterUS` => "SUPUS"
+      case `competitions` => "COMP"
+      case `events` => "EVT"
       case _ => "HOME"
     }
     val campaignTier = path match {
