@@ -1,12 +1,12 @@
 package controllers
 
 import play.api.mvc.Controller
-import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService}
+import services.eventbrite.{GuardianLiveEventCache, MasterclassEventCache, LocalEventCache}
 
 trait Staff extends Controller {
-  val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
-  val masterclassEvents = MasterclassEventService
+  val guLiveEvents = GuardianLiveEventCache
+  val localEvents = LocalEventCache
+  val masterclassEvents = MasterclassEventCache
 
   def eventOverview = GoogleAuthenticatedStaffAction { implicit request =>
      Ok(views.html.eventOverview.live(guLiveEvents.events, guLiveEvents.eventsDraft, request.path))

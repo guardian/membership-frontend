@@ -3,13 +3,13 @@ package controllers
 import model.RichEvent.EventBrandCollection
 import model._
 import play.api.mvc.Controller
-import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService, EventbriteService}
+import services.eventbrite._
 
 trait FrontPage extends Controller {
 
-  val liveEvents: EventbriteService
-  val localEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  val liveEvents: EventbriteCache
+  val localEvents: EventbriteCache
+  val masterclassEvents: EventbriteCache
 
   def index =  CachedAction { implicit request =>
 
@@ -185,7 +185,7 @@ trait FrontPage extends Controller {
 }
 
 object FrontPage extends FrontPage {
-  val liveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
-  val masterclassEvents = MasterclassEventService
+  val liveEvents = GuardianLiveEventCache
+  val localEvents = LocalEventCache
+  val masterclassEvents = MasterclassEventCache
 }

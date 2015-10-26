@@ -3,7 +3,7 @@ package services.eventbrite
 import model.RichEvent.RichEvent
 
 
-object EventbriteServiceHelpers {
+object EventbriteCacheHelpers {
 
    def getFeaturedEvents(orderedIds: Seq[String], events: Seq[RichEvent]): Seq[RichEvent] = {
      val (orderedEvents, normalEvents) = events.partition { event => orderedIds.contains(event.id) }

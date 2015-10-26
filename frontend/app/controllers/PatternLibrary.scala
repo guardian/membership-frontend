@@ -2,10 +2,10 @@ package controllers
 
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.eventbrite.{GuardianLiveEventService, EventbriteService}
+import services.eventbrite.{EventbriteCache, GuardianLiveEventCache, EventbriteCache$}
 
 trait PatternLibrary extends Controller {
-  val guLiveEvents: EventbriteService
+  val guLiveEvents: EventbriteCache
 
   val pageImages = Seq(
     ResponsiveImageGroup(
@@ -36,5 +36,5 @@ trait PatternLibrary extends Controller {
 }
 
 object PatternLibrary extends PatternLibrary {
-  val guLiveEvents = GuardianLiveEventService
+  val guLiveEvents = GuardianLiveEventCache
 }

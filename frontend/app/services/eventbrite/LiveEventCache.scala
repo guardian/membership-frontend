@@ -8,7 +8,7 @@ import services.{GuardianContentService, GridService}
 import scala.concurrent.Future
 
 
-abstract class LiveService extends EventbriteService {
+abstract class LiveEventCache extends EventbriteCache {
    val gridService = GridService(Config.gridConfig.url)
    val contentApiService = GuardianContentService
 

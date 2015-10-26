@@ -3,9 +3,8 @@ package services
 import actions._
 import com.netaporter.uri.dsl._
 import configuration.Config
-import model.{ContentDestination, Destination, EventDestination, ContentItem}
+import model.{ContentDestination, ContentItem, Destination, EventDestination}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import services.eventbrite.{EventbriteService, EventbriteCollectiveServices}
 
 import scala.concurrent.Future
 
