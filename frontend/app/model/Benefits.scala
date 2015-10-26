@@ -2,10 +2,16 @@ package model
 
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
+import com.gu.membership.zuora.rest.GBP
 import configuration.Config.zuoraFreeEventTicketsAllowance
 
-case class Benefits(tier: Tier, pricing: Option[Pricing]) {
+case class Benefits(tier: Tier, internationalPricing: Option[InternationalPricing]) {
   import Benefits._
+
+  def pricing: Option[Pricing] = for {
+    pricing <- internationalPricing
+    pricingInCurrency <- pricing.forCurrency(GBP)
+  } yield pricingInCurrency
 
   val list = tier match {
     case Friend => friendBenefitsList

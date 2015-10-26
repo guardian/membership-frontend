@@ -4,7 +4,7 @@ package controllers
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.salesforce.Tier
 import com.gu.monitoring.CloudWatchHealth
-import model.{TierPricing, Pricing}
+import model.{InternationalPricing, TierPricing, Pricing}
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
 import services.{SubscriptionService, GuardianLiveEventService, TouchpointBackend}
@@ -21,7 +21,7 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
 }
 
 class TierPricingTest(subscriptionService: SubscriptionService) extends Test {
-  def getTierPricing: Option[Either[Map[Tier, List[String]], Map[Tier, Pricing]]] =
+  def getTierPricing: Option[Either[Map[Tier, List[String]], Map[Tier, InternationalPricing]]] =
     subscriptionService.productCatalogSupplier.get().value.collect {
       case Success(catalog) => TierPricing(catalog).byTier
     }

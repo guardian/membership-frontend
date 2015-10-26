@@ -24,6 +24,8 @@ import org.joda.time.DateTime
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import play.api.libs.concurrent.Akka.system
+import play.api.Play.current
 
 case class SubscriptionServiceError(s: String) extends Throwable {
   override def getMessage: String = s
@@ -101,6 +103,9 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
 			                    val metrics: ServiceMetrics) extends LazyLogging {
 
   import SubscriptionService._
+  import scala.concurrent.duration.MINUTES
+  import scala.concurrent.duration.SECONDS
+  import scala.concurrent.duration.Duration
 
   val productRatePlanTiers: List[TierPlan] = List(
     FriendTierPlan,
@@ -110,9 +115,13 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     PaidTierPlan(Patron, annual = true), PaidTierPlan(Patron, annual = false))
 
   val productCatalogSupplier = zuoraRestClient.productCatalogSupplier
+
+  system.scheduler.schedule(Duration(1, SECONDS), Duration(30, MINUTES)) {
+    productCatalogSupplier.refresh()
+  }
+
   def membershipProducts = productCatalogSupplier.get().map(_.productsOfType(membershipProductType))
   def tierPricing: Future[TierPricing] = membershipProducts.map(TierPricing(_))
-
   val productRatePlanIdSupplier = new FutureSupplier[Map[TierPlan, String]](
     for {
       catalog <- membershipProducts

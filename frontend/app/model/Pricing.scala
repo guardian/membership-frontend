@@ -1,6 +1,8 @@
 package model
+import com.gu.membership.zuora.rest.{GBP, Currency}
 
-case class Pricing(yearly: Int,
+case class Pricing(currency: Currency,
+                   yearly: Int,
                    monthly: Int) {
 
   lazy val yearlyMonthlyCost = 12 * monthly
