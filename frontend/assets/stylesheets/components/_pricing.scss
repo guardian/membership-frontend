@@ -142,7 +142,7 @@
         @include fs-header(4);
     }
 }
-.price-info-inline__trail {
+.price-info-inline__trail, .price-info-inline__fee{
     @include fs-data(2);
 
     @include mq(mobileLandscape) {

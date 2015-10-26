@@ -13,7 +13,10 @@
             } { discountTicketing =>
                 <div class="js-event-price">
                     <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText">
-                    @discountTicketing.generalRelease.cost.get.formattedPrice
+			@discountTicketing.generalRelease.totalCost.get.formattedPrice
+			@discountTicketing.generalRelease.feeText.map { fee =>
+			    <span class="price-info-inline__fee" >incl. @fee booking fee</span>
+			}
                     </div>
                     <div class="price-info-inline__trail">
                         <span class="js-event-price-discount qa-event-detail-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText">
