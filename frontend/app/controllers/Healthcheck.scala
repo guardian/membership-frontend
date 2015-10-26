@@ -7,7 +7,8 @@ import com.gu.monitoring.CloudWatchHealth
 import model.{TierPricing, Pricing}
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
-import services.{SubscriptionService, GuardianLiveEventService, TouchpointBackend}
+import services.eventbrite.GuardianLiveEventService
+import services.{SubscriptionService, TouchpointBackend}
 import scala.util.Success
 
 trait Test {

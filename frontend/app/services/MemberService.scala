@@ -24,7 +24,8 @@ import org.joda.time.Period
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
-import services.EventbriteService._
+import services.eventbrite.EventbriteService
+import EventbriteService._
 import tracking._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

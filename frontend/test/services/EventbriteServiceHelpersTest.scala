@@ -4,6 +4,7 @@ import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.EventbriteTestObjects.TestRichEvent
 import org.specs2.mutable.Specification
+import services.eventbrite.EventbriteServiceHelpers
 import utils.Resource
 
 class EventbriteServiceHelpersTest extends Specification {

@@ -2,7 +2,7 @@ package controllers
 
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.{GuardianLiveEventService, EventbriteService}
+import services.eventbrite.{GuardianLiveEventService, EventbriteService}
 
 trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteService

@@ -19,8 +19,9 @@ import play.api.data.Form
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.eventbrite.EventbriteService
 import services.{GuardianContentService, _}
-import services.EventbriteService._
+import EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import utils.CampaignCode.extractCampaignCode
 

@@ -3,7 +3,7 @@ package controllers
 import model.RichEvent.EventBrandCollection
 import model._
 import play.api.mvc.Controller
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
+import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService, EventbriteService}
 
 trait FrontPage extends Controller {
 

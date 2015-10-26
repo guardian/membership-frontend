@@ -18,8 +18,9 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
-import services.EventbriteService._
+import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService, EventbriteService}
+import services.MemberService
+import EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
 

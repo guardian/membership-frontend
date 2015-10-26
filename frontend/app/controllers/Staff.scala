@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.Controller
-import services.{LocalEventService, GuardianLiveEventService, MasterclassEventService}
+import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService}
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService

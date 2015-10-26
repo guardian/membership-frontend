@@ -8,6 +8,7 @@ import model.RichEvent._
 import model._
 import play.api.mvc.Controller
 import services._
+import services.eventbrite.{GuardianLiveEventService, MasterclassEventService, LocalEventService, EventbriteService}
 import tracking.ActivityTracking
 
 trait WhatsOn extends Controller with ActivityTracking {
