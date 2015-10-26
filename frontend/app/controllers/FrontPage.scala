@@ -4,6 +4,8 @@ import model.RichEvent.EventBrandCollection
 import model._
 import play.api.mvc.Controller
 import services.eventbrite._
+import play.api.libs.concurrent.Execution.Implicits._
+import services._
 
 trait FrontPage extends Controller {
 
@@ -11,7 +13,7 @@ trait FrontPage extends Controller {
   val localEvents: EventbriteCache
   val masterclassEvents: EventbriteCache
 
-  def index =  CachedAction { implicit request =>
+  def index = CachedAction.async { implicit request =>
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -99,11 +101,12 @@ trait FrontPage extends Controller {
       )
     )
 
-    Ok(views.html.index(
-      pageImages,
-      midlandGoodsShedImages,
-      eventCollections
-    ))
+    TouchpointBackend.Normal.tierPricing.map { pricing =>
+          Ok(views.html.index(pricing,
+                              pageImages,
+                              midlandGoodsShedImages,
+                              eventCollections))
+    }
   }
 
   def welcome = CachedAction { implicit request =>

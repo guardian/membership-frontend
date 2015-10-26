@@ -1,36 +1,30 @@
-@(tier: com.gu.membership.salesforce.Tier, isReversible: Boolean = false, canFlex: Boolean = true)
-
-@import model.Benefits
 @import views.support.Prices._
+@import views.support.Copy._
 
-@defining(Benefits.details(tier)) { benefits =>
-    <div class="price-info@if(canFlex){ price-info--flex}@if(isReversible){ price-info--@tier.slug}">
-    @benefits.pricing.fold {
-        <div class="price-info__item price-info__item--single">
-            <div class="price-info__detail">
-                <span class="price-info__value price-info__value--free">Free</span>
-            </div>
+@(benefits: model.Benefits, isReversible: Boolean = false, canFlex: Boolean = true)
+
+<div class="price-info@if(canFlex){ price-info--flex}@if(isReversible){ price-info--@benefits.tier.slug}">
+@benefits.pricing.fold {
+    <div class="price-info__item price-info__item--single">
+        <div class="price-info__detail">
+            <span class="price-info__value price-info__value--free">Free</span>
         </div>
-    } { pricing =>
-        <div class="price-info__item price-info__item--split">
-            <div class="price-info__detail">
-                <strong class="price-info__value">@pricing.yearly.pretty</strong>
-                <span class="price-info__date">/year</span>
-            </div>
-            @if(pricing.hasYearlySaving) {
-                @if(pricing.hasOverride){
-                    <div class="price-info__saving">@pricing.yearlySavingsOverride</div>
-                } else{
-                    <div class="price-info__saving">Save @pricing.yearlySaving.pretty/year</div>
-                }
-            }
+    </div>
+} { pricing =>
+    <div class="price-info__item price-info__item--split">
+        <div class="price-info__detail">
+            <strong class="price-info__value">@pricing.yearly.pretty</strong>
+            <span class="price-info__date">/year</span>
         </div>
-        <div class="price-info__item price-info__item--split price-info__item--last">
-            <div class="price-info__detail price-info__detail--right">
-                <strong class="price-info__value">@pricing.monthly.pretty</strong>
-                <span class="price-info__date">/month</span>
-            </div>
+        @benefits.savingInfo.map { savingMsg =>
+            <div class="price-info__saving">@savingMsg</div>
+        }
+    </div>
+    <div class="price-info__item price-info__item--split price-info__item--last">
+        <div class="price-info__detail price-info__detail--right">
+            <strong class="price-info__value">@pricing.monthly.pretty</strong>
+            <span class="price-info__date">/month</span>
         </div>
-    }
     </div>
 }
+</div>

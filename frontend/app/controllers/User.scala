@@ -4,6 +4,7 @@ import actions._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
 import com.gu.membership.zuora.soap.models.SubscriptionDetails
+import model.Benefits
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}
 import play.api.Logger
@@ -78,7 +79,11 @@ trait User extends Controller {
     "firstName" -> member.firstName,
     "tier" -> member.tier.name,
     "isPaidTier" -> member.tier.isPaid,
-    "joinDate" -> member.joinDate
+    "joinDate" -> member.joinDate,
+    "benefits" -> Json.obj(
+      "discountedEventTickets" -> Benefits.DiscountTicketTiers.contains(member.tier),
+      "complimentaryEventTickets" -> Benefits.ComplimenataryTicketTiers.contains(member.tier)
+    )
   )
 
   case class SubCheck(valid: Boolean, msg: Option[String] = None)

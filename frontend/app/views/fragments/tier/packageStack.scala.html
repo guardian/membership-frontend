@@ -1,14 +1,12 @@
-@(tier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
-
-@import model.Benefits
+@(benefits: model.Benefits)(implicit token: play.filters.csrf.CSRF.Token)
 
 <div class="package-stack">
     <div class="package-stack__header">
-        @fragments.tier.tierTrail(tier)
+        @fragments.tier.tierTrail(benefits)
     </div>
     <div class="package-stack__content copy">
         <ul>
-            @for(benefit <- Benefits.detailsLimited(tier)) {
+            @for(benefit <- benefits.detailsLimited) {
                 <li>@benefit.title</li>
             }
         </ul>

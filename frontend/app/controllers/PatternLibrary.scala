@@ -2,8 +2,9 @@ package controllers
 
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.eventbrite.{EventbriteCache, GuardianLiveEventCache, EventbriteCache$}
-
+import services.TouchpointBackend
+import services.eventbrite.{EventbriteCache, GuardianLiveEventCache}
+import play.api.libs.concurrent.Execution.Implicits._
 trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteCache
 
@@ -26,11 +27,12 @@ trait PatternLibrary extends Controller {
     )
   )
 
-  def patterns = NoCacheAction { implicit request =>
-    Ok(views.html.patterns.patterns(
-      guLiveEvents.events,
-      pageImages
-    ))
+  def patterns = NoCacheAction.async { implicit request =>
+    TouchpointBackend.Normal.tierPricing.map(pricing =>
+      Ok(views.html.patterns.patterns(
+        pricing,
+        guLiveEvents.events,
+        pageImages)))
   }
 
 }

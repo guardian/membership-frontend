@@ -80,8 +80,13 @@ In `~/.aws/credentials` add the following:
 [membership]
 aws_access_key_id = [YOUR_AWS_ACCESS_KEY]
 aws_secret_access_key = [YOUR_AWS_SECRET_ACCESS_KEY]
-region = eu-west-1
+```
 
+Ensure you have the following in `~/.aws/config` (you may already have this from setting up another AWS application):
+
+```
+[default]
+region = eu-west-1
 ```
 
 ### Download private keys
