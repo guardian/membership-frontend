@@ -161,7 +161,8 @@ object MasterclassEventsProvider {
     _.internalTicketing.exists(_.memberDiscountOpt.exists(!_.isSoldOut))
 }
 
-object MasterclassEventService extends EventbriteService {
+object
+MasterclassEventService extends EventbriteService {
   import MasterclassEventsProvider._
 
   val apiToken = Config.eventbriteMasterclassesApiToken
