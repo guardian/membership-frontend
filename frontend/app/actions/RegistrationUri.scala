@@ -1,5 +1,6 @@
 package actions
 
+import com.gu.membership.salesforce.Tier
 import com.netaporter.uri.Uri
 import configuration.Config
 import play.api.mvc.RequestHeader
@@ -18,11 +19,10 @@ object RegistrationUri {
 
   private def extractCampaignCode(referer: String, path: String) = {
     val refererUrl = Uri.parse(referer)
-
-    val supporter =  controllers.routes.Info.supporter().toString()
-    val supporterUS =  controllers.routes.Info.supporterUSA().toString()
-    val competitions =   controllers.routes.Info.offersAndCompetitions().toString()
-    val events =   controllers.routes.WhatsOn.list().toString()
+    val supporter = controllers.routes.Info.supporter().toString()
+    val supporterUS = controllers.routes.Info.supporterUSA().toString()
+    val competitions = controllers.routes.Info.offersAndCompetitions().toString()
+    val events = controllers.routes.WhatsOn.list().toString()
 
     val campaignReferer = refererUrl.path match {
       case `supporter` => "SUPUK"
@@ -31,11 +31,17 @@ object RegistrationUri {
       case `events` => "EVT"
       case _ => "HOME"
     }
+
+    val supporterTier = controllers.routes.Joiner.joinPaid(Tier.Supporter).toString()
+    val partnerTier = controllers.routes.Joiner.joinPaid(Tier.Partner).toString()
+    val patronTier = controllers.routes.Joiner.joinPaid(Tier.Patron).toString()
+    val friendTier = controllers.routes.Joiner.joinPaid(Tier.Friend).toString()
+
     val campaignTier = path match {
-      case "/join/supporter/enter-details" => Some("SUP")
-      case "/join/partner/enter-details" => Some("PAR")
-      case "/join/patron/enter-details" => Some("PAT")
-      case "/join/friend/enter-details" => Some("FRI")
+      case `supporterTier` => Some("SUP")
+      case `partnerTier` => Some("PAR")
+      case `patronTier` => Some("PAT")
+      case `friendTier` => Some("FRI")
       case _ => None
     }
     campaignTier.map {
