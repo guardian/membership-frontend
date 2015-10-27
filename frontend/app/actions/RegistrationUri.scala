@@ -11,13 +11,19 @@ object RegistrationUri {
 
   def parse(request: RequestHeader) = {
     val redirectUrl: String = Config.idWebAppRegisterUrl(request.uri)
-    extractCampaignCode(request.headers(REFERRER_HEADER), request.path) match {
-      case Some(campaignCode) => redirectUrl.concat(s"&INTCMP=${campaignCode.get}")
-      case _ => redirectUrl
+    if(request.headers.keys.contains(REFERRER_HEADER)){
+      extractCampaignCode(request.headers(REFERRER_HEADER), request.path) match {
+        case Some(campaignCode) => redirectUrl.concat(s"&INTCMP=${campaignCode}")
+        case _ => redirectUrl
+      }
+    }
+    else {
+      redirectUrl
     }
   }
 
   private def extractCampaignCode(referer: String, path: String) = {
+
     val refererUrl = Uri.parse(referer)
     val supporter = controllers.routes.Info.supporter().toString()
     val supporterUS = controllers.routes.Info.supporterUSA().toString()
@@ -45,7 +51,7 @@ object RegistrationUri {
       case _ => None
     }
     campaignTier.map {
-      tier => Some(Seq(CAMPAIGN_SOURCE, campaignReferer, tier).mkString("_"))
+      tier => Seq(CAMPAIGN_SOURCE, campaignReferer, tier).mkString("_")
     }
   }
 }
