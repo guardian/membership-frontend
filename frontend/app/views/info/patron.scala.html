@@ -1,22 +1,20 @@
-@(pricing: model.TierPricing,
-  pageInfo: model.PageInfo,
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
-@import com.gu.membership.salesforce.Tier._
+@import com.gu.membership.salesforce.Tier
 @import views.support.Asset
 
-
 @main("Patrons", pageInfo=pageInfo) {
-        @* ===== About Patronage ===== *@
-        @for(img <- pageImages.find(_.name.contains("intro"))) {
-            <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title = "Patrons of the Guardian", img = img, isLead = true, toneClass = Some("tone-trans-white")) {
+
+    @* ===== About Patronage ===== *@
+    @for(img <- pageImages.find(_.name.contains("intro"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Patrons of the Guardian", img=img, isLead=true, toneClass=Some("tone-trans-white")) {
                 <div class="text-feature">
                     <p>The Patron tier is for those who care deeply about the Guardian’s journalism and the impact it has on the world.</p>
                     <p>From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
                     <p>Join as an annual Partner or Patron Member by 31 October and get 3 months free</p>
                 </div>
-                @fragments.tier.packagePromoMinimal(pricing.patronBenefits, showDescription = false, modifierClass = Some("package-promo--spread"))
+                @fragments.tier.packagePromoMinimal(Tier.Patron)
             }
         </div>
     }
@@ -33,49 +31,51 @@
                     <p>The support of Patrons helps to ensure that the Guardian can stand witness to the world, without interference.</p>
                 </div>
             }
-            </div>
-        }
-        @* ===== Backstage Pass ===== *@
-        @for(img <- pageImages.find(_.name.contains("backstage-pass"))) {
-            <div class="page-slice page-slice--slim l-constrained">
-            @fragments.promos.promoSecondary(Html("Backstage pass to the Guardian"), img = img, toneClass = Some("tone-trans-brand-supporting-2")) {
-                <p class="text-feature">
-                    In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
+        </div>
+    }
+
+    @* ===== Backstage Pass ===== *@
+    @for(img <- pageImages.find(_.name.contains("backstage-pass"))) {
+        <div class="page-slice page-slice--slim l-constrained">
+            @fragments.promos.promoSecondary(Html("Backstage pass to the Guardian"), img=img, toneClass=Some("tone-trans-brand-supporting-2")) {
+                <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
                 <a class="action"
-                href="@routes.Joiner.enterDetails(Patron)"
-                data-metric-trigger="click"
-                data-metric-category="join"
-                data-metric-action="patron"
+                    href="@routes.Joiner.enterDetails(Tier.Patron)"
+                    data-metric-trigger="click"
+                    data-metric-category="join"
+                    data-metric-action="patron"
                 >Become a Patron today</a>
             }
-            </div>
-        }
-        @* ===== Get Involved ===== *@
-        @for(img <- pageImages.find(_.name.contains("get-involved"))) {
-            <div class="page-slice l-constrained">
-            @fragments.promos.promoPrimary(title = "Choose to get involved", img = img, toneClass = Some("tone-trans-white")) {
+        </div>
+    }
+
+    @* ===== Get Involved ===== *@
+    @for(img <- pageImages.find(_.name.contains("get-involved"))) {
+        <div class="page-slice l-constrained">
+            @fragments.promos.promoPrimary(title="Choose to get involved", img=img, toneClass=Some("tone-trans-white")) {
                 <p class="text-feature">
                     Patrons are crucial to the future development of Membership, and there will be opportunities to get involved.  From hosting your own events to connecting members to one another, you will shape the future of the community.</p>
-                @fragments.tier.packagePromoMinimal(pricing.patronBenefits)
+                @fragments.tier.packagePromoMinimal(Tier.Patron)
             }
-            </div>
-        }
-        @* ===== Join Today ===== *@
+        </div>
+    }
+
+    @* ===== Join Today ===== *@
     <div class="page-slice page-slice--split tone-tint">
         <div class="page-slice__inner l-constrained">
             <h2 class="page-slice__headline">Not ready to become a Patron yet? Join as a Supporter or a Partner</h2>
             <div class="page-slice__content">
                 <ul class="grid grid--equal-heights grid--bordered grid--2up-stacked">
                     <li class="grid__item">
-                    @fragments.tier.packagePromo(pricing.supporterBenefits, isReversed = true)
+                        @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
                     </li>
                     <li class="grid__item">
-                    @fragments.tier.packagePromo(pricing.partnerBenefits, isReversed = true)
+                        @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
                     </li>
                 </ul>
-                @fragments.tier.friendTeaser(pricing)
-    </div>
-    </div>
+                @fragments.tier.friendTeaser()
+            </div>
+        </div>
     </div>
 
 }

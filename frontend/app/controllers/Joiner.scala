@@ -39,7 +39,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
-  def tierChooser = NoCacheAction.async { implicit request =>
+  def tierChooser = NoCacheAction { implicit request =>
+
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
     val contentRefererOpt = request.headers.get(REFERER)
@@ -55,44 +56,39 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       customSignInUrl=Some(signInUrl)
     )
 
-    TouchpointBackend.Normal.tierPricing.map(pricing =>
-      Ok(views.html.joiner.tierChooser(pricing, pageInfo, eventOpt, accessOpt, signInUrl))
-        .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
-    )
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, signInUrl))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-    //TODO: support test-users
-    val pricingF = TouchpointBackend.Normal.tierPricing
     userSignedIn match {
       case Some(user) => for {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
-        pricing <- pricingF
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.socialAvatarUrl
       } yield {
-        Ok(views.html.joiner.staff(pricing, new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
       }
-      case _ => pricingF.map(pricing => Ok(views.html.joiner.staff(pricing, new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
   def enterDetails(tier: Tier) = (AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
-      pricing <- request.tierPricing
     } yield {
 
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.form.friendSignup(pricing, privateFields, marketingChoices, passwordExists))
+        case Tier.Friend => Ok(views.html.joiner.form.friendSignup(privateFields, marketingChoices, passwordExists))
         case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          val benefits = pricing.benefits(tier)
-          Ok(views.html.joiner.form.payment(benefits, privateFields, marketingChoices, passwordExists, pageInfo))
+          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
       }
+
     }
   }
 

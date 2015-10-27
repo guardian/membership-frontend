@@ -1,8 +1,6 @@
-@import views.support.Prices._
-@import views.support.Copy._
-@import com.gu.membership.salesforce.Tier._
+@(tier: com.gu.membership.salesforce.Tier)
 
-@(benefits: model.Benefits)
+@import model.Benefits
 
 <fieldset class="fieldset js-payment-options-container">
 
@@ -16,7 +14,7 @@
         <div class="form-field">
 
             <label class="label" for="annual">
-                @benefits.pricing.fold{
+                @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
                     <input type="radio"
                            class="is-hidden"
@@ -29,8 +27,12 @@
                     <div class="pseudo-radio">
                         <div class="pseudo-radio__header">Pay £@pricing.yearly/year</div>
                         @if(pricing.hasYearlySaving) {
-                            <p class="pseudo-radio__note">£@pricing.yearly one off annual payment (save £@pricing.yearlySaving per year)</p>
-                            @for(yearlySavingsNote <- benefits.yearlySavingNote) {
+                            <p class="pseudo-radio__note">£@pricing.yearly one off annual payment
+                                @if(!pricing.hideYearlySaving) {
+                                    (save £@pricing.yearlySaving per year)
+                                }
+                            </p>
+                            @for(yearlySavingsNote <- pricing.yearlySavingsNote) {
                                 <p class="pseudo-radio__note">@yearlySavingsNote</p>
                             }
                         } else {
@@ -41,7 +43,7 @@
             </label>
 
             <label class="label" for="monthly">
-                @benefits.pricing.fold{
+                @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
                     <input type="radio"
                            class="is-hidden"
@@ -52,9 +54,6 @@
 
                     <div class="pseudo-radio">
                         <div class="pseudo-radio__header">Pay £@pricing.monthly/month</div>
-                        @benefits.savingInfo.map { savingInfo =>
-                          <div class="price-info__saving">{@savingInfo}</div>
-                        }
                         @if(pricing.hasYearlySaving) {
                             <p class="pseudo-radio__note">£@pricing.monthly per month (£@pricing.yearlyMonthlyCost per year)</p>
                         }

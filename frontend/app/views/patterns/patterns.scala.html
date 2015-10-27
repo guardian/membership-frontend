@@ -1,9 +1,8 @@
-@(pricing: model.TierPricing,
-  events: Seq[model.RichEvent.RichEvent],
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+@(events: Seq[model.RichEvent.RichEvent], pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
 
 @import com.gu.membership.salesforce.Tier
-@import model.FlashMessage
+@import model.{Benefits, FlashMessage}
+@import model.SVG.SVGImage
 @import configuration.Videos
 @import views.support.Asset
 
@@ -352,11 +351,11 @@
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
-        @fragments.pricing.priceInfo(pricing.partnerBenefits)
+        @fragments.pricing.priceInfo(Tier.Partner)
     }
 
     @pattern("Pricing Info - Fixed", "Fixed version which only expands to fill width on large screens (canFlex=false)") {
-        @fragments.pricing.priceInfo(pricing.partnerBenefits, canFlex=false)
+        @fragments.pricing.priceInfo(Tier.Partner, canFlex=false)
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
@@ -366,29 +365,29 @@
     }
 
     @pattern("Tier Trail - Caption", "Tier name with caption") {
-        @fragments.tier.tierTrail(pricing.partnerBenefits)
+        @fragments.tier.tierTrail(Tier.Partner)
     }
 
     @pattern("Tier Trail - No Caption", "Tier name with no caption") {
-        @fragments.tier.tierTrail(pricing.partnerBenefits, showCaption=false)
+        @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
     @pattern("Package: Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
-                @fragments.tier.packagePromo(pricing.friendBenefits)
+                @fragments.tier.packagePromo(Tier.Friend)
             </li>
             <li class="grid__item">
-                @fragments.tier.packagePromo(pricing.partnerBenefits)
+                @fragments.tier.packagePromo(Tier.Partner)
             </li>
             <li class="grid__item">
-                @fragments.tier.packagePromo(pricing.partnerBenefits)
+                @fragments.tier.packagePromo(Tier.Patron)
             </li>
         </ul>
     }
 
     @pattern("Package: Stack") {
-        @fragments.tier.packageStack(pricing.partnerBenefits)
+        @fragments.tier.packageStack(Tier.Partner)
     }
 
     @pattern("Flash Message: Success") {

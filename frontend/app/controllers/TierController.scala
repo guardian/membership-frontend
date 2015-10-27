@@ -23,10 +23,8 @@ import scala.concurrent.Future
 trait DowngradeTier extends ActivityTracking {
   self: TierController =>
 
-  def downgradeToFriend() = PaidMemberAction.async { implicit request =>
-    request.tierPricing.map { pricing =>
-      Ok(views.html.tier.downgrade.confirm(pricing, request.member.tier))
-    }
+  def downgradeToFriend() = PaidMemberAction { implicit request =>
+    Ok(views.html.tier.downgrade.confirm(request.member.tier))
   }
 
   def downgradeToFriendConfirm() = PaidMemberAction.async { implicit request => // POST
@@ -58,7 +56,6 @@ trait UpgradeTier {
         val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields)
 
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(memberRequest.touchpointBackend.stripeService.publicKey))
-        val pricingF = memberRequest.tierPricing
 
         memberRequest.member match {
           case paidMember: PaidMember =>
@@ -67,17 +64,16 @@ trait UpgradeTier {
 
             for {
               preview <- previewUpgradeSubscriptionF
-              pricing <- pricingF
               customer <- stripeCustomerF
               privateFields <- identityUserFieldsF
             } yield {
               val flashMsgOpt = memberRequest.flash.get("error").map(FlashMessage.error)
 
-              Ok(views.html.tier.upgrade.paidToPaid(pricing, memberRequest.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt)(getToken, memberRequest.request))
+              Ok(views.html.tier.upgrade.paidToPaid(memberRequest.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt)(getToken, memberRequest.request))
             }
           case _ =>
-            for (privateFields <- identityUserFieldsF; pricing <- pricingF) yield {
-              Ok(views.html.tier.upgrade.freeToPaid(pricing, memberRequest.member.tier, tier, privateFields, pageInfo)(getToken, memberRequest.request))
+            for (privateFields <- identityUserFieldsF) yield {
+              Ok(views.html.tier.upgrade.freeToPaid(memberRequest.member.tier, tier, privateFields, pageInfo)(getToken, memberRequest.request))
             }
         }
       }
@@ -152,10 +148,8 @@ trait UpgradeTier {
 trait CancelTier {
   self: TierController =>
 
-  def cancelTier() = MemberAction.async { implicit request =>
-    request.tierPricing.map { pricing =>
-      Ok(views.html.tier.cancel.confirm(pricing, request.member.tier))
-    }
+  def cancelTier() = MemberAction { implicit request =>
+    Ok(views.html.tier.cancel.confirm(request.member.tier))
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
@@ -184,10 +178,10 @@ trait CancelTier {
 }
 
 trait TierController extends Controller with UpgradeTier with DowngradeTier with CancelTier {
-  def change() = MemberAction.async { implicit request =>
-    request.tierPricing.map { pricing =>
-      Ok(views.html.tier.change(pricing, currentTier = request.member.tier))
-    }
+  def change() = MemberAction { implicit request =>
+    val currentTier = request.member.tier
+    val availableTiers = Tier.allPublic.filter(_ != currentTier)
+    Ok(views.html.tier.change(currentTier, availableTiers))
   }
 }
 
