@@ -1,26 +1,26 @@
+@(isReversed: Boolean)
 
-@(pricing: model.TierPricing, isReversed: Boolean)
-
-@import com.gu.membership.salesforce.Tier._
+@import model.Benefits
 @import views.support.Prices._
+@import com.gu.membership.salesforce.Tier
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(Supporter)"
+    href="@routes.Joiner.enterDetails(Tier.Supporter)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@Supporter.toString.toLowerCase"
+    data-metric-action="@Tier.Supporter.toString.toLowerCase"
 }
 
-<div class="package-promo @if(isReversed){ package-promo--reversed} package-promo--spread tone-border-@Supporter">
+<div class="@if(isReversed){ package-promo--reversed} package-promo--minimal tone-border-@Tier.Supporter">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
-        @defining(pricing.supporterBenefits) { benefits =>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(benefits, showCaption=false)
+                    @fragments.tier.tierTrail(Tier.Supporter, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
 
+                @defining(Benefits.details(Tier.Supporter)) { benefits =>
                     <div class="price-info">
                         @benefits.pricing.map { pricing =>
                             <div class="price-info__item price-info__item--split">
@@ -39,7 +39,7 @@
                             </div>
                         }
                     </div>
-            }
+                }
 
                 </div>
             </div>
@@ -47,7 +47,7 @@
     </div>
     <div class="package-promo__content">
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@Supporter.toString.toLowerCase" @actionAttrs>
+            <a class="action action--snap u-no-bottom-margin qa-package-@Tier.Supporter.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
                     Become a Supporter
                 </span>

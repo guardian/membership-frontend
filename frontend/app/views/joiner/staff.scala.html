@@ -1,11 +1,11 @@
 @(
-  pricing: model.TierPricing,
   staffEmail: model.StaffEmails,
   displayName: Option[String],
   avatarUrl: Option[String],
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
+@import com.gu.membership.salesforce.Tier
 @import configuration.Config
 @import model.{Benefits, Faq}
 @import play.twirl.api.Html
@@ -117,7 +117,7 @@
             </div>
             <div class="page-section__content copy">
                 <ul>
-                    @for(benefit <- pricing.staffBenefits.list) {
+                    @for(benefit <- Benefits.details(Tier.Partner).list) {
                         <li>
                             @benefit.title
                         </li>

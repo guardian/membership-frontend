@@ -1,4 +1,4 @@
-@(pricing: model.TierPricing, membersOnlyContent: Seq[model.ContentItemOffer])
+@(membersOnlyContent: Seq[model.ContentItemOffer])
 
 @offerArticle(memberContent: model.ContentItemOffer) = {
     <a href="@memberContent.content.webUrl" class="article-front">
@@ -56,5 +56,5 @@
 
     </main>
 
-    @fragments.tier.joinListing(pricing)
+    @fragments.tier.joinListing()
 }

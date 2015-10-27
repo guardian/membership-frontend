@@ -1,33 +1,31 @@
-@(pricing: model.TierPricing, currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(currentTier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
 
-@import com.gu.membership.salesforce.Tier.Friend
-@import views.support.Copy._
+@import com.gu.membership.salesforce.Tier
+@import model.Benefits
 @import views.html.helper._
 
 @currentTierDetails = {
-@defining(pricing.benefits(currentTier)) { currentBenefits =>
     <h3 class="h-stack">This is what you'll be giving up</h3>
-    @fragments.tier.tierTrail(currentBenefits, showCaption=false)
+    @fragments.tier.tierTrail(currentTier, showCaption=false)
     <div class="copy">
         <ul>
-        @for(benefit <- currentBenefits.list) {
-            <li>@benefit.title</li>
-        }
+            @for(benefit <- Benefits.details(currentTier).list) {
+                <li>@benefit.title</li>
+            }
         </ul>
     </div>
 }
-}
 
 @downgradeDetails = {
-    <form action="@routes.TierController.upgrade(Friend)" method="POST" class="u-cf">
+    <form action="@routes.TierController.upgrade(Tier.Friend)" method="POST" class="u-cf">
         @CSRF.formField
-        <button class="action u-align-right u-margin-bottom" id="qa-confirm-downgrade">@pricing.friendBenefits.cta</button>
+        <button class="action u-align-right u-margin-bottom" id="qa-confirm-downgrade">@Benefits.details(Tier.Friend).cta</button>
     </form>
     <h3 class="h-stack">Why not stay as a Friend</h3>
-    @fragments.tier.tierTrail(pricing.friendBenefits, showCaption=false)
+    @fragments.tier.tierTrail(Tier.Friend, showCaption=false)
     <div class="copy">
         <ul>
-            @for(benefit <- pricing.friendBenefits.list) {
+            @for(benefit <- Benefits.details(Tier.Friend).list) {
                 <li>@benefit.title</li>
             }
         </ul>
@@ -43,7 +41,7 @@
 
         <div class="page-section">
             <div class="page-section__content">
-                @if(currentTier == Friend) {
+                @if(currentTier == Tier.Friend) {
                     <a href="@routes.TierController.change" class="action action--secondary u-margin-bottom">
                         @fragments.actionIcon("arrow-left", leftIcon=true)
                         <span class="action__label">Stay as a @currentTier</span>

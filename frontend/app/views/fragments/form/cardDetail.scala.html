@@ -1,5 +1,6 @@
-@(benefits: model.Benefits, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
+@(tier: com.gu.membership.salesforce.Tier, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
 
+@import model.Benefits
 @import views.support.{Asset, Dates, selectDates}
 
 <fieldset class="fieldset">
@@ -14,7 +15,7 @@
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
-                @benefits.pricing.fold{
+                @Benefits.details(tier).pricing.fold{
                 }{ pricing =>
                     <p>Your card will be charged £<span class="js-card-note-pricing-charge"
                                                          data-annual="@pricing.yearly"

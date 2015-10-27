@@ -6,12 +6,11 @@ import scala.concurrent.Future
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
-import services.{TouchpointBackend, GuardianContentService, AuthenticationService, EmailService}
-import play.api.libs.concurrent.Execution.Implicits._
+import services.{GuardianContentService, AuthenticationService, EmailService}
 
 trait Info extends Controller {
 
-  def supporter = CachedAction.async { implicit request =>
+  def supporter = CachedAction { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -54,17 +53,14 @@ trait Info extends Controller {
       )
     )
 
-    TouchpointBackend.Normal.tierPricing.map { pricing =>
-      Ok(views.html.info.supporter(pricing,
-        PageInfo(CopyConfig.copyTitleSupporters,
-          request.path,
-          Some(CopyConfig.copyDescriptionSupporters)
-        ),
-        pageImages))
-    }
+    Ok(views.html.info.supporter(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
   }
 
-  def supporterUSA = CachedAction.async { implicit request =>
+  def supporterUSA = CachedAction { implicit request =>
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -105,15 +101,15 @@ trait Info extends Controller {
       )
     )
 
+    Ok(views.html.info.supporterUSA(PageInfo(
+      CopyConfig.copyTitleSupporters,
+      request.path,
+      Some(CopyConfig.copyDescriptionSupporters)
+    ), pageImages))
 
-    TouchpointBackend.Normal.tierPricing.map { pricing =>
-      Ok(views.html.info.supporterUSA(pricing,
-      PageInfo(CopyConfig.copyTitleSupporters, request.path, Some(CopyConfig.copyDescriptionSupporters)),
-      pageImages))
-    }
   }
 
-  def patron() = CachedAction.async { implicit request =>
+  def patron() = CachedAction { implicit request =>
     val pageInfo = PageInfo(
       CopyConfig.copyTitlePatrons,
       request.path,
@@ -153,20 +149,15 @@ trait Info extends Controller {
         )
       )
     )
-
-    TouchpointBackend.Normal.tierPricing.map { pricing =>
-      Ok(views.html.info.patron(pricing, pageInfo, pageImages))
-    }
+    Ok(views.html.info.patron(pageInfo, pageImages))
   }
 
-  def offersAndCompetitions = CachedAction.async { implicit request =>
-    val results =
-      GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
-        item.content.fields.map(_("membershipAccess")).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)
-
-    TouchpointBackend.Normal.tierPricing.map { pricing =>
-      Ok(views.html.info.offersAndCompetitions(pricing, results))
-    }
+  def offersAndCompetitions = CachedAction { implicit request =>
+    val results = GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer)
+      .filter(_.content.fields.map(_("membershipAccess")).isEmpty)
+      .filter(!_.content.webTitle.startsWith("EXPIRED"))
+      .filter(_.imgOpt.nonEmpty)
+    Ok(views.html.info.offersAndCompetitions(results))
   }
 
   def help = CachedAction { implicit request =>

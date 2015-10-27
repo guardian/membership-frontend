@@ -11,7 +11,7 @@ import com.gu.membership.zuora.{rest, soap}
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
 import com.netaporter.uri.dsl._
 import configuration.Config
-import model.{TierPricing, FeatureChoice}
+import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
 import play.libs.Akka
@@ -65,13 +65,10 @@ object TouchpointBackend {
 
 case class TouchpointBackend(memberRepository: FrontendMemberRepository,
                              stripeService: StripeService,
-			                       zuoraSoapClient: soap.ClientWithFeatureSupplier,
-			                       zuoraRestClient: rest.Client,
-			                       subscriptionService: SubscriptionService) extends ActivityTracking {
+			     zuoraSoapClient: soap.ClientWithFeatureSupplier,
+			     zuoraRestClient: rest.Client,
+			     subscriptionService: SubscriptionService) extends ActivityTracking {
 
-  def tierPricing: Future[TierPricing] = subscriptionService.tierPricing
-
-  //TODO: consider moving the following methods elsewhere
   def updateDefaultCard(member: PaidMember, token: String): Future[Stripe.Card] = {
     for {
       customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
