@@ -13,6 +13,7 @@ import play.api.Play.current
 import play.api.cache.Cache
 import play.api.libs.json.Reads
 import play.api.libs.ws._
+import services.EventbriteService._
 import utils.ScheduledTask
 import utils.StringUtils._
 
@@ -48,7 +49,7 @@ trait EventbriteService extends WebServiceHelper[EBObject, EBError] {
     archivedEventsTask.start(60.seconds)
   }
 
-  def events: Seq[RichEvent] = eventsTask.get()
+  def events: Seq[RichEvent] = eventsTask.get().filterNot(e => HiddenEvents.contains(e.id))
   def eventsDraft: Seq[RichEvent] = draftEventsTask.get()
   def eventsArchive: Seq[RichEvent] = archivedEventsTask.get()
 
