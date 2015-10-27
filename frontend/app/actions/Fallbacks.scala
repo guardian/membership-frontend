@@ -19,8 +19,7 @@ object Fallbacks {
   def notYetAMemberOn(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.tierChooser()).addingToSession("preJoinReturnUrl" -> request.uri)
 
-  def chooseSigninOrRegister(implicit request: RequestHeader) =
-    redirectTo(controllers.routes.Login.chooseSigninOrRegister(request.uri))
+  def chooseRegister(implicit request: RequestHeader) = SeeOther(RegistrationUri.parse(request))
 
   def joinStaffMembership(implicit request: RequestHeader) =
     redirectTo(controllers.routes.Joiner.staff())
@@ -32,3 +31,5 @@ object Fallbacks {
 
   def redirectTo(call: Call)(implicit req: RequestHeader) = SeeOther(call.absoluteURL(secure = true))
 }
+
+

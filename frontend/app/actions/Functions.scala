@@ -28,7 +28,7 @@ object Functions extends LazyLogging {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
 
-  def authenticated(onUnauthenticated: RequestHeader => Result = chooseSigninOrRegister(_)): ActionBuilder[AuthRequest] =
+  def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
     new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor(_), onUnauthenticated)
 
   def memberRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =
