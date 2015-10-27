@@ -133,10 +133,10 @@ trait UpgradeTier {
 
     val futureResult = request.member match {
       case freeMember: FreeMember =>
-        freeMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handleFree(freeMember))
+        freeMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handleFree(freeMember))
 
       case paidMember: PaidMember =>
-        paidMemberChangeForm.bindFromRequest.fold(_ => Future.successful(BadRequest), handlePaid(paidMember))
+        paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(paidMember))
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {

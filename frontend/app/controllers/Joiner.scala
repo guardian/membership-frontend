@@ -124,6 +124,11 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
+  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
+    paidMemberJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
+      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
+  }
+
   def updateEmailStaff() = AuthenticatedStaffNonMemberAction.async { implicit request =>
     val googleEmail = request.googleUser.email
     for {
@@ -133,26 +138,15 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       responseCode match {
         case 200 => Redirect(routes.Joiner.enterStaffDetails())
                   .flashing("success" ->
-          s"Your email address has been changed to ${googleEmail}")
+          s"Your email address has been changed to $googleEmail")
         case _ => Redirect(routes.Joiner.staff())
                   .flashing("error" ->
-          s"There has been an error in updating your email. You may already have an Identity account with ${googleEmail}. Please try signing in with that email.")
+          s"There has been an error in updating your email. You may already have an Identity account with $googleEmail. Please try signing in with that email.")
       }
     }
   }
 
   def unsupportedBrowser = CachedAction(Ok(views.html.joiner.unsupportedBrowser()))
-
-  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
-    paidMemberJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
-      makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
-  }
-
-  def redirectToUnsupportedBrowserInfo(form: Form[_])(implicit req: RequestHeader): Future[Result] = {
-    logger.error(s"Server-side form errors on joining indicates a Javascript problem: ${req.headers.get(USER_AGENT)}")
-    logger.debug(s"Server-side form errors : ${form.errors}")
-    Future.successful(Redirect(routes.Joiner.unsupportedBrowser()))
-  }
 
   private def makeMember(tier: Tier, result: Result)(formData: JoinForm)(implicit request: AuthRequest[_]) = {
 
