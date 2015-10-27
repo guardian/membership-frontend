@@ -18,8 +18,9 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService, MemberService}
-import services.EventbriteService._
+import services.eventbrite._
+import services.{EventbriteService, MemberService}
+import EventbriteService._
 import tracking._
 import utils.CampaignCode.extractCampaignCode
 
@@ -27,16 +28,16 @@ import scala.concurrent.Future
 
 trait Event extends Controller with ActivityTracking {
 
-  val guLiveEvents: EventbriteService
-  val localEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  val guLiveEvents: EventbriteCache
+  val localEvents: EventbriteCache
+  val masterclassEvents: EventbriteCache
   val memberService: MemberService
 
   private def recordBuyIntention(eventId: String) = new ActionBuilder[Request] {
     override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
-      EventbriteService.getEvent(eventId).map { event =>
+      getEvent(eventId).map { event =>
         trackAnon(EventActivity("buyActionInvoked", None, EventData(event)))(request)
-        Timing.record(event.service.wsMetrics, "buy-action-invoked") {
+        Timing.record(event.client.wsMetrics, "buy-action-invoked") {
           block(request)
         }
       }.getOrElse(Future.successful(NotFound))
@@ -49,7 +50,7 @@ trait Event extends Controller with ActivityTracking {
   def details(slug: String) = CachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      event <- getEvent(id)
     } yield {
       if (slug == event.slug) {
         trackAnon(EventActivity("viewEventDetails", None, EventData(event)))
@@ -73,7 +74,7 @@ trait Event extends Controller with ActivityTracking {
 
     val eventDataOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      event <- getEvent(id)
     } yield EmbedData(
       title = event.name.text,
       image = event.socialImgUrl,
@@ -94,7 +95,7 @@ trait Event extends Controller with ActivityTracking {
   def embedCard(slug: String) = CorsPublicCachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      event <- getEvent(id)
     } yield event
 
     Ok(eventOpt.fold {
@@ -117,7 +118,7 @@ trait Event extends Controller with ActivityTracking {
 
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
-    EventbriteService.getEvent(id).map { event =>
+    getEvent(id).map { event =>
       event match {
         case _: GuLiveEvent | _: LocalEvent =>
           if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
@@ -135,7 +136,7 @@ trait Event extends Controller with ActivityTracking {
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
+    Timing.record(event.client.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
 
       memberService.createEBCode(request.member, event).map { code =>
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
@@ -158,9 +159,9 @@ trait Event extends Controller with ActivityTracking {
     orderIdOpt.fold {
       val resultOpt = for {
         oid <- request.flash.get("oid")
-        event <- EventbriteService.getEvent(id)
+        event <- getEvent(id)
       } yield {
-        event.service.getOrder(oid).map { order =>
+        event.client.getOrder(oid).map { order =>
           val count = memberService.countComplimentaryTicketsInOrder(event, order)
           if (count > 0) {
             memberService.recordFreeEventUsage(request.member, event, order, count)
@@ -179,7 +180,7 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def thankyouPixel(id: String) = NoCacheAction { implicit request =>
-    EventbriteService.getEvent(id).map { event =>
+    getEvent(id).map { event =>
       // only log a conversion if the user came from a membership event page
       request.cookies.get(eventCookie(event)).foreach { _ =>
         trackConversionToThankyou(request, event, None, None)
@@ -189,21 +190,21 @@ trait Event extends Controller with ActivityTracking {
   }
 
   def preview(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   EventbriteService.getPreviewEvent(id).map(eventDetail)
+   getPreviewEvent(id).map(eventDetail)
   }
 
   def previewLocal(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-    EventbriteService.getPreviewLocalEvent(id).map(eventDetail)
+    getPreviewLocalEvent(id).map(eventDetail)
   }
 
   def previewMasterclass(id: String) = GoogleAuthenticatedStaffAction.async { implicit request =>
-   EventbriteService.getPreviewMasterclass(id).map(eventDetail)
+   getPreviewMasterclass(id).map(eventDetail)
   }
 }
 
 object Event extends Event {
-  val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
-  val masterclassEvents = MasterclassEventService
+  val guLiveEvents = GuardianLiveEventCache
+  val localEvents = LocalEventCache
+  val masterclassEvents = MasterclassEventCache
   val memberService = MemberService
 }

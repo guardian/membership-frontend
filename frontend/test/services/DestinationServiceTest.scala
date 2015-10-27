@@ -13,6 +13,7 @@ import org.specs2.mock.Mockito
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.test.{FakeApplication, FakeRequest, PlaySpecification}
 import play.api.{Application, GlobalSettings}
+import services.EventbriteCollectiveServices
 import utils.Resource
 
 import scala.concurrent.Future

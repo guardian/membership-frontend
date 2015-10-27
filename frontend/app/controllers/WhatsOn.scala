@@ -7,14 +7,15 @@ import model.RichEvent._
 import model._
 import play.api.mvc.Controller
 import services._
+import services.eventbrite._
 import tracking.ActivityTracking
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 trait WhatsOn extends Controller with ActivityTracking {
 
-  val guLiveEvents: EventbriteService
-  val localEvents: EventbriteService
-  val masterclassEvents: EventbriteService
+  val guLiveEvents: EventbriteCache
+  val localEvents: EventbriteCache
+  val masterclassEvents: EventbriteCache
 
   // This can be deleted once all these events have completed
   val hiddenEvents = Set(
@@ -116,7 +117,7 @@ trait WhatsOn extends Controller with ActivityTracking {
 }
 
 object WhatsOn extends WhatsOn {
-  val guLiveEvents = GuardianLiveEventService
-  val localEvents = LocalEventService
-  val masterclassEvents = MasterclassEventService
+  val guLiveEvents = GuardianLiveEventCache
+  val localEvents = LocalEventCache
+  val masterclassEvents = MasterclassEventCache
 }

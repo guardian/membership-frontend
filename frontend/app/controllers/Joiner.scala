@@ -19,11 +19,11 @@ import play.api.data.Form
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
+import services.eventbrite.EventbriteCache
 import services.{GuardianContentService, _}
-import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import utils.CampaignCode.extractCampaignCode
-
+import EventbriteService._
 import scala.concurrent.Future
 
 trait Joiner extends Controller with ActivityTracking with LazyLogging {
@@ -185,7 +185,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
             eventId <- PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request)
             event <- EventbriteService.getBookableEvent(eventId)
           } {
-            event.service.wsMetrics.put(s"join-$tier-event", 1)
+            event.service.client.wsMetrics.put(s"join-$tier-event", 1)
             val memberData = MemberData(member.salesforceContactId, request.user.id, tier.name, campaignCode=extractCampaignCode(request))
             track(EventActivity("membershipRegistrationViaEvent", Some(memberData), EventData(event)), request.user)
           }

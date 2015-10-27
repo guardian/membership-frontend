@@ -7,7 +7,8 @@ import com.gu.monitoring.CloudWatchHealth
 import model.{TierPricing, Pricing}
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
-import services.{SubscriptionService, GuardianLiveEventService, TouchpointBackend}
+import services.eventbrite.GuardianLiveEventCache
+import services.{SubscriptionService, TouchpointBackend}
 import scala.util.Success
 
 trait Test {
@@ -39,7 +40,7 @@ object Healthcheck extends Controller {
   val subscriptionService = TouchpointBackend.Normal.subscriptionService
 
   def tests = Seq(
-    new BoolTest("Events", () => GuardianLiveEventService.events.nonEmpty),
+    new BoolTest("Events", () => GuardianLiveEventCache.events.nonEmpty),
     new BoolTest("CloudWatch", () => CloudWatchHealth.hasPushedMetricSuccessfully),
     new BoolTest("ZuoraPing", () => zuoraSoapClient.lastPingTimeWithin(2.minutes)),
     new BoolTest("ZuoraProductRatePlans", () => subscriptionService.productRatePlanIdSupplier.get().value.exists(_.isSuccess)),

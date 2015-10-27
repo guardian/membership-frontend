@@ -4,7 +4,8 @@ import model.Eventbrite.{EBEvent, EBResponse}
 import model.EventbriteDeserializer._
 import model.RichEvent.MasterclassEvent
 import org.specs2.mutable.Specification
-import services.MasterclassEventsProvider.MasterclassesWithAvailableMemberDiscounts
+import services.eventbrite.MasterclassEventsProvider
+import MasterclassEventsProvider.MasterclassesWithAvailableMemberDiscounts
 import utils.Resource
 
 class MasterclassEventsProviderTest extends Specification {

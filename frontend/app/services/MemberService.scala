@@ -7,9 +7,9 @@ import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
 import com.gu.membership.util.{FutureSupplier, Timing}
+import com.gu.membership.zuora.soap.Readers._
 import com.gu.membership.zuora.soap.actions.Actions.CreateFreeEventUsage
 import com.gu.membership.zuora.soap.models.PreviewInvoiceItem
-import com.gu.membership.zuora.soap.Readers._
 import com.gu.membership.zuora.soap.models.Results.CreateResult
 import com.typesafe.scalalogging.LazyLogging
 import configuration.Config
@@ -24,8 +24,9 @@ import org.joda.time.Period
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.json.Json
-import services.EventbriteService._
+import EventbriteService._
 import tracking._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -178,7 +179,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
-      event.service.createOrGetAccessCode(event, code, unlockedTickets)
+      event.service.client.createOrGetAccessCode(event, code, unlockedTickets)
     }
   }
 
