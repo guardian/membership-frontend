@@ -16,7 +16,7 @@ class TierPricingTest extends Specification {
   def fromResource(fileName: String): TierPricing = {
     val json = Resource.getJson(fileName)
     val catalog = parseResponse[ProductCatalog](json).get.productsOfType(membershipProductType)
-    TierPricing(catalog)
+    TierPricing.fromProductCatalog(catalog)
   }
 
   "TicketPricing" should {

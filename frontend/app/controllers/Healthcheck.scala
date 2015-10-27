@@ -23,7 +23,7 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
 class TierPricingTest(subscriptionService: SubscriptionService) extends Test {
   def getTierPricing: Option[Either[Map[Tier, List[String]], Map[Tier, InternationalPricing]]] =
     subscriptionService.productCatalogSupplier.get().value.collect {
-      case Success(catalog) => TierPricing(catalog).byTier
+      case Success(catalog) => TierPricing.fromProductCatalog(catalog).byTier
     }
 
   override def ok = getTierPricing.exists(_.isRight)

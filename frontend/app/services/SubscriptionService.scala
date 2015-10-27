@@ -121,7 +121,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
   }
 
   def membershipProducts = productCatalogSupplier.get().map(_.productsOfType(membershipProductType))
-  def tierPricing: Future[TierPricing] = membershipProducts.map(TierPricing(_))
+  def tierPricing: Future[TierPricing] = membershipProducts.map(TierPricing.fromProductCatalog)
   val productRatePlanIdSupplier = new FutureSupplier[Map[TierPlan, String]](
     for {
       catalog <- membershipProducts
