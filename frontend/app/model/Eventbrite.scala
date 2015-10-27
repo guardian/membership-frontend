@@ -95,10 +95,8 @@ object Eventbrite {
 
   case class EBPricing(value: Int) extends EBObject {
     lazy val formattedPrice = formatPriceWithCurrency(value)
-    def addFee(other: Option[EBPricing]) : Option[EBPricing] = {
-      other.map( cost =>
-	EBPricing(value+cost.value)
-      )
+    def add(other: EBPricing) : EBPricing = {
+      EBPricing(value+other.value)
     }
   }
 
@@ -132,7 +130,7 @@ object Eventbrite {
     val priceValue = formatPrice(priceInPence)
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
     val feeText = fee.filter(_.value>0).map(_.formattedPrice)
-    val totalCost = cost.map(c => c addFee fee).getOrElse(cost)
+    val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0)))
 
 
     val currencyCode = "GBP"
