@@ -5,6 +5,8 @@ import com.netaporter.uri.Uri
 import configuration.Config
 import play.api.mvc.RequestHeader
 
+import scala.util.Try
+
 object RegistrationUri {
   val REFERRER_HEADER: String = "referer"
   val CAMPAIGN_SOURCE: String = "MEM"
@@ -21,7 +23,7 @@ object RegistrationUri {
     controllers.routes.Joiner.joinPaid(Tier.Supporter).toString() -> "SUP",
     controllers.routes.Joiner.joinPaid(Tier.Partner).toString() -> "PAR",
     controllers.routes.Joiner.joinPaid(Tier.Patron).toString() -> "PAT",
-    controllers.routes.Joiner.joinPaid(Tier.Friend).toString() -> "FRI"
+    controllers.routes.Joiner.joinFriend.toString() -> "FRI"
   )
 
   def parse(request: RequestHeader) = {
@@ -39,8 +41,9 @@ object RegistrationUri {
   }
 
   def getReferingPageCode(referer: String): Option[String] = {
-    val refererUrl = Uri.parse(referer)
-    referingPageCodes.get(refererUrl.path)
+    Try(Uri.parse(referer))
+      .toOption
+      .flatMap(refererUrl => referingPageCodes.get(refererUrl.path))
   }
 
 }
