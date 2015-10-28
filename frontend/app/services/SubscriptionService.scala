@@ -129,7 +129,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
   def accountWithLatestMembershipSubscription(member: MemberId): Future[(Account, rest.Subscription)] = for {
     accounts <- zuoraSoapClient.query[Account](SimpleFilter("crmId", member.salesforceAccountId))
     accountAndSubscriptionOpts <- Future.traverse(accounts) { account =>
-      zuoraRestClient.latestSubscriptionOpt(membershipProductType, Set(account.id)).map(account -> _)
+      zuoraRestClient.lastSubscriptionWithProductOfTypeOpt(membershipProductType, Set(account.id)).map(account -> _)
     }
   } yield {
       accountAndSubscriptionOpts.collect { case (account, Some(subscription)) =>
