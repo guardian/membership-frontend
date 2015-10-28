@@ -19,6 +19,15 @@ import scala.util.{Failure, Success, Try}
 
 object Eventbrite {
 
+  // This can be deleted once all these events have completed
+  val HiddenEvents = Map(
+    "18862189316" -> "19222944344",
+    "18882535171" -> "19223627387",
+    "18882579303" -> "19223798900",
+    "18882595351" -> "19223835008",
+    "18882606384" -> "19223927284"
+  )
+
   val googleMapsUri = Uri.parse("https://maps.google.com/")
 
   trait EBObject

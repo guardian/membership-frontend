@@ -49,14 +49,12 @@ trait Event extends Controller with ActivityTracking {
   def details(slug: String) = CachedAction { implicit request =>
     val eventOpt = for {
       id <- EBEvent.slugToId(slug)
-      event <- EventbriteService.getEvent(id)
+      correctEvent <-(Eventbrite.HiddenEvents.get(id).toSeq :+ id).flatMap(EventbriteService.getEvent).headOption
     } yield {
-      if (slug == event.slug) {
-        trackAnon(EventActivity("viewEventDetails", None, EventData(event)))
-        eventDetail(event)
-      } else {
-        Redirect(routes.Event.details(event.slug))
-      }
+      if (slug == correctEvent.slug) {
+        trackAnon(EventActivity("viewEventDetails", None, EventData(correctEvent)))
+        eventDetail(correctEvent)
+      } else Redirect(routes.Event.details(correctEvent.slug))
     }
 
     eventOpt.getOrElse(Redirect(routes.WhatsOn.list))
