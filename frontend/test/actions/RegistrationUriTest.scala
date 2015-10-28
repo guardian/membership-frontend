@@ -42,13 +42,21 @@ class RegistrationUriTest extends Specification {
       assertCodeFor("MEM_SUPUK_FRI", "/join/friend/enter-details", "https://membership.theguardian.com/supporter")
     }
 
+
+    "missing referer will return limited code" in {
+      val request = new RequestBuilder().path("/join/partner/enter-details").build()._underlyingHeader()
+      val regUri: String = RegistrationUri.parse(request)
+      regUri must contain("MEM")
+
+    }
+
   }
 
 
   private def assertCodeFor(code: String, path: String, referrer: String) =  {
     val request = new RequestBuilder().path(path).header("referer", referrer).build()._underlyingHeader()
     val regUri: String = RegistrationUri.parse(request)
-    regUri.contains(code) mustEqual(true)
+    regUri must contain(code)
   }
 
 }
