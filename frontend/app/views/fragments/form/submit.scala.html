@@ -11,7 +11,6 @@
 
 <fieldset class="fieldset fieldset--simple">
     <div class="fieldset__heading"></div>
-
     <div class="fieldset__fields fieldset__fields--no-padding">
 
     @if(membershipTermsAndConditions){
@@ -20,9 +19,11 @@
             <a href="@Links.guardianPrivacyPolicy" class="text-link" target="_blank">Privacy Policy</a>.
         </p>
     }
-
         <div class="actions">
-            <button type="submit" class="action js-submit-input">
+            <noscript>
+                <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
+            </noscript>
+            <button type="button" class="action js-submit-input u-hidden-non-js">
             @Html(tier.fold(ctaTextPrepend)(tier =>
                 ctaTextPrepend + " £<span class=\"js-submit-price-option\">" +
                     Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
@@ -30,6 +31,5 @@
             </button>
             <div class="loader js-loader"></div>
         </div>
-
     </div>
 </fieldset>

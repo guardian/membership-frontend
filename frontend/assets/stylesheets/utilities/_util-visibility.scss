@@ -1,6 +1,9 @@
 /* ==========================================================================
    State - Responsive Utilities
    ========================================================================== */
+.js-off .u-hidden-non-js {
+    display: none !important;
+}
 
  .js-on .u-hidden-js {
     display: none !important;
