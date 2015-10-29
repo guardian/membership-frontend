@@ -1,6 +1,8 @@
-@(tier: com.gu.membership.salesforce.Tier, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
+@import model.PaidTierDetails
+@import com.gu.membership.model.Currency
+@(details: PaidTierDetails, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)(implicit currency: Currency)
 
-@import model.Benefits
+@import views.support.Pricing._
 @import views.support.{Asset, Dates, selectDates}
 
 <fieldset class="fieldset">
@@ -15,11 +17,9 @@
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
-                @Benefits.details(tier).pricing.fold{
-                }{ pricing =>
                     <p>Your card will be charged £<span class="js-card-note-pricing-charge"
-                                                         data-annual="@pricing.yearly"
-                                                         data-month="@pricing.monthly">@pricing.yearly</span>
+                                                         data-annual="@details.pricingWithFallback.yearly"
+                                                         data-month="@details.pricingWithFallback.monthly">@details.pricingWithFallback.yearly</span>
                         every
                         <span class="js-card-note-pricing-period"
                               data-annual="year"
@@ -31,7 +31,6 @@
                         every <span class="js-card-note-pricing-period"
                                     data-annual="year"
                                     data-month="month">year</span>.</p>
-                }
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Cancellation</h3>

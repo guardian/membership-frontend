@@ -1,20 +1,22 @@
-@(tier: com.gu.membership.salesforce.Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@import com.gu.membership.model.Currency
+@import model.{TierDetails,PaidTierDetails, FreeTierDetails}
+@import views.support.DisplayText._
 
-@import model.Benefits
+@(details: TierDetails)(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
 
-@actionAttrs = {
-    href="@routes.TierController.upgrade(tier)"
-    data-metric-trigger="click"
-    data-metric-category="changeTier"
-    data-metric-action="@tier.toString.toLowerCase"
+@actionPath = {
+  @details match {
+      case paid: PaidTierDetails => { @routes.TierController.upgrade(paid.tier) }
+      case free: FreeTierDetails => { @routes.TierController.downgradeToFriend() }
+  }
 }
 
-<div class="package-promo--default tone-border-@tier.toString.toLowerCase">
+<div class="package-promo--default tone-border-@details.tier.slug">
     <div class="package-promo__header">
-        <a class="no-underline minimal-link" @actionAttrs>
+        <a class="no-underline minimal-link">
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(tier, showCaption=false)
+                    @fragments.tier.tierTrail(details.tier, showCaption=false)
                 </div>
             </div>
         </a>
@@ -22,7 +24,7 @@
     <div class="package-promo__content">
         <div class="package-promo__description copy">
             <ul class="o-bulleted-list">
-                @for(highlight <- Benefits.details(tier).highlights) {
+                @for(highlight <- details.tier.highlights) {
                     <li>
                         @if(highlight.isNew) {
                             @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -34,10 +36,15 @@
         </div>
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-            @fragments.pricing.priceInfo(tier, canFlex=false)
+            @fragments.pricing.priceInfo(details, canFlex=false)
             </div>
-            <a class="action u-no-bottom-margin" id="qa-change-tier-@tier.slug" @actionAttrs>
-                <span class="action__label">Become a @tier</span>
+            <a class="action u-no-bottom-margin"
+            id="qa-change-tier-@details.tier.slug"
+            href="@actionPath"
+            data-metric-trigger="click"
+            data-metric-category="changeTier"
+            data-metric-action="@details.tier.slug">
+                <span class="action__label">Become a @details.tier.name</span>
             </a>
         </div>
     </div>

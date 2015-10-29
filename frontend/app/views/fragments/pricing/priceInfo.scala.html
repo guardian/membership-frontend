@@ -1,36 +1,35 @@
-@(tier: com.gu.membership.salesforce.Tier, isReversible: Boolean = false, canFlex: Boolean = true)
-
-@import model.Benefits
+@import com.gu.membership.model.Currency
+@import model.{PaidTierDetails, TierDetails}
 @import views.support.Prices._
+@import views.support.Pricing._
 
-@defining(Benefits.details(tier)) { benefits =>
-    <div class="price-info@if(canFlex){ price-info--flex}@if(isReversible){ price-info--@tier.slug}">
-    @benefits.pricing.fold {
-        <div class="price-info__item price-info__item--single">
-            <div class="price-info__detail">
-                <span class="price-info__value price-info__value--free">Free</span>
-            </div>
+@(details: TierDetails, isReversible: Boolean = false, canFlex: Boolean = true)(implicit currency: Currency)
+
+@details match {
+  case paidDetails: PaidTierDetails => {
+    <div class="price-info@if(canFlex) { price-info--flex} @if(isReversible) { price-info--@details.tier.slug}">
+      <div class="price-info__item price-info__item--split">
+        <div class="price-info__detail">
+          <strong class="price-info__value">@paidDetails.pricingWithFallback.yearly.pretty</strong>
+          <span class="price-info__date">/year</span>
         </div>
-    } { pricing =>
-        <div class="price-info__item price-info__item--split">
-            <div class="price-info__detail">
-                <strong class="price-info__value">@pricing.yearly.pretty</strong>
-                <span class="price-info__date">/year</span>
-            </div>
-            @if(pricing.hasYearlySaving) {
-                @if(pricing.hasOverride){
-                    <div class="price-info__saving">@pricing.yearlySavingsOverride</div>
-                } else{
-                    <div class="price-info__saving">Save @pricing.yearlySaving.pretty/year</div>
-                }
-            }
+        @paidDetails.pricingWithFallback.savingInfo.map { savingMsg =>
+          <div class="price-info__saving">@savingMsg</div>
+        }
+      </div>
+      <div class="price-info__item price-info__item--split price-info__item--last">
+        <div class="price-info__detail price-info__detail--right">
+          <strong class="price-info__value">@paidDetails.pricingWithFallback.monthly.pretty</strong>
+          <span class="price-info__date">/month</span>
         </div>
-        <div class="price-info__item price-info__item--split price-info__item--last">
-            <div class="price-info__detail price-info__detail--right">
-                <strong class="price-info__value">@pricing.monthly.pretty</strong>
-                <span class="price-info__date">/month</span>
-            </div>
-        </div>
-    }
+      </div>
     </div>
+  }
+  case _ => {
+    <div class="price-info__item price-info__item--single">
+      <div class="price-info__detail">
+        <span class="price-info__value price-info__value--free">Free</span>
+      </div>
+    </div>
+  }
 }

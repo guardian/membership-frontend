@@ -1,6 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier)
-
-@import model.Benefits
+@(benefits: Seq[model.Benefit])
 
 <fieldset class="fieldset">
     <div class="fieldset__heading">
@@ -8,7 +6,7 @@
     </div>
     <div class="fieldset__fields copy">
         <ul>
-            @for(benefit <- Benefits.details(tier).list) {
+            @for(benefit <- benefits) {
                 <li>@benefit.title</li>
             }
         </ul>
