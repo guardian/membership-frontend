@@ -121,6 +121,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       }
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
+      case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
       case Failure(error) => {
         logger.error(s"Error in createMember() user=${user.id}", error)
         touchpointBackend.memberRepository.metrics.putFailSignUp(formData.plan)
