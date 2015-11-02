@@ -41,7 +41,7 @@ object Faq {
       Html("Membership has a lot to offer and by joining us you can help build and shape Guardian Members into one of the world’s largest communities of free thinkers. Benefits include access to the Guardian live events programme. Events range from lectures by the world’s foremost thinkers to exclusive screenings of the latest independent films; from sessions with senior journalists at our offices in Kings Place to more intimate, bespoke events. Tickets are only available to Guardian members. If you want to support the Guardian and its journalism, and keep our website open to all, then joining Guardian Members and paying your subscription is a great way to do it.")
     ),
     Item("How much does membership cost?",
-      Html("The Friend tier of Guardian Members is free. Partners pay £15 per month or £149 per year if you pay in one go. For Patrons, the cost is £60 per month or £599 per year. If you choose the annual payment you get 2 months free.")
+      Html("The Friend tier of Guardian Members is free. Supporters pay £5 per month or £49 per year. Partners pay £15 per month or £149 per year if you pay in one go. For Patrons, the cost is £60 per month or £599 per year. If you choose the annual payment you get 2 months free.")
     ),
     Item("What is the difference between a Friend, a Partner and a Patron?",
       Html(s"You can read a <a href='${routes.Joiner.tierChooser}'>full description of each membership tier here</a>.")
