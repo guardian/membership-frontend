@@ -9,15 +9,6 @@
 @import views.support.Asset
 
 @main("") {
-
-
-    <div class="roundel l-constrained">
-        <div class="roundel__container">
-            <h1 class="roundel__title">Annual Partners and Patrons get 3 months free</h1>
-            <p class="roundel__description">Until 31 October</p>
-        </div>
-    </div>
-
     <div class="hero-banner" style="background-image: url(@Asset.at("images/join-challenger/clinton-background.jpg"))">
         <div class="hero-banner__inner">
             <div class="l-constrained">
@@ -211,7 +202,6 @@
             </div>
             <div class="listing__content">
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
-                <p>Join as an annual Partner or Patron Member by <br/> 31 October 2015 and get 3 months free</p>
                 <ul class="grid">
                     @for(tier <- Seq(Supporter, Partner, Patron)) {
                         <li class="grid__item">
