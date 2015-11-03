@@ -51,12 +51,13 @@ define([
      * @param response
      */
     var stripeResponseHandler = function (status, response) {
-        var data, errMsg;
+        var data;
         if (response.error) {
             Raven.captureMessage(response.error.code + ' ' + response.error.message);
-            errMsg = paymentErrorMessages.getMessage(response.error);
-            if (errMsg) {
-                handleError(errMsg);
+            var userMessage = paymentErrorMessages.getMessage(response.error);
+            var errorElement = paymentErrorMessages.getElement(response.error);
+            if (userMessage) {
+                handleError(userMessage, errorElement);
             }
         } else {
             data = serializer(utilsHelper.toArray(form.elem.elements), { 'payment.token': response.id });
@@ -79,7 +80,9 @@ define([
                         Raven.captureException(e);
                     }
 
-                    handleError(paymentErrorMessages.getMessage(paymentErr));
+                    var userMessage = paymentErrorMessages.getMessage(paymentErr);
+                    var errorElement = paymentErrorMessages.getElement(paymentErr);
+                    handleError(userMessage, errorElement);
                 }
             });
 
@@ -93,10 +96,10 @@ define([
      * - enable the submit button
      * @param msg
      */
-    var handleError = function (msg) {
+    var handleError = function (msg, elem) {
         display.toggleErrorState({
             isValid: false,
-            elem: CREDIT_CARD_NUMBER_ELEM,
+            elem: elem,
             msg: msg
         });
 
