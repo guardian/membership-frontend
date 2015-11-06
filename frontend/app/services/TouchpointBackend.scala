@@ -26,7 +26,7 @@ object TouchpointBackend {
   import TouchpointBackendConfig.BackendType
 
   implicit class TouchpointBackendConfigLike(tpbc: TouchpointBackendConfig) {
-    def zuoraEnvName: String = tpbc.zuora.envName
+    def zuoraEnvName: String = tpbc.zuoraSoap.envName
     def zuoraMetrics(component: String): ServiceMetrics = new ServiceMetrics(zuoraEnvName, "membership", component)
     def zuoraRestUrl(config: com.typesafe.config.Config): String =
       config.getString(s"touchpoint.backend.environments.$zuoraEnvName.zuora.api.restUrl")
@@ -43,10 +43,9 @@ object TouchpointBackend {
       val service = "Stripe"
     })
 
-    val restBackendConfig = backend.zuora.copy(url = backend.zuoraRestUrl(Config.config))
 
-    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuora, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
-    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
+    val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
+    val zuoraRestClient = new rest.Client(backend.zuoraRest, backend.zuoraMetrics("zuora-rest-client"))
     val subscriptionService = new SubscriptionService(zuoraSoapClient, zuoraRestClient, backend.zuoraMetrics("zuora-rest-client"))
     val memberRepository = new FrontendMemberRepository(backend.salesforce)
 
