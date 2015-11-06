@@ -28,6 +28,25 @@
                         <li>Email: <strong>@userString@@gu.com</strong></li>
                     </ul>
                 </div>
+                <div class="copy">
+                    <p>
+                        Filling out all those registration fields can get tedious.
+                        Here's a bookmarklet to help you:
+                        <a href="javascript:
+                            (function() {
+                                var username = prompt('Test User key (first name, last name, username and password will be set to this value):');
+                                if (!username) return;
+                                ['firstName', 'secondName', 'publicFields_username', 'password', 'primaryEmailAddress'].forEach(function(field) {
+                                    document.getElementById('user_'+field).value = field === 'primaryEmailAddress' ? username + '@@gu.com' : username;
+                                });
+                                document.querySelector('.js-register-form').submit();
+                            })();">
+                            Register</a>.
+                        In Chrome you can drag the link to the bookmarks bar to bookmark it.
+                        Clicking it on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
+                    </p>
+
+                </div>
                 <div class="action-group">
                     <a class="action" href="@Config.idWebAppRegisterUrl("/")" target="_blank">Register Now</a>
                 </div>
