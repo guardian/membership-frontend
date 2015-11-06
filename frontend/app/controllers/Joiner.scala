@@ -6,7 +6,7 @@ import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.identity.play.{IdMinimalUser, StatusFields}
-import com.gu.membership.salesforce.{PaidMember, ScalaforceError, Tier}
+import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.gu.membership.zuora.soap.models.errors.ResultError
@@ -199,7 +199,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
 
     def futureCustomerOpt = request.member match {
-      case paidMember: PaidMember =>
+      case paidMember: Contact with Member with StripePayment =>
         request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
       case _ => Future.successful(None)
     }

@@ -2,7 +2,7 @@ package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.model._
-import com.gu.membership.salesforce.Member.Keys
+import com.gu.membership.salesforce.ContactDeserializer.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Customer
@@ -35,7 +35,7 @@ case class MemberServiceError(s: String) extends Throwable {
   override def getMessage: String = s
 }
 
-class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends MemberRepository {
+class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends ContactRepository {
   val metrics = new MemberMetrics(salesforceConfig.envName)
 
   val salesforce = new Scalaforce {
@@ -55,6 +55,9 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Membe
     private val actorSystem = Akka.system
     actorSystem.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
   }
+
+  def getMember(userId: String): Future[Option[Contact with Member]] =
+    get(userId).map { m => m.collect { case s: Contact with Member => s }}
 }
 
 trait MemberService extends LazyLogging with ActivityTracking {
@@ -80,13 +83,13 @@ trait MemberService extends LazyLogging with ActivityTracking {
     Keys.TIER -> plan.salesforceTier
   ) ++ customerOpt.map { customer =>
     Json.obj(
-      Keys.CUSTOMER_ID -> customer.id,
+      Keys.STRIPE_CUSTOMER_ID -> customer.id,
       Keys.DEFAULT_CARD_ID -> customer.card.id
     )
   }.getOrElse(Json.obj())
 
   def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest,
-                   paymentDelay: Option[Period], campaignCode: Option[String] = None): Future[MemberId] = {
+                   paymentDelay: Option[Period], campaignCode: Option[String] = None): Future[ContactId] = {
     val touchpointBackend = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
@@ -134,7 +137,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
   }
 
-  def recordFreeEventUsage(member: Member, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+  def recordFreeEventUsage(member: Contact with Member, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val tp = TouchpointBackend.forUser(member)
     for {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
@@ -147,7 +150,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+  def retrieveComplimentaryTickets(member: Contact with Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
     val tp = TouchpointBackend.forUser(member)
     Timing.record(tp.memberRepository.metrics, "retrieveComplimentaryTickets") {
       for {
@@ -167,7 +170,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveDiscountedTickets(member: Member, event: RichEvent): Seq[EBTicketClass] = {
+  def retrieveDiscountedTickets(member: Contact with Member, event: RichEvent): Seq[EBTicketClass] = {
     (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
@@ -175,7 +178,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Member, event: RichEvent): Future[Option[EBCode]] = {
+  def createEBCode(member: Contact with Member, event: RichEvent): Future[Option[EBCode]] = {
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
@@ -183,7 +186,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def previewUpgradeSubscription(paidMember: PaidMember, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
+  def previewUpgradeSubscription(paidMember: Contact with Member with StripePayment, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(paidMember)
 
     for {
@@ -193,11 +196,11 @@ trait MemberService extends LazyLogging with ActivityTracking {
     } yield subscriptionResult.invoiceItems
   }
 
-  def upgradeFreeSubscription(freeMember: FreeMember,
+  def upgradeFreeSubscription(freeMember: Contact with Member with NoPayment,
                               newTier: Tier,
                               form: FreeMemberChangeForm,
                               identityRequest: IdentityRequest,
-                              campaignCode: Option[String]): Future[MemberId] = {
+                              campaignCode: Option[String]): Future[ContactId] = {
 
     val touchpointBackend = TouchpointBackend.forUser(freeMember)
     for {
@@ -210,11 +213,11 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def upgradePaidSubscription(paidMember: PaidMember,
+  def upgradePaidSubscription(paidMember: Contact with Member with StripePayment,
                               newTier: Tier,
                               identityRequest: IdentityRequest,
                               campaignCode: Option[String],
-                              form: PaidMemberChangeForm): Future[MemberId] = {
+                              form: PaidMemberChangeForm): Future[ContactId] = {
 
     for {
       paymentSummary <- TouchpointBackend.forUser(paidMember).subscriptionService.getPaymentSummary(paidMember)
@@ -223,12 +226,12 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   }
 
-  private def upgradeSubscription(member: Member,
+  private def upgradeSubscription(member: Contact with Member,
                                   newRatePlan: PaidTierPlan,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
                                   identityRequest: IdentityRequest,
-                                  campaignCode: Option[String]): Future[MemberId] = {
+                                  campaignCode: Option[String]): Future[ContactId] = {
 
     val touchpointBackend = TouchpointBackend.forUser(member)
     val addressDetails = form.addressDetails
@@ -246,8 +249,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  private def trackUpgrade(memberId: MemberId,
-                           member: Member,
+  private def trackUpgrade(memberId: ContactId,
+                           member: Contact with Member,
                            newRatePlan: PaidTierPlan,
                            campaignCode: Option[String],
                            addressDetails: Option[AddressDetails]): Unit = {
@@ -270,7 +273,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       member)
   }
 
-  private def trackRegistration(formData: JoinForm, member: MemberId, user: IdMinimalUser, campaignCode: Option[String] = None) {
+  private def trackRegistration(formData: JoinForm, member: ContactId, user: IdMinimalUser, campaignCode: Option[String] = None) {
     val subscriptionPaymentAnnual = formData match {
       case paidMemberJoinForm: PaidMemberJoinForm => Some(paidMemberJoinForm.payment.annual)
       case _ => None

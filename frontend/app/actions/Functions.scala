@@ -2,7 +2,7 @@ package actions
 
 import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
-import com.gu.membership.salesforce.{PaidMember, Tier}
+import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
 import com.typesafe.scalalogging.LazyLogging
@@ -73,7 +73,7 @@ object Functions extends LazyLogging {
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {
         request.member match {
-          case paidMember: PaidMember => Right(MemberRequest(paidMember, request.request))
+          case paidMember: Contact with Member with StripePayment => Right(MemberRequest(paidMember, request.request))
           case _ => Left(onFreeMember(request))
         }
       }

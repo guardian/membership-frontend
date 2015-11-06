@@ -1,5 +1,7 @@
+@import com.gu.membership.salesforce.Member
+@import com.gu.membership.salesforce.Contact
 @(
-    member: com.gu.membership.salesforce.Member,
+    member: Contact with Member,
     summary: model.MembershipSummary,
     cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
     returnDestinationOpt: Option[model.Destination],

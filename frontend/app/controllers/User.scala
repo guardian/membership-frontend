@@ -2,7 +2,7 @@ package controllers
 
 import actions._
 import com.gu.cas.CAS.CASSuccess
-import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
+import com.gu.membership.salesforce._
 import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import model.Benefits
 import org.joda.time.format.ISODateTimeFormat
@@ -31,12 +31,12 @@ trait User extends Controller {
 
   def meDetails = AjaxMemberAction.async { implicit request =>
     def futureCardDetails = request.member match {
-      case paidMember: PaidMember =>
+      case paidMember: StripePayment =>
         for {
           customer <- request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
         } yield Json.obj("card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`))
 
-      case member: FreeMember =>
+      case member: NoPayment =>
         Future.successful(Json.obj())
     }
 
@@ -73,7 +73,7 @@ trait User extends Controller {
     futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
-  def basicDetails(member: Member) = Json.obj(
+  def basicDetails(member: Contact with Member) = Json.obj(
     "userId" -> member.identityId,
     "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
