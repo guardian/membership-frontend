@@ -83,7 +83,7 @@ define(function () {
             }
         }
 
-        return errMsg || paymentErrMsgs.generic_error;
+        return errMsg || paymentErrMsgs.generic_error.msg;
     };
 
     var getElement = function(err) {
