@@ -22,12 +22,14 @@ object Dependencies {
   val bCrypt = "com.github.t3hnar" %% "scala-bcrypt" % "2.4"
   val s3 =  "com.amazonaws" % "aws-java-sdk-s3" % awsClientVersion
   val scalaTest =  "org.scalatestplus" %% "play" % "1.4.0-M4" % "test"
+  val selenium = "org.seleniumhq.selenium" % "selenium-java" % "2.48.2" % "test"
 
   //projects
 
   val frontendDependencies = Seq(identityCookie, identityPlayAuth, playGoogleAuth, identityTestUsers, scalaUri, membershipCommon,
     contentAPI, playWS, playCache, playFilters,sentryRavenLogback, awsSimpleEmail, snowPlow, bCrypt, s3,
-    PlayImport.specs2 % "test",
-    scalaTest)
+    PlayImport.specs2 % "test")
+
+  val acceptanceTestDependencies = Seq(scalaTest, selenium, identityTestUsers)
 
 }
