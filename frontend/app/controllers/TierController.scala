@@ -162,7 +162,12 @@ trait UpgradeTier {
       case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
-    futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
+    val cookiesToDiscard = List(
+      DiscardingCookie("GU_MEM"),
+      DiscardingCookie("gu_paying_member")
+    )
+
+    futureResult.map(_.discardingCookies(cookiesToDiscard:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error: ResultError => Forbidden
       case error: ScalaforceError => Forbidden
