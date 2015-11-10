@@ -16,7 +16,7 @@ package object actions {
   implicit class RichAuthRequest[A](req: AuthRequest[A]) {
     lazy val touchpointBackend = TouchpointBackend.forUser(req.user)
 
-    def forMemberOpt[A, T](f: Option[Contact with Member] => T)(implicit executor: ExecutionContext): Future[T] =
+    def forMemberOpt[A, T](f: Option[Contact[Member, PaymentMethod]] => T)(implicit executor: ExecutionContext): Future[T] =
       Timing.record(MemberAuthenticationMetrics, s"${req.method} ${req.path}") {
         for {
           memberOpt <- touchpointBackend.memberRepository.getMember(req.user.id)
@@ -24,7 +24,7 @@ package object actions {
       }
     }
 
-  case class MemberRequest[A, +M <: Contact with Member](member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
+  case class MemberRequest[A, +M <: Contact[Member, PaymentMethod]](member: M, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val user = request.user
 
     def idCookies: Option[Seq[Cookie]] = for {
@@ -35,9 +35,9 @@ package object actions {
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
   }
 
-  type AnyMemberTierRequest[A] = MemberRequest[A, Contact with Member]
+  type AnyMemberTierRequest[A] = MemberRequest[A, Contact[Member, PaymentMethod]]
 
-  type PaidMemberRequest[A] = MemberRequest[A, Contact with Member with StripePayment]
+  type PaidMemberRequest[A] = MemberRequest[A, Contact[Member, StripePayment]]
 
   case class IdentityGoogleAuthRequest[A](googleUser: googleauth.UserIdentity, request: AuthRequest[A]) extends WrappedRequest[A](request) {
     val identityUser = request.user

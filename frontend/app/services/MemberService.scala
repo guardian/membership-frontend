@@ -42,7 +42,7 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
     val consumerKey = salesforceConfig.consumerKey
     val consumerSecret = salesforceConfig.consumerSecret
 
-    val apiURL = salesforceConfig.apiURL.toString
+    val apiURL = salesforceConfig.apiURL.toString()
     val apiUsername = salesforceConfig.apiUsername
     val apiPassword = salesforceConfig.apiPassword
     val apiToken = salesforceConfig.apiToken
@@ -56,8 +56,8 @@ class FrontendMemberRepository(salesforceConfig: SalesforceConfig) extends Conta
     actorSystem.scheduler.schedule(30.minutes, 30.minutes) { authSupplier.refresh() }
   }
 
-  def getMember(userId: String): Future[Option[Contact with Member]] =
-    get(userId).map { m => m.collect { case s: Contact with Member => s }}
+  def getMember(userId: String): Future[Option[Contact[Member, PaymentMethod]]] =
+    get(userId).map(_.collect { case Contact(d, m@Member(_, _), p) => Contact(d, m, p) })
 }
 
 trait MemberService extends LazyLogging with ActivityTracking {
@@ -125,10 +125,9 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }.andThen {
       case Success(memberAccount) => logger.debug(s"createMember() success user=${user.id} memberAccount=$memberAccount")
       case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
-      case Failure(error) => {
+      case Failure(error) =>
         logger.error(s"Error in createMember() user=${user.id}", error)
         touchpointBackend.memberRepository.metrics.putFailSignUp(formData.plan)
-      }
     }
   }
 
@@ -137,7 +136,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
   }
 
-  def recordFreeEventUsage(member: Contact with Member, event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+  def recordFreeEventUsage(member: Contact[Member, _], event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val tp = TouchpointBackend.forUser(member)
     for {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
@@ -150,7 +149,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Contact with Member, event: RichEvent): Future[Seq[EBTicketClass]] = {
+  def retrieveComplimentaryTickets(member: Contact[Member, _], event: RichEvent): Future[Seq[EBTicketClass]] = {
     val tp = TouchpointBackend.forUser(member)
     Timing.record(tp.memberRepository.metrics, "retrieveComplimentaryTickets") {
       for {
@@ -170,15 +169,15 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveDiscountedTickets(member: Contact with Member, event: RichEvent): Seq[EBTicketClass] = {
+  def retrieveDiscountedTickets(member: Contact[Member, _], event: RichEvent): Seq[EBTicketClass] = {
     (for {
       ticketing <- event.internalTicketing
-      benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.tier)
+      benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.memberStatus.tier)
     } yield ticketing.memberBenefitTickets)
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Contact with Member, event: RichEvent): Future[Option[EBCode]] = {
+  def createEBCode(member: Contact[Member, _], event: RichEvent): Future[Option[EBCode]] = {
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
@@ -186,7 +185,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def previewUpgradeSubscription(paidMember: Contact with Member with StripePayment, newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
+  def previewUpgradeSubscription(paidMember: Contact[Member, StripePayment], newTier: Tier): Future[Seq[PreviewInvoiceItem]] = {
     val touchpointBackend = TouchpointBackend.forUser(paidMember)
 
     for {
@@ -196,7 +195,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     } yield subscriptionResult.invoiceItems
   }
 
-  def upgradeFreeSubscription(freeMember: Contact with Member with NoPayment,
+  def upgradeFreeSubscription(freeMember: Contact[Member, NoPayment],
                               newTier: Tier,
                               form: FreeMemberChangeForm,
                               identityRequest: IdentityRequest,
@@ -213,7 +212,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def upgradePaidSubscription(paidMember: Contact with Member with StripePayment,
+  def upgradePaidSubscription(paidMember: Contact[Member, StripePayment],
                               newTier: Tier,
                               identityRequest: IdentityRequest,
                               campaignCode: Option[String],
@@ -226,7 +225,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   }
 
-  private def upgradeSubscription(member: Contact with Member,
+  private def upgradeSubscription(member: Contact[Member, _],
                                   newRatePlan: PaidTierPlan,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
@@ -250,7 +249,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   private def trackUpgrade(memberId: ContactId,
-                           member: Contact with Member,
+                           member: Contact[Member, _],
                            newRatePlan: PaidTierPlan,
                            campaignCode: Option[String],
                            addressDetails: Option[AddressDetails]): Unit = {
@@ -260,8 +259,8 @@ trait MemberService extends LazyLogging with ActivityTracking {
         MemberData(
           salesforceContactId = memberId.salesforceContactId,
           identityId = member.identityId,
-          tier = member.tier.name,
-          tierAmendment = Some(UpgradeAmendment(member.tier, newRatePlan.tier)),
+          tier = member.memberStatus.tier.name,
+          tierAmendment = Some(UpgradeAmendment(member.memberStatus.tier, newRatePlan.tier)),
           deliveryPostcode = addressDetails.map(_.deliveryAddress.postCode),
           billingPostcode = addressDetails.flatMap(f => f.billingAddress.map(_.postCode)).orElse(addressDetails.map(_.deliveryAddress.postCode)),
           subscriptionPaymentAnnual = Some(newRatePlan.annual),

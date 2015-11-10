@@ -198,9 +198,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
 
-    def futureCustomerOpt = request.member match {
-      case paidMember: Contact with Member with StripePayment =>
-        request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId).map(Some(_))
+    def futureCustomerOpt = request.member.paymentMethod match {
+      case StripePayment(id) =>
+        request.touchpointBackend.stripeService.Customer.read(id).map(Some(_))
       case _ => Future.successful(None)
     }
 

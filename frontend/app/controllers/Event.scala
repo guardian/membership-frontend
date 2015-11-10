@@ -115,15 +115,13 @@ trait Event extends Controller with ActivityTracking {
 
 
   def buy(id: String) = BuyAction(id).async { implicit request =>
-    EventbriteService.getEvent(id).map { event =>
-      event match {
-        case _: GuLiveEvent | _: LocalEvent =>
-          if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
-          else Future.successful(Redirect(routes.TierController.change()))
+    EventbriteService.getEvent(id).map {
+      case event@(_: GuLiveEvent | _: LocalEvent) =>
+        if (tierCanBuyTickets(event, request.member.tier)) redirectToEventbrite(request, event)
+        else Future.successful(Redirect(routes.TierController.change()))
 
-        case _: MasterclassEvent =>
-          redirectToEventbrite(request, event)
-      }
+      case event@(_: MasterclassEvent) =>
+        redirectToEventbrite(request, event)
     }.getOrElse(Future.successful(NotFound))
   }
 
@@ -133,11 +131,11 @@ trait Event extends Controller with ActivityTracking {
   private def eventCookie(event: RichEvent) = s"mem-event-${event.id}"
 
   private def redirectToEventbrite(request: AnyMemberTierRequest[AnyContent], event: RichEvent): Future[Result] =
-    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.tier}") {
+    Timing.record(event.service.wsMetrics, s"user-sent-to-eventbrite-${request.member.memberStatus.tier}") {
 
       memberService.createEBCode(request.member, event).map { code =>
         val eventUrl = code.fold(Uri.parse(event.url))(c => event.url ? ("discount" -> c.code))
-        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.tier.name, campaignCode = extractCampaignCode(request))
+        val memberData = MemberData(request.member.salesforceContactId, request.user.id, request.member.memberStatus.tier.name, campaignCode = extractCampaignCode(request))
 
         track(EventActivity("redirectToEventbrite", Some(memberData), EventData(event)),request.user)
 
@@ -147,8 +145,8 @@ trait Event extends Controller with ActivityTracking {
     }
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
-                                        member: Option[Contact with Member]) {
-    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.tier.name, campaignCode=extractCampaignCode(request)))
+                                        member: Option[Contact[Member, _]]) {
+    val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.memberStatus.tier.name, campaignCode=extractCampaignCode(request)))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
 

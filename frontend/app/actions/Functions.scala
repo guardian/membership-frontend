@@ -13,6 +13,7 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
 import services._
+import Contact._
 
 import scala.concurrent.Future
 
@@ -71,10 +72,10 @@ object Functions extends LazyLogging {
 
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
-      override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {
+      override def refine[A](request: AnyMemberTierRequest[A]) = Future {
         request.member match {
-          case paidMember: Contact with Member with StripePayment => Right(MemberRequest(paidMember, request.request))
-          case _ => Left(onFreeMember(request))
+          case Contact(d, m, NoPayment) => Left(onFreeMember(request))
+          case Contact(d, m, p@StripePayment(_)) => Right(MemberRequest(Contact(d, m, p), request.request))
         }
       }
     }

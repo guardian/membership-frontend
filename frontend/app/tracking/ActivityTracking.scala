@@ -203,7 +203,7 @@ trait ActivityTracking {
     if (!isTestUser(user)) executeTracking(data)
   }
 
-  def track(data: TrackerData, member: Contact with Member) {
+  def track(data: TrackerData, member: Contact[Member, _]) {
     if (!isTestUser(member)) executeTracking(data)
   }
 
