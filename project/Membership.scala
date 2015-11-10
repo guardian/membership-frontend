@@ -50,6 +50,9 @@ object Membership extends Build with Membership {
   val frontend = app("frontend")
                 .settings(libraryDependencies ++= frontendDependencies)
                 .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
+                .settings(libraryDependencies ++= acceptanceTestDependencies)
+                .settings(addCommandAlias("test", "testOnly -- -l Acceptance"))
+                .settings(addCommandAlias("acceptance-test", "testOnly acceptance.JoinPartnerSpec"))
 
   val root = Project("root", base=file(".")).aggregate(frontend)
 }

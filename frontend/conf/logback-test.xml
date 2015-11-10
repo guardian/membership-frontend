@@ -1,0 +1,22 @@
+<configuration>
+    <property name="application-name" value="membership-frontend" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%date %level %class - %m%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <File>logs/acceptance-test.log</File>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%date %level %class - %m%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
