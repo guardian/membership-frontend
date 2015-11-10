@@ -61,10 +61,6 @@ class JoinPartnerSpec extends FeatureSpec
       And("I fill in card details")
       enterDetails.fillInCardDetails()
 
-      And("ANALYTICS_OFF_KEY cookie is set")
-      Seq("ANALYTICS_OFF_KEY", "pre-signin-test-user").foreach { testCookie =>
-        assert(cookiesSet.map(_.getName).contains(testCookie)) }
-
       And("I click 'Pay' button")
       enterDetails.pay()
 
