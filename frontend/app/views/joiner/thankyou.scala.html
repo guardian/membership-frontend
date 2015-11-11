@@ -1,5 +1,9 @@
+@import com.gu.membership.salesforce.Member
+@import com.gu.membership.salesforce.Contact._
+@import com.gu.membership.salesforce.Contact
+@import com.gu.membership.salesforce.PaymentMethod
 @(
-    member: com.gu.membership.salesforce.Member,
+    member: Contact[Member, PaymentMethod],
     summary: model.MembershipSummary,
     cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
     returnDestinationOpt: Option[model.Destination],
@@ -15,9 +19,9 @@
 
 @title = @{
     if(upgrade) {
-        s"Thank you for upgrading | ${member.tier.name}"
+        s"Thank you for upgrading | ${member.memberStatus.tier.name}"
     } else {
-        s"Thank you | ${member.tier.name}"
+        s"Thank you | ${member.memberStatus.tier.name}"
     }
 }
 
@@ -47,7 +51,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeader, Some("You're the newest " + member.tier + " of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
+        @fragments.page.pageHeader(pageHeader, Some("You're the newest " + member.memberStatus.tier + " of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -57,7 +61,7 @@
                 <table class="table table--striped" role="grid">
                     <tr role="row">
                         <th role="rowheader">Tier</th>
-                        <td id="qa-joiner-summary-tier">@member.tier</td>
+                        <td id="qa-joiner-summary-tier">@member.memberStatus.tier</td>
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Start date</th>
@@ -112,7 +116,7 @@
 
         @returnDestinationOpt.fold{ 
             @getStarted("Get started") {
-                @member.tier match {
+                @member.memberStatus.tier match {
                     case Tier.Supporter => {
                         <p>Visit the Members area of theguardian.com, see all the latest news and highlights from our membership programme.</p>
                         <a class="action" href="@Links.membershipFront">Get started</a>
@@ -141,10 +145,10 @@
         }
     </main>
 
-    @fragments.analytics.googleJoinerConversion(member.tier)
-    @fragments.analytics.facebookJoinerConversion(member.tier)
+    @fragments.analytics.googleJoinerConversion(member.memberStatus.tier)
+    @fragments.analytics.facebookJoinerConversion(member.memberStatus.tier)
     @fragments.analytics.videoCampaignPHD.thankyouPage(
-        member.regNumber.fold("free")(regNumber => regNumber),
+        member.memberStatus.regNumber.getOrElse("free"),
         summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
     )
 }

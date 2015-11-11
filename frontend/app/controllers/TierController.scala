@@ -58,9 +58,10 @@ trait UpgradeTier {
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(memberRequest.touchpointBackend.stripeService.publicKey))
 
         memberRequest.member match {
-          case paidMember: PaidMember =>
-            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(paidMember, tier)
-            val stripeCustomerF = memberRequest.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+          case Contact(d, c, p: StripePayment) =>
+            val contact = Contact(d, c, p)
+            val previewUpgradeSubscriptionF = MemberService.previewUpgradeSubscription(contact, tier)
+            val stripeCustomerF = memberRequest.touchpointBackend.stripeService.Customer.read(contact.stripeCustomerId)
 
             for {
               preview <- previewUpgradeSubscriptionF
@@ -69,11 +70,11 @@ trait UpgradeTier {
             } yield {
               val flashMsgOpt = memberRequest.flash.get("error").map(FlashMessage.error)
 
-              Ok(views.html.tier.upgrade.paidToPaid(memberRequest.member.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt)(getToken, memberRequest.request))
+              Ok(views.html.tier.upgrade.paidToPaid(memberRequest.member.memberStatus.tier, tier, privateFields, pageInfo, PaidPreview(customer.card, preview), subscription, flashMsgOpt)(getToken, memberRequest.request))
             }
           case _ =>
             for (privateFields <- identityUserFieldsF) yield {
-              Ok(views.html.tier.upgrade.freeToPaid(memberRequest.member.tier, tier, privateFields, pageInfo)(getToken, memberRequest.request))
+              Ok(views.html.tier.upgrade.freeToPaid(memberRequest.member.memberStatus.tier, tier, privateFields, pageInfo)(getToken, memberRequest.request))
             }
         }
       }
@@ -103,18 +104,18 @@ trait UpgradeTier {
   def upgradeConfirm(tier: Tier) = MemberAction.async { implicit request =>
     val identityRequest = IdentityRequest(request)
 
-    def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = for {
+    def handleFree(freeMember: Contact[Member, NoPayment])(form: FreeMemberChangeForm) = for {
       memberId <- MemberService.upgradeFreeSubscription(freeMember, tier, form, identityRequest, extractCampaignCode(request))
     } yield Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(tier).url))
 
-    def handlePaid(paidMember: PaidMember)(form: PaidMemberChangeForm) = {
+    def handlePaid(paidMember: Contact[Member, StripePayment])(form: PaidMemberChangeForm) = {
       val reauthFailedMessage: Future[Result] = Future {
         Redirect(routes.TierController.upgrade(tier))
           .flashing("error" ->
           s"That password does not match our records. Please try again.")
       }
 
-      def doUpgrade: Future[Result] = {
+      def doUpgrade(): Future[Result] = {
         MemberService.upgradePaidSubscription(paidMember, tier, identityRequest, extractCampaignCode(request), form).map {
           _ => Redirect(routes.TierController.upgradeThankyou(tier))
         }
@@ -128,11 +129,8 @@ trait UpgradeTier {
     }
 
     val futureResult = request.member match {
-      case freeMember: FreeMember =>
-        freeMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handleFree(freeMember))
-
-      case paidMember: PaidMember =>
-        paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(paidMember))
+      case Contact(d, c, p: NoPayment) => freeMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handleFree(Contact(d, c, p)))
+      case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
     futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
@@ -161,14 +159,14 @@ trait CancelTier {
   }
 
   def cancelTierSummary() = AuthenticatedAction.async { implicit request =>
-    def subscriptionDetailsFor(memberOpt: Option[Member]) = {
-      memberOpt.collect { case paidMember: PaidMember =>
-        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(paidMember)
+    def subscriptionDetailsFor(memberOpt: Option[Contact[Member, PaymentMethod]]) = {
+      memberOpt.collect { case Contact(d, m, p: StripePayment) =>
+        request.touchpointBackend.subscriptionService.getCurrentSubscriptionDetails(d)
       }
     }
 
     for {
-      memberOpt <- request.touchpointBackend.memberRepository.get(request.user.id)
+      memberOpt <- request.touchpointBackend.memberRepository.getMember(request.user.id)
       subscriptionDetails <- Future.sequence(subscriptionDetailsFor(memberOpt).toSeq)
     } yield {
       val currentTierOpt = memberOpt.map(_.tier)
