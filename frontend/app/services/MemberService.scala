@@ -136,7 +136,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     order.attendees.count(attendee => ticketIds.contains(attendee.ticket_class_id))
   }
 
-  def recordFreeEventUsage(member: Contact[Member, _], event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
+  def recordFreeEventUsage(member: Contact[Member, PaymentMethod], event: RichEvent, order: EBOrder, quantity: Int): Future[CreateResult] = {
     val tp = TouchpointBackend.forUser(member)
     for {
       (account, subscription) <- tp.subscriptionService.accountWithLatestMembershipSubscription(member)
@@ -149,7 +149,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveComplimentaryTickets(member: Contact[Member, _], event: RichEvent): Future[Seq[EBTicketClass]] = {
+  def retrieveComplimentaryTickets(member: Contact[Member, PaymentMethod], event: RichEvent): Future[Seq[EBTicketClass]] = {
     val tp = TouchpointBackend.forUser(member)
     Timing.record(tp.memberRepository.metrics, "retrieveComplimentaryTickets") {
       for {
@@ -169,7 +169,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
     }
   }
 
-  def retrieveDiscountedTickets(member: Contact[Member, _], event: RichEvent): Seq[EBTicketClass] = {
+  def retrieveDiscountedTickets(member: Contact[Member, PaymentMethod], event: RichEvent): Seq[EBTicketClass] = {
     (for {
       ticketing <- event.internalTicketing
       benefit <- ticketing.memberDiscountOpt if DiscountTicketTiers.contains(member.memberStatus.tier)
@@ -177,7 +177,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       .getOrElse(Seq[EBTicketClass]())
   }
 
-  def createEBCode(member: Contact[Member, _], event: RichEvent): Future[Option[EBCode]] = {
+  def createEBCode(member: Contact[Member, PaymentMethod], event: RichEvent): Future[Option[EBCode]] = {
     retrieveComplimentaryTickets(member, event).flatMap { complimentaryTickets =>
       val code = DiscountCode.generate(s"A_${member.identityId}_${event.id}")
       val unlockedTickets = complimentaryTickets ++ retrieveDiscountedTickets(member, event)
@@ -225,7 +225,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
   }
 
-  private def upgradeSubscription(member: Contact[Member, _],
+  private def upgradeSubscription(member: Contact[Member, PaymentMethod],
                                   newRatePlan: PaidTierPlan,
                                   form: MemberChangeForm,
                                   customerOpt: Option[Customer],
@@ -249,7 +249,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
   }
 
   private def trackUpgrade(memberId: ContactId,
-                           member: Contact[Member, _],
+                           member: Contact[Member, PaymentMethod],
                            newRatePlan: PaidTierPlan,
                            campaignCode: Option[String],
                            addressDetails: Option[AddressDetails]): Unit = {

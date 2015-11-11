@@ -1,7 +1,9 @@
 @import com.gu.membership.salesforce.Member
+@import com.gu.membership.salesforce.Contact._
 @import com.gu.membership.salesforce.Contact
+@import com.gu.membership.salesforce.PaymentMethod
 @(
-    member: Contact[Member, _],
+    member: Contact[Member, PaymentMethod],
     summary: model.MembershipSummary,
     cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
     returnDestinationOpt: Option[model.Destination],

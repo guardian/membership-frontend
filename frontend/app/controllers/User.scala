@@ -73,7 +73,7 @@ trait User extends Controller {
     futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
-  def basicDetails(member: Contact[Member, _]) = Json.obj(
+  def basicDetails(member: Contact[Member, PaymentMethod]) = Json.obj(
     "userId" -> member.identityId,
     "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,

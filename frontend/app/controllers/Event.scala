@@ -4,7 +4,7 @@ import actions.AnyMemberTierRequest
 import actions.Fallbacks._
 import actions.Functions._
 import com.github.nscala_time.time.Imports._
-import com.gu.membership.salesforce.{Contact, Member, Tier}
+import com.gu.membership.salesforce.{PaymentMethod, Contact, Member, Tier}
 import com.gu.membership.util.Timing
 import com.netaporter.uri.Uri
 import com.netaporter.uri.dsl._
@@ -145,7 +145,7 @@ trait Event extends Controller with ActivityTracking {
     }
 
   private def trackConversionToThankyou(request: Request[_], event: RichEvent, order: Option[EBOrder],
-                                        member: Option[Contact[Member, _]]) {
+                                        member: Option[Contact[Member, PaymentMethod]]) {
     val memberData = member.map(m => MemberData(m.salesforceContactId, m.identityId, m.memberStatus.tier.name, campaignCode=extractCampaignCode(request)))
     trackAnon(EventActivity("eventThankYou", memberData, EventData(event), order.map(OrderData)))(request)
   }
