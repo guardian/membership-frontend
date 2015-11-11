@@ -162,10 +162,8 @@ trait UpgradeTier {
       case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
-    val cookiesToDiscard = List(
-      DiscardingCookie("GU_MEM"),
-      DiscardingCookie("gu_paying_member")
-    )
+    // After upgrading, let nextgen reassert the user's payment status
+    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member"))
 
     futureResult.map(_.discardingCookies(cookiesToDiscard:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
