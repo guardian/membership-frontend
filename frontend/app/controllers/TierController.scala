@@ -41,7 +41,7 @@ trait DowngradeTier extends ActivityTracking {
       subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
       currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.futureVersionOpt.get)
-    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName))
+    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName)).discardingCookies(DiscardingCookie("gu_paying_member"))
   }
 }
 
@@ -150,7 +150,7 @@ trait CancelTier {
   self: TierController =>
 
   def cancelTier() = MemberAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm(request.member.tier))
+    Ok(views.html.tier.cancel.confirm(request.member.tier)).discardingCookies(DiscardingCookie("gu_paying_member"))
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
@@ -182,7 +182,7 @@ trait TierController extends Controller with UpgradeTier with DowngradeTier with
   def change() = MemberAction { implicit request =>
     val currentTier = request.member.tier
     val availableTiers = Tier.allPublic.filter(_ != currentTier)
-    Ok(views.html.tier.change(currentTier, availableTiers))
+    Ok(views.html.tier.change(currentTier, availableTiers)).discardingCookies(DiscardingCookie("gu_paying_member"))
   }
 }
 
