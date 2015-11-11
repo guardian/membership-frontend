@@ -2,7 +2,7 @@ package actions
 
 import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
-import com.gu.membership.salesforce.{PaidMember, Tier}
+import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
 import com.gu.monitoring.CloudWatch
 import com.typesafe.scalalogging.LazyLogging
@@ -13,6 +13,7 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
 import services._
+import Contact._
 
 import scala.concurrent.Future
 
@@ -71,10 +72,10 @@ object Functions extends LazyLogging {
 
   def paidMemberRefiner(onFreeMember: RequestHeader => Result = changeTier(_)) =
     new ActionRefiner[AnyMemberTierRequest, PaidMemberRequest] {
-      override def refine[A](request: AnyMemberTierRequest[A]) = Future.successful {
+      override def refine[A](request: AnyMemberTierRequest[A]) = Future {
         request.member match {
-          case paidMember: PaidMember => Right(MemberRequest(paidMember, request.request))
-          case _ => Left(onFreeMember(request))
+          case Contact(d, m, NoPayment) => Left(onFreeMember(request))
+          case Contact(d, m, p@StripePayment(_)) => Right(MemberRequest(Contact(d, m, p), request.request))
         }
       }
     }

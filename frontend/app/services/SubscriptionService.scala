@@ -2,7 +2,7 @@ package services
 
 import com.github.nscala_time.time.Imports._
 import com.gu.membership.model._
-import com.gu.membership.salesforce.MemberId
+import com.gu.membership.salesforce.ContactId
 import com.gu.membership.salesforce.Tier._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.util.{FutureSupplier, Timing}
@@ -126,7 +126,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     subscriptions <- zuoraSoapClient.query[Subscription](SimpleFilter("Name", subscriptionNumber))
   } yield subscriptions
 
-  def accountWithLatestMembershipSubscription(member: MemberId): Future[(Account, rest.Subscription)] = for {
+  def accountWithLatestMembershipSubscription(member: ContactId): Future[(Account, rest.Subscription)] = for {
     accounts <- zuoraSoapClient.query[Account](SimpleFilter("crmId", member.salesforceAccountId))
     accountAndSubscriptionOpts <- Future.traverse(accounts) { account =>
       zuoraRestClient.latestSubscriptionOpt(membershipProductType, Set(account.id)).map(account -> _)
@@ -151,7 +151,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def memberTierFeatures(memberId: MemberId): Future[Seq[rest.Feature]] = for {
+  def memberTierFeatures(memberId: ContactId): Future[Seq[rest.Feature]] = for {
     (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
     productIds <- membershipProducts.map(_.products.map(_.id).toSet)
   } yield subscription
@@ -163,7 +163,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
    *         they have a pending amendment (Currently this is the case only of downgrades, as upgrades
    *         are effective immediately)
    */
-  def getSubscriptionStatus(memberId: MemberId): Future[SubscriptionStatus] =
+  def getSubscriptionStatus(memberId: ContactId): Future[SubscriptionStatus] =
     accountWithLatestMembershipSubscription(memberId).flatMap(accountWithSub =>
       getSubscriptionStatus(accountWithSub._2))
 
@@ -180,7 +180,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
   def getRatePlan(subscription: Subscription): Future[RatePlan] =
     zuoraSoapClient.queryOne[RatePlan](SimpleFilter("SubscriptionId", subscription.id))
 
-  def getCurrentSubscriptionDetails(memberId: MemberId): Future[SubscriptionDetails] = for {
+  def getCurrentSubscriptionDetails(memberId: ContactId): Future[SubscriptionDetails] = for {
     subscriptionStatus <- getSubscriptionStatus(memberId)
     subscriptionDetails <- getSubscriptionDetails(subscriptionStatus.currentVersion)
   } yield subscriptionDetails
@@ -205,13 +205,13 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def createPaymentMethod(memberId: MemberId, customer: Stripe.Customer): Future[UpdateResult] = for {
+  def createPaymentMethod(memberId: ContactId, customer: Stripe.Customer): Future[UpdateResult] = for {
     (account, _) <- accountWithLatestMembershipSubscription(memberId)
     paymentMethod <- zuoraSoapClient.authenticatedRequest(CreatePaymentMethod(account, customer))
     result <- zuoraSoapClient.authenticatedRequest(EnablePayment(account, paymentMethod))
   } yield result
 
-  def createSubscription(memberId: MemberId,
+  def createSubscription(memberId: ContactId,
                          joinData: JoinForm,
                          customerOpt: Option[Stripe.Customer],
                          paymentDelay: Option[Period],
@@ -230,7 +230,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
                                                              featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)))
   } yield result
 
-  def getPaymentSummary(memberId: MemberId): Future[PaymentSummary] = {
+  def getPaymentSummary(memberId: ContactId): Future[PaymentSummary] = {
     for {
       subscription <- getSubscriptionStatus(memberId)
       invoiceItems <- zuoraSoapClient.query[InvoiceItem](SimpleFilter("SubscriptionNumber", subscription.currentVersion.name))
@@ -238,17 +238,17 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     } yield PaymentSummary(filteredInvoices)
   }
 
-  def getMembershipSubscriptionSummary(memberId: MemberId): Future[MembershipSummary] = {
+  def getMembershipSubscriptionSummary(memberId: ContactId): Future[MembershipSummary] = {
     val latestSubF = for {
       (_, subscription) <- accountWithLatestMembershipSubscription(memberId)
       subscriptionVersions <- subscriptionVersions(subscription.subscriptionNumber)
     } yield subscriptionVersions.maxBy(_.version)
 
-    def hasUserBeenInvoiced(memberId: MemberId) =
+    def hasUserBeenInvoiced(memberId: ContactId) =
       for (subscription <- latestSubF)
         yield subscription.contractAcceptanceDate.isBeforeNow
 
-    def getSummaryViaSubscriptionAmend(memberId: MemberId) = for {
+    def getSummaryViaSubscriptionAmend(memberId: ContactId) = for {
       latestSubscription <- latestSubF
       subscriptionDetailsF = getSubscriptionDetails(latestSubscription)
       result <- zuoraSoapClient.authenticatedRequest(SubscriptionDetailsViaAmend(latestSubscription.id, latestSubscription.contractAcceptanceDate))
@@ -267,7 +267,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
                         firstPreviewInvoice.renewalDate )
     }
 
-    def getSummaryViaInvoice(memberId: MemberId) = for (paymentSummary <- getPaymentSummary(memberId)) yield {
+    def getSummaryViaInvoice(memberId: ContactId) = for (paymentSummary <- getPaymentSummary(memberId)) yield {
       MembershipSummary(paymentSummary.current.serviceStartDate, paymentSummary.current.serviceEndDate,
         Some(paymentSummary.totalPrice), paymentSummary.current.price, paymentSummary.current.price, paymentSummary.current.nextPaymentDate, paymentSummary.current.nextPaymentDate)
     }
@@ -278,7 +278,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     } yield summary
   }
 
-  def cancelSubscription(memberId: MemberId, instant: Boolean): Future[AmendResult] = {
+  def cancelSubscription(memberId: ContactId, instant: Boolean): Future[AmendResult] = {
     checkForPendingAmendments(memberId) { subscriptionStatus =>
       val currentSubscriptionVersion = subscriptionStatus.currentVersion
       for {
@@ -289,7 +289,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def downgradeSubscription(memberId: MemberId, newTierPlan: TierPlan): Future[AmendResult] = {
+  def downgradeSubscription(memberId: ContactId, newTierPlan: TierPlan): Future[AmendResult] = {
     //if the member has paid upfront so they should have the higher tier until charged date has completed then be downgraded
     //otherwise use customer acceptance date (which should be in the future)
     def effectiveFrom(subscriptionDetails: SubscriptionDetails) = subscriptionDetails.chargedThroughDate.getOrElse(subscriptionDetails.contractAcceptanceDate)
@@ -308,7 +308,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  def upgradeSubscription(memberId: MemberId, newTierPlan: TierPlan, preview: Boolean, featureChoice: Set[FeatureChoice]): Future[AmendResult] = {
+  def upgradeSubscription(memberId: ContactId, newTierPlan: TierPlan, preview: Boolean, featureChoice: Set[FeatureChoice]): Future[AmendResult] = {
     import SubscriptionService._
 
     checkForPendingAmendments(memberId) { subscriptionStatus =>
@@ -323,7 +323,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
     }
   }
 
-  private def checkForPendingAmendments(memberId: MemberId)(fn: SubscriptionStatus => Future[AmendResult]): Future[AmendResult] = {
+  private def checkForPendingAmendments(memberId: ContactId)(fn: SubscriptionStatus => Future[AmendResult]): Future[AmendResult] = {
     getSubscriptionStatus(memberId).flatMap { subscriptionStatus =>
       if (subscriptionStatus.futureVersionIdOpt.isEmpty) {
         fn(subscriptionStatus)
