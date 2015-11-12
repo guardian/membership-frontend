@@ -1,6 +1,7 @@
 package controllers
 
 import actions._
+import com.gu.identity.play.PrivateFields
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -53,7 +54,7 @@ trait UpgradeTier {
     def previewUpgrade(subscription: SubscriptionDetails): Future[Result] = {
       if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(memberRequest.member.tier, tier)))
       else {
-        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields)
+        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields.getOrElse(new PrivateFields))
 
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(memberRequest.touchpointBackend.stripeService.publicKey))
 
