@@ -50,6 +50,8 @@ object MembershipCatalog {
     override def supporter = _supporter
     override def backendType = _backendType
     override def tierPlanDetails(ratePlanId: ProductRatePlanId): Option[TierPlanDetails] = tierPlanDetailsMap.get(ratePlanId)
+
+    override def allTierPlanDetails: Seq[TierPlanDetails] = tierPlanDetailsMap.values.toSeq
   }
 
   def fromZuora(ratePlanIds: RatePlanIds)(ratePlans: Seq[rest.ProductRatePlan])(implicit bt: BackendType): Val[MembershipCatalog] = {
@@ -60,7 +62,7 @@ object MembershipCatalog {
         .map(_.successNel)
         .getOrElse((tierPlan -> s"""Failed to find the plan with id "$id"""").failureNel)
 
-    def planCharge(plan: ProductRatePlan) = plan.productRatePlanCharges match {
+    def planCharge(plan: ProductRatePlan): ValidationNel[String, ProductRatePlanCharge] = plan.productRatePlanCharges match {
       case Seq(c) => c.successNel
       case Nil => s"Could not find any rate plan charge for ${plan.id}".failureNel
       case cs => s"Ambiguous rate plan charges found for ${plan.id}: ${cs.mkString(", ")}".failureNel
@@ -167,6 +169,8 @@ trait MembershipCatalog {
   def partner: PaidTierDetails
   def patron: PaidTierDetails
   def tierPlanDetails(productRatePlanId: ProductRatePlanId): Option[TierPlanDetails]
+  def allTierPlanDetails: Seq[TierPlanDetails]
+
   implicit def backendType: BackendType
 
   def unsafeTierPlan(productRatePlanId: ProductRatePlanId): TierPlan = tierPlanDetails(productRatePlanId).map(_.plan).getOrElse {

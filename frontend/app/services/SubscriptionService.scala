@@ -23,7 +23,7 @@ import forms.MemberForm.JoinForm
 import model._
 import org.joda.time.DateTime
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
 case class SubscriptionServiceError(s: String) extends Throwable {
@@ -108,10 +108,14 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
   implicit private val _bt = bt
 
   val membershipCatalog: FutureSupplier[MembershipCatalog] = new FutureSupplier[MembershipCatalog](
-    for {
-      zuoraCatalog <- zuoraRestClient.productCatalog
-    } yield MembershipCatalog.unsafeFromZuora(ratePlanIds)(zuoraCatalog.products.flatMap(_.productRatePlans))
+    productRatePlans.map(MembershipCatalog.unsafeFromZuora(ratePlanIds))
   )
+
+  def productRatePlans: Future[Seq[rest.ProductRatePlan]] =
+     zuoraRestClient.productCatalog.map(_.products.flatMap(_.productRatePlans))
+
+  def getMembershipCatalog(): Future[MembershipCatalog.Val[MembershipCatalog]] =
+    productRatePlans.map(MembershipCatalog.fromZuora(ratePlanIds))
 
   private def subscriptionVersions(subscriptionNumber: String): Future[Seq[Subscription]] = for {
     subscriptions <- zuoraSoapClient.query[Subscription](SimpleFilter("Name", subscriptionNumber))
