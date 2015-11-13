@@ -6,6 +6,7 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.gu.membership.zuora.soap.models.errors.ResultError
 import com.gu.membership.zuora.soap.models.{PaidPreview, SubscriptionDetails}
+import configuration.Config
 import forms.MemberForm._
 import model.{FlashMessage, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -41,7 +42,9 @@ trait DowngradeTier extends ActivityTracking {
       subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
       currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.futureVersionOpt.get)
-    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName)).discardingCookies(DiscardingCookie("gu_paying_member"))
+    } yield Ok(
+      views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName)
+    ).discardingCookies(DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
   }
 }
 
@@ -133,8 +136,7 @@ trait UpgradeTier {
       case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
-    // After upgrading, let nextgen reassert the user's payment status
-    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member"))
+    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
 
     futureResult.map(_.discardingCookies(cookiesToDiscard:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
@@ -150,7 +152,7 @@ trait CancelTier {
   self: TierController =>
 
   def cancelTier() = MemberAction { implicit request =>
-    Ok(views.html.tier.cancel.confirm(request.member.tier)).discardingCookies(DiscardingCookie("gu_paying_member"))
+    Ok(views.html.tier.cancel.confirm(request.member.tier))
   }
 
   def cancelTierConfirm() = MemberAction.async { implicit request =>
@@ -174,6 +176,7 @@ trait CancelTier {
     } yield {
       val currentTierOpt = memberOpt.map(_.tier)
       Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption, currentTierOpt))
+        .discardingCookies(DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
     }
   }
 }
@@ -182,7 +185,7 @@ trait TierController extends Controller with UpgradeTier with DowngradeTier with
   def change() = MemberAction { implicit request =>
     val currentTier = request.member.tier
     val availableTiers = Tier.allPublic.filter(_ != currentTier)
-    Ok(views.html.tier.change(currentTier, availableTiers)).discardingCookies(DiscardingCookie("gu_paying_member"))
+    Ok(views.html.tier.change(currentTier, availableTiers))
   }
 }
 

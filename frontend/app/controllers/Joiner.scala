@@ -204,8 +204,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       case _ => Future.successful(None)
     }
 
-    // After joining, let nextgen reassert the user's payment status
-    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member"))
+    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
 
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
