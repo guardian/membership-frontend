@@ -171,7 +171,7 @@ trait Info extends Controller {
 
   def submitFeedback = NoCacheAction.async { implicit request =>
 
-    val userOpt = AuthenticationService.authenticatedUserFor(request)
+    val userOpt = AuthenticationService.authenticatedUserFor(request).map(_.user)
     val uaOpt = request.headers.get(USER_AGENT)
 
     def sendFeedback(formData: FeedbackForm) = {

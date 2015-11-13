@@ -1,5 +1,5 @@
 import com.gu.googleauth
-import com.gu.identity.play.IdMinimalUser
+import com.gu.identity.play.{AuthenticatedIdUser, IdMinimalUser}
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
 import play.api.mvc.Security.AuthenticatedRequest
@@ -9,7 +9,7 @@ import services._
 import scala.concurrent.{ExecutionContext, Future}
 
 package object actions {
-  type AuthRequest[A] = AuthenticatedRequest[A, IdMinimalUser]
+  type AuthRequest[A] = AuthenticatedRequest[A, AuthenticatedIdUser]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
 

@@ -5,7 +5,7 @@ import actions._
 import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 import com.gu.cas.CAS.CASSuccess
-import com.gu.identity.play.{IdMinimalUser, StatusFields}
+import com.gu.identity.play.{PrivateFields, IdMinimalUser, StatusFields}
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -69,7 +69,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
-        avatarUrl = fullUser.privateFields.socialAvatarUrl
+        avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
       } yield {
         Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
       }
@@ -83,10 +83,10 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     } yield {
 
       tier match {
-        case Tier.Friend => Ok(views.html.joiner.form.friendSignup(privateFields, marketingChoices, passwordExists))
+        case Tier.Friend => Ok(views.html.joiner.form.friendSignup(privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists))
         case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.form.payment(paidTier, privateFields, marketingChoices, passwordExists, pageInfo))
+          Ok(views.html.joiner.form.payment(paidTier, privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists, pageInfo))
       }
 
     }
@@ -97,7 +97,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields, marketingChoices, passwordExists, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists, flashMsgOpt))
     }
   }
 

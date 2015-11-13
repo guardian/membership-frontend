@@ -8,7 +8,7 @@ object Dependencies {
   //libraries
   val sentryRavenLogback = "net.kencochrane.raven" % "raven-logback" % "6.0.0"
   val identityCookie = "com.gu.identity" %% "identity-cookie" % "3.44"
-  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.4"
+  val identityPlayAuth = "com.gu.identity" %% "identity-play-auth" % "0.12"
   val identityTestUsers = "com.gu" %% "identity-test-users" % "0.5"
   val scalaUri = "com.netaporter" %% "scala-uri" % "0.4.6"
   val membershipCommon = "com.gu" %% "membership-common" % "0.100"
