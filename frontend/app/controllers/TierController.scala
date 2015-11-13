@@ -54,7 +54,7 @@ trait UpgradeTier {
     def previewUpgrade(subscription: SubscriptionDetails): Future[Result] = {
       if (subscription.inFreePeriodOffer) Future.successful(Ok(views.html.tier.upgrade.unavailable(memberRequest.member.tier, tier)))
       else {
-        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields.getOrElse(new PrivateFields))
+        val identityUserFieldsF = IdentityService(IdentityApi).getFullUserDetails(memberRequest.user, IdentityRequest(memberRequest)).map(_.privateFields.getOrElse(PrivateFields()))
 
         val pageInfo = PageInfo.default.copy(stripePublicKey = Some(memberRequest.touchpointBackend.stripeService.publicKey))
 
