@@ -1,10 +1,9 @@
-@import views.support.DisplayText._
-@import com.gu.membership.salesforce.Tier
 @(
-    tier: Tier,
+    tier: com.gu.membership.salesforce.Tier,
     showCaption: Boolean = true
 )
 
+@import model.Benefits
 
 <div class="tier-trail">
     <h3 class="tier-trail__name">
@@ -13,7 +12,7 @@
     </h3>
     @if(showCaption) {
         <div class="tier-trail__caption">
-            @tier.leadin
+            @Benefits.details(tier).leadin
         </div>
     }
 </div>

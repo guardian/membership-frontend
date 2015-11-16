@@ -1,12 +1,10 @@
-@import com.gu.membership.model.Currency
-@import model.MembershipCatalog
 @(
-  catalog: MembershipCatalog,
-  pageImages: Seq[model.ResponsiveImageGroup],
-  midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
-  eventCollection: model.RichEvent.EventBrandCollection
-)(implicit currency: Currency)
+    pageImages: Seq[model.ResponsiveImageGroup],
+    midlandGoodsShedImages: Seq[model.ResponsiveImageGroup],
+    eventCollection: model.RichEvent.EventBrandCollection
+)
 
+@import com.gu.membership.salesforce.Tier._
 @import views.support.Links.BasicLink
 @import views.support.Asset
 
@@ -206,9 +204,9 @@
                 <h4 class="h-intro h-intro--brand u-margin-bottom">Member levels</h4>
                 <p>Join as an annual Partner or Patron Member and get 2 months free</p>
                 <ul class="grid">
-                    @for(details <- Seq(catalog.supporter, catalog.partner, catalog.patron)) {
+                    @for(tier <- Seq(Supporter, Partner, Patron)) {
                         <li class="grid__item">
-                            @fragments.tier.packagePromo(details, modifierClass=Some("package-promo--homepage"))
+                            @fragments.tier.packagePromo(tier, modifierClass=Some("package-promo--homepage"))
                         </li>
                     }
                 </ul>
@@ -216,7 +214,7 @@
 
                 <div id="compare-membership">
                     <h4 class="h-intro h-intro--brand">What's included</h4>
-                    @fragments.tier.comparisonTable(catalog)
+                    @fragments.tier.comparisonTable()
                 </div>
 
                 @for(image <- pageImages.find(_.name.contains("patrons"))) {

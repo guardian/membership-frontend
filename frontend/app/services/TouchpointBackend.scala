@@ -2,7 +2,6 @@ package services
 
 import com.gu.identity.play.IdMinimalUser
 import com.gu.membership.model.FriendTierPlan
-import com.gu.membership.salesforce.Contact._
 import com.gu.membership.salesforce.ContactDeserializer.Keys
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.{Stripe, StripeService}
@@ -10,17 +9,14 @@ import com.gu.membership.touchpoint.TouchpointBackendConfig
 import com.gu.membership.zuora.soap.ClientWithFeatureSupplier
 import com.gu.membership.zuora.{rest, soap}
 import com.gu.monitoring.{ServiceMetrics, StatusMetrics}
-import com.netaporter.uri.Uri
-import configuration.{Config, RatePlanIds}
-import model.{FeatureChoice, MembershipCatalog}
+import configuration.Config
+import model.FeatureChoice
 import monitoring.TouchpointBackendMetrics
 import play.api.libs.json.Json
-import play.api.libs.ws.WS
 import play.libs.Akka
 import tracking._
 import utils.TestUsers.isTestUser
-import play.api.Play.current
-
+import Contact._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -37,21 +33,19 @@ object TouchpointBackend {
 
   def apply(backendType: TouchpointBackendConfig.BackendType): TouchpointBackend = {
     val touchpointBackendConfig = TouchpointBackendConfig.byType(backendType, Config.config)
-    TouchpointBackend(touchpointBackendConfig, backendType)
+    TouchpointBackend(touchpointBackendConfig)
   }
 
-  def apply(backend: TouchpointBackendConfig, backendType: BackendType): TouchpointBackend = {
+  def apply(backend: TouchpointBackendConfig): TouchpointBackend = {
     val stripeService = new StripeService(backend.stripe, new TouchpointBackendMetrics with StatusMetrics {
       val backendEnv = backend.stripe.envName
       val service = "Stripe"
-    }, WS.client)
+    })
 
-    val restBackendConfig = backend.zuoraRest.copy(url = Uri.parse(backend.zuoraRestUrl(Config.config)))
 
     val zuoraSoapClient = new ClientWithFeatureSupplier(FeatureChoice.codes, backend.zuoraSoap, backend.zuoraMetrics("zuora-soap-client"), Akka.system())
-    val zuoraRestClient = new rest.Client(restBackendConfig, backend.zuoraMetrics("zuora-rest-client"))
-    val ratePlanIds = RatePlanIds.fromConfig(Config.ratePlanIds(restBackendConfig.envName))
-    val subscriptionService = new SubscriptionService(zuoraSoapClient, zuoraRestClient, backend.zuoraMetrics("zuora-rest-client"), ratePlanIds, backendType)
+    val zuoraRestClient = new rest.Client(backend.zuoraRest, backend.zuoraMetrics("zuora-rest-client"))
+    val subscriptionService = new SubscriptionService(zuoraSoapClient, zuoraRestClient, backend.zuoraMetrics("zuora-rest-client"))
     val memberRepository = new FrontendMemberRepository(backend.salesforce)
 
     TouchpointBackend(memberRepository, stripeService, zuoraSoapClient, zuoraRestClient, subscriptionService)
@@ -69,14 +63,10 @@ object TouchpointBackend {
 
 case class TouchpointBackend(memberRepository: FrontendMemberRepository,
                              stripeService: StripeService,
-			                       zuoraSoapClient: soap.ClientWithFeatureSupplier,
-			                       zuoraRestClient: rest.Client,
-			                       subscriptionService: SubscriptionService
-			                       ) extends ActivityTracking {
+			     zuoraSoapClient: soap.ClientWithFeatureSupplier,
+			     zuoraRestClient: rest.Client,
+			     subscriptionService: SubscriptionService) extends ActivityTracking {
 
-  def catalog: Future[MembershipCatalog] = subscriptionService.membershipCatalog.get()
-
-  //TODO: consider moving the following methods elsewhere
   def updateDefaultCard(member: Contact[Member, StripePayment], token: String): Future[Stripe.Card] = {
     for {
       customer <- stripeService.Customer.updateCard(member.stripeCustomerId, token)
@@ -96,7 +86,7 @@ case class TouchpointBackend(memberRepository: FrontendMemberRepository,
 
   def downgradeSubscription(member: Contact[Member, PaymentMethod], user: IdMinimalUser, campaignCode: Option[String] = None): Future[String] = {
     for {
-      _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan.current)
+      _ <- subscriptionService.downgradeSubscription(member, FriendTierPlan)
     } yield {
       memberRepository.metrics.putDowngrade(member.tier)
       track(

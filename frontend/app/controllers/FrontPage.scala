@@ -1,11 +1,9 @@
 package controllers
 
-import com.gu.membership.model.{GBP, Currency}
 import model.RichEvent.EventBrandCollection
 import model._
 import play.api.mvc.Controller
-import services._
-import play.api.libs.concurrent.Execution.Implicits._
+import services.{EventbriteService, GuardianLiveEventService, LocalEventService, MasterclassEventService}
 
 trait FrontPage extends Controller {
 
@@ -13,8 +11,7 @@ trait FrontPage extends Controller {
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
-  def index = CachedAction.async { implicit request =>
-    implicit val currency: Currency = GBP
+  def index =  CachedAction { implicit request =>
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -102,12 +99,11 @@ trait FrontPage extends Controller {
       )
     )
 
-    TouchpointBackend.Normal.catalog.map { cat =>
-          Ok(views.html.index(cat,
-                              pageImages,
-                              midlandGoodsShedImages,
-                              eventCollections))
-    }
+    Ok(views.html.index(
+      pageImages,
+      midlandGoodsShedImages,
+      eventCollections
+    ))
   }
 
   def welcome = CachedAction { implicit request =>

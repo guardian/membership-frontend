@@ -1,5 +1,4 @@
 @(
-    pricing: model.FreeTierDetails,
     userFields: com.gu.identity.play.PrivateFields,
     marketingChoices: com.gu.identity.play.StatusFields,
     passwordExists: Boolean
@@ -7,7 +6,6 @@
 
 @import com.gu.membership.salesforce.Tier.Friend
 @import views.html.helper._
-@import views.support.DisplayText._
 
 @main("Become a Friend") {
 
@@ -35,7 +33,7 @@
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(pricing.tier.benefits)
+                        @fragments.form.benefitsFieldset(Friend)
                     </div>
 
                     <div class="form-group">
@@ -62,7 +60,7 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(None)
+                    @fragments.form.submit("Join now")
 
                 </div>
 

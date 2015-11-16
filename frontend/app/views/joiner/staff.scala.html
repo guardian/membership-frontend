@@ -1,17 +1,15 @@
-@import model.MembershipCatalog
 @(
-  catalog: MembershipCatalog,
   staffEmail: model.StaffEmails,
   displayName: Option[String],
   avatarUrl: Option[String],
   flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
+@import com.gu.membership.salesforce.Tier
 @import configuration.Config
-@import model.Faq
+@import model.{Benefits, Faq}
 @import play.twirl.api.Html
 @import views.html.helper._
-@import views.support.DisplayText._
 
 @signPostItem(btnText: String, btnSrc: String, title: String = "")(description: Html) = {
     <li class="signpost-item">
@@ -119,7 +117,7 @@
             </div>
             <div class="page-section__content copy">
                 <ul>
-                    @for(benefit <- catalog.staff.tier.benefits) {
+                    @for(benefit <- Benefits.details(Tier.Partner).list) {
                         <li>
                             @benefit.title
                         </li>

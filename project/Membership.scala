@@ -43,11 +43,7 @@ trait Membership {
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)
 
   def app(name: String) = lib(name).settings(playArtifactDistSettings: _*).settings(magentaPackageName := name)
-    .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq(
-      "controllers.TierBinder._",
-      "com.gu.membership.salesforce.Tier",
-      "com.gu.membership.salesforce.PaidTier"
-    ))
+    .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq("controllers.TierBinder._","com.gu.membership.salesforce.Tier"))
 }
 
 object Membership extends Build with Membership {

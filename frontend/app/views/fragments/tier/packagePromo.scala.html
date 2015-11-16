@@ -1,29 +1,27 @@
-@import views.support.DisplayText._
-@import model.PaidTierDetails
-@import com.gu.membership.model.Currency
-
 @(
-    details: PaidTierDetails,
+    tier: com.gu.membership.salesforce.Tier,
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
     extraClasses: Seq[String] = Seq.empty,
     isReversed: Boolean = false
-)(implicit currency: Currency)
+)
+
+@import model.Benefits
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(details.tier)"
+    href="@routes.Joiner.enterDetails(tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@details.tier.slug"
+    data-metric-action="@tier.toString.toLowerCase"
 }
 
-<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@details.tier.slug">
+<div class="@if(isReversed){ package-promo--reversed} @modifierClass.getOrElse("package-promo--default") @extraClasses.mkString("") tone-border-@tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                    @fragments.tier.tierTrail(details.tier, showCaption=false)
+                @fragments.tier.tierTrail(tier, showCaption=false)
                 </div>
             </div>
         </a>
@@ -32,7 +30,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- details.tier.highlights) {
+                    @for(highlight <- Benefits.details(tier).highlights) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -48,11 +46,11 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @fragments.pricing.priceInfo(details, canFlex=false)
+               @fragments.pricing.priceInfo(tier, canFlex=false)
             </div>
-            <a class="action action--no-icon u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
+            <a class="action action--no-icon u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
-                    Become a @details.tier.name
+                    Become a @tier
                 </span>
                 @fragments.actionIcon("arrow-right")
             </a>

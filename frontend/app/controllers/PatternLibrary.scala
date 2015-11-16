@@ -1,14 +1,11 @@
 package controllers
 
-import com.gu.membership.model.GBP
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
-import services.{TouchpointBackend, GuardianLiveEventService, EventbriteService}
-import play.api.libs.concurrent.Execution.Implicits._
+import services.{GuardianLiveEventService, EventbriteService}
 
 trait PatternLibrary extends Controller {
   val guLiveEvents: EventbriteService
-  implicit val currency = GBP
 
   val pageImages = Seq(
     ResponsiveImageGroup(
@@ -29,12 +26,11 @@ trait PatternLibrary extends Controller {
     )
   )
 
-  def patterns = NoCacheAction.async { implicit request =>
-    TouchpointBackend.Normal.catalog.map(cat =>
-      Ok(views.html.patterns.patterns(
-        cat,
-        guLiveEvents.events,
-        pageImages)))
+  def patterns = NoCacheAction { implicit request =>
+    Ok(views.html.patterns.patterns(
+      guLiveEvents.events,
+      pageImages
+    ))
   }
 
 }

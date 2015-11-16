@@ -1,69 +1,69 @@
-@import com.gu.membership.model.Currency
-@import views.support.DisplayText._
-@import views.support.Pricing._
-@(currentDetails: model.FreeTierDetails,
-  targetDetails: model.PaidTierDetails,
-  userFields: com.gu.identity.play.PrivateFields,
-  pageInfo: model.PageInfo
-)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_], currency: Currency)
+@(
+    currentTier: com.gu.membership.salesforce.Tier,
+    targetTier: com.gu.membership.salesforce.Tier,
+    userFields: com.gu.identity.play.PrivateFields,
+    pageInfo: model.PageInfo
+)(implicit token: play.filters.csrf.CSRF.Token, request: actions.AuthRequest[_])
 
 @import views.html.helper._
 
-@main("Change Tier | " + targetDetails.tier.name + " from " + currentDetails.tier.name, pageInfo = pageInfo) {
-      <main role="main" class="page-content l-constrained">
-          <form action="@routes.TierController.upgrade(targetDetails.tier)" method="POST" id="payment-form"
-          class="js-form" data-change-to-tier="@targetDetails.tier.name">
-              @CSRF.formField
+@main("Change Tier | " + targetTier + " from " + currentTier, pageInfo = pageInfo) {
 
-          <section class="page-header">
-              <h1 class="page-headline">Become a @targetDetails.tier.name</h1>
-              <p class="page-intro"> Join as an annual Partner or Patron Member by and get 2 months free</p>
-          </section>
+    <main role="main" class="page-content l-constrained">
+        <form action="@routes.TierController.upgrade(targetTier)" method="POST" id="payment-form"
+          class="js-form" data-change-to-tier="@targetTier">
+            @CSRF.formField
 
-          <section class="form-section form-section--no-padding">
-              <div class="form-section__content">
-              @fragments.form.errorMessageDisplay()
-              </div>
-          </section>
+            <section class="page-header">
+                <h1 class="page-headline">Become a @targetTier.name.capitalize</h1>
+                <p class="page-intro"> Join as an annual Partner or Patron Member by and get 2 months free</p>
+            </section>
 
-          <section class="form-section">
+            <section class="form-section form-section--no-padding">
+                <div class="form-section__content">
+                @fragments.form.errorMessageDisplay()
+                </div>
+            </section>
 
-              <div class="form-section__lead-in sign-in-required">
-              @fragments.joiner.signedInAs(routes.Joiner.enterDetails(targetDetails.tier).url)
-              </div>
+            <section class="form-section">
 
-              <div class="form-section__content">
+                <div class="form-section__lead-in sign-in-required">
+                    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(targetTier).url)
+                </div>
 
-                  <div class="form-group">
-                      @fragments.form.benefitsFieldset(targetDetails.tier.benefits)
-                      @fragments.form.featureChoiceFieldset(targetDetails.tier)
-                  </div>
+                <div class="form-section__content">
 
-                  <div class="form-group">
-                      <h2 class="form-group__title">Address</h2>
-                      @fragments.form.addressDetail(
-                          "Delivery address",
-                          "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
-                          "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
-                          userFields.postcode, userFields.address4, userFields.country
-                      )
-                  </div>
+                    <div class="form-group">
+                        @fragments.form.benefitsFieldset(targetTier)
+                        @fragments.form.featureChoiceFieldset(targetTier)
+                    </div>
 
-                  <div class="form-group">
-                      <h2 class="form-group__title">Billing</h2>
-                      @fragments.form.paymentOptions(targetDetails)
-                      @fragments.form.billingAddress("Billing address")
-                      @fragments.form.addressDetail(
-                          "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
-                          userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
-                          userFields.billingCountry
-                      )
-                      @fragments.form.cardDetail(targetDetails)
-                  </div>
+                    <div class="form-group">
+                        <h2 class="form-group__title">Address</h2>
+                        @fragments.form.addressDetail(
+                            "Delivery address",
+                            "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
+                            "deliveryAddress", true, userFields.address1, userFields.address2, userFields.address3,
+                            userFields.postcode, userFields.address4, userFields.country
+                        )
+                    </div>
 
-                  @fragments.form.submit(Some(targetDetails.pricingWithFallback))
-              </div>
-          </section>
-          </form>
-      </main>
+                    <div class="form-group">
+                        <h2 class="form-group__title">Billing</h2>
+                        @fragments.form.paymentOptions(targetTier)
+                        @fragments.form.billingAddress("Billing address")
+                        @fragments.form.addressDetail(
+                            "", "", "billingAddress", true, userFields.billingAddress1, userFields.billingAddress2,
+                            userFields.billingAddress3, userFields.billingPostcode, userFields.billingAddress4,
+                            userFields.billingCountry
+                        )
+                        @fragments.form.cardDetail(targetTier)
+                    </div>
+
+                    @fragments.form.submit("Pay", "now", Some(targetTier))
+
+                </div>
+            </section>
+        </form>
+    </main>
 }

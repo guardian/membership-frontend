@@ -1,38 +1,39 @@
-@import model.PaidTierDetails
-@import com.gu.membership.model.Currency
+@(
+    tier: com.gu.membership.salesforce.Tier,
+    showDescription: Boolean = true,
+    descriptionAnchor: Option[String] = None,
+    modifierClass: Option[String] = None,
+    extraClasses: Seq[String] = Seq.empty,
+    isReversed: Boolean = false
+    )
 
-@(details: PaidTierDetails,
-  showDescription: Boolean = true,
-  descriptionAnchor: Option[String] = None,
-  modifierClass: Option[String] = None,
-  extraClasses: Seq[String] = Seq.empty,
-  isReversed: Boolean = false)(implicit currency: Currency)
+@import model.Benefits
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(details.tier)"
+    href="@routes.Joiner.enterDetails(tier)"
     data-metric-trigger="click"
     data-metric-category="join"
-    data-metric-action="@details.tier.slug"
+    data-metric-action="@tier.toString.toLowerCase"
 }
 
-<div class="package-promo--minimal tone-border-@details.tier.slug">
+<div class="package-promo--minimal tone-border-@tier.slug">
     <div class="package-promo__header">
         <a class="no-underline minimal-link" @actionAttrs>
             <div class="package-promo__tier">
                 <div class="package-promo__tier__title">
-                @fragments.tier.tierTrail(details.tier, showCaption=false)
+                @fragments.tier.tierTrail(tier, showCaption=false)
                 </div>
                 <div class="package-promo__tier__pricing">
-                @fragments.pricing.priceInfo(details, canFlex=false)
+                @fragments.pricing.priceInfo(tier, canFlex=false)
                 </div>
             </div>
         </a>
     </div>
     <div class="package-promo__content">
         <div class="package-promo__actions">
-            <a class="action action--snap u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
+            <a class="action action--snap u-no-bottom-margin qa-package-@tier.toString.toLowerCase" @actionAttrs>
                 <span class="action__label">
-                    Become a @details.tier.name
+                    Become a @tier
                 </span>
             </a>
         </div>

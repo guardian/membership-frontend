@@ -6,7 +6,6 @@ import com.github.nscala_time.time.Imports
 import com.github.nscala_time.time.Imports._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.identity.play.{PrivateFields, IdMinimalUser, StatusFields}
-import com.gu.membership.model.GBP
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
@@ -29,7 +28,6 @@ import scala.concurrent.Future
 
 trait Joiner extends Controller with ActivityTracking with LazyLogging {
   val JoinReferrer = "join-referrer"
-  implicit val currency = GBP
 
   val contentApiService = GuardianContentService
 
@@ -41,7 +39,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
 
-  def tierChooser = NoCacheAction.async { implicit request =>
+  def tierChooser = NoCacheAction { implicit request =>
+
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
     val accessOpt = request.getQueryString("membershipAccess").map(MembershipAccess)
     val contentRefererOpt = request.headers.get(REFERER)
@@ -57,41 +56,39 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       customSignInUrl=Some(signInUrl)
     )
 
-    TouchpointBackend.Normal.catalog.map(cat =>
-      Ok(views.html.joiner.tierChooser(cat, pageInfo, eventOpt, accessOpt, signInUrl))
-        .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
-    )
+    Ok(views.html.joiner.tierChooser(pageInfo, eventOpt, accessOpt, signInUrl))
+      .withSession(request.session.copy(data = request.session.data ++ contentRefererOpt.map(JoinReferrer -> _)))
+
   }
 
   def staff = PermanentStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("error").map(FlashMessage.error)
     val userSignedIn = AuthenticationService.authenticatedUserFor(request)
-    val catalogF = TouchpointBackend.Normal.catalog
     userSignedIn match {
       case Some(user) => for {
         fullUser <- IdentityService(IdentityApi).getFullUserDetails(user, IdentityRequest(request))
-        catalog <- catalogF
         primaryEmailAddress = fullUser.primaryEmailAddress
         displayName = fullUser.publicFields.displayName
         avatarUrl = fullUser.privateFields.flatMap(_.socialAvatarUrl)
       } yield {
-        Ok(views.html.joiner.staff(catalog, new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
+        Ok(views.html.joiner.staff(new StaffEmails(request.user.email, Some(primaryEmailAddress)), displayName, avatarUrl, flashMsgOpt))
       }
-      case _ => catalogF.map(cat => Ok(views.html.joiner.staff(cat, new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
+      case _ => Future.successful(Ok(views.html.joiner.staff(new StaffEmails(request.user.email, None), None, None, flashMsgOpt)))
     }
   }
 
   def enterDetails(tier: Tier) = (AuthenticatedAction andThen onlyNonMemberFilter(onMember = redirectMemberAttemptingToSignUp(tier))).async { implicit request =>
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
-      catalog <- request.catalog
     } yield {
-      catalog.publicTierDetails(tier) match {
-        case freeDetails: FreeTierDetails => Ok(views.html.joiner.form.friendSignup(freeDetails, getOrBlank(privateFields), marketingChoices, passwordExists))
-        case paidDetails: PaidTierDetails =>
+
+      tier match {
+        case Tier.Friend => Ok(views.html.joiner.form.friendSignup(privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists))
+        case paidTier =>
           val pageInfo = PageInfo.default.copy(stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey))
-          Ok(views.html.joiner.form.payment(paidDetails, getOrBlank(privateFields), marketingChoices, passwordExists, pageInfo))
+          Ok(views.html.joiner.form.payment(paidTier, privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists, pageInfo))
       }
+
     }
   }
 
@@ -100,12 +97,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
     for {
       (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(getOrBlank(privateFields), marketingChoices, passwordExists, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(privateFields.getOrElse(PrivateFields()), marketingChoices, passwordExists, flashMsgOpt))
     }
   }
-
-  private def getOrBlank(privateFields: Option[PrivateFields]): PrivateFields =
-    privateFields.getOrElse(PrivateFields())
 
   private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
     val identityService = IdentityService(IdentityApi)
@@ -126,7 +120,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         makeMember(Tier.Partner, Redirect(routes.Joiner.thankyouStaff())) )
   }
 
-  def joinPaid(tier: PaidTier) = AuthenticatedNonMemberAction.async { implicit request =>
+  def joinPaid(tier: Tier) = AuthenticatedNonMemberAction.async { implicit request =>
     paidMemberJoinForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo,
       makeMember(tier, Ok(Json.obj("redirect" -> routes.Joiner.thankyou(tier).url))) )
   }

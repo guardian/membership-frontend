@@ -1,6 +1,6 @@
 package services
 
-import com.gu.membership.salesforce.{FreeTierMember, PaidTierMember, Member, Tier}
+import com.gu.membership.salesforce.{Member, Tier}
 import com.gu.membership.util.WebServiceHelper
 import com.gu.monitoring.StatusMetrics
 import configuration.Config
@@ -29,10 +29,7 @@ object MembersDataAPI {
   case class Attributes(tier: Tier, membershipNumber: Option[String])
 
   object Attributes {
-    def fromMember(member: Member) = member match {
-      case PaidTierMember(n, t) => Attributes(t, Some(n))
-      case FreeTierMember(t) => Attributes(t, None)
-    }
+    def fromMember(member: Member) = Attributes(member.tier, member.regNumber)
   }
 
   case class ApiError(message: String, details: String) extends RuntimeException(s"$message - $details")
@@ -54,7 +51,7 @@ object MembersDataAPI {
     def check(member: Member)(cookies: Seq[Cookie]) = get(cookies).onComplete {
       case Success(attrs) =>
         if (attrs != Attributes.fromMember(member)) {
-          Logger.warn(s"Members data API response doesn't match the expected member data. Expected ${Attributes.fromMember(member)}, got $attrs")
+          Logger.warn(s"Members data API response doesn't match the expected member data. Expected tier: ${member.tier}, number ${member.regNumber}, got tier: ${attrs.tier}, number: ${attrs.membershipNumber}")
           MembersDataAPIMetrics.put("members-data-api-mismatch", 1)
         } else {
           Logger.debug("Members data API response matches the expected member data")

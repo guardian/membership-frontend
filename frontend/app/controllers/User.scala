@@ -75,7 +75,7 @@ trait User extends Controller {
 
   def basicDetails(member: Contact[Member, PaymentMethod]) = Json.obj(
     "userId" -> member.identityId,
-    "regNumber" -> member.memberStatus.regNumberLabel,
+    "regNumber" -> member.regNumber.mkString,
     "firstName" -> member.firstName,
     "tier" -> member.tier.name,
     "isPaidTier" -> member.tier.isPaid,

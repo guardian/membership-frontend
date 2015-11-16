@@ -1,6 +1,5 @@
 package services
 
-import com.gu.membership.model.Year
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.zuora.{Address, Countries}
 import controllers.IdentityRequest
@@ -56,7 +55,7 @@ class IdentityServiceTest extends Specification with Mockito {
       val paidForm = PaidMemberJoinForm(
         Tier.Partner,
         NameForm("Joe", "Bloggs"),
-        PaymentForm(Year, "token"),
+        PaymentForm(annual = true, "token"),
         Address("line one", "line 2", "town", "country", "postcode", Countries.UK),
         Some(Address("line one", "line 2", "town", "country", "postcode", Countries.UK)),
         MarketingChoicesForm(Some(false), Some(false)),
