@@ -8,7 +8,6 @@ import play.api.data._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.MemberService
 
 import scala.concurrent.Future
 

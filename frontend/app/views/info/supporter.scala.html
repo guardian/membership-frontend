@@ -1,7 +1,10 @@
-@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+@import com.gu.membership.model.Currency
+@import model.MembershipCatalog
+@(catalog: MembershipCatalog,
+  pageInfo: model.PageInfo,
+  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
 
-@import com.gu.membership.salesforce.Tier
-@import model.Benefits
+@import com.gu.membership.salesforce.Tier.Supporter
 @import configuration.Videos
 
 @main("Supporters", pageInfo=pageInfo) {
@@ -13,7 +16,7 @@
                 <div class="text-feature">
                     <p>Supporters keep our journalism fearless, open and free from interference. For £5 a month.</p>
                 </div>
-                @fragments.tier.packagePromoMinimal(Tier.Supporter)
+                @fragments.tier.packagePromo(catalog.supporter, showDescription=false, modifierClass=Some("package-promo--spread"))
             }
         </div>
     }
@@ -40,7 +43,7 @@
                     <p>Become a Supporter to ensure the whole picture is available to everyone.</p>
                 </div>
                 <div class="action-group">
-                    <a class="action" href="@routes.Joiner.enterDetails(Tier.Supporter)">Become a Supporter</a>
+                    <a class="action" href="@routes.Joiner.enterDetails(Supporter)">Become a Supporter</a>
                 </div>
             }
         </div>
@@ -62,7 +65,7 @@
         <div class="l-constrained">
             <h2 class="page-slice__headline">What's included</h2>
             <div class="page-slice__content">
-                @fragments.tier.packageFeature(Tier.Supporter, isReversed=true)
+                @fragments.tier.packageFeature(catalog.supporter, isReversed=true)
             </div>
         </div>
     </div>

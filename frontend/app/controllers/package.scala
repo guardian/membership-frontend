@@ -1,4 +1,5 @@
 import actions._
+import com.gu.membership.salesforce.{PaidTierMember, Member}
 import com.typesafe.scalalogging.LazyLogging
 import play.api.data.Form
 import play.api.mvc.{RequestHeader, Result}
@@ -11,6 +12,13 @@ import scala.reflect.ClassTag
 import scala.reflect.classTag
 
 package object controllers extends CommonActions with LazyLogging{
+
+  implicit class WithRegNumberLabel(m: Member) {
+    def regNumberLabel = m match {
+      case PaidTierMember(n, _) => n
+      case _ => ""
+    }
+  }
 
   def redirectToUnsupportedBrowserInfo[T: ClassTag](form: Form[T])(implicit req: RequestHeader): Future[Result] = {
     lazy val errors = form.errors.map { e => s"  - ${e.key}: ${e.messages.mkString(", ")}"}.mkString("\n")
