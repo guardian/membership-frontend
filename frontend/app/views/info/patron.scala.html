@@ -1,6 +1,9 @@
-@(pageInfo: model.PageInfo, pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+@import com.gu.membership.model.Currency
+@import model.MembershipCatalog
+@(catalog: MembershipCatalog,
+  pageInfo: model.PageInfo,
+  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
 
-@import com.gu.membership.salesforce.Tier
 @import views.support.Asset
 
 @main("Patrons", pageInfo=pageInfo) {
@@ -14,7 +17,7 @@
                     <p>From campaigning on issues affecting the voices less heard to holding those in power to account, Patrons ensure the Guardian can continue to surface the information and ideas that shape the global conversation.</p>
                     <p>Join as an annual Partner or Patron Member and get 2 months free</p>
                 </div>
-                @fragments.tier.packagePromoMinimal(Tier.Patron)
+                @fragments.tier.packagePromoMinimal(catalog.patron, showDescription = false, modifierClass = Some("package-promo--spread"))
             }
         </div>
     }
@@ -40,7 +43,7 @@
             @fragments.promos.promoSecondary(Html("Backstage pass to the Guardian"), img=img, toneClass=Some("tone-trans-brand-supporting-2")) {
                 <p class="text-feature">In return for your support, Patrons are given a behind-the-scenes view of how the Guardian operates.  For example, tour our newsroom, visit our printing presses or attend a campaign lecture.</p>
                 <a class="action"
-                    href="@routes.Joiner.enterDetails(Tier.Patron)"
+                    href="@routes.Joiner.enterDetails(catalog.patron.tier)"
                     data-metric-trigger="click"
                     data-metric-category="join"
                     data-metric-action="patron"
@@ -55,7 +58,7 @@
             @fragments.promos.promoPrimary(title="Choose to get involved", img=img, toneClass=Some("tone-trans-white")) {
                 <p class="text-feature">
                     Patrons are crucial to the future development of Membership, and there will be opportunities to get involved.  From hosting your own events to connecting members to one another, you will shape the future of the community.</p>
-                @fragments.tier.packagePromoMinimal(Tier.Patron)
+                @fragments.tier.packagePromoMinimal(catalog.patron)
             }
         </div>
     }
@@ -67,13 +70,13 @@
             <div class="page-slice__content">
                 <ul class="grid grid--equal-heights grid--bordered grid--2up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
+                    @fragments.tier.packagePromo(catalog.supporter, isReversed = true)
                     </li>
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
+                    @fragments.tier.packagePromo(catalog.partner, isReversed = true)
                     </li>
                 </ul>
-                @fragments.tier.friendTeaser()
+                @fragments.tier.friendTeaser(catalog)
             </div>
         </div>
     </div>

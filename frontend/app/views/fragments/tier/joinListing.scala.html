@@ -1,4 +1,6 @@
-@import com.gu.membership.salesforce.Tier
+@import model.MembershipCatalog
+@import com.gu.membership.model.Currency
+@(catalog: MembershipCatalog)(implicit currency: Currency)
 
 <section class="listing listing--basic tone-tint">
     <div class="l-constrained">
@@ -8,16 +10,16 @@
         <div class="listing__content">
             <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                 <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Supporter, isReversed=true)
+                @fragments.tier.packagePromo(catalog.supporter, isReversed=true)
                 </li>
                 <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Partner, isReversed=true)
+                @fragments.tier.packagePromo(catalog.partner, isReversed=true)
                 </li>
                 <li class="grid__item">
-                @fragments.tier.packagePromo(Tier.Patron, isReversed=true)
+                @fragments.tier.packagePromo(catalog.patron, isReversed=true)
                 </li>
             </ul>
-            @fragments.tier.friendTeaser()
+            @fragments.tier.friendTeaser(catalog)
         </div>
     </div>
 </section>

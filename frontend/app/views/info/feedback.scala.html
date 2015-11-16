@@ -43,7 +43,15 @@
                     @CSRF.formField
                     @fragments.form.feedback()
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit("Send feedback now", membershipTermsAndConditions = false)
+                    <fieldset class="fieldset fieldset--simple">
+                        <div class="fieldset__heading"></div>
+                        <div class="fieldset__fields fieldset__fields--no-padding">
+                            <div class="actions">
+                                <button type="submit" class="action js-submit-input">"Send feedback now"</button>
+                                <div class="loader js-loader"></div>
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
 
             </div>
