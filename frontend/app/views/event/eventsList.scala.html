@@ -1,10 +1,13 @@
+@import model.MembershipCatalog
+@import com.gu.membership.model.Currency
 @(
+    catalog: MembershipCatalog,
     pageInfo: model.PageInfo,
     events: model.RichEvent.EventGroup,
     featuredEvents: model.RichEvent.EventGroup,
     locations: Seq[model.RichEvent.FilterItem],
     selectedLocation: Option[String]
-)
+)(implicit currency: Currency)
 
 @import model.SVG.Logos
 
@@ -44,5 +47,5 @@
         </div>
     </main>
 
-    @fragments.tier.joinListing()
+    @fragments.tier.joinListing(catalog)
 }

@@ -1,9 +1,6 @@
 package actions
 
-import actions.Fallbacks._
-import actions.Functions._
 import com.gu.googleauth
-import com.gu.membership.salesforce.Tier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -13,6 +10,8 @@ import play.api.mvc._
 import services.AuthenticationService
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
+import Functions._
+import Fallbacks._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

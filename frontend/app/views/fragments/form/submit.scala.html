@@ -1,13 +1,10 @@
-@(
-    ctaTextPrepend: String,
-    ctaTextAppend: String = "",
-    tier: Option[com.gu.membership.salesforce.Tier] = None,
-    membershipTermsAndConditions: Boolean = true,
-    isSlim: Boolean = false
-)
+@import views.support.Pricing
 
-@import configuration.{Config, Links}
-@import model.Benefits
+@(pricing: Option[Pricing],
+  membershipTermsAndConditions: Boolean = true,
+  isSlim: Boolean = false)
+
+@import configuration.Links
 
 <fieldset class="fieldset fieldset--simple">
     <div class="fieldset__heading"></div>
@@ -24,10 +21,9 @@
                 <a href="http://www.enable-javascript.com/" target="_blank" class="action is-disabled">Enable javascript to proceed</a>.
             </noscript>
             <button type="button" class="action js-submit-input u-hidden-non-js">
-            @Html(tier.fold(ctaTextPrepend)(tier =>
-                ctaTextPrepend + " £<span class=\"js-submit-price-option\">" +
-                    Benefits.details(tier).pricing.fold(0)(_.yearly) + "</span> " + ctaTextAppend
-            ))
+            @pricing.fold(Html("Join now")) { p =>
+              Pay £<span class="js-submit-price-option">@p.yearly</span> now
+            }
             </button>
             <div class="loader js-loader"></div>
         </div>

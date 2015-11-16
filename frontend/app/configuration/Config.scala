@@ -16,7 +16,7 @@ import services._
 import scala.util.Try
 
 object Config {
-  val logger = Logger(this.getClass())
+  val logger = Logger(this.getClass)
 
   val config = ConfigFactory.load()
 
@@ -170,4 +170,7 @@ object Config {
 
   val casServiceConfig = config.getString("cas.url")
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
+
+  def ratePlanIds(env: String) =
+    config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds")
 }

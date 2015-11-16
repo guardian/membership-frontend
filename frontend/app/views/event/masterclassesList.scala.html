@@ -1,9 +1,11 @@
-@(
-    pageInfo: model.PageInfo,
-    eventGroup: model.RichEvent.EventGroup,
-    selectedTag: String = "",
-    selectedSubTag: String = ""
-)
+@import model.MembershipCatalog
+@import com.gu.membership.model.Currency
+@(catalog: MembershipCatalog,
+  pageInfo: model.PageInfo,
+  eventGroup: model.RichEvent.EventGroup,
+  selectedTag: String = "",
+  selectedSubTag: String = ""
+)(implicit currency: Currency)
 
 @import model.SVG.Logos
 @import model.RichEvent.MasterclassEvent._
@@ -79,5 +81,5 @@
 
     </main>
 
-    @fragments.tier.joinListing()
+    @fragments.tier.joinListing(catalog)
 }
