@@ -1,14 +1,10 @@
-@import com.gu.membership.model.Currency
-@import com.gu.membership.salesforce.Tier._
-@import model.FlashMessage
+@(events: Seq[model.RichEvent.RichEvent], pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token)
+
+@import com.gu.membership.salesforce.Tier
+@import model.{Benefits, FlashMessage}
+@import model.SVG.SVGImage
 @import configuration.Videos
 @import views.support.Asset
-
-@import model.MembershipCatalog
-@(catalog: MembershipCatalog,
-  events: Seq[model.RichEvent.RichEvent],
-  pageImages: Seq[model.ResponsiveImageGroup])(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
-
 
 @pattern(title: String, description: String = "", removeClearFix: Boolean = false)(content: Html) = {
     <div class="pattern js-pattern-item@if(!removeClearFix){ u-cf}" data-pattern-label="@title">
@@ -355,11 +351,11 @@
     }
 
     @pattern("Pricing Info", "Single pricing info item which flexes to fill available width (up to maximum)") {
-        @fragments.pricing.priceInfo(catalog.partner)
+        @fragments.pricing.priceInfo(Tier.Partner)
     }
 
     @pattern("Pricing Info - Fixed", "Fixed version which only expands to fill width on large screens (canFlex=false)") {
-        @fragments.pricing.priceInfo(catalog.partner, canFlex=false)
+        @fragments.pricing.priceInfo(Tier.Partner, canFlex=false)
     }
 
     @pattern("Pricing Info - Event", "Simple inline version of price info for events") {
@@ -369,26 +365,29 @@
     }
 
     @pattern("Tier Trail - Caption", "Tier name with caption") {
-        @fragments.tier.tierTrail(Partner)
+        @fragments.tier.tierTrail(Tier.Partner)
     }
 
     @pattern("Tier Trail - No Caption", "Tier name with no caption") {
-        @fragments.tier.tierTrail(Partner, showCaption=false)
+        @fragments.tier.tierTrail(Tier.Partner, showCaption=false)
     }
 
     @pattern("Package: Promo") {
         <ul class="grid grid--3up-stacked">
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.partner)
+                @fragments.tier.packagePromo(Tier.Friend)
             </li>
             <li class="grid__item">
-                @fragments.tier.packagePromo(catalog.patron)
+                @fragments.tier.packagePromo(Tier.Partner)
+            </li>
+            <li class="grid__item">
+                @fragments.tier.packagePromo(Tier.Patron)
             </li>
         </ul>
     }
 
     @pattern("Package: Stack") {
-        @fragments.tier.packageStack(Partner)
+        @fragments.tier.packageStack(Tier.Partner)
     }
 
     @pattern("Flash Message: Success") {

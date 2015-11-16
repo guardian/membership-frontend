@@ -21,7 +21,7 @@ GET            /join/staff/enter-details              controllers.Joiner.enterSt
 GET            /join/:tier/enter-details              controllers.Joiner.enterDetails(tier: Tier)
 POST           /join/friend/enter-details             controllers.Joiner.joinFriend
 POST           /join/staff/enter-details              controllers.Joiner.joinStaff
-POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: PaidTier)
+POST           /join/:tier/enter-details              controllers.Joiner.joinPaid(tier: Tier)
 GET            /join/staff/thankyou                   controllers.Joiner.thankyouStaff
 GET            /join/:tier/thankyou                   controllers.Joiner.thankyou(tier: Tier)
 POST           /join/staff/update-email               controllers.Joiner.updateEmailStaff
@@ -78,9 +78,9 @@ GET            /tier/cancel/summary                   controllers.TierController
 GET            /tier/change/friend                    controllers.TierController.downgradeToFriend
 POST           /tier/change/friend                    controllers.TierController.downgradeToFriendConfirm
 GET            /tier/change/friend/summary            controllers.TierController.downgradeToFriendSummary
-GET            /tier/change/:tier                     controllers.TierController.upgrade(tier: PaidTier)
-POST           /tier/change/:tier                     controllers.TierController.upgradeConfirm(tier: PaidTier)
-GET            /tier/change/:tier/summary             controllers.TierController.upgradeThankyou(tier: PaidTier)
+GET            /tier/change/:tier                     controllers.TierController.upgrade(tier: Tier)
+POST           /tier/change/:tier                     controllers.TierController.upgradeConfirm(tier: Tier)
+GET            /tier/change/:tier/summary             controllers.TierController.upgradeThankyou(tier: Tier)
 
 # Information
 GET            /patrons                               controllers.Info.patron

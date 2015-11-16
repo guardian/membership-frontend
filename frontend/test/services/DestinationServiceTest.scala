@@ -35,7 +35,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
     val destinationService = DestinationServiceTest
 
     def createRequestWithSession(newSessions: (String, String)*) = {
-      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), FreeTierMember(Friend), NoPayment)
+      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), Member(None, Friend), NoPayment)
       val fakeRequest = FakeRequest().withSession(newSessions: _*)
       val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
       MemberRequest(testMember, new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest))

@@ -2,7 +2,6 @@
 @import com.gu.membership.salesforce.Contact._
 @import com.gu.membership.salesforce.Contact
 @import com.gu.membership.salesforce.PaymentMethod
-@import com.gu.membership.salesforce.PaidTierMember
 @(
     member: Contact[Member, PaymentMethod],
     summary: model.MembershipSummary,
@@ -23,13 +22,6 @@
         s"Thank you for upgrading | ${member.memberStatus.tier.name}"
     } else {
         s"Thank you | ${member.memberStatus.tier.name}"
-    }
-}
-
-@regNumberOrFree = @{
-    member.memberStatus match {
-        case PaidTierMember(n, _) => n
-        case _ => "Free"
     }
 }
 
@@ -156,6 +148,7 @@
     @fragments.analytics.googleJoinerConversion(member.memberStatus.tier)
     @fragments.analytics.facebookJoinerConversion(member.memberStatus.tier)
     @fragments.analytics.videoCampaignPHD.thankyouPage(
-        regNumberOrFree, summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
+        member.memberStatus.regNumber.getOrElse("free"),
+        summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
     )
 }

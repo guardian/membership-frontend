@@ -1,19 +1,17 @@
-@import model.PaidTierDetails
-@import views.support.DisplayText._
-@import com.gu.membership.model.Currency
+@(tier: com.gu.membership.salesforce.Tier, isReversed: Boolean = false)
 
-@(details: PaidTierDetails, isReversed: Boolean = false)(implicit currency: Currency)
+@import model.Benefits
 
 <div class="package-feature">
     <div class="package-feature__promo">
-        @fragments.tier.packagePromo(details, isReversed=isReversed, modifierClass=Some("package-promo--always-narrow"))
+        @fragments.tier.packagePromo(tier, isReversed=isReversed, modifierClass=Some("package-promo--always-narrow"))
     </div>
     <div class="package-feature__benefits copy">
-        <div class="package-feature__leadin tone-border-@details.tier.slug">
-            @details.tier.leadin
+        <div class="package-feature__leadin tone-border-@tier.slug">
+            @Benefits.details(tier).leadin
         </div>
         <ul>
-            @for(benefit <- details.tier.detailsLimited) {
+            @for(benefit <- Benefits.detailsLimited(tier)) {
                 <li>@benefit.title</li>
             }
         </ul>

@@ -1,5 +1,6 @@
 package actions
 
+import actions.Fallbacks._
 import com.gu.googleauth.{GoogleGroupChecker, UserIdentity}
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
@@ -12,7 +13,6 @@ import play.api.mvc.Security.AuthenticatedBuilder
 import play.api.mvc._
 import play.twirl.api.Html
 import services._
-import Fallbacks._
 import Contact._
 
 import scala.concurrent.Future
@@ -24,14 +24,13 @@ import scala.concurrent.Future
  * https://www.playframework.com/documentation/2.3.x/ScalaActionsComposition
  */
 object Functions extends LazyLogging {
-  import model.TierOrdering.upgradeOrdering
 
   def resultModifier(f: Result => Result) = new ActionBuilder[Request] {
     def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = block(request).map(f)
   }
 
   def authenticated(onUnauthenticated: RequestHeader => Result = chooseRegister(_)): ActionBuilder[AuthRequest] =
-    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor, onUnauthenticated)
+    new AuthenticatedBuilder(AuthenticationService.authenticatedUserFor(_), onUnauthenticated)
 
   def memberRefiner(onNonMember: RequestHeader => Result = notYetAMemberOn(_)) =
     new ActionRefiner[AuthRequest, AnyMemberTierRequest] {
@@ -40,9 +39,9 @@ object Functions extends LazyLogging {
       }
     }
 
-  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: AnyMemberTierRequest[_]): Result = selectedTier match {
-    case t: PaidTier if t > req.member.tier => tierChangeEnterDetails(t)(req)
-    case _ => memberHome(req)
+  def redirectMemberAttemptingToSignUp(selectedTier: Tier)(req: AnyMemberTierRequest[_]): Result = {
+    val selectedTierWouldBeUpgrade = selectedTier > req.member.tier
+    if (selectedTierWouldBeUpgrade) tierChangeEnterDetails(selectedTier)(req) else memberHome(req)
   }
 
   def onlyNonMemberFilter(onMember: AnyMemberTierRequest[_] => Result = memberHome(_)) = new ActionFilter[AuthRequest] {
@@ -76,7 +75,7 @@ object Functions extends LazyLogging {
       override def refine[A](request: AnyMemberTierRequest[A]) = Future {
         request.member match {
           case Contact(d, m, NoPayment) => Left(onFreeMember(request))
-          case Contact(d, m@PaidTierMember(_, _), p@StripePayment(_)) => Right(MemberRequest(Contact(d, m, p), request.request))
+          case Contact(d, m, p@StripePayment(_)) => Right(MemberRequest(Contact(d, m, p), request.request))
         }
       }
     }
@@ -94,8 +93,7 @@ object Functions extends LazyLogging {
 
   def googleAuthUserOpt(request: RequestHeader) = UserIdentity.fromRequest(request).filter(_.isValid || !OAuthActions.authConfig.enforceValidity)
 
-  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result =
-                            joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
+  def matchingGuardianEmail(onNonGuEmail: RequestHeader => Result = joinStaffMembership(_).flashing("error" -> "Identity email must match Guardian email")) = new ActionFilter[IdentityGoogleAuthRequest] {
     override def filter[A](request: IdentityGoogleAuthRequest[A]) = {
       for {
         user <- IdentityService(IdentityApi).getFullUserDetails(request.identityUser, IdentityRequest(request))

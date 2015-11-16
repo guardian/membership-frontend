@@ -1,9 +1,7 @@
-@import com.gu.membership.model.Currency
-@import model.MembershipCatalog
-@import configuration.Config
-@import com.gu.membership.salesforce.Tier
+@(currentTier: com.gu.membership.salesforce.Tier, availableTiers: Seq[com.gu.membership.salesforce.Tier])(implicit token: play.filters.csrf.CSRF.Token)
 
-@(currentTier: Tier, catalog: MembershipCatalog)(implicit token: play.filters.csrf.CSRF.Token, currency: Currency)
+@import configuration.Config
+@import model.Benefits
 
 @main("Change Tier") {
 
@@ -18,7 +16,6 @@
                     <span class="action__label">Edit profile</span>
                 </a>
             </div>
-            @defining(Tier.allPublic.filterNot(_ == currentTier)) { availableTiers =>
             <div class="page-section__content">
 
                 <h1 class="h-section">You are currently a @currentTier.toString, choose the tier you would like to switch to:</h1>
@@ -27,14 +24,14 @@
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     @for(tier <- availableTiers) {
                         <li class="grid__item">
-                           @fragments.tier.packageChanger(catalog.publicTierDetails(tier))
+                            @fragments.tier.packageChanger(tier)
                         </li>
                     }
                 </ul>
 
                 <h3 class="h-section">What's included</h3>
                 @for(tier <- availableTiers) {
-                    <div id="package-benefits-@tier.slug">
+                    <div id="package-benefits-@tier.name.toLowerCase">
                         @fragments.tier.packageStack(tier)
                     </div>
                 }
@@ -44,8 +41,8 @@
                     <li class="o-inline-list__item"><a href="@routes.Info.help">Help</a></li>
                     <li class="o-inline-list__item"><a href="@routes.TierController.cancelTier" id="qa-cancel-membership">Cancel Guardian membership</a></li>
                 </ul>
+
             </div>
-            }
         </section>
 
   </main>
