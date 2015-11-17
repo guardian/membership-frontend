@@ -1,7 +1,9 @@
 package controllers
 
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.Controller
-import services.{LocalEventService, GuardianLiveEventService, MasterclassEventService}
+import services.{GuardianLiveEventService, LocalEventService, MasterclassEventService, TouchpointBackend}
+import views.support.Catalog
 
 trait Staff extends Controller {
   val guLiveEvents = GuardianLiveEventService
@@ -22,6 +24,14 @@ trait Staff extends Controller {
 
   def eventOverviewDetails = GoogleAuthenticatedStaffAction { implicit request =>
     Ok(views.html.eventOverview.details(request.path))
+  }
+
+  def catalogDiagnostics = GoogleAuthenticatedStaffAction.async { implicit request =>
+    val testCat = TouchpointBackend.TestUser.subscriptionService.getMembershipCatalog()
+    val normalCat = TouchpointBackend.Normal.subscriptionService.getMembershipCatalog()
+    testCat.zip(normalCat).map((Catalog.Diagnostic.fromCatalogs _).tupled).map { diagnostic =>
+      Ok(views.html.staff.catalogDiagnostic(diagnostic))
+    }
   }
 }
 
