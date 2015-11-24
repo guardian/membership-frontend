@@ -9,13 +9,8 @@ cache:
   - $HOME/.sbt
   - $HOME/.ivy2
 before_cache:
-  #- find $HOME/.sbt -name "*.lock" -type f -delete -print
-  #- find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete -print
-  #
-  # Temporary fix for travis builds. These are currently failing because of
-  # a major version upgrade of Joda-time causing issues with sbt update task.
-  # Nuking the ivy cache fixed the problem on dev machines and Teamcity...
-  - rm -rf $HONE/.ivy2/cache
+  - find $HOME/.sbt -name "*.lock" -type f -delete -print
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete -print
 before_install:
   - export TZ=Europe/London
 script: sbt ++$TRAVIS_SCALA_VERSION test
