@@ -10,12 +10,15 @@
                 <div class="price-info-inline__value qa-event-detail-price">
                     @ticketing.generalReleaseTicketOpt.map(_.priceText)
                 </div>
-            } { discountTicketing =>
-                <div class="js-event-price">
-                    <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText">
-                    @discountTicketing.generalRelease.cost.get.formattedPrice
-                    </div>
-                    <div class="price-info-inline__trail">
+	    } { discountTicketing =>
+		<div class="js-event-price">
+		    <div class="price-info-inline__value js-event-price-value qa-event-detail-price" data-discount-text="@discountTicketing.member.priceText">
+			@discountTicketing.generalRelease.priceText
+			@discountTicketing.generalRelease.feeText.map { fee =>
+			    <span class="price-info-inline__fee" >plus @fee booking fee</span>
+			}
+		    </div>
+		    <div class="price-info-inline__trail">
                         <span class="js-event-price-discount qa-event-detail-price-discount" data-discount-text="Full price @discountTicketing.generalRelease.priceText">
                             Partners/Patrons @discountTicketing.member.priceText
                         </span>

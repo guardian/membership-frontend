@@ -95,6 +95,9 @@ object Eventbrite {
 
   case class EBPricing(value: Int) extends EBObject {
     lazy val formattedPrice = formatPriceWithCurrency(value)
+    def add(other: EBPricing) : EBPricing = {
+      EBPricing(value+other.value)
+    }
   }
 
   case class EventTimes(created: Instant, start: DateTime)
@@ -109,6 +112,7 @@ object Eventbrite {
                            quantity_sold: Int,
                            on_sale_status: Option[String], // Currently undocumented, so treating as optional. "SOLD_OUT", "AVAILABLE", "UNAVAILABLE"
                            cost: Option[EBPricing],
+			   fee: Option[EBPricing],
                            sales_end: Instant,
                            sales_start: Option[Instant],
                            hidden: Option[Boolean]) extends EBObject {
@@ -122,8 +126,13 @@ object Eventbrite {
     val isSoldOut = on_sale_status.contains("SOLD_OUT") || quantity_sold >= quantity_total
 
     val priceInPence = cost.map(_.value).getOrElse(0)
+    val feeInPence = fee.map(_.value).getOrElse(0)
     val priceValue = formatPrice(priceInPence)
     val priceText = cost.map(_.formattedPrice).getOrElse("Free")
+    val feeText = fee.filter(_.value>0).map(_.formattedPrice)
+    val totalCost = cost.map(c => c add fee.getOrElse(EBPricing(0)))
+
+
     val currencyCode = "GBP"
   }
 
@@ -188,7 +197,7 @@ object Eventbrite {
   }
 
   case class DiscountBenefitTicketing(generalRelease: EBTicketClass, member: EBTicketClass) {
-    val saving = generalRelease.priceInPence - member.priceInPence
+    val saving = (generalRelease.priceInPence + generalRelease.feeInPence) - member.priceInPence
 
     val savingText = formatPriceWithCurrency(saving)
 
