@@ -198,10 +198,12 @@ object Eventbrite {
 
   case class DiscountBenefitTicketing(generalRelease: EBTicketClass, member: EBTicketClass) {
     val saving = (generalRelease.priceInPence + generalRelease.feeInPence) - member.priceInPence
+    val savingExcludingFee = generalRelease.priceInPence - member.priceInPence
 
     val savingText = formatPriceWithCurrency(saving)
 
     val roundedSavingPercentage: Int = math.round(100 * (saving.toFloat / generalRelease.priceInPence))
+    val roundedSavingPercentageExcludingFee: Int = math.round(100 * (savingExcludingFee.toFloat / generalRelease.priceInPence))
 
     lazy val nonStandardSaving = roundedSavingPercentage != Config.roundedDiscountPercentage
 

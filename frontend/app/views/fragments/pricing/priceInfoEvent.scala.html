@@ -1,4 +1,3 @@
-@import configuration.Config
 @(event: model.RichEvent.RichEvent, isPrimary: Boolean = false, showLimited: Boolean = false)
 
 
@@ -20,8 +19,8 @@
 			}
 		    </div>
 		    <div class="price-info-inline__trail">
-                        <span class="js-event-price-saving" data-discount-text="You save @discountTicketing.savingText (@Config.roundedDiscountPercentage% off and no fees)">
-                            Partners/Patrons save @discountTicketing.savingText (@Config.roundedDiscountPercentage% off and no fees)                        </span>
+                        <span class="js-event-price-saving" data-discount-text="You save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off and no fees)">
+                            Partners/Patrons save @discountTicketing.savingText (@discountTicketing.roundedSavingPercentageExcludingFee% off and no fees)                        </span>
                     </div>
                     @if(showLimited && event.isBookable && event.isLimitedAvailability) {
                         <div class="price-info-inline__trail price-info-inline__limited">
