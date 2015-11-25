@@ -5,14 +5,16 @@ define([
     'src/modules/analytics/ophan',
     'src/modules/analytics/omniture',
     'src/modules/analytics/krux',
-    'src/modules/analytics/facebook'
+    'src/modules/analytics/facebook',
+    'src/modules/analytics/uet'
 ], function (
     cookie,
     ga,
     ophan,
     omniture,
     krux,
-    facebook
+    facebook,
+    uet
 ) {
     'use strict';
 
@@ -26,6 +28,7 @@ define([
         ophan.init();
         omniture.init();
         ga.init();
+        uet.init();
     }
 
     function setupThirdParties() {

@@ -172,6 +172,12 @@ module.exports = function (grunt) {
                 expand: true,
                 flatten: true
             },
+            uet: {
+                src: '<%= dirs.assets.javascripts %>/lib/analytics/uet.js',
+                dest: '<%= dirs.publicDir.javascripts %>/lib/uet/',
+                expand: true,
+                flatten: true
+            },
             images: {
                 cwd: '<%= dirs.assets.images %>',
                 src: [
@@ -348,7 +354,8 @@ module.exports = function (grunt) {
             'copy:polyfills',
             'copy:curl',
             'copy:zxcvbn',
-            'copy:omniture'
+            'copy:omniture',
+            'copy:uet'
         ]);
     });
     grunt.registerTask('compile', function(){
