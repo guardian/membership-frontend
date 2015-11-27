@@ -41,7 +41,7 @@
                 </h2>
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.supporter, Some("#package-benefits-supporter"))
+                        @fragments.tier.packagePromo(catalog.friend, Some("#package-benefits-friend"))
                     </li>
                     <li class="grid__item">
                         @fragments.tier.packagePromo(catalog.partner, Some("#package-benefits-partner"))
@@ -67,8 +67,11 @@
         <section class="page-section">
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
+                <div id="package-benefits-friend">
+                    @fragments.tier.packageStack(Friend)
+                </div>
                 <div id="package-benefits-supporter">
-                    @fragments.tier.packageStack(Supporter)
+                    @fragments.tier.packageStack(Supporter, Some(Friend))
                 </div>
                 <div id="package-benefits-partner">
                     @fragments.tier.packageStack(Partner)

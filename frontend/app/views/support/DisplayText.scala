@@ -4,12 +4,16 @@ import com.gu.membership.model.GBP
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
-import model.{FreeTierDetails, Benefits, PaidTierDetails, TierDetails}
+import model.{Benefits, PaidTierDetails}
 import views.support.Pricing._
 
 object DisplayText {
   implicit class TierCopy(tier: Tier) {
     def benefits = Benefits.forTier(tier)
+    def benefitsExcluding(tierOpt: Option[Tier]) = {
+      val exclude = tierOpt.map(t => t.benefits).getOrElse(Seq())
+      benefits.filter(!exclude.contains(_))
+    }
 
     def cta = s"Become a ${tier.slug}"
 
@@ -21,6 +25,7 @@ object DisplayText {
     }
 
     def leadin = tier match {
+      case Supporter => "Friend benefits, plus…"
       case Partner => "Supporter benefits, plus…"
       case Patron => " Partner benefits, plus…"
       case _ => "Benefits"

@@ -1,9 +1,9 @@
 @import views.support.DisplayText._
-@import model.PaidTierDetails
+@import model.TierDetails
 @import com.gu.membership.model.Currency
 
 @(
-    details: PaidTierDetails,
+    details: TierDetails,
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
@@ -48,7 +48,7 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @fragments.pricing.priceInfo(details, canFlex=false)
+               @fragments.pricing.priceInfo(details, canFlex=true)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
                 <span class="action__label">
