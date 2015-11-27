@@ -43,9 +43,12 @@ object DisplayText {
         Highlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true))
 
       case Patron => List(Highlight("Show deep support for keeping the Guardian free, open and independent."),
-        Highlight("Get invited to a small number of exclusive, behind-the-scenes functions"))
+        Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
+      )
       case _ => Nil
     }
+
+    val chooseTierPatron = List(Highlight("get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))
   }
 
   implicit class PaidTierDetailsCopy(paidTierDetails: PaidTierDetails) {

@@ -50,9 +50,9 @@
                         @fragments.tier.packagePromo(catalog.partner, Some("#package-benefits-partner"))
                     </li>
                 </ul>
-                @if(!accessOpt.exists(_.isPaidMembersOnly)) {
-                    @fragments.tier.friendTeaser(catalog)
-                }
+
+                @fragments.tier.packagePromo(catalog.patron, chooseTier=true)
+
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
                 <div class="page-section__supplementary">
