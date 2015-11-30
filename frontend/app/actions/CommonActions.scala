@@ -86,16 +86,16 @@ trait CommonActions {
 
   val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
-  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = createBasicGuMemCookie(_))
+  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = setGuMemCookie(_))
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = createBasicGuMemCookie(_))
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = setGuMemCookie(_))
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
 
-  def createBasicGuMemCookie(implicit request: RequestHeader) =
-    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))) { user =>
+  def setGuMemCookie(implicit request: RequestHeader) =
+    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
       val json = Json.obj("userId" -> user.id)
-      Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
+      Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
 }
 

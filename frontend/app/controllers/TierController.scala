@@ -6,17 +6,17 @@ import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
 import com.gu.membership.zuora.soap.models.errors.ResultError
 import com.gu.membership.zuora.soap.models.{PaidPreview, SubscriptionDetails}
-import configuration.Config
 import forms.MemberForm._
 import model.{FlashMessage, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, DiscardingCookie, Result}
 import services.{IdentityApi, IdentityService, MemberService}
-import play.api.mvc.{AnyContent, Result, Controller, DiscardingCookie}
+import play.api.mvc.{AnyContent, Result, Controller}
 import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
 import tracking.ActivityTracking
 import utils.CampaignCode.extractCampaignCode
+import utils.TierChangeCookies
 import play.filters.csrf.CSRF.Token.getToken
 
 import scala.concurrent.Future
@@ -44,7 +44,7 @@ trait DowngradeTier extends ActivityTracking {
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.futureVersionOpt.get)
     } yield Ok(
       views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName)
-    ).discardingCookies(DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
+    ).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 }
 
@@ -136,9 +136,7 @@ trait UpgradeTier {
       case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
-    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
-
-    futureResult.map(_.discardingCookies(cookiesToDiscard:_*)).recover {
+    futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error: ResultError => Forbidden
       case error: ScalaforceError => Forbidden
@@ -176,7 +174,7 @@ trait CancelTier {
     } yield {
       val currentTierOpt = memberOpt.map(_.tier)
       Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption, currentTierOpt))
-        .discardingCookies(DiscardingCookie("gu_paying_member", "/", Some(Config.guardianShortDomain)))
+        .discardingCookies(TierChangeCookies.deletionCookies:_*)
     }
   }
 }
