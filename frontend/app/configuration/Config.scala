@@ -28,6 +28,7 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val guardianHost = config.getString("guardian.host")
+  val guardianShortDomain = config.getString("guardian.shortDomain")
 
   val membershipUrl = config.getString("membership.url")
   val membershipHost = Uri.parse(Config.membershipUrl).host.get

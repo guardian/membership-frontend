@@ -24,6 +24,7 @@ import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import utils.CampaignCode.extractCampaignCode
+import utils.TierChangeCookies
 
 import scala.concurrent.Future
 
@@ -210,9 +211,6 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       case _ => Future.successful(None)
     }
 
-    // After joining, let nextgen reassert the user's payment status
-    val cookiesToDiscard = List(DiscardingCookie("GU_MEM"), DiscardingCookie("gu_paying_member"))
-
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
       customerOpt <- futureCustomerOpt
@@ -223,7 +221,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         customerOpt.map(_.card),
         destinationOpt,
         upgrade
-    )).discardingCookies(cookiesToDiscard:_*)
+    )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
   def thankyouStaff = thankyou(Tier.Partner)

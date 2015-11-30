@@ -26,7 +26,7 @@ trait User extends Controller {
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
     request.idCookies.foreach(MembersDataAPI.Service.check(request.member.memberStatus))
-    Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
+    Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
