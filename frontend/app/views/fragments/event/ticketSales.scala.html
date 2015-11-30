@@ -21,14 +21,7 @@
 
 <div class="ticket-sales">
     <span class="ticket-sales__header">Tickets</span>
-
-    <h1>BOO:         @ticketing.salesDates
-    </h1>
-
-
     <ul class="ticket-sales__list u-unstyled">
-
-
         @ticketSalesItem("Partners & Patrons") {
             @ticketDateForTier(Tier.Patron, ticketing.salesDates.datesByTier(Tier.Patron), ticketing.salesDates.needToDistinguishTimes)
         }
@@ -41,5 +34,4 @@
             </time>
         }
     </ul>
-
 </div>
