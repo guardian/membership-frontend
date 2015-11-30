@@ -48,7 +48,7 @@ object DisplayText {
       case _ => Nil
     }
 
-    val chooseTierPatron = List(Highlight("get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))
+    val chooseTierPatron = List(Highlight("Get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))
   }
 
   implicit class PaidTierDetailsCopy(paidTierDetails: PaidTierDetails) {
