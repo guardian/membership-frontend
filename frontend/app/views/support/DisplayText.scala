@@ -4,12 +4,16 @@ import com.gu.membership.model.GBP
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
-import model.{FreeTierDetails, Benefits, PaidTierDetails, TierDetails}
+import model.{Benefits, PaidTierDetails}
 import views.support.Pricing._
 
 object DisplayText {
   implicit class TierCopy(tier: Tier) {
     def benefits = Benefits.forTier(tier)
+    def benefitsExcluding(tierOpt: Option[Tier]) = {
+      val exclude = tierOpt.map(t => t.benefits).getOrElse(Seq())
+      benefits.filter(!exclude.contains(_))
+    }
 
     def cta = s"Become a ${tier.slug}"
 
@@ -21,6 +25,7 @@ object DisplayText {
     }
 
     def leadin = tier match {
+      case Supporter => "Friend benefits, plus…"
       case Partner => "Supporter benefits, plus…"
       case Patron => " Partner benefits, plus…"
       case _ => "Benefits"
@@ -38,9 +43,12 @@ object DisplayText {
         Highlight(s"Includes $zuoraFreeEventTicketsAllowance tickets to Guardian Live events (or 4 Guardian-published books) per year", isNew = true))
 
       case Patron => List(Highlight("Show deep support for keeping the Guardian free, open and independent."),
-        Highlight("Get invited to a small number of exclusive, behind-the-scenes functions"))
+        Highlight("Get invited to a small number of exclusive, behind-the-scenes functions")
+      )
       case _ => Nil
     }
+
+    val chooseTierPatron = List(Highlight("Get all partner benefits, 6 tickets and 4 books plus invitations  to exclusive behind-the-scenes functions"))
   }
 
   implicit class PaidTierDetailsCopy(paidTierDetails: PaidTierDetails) {

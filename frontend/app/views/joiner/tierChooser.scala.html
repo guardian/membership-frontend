@@ -41,18 +41,16 @@
                 </h2>
                 <ul class="grid grid--equal-heights grid--bordered grid--3up-stacked">
                     <li class="grid__item">
+                        @fragments.tier.packagePromo(catalog.friend, Some("#package-benefits-friend"))
+                    </li>
+                    <li class="grid__item">
                         @fragments.tier.packagePromo(catalog.supporter, Some("#package-benefits-supporter"))
                     </li>
                     <li class="grid__item">
                         @fragments.tier.packagePromo(catalog.partner, Some("#package-benefits-partner"))
                     </li>
-                    <li class="grid__item">
-                        @fragments.tier.packagePromo(catalog.patron, Some("#package-benefits-patron"))
-                    </li>
                 </ul>
-                @if(!accessOpt.exists(_.isPaidMembersOnly)) {
-                    @fragments.tier.friendTeaser(catalog)
-                }
+                @fragments.tier.packagePromo(catalog.patron, chooseTier=true)
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
                 <div class="page-section__supplementary">
@@ -67,14 +65,17 @@
         <section class="page-section">
             <div class="page-section__content">
                 <h3 class="h-section">What's included</h3>
+                <div id="package-benefits-friend">
+                    @fragments.tier.packageStack(Friend)
+                </div>
                 <div id="package-benefits-supporter">
-                    @fragments.tier.packageStack(Supporter)
+                    @fragments.tier.packageStack(Supporter, Some(Friend))
                 </div>
                 <div id="package-benefits-partner">
-                    @fragments.tier.packageStack(Partner)
+                    @fragments.tier.packageStack(Partner, Some(Supporter))
                 </div>
                 <div id="package-benefits-patron">
-                    @fragments.tier.packageStack(Patron)
+                    @fragments.tier.packageStack(Patron, Some(Partner))
                 </div>
             </div>
         </section>

@@ -1,14 +1,16 @@
 @import views.support.DisplayText._
-@import model.PaidTierDetails
+@import model.TierDetails
 @import com.gu.membership.model.Currency
 
+@import com.gu.membership.salesforce.Tier.Patron
 @(
-    details: PaidTierDetails,
+    details: TierDetails,
     showDescription: Boolean = true,
     descriptionAnchor: Option[String] = None,
     modifierClass: Option[String] = None,
     extraClasses: Seq[String] = Seq.empty,
-    isReversed: Boolean = false
+    isReversed: Boolean = false,
+    chooseTier: Boolean = false
 )(implicit currency: Currency)
 
 @actionAttrs = {
@@ -32,7 +34,7 @@
         @if(showDescription) {
             <div class="package-promo__description copy">
                 <ul class="o-bulleted-list">
-                    @for(highlight <- details.tier.highlights) {
+                    @for(highlight <- if(chooseTier && details.tier==Patron) details.tier.chooseTierPatron else details.tier.highlights) {
                         <li>
                             @if(highlight.isNew) {
                                 @fragments.inlineIcon("new-arrow", List("icon-inline--badge", "icon-inline--brand"))
@@ -48,7 +50,7 @@
         }
         <div class="package-promo__actions">
             <div class="package-promo__actions__pricing">
-               @fragments.pricing.priceInfo(details, canFlex=false)
+               @fragments.pricing.priceInfo(details, canFlex=true)
             </div>
             <a class="action action--no-icon u-no-bottom-margin qa-package-@details.tier.slug" @actionAttrs>
                 <span class="action__label">

@@ -1,6 +1,6 @@
 @import com.gu.membership.salesforce.Tier
 @import views.support.DisplayText._
-@(tier: Tier)(implicit token: play.filters.csrf.CSRF.Token)
+@(tier: Tier, baseTier: Option[Tier]=None)(implicit token: play.filters.csrf.CSRF.Token)
 
 <div class="package-stack">
     <div class="package-stack__header">
@@ -8,7 +8,7 @@
     </div>
     <div class="package-stack__content copy">
         <ul>
-            @for(benefit <- tier.benefits) {
+            @for(benefit <- tier.benefitsExcluding(baseTier)) {
                 <li>@benefit.title</li>
             }
         </ul>
