@@ -50,9 +50,7 @@
                         @fragments.tier.packagePromo(catalog.partner, Some("#package-benefits-partner"))
                     </li>
                 </ul>
-
                 @fragments.tier.packagePromo(catalog.patron, chooseTier=true)
-
             </div>
             @for(event <- eventOpt if accessOpt.isEmpty) {
                 <div class="page-section__supplementary">
@@ -74,10 +72,10 @@
                     @fragments.tier.packageStack(Supporter, Some(Friend))
                 </div>
                 <div id="package-benefits-partner">
-                    @fragments.tier.packageStack(Partner)
+                    @fragments.tier.packageStack(Partner, Some(Supporter))
                 </div>
                 <div id="package-benefits-patron">
-                    @fragments.tier.packageStack(Patron)
+                    @fragments.tier.packageStack(Patron, Some(Partner))
                 </div>
             </div>
         </section>
