@@ -27,15 +27,12 @@ define(['$', 'bonzo', 'src/utils/user'], function ($, bonzo, userUtil) {
     var updateEventPricing = function(el) {
 
         var elPrice = $(el.querySelector(selectors.EVENT_PRICE));
-        var elPriceDiscount = $(el.querySelector(selectors.EVENT_PRICE_DISCOUNT));
         var elPriceSaving = $(el.querySelector(selectors.EVENT_SAVING));
 
-        if (elPrice.length && elPriceDiscount.length && elPriceSaving.length) {
+        if (elPrice.length && elPriceSaving.length) {
             elPrice.text(elPrice.attr('data-discount-text'));
-            elPriceDiscount.text(elPriceDiscount.attr('data-discount-text'));
             elPriceSaving.text(elPriceSaving.attr('data-discount-text'));
         }
-
     };
 
     return {
