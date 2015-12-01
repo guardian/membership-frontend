@@ -12,11 +12,12 @@ import forms.MemberForm._
 import model.{FlashMessage, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, DiscardingCookie, Result}
+import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import services._
 import tracking.ActivityTracking
 import utils.CampaignCode.extractCampaignCode
+import utils.TierChangeCookies
 import views.support.DisplayText._
 
 import scala.concurrent.Future
@@ -47,7 +48,9 @@ trait DowngradeTier extends ActivityTracking {
       subscriptionStatus <- subscriptionService.getSubscriptionStatus(request.member)
       currentSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
       futureSubscription <- subscriptionService.getSubscriptionDetails(subscriptionStatus.futureVersionOpt.get)
-    } yield Ok(views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName))
+    } yield Ok(
+      views.html.tier.downgrade.summary(currentSubscription, futureSubscription, currentTier, futureTierName)
+    ).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 }
 
@@ -162,7 +165,7 @@ trait UpgradeTier {
       case Contact(d, c, p: StripePayment) => paidMemberChangeForm.bindFromRequest.fold(redirectToUnsupportedBrowserInfo, handlePaid(Contact(d, c, p)))
     }
 
-    futureResult.map(_.discardingCookies(DiscardingCookie("GU_MEM"))).recover {
+    futureResult.map(_.discardingCookies(TierChangeCookies.deletionCookies:_*)).recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
       case error: ResultError => Forbidden
       case error: ScalaforceError => Forbidden
@@ -202,6 +205,7 @@ trait CancelTier {
     } yield {
       val currentTierOpt = memberOpt.map(_.tier)
       Ok(views.html.tier.cancel.summary(subscriptionDetails.headOption, currentTierOpt))
+        .discardingCookies(TierChangeCookies.deletionCookies:_*)
     }
   }
 }

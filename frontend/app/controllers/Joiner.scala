@@ -24,6 +24,7 @@ import services.{GuardianContentService, _}
 import services.EventbriteService._
 import tracking.{ActivityTracking, EventActivity, EventData, MemberData}
 import utils.CampaignCode.extractCampaignCode
+import utils.TierChangeCookies
 
 import scala.concurrent.Future
 
@@ -220,7 +221,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         customerOpt.map(_.card),
         destinationOpt,
         upgrade
-    )).discardingCookies(DiscardingCookie("GU_MEM"))
+    )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }
 
   def thankyouStaff = thankyou(Tier.Partner)
