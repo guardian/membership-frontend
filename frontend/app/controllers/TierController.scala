@@ -12,7 +12,6 @@ import forms.MemberForm._
 import model.{FlashMessage, PageInfo}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
-<<<<<<< HEAD
 import play.api.mvc.{Controller, Result}
 import play.filters.csrf.CSRF.Token.getToken
 import services._
@@ -20,16 +19,6 @@ import tracking.ActivityTracking
 import utils.CampaignCode.extractCampaignCode
 import utils.TierChangeCookies
 import views.support.DisplayText._
-=======
-import play.api.mvc.{Controller, DiscardingCookie, Result}
-import services.{IdentityApi, IdentityService, MemberService}
-import play.api.mvc.{AnyContent, Result, Controller}
-import services.{SubscriptionService, IdentityApi, IdentityService, MemberService}
-import tracking.ActivityTracking
-import utils.CampaignCode.extractCampaignCode
-import utils.TierChangeCookies
-import play.filters.csrf.CSRF.Token.getToken
->>>>>>> fd90fa51739a2675bf8d5c9df4fe1750d30d2939
 
 import scala.concurrent.Future
 
