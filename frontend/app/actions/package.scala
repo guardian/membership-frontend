@@ -1,8 +1,9 @@
 import com.gu.googleauth
-import com.gu.identity.play.{AuthenticatedIdUser, IdMinimalUser}
+import com.gu.identity.play.AuthenticatedIdUser
 import com.gu.membership.salesforce._
 import com.gu.membership.util.Timing
 import model.MembershipCatalog
+import monitoring.MemberAuthenticationMetrics
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc.{Cookie, WrappedRequest}
 import services._
@@ -13,6 +14,8 @@ package object actions {
   type AuthRequest[A] = AuthenticatedRequest[A, AuthenticatedIdUser]
 
   type GoogleAuthRequest[A] = AuthenticatedRequest[A, googleauth.UserIdentity]
+
+  val countryGroupKey = "country-group"
 
   trait TierDetailsProvider {
     def touchpointBackend: TouchpointBackend
@@ -40,6 +43,14 @@ package object actions {
     } yield Seq(guu, scguu)
 
     lazy val touchpointBackend = TouchpointBackend.forUser(user)
+  }
+
+  case class SubscriptionRequest[A](subscription: model.Subscription,
+                                    memberRequest: MemberRequest[A, Contact[Member, PaymentMethod]]
+                                   ) extends WrappedRequest[A](memberRequest) with TierDetailsProvider {
+    val user = memberRequest.user
+    val touchpointBackend = memberRequest.touchpointBackend
+    val member = memberRequest.member
   }
 
   type AnyMemberTierRequest[A] = MemberRequest[A, Contact[Member, PaymentMethod]]

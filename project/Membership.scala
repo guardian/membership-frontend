@@ -46,6 +46,7 @@ trait Membership {
     .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq(
       "controllers.TierBinder._",
       "com.gu.membership.salesforce.Tier",
+      "com.gu.membership.salesforce.FreeTier",
       "com.gu.membership.salesforce.PaidTier"
     ))
 }

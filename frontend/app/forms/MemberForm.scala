@@ -1,9 +1,9 @@
 package forms
 
+import com.gu.i18n._
 import com.gu.membership.model._
-import com.gu.membership.salesforce.{PaidTier, Tier}
-import com.gu.membership.zuora.{Address, Countries, Country}
-import model.FeatureChoice
+import com.gu.membership.salesforce.PaidTier
+import model.{MembershipCatalog, FeatureChoice}
 import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError, Mapping}
@@ -21,26 +21,31 @@ object MemberForm {
     val marketingChoices: MarketingChoicesForm
     val password: Option[String]
     val plan: TierPlan
-    val featureChoice: Set[FeatureChoice]
   }
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
     override val plan = FriendTierPlan.current
-    override val featureChoice = Set.empty[FeatureChoice]
   }
 
   case class StaffJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
     override val plan = StaffPlan
-    override val featureChoice = Set.empty[FeatureChoice]
   }
 
-  case class PaidMemberJoinForm(tier: PaidTier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
-                                billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
-                                password: Option[String], casId: Option[String], subscriberOffer: Boolean,
-                                featureChoice: Set[FeatureChoice]) extends JoinForm {
+  case class PaidMemberJoinForm(tier: PaidTier,
+                                name: NameForm,
+                                payment: PaymentForm,
+                                deliveryAddress: Address,
+                                billingAddress: Option[Address],
+                                marketingChoices: MarketingChoicesForm,
+                                password: Option[String],
+                                casId: Option[String],
+                                subscriberOffer: Boolean,
+                                featureChoice: Set[FeatureChoice]
+                               ) extends JoinForm {
     override val plan = PaidTierPlan(tier, payment.billingPeriod, Current)
+    lazy val zuoraAccountAddress = billingAddress.getOrElse(deliveryAddress)
   }
 
   case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
@@ -73,10 +78,23 @@ object MemberForm {
       Map(key -> FeatureChoice.setToString(choices))
   }
 
-  private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
+  implicit val countryFormatter: Formatter[Country] = new Formatter[Country] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Country] = {
+      val countryCode = data.get(key)
+      lazy val formError = FormError(key, s"Cannot find a country by country code ${countryCode.getOrElse("")}")
 
-  val countryText = nonEmptyText.verifying(Countries.allCodes.contains _)
-    .transform[Country](Countries.allCodes.apply, _.alpha2)
+      countryCode
+        .flatMap(CountryGroup.countryByCode)
+        .toRight[Seq[FormError]](Seq(formError))
+    }
+
+    override def unbind(key: String, value: Country): Map[String, String] =
+      Map(key -> value.alpha2)
+  }
+
+  private val productFeature = of[Set[FeatureChoice]] as productFeaturesFormatter
+  private val country = of[Country] as countryFormatter
+
 
   val nonPaidAddressMapping: Mapping[Address] = mapping(
     "lineOne" -> text,
@@ -84,7 +102,7 @@ object MemberForm {
     "town" -> text,
     "countyOrState" -> text,
     "postCode" -> text(maxLength=20),
-    "country" -> countryText
+    "country" -> country
   )(Address.apply)(Address.unapply).verifying(_.valid)
 
   val paidAddressMapping: Mapping[Address] = mapping(
@@ -93,7 +111,7 @@ object MemberForm {
     "town" -> nonEmptyText,
     "countyOrState" -> text,
     "postCode" -> text(maxLength=20),
-    "country" -> countryText
+    "country" -> country
   )(Address.apply)(Address.unapply).verifying(_.valid)
 
   val nameMapping: Mapping[NameForm] = mapping(

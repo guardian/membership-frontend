@@ -1,5 +1,5 @@
 @import views.support.DisplayText._
-@import com.gu.membership.model.Currency
+@import com.gu.i18n.Currency
 @import model.{PaidTierDetails, Benefit}
 @import com.gu.membership.salesforce.Tier._
 @import com.gu.membership.salesforce.Tier
@@ -49,7 +49,7 @@
         <div class="comparison-table__trail__inner">
             <div class="comparison-table__trail__action">
                 <a class="action action--no-icon qa-comparison-@details.tier.slug"
-                    href="@routes.Joiner.enterDetails(details.tier)"
+                    href="@routes.Joiner.enterPaidDetails(details.tier)"
                     data-metric-trigger="click"
                     data-metric-category="join"
                     data-metric-action="@details.tier.slug"

@@ -1,19 +1,23 @@
-@(
-    pricing: model.FreeTierDetails,
-    userFields: com.gu.identity.play.PrivateFields,
-    marketingChoices: com.gu.identity.play.StatusFields,
-    passwordExists: Boolean
-)(implicit token: play.filters.csrf.CSRF.Token)
-
+@import views.support.PageInfo
+@import model.FreeTierDetails
+@import com.gu.i18n.GBP
+@import views.support.CountryWithCurrency
 @import com.gu.membership.salesforce.Tier.Friend
 @import views.html.helper._
 @import views.support.DisplayText._
 
-@main("Become a Friend") {
+@(friendTierDetails: FreeTierDetails,
+  userFields: com.gu.identity.play.PrivateFields,
+  marketingChoices: com.gu.identity.play.StatusFields,
+  passwordExists: Boolean,
+  pageInfo: PageInfo
+)(implicit token: play.filters.csrf.CSRF.Token)
+
+@main("Become a Friend", pageInfo) {
 
     <main role="main" class="page-content l-constrained">
 
-        <form action="@routes.Joiner.joinFriend" method="POST" id="payment-form" class="js-form" novalidate>
+        <form action="@routes.Joiner.joinFriend" method="POST" id="payment-form" class="js-form js-friend-form" novalidate>
             @CSRF.formField
 
             <section class="form-header">
@@ -29,13 +33,13 @@
             <section class="form-section">
 
                 <div class="form-section__lead-in sign-in-required">
-                    @fragments.joiner.signedInAs(routes.Joiner.enterDetails(Friend).url)
+                    @fragments.joiner.signedInAs(routes.Joiner.enterFriendDetails().url)
                 </div>
 
                 <div class="form-section__content">
 
                     <div class="form-group">
-                        @fragments.form.benefitsFieldset(pricing.tier.benefits)
+                        @fragments.form.benefitsFieldset(Friend.benefits)
                     </div>
 
                     <div class="form-group">
@@ -43,6 +47,7 @@
 
                         @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                         @fragments.form.addressDetail(
+                            countriesWithCurrencies = CountryWithCurrency.withCurrency(GBP),
                             heading = "Address",
                             note = "Tell us where you live and we'll keep you posted on events happening in your local community.",
                             formType = "deliveryAddress",
@@ -62,10 +67,8 @@
                     </div>
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(None)
-
+                    @fragments.form.submit(friendTierDetails)
                 </div>
-
             </section>
         </form>
     </main>

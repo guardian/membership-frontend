@@ -2,7 +2,7 @@ package services
 
 import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.membership.util.Timing
-import com.gu.membership.zuora.Address
+import com.gu.i18n.Address
 import configuration.Config
 import controllers.IdentityRequest
 import forms.MemberForm._
@@ -141,7 +141,7 @@ trait IdentityApi {
   }
 
   private def recordAndLogResponse(status: Int, responseMethod: String, endpoint: String) {
-    Logger.info(s"$responseMethod response ${status} for endpoint ${endpoint}")
+    Logger.info(s"$responseMethod response $status for endpoint $endpoint")
     IdentityApiMetrics.putResponseCode(status, responseMethod)
   }
 }

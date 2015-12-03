@@ -1,7 +1,6 @@
 @import model.MembershipCatalog
 @(catalog: MembershipCatalog)
 
-@import com.gu.membership.salesforce.Tier.Friend
 @import views.support.DisplayText._
 
 <div class="package-teaser">
@@ -13,7 +12,7 @@
         </div>
     }
     <div class="package-teaser__action">
-        <a href="@routes.Joiner.enterDetails(Friend).url"
+        <a href="@routes.Joiner.enterFriendDetails().url"
             class="action action--secondary qa-friend-join"
             aria-title="Join as a Friend for free"
             data-metric-trigger="click"

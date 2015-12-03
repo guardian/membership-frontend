@@ -1,6 +1,6 @@
 package views.support
 
-import com.gu.membership.model.GBP
+import com.gu.i18n.GBP
 import com.gu.membership.salesforce.Tier
 import com.gu.membership.salesforce.Tier._
 import configuration.Config.zuoraFreeEventTicketsAllowance
@@ -54,7 +54,7 @@ object DisplayText {
   }
 
   implicit class PaidTierDetailsCopy(paidTierDetails: PaidTierDetails) {
-    private val pricing = paidTierDetails.pricingWithFallback(GBP)
+    private val pricing = paidTierDetails.gbpPricing
 
     val yearlySavingNote: Option[String] = paidTierDetails.tier match {
       case Supporter => Some("1 year membership, 2 months free")

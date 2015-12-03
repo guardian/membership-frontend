@@ -6,7 +6,7 @@ import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
 import com.gu.membership.zuora.rest
 import com.gu.membership.zuora.rest.Readers._
 import com.gu.membership.zuora.rest.{ProductCatalog, ProductRatePlan, ProductRatePlanCharge}
-import configuration.{Config, RatePlanIds}
+import configuration.Config.productFamily
 import org.specs2.mutable.Specification
 import utils.Resource
 
@@ -27,7 +27,7 @@ class MembershipCatalogTest extends Specification {
     rp.copy(productRatePlanCharges = extraCharge +: rp.productRatePlanCharges)
   }
 
-  val ratePlanIds = RatePlanIds.fromConfig(Config.ratePlanIds("DEV"))
+  val ratePlanIds = productFamily("DEV")
   val ratePlans = productRatePlansFromCatalog("model/zuora/json/product-catalog-dev.json")
 
   def changeRatePlans(ids: String*)(f: ProductRatePlan => ProductRatePlan): Seq[ProductRatePlan] =

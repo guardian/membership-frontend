@@ -1,6 +1,5 @@
 @import model.PaidTierDetails
-@import com.gu.membership.model.Currency
-@(details: PaidTierDetails, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)(implicit currency: Currency)
+@(details: PaidTierDetails, cardOpt: Option[com.gu.membership.stripe.Stripe.Card] = None)
 
 @import views.support.Pricing._
 @import views.support.{Asset, Dates, selectDates}
@@ -17,20 +16,33 @@
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Ongoing payments</h3>
-                    <p>Your card will be charged £<span class="js-card-note-pricing-charge"
-                                                         data-annual="@details.pricingWithFallback.yearly"
-                                                         data-month="@details.pricingWithFallback.monthly">@details.pricingWithFallback.yearly</span>
-                        every
-                        <span class="js-card-note-pricing-period"
-                              data-annual="year"
-                              data-month="month">year</span>.
-                        Payments will taken on or shortly after the
-                        <span class="js-card-note-payment-taken"
-                              data-annual="@Dates.dayInMonthWithSuffixAndMonth()"
-                              data-month="@Dates.dayInMonthWithSuffix()">@Dates.dayInMonthWithSuffixAndMonth()</span>
-                        every <span class="js-card-note-pricing-period"
-                                    data-annual="year"
-                                    data-month="month">year</span>.</p>
+                    @for(pricing <- details.allPricing) {
+                        <p class="is-hidden" data-currency="@pricing.currency">
+                            Your card will be charged @pricing.currency.glyph
+                            <span class="js-card-note-pricing-charge"
+                                  data-annual="@pricing.yearly.amount"
+                                  data-monthly="@pricing.monthly.amount">
+                                @pricing.yearly.amount
+                            </span>
+                            every
+                            <span class="js-card-note-pricing-period"
+                                  data-annual="year"
+                                  data-monthly="month">
+                                year
+                            </span>
+                            . Payments will taken on or shortly after the
+                            <span class="js-card-note-payment-taken"
+                                  data-annual="@Dates.dayInMonthWithSuffixAndMonth()"
+                                  data-monthly="@Dates.dayInMonthWithSuffix()">
+                                @Dates.dayInMonthWithSuffixAndMonth()
+                            </span>
+                            every
+                            <span class="js-card-note-pricing-period" data-annual="year" data-monthly="month">
+                                year
+                            </span>
+                            .
+                        </p>
+                    }
             </div>
             <div class="credit-card-note">
                 <h3 class="credit-card-note__header">Cancellation</h3>

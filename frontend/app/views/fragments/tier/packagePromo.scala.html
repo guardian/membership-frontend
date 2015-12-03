@@ -1,8 +1,8 @@
 @import views.support.DisplayText._
-@import model.TierDetails
-@import com.gu.membership.model.Currency
+@import model._
 
-@import com.gu.membership.salesforce.Tier.Patron
+@import com.gu.membership.salesforce._
+@import com.gu.membership.salesforce.Tier._
 @(
     details: TierDetails,
     showDescription: Boolean = true,
@@ -11,10 +11,17 @@
     extraClasses: Seq[String] = Seq.empty,
     isReversed: Boolean = false,
     chooseTier: Boolean = false
-)(implicit currency: Currency)
+)
+
+@link(tier: Tier) = {
+    @tier match {
+        case paid: PaidTier => { @routes.Joiner.enterPaidDetails(paid) }
+        case _: FreeTier => { @routes.Joiner.enterFriendDetails() }
+    }
+}
 
 @actionAttrs = {
-    href="@routes.Joiner.enterDetails(details.tier)"
+    href="@link(details.tier)"
     data-metric-trigger="click"
     data-metric-category="join"
     data-metric-action="@details.tier.slug"

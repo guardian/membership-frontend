@@ -1,22 +1,18 @@
-@import com.gu.membership.salesforce.Member
 @import com.gu.membership.salesforce.Contact._
-@import com.gu.membership.salesforce.Contact
-@import com.gu.membership.salesforce.PaymentMethod
-@import com.gu.membership.salesforce.PaidTierMember
-@(
-    member: Contact[Member, PaymentMethod],
-    summary: model.MembershipSummary,
-    cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
-    returnDestinationOpt: Option[model.Destination],
-    upgrade: Boolean
-)
-
-@import play.twirl.api.Html
+@import com.gu.membership.salesforce.{Contact, Member, PaidTierMember, PaymentMethod}
 @import com.gu.membership.salesforce.Tier
-@import configuration.{Config, Links}
+@import com.gu.membership.model.Year
+@import configuration.Links
+@import play.twirl.api.Html
 @import views.support.Dates._
-@import views.support.Prices._
 @import views.support.Social.joinThankyou
+
+@import views.support.ThankyouSummary
+@(member: Contact[Member, PaymentMethod],
+  summary: ThankyouSummary,
+  cardOpt: Option[com.gu.membership.stripe.Stripe.Card],
+  returnDestinationOpt: Option[model.Destination],
+  upgrade: Boolean)
 
 @title = @{
     if(upgrade) {
@@ -59,7 +55,7 @@
 
     <main role="main" class="page-content l-constrained">
 
-        @fragments.page.pageHeader(pageHeader, Some("You're the newest " + member.memberStatus.tier + " of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to " + member.email))
+        @fragments.page.pageHeader(pageHeader, Some(s"You're the newest ${member.memberStatus.tier} of the Guardian and we're thrilled to have you on board. We've sent confirmation of your membership to ${member.email}"))
 
         <section class="page-section page-section--bordered">
             <div class="page-section__lead-in">
@@ -77,23 +73,27 @@
                     </tr>
                     <tr role="row">
                         <th role="rowheader">Amount paid today</th>
-                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.getOrElse(0f).pretty</td>
+                        <td id="qa-joiner-summary-today">@summary.amountPaidToday.pretty</td>
                     </tr>
-                    <tr role="row">
-                        <th role="rowheader">Next payment</th>
-                        <td id="qa-joiner-summary-next">
+                    @for(payment <- summary.nextPayment) {
+                        <tr role="row">
+                            <th role="rowheader">Next payment</th>
+                            <td id="qa-joiner-summary-next">
                             @if(summary.initialFreePeriodOffer) {
-                                @summary.nextPaymentPrice.pretty (@summary.nextPaymentDate.pretty)
-                            } else { @summary.nextPaymentDate.pretty }
-                        </td>
-                    </tr>
+                                @payment.price.pretty (@payment.date.pretty)
+                            } else {
+                                @payment.date.pretty
+                            }
+                            </td>
+                        </tr>
+                    }
                     <tr role="row">
                         <th role="rowheader">
-                            @if(summary.annual) { Annual } else { Monthly } payment
+                            @summary.billingPeriod.adjective.capitalize payment
                         </th>
                         <td id="qa-joiner-summary-recurring">@summary.planAmount.pretty</td>
                     </tr>
-                    @if(summary.annual && summary.initialFreePeriodOffer) {
+                    @if(summary.billingPeriod == Year && summary.initialFreePeriodOffer) {
                         <tr role="row">
                             <th role="rowheader">
                                 Next Annual payment
@@ -135,19 +135,20 @@
                     }
                 }
             }
-        }{ destination => @destination match {
-                case eventDestination: model.EventDestination => {
-                    @getStarted("Complete your ticket purchase") {
-                        <p>You will be redirected to the Eventbrite website to complete your ticket purchase.</p>
-                        <iframe src="@eventDestination.iframeUrl" width="100%" height="@eventDestination.iframeHeight" frameborder="0" vspace="0"
-                        hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true"></iframe>
-                    }
-  }
-                case contentDestination: model.ContentDestination => {
-                    @getStarted("Go to article") {
-                        @fragments.content.articleSnapshot(contentDestination.item)
-                        <a class="action" href="@contentDestination.item.content.webUrl">View now</a>
-                    }
+        } {
+            case eventDestination: model.EventDestination => {
+                @getStarted("Complete your ticket purchase") {
+                    <p>You will be redirected to the Eventbrite website to complete your ticket purchase.</p>
+                      <iframe src="@eventDestination.iframeUrl" width="100%" height="@eventDestination.iframeHeight" frameborder="0" vspace="0"
+                      hspace="0" marginheight="5" marginwidth="5" scrolling="auto" allowtransparency="true">
+                      </iframe>
+                }
+  
+            }
+            case contentDestination: model.ContentDestination => {
+                @getStarted("Go to article") {
+                    @fragments.content.articleSnapshot(contentDestination.item)
+                    <a class="action" href="@contentDestination.item.content.webUrl">View now</a>
                 }
             }
         }
@@ -156,6 +157,6 @@
     @fragments.analytics.googleJoinerConversion(member.memberStatus.tier)
     @fragments.analytics.facebookJoinerConversion(member.memberStatus.tier)
     @fragments.analytics.videoCampaignPHD.thankyouPage(
-        regNumberOrFree, summary.amountPaidToday.fold("free")( paid => "%.2f".format(paid))
+        regNumberOrFree, summary.amountPaidToday.pretty)
     )
 }

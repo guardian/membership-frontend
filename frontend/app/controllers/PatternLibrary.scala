@@ -1,6 +1,6 @@
 package controllers
 
-import com.gu.membership.model.GBP
+import com.gu.i18n.GBP
 import model.{ResponsiveImageGenerator, ResponsiveImageGroup}
 import play.api.mvc.Controller
 import services.{TouchpointBackend, GuardianLiveEventService, EventbriteService}

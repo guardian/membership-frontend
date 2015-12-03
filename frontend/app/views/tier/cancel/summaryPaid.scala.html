@@ -1,0 +1,28 @@
+@import configuration.Config
+@import views.support.Dates._
+
+@(subscription: model.PaidSubscription)
+
+@main("Cancel Tier summary") {
+
+    <main role="main" class="page-content l-constrained">
+
+        @subscription.chargedThroughDate.map { endDate =>
+            @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.toDateTimeAtCurrentTime().pretty))
+        }
+        <section class="page-section page-section--bordered">
+            <div class="page-section__lead-in">
+                <h2 class="page-section__headline">Current Membership summary</h2>
+            </div>
+            <div class="page-section__content">
+
+                @fragments.tier.summary(subscription)
+
+                <p>Your Guardian profile will remain active so you can continue to participate in the Guardian community.</p>
+
+                <a href="@Config.idWebAppUrl/membership/edit" class="action">My Profile</a>
+            </div>
+        </section>
+
+    </main>
+}

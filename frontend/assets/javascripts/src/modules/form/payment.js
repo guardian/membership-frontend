@@ -1,8 +1,7 @@
 /*global Stripe*/
 define([
-    'src/modules/form/payment/listeners',
-    'src/modules/form/payment/options'
-], function (listeners, options) {
+    'src/modules/form/payment/listeners'
+], function (listeners) {
     'use strict';
 
     /**
@@ -15,7 +14,6 @@ define([
     var init = function () {
         Stripe.setPublishableKey(guardian.stripePublicKey);
         listeners.addPaymentListeners();
-        options.init();
     };
 
     return {

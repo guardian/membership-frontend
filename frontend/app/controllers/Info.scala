@@ -1,19 +1,20 @@
 package controllers
 
-import com.gu.membership.model.{Currency, GBP}
-import play.api.mvc.Controller
-import views.support.Asset
-import scala.concurrent.Future
+import com.gu.i18n.{GBP, USD}
 import configuration.CopyConfig
 import forms.MemberForm._
 import model._
-import services.{TouchpointBackend, GuardianContentService, AuthenticationService, EmailService}
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.mvc.Controller
+import services.{AuthenticationService, EmailService, GuardianContentService, TouchpointBackend}
+import views.support.{Asset, PageInfo}
+
+import scala.concurrent.Future
 
 trait Info extends Controller {
-  implicit val currency: Currency = GBP
 
   def supporter = CachedAction.async { implicit request =>
+    implicit val currency = GBP
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -58,15 +59,17 @@ trait Info extends Controller {
 
     TouchpointBackend.Normal.catalog.map { catalog =>
       Ok(views.html.info.supporter(catalog,
-        PageInfo(CopyConfig.copyTitleSupporters,
-          request.path,
-          Some(CopyConfig.copyDescriptionSupporters)
+        PageInfo(
+          title = CopyConfig.copyTitleSupporters,
+          url = request.path,
+          description = Some(CopyConfig.copyDescriptionSupporters)
         ),
         pageImages))
     }
   }
 
   def supporterUSA = CachedAction.async { implicit request =>
+    implicit val currency = USD
 
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -109,17 +112,22 @@ trait Info extends Controller {
 
 
     TouchpointBackend.Normal.catalog.map { catalog =>
-      Ok(views.html.info.supporterUSA(catalog,
-      PageInfo(CopyConfig.copyTitleSupporters, request.path, Some(CopyConfig.copyDescriptionSupporters)),
+      Ok(views.html.info.supporterUSA(catalog.supporter,
+      PageInfo(
+        title = CopyConfig.copyTitleSupporters,
+        url = request.path,
+        description = Some(CopyConfig.copyDescriptionSupporters)),
       pageImages))
     }
   }
 
   def patron() = CachedAction.async { implicit request =>
+    implicit val currency = GBP
+
     val pageInfo = PageInfo(
-      CopyConfig.copyTitlePatrons,
-      request.path,
-      Some(CopyConfig.copyDescriptionPatrons)
+      title = CopyConfig.copyTitlePatrons,
+      url = request.path,
+      description = Some(CopyConfig.copyDescriptionPatrons)
     )
     val pageImages = Seq(
       ResponsiveImageGroup(
@@ -162,6 +170,8 @@ trait Info extends Controller {
   }
 
   def offersAndCompetitions = CachedAction.async { implicit request =>
+    implicit val currency = GBP
+
     val results =
       GuardianContentService.offersAndCompetitionsContent.map(ContentItemOffer).filter(item =>
         item.content.fields.map(_("membershipAccess")).isEmpty && ! item.content.webTitle.startsWith("EXPIRED") && item.imgOpt.nonEmpty)

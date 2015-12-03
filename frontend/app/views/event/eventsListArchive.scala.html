@@ -1,4 +1,5 @@
-@(pageInfo: model.PageInfo, groupedEvents: model.RichEvent.CalendarMonthDayGroup)
+@import views.support.PageInfo
+@(pageInfo: PageInfo, groupedEvents: model.RichEvent.CalendarMonthDayGroup)
 
 @main(pageInfo.title, pageInfo) {
     <main class="page-content l-constrained">

@@ -1,20 +1,20 @@
 package controllers
 
-import com.gu.membership.model.{GBP, Currency}
+import com.gu.i18n.GBP
 import model.RichEvent.EventBrandCollection
 import model._
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Controller
 import services._
-import play.api.libs.concurrent.Execution.Implicits._
+import views.support.PageInfo
 
 trait FrontPage extends Controller {
-
   val liveEvents: EventbriteService
   val localEvents: EventbriteService
   val masterclassEvents: EventbriteService
 
   def index = CachedAction.async { implicit request =>
-    implicit val currency: Currency = GBP
+    implicit val currency = GBP
 
     val eventCollections = EventBrandCollection(
       liveEvents.getSortedByCreationDate.take(3),
@@ -184,7 +184,7 @@ trait FrontPage extends Controller {
       )
     )
 
-    Ok(views.html.welcome(PageInfo("Welcome", request.path, None), slideShowImages))
+    Ok(views.html.welcome(PageInfo(title = "Welcome", url = request.path), slideShowImages))
   }
 }
 

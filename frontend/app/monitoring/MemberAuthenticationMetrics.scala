@@ -1,6 +1,4 @@
-package actions
-
-import monitoring.Metrics
+package monitoring
 
 object MemberAuthenticationMetrics extends Metrics {
   val service = "MemberAuthentication"

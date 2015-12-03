@@ -1,8 +1,12 @@
-@(
-    userFields: com.gu.identity.play.PrivateFields,
-    marketingChoices: com.gu.identity.play.StatusFields,
-    passwordExists: Boolean,
-    flashMessage: Option[model.FlashMessage]
+@import model.FreeTierDetails
+@import views.support.CountryWithCurrency
+@import com.gu.i18n.GBP
+
+@(staffDetails: FreeTierDetails,
+  userFields: com.gu.identity.play.PrivateFields,
+  marketingChoices: com.gu.identity.play.StatusFields,
+  passwordExists: Boolean,
+  flashMessage: Option[model.FlashMessage]
 )(implicit token: play.filters.csrf.CSRF.Token)
 
 @import views.html.helper._
@@ -37,6 +41,7 @@
                     @CSRF.formField
                     @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
                     @fragments.form.addressDetail(
+                        countriesWithCurrencies = CountryWithCurrency.withCurrency(GBP),
                         heading = "Delivery address",
                         note = "Once you've joined Guardian Members we'll send you a welcome pack in the post.",
                         formType = "deliveryAddress",
@@ -58,7 +63,7 @@
                     }
 
                     @fragments.form.errorMessageDisplay()
-                    @fragments.form.submit(None)
+                    @fragments.form.submit(staffDetails)
                 </form>
 
             </div>

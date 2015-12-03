@@ -1,13 +1,12 @@
 package model
 
+import com.gu.config.Membership
 import com.gu.membership.model._
 import com.gu.membership.salesforce.Tier._
 import com.gu.membership.salesforce.{FreeTier, PaidTier, Tier}
 import com.gu.membership.touchpoint.TouchpointBackendConfig.BackendType
 import com.gu.membership.zuora.rest
 import com.gu.membership.zuora.rest.{PricingSummary, ProductRatePlan, ProductRatePlanCharge}
-import com.gu.membership.zuora.soap.models.SubscriptionDetails
-import configuration.RatePlanIds
 import model.MembershipCatalog.{MembershipCatalogException, ProductRatePlanId}
 
 import scalaz._
@@ -54,7 +53,7 @@ object MembershipCatalog {
     override def allTierPlanDetails: Seq[TierPlanDetails] = tierPlanDetailsMap.values.toSeq
   }
 
-  def fromZuora(ratePlanIds: RatePlanIds)(ratePlans: Seq[rest.ProductRatePlan])(implicit bt: BackendType): Val[MembershipCatalog] = {
+  def fromZuora(productFamily: Membership)(ratePlans: Seq[rest.ProductRatePlan])(implicit bt: BackendType): Val[MembershipCatalog] = {
     val ratePlansById = ratePlans.map(p => p.id -> p).toMap
     def byId(tierPlan: TierPlan, id: ProductRatePlanId): Val[ProductRatePlan] =
       ratePlansById
@@ -104,7 +103,7 @@ object MembershipCatalog {
       tierDetails.monthlyPlanDetails.currencies == tierDetails.yearlyPlanDetails.currencies
 
     object PublicPlans {
-      val ids = ratePlanIds
+      val ids = productFamily
       val friend = freeTierPlanDetails(FriendTierPlan.current, ids.friend)
       val staff = freeTierPlanDetails(StaffPlan, ids.staff)
       val supporterM = paidTierPlanDetails(PaidTierPlan.monthly(Supporter, Current), ids.supporterMonthly)
@@ -117,7 +116,7 @@ object MembershipCatalog {
     }
 
     object LegacyPlans {
-      val ids = ratePlanIds.legacy
+      val ids = productFamily.legacy
       val friend = freeTierPlanDetails(FriendTierPlan.legacy, ids.friend)
       val supporterM = paidTierPlanDetails(PaidTierPlan.monthly(Supporter, Legacy), ids.supporterMonthly)
       val supporterY = paidTierPlanDetails(PaidTierPlan.yearly(Supporter, Legacy), ids.supporterYearly)
@@ -150,8 +149,8 @@ object MembershipCatalog {
     )(MembershipCatalog.apply)
   }
 
-  def unsafeFromZuora(ratePlanIds: RatePlanIds)(ratePlans: Seq[rest.ProductRatePlan])(implicit bt: BackendType): MembershipCatalog = {
-    fromZuora(ratePlanIds)(ratePlans) match {
+  def unsafeFromZuora(productFamily: Membership)(ratePlans: Seq[rest.ProductRatePlan])(implicit bt: BackendType): MembershipCatalog = {
+    fromZuora(productFamily)(ratePlans) match {
       case Success(catalog) => catalog
       case Failure(errs) =>
         val msg = s"The catalog is inconsistent:\n" + errs.list.map(errorLine).mkString("\n")
@@ -182,12 +181,6 @@ trait MembershipCatalog {
     case _ => throw MembershipCatalogException(s"Cannot find PaidTierPlanDetails for ratePlanId: $productRatePlanId")
   }
 
-  def unsafePaidTierPlanDetails(subs: SubscriptionDetails): PaidTierPlanDetails = {
-     val prpId = subs.productRatePlanId
-     val plan = unsafePaidTierPlan(prpId)
-     PaidTierPlanDetails(plan, prpId, PricingSummary(Map(subs.currency -> subs.planAmount)))
-  }
-
   def ratePlanId(plan: TierPlan): String = planDetails(plan).productRatePlanId
 
   def publicTierDetails(tier: Tier): TierDetails = tier match {
@@ -209,15 +202,20 @@ trait MembershipCatalog {
     case Patron => patron
   }
 
-  def planDetails(tierPlan: TierPlan): TierPlanDetails = tierPlan match {
-    case FriendTierPlan(Current) => friend.planDetails
-    case StaffPlan => staff.planDetails
+  def paidTierPlanDetails(paidTierPlan: PaidTierPlan) = paidTierPlan match {
     case PaidTierPlan(Supporter, Year, Current) => supporter.yearlyPlanDetails
     case PaidTierPlan(Supporter, Month, Current) => supporter.monthlyPlanDetails
     case PaidTierPlan(Partner, Year, Current) => partner.yearlyPlanDetails
     case PaidTierPlan(Partner, Month, Current) => partner.monthlyPlanDetails
     case PaidTierPlan(Patron, Year, Current) => patron.yearlyPlanDetails
     case PaidTierPlan(Patron, Month, Current) => patron.monthlyPlanDetails
+    case _ => throw MembershipCatalogException("planDetails called with a legacy TierPlan")
+  }
+
+  def planDetails(tierPlan: TierPlan): TierPlanDetails = tierPlan match {
+    case FriendTierPlan(Current) => friend.planDetails
+    case StaffPlan => staff.planDetails
+    case paid: PaidTierPlan => paidTierPlanDetails(paid)
     case _ => throw MembershipCatalogException("planDetails called with a legacy TierPlan")
   }
 }

@@ -1,20 +1,16 @@
-@import com.gu.membership.salesforce.Tier
-@import com.gu.membership.zuora.soap.models.SubscriptionDetails
-@import views.support.Prices._
-@import views.support.Dates._
 @import configuration.Config.idWebAppUrl
-
+@import model.{MembershipCatalog, PaidSubscription}
+@import org.joda.time.DateTime
+@import views.support.Dates._
 @(
-    currentSubscription: SubscriptionDetails,
-    futureSubscription: SubscriptionDetails,
-    currentTier: Tier,
-    futureTierName: String
+    subscription: PaidSubscription,
+    catalog: MembershipCatalog,
+    friendTierStartDate: DateTime
 )
-@main("Change Tier Summary | " + futureTierName + " from " + currentTier.name) {
-
+@main(s"Change Tier Summary |  ${catalog.friend.tier.name} from ${subscription.plan.tier.name}") {
     <main role="main" class="page-content l-constrained">
 
-        @currentSubscription.chargedThroughDate.map { endDate =>
+        @subscription.chargedThroughDate.map { endDate =>
             @fragments.page.pageHeader("Sorry to see you go…", Some("You will continue to receive all the great Membership benefits until " + endDate.pretty))
         }
 
@@ -23,7 +19,7 @@
                 <h2 class="page-section__headline">Current Membership summary</h2>
             </div>
             <div class="page-section__content">
-                @fragments.tier.summary(currentSubscription, Some(currentTier))
+                @fragments.tier.summary(subscription)
             </div>
         </section>
 
@@ -38,7 +34,7 @@
                             Tier
                         </th>
                         <td id="qa-downgrade-summary-tier">
-                            @futureTierName
+                            @catalog.friend.tier.name
                         </td>
                     </tr>
                     <tr role="row">
@@ -46,15 +42,7 @@
                             Start date
                         </th>
                         <td id="qa-downgrade-summary-start">
-                            @futureSubscription.effectiveStartDate.pretty
-                        </td>
-                    </tr>
-                    <tr role="row">
-                        <th role="rowheader">
-                            @if(futureSubscription.annual){ Annual } else { Monthly } payment
-                        </th>
-                        <td>
-                            @futureSubscription.planAmount.pretty
+                            @friendTierStartDate.pretty
                         </td>
                     </tr>
                 </table>

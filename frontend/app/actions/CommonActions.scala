@@ -1,6 +1,9 @@
 package actions
 
+import actions.Fallbacks._
+import actions.Functions._
 import com.gu.googleauth
+import com.gu.membership.salesforce.PaidTier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -10,8 +13,6 @@ import play.api.mvc._
 import services.AuthenticationService
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
-import Functions._
-import Fallbacks._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -19,7 +20,7 @@ import scala.concurrent.Future
 trait CommonActions {
 
   val AddUserInfoToResponse = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) = {
+    def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]) =
       block(request).map { result =>
         (for (user <- AuthenticationService.authenticatedUserFor(request)) yield {
           result.withHeaders(
@@ -28,7 +29,6 @@ trait CommonActions {
         }).getOrElse(result)
       }
     }
-  }
 
   val NoCacheAction = resultModifier(NoCache(_)) andThen AddUserInfoToResponse
 
@@ -96,6 +96,29 @@ trait CommonActions {
       val json = Json.obj("userId" -> user.id)
       Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
+
+  def CheckTierChangeTo(targetTier: PaidTier) = new ActionRefiner[AnyMemberTierRequest, SubscriptionRequest] {
+    import model.TierOrdering.upgradeOrdering
+
+    override protected def refine[A](request: AnyMemberTierRequest[A]): Future[Either[Result, SubscriptionRequest[A]]] = {
+      val subService = request.touchpointBackend.subscriptionService
+
+      subService.membershipCatalog.get().zip(
+        subService.currentSubscription(request.member)
+      ).map { case (catalog, sub) =>
+        val currentTier = request.member.tier
+        val targetCurrencies = catalog.paidTierDetails(targetTier).currencies
+
+        if (!sub.isInTrialPeriod && targetCurrencies.contains(sub.accountCurrency) && targetTier > currentTier) {
+          Right(SubscriptionRequest(sub, request))
+        } else {
+          Left(Ok(views.html.tier.upgrade.unavailable(currentTier, targetTier)))
+        }
+      }
+    }
+  }
+
+  def ChangeToPaidAction(targetTier: PaidTier): ActionBuilder[SubscriptionRequest] = MemberAction andThen CheckTierChangeTo(targetTier)
 }
 
 trait OAuthActions extends googleauth.Actions {

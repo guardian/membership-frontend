@@ -1,4 +1,4 @@
-@(tier: com.gu.membership.salesforce.Tier)(implicit request: actions.AuthRequest[_])
+@(tier: com.gu.membership.salesforce.Tier)(implicit request: RequestHeader)
 
 @import com.gu.membership.salesforce.Tier.{Partner, Patron}
 @import model.FeatureChoice
