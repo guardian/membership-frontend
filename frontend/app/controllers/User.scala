@@ -3,7 +3,6 @@ package controllers
 import actions._
 import com.gu.cas.CAS.CASSuccess
 import com.gu.membership.salesforce._
-import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import model.Benefits
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{DateTime, Instant}
@@ -11,11 +10,9 @@ import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json.toJson
 import play.api.libs.json._
-import play.api.mvc.{Controller, Cookie}
-import services.{MembersDataAPI, CASService}
+import play.api.mvc.Controller
+import services.{CASService, MembersDataAPI}
 import utils.GuMemCookie
-
-import scala.concurrent.Future
 
 trait User extends Controller {
   val standardFormat = ISODateTimeFormat.dateTime.withZoneUTC
@@ -27,50 +24,6 @@ trait User extends Controller {
     val json = basicDetails(request.member)
     request.idCookies.foreach(MembersDataAPI.Service.check(request.member.memberStatus))
     Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
-  }
-
-  def meDetails = AjaxMemberAction.async { implicit request =>
-    def futureCardDetails = request.member.paymentMethod match {
-      case StripePayment(id) =>
-        for {
-          customer <- request.touchpointBackend.stripeService.Customer.read(id)
-        } yield Json.obj("card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`))
-
-      case NoPayment =>
-        Future.successful(Json.obj())
-    }
-
-    def endDate(subscriptionDetails: SubscriptionDetails) = {
-      subscriptionDetails.chargedThroughDate.orElse {
-        if (subscriptionDetails.inFreePeriodOffer) Some(subscriptionDetails.contractAcceptanceDate)
-        else None
-      }
-    }
-
-    val futurePaymentDetails = for {
-      cardDetails <- futureCardDetails
-      subscriptionStatus <- request.touchpointBackend.subscriptionService.getSubscriptionStatus(request.member)
-      subscriptionDetails <- request.touchpointBackend.subscriptionService.getSubscriptionDetails(subscriptionStatus.currentVersion)
-      membershipSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
-    } yield
-      Json.obj(
-        "optIn" -> !subscriptionStatus.cancelled,
-        "subscription" -> (cardDetails ++ Json.obj(
-          "start" -> membershipSummary.startDate,
-          "end" -> endDate(subscriptionDetails),
-          "nextPaymentPrice" -> membershipSummary.nextPaymentPrice * 100,
-          "nextPaymentDate" -> membershipSummary.nextPaymentDate,
-          "renewalDate" -> membershipSummary.renewalDate,
-          "cancelledAt" -> subscriptionStatus.futureVersionIdOpt.isDefined,
-          "plan" -> Json.obj(
-            "name" -> subscriptionDetails.planName,
-            "amount" -> subscriptionDetails.planAmount * 100,
-            "interval" -> (if (membershipSummary.annual) "year" else "month")
-          ))
-          )
-      )
-
-    futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
   def basicDetails(member: Contact[Member, PaymentMethod]) = Json.obj(

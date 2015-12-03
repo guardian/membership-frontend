@@ -97,7 +97,6 @@ GET            /patterns                              controllers.PatternLibrary
 
 # User
 GET            /user/me                               controllers.User.me
-GET            /user/me/details                       controllers.User.meDetails
 GET            /user/check-subscriber                 controllers.User.checkSubscriberDetails(id: String, postcode: Option[String], lastName: String)
 
 # Vanity URLS
