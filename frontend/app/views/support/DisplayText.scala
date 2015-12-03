@@ -34,7 +34,7 @@ object DisplayText {
     def highlights = tier match {
       case Friend => List(Highlight(
         """Receive regular updates from the membership community,
-          | book tickets to Guardian Live events and access the Guardian members area""".stripMargin))
+          | book tickets to Guardian Live and Local events and access the Guardian members area""".stripMargin))
 
       case Supporter => List(Highlight("Support our journalism and keep theguardian.com free of charge"),
         Highlight("Get access to tickets and to the live broadcast of events"))
