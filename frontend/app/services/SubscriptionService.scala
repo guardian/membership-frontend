@@ -196,9 +196,7 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
 
   def createSubscription(memberId: ContactId,
                          joinData: JoinForm,
-                         customerOpt: Option[Stripe.Customer],
-                         paymentDelay: Option[Period],
-                         casId: Option[String]): Future[SubscribeResult] = for {
+                         customerOpt: Option[Stripe.Customer]): Future[SubscribeResult] = for {
     zuoraFeatures <- zuoraSoapClient.featuresSupplier.get()
     ratePlanId <- findRatePlanId(joinData.plan)
     result <- zuoraSoapClient.authenticatedRequest(Subscribe(account = subscribe.Account.stripe(memberId, customerOpt.isDefined),
@@ -207,8 +205,8 @@ class SubscriptionService(val zuoraSoapClient: soap.ClientWithFeatureSupplier,
                                                              firstName=joinData.name.first,
                                                              lastName=joinData.name.last,
                                                              address=joinData.deliveryAddress,
-                                                             casIdOpt = casId,
-                                                             paymentDelay = paymentDelay,
+                                                             casIdOpt = None,
+                                                             paymentDelay = None,
                                                              ipAddressOpt = None,
                                                              featureIds = featuresPerTier(zuoraFeatures)(joinData.plan, joinData.featureChoice).map(_.id)))
   } yield result
