@@ -10,7 +10,7 @@ import com.gu.membership.model.GBP
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
-import com.gu.membership.zuora.soap.models.errors.ResultError
+import com.gu.membership.zuora.soap.models.errors.{GatewayError, ResultError}
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig, Email}
@@ -188,6 +188,7 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
           }
           result
         }.recover {
+          case GatewayError(_, _, "Declined") => Forbidden(Json.toJson(Stripe.Error("card_error", "", "card_declined")))
           case error: Stripe.Error => Forbidden(Json.toJson(error))
       	  case error: ResultError => Forbidden
           case error: ScalaforceError => Forbidden
