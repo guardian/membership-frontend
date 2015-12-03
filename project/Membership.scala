@@ -43,13 +43,20 @@ trait Membership {
   def lib(name: String) = Project(name, file(name)).enablePlugins(PlayScala).settings(commonSettings: _*)
 
   def app(name: String) = lib(name).settings(playArtifactDistSettings: _*).settings(magentaPackageName := name)
-    .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq("controllers.TierBinder._","com.gu.membership.salesforce.Tier"))
+    .settings(play.sbt.routes.RoutesKeys.routesImport ++= Seq(
+      "controllers.TierBinder._",
+      "com.gu.membership.salesforce.Tier",
+      "com.gu.membership.salesforce.PaidTier"
+    ))
 }
 
 object Membership extends Build with Membership {
   val frontend = app("frontend")
                 .settings(libraryDependencies ++= frontendDependencies)
                 .settings(addCommandAlias("devrun", "run -Dconfig.resource=dev.conf 9100"): _*)
+                .settings(libraryDependencies ++= acceptanceTestDependencies)
+                .settings(addCommandAlias("test", "testOnly -- -l Acceptance"))
+                .settings(addCommandAlias("acceptance-test", "testOnly acceptance.JoinPartnerSpec"))
 
   val root = Project("root", base=file(".")).aggregate(frontend)
 }

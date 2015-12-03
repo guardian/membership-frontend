@@ -3,8 +3,9 @@ package services
 import actions.MemberRequest
 import com.github.nscala_time.time.Imports._
 import com.gu.contentapi.client.parser.JsonParser
-import com.gu.identity.play.IdMinimalUser
-import com.gu.membership.salesforce.{FreeMember, Tier}
+import com.gu.identity.play.{AccessCredentials, AuthenticatedIdUser, IdMinimalUser}
+import com.gu.membership.salesforce.Tier.Friend
+import com.gu.membership.salesforce._
 import model.Eventbrite.EBAccessCode
 import model.EventbriteTestObjects._
 import model.{ContentDestination, EventDestination}
@@ -34,10 +35,10 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
     val destinationService = DestinationServiceTest
 
     def createRequestWithSession(newSessions: (String, String)*) = {
-      val testMember = FreeMember("", "", "", Tier.Friend, None, None, "", "", DateTime.now)
+      val testMember = Contact(ContactDetails("id", Some("fn"), "ln", "email", new DateTime(), "contactId", "accountId"), FreeTierMember(Friend), NoPayment)
       val fakeRequest = FakeRequest().withSession(newSessions: _*)
       val minimalUser: IdMinimalUser = IdMinimalUser("123", None)
-      MemberRequest(testMember, new AuthenticatedRequest(minimalUser, fakeRequest))
+      MemberRequest(testMember, new AuthenticatedRequest(AuthenticatedIdUser(AccessCredentials.Cookies("foo", "bar"), minimalUser), fakeRequest))
 
     }
 
@@ -55,7 +56,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
 
         //verify eventDestinationFor returns a valid content destination
         whenReady(futureResult) { contentDestinationOpt =>
-          contentDestinationOpt.get.item.content.id mustEqual ("membership/2015/apr/17/guardian-live-diversity-in-the-arts")
+          contentDestinationOpt.get.item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
         }
       }
     }
@@ -106,7 +107,7 @@ class DestinationServiceTest extends PlaySpecification with Mockito with ScalaFu
             case contentDestination: ContentDestination => contentDestination.item.content.id mustEqual "membership/2015/apr/17/guardian-live-diversity-in-the-arts"
           }
           val validDestination = destination.isInstanceOf[ContentDestination] || destination.isInstanceOf[EventDestination]
-          validDestination must_== (true)
+          validDestination must_== true
         }
       }
     }

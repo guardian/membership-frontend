@@ -16,7 +16,7 @@ import services._
 import scala.util.Try
 
 object Config {
-  val logger = Logger(this.getClass())
+  val logger = Logger(this.getClass)
 
   val config = ConfigFactory.load()
 
@@ -28,6 +28,7 @@ object Config {
   lazy val awsSecretKey = config.getString("aws.secret.key")
 
   val guardianHost = config.getString("guardian.host")
+  val guardianShortDomain = config.getString("guardian.shortDomain")
 
   val membershipUrl = config.getString("membership.url")
   val membershipHost = Uri.parse(Config.membershipUrl).host.get
@@ -170,4 +171,7 @@ object Config {
 
   val casServiceConfig = config.getString("cas.url")
   val zuoraFreeEventTicketsAllowance = config.getInt("zuora.free-event-tickets-allowance")
+
+  def ratePlanIds(env: String) =
+    config.getConfig(s"touchpoint.backend.environments.$env.zuora.ratePlanIds")
 }

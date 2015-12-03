@@ -1,15 +1,15 @@
 package services
 
-import com.gu.membership.model.{FriendTierPlan, PaidTierPlan}
-import com.gu.membership.salesforce.Tier
-import com.gu.membership.salesforce.Tier.{Supporter, Partner, Patron}
+import com.github.nscala_time.time.Imports._
+import com.gu.membership.model._
+import com.gu.membership.salesforce.PaidTier
+import com.gu.membership.salesforce.Tier.{Partner, Patron, Supporter}
 import com.gu.membership.zuora.soap.models.Queries._
 import com.gu.membership.zuora.soap.models._
-import model.{FreeEventTickets, Books}
+import model.{Books, FreeEventTickets}
 import org.joda.time.format.DateTimeFormatter
+import org.joda.time.{DateTime, DurationFieldType}
 import org.specs2.mutable.Specification
-import org.joda.time.{DurationFieldType, ReadableDuration, DateTime}
-import com.github.nscala_time.time.Imports._
 
 class SubscriptionServiceTest extends Specification {
   "SubscriptionService" should {
@@ -27,11 +27,12 @@ class SubscriptionServiceTest extends Specification {
           termEndDate = startDate,
           contractAcceptanceDate = startDate,
           activationDate = Some(startDate)),
-        RatePlan("RatePlanId", "Product name - annual", "productRatePlanId"),
+        RatePlan("RatePlanId", "Product name - annual", "ProductRatePlanId"),
         RatePlanCharge("RatePlanChargeId", Some(endDate), startDate, None, None, None, 12.0f)
       )
 
-      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, startDate, startDate, Some(endDate), "RatePlanId")
+
+      subscriptionDetails mustEqual SubscriptionDetails("Product name", 12.0f, GBP, startDate, startDate, Some(endDate), "RatePlanId", "ProductRatePlanId")
       subscriptionDetails.annual mustEqual false
     }
   }
@@ -45,7 +46,7 @@ class SubscriptionServiceTest extends Specification {
 
     val features = featuresPerTier(Seq(feature1, feature2, feature3)) _
 
-    def plan(t: Tier) = PaidTierPlan(t, annual = true)
+    def plan(t: PaidTier) = PaidTierPlan.yearly(t, Current)
 
     "return both books and events for patrons" in {
       features(plan(Patron), Set(Books, FreeEventTickets)) mustEqual List(feature1, feature2)
@@ -60,7 +61,7 @@ class SubscriptionServiceTest extends Specification {
 
     "return no features for supporters or friends" in {
       features(plan(Supporter), Set(Books)) mustEqual List.empty
-      features(FriendTierPlan, Set(FreeEventTickets)) mustEqual List.empty
+      features(FriendTierPlan.current, Set(FreeEventTickets)) mustEqual List.empty
     }
   }
 

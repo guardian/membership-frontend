@@ -1,7 +1,7 @@
 package forms
 
 import com.gu.membership.model._
-import com.gu.membership.salesforce.Tier
+import com.gu.membership.salesforce.{PaidTier, Tier}
 import com.gu.membership.zuora.{Address, Countries, Country}
 import model.FeatureChoice
 import play.api.data.Forms._
@@ -11,7 +11,7 @@ import play.api.data.{Form, FormError, Mapping}
 object MemberForm {
   case class NameForm(first: String, last: String)
 
-  case class PaymentForm(annual: Boolean, token: String)
+  case class PaymentForm(billingPeriod: BillingPeriod, token: String)
 
   case class MarketingChoicesForm(gnm: Option[Boolean], thirdParty: Option[Boolean])
 
@@ -26,7 +26,7 @@ object MemberForm {
 
   case class FriendJoinForm(name: NameForm, deliveryAddress: Address, marketingChoices: MarketingChoicesForm,
                             password: Option[String]) extends JoinForm {
-    override val plan = FriendTierPlan
+    override val plan = FriendTierPlan.current
     override val featureChoice = Set.empty[FeatureChoice]
   }
 
@@ -36,11 +36,11 @@ object MemberForm {
     override val featureChoice = Set.empty[FeatureChoice]
   }
 
-  case class PaidMemberJoinForm(tier: Tier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
+  case class PaidMemberJoinForm(tier: PaidTier, name: NameForm, payment: PaymentForm, deliveryAddress: Address,
                                 billingAddress: Option[Address], marketingChoices: MarketingChoicesForm,
                                 password: Option[String], casId: Option[String], subscriberOffer: Boolean,
                                 featureChoice: Set[FeatureChoice]) extends JoinForm {
-    override val plan = PaidTierPlan(tier, payment.annual)
+    override val plan = PaidTierPlan(tier, payment.billingPeriod, Current)
   }
 
   case class AddressDetails(deliveryAddress: Address, billingAddress: Option[Address])
@@ -107,8 +107,8 @@ object MemberForm {
   )(MarketingChoicesForm.apply)(MarketingChoicesForm.unapply)
 
   val paymentMapping: Mapping[PaymentForm] = mapping(
-    "type" -> nonEmptyText.transform[Boolean](b =>
-      Seq("annual","subscriberOfferAnnual").contains(b), x => if (x) "annual" else "month"),
+    "type" -> nonEmptyText.transform[BillingPeriod](b =>
+      if (Seq("annual","subscriberOfferAnnual").contains(b)) Year else Month, _.noun),
     "token" -> nonEmptyText
   )(PaymentForm.apply)(PaymentForm.unapply)
 
@@ -140,7 +140,7 @@ object MemberForm {
 
   val paidMemberJoinForm: Form[PaidMemberJoinForm] = Form(
     mapping(
-      "tier" -> nonEmptyText.transform[Tier](Tier.slugMap, _.slug),
+      "tier" -> nonEmptyText.transform[PaidTier](PaidTier.slugMap, _.slug),
       "name" -> nameMapping,
       "payment" -> paymentMapping,
       "deliveryAddress" -> paidAddressMapping,

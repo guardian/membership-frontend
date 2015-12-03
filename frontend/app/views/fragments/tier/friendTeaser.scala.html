@@ -1,16 +1,19 @@
-@import model.Benefits
-@import com.gu.membership.salesforce.Tier
+@import model.MembershipCatalog
+@(catalog: MembershipCatalog)
+
+@import com.gu.membership.salesforce.Tier.Friend
+@import views.support.DisplayText._
 
 <div class="package-teaser">
     <h4 class="package-teaser__title">Alternatively, join for free</h4>
 
-    @for(highlight <- Benefits.details(Tier.Friend).highlights.headOption) {
+    @for(highlight <- catalog.friend.tier.highlights.headOption) {
         <div class="package-teaser__description copy">
         @highlight.description
         </div>
     }
     <div class="package-teaser__action">
-        <a href="@routes.Joiner.enterDetails(Tier.Friend).url"
+        <a href="@routes.Joiner.enterDetails(Friend).url"
             class="action action--secondary qa-friend-join"
             aria-title="Join as a Friend for free"
             data-metric-trigger="click"

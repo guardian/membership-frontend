@@ -2,7 +2,7 @@ package controllers
 
 import actions._
 import com.gu.cas.CAS.CASSuccess
-import com.gu.membership.salesforce.{FreeMember, Member, PaidMember}
+import com.gu.membership.salesforce._
 import com.gu.membership.zuora.soap.models.SubscriptionDetails
 import model.Benefits
 import org.joda.time.format.ISODateTimeFormat
@@ -25,18 +25,18 @@ trait User extends Controller {
 
   def me = AjaxMemberAction { implicit request =>
     val json = basicDetails(request.member)
-    request.idCookies.foreach(MembersDataAPI.Service.check(request.member))
-    Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
+    request.idCookies.foreach(MembersDataAPI.Service.check(request.member.memberStatus))
+    Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
   }
 
   def meDetails = AjaxMemberAction.async { implicit request =>
-    def futureCardDetails = request.member match {
-      case paidMember: PaidMember =>
+    def futureCardDetails = request.member.paymentMethod match {
+      case StripePayment(id) =>
         for {
-          customer <- request.touchpointBackend.stripeService.Customer.read(paidMember.stripeCustomerId)
+          customer <- request.touchpointBackend.stripeService.Customer.read(id)
         } yield Json.obj("card" -> Json.obj("last4" -> customer.card.last4, "type" -> customer.card.`type`))
 
-      case member: FreeMember =>
+      case NoPayment =>
         Future.successful(Json.obj())
     }
 
@@ -73,9 +73,9 @@ trait User extends Controller {
     futurePaymentDetails.map { paymentDetails => Ok(basicDetails(request.member) ++ paymentDetails) }
   }
 
-  def basicDetails(member: Member) = Json.obj(
+  def basicDetails(member: Contact[Member, PaymentMethod]) = Json.obj(
     "userId" -> member.identityId,
-    "regNumber" -> member.regNumber.mkString,
+    "regNumber" -> member.memberStatus.regNumberLabel,
     "firstName" -> member.firstName,
     "tier" -> member.tier.name,
     "isPaidTier" -> member.tier.isPaid,
@@ -97,7 +97,7 @@ trait User extends Controller {
     } yield {
       val subCheck = casResult match {
         case casSuccess: CASSuccess =>
-          if (new DateTime(casSuccess.expiryDate).isBeforeNow()) SubCheck(false, Some("Sorry, your subscription has expired."))
+          if (new DateTime(casSuccess.expiryDate).isBeforeNow) SubCheck(false, Some("Sorry, your subscription has expired."))
           else if (existingSubsWithCasId.nonEmpty) SubCheck(false, Some(s"Sorry, the Subscriber ID entered has already been used to redeem this offer."))
           else SubCheck(true)
         case _ => SubCheck(false, Some(s"To redeem this offer we need more information to validate your Subscriber ID.  Please review the additional information required and try again."))

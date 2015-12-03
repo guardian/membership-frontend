@@ -1,9 +1,6 @@
 package actions
 
-import actions.Fallbacks._
-import actions.Functions._
 import com.gu.googleauth
-import com.gu.membership.salesforce.Tier
 import configuration.Config
 import controllers._
 import play.api.http.HeaderNames._
@@ -13,6 +10,8 @@ import play.api.mvc._
 import services.AuthenticationService
 import utils.GuMemCookie
 import utils.TestUsers.isTestUser
+import Functions._
+import Fallbacks._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -86,16 +85,16 @@ trait CommonActions {
 
   val CorsPublicCachedAction = CorsPublic andThen CachedAction
 
-  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = createBasicGuMemCookie(_))
+  val AjaxAuthenticatedAction = Cors andThen NoCacheAction andThen authenticated(onUnauthenticated = setGuMemCookie(_))
 
-  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = createBasicGuMemCookie(_))
+  val AjaxMemberAction = AjaxAuthenticatedAction andThen memberRefiner(onNonMember = setGuMemCookie(_))
 
   val AjaxPaidMemberAction = AjaxMemberAction andThen paidMemberRefiner(onFreeMember = _ => Forbidden)
 
-  def createBasicGuMemCookie(implicit request: RequestHeader) =
-    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(DiscardingCookie("GU_MEM"))) { user =>
+  def setGuMemCookie(implicit request: RequestHeader) =
+    AuthenticationService.authenticatedUserFor(request).fold(Forbidden.discardingCookies(GuMemCookie.deletionCookie)) { user =>
       val json = Json.obj("userId" -> user.id)
-      Ok(json).withCookies(Cookie("GU_MEM", GuMemCookie.encodeUserJson(json), secure = true, httpOnly = false))
+      Ok(json).withCookies(GuMemCookie.getAdditionCookie(json))
     }
 }
 
