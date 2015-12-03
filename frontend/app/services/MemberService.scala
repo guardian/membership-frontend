@@ -90,14 +90,17 @@ trait MemberService extends LazyLogging with ActivityTracking {
     )
   }.getOrElse(Json.obj())
 
-  def createMember(user: IdMinimalUser, formData: JoinForm, identityRequest: IdentityRequest,
-                   paymentDelay: Option[Period], campaignCode: Option[String] = None): Future[ContactId] = {
-    val touchpointBackend = TouchpointBackend.forUser(user)
+  def createMember(user: IdMinimalUser,
+                   formData: JoinForm,
+                   identityRequest: IdentityRequest,
+                   campaignCode: Option[String] = None): Future[ContactId] = {
+
+    val tp = TouchpointBackend.forUser(user)
     val identityService = IdentityService(IdentityApi)
 
-    Timing.record(touchpointBackend.memberRepository.metrics, "createMember") {
+    Timing.record(tp.memberRepository.metrics, "createMember") {
       def futureCustomerOpt = formData match {
-        case paid: PaidMemberJoinForm => touchpointBackend.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
+        case paid: PaidMemberJoinForm => tp.stripeService.Customer.create(user.id, paid.payment.token).map(Some(_))
         case _ => Future.successful(None)
       }
 
@@ -112,15 +115,15 @@ trait MemberService extends LazyLogging with ActivityTracking {
         fullUser <- identityService.getFullUserDetails(user, identityRequest)
         customerOpt <- futureCustomerOpt
         userData = initialData(fullUser, formData)
-        memberId <- touchpointBackend.memberRepository.upsert(user.id, userData)
-        subscription <- touchpointBackend.subscriptionService.createSubscription(memberId, formData, customerOpt, paymentDelay, casId)
+        memberId <- tp.memberRepository.upsert(user.id, userData)
+        subscription <- tp.subscriptionService.createSubscription(memberId, formData, customerOpt)
 
         // Set some fields once subscription has been successful
-        updatedMember <- touchpointBackend.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))
+        updatedMember <- tp.memberRepository.upsert(user.id, memberData(formData.plan, customerOpt))
       } yield {
         identityService.updateUserFieldsBasedOnJoining(user, formData, identityRequest)
 
-        touchpointBackend.memberRepository.metrics.putSignUp(formData.plan)
+        tp.memberRepository.metrics.putSignUp(formData.plan)
         trackRegistration(formData, memberId, user, campaignCode)
         memberId
       }
@@ -129,7 +132,7 @@ trait MemberService extends LazyLogging with ActivityTracking {
       case Failure(error: Stripe.Error) => logger.warn(s"Stripe API call returned error: '${error.getMessage()}' for user ${user.id}")
       case Failure(error) =>
         logger.error(s"Error in createMember() user=${user.id}", error)
-        touchpointBackend.memberRepository.metrics.putFailSignUp(formData.plan)
+        tp.memberRepository.metrics.putFailSignUp(formData.plan)
     }
   }
 
