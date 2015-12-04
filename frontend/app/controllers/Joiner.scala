@@ -204,7 +204,9 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
         result
       } recover {
       case error: Stripe.Error => Forbidden(Json.toJson(error))
-      case _: ResultError | _: ScalaforceError | _: MemberServiceError => Forbidden
+      case error =>
+        logger.error("An error occurred while calling Joiner.makeMember", error)
+        Forbidden
     }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
