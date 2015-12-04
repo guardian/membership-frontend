@@ -95,21 +95,22 @@ trait Joiner extends Controller with ActivityTracking
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
     implicit val backendProvider: BackendProvider = request
+    val desiredCurrency = countryGroup.currency
     for {
       cat <- catalog
       identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
-      val cg = countryGroup
       val paidDetails = cat.paidTierDetails(tier)
-      val currency = if (paidDetails.currencies.contains(cg.currency)) cg.currency else GBP
-      val idUserWithCountry = identityUser.withCountryGroup(cg)
+      val supportedCurrencies = paidDetails.currencies
+      val currency = if (supportedCurrencies.contains(desiredCurrency)) desiredCurrency else GBP
+      val idUserWithCountry = identityUser.withCountryGroup(countryGroup)
       val pageInfo = PageInfo(
         stripePublicKey = Some(stripeService.publicKey),
-        initialCheckoutForm = CheckoutForm(cg.defaultCountry, currency, Year)
+        initialCheckoutForm = CheckoutForm(countryGroup.defaultCountry, currency, Year)
       )
 
       Ok(views.html.joiner.form.payment(
-         countriesWithCurrencies = CountryWithCurrency.whitelisted(paidDetails.currencies, GBP),
+         countriesWithCurrencies = CountryWithCurrency.whitelisted(supportedCurrencies, GBP),
          details = paidDetails,
          idUser = idUserWithCountry,
          pageInfo = pageInfo))
