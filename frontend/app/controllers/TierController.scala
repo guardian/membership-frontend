@@ -68,8 +68,8 @@ trait UpgradeTier {
 
     val identityUserFieldsF =
       IdentityService(IdentityApi)
-        .getFullUserDetails(request.user, IdentityRequest(request))
-        .map(_.privateFields.getOrElse(PrivateFields()))
+        .getIdentityUserView(request.user, IdentityRequest(request))
+        .map(_.privateFields)
 
     // Preselect the country from Identity fields
     // but the currency from Zuora account

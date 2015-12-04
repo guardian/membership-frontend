@@ -6,10 +6,9 @@
 @import views.html.helper._
 @import views.support.DisplayText._
 
+@import views.support.IdentityUser
 @(friendTierDetails: FreeTierDetails,
-  userFields: com.gu.identity.play.PrivateFields,
-  marketingChoices: com.gu.identity.play.StatusFields,
-  passwordExists: Boolean,
+  idUser: IdentityUser,
   pageInfo: PageInfo
 )(implicit token: play.filters.csrf.CSRF.Token)
 
@@ -45,23 +44,23 @@
                     <div class="form-group">
                         <h2 class="form-group__title">Address</h2>
 
-                        @fragments.form.nameDetail(userFields.firstName, userFields.secondName)
+                        @fragments.form.nameDetail(idUser.privateFields.firstName, idUser.privateFields.secondName)
                         @fragments.form.addressDetail(
                             countriesWithCurrencies = CountryWithCurrency.withCurrency(GBP),
                             heading = "Address",
                             note = "Tell us where you live and we'll keep you posted on events happening in your local community.",
                             formType = "deliveryAddress",
                             addressRequired = false,
-                            address1 = userFields.address1,
-                            address2 = userFields.address2,
-                            town = userFields.address3,
-                            postcode = userFields.postcode,
-                            county = userFields.address4,
-                            userCountry = userFields.country
+                            address1 = idUser.privateFields.address1,
+                            address2 = idUser.privateFields.address2,
+                            town = idUser.privateFields.address3,
+                            postcode = idUser.privateFields.postcode,
+                            county = idUser.privateFields.address4,
+                            userCountry = idUser.privateFields.country
                         )
-                        @fragments.form.marketingChoices(marketingChoices.receiveGnmMarketing, marketingChoices.receive3rdPartyMarketing)
+                        @fragments.form.marketingChoices(idUser.marketingChoices.receiveGnmMarketing, idUser.marketingChoices.receive3rdPartyMarketing)
 
-                        @if(!passwordExists) {
+                        @if(!idUser.passwordExists) {
                             @fragments.form.createPassword()
                         }
                     </div>

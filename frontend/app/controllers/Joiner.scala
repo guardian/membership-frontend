@@ -4,13 +4,11 @@ import actions.Functions._
 import actions._
 import com.github.nscala_time.time.Imports._
 import com.gu.i18n.{CountryGroup, GBP}
-import com.gu.identity.play.{IdMinimalUser, PrivateFields, StatusFields}
 import com.gu.membership.model.Year
 import com.gu.membership.salesforce.Tier.Friend
 import com.gu.membership.salesforce._
 import com.gu.membership.stripe.Stripe
 import com.gu.membership.stripe.Stripe.Serializer._
-import com.gu.membership.zuora.soap.models.errors.ResultError
 import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.LazyLogging
 import configuration.{Config, CopyConfig}
@@ -42,6 +40,8 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   val casService = CASService
 
   val EmailMatchingGuardianAuthenticatedStaffNonMemberAction = AuthenticatedStaffNonMemberAction andThen matchingGuardianEmail()
+
+  val identityService = IdentityService(IdentityApi)
 
   def tierChooser = NoCacheAction.async { implicit request =>
     val eventOpt = PreMembershipJoiningEventFromSessionExtractor.eventIdFrom(request).flatMap(EventbriteService.getBookableEvent)
@@ -90,12 +90,13 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
 
   def enterPaidDetails(tier: PaidTier, countryGroup: CountryGroup) = NonMemberAction(tier).async { implicit request =>
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
       catalog <- request.catalog
+      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
     } yield {
       val cg = countryGroup
       val paidDetails = catalog.paidTierDetails(tier)
       val currency = if (paidDetails.currencies.contains(cg.currency)) cg.currency else GBP
+      val idUserWithCountry = identityUser.withCountryGroup(cg)
       val pageInfo = PageInfo(
         stripePublicKey = Some(request.touchpointBackend.stripeService.publicKey),
         initialCheckoutForm = CheckoutForm(cg.defaultCountry, currency, Year)
@@ -104,30 +105,21 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
       Ok(views.html.joiner.form.payment(
          countriesWithCurrencies = CountryWithCurrency.whitelisted(paidDetails.currencies, GBP),
          details = paidDetails,
-         userFields = setCountry(privateFields, cg),
-         marketingChoices = marketingChoices,
-         passwordExists = passwordExists,
+         idUser = idUserWithCountry,
          pageInfo = pageInfo))
     }
   }
 
-  private def setCountry(fields: PrivateFields, cg: CountryGroup): PrivateFields = {
-    val country = fields.country.orElse(cg.defaultCountry.map(_.alpha2))
-    fields.copy(billingCountry = country)
-  }
-
   def enterFriendDetails = NonMemberAction(Friend).async { implicit request =>
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.user, request)
+      identityUser <- identityService.getIdentityUserView(request.user, IdentityRequest(request))
       catalog <- request.catalog
     } yield {
       val ukGroup = CountryGroup.UK
       val formI18n = CheckoutForm(ukGroup.defaultCountry, ukGroup.currency, Year)
       Ok(views.html.joiner.form.friendSignup(
         catalog.friend,
-        privateFields,
-        marketingChoices,
-        passwordExists,
+        identityUser,
         support.PageInfo(initialCheckoutForm = formI18n)))
     }
   }
@@ -135,21 +127,11 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   def enterStaffDetails = EmailMatchingGuardianAuthenticatedStaffNonMemberAction.async { implicit request =>
     val flashMsgOpt = request.flash.get("success").map(FlashMessage.success)
     for {
-      (privateFields, marketingChoices, passwordExists) <- identityDetails(request.identityUser, request)
+      identityUser <- identityService.getIdentityUserView(request.identityUser, IdentityRequest(request))
       catalog <- TouchpointBackend.forUser(request.identityUser).catalog
     } yield {
-      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, privateFields, marketingChoices, passwordExists, flashMsgOpt))
+      Ok(views.html.joiner.form.addressWithWelcomePack(catalog.staff, identityUser, flashMsgOpt))
     }
-  }
-
-
-  private def identityDetails(user: IdMinimalUser, request: Request[_]) = {
-    val identityService = IdentityService(IdentityApi)
-    val identityRequest = IdentityRequest(request)
-    for {
-      user <- identityService.getFullUserDetails(user, identityRequest)
-      passwordExists <- identityService.doesUserPasswordExist(identityRequest)
-    } yield (user.privateFields.getOrElse(PrivateFields()), user.statusFields.getOrElse(StatusFields()), passwordExists)
   }
 
   def joinFriend = AuthenticatedNonMemberAction.async { implicit request =>
