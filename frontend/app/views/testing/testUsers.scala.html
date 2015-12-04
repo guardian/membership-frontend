@@ -3,6 +3,7 @@
 @import configuration.Config
 @import utils.TestUsers.ValidityPeriod
 @import views.support.Dates._
+@import views.support.Asset
 
 @main("Test Users") {
 
@@ -34,14 +35,12 @@
                         Here's a bookmarklet to help you:
                         <a href="javascript:
                             (function() {
-                                var username = prompt('Test User key (first name, last name, username and password will be set to this value):');
-                                if (!username) return;
-                                ['firstName', 'secondName', 'publicFields_username', 'password', 'primaryEmailAddress'].forEach(function(field) {
-                                    document.getElementById('user_'+field).value = field === 'primaryEmailAddress' ? username + '@@gu.com' : username;
-                                });
-                                document.querySelector('.js-register-form').submit();
+                                var s = document.createElement('script');
+                                s.src = '@Asset.bookmarklet("identity-signup.js")';
+                                s.type = 'text/javascript';
+                                document.head.appendChild(s);
                             })();">
-                            Register</a>.
+                            @if(Config.stageDev){Dev }Register</a>.
                         In Chrome you can drag the link to the bookmarks bar to bookmark it.
                         Clicking it on the sign-up page will prompt you for the Test User key, then fill out fields appropriately and submit the form.
                     </p>
