@@ -56,7 +56,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     }
 
     function selectCountry(selectEl, country) {
-        toArray($('option', selectEl)).forEach(function (el) {
+        $('option', selectEl).each(function (el) {
             if ($(el).val() == country) {
                 $(el)[0].selected = true;
             }
@@ -64,14 +64,14 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     }
 
     function renderPaymentOptions() {
-        toArray($(BILLING_PERIOD_CONTAINER_EL, PAYMENT_OPTIONS_CONTAINER_EL)).forEach(function (el) {
+        $(BILLING_PERIOD_CONTAINER_EL, PAYMENT_OPTIONS_CONTAINER_EL).each(function (el) {
             toggleCurrency(el);
             setBillingPeriod(el);
         });
     }
 
     function renderCardDetailsNotes() {
-        toArray(CARD_NOTE_CURRENCIES_ELS).forEach(function (el) {
+        CARD_NOTE_CURRENCIES_ELS.each(function (el) {
             toggleCurrency(el);
         });
 
@@ -84,7 +84,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     }
 
     function renderSubmitButton() {
-        toArray($(DATA_CURRENCY_SEL, SUBMIT_BTN_EL)).forEach(function (el) {
+        $(DATA_CURRENCY_SEL, SUBMIT_BTN_EL).each(function (el) {
             var elCurrency = $(el).attr('data-currency');
             var elBillingPeriod = $(el).attr('data-billing-period');
 
@@ -97,7 +97,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     }
 
     function setBillingPeriod(el) {
-        toArray(el.querySelectorAll('input[type="radio"]')).forEach(function (inputEl) {
+        $('input[type="radio"]', el).each(function (inputEl) {
             var elBillingPeriod = inputEl.value;
             var elCurrency = inputEl.getAttribute(CURRENCY_ATTR);
             if (elBillingPeriod === checkoutForm.billingPeriod && elCurrency === checkoutForm.currency) {
@@ -177,7 +177,7 @@ define(['$', 'bean', 'src/modules/form/validation/display'], function ($, bean, 
     };
 
     function toArray(nodeList) {
-      return Array.prototype.slice.call(nodeList);
+        return Array.prototype.slice.call(nodeList);
     }
 
     function toggleCurrency(el) {
