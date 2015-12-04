@@ -200,21 +200,15 @@ trait Joiner extends Controller with ActivityTracking with LazyLogging {
   }
 
   def thankyou(tier: Tier, upgrade: Boolean = false) = MemberAction.async { implicit request =>
-    val futureCustomerOpt = request.member.paymentMethod match {
-      case StripePayment(id) =>
-        request.touchpointBackend.stripeService.Customer.read(id).map(Some(_))
-      case _ => Future.successful(None)
-    }
-
     for {
       paymentSummary <- request.touchpointBackend.subscriptionService.getMembershipSubscriptionSummary(request.member)
-      customerOpt <- futureCustomerOpt
-      destinationOpt <- DestinationService.returnDestinationFor(request)
+      stripeCustomer <- memberService.getStripeCustomer(request.member)
+      destination <- DestinationService.returnDestinationFor(request)
     } yield Ok(views.html.joiner.thankyou(
         request.member,
         paymentSummary,
-        customerOpt.map(_.card),
-        destinationOpt,
+        stripeCustomer.map(_.card),
+        destination,
         upgrade
     )).discardingCookies(TierChangeCookies.deletionCookies:_*)
   }

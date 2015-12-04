@@ -320,6 +320,13 @@ trait MemberService extends LazyLogging with ActivityTracking {
 
     track(MemberActivity("membershipRegistration", trackingInfo), user)
   }
+
+  def getStripeCustomer(contact: Contact[MemberStatus, PaymentMethod]): Future[Option[Customer]] = contact.paymentMethod match {
+    case StripePayment(id) =>
+      TouchpointBackend.forUser(contact).stripeService.Customer.read(id).map(Some(_))
+    case _ =>
+      Future.successful(None)
+  }
 }
 
 object MemberService extends MemberService
